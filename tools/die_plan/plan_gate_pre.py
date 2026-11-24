@@ -79,6 +79,9 @@ DEADIN-1122 (FLOW-OPS-R2, COORD): with an as-built that names dead_input_proofs,
   validation (repository-relative paths, PASS verdict, defines / re-proofs, dependency module hashes, selected source) runs here,
   before the elab: OPUS-FIX-S81-COLROM-R6 kit G lost 28 min of elab to "dead-input proof must be repository-relative".
 
+STNPRICE (STN-REPRICE 11-24, report-only): one LIST line counting lanes whose source OUT + destination IN station depth != fixed_cycles.  Rows that add
+  stations are re-priced in the same op set by `stn_reprice.py wrap -- ROW.py PLAN_IN PLAN_OUT` (law-table guard: WARN, --strict refuses unless a regenerated
+  table is supplied).
 REMAP-BASE-1122 (FLOW-OPS-R2, COORD): LANDREMAP and ISTCYC compare against the remap base, resolved without the lane naming
   it: --remap-base, else --baseline-plan, else $OT_PLAN_REMAP_BASE, else the plan recorded in <plan dir>/bind_of_record/
   provenance_bind.json (the tree's last bind).  publish_gate passes the die's live plan (kit_wave.json), ot_build passes its
@@ -1899,6 +1902,11 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_istcyc(plan, rb)
     if "ISTPRICE" in skip:
         findings.append("WARN ISTPRICE --skip ignored: ISTPRICE is not skippable (FABLE FLOW REVIEW 11-23 22:50)")
+    try:                                                 # STN-REPRICE-1124: report-only count of lanes with station depth != priced fixed_cycles
+        import stn_reprice as _SR
+        findings += _SR.check_stnprice(plan)
+    except Exception as _e:  # noqa: BLE001
+        findings.append(f"LIST STNPRICE not counted: {type(_e).__name__}: {str(_e)[:120]}")
     findings += check_istprice(tree, plan, asbuilt)     # ISTPRICE-1123: every lane's stations vs its priced cycles, seconds, never skipped
     if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
         findings += check_r8stale(tree, plan, rb, asbuilt)
