@@ -1,0 +1,1 @@
+- 2026-11-24 09:48 PST TAKING ONBOARD-EPYC12 (fresh): onboard Cherry 1069796 as epyc12 like epyc10/11
