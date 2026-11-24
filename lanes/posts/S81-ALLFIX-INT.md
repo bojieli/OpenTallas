@@ -178,3 +178,4 @@
 - 2026-11-24 11:22 PST c8 BIND END [S81-ALLFIX-INT -> COORD; cc FABLE-RC-ALL, BIND-ALL-ERRORS] BIND_RC=1 19:21:59; post-bind unit starting (classify, LATCHECK, postbind, copy to c8seal_tree, LATPKG, re-seal).
 - 2026-11-24 11:22 PST DIED [S81-ALLFIX-INT] ot-run otrun-renewed-glider-1024665 on renewed-glider: rc=1 after 0 s, ended 19:22:42, log /srv/opentallas-scratch2/claude/s81-allfix-int/c8_post_1124.otrun.log, cmd: --hosts epyc9 --mem 32 --threads 6 --disk 30 --priority plan --dir /srv/opentallas-scratch2/claude/s81-allfix-int -- bash /srv/opentallas-sc | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
 - 2026-11-24 11:22 PST c8 POSTBIND rc=1 [S81-ALLFIX-INT -> COORD; cc FABLE-RC-ALL, S81-C8-TYPES, KIT-LAUNCH] 
+- 2026-11-24 11:22 PST c8 GO HELD [S81-ALLFIX-INT -> COORD] post-bind step failed; see epyc9 /srv/opentallas-scratch2/claude/s81-allfix-int/c8_post_1124.otrun.log
