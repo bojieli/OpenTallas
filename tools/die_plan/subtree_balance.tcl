@@ -45,6 +45,16 @@ if {![info exists ::stb::n]} { set ::stb::n 0 }
 # OT_TAP_TARGET_PS (core kits: unchanged).  On GRT RC (tapbal_grt.tcl) the routed tree sits later than the placement estimate
 # (S81 eng_rr_e median +65 ps), so the default cap there is that bound + OT_STB_GRT_MARGIN_PS (default 65).
 # OT_STB_TARGET_MAX_PS=0 = no cap (the old rule).
+# STB-BOUND-PORTS 11-24 (S81-SERDES-TAPSKEW): the bound is the TAP bound, so it caps only the tap port family (OT_TAP_PORT,
+# default clk, and its clk_<x><n> taps: clk_t5, clk_c3, ...).  Other clock ports keep the latest-sink target: S81 serdes__t2
+# io_pma_rck[0] (rck_balance.tcl pass, 26,373 sinks raw 1404..1942 ps) was capped at 250 + 20 = 270 ps, below every sink, so
+# the rck tree got no pads (spread 538 ps instead of 44).  OT_STB_CAP_PORTS_RE overrides the family (Tcl ARE).
+proc stb::capped_port {p} {
+  if {[info exists ::env(OT_STB_CAP_PORTS_RE)] && $::env(OT_STB_CAP_PORTS_RE) ne ""} { return [regexp -- $::env(OT_STB_CAP_PORTS_RE) $p] }
+  set base [expr {[info exists ::env(OT_TAP_PORT)] && $::env(OT_TAP_PORT) ne "" ? $::env(OT_TAP_PORT) : "clk"}]
+  if {![regexp {^[A-Za-z0-9_]+$} $base]} { return [expr {$p eq $base}] }
+  return [regexp -- "^${base}(_\[a-z\]+\[0-9\]+)?\$" $p]
+}
 proc stb::target_cap {} {
   if {[info exists ::env(OT_STB_TARGET_MAX_PS)] && $::env(OT_STB_TARGET_MAX_PS) ne ""} {
     set v [expr {double($::env(OT_STB_TARGET_MAX_PS))}]
@@ -201,7 +211,7 @@ proc stb::balance {} {
     if {$ns < 2} continue
     set m [stb::measure $p]
     if {$m eq ""} continue
-    if {$cap ne "" && [lindex $m 4] > $cap} {
+    if {$cap ne "" && [stb::capped_port $p] && [lindex $m 4] > $cap} {
       dict set T $p $cap
       puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f $cap] (latest sink [format %.1f [lindex $m 4]] over the bound: capped)"
     } else {

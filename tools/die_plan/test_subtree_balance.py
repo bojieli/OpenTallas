@@ -300,3 +300,23 @@ def test_grt_cap_adds_routed_margin_and_core_kits_are_uncapped():
     assert "target 50.0 (latest sink 80.0 over the bound: capped)" in out, out
     out2, arr2 = _run("set ::env(OT_STB_EST) grt\nset ::env(OT_STB_PORTS) clk\n")      # no OT_TAP_TARGET_PS: old rule
     assert "target 80.0 (latest sink, fixed)" in out2 and 80 - 8 - 20 < arr2["f1"] <= 80, (arr2, out2)
+
+
+def test_cap_applies_only_to_the_tap_port_family():
+    """STB-BOUND-PORTS 11-24 (S81-SERDES-TAPSKEW): the tap bound caps only OT_TAP_PORT and its clk_<x><n> taps.  S81 serdes__t2
+    io_pma_rck[0] (rck_balance.tcl pass, raw 1404..1942 ps) was capped at 270 ps, below every sink, and got no pads.
+    Mock: clk (tap family) target 80 -> capped 50; ck2 (another clock port) keeps its latest sink 60 and is balanced to it."""
+    env = ("set ::env(OT_STB_EST) placement\n"
+           "set ::env(OT_TAP_TARGET_PS) 30\nset ::env(OT_TAP_WINDOW_PS) 20\n")
+    out, arr = _run(env)
+    assert "OT_STB ERROR" not in out, out
+    assert "OT_STB before clk " in out and "target 50.0 (latest sink 80.0 over the bound: capped)" in out, out
+    assert "OT_STB before ck2 " in out and "target 60.0 (latest sink, fixed)" in out, out
+    assert 50 - 8 - 20 < arr["f1"] <= 50 and arr["f3"] == 80, (arr, out)
+    assert 60 - 8 - 20 < arr["g1"] <= 60 and arr["g2"] == 60, (arr, out)
+    # OT_TAP_PORT renames the family; OT_STB_CAP_PORTS_RE overrides it
+    out2, _ = _run(env + "set ::env(OT_TAP_PORT) ck2\n")
+    assert "OT_STB before ck2 " in out2 and "target 50.0 (latest sink 60.0 over the bound: capped)" in out2, out2
+    assert "target 80.0 (latest sink, fixed)" in out2, out2
+    out3, _ = _run(env + "set ::env(OT_STB_CAP_PORTS_RE) {^(clk|ck2)$}\n")
+    assert out3.count("over the bound: capped") == 2, out3
