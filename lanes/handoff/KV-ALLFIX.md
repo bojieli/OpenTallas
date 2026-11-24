@@ -50,3 +50,8 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - COORD ruling 08:0x: launched 9 A5t3 types untouched by A5t4 on E9 (units allfix-A5t3u-*, specs ~/tmp/kvallfix/launch_A5t3u/specs.tsv). A5t3 launched 72 total.
 - C2T2 2fb2dab1e7db: final strict BIND1 rc0 93 types 0 errors, LAT 2752/2752 (88/93 was a progress line); BPC/R8 still running at 08:05.
 - Next: after A5t4 bind, relaunch pc_v1 cl4ea x7 + phy_v1 from the A5t4 bind on rt >= 3f926e2068.
+## 09:55 PST state
+- KV event KV-A5t3 since 08:25 (receipt lanes/handoff/qwen_kvsys_atomic_apply_1795537486891205638.json); gen_hosts epyc11,epyc9,intel1,epyc10,epyc8; tools_sha 434f13368bb6 (bind_matches 93/93 both rts).
+- kit_wave edits: only_items 56->99 (a156e52f, 948930450); holds released pc cl254/cl5a95, hub_Wi/Wo/Eo; hold kv3_pc_v1__cl7f648944* (KV-OWN-RSTREACH 10:15); hg*/pv* holds re-owned to me, eta 11:00, lift when the event carries A5t4 rows (A5t5 includes them).
+- A5t5 (E9 run_a5t5.sh, list grow/a5t5.list = C2T2 + A5t4 rows + EF4 + SENDER merge) composing; A5t6 rows owed: pv_v4 stations KV-OWN-PV, pad fix pv_v3e/v7/v12 KV-PV-CAP, hub_Eo channel KV-OWN-HUB(-R2), headN_eN stations KV-OWN-HG.
+- Cancelled hgi + hgi_v2 cl2862 (census -870/-250). C2T2 full PASS. bgrepl E9 -> epyc7/epyc2/intel2 running.
