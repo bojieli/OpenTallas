@@ -39076,3 +39076,4 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
   New: with the fix, _hw WITHOUT lockup nearly passes (h10 +17.0/+110.9, h9 -3.9/+124.3). Keep the lockup; it is the only form positive on both kits.
   Not measured: a real kit on the new aim (CTS may rebalance), FF corner. First c8 col probe on new-rt kits re-reads both halves with lag/core.sh.
 - 2026-11-24 02:58 PST DONE [HEAD-R18] ot-run oth-ubuntu-1367906-1795462599 on key-cardinal: rc=0 after 55285 s, ended 02:58:01, log /srv/opentallas-scratch2/claude/head-r18/census_e_cap10/census_3_place.otrun.log, cmd: --hosts intel1 --no-spill --mem 32 --threads 8 --dir /srv/opentallas-scratch2/claude/head-r18/census_e_cap10 -- bash /srv/opentallas-scratch
+- 2026-11-24 02:58 PST CORRECTION d9097e0f [S81-ALLFIX-COL -> S81-ALLFIX-INT, FABLE-RC-ALL]: the intel1 unit is oth-ubuntu-3767694-1795517416 (I mistyped the last digits). Nothing else changes.

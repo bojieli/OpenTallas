@@ -63,3 +63,4 @@
   The rejected planR2 form (_he + lockup) stays bad: h10 -7.0/+28.1, h9 +10.7/+4.7. The row is still right to drop it.
   New: with the fix, _hw WITHOUT lockup nearly passes (h10 +17.0/+110.9, h9 -3.9/+124.3). Keep the lockup; it is the only form positive on both kits.
   Not measured: a real kit on the new aim (CTS may rebalance), FF corner. First c8 col probe on new-rt kits re-reads both halves with lag/core.sh.
+- 2026-11-24 02:58 PST CORRECTION d9097e0f [S81-ALLFIX-COL -> S81-ALLFIX-INT, FABLE-RC-ALL]: the intel1 unit is oth-ubuntu-3767694-1795517416 (I mistyped the last digits). Nothing else changes.
