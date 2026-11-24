@@ -393,6 +393,31 @@ def start_type(P, tn, t, margin, min_um):
     return rep
 
 
+RSTFAN_COPY = re.compile(r"ot_dp_rrelay\s+(u_cland_rfan_\w+)\s*\(\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\);[ \t]*"
+                         r"//[ \t]*RING-RSTFAN-1 same-cycle copy of (u_cland_rst_\w+)")
+
+
+def rstfan_original(text, raw):
+    """KV-PV-RSTRELAY 11-23: cland_start_raw of a bind made WITHOUT literal raw branches can be a RING-RSTFAN-1 copy
+    u_cland_rfan_<bus>_<k> (clock_landings._ring_reset_fan moves the origin group, incl. the cland_start_raw alias, onto a
+    same-D copy of the ring reset relay u_cland_rst_<bus>).  clock_landings runs RING-RSTFAN only when the type has NO
+    landing_raw_branches, so once branches exist cland_start_raw is the original u_cland_rst_<bus> Q again, and that relay
+    is the registered baseline relay RawBranches resolves.  A branch that named the copy (kv3_pv, kv3_pv_v8 on the KV A3g
+    bind) failed bind EMIT 'raw Q cland_rfan_ft1_i_1: exactly one same-clk plain relay required'.  Map the copy back to
+    the original ring reset net (same clk, same D = same depth and release edge); fail closed if that relay is missing.
+    -> (original net, copy instance or None)"""
+    for m in RSTFAN_COPY.finditer(text):
+        cinst, d, q, drv = m.groups()
+        if q != raw:
+            continue
+        o = re.findall(r"\bot_dp_rrelay\s+" + re.escape(drv) + r"\s*\(\.clk\(clk\),\s*\.d\(" + re.escape(d) +
+                       r"\),\s*\.q\((\w+)\)\);", text)
+        if len(o) != 1:
+            raise SystemExit(f"kv_start_corridor_event raw: RSTFAN copy {cinst} of {drv}: original relay with D={d} not found once")
+        return o[0], cinst
+    return raw, None
+
+
 def raw_type(P, tn, t, rtl_dir, margin, min_um):
     from start_obstacle_path import length, relay_sites
     W, H = t["outline_um"]
@@ -406,7 +431,7 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     m = re.search(r"assign cland_start_raw = (\w+);", text)
     if not m:
         raise SystemExit(f"kv_start_corridor_event raw {tn}: no cland_start_raw in {f}")
-    raw = m.group(1)
+    raw, rstfan_copy = rstfan_original(text, m.group(1))
     by_q = {q: dict(d=d, depth=int(dep), xy=(float(x), float(y))) for _, d, q, dep, x, y in REL.findall(text)}
     if raw not in by_q:
         # KV-RAWFIX 11-15 (rule part 1): cland_start_raw of a type without a START plan is the default ring reset relay
@@ -465,8 +490,11 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     if fails:
         raise SystemExit(f"kv_start_corridor_event raw {tn}: no corridor with hops <= {max_hop_um()}: {fails}")
     ck["landing_raw_branches"] = branches
-    return dict(raw=raw, chain_depth=len(chain), branches=len(branches),
-                copies=sum(len(b["stages"]) for b in branches), consumers=rep)
+    out = dict(raw=raw, chain_depth=len(chain), branches=len(branches),
+               copies=sum(len(b["stages"]) for b in branches), consumers=rep)
+    if rstfan_copy:
+        out["rstfan_copy_mapped"] = dict(copy=rstfan_copy, bound_raw=m.group(1))
+    return out
 
 
 LAYER_PITCH_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064}   # core_pin_sites_gate.MIN_PITCH
