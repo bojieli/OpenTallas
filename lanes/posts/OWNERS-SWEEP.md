@@ -460,3 +460,8 @@
   DEAD-OWNER (no post since 00:50): S81 66 (S81-OPEN-DEMAND 42 last 22:35, OPUS-FIX-S81-SVC-R9 16 last 23:14, S81-OPEN-FSTART 8 last 23:58), KV 30 (OPUS-FIX-KV-PV-R7 29 last 20:58, KV-HUB-HOLD 1).
   STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue). QC glue now owned by QC-INHOLD-BUDGET (cancelled-superseded). sle_st_b_v2__clfde1249e owned by QC-ALLFIX (placed, route held).
   QC rc99/rc101 are PROBE-PENDING in ALLFIX-QC.tsv (not launched). New lanes KV-SPINE-REWIRE 02:48, ROMW-LOSS-1124 02:37 posting; RSTSOLVE has no post file.
+- 2026-11-24 03:50 PST OWNERS-SWEEP 03:5x (446 rows); FABLE-*, HOURLY-* now excluded as owners in owners_sweep.py (backup .bak-1123).
+  UNOWNED S81 2 (dsdv_slice_lepe_nh_mus_LP__t1, lepw_mus_LP__t2). No FAILED-NO-RELAUNCH. HEAD clean.
+  DEAD-OWNER (no post since 01:50): FAM-S81-COL-H9R0-R4 60 (last 01:19), OPUS-FIX-S81-SVC-R9 16 (23:14), S81-OPEN-FSTART 2, KIT-FWDCLK-SDC 1, WATCHDOG-SWEEP 1.
+  STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue).
+  col_h10_r2 12 rows: S81-ALLFIX-INT 10 + SEAT-MATCH-AUDIT 2, both posted 03:13-03:49; not RSTSOLVE.
