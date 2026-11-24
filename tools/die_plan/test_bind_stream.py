@@ -257,3 +257,19 @@ def test_attribution_inputs_reads_sidecars(tmp_path):
     (tmp_path / "bind_lane_asbuilt.json").write_text(json.dumps(dict(lanes=[dict(lane="L", src_type="a", dst_type="b")])))
     kw = bind.attribution_inputs(tmp_path, ["TYPE_DEFINE_CONFLICT x", "LANE_ASBUILT L: d"])
     assert kw == dict(define_outside=("kv__t1",), define_requesters=("svc__t1",), lane_types={"L": ("a", "b")})
+
+
+def test_type_strict_report_basis(tmp_path):
+    """BIND-STREAM-SNAP-2: whole-unbound proof report: global for a clean bind, per-type for a stream record / clean partial receipt"""
+    import bind
+    out, kd = tmp_path / "o", tmp_path / "k"
+    out.mkdir(); kd.mkdir()
+    assert bind._type_strict_report(out, kd, "ta", "ta", {"n_errors": 0}, None) == out / "bind_report.json"
+    p = bind._type_strict_report(out, kd, "ta", "ta", {"n_errors": 0}, {"stream_records": {"ta": {"run_id": "r"}}})
+    d = json.loads(p.read_text())
+    assert d["n_errors"] == 0 and d["proof"]["tied"] == 0 and d["basis"]["kind"] == "bind_stream_record"
+    (out / "native_topology.json").write_text(json.dumps({"partial": True, "refused": {"tb": ["TIED x"]}}))
+    d = json.loads(bind._type_strict_report(out, kd, "ta", "ta", {"n_errors": 3}, None).read_text())
+    assert d["basis"]["kind"] == "partial_type_receipt" and d["basis"]["global_n_errors"] == 3
+    with pytest.raises(ValueError):
+        bind._type_strict_report(out, kd, "tb", "tb", {"n_errors": 3}, None)

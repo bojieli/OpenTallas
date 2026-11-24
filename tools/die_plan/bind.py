@@ -3950,7 +3950,9 @@ class Binder:
             try:
                 import bind_stream
                 bind_stream.write_type(ctx, tn, self.types[tn]["module"], len(ps), files[n0:], ctx.get("lib", []),
-                                       list(getattr(self, "extra_lib", [])), Path(out) / "rtl" / "bind_cells.sv",
+                                       list(getattr(self, "extra_lib", [])),
+                                       # out is OUT/rtl here (_emit_body writes out/bind_cells.sv); was OUT/rtl/rtl/ (never hashed)
+                                       Path(out) / "bind_cells.sv" if Path(out).name == "rtl" else Path(out) / "rtl" / "bind_cells.sv",
                                        instance_params=self.instance_params(tn, ps))
             except Exception as exc:          # report only: the type then waits for the bind end as before
                 print(f"bind: WARN BIND_STREAM {tn}: no stream record ({type(exc).__name__}: {exc})", flush=True)
@@ -7824,6 +7826,30 @@ def kit_dedupe(tn, fl):
 
 
 
+def _type_strict_report(out, kd, key, tn, rep, stream_rep):
+    """BIND-STREAM-SNAP-2 11-24 (COORD, S81 c8s svc_hi_*_rs: 'whole-unbound input proof' read OUT/bind_report.json): the strict
+    mapping report the whole-unbound proof hashes.  A clean global bind: its bind_report.json (unchanged).  A running bind (final
+    stream record = the type emitted with no gap of its own) or an ended bind whose partial receipt keeps this type clean: a
+    per-type report KIT/bind_report_type.json (0 errors / unbound / tied / undriven for THIS type, with its basis); the global
+    bind_report stays the gate of record and a type the bind end withdraws or refuses voids the kit at its next check."""
+    if stream_rep is None and not rep.get("n_errors"):
+        return out / "bind_report.json"
+    if stream_rep is not None:
+        basis = dict(kind="bind_stream_record", records=stream_rep.get("stream_records"))
+    else:
+        import kit_topology as _KT
+        ok, why = _KT.receipt_type_clean(out, key, tn)
+        if not ok:
+            raise ValueError(f"no per-type strict basis: {why}")
+        basis = dict(kind="partial_type_receipt", why=why, receipt_sha256=hashlib.sha256((out / "native_topology.json").read_bytes()).hexdigest(),
+                     global_n_errors=rep.get("n_errors"))
+    doc = dict(schema="opentallas.bind_report_type.v1", type=key, n_errors=0, errors=[], unmapped=0,
+               proof=dict(unbound=0, tied=0, undriven=0, multiply_bound=0), basis=basis)
+    p = Path(kd) / "bind_report_type.json"
+    p.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n")
+    return p
+
+
 def kit_native_station_geometry(out, bound_type, bound_text, kit):
     """Carry native FIRM station sites with bound RTL through the kit wrapper.
 
@@ -8320,7 +8346,7 @@ def cmd_kit_rtl(a):
             receipt['unbound_input_buses']=unbound_inputs
             try:
                 receipt['unbound_source_proof']=KDI.unbound_receipt(unbound_inputs,missing,
-                    out/'bind_report.json',native_bound_source,native_bound_module)
+                    _type_strict_report(out, kd, key, tn, rep, stream_rep),native_bound_source,native_bound_module)
                 dead_doc['proof']['method'] += '; complete unbound ports re-proved as literal unread declarations'
                 KDI.refresh(dict(dead_inputs=dead_doc,narrow_buses=narrow,unbound_input_buses=unbound_inputs,
                                  plan_buses_unbound=missing),kd/f'{mod}.sv')

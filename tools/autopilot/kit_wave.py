@@ -195,7 +195,7 @@ GATE_KEYS = ("bind", "clock")                 # plan event checks that must be P
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"tool_skew": True, "max_inflight": 40, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "kit_rtl_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
@@ -5325,6 +5325,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
             "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
+            # S81 c8s 11-24: 24 kits MEMCG-OOM at the fixed 8 GiB kit_rtl cap (216 MB plan); option kit_rtl_mem_gb (die > global)
+            "kit_rtl_mem_gb": int(opt(cfg, die, "kit_rtl_mem_gb") or 8),
             "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
@@ -7144,7 +7146,7 @@ def counted_now(cfg, st, die, item, block=None):
 # src_base (KW-FIX-44 11-10, COORD): the commit a wave source tree actually started from; src_sha names the commit its
 # switch inputs came from, and the tree was never at it.  A record of provenance, so not an input.
 INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "roam_hosts", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
-              "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
+              "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "kit_rtl_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
               "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins"}
@@ -11451,7 +11453,7 @@ def run_item(spec_path):
         krb_cmd = lambda bnd, flag: (f"cd {q(tsrc)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
         src_flag = "" if rcp and pinned_gen else f"--src-tree {q(src)} "
-        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, src_flag), gh, roam=False))
+        rc, txt = run("kit_rtl", otrun(int(sp.get("kit_rtl_mem_gb") or 8), 2, W, krb_cmd(kbind, src_flag), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
         # call-time error, never a design verdict) the tree runs its OWN bind.py unchanged, one consistent set, without --src-tree

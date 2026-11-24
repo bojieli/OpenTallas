@@ -75,6 +75,9 @@ def write_type(ctx, tn, module, instances, files, lib, extra_lib, cells, instanc
         s = Path(f).with_suffix(".reset_tree.json")
         if s.is_file():
             side.append(str(s))
+    sdir = Path(ctx["dir"]).parent / "native_internal_stations" / tn   # BIND-STREAM-SNAP-2: kit-rtl reads istations.tcl / receipt.json
+    if sdir.is_dir():
+        side += [str(x) for x in sorted(sdir.iterdir()) if x.is_file()]
     rec = dict(schema=SCHEMA_TYPE, type=tn, final=True, run_id=ctx["run_id"], context_sha256=ctx["context_sha256"],
                plan_sha256=ctx["plan_sha256"], module=module, instances=instances,
                files={f: _sha(f) for f in files + side + [str(cells)] if Path(f).is_file()},

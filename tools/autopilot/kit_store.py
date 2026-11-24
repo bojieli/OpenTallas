@@ -280,6 +280,20 @@ def stream_files(d, tn):
                 raise StoreError(f"KIT-SNAP BIND_STREAM {n}: recorded file changed or missing {fp}")
             if fp.startswith(os.path.normpath(d) + "/"):
                 out[os.path.relpath(fp, d)] = fp
+        # BIND-STREAM-SNAP-2 11-24 (S81 c8s, 113 of 121 kits at kit_rtl): kit-rtl also reads rtl/bind_cells.sv (52c1 records name it
+        # under a wrong rtl/rtl/ path, so it was never hashed) and OUT/native_internal_stations/<type>/ (istations.tcl, receipt.json),
+        # both written before the type's record; a file there newer than the record changed after it -> refused
+        rt_ = os.stat(rp).st_mtime
+        extra = [os.path.join(d, "rtl", "bind_cells.sv")] + [os.path.normpath(x) for x in r.get("bind_f") or ()]
+        sdir = os.path.join(d, "native_internal_stations", n[:-5])
+        if os.path.isdir(sdir):
+            extra += [os.path.join(sdir, x) for x in sorted(os.listdir(sdir))]
+        for fp in extra:
+            if not fp.startswith(os.path.normpath(d) + "/") or not os.path.isfile(fp) or fp.endswith(".tmp"):
+                continue
+            if os.stat(fp).st_mtime > rt_ + 1:
+                raise StoreError(f"KIT-SNAP BIND_STREAM {n}: {fp} changed after the type's record")
+            out.setdefault(os.path.relpath(fp, d), fp)
     return out
 
 

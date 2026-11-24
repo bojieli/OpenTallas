@@ -71,6 +71,20 @@ class StreamSnap(unittest.TestCase):
         with self.assertRaisesRegex(KS.StoreError, "recorded file changed"):
             self.snap()
 
+    def test_stream_takes_bind_cells_and_the_type_stations(self):
+        old = os.stat(os.path.join(self.o, "native_topology.d/ta.json")).st_mtime - 5
+        for n in ("rtl/bind_cells.sv", "native_internal_stations/ta/istations.tcl", "native_internal_stations/ta/receipt.json"):
+            os.utime(put(os.path.join(self.o, n), n), (old, old))
+        put(os.path.join(self.o, "native_internal_stations/tb/receipt.json"), "other type")
+        rel = sorted(os.path.relpath(p, self.o) for p in KS.stream_files(self.o, "ta").values())
+        for n in ("rtl/bind_cells.sv", "native_internal_stations/ta/istations.tcl", "native_internal_stations/ta/receipt.json"):
+            self.assertIn(n, rel)
+        self.assertNotIn("native_internal_stations/tb/receipt.json", rel)
+        new = time.time() + 50
+        os.utime(os.path.join(self.o, "native_internal_stations/ta/receipt.json"), (new, new))
+        with self.assertRaisesRegex(KS.StoreError, "changed after the type's record"):
+            KS.stream_files(self.o, "ta")
+
     def test_ended_or_plain_out_is_taken_whole(self):
         put(os.path.join(self.o, "bind_report.json"), "{}")                    # the bind ended
         self.assertIsNone(KS.stream_files(self.o, "ta"))
@@ -84,6 +98,8 @@ class StreamSnap(unittest.TestCase):
         bo = lambda s: next(i for i in KW.ks_inputs(s, "/srv/x/plan.json") if i["role"] == "bind_out")
         self.assertNotIn("stream_type", bo(sp))
         self.assertEqual(bo(dict(sp, bind_stream_launch=True))["stream_type"], "ta")
+        self.assertEqual(KW.DEFAULTS["kit_rtl_mem_gb"], 8)
+        self.assertIn("kit_rtl_mem_gb", KW.INPUT_SKIP)
 
 
 class Store(unittest.TestCase):
