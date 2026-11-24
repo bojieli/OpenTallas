@@ -52377,7 +52377,10 @@
     "sle_st_b_v2__cl14c98df5__pv41c959f3@1:fix=59c032c8eb9",
     "slw_st_b_v1__cl6357f1cc__pvffd43fdc@1:fix=59c032c8eb9",
     "slw_st_b_v1__cle6023ec2@2:fix=59c032c8eb9",
-    "slw_st_b_v2__pva66d0f22__pvb80e2003@2:fix=59c032c8eb9"
+    "slw_st_b_v2__pva66d0f22__pvb80e2003@2:fix=59c032c8eb9",
+    "sle_hc0__cl05696ed1@1:fix=59c032c8eb9",
+    "sle_hc0__cl929603c0__cl38badc56@1:fix=59c032c8eb9",
+    "sle_st_b_v1__pv0e7b1dcc@1:fix=59c032c8eb9"
    ],
    "bound_trees": [
     {
@@ -52596,16 +52599,7 @@
      "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
     }
    },
-   "pregrt_refresh": [
-    "sle_st_b_v2__cl14c98df5__pv41c959f3",
-    "slw_hc3__clccfc3e6b__pvcca9ff41",
-    "slw_st_b_v1__cl6357f1cc__pvffd43fdc",
-    "slw_st_b_v1__cle6023ec2",
-    "slw_st_b_v2__pva66d0f22__pvb80e2003",
-    "slw_st_b_v2__pvc2ec5bfb",
-    "slw_hc2__cla3497502__cl16607c7a",
-    "sle_st_b_v2__clfde1249e"
-   ],
+   "pregrt_refresh": true,
    "pregrt_refresh_pad": "rr",
    "bind_preflight": false
   },
