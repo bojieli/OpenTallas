@@ -12,3 +12,7 @@ Work dir E10 /srv/opentallas-scratch2/claude/s81-allfix-multi/{rhi,rr,x13} (E10 
 - RHI-RST-REACH v1 12cd5a01764b (rr/plan_v1.json) PRE 0/178, ROW-REBASED posted. Chain: seq0 (B1 RTL seqhost) -> v1a (J8 RTL eng,gunit,iqf --local-taps) -> v1 (eng --second-pass). Needs env OT_PLAN_ROOT=b1_tree/physical/die_plan/s81 OT_RT_CURRENT=b1_tree.
 - v2 = same chain with B1 RTL once j9_b1_exact_1123_out/rtl has s81p_{eng,gunit,iqf}__t1.sv (waiter running). Then pre.sh plan_v2.json v2 and post.
 - REPORT to COORD posted 17:5x.
+## 18:4x
+- RHI-RST-REACH v2 2e5928836573 (rr/plan_v2.json, B1 bound RTL all 4 types) PRE 0/178; ROW-REBASED posted (supersedes v1). INT c4 (E9 s81-allfix-int/c4, f347fb918fab) composed v1 -> INT must swap step to v2 (only bank_taps on eng/gunit/iqf/seqhost differ).
+- To do: ot-delete rr/pbind_out (3.4 GB, cancelled probe bind; lease until 20:23 PST) + rr/plan_seq0/v1a/v2a when no longer needed.
+- Owed after INT combined strict (~22:30): rc67 adv_hop_gap.py on combined bind OUT; x13 type_define_effect census on combined ELAB (GFLOCAL must be KIT/DIE_WIDE).
