@@ -36199,3 +36199,4 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
   (2) Reset: ot_dp_dly is reset-less. A new test runs the reset-state compare from every start state (D=1..5): 14 pass (c40e2c38ea, not pushed yet).
   (3) Netlist proof: non-fw slw_su_l1 elaborated netlist hash fe277a9e is identical with old and new bind_cells. The fw_v3 define-on check is running.
   (4) Running on epyc11 in parallel: place A/B (base100, base200, cpl200) and cpl-to-CTS. Bind moved to epyc11, since epyc7 is at 98% disk and on HOLD.
+- 2026-11-23 22:13 PST DONE [PRECHECK-DERIVED-DROP] ot-run oth-ubuntu-85395-1795500182 on renewed-glider: rc=0 after 601 s, ended 06:13:01, log /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP/runs/s81_c7a_tail_v2.otrun.log, cmd: --mem 24 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP -- bash /srv/opentallas-scratch2/claude/PRECH
