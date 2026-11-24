@@ -1905,10 +1905,21 @@ def gendry_bind_out(elab_dir):
     return str(Path(elab_dir).absolute()) if not r.get("errors") and not r.get("n_errors") else None
 
 
+def gendry_src_tree(tree):
+    """GENDRY-PADBIND-1124: the design source tree bind.py kit-rtl checks the kit filelist against.  An rt launch tree
+    (rt_launch_tree.sh: L/.rt_launch_ok {"src": SRC}) symlinks rtl/ and physical/* into SRC, so the filelist resolves under SRC
+    and --src-tree L refuses every file ('outside the kit source tree', QC C1g glue); the wave passes the die tree SRC too."""
+    try:
+        src = json.loads((Path(tree) / ".rt_launch_ok").read_text()).get("src")
+    except (OSError, ValueError, AttributeError):
+        src = None
+    return str(Path(src).absolute()) if src and Path(src).is_dir() else str(Path(tree).absolute())
+
+
 def gendry_kitrtl_cmd(tree, plan, tn, kit, bind_out, asbuilt=None):
     bind = Path(__file__).resolve().parent / "bind.py"
     cmd = [sys.executable, "-I", "-B", str(bind), "kit-rtl", str(Path(plan).absolute()), "--out", str(bind_out), "--type", tn,
-           "--kit", str(kit), "--src-tree", str(Path(tree).absolute())]
+           "--kit", str(kit), "--src-tree", gendry_src_tree(tree)]
     if asbuilt:
         cmd += ["--asbuilt", str(Path(asbuilt).absolute())]
     return cmd

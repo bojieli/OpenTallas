@@ -211,3 +211,16 @@ def test_pad_bound_only_in_bound_rtl_goes_through_kit_rtl(tmp_path):
     assert len(kr) == 1 and kr[0][kr[0].index("--type") + 1] == "glue"
     g = [c for c in cmds if "--types" in c and c[c.index("--types") + 1] == "glue"]
     assert len(g) == 1 and "--kit-rtl" in g[0]
+
+
+def test_kitrtl_src_tree_of_rt_launch_tree(tmp_path):
+    """GENDRY-PADBIND-1124: on an rt launch tree the kit-rtl --src-tree is the die tree SRC the launch tree links into"""
+    src, lt = tmp_path / "tree", tmp_path / "launch"
+    src.mkdir(); lt.mkdir()
+    assert P.gendry_src_tree(lt) == str(lt.absolute())
+    (lt / ".rt_launch_ok").write_text(json.dumps({"rt": "/x", "src": str(src)}))
+    assert P.gendry_src_tree(lt) == str(src.absolute())
+    cmd = P.gendry_kitrtl_cmd(lt, tmp_path / "p.json", "glue", tmp_path / "k", tmp_path / "b")
+    assert cmd[cmd.index("--src-tree") + 1] == str(src.absolute())
+    (lt / ".rt_launch_ok").write_text(json.dumps({"src": str(tmp_path / "gone")}))
+    assert P.gendry_src_tree(lt) == str(lt.absolute())
