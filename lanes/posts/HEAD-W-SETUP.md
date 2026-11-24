@@ -1,0 +1,1 @@
+- 2026-11-23 23:54 PST TAKING HEAD-W-SETUP from HEAD-WEST: three routed setup groups of hd_lep0N_w run 1 (-56.3 fs_q, -54.2 lap_ok, -47.6 tx SRAM odr). cc HEAD-WEST
