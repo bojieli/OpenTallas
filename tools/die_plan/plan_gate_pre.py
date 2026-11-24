@@ -138,6 +138,13 @@ SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,20
   origins (origin + track_offset) off the manufacturing grid are WARN SITEGRID-MACRO; off the site column / row and plan cell
   hints the kit legalises are counted in WARN SITEGRID-SUMMARY only (adopted kits place with them).  Seconds.
 
+ISTPRICE (FABLE FLOW REVIEW 11-23 22:50, PRECHECK-LEDGER-R3): FAIL for every lane whose stored latency row is short of the live counts
+  (PRICE-SHORT: cycles < 2 + ft stations + landing + source stations; STALE-TABLE: stored ft stations / landing != live) and, with an
+  as-built, every native-source lane whose fixed_cycles != source + destination stations (FIXED-SPLIT) or whose native source bus has
+  != 1 outgoing lane (OUT-LANES): the strict bind dies on these in build_buses / native_istations 35-60 min later (S81 c8 dn_s_3N_L3
+  fixed_cycles 10 != 8 + 1; KV A3c / A2f).  Passes only at 0 flagged lanes.  NOT skippable (--skip ISTPRICE is ignored and said so).
+  As-built: --asbuilt, else the plan's own `asbuilt` section, else <plan dir>/{plan_of_record/native_bind,plan_inputs/run}/asbuilt_run*.json, else the same under <tree>/physical/die_plan/*/
+  (the newest); none found = FAIL ISTPRICE (the native rules cannot be judged), never a silent pass.  tools/die_plan/adv_ist_price.py.
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -159,7 +166,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ISTPRICE", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1186,6 +1193,55 @@ def reprice(plan, baseline, out):
     return done
 
 
+def check_istprice(tree, plan, asbuilt=None, max_list=10):
+    """FAIL ISTPRICE per over-cycle lane (see ISTPRICE in the module doc); the as-built is resolved here when none is given"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import adv_ist_price as IP
+    except ImportError as e:
+        return [f"FAIL ISTPRICE cannot run: {e}"]
+    raw = _load(plan) or {}
+    ab, how = None, ""
+    if asbuilt:
+        ab, how = _load(asbuilt), f"--asbuilt {asbuilt}"
+    elif isinstance(raw.get("asbuilt"), dict):
+        ab, how = raw["asbuilt"], "the plan's own asbuilt section"
+    else:
+        pd = Path(plan).resolve().parent
+        cands = []
+        for rel in ("plan_of_record/native_bind", "plan_inputs/run", "native_bind", "."):
+            cands += sorted((pd / rel).glob("asbuilt_run*.json"), key=lambda q: q.stat().st_mtime, reverse=True)
+        if not cands and tree:      # a composed plan outside the tree (c8/..json): the tree's own plan_of_record asbuilt_run
+            for g in ("physical/die_plan/*/plan_of_record/native_bind/asbuilt_run*.json", "physical/die_plan/*/plan_inputs/run/asbuilt_run*.json"):
+                cands += sorted(Path(tree).glob(g), key=lambda q: q.stat().st_mtime, reverse=True)
+        if cands:
+            ab, how = _load(cands[0]), str(cands[0])
+    if not raw.get("lanes") or not raw.get("partition_types"):
+        return []                                         # nothing to price (fixtures, type-only plans)
+    types = raw.get("partition_types") or {}
+    native_possible = any(isinstance(t, dict) and any(str(e.get("conn", "")).startswith("bus:") for e in t.get("internal_stations") or [] if isinstance(e, dict))
+                          for t in types.values()) and bool(raw.get("lanes"))
+    IP.MAX_LINES = 10 ** 6
+    lines = IP.findings(raw, str(plan), tree, asbuilt=ab if isinstance(ab, dict) else None)
+    out = []
+    for ln in lines:
+        if ln.startswith("WARN ADV-IST-PRICE not checked"):
+            out.append("FAIL ISTPRICE " + ln.split("ADV-IST-PRICE ", 1)[1])
+        elif ("summary" not in ln) and (" lane " in ln or "OUT-LANES" in ln):
+            out.append("FAIL ISTPRICE " + ln.split("ADV-IST-PRICE ", 1)[1])
+    n = len(out)
+    if n > max_list:
+        out = out[:max_list] + [f"FAIL ISTPRICE ... {n - max_list} more lane(s)"]
+    if not isinstance(ab, dict) and native_possible:
+        out.append("FAIL ISTPRICE no as-built found (--asbuilt, plan asbuilt section, plan_of_record/native_bind/asbuilt_run*.json): "
+                   "FIXED-SPLIT / OUT-LANES (native station rules) cannot be judged; pass the integrator's as-built")
+    if out:
+        out.append(f"FAIL ISTPRICE {n} lane(s) over-cycle; fix: refresh the latency table / fixed_cycles = source + destination (ADV-IST-PRICE has the per-lane fix)")
+    elif ab is not None:
+        out.append(f"LIST ISTPRICE 0 lanes flagged (as-built: {how})")
+    return out
+
+
 def check_deadin(tree, plan, asbuilt):
     """FAIL DEADIN <bind error> when dead_inputs.ProvenDead refuses the as-built's dead-input proofs (see DEADIN-1122)"""
     ab = _load(asbuilt) if asbuilt else None
@@ -1806,6 +1862,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
         findings += check_istcyc(plan, rb)
+    if "ISTPRICE" in skip:
+        findings.append("WARN ISTPRICE --skip ignored: ISTPRICE is not skippable (FABLE FLOW REVIEW 11-23 22:50)")
+    findings += check_istprice(tree, plan, asbuilt)     # ISTPRICE-1123: every lane's stations vs its priced cycles, seconds, never skipped
     if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
         findings += check_r8stale(tree, plan, rb, asbuilt)
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
@@ -1940,7 +1999,7 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None):
     except ImportError:
         return []
     try:
-        lines = PA.run(_load(plan), plan, tree, asbuilt=asbuilt, baseline=baseline)
+        lines = PA.run(_load(plan), plan, tree, checks=[c for c, _ in PA.CHECKS if c != "IST-PRICE"], asbuilt=asbuilt, baseline=baseline)   # IST-PRICE is a FAIL class now
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
     return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
