@@ -36,3 +36,13 @@
 - Then: ot-tree-fork grow/tree (with the FWDCLK kvfwd_views_1123 and astk_views) into epyc10 /srv/opentallas-scratch2/claude/KV-HG-CAP/treeA4d. Run private-spec ON epyc10, --host epyc10 --goal grt --rt a64d7d7813de, then run-item.
   - Deliver the density render (no bin >0.7 outside halos) and the instance count vs 400k to FABLE-RC-KV.
 - rc127 GRT resume on epyc8 (kv-hg-cap-rc127-grt): CTS post-hook setup -563 / hold -558. GRT is running; read the final 5_1_grt.odb for overflow.
+
+## 11-23 23:51 PST state
+[KV-HG-CAP -> COORD; cc KV-ALLFIX, FABLE-RC-KV] STATE 11-23 23:51 PST: v1p5 r2-form probe NOT started, waiting for the KV-ALLFIX A5r strict bind (its ETA 01:00 PST; A4d was refused at elab); probe launch ETA 01:20, placed density + count ETA ~04:30 (estimate). I had no waiter on A5r and repeated the stale A4d 00:45 ETA; armed now. rc127 unit live.
+CORRECTIONS to my posts and report:
+- rc127 is NOT in GRT. It is in pre-GRT FF hold repair: one OpenROAD process, 99.9% CPU for 65 min, table still at iteration 0, 15498 endpoints, WNS -500 ps. I reported "GRT running" at 22:47 and later without reading a log. Not killed; it passes the 2-h watchdog mark at ~00:45, and I decide then.
+- rc127 setup -563 / hold -558 "expected for the old form" had no analysis behind it. Cause not measured. The worst hold endpoint is in the soft g_ex_0 that r2 removes; 13215 of 14096 failing endpoints are cross_tap, so a clock cause is open and may remain on r2.
+- Route demand on r2: only ~0.5% on v1p5; kv3_hg is +7% (1377 vs 1289). Not all hg types were compared.
+- r2 PRE (rt 9b19) has no RSTREACH check. KV-ALLFIX A5 PRE fails it on kv3_hg (5 hops, max 681 um) and v1p5 (1 hop, 628 um), so "PRE same as base" does not cover reset reach. KV-ALLFIX sent the list to KV-RSTREACH; whether my row added any is not checked.
+- In A5 the hg blocks differ from r2 in clock, internal_stations and one ring core (kv3_hg_v3 also ft_slots). The hard g_ex_0 row is unchanged (checked on kv3_hg, v1p5, v3).
+- My handoff entries stamped 22:35 and 22:52 were written 22:29 and 22:50.
