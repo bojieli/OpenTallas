@@ -11,7 +11,16 @@ from unittest.mock import patch
 import kit_wave as KW
 
 # FLEET-WATCH-R8 11-21: run_item re-picks the spec hosts from the LIVE ~/coord kit_wave.json gen_hosts (repick_stage_hosts); the fixture hosts must not depend on it
-KW.repick_stage_hosts = lambda sp, cfg_path=None: sp
+# KW-REPICK-PIN 11-24: patched for this module only (a module-level assignment replaced it for every later test in the process: test_repick_hosts failed)
+_REPICK_PATCH = patch.object(KW, "repick_stage_hosts", lambda sp, cfg_path=None, **_kw: sp)
+
+
+def setUpModule():
+    _REPICK_PATCH.start()
+
+
+def tearDownModule():
+    _REPICK_PATCH.stop()
 
 RECEIPT = {"path": "/w/gen/T/physical_completion/dpkit-T-1.json", "run_id": "dpkit-T-1", "proof_owner": "dpkit-T-1",
            "proof_pending": True, "checkpoint": {"path": "run/results/asap7/x/base/3_place.odb", "size": 9, "mtime_ns": 1}}
