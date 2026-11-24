@@ -1,0 +1,31 @@
+type	bins_n	placed_n	placed_source (cache section, stage, kit)	over_tap_cap	placed_max_tap_load (own placed scan)	tap_cap	over_cap
+kv3_hg_v3	72145	57855	flops place kv3_hg_v3-place-outgoing-giraffe-3963311-1795274	no	5406 (kit kv3_hg_v3-route-loved-redfish-818768)	1800	yes
+kv3_hgi_v1__cl141fc26e	26269	20451	flops place kv3_hgi_v1__cl141fc26e-place-loved-redfish-34090	no	1385 (kit kv3_hgi_v1__cl141fc26e-route-renewed)	3000	no
+kv3_hgi_v1__cl42bc8b12	26116	37051	placed_bins route kv3_hgi_v1__cl42bc8b12-route-renewed-glider-2534	no	1686 (kit kv3_hgi_v1__cl42bc8b12-route-renewed)	3000	no
+kv3_hgi_v3	33489	22760	flops place kv3_hgi_v3-place-outgoing-giraffe-1647872-179542	no	1000 (kit kv3_hgi_v3-route-renewed-glider-2840)	1200	no
+kv3_hgi_v4	31903	25513	flops place kv3_hgi_v4-place-outgoing-giraffe-292672-1795504	no	1000 (kit kv3_hgi_v4-route-loved-redfish-13187)	1200	no
+kv3_hgi_v5	34886	24205	flops place kv3_hgi_v5-place-outgoing-giraffe-2048858-179543	no	1000 (kit kv3_hgi_v5-route-renewed-glider-2822)	1200	no
+kv3_hgi_v6	38422	45095	placed_bins route kv3_hgi_v6-route-renewed-glider-2824096-17952488	no	1000 (kit kv3_hgi_v6-route-renewed-glider-2824)	1200	no
+kv3_hgi_v7	36945	43163	placed_bins route kv3_hgi_v7-route-outgoing-giraffe-3710814-179524	no	1000 (kit kv3_hgi_v7-route-outgoing-giraffe-37)	1200	no
+kv3_hgi_v8	46363	25879	flops place kv3_hgi_v8-place-outgoing-giraffe-3854124-179542	no	1000 (kit kv3_hgi_v8-route-outgoing-giraffe-37)	3000	no
+kv3_io_cor_v1	26575	38714	placed_bins route kv3_io_cor_v1-route-outgoing-giraffe-523104-1795	no	2327 (kit kv3_io_cor_v1-route-outgoing-giraffe)	3000	no
+kv3_pc_v1__cl23f6a148	61280	71101	flops place kv3_pc_v1__cl23f6a148-place-renewed-glider-76699	no	8909 (kit kv3_pc_v1__cl23f6a148-route-loved-re)	3000	yes
+kv3_pc_v3	67338	86464	flops place kv3_pc_v3-place-renewed-glider-3969446-179548464	no	10284 (kit kv3_pc_v3-route-outgoing-giraffe-292)	3000	yes
+kv3_pv	113525	161699	flops place kv3_pv-place-renewed-glider-143859-1795420757	no	n/a (no placed tap scan)	1000	unknown
+kv3_pv_v1	125590	230057	flops place kv3_pv_v1-place-loved-redfish-1050887-1795421716	no	1000 (kit kv3_pv_v1-route-outgoing-giraffe-372)	1000	no
+kv3_pv_v12	71409	195730	flops place kv3_pv_v12-place-loved-redfish-2725675-179543627	no	1000 (kit kv3_pv_v12-route-renewed-glider-2836)	1000	no
+kv3_pv_v1n	98532	220405	placed_bins route kv3_pv_v1n-route-renewed-glider-2836871-17952488	no	12753 (kit kv3_pv_v1n-route-renewed-glider-2836)	1200	yes
+kv3_pv_v2	76969	262012	placed_bins route kv3_pv_v2-route-loved-redfish-493996-1795442749	no	1128 (kit kv3_pv_v2-route-loved-redfish-493996)	1000	yes
+kv3_pv_v2n	50800	212471	placed_bins route kv3_pv_v2n-route-outgoing-giraffe-3727575-179524	no	3618 (kit kv3_pv_v2n-route-outgoing-giraffe-37)	1200	yes
+kv3_pv_v3	59695	155727	flops place kv3_pv_v3-place-civil-redfish-3878329-1795422332	no	3842 (kit kv3_pv_v3-place-loved-redfish-301061)	1200	yes
+kv3_pv_v3e	58873	166831	placed_bins place kv3_pv_v3e-place-civil-redfish-3819877-179542218	no	15670 (kit kv3_pv_v3e-place-civil-redfish-38198)	1200	yes
+kv3_pv_v3n	116101	165713	flops route kv3_pv_v3n-route-outgoing-giraffe-3734062-179524	no	4489 (kit kv3_pv_v3n-route-renewed-glider-3154)	1200	yes
+kv3_pv_v4	85245	257458	placed_bins route kv3_pv_v4-route-renewed-glider-636568-1795442935	no	17980 (kit kv3_pv_v4-route-renewed-glider-63656)	1200	yes
+kv3_pv_v4n	86402	154259	flops route kv3_pv_v4n-route-outgoing-giraffe-3739489-179524	no	6906 (kit kv3_pv_v4n-route-renewed-glider-3440)	1200	yes
+kv3_pv_v5	75260	188536	flops place kv3_pv_v5-place-loved-redfish-125989-1795278586	no	7220 (kit kv3_pv_v5-route-outgoing-giraffe-374)	1200	yes
+kv3_pv_v5n	101616	142639	flops place kv3_pv_v5n-place-loved-redfish-1628025-179545878	no	1000 (kit kv3_pv_v5n-route-outgoing-giraffe-37)	1000	no
+kv3_pv_v5ne	78114	140943	flops place kv3_pv_v5ne-place-loved-redfish-1566662-17954586	no	n/a (no placed tap scan)	1000	unknown
+kv3_pv_v6	100546	231880	placed_bins route kv3_pv_v6-route-outgoing-giraffe-2822691-1795440	no	11764 (kit kv3_pv_v6-route-outgoing-giraffe-282)	1200	yes
+kv3_pv_v6n	50235	100445	flops place kv3_pv_v6n-place-outgoing-giraffe-4022408-179540	no	5101 (kit kv3_pv_v6n-route-loved-redfish-33057)	1000	yes
+kv3_pv_v7	47374	168455	flops place kv3_pv_v7-place-loved-redfish-389756-1795279326	no	4713 (kit kv3_pv_v7-route-loved-redfish-979394)	1000	yes
+kv3_pv_v8	101196	150796	flops place kv3_pv_v8-place-renewed-glider-1613965-179531878	no	8710 (kit kv3_pv_v8-route-loved-redfish-239531)	1000	yes
