@@ -14432,12 +14432,17 @@ def on_old_plan(cfg, die, r):
     return bool(cur) and bool(rp) and rp != cur
 
 
-def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True):
+def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False, old_plans_only=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True,
+                     route_held=False, rows=None):
     """COORD 11-18 (cbx_q10 / col_h9_r1): place the structural stop for the plan block of every live row of die/item_glob FIRST (a CANCELLED row relaunches by itself under stops_off), then cancel
     each live row through the wave's own API (grt_arm_cancel: exact wave unit + PLACE client, the running route job's unit or the withdrawal of an unstarted queue row, exact container names
     under the attempt root; run data kept).  -> (stops placed, [(key, item, attempt, status)] cancelled)"""
+    # CANCEL-HELD-1124 (COORD 05:0x: retire 45 S81 ROUTE-HELD rows superseded by c8): route_held=True also takes ROUTE-HELD rows (placed, held at the
+    # review gate: no unit, no queue job -> grt_arm_cancel only marks them CANCELLED); rows = {(event, item, attempt)} limits the cancel to exact rows.
+    sts = ("RUNNING", "LAUNCHING", "ENQUEUED") + (("ROUTE-HELD",) if route_held else ())
     live = [(k, r) for k, r in sorted((st.get("items") or {}).items())
-            if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")
+            if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in sts
+            and (rows is None or (str(r.get("event")), str(r.get("item")), str(r.get("attempt"))) in rows)
             and (not old_plans_only or on_old_plan(cfg, die, r))
             and (not event or str(r.get("event")) == str(event)) and (not attempt or str(r.get("attempt")) == str(attempt))]   # FLEET-WATCH-2000: item names are shared by events; a caller may name one (event, attempt)
     stops, notices = 0, {}
@@ -14484,7 +14489,8 @@ def close_queue_job(AP, rec, why):
 CANCEL_LOCK_WAIT_S = 900
 
 
-def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True):
+def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP", carry=True,
+                       route_held=False, rows=None):
     """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
     Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
     (3) lock again only to write the results into the CURRENT state (CAS: a row whose attempt or live status changed meanwhile is left alone); then the queue jobs are closed (M).
@@ -14502,7 +14508,8 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
             jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
         except (OSError, ValueError):
             jobs = {}
-        stops, done = cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=True, old_plans_only=old_plans_only, event=event, attempt=attempt)
+        stops, done = cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=True, old_plans_only=old_plans_only, event=event, attempt=attempt,
+                                       route_held=route_held, rows=rows)
         if not dry:
             stops = 0
             for k, r in sorted((st.get("items") or {}).items()):
@@ -14528,7 +14535,7 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
         st = load_state(ap_dir)
         for k, r in results.items():
             cur = (st.get("items") or {}).get(k)
-            if cur and cur.get("attempt") == r.get("attempt") and cur.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED", "CANCELLED"):
+            if cur and cur.get("attempt") == r.get("attempt") and cur.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED", "CANCELLED") + (("ROUTE-HELD",) if route_held else ()):
                 for f in CANCEL_COPY_FIELDS:
                     if f in r:
                         cur[f] = r[f]
@@ -21496,6 +21503,8 @@ def main(argv=None):
     cr_.add_argument("--event", default=None, help="only rows of this event (item names are shared by events)"); cr_.add_argument("--attempt", default=None)
     cr_.add_argument("--cls", default="STRUCT-STOP", choices=CLASSES + ("STRUCT-STOP",), help="class written on the cancelled rows (NOPROG: PLAN, so the die owner gets a plan row)")
     cr_.add_argument("--old-plans-only", action="store_true", help="skip rows launched on the die current plan of record (rows on the applied plan must run)")
+    cr_.add_argument("--route-held", action="store_true", help="CANCEL-HELD-1124: also cancel ROUTE-HELD rows (placed, held at review; nothing runs, the row is only marked CANCELLED)")
+    cr_.add_argument("--rows-file", help="CANCEL-HELD-1124: only the exact rows listed, one 'event item attempt' per line (# comments); use --item '*'")
     for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list", "struct-lift"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
         sp_.add_argument("--ap-dir"); sp_.add_argument("--config", help="kit_wave.json (needed to pick the current event for --block current)")
@@ -21595,8 +21604,13 @@ def main(argv=None):
         if not n_state:
             print("cancel-rows: the state file is empty or missing here; run this on the hub (intel2) or pass --ap-dir")
             return 2
+        rows = None
+        if a.rows_file:
+            rows = {tuple(ln.split()[:3]) for ln in Path(a.rows_file).read_text().splitlines() if ln.strip() and not ln.lstrip().startswith("#") and len(ln.split()) >= 3}
+            print(f"cancel-rows: --rows-file {a.rows_file}: {len(rows)} exact row(s)")
         try:
-            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop, event=a.event, attempt=a.attempt, cls=a.cls, carry=not a.per_block)
+            stops, done, skipped = cancel_rows_phased(AP, cfg, ap_dir, a.die, a.item, a.why, a.owner, a.verdict, dry=a.dry_run, old_plans_only=a.old_plans_only, no_stop=a.no_stop, event=a.event, attempt=a.attempt, cls=a.cls, carry=not a.per_block,
+                                                      route_held=a.route_held, rows=rows)
         except RuntimeError as e:
             print(f"cancel-rows: {e}; nothing done")
             return 1

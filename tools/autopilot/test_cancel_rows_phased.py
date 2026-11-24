@@ -69,3 +69,25 @@ def test_cancel_lock_wait_is_long_enough_for_a_tick(tmp_path, monkeypatch):
     monkeypatch.setattr(KW, "grt_arm_cancel", lambda ap, cfg, rec, why, cls, jobs, notices, reclaim=True: rec.update(status="CANCELLED", updated=time.time()))
     KW.cancel_rows_phased(AP, {"dies": {}}, tmp_path, "s81", "t1", "why", "o", "GEOMETRY")
     assert seen and min(seen) >= 600
+
+
+# CANCEL-HELD-1124: --route-held retires ROUTE-HELD rows (exact rows only with rows=); default leaves them alone
+def test_route_held_rows_cancel_only_when_asked_and_only_the_listed_rows(tmp_path, monkeypatch):
+    held = {"die": "s81", "item": "t1", "attempt": 1, "event": "e1", "status": "ROUTE-HELD", "block_sha": "b" * 40, "dir": str(tmp_path)}
+    run = {"die": "s81", "item": "t1", "attempt": 2, "event": "e1", "status": "RUNNING", "block_sha": "c" * 40, "unit": "u2", "dir": str(tmp_path)}
+    other = dict(held, item="t2", block_sha="d" * 40)
+    (tmp_path / KW.STATE_FILE).write_text(json.dumps({"items": {"h": held, "r": run, "o": other}}))
+    (tmp_path / "state.json").write_text(json.dumps({"jobs": {}}))
+    calls = []
+
+    def fake_cancel(ap, cfg, rec, why, cls, jobs, notices, reclaim=True):
+        calls.append((rec["item"], rec["attempt"]))
+        rec.update(status="CANCELLED", **{"class": cls}, updated=time.time(), reason=why)
+    monkeypatch.setattr(KW, "grt_arm_cancel", fake_cancel)
+    st = json.loads((tmp_path / KW.STATE_FILE).read_text())
+    assert KW.cancel_rows_core(AP, {}, st, "s81", "*", "w", "o", "REDESIGN", {}, dry=True)[1] == [("r", "t1", 2, "RUNNING")]   # default: held rows untouched
+    stops, done, skipped = KW.cancel_rows_phased(AP, {"dies": {}}, tmp_path, "s81", "*", "superseded by c8", "COORD", "REDESIGN",
+                                                 carry=False, route_held=True, rows={("e1", "t1", "1")})
+    st = json.loads((tmp_path / KW.STATE_FILE).read_text())["items"]
+    assert calls == [("t1", 1)] and not skipped and stops == 1
+    assert st["h"]["status"] == "CANCELLED" and st["r"]["status"] == "RUNNING" and st["o"]["status"] == "ROUTE-HELD"
