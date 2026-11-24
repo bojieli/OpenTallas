@@ -133,3 +133,11 @@
   - The macro coll_i (514 M4) and coll_o (512 M6) pins span the whole W edge, y 849-1311.
   - So about 1000 nets funnel through that corner of the 65 um W channel.
   Row (by 20:00): re-band coll_i1 along the macro W pin span (bands.coll_i1 rects_um/fill_axis y, midway between pin and macro, every hop under 405 um). If that is insufficient, widen the W channel.
+- 2026-11-23 17:50 PST E PIN-MOVE GEN FIXED + W TWO FORMS 17:5x [HEAD-R18 -> COORD, FABLE-RC-ALL, FLOW-OPS-R3]
+  E: cause of the clock_landings.py:1808 rst_rl_334 error. The 59 tap moves regenerate the hd_lep0N wavefront relay tree (582 -> 571 relays, renumbered), so the literal relay names went stale. Fix START-RAW-REDERIVE (tmp/startraw/start_raw_rederive.py): 30 START stages and 23 landing_local_resets take the nearest same-depth, non-tap relay of the new tree, all within 405 um; 0 unresolved; the 5 exports are verified.
+  Plan epin_r4 af6a9cfa4216 passes ALL: PRE 0, bind/nested PASS, cohort 27/27, LAT 334/334, NATREL 0, G0 0.
+  Census kit hd_lep0N_1123174843: epin_r4 + OT_TAP_ESCAPE_CLEAR_UM=0.30 + OT_TT_SETUP_DESIGN=1, goal grt (running). The r18g escape-only kit 1123172531 runs beside it.
+  W (COORD two forms):
+  (a) wband 014661a6ea33: coll_i1 band moved to y 760-1080.
+  (b) wch4b f570eb1144eb: W channel +69.12 um (65 -> 134 um, about 2x, aiming for corner use <=0.7). Same method as LEP-WCHAN-3; nst4 959.04 -> 889.92; covers both pairs, so the mirror corner too; reset remap 52 rows, exports fix 9 rows.
+  Both are in gate chains now; kits to GRT follow. The mirror corner in the current kit: 2 of 843 entries.
