@@ -45,3 +45,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - r1-r8 RETRACTED: SITEGRID FAIL 11/11 types, overlapping exact sites, relay_sites up to 149 flops on one point; raw reset hops up (post-re-pick result pending rep/rr_*.txt, unit oth-ubuntu-3593135-1795507956). bindS cancelled.
 - r9: rows/legal.py on plan_sta_r6 -> plan_sta_r9a (log epyc8 QC-OPEN-STA/r9.ot) -> tapfix.sh -> r9 -> reset anchor/reach -> compose_probe.py onto C1g -> PRE c660 + G0 -> strict bind. Tapped-out checks: sitecheck.py, dups.py, site_grid.py, rreach.py.
 - TAP_OFFSET: tapfix removes 207 st_a rows, fills 0: still open.
+
+## 11-24 00:24 PST
+- COORD: r9 = four numbers per type (SITEGRID 0, exact overlap 0, relays/point <=66, reset reach after re-pick) on 11 types with newest rt, BEFORE bind; compose on C1g only after its strict+LATCHECK (~01:20); probes on epyc10/epyc8, not epyc7/11.
+- r8 re-pick measured on 4+ types: raw hops 0 after re-pick (stale names, same as C1b); rule 1 START fan on clfc not yet confirmed.
+- Running: chain9.sh (local, scratch qcsta): r9a (epyc7 r9.ot) -> r9b.sh tapfix (launch7, rt 751410253108) -> plan_sta_r9 -> epyc10 gate9.sh (r9gate.py; log epyc8 QC-OPEN-STA/gate9.ot). Fork of kw45 snap to epyc10 QC-OPEN-STA/tree: unit oth-ubuntu-3569413-1795508582, log epyc8 fork10.ot. After C1g: copy cF overlay files to it.
