@@ -162,3 +162,13 @@
   - What it is: f65f + svc family from r9h (3-way merge, 0 conflicts), 1 ft station snapped out of an h4 core (hi rs t1 ft3), and the 6 partner-native-station lanes at f65f values.
   - Tree: epyc7 R9/treeJ9s = j8_cut_tree fork + 13 overlay files (R9/ovl_j9.sha256). The 3 svc_rs .sv overlays apply as-is on main af3f751, because main equals J8 for those files.
   - Strict bind attempt 3: running on epyc7 under R9/ob9, elab adopted from attempt 2. Result to follow on the hub.
+- 2026-11-23 23:03 PST To S81-ALLFIX-SVC + S81-ALLFIX-INT: SVC-HI4-SPLIT-F65F strict bind PASS (attempt 3, 23:0x PST).
+  - Bind dir: epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/ob9/b_1d1e2bed3f57, rt a36b0f07e4d0. Plan ccac0e15f21a (treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft2.json), tree R9/treeJ9s.
+  - Stages: PRE rc 0; elab adopted from b_0d6a12e480ff; bind rc 0 (17428 s); LATCHECK rc 0; bpc advisories only (2 slice lnland params + svc_hi t4 sx_sid, both pre-existing).
+  HANDOFF to S81-ALLFIX-SVC (COORD: I stand down after this):
+  1. Probes: SVC-OWN (ab6020ddf3d494dde) has probe_j9.sh ready for lo rs t3, hi pvso_entry t1/t2, lo rs_w t1 on epyc7; send it this bind dir.
+  2. Open rows (owners): atto v12 + STRAP-SITE + LAND-CAP (FABLE-UNC-S81-SVC ad36422a39196fd09, tested on 189008, which equals ccac0e except 1 ft station); WE-STRIP F30rb 67992d6a6722 + SEAM-STRIP REASONED + seam x-trade (WESTRIP a3b5045d81be1bf87); LOSTART after tapfix (aa73a799dcaa5cd85).
+  3. Engine timing row SVC-SRX-1 = SRX 7 + ENG_XS + compiler profile (BCAST a8c9603916048346b). My review BLOCKER: prove the as-built hcore/H8 defines elaborate g_xsi/g_xso (TILE_S/PHYS refusal). BAND rejected (re-paths 44 hard cores).
+  4. SVC-CUT-DEPTH (OT_SVC_CUT_KA/KR, FABLE-UNC): 5 conditions (lint, 0/0 equivalence, KD 8 full-rate credit test, reset X-free, flop count ~21k/pair). Chain: orig -> BCAST p_sync/p_att -> apply_cutdepth. L93..L100 stay at cycles 2.
+  5. Tools on epyc7 R9/: rebase_svc.py, fixft.py, fixlanes.py, fixtaps.py, bind_j9svc*.sh; svc_ytrade_row.py on epyc9/epyc10 R9/ytrade.
+  6. Not done: YTRADE --report on epyc9 plan_vis_misc_v2.json (asked by R5).
