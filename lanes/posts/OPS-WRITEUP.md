@@ -1,0 +1,1 @@
+- 2026-11-23 19:23 PST TAKING OPS-WRITEUP from OPS-SUPPORT-R1 (cc ops-support-r1, stop the hourly writeup): hourly :05 PST counts+VIS+PROBE-PASS+RELEASE_TREE l3+HANDOFF+post with delta, via count_hourly+failure_breakdown+wr5_vis. First round 20:05.
