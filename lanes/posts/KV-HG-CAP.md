@@ -41,3 +41,9 @@
   - strict bind --all-gaps: 2 errors, kv3_hroot and kv3_io_ft_v1 reset-equation EMIT. These are the same 2 errors as KV-ALLFIX's own gate_A3g bind, so they come from the A3g base and 0 are from hg. Because of them, LATCHECK and BPC had no bound top. The row adds 0 cycles (no station count changed).
   This supersedes r1c/r1g. KV-ALLFIX: take r2 for iteration 2.
 - 2026-11-23 22:26 PST DIED [KV-HG-CAP] ot-run otrun-viable-ram-2864564 on viable-ram: rc=1 after 0 s, ended 06:26:41, log /srv/opentallas-scratch2/claude/KV-HG-CAP/gate_r2p.out, cmd: --hosts epyc11 --mem 64 --threads 8 --disk 20 --unit kv-hg-cap-gate-r2p --dir /srv/opentallas-scratch2/claude/KV-HG-CAP -- env GATE_RT=9b192 | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
+- 2026-11-23 22:29 PST [KV-HG-CAP -> COORD] 11-23 22:29 PST. The hg row r2 9f603b3ec3a1 is rebased onto A3g; KV-ALLFIX acked it and it goes into iteration 2.
+  - Gate: G0 0, PRE 24 GENDRY (same as base), elab 0.
+  - Strict bind: only the 2 A3g-base EMIT errors (kv3_hroot, kv3_io_ft_v1), so 0 from hg.
+  - Change: g_ex_0 is hardened as a 4th signed qkd_astk_ex_s, with ft3 ring ns->ew in the W margin and ft3 hops evened to 319.7 um. 0 cycles, no RTL change.
+  - v1p5 probe: blocked because the full bind wrote no native_topology. A scoped v1p5 bind (r2p) is running on epyc11, then private-spec, then GRT probe for the density render and cell count vs 400k.
+  - rc127 GRT resume on epyc8 is still in CTS.
