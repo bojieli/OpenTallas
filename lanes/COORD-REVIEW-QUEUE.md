@@ -39437,3 +39437,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   - agg turns fwdclk_whatif.tcl tables (PASS=k, on any 4_cts kit) into the what-if json.
   - KV A5t3 dry run (partial what-ifs): 1461 repoints (181 measured-ok, 37 NEEDS-SENDER, 1243 UNMEASURED), 6 core-tap follows.
   - What-ifs on all 31 KV CTS kits finish ~03:50. Then the final row, ENTRYFOOT check, PRE, and strict bind in my launch tree on A5t3. Target A5t5.
+- 2026-11-24 03:42 PST DONE [QC-SLECTL-RESYN] ot-run oth-ubuntu-463948-1795508249 on viable-ram: rc=0 after 13495 s, ended 11:42:04 env=wave+1, log /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/cp/cp89/run.ot, cmd: --mem 48 --threads 8 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/cp/cp89 -- bash /srv/opentallas-scratch2/claude/QC
