@@ -77,3 +77,15 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - rxsb: synthesis uses slang, while LEC gold uses read_verilog -sv by design. Failing points are FP datapath (a_sp, g_h[*].u_h.y/s2_prod/s3_pf).
   - Test run: --gold-frontend slang (epyc9 ml/rxsb_goldslang, tmp/mlechx.sh with EXTRA).
   - If it comes back EQ, the two frontends disagree and I find which one is right. If slang is wrong, that is REAL silicon.
+
+## 20:0x 11-23: HANDOVER to LEC-AUTOFILL (owner order, one job per lane). RELEC keeps only the hc3 reruns + COUNT-REVOKED restores.
+- LEC-MERGEPAIR-FIX is on main 096df89d (attn_tr_x EQ 14920/14920, no hints). Done.
+- AUTO-FILL class is handed over (RELEC no longer touches it):
+  - Patch: epyc9 /srv/opentallas-scratch2/claude/RELEC-1122/tmp/autofill.patch (142 lines, against origin/main 3e1a2180). It adds fill_proposals() + auto_fill() (OT_LEC_AUTO_FILL=0 disables), called right after auto_loaded, plus 2 unit tests. The related tests pass; the full suite was not run; NOT pushed.
+  - Same code: epyc9 RELEC-1122/m6/lec.py (sha 912eca44) and the RELEC clone branch relec-fill (uncommitted). Apply it in your own lane clone.
+  - Method: candidates = gold-only noreset_dropped constants that do not read their own Q. pred = the deepest candidate in D's register support, None = a chain root. Each hint is proved through apply_hints (fill form, LEC-FPREG-6); the hypotheses are restored if the refinement does not converge.
+  - rxsb auto run (no hints) in progress: epyc9 RELEC-1122/ml/rxsb_autofill (docker relec1122-ml-rxsb_autofill, log runs.log MEND rxsb_autofill). Kit: RELEC-1122/rk2/dsfd_su_t_rxsb_c/dsfd_su_t_rxsb_c, netlist run/results/asap7/kr_dsfd_su_t_rxsb_c/base/6_final.v.
+  - Hand-hint test ml/rxsb_fill: 755 -> 729 differs. Only the g_h[1] chain was kept: my hint script mis-keyed d_cut.genblk1.g_one.line[108], because lec drops genblk1; the auto version uses L.gp keys. Other chains still fail: m_l.s1_rows (120), a_sp.*, y; their causes are not traced yet.
+  - Sweep list (dropped no-reset constants): hd_ctl 0ce42cbd (epyc8 ak/.../lec_routed_relec1122, 10728); hd_ctl counted (epyc9 ml/hdctl_counted_fsmhint, 10809); hd_mesh 22dcfc2f (epyc9 ak/..., 8606); slw_hc3 cld86 (epyc8 ml/slw_hc3_cld86_mainlec, 38081); slw_hc3 clccfc (epyc9 ml/slw_hc3_clccfc_mainlec, 153); t40 c01b49be73a8 (epyc8 ml/mp_c01b49be73a8, 63); coll_s (epyc9 ml/coll_s_eco_mainlec, 52); col774 (REAL RTL bug, 12). Also S81 kv_leaf ikw (ARCH-R2, 887 points / 107 regs in ot_hgi_fp4qdq).
+  - Runner: <host>:RELEC-1122/tmp/mlech.sh TAG KIT NETREL MEM LECDIR HOST (docker via ot-run).
+- RELEC continues: hc3 reruns on main 2ebb7b8e: r6_d5fde81d + r6_afda1e9d (epyc8), r6_00112d4e (epyc9). Restore only EQUIVALENT ones. 822d3873e2eb / 827de5708c20 have no kit or netlist anywhere and stay revoked.
