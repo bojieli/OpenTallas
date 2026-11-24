@@ -14,3 +14,8 @@ Rows file: lanes/handoff/S81-OWN-KVLEAF-LEP-rows.json. Other live owners: S81-LE
 5. Do NOT build it if SLICE answers it already holds the station (dedupe).
 ## Next (waiter armed on INT posts for f6b657b60cef strict bind pass)
 - On strict bind PASS: launch kits via ot-run on the bound plan: kv_leaf t3, t5, lepw_mus_C t1 (epyc11 first, then epyc10/9), goal grt; read 5_1_grt.odb + post-hook CTS; post to COORD <150 words.
+
+## UPDATE 11-24 ~01:00 PST: t3 bit set read from RTL, plan diff (b1fix2 vs c8 b0cf0cfccbc9)
+- Path = rb_v_c (ot_s81sl_vn.sv:62 flop) -> sc_nn[7:0] mux/adder (:345) -> u_x.ra[6:0] (ot_s81sl_vn_rf8 u_x, W=128, :354) -> u_x.q[21]. One soft module (vn_b half), 20 stages, 610 um: address-to-read-data path, NOT a cross-module hop. A mid-hop valid station does not shorten it (earlier draft wrong).
+- Group = sc_nn[6:0] (7 address bits) + u_x.q[127:0]. Candidate cut: register sc_nn one edge earlier (+1 cycle on the scale sequencer; LATCHECK + sequence bench). VNB-HARD-1 (u_b hard core) may remove the path: read t3 on the c8 bind first.
+- Plan diff t3, 437 leaf diffs: clock (landing_contract x3, reset_tree_anchor x3, added_taps, taps, tap_um, tap_pair_affinity ADDED, tap_reset_split ADDED), contents, ft_slots, hard_cores, internal_stations, ~410 relay_sites u_lpad_leafdn_i0.q[*]. Census is RTL-level and holds; placement facts need c8 re-confirm.
