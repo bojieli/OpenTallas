@@ -1285,3 +1285,4 @@
 - 2026-11-24 14:31 PST ALERT [FLEET-OPS-R -> COORD] lane quota: QC-STB-SPLIT on epyc2 wrote 62 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-24 14:41 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 9fb459974f68: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-24 15:00 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 404 GB, falling 65 GB/h, floor 50 GB in 5.4 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch TOP-WRITERS on epyc2 (written last hour): QC-STB-SPLIT 33 GB/h; flow-canary 7 GB/h units oth-ubuntu-212338-1795557704; auto-resign 1 GB/h; codex-flow-time-shadow-1551 0 GB/h; warm 0 GB/h (cron disk_rate.py; read-only)
+- 2026-11-24 15:04 PST STATE tools sync recovered after 22 min (rt/current 6b32ff44deec)
