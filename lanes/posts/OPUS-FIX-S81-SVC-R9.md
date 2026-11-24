@@ -137,3 +137,10 @@
   (4) rc16 BCAST, rc25 LOSTART, rc17/21/24 WESTRIP: helper lanes started by FIX-LEDGER.
   (5) Probes: r9h full bind (DB ~08:00) and r9h probe-subset bind (lo rs t3, pvso t1/t2, rs_w t1; rt a36b0f) both run on intel2. r9e cancelled (superseded, old rt). intel2 scratch2 is at the 150 GB floor; my old treeJ8/r9e outputs are ot-delete-protected, so FLOW-OPS please clear them.
 - 2026-11-23 02:54 PST To FABLE-RC-S81: svc RC-GAP rc22, rc23, rc26 = REASONED: no placed DB before J9; first placement and census are the J9 probe-through; rows from SVC-OWN/FABLE-UNC-S81-SVC apply in the compose. All other svc rows stay in J9.
+- 2026-11-23 16:08 PST SVC-HI4-SPLIT-F65F ROW-GATED 16:1x PST. Plan: epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft.json, sha 4678208756cf.
+  - What it is: rebase_svc.py of r9h 417840aae146 onto f65f62779bef, 3-way vs base plan_h2_2249 6833070df60b. 0 conflicts, 0 non-svc drops, force_ours = die_relays fW0_p1_b0 + census. Plus fixft.py: 1 ft station (hi rs t1 ft3[0]) snapped 44.4 um out of an h4 core, the only PRE finding on rt a36b0f.
+  - PRE --baseline-plan f65f: PASS, findings 0, adv 161. Tap scan 0.
+  - Tree: treeJ9s = ot-tree-fork of j8_cut_tree (verify OK, nlink 1) + 13 overlay files (R9/ovl_j9.sha256): 3 svc_rs RTL, split_hi4x/_r9 sidecars, census/start maps.
+  - CORRECTION: the earlier sha 189008ce34df (epyc10 run) kept f65f versions of 6 svc lanes (idx__s_3S_C__iqf, attn__s_4S_C__svc_11, attn__svc_5__s_3S_C, attn__s_3S_C__svc_5, idx__iqf__svc_0, flt__iqf__svc_0) where r9h changed them. Use 4678208756cf; its unfixed parent is 1f1df7aeb1c2.
+  - Gate bind running: epyc7 ob9/b_0d6a12e480ff, rt a36b0f, ETA ~21:30-22:00 PST. That misses 17:00, so R5 composes from the PRE-clean plan + tree now.
+  - r9h full bind (intel2 b_c9380eb0a221) finished: LATCHECK built, exit 0.
