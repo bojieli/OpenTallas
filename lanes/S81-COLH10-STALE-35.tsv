@@ -1,0 +1,36 @@
+item	class	covering_row_or_successor	live_unit	action
+col_h10_r0_p1__t1__cl911743eb	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pv0713a75a	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pv1a6ec9c2	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pv69c7e9a6	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pv6a7ae122	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pva3a8bfd1	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h10_r1__t1__cl95b37463__pvce76611c	b	ALLFIX-S81 hop-S81-col_h10 (COL-H10-REACH_J9 5f8b2104a625, IN-BASE c4 f347fb918fab) + COL-FRAME-HOPFIX c71de97d3e91 (reprices h10_r0_p1/p4)	none	reps relaunch from c8 plan only; no old-plan start
+col_h9_r0_p6__t1__pv0012ba28	a	superseded by B1/c6/c8 plans; col_h9_r0 types HELD until rc72 GRT read (ALLFIX-COL 19:29)	none	hold; relaunch from c8
+dsdv_slice_c1x_C__t1	a	superseded by ALLFIX-SLICE rc4/rc5 LEAF-ALLFIX-1 8ce96cfc7c52 (IN-COMPOSE c6) + hg-S81-LOGIC-DEPTH	none	no relaunch; c8
+dsdv_slice_c1x_C__t5	a	superseded by ALLFIX-SLICE rc4/rc5 LEAF-ALLFIX-1 8ce96cfc7c52 (IN-COMPOSE c6) + hg-S81-LOGIC-DEPTH	none	no relaunch; c8
+dsdv_slice_c3x_C__t1	a	superseded by ALLFIX-SLICE rc4/rc5 LEAF-ALLFIX-1 8ce96cfc7c52 (IN-COMPOSE c6) + hg-S81-LOGIC-DEPTH	none	no relaunch; c8
+dsdv_slice_iq_C__t1	a	superseded by ALLFIX-SLICE rc4/rc5 LEAF-ALLFIX-1 8ce96cfc7c52 (IN-COMPOSE c6) + hg-S81-LOGIC-DEPTH	none	no relaunch; c8
+dsdv_slice_lepe_mu_LP__t2	a	superseded by ALLFIX-SLICE rc4/rc5 LEAF-ALLFIX-1 8ce96cfc7c52 (IN-COMPOSE c6) + hg-S81-LOGIC-DEPTH	none	no relaunch; c8
+gunit__t1	a	superseded by ALLFIX-MULTI combined plan c6/c8 (kit cancelled)	none	no relaunch; c8
+serdes__t14	a	superseded by ALLFIX-SVC SERDES-RING (kit cancelled/held for plan event); c7a/c8	none	no relaunch; c8
+serdes__t1__clb45db5be	a	superseded by ALLFIX-SVC SERDES-RING (kit cancelled/held for plan event); c7a/c8	none	no relaunch; c8
+serdes__t1__clfe1f0815	a	superseded by ALLFIX-SVC SERDES-RING (kit cancelled/held for plan event); c7a/c8	none	no relaunch; c8
+serdes__t2	a	superseded by ALLFIX-SVC SERDES-RING (kit cancelled/held for plan event); c7a/c8	none	no relaunch; c8
+svc_hi_dsdv_svc_pvso_entry__t1	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_pvso_entry__t2	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t1	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t2	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t3	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t4	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t5	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_hi_dsdv_svc_rs__t6	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t1	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t2	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t3	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t4	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t5	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t6	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs__t7	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
+svc_lo_dsdv_svc_rs_w__t1	a	superseded by SVC-FRAME-G0 v3 928680a590ee (hop-S81-svc/B2-R3 STAGED c8, PRE 0/178)	none	no relaunch; c8
