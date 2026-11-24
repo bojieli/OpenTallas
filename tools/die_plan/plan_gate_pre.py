@@ -1868,6 +1868,34 @@ def gendry_kitrtl_types(plan_raw, types):
     return out
 
 
+GENDRY_WAVE_MODES = ("bind", "script", "plan")
+
+
+def gendry_wave_mode(raw, env):
+    """GENDRY-WAVEMODE-1124 (QC-GENDRY-TRIAGE, COORD f8832eb7): -> (kit-RTL mode of the die's wave, how known) so the dry gen takes the
+    path the wave takes.  The wave (kit_wave.py) builds EVERY non-core type of a die whose kit_rtl mode is bind / script from the
+    bound RTL (bind.py kit-rtl, then gen.py phys --kit-rtl), whatever its buses carry; only a die without kit_rtl uses the plan wrapper.
+    $OT_PRE_KIT_RTL_MODE (bind / script / plan) wins; else kit_wave.json dies.<die>.kit_rtl.mode ($OT_KIT_WAVE_JSON or
+    ~/coord/autopilot/kit_wave.json; a listed die without kit_rtl = plan); else, for a named die, bind (every live wave die runs
+    kit_rtl bind or script, and kit_wave.json lives on the hub only); a plan naming no die -> (None, ...) = the per-type classifier."""
+    v = (env.get("OT_PRE_KIT_RTL_MODE") or "").strip().lower()
+    if v in GENDRY_WAVE_MODES:
+        return v, "$OT_PRE_KIT_RTL_MODE"
+    die = (raw.get("die") or {}).get("name") if isinstance(raw.get("die"), dict) else None
+    if not die:
+        return None, "plan names no die"
+    kw = env.get("OT_KIT_WAVE_JSON") or os.path.expanduser("~/coord/autopilot/kit_wave.json")
+    try:
+        dies = json.loads(Path(kw).read_text()).get("dies") or {}
+    except (OSError, ValueError):
+        dies = None
+    if isinstance(dies, dict) and isinstance(dies.get(die), dict):
+        kr = dies[die].get("kit_rtl") if isinstance(dies[die].get("kit_rtl"), dict) else {}
+        m = kr.get("mode") if kr.get("mode") in ("bind", "script") else "plan"
+        return m, f"kit_wave.json dies.{die}.kit_rtl.mode"
+    return "bind", f"default for die {die} (kit_wave.json not readable here; every live wave die runs kit_rtl bind/script)"
+
+
 def gendry_plan_unbound_pads(t):
     """GENDRY-PADBIND-1124: the type's pads that no contents[].bind names (bound only in the bound RTL, e.g. bump_ports)"""
     used = {k for c in t.get("contents") or [] for k in (c.get("bind") or {}).values()}
@@ -1958,6 +1986,11 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")       # the sidecar gendry_cmd passes
     if Path(sc).is_file() and not gendry_native_observer(raw, sc):               # GENDRY-OBSERVER-1123: kit-rtl like the wave
         kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
+    wmode, whow = gendry_wave_mode(raw, env)
+    if wmode in ("bind", "script"):                      # GENDRY-WAVEMODE-1124: a kit_rtl die builds every non-core type from bound RTL
+        kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
+    elif wmode == "plan":                                # a die without kit_rtl: the wave uses the plan wrapper for every type
+        kitrtl = set()
     bind_out = gendry_bind_out(elab_dir) if kitrtl else None
     out = []
     if kitrtl and not bind_out:
@@ -2006,7 +2039,8 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
         out.append(f"WARN GENDRY-UNCHECKED {len(rest)} changed type(s) over the cap {cap} ($OT_PRE_GENDRY_MAX): {', '.join(rest[:12])}")
     nk = len(kitrtl) if not bind_out else 0
     out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry ({len(kitrtl) - nk} kit-RTL from the bound RTL), "
-               f"{nk} kit-RTL classified not generated, {sum(1 for x in out if x.startswith('FAIL'))} failed")
+               f"{nk} kit-RTL classified not generated, {sum(1 for x in out if x.startswith('FAIL'))} failed; "
+               f"wave kit_rtl mode {wmode or 'per-type'} ({whow})")
     return out
 
 

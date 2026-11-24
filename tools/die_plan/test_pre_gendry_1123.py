@@ -224,3 +224,41 @@ def test_kitrtl_src_tree_of_rt_launch_tree(tmp_path):
     assert cmd[cmd.index("--src-tree") + 1] == str(src.absolute())
     (lt / ".rt_launch_ok").write_text(json.dumps({"src": str(tmp_path / "gone")}))
     assert P.gendry_src_tree(lt) == str(lt.absolute())
+
+
+def test_wave_mode_kit_rtl_sends_every_nonhard_type_through_kit_rtl(tmp_path):
+    """GENDRY-WAVEMODE-1124 (QC-GENDRY-TRIAGE, COORD f8832eb7): QC kits always use kit_rtl mode bind, so the dry gen takes bind.py
+    kit-rtl + gen --kit-rtl for every non-hard type, also one whose buses carry bus.leaf (21 QC types false-failed on the plan
+    wrapper); a die without kit_rtl uses the plan wrapper for all; a plan naming no die keeps the per-type classifier"""
+    import json as _j
+    plan = {"die": {"name": "dq"}, "partition_types": {
+        "leafy": {"buses": [{"name": "a", "leaf": "u.a"}]},
+        "hardy": {"hard": True, "buses": [{"name": "b", "leaf": "u.b"}]}}}
+    pn = tmp_path / "plan.json"; pn.write_text(_j.dumps(plan))
+    kw = tmp_path / "kw.json"
+    el = tmp_path / "bind"; el.mkdir(); (el / "bind_report.json").write_text('{"errors": []}')
+    cmds = []
+
+    def run(c, w, t):
+        cmds.append(" ".join(map(str, c)))
+        if "kit-rtl" in cmds[-1] and "bind.py" in cmds[-1]:
+            k = Path(c[c.index("--kit") + 1]) if "--kit" in c else None
+            if k:
+                k.mkdir(parents=True, exist_ok=True); (k / "kit_rtl.f").write_text("")
+        return 0, ""
+    env = {"OT_PRE_GENDRY_TYPES": "leafy,hardy", "OT_KIT_WAVE_JSON": str(kw)}
+    kw.write_text(_j.dumps({"dies": {"dq": {"kit_rtl": {"mode": "bind"}}}}))
+    assert P.gendry_wave_mode(plan, env) == ("bind", "kit_wave.json dies.dq.kit_rtl.mode")
+    out = P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
+    gens = [c for c in cmds if " phys " in f" {c} "]
+    assert any("leafy" in c and "--kit-rtl" in c for c in gens), cmds
+    assert any("hardy" in c and "--kit-rtl" not in c for c in gens), cmds
+    assert "wave kit_rtl mode bind" in out[-1], out
+    cmds.clear()
+    out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)          # no bind OUT: classified WARN, never the plan-wrapper FAIL
+    assert any(x.startswith("WARN GENDRY-KITRTL leafy") for x in out) and not any("leafy" in c for c in cmds), (out, cmds)
+    kw.write_text(_j.dumps({"dies": {"dq": {}}}))                          # die without kit_rtl: plan wrapper for all
+    assert P.gendry_wave_mode(plan, env)[0] == "plan"
+    assert P.gendry_wave_mode(plan, {"OT_KIT_WAVE_JSON": str(tmp_path / "none.json")})[0] == "bind"      # named die, no kit_wave.json
+    assert P.gendry_wave_mode(plan, {"OT_PRE_KIT_RTL_MODE": "plan"})[0] == "plan"
+    assert P.gendry_wave_mode({"partition_types": {}}, env)[0] is None
