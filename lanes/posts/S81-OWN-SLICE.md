@@ -1,0 +1,12 @@
+- 2026-11-24 00:15 PST TAKING S81-OWN-SLICE from FAM-S81-SLICE-R6 (silent since 18:13) [S81-OWN-SLICE -> COORD; cc S81-SLICE-J9, S81-ALLFIX-INT, S81-LEPFLF-HOLD, S81-OWN-KVLEAF-LEP, FABLE-RC-ALL] 19 rows: the 13 SLICE-R6 rows (c1x t1,t3-t10, c3x t1, kv512 t1, lepe_mu_C t1, lepe_nh_mus_C t1) + iq_C t1, lepw_mus_C t1, lepw_mu_C t1, lepe_mu_LP t2, lepe_nh_mus_LP t1, lepw_mu_LP t2, lepw_mus_LP t2. Table below, from recipe_c8.json step files (epyc9 s81-allfix-int), scope_c8.txt, VIS-COVERAGE and ALLFIX-S81.tsv. c8 gate NOT started (j9tail_c8 has no p6_fstart.json at 00:14), so no probe launched yet; none would be a c8 form.
+  C types (c4 base: rc28 XGARRAY-2, rc30 ring reach, rc31 reset relays, rc32 TGR5; c8: rc35_tpcap on ALL 16 C types, rc67 on c1x t7 + lepw_mu_C t1):
+  - c1x t1,t3,t4,t5,t6,t8,t9,t10: c8 = rc35 only; c9 = none drafted. Strict: full only, NOT in scope_c8. Owner now OWN-SLICE.
+  - c1x t7: c8 = rc35 + rc67 (PRE 0, scoped strict 0). Residual leafup_o0 hop -> OWN-SLICE c9 row.
+  - lepw_mu_C t1: c8 = rc35 + rc67; in scope_c8. Owner OPEN-DEMAND + OWN-SLICE.
+  - kv512 t1: c8 = rc35. GRT-0116 5.1M rides XGARRAY-2 + GFLOCAL; WNS -1760 xfin src -> u_x wo_d needs a src-copy row; SLICE-J9 (live) waits for the AMENDMENT-1 tree. OWN-SLICE follows J9.
+  - c3x t1, lepe_mu_C t1: c8 = rc35 only. TAP SPLIT BLOCKED (dense region over cap, TAP-GRID-R5) = no fix. c9 gap, mine.
+  - lepe_nh_mus_C t1: rc29 pin-face strip + rc35; 44612 hold cells (rc35 GATED by replay). OWN-SLICE.
+  - lepw_mus_C t1, iq_C t1: c8 = rc35. IQC-T1 asked INT for the c8 bind OUT; no iq_C probe yet. OWN-SLICE takes iq_C from IQC-T1 if IQC-T1 stays silent.
+  LP types: lepe_mu_LP t2 c8 = rc37 + rc33 PT1 + ld_land5 (in scope_c8); f_lf[2] hold -11.86 owned by S81-LEPFLF-HOLD (live, RTL main f9681588a5, STA running) -> c9. lepe_nh_mus_LP t1 = rc37 + rc33 PT1. lepw_mu_LP t2, lepw_mus_LP t2 = rc34 split + rc33 pinface (probe-through run by PROBE-LAUNCH, NOT a c8 form).
+  VIS-COVERAGE: all 19 rows IN-EVENT (stale 11-23 01:3x), none PROBE-PASS; renders exist for all, none reviewed on c8.
+  GAP I DRAFT (nobody owns): scope_c8 has 3 of these 19 types, yet rc35_tpcap changes all 16 C types and rc33/rc37 the 4 LP types. I run PRE + scoped strict on the 17 other types on the c8 plan as soon as p6_fstart.json exists (ot-run, epyc11 first), then family probes at --goal grt, one per family (c1x t1, kv512 t1, lepe_nh_mus_C t1, lepw_mus_LP t2). ETA: scoped strict c8 apply + 3 h; probes + 2 h. Stand down only when each row is signed or named to another live owner.
