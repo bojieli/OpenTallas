@@ -16,3 +16,9 @@ Job: coll_core rows of lanes/ALLFIX-QC.tsv: (1) coll_core 80 CLK-open reset copi
 - Not a gate: spec tools_rt/hosts set by hand, --allow-bind-stale; plan 1e0c has no strict bind. Semantic toolskew OK.
 - C1e b6211ae9de47 still lacks ORGRP-SYNC (posted ACTION to QC-ALLFIX); applied cleanly = fdfd6e012c39.
 - G0 C1b = C1b+row: FAIL 3, su_c types only. Next: read 5_1_grt.odb setup/hold/CLK-open + full-cause census fe8a2a5, incl rc107 g_pf hotspot and rc109 shr_p_rx_i.
+
+## 11-24 00:3x PST
+- OWNERS-SWEEP: claimed none of the 8 st_a rows; cbf_q00_s2 not mine (asked COORD to name QC-ALLFIX or QC-V4). Matcher ruling relayed to QC-CB-PROBE (acked).
+- C1g 96cce77c1e2f contains ORGRP-SYNC. GRT waiter = ot-wait PID 1838076 epyc8 (6 h).
+- CTS setup census: 9 fails; -201 warm[4]->g_xf[0].red_in, -124 g_xf[0].e_out->xe0_q (~420 um). Scripts epyc8 QC-OPEN-COLL/grtread/sta.sh <4_cts|5_1_grt>, sta_wp.sh. Candidate: move g_xf[0] or +1 stage each way; not built.
+- Seats: 4/49748 unmatched, 1 station missing unexplained.
