@@ -39917,3 +39917,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   - pv_v7e o_vport_W_N_f, nearest tap at the 300 um limit -> KV-OWN-PV (pin move or new tap)
   - sys_SD / sys_SD_v1 cland_up, no tap within 300 um -> KV-ALLFIX, with the RSTREACH sys_SD work
   - 744 UNMEASURED pins: I re-run the what-if on the first A5t3 kits that reach CTS.
+- 2026-11-24 04:41 PST DIED [KV-RSTREACH] ot-run oth-ubuntu-33463-1795524038 on civil-redfish: rc=5 after 75 s, ended 12:41:51, log /srv/opentallas-scratch2/claude/kv-rstreach/a5t/row1.log, cmd: --hosts epyc10 --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kv-rstreach/a5t/launch_ro -- bash /srv/opentallas-scratch2/claude/ | class=TOOL-TRACEBACK cause=IndentationError: unexpected indent
