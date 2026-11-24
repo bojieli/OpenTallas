@@ -1994,6 +1994,45 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
 INST_NAME = re.compile(r"^\s*(?:\(\*[^*]*\*\)\s*)?([A-Za-z_]\w*)\s*(?:#|[A-Za-z_\\][\w$]*\s*[\(\[])", re.M)
 
 
+NETLIST_INST = re.compile(r"^\s*([A-Za-z_]\w*)\s+(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?([A-Za-z_]\w*|\\\S+)\s*\(", re.M)
+
+
+def netlist_roots(ab, base, raw, idx):
+    """DEPTH-NETLIST-1124: {module: {plan type, ...}} of the modules the as-built die netlist(s) (ab["netlist"], .v or .v.gz) instantiate.
+    Most plan type modules (qfd_qc_<type>_part) are bind-generated wrappers that no RTL root defines, so the die netlist is where the
+    bound logic is named (QC C1g: tt_ctlm = qfd_tt_ctlm_..._f5_cpub39_1 is instanced only there).  An instance is attributed to the type
+    of the plan partition with its name, else to every type listing it in contents[] / hard_cores[], else to "<die netlist>"."""
+    import gzip
+    import bind_elab as E
+    if not isinstance(ab, dict) or not ab.get("netlist"):
+        return {}
+    ptype = {q.get("name"): q.get("type") for q in raw.get("partitions") or [] if isinstance(q, dict)}
+    cont = {}
+    for tn, t in (raw.get("partition_types") or {}).items():
+        for c in (t.get("contents") or []) + (t.get("hard_cores") or []) if isinstance(t, dict) else []:
+            if isinstance(c, dict) and c.get("inst"):
+                cont.setdefault(c["inst"], set()).add(tn)
+    out = {}
+    nl = ab["netlist"] if isinstance(ab["netlist"], list) else [ab["netlist"]]
+    for f in nl:
+        fp = Path(f) if Path(f).is_absolute() else Path(base) / f
+        if not fp.is_file() and fp.suffix != ".gz" and Path(str(fp) + ".gz").is_file():
+            fp = Path(str(fp) + ".gz")
+        with (gzip.open(fp, "rt", errors="replace") if fp.suffix == ".gz" else open(fp, errors="replace")) as h:
+            body = E._strip(h.read())
+        named = set()
+        for m in NETLIST_INST.finditer(body):
+            mod, inst = m.group(1), m.group(2).lstrip("\\")
+            if mod not in idx:
+                continue
+            named.add(mod)
+            tys = ({ptype[inst]} if ptype.get(inst) else set()) or cont.get(inst) or {"<die netlist>"}
+            out.setdefault(mod, set()).update(tys)
+        for mod in E.instantiated(body, idx) - named:              # a form the instance regex did not parse: still a root
+            out.setdefault(mod, set()).add("<die netlist>")
+    return out
+
+
 def depth_netlists(tree, plan, asbuilt=None):
     """-> (generated netlist files the plan's RTL reaches, how).  With an as-built (rtl_roots / files / prefer): the modules of the plan's
     types and hard cores, closed over instantiation through bind_elab.module_index; without one: every generated file under <tree>/rtl."""
@@ -2020,10 +2059,17 @@ def depth_netlists(tree, plan, asbuilt=None):
                 txt = ""
             kids[p] = [x for x in set(INST_NAME.findall(txt)) if x in idx]
         return kids[p]
+    seeds = []
     for tn, t in sorted((raw.get("partition_types") or {}).items()):        # per type: which generated netlists it reaches (DEPTH-HELD)
         if not isinstance(t, dict):
             continue
-        todo = [t.get("module")] + [c.get("module") for c in t.get("hard_cores") or [] if isinstance(c, dict)]
+        seeds.append((tn, [t.get("module")] + [c.get("module") for c in (t.get("contents") or []) + (t.get("hard_cores") or [])
+                                                if isinstance(c, dict)]))
+    nroots = netlist_roots(ab, b, raw, idx)                                 # DEPTH-NETLIST-1124: the die netlist's instances are roots too
+    for mod, tys in sorted(nroots.items()):
+        for tn in sorted(tys):
+            seeds.append((tn, [mod]))
+    for tn, todo in seeds:
         mine = set()
         while todo:
             m = todo.pop()
@@ -2035,7 +2081,8 @@ def depth_netlists(tree, plan, asbuilt=None):
                 todo += [x for x in children(p) if x not in mine]
         seen |= mine
     files = sorted(p for p in reach if LD.is_generated(p))
-    return files, f"{len(seen)} module(s) reached from the plan's types", {p: reach[p] for p in files}
+    nl = f" + {len(nroots)} die-netlist instance module(s)" if nroots else ""
+    return files, f"{len(seen)} module(s) reached from the plan's types{nl}", {p: reach[p] for p in files}
 
 
 def _plan_modules(node, hard, soft):
@@ -2078,6 +2125,9 @@ def depth_cover(tree, plan, asbuilt, modules):
         return kids[m]
     hard, soft = set(), set()
     _plan_modules(raw, hard, soft)
+    if isinstance(ab, dict) and ab.get("netlist"):                 # DEPTH-NETLIST-1124: what the die netlist instantiates is in the plan too
+        import bind_rowcheck as RC
+        soft |= set(netlist_roots(ab, RC._base(plan, ab, asbuilt) or str(root), raw, idx)) - hard
     if not (hard or soft):                                  # a plan that names no module: reachability is unknowable, keep the FAIL
         return {}
 

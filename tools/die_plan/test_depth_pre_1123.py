@@ -128,3 +128,33 @@ def test_depth_covered_signed_hard_core_and_not_in_plan_warn(tmp_path, monkeypat
     cov = {x.split()[2].rstrip(":"): x for x in f if x.startswith("WARN DEPTH-COVERED")}
     assert "signed hard core" in cov["qfd_inner_deep"] and "not reachable from the plan" in cov["qfd_orphan_deep"], f
     assert "1 over budget" in f[-1], f
+
+
+def test_depth_follows_the_asbuilt_die_netlist_to_a_bound_netlist(tmp_path, monkeypatch):
+    """DEPTH-NETLIST-1124 (COORD, QC C1g 96cce77c1e2f): the plan type module is a bind-generated wrapper (qfd_qc_<type>_part) no RTL root
+    defines; the bound constructor netlist (TTC F5) is instanced only by the as-built die netlist (.v.gz).  DEPTH must still reach it,
+    attribute it to the partition's type (so a typed hold applies), and depth_cover must not call it "not reachable from the plan"."""
+    import gzip
+    monkeypatch.delenv("OT_PRE_DEPTH_HELD", raising=False)
+    monkeypatch.setenv("OT_KIT_WAVE_JSON", str(tmp_path / "none.json"))
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "f5.sv").write_text(chain(25, "qfd_f5_deep"))
+    (tmp_path / "rtl" / "orphan.sv").write_text(chain(25, "qfd_orphan_deep"))
+    nl = tmp_path / "bind" / "inputs"; nl.mkdir(parents=True)
+    with gzip.open(nl / "die.v.gz", "wt") as h:
+        h.write("module qfd_die ();\n  qfd_rstsync rs (.ck(c));\n  qfd_f5_deep tt (.a(n_a), .clk(c), .y(n_y));\nendmodule\n")
+    ab = tmp_path / "ab.json"
+    ab.write_text(json.dumps({"base": ".", "rtl_roots": ["rtl"], "netlist": ["bind/inputs/die.v.gz"], "top": "qfd_die"}))
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"die": {"name": "qwen_compute"}, "partitions": [{"name": "tt", "type": "tt"}],
+                                "partition_types": {"tt": {"module": "qfd_qc_tt_part", "contents": [{"inst": "u_tt", "module": "qfd_alt_wrap"}]}}}))
+    files, how, reach = G.depth_netlists(str(tmp_path), str(plan), str(ab))
+    assert [Path(p).name for p in files] == ["f5.sv"] and reach[files[0]] == {"tt"}, (files, reach)
+    assert "1 die-netlist instance module(s)" in how, how
+    f = G.check_depth(str(tmp_path), str(plan), str(ab))
+    assert any(x.startswith("FAIL DEPTH qfd_f5_deep:") for x in f) and not any("qfd_orphan_deep" in x for x in f), f
+    monkeypatch.setenv("OT_PRE_DEPTH_HELD", "tt")                           # the typed hold reaches it through the partition attribution
+    f = G.check_depth(str(tmp_path), str(plan), str(ab))
+    assert not any(x.startswith("FAIL") for x in f) and any(x.startswith("WARN DEPTH-HELD qfd_f5_deep:") for x in f), f
+    assert G.depth_cover(str(tmp_path), str(plan), str(ab), {"qfd_f5_deep", "qfd_orphan_deep"}) == {
+        "qfd_orphan_deep": "not reachable from the plan: no plan type, core or glue module instantiates it"}
