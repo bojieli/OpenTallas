@@ -7,3 +7,9 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - ATTCUT: drop on the last 10 svc_hi (adopted INT draft rows/c8_attcut_drop10.DRAFT; row/svctied_attcut_drop10.ops.json 13da27e41f30). ON = functional break (S81-SVC-J9-CUT-ENG-reconcile bench: one-slice cut FAIL, uniform needs +2K dates). c9 plan + row = row/plan_c9_svctied.json 99f7d3042489 (verilog_defines only, 10 types).
 - Running: E9 pre.sh (PRE base c9 vs c9+row, tree amd1_tree, rt 515889f6ef75); E9 c8fix.sh (c8 plan+drop, c8 asbuilt+2, fresh strict elab + scoped strict bind on all svc_* types). Note: c8fix installs 2 new files in INT amd1_tree (plan_svctied_c8_<sha>.json, native_bind/asbuilt_run_allfix2_svctied.json); ot-delete after.
 - Next: c9 scoped strict on E11 c9seal_tree once sealed (or INT folds row into the c9 gate elab), then ROW-REBASED.
+## 15:2x PST results
+- c8fix elab ELAB_RC=0: every kreg/dly cell at its own width; type_defines NONE_NEEDED; in-elab PRE = 26 ANCHORDRY (base-identical, serdes, not mine). Standalone PRE base vs row: identical (only path-label diffs).
+- c8fix scoped strict v1 (E9 c8fix_v1/, asbuilt +2 bb): TIED 486,192 -> 41,584, UNDRIVEN 0, n_errors 201 = TIED only. First bind run OOM-killed at EMIT j=8 (240G); reruns use OT_BIND_EMIT_J=2..3, --mem 220.
+- Residue declared (gen_ties.py, 41 declared_ties rows, bit-exact vs srx_fused formula): tr_x.w_g 41,472 non-fused fill bits =0; kreg.d=1 112 bits = W1 reset relays u_rn/u_rn_a/u_rn_e/u_rs0.
+- ROW v2: plan c9 99f7d3042489 + asbuilt c9 b23d94ffcd6e (row/asbuilt_run_c9_svctied2.json); c8 twin fbd98e560cd9. INT c9s gate runs f0b6 (v1): expect the same 201 TIED; swap v2 in (bind-only).
+- Running: E9 c8fix_bind2.sh (v2 recheck, unit oth-ubuntu-3514937). Then: ROW-REBASED post, svc kit probes (svc_lo rs t3, svc_hi pvso_entry t1), ot-delete my 3 files in INT amd1_tree (plan_svctied_c8_*, native_bind/asbuilt_run_allfix2_svctied{,2}.json).
