@@ -192,3 +192,13 @@ def test_reshape_refits_broken_lane_and_only_adds_stations():
     assert fit["stations"]["t1.ft0"][0] == 4 and fit["stations"]["t1.ft0"][1] > 4 and not fit["unfixable_leads"]
     s1 = new["partition_types"]["t1"]["ft_slots"][0]
     assert s1["stations"] == len(s1["regs_um"]) and all(0 < p[0] < 864.0 + grow for p in s1["regs_um"])
+
+
+def test_stale_die_relays_dropped_when_wavefront_parent_changes(monkeypatch):
+    import reset_tree as RT
+    raw = _plan()
+    raw["reset"] = dict(die_relays={"B": dict(parent="A", site=3, sites_um=[[900.0, 10.0]]),
+                                    "D": dict(parent="C", site=1, sites_um=[[1800.0, 10.0]])})
+    monkeypatch.setattr(RT, "wf_solve", lambda P: dict(parent={"B": ("A", 3, 0.0), "D": ("B", 0, 0.0)}))
+    out = RR.drop_stale_die_relays(raw)
+    assert out == {"D": ["C", 1, "B", 0]} and list(raw["reset"]["die_relays"]) == ["B"]

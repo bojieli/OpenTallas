@@ -830,6 +830,7 @@ def apply(raw, spec, pin_gap=1.2):
     rep["repin_types"] = {tn: {f: sorted(set(v)) for f, v in fs.items()} for tn, fs in sorted(repin.items())}
     rep["ft_slots_rebuilt"] = {tn: sorted(v) for tn, v in sorted(slot_changed.items())}
     rep["port_rows"] = rows
+    rep["die_relays_stale"] = drop_stale_die_relays(raw)
     lim = spec.get("respace_limit", 405.0)
     if lim:
         free = set(reshaped) | {n for n in parts if parts[n]["type"] in slot_changed}
@@ -840,6 +841,33 @@ def apply(raw, spec, pin_gap=1.2):
         if spec.get("path_respace"):
             rep["respace"] = respace(raw, rows, slot_changed, float(lim), bool(spec.get("respace_add", True)))
     return raw, rep
+
+
+def drop_stale_die_relays(raw):
+    """reset.die_relays declare the solved wavefront parent / rst_o site of each child; a re-floor can change the solve
+    (reset_tree: a declaration that no longer matches is an error, never re-used).  Entries whose parent / site differ
+    from reset_tree.wf_solve on the moved plan are dropped here so reach_relay_plan re-plans them.  Returns
+    {child: [old parent, old site, new parent, new site]} (or {"error": ...} when the plan has no solvable wavefront)."""
+    dr = (raw.get("reset") or {}).get("die_relays")
+    if not dr:
+        return {}
+    try:
+        import reset_tree as RT
+        P = S.Plan(raw)
+        P.reset["die_relays"] = {}
+        sol = RT.wf_solve(P)
+    except Exception as e:      # no wavefront reset in this plan form: leave the declarations to reach_relay_plan
+        return {"error": f"{type(e).__name__}: {e}"[:200]}
+    out = {}
+    for child in sorted(dr):
+        d = dr[child]
+        pr = sol["parent"].get(child)
+        if pr is None or [pr[0], pr[1]] != [d.get("parent"), d.get("site")]:
+            out[child] = [d.get("parent"), d.get("site")] + ([pr[0], pr[1]] if pr else [None, None])
+            del dr[child]
+    if not dr:
+        raw["reset"].pop("die_relays", None)
+    return out
 
 
 def fit_free_slots(raw, parts_free, limit, margin=10.0):
