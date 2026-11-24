@@ -1,0 +1,12 @@
+# run from rtl/dsrom_sys/s81_dv/slice/test: yosys -q lec_lep_lfneg.ys  (PASS = "Induction step proven: SUCCESS"); add -DLEC_MUT to read_verilog for the mutant (must FAIL)
+# Sequential LEC of the f_lf status register: REF = one rising-edge register (as built), NEW = falling-edge pre-stage
+# + rising-edge register (OT_S81SL_LEP_LFNEG).  Inputs come from rising-edge launch flops (as in the design: the
+# lnland k_st / k_flt landing registers), modelled by a rising-edge input register in each miter side.
+read_verilog -sv lec_lep_lfneg.sv
+prep -top lf_miter
+async2sync
+clk2fflogic
+flatten
+opt_clean
+setattr -unset init w:*
+sat -tempinduct -prove ok 1 -set-init-zero -seq 1 -maxsteps 24 -show-inputs -verify lf_miter

@@ -1317,7 +1317,21 @@ module ot_s81sl_lep_core #(
         if (rel && hacc && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
       end
     end
+// S81-LEPFLF-HOLD 11-23 (REPAIR-CAP-LEPFLF, lepe_mu_LP__t2 kit FAM-S81-LEPE-4 _1122050440): f_lf[2] D = l1_st[1] is a
+// ZERO-logic leg from the hard landing u_u_lnl1 k_st[1] (ot_s81_mu72_lnland, ck_k on the early-core port clk_c4: launch
+// -16 + 354 ps = 338) to a flop on the clk_t34 leaf (capture 315.6 + 25 unc + 10 hold = 350.5): hold -11.86 ps, wire
+// 0.30 ps (abutted hard pin), 2 x 201 hold buffers gained 0.00 (OT_HOLD_STALL NEEDS_RTL).  Bare selector
+// OT_S81SL_LEP_LFNEG takes the status bits through a falling-edge pre-stage: lf_n samples at the falling edge (half-cycle
+// setup ~ +350 ps; hold is checked against the previous falling edge, ~ +440 ps), lf takes lf_n at the rising edge.
+// lf at rising edge t holds exactly the value it held before (the macro bits launched at t-1 rise): cycle-exact, latency
+// 0, bind K 0.  Absent = the single rising-edge register (netlist unchanged for every other type).
+`ifdef OT_S81SL_LEP_LFNEG
+    reg [3:0] lf_n;
+    always @(negedge clk) lf_n <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+    always @(posedge clk) lf <= lf_n;
+`else
     always @(posedge clk) lf <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
+`endif
     assign f_host = {fh_d, fh_v};
     assign f_ks = {fk_s, fk_d};
     assign f_lf = lf;
