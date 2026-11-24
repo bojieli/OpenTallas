@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""bind_reset_core_class: does the wavefront reset contract (bind_reset.json types[].core_resets) match the bound RTL?
+
+KV-RSTREACH 11-24 (FABLE-RC-KV 01:23 second finding): reset_tree.wf_plan lists every hard-core reset pin as a
+wavefront consumer on its own tap rst_n_t<tap>, from the plan alone.  The binder can instead land that pin on a reset
+spine (asbuilt.reset_spines: the as-built netlist ties it to host.die_rst_n), e.g. the kv3_pv* join cores
+(ot_qwen_tp8_pv_join_t .rst_n = rs_ri_pv_u_g*_j_rst_n_r<k>, a spine tail copy).  The tap is then a dead keep wire and
+every tool that reads bind_reset.json (release order, reach, reset-hold tables) works on a wrong map for that core.
+
+REPORT ONLY: classify each listed core reset by what actually drives the pin in the emitted type RTL; bind_reset.json
+itself is not changed.  -> OUT/bind_reset_core_class.json  {types: {tn: [{inst, pin, tap, rtl_net, rtl_class,
+agrees}]}, mismatches: n, by_class: {...}}.  rtl_class: wavefront (the listed tap rst_n_t<tap>, or a relay copy of it),
+spine (a reset-spine port ri_* / its synchroniser or tail copy rs_ri_*), other (anything else), missing (instance or
+pin not found in the type RTL).
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def _leaf(c):
+    """the instance name in the type RTL: last segment of physical_inst (u_bound.u_pv_u_g0_j -> u_pv_u_g0_j)."""
+    p = c.get("physical_inst") or c.get("inst", "")
+    return re.split(r"[./]", p)[-1]
+
+
+def _resolve(text, c):
+    """(instance, net) for the core reset pin: physical_inst's leaf, else the nearest ancestor instance present in the
+    flat type RTL (a pin inside a bound hard core, e.g. u_bound.u_pvfin.g_sl[0].u_sl -> u_pvfin.rst_n)."""
+    p = c.get("physical_inst") or c.get("inst", "")
+    segs = [re.sub(r"\[[^\]]*\]$", "", x) for x in re.split(r"[./]", p) if x and x != "u_bound"]
+    for inst in reversed(segs):
+        net = _pin_net(text, inst, c.get("pin", "rst_n"))
+        if net is not None:
+            return inst, net
+    return _leaf(c), None
+
+
+def _pin_net(text, inst, pin):
+    """net on .<pin>( ... ) of instance <inst> in a flat Verilog module text, or None."""
+    m = re.search(r"(?m)^\s*\w+\s*(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?" + re.escape(inst) + r"\s*\(", text)
+    if not m:
+        return None
+    depth, i, n = 1, m.end(), len(text)
+    while i < n and depth:
+        depth += {"(": 1, ")": -1}.get(text[i], 0)
+        i += 1
+    body = text[m.end():i - 1]
+    pm = re.search(r"\.\s*" + re.escape(pin) + r"\s*\(\s*([^()]*?)\s*\)", body)
+    return pm.group(1) if pm else None
+
+
+def classify(net, tap):
+    if net is None:
+        return "missing"
+    base = re.sub(r"\[[^\]]*\]$", "", net.strip())
+    if base == f"rst_n_t{tap}":
+        return "wavefront"
+    if re.fullmatch(r"(rs_)?ri_\w+", base):
+        return "spine"
+    return "other"
+
+
+def check(W, type_text):
+    """W = bind_reset.json dict; type_text = {type name: emitted module text}.  -> report dict."""
+    types, by, bad = {}, {}, 0
+    for tn, T in sorted(W.get("types", {}).items()):
+        rows = []
+        for c in T.get("core_resets", []):
+            txt = type_text.get(tn)
+            ri, net = (_leaf(c), None) if txt is None else _resolve(txt, c)
+            cl = classify(net, c.get("tap")) if txt is not None else "missing"
+            ok = cl == "wavefront"
+            bad += not ok
+            by[cl] = by.get(cl, 0) + 1
+            rows.append(dict(inst=c.get("inst"), pin=c.get("pin"), tap=c.get("tap"), rtl_inst=ri,
+                             rtl_net=net, rtl_class=cl, agrees=ok))
+        if rows:
+            types[tn] = rows
+    return dict(mode="report-only", mismatches=bad, by_class=dict(sorted(by.items())), types=types,
+                note="bind_reset.json core_resets vs the pin driver in the emitted type RTL; bind_reset.json unchanged")
+
+
+def main(argv):
+    """bind_reset_core_class.py BIND_OUT [TYPE_MODULE_MAP.json]: reads BIND_OUT/bind_reset.json + BIND_OUT/rtl/*.sv."""
+    out = Path(argv[1])
+    W = json.loads((out / "bind_reset.json").read_text())
+    texts = {}
+    for f in (out / "rtl").glob("*.sv"):
+        t = f.read_text(errors="replace")
+        for mm in re.finditer(r"(?m)^module\s+(\w+)", t):
+            texts[mm.group(1)] = t
+    tmap = json.loads(Path(argv[2]).read_text()) if len(argv) > 2 else {}
+    type_text = {tn: texts.get(tmap.get(tn, tn)) or texts.get(tn + "_part") for tn in W.get("types", {})}
+    type_text = {k: v for k, v in type_text.items() if v is not None}
+    R = check(W, type_text)
+    (out / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")
+    print(f"BIND-RESET-CORE-CLASS report-only mismatches={R['mismatches']} by_class={R['by_class']}")
+    for tn, rows in R["types"].items():
+        for r in rows:
+            if not r["agrees"]:
+                print(f"  {tn} {r['inst']}.{r['pin']} contract tap {r['tap']} rtl {r['rtl_class']} {r['rtl_net']}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
