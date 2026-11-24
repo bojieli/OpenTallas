@@ -418,6 +418,36 @@ def rstfan_original(text, raw):
     return raw, None
 
 
+def _relay_table(text, rtl_dir, tn):
+    """{q: dict(d, depth, xy)} of the bound reset tree.  d / depth come from the emitted .sv relay comments; xy is
+    overlaid with the exact site of <tn>.reset_tree.json when the bind wrote it: the .sv comment rounds to 0.1 um,
+    and a relay sited exactly on a clearance-grown keepout edge rounds INSIDE it (S81 col_h10_r0_p1 rst_rl_286..293
+    at y 773.28 -> 773.3), which made every raw corridor fail 'START endpoint inside keepout'.  A tree json with
+    relays and no .sv comments (the bind no longer writes them) gives the whole table."""
+    by_q = {q: dict(d=d, depth=int(dep), xy=(float(x), float(y))) for _, d, q, dep, x, y in REL.findall(text)}
+    j = Path(rtl_dir) / f"{tn}.reset_tree.json"
+    if j.exists():
+        tree = (json.loads(j.read_text()) or {}).get("tree") or {}
+        for r in tree.get("relays") or []:
+            xy = (float(r["xy"][0]), float(r["xy"][1]))
+            if r["q"] in by_q:
+                by_q[r["q"]]["xy"] = xy
+        if not by_q:
+            by_q = {r["q"]: dict(d=r["d"], depth=int(r["depth"]), xy=(float(r["xy"][0]), float(r["xy"][1])))
+                    for r in tree.get("relays") or []}
+    return by_q
+
+
+def _legal_start(xy, obs, W, H, margin):
+    """the relay site itself when a START corridor may begin there, else the nearest legal point (a site on or just
+    inside a clearance-grown keepout edge); None when the core area has none near it."""
+    g = [(a - CLEAR_UM, b - CLEAR_UM, c + CLEAR_UM, d + CLEAR_UM) for a, b, c, d in obs]
+    x, y = xy
+    if 0.0 <= x <= W and 0.0 <= y <= H and not any(a < x < c and b < y < d for a, b, c, d in g):
+        return tuple(xy)
+    return _core_free_point(tuple(xy), obs, W, H, margin)
+
+
 def raw_type(P, tn, t, rtl_dir, margin, min_um):
     from start_obstacle_path import length, relay_sites
     W, H = t["outline_um"]
@@ -432,7 +462,7 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     if not m:
         raise SystemExit(f"kv_start_corridor_event raw {tn}: no cland_start_raw in {f}")
     raw, rstfan_copy = rstfan_original(text, m.group(1))
-    by_q = {q: dict(d=d, depth=int(dep), xy=(float(x), float(y))) for _, d, q, dep, x, y in REL.findall(text)}
+    by_q = _relay_table(text, rtl_dir, tn)
     if raw not in by_q:
         # KV-RAWFIX 11-15 (rule part 1): cland_start_raw of a type without a START plan is the default ring reset relay
         # u_cland_rst_<bus>; the emitter writes it without a "depth N @ (x, y)" comment, so the chain was one node long
@@ -463,13 +493,24 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
             continue
         occupied = [x for x in bands if not (x[0] <= xy[0] <= x[2] and x[1] <= xy[1] <= x[3])]
         done = None
+        rxy = by_q[raw]["xy"] if raw in by_q else None
+        if rxy is not None and man(rxy, xy) <= max_hop_um() + 1e-6:
+            # S81-OWN-COLH10 11-24: a consumer the raw relay itself reaches in one hop needs no branch (the default
+            # raw pointer is in reach); a branch would need >= 1 copy and can find no legal site this close
+            rep[role] = dict(base=raw, copies=0, direct_um=round(man(rxy, xy), 1))
+            if tuple(xy) != tuple(pin_xy):
+                rep[role]["target_um"] = [round(v, 3) for v in xy]
+            continue
         for k in range(len(chain) - 2, -1, -1):          # deepest base first = fewest copies
             base, n = chain[k], len(chain) - 1 - k
+            bxy = _legal_start(by_q[base]["xy"], obs, W, H, margin)
+            if bxy is None:
+                continue
             try:
-                r = _route(by_q[base]["xy"], xy, obs, W, H)
+                r = _route(bxy, xy, obs, W, H)
             except ValueError:
                 continue
-            st, r = sited(by_q[base]["xy"], xy, r, n, obs, occupied, W, H)
+            st, r = sited(bxy, xy, r, n, obs, occupied, W, H)
             if st is None:
                 continue
             done = (k, base, n, r, st)
@@ -481,7 +522,7 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
         name = "o" if role == "origin" else "fs_" + role.split(":", 1)[1]
         branches.append(dict(name=name, base=base, stages=[dict(original=chain[k + 1 + i], xy_um=st[i]) for i in range(n)],
                              consumers=[role]))
-        pts = [list(by_q[base]["xy"])] + st + [list(xy)]
+        pts = [list(_legal_start(by_q[base]["xy"], obs, W, H, margin))] + st + [list(xy)]
         rep[role] = dict(base=base, copies=n, corridor_um=round(length(r), 1),
                          max_hop_um=round(max(man(a, c) for a, c in zip(pts, pts[1:])), 1))
         if tuple(xy) != tuple(pin_xy):
