@@ -1,1 +1,2 @@
 - 2026-11-23 23:54 PST TAKING HEAD-W-SETUP from HEAD-WEST: three routed setup groups of hd_lep0N_w run 1 (-56.3 fs_q, -54.2 lap_ok, -47.6 tx SRAM odr). cc HEAD-WEST
+- 2026-11-24 00:12 PST DONE [HEAD-W-SETUP] ot-run oth-ubuntu-3559426-1795507854 on loved-redfish: rc=0 after 127 s, ended 08:12:58, log none, cmd: --mem 24 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/HEAD-W-SETUP -- bash q.sh
