@@ -1280,6 +1280,11 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_PINREG_TAPS)] && [string tr
   puts "OT_PINREG_TAPS [dict size $ct_prp] pin-face taps, [dict size $ct_prg] register chunks (re '$ct_prre', chunk $ct_prch), $ct_prmv pin-register sinks moved, $ct_prout other sinks evicted; load: $ct_prload"
 }
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
+# QC-TTC-R2 11-23 (default off, OT_TAP_RELAY_COHORT=1 from clock.tap_relay_cohort): same-site relay chains share one tap
+# (tap_relay_cohort.tcl), after the cap pass and every affinity pass that could split them.
+if {[info exists ::env(OT_TAP_RELAY_COHORT)] && $::env(OT_TAP_RELAY_COHORT) eq "1"} {
+ source [file join [file dirname [info script]] tap_relay_cohort.tcl]
+}
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
 # assembly (gen.py assembly, views/<type>/ot_clock_taps.json) leaves it unconnected, so the spine makes no dead drop.
 if {[llength $ct_taps] >= 2} {

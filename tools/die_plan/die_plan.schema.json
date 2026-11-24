@@ -2282,6 +2282,9 @@
        "tap_landing_seam": {
         "type": "boolean"
        },
+       "tap_relay_cohort": {
+        "type": "boolean"
+       },
        "tap_group": {
         "type": "object",
         "additionalProperties": false,
