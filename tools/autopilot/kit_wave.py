@@ -12464,7 +12464,15 @@ try:
     _rt = (os.environ.get("OT_BIND_PROBE_RT") or "/srv/opentallas-scratch2/claude/rt/current/tools/die_plan") + "/kit_topology.py"      # rt/current/tools/die_plan/kit_topology.py
     src_tool = str(Path(a["src"]) / "tools" / "die_plan" / "kit_topology.py")
     topo = _rt if not a.get("gen_tools_manifest_sha") and os.path.isfile(_rt) else src_tool
-    paths = [a["plan"], topo, a["bind_out"], a.get("asbuilt") or ""]
+    # BINDPROBE-FIX 11-24 (FABLE-FLOW-REVIEW-0750 (4): bf30ce94 re-probed 12x 01:00-07:42): rt/current is re-published every few minutes, so the
+    # tool's size+mtime changed at every flip although its bytes did not; each recheck dropped the verdict and re-ran the full probe
+    # (rows BIND_PREFLIGHT_PENDING for a tick each time).  The tool is hashed by content; the plan / bind / asbuilt walk is unchanged.
+    try:
+        with open(topo, "rb") as _f:
+            h.update(("tool " + hashlib.sha1(_f.read()).hexdigest()).encode())
+    except OSError:
+        h.update(("missing tool " + topo).encode())
+    paths = [a["plan"], a["bind_out"], a.get("asbuilt") or ""]
     n = 0
     for p in paths:
         if not p:
@@ -12636,6 +12644,7 @@ def auto_rebind(AP, cfg, st, die, rows, stale, now=None, rpy=None, rebind=None):
     ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
     if res.get("host"):
         cfg2["dies"][die]["gen_host"] = res["host"]     # the bind probe runs where the fresh bind is
+        cfg2["dies"][die]["_bind_probe_pin"] = res["host"]   # BINDPROBE-FIX 11-24: bind_probe_host never moves it
     for r in todo:
         ii2[r["item"]] = dict(ii2.get(r["item"]) or {}, kit_rtl=dict(kr))
     bad = bind_preflight(AP, cfg2, st, die, todo, now=now, rpy=rpy)
@@ -12663,11 +12672,19 @@ def bind_probe_detached(AP, host, args, now):
     -> the probe result once there (consumed: the file is removed), else None (the unit is started or still running)."""
     key = hashlib.sha1(json.dumps([host, args], sort_keys=True).encode()).hexdigest()[:16]
     dd = Path(getattr(AP, "AP_DIR")) / BIND_PROBE_DIR
-    res, req = dd / f"{key}.json", dd / f"{key}.req.json"
+    res, req, done = dd / f"{key}.json", dd / f"{key}.req.json", dd / f"{key}.done.json"
     try:
         if res.exists() and req.exists() and res.stat().st_mtime >= req.stat().st_mtime:
             got = json.loads(res.read_text())
-            res.unlink()
+            # BINDPROBE-FIX 11-24: the consumed result is kept as <key>.done.json (was unlinked), so "no <key>.json" means delivered, not lost
+            try:
+                os.replace(res, done)
+            except OSError:
+                res.unlink()
+            if hasattr(AP, "log"):
+                AP.log(f"KIT-WAVE BIND-PROBE RESULT {host} {key}: " + (
+                    f"ERROR {str(got.get('error'))[:200]}" if not isinstance(got, dict) or got.get("error")
+                    else f"{len(got.get('stale') or [])} stale of {len(args.get('types') or [])} type(s)"))
             return got
     except (OSError, ValueError):
         pass
@@ -12677,6 +12694,21 @@ def bind_probe_detached(AP, host, args, now):
         rq = {}
     if rq.get("unit") and now - float(rq.get("t") or 0) < BIND_PROBE_WAIT_S and (not hasattr(AP, "unit_active") or AP.unit_active(rq["unit"])):
         return None
+    if rq.get("unit") and hasattr(AP, "log"):
+        # BINDPROBE-FIX 11-24 (bf30ce94: 12 runs rc 0, no line in its log, rows waited): a unit that ended (or overran) without a result for its
+        # request says so before it is started again; a delivered result (<key>.done.json newer than the request) is no failure
+        try:
+            delivered = done.exists() and done.stat().st_mtime >= req.stat().st_mtime
+        except OSError:
+            delivered = False
+        if not delivered:
+            try:
+                tail = " | ".join((dd / f"{key}.log").read_text(errors="replace").strip().splitlines()[-3:])[-300:]
+            except OSError:
+                tail = "no log"
+            AP.log(f"KIT-WAVE BIND-PROBE NO-RESULT {host} {key}: unit {rq['unit']} "
+                   f"{'overran ' + str(int(now - float(rq.get('t') or 0))) + ' s' if now - float(rq.get('t') or 0) >= BIND_PROBE_WAIT_S else 'ended'} "
+                   f"without writing {res.name}; started again; log tail: {tail}")
     dd.mkdir(parents=True, exist_ok=True)
     unit = f"kw-bprobe-{key[:10]}-{int(now) % 100000}"
     req.write_text(json.dumps({"host": host, "args": args, "unit": unit, "t": now, "out": str(res)}))
@@ -12690,12 +12722,55 @@ def bind_probe_cmd(req_path):
     """kit_wave.py bind-probe <req.json>: run the bind probe of one request and write its result (the detached half of bind_probe_detached)"""
     import autopilot as AP
     rq = json.loads(Path(req_path).read_text())
-    got = AP.rpy(rq["host"], PROBE_BIND, rq["args"], timeout=1800)
     out = Path(rq["out"])
-    tmp = out.with_suffix(f".{os.getpid()}")
-    tmp.write_text(json.dumps(got))
-    os.replace(tmp, out)
-    return 0 if isinstance(got, dict) and not got.get("error") else 1
+    n = len((rq.get("args") or {}).get("types") or [])
+    try:
+        got = AP.rpy(rq["host"], PROBE_BIND, rq["args"], timeout=1800)
+    except Exception as e:                               # BINDPROBE-FIX 11-24: a worker crash is a result too (error), never a silent exit
+        got = {"error": f"bind-probe worker: {type(e).__name__}: {e}"[:400]}
+    try:
+        tmp = out.with_suffix(f".{os.getpid()}")
+        tmp.write_text(json.dumps(got))
+        os.replace(tmp, out)
+        ok = out.stat().st_size > 0
+    except OSError as e:
+        print(f"BIND-PROBE NO-RESULT {rq['host']}: cannot write {out}: {type(e).__name__}: {e}", flush=True)
+        return 3
+    if not ok:
+        print(f"BIND-PROBE NO-RESULT {rq['host']}: {out} empty after write", flush=True)
+        return 3
+    if isinstance(got, dict) and not got.get("error") and isinstance(got.get("stale"), list):
+        print(f"BIND-PROBE RESULT {rq['host']} -> {out}: {len(got['stale'])} stale of {n} type(s)", flush=True)
+        return 0
+    print(f"BIND-PROBE ERROR {rq['host']} -> {out}: " + str(got.get("error") if isinstance(got, dict) else got)[:500], flush=True)
+    return 1
+
+
+def bind_probe_host(cfg, die, st=None):
+    """BINDPROBE-FIX 11-24 (COORD: pin bind probes away from epyc10; its scratch2 sat at ENOSPC while every QC probe ran there).  The host the
+    bind probe (and its signature recheck) runs on: the die's gen_host unless it is in bind_probe_avoid_hosts (cfg or die option) or is no
+    gen host this tick (gen_hosts(): drained, work_root low, SRC-INCOMPLETE, spill-marked); else the next of the die's gen_hosts (they hold the
+    die's inputs at the same paths).  The choice sticks per die in st.bind_probe_host while it stays allowed, so the cached signature (taken
+    on that host) is not dropped by host flapping.  A die option _bind_probe_pin (auto_rebind: the fresh bind lives on one host) wins."""
+    d = cfg["dies"][die]
+    if d.get("_bind_probe_pin"):
+        return d["_bind_probe_pin"]
+    gh = d.get("gen_host")
+    listed = [h for h in dict.fromkeys([gh] + list(d.get("gen_hosts") or [])) if h]
+    hs = listed
+    if cfg.get("_otrun_status") is not None:             # the tick's filters need its ot-run status; without it (tests, CLI) the listed hosts stand
+        try:
+            hs = [h for h in gen_hosts(cfg, die) if h] or listed
+        except Exception:
+            hs = listed
+    avoid = set(cfg.get("bind_probe_avoid_hosts") or []) | set(d.get("bind_probe_avoid_hosts") or [])
+    hs = [h for h in hs if h not in avoid] or [h for h in listed if h not in avoid] or hs
+    if not hs:
+        return gh
+    mem = st.setdefault("bind_probe_host", {}) if isinstance(st, dict) else {}
+    h = mem.get(die) if mem.get(die) in hs else (gh if gh in hs else hs[0])
+    mem[die] = h
+    return h
 
 
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
@@ -12734,6 +12809,7 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     for k in [k for k, v in cache.items() if now - float(v.get("t") or 0) > BIND_PREFLIGHT_TTL_S]:
         del cache[k]
     out = {}
+    ph = bind_probe_host(cfg, die, st) if groups else d.get("gen_host")
     # COORD 11-20 (tick time): the groups of one die probe in parallel (thread pool, each rpy has its own ssh timeout); results merge in order
     if len(groups) > 1 and not os.environ.get("OT_BIND_PREFLIGHT_SERIAL"):
         from concurrent.futures import ThreadPoolExecutor
@@ -12741,24 +12817,26 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
 
         def _one(kv):
             sub = {}
-            _bind_preflight_groups(AP, d, st, die, [kv], cache, now, rpy, sub)
+            _bind_preflight_groups(AP, d, st, die, [kv], cache, now, rpy, sub, host=ph)
             return sub
         with ThreadPoolExecutor(max_workers=min(8, len(ordered))) as ex:
             for sub in ex.map(_one, ordered):
                 out.update(sub)
         return out
-    _bind_preflight_groups(AP, d, st, die, list(groups.items()), cache, now, rpy, out)
+    _bind_preflight_groups(AP, d, st, die, list(groups.items()), cache, now, rpy, out, host=ph)
     return out
 
 
-def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
-    """the body of bind_preflight's per-group loop (cache check, signature recheck, probe, verdict) for the given [(key, (g, items))]; fills `out`"""
+def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out, host=None):
+    """the body of bind_preflight's per-group loop (cache check, signature recheck, probe, verdict) for the given [(key, (g, items))]; fills `out`.
+    host = the probe host (bind_probe_host; default the die's gen_host)"""
+    ph = host or d.get("gen_host")
     for key, (g, items) in group_items:
         c = cache.get(key)
         if c and c.get("sig") and now - float(c.get("sig_t") or 0) >= BIND_SIG_RECHECK_S:
             # WAVE-TICK-1119 (COORD 2): the verdict stands while the plan, the bind and kit_topology.py are byte-for-byte what they were (size + mtime walk);
             # a changed or unreadable signature drops the entry and the full probe below runs
-            sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
+            sg = rpy(ph, PROBE_BIND_SIG, g, timeout=120)
             if isinstance(sg, dict) and sg.get("sig") == c["sig"]:
                 c["sig_t"] = now
             else:
@@ -12769,13 +12847,13 @@ def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
             old_c = c if (c and c.get("sig")) else None
             todo_i = sorted(set(items) - set(old_c.get("checked") or ())) if old_c else sorted(set(items))
             if getattr(AP, "KW_DETACH_PROBES", False) and not getattr(AP, "DRY", False) and os.environ.get("OT_BIND_PREFLIGHT_SYNC") != "1":
-                p = bind_probe_detached(AP, d.get("gen_host"), dict(g, types=todo_i), now)
+                p = bind_probe_detached(AP, ph, dict(g, types=todo_i), now)
                 if p is None:                            # PROBE-DETACH-1122: the probe runs in its own unit; rows wait (fail closed), next tick reads it
                     for item in items:
                         out[item] = f"{BIND_PREFLIGHT_PENDING} the bind probe runs detached from the tick; launched once it has judged"
                     continue
             else:
-                p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=todo_i), timeout=600)
+                p = rpy(ph, PROBE_BIND, dict(g, types=todo_i), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
                 if AP:
                     AP.log(f"KIT-WAVE bind preflight {die} UNKNOWN (fail closed, rows not launched): "
@@ -12783,7 +12861,7 @@ def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
                 for item in items:                       # FAILCLOSED-1116: an unreadable probe blocks the launch, never passes it (not cached: retried next tick)
                     out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
-            sg = rpy(d.get("gen_host"), PROBE_BIND_SIG, g, timeout=120)
+            sg = rpy(ph, PROBE_BIND_SIG, g, timeout=120)
             c = cache[key] = {"t": now, "relay": dict((old_c or {}).get("relay") or {}, **(p.get("relay") or {})), "checked": sorted(set(items) | set((old_c or {}).get("checked") or ())),
                               "stale": sorted(set(p["stale"]) | (set((old_c or {}).get("stale") or ()) if old_c and isinstance(sg, dict) and sg.get("sig") == old_c.get("sig") else set())),
                               "sig": sg.get("sig") if isinstance(sg, dict) else None, "sig_t": now}

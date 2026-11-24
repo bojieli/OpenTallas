@@ -1,5 +1,6 @@
 """KV-BIND-REGEN-1 11-12: pre-submit KIT_TOPOLOGY_BIND_STALE check (same kit_topology.bind_matches as prepare-stations)."""
 import json
+import os
 import subprocess
 import sys
 
@@ -136,3 +137,109 @@ def test_detached_probe_pends_then_reads_the_result(tmp_path):
     rq = _j.loads(open(req).read())
     open(rq["out"], "w").write(_j.dumps({"stale": [], "relay": {}}))
     assert K.bind_probe_detached(ap, "epyc10", {"types": ["t"]}, 1002.0) == {"stale": [], "relay": {}}
+
+
+# BINDPROBE-FIX 11-24 (FABLE-FLOW-REVIEW-0750 (4): bf30ce94 re-ran 12x on epyc10, rc 0, nothing in its log, 12 QC + 6 KV rows waited)
+def _bp_ap(tmp_path, active=True):
+    class AP:
+        KW_DETACH_PROBES, DRY, AP_DIR = True, False, tmp_path
+
+        def __init__(self):
+            self.units, self.logs, self.active = [], [], active
+
+        def launch_unit(self, unit, logf, argv):
+            self.units.append((unit, argv))
+            return True
+
+        def unit_active(self, unit):
+            return self.active
+
+        def log(self, m):
+            self.logs.append(m)
+    return AP()
+
+
+def test_bindprobe_fix_consumed_result_is_kept_and_logged_and_a_lost_one_is_loud(tmp_path):
+    ap = _bp_ap(tmp_path)
+    assert KW.bind_probe_detached(ap, "h", {"types": ["t1", "t2"]}, 1000.0) is None
+    rq = json.loads(open(ap.units[0][1][-1]).read())
+    open(rq["out"], "w").write(json.dumps({"stale": ["t2"]}))
+    assert KW.bind_probe_detached(ap, "h", {"types": ["t1", "t2"]}, 1001.0) == {"stale": ["t2"]}
+    key = rq["out"].rsplit("/", 1)[-1][:-5]
+    assert (tmp_path / "bind_probe" / f"{key}.done.json").exists()          # delivered, kept: a missing <key>.json is no lost result
+    assert any("BIND-PROBE RESULT h" in m and "1 stale of 2" in m for m in ap.logs)
+    # the verdict is dropped later and the probe starts again: no NO-RESULT for a delivered request
+    ap.active = False
+    assert KW.bind_probe_detached(ap, "h", {"types": ["t1", "t2"]}, 1002.0) is None and len(ap.units) == 2
+    assert not any("NO-RESULT" in m for m in ap.logs)
+    # that unit ends without writing anything: the next tick says so, then starts it again
+    (tmp_path / "bind_probe" / f"{key}.log").write_text("AP_START 1 u\nAP_RC=0\n")
+    assert KW.bind_probe_detached(ap, "h", {"types": ["t1", "t2"]}, 1003.0) is None and len(ap.units) == 3
+    lost = [m for m in ap.logs if "BIND-PROBE NO-RESULT h" in m]
+    assert len(lost) == 1 and "ended without writing" in lost[0] and "AP_RC=0" in lost[0]
+
+
+def test_bindprobe_fix_worker_writes_a_result_or_fails_loudly(tmp_path, monkeypatch, capsys):
+    import autopilot
+    req = tmp_path / "k.req.json"
+    out = tmp_path / "k.json"
+    req.write_text(json.dumps({"host": "h", "args": {"types": ["a", "b"]}, "out": str(out)}))
+    monkeypatch.setattr(autopilot, "rpy", lambda h, c, a, timeout=0: {"stale": ["b"]})
+    assert KW.bind_probe_cmd(str(req)) == 0 and json.loads(out.read_text()) == {"stale": ["b"]}
+    assert "BIND-PROBE RESULT h" in capsys.readouterr().out
+
+    def boom(*a, **k):
+        raise RuntimeError("ssh died")
+    monkeypatch.setattr(autopilot, "rpy", boom)
+    assert KW.bind_probe_cmd(str(req)) == 1 and "ssh died" in json.loads(out.read_text())["error"]
+    assert "BIND-PROBE ERROR h" in capsys.readouterr().out
+    req.write_text(json.dumps({"host": "h", "args": {"types": ["a"]}, "out": str(tmp_path / "no_such_dir" / "k.json")}))
+    monkeypatch.setattr(autopilot, "rpy", lambda h, c, a, timeout=0: {"stale": []})
+    assert KW.bind_probe_cmd(str(req)) == 3
+    assert "BIND-PROBE NO-RESULT h" in capsys.readouterr().out
+
+
+def test_bindprobe_fix_signature_ignores_a_republished_tool_with_the_same_bytes(tmp_path):
+    rt1, rt2 = tmp_path / "rt1", tmp_path / "rt2"
+    for r in (rt1, rt2):
+        r.mkdir()
+        (r / "kit_topology.py").write_text("X = 1\n")
+    os.utime(rt2 / "kit_topology.py", (1, 1))
+    (tmp_path / "plan.json").write_text("{}")
+    (tmp_path / "bind").mkdir()
+    a = {"src": str(tmp_path), "plan": str(tmp_path / "plan.json"), "bind_out": str(tmp_path / "bind")}
+
+    def sig(rt):
+        r = subprocess.run([sys.executable, "-I", "-", json.dumps(a)], input=KW.PROBE_BIND_SIG, capture_output=True, text=True,
+                           env=dict(os.environ, OT_BIND_PROBE_RT=str(rt)))
+        return json.loads(r.stdout.strip().splitlines()[-1][8:])["sig"]
+    s1 = sig(rt1)
+    assert s1 == sig(rt2)
+    (rt2 / "kit_topology.py").write_text("X = 2\n")
+    assert sig(rt2) != s1
+
+
+def test_bindprobe_fix_probe_host_avoids_listed_hosts_and_sticks(tmp_path):
+    c = cfg(gen_host="epyc10", gen_hosts=["epyc2", "intel1", "epyc10"])
+    st = {}
+    assert KW.bind_probe_host(c, "kv", st) == "epyc10"                       # no avoid list: unchanged
+    c["bind_probe_avoid_hosts"] = ["epyc10"]
+    st = {}
+    assert KW.bind_probe_host(c, "kv", st) == "epyc2"
+    st["bind_probe_host"]["kv"] = "intel1"
+    assert KW.bind_probe_host(c, "kv", st) == "intel1"                       # sticky while allowed
+    c["dies"]["kv"]["bind_probe_avoid_hosts"] = ["intel1"]
+    assert KW.bind_probe_host(c, "kv", st) == "epyc2"
+    c["dies"]["kv"]["_bind_probe_pin"] = "epyc10"                            # auto_rebind: the fresh bind's host wins
+    assert KW.bind_probe_host(c, "kv", st) == "epyc10"
+    # bind_preflight probes (and rechecks the signature) on that host
+    c = cfg(gen_host="epyc10", gen_hosts=["epyc2", "epyc10"])
+    c["bind_probe_avoid_hosts"] = ["epyc10"]
+    hosts = []
+    p = Probe()
+
+    def rec(host, code, args, timeout=600):
+        hosts.append(host)
+        return p(host, code, args, timeout)
+    KW.bind_preflight(None, c, {}, "kv", ROWS, now=100.0, rpy=rec)
+    assert hosts and set(hosts) == {"epyc2"}
