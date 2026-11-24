@@ -230,6 +230,59 @@ def dir_files(d, cap=DIR_MAX_FILES, recursive=True, subdirs=()):
     return out
 
 
+STREAM_DIR, STREAM_CTX = "native_topology.d", "_context.json"
+
+
+def stream_files(d, tn):
+    """BIND-STREAM-SNAP 11-24 (COORD, S81 c8s: KIT-SNAP inputs changed while the snapshot was built, the strict bind still writes
+    its OUT).  For a bind OUT whose bind still runs (native_topology.d/_context.json, no bind_report.json at least as new):
+    {rel: path} = the files fixed before the stream started (elab / head outputs, mtime < _context.json; rtl/ and the stream
+    dir left out) + _context.json + type tn's own record(s) (tn.json, else its split variants tn__*.json) + every file a record
+    hashes, each checked against its record sha256.  A record that is not final=true or of another run / context -> StoreError.
+    -> None when the OUT is not a live stream (the whole dir is taken as before)."""
+    ctx = os.path.join(d, STREAM_DIR, STREAM_CTX)
+    if not tn or not os.path.isfile(ctx):
+        return None
+    ct = os.stat(ctx).st_mtime
+    rep = os.path.join(d, "bind_report.json")
+    if os.path.isfile(rep) and os.stat(rep).st_mtime >= ct:
+        return None                                   # the bind ended: its OUT is final, taken whole
+    csha = sha256_file(ctx)
+    cdoc = jload(ctx)
+    sd = os.path.join(d, STREAM_DIR)
+    names = [f"{tn}.json"] if os.path.isfile(os.path.join(sd, f"{tn}.json")) else sorted(
+        n for n in os.listdir(sd) if n.startswith(tn + "__") and n.endswith(".json"))
+    if not names:
+        raise StoreError(f"KIT-SNAP BIND_STREAM {tn}: no record in {sd} yet (type not emitted): launch when it lands")
+    out = {}
+    for dp, dns, fns in os.walk(d, followlinks=True):
+        rel = os.path.relpath(dp, d)
+        if rel == ".":
+            dns[:] = sorted(x for x in dns if x not in ("rtl", STREAM_DIR))
+        dns.sort()
+        for n in sorted(fns):
+            p = os.path.join(dp, n)
+            if n.endswith(".tmp") or not os.path.isfile(p) or os.stat(p).st_mtime >= ct:
+                continue                              # written by the running bind (other types, end sidecars): not this kit's
+            out[os.path.relpath(p, d)] = p
+    out[os.path.join(STREAM_DIR, STREAM_CTX)] = ctx
+    for n in names:
+        rp = os.path.join(sd, n)
+        r = jload(rp)
+        if r.get("final") is not True:
+            raise StoreError(f"KIT-SNAP BIND_STREAM {n}: record not final (withdrawn by bind errors: {str(r.get('withdrawn'))[:200]})")
+        if r.get("run_id") != cdoc.get("run_id") or r.get("context_sha256") != csha:
+            raise StoreError(f"KIT-SNAP BIND_STREAM {n}: record of another bind run / context")
+        out[os.path.join(STREAM_DIR, n)] = rp
+        for fp, sha in sorted((r.get("files") or {}).items()):
+            fp = os.path.normpath(fp)
+            if not os.path.isfile(fp) or sha256_file(fp) != sha:
+                raise StoreError(f"KIT-SNAP BIND_STREAM {n}: recorded file changed or missing {fp}")
+            if fp.startswith(os.path.normpath(d) + "/"):
+                out[os.path.relpath(fp, d)] = fp
+    return out
+
+
 def scan_refs(path):
     """absolute scratch paths a recipe / json names"""
     try:
@@ -358,8 +411,10 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
                     absent.append({"path": p, "role": inp.get("role"), "why": "directory above lane sub-dir level: not a kit input"})
                     continue
                 try:
-                    lst = dir_files(p, cap=0 if inp.get("required") else DIR_MAX_FILES,
-                                    recursive=not inp.get("flat"), subdirs=tuple(inp.get("subdirs") or ()))
+                    lst = stream_files(p, inp.get("stream_type")) if inp.get("stream_type") else None
+                    if lst is None:
+                        lst = dir_files(p, cap=0 if inp.get("required") else DIR_MAX_FILES,
+                                        recursive=not inp.get("flat"), subdirs=tuple(inp.get("subdirs") or ()))
                 except StoreError as e:
                     if inp.get("required"):
                         raise

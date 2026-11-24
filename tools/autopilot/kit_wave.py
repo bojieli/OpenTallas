@@ -11900,7 +11900,10 @@ def ks_inputs(sp, plan):
     if str(kr.get("asbuilt") or "").startswith("/"):
         ins.append({"role": "asbuilt", "path": kr["asbuilt"], "kind": "file", "required": True, "siblings": []})
     if str(kr.get("bind_out") or "").startswith("/"):
-        ins.append({"role": "bind_out", "path": kr["bind_out"], "kind": "dir", "required": True})
+        ins.append({"role": "bind_out", "path": kr["bind_out"], "kind": "dir", "required": True}
+                   # BIND-STREAM-SNAP 11-24: while that bind runs, only this type's final stream record + the fixed elab inputs
+                   | ({"stream_type": sp["item"]} if sp.get("bind_stream_launch") and (sp.get("kind") or "type") == "type"
+                      and sp.get("item") else {}))
     if str(kr.get("script") or "").startswith("/"):
         ins.append({"role": "kit_rtl_script", "path": kr["script"], "kind": "file", "required": True})
     if str(sp.get("type_overlay") or "").startswith("/"):

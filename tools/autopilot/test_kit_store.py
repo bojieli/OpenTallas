@@ -20,6 +20,72 @@ def put(p, data):
     return p
 
 
+class StreamSnap(unittest.TestCase):
+    """BIND-STREAM-SNAP 11-24: a running bind's OUT snapshots per type (its final record + fixed inputs), sealed by sha"""
+    def setUp(self):
+        import hashlib
+        self.h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+        self.t = os.path.realpath(tempfile.mkdtemp(prefix="kss"))
+        self.root = os.path.join(self.t, "scratch/kit-store")
+        self.o = os.path.join(self.t, "scratch/claude/lane1/out")
+        old = time.time() - 100
+        for n in ("asbuilt.json", "provenance_elab.json", "bind_clock_landings.json"):
+            os.utime(put(os.path.join(self.o, n), n), (old, old))
+        ctx = put(os.path.join(self.o, "native_topology.d/_context.json"), json.dumps({"run_id": "r1"}))
+        os.utime(ctx, (old + 10, old + 10))
+        self.ctx = ctx
+        self.f = put(os.path.join(self.o, "rtl/s81p_ta.sv"), "module s81p_ta; endmodule")
+        put(os.path.join(self.o, "rtl/s81p_tb.sv"), "module s81p_tb;")      # another type, still being written
+        put(os.path.join(self.o, "bind_tied.json"), "[]")                     # an end sidecar of this run
+        self.rec("ta", final=True)
+
+    def rec(self, tn, final=True, run="r1"):
+        put(os.path.join(self.o, f"native_topology.d/{tn}.json"), json.dumps(dict(
+            type=tn, final=final, run_id=run, context_sha256=self.h(self.ctx), files={self.f: self.h(self.f)})))
+
+    def snap(self, tn="ta"):
+        spec = {"inputs": [{"role": "bind_out", "path": self.o, "kind": "dir", "required": True, "stream_type": tn}]}
+        return KS.snap(spec, os.path.join(self.root, "snaps"), self.root, log=lambda *a: None)
+
+    def test_live_stream_takes_only_the_type_record_and_fixed_inputs(self):
+        doc = self.snap()
+        man = json.load(open(os.path.join(doc["dir"], "MANIFEST.json")))
+        rel = sorted(os.path.relpath(p, self.o) for p in man["files"])
+        self.assertEqual(rel, ["asbuilt.json", "bind_clock_landings.json", "native_topology.d/_context.json",
+                               "native_topology.d/ta.json", "provenance_elab.json", "rtl/s81p_ta.sv"])
+        put(os.path.join(self.o, "rtl/s81p_tb.sv"), "module s81p_tb; endmodule")   # the bind keeps writing other files
+        self.rec("tb")
+        self.assertEqual(self.snap()["id"], doc["id"])                               # same closure, same sealed snapshot
+
+    def test_refuses_not_final_other_run_missing_and_changed(self):
+        self.rec("ta", final=False)
+        with self.assertRaisesRegex(KS.StoreError, "not final"):
+            self.snap()
+        self.rec("ta", run="r0")
+        with self.assertRaisesRegex(KS.StoreError, "another bind run"):
+            self.snap()
+        with self.assertRaisesRegex(KS.StoreError, "no record"):
+            self.snap("tc")
+        self.rec("ta")
+        put(self.f, "module s81p_ta; wire x; endmodule")
+        with self.assertRaisesRegex(KS.StoreError, "recorded file changed"):
+            self.snap()
+
+    def test_ended_or_plain_out_is_taken_whole(self):
+        put(os.path.join(self.o, "bind_report.json"), "{}")                    # the bind ended
+        self.assertIsNone(KS.stream_files(self.o, "ta"))
+        self.assertIsNone(KS.stream_files(self.o, ""))
+        man = json.load(open(os.path.join(self.snap()["dir"], "MANIFEST.json")))
+        self.assertIn(os.path.join(self.o, "rtl/s81p_tb.sv"), man["files"])
+
+    def test_kit_wave_sets_stream_type_only_in_stream_mode(self):
+        KW = SourceFileLoader("kw_stream_snap", str(HERE / "kit_wave.py")).load_module()
+        sp = {"item": "ta", "kind": "type", "kit_rtl": {"mode": "bind", "bind_out": self.o}}
+        bo = lambda s: next(i for i in KW.ks_inputs(s, "/srv/x/plan.json") if i["role"] == "bind_out")
+        self.assertNotIn("stream_type", bo(sp))
+        self.assertEqual(bo(dict(sp, bind_stream_launch=True))["stream_type"], "ta")
+
+
 class Store(unittest.TestCase):
     def setUp(self):
         self.t = os.path.realpath(tempfile.mkdtemp(prefix="kst"))
