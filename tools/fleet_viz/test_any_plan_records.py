@@ -53,3 +53,14 @@ def test_record_id_scheme():
     assert APR.base_name('col__a3_0915') == 'col'
     assert APR.record_id('s81', 'c', 'col_a__clx', nodes()) == 's81.t.col_a__clx'   # only the type is a node: that level
     assert APR.record_id('s81', 'x', 'new') == 's81.t.new'
+
+
+def test_archive_element_alias_record_id():
+    # ARCHIVE-ALIAS-1124: the misnamed hd_tile export lands on the hd_tile record, with its unit listed
+    nodes = {"s81_head.t.hd_tile": {"id": "s81_head.t.hd_tile", "die": "s81_head", "level": "type", "name": "hd_tile", "status": {"state": "signed"}}}
+    tsv = ("die\telement\tkind\trecord\tdb\trtx_db\tsize\tsha256\tpack\tmeta\tstatus\tsrc\n"
+           "s81_head\thd_tile_htr_eco1124\tt\tr\t/a/s81_head/hd_tile_htr_eco1124__ax_417e624cd7/6_final.odb\t\t1\ts\t\t\tRTX-FULL-AGI-META\tx\n")
+    out = APR.build(nodes, tsv)
+    assert list(out) == ["s81_head.t.hd_tile"]
+    assert out["s81_head.t.hd_tile"]["archive"]["units"] == ["hd_tile_htr_eco1124__ax_417e624cd7"]
+    assert APR.base_name("hd_tile_htr_eco1124") == "hd_tile_htr_eco1124"   # the alias is per die

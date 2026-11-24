@@ -142,3 +142,15 @@ def test_repeat_run_in_the_hour_still_prints_the_summary(env, capsys):
     out = capsys.readouterr().out
     assert "already holds these counts" in out and "count_hourly: signed any plan" in out
 
+
+
+def test_archive_element_alias_maps_misnamed_export(tmp_path):
+    # ARCHIVE-ALIAS-1124: hd_tile exported as its record name hd_tile_htr_eco1124 is the signed hd_tile, not a retired design
+    al = CH.load_element_alias()
+    assert al.get(("s81_head", "hd_tile_htr_eco1124")) == "hd_tile"
+    cache = {"plans": {"h": {"die": "s81_head", "plan_types": {"hd_tile": "ot_s81hd_tile_p"}, "signed_types": {"hd_tile": {}}}}}
+    assert CH.any_plan_extra(cache, [("s81_head", "hd_tile_htr_eco1124", "t")]) == 0
+    p = tmp_path / "a.tsv"
+    p.write_text("die\tarchived_element\telement\treason\nqc\tx_bad\tx\tr\nshort\n")
+    assert CH.load_element_alias(str(p)) == {("qc", "x_bad"): "x"}
+    assert CH.load_element_alias(str(tmp_path / "missing.tsv")) == {}

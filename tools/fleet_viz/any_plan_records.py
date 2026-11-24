@@ -18,6 +18,7 @@ each archived signed unit becomes one record:
 Sources (read-only): the AGIdock INDEX.tsv text mirrored in archive_index.json (agidock_index_tsv, the archive of record),
 the rtx-pro export listing of the same file (export rows), the design index nodes, the layout store.
 """
+import os
 import re
 
 VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")   # = count_hourly.VARIANT: a re-sign of the same unit, not a new one
@@ -28,14 +29,35 @@ LABEL = {'current': 'current plan', 'resign': 'superseded: older block of a curr
          'retired': 'superseded: retired plan (name not in the current plan)'}
 
 
-def base_name(el):
-    return VARIANT.sub('', AX.sub('', el or ''))
+def load_element_alias(path=None):
+    """(die, archived element) -> element from tools/autopilot/archive_element_alias.tsv (ARCHIVE-ALIAS-1124): an archived unit exported under a
+    wrong element name maps to its real design; the append-only INDEX itself is never edited.  Missing / unreadable file -> {}."""
+    p = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "autopilot", "archive_element_alias.tsv")
+    out = {}
+    try:
+        lines = open(p).read().splitlines()
+    except OSError:
+        return out
+    for ln in lines[1:]:
+        f = ln.split("\t")
+        if len(f) >= 3 and f[0] and f[1] and f[2]:
+            out[(f[0], f[1])] = f[2]
+    return out
+
+
+ALIAS = load_element_alias()
+
+
+def base_name(el, die=None):
+    el = AX.sub('', el or '')
+    el = ALIAS.get((die, el), el)
+    return VARIANT.sub('', el)
 
 
 def record_id(die, kind, el, nodes=None):
     """<die>.<t|c>.<base element>; when only the other level is a node of the current plan, that one"""
     k = kind if kind in ('t', 'c') else 't'
-    b = base_name(el)
+    b = base_name(el, die)
     nid = '%s.%s.%s' % (die, k, b)
     if nodes is not None and nid not in nodes:
         o = '%s.%s.%s' % (die, 'c' if k == 't' else 't', b)
@@ -67,7 +89,7 @@ def build(nodes, index_tsv, export_rows=None, store_entry=None):
         n = nodes.get(rid)
         st = ((n or {}).get('status') or {}).get('state')
         plan = 'current' if st == 'signed' else 'superseded'
-        why = 'current' if plan == 'current' else ('resign' if n or (die, base_name(el)) in names else 'retired')
+        why = 'current' if plan == 'current' else ('resign' if n or (die, base_name(el, die)) in names else 'retired')
         r = out.get(rid)
         if r is None:
             r = out[rid] = dict(id=rid, die=die, level='core' if rid.split('.')[1] == 'c' else 'type', name=rid.split('.', 2)[2], plan=plan,

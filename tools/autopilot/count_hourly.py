@@ -35,6 +35,24 @@ VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")   # AUTO-EXPORT / re-sign
 INDEX_DIES = {die for die, _ in DIES}
 
 
+def load_element_alias(path=None):
+    """(die, archived element) -> element from tools/autopilot/archive_element_alias.tsv (ARCHIVE-ALIAS-1124): an archived unit exported under a
+    wrong element name maps to its real design; the append-only INDEX itself is never edited.  Missing / unreadable file -> {}."""
+    p = path or os.path.join(os.path.dirname(os.path.abspath(__file__)), ".", "archive_element_alias.tsv")
+    out = {}
+    try:
+        lines = open(p).read().splitlines()
+    except OSError:
+        return out
+    for ln in lines[1:]:
+        f = ln.split("\t")
+        if len(f) >= 3 and f[0] and f[1] and f[2]:
+            out[(f[0], f[1])] = f[2]
+    return out
+
+
+
+
 def index_rows(index_json):
     """-> [(die, element, kind)] of the ARCHIVED rows of the AGIdock INDEX.tsv the counter mirrored in agidock_archive_index.json"""
     try:
@@ -65,7 +83,9 @@ def any_plan_extra(cache, rows, by_die=False):
         for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}) + list(e.get("signed_designs") or {}):
             sk.add(x)
     dfr, ret = set(), set()
+    alias = load_element_alias()
     for die, el, kind in rows:
+        el = alias.get((die, el), el)
         base = VARIANT.sub("", el)
         sk, pk = signed_k.get(die, set()), plan_k.get(die, set())
         if el in sk or base in sk:
