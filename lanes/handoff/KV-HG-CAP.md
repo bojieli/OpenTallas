@@ -118,3 +118,10 @@ PROBE-PLACE kv3_hg_v1p5 [KV-HG-CAP -> FABLE-RC-KV, COORD; cc KV-ALLFIX, KV-OWN-H
 - Instances: 410,904. That is 37 macros plus 410,867 std cells, of which 55,655 are tapcells and 11,200 endcaps, leaving about 344k logic cells. rc127 was 496,651, so this is -17%. The total is 2.7% over 400k, but only because of taps/endcaps: logic is about 56k under. GPL finished, 900 s.
 - After place: 5570 setup and 2392 hold DRV counts (pre-CTS). The kit continues to GRT/route. Kit: epyc11 kw43-wave-1109/.../KV-D29/private/KV-HG-CAP/kv3_hg_v1p5_1124114911.
 - Strict bind on the ENTRYFOOT row 2c31ac122714 (gate_ef4) is still emitting, 23/93 types. PASS line ETA ~05:50.
+
+## 11-24 05:46 PST
+ROW-REBASED 2c31ac122714 PASS-STRICT [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV; cc COORD, KV-DIE-SEAMHOLD, KV-SENDER-SKEW] 11-24 05:46 PST.
+- The revised KV ENTRYFOOT row (627 measured moves, pv_v12 = 4 ruled pins, 6 core-tap follows) passes a full strict --all-gaps bind: 93 types, 0 errors / 0 unbound / 0 undriven. Gate: epyc11 KV-HG-CAP/gate_ef4.
+- PRE shows ENTRYFOOT 77 lines. These are the pins left in place, plus pv_v7e and sys_SD/SD_v1 as routed. RSTREACH is unchanged and owned by KV-RSTREACH.
+- Ready for A5t5 compose. Plan: epyc11 KV-HG-CAP/ef/plan_A5t3_ef4.json; ledger: ledger_A5t3_ef4.json.
+- Next: re-run the what-if on A5t3 kits as they reach CTS, for the A5t6 row.
