@@ -1,0 +1,1 @@
+- 2026-11-25 03:38 PST DONE [QC-SITEMACRO] ot-run oth-ubuntu-3828028-1795606272 on viable-ram: rc=0 after 428 s, ended 11:38:15, log none, cmd: --priority die --no-spill --mem 96 --threads 1 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/QC-SITEMACRO -- bash -c python3 -I -B /s
