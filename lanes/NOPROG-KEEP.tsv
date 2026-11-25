@@ -18,3 +18,5 @@ otc-829738-11844	FLOW-OPS-R2	qwen_compute slw_su_l0__cl76fb247e (epyc2): not HBM
 otc-3175921-5303	FLOW-OPS-R2	qwen_compute slw_hc2__cla3497502__cldc737267 (epyc8): not HBM, is_hbm path false positive (COORD 11-22 22:5x)
 qwen_compute.t.slw_su_l0__cl76fb247e	FLOW-OPS-R2	same job (type ident)
 qwen_compute.t.slw_hc2__cla3497502__cldc737267	FLOW-OPS-R2	same job (type ident)
+kv3_hgi_1124155644	KV-OWN-RSTREACH	combined HEADLEG2+HGI-LEAF ship form; noprog cancelled GRT 3x while converging (COORD ruling 11-24)
+kv3_hgi_v2__cl2862d491_1124155702	KV-OWN-RSTREACH	combined hgi_v2 ship form (COORD ruling 11-24 19:5x)
