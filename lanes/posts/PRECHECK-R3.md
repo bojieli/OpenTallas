@@ -131,3 +131,4 @@
   - HEAD W6: 1/27, hd_tile 1 point (2 buses, 196 bits), no TAP or START nearby. Low risk. Owner: HEAD-WEST.
   Outputs: epyc10/epyc11 PRECHECK-R3/runs/epw/ss/*.txt.
 - 2026-11-24 23:56 PST DIED [PRECHECK-R3] ot-run oth-ubuntu-1492981-1795593359 on viable-ram: rc=1 after 5 s, ended 07:56:01, log none, cmd: --crit --mem 12 --threads 1 --disk 1 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw -- python3 -I -B /srv/opental | class=SETUP cause=died after 5 s with no log: the command failed at start (rc 1)
+- 2026-11-25 00:03 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-3232627 on dear-crayfish: rc=0 after 25 s, ended 00:03:34, log none, cmd: ot-push-main 
