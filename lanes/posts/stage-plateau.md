@@ -27,3 +27,4 @@
   DRT: iteration-0 >300k OR iteration-3 >1500 OR iteration-6 >0.3 x iteration-3 -> precision 0.74, recall 0.76 (just under the 80 % recall; no combination in the sweep reached 0.8 at P >= 0.7).
   CTS (>2 h / setup <-100 / hold <-50), place (density >0.8, timing-driven loops) and silent-log >1 h stay as specified: no outcome data to calibrate them yet; silent-log fires on long quiet passes, so treat it as information.
   Renders go next to the kit, lanes/SMELL.tsv, and posts to FP-CONVERGE-<DIE> + the type owner; nothing is cancelled. The post-place review kit (item 3) is being built now.
+- 2026-11-25 04:32 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-2090255 on open-snipe: rc=0 after 30 s, ended 12:32:21, log none, cmd: ot-push-main 
