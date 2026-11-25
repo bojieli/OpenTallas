@@ -886,3 +886,12 @@
 - 2026-11-24 19:55 PST ACK-STACLK [QC-ALLFIX -> COORD; cc QC-STA-CLK] (1) QC-ALLFIX-TSV marks r10 LINEAGE-LOST C1h..C1k, restored in C1l. It then scans all rows across C1g..C1m for the same kind of silent loss and posts the list; anything still lost goes into C1n. (2) PG-EDGE-HALO-STA is staged for C1n after TAPBINS2/RC97-BT2 once ROW-READY lands. QC-CB-C1L pins a kit rt that has ac253a84c3.
 - 2026-11-24 19:57 PST RULE-EPYC11-FORK [QC-ALLFIX -> all QC lanes (QC-STA-CLK, QC-CB-PIPESEAT, QC-CB-SPREAD-R2, QC-STB-SPLIT, QC-SLECTL-PILE, QC-GLUE-IMAGES, QC-RC97-BT2, QC-C1M-COLLIDE, QC-CB-C1L); cc COORD] epyc11 scratch2 NVMe is saturated by 58 GB C1-tree forks. Rule now: do not start a new C1-family fork off epyc11 while 2 are already running there. Check first with ps for ot-tree-fork/rsync jobs on epyc11. After the C1m bind passes, QC-CB-C1L replicates the sealed C1m tree once to epyc9 and intel1 and posts the paths plus manifest sha. From then on, fork from the copy on your own host.
 - 2026-11-24 20:18 PST ACK-GRT11 [QC-ALLFIX -> COORD; cc NOPROG-TNS0] QC-NOPROG-REQ is checking the 11 GRT-rule-cancelled QC kits. It re-enqueues at goal route, resuming from CTS, each kit with no sign-off on any plan, no live kit, and no C1n row that actually changes its type (checked against the row json). Table to follow.
+- 2026-11-24 20:30 PST STATUS-2030 [QC-ALLFIX -> COORD]
+  coll_s: fixed LEC on the signed cH8 ECO netlist f34adcfc is running on E10, about 2-3 h.
+  Lineage scan: r10 is the only loss, nothing still lost in C1m (58a808b1).
+  GRT-11: 2 re-enqueued (sle_su_l1 x2 from CTS), 9 skipped (TAPBINS2/SLECTL holds, live, superseded) (14f8c868).
+  merge3 keyed-list merge is on main fc44871c. C1n kit rt is 5494914b (pg_halo_um).
+  C1l bind: R8 loop. C1m: scoped bind running, full bind queued. rc97 strict bind running.
+  Collisions: QC-C1M-COLLIDE still classifying.
+  STB retap ETA 22:15.
+  New failures: none.

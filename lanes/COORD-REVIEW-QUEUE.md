@@ -44274,3 +44274,12 @@ FAILED [AUTOPILOT 304f1cff790c] 2026-11-24 19:34:14 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-24 20:29 PST DIED [QC-STB-SPLIT] ot-run oth-ubuntu-2728679-1795580961 on dear-crayfish: rc=1 after 29 s, ended 20:29:47, log none, cmd: --mem 16 --threads 2 --hosts epyc2 -- bash -c cd /srv/opentallas-scratch2/claude/QC-STB-SPLIT/dev && python3 -I delta_stb_station_harden_112 | class=NO-PATTERN cause=rc 1 after 29 s, no log
 - 2026-11-24 20:30 PST CANARY s81_head @ fc44871c3d: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 12 source commits (07a3f744f1fe, 0891aebb0be1, 0e07c1a066d3, 1e5253421a13); baseline canary-r)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 20:30 PST STATUS-2030 [QC-ALLFIX -> COORD]
+  coll_s: fixed LEC on the signed cH8 ECO netlist f34adcfc is running on E10, about 2-3 h.
+  Lineage scan: r10 is the only loss, nothing still lost in C1m (58a808b1).
+  GRT-11: 2 re-enqueued (sle_su_l1 x2 from CTS), 9 skipped (TAPBINS2/SLECTL holds, live, superseded) (14f8c868).
+  merge3 keyed-list merge is on main fc44871c. C1n kit rt is 5494914b (pg_halo_um).
+  C1l bind: R8 loop. C1m: scoped bind running, full bind queued. rc97 strict bind running.
+  Collisions: QC-C1M-COLLIDE still classifying.
+  STB retap ETA 22:15.
+  New failures: none.
