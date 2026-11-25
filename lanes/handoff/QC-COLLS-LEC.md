@@ -43,3 +43,9 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
 - Coverage gap: only fault_cause[3] (rv && !ev) and [4] (phy_fault) fire; ev / rx_v / crc / slot / unread / collision / cmd_ov
   never: core tokens enter via ot_dp_clk_landing_cas CDCs that port-level stimulus does not open. Next: block-level witness.
 - H3 unit oth-ubuntu-3820122-1795566900 still running (r/H3_esc).
+
+## 19:51 DONE: H3 EQUIVALENT 50800/50800 (posted hub 3c77cee)
+- attempt_8 base 6_final.v sha d0b7a92bf6c9; lec.py main e52216b703b; OT_LEC_ESCALATE_C=50000000 S=10800; seed 0; no hints.
+- record E10 QC-COLLS-LEC/r/H3_esc/lec/lec.json sha 9f168fc9686a. Asked COORD/RELEC-R2 to lift coll_s COUNT-REVOKED/RECHECK.
+- Remaining (optional, other owners): fixed-lec on QC-ALLFIX cH8 coll_s netlist after its sign-off (needs ESCALATE 50M/10800);
+  rerun coll_core UNPROVEN records (opus-fix-qc-coll-r3) with same settings.
