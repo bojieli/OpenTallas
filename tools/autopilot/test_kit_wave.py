@@ -773,6 +773,9 @@ class Step(unittest.TestCase):
         self.enterContext(mock.patch.object(KW, "reload_step", side_effect=AssertionError("fixture launched the scheduler CLI")))
         home = Path(self.enterContext(tempfile.TemporaryDirectory()))
         self.enterContext(mock.patch.object(Path, "home", return_value=home))
+        # KV-NOADVANCE 11-25: COUNTER_CACHE is bound at import (the real ~/.local/state/fleet-viz cache), so the Path.home patch never reached it and a host
+        # whose real sign-off counter lists kv3_phy_v1 / kv3_hroot / kv3_io_cor_v1 as signed launched nothing on tick 2 (test_launch_collect_enqueue_and_classify)
+        self.enterContext(mock.patch.object(KW, "COUNTER_CACHE", home / "no_counter_cache.json"))
 
     def test_injected_step_uses_its_loaded_revision(self):
         with tempfile.TemporaryDirectory() as d, mock.patch.object(KW, "IMPORTED_SCHEDULER_CODE", "fixture-import-id"):
