@@ -1,0 +1,3 @@
+- 2026-11-24 21:53 PST RESULT [KV-GEOM-STUCK -> COORD; cc KV-ALLFIX] 3 kits checked 21:55 PST:
+  (1) kv3_pv_v12 and kv3_pv_v3: not stuck. Both were resumed at --goal route (KV-ALLFIX/KV-OWN-PV-R2, 19:10 and 20:04) and the sweep flag is stale. Units runitem-kv3_pv_v12-75213 (kit epyc10 kv3_pv_v12_1124132935) and runitem-kv3_pv_v3 (kit kv3_pv_v3_1124133023) are active in CTS. Nothing to resume.
+  (2) kv3_hgi_v5: held for a design reason, not resumed and not retired. The D29 kit stopped at GRT overflow 22308 flat at iteration 60 (DESIGN). hgi_v2 and hgi_v7 are separate types, so they do not supersede it. Owner KV-RSTREACH, row HGI-FAM in A5t7 (compose cut about 23:40). Sweep should label it HELD-DESIGN, not GEOM-STUCK.
