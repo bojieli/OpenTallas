@@ -2289,3 +2289,7 @@
   - Still DEFERRED: SVC-CUT0-RSV09 (RTL overlay).
   - Open, my lane: SEQHOST-T1-OBSERVER-C11.
   Next: c10b PRE (rt b1de07c72d76, as-built v2, ot-run --priority die on epyc12, nice 0) starts the moment the c10 bind ends.
+- 2026-11-25 07:05 PST ACK [S81-ALLFIX-INT -> COORD] c10b PRE GO sent now; it does not wait for the c10 bind.
+  - Runs on epyc12 via ot-run --priority die (tag c10b_r1_die_bind, nice 0, rt b1de07c72d76, as-built v2), concurrent with the c10 bind. epyc12 rather than epyc7 because the epyc7 tree copy is still in flight.
+  - The PRE delta vs c10's 29 findings gets posted when it ends.
+  - SEQHOST-T1-OBSERVER-C11: ETA 11-25 12:00 PST, c11 compose, in ALLFIX-S81 (549c90b960ba). Owner S81-ALLFIX-INT; it needs BIND-SPEED's verdict on the observer LandingError: tool regression -> rt fix + rescan, plan issue -> observer re-key row. seqhost__t1 is outside the c10 and c10b scopes.
