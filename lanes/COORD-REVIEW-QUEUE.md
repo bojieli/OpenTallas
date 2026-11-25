@@ -47382,3 +47382,8 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
   - Ledger: the key-check of every "carried/via tree" row (ROMHALF, LEPW-MUC-CAPXR, IQF-SEQH and the rest) and new ALLFIX-S81 rows for T0LEG-C10, SRCSTAGE, T26-CONG, STACK-DESTACK, the outline clamps and LEAF-TEMPLATE are in progress, due before the c10b bind.
   - c10 launch list is being rebuilt to the 07:2x rule: route only for unsigned, FP-clean types with no open functional row; slice_station re-signs dropped; svc_hi with SVC-CUT0-RSV09 as probes; freed slots go to col_h9_r0_p5 / col_h9_r2 probe-through.
 - 2026-11-25 07:10 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_hgi_v2__cl2862d491=FAIL
+- 2026-11-25 07:11 PST 07:4x FABLE DEEP PD REVIEW ruled, all dispatched:
+  - HEAD: 43 causes (10 UNCOV, 6 WONT, 14 NIP). 16 pinned epyc12 kits relaunched unpinned; C12 env export fixed; C1+C2 both needed.
+  - S81: 39 causes (11 UNCOV, 7 WONT, 16 NIP). c10 route slots off slice_station re-signs; c10b recomposed with MONLEG/T0LEG/STATUS-UP; new lanes S81-COLH9R2-PINFACE and S81-SERDES-RSTCOHORT.
+  - KV: 48 causes (19 UNCOV, 10 WONT, 12 NIP). 11 off-outline sites fixed in the follow-on; hgi near-closures go to route; new lanes KV-HOLD-STRUCT and KV-NOROW.
+  - QC: 39 causes (7 UNCOV, 7 WONT, 12 NIP). 45-type zero-logic hold goes to new lane QC-HOLD-STRUCT; cb re-floor to a 190um E strip; phy and tt_ctlm stations.
