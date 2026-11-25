@@ -2,7 +2,7 @@
  "schema": "opentallas.zl_hold_class.v1",
  "owner": "QC-HOLD-STRUCT",
  "date": "2026-11-25",
- "note": "Zero-logic shift-seam classes of the QC hold-only kits (census tools/die_plan/zl_hold_class/census_qc_hold.tsv). Regexps match the CAPTURE register instance name (Tcl regexp, ERE).",
+ "note": "Zero-logic shift-seam classes of the QC hold-only kits (census tools/die_plan/zl_hold_class/census_qc_hold.tsv). Regexps match the CAPTURE register instance name (Tcl regexp, ERE). v2 11-25: classes added from the report-only name census (tools/die_plan/zl_hold_class/census_zlp_report.tsv); a class only restricts, the zero-logic test of zl_hold_pad.tcl still decides every pad, so enable flops (g_t) are listed but never padded.",
  "classes": {
   "pad_line": "\\.u_pd[0-9]+_[A-Za-z0-9_]+\\.(r|q)",
   "lpad_line": "\\.u_lpad_[A-Za-z0-9_]+\\.(r|q)",
@@ -10,7 +10,14 @@
   "relay_wd": "\\.u_u_x[hl][0-9_]*\\.(wo_d|wd|wo_ctl|wctl)[^A-Za-z_]",
   "rrl": "\\.u_rrl_[0-9a-z_]+[/.]",
   "ist_bout_bin": "\\.u_(ist|bout|bin)_[A-Za-z0-9_]+(/|\\.)",
-  "st_b_lane": "\\.u_u_r[0-9]+\\.g_l[0-9]+"
+  "st_b_lane": "\\.u_u_r[0-9]+\\.g_l[0-9]+",
+  "xh_regs": "\\.u_u_xh[0-9]*\\.(n_d|ib_c[0-9]*|ib_q|p_f|r_f|lqp|s_d|g_n_pad\\.pad_n)",
+  "xl_regs": "\\.u_u_xl[0-9_]*\\.(g_t|q|wm|g_read_pin\\.v)",
+  "rd_pad": "\\.u_(rd|nbo|nb_in|hi)_pad(_d)?\\.(q|g_line\\.r)",
+  "cland_srl": "\\.u_(cland_|srl_)",
+  "stream_se_sw": "\\.u_stream\\.(se|sw)_q",
+  "st_b_bank": "\\.u_u_r[0-9]+\\.(u_sks|u_scale_wait)\\.|\\.u_u_r[0-9]+\\.(g_sc|g_nb|g_ws)",
+  "ft_out_ctl": "u_ft_out_data_rd_wi_o_|u_ctl\\.rf"
  },
  "applies_to": {
   "families": [
@@ -42,5 +49,6 @@
   ],
   "form": "ZLP pre-CTS (one HB4xp67 on the capture D) restricted to these classes; post-route hold ECO (eco_loop b10) stays the residual closer"
  },
- "depth": 4
+ "depth": 4,
+ "version": 2
 }
