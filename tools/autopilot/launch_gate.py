@@ -22,7 +22,7 @@ Decision per (die, type) -> FULL | PILOT | PROBE (+ reason)
             still gets ONE full pilot per flag signature (guardrail 3: hold / DRC / LEC surface early); recorded in st['kpg_pilots']
   PROBE     proven flags and the family already has its pilot for this signature, or a replicated family whose pilot is not signed:
             stays placed (ROUTE-HELD "KPG-PROBE: ...")
-  idle fill PROBE rows with NO proven flag (family-wait members) route anyway while the fleet is idle (sum load < IDLE_RATIO x cores,
+  idle fill PROBE rows with NO proven flag (family-wait members) route anyway on idle capacity (per host: load < IDLE_RATIO x cores,
             ot-run status), fewest advisory flags first, at most the idle core share / IDLE_KIT_CORES kits per tick (guardrail 2)
 
 POST-PLACEMENT (pp_*): before a FULL / PILOT row routes, its placed kit is read once (auto_visual_review remote read + auto_geom rule
@@ -218,13 +218,13 @@ def decide(die, item, fl, family, members, pilots, pilot_state, event=""):
 
 
 def idle_slots(status, ratio=IDLE_RATIO, kit_cores=IDLE_KIT_CORES):
-    """free kit slots while the fleet is under RATIO x cores (ot-run status rows {cores, load}); 0 when busy / unknown"""
-    rows = [v for v in (status or {}).values() if isinstance(v, dict) and int(v.get("cores") or 0) > 0]
-    cores = sum(int(v["cores"]) for v in rows)
-    load = sum(float(v.get("load") or 0) for v in rows)
-    if not cores or load >= ratio * cores:
-        return 0
-    return int((ratio * cores - load) // kit_cores)
+    """free kit slots on hosts under RATIO x cores (ot-run status rows {cores, load}), summed per host: one idle host counts even
+    while the rest of the fleet is loaded (COORD 04:2x: epyc2 57/128 while epyc12 178/96); 0 when unknown"""
+    n = 0
+    for v in (status or {}).values():
+        if isinstance(v, dict) and int(v.get("cores") or 0) > 0:
+            n += int(max(0.0, ratio * int(v["cores"]) - float(v.get("load") or 0)) // kit_cores)
+    return n
 
 
 def idle_pick(cands, n):

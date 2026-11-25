@@ -76,6 +76,7 @@ def test_decide_family_pilot_and_release():
 def test_idle_fill():
     assert G.idle_slots({"a": dict(cores=128, load=200)}) == 0
     assert G.idle_slots({"a": dict(cores=128, load=10), "b": dict(cores=64, load=60)}) == 2
+    assert G.idle_slots({"epyc2": dict(cores=128, load=57), "epyc12": dict(cores=96, load=178)}) == 1   # one idle host counts
     assert G.idle_pick([("x", 0, 3), ("y", 0, 1), ("z", 1, 0)], 1) == ["y"]
 
 
