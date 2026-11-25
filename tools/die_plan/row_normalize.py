@@ -1,0 +1,325 @@
+#!/usr/bin/env python3
+"""NORMALIZE (COMPOSE-FAST 11-25, OWNER via COORD): rows carry intent only; this pass derives the consequences after ALL rows are
+applied, so no lane hand-runs (or forgets) a repair step and no compose breaks on a consequence one row could not see.
+
+Tonight's binds failed on consequences, each found only at the bind (1-3 h a loop): stations changed depth -> fixed_cycles not
+re-priced (ISTCYC) and R8 tables stale (R8STALE / R8_STALE, 31 on KV pvw_1: table depth 30, bind 32); moved sinks / cores ->
+density added-tap names off the new base count (TAPNAME, then LANDREMAP-UNCHECKED); moved station registers -> their bank sites
+left behind, in a core or off the site grid (ADV-SITE-IN-MACRO / SITEGRID).  The standard repairs, in this order:
+
+  plan phase (plan json only, seconds to minutes; `row_normalize.py plan`):
+    1 REPRICE  stn_reprice.reprice_raw: every lane whose end-bus station depth moved vs BASE and whose BASE fixed_cycles followed
+               source + destination takes the new depth (fixed_cycles + latency fixed / cycles / natural by the same delta).
+    2 LEGAL    core_place.resite_station_banks on every type whose internal_stations or hard_cores differ from BASE: a bank whose
+               registers moved follows them (unless the row moved the bank itself), then every bank site that is in a core + halo,
+               off the CORE_AREA or off the site/row grid goes to the nearest free legal site (the core_place legaliser).
+    3 TAPNAME  every clock.tap_mode "density" type the rows touched with clock.added_taps: the added taps are renamed to continue
+               from the density base count of the NEW plan (clk_t<nb>..), in order, and an added tap that the moved sinks / cores
+               made illegal (outline / halo / tap spacing, the taps.density_taps predicate) moves to the nearest legal 0.054 um site
+               (the kv-pv-estrip tapname_fix.py form, for every die and type).
+    4 RETAP    retap.repoint(BASE, plan): every type whose tap set (names, sites) changed vs BASE gets its tap-named references
+               (landing contract source taps, consumer new_reset, per-port tap offsets / windows) re-pointed to the nearest new tap
+               and its own published collector tree re-solved.
+  tables phase (needs the elab's bus_groups.json; `row_normalize.py tables`):
+    5 R8       r8_refresh.py: the as-built land_r8 table and every land_r8_extra table re-derived from this plan's elab, ALWAYS
+               before the bind (R8 drift is reported as fixed, never left for the strict bind to find as R8_STALE).
+
+Each step only touches what differs from BASE; a plan equal to BASE is returned byte-equal (no step fires).  Every step writes
+a report row; nothing is silently dropped.  --skip STEP leaves one out (reprice, legal, tapname, retap).
+
+  row_normalize.py plan --base BASE --in PLAN --out OUT --tree TREE [--report R.json] [--skip STEP ...]
+  row_normalize.py tables --plan PLAN --tree TREE --asbuilt AB --bus-groups OUT/bus_groups.json [--report R.json]
+TREE = the tree the plan's repository-relative inputs resolve in (the gate's launch tree)."""
+import argparse
+import contextlib
+import copy
+import hashlib
+import io
+import json
+import math
+import os
+import sys
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+
+STEPS = ("reprice", "legal", "tapname", "retap")
+TAP_STEP_UM = 0.054
+
+
+def _pt(raw):
+    return raw.get("partition_types") or {}
+
+
+def touched_types(raw, braw):
+    """types whose partition_types entry differs from BASE (new types included), in plan order"""
+    b = _pt(braw)
+    return [tn for tn, t in _pt(raw).items() if b.get(tn) != t]
+
+
+# ------------------------------------------------------------------ 1 REPRICE
+def step_reprice(raw, braw):
+    import stn_reprice as SR
+    return {k: list(v) for k, v in SR.reprice_raw(raw, braw).items()}
+
+
+# ------------------------------------------------------------------ 2 LEGAL
+_BANK_KEYS = ("bit_sites_um", "face_bit_sites_um")
+
+
+def _bank_base(b, t):
+    """the BASE type as the legaliser should see it: a station row whose bank sites the row moved itself takes its own regs / to
+    as base (no follow shift: the row already placed the bank); other rows keep the BASE regs (the bank follows the move)"""
+    bb = copy.deepcopy(b)
+    bst, nst = bb.get("internal_stations") or [], t.get("internal_stations") or []
+    for i, s in enumerate(nst):
+        if i < len(bst) and bst[i].get("conn") == s.get("conn") and any(bst[i].get(k) != s.get(k) for k in _BANK_KEYS):
+            for k in ("regs_um", "to_um"):
+                if k in s:
+                    bst[i][k] = copy.deepcopy(s[k])
+    return bb
+
+
+def step_legal(raw, braw, types, resite=None):
+    """core_place legaliser on the touched types whose stations or cores moved -> {type: report}"""
+    if resite is None:
+        import core_place as CP
+        resite = CP.resite_station_banks
+    out = {}
+    for tn in types:
+        t, b = _pt(raw).get(tn), _pt(braw).get(tn) or {}
+        if not isinstance(t, dict) or not t.get("outline_um"):
+            continue
+        if t.get("internal_stations") == b.get("internal_stations") and t.get("hard_cores") == b.get("hard_cores"):
+            continue
+        if not any(s.get(k) for s in t.get("internal_stations") or [] for k in _BANK_KEYS):
+            continue
+        t_new, r = copy.deepcopy(t), {}
+        resite(_bank_base(b, t), t_new, r)
+        if t_new != t:
+            raw["partition_types"][tn] = t_new
+            out[tn] = dict(r, changed=True)
+        elif r.get("bank_failed"):
+            out[tn] = dict(r, changed=False)
+    return out
+
+
+# ------------------------------------------------------------------ 3 TAPNAME
+@contextlib.contextmanager
+def in_tree(tree):
+    """cwd + $OT_REPO_ROOT = TREE while the tap / reset solvers read the plan's repository-relative inputs"""
+    here, old = os.getcwd(), os.environ.get("OT_REPO_ROOT")
+    if tree:
+        os.chdir(tree)
+        os.environ["OT_REPO_ROOT"] = str(Path(tree).resolve())
+    try:
+        yield
+    finally:
+        os.chdir(here)
+        if old is None:
+            os.environ.pop("OT_REPO_ROOT", None)
+        else:
+            os.environ["OT_REPO_ROOT"] = old
+
+
+def _density_types(raw, types):
+    return [tn for tn in types if isinstance(_pt(raw).get(tn), dict)
+            and ((_pt(raw)[tn].get("clock") or {}).get("tap_mode") == "density") and (_pt(raw)[tn]["clock"].get("added_taps"))]
+
+
+def _real_tap_fns(raw, plan_path):
+    """(base_count(tn), legal_factory(tn) -> legal(x, y), taken list) on the real taps / schema solvers"""
+    import schema
+    import taps as TP
+    from placement_obstacles import placement_boxes
+    P = schema.Plan(json.loads(json.dumps(raw)), Path(plan_path).absolute())
+    cache = {}
+
+    def base(tn):
+        if tn not in cache:
+            cache[tn] = TP._density_base(P, tn)
+        return cache[tn]
+
+    def legal_for(tn):
+        tt = P.types[tn]
+        w, h = tt["outline_um"]
+        clear, eps = schema.type_tap_clear(tt), 1e-8
+        boxes = list(placement_boxes(tt, halo=clear).values())
+        boxes += [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in (tt.get("clock") or {}).get("keepouts_um", [])]
+        taken = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)] + [(q[1], q[2]) for q in base(tn)]
+
+        def legal(x, y):
+            return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+                    and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+                    and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+        return legal, taken
+    return (lambda tn: len(base(tn))), legal_for
+
+
+def _nearest_legal(x, y, legal, rmax=1200):
+    for r in range(1, rmax):
+        cand = [(x + i * TAP_STEP_UM, y + j * TAP_STEP_UM) for i in range(-r, r + 1) for j in (-r, r)]
+        cand += [(x + i * TAP_STEP_UM, y + j * TAP_STEP_UM) for j in range(-r + 1, r) for i in (-r, r)]
+        cand = [c for c in cand if legal(*c)]
+        if cand:
+            return min(cand, key=lambda c: abs(c[0] - x) + abs(c[1] - y))
+    return None
+
+
+def step_tapname(raw, types, plan_path=None, base_count=None, legal_for=None):
+    """rename density added taps from the new base count; move illegal ones to the nearest legal site -> {type: report}"""
+    dts = _density_types(raw, types)
+    if not dts:
+        return {}
+    if base_count is None or legal_for is None:
+        bc, lf = _real_tap_fns(raw, plan_path)
+        base_count, legal_for = base_count or bc, legal_for or lf
+    out = {}
+    for tn in dts:
+        added = raw["partition_types"][tn]["clock"]["added_taps"]
+        nb = base_count(tn)
+        exp = [f"clk_t{nb + i}" for i in range(len(added))]
+        old = [str(a.get("name")) for a in added]
+        rec = {}
+        if old != exp:
+            for a, e in zip(added, exp):
+                a["name"] = e
+            rec.update(base=nb, renamed=sum(1 for o, e in zip(old, exp) if o != e), first=[old[0], exp[0]])
+        legal, taken = legal_for(tn)
+        moved = []
+        for a in added:
+            x, y = map(float, a["xy"])
+            if not legal(x, y):
+                best = _nearest_legal(x, y, legal)
+                if best is None:
+                    rec["failed"] = f"{a['name']}: no legal site within {1200 * TAP_STEP_UM:.0f} um of {x},{y}"
+                    taken.append((x, y))
+                    continue
+                a["xy"] = [round(best[0], 4), round(best[1], 4)]
+                moved.append([a["name"], [x, y], a["xy"]])
+                x, y = best
+            taken.append((x, y))
+        if moved:
+            rec.update(relegalised=len(moved), moved=moved[:6])
+        if rec:
+            out[tn] = rec
+    return out
+
+
+# ------------------------------------------------------------------ 4 RETAP
+def step_retap(braw, raw, base_path, plan_path, types):
+    import retap as RT
+    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types))
+    return {tn: len(ch) for tn, ch in rep.items()}
+
+
+def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=(), hooks=None):
+    """all plan-phase steps on raw (in place) -> report"""
+    hooks = hooks or {}
+    skip = {s.lower() for s in skip}
+    rep = dict(steps={}, seconds={})
+    types = touched_types(raw, braw)
+    rep["touched_types"] = types
+    with in_tree(tree):
+        for name in STEPS:
+            t0 = time.time()
+            if name in skip:
+                rep["steps"][name] = "skipped"
+                continue
+            if name == "reprice":
+                r = step_reprice(raw, braw)
+            elif name == "legal":
+                r = step_legal(raw, braw, types, resite=hooks.get("resite"))
+            elif name == "tapname":
+                r = step_tapname(raw, types, plan_path, hooks.get("base_count"), hooks.get("legal_for"))
+            else:
+                r = (hooks["retap"](braw, raw, types) if "retap" in hooks else step_retap(braw, raw, base_path, plan_path, types)) if types else {}
+            rep["steps"][name] = r
+            rep["seconds"][name] = round(time.time() - t0, 1)
+    rep["changed"] = {k: len(v) for k, v in rep["steps"].items() if isinstance(v, dict) and v}
+    return rep
+
+
+# ------------------------------------------------------------------ 5 R8 (tables)
+def _sha(p):
+    try:
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest()[:12]
+    except OSError:
+        return None
+
+
+def r8_tables(tree, asbuilt):
+    ab = json.loads((Path(tree) / asbuilt if not Path(asbuilt).is_absolute() else Path(asbuilt)).read_text())
+    if not ab.get("land_r8"):
+        return None, []
+    rel = lambda p: Path(p) if Path(p).is_absolute() else Path(tree) / p  # noqa: E731
+    return rel(ab["land_r8"]), [rel(x) for x in ab.get("land_r8_extra") or []]
+
+
+def normalize_tables(plan, tree, asbuilt, bus_groups):
+    """r8_refresh of the land_r8 table + extras from this plan's elab -> report (R8 drift fixed: tables whose bytes moved)"""
+    import r8_refresh as RR
+    table, extras = r8_tables(tree, asbuilt)
+    if table is None:
+        return dict(r8="no land_r8 in the as-built", rc=0, fixed={})
+    before = {str(p): _sha(p) for p in [table] + extras}
+    abp = Path(asbuilt) if Path(asbuilt).is_absolute() else Path(tree) / asbuilt
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = RR.main([str(plan), str(bus_groups), str(table), "--asbuilt", str(abp), "--root", str(tree)])
+    after = {p: _sha(p) for p in before}
+    fixed = {os.path.relpath(p, tree): [before[p], after[p]] for p in before if before[p] != after[p]}
+    return dict(rc=rc, fixed=fixed, tables=len(before), log=buf.getvalue()[-1500:],
+                r8=(f"R8 drift fixed in {len(fixed)} of {len(before)} table(s)" if fixed else f"R8 tables current ({len(before)})")
+                if rc == 0 else f"R8 refresh FAILED rc {rc}")
+
+
+def dump(raw, path):
+    tmp = Path(str(path) + ".norm.tmp")
+    tmp.write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
+    os.replace(tmp, path)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("plan")
+    p.add_argument("--base", required=True)
+    p.add_argument("--in", dest="inp", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--tree")
+    p.add_argument("--report")
+    p.add_argument("--skip", action="append", default=[], choices=STEPS)
+    t = sub.add_parser("tables")
+    t.add_argument("--plan", required=True)
+    t.add_argument("--tree", required=True)
+    t.add_argument("--asbuilt", required=True)
+    t.add_argument("--bus-groups", required=True)
+    t.add_argument("--report")
+    a = ap.parse_args(argv)
+    if a.cmd == "plan":
+        braw = json.loads(Path(a.base).read_text())
+        text = Path(a.inp).read_text()
+        raw = json.loads(text)
+        rep = normalize_plan(braw, raw, a.tree, Path(a.base).absolute(), Path(a.out).absolute(), a.skip)
+        if rep["changed"]:
+            dump(raw, a.out)
+        elif os.path.abspath(a.inp) != os.path.abspath(a.out):
+            Path(a.out).write_text(text)
+        print(f"NORMALIZE plan: {len(rep['touched_types'])} touched type(s); changed {rep['changed'] or 'nothing'}; "
+              f"seconds {rep['seconds']}")
+        rc = 3 if any(isinstance(v, dict) and any(isinstance(x, dict) and (x.get("failed") or x.get("bank_failed")) for x in v.values())
+                      for v in rep["steps"].values()) else 0
+    else:
+        rep = normalize_tables(a.plan, a.tree, a.asbuilt, a.bus_groups)
+        print(f"NORMALIZE tables: {rep['r8']}" + "".join(f"\n  {k}: {v[0]} -> {v[1]}" for k, v in rep["fixed"].items()))
+        rc = rep["rc"]
+    if a.report:
+        Path(a.report).write_text(json.dumps(rep, indent=1, default=str) + "\n")
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main())
