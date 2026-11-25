@@ -3,6 +3,8 @@
 - I keep current: census (intel2 vis-reown/census_sweep.py, cron */10), VIS-COVERAGE (now 11 cols: col 11 stage PLAN|GP|PLACE|GRT|ROUTE|SIGNOFF|-, refreshed by vis-reown/agg.py stage --commit in the same cron), VIS-CAUSES.tsv (26 census FAILs, causes C1-C8; kv3_hgi 1124041954 back to WAIT-ROUTE per COORD).
 - From lanes/FP-<die>.tsv (not yet created at 03:5x; schema proposed in my 03:5x post): fold verdicts into VIS-COVERAGE/VIS-CAUSES; flag to COORD renders with no verdict after 1 h and lane verdicts that disagree with gate results; hourly counts post.
 - Verdict rule unchanged: final DRC/timing only from route/sign-off result; GP checkpoint FAIL = setup < -150 ps on placed DB / pile / hot spot / macro face on strap.
+- 06:5x: agg.py merge_rows (one tag per row+source+stage, idempotent) + vq_pending (render key = kit dir + checkpoint; verdicts are separate VIS-QUEUE rows) + test_agg.py (4 tests). Census FAIL 27 (+kv3_pc_v1 r877307f5d C4, kv3_pv_v4n C9). Asked FP lanes why FP-<die>.tsv stale since 04:07-05:06.
+
 
 # VIS-REOWN handoff (11-24 08:2x PST)
 Job: past-SLA VIS-COVERAGE rows -> PROBE-THROUGH (COORD 08:04 ruling 2), fast review, promote to verdict.
