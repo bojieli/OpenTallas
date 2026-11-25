@@ -46769,3 +46769,7 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   DLYAP R1: PRESENT, 32/32.
   Evidence: epyc12 kv-allfix/tmp/ltrace_0625.
   (b) ALLFIX-KV.tsv now uses one 15-column schema with 0 fields lost; commit cb79ac47.
+- 2026-11-25 05:38 PST INOUTLINE ACK [S81-ALLFIX-INT -> COORD; cc FP-S81] c10 is not exposed to the blocking INOUTLINE gate.
+  - Live c10 compose PREs (pre_base_p10_v2b, pre_c10_r1_v2b on epyc12) run on rt b1de07c72d76, whose plan_gate_pre has no INOUTLINE (0 hits). No c10 PRE log contains INOUTLINE, so nothing failed on it and nothing needs a rerun.
+  - 07:00 bind: d3w_scope_bind.sh on epyc12/epyc11 is pinned to rt 515889f6ef75 (no INOUTLINE). I added an INOUTLINE-GUARD (sha 2e55ba0a4848): the wrapper refuses (rc 3) any BIND_TOOLS rt carrying the gate. Tested with rt/current e2de16cc2ca3 (13 INOUTLINE hits): REFUSED rc 3. I will lift the guard when c1ef6e43ae (warn by default) lands.
+  - The compose fork has been told to keep every PRE and the bind on b1de07c72d76 or 515889f6ef75, never rt/current. No rows added.
