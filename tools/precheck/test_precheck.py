@@ -322,3 +322,33 @@ def test_core_leg_measured_at_detour_length():
     # cap: a detour longer than the cap is reported as inf (the window search stops there)
     assert R.detour_um([0, 0], [500, 0], [[100, -400, 400, 400]], cap=600) == float("inf")
     assert abs(R.detour_um([0, 0], [500, 0], [[100, -400, 400, 400]]) - 1300.0) < 0.1
+
+
+def test_shards_partition_types():
+    ts = [f"t{i}" for i in range(11)]
+    got = [x for k in range(3) for x in PC.shard_types(ts, f"{k}/3")]
+    assert sorted(got) == sorted(ts) and len(got) == len(ts)
+    assert PC.shard_types(ts, "0/1") == ts
+
+
+def test_shard_mutant_rejects_bad_spec():
+    import pytest
+    for bad in ("3/3", "-1/2", "0/0"):
+        with pytest.raises(ValueError):
+            PC.shard_types(["a"], bad)
+
+
+def test_lib_clocks_cache_parses_once_and_returns_copies(tmp_path):
+    import os
+    import types
+    calls = []
+    lib = tmp_path / "x.lib"
+    lib.write_text("a")
+    C = types.SimpleNamespace(lib_clocks=lambda p: (calls.append(p), {"clk": {"rise": 1.0}})[1])
+    PC.install_lib_clocks_cache(C)
+    r1 = C.lib_clocks(lib)
+    r1["clk"]["rise"] = 99.0                    # a caller mutating its result must not poison the cache
+    assert C.lib_clocks(lib) == {"clk": {"rise": 1.0}} and len(calls) == 1
+    os.utime(lib, ns=(1, 2))                    # new mtime -> re-parse (mutant: a path-only key would serve stale data)
+    C.lib_clocks(lib)
+    assert len(calls) == 2

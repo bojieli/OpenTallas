@@ -47,6 +47,7 @@ Outputs in --out: findings.tsv (type, check, value, threshold, family, detail), 
 import argparse
 import collections
 import contextlib
+import copy
 import io
 import fnmatch
 import json
@@ -571,6 +572,28 @@ def core_tap_owner_findings(P, tn, tools=None):
                        f"{', '.join(owners)}) -> legacy path; " + "; ".join(gaps[:6]))]
 
 
+def install_lib_clocks_cache(C):
+    """cache C.lib_clocks per (path, mtime): the same liberty file was re-parsed 173x per plan (31 % of a census)"""
+    orig = C.lib_clocks
+    cache = {}
+
+    def cached(path):
+        key = (str(path), Path(path).stat().st_mtime_ns)
+        if key not in cache:
+            cache[key] = orig(path)
+        return copy.deepcopy(cache[key])
+    C.lib_clocks = cached
+    return cached
+
+
+def shard_types(types, spec):
+    """'K/N' -> every N-th type starting at K (sorted input): the shards partition the types"""
+    k, n = (int(x) for x in spec.split("/"))
+    if n < 1 or not 0 <= k < n:
+        raise ValueError(f"bad --shard {spec}")
+    return [t for i, t in enumerate(types) if i % n == k]
+
+
 def type_findings(ctx, tn, checks, opts):
     P = ctx.P
     t = P.types[tn]
@@ -850,6 +873,7 @@ def main(argv=None):
     ap.add_argument("--plan", required=True)
     ap.add_argument("--types", default="*", help="glob over type names (comma-separated globs allowed)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--shard", default="", help="K/N: run only every N-th type (index mod N == K); merge the --out dirs afterwards")
     ap.add_argument("--tools", default=str(HERE.parent / "die_plan"), help="die_plan tools dir (schema, taps, gen_phys)")
     ap.add_argument("--checks", default=",".join(c for c in CHECKS if c not in OPT_IN))
     ap.add_argument("--reach", type=float, default=REACH_UM)
@@ -879,14 +903,21 @@ def main(argv=None):
             print(f"PRECHECK kit-sinks {f}: {e}")
     sys.path.insert(0, a.tools)
     import schema as S
+    # FP-CONVERGE-S81 11-25: profile of a 403-type S81 plan = 80 s/type: cores.lib_clocks re-parses the same liberty text
+    # 173x (31 %), reset_tree wavefront inside taps.grid_explicit_taps 64 %.  Cache lib_clocks per (path, mtime).
+    try:
+        import cores as _C
+        install_lib_clocks_cache(_C)
+    except Exception:  # noqa: BLE001
+        pass
     t0 = time.time()
     raw = json.loads(Path(a.plan).read_text())
     P = S.Plan(raw, a.plan)
     ctx = Ctx(P, raw, a.plan, a.tools)
     globs = [g.strip() for g in a.types.split(",") if g.strip()]
     types = sorted(t for t in P.types if any(fnmatch.fnmatchcase(t, g) for g in globs))
-    if not any(p.get("type") for p in raw.get("partitions") or []):
-        pass
+    if a.shard:
+        types = shard_types(types, a.shard)
     placed = {p["type"] for p in raw.get("partitions") or []}
     checks = {c.strip().upper() for c in a.checks.split(",")} - DIE_SKIP.get(a.die, set())
     findings, errors = [], []
