@@ -119,3 +119,23 @@ def test_gate_runs_beside_the_bind_and_its_refusal_wins(monkeypatch, tmp_path, g
     assert "GATE-LINE" in (out / "plan_gate_pre.log").read_text()
     assert (out / "PLAN_GATE_PRE_REFUSED.txt").exists() == bool(gate_rc)
     assert not bind._PG_CHILD.get("pid") and os.getpid()
+
+
+def test_warn_fail_stamp_replays_same_inputs_only(fake, monkeypatch, capsys):
+    """BIND-SPEED-1124: elab then bind of one OUT ran the same warn-mode PRE twice (no stamp after a FAIL finding)"""
+    mod, calls, p, out = fake
+    mod.findings = ["FAIL RSTREACH x", "WARN ENTRYFOOT y"]
+    monkeypatch.setenv("OT_PLAN_GATE_PRE", "warn")
+    monkeypatch.setattr(bind, "_PG_ELAB_DONE", [True])                         # the elab's gate runs once its elab returned
+    assert bind._plan_gate_pre(NS(p, out, cmd="elab")) == 0
+    first = capsys.readouterr().out
+    assert json.loads((out / "plan_gate_pre.json").read_text())["result"] == "warn"
+    assert bind._plan_gate_pre(NS(p, out)) == 0 and len(calls) == 1             # replayed, not re-run
+    assert capsys.readouterr().out == first
+    monkeypatch.setenv("OT_PRE_DEPTH_X", "1")                                   # a setting changed: run again
+    assert bind._plan_gate_pre(NS(p, out)) == 0 and len(calls) == 2
+    (out / "asbuilt.json").write_text("{}")                                     # the elab netlist changed: run again
+    bind._plan_gate_pre(NS(p, out))
+    assert len(calls) == 3
+    monkeypatch.setenv("OT_PLAN_GATE_PRE", "refuse")                            # a warn stamp never passes a refusing gate
+    assert bind._plan_gate_pre(NS(p, out)) == 2 and len(calls) == 4

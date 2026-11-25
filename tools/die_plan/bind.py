@@ -8836,11 +8836,20 @@ def _plan_gate_pre(a):
     except OSError:
         key = None
     stamp = Path(a.out) / "plan_gate_pre.json"
+    wkey = _pg_warn_key(a, key, G, mode) if key and mode == "warn" else None
     try:
-        if key and json.loads(stamp.read_text()).get("key") == key:
+        st = json.loads(stamp.read_text())
+        if key and st.get("key") == key and st.get("result", "pass") == "pass":
             return 0
-    except (OSError, ValueError):
+        if wkey and st.get("result") == "warn" and st.get("wkey") == wkey:
+            # BIND-SPEED-1124 (KV elab + bind into one OUT each ran the same warn-mode PRE, ~530 s twice, because a FAIL finding
+            # wrote no stamp): same plan, as-built, baseline, tools, elab netlist and settings -> print the first run's findings
+            for x in st.get("lines", []):
+                print(x)
+            return 0
+    except (OSError, ValueError, AttributeError):
         pass
+    printed = []
     try:
         # BIND-SPEED-1118: the elab output of this run (OUT/asbuilt.json) lets the row checks (ROWSINK, MODULES) run here too;
         # a tool older than the live tree is a warning in a bind (an event may pin its tools), a FAIL in bind_fast.py precheck
@@ -8856,6 +8865,7 @@ def _plan_gate_pre(a):
     fails = [x for x in fs if x.startswith("FAIL")]
     for x in fs:
         print(f"bind: plan_gate_pre {x}")
+        printed.append(f"bind: plan_gate_pre {x}")
     if fails and mode != "warn":
         print(f"bind: REFUSED by plan_gate_pre ({len(fails)} findings; OT_PLAN_GATE_PRE=warn or off to override, "
               f"tools/die_plan/plan_gate_pre.py check --tree . --plan {a.plan} to re-run)")
@@ -8865,7 +8875,8 @@ def _plan_gate_pre(a):
         lr = _landremap_prev(a, G)
         for x in lr:
             print(f"bind: plan_gate_pre {x}")
-        fails += [x for x in lr if x.startswith("FAIL")]
+            printed.append(f"bind: plan_gate_pre {x}")
+        fails +=[x for x in lr if x.startswith("FAIL")]
         if fails and mode != "warn":
             print(f"bind: REFUSED by plan_gate_pre LANDREMAP ({len(fails)} findings; run tools/die_plan/landing_remap.py as printed, "
                   f"or OT_PLAN_GATE_PRE=warn to override)")
@@ -8876,7 +8887,31 @@ def _plan_gate_pre(a):
             stamp.write_text(json.dumps({"key": key, "result": "pass"}) + "\n")
         except OSError:
             pass
+    elif fails and wkey:                      # BIND-SPEED-1124: warn mode went on past FAIL findings: keep them for a same-input rerun
+        try:
+            Path(a.out).mkdir(parents=True, exist_ok=True)
+            stamp.write_text(json.dumps({"key": key, "result": "warn", "wkey": wkey, "lines": printed}) + "\n")
+        except OSError:
+            pass
     return 0
+
+
+def _pg_warn_key(a, key, G, mode):
+    """BIND-SPEED-1124: what a warn-mode PRE result depends on beyond the plan / as-built / baseline key: plan_gate_pre.py and
+    bind.py bytes, the LANDREMAP base (OUT/provenance_bind.json plan), the elab netlist it reads (OUT/asbuilt.json size + mtime,
+    and whether row checks run) and every OT_PLAN_GATE* / OT_PRE* / OT_BIND_REF_TOOLS setting.  -> digest, or None (PRE runs)."""
+    try:
+        h = hashlib.sha256(key.encode())
+        for f in (getattr(G, "__file__", None), __file__):
+            h.update(Path(f).read_bytes() if f else b"-")
+        ab = Path(a.out) / "asbuilt.json"
+        h.update(repr((_prev_bind_plan(a), mode, _pg_elab_dir(a) is None,
+                       (ab.stat().st_size, ab.stat().st_mtime_ns) if ab.is_file() else None)).encode())
+        h.update(json.dumps(sorted((k, v) for k, v in os.environ.items()
+                                   if k.startswith(("OT_PLAN_GATE", "OT_PRE", "OT_BIND_REF_TOOLS")))).encode())
+        return h.hexdigest()[:24]
+    except (OSError, TypeError):
+        return None
 
 
 _PG_CHILD = {}
