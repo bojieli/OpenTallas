@@ -379,7 +379,9 @@ while :; do
     # CRIT_1101 (FLOW-21, COORD 11-01 09:1x): ot-run --crit -> OT_HEAVY_CPU=crit: the scope gets CPUWeight=1000 (default
     # 100) against its sibling user scopes, and the ot-heavy-docker shim gives its containers cpu.weight ~1000 against
     # the sibling (volume kit) containers in system.slice.  No admission change beyond bypassing LOADCAP_1101.
-    _CW=(); [ "${OT_HEAVY_CPU:-}" = crit ] && _CW=(-p CPUWeight=1000)
+    # FLEET-OPS 11-25 (FLOW-0730 F1: nice does not cross cgroups; every scope had cpu.weight 100, so the A5t8 / c10 / C1o die binds got 13-39 % of a core on epyc12):
+    # die class (OT_HEAVY_PRIO die / plan, ot-run --priority die) gets CPUWeight=1000 too; kits stay at 100.  OT_HEAVY_DIE_CPUWEIGHT=0 turns it off.
+    _CW=(); { [ "${OT_HEAVY_CPU:-}" = crit ] || { [ "$_dieclass" = 1 ] && [ "${OT_HEAVY_DIE_CPUWEIGHT:-1}" != 0 ]; }; } && _CW=(-p CPUWeight=1000)
     # DIE_WATCHDOG_1021: user scopes cannot set OOMScoreAdjust; set the launching PID as root (-999), then inherit.
     if [ "${OT_HEAVY_PRIO:-}" = die ]; then
       sudo -n /usr/local/bin/ot-protect-die --pid "$$" || { echo "ot-heavy: NOT RUN: die protection failed" >&2; exit 70; }

@@ -97,3 +97,13 @@ class LoadCapLec(LoadCap):
         env['OT_HEAVY_LEC_CPU_EXEMPT'] = '0'
         r = subprocess.run(lec, capture_output=True, text=True, env=env, timeout=60)
         self.assertEqual(r.returncode, 75)
+
+
+class DieWeight(LoadCap):
+    def test_die_class_scope_gets_cpuweight_1000(self):    # FLEET-OPS 11-25 FLOW-0730 F1: nice does not cross cgroups
+        r, ran = self.go('1', prio='die'); self.assertTrue(ran, r.stderr)
+        self.assertIn('CPUWeight=1000', (self.d / 'args').read_text())
+
+    def test_kit_scope_stays_at_default_weight(self):
+        r, ran = self.go('1'); self.assertTrue(ran, r.stderr)
+        self.assertNotIn('CPUWeight=1000', (self.d / 'args').read_text())
