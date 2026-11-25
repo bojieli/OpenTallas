@@ -234,6 +234,34 @@ STREAM_DIR, STREAM_CTX = "native_topology.d", "_context.json"
 NATIVE_GLUE_INST = re.compile(r"\b(ot_bind_native_[0-9a-f]{24})\b")   # = bind.NATIVE_GLUE_INST
 
 
+def _stream_alive(d, cdoc):
+    """'' while the bind writing this stream runs, else why not (= bind_stream.alive: same-host pid runs bind.py, else
+    native_topology.d/_heartbeat younger than 10 min)"""
+    pid = cdoc.get("pid")
+    if pid is None:
+        try:
+            pid = int(str(cdoc.get("run_id", "")).split("-")[1])
+        except (IndexError, ValueError):
+            pid = None
+    host = cdoc.get("host")
+    hb = os.path.join(d, STREAM_DIR, "_heartbeat")
+    if host in (None, socket.gethostname()) and pid:
+        try:
+            with open(f"/proc/{pid}/cmdline", "rb") as f:
+                cmd = f.read().replace(b"\0", b" ").decode(errors="replace")
+        except OSError:
+            cmd = ""
+        if "bind.py" in cmd:
+            return ""
+    try:
+        age = time.time() - os.stat(hb).st_mtime
+    except OSError:
+        age = None
+    if age is not None and age < 600:
+        return ""
+    return f"bind heartbeat {'absent' if age is None else f'{age:.0f} s old'}: its records are void"
+
+
 def stream_files(d, tn):
     """BIND-STREAM-SNAP 11-24 (COORD, S81 c8s: KIT-SNAP inputs changed while the snapshot was built, the strict bind still writes
     its OUT).  For a bind OUT whose bind still runs (native_topology.d/_context.json, no bind_report.json at least as new):
@@ -250,6 +278,9 @@ def stream_files(d, tn):
         return None                                   # the bind ended: its OUT is final, taken whole
     csha = sha256_file(ctx)
     cdoc = jload(ctx)
+    why = _stream_alive(d, cdoc)
+    if why:
+        raise StoreError(f"KIT-SNAP BIND_STREAM {tn}: {why}")
     sd = os.path.join(d, STREAM_DIR)
     names = [f"{tn}.json"] if os.path.isfile(os.path.join(sd, f"{tn}.json")) else sorted(
         n for n in os.listdir(sd) if n.startswith(tn + "__") and n.endswith(".json"))

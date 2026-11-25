@@ -3947,6 +3947,8 @@ class Binder:
         n0, g0 = len(files), len(getattr(self, "emit_gaps", None) or [])
         r = Binder._emit_one_type(self, tn, ps, out, files)     # unbound call: test doubles carry only _emit_one
         ctx = getattr(self, "_stream", None)
+        if ctx and (ctx.get("hold_all") or tn in (ctx.get("pre_refused") or ())):
+            ctx = None                       # BIND-STREAM-FINAL: an error known before the emit names this type (or none is owned)
         if ctx and len(files) > n0 and len(getattr(self, "emit_gaps", None) or []) == g0:
             try:
                 import bind_stream
@@ -6738,6 +6740,21 @@ def cmd_bind(a):
         B.pad_trees()
     files = []
     try:
+        if B._stream is not None and B.errors:
+            # BIND-STREAM-FINAL 11-24 (S81 c8s svc_*: 848 analyse-phase UNDRIVEN_OPEN, the bind died before finish(), the records
+            # stayed final): errors known before the emit (UNDRIVEN_OPEN, TIED, LF_CS_DEPTH, TYPE_DEFINE_*, ...) withhold the
+            # records of the types they name; an error that names no type withholds every record (the end receipt rule)
+            try:
+                _akw = attribution_inputs(out, B.errors)
+                _pre, _pun = attribute_errors(B.errors, set(B.by_type), _path_types(B), _module_types(B),
+                                              getattr(B, "tied_pins", {}), _akw.pop("define_outside"), **_akw)
+            except Exception as exc:
+                _pre, _pun = {}, [f"attribution failed: {type(exc).__name__}: {exc}"]
+            B._stream["pre_refused"] = sorted(_pre)
+            B._stream["hold_all"] = bool(_pun)
+            print(f"bind: BIND_STREAM {len(B.errors)} pre-emit error(s): "
+                  + (f"{len(_pun)} name no type -> no stream records" if _pun else f"records withheld for {len(_pre)} type(s)"),
+                  flush=True)
         files = B.emit(out)
     except BindError as e:
         B.errors.extend(f"EMIT {g}" for g in getattr(B, "emit_gaps", []))   # --all-gaps: gaps before the stop

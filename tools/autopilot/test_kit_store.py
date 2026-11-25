@@ -31,7 +31,8 @@ class StreamSnap(unittest.TestCase):
         old = time.time() - 100
         for n in ("asbuilt.json", "provenance_elab.json", "bind_clock_landings.json"):
             os.utime(put(os.path.join(self.o, n), n), (old, old))
-        ctx = put(os.path.join(self.o, "native_topology.d/_context.json"), json.dumps({"run_id": "r1"}))
+        ctx = put(os.path.join(self.o, "native_topology.d/_context.json"), json.dumps({"run_id": "r1", "host": "other", "pid": 1}))
+        put(os.path.join(self.o, "native_topology.d/_heartbeat"), "")         # the bind beats (another host)
         os.utime(ctx, (old + 10, old + 10))
         self.ctx = ctx
         self.f = put(os.path.join(self.o, "rtl/s81p_ta.sv"), "module s81p_ta; endmodule")
@@ -99,6 +100,16 @@ class StreamSnap(unittest.TestCase):
         rel = sorted(os.path.relpath(p, self.o) for p in KS.stream_files(self.o, "ta").values())
         self.assertIn(f"rtl/native_glue/{m}.sv", rel)
         self.assertNotIn(f"rtl/native_glue/{other}.sv", rel)
+
+    def test_a_bind_that_died_before_its_end_voids_its_records(self):
+        """BIND-STREAM-FINAL: OOM-killed before finish(): no bind_report, records still final, heartbeat stops"""
+        stale = time.time() - 900
+        os.utime(os.path.join(self.o, "native_topology.d/_heartbeat"), (stale, stale))
+        with self.assertRaisesRegex(KS.StoreError, "heartbeat 9.. s old"):
+            KS.stream_files(self.o, "ta")
+        os.unlink(os.path.join(self.o, "native_topology.d/_heartbeat"))
+        with self.assertRaisesRegex(KS.StoreError, "heartbeat absent"):
+            KS.stream_files(self.o, "ta")
 
     def test_ended_or_plain_out_is_taken_whole(self):
         put(os.path.join(self.o, "bind_report.json"), "{}")                    # the bind ended

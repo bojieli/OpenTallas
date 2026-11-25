@@ -58,11 +58,68 @@ def start(out, receipt, plan_path, asbuilt=None):
     for e in os.scandir(d):
         if e.is_file(follow_symlinks=False) and e.name.endswith((".json", ".tmp")):
             os.unlink(e.path)
+    import socket
     ctx = dict(schema=SCHEMA_CTX, run_id=f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}-{uuid.uuid4().hex[:12]}",
+               host=socket.gethostname(), pid=os.getpid(),
                plan=str(Path(plan_path).resolve()), plan_sha256=_sha(plan_path),
                asbuilt=str(Path(asbuilt).resolve()) if asbuilt else None, receipt=dict(receipt))
     _write(d / CTX, ctx)
+    _heartbeat_start(d)
     return dict(dir=str(d), run_id=ctx["run_id"], context_sha256=_sha(d / CTX), plan_sha256=ctx["plan_sha256"])
+
+
+HEARTBEAT, HEARTBEAT_S, HEARTBEAT_STALE_S = "_heartbeat", 60, 600
+
+
+def _heartbeat_start(d):
+    """BIND-STREAM-FINAL 11-24: the running bind touches native_topology.d/_heartbeat every 60 s (daemon thread, parent only)"""
+    import threading
+    hb = Path(d) / HEARTBEAT
+
+    def beat():
+        while True:
+            try:
+                hb.touch()
+            except OSError:
+                pass
+            time.sleep(HEARTBEAT_S)
+    hb.touch()
+    threading.Thread(target=beat, name="bind-stream-heartbeat", daemon=True).start()
+
+
+def alive(out, why=None):
+    """BIND-STREAM-FINAL 11-24 (S81 c8s: the bind was OOM-killed before finish(); its final records stayed launchable): is the
+    bind that writes this OUT's stream still running?  Yes when, on the same host, its pid (context pid, else the run id's) runs
+    bind.py, or native_topology.d/_heartbeat is younger than 10 min (other host; a killed bind stops beating).  Launch gates call it on the original OUT (never on a kit snapshot)."""
+    import socket
+    c = _context(out)
+    if c is None:
+        return False
+    ctx = c[0]
+    pid = ctx.get("pid")
+    if pid is None:
+        try:
+            pid = int(str(ctx.get("run_id", "")).split("-")[1])
+        except (IndexError, ValueError):
+            pid = None
+    host = ctx.get("host")
+    if host in (None, socket.gethostname()) and pid:
+        try:
+            cmd = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").decode(errors="replace")
+        except OSError:
+            cmd = ""
+        if "bind.py" in cmd:
+            return True
+    hb = Path(out) / DIR / HEARTBEAT
+    try:
+        age = time.time() - hb.stat().st_mtime
+    except OSError:
+        age = None
+    if age is not None and age < HEARTBEAT_STALE_S:
+        return True
+    if why is not None:
+        why.append(f"bind heartbeat {'absent' if age is None else f'{age:.0f} s old'} (bind on {host}): its records are void")
+    return False
 
 
 def write_type(ctx, tn, module, instances, files, lib, extra_lib, cells, instance_params=None):
@@ -247,6 +304,8 @@ def launch_check(bind_out, tn, plan, asbuilt=None):
                 return 0, f"BIND errors {n}, TYPE_RECEIPT: {why}"
         return (0 if n == 0 else 3), f"BIND errors {n}"
     why = []
+    if not alive(out, why):
+        return 3, f"BIND_STREAM {tn}: {'; '.join(why)[:300]}"
     if not records(out, tn, why):
         return 3, f"BIND_STREAM {tn}: no usable record ({'; '.join(why)[:300]})"
     import sys as _sys

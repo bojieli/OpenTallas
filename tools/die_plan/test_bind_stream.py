@@ -273,3 +273,50 @@ def test_type_strict_report_basis(tmp_path):
     assert d["basis"]["kind"] == "partial_type_receipt" and d["basis"]["global_n_errors"] == 3
     with pytest.raises(ValueError):
         bind._type_strict_report(out, kd, "tb", "tb", {"n_errors": 3}, None)
+
+
+def test_alive_pid_and_heartbeat(tmp_path, monkeypatch):
+    """BIND-STREAM-FINAL: a stream is live while its bind runs (same-host pid runs bind.py, or a fresh heartbeat); a killed bind's
+    records are refused by the launch check"""
+    import socket
+    out = tmp_path / "o"
+    d = out / BS.DIR
+    d.mkdir(parents=True)
+    (d / BS.CTX).write_text(json.dumps(dict(run_id="20261124T000000-999999999-x", host=socket.gethostname(), pid=999999999)))
+    why = []
+    assert not BS.alive(out, why) and "heartbeat absent" in why[0]
+    (d / BS.HEARTBEAT).touch()
+    assert BS.alive(out)
+    old = time.time() - 900
+    os.utime(d / BS.HEARTBEAT, (old, old))
+    assert not BS.alive(out)
+    rc, line = BS.launch_check(out, "ta", tmp_path / "plan.json")
+    assert rc == 3 and "void" in line
+
+
+def test_pre_emit_errors_withhold_records(tmp_path):
+    """BIND-STREAM-FINAL: an analyse-phase error naming a type withholds its record; the other types still stream"""
+    import bind
+    calls = []
+
+    class B:
+        _stream = dict(pre_refused=["ta"], hold_all=False, dir=str(tmp_path))
+        types = {"ta": {"module": "m_a"}, "tb": {"module": "m_b"}}
+        emit_gaps = []
+        extra_lib = []
+
+        def _emit_type_files(self, tn, ps, out, files):
+            files.append(tmp_path / f"{tn}.sv")
+
+        def instance_params(self, tn, ps):
+            return {}
+    old = BS.write_type
+    BS.write_type = lambda ctx, tn, *a, **k: calls.append(tn)
+    try:
+        for tn in ("ta", "tb"):
+            bind.Binder._emit_one(B(), tn, ["p"], tmp_path, [])
+        B._stream["hold_all"] = True
+        bind.Binder._emit_one(B(), "tb", ["p"], tmp_path, [])
+    finally:
+        BS.write_type = old
+    assert calls == ["tb"]
