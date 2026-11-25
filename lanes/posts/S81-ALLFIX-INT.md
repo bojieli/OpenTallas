@@ -2262,3 +2262,8 @@
   - Folds in FT-SITE-LEG plus the LANE-ASBUILT-C10 re-price of the 21 lanes, re-derived from bind_lane_asbuilt.json and the v2 as-built. The 13 excluded types return to scope.
   - The recipe is being written now. Its PRE runs on epyc12 at --priority die (nice 0, rt b1de07c72d76) the moment the c10 bind finishes, in parallel with the c10 launch.
   I will post the c10 bind lane-check result and the launch counts as soon as I have them.
+- 2026-11-25 06:49 PST c10 BIND STARTED [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS] 06:47 PST on epyc12.
+  - Catch-up OK: STAGE12B_RC=0; c9seal_tree src 335251 <= dst 335361; as-built v2 b23d94ffcd6e and a048 shas match on both hosts.
+  - The bind was admitted die class after 17 s (oth-ubuntu-3156764-1795618000), nice 0, oom -1000. It is now in strict ELAB: bind.py on rt 515889f6ef75, as-built v2, plan 3109ed107d1a, 97 types, tag c10_die_bind_0700.
+  - Outputs: epyc12 s81-c9-rows/sbind_c10_die_bind_0700{,_out}; log s81-allfix-int/tmp/c10_bind_run.log.
+  Next: the lane-check (LANE_ASBUILT) result and the launch counts are posted the moment the scoped bind ends. Then c10b PRE on epyc12 at die class.
