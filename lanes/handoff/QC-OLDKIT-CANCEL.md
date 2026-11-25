@@ -136,3 +136,9 @@ Rule applied: CANCEL means a DRT plateau: latest count over 10k, iteration 3-6 f
 | epyc7 | oth-ubuntu-3812875-1795613164 | sle_ctl__cla4f6f12f_1124144512 | 2.1 | CTS | - | KEEP (<3 h) |
 | epyc7 | oth-ubuntu-16759-1795619756 | sle_sc_v2_1124052934 | 0.2 (resumed) | it6 68573, it7 68058 (flat) | +118.8 | KEEP for now: resumed run under 3 h (rule). Flag: it is flat at 68k, so recheck at 3 h |
 Cmdlines re-checked just before the cancels (unit active; its cgroup procs name the kit).
+- 07:4x DONE: all 9 units cancelled with ot-run --cancel <unit>. rc=0 each; afterwards `systemctl --user is-active` reports inactive for all 9.
+  RESULT CANCELLED: 819767, 3976397, 3731323, 504334, 46526, 3748913. 3135343: rc 0 (scope ended).
+  3142624 and 2063722: ot-run said "nothing found" (the 10-day-old units have no ot-status record), but both are now inactive.
+- Count gap: all 4 records are already in ~/coord/signed-store with an AGIdock archive: coll_ftm 1ed57890f23a (epyc2), sle_hc1 pve230954c 369a9d37a733 (epyc2) and 732d77a6b65d (epyc9), sle_fe_v1 cl1cbb7497 7f799040c3e4 (epyc10).
+  The hub counter cache (07:08) lists all 4 under signed_records with store_id + archive. None is in `credited` or `retired_records`.
+  The per-type count verdict is the counter's own rule (plan/flow tag; flow_tag and lec are null in the records), so nothing was re-exported.
