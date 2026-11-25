@@ -550,6 +550,28 @@ def _route(a, b, boxes, box_out, cap=250000, faces=None):
     if a[0] not in xi or a[1] not in yi or b[0] not in xi or b[1] not in yi:
         return None
     s0, t0 = (xi[a[0]], yi[a[1]]), (xi[b[0]], yi[b[1]])
+    # BIND-SPEED-1124 #2 (S81 C10 bind: 1.8 ks of 2.9 ks _bind_through_landings in _seg_hits): the same test as _seg_hits(p, q,
+    # boxes) per grid edge, against only the boxes whose open interval spans the edge's row / column, once per edge.
+    rows, cols, memo = {}, {}, {}
+
+    def blocked(u, v):
+        k = (u, v) if u <= v else (v, u)
+        r = memo.get(k)
+        if r is None:
+            if u[1] == v[1]:                         # horizontal: ly == hy == y, so ly < d and hy > b is b < y < d
+                lst = rows.get(u[1])
+                if lst is None:
+                    y = ys[u[1]]
+                    lst = rows[u[1]] = [(bx[0], bx[2]) for bx in boxes if y < bx[3] and y > bx[1]]
+                lo, hi = min(xs[u[0]], xs[v[0]]), max(xs[u[0]], xs[v[0]])
+            else:                                    # vertical: a < x < c
+                lst = cols.get(u[0])
+                if lst is None:
+                    x = xs[u[0]]
+                    lst = cols[u[0]] = [(bx[1], bx[3]) for bx in boxes if x < bx[2] and x > bx[0]]
+                lo, hi = min(ys[u[1]], ys[v[1]]), max(ys[u[1]], ys[v[1]])
+            r = memo[k] = any(lo < c and hi > a_ for a_, c in lst)
+        return r
     dist = {(s0, -1): (0.0, 0)}
     prev = {}
     pq = [(0.0, 0, s0, -1)]
@@ -579,9 +601,9 @@ def _route(a, b, boxes, box_out, cap=250000, faces=None):
             v = (u[0] + di, u[1] + dj)
             if not (0 <= v[0] < len(xs) and 0 <= v[1] < len(ys)):
                 continue
-            p, q = (xs[u[0]], ys[u[1]]), (xs[v[0]], ys[v[1]])
-            if _seg_hits(p, q, boxes):
+            if blocked(u, v):
                 continue
+            p, q = (xs[u[0]], ys[u[1]]), (xs[v[0]], ys[v[1]])
             c = (d + _man(p, q), nb + (dr >= 0 and dr // 2 != nd // 2))
             if c < dist.get((v, nd), (1e30, 0)):
                 dist[(v, nd)] = c

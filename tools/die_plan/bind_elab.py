@@ -87,10 +87,32 @@ def _module_names(t):
     return [m.group(1) for m in MOD_RE.finditer(_strip(t))]
 
 
+_BODY_TEXT = {}             # BIND-SPEED-1124: path -> (stat key, comment-stripped text, {name: body})
+_BODY_BYTES = [0]
+BODY_CACHE_MAX = 4 << 30    # characters of stripped text kept; past it the oldest files are dropped (re-read on the next call)
+
+
 def module_body(path, name):
-    t = _strip(Path(path).read_text(errors="replace"))
-    m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(name) + r"\b(.*?)\bendmodule\b", t, re.S | re.M)
-    return m.group(1) if m else ""
+    """the body of module `name` in file `path` (comments stripped); memoized per file on its stat (dev, inode, size, mtime_ns,
+    ctime_ns) -- S81 C10 bind: 235 s of analyse re-read and re-stripped the same files for every call"""
+    p = str(path)
+    st = os.stat(p)
+    sk = (st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+    hit = _BODY_TEXT.get(p)
+    if hit is None or hit[0] != sk:
+        if hit is not None:
+            _BODY_BYTES[0] -= len(hit[1])
+        hit = (sk, _strip(Path(p).read_text(errors="replace")), {})
+        _BODY_TEXT[p] = hit
+        _BODY_BYTES[0] += len(hit[1])
+        while _BODY_BYTES[0] > BODY_CACHE_MAX and len(_BODY_TEXT) > 1:
+            old = next(iter(_BODY_TEXT))
+            _BODY_BYTES[0] -= len(_BODY_TEXT.pop(old)[1])
+    bodies = hit[2]
+    if name not in bodies:
+        m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(name) + r"\b(.*?)\bendmodule\b", hit[1], re.S | re.M)
+        bodies[name] = m.group(1) if m else ""
+    return bodies[name]
 
 
 def instantiated(body, idx):

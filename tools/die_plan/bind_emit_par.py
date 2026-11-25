@@ -15,7 +15,7 @@ whole value), extend (list tail), union (set).  Anything else (a removed key, a 
 values that do not merge) is UNSAFE: the parent raises ParUnsafe before touching its state and the caller reruns the plain serial loop, so a
 form this module does not understand costs time, never a wrong bind.
 
-    OT_BIND_EMIT_J=N     workers (default `auto` = min(8, cpus/4, what the memory limit holds); 1 = the plain serial loop)
+    OT_BIND_EMIT_J=N     workers (default `auto` = min(OT_BIND_EMIT_JMAX (8), cpus/4, what the memory limit holds); 1 = the plain serial loop)
     OT_BIND_EMIT_PAR_REC=FILE   per-type wall / worker private memory record (default OUT/bind_emit_par.json)
 
 Proof duty of a caller that turns it on for a new die: one serial and one parallel bind of the same inputs, `diff -r` of the two out
@@ -90,11 +90,20 @@ def mem_jobs(rss=None, limit=None):
     return max(1, int((limit - 1.1 * rss) // (WORKER_FRAC * rss)))
 
 
+JMAX = 8                   # auto cap; OT_BIND_EMIT_JMAX raises it (BIND-SPEED-1124 KV A5t5: j=16 = 47 chunks, deltas 490 -> 1164 s, emit
+                           # 846 -> 821 s, peak 18.9 -> 27.3 GB: the per-chunk delta, not the worker count, bounds the emit today)
+
+
 def jobs():
-    """OT_BIND_EMIT_J: N workers, 1 = the serial loop, `auto` (the default) = min(8, cpus/4, what the memory limit holds)"""
+    """OT_BIND_EMIT_J: N workers, 1 = the serial loop, `auto` (the default) = min(OT_BIND_EMIT_JMAX (8), cpus/4, what the memory
+    limit holds)"""
     v = os.environ.get("OT_BIND_EMIT_J", DEFAULT_J).strip() or DEFAULT_J
     if v == "auto":
-        return max(1, min(8, (os.cpu_count() or 4) // 4, mem_jobs()))
+        try:
+            cap = max(1, int(os.environ.get("OT_BIND_EMIT_JMAX") or JMAX))
+        except ValueError:
+            cap = JMAX
+        return max(1, min(cap, (os.cpu_count() or 4) // 4, mem_jobs()))
     try:
         return max(1, int(v))
     except ValueError:

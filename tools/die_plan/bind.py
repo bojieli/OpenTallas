@@ -2188,10 +2188,20 @@ class Binder:
         (UCIe PHY rst_n, as-built glue d2d_rom.phy_rst_n -> core.rst_n).  The as-built crossing into the pin is then
         not a lane: the pin binds like a reset (rst low).  Absent key = unchanged."""
         t = self.types[self.parts[p]["type"]]
-        for e in t.get("contents", []) + t.get("hard_cores", []):
-            if pn in (e.get("local_reset_pins") or []) and (not e.get("module") or self.F.cells[ci].module == e["module"]):
-                return True
-        return False
+        # BIND-SPEED-1124 (S81 C10 analyse: 325 s here, once per input bit): the type's {pin: [module or None]} index, built once per
+        # type dict object; kept outside the Binder state (the emit snapshot never sees it)
+        per = _LRP_INDEX.setdefault(id(self), {})
+        hit = per.get(self.parts[p]["type"])
+        if hit is None or hit[0] is not t:
+            idx = {}
+            for e in t.get("contents", []) + t.get("hard_cores", []):
+                for q in (e.get("local_reset_pins") or []):
+                    idx.setdefault(q, []).append(e.get("module") or None)
+            hit = per[self.parts[p]["type"]] = (t, idx)
+        mods = hit[1].get(pn)
+        if not mods:
+            return False
+        return any(m is None or self.F.cells[ci].module == m for m in mods)
 
     def _classify(self, p, ci, pn, i, s, cnt):
         if self._local_reset_pin(p, ci, pn):
@@ -6667,6 +6677,31 @@ def load_asbuilt_netlist(out):
     raise BindError(f"{out}: no asbuilt.json or asbuilt.json.gz (run bind.py elab, or stage the packaged cached elaboration)")
 
 
+_LRP_INDEX = {}      # id(Binder) -> {type: (type dict, {local reset pin: [module or None]})}  (Binder._local_reset_pin)
+
+
+def _reset_anchor_prewarm(B, raw):
+    """BIND-SPEED-1124 (S81 C10 bind: RESET_ANCHOR solved 184 anchored reset trees one by one, ~25 min of the bind head): solve them
+    first in reset_tree.prewarm's fork pool, on a Plan over a COPY of the plan, into the process-wide RESET-TREE-CACHE.  The anchor
+    pass then reads them through the same cache key (same plan text, folder, tools, env); a type whose block changed in between
+    misses and is solved as before.  OT_BIND_RESET_PREWARM=0: off."""
+    P = B.wavefront_plan()
+    if P is None or os.environ.get("OT_BIND_RESET_PREWARM", "1") == "0":
+        return
+    import copy
+    import reset_anchor
+    import reset_tree as RT
+    import schema
+    anchored = [tn for tn, t in raw.get("partition_types", {}).items() if (t.get("clock") or {}).get(reset_anchor.KEY)]
+    if len(anchored) < 2:
+        return
+    try:
+        st = RT.prewarm(schema.Plan(copy.deepcopy(B.plan), B.plan_dir / "die_plan.json"), anchored)
+        print(f"bind: RESET-ANCHOR prewarm {st['todo']} anchored type tree(s) in {st['jobs']} worker(s), {st['seconds']} s", flush=True)
+    except Exception as exc:  # noqa: BLE001 - a prewarm failure only costs time: the anchor pass solves on demand
+        print(f"bind: RESET-ANCHOR prewarm skipped: {type(exc).__name__}: {exc}", flush=True)
+
+
 def _bind_through_landings(a):
     """cmd_bind up to and including align_landings (R8 table read): -> (raw, out dir, Binder, yjs, input_topology).  Shared by `bind` and
     `r8-prepass` (BIND-SPEED-1118).  Also returns the elab netlist and the input topology the rest of `bind` still reads."""
@@ -6703,6 +6738,7 @@ def _bind_through_landings(a):
     if any("reset_tree_anchor" in (t.get("clock") or {}) for t in raw.get("partition_types", {}).values()):
         import reset_anchor
         import taps as _taps
+        _reset_anchor_prewarm(B, raw)
         receipts, ra_err = reset_anchor.resolve_plan(raw, B.wavefront_plan(), _taps._root())
         B.errors.extend(ra_err)
         for r in receipts:

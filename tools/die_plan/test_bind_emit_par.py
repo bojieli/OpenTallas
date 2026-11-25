@@ -237,6 +237,24 @@ def test_jobs_env(monkeypatch):
     assert EP.jobs() == 1
 
 
+def test_jobs_auto_cap_env_bounded_by_memory_and_cpus(monkeypatch):
+    """BIND-SPEED-1124 (COORD 11-25): auto uses up to OT_BIND_EMIT_JMAX (default 8) workers when memory and cpus/4 hold them"""
+    monkeypatch.delenv("OT_BIND_EMIT_J", raising=False)
+    monkeypatch.delenv("OT_BIND_EMIT_JMAX", raising=False)
+    monkeypatch.setattr(EP.os, "cpu_count", lambda: 256)
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 40)
+    assert EP.jobs() == 8
+    monkeypatch.setenv("OT_BIND_EMIT_JMAX", "16")
+    assert EP.jobs() == 16
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 11)
+    assert EP.jobs() == 11
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 40)
+    monkeypatch.setenv("OT_BIND_EMIT_JMAX", "8")
+    assert EP.jobs() == 8
+    monkeypatch.setattr(EP.os, "cpu_count", lambda: 24)
+    assert EP.jobs() == 6
+
+
 def test_mem_jobs():
     G = 1 << 30
     assert EP.mem_jobs(rss=8 * G, limit=110 * G) == 15                 # KV: 8 GB parent, ot-run --mem 110
