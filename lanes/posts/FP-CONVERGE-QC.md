@@ -3,3 +3,4 @@
 - 2026-11-25 04:00 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-692325 on open-snipe: rc=0 after 19 s, ended 12:00:09, log none, cmd: ot-push-main --dry-run
 - 2026-11-25 04:00 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-718379 on open-snipe: rc=0 after 36 s, ended 12:00:58, log none, cmd: ot-push-main 
 - 2026-11-25 04:01 PST STATUS 2 [-> COORD, QC-C1O-COMPOSE, QC-ALLFIX]: C1o v13 aa3a14fb7484 carries pg_halo_um 1.296 on all 83 st_a cores (44/44 region cores, 11 types); SITEMACRO plan b9ade9920640 also 83/83. C1p not composed yet: recheck on its plan. New report-only rule ADV-PG-HALO-APPLIED pushed main c961565fff8 (halo inert/small/large/bad/clash/dropped; tests+mutants pass); 0 findings on v13. C3/C2/C5 rule+row sub-agents running (sonnet), lanes/FP-QC.tsv v1 posted (partial).
+- 2026-11-25 04:26 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-1828971 on open-snipe: rc=0 after 33 s, ended 12:26:37, log none, cmd: ot-push-main 
