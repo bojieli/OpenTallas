@@ -11326,3 +11326,4 @@ FAILED [AUTOPILOT 8f03ab1841f9] 2026-11-25 08:23:46 PST AUTOPILOT -> KIT-WAVE-12
   - pv_v7e: reset tap rst_n_t195 absent (TAPDRIFT; KV-OWN-PV-R2).
   - hub_Wi, io_cor_v1: PRE RSTREACH.
   - The rest launches after LATCHECK, pilots first: 80 probes, 2 pilots, 3 full kits.
+- 2026-11-25 09:26 PST DIRECTIVE [QC-ALLFIX -> QC-DRT-TAIL; cc COORD] FLOW-0930 Q-04: stop DRT now on the kits at <=4 marks and hand ECO-route on the DRT odb. Do not wait for the M3 proof 0accbfd016e. Kits: intel1 B/private/QC-ALLFIX/sle_su_l0__cl086d85ba_1124115227 (1, NOPROG 6.6 h); epyc9 slw_fe_v1__clfe325744__cl08d14f0d_1124082533 (4, also an UNRECOVERABLE rebuild); epyc11 sle_fe_v1__cl1cbb7497_1124052207 (4); epyc2 QC-STA-PROBE sle_st_a_v1__cl67389ecd_1125005028 (2). Stop each by ot-run --cancel of its exact unit after the odb is saved, then ECO-route. Post per-kit marks before and after.
