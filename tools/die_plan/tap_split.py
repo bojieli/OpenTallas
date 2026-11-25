@@ -161,7 +161,7 @@ def _walk(doc, path):
 
 
 def apply_ops(doc, ops):
-    """RFC 6902 subset: test / add / replace; `replace` and `add` of an existing key may carry "old" (checked)."""
+    """RFC 6902 subset: test / add / replace / remove; `replace` and `add` of an existing key may carry "old" (checked)."""
     for n, o in enumerate(ops):
         par, key = _walk(doc, o["path"])
         if isinstance(par, list):
@@ -186,6 +186,14 @@ def apply_ops(doc, ops):
                     par[idx] = o["value"]
             else:
                 par[key] = o["value"]
+        elif o["op"] == "remove":
+            have = par[idx] if isinstance(par, list) else par.get(key)
+            if "old" in o and have != o["old"]:
+                raise ValueError(f"op {n} {o['path']}: old-value check failed on remove")
+            if isinstance(par, list):
+                del par[idx]
+            else:
+                del par[key]
         else:
             raise ValueError(f"op {n}: unsupported {o['op']}")
     return doc
@@ -396,6 +404,54 @@ def cmd_render(a):
     return 0
 
 
+def diff_ops(old, new, path=""):
+    """jsonpatch ops (test/add/replace/remove with old-value checks) turning old into new.  Lists that only grew are
+    appended to (with a length test), other differing lists are replaced whole."""
+    ops = []
+    if isinstance(old, dict) and isinstance(new, dict):
+        for k in old:
+            if k not in new:
+                ops.append(dict(op="remove", path=f"{path}/{k}", old=old[k]))
+        for k in new:
+            if k not in old:
+                ops.append(dict(op="add", path=f"{path}/{k}", old=None, value=new[k]))
+            elif old[k] != new[k]:
+                ops += diff_ops(old[k], new[k], f"{path}/{k}")
+    elif isinstance(old, list) and isinstance(new, list):
+        if len(new) >= len(old) and new[:len(old)] == old:
+            ops.append(dict(op="test", path=path, len=len(old)))
+            ops += [dict(op="add", path=f"{path}/-", value=v) for v in new[len(old):]]
+        elif len(new) == len(old):
+            for i, (a, b) in enumerate(zip(old, new)):
+                if a != b:
+                    ops += diff_ops(a, b, f"{path}/{i}")
+        else:
+            ops.append(dict(op="replace", path=path, old=old, value=new))
+    else:
+        ops.append(dict(op="replace", path=path, old=old, value=new))
+    return ops
+
+
+def cmd_diff(a):
+    old = json.load(open(a.old))
+    new = json.load(open(a.new))
+    ops = []
+    for k in sorted(set(old) | set(new)):
+        if old.get(k) != new.get(k):
+            ops += diff_ops(old.get(k), new.get(k), f"/{k}") if k in old and k in new else                 [dict(op="add", path=f"/{k}", old=None, value=new[k])]
+    changed = {}
+    for o in ops:
+        q = o["path"].split("/")
+        key = q[2] if q[1] == "partition_types" and len(q) > 2 else q[1] + ("/" + q[2] + "/" + q[3] if q[1] == "clock" and len(q) > 3 else "")
+        changed[key] = changed.get(key, 0) + 1
+    chk = apply_ops(json.loads(json.dumps(old)), ops)
+    assert chk == new, "applying the diff ops does not give the new plan"
+    json.dump(dict(row=a.row_name, lane=a.lane, base_sha12=a.base_sha12, why=a.why, ops=ops, check=dict(types=sorted(changed), ops_per_type=changed)),
+              open(a.out, "w"))
+    print("DIFF types", len(changed), "ops", len(ops), "->", a.out)
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -423,6 +479,15 @@ def main(argv=None):
     p.add_argument("row")
     p.add_argument("out")
     p.set_defaults(fn=cmd_apply)
+    p = sp.add_parser("diff")
+    p.add_argument("old")
+    p.add_argument("new")
+    p.add_argument("out")
+    p.add_argument("--row-name", default="KV-TAPSPLIT")
+    p.add_argument("--lane", default="KV-TAPSPLIT")
+    p.add_argument("--base-sha12", required=True)
+    p.add_argument("--why", default="clock taps split by measured sink clusters")
+    p.set_defaults(fn=cmd_diff)
     p = sp.add_parser("check")
     p.add_argument("plan")
     p.add_argument("row")

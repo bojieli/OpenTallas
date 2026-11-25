@@ -94,3 +94,21 @@ def test_bins_roundtrip_counts():
 def test_grid_only_type_is_refused():
     with pytest.raises(ValueError, match="no added_taps"):
         TS.type_ops("t", {"tap_mode": "grid+explicit"}, 2, [], "b.json", 1000)
+
+
+def test_diff_ops_roundtrip_and_old_value_checks():
+    old = {"partition_types": {"t": {"clock": {"added_taps": [{"name": "a"}], "tap_max_sinks": 3000, "x": [1, 2, 3],
+                                               "gone": 1}}}, "clock": {"tap_offset": {"per_port_ps": {"t": {}}}}}
+    new = copy.deepcopy(old)
+    new["partition_types"]["t"]["clock"]["added_taps"].append({"name": "b"})
+    new["partition_types"]["t"]["clock"]["tap_max_sinks"] = 1000
+    new["partition_types"]["t"]["clock"]["x"] = [1, 9, 3]
+    del new["partition_types"]["t"]["clock"]["gone"]
+    new["clock"]["tap_offset"]["per_port_ps"]["t"]["clk_t1"] = {"TT": 1.0}
+    ops = TS.diff_ops(old["partition_types"], new["partition_types"], "/partition_types") + \
+        TS.diff_ops(old["clock"], new["clock"], "/clock")
+    assert TS.apply_ops(copy.deepcopy(old), ops) == new
+    stale = copy.deepcopy(old)
+    stale["partition_types"]["t"]["clock"]["tap_max_sinks"] = 1200
+    with pytest.raises(ValueError, match="old-value"):
+        TS.apply_ops(stale, ops)
