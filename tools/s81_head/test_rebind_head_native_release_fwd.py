@@ -27,3 +27,13 @@ def test_other_change_still_refused():
     b["pads"][0]["width"] = 3
     with pytest.raises(ValueError):
         R.fwd_only_delta(a, b, allow_physical=True)
+
+
+def test_core_origin_and_regions_physical_only():
+    a, b = base(), base()
+    a["hard_cores"] = [{"inst": "u_chn", "origin_um": [1, 2]}]
+    b["hard_cores"] = [{"inst": "u_chn", "origin_um": [1, 9]}]
+    b["place_regions"] = [{"name": "r"}]
+    with pytest.raises(ValueError, match="physical-only"):
+        R.fwd_only_delta(copy.deepcopy(a), copy.deepcopy(b))
+    R.fwd_only_delta(a, b, allow_physical=True)

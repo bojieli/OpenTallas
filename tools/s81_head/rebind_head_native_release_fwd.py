@@ -55,6 +55,8 @@ def fwd_only_delta(a, b, allow_physical=False):
         for pd in x.get("pads", []):
             phys.append(("pad:" + str(pd.get("name")), pd.pop("sites_um", None), pd.pop("layer", None)))
         phys.append(("reserved_sites_um", x.get("clock", {}).pop("reserved_sites_um", None), None))
+        phys.append(("place_regions", x.pop("place_regions", None), None))
+        phys.append(("hard_core_origins", [hc.pop("origin_um", None) for hc in x.get("hard_cores", [])], None))
     half = len(phys) // 2
     changed = sorted({p[0] for p, q in zip(phys[:half], phys[half:]) if p != q})
     if changed:
