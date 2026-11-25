@@ -27,7 +27,7 @@
    "loose_pass": 0,
    "refused": [],
    "max_hop_before": 386.2,
-   "max_hop_after": 404.2
+   "max_hop_after": 404.0
   },
   "kv3_hgi_v5": {
    "stacked_before": 1,
@@ -45,7 +45,7 @@
    "loose_pass": 0,
    "refused": [],
    "max_hop_before": 397.4,
-   "max_hop_after": 404.2
+   "max_hop_after": 404.0
   },
   "kv3_hgi_v7": {
    "stacked_before": 7,
@@ -54,7 +54,7 @@
    "loose_pass": 0,
    "refused": [],
    "max_hop_before": 390.5,
-   "max_hop_after": 404.2
+   "max_hop_after": 404.0
   },
   "kv3_hgi_v8": {
    "stacked_before": 4,
@@ -369,7 +369,7 @@
    "loose_pass": 7,
    "refused": [],
    "max_hop_before": 404.0,
-   "max_hop_after": 404.4
+   "max_hop_after": 404.3
   },
   "kv3_pv_v4e": {
    "stacked_before": 14,
@@ -437,8 +437,8 @@
   "kv3_pv_v6e": {
    "stacked_before": 10,
    "moved": 13,
-   "strict_pass": 7,
-   "loose_pass": 6,
+   "strict_pass": 6,
+   "loose_pass": 7,
    "refused": [],
    "max_hop_before": 403.6,
    "max_hop_after": 403.6
@@ -455,8 +455,8 @@
   "kv3_pv_v6ne": {
    "stacked_before": 10,
    "moved": 13,
-   "strict_pass": 7,
-   "loose_pass": 6,
+   "strict_pass": 6,
+   "loose_pass": 7,
    "refused": [],
    "max_hop_before": 403.6,
    "max_hop_after": 403.6
@@ -468,7 +468,7 @@
    "loose_pass": 8,
    "refused": [],
    "max_hop_before": 402.3,
-   "max_hop_after": 404.5
+   "max_hop_after": 404.4
   },
   "kv3_sys_c": {
    "stacked_before": 4,
@@ -480,5 +480,5 @@
    "max_hop_after": 564.0
   }
  },
- "plan_out_sha": "181b04b7a0d0"
+ "plan_out_sha": "16f46049d223"
 }

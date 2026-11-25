@@ -69,6 +69,13 @@ def pk(r):
     return AS._key(r)
 
 
+SW, RH = 0.054, 0.27     # core site grid (ft_bit_sites.snap_slots defaults): offsets are whole sites / rows, so moved bit sites stay on-grid
+
+
+def grid_off(r, c):
+    return [round(r[0] + round((c[0] - r[0]) / SW) * SW, 3), round(r[1] + round((c[1] - r[1]) / RH) * RH, 3)]
+
+
 def run_type(tn, t, rep, prefer=None):
     prefer = prefer or {}
     W, H = t["outline_um"]
@@ -92,6 +99,26 @@ def run_type(tn, t, rep, prefer=None):
         for r in s["regs_um"]:
             grid[(int(r[0] // 8), int(r[1] // 8))].append((b, r[0], r[1]))
     taken = set(own)
+    sites = collections.Counter()
+    for _b, _s in objs:
+        for st in _s.get("bit_sites_um") or []:
+            for q in st:
+                sites[(round(q[0], 3), round(q[1], 3))] += 1
+    in_core0 = lambda q: any(a < q[0] < c and b < q[1] < d for a, b, c, d in boxes0)
+    boxes0 = [(a + HALO, b + HALO, c - HALO, d - HALO) for a, b, c, d in bx]    # core boxes without the reg halo
+
+    def sites_ok(s, j, dx, dy):
+        bs = s.get("bit_sites_um")
+        if not (isinstance(bs, list) and j < len(bs) and isinstance(bs[j], list)):
+            return True
+        old = {(round(q[0], 3), round(q[1], 3)) for q in bs[j]}
+        for q in bs[j]:
+            n = [round(q[0] + dx, 3), round(q[1] + dy, 3)]
+            if not (0 <= n[0] <= W and 0 <= n[1] <= H) or (in_core0(n) and not in_core0(q)):
+                return False
+            if (n[0], n[1]) not in old and sites.get((n[0], n[1]), 0):
+                return False
+        return True
 
     def clear(c, b):
         gx, gy = int(c[0] // 8), int(c[1] // 8)
@@ -143,7 +170,10 @@ def run_type(tn, t, rep, prefer=None):
                         key=lambda c: abs(c[0] - r[0]) + abs(c[1] - r[1]))   # last resort: >= 5 um (> 4.32-um window) where hops sit at the 405 cap
             for pas in (0, 1, 2, 3):
                 for c in (g3 if pas == 3 else g2 if pas == 2 else cands):
-                    if not (0 <= c[0] <= W and 0 <= c[1] <= H) or inside(c, bx) or pk(c) in taken:
+                    c = grid_off(r, c)
+                    if not (0 <= c[0] <= W and 0 <= c[1] <= H) or inside(c, bx) or pk(c) in taken or c == r:
+                        continue
+                    if not sites_ok(s, j, c[0] - r[0], c[1] - r[1]):
                         continue
                     if (pas == 0 and near(c)) or (pas != 1 and not clear(c, b)):
                         continue
@@ -165,7 +195,11 @@ def run_type(tn, t, rep, prefer=None):
             grid[(int(ok[0] // 8), int(ok[1] // 8))].append((b, ok[0], ok[1]))
             bs = s.get("bit_sites_um")
             if isinstance(bs, list) and j < len(bs) and isinstance(bs[j], list):
+                for q in bs[j]:
+                    sites[(round(q[0], 3), round(q[1], 3))] -= 1
                 bs[j] = [[round(q[0] + dx, 3), round(q[1] + dy, 3)] for q in bs[j]]
+                for q in bs[j]:
+                    sites[(q[0], q[1])] += 1
             moved += 1
         s["regs_um"] = regs
         mh_a = max(mh_a, max(hops(s)))
