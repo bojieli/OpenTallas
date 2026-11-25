@@ -77,6 +77,14 @@ _i = next(i for i, (_, n, _) in enumerate(_nb0) if n == "nb_od")
 PORTS["qfd_dv_s8_station_tail1"] = (_nb0[:_i]
     + [("input", "nb_d_p", lambda p: 64), ("input", "nb_c_p", lambda p: 2)]
     + _nb0[_i:])
+# QC-STB-SPLIT 11-24 (st_b station hard children, STATION-HARDEN-1124): the orq / orq3 / nb0_orq / nb0_orq_mrep station
+# variants of the st_b regions carry exactly the nb0 / tail1 headers (test_param_wrap_station_tail1 checks each against
+# its own source header), so their port tables are the same lists.
+for _alias, _src in (("qfd_dv_s8_station_tail1_nb0_orq", "qfd_dv_s8_station_tail1_nb0"),
+                     ("qfd_dv_s8_station_tail1_nb0_orq_mrep", "qfd_dv_s8_station_tail1_nb0"),
+                     ("qfd_dv_s8_station_tail1_orq", "qfd_dv_s8_station_tail1"),
+                     ("qfd_dv_s8_station_tail1_orq3", "qfd_dv_s8_station_tail1")):
+    PORTS[_alias] = PORTS[_src]
 
 def param_text(params):
     """the bind's instantiation parameter text: #(.W(2104), .DEPTH(4), ...) in the given order"""

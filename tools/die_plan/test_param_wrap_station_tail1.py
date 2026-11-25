@@ -52,3 +52,19 @@ def test_ordinary_tail1_ports_match_source_header():
     sv = PW.wrapper_sv("qfd_dv_s8_station_tail1_h17_n7_s8", base, {"HI_PAD": 17, "SKEW_N": 7, "SKEW_S": 8})
     assert ".nb_d_p(nb_d_p)" in sv and ".nb_c_p(nb_c_p)" in sv
     assert "#(.HI_PAD(17), .SKEW_N(7), .SKEW_S(8))" in sv
+
+
+def test_st_b_station_variants_match_their_source_headers():
+    """QC-STB-SPLIT 11-24: each aliased st_b station base equals its own source header."""
+    for base, fname in (("qfd_dv_s8_station_tail1_nb0_orq", "qfd_dv_s8_ce_orq.sv"),
+                        ("qfd_dv_s8_station_tail1_nb0_orq_mrep", "qfd_dv_s8_ce_orq_mrep.sv"),
+                        ("qfd_dv_s8_station_tail1_orq", "qfd_dv_s8_ce_orq.sv"),
+                        ("qfd_dv_s8_station_tail1_orq3", "qfd_dv_s8_ce_orq3.sv")):
+        source = SRC.with_name(fname)
+        if not source.is_file():
+            continue
+        want = header_ports(source.read_text(), base)
+        got = [(d, n, w({})) for d, n, w in PW.PORTS[base]]
+        assert got == want, base
+        sv = PW.wrapper_sv("qc_stb_x", base, {"HI_PAD": 33, "SKEW_N": 7})
+        assert f"{base} #(.HI_PAD(33), .SKEW_N(7)) u_w" in sv and ".flt_vld_o(flt_vld_o)" in sv
