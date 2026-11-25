@@ -11184,3 +11184,4 @@ FAILED [AUTOPILOT 8f03ab1841f9] 2026-11-25 08:23:46 PST AUTOPILOT -> KIT-WAVE-12
   - CB-LCORNER: PASS-WITH-FIXES. In r1 the bc_i22 worst pin hop reached 412.6. r2 b2cb4d5e741b: na_i22 +17.28 in y (+19% area), bc_i22 slid up, worst hop about 395, nb_i22 untouched. A wider na band would hit the core.
   - CB-RSTHOP 8855c94b26c5: PASS-WITH-FIXES. Needs RESET-PLAN-MARGIN on main (push retrying) and the tree regenerated at bind.
   PRE for r2 + RSTHOP started on epyc12.
+- 2026-11-25 09:02 PST DIED [KV-HGI-WGATE] ot-run oth-ubuntu-3111755-1795625221 on open-snipe: rc=1 after 1063 s, ended 17:02:37, log /srv/opentallas-scratch2/claude/KV-HGI-WGATE/gate1.log, cmd: --die --mem 96 --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8/tree -- /usr/bin/python3 -I /srv/opentallas-scratch2/claude/rt/c57adec4b | class=NO-PATTERN cause=ROW-GATE NOT-READY lane=KV-HGI-WGATE die=qwen_kvsys plan=497f1df73e07 seconds=901.2 why=PRE-DIFF: 13 new findi
