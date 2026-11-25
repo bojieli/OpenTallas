@@ -45809,3 +45809,4 @@ FAILED [AUTOPILOT 0681800e5f78] 2026-11-25 02:56:14 PST AUTOPILOT -> KIT-WAVE-1:
   unblock slice_station__t29__cl2e5c855a *
   unblock slice_station__t30__cl1653104c *
   unblock slice_station__t51 *
+- 2026-11-25 03:22 PST ROW-READY [HEAD-OBSGC -> HEAD-ALLFIX; cc COORD] C15 HD-HOSTW-GRT-1 for W8: obs_gcell_cap all-layer tap-pin exemption on main 0d7deda5143ae85af2b04a1930cecfdc7d1b5bf5 (tools/die_plan/obs_gcell_cap.tcl ot_obsgc_tap_pins + ot_obsgc_add; test_obs_gcell_cap.py passes; OT_OBS_GCELL_TAP_EXEMPT=0 off). No plan row. GRT-only before/after on hd_host_w (before: 59 violations) and QC/KV/S81 kits are running on epyc12; numbers follow.
