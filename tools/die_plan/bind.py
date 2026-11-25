@@ -907,6 +907,65 @@ def core_input_uses_pad(plan):
                for bits in row.values() for n in bits.values())
 
 
+def undriven_census(open_inputs, tied_bits_by_part, parts, declared=None, declared_tied=None):
+    """UNDRIVEN-CENSUS-1124 (COORD r703: a new check starts REPORT-ONLY): per bound type, every input bit of a leaf the bound
+    RTL leaves undriven, in two classes that bind already reports as errors elsewhere:
+      open_bits  - UNDRIVEN_OPEN: bits the as-built instance leaves unconnected (absent port or above the connected width);
+      tied_ub_bits - TIED: undeclared constant ties, emitted as never-assigned `wire ub_N` (S81 c8: 30,387 per svc type);
+    bits = open_bits + tied_ub_bits, summed over the type's partitions (instances); *_max_instance = the largest single one.
+    declared = bits the plan excuses (dead proofs, bumps, declared ties) and so never counted.  Changes no verdict."""
+    declared, declared_tied = declared or {}, declared_tied or {}
+    rows = {}
+
+    def row(tn):
+        return rows.setdefault(tn, dict(groups=0, open_bits=0, absent_bits=0, partial_bits=0, source_leaf_bits=0,
+                                        tied_ub_bits=0, partitions=set(), _open_part=defaultdict(int),
+                                        _tied_part=defaultdict(int), declared=dict(dead=0, bump=0, tied=0)))
+    for r in open_inputs:
+        x = row(r["type"])
+        x["groups"] += 1
+        x["open_bits"] += r["n"]
+        x["source_leaf_bits" if r.get("source_leaf") else ("absent_bits" if r.get("absent") else "partial_bits")] += r["n"]
+        x["partitions"].add(r.get("partition"))
+        x["_open_part"][r.get("partition")] += r["n"]
+    for p, n in tied_bits_by_part.items():
+        tn = (parts.get(p) or {}).get("type")
+        if tn is None or not n:
+            continue
+        x = row(tn)
+        x["tied_ub_bits"] += n
+        x["partitions"].add(p)
+        x["_tied_part"][p] += n
+    for tn, kinds in declared.items():
+        for k, n in kinds.items():
+            if n:
+                row(tn)["declared"][k] = row(tn)["declared"].get(k, 0) + n
+    for (tn, _m, _pn), bits in declared_tied.items():
+        if bits and tn is not None:
+            row(tn)["declared"]["tied"] += len(bits)
+    types = {}
+    for tn, x in sorted(rows.items()):
+        op, tp = x.pop("_open_part"), x.pop("_tied_part")
+        x["partitions"] = len(x["partitions"])
+        x["bits"] = x["open_bits"] + x["tied_ub_bits"]
+        x["bits_max_instance"] = max((op.get(p, 0) + tp.get(p, 0) for p in set(op) | set(tp)), default=0)
+        x["declared"]["total"] = sum(v for k, v in x["declared"].items() if k != "total")
+        types[tn] = x
+    hit = {tn: x for tn, x in types.items() if x["bits"]}
+    return dict(report_only=True, counted="bits = open_bits (UNDRIVEN_OPEN) + tied_ub_bits (TIED, wire ub_N), all instances",
+                types_with_any=len(hit), bits=sum(x["bits"] for x in hit.values()),
+                open_bits=sum(x["open_bits"] for x in hit.values()), tied_ub_bits=sum(x["tied_ub_bits"] for x in hit.values()),
+                types=types)
+
+
+def undriven_census_line(die, census, top=8):
+    """the one report-only bind line (UNDRIVEN-CENSUS-1124)"""
+    hit = sorted(((x["bits"], tn) for tn, x in census["types"].items() if x["bits"]), key=lambda t: (-t[0], t[1]))
+    return (f"UNDRIVEN_OPEN_CENSUS die={die} types={census['types_with_any']} bits={census['bits']} "
+            f"top={','.join(f'{tn}:{b}' for b, tn in hit[:top]) or '-'} open={census['open_bits']} "
+            f"tied_ub={census['tied_ub_bits']} (report-only)")
+
+
 def lockup_key_errors(plan, seen, typed_seen=()):
     """LATCH_EXCEPT_MODULE (FABLE-PLAN-QC-N 11-17): every module named in clock.core_input_lockup.latch_except / latch_except_hb4 must be a
     BOUND lockup module (the leaf module the emitter really saw, e.g. qfd_tile_nk_rp2_romleaf_rr, not the plan hard-core name
@@ -1364,6 +1423,7 @@ class Binder:
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
         self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
+        self.tied_bits_by_part = defaultdict(int)   # UNDRIVEN-CENSUS-1124: partition -> undeclared tied bits (emitted ub_ wires)
         self.declared_tied = defaultdict(list)   # (type, module, port) -> bits, manifest declared_ties (reported, not errors)
         self.rewire, self.rewire_stats = {}, {}
         # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
@@ -1900,6 +1960,7 @@ class Binder:
         whole port, which is then CONNECTED here as that constant (a tie that is only declared would still float).
         Scope: leaf pins of the bound die.  Instances inside a leaf body are blackboxed here (kit synth gate)."""
         self.open_inputs, self.open_inputs_unjudged = [], []
+        decl = self.open_inputs_declared = defaultdict(lambda: defaultdict(int))   # UNDRIVEN-CENSUS-1124: type -> kind -> bits
         G, F = self.G, self.F
         if not getattr(F, "leaf_inputs", None):
             return
@@ -1925,6 +1986,7 @@ class Binder:
                 have = len(c.ports.get(pn) or [])
                 if (ci, pn) in bumps:
                     cnt["open_input_bump"] += (w or 1) if not have else 0
+                    decl[tn]["bump"] += (w or 1) if not have else 0
                     continue
                 if w is None:
                     if have:
@@ -1938,6 +2000,7 @@ class Binder:
                 dfl = self.param_defaults.get((c.ytype, c.module), {})
                 live = [i for i in bits if not self.proven_dead.allows(tn, c, pn, i, dfl)]
                 cnt["open_input_dead"] += len(bits) - len(live)
+                decl[tn]["dead"] += len(bits) - len(live)
                 if not live:
                     continue
                 if not have and len(live) == w:
@@ -1949,6 +2012,7 @@ class Binder:
                         c.dirs[pn] = "input"
                         G.dirs[ci][pn] = "input"
                         cnt["open_input_tied"] += w
+                        decl[tn]["tied"] += w
                         continue
                 cnt["undriven"] += len(live)
                 cnt["open_input"] += len(live)
@@ -2052,6 +2116,8 @@ class Binder:
             cnt["tied"] += 1
             self.tied_by_port[f"{self.F.cells[ci].module}.{pn} <- {s[2]}"] += 1
             self.tied_pins[(self.F.cells[ci].path, pn, self.F.cells[ci].module)].append((i, s[1], s[2]))
+            if hasattr(self, "tied_bits_by_part"):
+                self.tied_bits_by_part[p] += 1
             self.errors.append(f"TIED {pin}[{i}] = {s[1]} ({s[2]})") if cnt["tied"] <= 200 else None
             return ("tied", s[1])
         if k == "top":
@@ -6776,13 +6842,17 @@ def cmd_bind(a):
                            port=n + "_i", scope="parent_spare_ft", bits=list(range(sl["width"] + 1)),
                            n=sl["width"] + 1, value=0)
                       for p, slots in sorted(getattr(B, "spare_ft", {}).items()) for n, sl in sorted(slots.items())]
+    _census = undriven_census(getattr(B, "open_inputs", []), getattr(B, "tied_bits_by_part", {}), B.parts,
+                              getattr(B, "open_inputs_declared", {}), getattr(B, "declared_tied", {}))
     _fresh_write_text(out / "bind_open_inputs.json", json.dumps(
         dict(schema="opentallas.bind_open_inputs.v1", undriven=getattr(B, "open_inputs", []),
              unjudged=getattr(B, "open_inputs_unjudged", [])[:5000],
              rule_cells=getattr(B, "open_inputs_rule", []), nested=getattr(B, "open_inputs_nested", []),
              nested_unjudged=getattr(B, "open_inputs_nested_unjudged", []),
              n_undriven=sum(r["n"] for r in getattr(B, "open_inputs", [])),
+             census=_census,
              **{k: B.counts.get("open_input_" + k, 0) for k in ("dead", "bump", "tied")}), indent=1) + "\n")
+    print(undriven_census_line(raw["die"]["name"], _census), flush=True)
     _fresh_write_text(out / "bind_declared_ties.json", json.dumps(
         [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())] + parent_ft_ties,
         indent=0) + "\n")
