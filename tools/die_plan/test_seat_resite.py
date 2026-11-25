@@ -77,3 +77,12 @@ def test_flip_recommendation_lists_cores_with_mostly_against_pins():
     t = _type([[60.0, 200.0]])
     t["internal_stations"] = t["internal_stations"] * 5
     assert R.flip_recommendations(t, min_share=0.5, min_hops=4) and R.flip_recommendations(_type([[300.0, 200.0]])) == []
+
+
+def test_far_mid_chain_site_is_found():
+    # the only legal sites are 300..500 um from the pin (next register at 700): the ring search must reach CAP, not stop at ~259 um
+    t = _type([[60.0, 200.0], [700.0, 200.0]])
+    ops, sk = R.type_fixes("T", t)
+    assert len(ops) == 1 and not sk
+    q = ops[0]["value"][0]
+    assert R.man((100.0, 200.0), q) <= R.CAP and R.man(q, (700.0, 200.0)) <= R.CAP and S.seat_orient(_type(ops[0]["value"]))[0] == 0

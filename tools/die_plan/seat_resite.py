@@ -29,7 +29,7 @@ LAT = 4.32
 HALO = 1.0
 INSET = 8.0
 CAP = 404.0
-RINGS = 60
+RINGS = int(CAP / LAT) + 3  # the search must reach every site within CAP of the pin (60 rings = 259 um missed mid-chain sites)
 
 
 def man(a, b):
@@ -66,11 +66,11 @@ def fix_end(pin, n, old, nxt, rects, w, h, taken):
         if first is not None and ring > first + 3:
             break
         for p in _ring(start, ring):
-            if p in taken or not _legal(p, rects, w, h):
+            if man(pin, p) > CAP or man(p, nxt) > CAP:
                 continue
             if (p[0] - pin[0]) * n[0] + (p[1] - pin[1]) * n[1] < -S.AGAINST_UM:
                 continue
-            if man(pin, p) > CAP or man(p, nxt) > CAP:
+            if p in taken or not _legal(p, rects, w, h):
                 continue
             first = ring if first is None else first
             d = man(p, old)
