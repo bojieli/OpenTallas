@@ -92,3 +92,18 @@
 - 2026-11-24 22:07 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2329642 on dear-crayfish: rc=0 after 63 s, ended 22:07:03, log none, cmd: ot-push-main 
 - 2026-11-24 22:14 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2698775 on dear-crayfish: rc=0 after 21 s, ended 22:14:20, log none, cmd: ot-push-main 
 - 2026-11-24 22:21 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2991118 on dear-crayfish: rc=0 after 20 s, ended 22:21:59, log none, cmd: ot-push-main 
+- 2026-11-24 22:22 PST PRECHECK-R3: ADV-RST-SIDECAR landed and risk sweep done [-> COORD; HAND-OFF S81-ALLFIX-INT, KV-ALLFIX; cc QC-ALLFIX, QC-SLECTL-RRL]
+  Check (report-only): main 86eeb1e640 + 5369903db1 + 6e9705f7fe (tools/die_plan/adv_rst_sidecar.py, in plan_advisory CHECKS as RST-SIDECAR).
+  It takes the sidecar tap/node that bind and gen read, from the as-built clock_landing_table (or --sidecar), and measures it on the PLAN collector_tree, using the same measure as QC-SLECTL-RRL-srctap2.py:
+  - RAW: the reset copy is > 300 um from the RTL raw parent of the ring tap nearest the pin.
+  - STATUS / CHILD: the collector is > 405 um from its status pins.
+  - MISSING: the sidecar node is not in the plan tree.
+  - Each far collector is also split into REATTACH (a same-depth relay lies within 405 um, so re-noding fixes it) and NO-NEAR (no such relay; plan geometry).
+  Validation: on QC C1m it reproduces the builder's 104 hops > 300 / 20 > 405 exactly. That is 93 RAW + 11 MISSING, and 9 STATUS + 11 MISSING; MISSING counts sources whose sidecar node is gone from the plan tree.
+  Counts per die (types hit / types with a collector sidecar row; reset copies > 300; collectors > 405; MISSING; worst):
+  - S81 c9s 99f7d3042489, sidecar landed_sidecar_c9_lkes0AB_3badadef97b7: 95/265 types; RAW 20; STATUS 6 + CHILD 121, all 127 REATTACH; MISSING 0; worst 4488 um. c9t43 gives identical counts (same sidecar). Top families: ot_s81sl_leaf (13 types, 34 hops, worst 2153), ot_s81sl_kv_leaf (3 types, 9 hops, worst 4488), col_h9_r0_p1 (4 types, 8 hops, worst 2459), svc_hi_dsdv_svc_rs, dsdv_slice_c1x_C, slice_station. Most hits are seam children (e.g. sl_leaf__t26 child 0 at rst_n_t60, 2000 um away). There the plan and sidecar agree on a stale tap, and a same-depth relay is in reach. -> S81-ALLFIX-INT: re-node with collector_reattach --sidecar (or the srctap2 rule) at the c10 compose.
+  - KV A5t6, sidecar eW_sidecar_A5t3 (as-built asbuilt_allfix_A5t3): 45/91 types; RAW 218; STATUS 9 + CHILD 5, all 14 REATTACH; MISSING 0; worst 1222 um. Top types: kv3_pv_v7e RAW 39 (worst 428), kv3_hub_C 29 (599), kv3_hub_Wi 27 (500), kv3_pv_v3ne 19 (805), kv3_pc_v1 x9 18 (515), kv3_hgi_v5 8 RAW + 8 far (1182). -> KV-ALLFIX: the A5t6 bind reads the A5t3 sidecar against the A5t6 plan tree, so reattach the sidecar to A5t6.
+  - HEAD W6: N/A, 0 types. None of its 27 landing-contract types has a plan collector_tree, so there are no plan tap indices that can go stale against the sidecar.
+  - QC: C1m 41/125 types (RAW 93, far 12 REATTACH, MISSING 12, worst 1530). C1n (TAPBINS2 f0d336) 43/125 (RAW 107, far 22 STATUS + 5 CHILD, MISSING 12). This class is already owned by QC-SLECTL-RRL (srctap2 row).
+  Caveat: RAW assumes the shared clock_landings convention (the RTL raw copy taps the ring tap nearest the pin). The KV RAW count of 218 depends on it, so KV-ALLFIX should confirm on one kv3_hub type.
+  Outputs: epyc11/epyc10 PRECHECK-R3/runs/epw/rsc/*.v2.txt.
