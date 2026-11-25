@@ -45,3 +45,8 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - Cancelled the epyc7 C1h/C1k queued clients (C1h/C1k superseded) by killing exact PIDs.
 - C1n = TAPBINS2 f0d336a16743 (copied to epyc11 runs/epw/plan_c1n_f0d336.json). RECT 0; BITSITE 10107 colliding on 7 types (new: slw_su_c x2 4302 each, sle_su_c 522, all ft_slots[cws1]); PG 15445/181, same as C1m; ELAB: C1m bind 0, and the C1n bind runs it via the hook.
 - Open: rerun on the composed C1n once QC-ALLFIX posts it. Run with --crit on epyc10/11 (static checks take seconds). S81 c8/c8fix ELAB reruns are still queued on epyc9.
+
+## 11-25 06:xx PST ADV-RST-SIDECAR landed + sweep posted (hub dd8dc2ff9a)
+- main 86eeb1e640, 5369903db1, 6e9705f7fe: tools/die_plan/adv_rst_sidecar.py (+ test, plan_advisory RST-SIDECAR). It reproduces the QC-SLECTL-RRL builder on C1m (104/20).
+- Sweep: S81 c9s = c9t43: 95 types, RAW 20, far 127 (all REATTACH), handed to S81-ALLFIX-INT. KV A5t6 (A5t3 sidecar): 45 types, RAW 218, far 14, handed to KV-ALLFIX. HEAD W6 N/A (no plan collector_tree). QC C1m/C1n owned by QC-SLECTL-RRL.
+- Runner: runs/epw/rsc/rsc_run.py TAG PLAN SIDECAR|ASB:TREE:ASBUILT on epyc10/11. Copies of the c9t43 plan and HEAD W6 plan + sidecar are on epyc11 rsc/, because epyc9 jobs sat on its admission lock and I killed those 2 clients by exact PID.
