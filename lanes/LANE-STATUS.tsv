@@ -185,3 +185,4 @@ HEAD-W6-ACCEPT	stood-down	COORD	2026-11-24	07:57 PST | W6 b3507e628de6 ACCEPT po
 BINDPROBE-FIX	stood-down	KITWAVE-BINDOUT	2026-11-24	09:25 PST | bind probe re-probe loop fixed on main 434f13368bb; probes off epyc10 via bind_probe_avoid_hosts
 HEAD-TILE-RESIGN	stood-down	none	2026-11-24	09:48 PST | job done: hd_tile signed (417e624cd713), exported, alias on main 19bee1bf8c2; COORD reads the result
 QC-COMPOSE-GUARD	stood-down	QC-CB-C1L	2026-11-24	16:10 PST | job done: C1k dropped-row list + C1l restore 3d81651854c4 + compose_drop_guard main e827d53ab617; see lanes/handoff/QC-COMPOSE-GUARD.md
+KV-OWN-HG	stood-down	KV-ALLFIX	2026-11-24	18:12 PST | all KV-OWN-HG rows have named live owners (hgi_v1/v7 KV-ALLFIX, hg_v1p3 KV-OWN-HG-R2, hub_Wi KV-OWN-HUB-R2, pc cl254 KV-SENDER-SKEW); u_rrl export-pair fix 0549174ed9c on main
