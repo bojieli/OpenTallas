@@ -47016,3 +47016,22 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 06:16 PST STATE tools sync recovered after 18 min (rt/current 631ac6b3736b)
 - 2026-11-25 06:15 PST STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: 11 flagged of 244 containers {'NO-PROGRESS': 1, 'GRT-LABEL': 10, 'YOUNG': 172, 'NO-DATA': 29, 'KEEP': 3, 'EXCLUDED': 1, 'PROGRESS': 28}; full table lanes/NOPROG-TABLE.md; flagged: epyc8 kv3_hg_v1p5 pregrt_ff_hold [NO-PROGRESS: no new repair_TNS row in 2 h] REPORT-ONLY: lane-own kit (K; epyc10 kv3_pc_v1 5_1_grt [GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion)] ; epyc10 kv3_pv 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 46293 at round 10 > 1000] ; epyc11 kv3_pv_v2 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 48975 at round 10 > 1000] ; epyc11 kv3_pv_v3e 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 53939 at round 10 > 1000] ; epyc11 kv3_pv_v4n 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 16743 at round 10 > 1000] ; epyc11 kv3_pv_v5ne 5_1_grt [GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion)] ; epyc11 kv3_pv_v6n 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 35967 at round 10 > 1000] ; epyc11 slw_su_c 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 14785 at round 10 > 1000] ; epyc7 cbf_q00_s2 5_1_grt [GRT-LABEL: DESIGN-FAIL: GRT-0273 (clock NDR dropped under congestion)] ; epyc7 sle_ctl 5_1_grt [GRT-LABEL: DESIGN-FAIL: overflow 2858 at round 10 > 1000] 
 - 2026-11-25 06:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned S81 119 types; CBC-FALLBACK (r713: >= 2 failed design fix rounds -> close-by-construction form; die owner folds tools/die_plan/cbc_pass.py rows into the next event): S81 col_h9_r1: 60 unsigned (col_h9_r1__t1__cl49d7a23e__pv047ea3b3,col_h9_r1__t1__cl49d7a23e__pv0a45e191,col_h9_r1__t1__cl49d7a23e__pv0bab1162), events 18a2688b741/a6771d12,891100ef774/6833070d; S81 col_h9_r2: 58 unsigned (col_h9_r2__t1__cl774acf45__pv858fb2ba,col_h9_r2__t1__cl774acf45__pve3ab90e7,col_h9_r2__t1__cl774acf45__pvea45273b), events 18a2688b741/a6771d12,891100ef774/6833070d; S81 dsdv_slice_lepw_mu_C: 1 unsigned (dsdv_slice_lepw_mu_C__t1), events 18a2688b741/a6771d12,891100ef774/6833070d
+- 2026-11-25 06:17 PST c10 PRE + BIND PLAN [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS, S81-OPEN-FSTART, S81-D3-SCOPE]
+  RECIPE: epyc12 compose/recipe_c10.json (794b40f8d00f) on base p10_row (de9035f401fe). Output compose/c10_r1/05_ft_site_leg_c8.json (3109ed107d1a): 13798 ops, 0 conflicts. 37 rows IN-BASE, plus FT-SITE-LEG on 24 types.
+  PRE (rt b1de07c72d76, as-built v2 b23d94ffcd6e, run in parallel at 48 and 24 threads):
+  - c10: FAIL, findings=29 (ANCHORDRY 26, RSTREACH 3).
+  - base p10: FAIL with the IDENTICAL 29 findings, so c10 adds 0 new findings; all 29 are inherited from p10.
+  - WALL TIME 79 min each (04:53 -> 06:12 PST; internal PRE-TIME 4747 s, of which ADVISORY 2818 s).
+  - No INOUTLINE.
+  On the 99-type scope:
+  - 16 findings are on out-of-scope types.
+  - 8 are in scope: ANCHORDRY on serdes__t3 and leaf t6/t28/t43/t51/t70; RSTREACH on kv_leaf__t2 and leaf__t17. These 8 types run as place probes only, so there are no route kits on PRE-failing types. The ANCHORDRY rows are p10 re-anchor inheritance; owner S81-C9-ROWS / S81-OPEN-FSTART, ETA c10b.
+  - The bind runs with OT_PLAN_GATE_PRE=warn, so PRE findings do not fail the die bind.
+  BIND (armed): timer s81int-c10bind on epyc12 at 06:42 PST. It is gated on STAGE12B_RC=0 (the 06:40 catch-up, now on epyc12) and on the plan sha matching. It runs ot-run --crit --mem 96 --hosts epyc12 d3w_scope_bind.sh, tag c10_0700, rt 515889f6ef75, as-built v2 (a048 refused).
+  - Scope 97 types = 99 (LANE-ASBUILT-C10 exclusion, 13 types) minus kv_leaf__t2 and slice_station__t45 (the 06:30 D3 fallback DEFERs them; no D3 ROW-READY).
+  - Log: s81-allfix-int/tmp/c10_bind_run.log.
+  LAUNCH after the bind (epyc12/epyc7/intel1 only):
+  - ROUTE 21: bk_sel t2, c1x_C t6, lepw_mu_C t1, phy t1, serdes t15__cla3d02796, slice_station t17 t20 t29__cl2e5c855a t41 t43 t44 t46 t47 t48, svc_hi pvso_entry t2, svc_hi rs t1 t4_att t6, svc_lo rs t1 t4 t6.
+  - PROBES 76 (--goal place): 45 leaf, kv_leaf t3-t5, 27 col, serdes t3.
+  - Plus the 20-type c10 place re-issue list.
+  Note: COORD said "23 full + 76 probes". The measured split after removing serdes__t3 (PRE FAIL) and slice_station__t45 (D3 DEFER) is 21 route + 76 probe on the 97 bound types.

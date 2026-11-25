@@ -2218,3 +2218,22 @@
   Bind: as-built v2 b23d94ffcd6e; a048 refused (wrapper rc 3). rt 515889f6ef75 (INOUTLINE guard).
 - 2026-11-25 06:12 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-2944899-1795611195 on tolerant-swine: rc=1 after 4777 s, ended 06:12:47, log /home/ubuntu/tmp/s81int/pre_c10_r1_v2b.out, cmd: --crit --mem 96 --threads 48 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/s81-allfix-int/compose --stage /srv/opentallas-scratch2/cl | class=DESIGN-FAIL cause=no cause line
 - 2026-11-25 06:13 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-2944867-1795611195 on tolerant-swine: rc=1 after 4804 s, ended 06:13:13, log /home/ubuntu/tmp/s81int/pre_base_p10_v2b.out, cmd: --crit --mem 96 --threads 24 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/s81-allfix-int/compose --stage /srv/opentallas-scratch2/cl | class=DESIGN-FAIL cause=no cause line
+- 2026-11-25 06:17 PST c10 PRE + BIND PLAN [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS, S81-OPEN-FSTART, S81-D3-SCOPE]
+  RECIPE: epyc12 compose/recipe_c10.json (794b40f8d00f) on base p10_row (de9035f401fe). Output compose/c10_r1/05_ft_site_leg_c8.json (3109ed107d1a): 13798 ops, 0 conflicts. 37 rows IN-BASE, plus FT-SITE-LEG on 24 types.
+  PRE (rt b1de07c72d76, as-built v2 b23d94ffcd6e, run in parallel at 48 and 24 threads):
+  - c10: FAIL, findings=29 (ANCHORDRY 26, RSTREACH 3).
+  - base p10: FAIL with the IDENTICAL 29 findings, so c10 adds 0 new findings; all 29 are inherited from p10.
+  - WALL TIME 79 min each (04:53 -> 06:12 PST; internal PRE-TIME 4747 s, of which ADVISORY 2818 s).
+  - No INOUTLINE.
+  On the 99-type scope:
+  - 16 findings are on out-of-scope types.
+  - 8 are in scope: ANCHORDRY on serdes__t3 and leaf t6/t28/t43/t51/t70; RSTREACH on kv_leaf__t2 and leaf__t17. These 8 types run as place probes only, so there are no route kits on PRE-failing types. The ANCHORDRY rows are p10 re-anchor inheritance; owner S81-C9-ROWS / S81-OPEN-FSTART, ETA c10b.
+  - The bind runs with OT_PLAN_GATE_PRE=warn, so PRE findings do not fail the die bind.
+  BIND (armed): timer s81int-c10bind on epyc12 at 06:42 PST. It is gated on STAGE12B_RC=0 (the 06:40 catch-up, now on epyc12) and on the plan sha matching. It runs ot-run --crit --mem 96 --hosts epyc12 d3w_scope_bind.sh, tag c10_0700, rt 515889f6ef75, as-built v2 (a048 refused).
+  - Scope 97 types = 99 (LANE-ASBUILT-C10 exclusion, 13 types) minus kv_leaf__t2 and slice_station__t45 (the 06:30 D3 fallback DEFERs them; no D3 ROW-READY).
+  - Log: s81-allfix-int/tmp/c10_bind_run.log.
+  LAUNCH after the bind (epyc12/epyc7/intel1 only):
+  - ROUTE 21: bk_sel t2, c1x_C t6, lepw_mu_C t1, phy t1, serdes t15__cla3d02796, slice_station t17 t20 t29__cl2e5c855a t41 t43 t44 t46 t47 t48, svc_hi pvso_entry t2, svc_hi rs t1 t4_att t6, svc_lo rs t1 t4 t6.
+  - PROBES 76 (--goal place): 45 leaf, kv_leaf t3-t5, 27 col, serdes t3.
+  - Plus the 20-type c10 place re-issue list.
+  Note: COORD said "23 full + 76 probes". The measured split after removing serdes__t3 (PRE FAIL) and slice_station__t45 (D3 DEFER) is 21 route + 76 probe on the 97 bound types.
