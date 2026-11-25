@@ -990,3 +990,8 @@
   (a) Publish a strict bind scoped to the 89 types (n_errors 0) and launch now, pilots first. LATCHECK and the die top move to A5t9/DIE-PROTO after R7-EFAULT-RESOURCE. DIE-PROTO gets per-type RTL only until A5t9.
   (b) Fix the 4 EMIT gaps first: a regate3, +2 h.
   Recommend (a). Compose is sealing the scoped bind now (reversible); apply and launch wait for your answer.
+- 2026-11-25 09:43 PST KV-ALLFIX 11-25 09:43 PST F-12/K-02/K-07 DONE (c530b19a; ALLFIX-KV L563-727, 165 rows, 15 fields each).
+  - F-12: one latest row per item, 165 items. The F12-PROBE-READ placeholders are replaced by the real status from each item's last owner row, with probe_unit as host:dir. 84 are open (44 DEFERRED, 12 DRAFT-NEEDED); 81 are closed or in a plan. probe_result: 75 measured (8 probe, 26 carried, 41 baseline), 90 NO-PROBE-YET with a reason.
+  - K-02: 48 re-dates, all owned. 44 go to the A5t9 cut 13:00 PST; real later ETAs are kept.
+  - K-07: 18 rows re-owned to KV-OWN-HG-R3. The 2 pilots stay KV-ALLFIX.
+  - Ledger debt: L559 has 5 fields (HUB-R2) and L560-562 have 14 (PC-BANK). Those lanes should restate them.
