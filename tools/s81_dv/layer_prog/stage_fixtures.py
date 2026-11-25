@@ -139,6 +139,9 @@ def gen(stage, rank, out, path=None, ck=None):
                 a, dt = LC._raw(ck, tensor, rows, cols)
                 o.put(f"weights/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
     shapes = x_shapes(m, experts, spec)
+    if "attn.cmp.wk" in bf:
+        # The indexer projection consumes the full checkpoint row, including split inputs.
+        shapes["attn.cmp.norm.scale"] = (o.files["weights/indexer.wk.bin"]["shape"][1],)
     if engram:
         # The weights-only planner still needs a vector at the released K.
         # The actual runtime Engram all-gather is outside this image fixture.
