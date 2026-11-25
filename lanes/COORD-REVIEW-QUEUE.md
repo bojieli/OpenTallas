@@ -11738,3 +11738,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.2 h job 1.2 h: last event 1.3 h ago, log write 1.3 h ago (35 lines), cpu idle (hung)
 - 2026-11-25 10:22 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc7: rt/current 37d7ab58cd42 != hub 427fe7078f5a. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-25 10:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 10:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-plan-r6 on intel1 wrote 49 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
