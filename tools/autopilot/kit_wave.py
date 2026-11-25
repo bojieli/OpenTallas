@@ -9460,6 +9460,38 @@ def bind_pins(stamp, new_rt, bind_rt, bind_sha=""):
     return {"rt": str(bind_rt).rstrip("/"), "sha": str(bind_sha or os.path.basename(str(bind_rt).rstrip("/"))), "files": {n: old[n] for n in sorted(want)}}
 
 
+# CARRY-FWD-1125 (COORD 05:4x, KV-SENDER-SKEW hub 1c659a509b1): a kit whose BIND-PIN was refused falls back to the bind's WHOLE rt (e.g. 327b4daf3eda),
+# whose bind_stream.py predates d53d2f5627 BIND-SNAP-ENDED, and dies at kit_snap "bind heartbeat absent" on an ended bind's kit-store snapshot.
+# Launch-path fixes the fallback rt predates ride forward from the newest rt as a pin overlay (rt_launch_tree.sh, sha-checked): {file: marker}.
+# Only files outside the bind stamp (bind_tool_stamp.GENERATORS) are carried, so the bind's generators stay the bind's own.
+CARRY_FORWARD = {"bind_stream.py": "_ended_snapshot"}
+
+
+def carry_pins(new_rt, old_rt):
+    """CARRY-FWD-1125: the pin overlay {"rt": new_rt, "sha", "files": {name: sha256}} that gives a kit on the older OLD_RT the CARRY_FORWARD
+    files of NEW_RT (only those OLD_RT lacks the fix of, and only when OLD_RT's own modules find every name they use in the carried file);
+    None when nothing is to carry or OT_CARRY_PIN=0"""
+    if os.environ.get("OT_CARRY_PIN", "1") == "0" or not new_rt or not old_rt or str(new_rt).rstrip("/") == str(old_rt).rstrip("/"):
+        return None
+    files = {}
+    for n, marker in CARRY_FORWARD.items():
+        nf, of = Path(new_rt) / "tools" / "die_plan" / n, Path(old_rt) / "tools" / "die_plan" / n
+        try:
+            nt = nf.read_text(errors="replace")
+        except OSError:
+            continue
+        try:
+            ot = of.read_text(errors="replace")
+        except OSError:
+            ot = ""
+        if marker in ot or marker not in nt or pin_api_gaps(old_rt, new_rt, [n]):
+            continue
+        files[n] = hashlib.sha256(nf.read_bytes()).hexdigest()
+    if not files:
+        return None
+    return {"rt": str(new_rt).rstrip("/"), "sha": os.path.basename(str(new_rt).rstrip("/")), "files": files, "carry": True}
+
+
 def pin_api_gaps(new_rt, bind_rt, names):
     """KV-NOADVANCE 11-25 (30 KV + 5 S81 gen fails, 'module reset_tree has no attribute raw_tap_hold'): a pin set must be self-consistent.
     Static scan: every `<alias>.<attr>` that an UNPINNED tools/die_plan module of new_rt uses on a pinned module (alias from
@@ -9661,6 +9693,7 @@ def resolve_tree_inputs(cfg, die, item, sp, tree, host=None, bind_out=None, rt=N
         return {"update": upd, "record": rec}
     if hit:
         upd["_rt_sha"] = hit[1]
+        upd["_rt_carry"] = carry_pins(sp["tools_rt"], hit[0])   # CARRY-FWD-1125
         rec["rt_from"] = f"rt {os.path.basename(hit[0])} (the bind's generators; wave rt {str(sp.get('tools_sha') or '')[:12]} differs)"
         return {"update": upd, "record": rec}
     if (pr or {}).get("gens") and not stamp_diff(stamp, pr["gens"]):
@@ -9768,6 +9801,9 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
                 sp.pop("gen_pins", None)
     if rt_pick:
         sp.pop("gen_pins", None)                         # an explicit --rt / the bind's whole rt: no overlay
+        _cp = ((ti or {}).get("update") or {}).get("_rt_carry") if not rt else None
+        if _cp:                                          # CARRY-FWD-1125: except the launch-path fixes the bind's rt predates
+            sp["gen_pins"] = _cp
     if plan:
         sp["plan"] = os.path.abspath(plan)
     ov = [o for o in (overlays or []) if o]
@@ -11537,8 +11573,14 @@ def run_item(spec_path):
                     rc, txt = run("bind_toolskew_pin", remote(f"python3 -I {q(tsrc)}/tools/die_plan/bind_tool_stamp.py check --bind-out {q(bind)} --tools {q(tsrc)}"), idempotent=True)
                 elif rc2 == 0 and hit:
                     old_sha = sp.get("tools_sha")
+                    _new_rt = sp.get("tools_rt")
                     sp["tools_rt"], sp["tools_sha"] = hit[-1]
                     sp.pop("gen_pins", None)
+                    _cp = carry_pins(_new_rt, sp["tools_rt"])     # CARRY-FWD-1125: the bind's whole rt keeps the newest bind_stream snapshot fix
+                    if _cp:
+                        sp["gen_pins"] = _cp
+                        print(f"KW_CARRY_PIN whole bind rt {sp['tools_sha']} + {', '.join(_cp['files'])} from rt {_cp['sha']}", flush=True)
+                        res.update(gen_pins=_cp)
                     tsrc = sp_launch_path(sp)
                     print(f"KW_BIND_RT gen runs on the bind's rt {sp['tools_sha']} (was {old_sha}): {txt.strip().splitlines()[-1][:300] if txt.strip() else ''}", flush=True)
                     res.update(tools_rt=sp["tools_rt"], tools_sha=sp["tools_sha"], tools_rt_from=f"bind stamp (wave rt {old_sha})")
@@ -14612,7 +14654,11 @@ def bind_rt_follow(cfg, die, f):
         return f
     if pins:                                           # BIND-PIN-1124: the newest rt, the bind's generator files pinned
         return dict(f, gen_pins=pins)
-    return {"tools_rt": hit[0], "tools_sha": hit[1]} if hit else f
+    if not hit:
+        return f
+    out = {"tools_rt": hit[0], "tools_sha": hit[1]}
+    cp = carry_pins(f["tools_rt"], hit[0])                # CARRY-FWD-1125: the whole bind rt keeps the newest launch-path fixes
+    return dict(out, gen_pins=cp) if cp else out
 
 
 def rt_launch_path(src, rt, pins=None):
