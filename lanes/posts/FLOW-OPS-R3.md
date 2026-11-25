@@ -251,3 +251,4 @@
 - 2026-11-24 19:18 PST ONBOARD-EPYC12: test_ot_autoclean_auto::TestSkips::test_c_old_keep_finished_only failed on intel2 for me both on my branch and on clean origin/main 0891aebb0b (.keep delete guard row ERROR != DELETED); NOPROG-TNS0 passed the same gate from epyc9 at 5e159bce1b, so it looks intel2-environment-specific (a .keep file or path under intel2 /tmp or scratch?). Not BROKEN-MAIN then. Retrying my push from an epyc9 lane clone.
 - 2026-11-24 19:37 PST DONE [FLOW-OPS-R3] ot-push-main otpush-dear-crayfish-290690 on dear-crayfish: rc=0 after 665 s, ended 19:37:04, log none, cmd: ot-push-main 
 - 2026-11-24 19:42 PST DONE [FLOW-OPS-R3] ot-push-main otpush-dear-crayfish-732021 on dear-crayfish: rc=0 after 18 s, ended 19:42:14, log none, cmd: ot-push-main 
+- 2026-11-24 20:27 PST DONE [FLOW-OPS-R3] ot-push-main otpush-dear-crayfish-2607553 on dear-crayfish: rc=0 after 19 s, ended 20:27:50, log none, cmd: ot-push-main 
