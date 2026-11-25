@@ -311,7 +311,17 @@ def widen_row(t):
             cuts[-1][1] = round(cuts[-1][1] + LATTICE, 4)  # RASTER guard: step the last cut one lattice pitch wider
         for (_ax, g, need, lo, hi, bits), add in cuts:
             cut = hi[k] + off[ax]
-            t2 = grow_row(t2, add, 0.0, None, cut) if ax == "x" else grow_row(t2, 0.0, add, cut, None)
+            if ax == "x":
+                # in-band ft registers / bit-site groups east of the cut follow the cores (a pinned ft column would land in a
+                # shifted macro); face points stay on their face; y cuts keep ft pinned (ft_slot_interior has no dy)
+                keep = FT_MODE[0], FT_XCUT[0]
+                FT_MODE[0], FT_XCUT[0] = "ft", cut
+                try:
+                    t2 = grow_row(t2, add, 0.0, None, cut)
+                finally:
+                    FT_MODE[0], FT_XCUT[0] = keep
+            else:
+                t2 = grow_row(t2, 0.0, add, cut, None)
             off[ax] += add
             rep.append((ax, round(g, 2), lo[4], hi[4], bits, round(need, 1), add))
         face = 0.0

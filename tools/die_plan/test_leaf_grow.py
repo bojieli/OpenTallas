@@ -214,3 +214,16 @@ def test_widen_face_grows_an_inherited_truncating_width_on_an_uncut_axis():
     assert abs(g["outline_um"][0] - 1550.88) < 1e-6 and not LG.raster_bad(g["outline_um"][1])
     assert g["hard_cores"][0]["origin_um"] == [700.0, 300.0]                  # no core moved in x
     assert LG.check_rows(t, g, cuts=ncut) == []
+
+
+def test_widen_x_cut_moves_interior_ft_groups_east_of_the_cut_with_the_cores():
+    t = widen_row_fixture()
+    # an interior ft column under core c (east of both cuts) and one under core a (west of both): only the first follows
+    t["ft_slots"] = [{"name": "ft0", "in_face": "E", "out_face": "S", "in_window_um": [10.0, 20.0], "out_window_um": [5.0, 9.0],
+                      "regs_um": [[1000.0, 60.0], [400.0, 60.0], [150.0, 60.0], [150.0, 0.0]],
+                      "bit_sites_um": [[[400.0, 60.0], [401.0, 60.0]], [[150.0, 60.0], [151.0, 60.0]]], "width": 2}]
+    g, rep, ncut = LG.widen_row(t)
+    s = g["ft_slots"][0]
+    assert s["regs_um"] == [[1051.84, 60.0], [451.84, 60.0], [150.0, 60.0], [150.0, 0.0]]
+    assert s["bit_sites_um"] == [[[451.84, 60.0], [452.84, 60.0]], [[150.0, 60.0], [151.0, 60.0]]]
+    assert s["in_window_um"] == [10.0, 20.0] and LG.FT_MODE[0] is True and LG.FT_XCUT[0] == 0.0
