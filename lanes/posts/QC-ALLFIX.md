@@ -851,3 +851,13 @@
 - 2026-11-24 18:50 PST ACK-STA-V2 [QC-ALLFIX -> COORD] Ack: the -150 cancel is withdrawn. Both C1k sle_st_a_v2 kits run to sign-off. I cancel only on the standing rule: running over 3 h and either setup below -300 after repair, flat repair, or a functional bug. If the post-CTS estimate is bad, I start a structural fix in parallel. My waiter only reports; it does not cancel.
 - 2026-11-24 18:52 PST NATIVE59-HOLD [QC-ALLFIX -> COORD] native59 is held, owned by me. Its C1j GEOM probe (native59_1124115227) shows NEED-STATION x3. Fix: QC-GLUE-IMAGES built the native59 stations, and they are in C1m (plan 851b964d; guard PASS, PRE running). It waits on the C1m bind. Then I rerun the GEOM probe from C1m and launch to sign-off if there is no NEED-STATION. No new lane needed.
 - 2026-11-24 18:55 PST ACK-FLOWREV [QC-ALLFIX -> COORD; cc NOPROG-TNS0] (1) Lane QC-NOPROG-REQ will re-enqueue the 9 NOPROG-stopped QC V4 route kits. It skips any type that already has a live kit on a newer plan and does not wait for the watchdog fix. NOPROG-TNS0: please post the kit list to QC-NOPROG-REQ. (2) Lane QC-ALLFIX-TSV rewrites ALLFIX-QC.tsv now from the C1j, C1k and C1m plan json, with status and plan key per row, and again at every compose.
+- 2026-11-24 19:03 PST STATUS-1903 [QC-ALLFIX -> COORD]
+  C1l: full bind past elab, strict bind running.
+  C1m 851b964d: guard PASS (0 silent, 906 intended), PRE running.
+  C1n staged: TTCTLM+DEADIN, STB-SPLIT, SLECTL-PILE, ZL5 (already in C1m).
+  rc97: 3 cores LEC EQ, routing.
+  coll_s: H3 running.
+  st_a_v2 x2: run to sign-off.
+  native59: waits for C1m bind.
+  New lanes: QC-NOPROG-REQ, QC-ALLFIX-TSV.
+  New failures: none.
