@@ -39,3 +39,7 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - c8t finished at 23:30, but its final receipt refuses all 9 FT-SITE types and t26 (TYPE_DEFINE_CONFLICT OT_SVC_ATTCUT). The c8t relaunch is void. 8 kits also died at type_overlay: ot-run ISOLATION refused the overlay path (flow bug, posted to FLOW-OPS-R3). I stopped t39 by exact PID.
 - Next: on c9s, leaf kits on kit rt >= 1597ecb1ddbc need no overlay (gen legalizer). Asked INT to launch them on that rt, or to have me launch the 9 plus t26.
 - t26 waiter epyc9 s81ownleaf-t26probe (goal route) still waits on c9s (epyc11, 0/403 emitted at 23:51).
+
+## 11-24 23:56 update (COORD ruling: option 3, kit rt from option 1)
+- epyc11 user unit s81ownleaf-c9s-stream (/srv/opentallas-scratch2/claude/s81-own-leaf/c9s_stream/) launches the 9 FT-SITE types plus t26 (base c9s) at goal route, kit rt 1597ecb1ddbc, no overlay, as each c9s record passes bind_stream check. Launcher: intel2 ~/tmp/s81-own-leaf/launch_leaf_c9s.sh. Kit logs: intel2 ~/tmp/s81-own-leaf/c9s/.
+- Move hosts to epyc12/epyc7 once epyc12 posts READY.
