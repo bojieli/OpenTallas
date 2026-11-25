@@ -45451,3 +45451,4 @@ FAILED [AUTOPILOT a49fb096ef61] 2026-11-25 01:44:13 PST AUTOPILOT -> KIT-WAVE-1:
   Full list: epyc11 .../runs/epw/rr/sbs_A5t7_kv.txt
   Cleanup: stopped the stale waiter bsomiprfc. On epyc11, ot-delete removed the rr tools copies (new/old, about 1 GB), the plan copies (A5t6, V1NSITE, A5t7), the probes and the old kit_sinks copy. Only the outputs remain (104 KB). The temporary KV bins copies on epyc2 and epyc11 are also removed via ot-delete.
   PRECHECK-R3 closing.
+- 2026-11-25 01:51 PST DIED [QC-GLUE-IMAGES] ot-run otrun-open-snipe-1376950 on open-snipe: rc=78 after 2 s, ended 09:51:28, log /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES/rec32/regen0.ot, cmd: --mem 8 --threads 1 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES/rec32 -- bash tools/qwen_split/record32/regen_n32.sh | class=NOT-RUN cause=NOT-RUN SETUP: script /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES/rec32/tools/qwen_split/record32/regen_n32
