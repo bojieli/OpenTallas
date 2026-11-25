@@ -43,3 +43,21 @@ def test_default_off_flag_and_mutant_flag_on_blocks_straight():
             HR.OBSTACLE_AWARE = False
         if r_on is not None:
             assert r_on["length_um"] >= r_off["length_um"]
+
+
+def test_resite_no_worse_rejects_longer_candidate_and_accepts_equal():
+    R = setup()
+    old = [(100.0, 20.0), (400.0, 20.0), (700.0, 20.0), (900.0, 20.0)]          # 300/300/200 along the free bottom edge
+    longer = [(100.0, 20.0), (400.0, 380.0 - 360.0 + 20.0), (700.0, 20.0), (900.0, 20.0)]
+    assert HR.resite_no_worse(R, old, list(old))                                   # equal is accepted
+    worse = [(100.0, 20.0), (400.0, 20.0), (700.0, 20.0), (900.0, 395.0)]          # last hop 200 -> 375 (and longer total)
+    assert not HR.resite_no_worse(R, old, worse)                                   # mutant: a longer chain is rejected
+    shorter = [(100.0, 20.0), (400.0, 20.0), (650.0, 20.0), (900.0, 20.0)]
+    assert HR.resite_no_worse(R, old, shorter) or HR.chain_metrics(R, shorter)[0] > HR.chain_metrics(R, old)[0]
+    assert HR.chain_metrics(R, old)[0] == 300.0 and HR.chain_metrics(R, old)[1] == 800.0
+
+
+def test_chain_metrics_uses_obstacle_model_for_blocked_hop():
+    R = setup()                                     # tall core between: straight hop (100,200)->(900,200) has no clear L
+    direct = HR.chain_metrics(R, [(100.0, 200.0), (900.0, 200.0)])
+    assert direct[0] >= 800.0                       # never shorter than Manhattan; detour via A* only lengthens

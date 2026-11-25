@@ -1518,6 +1518,7 @@ def write_type(M, t_new, cfg, log):
         nold = len(s.get("regs_um") or [])
         rep["stations"] += 1
         rep["regs_old"] += nold
+        old_ab = (tuple(s["from_um"]), tuple(s["to_um"]), [tuple(r[:2]) for r in s.get("regs_um") or []])
         s["from_um"], s["to_um"] = [round(a[0], 4), round(a[1], 4)], [round(b[0], 4), round(b[1], 4)]
         regs_free = all(R.free(*r[:2]) for r in s.get("regs_um") or [])
         if not mv and regs_free:
@@ -1528,7 +1529,13 @@ def write_type(M, t_new, cfg, log):
         if nold == 0:
             rep["regs_new"] += 0
             continue
-        if r is not None and len(r["regs"]) == nold:
+        if (r is not None and len(r["regs"]) == nold and cfg.get("obstacle_aware") and regs_free and nold and
+                HR.chain_metrics(R, [tuple(a)] + old_ab[2] + [tuple(b)])[0] <= cfg["reach"] + EPS and
+                not HR.resite_no_worse(R, [old_ab[0]] + old_ab[2] + [old_ab[1]], [tuple(a)] + [tuple(p) for p in r["regs"]] + [tuple(b)])):
+            # --obstacle-aware: the kept registers are legal, still within reach of the moved pins, and the re-site is longer: keep them
+            rep["rejected_worse"] = rep.get("rejected_worse", 0) + 1
+            rep["regs_new"] += nold
+        elif r is not None and len(r["regs"]) == nold:
             s["regs_um"] = [list(p) for p in r["regs"]]
             rep["rerouted"] += 1
             rep["regs_new"] += nold
@@ -2066,6 +2073,11 @@ def ft_resite(M, t_new, R, cfg, rep):
                 prev = tuple(regs[j0 - 1]) if j0 > 0 else A
                 nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
                 r = HR.route_station(R, prev, nxt, len(run), reach)
+                if (r is not None and len(r["regs"]) == len(run) and cfg.get("obstacle_aware") and
+                        not HR.resite_no_worse(R, [prev] + [tuple(snap0[0][j][:2]) for j in run] + [nxt],
+                                               [prev] + [tuple(p) for p in r["regs"]] + [nxt])):
+                    rep["ft_resite_rejected_worse"] = rep.get("ft_resite_rejected_worse", 0) + 1
+                    r = None        # --obstacle-aware: a longer chain than the old site is not taken; nearest-free search from the old sites
                 if r is not None and len(r["regs"]) == len(run):
                     newp = [list(p) for p in r["regs"]]
                 else:           # no routed form: start the nearest-free search from the old sites

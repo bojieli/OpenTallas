@@ -503,6 +503,35 @@ def _hops_clear(R, pts):
     return True
 
 
+def _hop_len(R, p, q):
+    """obstacle-model length of one hop: Manhattan when an L (HV or VH) crosses no core, else the street A* length, else
+    Manhattan (nothing routable: the hop keeps its straight length)"""
+    m = abs(q[0] - p[0]) + abs(q[1] - p[1])
+    if not (poly_crosses_core(R, [p, (q[0], p[1]), q]) and poly_crosses_core(R, [p, (p[0], q[1]), q])):
+        return m
+    try:
+        poly = astar(R, escape(R, p), escape(R, q))
+    except Exception:  # noqa: BLE001
+        poly = None
+    if poly is None:
+        return m
+    return max(m, sum(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(poly, poly[1:])))
+
+
+def chain_metrics(R, pts):
+    """(max hop, total path) of a pin/register chain in the obstacle model"""
+    hops = [_hop_len(R, tuple(a), tuple(b)) for a, b in zip(pts, pts[1:])]
+    return (max(hops) if hops else 0.0, sum(hops))
+
+
+def resite_no_worse(R, old_pts, new_pts, tol=1e-6):
+    """FP-CONVERGE-S81 (t70 ft4 627.6 um): an obstacle-aware re-site is accepted only when its max hop AND its total path
+    are no worse than the old (pre-move) site's, both measured with the same obstacle model"""
+    om, ot = chain_metrics(R, old_pts)
+    nm, nt = chain_metrics(R, new_pts)
+    return nm <= om + tol and nt <= ot + tol
+
+
 def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
     """(poly incl. pins, regs, n_min, kind) for pins a -> b."""
     ea, eb = escape(R, a), escape(R, b)
