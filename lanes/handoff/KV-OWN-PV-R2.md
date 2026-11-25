@@ -28,3 +28,11 @@
 - RSTRELAY-v3 (orphan of KV-PV-RSTRELAY, = RING-RSTFAN pv+v8 follow-on): row on A5t6 + ALLFIX gate_A5t6 bind rtl (epyc10 $M/rst6): plan bb1f6c65e9e8, 17 br, 58 copies, max hop 295.6, 0 cycles; row copy 973ab46de554 (summary fix for efc0 report). Gate jobR6.sh on tree6 (epyc11 fork of pub A5t5 + A5t6 files), chained chainR6.sh; out $M/R6.
 
 - 11-24 19:14 jobQ6 moved to intel1 (epyc11 over cap). intel1 $M=/srv/opentallas-scratch2/claude/kv-own-pv-r2 tree5 forked from pub/kv_a5t6_tree (fork unit oth-ubuntu-241734-1795576396); chain intel2 ~/tmp/kvownpvr2/chainQ6i1.sh -> jobQ6i1.otrun.log; outputs intel1 $M/Q6. epyc11 jobQ6 client killed (pid 3395865), never ran.
+
+## 11-24 23:15 state
+- RSTRELAY-v3 (bb1f6c65e9e8): ROW-REBASED posted b9f10ebe, accepted for A5t7. Probe kit kv3_pv private_specs/KV-OWN-PV-R2/qwen_kvsys_kv3_pv_1124201440 (epyc9 tree6 + R6/bind), unit runitem-kv3_pv, past chain_probe; owe reset-reach + hold at CTS.
+- PVLEGS6 (c63e9fdda6ff) gate intel1 gate_PVLEGS6: bind/G0/LATCHECK/BPC PASS, R8 new=4 (vport_EN_1/ES_1 pr_t +2 needed; pc_v1 cl23f6a148/cl7f648944 replica pads from vq calendar landed rise). r2 vport = regen6/out_r2/vport_r2_final.json 9996657fc3b8. A5t6 R8 reference intel1 r8a5t6/.
+- V1NSITE (row 887341f510ca, plan 0eca5044e7fb, render intel2 /v1nsite/kv3_pv_v1n_v1nsite.png): probe chain intel2 ~/tmp/kvownpvr2/chainV1i2b.sh queued (intel2 scratch2 < 150 GB floor).
+- kv3_pv E column = CB-TAPBINS stale sink_bins (D23H) + duplicate face sink_sites_um rows; family row SINKBINS-PV to build (sink_bins_from_place.py / sink_bins_compose.py).
+- v3n: no static site cause; KV-ALLFIX route kit kv3_pv_v3n_a5t5route_1124 live.
+- ot-run --cancel cannot see older-rt clients: kill exact pid after cmdline check.
