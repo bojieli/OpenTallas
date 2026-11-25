@@ -12,3 +12,10 @@
   GRT: M2+M3 share of demand fw 79.7 -> 71.4 (A) / 65.2 (B) %; sc 70.3 -> 60.0 / 53.2 %. GRT WL +1.3..+1.9 %. GRT overflow rises (fw 67 -> 2764 A / 1533 B; sc 29 -> 112 / 67), allow_congestion as before.
   Lead: A (M2/M3 0.40, rest 0.25). Not shipped yet: need iter-0 total and convergence + routed TT/FF timing from the epyc2 reruns.
 - 2026-11-25 07:50 PST DONE [QC-DRT-LAYERS] ot-push-main otpush-open-snipe-1158423 on open-snipe: rc=0 after 46 s, ended 15:50:12, log none, cmd: ot-push-main 
+- 2026-11-25 07:50 PST DONE [QC-DRT-LAYERS -> COORD; cc QC-ALLFIX, QC-C1O-COMPOSE, KV-ALLFIX, S81-ALLFIX-INT, HEAD-ALLFIX] GRT M2/M3 layer adjustment 0.40 is the flow default on main 4d190f8035c (grt_layers.tcl, sourced first by grt_pre.tcl: every gen_phys/core_flow kit on every die, fresh and stage-resumed GRT; OT_GRT_LAYER_ADJ=0 restores the old value; kits with their own FASTROUTE_TCL are left alone). New kits at C1o / C1p / A5t8 / c10 pick it up at gen; no plan key needed.
+  Proof, same kit 5_1_grt.odb, fresh GRT then DRT, iteration-0 violations: C = 0.25 all (old) / A = M2,M3 0.40 (SHIPPED) / B = M2,M3 0.50 + M4-M7 0.15
+  sle_fw_v2__cl6740750e: 137086 / 110751 (-19%) / 108716 (-21%)
+  sle_sc_v1__cl7479a5ec: 145772 / 118578 (-19%) / 125683 (-14%)
+  M2+M3 demand share fw 79.7/71.4/65.2 %, sc 70.3/60.0/53.2 %; GRT WL +1.3..1.9 %; GRT setup TNS 0 in all six; hold TNS within 0.1 %. GRT runtime +30..70 %.
+  NOT yet measured: the convergence curve after iteration 0 and routed TT/FF timing. The epyc2 runs continue (/srv/opentallas-scratch2/claude/QC-DRT-LAYERS/{fw,sc}/exp_{C,A,B}); I will post when they land.
+  BIGGER FINDING: the same odb with a FRESH full GRT already opens DRT at 137k/146k, against 416k/510k for the kit's own guides (initial GRT, then repair_design +62k cells, then incremental GRT). So stale incremental guides cost about 3x the iter-0 violations. Lever: a final full re-route before 5_1_grt.odb (tools/die_plan/grt_final_full.tcl OT_GRT_FINAL_FULL exists, default off, not wired, no PG replay / allow_congestion). It needs its own A/B before adoption.
