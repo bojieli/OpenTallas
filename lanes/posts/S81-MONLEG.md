@@ -1,0 +1,1 @@
+- 2026-11-25 00:41 PST DIED [S81-MONLEG] ot-push-main otpush-loved-redfish-1370262 on loved-redfish: rc=3 after 19 s, ended 08:40:58, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 19 s, no log
