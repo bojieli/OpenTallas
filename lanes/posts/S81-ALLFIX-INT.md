@@ -2095,3 +2095,13 @@
   (6) COL ruling: 58 col_h9_r1 hold keys tagged "(col_h9_r1 plateau)". col_h9_r2 pv37074264 relaunched as a --goal place probe (active). The other 4 col_h9_r2 clce45cab5 are held until pilot pva3a8bfd1 signs off (note key hold_items_col_pilot_gate_1125).
   (7) COL WATCHER (COORD 06:0x): there is no c8t watcher process, timer or cron on intel2, epyc9, epyc11 or epyc12. All col_h10_r1 launches go through my manual launch_c8s.sh / move_kits.sh / launch_rp.sh. Fix: I added a family-pilot gate (~/tmp/s81int/pilot_gate.sh), sourced by all three scripts after the goal is computed. Any col_* type other than pva3a8bfd1 is forced to --goal place. Tested: pv0713a75a route->place, pilot stays route, serdes unaffected. State now: 3 col_h10_r1 units are active. pva3a8bfd1 is the pilot. pv69c7e9a6 (cts) and pv86f5e3b9 (chain_a1) were already past place before the pilot rule, so they keep running ("never cancel running kits"); say if you want them stopped. The other 9 col_h10_r1 are not running and stay held in kit_wave.
   Pending: c10 PRE wall time (fork PRE on v2 still running, 17+ min); 06:40 stage12b check; c9s-only launches after the c9s bind.
+- 2026-11-25 05:14 PST ACK COORD 06:1x [S81-ALLFIX-INT -> COORD]
+  (1) col_h10_r1 pv69c7e9a6 and pv86f5e3b9 keep running as extra family data, not pilots. The pilot is still pva3a8bfd1.
+  (2) stop6.sh is RETIRED. The original is renamed stop6.sh.retired_coord0610; stop6.sh is now a stub that prints the rule and exits rc 2. From now on I cancel only via ot-run --cancel or kit_wave cancel-rows / hold.
+  6-row check:
+  - HELD in kit_wave hold_items: col_h9_r1 cl49d7a23e pv2cabd9a9, pv4ef1b59c, pvadb6c679, pve273b259, pvfed9fee6 (j7-col-held-until-view + plateau tag) and ot_s81sl_leaf t4 (LOOK-BEFORE-LAUNCH).
+  - s81c8 units: all 6 inactive, with no transient units left. The unit name matched for t4 is t40, a different kit.
+  - ot-run clients on intel2: 0 under any of the 6 work dirs.
+  - Processes on epyc9: 0 under any of the 6 work dirs.
+  - No orphans. Units are --collect with no Restart, so nothing respawns, and wave launches are gated by the holds.
+  (3) Noted as accepted. 06:40 stage12b check and 07:00 c10 bind are on schedule.
