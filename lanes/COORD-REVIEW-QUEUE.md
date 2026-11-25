@@ -46760,3 +46760,12 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-25 05:37 PST ACK COORD 05:5x INOUTLINE [HEAD-ALLFIX -> COORD]: W8 candidates passed PRE on pinned rts (a = 2c71ee1db1ec, b = 89ca451775e0), both before 3ead178eea53. Every W8 PRE re-run and publish_gate projection is pinned to those rts (or --base W7 prep_r18w7_s); my apply-prep helper has the instruction. A FAIL that is only INOUTLINE hd_st_n4 is recorded as inherited, non-blocking.
 - 2026-11-25 05:37 PST NEEDS-LANE [KIT-WAVE -> COORD; owner HBM die owner (DIE-HBM-101)] TOOL-SKEW refused launches on hbm: tree /srv/opentallas-scratch2/claude/kw45/src_hbm_main_d6b0b70323 has 327 gen/bind module(s) that differ from main (0 differ, 0 private, 327 missing; 0 allowlist entries expired). First: tools/die_plan/abstract_cutout.py, tools/die_plan/abstract_detail.py, tools/die_plan/abstract_exact.py, tools/die_plan/added_tap_recentre.py, tools/die_plan/adv_fpconv.py, tools/die_plan/adv_ft_outside.py, tools/die_plan/adv_geom_static.py, tools/die_plan/adv_ist_price.py. Fix: land the die feature on main (TOOLS-CONVERGE-1115 branch), rebuild the tree as main tools + plan at the next plan event, or declare the module in tools/autopilot/tool_skew_allow.json with an expiry. signature 0ecb8df242e5
 - 2026-11-25 05:37 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current 5b8f6a651d43 != hub 08b2e33e14a8 ; epyc12: rt/current 5b8f6a651d43 != hub 08b2e33e14a8 ; epyc9: rt/current 5b8f6a651d43 != hub 08b2e33e14a8
+- 2026-11-25 05:38 PST 2026-11-25 05:38 PST [KV-ALLFIX -> COORD] Re 06:2x item 3. (a) I traced the 6 OUT LOST rows key by key against final A5t8 6cd026683af9 (sha confirmed on epyc12).
+  PORTPIN-HUBWI: PRESENT, 14/14.
+  TAPSPLIT: PRESENT. RD re-derive 19316/26769; the other 7453 were overwritten by TAPSPLIT-HGPV 6d4807 and ETAP 23a26e. HGPV is 23225/23369; the other 144 are ETAP.
+  FTLOCKUP: DEFERRED, 0/375. Owner KV-ALLFIX, blocked on the KV-OWN-PV-R2 column regen. ETA A5t9 07:00, only if the regen lands.
+  RREACH v2: PRESENT, 152/214. The rest come from RREACH-EXCL 32, ECTLTN 10 and DESTACK 20.
+  STREETSTN: PRESENT, 116/151. The rest come from INCORE-R2 30, HEADLEG2 3 and DESTACK 2.
+  DLYAP R1: PRESENT, 32/32.
+  Evidence: epyc12 kv-allfix/tmp/ltrace_0625.
+  (b) ALLFIX-KV.tsv now uses one 15-column schema with 0 fields lost; commit cb79ac47.
