@@ -163,6 +163,16 @@ def test_credit_only_by_kit_hash():
     assert TC.credit_row(c, TC.contract(q, "A"), None, "h1") == "REISSUE"
 
 
+def test_core_model_is_signed_mean_only_never_etm():
+    rows = [{"type": "A", "tap": "u_c.ck", "port": "clk_c0", "signed_mean_TT": None, "etm_max_TT": 820.0}]
+    assert TC.core_model_rows(rows) == {}                                  # no signed view -> no model
+    st = {r["key"]: r["status"] for r in TC.census_type(TC.contract(_plan(), "A"), {}, TC.core_model_rows(rows).get("A"))}
+    assert st["core:u_c.ck"] == "UNMODELLED"                               # not OUTSIDE via the ETM max (820 - 700 > 30)
+    rows[0]["signed_mean_TT"] = 750.0
+    st = {r["key"]: r["status"] for r in TC.census_type(TC.contract(_plan(), "A"), {}, TC.core_model_rows(rows).get("A"))}
+    assert st["core:u_c.ck"] == "OUTSIDE"                                  # a signed mean 50 ps off a 30 ps window is real
+
+
 def test_model_rows_follow_sites_not_tap_names():
     """the model was measured on a plan where the tap at (50,50) was called clk_t7: it must land on that SITE in the new plan"""
     old = _plan()

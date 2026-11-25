@@ -29,7 +29,7 @@ The five accepted changes (FABLE-RC-ALL 51358d36 on DESIGN.md):
  5. ARRIVAL vs DECLARED WINDOW AT BIND.  census() compares, per entry, the modelled arrival spread (per-port kit window need of
     the die clock model, --arrivals {per_port_ps: {type: {port: need}}}, re-keyed to SITES through --arrivals-plan = the plan the
     model was measured on) with the entry's declared window, and every core entry's modelled insertion (--core-rows,
-    core_tap_retarget rows keyed by core pin: signed mean, else ETM) with its schedule.  OUTSIDE = need >
+    core_tap_retarget rows keyed by core pin: SIGNED mean only, no signed view = UNMODELLED) with its schedule.  OUTSIDE = need >
     window (or |model - schedule| > window); UNMODELLED = no model value.  Report only.
 
 CONTRACT WINDOW.  An entry's window is clock.tap_window.per_port_ps[type][port], else per_type_ps[type], else window_ps.  With
@@ -272,6 +272,18 @@ def census_type(c, need=None, core_model=None, eps=0.05):
     return rows
 
 
+def core_model_rows(rows):
+    """core_tap_retarget rows -> {type: {'core:<tap>': signed mean TT}}.  Only a SIGNED view models a core entry: a tap with no
+    signed mean stays UNMODELLED.  The ETM max is never used as the model (S81-ALLFIX-INT / S81-ROM-TEMPLATE 11-24: ETM
+    max_clock_tree_path is a max over the tree, not the insertion a schedule declares; 1243 ROM elem taps were false OUTSIDE)."""
+    core = {}
+    for r in rows:
+        v = _num(r.get("signed_mean_TT"))
+        if v is not None and r.get("tap"):
+            core.setdefault(r["type"], {})["core:%s" % r["tap"]] = v
+    return core
+
+
 def need_by_key(raw, tn, per_port, P=None):
     """change 4: a per-PORT model row (die tap names of the plan it was measured on = raw) -> {entry key: value}, through that
     plan's own tap sites; ports the plan does not have are dropped (returned second)"""
@@ -456,14 +468,7 @@ def main(argv=None):
             P_m = _plan_obj(raw_m, a.arrivals_plan, a.tools)
         else:
             raw_m, P_m = raw, P
-        core = {}
-        if a.core_rows:
-            for r in json.load(open(a.core_rows)).get("rows") or []:
-                v = _num(r.get("signed_mean_TT"))
-                if v is None:
-                    v = _num(r.get("etm_max_TT"))
-                if v is not None and r.get("tap"):
-                    core.setdefault(r["type"], {})["core:%s" % r["tap"]] = v
+        core = core_model_rows(json.load(open(a.core_rows)).get("rows") or []) if a.core_rows else {}
         out, flat, lost_n, name_diff = {}, [], 0, 0
         for tn in _types(raw, a.types, a.types_file):
             c = contract(raw, tn, P, tw)
