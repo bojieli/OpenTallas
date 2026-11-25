@@ -19,3 +19,10 @@ rows/ = plans+deltas+guards, cores/ = 3 _bt3 child kits, bin/ = mk_bt3.py, scope
 - _bt3 masters SIGNED + LEC EQUIVALENT (TT +28.0/+17.74/+30.58, DRC 0); views epyc2 /srv/opentallas-scratch3/claude/QC-STA-BTLAT3/views, copied into intel1 tree qcviews_btlat3.
 - epyc2 tree deleted (ot-delete). intel1 tree: ot-delete same hour PRE/scoped bind finish (QC-ALLFIX disk ask).
 - v1 (6 types): C1p row note posted (RC97-V1 by QC-STA-CLK first, then STA-BTLAT3 unchanged).
+
+## 2026-11-25 03:20 PST CLOSED
+- Row 4557d9ec3716 is carried in C1o v13 (aa3a14fb7484). PRE and the strict bind belong to QC-C1O-COMPOSE.
+- My PRE had one finding, ROWS-NO-PROOF on 9 sc types. It comes from the base and is cleared by the r3 proof from QC-CB-C1L.
+- I ran no scoped bind of my own.
+- Both tree forks are deleted. The _bt3 views stay on epyc2 at /srv/opentallas-scratch3/claude/QC-STA-BTLAT3/views.
+- The v1 types move to C1p, after QC-STA-CLK delivers RC97-V1.
