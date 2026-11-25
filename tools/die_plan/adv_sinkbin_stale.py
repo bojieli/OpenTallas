@@ -14,6 +14,10 @@ no kit: it compares the bins with the PLAN.  Per type with a clock.sink_bins_fil
                 the bins time (doc "created"/"mtime" epoch, else the file mtime) is older than the type's row time;
   INSIDE    > 5 % of the bins' sinks lie in a hard core / lef child (adv_site_in_macro.core_rects, shrunk by half a bin
             so edge bins of sinks beside the core do not count) or outside the type outline (grown by half a bin);
+  NOBINS    a placed soft type with clock.tap_mode "density" or "grid+explicit" (added taps) has no clock.sink_bins_file (or the file is
+            missing): its taps are planned on the face / ft sinks only, so a grid or added tap can carry thousands of real sinks
+            (KV-TAPSPLIT 11-25: kv3_pc_v3 clk_t7 14,012, kv3_hub_C clk_t57 5,284, no bins file);
+  COUNT     the newest kit of the type (built AFTER the bins) holds > 15 % more or fewer clock sinks than the bins' n;
   FANOUT    a tap carries > 1,000 sinks: the largest tap after the cap pass of the newest kit of the type (exact, else
             its base type) built AFTER the bins file (kit_sinks.py --kitwave map, as ADV-STALE-BINS: kit_sinks= /
             env OT_ADV_KIT_SINKS / precheck-cache default).  The plan's own density solve balances to
@@ -39,10 +43,26 @@ FRAC = 0.05
 FANOUT_MAX = 1000
 MAX_LINES = 25
 ROWS_ENV = "OT_ADV_SINKBIN_ROWS"
+BLOCK_ENV = "OT_ADV_SINKBIN_BLOCK"        # =1: NOBINS / COUNT lines start FAIL (blocking); default report-only (WARN)
+COUNT_FRAC = 0.15
 
 
 def _w(*p):
     return " ".join(["WARN", CHECK] + [str(x) for x in p])
+
+
+def _f(*p):
+    """NOBINS / COUNT line: WARN while report-only, FAIL when OT_ADV_SINKBIN_BLOCK=1 (the counts are stable)"""
+    return " ".join(["FAIL" if os.environ.get(BLOCK_ENV) == "1" else "WARN", CHECK] + [str(x) for x in p])
+
+
+def needs_bins(t):
+    """a soft type whose taps are planned from sinks: density mode, or grid+explicit with added taps"""
+    ck = t.get("clock") if isinstance(t, dict) else None
+    if not isinstance(ck, dict) or t.get("hard"):
+        return False
+    mode = ck.get("tap_mode")
+    return mode == "density" or (mode == "grid+explicit" and bool(ck.get("added_taps")))
 
 
 def _epoch(v):
@@ -141,14 +161,22 @@ def _findings(raw, plan_path, tree, row_times, kit_sinks, frac, fanout_max, max_
     n_nokit = n_oldkit = 0
     placed = {p.get("type") for p in raw.get("partitions") or [] if isinstance(p, dict)}
     hits, n_chk, n_nofile = [], 0, 0
+    nobins, count_bad = [], []
     cnt = dict(predates=0, inside=0, fanout=0)
     for tn, t in sorted(types.items()):
         ck = t.get("clock") if isinstance(t, dict) else None
-        if not isinstance(ck, dict) or not ck.get("sink_bins_file") or (placed and tn not in placed):
+        if placed and tn not in placed:
+            continue
+        if needs_bins(t) and not (ck or {}).get("sink_bins_file"):
+            nobins.append(tn)
+            continue
+        if not isinstance(ck, dict) or not ck.get("sink_bins_file"):
             continue
         bp = _SB.bins_path(ck["sink_bins_file"], plan_path, tree)
         if bp is None:
             n_nofile += 1
+            if needs_bins(t):
+                nobins.append(tn)
             continue
         try:
             doc = json.loads(bp.read_text())
@@ -161,6 +189,9 @@ def _findings(raw, plan_path, tree, row_times, kit_sinks, frac, fanout_max, max_
         n_nokit += kit is None
         r = judge_type(tn, t, doc, bt, _epoch(rt.get(tn)), frac, fanout_max, types, kit)
         n_oldkit += r["old_kit"]
+        if kit and not r["old_kit"] and doc.get("n") and kit.get("sinks") and \
+                abs(kit["sinks"] - doc["n"]) > COUNT_FRAC * doc["n"]:
+            count_bad.append((tn, int(doc["n"]), int(kit["sinks"])))
         if not r["hit"]:
             continue
         why, score = [], 0.0
@@ -181,6 +212,14 @@ def _findings(raw, plan_path, tree, row_times, kit_sinks, frac, fanout_max, max_
         hits.append((score, _w(tn, f"{bp.name}: " + " | ".join(why))))
     hits.sort(key=lambda h: -h[0])
     out = [m for _, m in hits[:max_lines]]
+    if nobins:
+        out.append(_f("NOBINS", f"{len(nobins)} soft density / grid+explicit type(s) without a usable clock.sink_bins_file "
+                                f"(taps planned on face / ft sinks only): {', '.join(nobins[:max_lines])}"
+                                f"{' ...' if len(nobins) > max_lines else ''}; fix: tap_split.py plan (grid+explicit) or "
+                                f"sink_bins_from_place.py bins + apply (density) from a kit placed on the current form"))
+    if count_bad:
+        out.append(_f("COUNT", f"{len(count_bad)} type(s) whose bins hold >{COUNT_FRAC:.0%} other sink counts than the newest "
+                               f"kit built after them: " + ", ".join(f"{t} {a:,}->{b:,}" for t, a, b in count_bad[:max_lines])))
     out.append(_w("summary", f"{len(hits)} of {n_chk} types with sink bins stale (PREDATES {cnt['predates']}, INSIDE > {frac:.0%} "
                              f"{cnt['inside']}, FANOUT > {fanout_max} {cnt['fanout']}); {n_nofile} bins files not found; kit sinks "
                              f"{ks_src or 'none'}: {n_nokit} types without a kit, {n_oldkit} with a kit older than the bins (not judged)"

@@ -71,3 +71,25 @@ def test_findings_end_to_end_and_never_raises(tmp_path):
     ls = A.findings(raw, str(plan), kit_sinks={})
     assert ls[0].startswith("WARN ADV-SINKBIN-STALE stb stb.json: INSIDE") and "1 of 1 types" in ls[-1]
     assert A.findings(None, None)[0].startswith("WARN ADV-SINKBIN-STALE not checked")
+
+
+def test_nobins_and_count_report_only_then_block(tmp_path, monkeypatch):
+    (tmp_path / "sink_bins").mkdir()
+    doc = bins_doc("have", 0.0)
+    doc["n"] = 1000
+    (tmp_path / "sink_bins" / "have.json").write_text(json.dumps(doc))
+    ge = lambda b: {"outline_um": [1000, 1000], "clock": {"tap_mode": "grid+explicit", "added_taps": [{"name": "clk_t1", "xy": [5, 5]}],
+                                                       **({"sink_bins_file": "sink_bins/have.json"} if b else {})}}
+    raw = {"partition_types": {"nob": ge(False), "have": ge(True),
+                               "hardt": {"hard": True, "outline_um": [1, 1], "clock": {"tap_mode": "density"}},
+                               "grid": {"outline_um": [1, 1], "clock": {"tap_mode": "grid+explicit"}}}}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    kit = {"have": {"sinks": 1500, "max_sinks": 900, "max_tap": "clk", "mtime": 9e9}}
+    monkeypatch.delenv(A.BLOCK_ENV, raising=False)
+    ls = A.findings(raw, str(plan), kit_sinks=kit)
+    nb = [x for x in ls if " NOBINS " in x]
+    assert nb and nb[0].startswith("WARN") and "nob" in nb[0] and "hardt" not in nb[0] and "grid," not in nb[0]
+    assert any(" COUNT " in x and "have 1,000->1,500" in x for x in ls)
+    monkeypatch.setenv(A.BLOCK_ENV, "1")
+    assert [x for x in A.findings(raw, str(plan), kit_sinks=kit) if " NOBINS " in x][0].startswith("FAIL")
