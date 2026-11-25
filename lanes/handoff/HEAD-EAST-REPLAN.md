@@ -42,3 +42,8 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/head-east-replan (clone/, tmp/,
 - Branch claude/head-east-rne-stage@952935da46 (generator hook, unmerged).
 - r8 tree intel1 trees/s81_head_east_r8 (patched split 0844883f78d0, lep_nr cda6cc323813); plan prep_east_r8 45a10ff0ef6b; bind_east_r8 all PASS (PRE baseline-only).
 - r8 kit: intel2 head-east-r8-place (launch_east_r8.sh, GOAL env), spec 1124084159, host intel1. Next: review place, then GOAL=route.
+
+## 11-25 01:5x PST STOOD DOWN -> HEAD-ALLFIX
+- HEAD-ALLFIX (single HEAD owner, 11-25 01:26) cancelled r7 kits (tapbal GRT 15/18 h) and carries RNE-PAIR-COPY as ALLFIX C10.
+- r7 post-hook CTS: setup -122.28 (reset recovery, C8); rne data leg not in listed top paths.
+- r8 placed kit on intel1 (spec 1124084159) left unrouted for HEAD-ALLFIX.
