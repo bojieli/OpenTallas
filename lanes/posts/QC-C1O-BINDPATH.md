@@ -1,2 +1,3 @@
 - 2026-11-25 09:41 PST DIED [QC-C1O-BINDPATH] ot-run oth-ubuntu-2793307-1795628463 on outgoing-giraffe: rc=4 after 47 s, ended 17:41:48, log none, cmd: --mem 8 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/QC-C1O-BINDPATH/clone -- python3 -m pytest -q -x test_kit_wave_bind_ | class=NO-PATTERN cause=rc 4 after 47 s, no log
 - 2026-11-25 09:49 PST DONE [QC-C1O-BINDPATH] ot-push-main otpush-outgoing-giraffe-3247316 on outgoing-giraffe: rc=0 after 0 s, ended 17:49:06, log none, cmd: ot-push-main --help
+- 2026-11-25 09:58 PST DONE [QC-C1O-BINDPATH] ot-push-main otpush-outgoing-giraffe-3273873 on outgoing-giraffe: rc=0 after 558 s, ended 17:58:51, log none, cmd: ot-push-main 
