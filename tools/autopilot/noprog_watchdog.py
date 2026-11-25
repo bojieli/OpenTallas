@@ -2226,7 +2226,7 @@ def grt_layer_overflow(text):
 
 
 # ---------------------------------------------------------------- VIS checkpoints (OWNER 04:3x via COORD): every kit is rendered when global placement ends and when GRT ends
-VIS_CHECKPOINTS = (("PLACE-GP", "3_3_place_gp.odb"), ("GRT", "5_1_grt.odb"))
+VIS_CHECKPOINTS = (("PLACE-GP", ("3_3_place_gp.odb", "3_place.odb")), ("GRT", ("5_1_grt.odb",)))      # first non-empty name wins (stage_odb_cap emptied 3_3_place_gp.odb on kits started before 11-25)
 
 
 VIS_SETTLE_S = 180        # the checkpoint DB must be untouched for 3 min: 6 of 28 first renders read a DB still being written (ORD-0054 odb invalid: basic_ios::clear)
@@ -2265,18 +2265,25 @@ def vis_retry(state, now, read=read_text):
 def vis_candidates(work, done):
     """-> [(checkpoint, odb)] of the kit's checkpoint DBs that exist and were not rendered yet (done: {odb|mtime: t}).  Pure apart from the filesystem."""
     out = []
-    for cp, name in VIS_CHECKPOINTS:
-        for g in (f"run/results/*/*/*/{name}", f"gen/*/run/results/*/*/*/{name}", f"results/*/*/*/{name}"):
-            for p_ in glob.glob(os.path.join(work or "", g)):
-                try:
-                    mt_ = os.stat(p_).st_mtime
-                    k = f"{p_}|{int(mt_)}"
-                except OSError:
-                    continue
-                if time.time() - mt_ < VIS_SETTLE_S:
-                    continue
-                if k not in done:
-                    out.append((cp, p_, k))
+    for cp, names in VIS_CHECKPOINTS:
+        found = False
+        for name in names:
+            if found:
+                break
+            for g in (f"run/results/*/*/*/{name}", f"gen/*/run/results/*/*/*/{name}", f"results/*/*/*/{name}"):
+                for p_ in glob.glob(os.path.join(work or "", g)):
+                    try:
+                        stt = os.stat(p_)
+                    except OSError:
+                        continue
+                    if stt.st_size == 0:
+                        continue          # a zero-byte placeholder is no DB
+                    found = True
+                    k = f"{p_}|{int(stt.st_mtime)}"
+                    if time.time() - stt.st_mtime < VIS_SETTLE_S:
+                        continue
+                    if k not in done:
+                        out.append((cp, p_, k))
     return out
 
 

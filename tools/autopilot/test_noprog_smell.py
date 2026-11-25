@@ -250,3 +250,14 @@ def test_vis_queue_status_follows_the_render(tmp_path):
     st = [ln.split("\t")[5] for ln in q.read_text().splitlines()[1:]]
     assert st == ["RENDERED", "FAILED", "GONE", "rendering", "VERDICT"]
     assert nw.vis_status_sync(str(q), lambda h, c: "rendering /d/4\n") == 0
+
+
+def test_place_checkpoint_falls_back_to_3_place_when_3_3_is_an_empty_placeholder(tmp_path):
+    work = mkkit(tmp_path, names=("3_place.odb", "3_3_place_gp.odb"))
+    d = tmp_path / "kit/run/results/asap7/d/base"
+    (d / "3_3_place_gp.odb").write_text("")
+    got = nw.vis_candidates(work, {})
+    assert [(c, os.path.basename(o)) for c, o, _ in got] == [("PLACE-GP", "3_place.odb")]
+    (d / "3_3_place_gp.odb").write_text("odb")
+    os.utime(d / "3_3_place_gp.odb", (1_000_000, 1_000_000))
+    assert [os.path.basename(o) for c, o, _ in nw.vis_candidates(work, {})] == ["3_3_place_gp.odb"]
