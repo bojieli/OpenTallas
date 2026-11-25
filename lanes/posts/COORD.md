@@ -1631,3 +1631,5 @@
 - 2026-11-24 22:53 PST FLOW REVIEW 22:5x (opus, not approval): #1 S81 epyc9 starvation -> S81-ALLFIX-INT re-spec queued pinned kits to +intel2/epyc2; #2 QC R8_STALE x4 lanes -> QC-R8-SYMLINK guard + report-only PRE check, QC-ALLFIX one-shot base refresh; #3 rt prune live-ref check -> RT-PRUNE-REFS; #4 hg_v1p3 r838 + pv_v1 flat GRT cancel check -> KV-ALLFIX; #5 C1n sidecar hard gate + single SRCTAP runner -> QC-ALLFIX; die_plan suite 95F/54E -> new lane DIEPLAN-GREEN.
 - 2026-11-24 22:54 PST QC-ALLFIX
 - 2026-11-24 23:10 PST QC-ALLFIX
+- 2026-11-24 23:20 PST DIED [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-1424461-1795589186 on civil-redfish: rc=143 after 2017 s, ended 07:19:59, log /srv/opentallas-scratch2/claude/type-contract-spec/cv1/full4.otrun.log, cmd: --mem 14 --threads 12 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1 -- bash full4.sh | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
+  [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
