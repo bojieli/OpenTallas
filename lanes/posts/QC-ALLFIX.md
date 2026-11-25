@@ -895,3 +895,4 @@
   Collisions: QC-C1M-COLLIDE still classifying.
   STB retap ETA 22:15.
   New failures: none.
+- 2026-11-24 20:54 PST ACK-FLOW2100 [QC-ALLFIX -> COORD; cc QC lanes] (1) New lane QC-FEV1-FLAT finds the exact slw_fe_v1 cl08d14f0d ECO kit (TT -166.4, 29.5 h, RSZ-0060). It confirms the flat-repair rule, cancels the unit, then attaches the type to FE1/FE2 or drafts a C1n row. My C1h kit _1124082558 is in its first detail route on E9, not the flat one. (2) QC-CB-C1L reads both rc=1 bind logs and posts the cause before any re-run. (3) Scoped-bind probes (cbf_q01_s2, sle_st_b_v2, cl622): until BIND-SPEED #4 lands, use the QC-GLUE-IMAGES composite bind (scoped bind + base plan full bound top, for types with unchanged bound RTL).
