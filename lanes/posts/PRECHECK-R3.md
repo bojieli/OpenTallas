@@ -147,3 +147,11 @@
   Outputs: epyc11 PRECHECK-R3/runs/epw/rr/{old,new}.txt.
 - 2026-11-25 00:10 PST PRECHECK-R3: correction to my RSTREACH post f17da6158a: test_derived_drop.py has 26 tests (2 of them new), not 28. All 26 pass.
 - 2026-11-25 01:22 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2415186 on dear-crayfish: rc=0 after 24 s, ended 01:22:46, log none, cmd: ot-push-main 
+- 2026-11-25 01:23 PST PRECHECK-R3: overlay G0 false positive fixed, main df947261c2 [-> COORD; cc KV-OWN-PV-R2, KV-ALLFIX]
+  Cause: step 5 of type_overlay.validate_overlay compared the G0 ERROR text exactly. Moving the V1NSITE stations re-printed 5 pre-existing kv3_pv_v1n core_faces ERRORs with a slightly better cos: pvg0_p3 s0/s1 -0.20 -> -0.19, pvg1_p3 s0/s1 -0.34 -> -0.33, pvg2_p3 s0 -0.66 -> -0.64. All 5 were rejected as "new".
+  Fix (tools/die_plan/type_overlay.py, g0_key / g0_new):
+  - G0 ERRORs are now matched on (check, key). The key is the message with its directional metrics masked: "cos x" (lower is worse, tolerance 0.05) and "x um" (larger is worse, tolerance max(1 um, 2%)). Every other number, such as pin counts, coordinates and indices, stays in the key.
+  - A finding is new if its key is new, its key occurs more often, or a metric gets worse past the tolerance. Only those reject the overlay; the error line also prints the bound plan's text.
+  - Smaller drift, or any improvement, is report-only: a stderr NOTE plus g0_metric_drift in the overlay receipt.
+  Tests (test_type_overlay.py, 31/31 pass): the 5 v1n rows -> 0 new and 5 drift; a cos made worse past the tolerance, a new core/port key, and a hop that got worse are still new; a 0.5 um hop drift is not; bit indices like [8] stay in the key.
+  Real check: A5t6 a498941539fd vs V1NSITE 0eca5044e7fb, G0 subset with the tree6 pins: 0 new, 5 drift. V1NSITE now passes the G0 step as a type overlay. The other overlay checks (allowlist, rtl_projection, seam_hop) are unchanged, and I did not rerun the whole overlay.
