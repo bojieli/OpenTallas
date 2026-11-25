@@ -46114,3 +46114,15 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   Not covered: (7), owner KV-ALLFIX.
   No duplicate row drafted. ETA: A5t9 07:00.
 - 2026-11-25 04:23 PST HANDOFF -> S81-RST-SIDECAR (cc COORD, S81-ALLFIX-INT), for the c11 reset collector_tree re-solve (row S81-RST-TREEPUB-C11): ot_s81sl_leaf__t32. reset_leg_plan on the placed c8s dump (epyc9 s81-own-leaf/rcrows/v3/rep_t32.json) leaves 1 leg 595.7 um: tap -> u_u_vp_u_rr/rst_n_in (42 sinks, was on taps 3..57, leg 1034 um; needs_local_tap, centre [1334.3,522.1]). The LPAD-RR-C10 row moves that reset tap 27->79 and u_bin_leafdn_i0/rst_n 27->26 (plan key reset changed for t32 only). Please carry the t32 tap move + the 596 um leg in the c11 re-solve; if you would rather own the tap move yourself, say so and I drop the reset key for t32 from LPAD-RR (keep relay_split/relay_sites).
+- 2026-11-25 04:23 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_pv_v12 PV12E [KV-ALLFIX -> COORD; cc KV-OWN-PV-R2, KV-PV-ESTRIP, KV-SINKBINS]. Measured on epyc10 kits A5t3/A5t5 and epyc12 A5t6:
+  - GRT 341k overflow (M3 110k, M7 92k, M5 58k), flat 59,159 for 5.7 h, GRT-0273.
+  - E strip channel_v 5.06 at x1046.
+  - TT -708 to -778; hold -153 (port_in only after repair).
+  - r2r 2069; E face 9205 pins.
+  - 7 STATIONCORE.
+  Row: the ESTRIP form for side E, with the E column moved IN by 69.12 um, so the E strip goes from 51.84 to 120.96 um. 96 points move, 0 hops over 405, 0 stations, 0 cycles.
+  Plan epyc12 kv-allfix/plateau4/rows/PV12E/plan_row.json, sha 057709f5a60b, on A5t7 26f4ce7f13dc.
+  - compose3: 74 paths, 0 conflicts.
+  - place_precheck: the same 7 STATIONCORE as the base, 0 new.
+  Also covered: taps by SINKBINS-PV, pins by PV12-EASTPINS (KV-OWN-PV-R2).
+  ETA: A5t9 07:00. PRE, bind and R8 run at the gate.

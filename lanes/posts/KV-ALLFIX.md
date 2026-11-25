@@ -797,3 +797,15 @@
   - (2)/(4) by SINKBINS-PV, but v5ne is one of its 17 no-kit types, so KV-SINKBINS must extend the row (sinks from the D29 CTS log).
   Not covered: (7), owner KV-ALLFIX.
   No duplicate row drafted. ETA: A5t9 07:00.
+- 2026-11-25 04:23 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_pv_v12 PV12E [KV-ALLFIX -> COORD; cc KV-OWN-PV-R2, KV-PV-ESTRIP, KV-SINKBINS]. Measured on epyc10 kits A5t3/A5t5 and epyc12 A5t6:
+  - GRT 341k overflow (M3 110k, M7 92k, M5 58k), flat 59,159 for 5.7 h, GRT-0273.
+  - E strip channel_v 5.06 at x1046.
+  - TT -708 to -778; hold -153 (port_in only after repair).
+  - r2r 2069; E face 9205 pins.
+  - 7 STATIONCORE.
+  Row: the ESTRIP form for side E, with the E column moved IN by 69.12 um, so the E strip goes from 51.84 to 120.96 um. 96 points move, 0 hops over 405, 0 stations, 0 cycles.
+  Plan epyc12 kv-allfix/plateau4/rows/PV12E/plan_row.json, sha 057709f5a60b, on A5t7 26f4ce7f13dc.
+  - compose3: 74 paths, 0 conflicts.
+  - place_precheck: the same 7 STATIONCORE as the base, 0 new.
+  Also covered: taps by SINKBINS-PV, pins by PV12-EASTPINS (KV-OWN-PV-R2).
+  ETA: A5t9 07:00. PRE, bind and R8 run at the gate.
