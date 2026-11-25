@@ -7,6 +7,8 @@ Text only. It never changes a verdict, a kind, a retry or a cancel. Of 745 crash
 import os
 import re
 
+from kit_resume import HOLD_GUARD_CAP_RE   # the one definition of a caught hold-guard RSZ-0060
+
 # first match wins, on one line of text
 CLASSES = (
     ("disk-full", r"No space left on device|ENOSPC|disk quota exceeded"),
@@ -48,6 +50,7 @@ def client_error(text):
     """first error line of this attempt in the client log; '' when the log names none"""
     i = text.rfind("AP_START ")
     tail = text[i:] if i >= 0 else text
+    tail = HOLD_GUARD_CAP_RE.sub("", tail)       # a caught RSZ-0060 (a chunk line follows) is not a cause; the next real error is
     hits = [l.strip() for l in tail.splitlines() if ERR_LINE.search(l[:500]) and not NOISE.search(l[:200])]
     if "ot-run: RAN on " in tail:                          # a refused host before the one that ran the job is no cause
         hits = [l for l in hits if not l.startswith("NOT-RUN ")]

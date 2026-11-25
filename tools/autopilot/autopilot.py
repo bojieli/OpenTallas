@@ -829,7 +829,8 @@ for _lp in [p for p in logs[-1:] if os.path.getmtime(p) >= since] + [os.path.joi
             out["first_error"] = "5_1_grt.log: " + out["grt_caught_dpl"]
             out["first_error_log"] = _lp
             break
-    _m = _fere.search(_stage_log)
+    # QC-OVERSIZE 11-25: an RSZ-0060 the GRT hold guard caught (its "OT_HOLD_GUARD_GRT chunk N:" line follows) is no error; it is not the first error
+    _m = _fere.search(HOLD_GUARD_CAP_RE.sub("", _stage_log))
     if _m:
         out["first_error"] = (os.path.basename(_lp) + ": " + _m.group(0).strip())[:300]
         out["first_error_log"] = _lp

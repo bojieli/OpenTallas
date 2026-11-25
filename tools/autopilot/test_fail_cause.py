@@ -74,3 +74,13 @@ def test_notice_is_one_line(tmp_path, monkeypatch):
     for _, l in out:
         assert "\n" not in l and "cause pin-access: [ERROR DRT-0073] No access point for u/clk" in l and f"log {p}" in l
         assert " | kit epyc2:/srv/s/items/t/gen/t src main@x | review " in l
+
+
+def test_caught_rsz0060_is_skipped_but_uncaught_is_kept():
+    caught = ("AP_START 1 u\n[ERROR RSZ-0060] Max buffer count reached.\nOT_HOLD_GUARD_GRT chunk 1: hold ws 23.50 (+19.94) tns 0.0 viol 0, +200 buffers (cap 200), 4670 s\n"
+              "[ERROR DRT-0073] No access point for u/clk\n")
+    assert F.client_error(caught) == "[ERROR DRT-0073] No access point for u/clk"
+    assert F.cause(job(kind="flow-error", reasons="exit 1"), caught)[0] == "pin-access"
+    uncaught = "AP_START 1 u\n[ERROR RSZ-0060] Max buffer count reached.\nError: global_route.tcl, 5 died\n"
+    assert F.client_error(uncaught) == "[ERROR RSZ-0060] Max buffer count reached."
+    assert F.cause(job(kind="flow-error", reasons="exit 1"), uncaught)[0] == "buffer-cap"
