@@ -1685,7 +1685,9 @@ def clients():
         if not p.isdigit() or int(p) == os.getpid():
             continue
         a = proc_args(p)
-        i = next((k for k, x in enumerate(a[:3]) if is_client_exe(x)), None)
+        # FLEET-OPS 11-25 (HEAD-SERDES-REFLOOR: a queued client stayed alive and `ot-run --cancel` matched none): the entry point may follow interpreter flags
+        # (python3 -I -B -u ot-run, env VAR=x python3 ...), so look at the first 8 words, not 3; a wrapper (bash -c / ssh / systemd-run) is still never a client
+        i = next((k for k, x in enumerate(a[:8]) if is_client_exe(x) and not any(w in ("-c", "bash", "sh") for w in a[:k])), None)
         if i is None or "--" not in a or "--cancel" in a[i + 1:i + 2]:
             continue
         rest = a[i + 1:]

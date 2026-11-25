@@ -163,3 +163,20 @@ def test_a_lease_thread_does_not_swallow_the_kill(tmp_path):
     and the admitted unit ran on; helper threads now block the signals so run()'s watcher takes them"""
     rc, err, stop = drive(tmp_path, signal.SIGTERM, lease=True)
     assert rc == 143 and stop is not None and "was STOPPED with its client" in err
+
+
+def test_clients_found_behind_interpreter_flags_but_not_behind_a_shell_wrapper(tmp_path):
+    """FLEET-OPS 11-25: `python3 -I -B -u .../ot-run ...` (entry point at word 4) was invisible to `ot-run --cancel`"""
+    script = tmp_path / "ot-run"
+    script.write_text("import time\ntime.sleep(60)\n")
+    procs = [subprocess.Popen([sys.executable, "-I", "-B", "-u", str(script), "--mem", "1", "--dir", "/x/kit", "--", "true"]),
+             subprocess.Popen(["bash", "-c", f"exec -a x sleep 60 # {script} --dir /y/kit -- true"]),
+             subprocess.Popen(["bash", "-c", "sleep 60", "bash", str(script), "--dir", "/z/kit", "--", "true"])]
+    try:
+        time.sleep(0.5)
+        found = RUN.clients()
+        assert procs[0].pid in found and found[procs[0].pid][1] == "/x/kit"
+        assert procs[1].pid not in found and procs[2].pid not in found
+    finally:
+        for p in procs:
+            p.terminate(); p.wait()

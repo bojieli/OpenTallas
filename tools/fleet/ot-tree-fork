@@ -817,6 +817,13 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
                       + "; ".join(P["refused"][:5]) + ("; ..." if len(P["refused"]) > 5 else "")
                       + ".  Fork that tree on its own, or pass --materialize to copy the targets in.")
     n, gb = len(P["files"]), P["bytes"] / 2**30
+    if P["external"] and os.environ.get("OT_TREE_FORK_LINK_WARN", "1") != "0":
+        # FLEET-OPS 11-25 (COORD Q2, report only: QC-STAV2-F436 fork refused on 1006 links, a v13 bind tree before it): a symlink leaving SRC is kept verbatim; list them so the
+        # owner sees which trees the private copy still points into (a write through one lands there).  The default behaviour is unchanged.
+        import collections
+        by = collections.Counter(os.path.dirname(t.split(" -> ", 1)[1].rstrip("/")) or "/" for t in P["external"])
+        out(f"TREE-FORK WARN {len(P['external'])} symlink(s) in {src} point OUTSIDE it and were kept verbatim (not dereferenced; --materialize copies them in): "
+            + ", ".join(f"{k} x{v}" for k, v in by.most_common(5)) + "; first: " + "; ".join(P["external"][:5]))
     if dry:
         out(f"TREE-FORK DRY {src} -> {dst}: {n} files {gb:.2f} GB, {len(P['dirs'])} dirs, {len(P['links'])} links "
             f"({len(P['external'])} external kept), {len(P['materialized'])} materialized, {len(P['specials'])} specials skipped")
