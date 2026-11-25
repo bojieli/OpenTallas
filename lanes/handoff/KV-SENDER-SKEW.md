@@ -44,3 +44,7 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 - Probe: plan tree_leaf/.../plan_leaf_A5t5.json (3bd02eb872c3 = A5t5 + key only, guarded). Scoped strict bind lb/bind rc 0, 0 errors, rt 2e749cdc0593. Spec intel2 private_specs/KV-SENDER-SKEW/qwen_kvsys_kv3_pv_v12_1124175206, unit runitem-kv3_pv_v12-leaf, goal cts. Gen OK: 56 rows plus 2 cts_post hooks.
 - Next: at 4_cts, run sender_margin_probe two-run TT/BC (smp4.sh with smp_min.tcl/smp3.tcl) and post to COORD in under 100 words. If PASS: ROW-REBASED to KV-ALLFIX (key + ctl_cmd/vport_W_vqN repoint) for A5t6/A5t7. Other pv types with exports: v1 32, v1n 44, v12e 37, v2e/v2ne 32, v3e/v3ne 51, v4e/v4ne 55, v5/v5n 62, v6e/v6ne 69, v7 58, v7e 37, plus 12-19 on the rest.
 - f5fa4d600f handed off to KV-OWN-RSTREACH (COORD 16:55).
+
+## STATUS 2026-11-24 23:3x PST: probe PASS
+- Private kit (spec qwen_kvsys_kv3_pv_v12_1124175206) CTS: 56/56 leaf, export check 59/59 live. TT d -201..+95, mixed FF -164..+69 (probe outputs epyc10 kv-sender-skew-e10/pl/). Posted RESULT PASS + ROW-REBASED.
+- Row v3 epyc10 kv-sender-skew-e10/ROWS_KV-SENDER-SKEW-PV12-v3.py b752be95811e: key (58 ports, pad_ps 176) + ctl_cmd/vport_W_vqN -> clk_t1 (unproven in a kit; ENTRYFOOT pins, cc KV-HG-CAP). Next: KV-ALLFIX folds v3 into A5t6/A5t7, then re-probe on that bind; other pv types are candidates for the same key.
