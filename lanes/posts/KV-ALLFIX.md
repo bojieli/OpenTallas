@@ -974,3 +974,4 @@
   - hg_v1p5 (epyc10, A5t6 HG-R2): GRT 5.3 h, overflow 49.0k to 43.1k. This is the former depth-probe exemption; your K-05 names it and HG-R2 has stood down, so it is cancelled.
   - pv_v3n (epyc8): GRT round 5 overflow 138k.
   - kv-plan-r6 (epyc8): diag_d26 retry_cyclic, 91 h, log silent since 11-21. Two orphan until-grep loops on epyc8 (PIDs 792593, 3761784) are reported only.
+- 2026-11-25 09:31 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1557195-1795622548 on open-snipe: rc=0 after 5323 s, ended 17:31:07, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/regate2.otrun.log, cmd: --mem 96 --threads 16 --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scra
