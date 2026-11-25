@@ -6970,6 +6970,44 @@
        }
       }
      },
+     "leaf_params": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "module",
+        "params"
+       ],
+       "properties": {
+        "module": {
+         "type": "string",
+         "minLength": 1
+        },
+        "local_re": {
+         "type": "string",
+         "minLength": 1
+        },
+        "note": {
+         "type": "string"
+        },
+        "params": {
+         "type": "object",
+         "minProperties": 1,
+         "propertyNames": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+         },
+         "additionalProperties": {
+          "type": [
+           "integer",
+           "string"
+          ]
+         }
+        }
+       }
+      }
+     },
      "superset": {
       "type": [
        "boolean",

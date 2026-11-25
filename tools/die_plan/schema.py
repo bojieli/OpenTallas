@@ -1801,6 +1801,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
                    # cone auto (default: both-way cone, joined under 0.5 coverage, DROP when > 8 x members) | between (only the cells on
                    # member -> member paths join, always; LOCAL-CONE-SCATTER counters / decode cones)
                    "cone": {"enum": ["auto", "between"]}}}}
+# PLAN-LEAF-PARAMS (S81-WREG-PARAM 11-24; bind.plan_leaf_params): per-instance RTL parameters on the leaves of one master inside
+# every partition of this type (e.g. S81 ot_s81sl_vpw WREG 1 instead of the shared-file define OT_S81SL_VP_WREG); absent = as built.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["leaf_params"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["module", "params"],
+    "properties": {"module": _name, "local_re": {"type": "string", "minLength": 1}, "note": {"type": "string"},
+                   "params": {"type": "object", "minProperties": 1, "propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                              "additionalProperties": {"type": ["integer", "string"]}}}}}
 # UNIFY-TOOLS-0300 11-20 (FABLE-SUPERSET-0415 section 10, U5): a SUPERSET type carries the union pin set of its class.
 # true / object (e.g. {"class": "slw_fe"}) = on; gen_phys.superset_spare_pins pins the ends no die port binds.  Each
 # instance then names its unbound ends in partitions[].spare_ends (a spare input is tied 0 at the parent, a spare output

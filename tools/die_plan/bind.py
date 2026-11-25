@@ -3234,6 +3234,44 @@ class Binder:
             self._cidx = {c.path: i for i, c in enumerate(self.F.cells)}
         return self._cidx
 
+    def plan_leaf_params(self):
+        """PLAN-LEAF-PARAMS (S81-WREG-PARAM 11-24, COORD): partition_types[T].leaf_params = [{"module": RTL master,
+        "params": {name: value}, "local_re": optional fullmatch on the leaf's path inside its partition}] sets RTL
+        parameters PER INSTANCE on the matching leaves of every partition of plan type T, before the types form; the
+        values reach the bound RTL as explicit overrides (.WREG(1)) and are recorded in param_regen.json with the hook's.
+        This replaces a per-type verilog_define read by a file that other types share (S81 OT_S81SL_VP_WREG in
+        ot_s81sl_vp.sv: TYPE_DEFINE_CONFLICT / NOEFFECT, c9 ROW-DROP 46273028): a type without leaf_params binds exactly as
+        before.  Fail closed: an unknown key, a master that is no leaf of some partition of T, or a parameter the master
+        does not declare is an error (the latter in regen_params).  -> ({leaf path: {param: value}}, record)."""
+        out, rec = {}, []
+        for tn in sorted(self.types):
+            rules = self.types[tn].get("leaf_params")
+            if not rules:
+                continue
+            parts = sorted(p for p, ps in self.parts.items() if ps.get("type") == tn)
+            if not isinstance(rules, list) or not parts:
+                self.errors.append(f"PLAN_LEAF_PARAMS {tn}: leaf_params must be a list on a type with partitions")
+                continue
+            for j, rule in enumerate(rules):
+                bad = sorted(set(rule) - {"module", "params", "local_re", "note"}) if isinstance(rule, dict) else ["<not a dict>"]
+                if bad or not rule.get("module") or not isinstance(rule.get("params"), dict) or not rule["params"]:
+                    self.errors.append(f"PLAN_LEAF_PARAMS {tn}[{j}]: needs module + non-empty params (unknown keys {bad})")
+                    continue
+                rx = re.compile(rule.get("local_re") or ".*")
+                n = 0
+                for p in parts:
+                    hit = [ci for ci in self.members.get(p, []) if self.F.cells[ci].kind == "leaf"
+                           and self.F.cells[ci].module == rule["module"] and rx.fullmatch(self.rel_of(ci))]
+                    if not hit:
+                        self.errors.append(f"PLAN_LEAF_PARAMS {tn}[{j}]: no {rule['module']} leaf in partition {p}"
+                                           + (f" matching {rule['local_re']}" if rule.get("local_re") else ""))
+                    for ci in hit:
+                        out.setdefault(self.F.cells[ci].path, {}).update(rule["params"])
+                        n += 1
+                rec.append(dict(type=tn, module=rule["module"], params=rule["params"], local_re=rule.get("local_re"),
+                                partitions=len(parts), leaves=n))
+        return out, rec
+
     def regen_params(self):
         """asbuilt.param_regen {file, ...}: a die hook `regen(ctx)` that re-derives leaf parameters from the BOUND lane
         latencies (e.g. the collective calendar LS / face PHY / R from the SerDes and core<->face lanes) and returns
@@ -3241,25 +3279,40 @@ class Binder:
         ctx.base, ctx.ab).  Values replace the as-built parameters before the types are formed."""
         self.param_regen = None
         spec = self.ab.get("param_regen")
-        if not spec:
+        plan_params, plan_record = self.plan_leaf_params()
+        if not spec and not plan_params:
             return
-        import importlib.util
-        f = Path(spec["file"])
-        f = f if f.is_absolute() else Path(self.base) / f
-        m = importlib.util.spec_from_file_location("bind_param_regen", f)
-        mod = importlib.util.module_from_spec(m)
-        # A source-tree hook can prepend its own tools directory. Its imports
-        # must not change where this binder resolves later generator imports.
-        saved_path = sys.path[:]
-        try:
-            m.loader.exec_module(mod)
+        mod, r = None, dict(params={})
+        if spec:
+            import importlib.util
+            f = Path(spec["file"])
+            f = f if f.is_absolute() else Path(self.base) / f
+            m = importlib.util.spec_from_file_location("bind_param_regen", f)
+            mod = importlib.util.module_from_spec(m)
+            # A source-tree hook can prepend its own tools directory. Its imports
+            # must not change where this binder resolves later generator imports.
+            saved_path = sys.path[:]
             try:
-                r = mod.regen(self)
-            except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
-                self.errors.append(f"PARAM_REGEN {f.name}: {e}")
-                return
-        finally:
-            sys.path[:] = saved_path
+                m.loader.exec_module(mod)
+                try:
+                    r = mod.regen(self)
+                except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
+                    self.errors.append(f"PARAM_REGEN {f.name}: {e}")
+                    return
+            finally:
+                sys.path[:] = saved_path
+        else:
+            spec = {}
+        if plan_params:
+            # PLAN-LEAF-PARAMS: a plan-type leaf parameter and a die hook value for the same leaf parameter must agree
+            hp = {p: dict(ps) for p, ps in (r.get("params") or {}).items()}
+            for path, ps in plan_params.items():
+                for k, v in ps.items():
+                    if k in hp.get(path, {}) and str(hp[path][k]) != str(v):
+                        self.errors.append(f"PLAN_LEAF_PARAMS {path}.{k}: plan {v} != param_regen hook {hp[path][k]}")
+                        continue
+                    hp.setdefault(path, {})[k] = v
+            r = dict(r, params=hp)
         changed, derived = [], []
         # DIE-KV-97 11-09: asbuilt.param_regen.declare {RTL master: {param: default}} names parameters the as-built netlist
         # cannot show: those of a per-instance substitute master (substitute_inst, e.g. KV qkd_astk_ep_s_e EO_E / EO_RL;
@@ -3285,7 +3338,9 @@ class Binder:
                 if old != str(v):
                     changed.append(row)
                 c.params[k] = str(v)
-        self.param_regen = dict(file=str(spec["file"]), changed=changed, derived=derived, record=r.get("record", {}))
+        self.param_regen = dict(file=str(spec.get("file", "")), changed=changed, derived=derived, record=r.get("record", {}))
+        if plan_params:
+            self.param_regen["plan_leaf_params"] = plan_record
         # DIE-HBM-92-LCHK: the hook's declared fixed-latency contracts (latency_consumers.py checks every instance)
         lc = r.get("latency_contracts") or getattr(mod, "LATENCY_CONTRACTS", None)
         if lc:
