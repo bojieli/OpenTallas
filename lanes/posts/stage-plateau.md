@@ -157,3 +157,4 @@
   P11 could not determine: floorplan.png diamond of coloured squares at x225-270,y690-755 on the clock row (no legend); paths.png has 0 paths drawn although hold fails after CTS - the PLACE-GP render carries no timing overlay.
 - 2026-11-25 05:12 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-3735567 on open-snipe: rc=0 after 30 s, ended 13:12:56, log none, cmd: ot-push-main 
 - 2026-11-25 05:16 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-3891929 on open-snipe: rc=0 after 27 s, ended 13:16:41, log none, cmd: ot-push-main 
+- 2026-11-25 05:17 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-3922631 on open-snipe: rc=0 after 1 s, ended 13:17:09, log none, cmd: ot-push-main 
