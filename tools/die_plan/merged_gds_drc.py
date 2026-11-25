@@ -39,6 +39,15 @@ STD_LEFS = [PLAT + "/lef/asap7_tech_1x_201209.lef"] + [PLAT + "/lef/asap7sc7p5t_
                                                          for v in ("R", "L", "SL")]
 STD_GDS = [PLAT + "/gds/asap7sc7p5t_28_%s_220121a.gds" % v for v in ("R", "L", "SL")]
 DECK = PLAT + "/drc/asap7.lydrc"
+# BEOL deck (default): the platform deck cut to the layer sections an exact-abstract view can change.  The view keeps M1-M3 as
+# one blanket OBS and its FEOL is the signed core's, so the parent can only add M4-M7 / V3-V6 shapes over a core; the full
+# deck spends > 1 h on FEOL checks of the std cells per block (HEAD hd_host_e: line 154 of 561 after 56 min).
+BEOL_SECTIONS = ("M3", "V3", "M4", "V4", "M5", "V5", "M6", "V6", "M7")
+BEOL_AWK = ('{sub(/\\r$/, "")}\n'            # the deck has CRLF line ends
+            '/^info\\("DRC section"\\)/ {print; drc=1; keep=0; next}\n'
+            'drc && /^###/ {keep = ($2 ~ /^(%s)$/); if (keep) print; next}\n'
+            '!drc || keep {print}\n'
+            'END {print "</text>"; print "</klayout-macro>"}\n' % "|".join(BEOL_SECTIONS))
 GATING_ZONE = "HARDCORE"
 
 
@@ -100,9 +109,14 @@ def build_script(a, cores, P):
                  "-rd macro_map=%s/macro_map.json -rd allow_empty=%s -rd out_dir=%s > %s/parent.log 2>&1"
                  % (P["pdef"], os.path.basename(a.parent_def), q(a.design), O, q(" ".join(STD_GDS)), O,
                     q(a.allow_empty or ""), O, O))
+    deck = DECK
+    if getattr(a, "deck", "beol") == "beol":
+        Path(a.out, "beol.awk").write_text(BEOL_AWK)
+        lines.append("awk -f %s/beol.awk %s > %s/beol.lydrc" % (O, DECK, O))
+        deck = "%s/beol.lydrc" % O
     for g in ("merged", "parent_only", "macros_only"):
         lines.append("( klayout -b -r %s -rd in_gds=%s/%s.gds -rd report_file=%s/%s.lyrdb > %s/drc_%s.log 2>&1"
-                     " && echo 0 > %s/drc_%s.rc || echo 1 > %s/drc_%s.rc ) &" % (DECK, O, g, O, g, O, g, O, g, O, g))
+                     " && echo 0 > %s/drc_%s.rc || echo 1 > %s/drc_%s.rc ) &" % (deck, O, g, O, g, O, g, O, g, O, g))
     lines += ["wait", "for g in merged parent_only macros_only; do [ \"$(cat %s/drc_$g.rc)\" = 0 ] || "
               "{ echo DRC_FAIL $g; exit 4; }; done" % O,
               "$K -rd mode=compare -rd merged=%s/merged.lyrdb -rd parent_only=%s/parent_only.lyrdb "
@@ -210,7 +224,7 @@ def kit_run(a):
         return 2
     ns = argparse.Namespace(parent_def=kp["parent_def"], design=kp["design"], core=["%s=%s" % c for c in kp["cores"]],
                             lef=kp["lefs"], allow_empty=kp["allow_empty"], halo_um=a.halo_um, out=str(out),
-                            image=a.image, mem_gb=a.mem_gb, local=a.local)
+                            image=a.image, mem_gb=a.mem_gb, local=a.local, deck=a.deck)
     return run(ns)
 
 
@@ -281,6 +295,7 @@ def main(argv=None):
     r.add_argument("--lef", action="append", default=[], help="every non-std-cell LEF the parent DEF uses (repeat)")
     r.add_argument("--allow-empty", default="", help="regex of generated macros without GDS (UNCHECKED, not gating)")
     r.add_argument("--halo-um", type=float, default=1.0)
+    r.add_argument("--deck", choices=("beol", "full"), default="beol")
     r.add_argument("--out", required=True)
     r.add_argument("--image", default="openroad/orfs:asap7lock")
     r.add_argument("--mem-gb", type=int, default=64)
@@ -296,6 +311,7 @@ def main(argv=None):
     k.add_argument("--kit", required=True)
     k.add_argument("--out")
     k.add_argument("--halo-um", type=float, default=1.0)
+    k.add_argument("--deck", choices=("beol", "full"), default="beol")
     k.add_argument("--image", default="openroad/orfs:asap7lock")
     k.add_argument("--mem-gb", type=int, default=64)
     k.add_argument("--local", action="store_true")
