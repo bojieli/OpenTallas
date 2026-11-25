@@ -133,3 +133,33 @@ def test_lec_is_never_no_progress():
     assert nw.lec_exempt("lec", "NO-PROGRESS", "no new LEC file/log write for 7.0 h")[0] == "PROGRESS"
     assert nw.lec_exempt("lec", "PROGRESS", "x") == ("PROGRESS", "x")
     assert nw.lec_exempt("yosys", "NO-PROGRESS", "x") == ("NO-PROGRESS", "x")
+
+
+# ---------------------------------------------------------------- FLOW-0730 F6: PLATEAU label + routing (report-only)
+def test_plateau5_needs_five_flat_iterations():
+    flat = [9000, 5000, 3000, 1500, 1490, 1480, 1475, 1470, 1466]
+    assert nw.drt_plateau5(flat) == 1466
+    assert nw.drt_plateau5([9000, 5000, 3000, 1500, 1490, 1480, 1475, 1470, 1300]) is None        # last step -11 %
+    assert nw.drt_plateau5([100, 100, 100, 100, 100]) is None                                      # fewer than 6 totals
+    assert nw.drt_plateau5([100, 100, 100, 101, 100, 99]) == 99
+
+
+def test_plateau_routes_by_violation_count():
+    assert nw.plateau_route({"plateau5": 60})[0] == "REPAIR"
+    assert nw.plateau_route({"plateau5": 500})[0] == "MID"
+    assert nw.plateau_route({"plateau5": 1466, "age_h": 2.0})[0] == "SMELL"
+    assert nw.plateau_route({"plateau5": 1466, "age_h": 5.0})[0] == "RECOMMEND-CANCEL"
+    assert nw.plateau_route({}) is None
+
+
+def test_plateau_pass_posts_once_report_only(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    from test_noprog_smell import srow
+    rows = [srow(plateau5=60, unit="u1", kit="/srv/x/private/QC-ALLFIX/a/gen/a", work="/srv/x/private/QC-ALLFIX/a/gen/a"), srow(plateau5=2000, age_h=9.0, unit="u2")]
+    seen = {}
+    out = nw.plateau_route_pass(rows, seen, NOW)
+    assert sorted(c for _, c, _ in out) == ["RECOMMEND-CANCEL", "REPAIR"]
+    p = posted(tmp_path)
+    assert any("PLATEAU-REPAIR [SMELL-WATCH -> QC-ALLFIX, QC-DRT-TAIL;" in x for x in p) and any("PLATEAU-RECOMMEND-CANCEL" in x and "FP-CONVERGE-QC" in x and "cancel recommended" in x for x in p)
+    assert nw.plateau_route_pass(rows, seen, NOW + 900) == []
+    assert not (tmp_path / "autopilot/cancel_marks.tsv").exists()

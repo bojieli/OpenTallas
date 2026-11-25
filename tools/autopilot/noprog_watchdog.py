@@ -1241,6 +1241,12 @@ def scan(now=None, act=False, probe_s=4):
                     cts_ = (float(cm[-1][0]), float(cm[-1][1]) if cm[-1][1] else None) if cm else None
                 rounds_s = grt_rounds(os.path.dirname(log).replace("/logs/", "/reports/")) if kind == "grt" else None
                 row["smell"] = smell_triggers(kind, stage, (now - mt) / 3600, (now - lbirth) / 3600, rounds_s, drt_vals, drc_t, log_text if kind == "gpl" else "", cts_)
+                if drt_vals:
+                    p5 = drt_plateau5(drt_vals)
+                    if p5 is not None:
+                        row["plateau5"] = p5
+                        if p5 > PLATEAU_SMELL_MIN:
+                            row["smell"].append(("DRT", f"DRT plateau: 5 iterations < 2 % change at {p5:g} violations"))
             except (OSError, ValueError, IndexError):
                 row["smell"] = []
             if kind == "drt" and log:
@@ -1486,6 +1492,10 @@ def hub(now=None, post=True):
         files.append("lanes/CANCEL-GRT-FLAT.tsv")
     if ddone:
         files.append("lanes/CANCEL-DESIGN-FAIL.tsv")
+    try:
+        plateau_route_pass(rows, seen, now, post=post)
+    except Exception as e:
+        print(f"noprog plateau route failed: {e!r}", file=sys.stderr)
     if vis_queue_append(rows, now, post):
         files.append("lanes/VIS-QUEUE.tsv")
     try:
@@ -1970,6 +1980,64 @@ def lec_exempt(kind, verdict, why):
     if kind == "lec" and verdict == "NO-PROGRESS":
         return "PROGRESS", f"LEC exempt from no-progress (COORD 11-25): {why}"
     return verdict, why
+
+
+PLATEAU5_ITERS = 5
+PLATEAU5_CHANGE = 0.02
+PLATEAU_REPAIR_MAX = 100        # under this many violations a plateau is a DRC-repair / ECO-route candidate
+PLATEAU_SMELL_MIN = 1000        # over this many it is a SMELL (+ render), and a cancel RECOMMENDATION once the job is over 3 h
+
+
+def drt_plateau5(vals):
+    """FLOW-0730 F6: PLATEAU = each of the last 5 iterations changed the DRT total by less than 2 % (either way).  -> last total, or None.  Pure.
+    Wider than DRT-PLATEAU (which cancels): this only labels and routes (report-only)."""
+    if len(vals) < PLATEAU5_ITERS + 1:
+        return None
+    t = vals[-(PLATEAU5_ITERS + 1):]
+    if all(a > 0 and abs(b - a) / a < PLATEAU5_CHANGE for a, b in zip(t, t[1:])):
+        return t[-1]
+    return None
+
+
+def plateau_route(r):
+    """-> (class, text) routing of a row with r['plateau5'] (last DRT total) set, else None.  class REPAIR (< 100), SMELL (> 1000), RECOMMEND-CANCEL (> 1000 and job > 3 h), MID (100..1000: label only)"""
+    n = r.get("plateau5")
+    if n is None:
+        return None
+    if n < PLATEAU_REPAIR_MAX:
+        return "REPAIR", f"DRT plateau at {n:g} violations (5 iterations < 2 % change): DRC-repair / ECO-route candidate"
+    if n > PLATEAU_SMELL_MIN:
+        if float(r.get("age_h") or 0) > DF_MIN_AGE_H:
+            return "RECOMMEND-CANCEL", f"DRT plateau at {n:g} violations (5 iterations < 2 % change), job {r.get('age_h')} h > 3 h: cancel recommended (report-only)"
+        return "SMELL", f"DRT plateau at {n:g} violations (5 iterations < 2 % change)"
+    return "MID", f"DRT plateau at {n:g} violations (5 iterations < 2 % change)"
+
+
+def plateau_route_pass(rows, seen, now, post=True):
+    """HUB, report-only: post each plateau kit once per class (24 h).  REPAIR -> owner + QC-DRT-TAIL; SMELL / RECOMMEND-CANCEL -> die FP-CONVERGE lane + owner (SMELL also gets its render
+    through smell_pass).  Never cancels.  -> [(key, class, text)]"""
+    st = seen.setdefault("plateau5", {})
+    out = []
+    for r in rows:
+        pr = plateau_route(r)
+        if not pr or smell_exempt(r) or plateau_exempt(r):
+            continue
+        k = f"{r.get('kit') or r.get('work') or r.get('container')}|{pr[0]}"
+        if k in st:
+            continue
+        st[k] = now
+        out.append((k, pr[0], pr[1], r))
+    for k in [k for k, t in st.items() if now - float(t) > 86400]:
+        del st[k]
+    if post and out:
+        groups = {}
+        for k, cls, txt, r in out:
+            die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
+            to = smell_recipients(die, owner_of([r])) if cls != "REPAIR" else ", ".join(x for x in (owner_of([r]), "QC-DRT-TAIL") if x and x != "COORD") or "QC-DRT-TAIL"
+            groups.setdefault((cls, to), []).append(f"{r.get('type', '')} {r.get('host')} {r.get('unit') or r.get('container')}: {txt}")
+        for (cls, to), items in sorted(groups.items()):
+            _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"), f"PLATEAU-{cls} [SMELL-WATCH -> {to}; cc COORD] {len(items)} kit(s), report-only: " + " | ".join(items[:25]))
+    return [(k, c, t) for k, c, t, _ in out]
 
 
 def hold_stall_evidence(stage, res, verdict, why, detail="", anchors=None, now=None, window=None):
