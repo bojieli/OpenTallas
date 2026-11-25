@@ -1,4 +1,4 @@
-# QC-STA-HOP handoff (parent QC-ALLFIX). Updated 2026-11-25 08:50 PST.
+# QC-STA-HOP handoff (parent QC-ALLFIX). Updated 2026-11-25 09:58 PST.
 Cause (CORRECTED 07:53): st_a b_hw_ctl_hc0 is a LANDED ft slot with explicit_stage0 + 5 bit_sites stages. The face_flops landed loop gives station i key i+1
 and puts the last station at the out face, so bs[0] is dead and ring -> bs[1] = 653 um plan / 438 um placed (186 bits). 07:31 "artefact" claim was WRONG.
 Checker: main 01b2d3adc8f (die_hop_scan explicit_full/landed model, adv_g0_hops, ft_reach_fix/ft_s0_resite skip, int casts). Fable r1 FAIL, r2 PASS-WITH-NITS.
@@ -10,3 +10,9 @@ Script: epyc10 /srv/opentallas-scratch2/claude/QC-STA-HOP/row_sta_hop_v2.py (TRE
 Trees (epyc10): launch_hop (PRE, clean), launch_hop2 (bind, forking). epyc12 tree_bind deleted (.fork.json write-through incident 08:44).
 Next: PRE v3 (pre_hop.sh c78c on launch_hop) + scoped bind (bind_hop.sh ROWSHA, set T=launch_hop2) + latcheck; ROW-READY after BANKRST-LAND ROW-READY.
 Cleanup owed: ot-delete epyc10 launch_hop.forking-3331121, .forking-3451048.
+
+09:58: FINAL row plan 406752220869 = BANKRST-LAND c78ca1b08c5b + STA-HOP v3 (4dca8a408a38) with explicit_stage0 kept false (COMPOSEDROP).
+  epyc10 row/plan_sta_hop_c78cf.json, ledger row/ledger_sta_hop_c78c.json, post-step flag_false.py. check_bank_taps 0, worst bank-tap 141 um.
+  Running on epyc10 launch_hop: scoped bind oth-ubuntu-1627024-1795629059 (bind_c78c/, row installed in launch_hop POR),
+  combined PRE oth-ubuntu-1799415-1795629209 (pre_c78cf.log). launch_hop2 cancelled+deleted (disk rail).
+  Next: place probes (v1 cl67389ecd + v2 E5) on the bound row; ROW-READY after BANKRST-LAND ROW-READY.
