@@ -8480,6 +8480,157 @@ def reset_contract_gate(kit, top, environ=None):
     return rep
 
 
+class _RelayHints:
+    """LEC-RELAYHINT-1: structural reset / start relay classes (relay_hints.py is the CLI over these; kept in
+    lec.py so a kit-copied lec.py carries them)."""
+    KINDS = {"ot_dp_rrelay": ("rrelay", "q"), "ot_dp_rrelay_drive": ("rrelay", "state"),
+             "ot_dp_head_raw_export_pair": ("rrelay", "q"), "ot_dp_rgate": ("rgate", "q"),
+             "ot_dp_rgate_drive": ("rgate", "state")}
+    INST = re.compile(r"\b(ot_dp_\w+)\s+(?:#\s*\([^;]*?\)\s*)?(\w+)\s*\(([^;]*?)\)\s*;", re.S)
+    PIN = re.compile(r"\.(\w+)\s*\(\s*([\w\[\]]+)\s*\)")
+    MOD = re.compile(r"\bmodule\s+(\w+)\b(.*?)\bendmodule\b", re.S)
+    KEY = re.compile(r"^ff:u_dut\.(\w+)\.(q|state|export_q)$")
+
+
+    @staticmethod
+    def module_text(text, top=None):
+        """the body of module `top` (default: the whole text when there is no such module)"""
+        if top:
+            for m in _RelayHints.MOD.finditer(text):
+                if m.group(1) == top:
+                    return m.group(2)
+        return text
+
+
+    @staticmethod
+    def relays(text):
+        """-> {instance: dict(kind, d, run, q, export, reg)} for the relay cells instantiated in `text`"""
+        rows = {}
+        for m in _RelayHints.INST.finditer(re.sub(r"//[^\n]*", "", text)):
+            if m.group(1) not in _RelayHints.KINDS:
+                continue
+            pins = dict(_RelayHints.PIN.findall(m.group(3)))
+            if "d" not in pins or "q" not in pins:
+                continue
+            kind, reg = _RelayHints.KINDS[m.group(1)]
+            if kind == "rgate" and "run" not in pins:
+                continue
+            rows[m.group(2)] = dict(kind=kind, d=pins["d"], run=pins.get("run"), q=pins["q"],
+                                    export=pins.get("export_q"), reg=reg)
+        return rows
+
+
+    @staticmethod
+    def classes(rows):
+        """-> {instance: class key (hashable)}"""
+        q2r = {v["q"]: k for k, v in rows.items()}
+        memo, busy = {}, set()
+
+        def cls(net):
+            r = q2r.get(net)
+            if r is None:
+                return ("ext", net)
+            if r in memo:
+                return memo[r]
+            if r in busy:                       # a relay loop is not a shift register: its own class
+                return ("loop", r)
+            busy.add(r)
+            v = rows[r]
+            c = (v["kind"], cls(v["d"]), cls(v["run"]) if v["run"] else None)
+            busy.discard(r)
+            memo[r] = c
+            return c
+        return {r: cls(rows[r]["q"]) for r in rows}
+
+
+    @staticmethod
+    def _num(r):
+        m = re.search(r"(\d+)$", r)
+        return (int(m.group(1)) if m else -1, r)
+
+
+    @staticmethod
+    def hints(rows, prefix="ff:u_dut."):
+        """-> ['both', key, ['eq', 'gold', representative key, 0]] for every non-representative relay (and export_q)"""
+        cl = _RelayHints.classes(rows)
+        groups = {}
+        for r, c in cl.items():
+            groups.setdefault(c, []).append(r)
+        out = []
+        for c, rs in sorted(groups.items(), key=lambda x: sorted(x[1], key=_RelayHints._num)[0]):
+            rs.sort(key=lambda r: (rows[r]["reg"] != "q", _RelayHints._num(r)))
+            rep = f"{prefix}{rs[0]}.{rows[rs[0]]['reg']}"
+            for r in rs[1:]:
+                out.append(["both", f"{prefix}{r}.{rows[r]['reg']}", ["eq", "gold", rep, 0]])
+            for r in rs:
+                if rows[r]["export"]:
+                    out.append(["both", f"{prefix}{r}.export_q", ["eq", "gold", rep, 0]])
+        return out
+
+
+    @staticmethod
+    def relay_key(key, rows):
+        m = _RelayHints.KEY.match(key) if isinstance(key, str) else None
+        return bool(m) and m.group(1) in rows
+
+
+    @staticmethod
+    def audit(supplied, rows):
+        """supplied hints -> (relay hints, wrong-phase relay hints): an eq hint on a relay key whose partner is not a relay
+        of the same class (or not a relay at all), or inverted."""
+        cl = _RelayHints.classes(rows)
+        rel, wrong = [], []
+        for e in supplied:
+            if not (isinstance(e, (list, tuple)) and len(e) == 3 and _RelayHints.relay_key(e[1], rows)):
+                continue
+            rel.append(e)
+            h = e[2]
+            if not (isinstance(h, (list, tuple)) and h and h[0] == "eq"):
+                wrong.append(e)
+                continue
+            a, b = _RelayHints.KEY.match(e[1]).group(1), _RelayHints.KEY.match(h[2]) if isinstance(h[2], str) else None
+            if not b or b.group(1) not in rows or cl[a] != cl[b.group(1)] or h[3]:
+                wrong.append(e)
+        return rel, wrong
+
+
+    @staticmethod
+    def rewrite(supplied, rows):
+        """drop every supplied hint on a relay key, add the structural class hints -> (hints, info)"""
+        rel, wrong = _RelayHints.audit(supplied, rows)
+        new = _RelayHints.hints(rows)
+        keep = [e for e in supplied if not (isinstance(e, (list, tuple)) and len(e) == 3 and _RelayHints.relay_key(e[1], rows))]
+        info = dict(relays=len(rows), classes=len(set(_RelayHints.classes(rows).values())), structural=len(new),
+                    supplied_relay=len(rel), supplied_wrong_phase=len(wrong), wrong_first=[list(x) for x in wrong[:8]])
+        return keep + new, info
+
+
+def _relay_hints():
+    return _RelayHints
+
+
+def relay_class_rows(env, kit, top, rec):
+    """LEC-RELAYHINT-1 (COORD 11-25): the reset / start relay cells of the top module (relay_hints.py), default on
+    (OT_LEC_RELAY_HINTS=0 disables).  Their structural classes become 'both' eq hints, each proved by the induction;
+    supplied hints on relay registers are replaced (the earlier generator paired relays of different shift depth:
+    hd_mesh 67 wrong-phase hints dropped the u_lb reset-root alias and failed 9,556 SRAM pins).  -> rows or {}"""
+    if os.environ.get("OT_LEC_RELAY_HINTS", "1") == "0":
+        return {}
+    rh = _relay_hints()
+    text = []
+    for f in env.get("VERILOG_FILES", "").split():
+        try:
+            t = Path(kpath(kit, f)).read_text(errors="replace")
+        except OSError:
+            continue
+        if re.search(rf"\bmodule\s+{re.escape(top)}\b", t):
+            text.append(rh.module_text(t, top))
+    rows = rh.relays("\n".join(text))
+    if rows:
+        rec["relay_cells"] = len(rows)
+    return rows
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -8642,8 +8793,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         rec["kit_reset_ports"] = L.kit_reset_ports
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         discovery_rounds = 24
+        if hints and not hf.is_file():
+            raise LecError(f"hints file {hints} not found")
+        supplied, relay = [], relay_class_rows(env, kit, top, rec)
         if hf.is_file():
             preseed, supplied, discovery_rounds = decode_hint_plan(json.loads(hf.read_text()))
+            if relay and preseed is not None:
+                preseed = [e for e in preseed if not (isinstance(e, (list, tuple)) and len(e) == 3
+                                                      and _relay_hints().relay_key(e[1], relay))]
             if preseed is not None:
                 L.preseed_hints = preseed
                 rec["hint_plan"] = dict(schema=HINT_PLAN_SCHEMA, discovery_rounds=discovery_rounds,
@@ -8654,17 +8811,22 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
+        if relay:                         # LEC-RELAYHINT-1: structural relay classes replace supplied relay hints
+            supplied, rec["relay_hints"] = _relay_hints().rewrite(supplied, relay)
+            log.append(f"relay hints: {rec['relay_hints']['structural']} structural ({rec['relay_hints']['classes']} "
+                       f"classes of {rec['relay_hints']['relays']} relays); supplied relay hints replaced "
+                       f"{rec['relay_hints']['supplied_relay']}, of them wrong-phase "
+                       f"{rec['relay_hints']['supplied_wrong_phase']}")
         correspond(L, out, conflicts, log, rounds=discovery_rounds)
         if hasattr(L, "early_compare"):
             rec["early_compare"] = L.early_compare
-        if hf.is_file():
+        if hf.is_file() or (relay and rec["relay_hints"]["structural"]):
             import hashlib
-            rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
+            rec["hints"] = dict(file=str(hf) if hf.is_file() else None,
+                                sha256=hashlib.sha256(hf.read_bytes()).hexdigest() if hf.is_file() else None)
             rec["hints"].update(apply_hints(L, supplied, out, conflicts, log))
             rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
             rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
-        elif hints:
-            raise LecError(f"hints file {hints} not found")
         if os.environ.get("OT_LEC_AUTO_TWINS", "1") != "0":
             auto_twins(L, rec, out, conflicts, log)
         if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":
@@ -9010,7 +9172,7 @@ def _provenance(kit=None):
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
                  "OT_LEC_ENABLE_FILL_GUARD", "OT_LEC_REPLICA_MATCH",
-                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS", "OT_LEC_PART_RE")
+                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS", "OT_LEC_PART_RE", "OT_LEC_RELAY_HINTS")
 
 
 def nowiden_retry(r, out, run):
