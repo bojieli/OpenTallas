@@ -22,3 +22,8 @@ Clone: E2 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/wt_1124 (branch s81
 - Die: refloor/spec_t2B_ch86.json on D3 49332d346d48 (E2 refloor/), s_3N_L0 +86.4 tall + 22 parts above +86.4 (top margin 103.68 -> 17.28). price_t2B_ch86.json running.
 - (4) LEPK gate: annotate_soft_dest KeyError 'id'; fix 245ed6cdf98 on main (with 0f1a09d6d5cc). Mixed LEPK/UNIT held.
 - Cancelled: probe_v9 waiter (never started). probe_v8 (intel1, stuck GRT on shape OBS) still running.
+## 11-24 ~09:30 PST update
+- eq proof: eq10 intel1 blk97c (equiv_make -blacklist eq10_blacklist.txt; equiv_struct -fwonly <each black-box type>; cutpoint -blackbox; equiv_induct -seq 16; 2 h bound). eq4-eq9 lessons: (a) no SAT model -> cutpoint after struct; (b) XMRG-removed CN state name-matched to constants -> blacklist; (c) plain equiv_struct BACKWARD-merged the 16 cnw / cn_norm_write black boxes ACROSS blocks (i_block strap 1 vs 0) = unsound, base case diverged -> -fwonly per type. eq10 struct counts = per-form counts (every black box paired once), no constant-sided equivs; induction running. Result: rc10.txt, eq10_status.txt, eq10_tgt_total.txt.
+- Die price: E2 refloor/ spec_t2B_ch{86,86b,86c,d,e}.json; e (+43.2, x06 rows -43.2 tall, gunit/bk_sel fixed) blocks only 3 NO-ROOM seams (xring s_5N_C|s_4N_C, s_2N_C|s_1N_C, x_W4_in__1); posted to T2-REFLOOR.
+- probe_v10 intel1 (cover-OBS + ch2x43 seats 98c505a87106) unit oth-ubuntu-2432180-1795567341: read GRT overflow + congestion.rpt when done, rerun rde on its 3_place.odb (run_dump.sh / run_rde.sh / cutcount.py in rde/), render, then decide route checkpoint.
+- hub write-up results/geom_review/s81_t2b_rde_1124.md (f0b61ca520cf).
