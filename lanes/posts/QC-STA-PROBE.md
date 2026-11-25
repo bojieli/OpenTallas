@@ -1,0 +1,1 @@
+- 2026-11-24 21:15 PST DONE [QC-STA-PROBE] ot-run oth-ubuntu-772030-1795583476 on dear-crayfish: rc=0 after 226 s, ended 21:15:00, log /srv/opentallas-scratch3/claude/QC-STA-PROBE/compose.log, cmd: --mem 16 --threads 2 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-STA-PROBE -- bash /srv/opentallas-scratch3/claude/QC-STA-PROBE/b
