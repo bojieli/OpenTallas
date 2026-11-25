@@ -847,6 +847,7 @@ class TestTick(TickBase):
         self.assertEqual(len(self.f.launched), 3)        # two OOM resubmits only
         self.assertEqual(list(jobs.values())[0]["status"], "DONE-CRASH")
         self.assertIn("CRASH/infra-oom", (Path(self.tmp.name) / "structural.tsv").read_text())
+        self.assertIn("OOM-EXHAUSTED (2 OOM retries used", json.dumps(list(jobs.values())[0]))   # DIECLASS_1125: own failure_breakdown class
 
     CANCEL = ("ot-run: interrupted (signal 15 from pid 111446 (python3 /home/ubuntu/.local/bin/ot-run --cancel "
               "s81/kits/slice_station__t5; parent 111442 (bash))); the command is STILL RUNNING on localhost "
@@ -889,14 +890,15 @@ class TestTick(TickBase):
                             f"{datetime.datetime.now().astimezone().strftime('%Y-%m-%dT%H:%M:%S%z')} signal 15 from pid 9 "
                             f"(python3 ot-run --cancel y; parent 8 (bash)) -> ot-run pid 7 host h tag t STARTED unit u "
                             f"dir {path}_other: bash\n")
+        self.ap.kit_lost = lambda j: None                    # the harness has no runner on disk; a real kit has one
         self._cancel_case("ot-run: RAN on epyc2: exit 143\nAP_RC=143\n", sig)
-        self.assertEqual(len(self.f.launched), 1)            # exit 143, no matching cancel, no OOM line: stopped, no retry
+        self.assertEqual(len(self.f.launched), 2)            # exit 143, no matching cancel, no OOM line: stopped, retried once (DIECLASS_1125)
 
     def test_outside_stop_is_not_retried_real_oom_is(self):
         C = lambda c, cl: self.ap.classify(c, cl)[:2]
         for rc in (137, 143):
             self.assertEqual(C({}, {"exit": rc}), ("CRASH", "infra-stopped"))
-            self.assertNotIn("infra-stopped", self.ap.INFRA_KINDS)
+            self.assertIn("infra-stopped", self.ap.INFRA_KINDS)          # DIECLASS_1125 (COORD 11-25): retried once from the run dir
             self.assertEqual(C({"oom": "make: *** [x] Error 137"}, {"exit": rc}), ("CRASH", "infra-oom"))
 
     def test_watchdog_stop_names_the_sender_of_143(self):

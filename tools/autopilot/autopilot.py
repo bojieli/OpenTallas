@@ -1540,7 +1540,7 @@ def classify(c, client):
         return "CRASH", "infra-oom", f"exit {client['exit']}: {client['oom_report']}"[:600]
     if client.get("exit") in (137, 143):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
-        # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
+        # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). DIECLASS_1125: retried once (INFRA_KINDS), --mem unchanged.
         return "CRASH", "infra-stopped", f"exit {client['exit']}, no OOM line in the run logs: stopped from outside"
     # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
     # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
@@ -1563,7 +1563,9 @@ def classify(c, client):
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
-INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk", "infra-flow-refresh")
+INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk", "infra-flow-refresh",
+               "infra-stopped")   # DIECLASS_1125 (COORD 11-25, standing rule: an infra-stopped kit never sits stopped): a bare 137/143 retries ONCE from the run dir;
+                                  # deliberate stops (ot-run --cancel, HUNG-WATCH, no-progress / UNSIGNABLE watchdog marks, hub WATCHDOG) are CANCELLED / watchdog-* before this
 
 
 def parse_client_log(text, *, unit=None, started=0):
@@ -4019,6 +4021,12 @@ def finish(st, j, c, client):
             j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
             submit(st, j, f"(resubmit {j['oom_retries']}/{MAX_OOM_RESUBMITS} after infra-oom; resumes the run dir; "
                           f"--mem {j['mem_gb']})")
+            return
+        if kind == "infra-oom":
+            # DIECLASS_1125 (COORD 11-25): the OOM retry budget is spent: CRASH, under its own failure_breakdown class OOM-EXHAUSTED so an owner sees it
+            set_status(st, j, cls, f"OOM-EXHAUSTED ({oom_attempts} OOM retries used, --mem {j.get('mem_gb')}) infra-oom: {reasons[:160]}"[:200])
+            after_class(st, j)
+            released_cleanup()
             return
         lost = kit_lost(j)
         if lost:
