@@ -360,3 +360,64 @@ def test_qc_local_reset_far_site_fails_and_uncovered_pins_still_grouped():
     t = _ttctlm(); t["clock"]["landing_local_resets"] = t["clock"]["landing_local_resets"][:1]
     out = D.findings({"partition_types": {"tt_ctlm": t}}, "/x/p.json", solver=Fake({"tt_ctlm": TREE}), classes=("RSTREACH",))
     assert len(out) == 1 and out[0].startswith("WARN RSTREACH tt_ctlm: 4 FSTART pin(s) span")
+
+
+# RRDRV (QC-RRDRV-FIX 11-25): C1n 26036a30b94f -- CB-TAPBINS numbered START raws on a 145-tap census, the bound tree has
+# 101 taps + 3 outs + 4 core resets: 643 'rr_tN has no registered wavefront driver' EMITs, and kept raws 2 mm from their stage.
+class RR(Fake):
+    def __init__(self, npts=3, sites=None, bc=True, hops=None):
+        sites = sites or {0: (0.0, 0.0), 1: (1000.0, 0.0), 2: (350.0, 0.0)}
+        super().__init__({"rr": {f"rst_n_t{i}": ("rst_root_n", xy) for i, xy in sites.items() if i < npts}}, hops={"rr": hops or []})
+        self.npts, self.bc = npts, bc
+
+    def tree(self, tn):
+        T = super().tree(tn)
+        T["taps"] = [f"p{i}" for i in range(self.npts)]
+        return T
+
+    def broadcast(self):
+        return self.bc
+
+
+def _rr_type(raws, branches=None):
+    st = {"x_i": {"stages": [{"xy_um": [0.0, 0.0], "raw_reset": r} for r in raws]}}
+    ck = {"landing_contract": {"pins": []}, "landing_reader_start": {"branches": st}}
+    if branches is not None:
+        ck["landing_raw_branches"] = branches
+    return {"clock": ck}
+
+
+def _rr_hops(raws):
+    return [(f"reader_start:x_i:{i}", r, "missing", None, 0.0) for i, r in enumerate(raws)]
+
+
+def test_rrdrv_raw_past_tree_points_fails():
+    raws = ["rr_t0", "rr_t7"]
+    out = D.findings({"partition_types": {"rr": _rr_type(raws)}}, "/x/p.json", solver=RR(hops=_rr_hops(raws)))
+    f = [x for x in out if x.startswith("FAIL RSTREACH rr: RRDRV 1 ")]
+    assert f and "rr_t7" in f[0] and "3 reset tree points" in f[0], out
+    assert not any("start_relays model" in x for x in out)
+
+
+def test_rrdrv_far_raw_fails_mid_warns_near_passes():
+    raws = ["rr_t1", "rr_t2", "rr_t0"]          # 1000 um, 350 um, 0 um from the stage at (0, 0)
+    out = D.findings({"partition_types": {"rr": _rr_type(raws)}}, "/x/p.json", solver=RR(hops=_rr_hops(raws)))
+    assert any(x.startswith("FAIL RSTREACH rr: RRDRV 1 START raw rr_t hop(s) over the reset reach") and "1000 um" in x
+               for x in out), out
+    assert any(x.startswith("WARN RSTREACH rr: RRDRV 1 ") and "350 um" in x for x in out), out
+    assert not any("rr_t0" in x for x in out)
+
+
+def test_rrdrv_clean_plan_silent():
+    raws = ["rr_t0", "rr_t0"]
+    out = D.findings({"partition_types": {"rr": _rr_type(raws)}}, "/x/p.json", solver=RR(hops=_rr_hops(raws)))
+    assert not [x for x in out if "RRDRV" in x or "rr_t" in x], out
+
+
+def test_rrdrv_raw_branch_roles_and_no_broadcast_not_judged():
+    raws = ["rr_t9"]
+    t = _rr_type(raws, branches=[{"consumers": ["reader:x_i:0"], "stages": []}])
+    out = D.rrdrv_type("rr", t, RR(hops=_rr_hops(raws)), _rr_hops(raws))
+    assert out == ([], []), out
+    out = D.rrdrv_type("rr", _rr_type(raws), RR(bc=False), _rr_hops(raws))
+    assert out == ([], []), out

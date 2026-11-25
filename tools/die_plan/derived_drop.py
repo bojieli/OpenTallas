@@ -24,6 +24,9 @@ RSTREACH (FAIL; generic, every die, plan-only):
        co-sited chain (all stages on one site) is named.
   The generator default is 300 um (cbc_rules.reset_hop_cap_um); the FAIL line is the CHECK reach 405 (cbc REACH_GATE_UM), so a
   bound plan's recorded reach keeps passing.
+  c. RRDRV (QC-RRDRV-FIX 11-25, broadcast START plans): every START stage raw rr_t<N> names a point of the solved reset tree
+     (N < len(tree taps) = consumer taps + rst_o outs + core resets; else the bind EMIT 'has no registered wavefront driver'),
+     and its hop to that point's planned relay site is <= 405 um (FAIL) / <= 300 um (WARN).  See rrdrv_type.
 DERIVEDNAME (FAIL; generic): every derived name resolves in the current floorplan:
   a. relay / tap names (rst_rl_<k>, rst_n_t<i>, rr_t<i>, clk_t<i>) referenced by the clock section (tap tables and
      collector_tree excluded: they define names) are emitted by the type's reset tree / tap table;
@@ -256,6 +259,83 @@ def _repaired(S, tn):
     return f(tn) if f else set()
 
 
+RRQ = re.compile(r"^rr_t(\d+)$")
+
+
+def _start_stage(t, where):
+    """the plan START stage dict of a raw_hops 'where' (reader_start:<bus>:<i> / writer_start:<bus>:<i>), else None"""
+    kind, _, rest = where.partition(":")
+    bus, _, i = rest.rpartition(":")
+    if kind not in ("reader_start", "writer_start") or not i.isdigit():
+        return None
+    br = ((((t.get("clock") or {}).get(f"landing_{kind}") or {}).get("branches") or {}).get(bus))
+    st = (br.get("stages") or []) if isinstance(br, dict) else []
+    return st[int(i)] if int(i) < len(st) and isinstance(st[int(i)], dict) else None
+
+
+def rrdrv_type(tn, t, S, hops, soft=(), reach=REACH_UM, gen=GEN_UM):
+    """RRDRV (QC C1m..C1n, QC-RRDRV-FIX 11-25): START stage raw resets rr_t<N> judged on the type's solved reset tree.
+    rr_t<N> is the registered raw copy of tree point N (start_relays: base site = the relay whose q is rst_n_t<N>); the
+    points are the consumer taps, then the rst_o outs, then the hard-core resets (len(tree['taps'])).
+      - N >= the point count: no tree point, so no registered wavefront driver -> FAIL (the strict bind EMIT refuses the
+        type: 'START raw reset rr_tN has no registered wavefront driver'; CB-TAPBINS numbered raws on another tap census:
+        643 stages / 35 types on C1n, found after two full binds);
+      - hop stage xy -> that relay site over the reset reach (405 um) -> FAIL; over the generator cap (300 um) -> WARN.
+    Stages a landing_raw_branches consumer re-derives (reader:/writer:<bus>:<i>) and references the bind re-picks itself are
+    not judged here.  Only with a broadcast START tree (S.broadcast() True) and a solved tree that lists its points; otherwise
+    nothing is judged and the caller's start_relays estimator applies.  -> (lines, judged hops)"""
+    rr = [h for h in hops if RRQ.match(str(h[1])) and h not in soft and _start_stage(t, h[0]) is not None]
+    bc = getattr(S, "broadcast", None)
+    if not rr or bc is None or bc() is not True:
+        return [], []
+    try:
+        T = S.tree(tn)
+    except Exception:  # noqa: BLE001 - no tree: the type is reported by the other RSTREACH / bind checks
+        return [], []
+    if not isinstance(T.get("taps"), list):
+        return [], []
+    npts = len(T["taps"])
+    sites = {str(r.get("q")): r.get("xy") for r in T.get("relays") or []}
+    roles = {c for b in ((t.get("clock") or {}).get("landing_raw_branches") or []) if isinstance(b, dict)
+             for c in b.get("consumers") or []}
+    nodrv, over, warn, judged = [], [], [], []
+    for h in rr:
+        side, _, rest = h[0].partition("_start:")
+        if f"{side}:{rest}" in roles:
+            continue
+        judged.append(h)
+        n = int(RRQ.match(str(h[1])).group(1))
+        site = sites.get(f"rst_n_t{n}")
+        if n >= npts or site is None:
+            nodrv.append(h)
+            continue
+        xy = _start_stage(t, h[0]).get("xy_um")
+        if not (isinstance(xy, list) and len(xy) == 2):
+            continue
+        um = man(site, xy)
+        lim = h[4] if h[2] != "missing" and h[4] else reach
+        if um > lim + EPS:
+            over.append((h[0], h[1], um, lim))
+        elif um > min(gen, lim) + EPS:
+            warn.append((h[0], h[1], um))
+    out = []
+    if nodrv:
+        ex = "; ".join(f"{h[0]} <- {h[1]}" for h in nodrv[:MAX_LIST])
+        out.append(f"FAIL RSTREACH {tn}: RRDRV {len(nodrv)} START raw reset(s) rr_t<N> with N >= the {npts} reset tree points "
+                   f"(no registered wavefront driver; the strict bind refuses the type) ({ex}); re-point each to the consumer "
+                   f"tap nearest its stage (N < the tap count), e.g. the QC-RRDRV-FIX RRDRV-REMAP rule")
+    if over:
+        over.sort(key=lambda x: -x[2])
+        ex = "; ".join(f"{w} <- {r} {u:.0f} um" for w, r, u, _ in over[:MAX_LIST])
+        out.append(f"FAIL RSTREACH {tn}: RRDRV {len(over)} START raw rr_t hop(s) over the reset reach (limit {over[0][3]:g} um, "
+                   f"planned relay site; worst {ex}): the raw names a tap of another tap census; re-point to the nearest consumer tap")
+    if warn:
+        warn.sort(key=lambda x: -x[2])
+        out.append(f"WARN RSTREACH {tn}: RRDRV {len(warn)} START raw rr_t hop(s) over the {gen:g} um generator cap, within reach "
+                   f"(worst {warn[0][0]} <- {warn[0][1]} {warn[0][2]:.0f} um)")
+    return out, judged
+
+
 def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
     out = []
     # a. START / local raw reset hops (R-REACH-5 measure); a reference the bind re-picks itself (GATE-AGREE-R1 predicate,
@@ -265,8 +345,11 @@ def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
     rp = _repaired(S, tn) if bad_hops else set()
     soft = [h for h in bad_hops if hop_path(h[0], t) in rp]
     # rr_t<i> (MISSION-role raw wavefront copies): reach_rules resolves them on reset_tree.start_relays, which does not hold
-    # every copy the bind emits (QC C1b slw_su_c: 13 'missing' rr_t names, strict bind clean) -> estimator only
-    rrt = [h for h in bad_hops if h not in soft and str(h[1]).startswith("rr_t")]
+    # every copy the bind emits (QC C1b slw_su_c: 13 'missing' rr_t names, strict bind clean) -> estimator only, EXCEPT
+    # RRDRV (below): a copy the tree cannot emit, or one whose planned relay site is over the reach
+    rr_lines, judged = rrdrv_type(tn, t, S, hops, soft, reach)
+    out += rr_lines
+    rrt = [h for h in bad_hops if h not in soft and h not in judged and str(h[1]).startswith("rr_t")]
     if rrt:
         w = max(rrt, key=lambda h: h[3] or 0)
         out.append(f"WARN RSTREACH {tn}: {len(rrt)} START raw rr_t reference(s) missing / over reach on the start_relays model "
@@ -275,7 +358,7 @@ def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
     if soft:
         out.append(f"WARN RSTREACH {tn}: {len(soft)} START / local reset raw reference(s) missing or over reach that the bind "
                    f"re-picks itself (e.g. {soft[0][0]} <- {soft[0][1]}); re-derive to keep kits byte-stable")
-    hops = [h for h in hops if h not in soft]
+    hops = [h for h in hops if h not in soft and h not in judged]
     miss = [h for h in hops if h[2] == "missing"]
     over = sorted((h for h in hops if h[3] is not None and h[3] > h[4] + EPS), key=lambda h: -h[3])
     if miss:
