@@ -45387,3 +45387,4 @@ FIX [WATCHDOG 2026-11-25 01:33 PST] intel1 oth-ubuntu-1946067-1795587260.scope [
   - Owners: QC-ALLFIX, plus QC-STB-SPLIT for st_b.
   c9t43: 0 types. S81 plans have no density sink_bins_file, so the check does not apply.
   Full lists: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/sbs_{A5t7,C1n,c9t43}.txt
+- 2026-11-25 01:35 PST DIED [QC-TTCTLM-PROBE] ot-run oth-ubuntu-2709870-1795588418 on key-cardinal: rc=2 after 10910 s, ended 01:35:25, log /srv/opentallas-scratch2/claude/QC-TTCTLM-PROBE/bind.out, cmd: --crit --no-spill --mem 48 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-TTCTLM-PROBE -- bash /srv/opentallas-scratch2 | class=SETUP cause=ls: cannot access '/srv/opentallas-scratch2/claude/QC-TTCTLM-PROBE/s/bind/bind_parent_id_straps.json': No such
