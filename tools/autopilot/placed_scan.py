@@ -140,6 +140,24 @@ def row_for(rows, a, b):
     return "none"
 
 
+DRIFT_FACTOR = 1.2
+
+
+def hop_drift(groups, factor=DRIFT_FACTOR):
+    """PLACED-HOP-DRIFT (FP-CONVERGE-S81 11-25, COORD ruling; report only): groups whose plan row (ROW=n/hop) declares a hop but whose
+    placed mean hop is over factor x the declared hop: the stations of the row are not held at their plan seats (unconstrained or
+    drifted by the placer).  -> [(group, placed_mean_um, plan_hop_um, ratio)] worst ratio first"""
+    out = []
+    for g in groups:
+        m = re.match(r"^\d+/(\d+)um$", str(g.get("row", "")))
+        if not m:
+            continue
+        hop = float(m.group(1))
+        if hop > 0 and g.get("mean_um", 0) > factor * hop:
+            out.append((g, g["mean_um"], hop, g["mean_um"] / hop))
+    return sorted(out, key=lambda x: -x[3])
+
+
 def derive_rows(out, limit):
     """Station form for the NEED-STATION groups, instead of a wider band / bigger window: per matched group the number of
     stations n = ceil(mean_long_hop / limit) - 1 and their sites on the Manhattan leg launch -> capture (x first, as the
@@ -229,6 +247,9 @@ def main(argv=None):
             "groups_over_reach": len(out), "groups_need_station": len(need),
             "bits_over_reach": sum(r["over_reach"] for r in out), "bits_over_cycle": sum(r["over_cycle"] for r in out),
             "groups": out}
+    drift = hop_drift(out)
+    summ["hop_drift_groups"] = len(drift)
+    summ["hop_drift_bits"] = sum(g["bits"] for g, _, _, _ in drift)
     srows = derive_rows(out, a.limit)
     for r in out:
         for k in ("_n", "_sx", "_sy", "_ex", "_ey"):
@@ -251,6 +272,10 @@ def main(argv=None):
     print(f"AP_PLACED_SCAN {verdict} type={tname} groups_need_station={len(need)} groups_over_{a.limit:.0f}um={len(out)} "
           f"bits_over_{a.cycle:.0f}um={summ['bits_over_cycle']} bits_over_{a.limit:.0f}um={summ['bits_over_reach']} "
           f"(advisory, early-fail diagnostic){' :: ' + top if top else ''}")
+    if drift:
+        print(f"PLACED-HOP-DRIFT type={tname} groups={len(drift)} bits={summ['hop_drift_bits']} (report only: placed mean hop > "
+              f"{DRIFT_FACTOR} x plan hop; stations not held at plan seats) :: " +
+              "; ".join(f"{g['src']}->{g['end']} placed {m}um plan {h:.0f}um x{r:.1f}" for g, m, h, r in drift[:3]))
     for r in out[:a.top]:
         print(f"  {r['cls']:12s} {r['src']} -> {r['end']}\tbits {r['bits']} over{a.limit:.0f} {r['over_reach']} "
               f"over{a.cycle:.0f} {r['over_cycle']} max {r['max_um']}um mean {r['mean_um']}um ~{r['est_ps']}ps bufs {r['max_bufs']} "

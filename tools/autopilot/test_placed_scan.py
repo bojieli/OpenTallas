@@ -83,3 +83,21 @@ def test_main_returns_3_only_with_opt_in(tmp_path, monkeypatch, capsys):
     assert "PLACED-REACH" in capsys.readouterr().out
     monkeypatch.setenv("OT_PLACED_REACH_STOP", "1")
     assert PS.main([str(g), "--out", str(out), "--goal", "route", "--top", "0"]) == 3
+
+
+def test_hop_drift_flags_only_over_1_2x_plan_hop():
+    g = lambda row, mean: {"src": "a", "end": "b", "bits": 8, "row": row, "mean_um": mean}
+    got = PS.hop_drift([g("6/273um", 819), g("2/300um", 359), g("2/300um", 361), g("none", 900), g("NA", 900)])
+    assert [(x[1], round(x[3], 2)) for x in got] == [(819, 3.0), (361, 1.2)] or [x[1] for x in got] == [819, 361]
+    assert PS.hop_drift([g("2/300um", 360)]) == []        # exactly 1.2 x is not drift (mutant: >= would flag it)
+    assert PS.hop_drift([g("none", 5000)]) == []          # no plan row: UNCONSTRAINED, not drift
+
+
+def test_hop_drift_line_and_json(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(PS, "row_for", lambda rows, a, b: "2/100um")      # the plan row of the u_a -> u_b group (bus names < 6 chars never match)
+    g = tmp_path / "geom.tsv"
+    dump(g, 900)
+    out = tmp_path / "o"
+    PS.main([str(g), "--out", str(out), "--top", "0"])
+    j = json.loads((out / "placed_scan.json").read_text())
+    assert j["hop_drift_groups"] == 1 and "PLACED-HOP-DRIFT" in capsys.readouterr().out
