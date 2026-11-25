@@ -6960,7 +6960,21 @@ def r8_fail_fast(a, raw, out, B):
     return 1
 
 
+def _seal_gate(who):
+    """FLEET-OPS 11-25 (F-06 hook): report-only for an hour, then blocking: a symlink under physical/ that leads into another lane's scratch tree.  -> 4 when blocked, else 0; never raises"""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "fleet"))
+        import seal_gate
+        return seal_gate.gate(str(E.REPO), who)
+    except Exception as exc:                 # noqa: BLE001 -- a broken gate never stops a bind
+        print(f"bind: WARN seal gate off ({type(exc).__name__}: {exc})", flush=True)
+        return 0
+
+
 def cmd_bind(a):
+    if _seal_gate("bind") == 4:
+        print("bind: REFUSED: a symlink under physical/ leads into another scratch tree (ot-tree-fork --seal-check; OT_SEAL_GATE=0 disables)", flush=True)
+        return 4
     import kit_topology
     raw, out, B, yjs, input_topology = _bind_through_landings(a)
     stop = r8_fail_fast(a, raw, out, B)
