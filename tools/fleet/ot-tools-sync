@@ -82,7 +82,7 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
     every process command line (queued ot-run clients, armed waiters `bash -c 'while pgrep ..; do sleep; done; python3 rt/<sha>/..'`, running jobs), their working directories, the
     targets of their open files, the CONTENT of the script files their command lines name (<= 2 MB), and the recent admission log (commands of ot-heavy units admitted or queued).
     Same reference rule as the cleaners' live-process check, widened to script bodies."""
-    out = []
+    out = []; seen_scripts = set()
     for d in os.listdir(proc):
         if not d.isdigit():
             continue
@@ -104,6 +104,9 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
         except OSError:
             pass
         for m in SCRIPT_RE.finditer(cmd):
+            if m.group(1) in seen_scripts:       # DISK-RECLAIM 11-25: hundreds of ssh/ot-run processes name the same script: read it once (the dump was 0.9-1.1 GB)
+                continue
+            seen_scripts.add(m.group(1))
             try:
                 if os.path.getsize(m.group(1)) <= max_script:
                     out.append(open(m.group(1), errors="replace").read())
@@ -113,7 +116,7 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
         try: out += open(lg, errors="replace").read().splitlines()[-tail_lines:]
         except OSError: pass
     out.append(recent_launch_text())
-    return "\n".join(out)
+    return "\n".join(dict.fromkeys(out))      # identical command lines / cwds / fd targets once
 
 
 RECENT_LAUNCH_H = float(os.environ.get("OT_RT_RECENT_LAUNCH_H", "6"))

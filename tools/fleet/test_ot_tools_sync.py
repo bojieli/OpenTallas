@@ -415,3 +415,11 @@ class DiskReclaimWindows(unittest.TestCase):
             self.assertIn("rt/" + sha, m.live_reference_text())
         finally:
             p.terminate(); p.wait()
+
+    def test_same_script_named_by_many_processes_is_read_once(self):
+        m = self.load(); f = pathlib.Path(tempfile.mkdtemp()) / "spec.json"; f.write_text("UNIQUE-MARK-7731 rt/0123456789ab")
+        ps = [subprocess.Popen(["sleep", "30", str(f)]) for _ in range(5)]
+        try:
+            self.assertEqual(m.live_reference_text().count("UNIQUE-MARK-7731"), 1)
+        finally:
+            for p in ps: p.terminate(); p.wait()
