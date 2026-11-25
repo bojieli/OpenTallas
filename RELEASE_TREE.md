@@ -5,8 +5,8 @@
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-25 02:08 PST)
-count_hourly: signed any plan 602 | current plan 487 | deferred re-sign 21 (hbm 1, head 10, qc 7, s81 3) | retired-plan 94 (head 2, kv 13, qc 50, s81 29)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-25 03:12 PST)
+count_hourly: signed any plan 605 | current plan 487 | deferred re-sign 21 (hbm 1, head 10, qc 7, s81 3) | retired-plan 97 (head 2, kv 13, qc 53, s81 29)
 - [ ] FAIL.S81.CORES 72/72 signed · open: none
 - [ ] FAIL.S81.TYPES 48/394 signed · kit rows: held by die owner (plan event pending) 296 (bk_sel__t2, +295) · cancelled (superseded) 48 (col_h10_r0_p1__t1__cl911743eb, +47)
 - [ ] FAIL.HEAD.CORES 5/5 signed · open: none
@@ -14,17 +14,17 @@ count_hourly: signed any plan 602 | current plan 487 | deferred re-sign 21 (hbm 
 - [ ] FAIL.QC.CORES 69/69 signed · open: none
 - [ ] FAIL.QC.TYPES 80/127 signed · kit rows: held by die owner (plan event pending) 37 (cbf_q00__cl1b5a6458, +36) · cancelled (superseded) 2 (glue, +1) · other flow error 1 (slw_fe_v2__clf110fab2) · stopped (ruling/infra) 1 (sle_st_b_v2__clfde1249e)
 - [ ] FAIL.KV.CORES 84/85 signed · open: no kit-wave row 1 (kv3_pv_pair)
-- [ ] FAIL.KV.TYPES 10/93 signed · kit rows: cancelled (superseded) 27 (kv3_hg_v1__r889141819, +26) · running (lint advisory) 18 (kv3_hgi_v1__cl141fc26e, +17) · held by die owner (plan event pending) 17 (kv3_hg, +16) · running 15 · other flow error 5 (kv3_pv_v1e, +4)
+- [ ] FAIL.KV.TYPES 10/93 signed · kit rows: cancelled (superseded) 27 (kv3_hg_v1__r889141819, +26) · running (lint advisory) 18 (kv3_hgi_v1__cl141fc26e, +17) · held by die owner (plan event pending) 17 (kv3_hg, +16) · running 11 · other flow error 9 (kv3_hgi_v2__cle0015330, +8)
 - [ ] FAIL.HBM.CORES 90/119 signed · open: no kit-wave row 19 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group0, +12) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 1 current-event (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.KV 1 (cores 1, types 0) · by owner: OPUS-FIX-KV-PV-R7 1
   - core kv3_pv_pair#380.16x190.08/c9cb3c7d41ae4f43 · no kit-wave row · owner OPUS-FIX-KV-PV-R7
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
-- TOOLS-LAG qwen_compute 560 commits / missing none (tree tools by design: tools_from_rt false)
-- TOOLS-LAG qwen_kvsys 2 commits / missing none
-- TOOLS-LAG s81 2 commits / missing none
-- TOOLS-LAG s81_head 2 commits / missing none
+- TOOLS-LAG qwen_compute 574 commits / missing none (tree tools by design: tools_from_rt false)
+- TOOLS-LAG qwen_kvsys 84 commits / missing none
+- TOOLS-LAG s81 668 commits / missing none
+- TOOLS-LAG s81_head 3 commits / missing none
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
 - TAP-INSERTION qwen_compute: 4699 taps in 43 types, 115 over 1650 sinks; insertion max 696 ps (p50 267, p90 283), skew max 137 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 412 taps in 5 types, 14 over 1650 sinks; insertion max 590 ps (p50 259, p90 304), skew max 270 ps; oversized taps: ins max 390 ps, skew max 107 ps
