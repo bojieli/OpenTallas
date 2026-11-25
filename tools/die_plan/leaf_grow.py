@@ -32,6 +32,8 @@ from pathlib import Path
 FT_XCUT = [0.0]           # --ft-xcut: in-band ft points with x < this never shift (default 0 = all follow)
 FT_MODE = [True]          # True: ft slots pin-anchored; "ft": in-band ft points shift with the cores (--ft-interior)
 LEAF_RE = re.compile(r"^ot_s81sl_(kv_)?leaf__")
+SHIFT_ONLY = [False]      # shift-in-place: outline and E/N face points stay, the core block translates east inside the original outline
+VE_MIN_GAP = 28.08        # ve_m|ve_s: never abut (386 mated M4 pins per side): gap >= this, or the source's own pin-aligned offset
 ANY_TYPE = [False]        # --any-type: the growth / retap / check commands accept any partition type (non-leaf: dsdv_slice_*_C ...)
 LATTICE = 4.32            # placement lattice (hub_repack.G); widened gaps are rounded UP to a multiple
 
@@ -63,7 +65,7 @@ def xform(pt, W, H, dx, dy, xcut, ycut, pinned):
             return [round(x, 4), round(y + (dy if dy and y >= ycut else 0.0), 4)] + list(pt[2:])
         pinned = False                                   # --ft-interior: an in-band ft reg / bit site follows the cores
     if pinned:
-        if x >= W - EPS:
+        if x >= W - EPS and not SHIFT_ONLY[0]:
             nx = x + dx
         if dy and y >= H - EPS:
             ny = y + dy
@@ -190,9 +192,58 @@ def grow_row(t, dx, dy=0.0, ycut=None, xcut=None):
             t[k] = [ft_slot_interior(sl, f, W, H, dx) for sl in t[k]]
             continue
         t[k] = walk(t[k], f, (FT_MODE[0] if k == "ft_slots" else None) or k in PIN_KEYS)
-    t["outline_um"] = [round(W + dx, 4), round(H + dy, 4)]
+    if SHIFT_ONLY[0]:
+        t["outline_um"] = [W, H]
+    else:
+        t["outline_um"] = [round(W + dx, 4), round(H + dy, 4)]
     t["note"] = (t.get("note", "") + " | LEAF-GROW 11-25: outline +%.2f x +%.2f (xcut %.2f)" % (dx, dy, xcut)).strip(" |")
     return t
+
+
+def core_boxes(t):
+    out = {}
+    for h in t.get("hard_cores") or []:
+        o, d = h["origin_um"], h["outline_um"]
+        w, hh = (d[1], d[0]) if h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90") else d
+        out[h["inst"]] = (o[0], o[1], o[0] + w, o[1] + hh)
+    return out
+
+
+def shift_row(t, dx, margin=8.0, xcut=None):
+    """SHIFT-IN-PLACE (Fable review of plan_c11grow5: growth overlapped the die neighbours): outline_um and every pin window
+    stay, the core block (cores, taps, internal stations, in-band ft points, relay sites, reach-fix sinks) translates +dx
+    east inside the ORIGINAL outline.  ValueError when a shifted core would end closer than margin to the E face."""
+    W, H = t["outline_um"]
+    hc = t.get("hard_cores") or []
+    x0 = min(h["origin_um"][0] for h in hc) if (xcut is None and hc) else (xcut or 0.0)
+    room = W - margin - max(b[2] for b in core_boxes(t).values())
+    if dx > room + 1e-9:
+        raise ValueError("shift %.2f um exceeds the E room %.2f um (outline %.2f, margin %.1f)" % (dx, room, W, margin))
+    SHIFT_ONLY[0] = True
+    try:
+        g = grow_row(t, dx, 0.0, None, x0)
+    finally:
+        SHIFT_ONLY[0] = False
+    g["note"] = g["note"].replace("LEAF-GROW 11-25: outline", "LEAF-SHIFT 11-25: core block shifted in place (outline fixed)")
+    return g
+
+
+def ve_gap_findings(a, b):
+    """ve_m|ve_s facing gap in x: never below VE_MIN_GAP unless it equals the source's (pin-aligned) gap -> [problem]"""
+    def gap(t):
+        bx = core_boxes(t)
+        m, s2 = bx.get("u_lf.u_ve.u_m"), bx.get("u_lf.u_ve.u_s")
+        if not m or not s2:
+            return None
+        if min(m[3], s2[3]) - max(m[1], s2[1]) <= 0:
+            return None
+        return max(s2[0] - m[2], m[0] - s2[2])
+    ga, gb = gap(a), gap(b)
+    if gb is None or ga is None:
+        return []
+    if gb < VE_MIN_GAP - 1e-6 and abs(gb - ga) > 1e-3:
+        return ["VEGAP ve_m|ve_s gap %.2f um < %.2f (source %.2f): do not abut mated pins" % (gb, VE_MIN_GAP, ga)]
+    return []
 
 
 def pts(t):
@@ -248,6 +299,7 @@ def check_rows(a, b, name="", cuts=1):
             bad.append("ft %s window changed" % fa.get("name"))
     if len(a.get("hard_cores") or []) != len(b.get("hard_cores") or []):
         bad.append("core count changed")
+    bad += ve_gap_findings(a, b)
     # relative geometry of the cores that moved together is untouched: every core either kept or moved by exactly dx
     dxs = {round(hb["origin_um"][0] - ha["origin_um"][0], 3) for ha, hb in zip(a["hard_cores"], b["hard_cores"])}
     if len(dxs) > cuts + 1:
@@ -364,6 +416,9 @@ def cmd_widen(a):
 
 
 def cmd_grow(a):
+    if a.die_cap is not None and a.dx > a.die_cap + 1e-9:
+        print("grow dx %.2f um exceeds the die-level cap %.2f um (the grown tile would overlap its neighbour)" % (a.dx, a.die_cap))
+        return 1
     P = json.loads(Path(a.plan).read_text())
     n = []
     for tn, t in P["partition_types"].items():
@@ -383,6 +438,31 @@ def cmd_grow(a):
     if not a.no_retap:
         for tn, (ng, mp) in retap_plan(P, a.plan, n).items():
             print("%s grid taps %d: %d added taps renamed" % (tn, ng, len(mp)))
+    Path(a.out).write_text(json.dumps(P, separators=(",", ":")))
+    return 0
+
+
+def cmd_shift(a):
+    P = json.loads(Path(a.plan).read_text())
+    n = []
+    for tn, t in P["partition_types"].items():
+        if type_ok(tn) and re.search(a.types, tn) and t.get("hard_cores"):
+            FT_MODE[0] = "ft" if a.ft_interior else True
+            FT_XCUT[0] = a.ft_xcut
+            try:
+                g = shift_row(t, a.dx, a.margin, a.xcut)
+            except ValueError as e:
+                print("%s %s" % (tn, e))
+                return 1
+            bad = check_rows(t, g, tn)
+            print("%s shift +%.2f in place, outline %s %s" % (tn, a.dx, g["outline_um"], "BAD " + "; ".join(bad) if bad else "ok"))
+            if bad:
+                return 1
+            P["partition_types"][tn] = g
+            n.append(tn)
+    if not n:
+        print("no type matched", file=sys.stderr)
+        return 2
     Path(a.out).write_text(json.dumps(P, separators=(",", ":")))
     return 0
 
@@ -443,8 +523,19 @@ def main(argv=None):
     g.add_argument("--ft-xcut", type=float, default=0.0,
                    help="with --ft-interior: in-band ft points with x < this stay (e.g. the street a slot keeps)")
     g.add_argument("--no-retap", action="store_true", help="do not rename grid+explicit added taps after the grow")
+    g.add_argument("--die-cap", type=float, default=None, help="refuse dx above this die-level cap (t10: street to column 1 = 155.52 um)")
     g.add_argument("--any-type", action="store_true", help="any partition type, not only ot_s81sl_(kv_)leaf__*")
     g.add_argument("--out", required=True)
+    sh = sp.add_parser("shift", help="SHIFT-IN-PLACE: outline + pin windows fixed, the core block translates east by dx inside the original outline")
+    sh.add_argument("plan")
+    sh.add_argument("--types", required=True)
+    sh.add_argument("--dx", type=float, required=True)
+    sh.add_argument("--margin", type=float, default=8.0)
+    sh.add_argument("--xcut", type=float, default=None)
+    sh.add_argument("--ft-interior", action="store_true")
+    sh.add_argument("--ft-xcut", type=float, default=0.0)
+    sh.add_argument("--any-type", action="store_true")
+    sh.add_argument("--out", required=True)
     w = sp.add_parser("widen", help="widen every plan-core gap < 9 um that carries a bus lane to the ADV-CHANNEL-WIDTH width (any type)")
     w.add_argument("plan")
     w.add_argument("--types", required=True)
@@ -466,7 +557,7 @@ def main(argv=None):
     c.add_argument("--any-type", action="store_true")
     a = ap.parse_args(argv)
     ANY_TYPE[0] = bool(getattr(a, "any_type", False))
-    return {"grow": cmd_grow, "check": cmd_check, "retap": cmd_retap, "retap-check": cmd_retap_check, "widen": cmd_widen}[a.cmd](a)
+    return {"grow": cmd_grow, "check": cmd_check, "retap": cmd_retap, "retap-check": cmd_retap_check, "widen": cmd_widen, "shift": cmd_shift}[a.cmd](a)
 
 
 if __name__ == "__main__":

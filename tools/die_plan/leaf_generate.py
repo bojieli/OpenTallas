@@ -144,8 +144,16 @@ def steps(a, work):
         cur = str(out)
 
     pre = cur
-    if a.grow:
+    if getattr(a, "shift", 0.0):
+        argv = py + [str(HERE / "leaf_grow.py"), "shift", cur, "--types", types, "--dx", str(a.shift), "--ft-interior", "--out", str(w / "s1_shift.json")]
+        if a.ft_xcut:
+            argv += ["--ft-xcut", str(a.ft_xcut)]
+        add("shift", argv, w / "s1_shift.json")
+        pre = pre   # refresh deltas are measured against the BASE
+    elif a.grow:
         argv = py + [str(HERE / "leaf_grow.py"), "grow", cur, "--types", types, "--dx", str(a.grow), "--ft-interior", "--out", str(w / "s1_grow.json")]
+        if getattr(a, "die_cap", None) is not None:
+            argv += ["--die-cap", str(a.die_cap)]
         if a.ft_xcut:
             argv += ["--ft-xcut", str(a.ft_xcut)]
         add("grow", argv, w / "s1_grow.json")
@@ -209,6 +217,8 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--grow", type=float, default=0.0, help="W-face growth DX (um); 0 = no growth")
     ap.add_argument("--ft-xcut", type=float, default=0.0)
+    ap.add_argument("--shift", type=float, default=0.0, help="SHIFT-IN-PLACE DX (um): outline and pin windows fixed, the core block moves east (instead of --grow)")
+    ap.add_argument("--die-cap", type=float, default=None, help="with --grow: refuse DX above the die-level cap (t10: 155.52)")
     ap.add_argument("--tree", default="/srv/opentallas-scratch2/claude/s81-allfix-int/c9seal_tree")
     ap.add_argument("--seed")
     ap.add_argument("--extra-reg", action="store_true")

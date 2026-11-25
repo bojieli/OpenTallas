@@ -51,3 +51,27 @@ def test_apply_ops_checks_old_value():
     except ValueError:
         return
     raise AssertionError("old-value mismatch must raise")
+
+
+def test_routed_hop_over_a_core_triggers_resite():
+    # Manhattan hops are 250 each (<405) but a core sits between pin and register: the obstacle-avoiding hop is longer
+    core = {"inst": "c", "origin_um": [200.0, 300.0], "outline_um": [100.0, 400.0]}
+    t = _type([[260.0, 500.0], [500.0, 500.0], [750.0, 500.0]], core)
+    assert max(CR.hops(CR.chain_points(t, t["internal_stations"][0]))) <= 405
+    rm = CR.routed_max(t, CR.chain_points(t, t["internal_stations"][0]))
+    ops, lat, sk = CR.resite_type("T", t)
+    if rm > 405:
+        assert ops or sk                                   # acted on (re-sited or reported), never silently kept
+    ops2, lat2, sk2 = CR.resite_type("T", t, routed=False)
+    assert ops2 == [] and sk2 == []                        # mutant: Manhattan-only mode leaves it untouched
+
+
+def test_whole_bus_plus_one_register():
+    t = {"outline_um": [1000.0, 1000.0], "buses": [],
+         "internal_stations": [
+             {"conn": "bus:b", "bits": 130, "from_um": [10.0, 500.0], "regs_um": [[500.0, 500.0]], "to_um": [990.0, 500.0]},
+             {"conn": "bus:b", "bits": 32, "from_um": [10.0, 520.0], "regs_um": [[500.0, 520.0]], "to_um": [800.0, 520.0]}]}
+    ops, lat, sk = CR.resite_type("T", t, extra_reg=True, whole_bus=True)
+    assert sorted(l["index"] for l in lat) == [0, 1] and any(l.get("whole_bus") for l in lat)   # rb_d-like short chain gets +1 too
+    ops2, lat2, sk2 = CR.resite_type("T", t, extra_reg=True, whole_bus=False)
+    assert [l["index"] for l in lat2] == [0]                # mutant: only the failing chain

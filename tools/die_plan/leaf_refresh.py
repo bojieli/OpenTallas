@@ -143,6 +143,35 @@ def stats(t, rects, legal):
     return n
 
 
+def rect_dist(r, p):
+    return max(r[0] - p[0], 0, p[0] - r[2], r[1] - p[1], 0, p[1] - r[3])
+
+
+def stale_findings(base_t, new_t, own=OWN_UM):
+    """FP-CONVERGE-S81 (Fable, grown t10: u_vsw.clk 195 um and g_ln[12].clk 504 um from their core, rst_n[16] 448 um from
+    g_ln[12]): items that must sit at their owner core but are > own um from it -> [str].  Core taps: the core named in the
+    tap name.  Relay sites: the core that held the relay in BASE (owner_core) - once the core moved, the relay must follow."""
+    brects, nrects = core_rects(base_t), core_rects(new_t)
+    bad = []
+    base_items = {lab: c[k] for lab, c, k in _pts(base_t)}
+    for lab, c, k in _pts(new_t):
+        p = c[k]
+        if not isinstance(p, (list, tuple)) or len(p) < 2:
+            continue
+        inst = None
+        if lab[0] == "core_tap":
+            inst = str(lab[1]).rsplit(".", 1)[0]
+        elif lab[0] == "relay_site":
+            b = base_items.get(lab)
+            inst = owner_core(brects, b) if b else None
+        if not inst or inst not in nrects:
+            continue
+        d = rect_dist(nrects[inst], p)
+        if d > own:
+            bad.append("STALE %s %s %.1f um from %s (> %.0f)" % (lab[0], lab[1], d, inst, own))
+    return bad
+
+
 def refresh_type(base_t, new_t):
     """mutates new_t; -> report dict"""
     rep = dict(shifted=0, legalised=0, flipped=0, unplaced=0)
@@ -191,6 +220,7 @@ def refresh_type(base_t, new_t):
         c[k] = [q[0], q[1]] + list(p[2:])
         rep["legalised"] += 1
     rep["after"] = stats(new_t, nrects, legal)
+    rep["stale"] = stale_findings(base_t, new_t)
     return rep
 
 
@@ -214,6 +244,7 @@ def main(argv=None):
     ap.add_argument("out")
     ap.add_argument("--types", required=True)
     ap.add_argument("--report")
+    ap.add_argument("--allow-stale", action="store_true", help="report STALE items (core tap / relay seat > 30 um from its owner core) without failing")
     a = ap.parse_args(argv)
     base = json.loads(Path(a.base).read_text())
     new = json.loads(Path(a.new).read_text())
@@ -225,8 +256,11 @@ def main(argv=None):
     for tn, r in rep.items():
         print(f"{tn}: shifted {r['shifted']} legalised {r['legalised']} flipped {r['flipped']} unplaced {r['unplaced']} "
               f"in_core {r['before']['in_core']}->{r['after']['in_core']} outside {r['before']['outside']}->{r['after']['outside']}")
+    stale = [(tn, x) for tn, r in rep.items() for x in r.get("stale", [])]
+    for tn, x in stale:
+        print(f"{tn}: {x}")
     print("NEXT: " + " ".join(anchor_cmd(a.out, a.out.replace(".json", "_r.json"), types)))
-    return 0
+    return 1 if stale and not a.allow_stale else 0
 
 
 if __name__ == "__main__":

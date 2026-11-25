@@ -227,3 +227,45 @@ def test_widen_x_cut_moves_interior_ft_groups_east_of_the_cut_with_the_cores():
     assert s["regs_um"] == [[1051.84, 60.0], [451.84, 60.0], [150.0, 60.0], [150.0, 0.0]]
     assert s["bit_sites_um"] == [[[451.84, 60.0], [452.84, 60.0]], [[150.0, 60.0], [151.0, 60.0]]]
     assert s["in_window_um"] == [10.0, 20.0] and LG.FT_MODE[0] is True and LG.FT_XCUT[0] == 0.0
+
+
+def test_shift_in_place_keeps_outline_and_face_points():
+    r = row()
+    g = LG.shift_row(r, 100.0)
+    assert g["outline_um"] == [1000.0, 800.0]
+    assert [h["origin_um"] for h in g["hard_cores"]] == [[200.0, 100.0], [500.0, 300.0]]
+    f = g["ft_slots"][0]
+    assert f["regs_um"][2] == [1000.0, 50.0] and f["bit_sites_um"][1] == [[1000.0, 50.0]]      # E-face point stays on the face
+    assert g["clock"]["taps"][0]["xy"] == [400.0, 300.0] and g["internal_stations"][0]["regs_um"] == [[350.0, 200.0]]
+    assert LG.check_rows(r, g) == []
+
+
+def test_shift_refuses_beyond_e_room():
+    import pytest
+    with pytest.raises(ValueError):
+        LG.shift_row(row(), 500.0)                   # cores end at x=450: room = 1000 - 8 - 450 = 542 -> 500 ok, 600 not
+        LG.shift_row(row(), 600.0)
+
+
+def test_shift_mutant_growth_changes_outline():
+    g = LG.grow_row(row(), 100.0)
+    assert g["outline_um"] == [1100.0, 800.0] and LG.check_rows(row(), g) == []   # grow is NOT shift: outline differs
+
+
+def test_ve_gap_no_abut_unless_source():
+    def mk(gap):
+        return {"outline_um": [1000.0, 800.0], "hard_cores": [
+            {"inst": "u_lf.u_ve.u_m", "origin_um": [100.0, 100.0], "outline_um": [100.0, 100.0]},
+            {"inst": "u_lf.u_ve.u_s", "origin_um": [200.0 + gap, 100.0], "outline_um": [100.0, 100.0]}]}
+    a = mk(8.64)
+    assert LG.ve_gap_findings(a, mk(8.64)) == []       # source gap kept (pin-aligned offset)
+    assert LG.ve_gap_findings(a, mk(0.0))              # abutted at 0: refused
+    assert LG.ve_gap_findings(a, mk(28.08)) == []
+
+
+def test_die_cap_refuses_big_growth(tmp_path):
+    import json
+    p = tmp_path / "p.json"
+    p.write_text(json.dumps({"partition_types": {"ot_s81sl_leaf__t1": row()}}))
+    rc = LG.main(["grow", str(p), "--types", "t1", "--dx", "185.76", "--die-cap", "155.52", "--out", str(tmp_path / "o.json")])
+    assert rc == 1 and not (tmp_path / "o.json").exists()

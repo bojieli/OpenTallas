@@ -94,3 +94,16 @@ def test_chain_order_and_plan_handover():
     a.grow, a.no_core_place, a.extra_reg = 0.0, True, False
     st2 = LG.steps(a, "/w")
     assert [s[0] for s in st2] == ["refresh", "chain_resite", "retap", "anchor"] and "--extra-reg" not in st2[1][1]
+
+
+def test_shift_step_replaces_grow_and_keeps_base_for_refresh(tmp_path):
+    import argparse
+    import leaf_generate as LGN
+    a = argparse.Namespace(base="b.json", types="ot_s81sl_leaf__t50", out="o.json", grow=0.0, shift=106.0, ft_xcut=0.0, die_cap=None,
+                           tree="/t", seed=None, extra_reg=False, no_core_place=True, work=None, dry=True)
+    st = LGN.steps(a, tmp_path)
+    names = [s[0] for s in st]
+    assert names[0] == "shift" and "grow" not in names and "core_place" not in names
+    assert "shift" in st[0][1] and "--dx" in st[0][1]
+    refresh = [s for s in st if s[0] == "refresh"][0]
+    assert refresh[1][refresh[1].index("run") + 1] == "b.json"           # deltas measured against the BASE plan

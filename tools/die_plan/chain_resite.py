@@ -130,29 +130,76 @@ def group_box(group, reg):
     return (min(xs), min(ys), max(xs), max(ys))
 
 
-def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False):
-    """-> (ops, latency, skipped) for type t (t is NOT modified)"""
+ROUTED_CAPS = (404.0, 380.0, 350.0, 320.0)   # tighter Manhattan caps tried until the OBSTACLE-AVOIDING hop is <= gate
+
+
+def routed_max(t, pts):
+    """FP-CONVERGE-S81 (Fable: t10 internal hops >405 um routed 1 -> 14, t50 14 -> 29: precheck REACH is Manhattan only):
+    max hop of the chain in hub_repack's obstacle model (a hop whose L-routes cross a core is the street A* length)"""
+    import hub_repack as HR
+    w, h = t.get("outline_um") or (0, 0)
+    R = HR.Raster(w, h, [r[:4] for r in AG.hard_rects(t)], halo=HALO)
+    return HR.chain_metrics(R, pts)[0]
+
+
+def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True):
+    """place_chain, accepted only when its routed max hop is <= gate; tries tighter Manhattan caps; None when infeasible"""
+    caps = [c for c in ROUTED_CAPS if c <= cap] or [cap]
+    for c in (caps if routed else caps[:1]):
+        new = place_chain(pts, k, offs_list, rects, w, h, c)
+        if new is None:
+            return None
+        if not routed or routed_max(t, [pts[0]] + [tuple(r) for r in new] + [pts[-1]]) <= gate:
+            return new
+    return None
+
+
+def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, whole_bus=True):
+    """-> (ops, latency, skipped) for type t (t is NOT modified).  routed: a chain whose obstacle-avoiding hop is over the
+    gate is re-sited too and a placement is accepted only when its routed hop is <= gate; whole_bus: with extra_reg, a bus that
+    needs +1 gets it on EVERY chain of that bus (conn) so the lane keeps one latency (leafdn_i0 rb_d 32 bits stayed uneven)"""
     w, h = t.get("outline_um") or (0, 0)
     rects = [(x0 - HALO, y0 - HALO, x1 + HALO, y1 + HALO) for x0, y0, x1, y1, _ in AG.hard_rects(t)]
     ops, latency, skipped = [], [], []
-    for i, e in enumerate(t.get("internal_stations") or []):
+    plus1 = set()
+    ents = t.get("internal_stations") or []
+    for i, e in enumerate(ents):
         if not e.get("from_um") or not e.get("to_um") or not e.get("regs_um"):
             continue
         pts = chain_points(t, e)
-        if max(hops(pts)) <= gate:
+        if max(hops(pts)) <= gate and (not routed or routed_max(t, pts) <= gate):
             continue
         regs = [list(r) for r in e["regs_um"]]
         k = len(regs)
-        new = place_chain(pts, k, [None] * k, rects, w, h, cap)
+        new = place_routed(t, pts, k, [None] * k, rects, w, h, cap, gate, routed)
         path = f"/partition_types/{name}/internal_stations/{i}/regs_um"
         if new is None and extra_reg:
-            new = place_chain(pts, k + 1, [None] * (k + 1), rects, w, h, cap)
+            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)
             if new is not None:
                 latency.append({"type": name, "index": i, "conn": e.get("conn"), "bits": e.get("bits"), "regs": k, "new_regs": k + 1})
+                plus1.add(e.get("conn"))
         if new is None:
-            skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": f"no legal placement <= {cap} um"})
+            skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": f"no legal placement <= {cap} um" + (" (routed)" if routed else "")})
             continue
         ops.append({"op": "replace", "path": path, "old": regs, "value": new})
+    if extra_reg and whole_bus and plus1:
+        done = {o["path"] for o in ops}
+        for i, e in enumerate(ents):
+            if e.get("conn") not in plus1 or not e.get("from_um") or not e.get("to_um") or not e.get("regs_um"):
+                continue
+            if any(l["index"] == i for l in latency):
+                continue
+            pts = chain_points(t, e)
+            regs = [list(r) for r in e["regs_um"]]
+            k = len(regs)
+            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)
+            path = f"/partition_types/{name}/internal_stations/{i}/regs_um"
+            if new is None:
+                skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": "whole-bus +1 register: no legal placement"})
+                continue
+            ops = [o for o in ops if o["path"] != path]
+            ops.append({"op": "replace", "path": path, "old": regs, "value": new})
+            latency.append({"type": name, "index": i, "conn": e.get("conn"), "bits": e.get("bits"), "regs": k, "new_regs": k + 1, "whole_bus": True})
     for si, s in enumerate(t.get("ft_slots") or []):
         k = int(s.get("stations", 1) or 1)
         regs = [list(r) for r in s.get("regs_um") or []]
@@ -207,6 +254,8 @@ def main(argv=None):
     r.add_argument("--gate", type=float, default=405.0)
     r.add_argument("--cap", type=float, default=404.0)
     r.add_argument("--extra-reg", action="store_true")
+    r.add_argument("--no-routed", action="store_true", help="Manhattan hops only (the pre-Fable behaviour)")
+    r.add_argument("--no-whole-bus", action="store_true", help="with --extra-reg: +1 only on the failing chains, not on the whole bus")
     r.add_argument("--ops")
     r.add_argument("--report")
     a = ap.parse_args(argv)
@@ -214,7 +263,7 @@ def main(argv=None):
     ops, lat, sk = [], [], []
     for name in [x for x in a.types.split(",") if x]:
         t = plan["partition_types"][name]
-        o, l, s = resite_type(name, t, a.gate, a.cap, a.extra_reg)
+        o, l, s = resite_type(name, t, a.gate, a.cap, a.extra_reg, not a.no_routed, not a.no_whole_bus)
         ops += o
         lat += l
         sk += s

@@ -58,3 +58,20 @@ def test_mutant_double_shift_is_refused():
     n["partition_types"]["T"]["clock"]["taps"][0]["xy"] = [161.0, 131.0]
     out, rep = LR.run(b, n, ["T"])
     assert out["partition_types"]["T"]["clock"]["taps"][0]["xy"] == [161.0, 131.0]
+
+
+def test_stale_core_tap_and_relay_block():
+    import leaf_refresh as LR
+    def row(tap_xy, relay_xy, ox):
+        return {"outline_um": [1000.0, 800.0],
+                "hard_cores": [{"inst": "u_lf.u_a", "origin_um": [ox, 100.0], "outline_um": [100.0, 100.0]}],
+                "clock": {"taps": [{"name": "u_lf.u_a.clk", "kind": "core", "xy": tap_xy}]},
+                "relay_sites": {"r": relay_xy}}
+    base = row([150.0, 150.0], [150.0, 120.0], 100.0)
+    moved_ok = row([350.0, 150.0], [350.0, 120.0], 300.0)
+    assert LR.stale_findings(base, moved_ok) == []
+    stale = row([150.0, 150.0], [150.0, 120.0], 300.0)          # core moved +200, tap and relay left behind
+    got = LR.stale_findings(base, stale)
+    assert any("core_tap" in g for g in got) and any("relay_site" in g for g in got)
+    near = row([150.0, 150.0], [340.0, 120.0], 300.0)           # tap 150 um from its core rect (x 300-400): still stale
+    assert any("core_tap" in g for g in LR.stale_findings(base, near))
