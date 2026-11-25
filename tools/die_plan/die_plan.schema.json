@@ -5194,6 +5194,11 @@
         "exclusiveMinimum": 25,
         "maximum": 405
        },
+       "plan_margin_um": {
+        "type": "number",
+        "minimum": 25,
+        "maximum": 300
+       },
        "column": {
         "type": "object",
         "additionalProperties": false,
