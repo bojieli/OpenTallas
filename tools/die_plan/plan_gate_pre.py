@@ -40,6 +40,10 @@ INOUTLINE (FP-CONVERGE-S81 11-25, COORD): WARN INOUTLINE by default, FAIL INOUTL
   reach/sink sites, added taps, landing bands, landing-contract collector root / outs / relays / local sources / pins) lies > 1 um outside outline_um.
   With --base only NEW or CHANGED lines block (PRE-DIFF).  Replaces the WARN ADV-IN-OUTLINE / ADV-FT-OUTSIDE lines in this gate.
 
+SITE-OFF-OUTLINE (COORD K10 11-25): FAIL ADV-SITE-OFF-OUTLINE <type>, always blocking: a station site / bit site, relay site, CLAND seat
+  (collector local source, reset tap), port pin or clock tap outside outline_um (adv_site_in_macro.off_outline_findings).  The
+  ADV-SITE-IN-MACRO advisory no longer WARNs off-outline sites.  KV A5t8: 10 hg o_ectl station regs + kv3_pv_v1e port (GRT-0209 in D29).
+
 PRE-DIFF (COMPOSE-FAST 11-25): `check ... --base BASE [--base-tree T]` fails only on FAIL lines that are NEW (or CHANGED) against the
   same check on BASE; base lines the row repeats are LIST PRE-INHERITED.  The base check runs beside the row check, cached by
   base/as-built/tools sha (pre_diff.py has the rules).  The canonical row gate (row_gate.py) always passes --base.
@@ -249,7 +253,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2981,6 +2985,9 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _pt.mark("INOUTLINE")
     if "INOUTLINE" not in skip:                          # FP-CONVERGE-S81 11-25 (COORD 06:2x): a coordinate outside the outline is a FAIL
         findings += inoutline_findings(plan)
+    _pt.mark("SITE-OFF-OUTLINE")
+    if "SITE-OFF-OUTLINE" not in skip:                   # COORD K10 11-25: a site / port pin / clock tap off the outline is a FAIL, never a WARN
+        findings += site_off_outline_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
@@ -3414,6 +3421,21 @@ def inoutline_findings(plan, block=None):
         out.append(f"LIST INOUTLINE-SUMMARY {n} type(s) with coordinates outside the outline"
                    + ("" if block else " (report only; $OT_PRE_INOUTLINE_BLOCK=1 makes them FAIL, set for the c11 cut)"))
     return out
+
+
+def site_off_outline_findings(plan):
+    """COORD K10 11-25 (FABLE-RC-KV SITE-OFF-OUTLINE): BLOCKING, no opt-in.  FAIL ADV-SITE-OFF-OUTLINE per type with a station site,
+    relay / CLAND seat (collector local source, reset tap), port pin or clock tap outside its outline (adv_site_in_macro.off_outline_findings).
+    KV D29 pv_v1e died at GRT-0209 on such a port.  With --base only NEW or CHANGED lines block (PRE-DIFF)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import adv_site_in_macro as SM
+    except ImportError as e:
+        return [f"FAIL ADV-SITE-OFF-OUTLINE not checked: {e}"]
+    try:
+        return SM.off_outline_findings(_load(plan))
+    except Exception as e:  # noqa: BLE001 -- an unreadable plan cannot be judged: refuse, never a silent pass
+        return [f"FAIL ADV-SITE-OFF-OUTLINE not checked: {type(e).__name__}: {str(e)[:160]}"]
 
 
 def advisory_lines(tree, plan, asbuilt=None, baseline=None):

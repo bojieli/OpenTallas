@@ -58,3 +58,29 @@ def test_registered_in_plan_advisory():
     assert ("SITE-IN-MACRO", "adv_site_in_macro") in PA.CHECKS
     lines = PA.run({"partition_types": {"ty": ptype(relay_sites={"r": [120.0, 120.0]})}}, "p", checks=["SITE-IN-MACRO"])
     assert lines and lines[0].startswith("WARN ADV-SITE-IN-MACRO ty:")
+
+
+def test_off_outline_is_a_fail_class_not_a_warn():
+    """COORD K10: an off-outline station site, collector source, port pin or clock tap is FAIL ADV-SITE-OFF-OUTLINE; the advisory stays silent"""
+    t = ptype(internal_stations=[{"conn": "bus:o_ectl", "regs_um": [[10.0, 10.0], [210.0, 50.0]]}],
+              clock={"landing_contract": {"collector_local_sources": [{"name": "src", "xy_um": [-32.07, 0.0]}],
+                                          "pins": [{"name": "p_in", "xy_um": [0.0, 20.0]}, {"name": "p_out", "xy_um": [100.0, 201.0]}]},
+                     "edge_clocks": [{"port": "fclk_in_x", "tap_um": [-32.16, 2.656]}],
+                     "added_taps": [{"name": "clk_t1", "xy": [50.0, 50.0]}]},
+              reset_spine_pins=[{"name": "ri", "sites_um": [[150.0, 190.0]]}])
+    raw = {"partition_types": {"ty": t}}
+    assert run(t) == []
+    out = M.off_outline_findings(raw)
+    assert out[0].startswith("FAIL ADV-SITE-OFF-OUTLINE ty: 4 object(s) outside the 200x200 outline")
+    assert "[by key cland_seats 1, clock_taps 1, internal_stations.regs_um 1, port_pins 1]" in out[0]
+    assert out[-1] == "LIST ADV-SITE-OFF-OUTLINE 1 type(s), 4 object(s) off the outline"
+    assert M.off_outline_findings({"partition_types": {"ty": ptype(relay_sites={"r": [10.0, 10.0]})}}) == []
+
+
+def test_pre_gate_runs_off_outline_as_fail(tmp_path):
+    import json
+    import plan_gate_pre as P
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps({"partition_types": {"ty": ptype(relay_sites={"r": [-1.0, 10.0]})}}))
+    out = P.site_off_outline_findings(str(p))
+    assert out[0].startswith("FAIL ADV-SITE-OFF-OUTLINE ty: 1 object(s)") and "SITE-OFF-OUTLINE" in P.CLASSES

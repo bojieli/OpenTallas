@@ -16,8 +16,14 @@ This check covers EVERY site-bearing plan key of a partition type (type frame, u
 CLAND seats (landing START / status / local-reset windows, collector sources, reset taps) lying in a core are counted apart
 (`cland`, informational): landing_place moves them clear of every core at gen (ADV-SITE-COLLIDE KEEPOUT prices the move), so they
 are not a placement refusal.  The FIRM keys (regs_um, bit_sites_um, face_bit_sites_um, relay_sites, soft banks) are what global_place
-refuses ("exact packed bank overlaps hard macro", KV A5t6).  A type is a WARN when a FIRM site is in a core / halo or any site is
-off the outline.
+refuses ("exact packed bank overlaps hard macro", KV A5t6).  A type is a WARN when a FIRM site is in a core / halo.
+
+ADV-SITE-OFF-OUTLINE (COORD K10 11-25, FABLE-RC-KV SITE-OFF-OUTLINE): a FAIL class, never a WARN.  Every site above (station regs / bit
+sites, relay sites, soft banks, CLAND seats incl. collector local sources and reset taps) plus the port pins and clock taps
+(port_tap_points: landing-contract pins, reset_spine_pins sites, clock.added_taps, clock.edge_clocks tap_um) whose footprint leaves
+[0, W] x [0, H] is one FAIL ADV-SITE-OFF-OUTLINE line per type (off_outline_findings; plan_gate_pre runs it as a blocking class).  A site
+off the outline cannot be placed: KV D29 kv3_pv_v1e died at 5_1_grt on GRT-0209 for the edge clock port fclk_in_i_slg_E_N_rsp_d1 that
+A5t8 still carried at (-32.16, 2.656) with its collector local source at (-32.07, 0).
 
 A site is IN-MACRO when its footprint (a point for a point site) overlaps a hard_cores[] / lef contents[] footprint grown by that
 core's halo_um (touching is not overlapping); it is reported as `core` when it overlaps the core itself and `halo` when only the
@@ -34,6 +40,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import adv_geom_static as G  # noqa: E402
 
 CHECK = "ADV-SITE-IN-MACRO"
+OFF_CHECK = "ADV-SITE-OFF-OUTLINE"
 EPS = 1e-6
 MAX_EX = 3
 
@@ -126,6 +133,64 @@ def classify(t, ss=None):
     return len(ss), inm, off
 
 
+def _xy(p):
+    return isinstance(p, (list, tuple)) and len(p) >= 2 and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in p[:2])
+
+
+def port_tap_points(t):
+    """-> [(key, label, x, y)] port pins and clock taps of one type (points): clock.landing_contract.pins xy_um, reset_spine_pins
+    sites_um, clock.added_taps xy, clock.edge_clocks tap_um (one point or a list of points)"""
+    out = []
+    ck = t.get("clock") or {}
+    for j, p in enumerate((ck.get("landing_contract") or {}).get("pins") or []):
+        if isinstance(p, dict) and _xy(p.get("xy_um")):
+            out.append(("port_pins", f"landing_contract.pins[{p.get('name', j)}]", float(p["xy_um"][0]), float(p["xy_um"][1])))
+    for j, p in enumerate(t.get("reset_spine_pins") or []):
+        for k, q in enumerate((p.get("sites_um") or []) if isinstance(p, dict) else []):
+            if _xy(q):
+                out.append(("port_pins", f"reset_spine_pins[{p.get('name', j)}].sites_um[{k}]", float(q[0]), float(q[1])))
+    for j, a in enumerate(ck.get("added_taps") or []):
+        if isinstance(a, dict) and _xy(a.get("xy")):
+            out.append(("clock_taps", f"clock.added_taps[{a.get('name', j)}]", float(a["xy"][0]), float(a["xy"][1])))
+    for j, e in enumerate(ck.get("edge_clocks") or []):
+        tp = e.get("tap_um") if isinstance(e, dict) else None
+        for k, q in enumerate([tp] if _xy(tp) else (tp or []) if isinstance(tp, list) else []):
+            if _xy(q):
+                out.append(("clock_taps", f"clock.edge_clocks[{e.get('port') or e.get('name') or j}].tap_um" + (f"[{k}]" if not _xy(tp) else ""),
+                            float(q[0]), float(q[1])))
+    return out
+
+
+def off_outline(t, off=None):
+    """-> [(key, label, x, y)] every site (sites(), footprints) and port pin / clock tap (points) outside [0, W] x [0, H]"""
+    off = list(classify(t)[2] if off is None else off)
+    ow, oh = (float(v) for v in t["outline_um"][:2])
+    off += [e for e in port_tap_points(t) if max(-e[2], -e[3], e[2] - ow, e[3] - oh) > EPS]
+    return off
+
+
+def off_outline_findings(raw, **_kw):
+    """ADV-SITE-OFF-OUTLINE: one FAIL line per type with any site / port pin / clock tap off the outline (+ a LIST total)"""
+    out, n = [], 0
+    for tn, t in G._types(raw):
+        if not t.get("outline_um"):
+            continue
+        off = off_outline(t)
+        if not off:
+            continue
+        n += len(off)
+        by = {}
+        for e in off:
+            by[e[0]] = by.get(e[0], 0) + 1
+        ow, oh = (float(v) for v in t["outline_um"][:2])
+        ex = "; ".join(f"{e[1]} at ({e[2]:g}, {e[3]:g})" for e in off[:MAX_EX])
+        out.append(f"FAIL {OFF_CHECK} {tn}: {len(off)} object(s) outside the {ow:g}x{oh:g} outline (e.g. {ex}) [by key "
+                   + ", ".join(f"{k} {v}" for k, v in sorted(by.items())) + "] (fix: re-site inside the outline; a site off the outline cannot place, GRT-0209)")
+    if out:
+        out.append(f"LIST {OFF_CHECK} {len(out)} type(s), {n} object(s) off the outline")
+    return out
+
+
 def counts(raw):
     """{type: dict(sites, in_core, in_halo (FIRM keys), cland (CLAND seats in a core / halo), off_outline, by_key, in_macro, off)}
     of the types with a FIRM site in a core or any site off the outline"""
@@ -160,13 +225,13 @@ def findings(raw, plan_path=None, tree=None, **_kw):
             parts.append(f"{r['in_core'] + r['in_halo']} in hard core ({r['in_core']} on the core, {r['in_halo']} in its halo only; e.g. {ex})")
         if r["cland"]:
             parts.append(f"+{r['cland']} CLAND seats in a core (kit moves them)")
-        if r["off_outline"]:
-            parts.append(f"{r['off_outline']} off the outline (e.g. {r['off'][0][1]} at ({r['off'][0][2]:g}, {r['off'][0][3]:g}))")
+        if not parts:                                             # off the outline only: the FAIL ADV-SITE-OFF-OUTLINE class carries it
+            continue
         out.append(f"WARN {CHECK} {tn}: {r['sites']} sites: " + "; ".join(parts)
                    + " [by key " + ", ".join(f"{k} {v}" for k, v in sorted(r["by_key"].items())) + "]")
     if out:
         out.append(f"LIST {CHECK} {len(res)} type(s): {sum(r['in_core'] for r in res.values())} on a core, "
-                   f"{sum(r['in_halo'] for r in res.values())} in a halo only, {sum(r['off_outline'] for r in res.values())} off the outline, "
+                   f"{sum(r['in_halo'] for r in res.values())} in a halo only, {sum(r['off_outline'] for r in res.values())} off the outline (FAIL {OFF_CHECK}), "
                    f"{cland_total(raw)} CLAND seats in a core on all types (informational) "
                    f"(fix: re-site the row's dependent bit_sites_um / regs_um from the current core placement)")
     return out
@@ -175,5 +240,5 @@ def findings(raw, plan_path=None, tree=None, **_kw):
 if __name__ == "__main__":
     import json
     raw = json.loads(Path(sys.argv[1]).read_text())
-    for line in findings(raw, sys.argv[1]):
+    for line in off_outline_findings(raw) + findings(raw, sys.argv[1]):
         print(line)
