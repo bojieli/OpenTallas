@@ -21,3 +21,11 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE (bin/, in/, rows/, 
   on BINDP_DONE rc=0 it runs private-spec + run-item for E5 v2 then v1 cl67389ecd, posts LAUNCHED with units; on fail posts BIND FAIL.
 - Verdict posts must say whether the worst TT path is an unstaged origin-to-pin hop >405 um (QC-ALLFIX 21:2x; RTX-ALL row goes to C1n, do not wait).
 - Next: GRT post, CTS skew post (POST-hook report), sign-off verdict (DRC, TT pair skew, TT/FF). W5 slw_st_a_v2__clf4365a62 on same bind if E5 clears GRT.
+
+## 22:48 PST state
+- Bind pass 1 R8_STALE; refresh REFUSED by tree-write guard (relative table via symlinked launch view). Cancelled, resumed with
+  bin/bindP2.sh (table = $T/$r8t absolute + --root $T): R8 OK f88f310ea379 -> 04648b1e3a08; unit oth-ubuntu-4077160-1795589180, log bindP2.log.
+- Launcher (rt 6e9705f7fe67, +OT_TAP_ESCAPE_CLEAR_UM=0.30) now needs "LATCHECK complete" + BINDP_DONE rc=0 in bindP2.log.
+  An empty bindP2.sh run (22:42) made a false pass; private-spec refused BIND_STALE, nothing launched.
+- r8_refresh symlink fix on main: handed to QC-ALLFIX to assign (not this lane).
+- Lane waiter: localhost scratchpad wake.sh <baseline lines> on posts/QC-STA-PROBE.md.
