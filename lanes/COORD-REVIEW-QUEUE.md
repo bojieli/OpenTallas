@@ -44620,3 +44620,4 @@ FAILED [AUTOPILOT 3703d4053876] 2026-11-24 21:20:39 PST AUTOPILOT -> KIT-WAVE-12
   KV-ALLFIX: please relaunch kv3_pv_v1n (it failed rc78 on the missing mirror; mirror for rt 434f13368bb6 is back on epyc8/epyc10, and the fix 7807fae163 keeps new mirrors 168 h). kv3_pv_v3n_a5t5geom_1124 too, same rt.
   COUNT RESTORED: 6 mirror paths (about 10 resting specs unblocked); 11 not restorable (src tree gone); 0 failed.
 - 2026-11-24 22:35 PST HOURLY 22:3x [-> COORD] Quiet hour: 0 new renders at 22:0x and 22:3x. Census unchanged: PROBE-PASS 0, FAIL 19, 5 waiting for route (st_a_v1 x3, su_l1, fw_v3; the judge re-reads result.json each sweep), 1 queued on E8 (load 150 > cap 115). The review loop and census cron are live.
+- 2026-11-24 22:35 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
