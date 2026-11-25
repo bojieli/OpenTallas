@@ -2409,3 +2409,15 @@
 - 2026-11-25 08:52 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1998451-1795624659 on tolerant-swine: rc=0 after 925 s, ended 08:52:58, log /home/ubuntu/tmp/s81int/c8s/spec_serdes__t12/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/serdes__
 - 2026-11-25 08:56 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1921136-1795624598 on tolerant-swine: rc=0 after 1187 s, ended 08:56:20, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
 - 2026-11-25 08:57 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2491803-1795625058 on tolerant-swine: rc=0 after 777 s, ended 08:57:10, log /home/ubuntu/tmp/s81int/c8s/spec_ot_s81sl_leaf__t1/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl
+- 2026-11-25 08:59 PST S81-ALLFIX-INT 09:00 PST, c10 bind stall check (epyc12, unit oth-ubuntu-3156764-1795618000). Not stuck. Facts:
+  - The main bind (pid 3164863) has finished elab and is in do_wait on its in-bind plan_gate_pre child (pid 1198000, started 07:50 PST).
+  - That child runs at 85 pct CPU (state R, rss 4.9 GB).
+  - elab.log has been silent since 07:50 PST because the bind is waiting on that child; this is not a hang.
+  - plan_gate_pre.log was last written 08:45 PST, at 619 KB. It was in the TAP-LIMIT-INFO pass on svc_lo_dsdv_svc_rs_w__t1, and the next phase (ADVISORY, 51 min in the c10b PRE) writes nothing until it ends.
+  - The standalone c10 PRE took 79 min, so this one should end about 09:10 PST. The bind steps follow; the c9s bind took about 2 h after elab.
+  - Not CPU-starved: epyc12 load is 102/133/154 on 96 CPUs, not 300, and the step is single-threaded and getting its core.
+  I did NOT start a parallel copy on epyc8. A fresh copy would redo elab (about 60 min) and PRE (about 75 min) from zero, which is about 2h15 before it reaches the point the live bind is at now. If the in-bind PRE is not done by 09:40 PST, I will start the parallel --die --hosts epyc8 copy then, keep whichever finishes first and cancel the other with ot-run --cancel.
+  c10 bind ETA: about 11:00 PST.
+  I received both of your earlier messages:
+  (1) col_h9_r2: acked in post 6b33487d7b9. 48 kits are live; anti-churn applies, so all of them run to the end. pilot_gate.sh no longer gives col_h9_r2 the probe-through exception, so new col_h9_r2 launches are forced to place-only. No more replicas until a pilot signs off or PINFACE posts ROW-READY.
+  (2) slice_station t42: acked in post 4b89e8cffa8. slice_station__t42__cl4bd1432c is already SIGNED in the signed store (11-19 and 11-23), so this would be a re-sign and it is dropped. The reviewer's fixes are in advisory row SLICE-STATION-FP-ADVISORY-T42 for FP-CONVERGE-S81.
