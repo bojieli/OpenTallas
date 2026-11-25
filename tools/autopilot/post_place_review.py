@@ -360,6 +360,12 @@ def finish(rev, npath=50):
         (rev / "paths_ideal.tsv").write_text(paths_tsv(rows))
         summary["files"] += ["paths_ideal.tsv", "paths_ideal.txt"]
         summary["paths"] = {"n": len(rows), "worst_slack_ps": rows[0]["slack"] if rows else None}
+        sta = parse_sta(_read(rev / "sta_wns.txt"), _read(rev / "sta_tns.txt"), _read(rev / "sta_below150.txt"), _read(rev / "sta_clocks.txt"))
+        if "wns_ps" not in sta and rows:
+            sta["wns_ps"] = rows[0]["slack"]            # report_wns not available: the worst of the dumped paths
+        summary["sta"] = sta
+        summary["sta_cell"] = sta_cell(sta)
+        summary["smell_wns"] = bool(sta.get("wns_ps") is not None and sta["wns_ps"] < SMELL_WNS_PS)
     else:
         rows = []
         summary["notes"].append("no path report: " + (_read(rev / "sta_error.txt").strip() or "STA did not run"))
@@ -472,6 +478,43 @@ def find_drt_report(kit):
             if mt > best[1]:
                 best = (p_, mt)
     return best[0]
+
+
+STA_WNS = re.compile(r"wns\s+(?:max\s+)?(-?\d+(?:\.\d+)?)")
+STA_TNS = re.compile(r"tns\s+(?:max\s+)?(-?\d+(?:\.\d+)?)")
+SMELL_WNS_PS = -150.0
+
+
+def parse_sta(wns_txt, tns_txt, below_txt, clocks_txt=""):
+    """quick setup STA numbers from the tcl dumps -> {wns_ps, tns_ps, n_below_150, period_ps}.  Pure.  n_below_150 counts endpoint rows of a `-format end` report whose last column (slack) is < -150."""
+    out = {}
+    m = STA_WNS.search(wns_txt or "")
+    if m:
+        out["wns_ps"] = float(m.group(1))
+    m = STA_TNS.search(tns_txt or "")
+    if m:
+        out["tns_ps"] = float(m.group(1))
+    n = 0
+    for ln in (below_txt or "").splitlines():
+        t = ln.split()
+        if len(t) >= 3 and re.fullmatch(r"-?\d+(?:\.\d+)?", t[-1]) and float(t[-1]) < -150.0 and not ln.startswith(("Endpoint", "-")):
+            n += 1
+    out["n_below_150"] = n
+    for ln in (clocks_txt or "").splitlines():
+        t = ln.split()
+        if len(t) == 2:
+            try:
+                out.setdefault("period_ps", float(t[1]))
+            except ValueError:
+                pass
+    return out
+
+
+def sta_cell(sta):
+    """VIS-QUEUE column 10 text"""
+    if not sta or "wns_ps" not in sta:
+        return "STA n/a"
+    return f"WNS {sta['wns_ps']:.1f} TNS {sta.get('tns_ps', float('nan')):.1f} n<-150 {sta.get('n_below_150', 0)} T {sta.get('period_ps', 0):g}"
 
 
 def slack_label(slack):
