@@ -116,7 +116,7 @@ HERE = Path(__file__).resolve().parent
 # (check name, module in this directory); a module absent from an older tree is skipped quietly
 CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), ("SITE-COLLIDE", "adv_site_collide"),
           ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
-          ("CELLCAP", "adv_cellcap"), ("CELL-BUDGET", "adv_cell_budget"),
+          ("CELLCAP", "adv_cellcap"), ("CELL-BUDGET", "adv_cell_budget"), ("HOLDCELL-BUDGET", "adv_holdcell_budget"),
           ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"), ("STALE-BINS", "adv_stale_bins"),
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
           ("PHANTOM-STATION", "adv_phantom_station"), ("BANK-OFFAREA", "adv_bank_offarea"),
