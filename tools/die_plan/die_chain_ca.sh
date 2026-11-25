@@ -28,7 +28,7 @@ FRAME=(--frame-plan "$PLAN")
 case " ${CA_PLAN_ARGS:-} " in
   *" --frame-plan "*|*" --frame-plan="*|*" --sta-plan "*|*" --sta-plan="*) FRAME=() ;;
 esac
-python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" "${FRAME[@]}" ${CA_PLAN_ARGS:-} $WFP $MD --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
+python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} "${FRAME[@]}" $WFP $MD --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
 python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} $WFB --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 log "CA_WRITE_EDGE ${WF:-rise}"
 # REAL-VIEWS-1119 (COORD 11-19): every signed core view (--core-view) and signed type view (--kit) whose pins match this
