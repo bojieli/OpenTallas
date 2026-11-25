@@ -6977,7 +6977,7 @@ def cmd_bind(a):
     r8_sites = getattr(B, "r8_sites", {})
     if B.lane_count_sites:
         r8_sites = {tn: {**r8_sites.get(tn, {}), **B.lane_count_sites.get(tn, {})}
-                    for tn in r8_sites.keys() | B.lane_count_sites.keys()}
+                    for tn in sorted(r8_sites.keys() | B.lane_count_sites.keys())}   # sorted: set order follows the hash seed
     if r8_sites:
         rep["r8_strap_sites"] = dict(types=len(r8_sites), sites=sum(len(v) for v in r8_sites.values()),
                                      bits=sum(x["width"] for v in r8_sites.values() for x in v.values()),
