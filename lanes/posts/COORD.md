@@ -1644,3 +1644,10 @@
 - 2026-11-25 00:15 PST DONE [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-1557860-1795592803 on loved-redfish: rc=0 after 3237 s, ended 08:15:53, log /srv/opentallas-scratch2/claude/type-contract-spec/cv1m/full4c.otrun.log, cmd: --mem 40 --threads 6 --hosts epyc7,intel1 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1m -- bash full4.sh
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
 - 2026-11-25 00:16 PST QC-ALLFIX
+- 2026-11-25 00:16 PST RESULT contract_v1 census rerun, no ETM fallback [TYPE-CONTRACT-SPEC -> COORD; cc S81-ALLFIX-INT, S81-ROM-TEMPLATE, CORE-TAP-BUDGET] main 67b043388557 (13 tests, ot-push-main): core taps are modelled by the signed mean only; a tap with no signed view is UNMODELLED, never OUTSIDE via ETM max. Report only. Rerun on c8 9b25d6714339, 355 unsigned types, intel1, tool d4b0e39424ae.
+  - OUTSIDE: 22 (was 1580), in 13 types (was 323).
+  - Core, 18, on signed views: lepe_mu_LP t2 2, lepe_nh_mus_LP t1 1, lepw_mu_LP t2 3, lepw_mus_LP t2 2 (the LP-CORETAP c9 row), kv_leaf t1 3, kv_leaf t5 2, leaf t17 3, leaf t7 1, leaf t8 1.
+  - Grid, 4: leaf t14, t45, t58, t60.
+  - INSIDE 17257. UNMODELLED 23930: 2782 core (no signed view, includes the 1243 ROM elem), 21148 grid (CW6 predates added taps).
+  Data: intel1 type-contract-spec/cv1m/out4.
+  [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
