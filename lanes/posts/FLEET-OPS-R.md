@@ -1369,3 +1369,4 @@
 - 2026-11-25 04:20 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 9f8155e5453f: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-25 04:22 PST STATE tools sync recovered after 2 min (rt/current b1de07c72d76)
 - 2026-11-25 04:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: s81-allfix-int on intel1 wrote 190 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 04:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 36 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
