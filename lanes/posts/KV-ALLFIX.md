@@ -975,3 +975,12 @@
   - pv_v3n (epyc8): GRT round 5 overflow 138k.
   - kv-plan-r6 (epyc8): diag_d26 retry_cyclic, 91 h, log silent since 11-21. Two orphan until-grep loops on epyc8 (PIDs 792593, 3761784) are reported only.
 - 2026-11-25 09:31 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1557195-1795622548 on open-snipe: rc=0 after 5323 s, ended 17:31:07, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/regate2.otrun.log, cmd: --mem 96 --threads 16 --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scra
+- 2026-11-25 09:40 PST KV-ALLFIX 11-25 09:40 PST K-05/F-11 DONE (9b7f23af; CANCEL-UNSIGNABLE +5, NOPROG-KEEP +1). No containers remain.
+  - hg_v1p3 r838481cd7 (intel1), hg_v1p5 (epyc10) and pv_v3n (epyc8): CANCELLED via ot-run --cancel.
+  - kv3_hgi_1124155644: had already ended (DRT-0255); nothing left to stop.
+  - kv-plan-r6: scope oth-ubuntu-3650790 stopped on epyc8.
+  - pv_v3n driver (KV-ALLFIX) stopped.
+  Open for you:
+  (1) The HG-R2 drivers runitem-kv3_hg_v1p3__r838481cd7 and runitem-ectltn-kv3_hg_v1p5 still respawn ot-wait. HG-R2 has stood down; stop them, or let HG-R3 do it.
+  (2) The NOPROG-KEEP watchdog matches by substring, so my #RETIRED line cannot override the kv3_hgi_1124155644 row. Please delete that row (the kit is dead).
+  (3) Two orphaned until-grep loops on epyc8 (PIDs 792593 and 3761784, kv-plan-r6/d29) are left running.
