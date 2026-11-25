@@ -695,3 +695,6 @@
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 23.8 h job 23.8 h: no new meaningful log line for 12.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS intel2 col_h10_r0_p4__t1__pv07945c1e 5_2_route stage 14.3 h job 15.0 h: drt_violations best 2 last 47 rows 54 window-gain 0.0%; stagnant 6.5 h; last event 2.4 h ago, log write 2.4 h ago (3100 lines)
   NO-PROGRESS intel1 probe_v8 flow3 stage 10.7 h job 10.7 h: no new meaningful log line for 9.9 h; last: [INFO GRT-0102] Start extra iteration 1/2
+- 2026-11-24 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 16:52 PST: 215 running jobs, PROGRESSING 207, SLOW 6, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 28.6 h job 28.6 h: no new meaningful log line for 13.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 24.8 h job 24.8 h: no new meaningful log line for 13.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
