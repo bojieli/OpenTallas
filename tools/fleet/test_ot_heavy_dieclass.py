@@ -161,3 +161,14 @@ def test_crit_jobs_use_the_die_slice(monkeypatch):
     monkeypatch.setenv("OT_HEAVY_CPU", "crit")
     monkeypatch.delenv("OT_HEAVY_PRIO", raising=False)
     assert R.die_slice_gb() == 0.0 and R.die_slice_cores() == 0.0
+
+
+def test_script_that_runs_a_die_level_tool_is_die_class(tmp_path):
+    """FLEET-OPS 11-25: `bash pre_bind.sh` (runs plan_gate_pre.py / die-plan bind) ran at nice 10"""
+    pre = tmp_path / "pre_run.sh"; pre.write_text("cd t; python3 -I -B tools/die_plan/plan_gate_pre.py check --tree x --plan y\n")
+    bnd = tmp_path / "go.sh"; bnd.write_text("python3 -I -B tools/die_plan/bind.py bind plan.json --out o\n")
+    kit = tmp_path / "kit.sh"; kit.write_text("make -C run\n")
+    krt = tmp_path / "krt.sh"; krt.write_text("python3 tools/die_plan/bind.py bind kit-rtl x; tools/die_plan/plan_gate_pre.py kit-rtl\n")
+    assert R.die_like(["bash", str(pre)], str(tmp_path)) and R.die_like(["bash", str(bnd)], str(tmp_path))
+    assert not R.die_like(["bash", str(kit)], str(tmp_path)) and not R.die_like(["bash", str(krt)], str(tmp_path))
+    assert not R.script_die_level(["python3", str(pre)]) and not R.script_die_level(["bash", str(tmp_path / "missing.sh")])

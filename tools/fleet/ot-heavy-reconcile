@@ -2022,6 +2022,25 @@ def proof_like(argv, cwd="", environ=()):
     return False
 
 
+SCRIPT_DIE_RE = re.compile(r"plan_gate_pre\.py|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|bind_phases|plan_census")
+
+
+def script_die_level(argv):
+    """FLEET-OPS 11-25 (COORD: PREs started as `bash pre_bind.sh` ran at nice 10 and as type-level work): a `bash|sh <script>` job whose script (<= 64 KB, the first
+    file argument) runs a die-level tool (PRE, die-plan bind / check, bind phases, census) is die class too.  Never for a script that names kit-rtl."""
+    try:
+        a = [x for x in argv if x not in ("--",)]
+        if len(a) < 2 or os.path.basename(a[0]) not in ("bash", "sh", "dash"):
+            return False
+        f = next((x for x in a[1:] if not x.startswith("-")), None)
+        if not f or not os.path.isfile(f) or os.path.getsize(f) > 65536:
+            return False
+        t = open(f, errors="replace").read()
+        return bool(SCRIPT_DIE_RE.search(t)) and not re.search(r"\bkit-rtl\b", t)
+    except (OSError, ValueError):
+        return False
+
+
 def die_like(argv, cwd="", environ=()):
     """die-level job: OT_HEAVY_PRIO=die, or DIE_RE / a PRIO_FILE regex on its command line or working directory"""
     if "OT_HEAVY_PRIO=die" in environ:
@@ -2030,6 +2049,8 @@ def die_like(argv, cwd="", environ=()):
     if DIE_RE.search(text):
         return True
     if DIE_LEVEL_RE.search(" ".join(argv)) and not re.search(r"\bkit-rtl\b", " ".join(argv)):   # DIECLASS_1125: on the command only (a kit's cwd may sit under a bind dir)
+        return True
+    if script_die_level(argv):
         return True
     for ln in rd(PRIO_FILE).splitlines():
         ln = ln.strip()
