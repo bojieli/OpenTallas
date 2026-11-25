@@ -2389,6 +2389,11 @@ _PT["placement_guides"] = {
 # RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
+# QC-GLUE 11-25: opt-in per type placement clusters (logic_cluster.py): odb region + group, GPL/DPL fence; absent = byte-identical kits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["logic_cluster_rects_um"] = {"type": "array", "minItems": 1, "items": {
+    "type": "object", "additionalProperties": False, "required": ["name", "patterns", "rect_um"], "properties": {
+        "name": {"type": "string"}, "patterns": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "rect_um": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}}}}
 # RANK-SEAT 11-22 (FABLE-FIX-S81-COL-RANKSEAT; kit_istations rank_sites_lines / rs_rank_line): opt-in per type, every bit of a wide
 # register rank (key = register name without its last [bit]) FIRM on the line line_um, bit 0 first (asc); absent = byte-identical kits
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_rank_sites"] = {"type": "object", "additionalProperties": {

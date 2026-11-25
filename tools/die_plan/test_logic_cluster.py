@@ -52,3 +52,9 @@ def test_gen_phys_wires_the_hook():
     from pathlib import Path
     src = Path(GP.__file__).read_text()
     assert "logic_cluster.tcl" in src and "import logic_cluster" in src
+
+
+def test_schema_accepts_the_key():
+    import schema
+    props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert props["logic_cluster_rects_um"]["items"]["required"] == ["name", "patterns", "rect_um"]

@@ -7748,6 +7748,39 @@
        "maxItems": 2
       }
      },
+     "logic_cluster_rects_um": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "patterns",
+        "rect_um"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "patterns": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string"
+         }
+        },
+        "rect_um": {
+         "type": "array",
+         "minItems": 4,
+         "maxItems": 4,
+         "items": {
+          "type": "number"
+         }
+        }
+       }
+      }
+     },
      "relay_rank_sites": {
       "type": "object",
       "additionalProperties": {
