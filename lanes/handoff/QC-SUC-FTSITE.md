@@ -20,3 +20,5 @@ PILOT: epyc11 /srv/opentallas-scratch2/claude/QC-SUC-FTSITE/forkbind.sh (fork cK
   Need ~+100 um x (W +57, vb|vc +28, vc|cl +9, mid +13); in-type slack 224 um insufficient; slice packed su_l1 622|su_c 1227|su_l0 622 to die E face.
   Options posted: A su_l1/su_l0 give 100 um (QC-SUL1-SLW-REFLOOR), B die +1.2 mm x, C relocate a bottom core to empty band y1024-1400 (rec). Waiting QC-ALLFIX pick; ETA 12:00.
   Any p1_o rework must regenerate per bit from true sources (FABLE-FIX-QC-SLE-R3 method), assert every relay site off cores + hop<=405.
+- 08:12 QC-ALLFIX ruling: C primary (move one bottom core to y>1024 band), A fallback (asked QC-SUL1-SLW-REFLOOR), B out (reticle). cl92 repair flat at -265: NOT cancelled (-42..-300 never-cancel band conflicts with flat criterion; asked COORD).
+- 08:35 Option C draft delegated to Fable design agent: outputs intel1 QC-SUC-FTSITE/c1o/sucC/ (su_c_coremove.py, plan_c1o_sucC.json, census, hop table, PNG). Then independent Fable render review -> ROW-READY. Top band occupancy: x_su_l1_ctl/sc/stm FTs y1244-1390, x_ctl_o 403 relay sites x50-900 y1000-1250, x_ctl_p1/p2_i x851/946.
