@@ -21,10 +21,20 @@ plan (a tree built another way, e.g. the cb landing collector form with entry / 
 snapshot, is left as is and reported as tree_not_own, never overwritten).  Reset relay names rst_rl_<k> that other plan rows name are
 re-picked at bind by reset_anchor.py; not here.
 
-  retap.py OLD_PLAN NEW_PLAN OUT [--report R.json] [--types a,b]
+TAPOFF-RETAP (QC-CB-SPREAD-R2 11-24, COORD: C1m PRE TAPOFF-MISSING x28 after CB-TAPBINS): the die per-port clock rows
+(clock.tap_offset.per_port_ps / clock.tap_window.per_port_ps, keyed type -> tap name) name taps too.  In the same step, every type
+whose tap set changed gets its row rebuilt on the new taps (tapoff=True, the default): a new tap at an unchanged site keeps its row;
+a moved / new tap takes the row of the OLD tap nearest its site (the tap_map rule; a row kept by NAME would time a renumbered tap
+at another tap's offset), offsets form tol = max(that row's tol, the old table's leave-one-out p95 of the nearest-other-tap
+estimate, ceil 0.1 ps), window form = the largest window of the 3 nearest old taps; rows of names that are no longer taps go
+(core clk_c* rows are never touched).  Then tap_offset_cover.fill closes whatever is still missing, so PRE TAPOFF-MISSING reads 0.
+The rows are estimates until die_sta_related --kit-offset-out / tap_window_measure re-measure.  --no-tapoff keeps the old behaviour.
+
+  retap.py OLD_PLAN NEW_PLAN OUT [--report R.json] [--types a,b] [--no-tapoff]
   sink_bins_from_place.py apply PLAN OUT --bins TYPE=FILE ... calls repoint in the same step.
 """
 import argparse
+import copy
 import json
 import re
 import sys
@@ -173,7 +183,72 @@ def _reset_inputs(t):
     return _norm({"clock": ck, "reset": t.get("reset")})
 
 
-def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False):
+CORE_RE = re.compile(r"^clk_c")
+
+
+def _tapoff_tables(raw):
+    ck = raw.get("clock") or {}
+    off = (ck.get("tap_offset") or {}).get("per_port_ps") or {}
+    win = (ck.get("tap_window") or {}).get("per_port_ps") or {}
+    return off, win
+
+
+def _ceil1(v):
+    import math
+    return math.ceil(v * 10 - 1e-9) / 10.0
+
+
+def _near(xy, pts, k=1):
+    return sorted(pts, key=lambda q: (abs(q[1] - xy[0]) + abs(q[2] - xy[1]), q[0]))[:k]
+
+
+def carry_tapoff(old_raw, new_raw, tn, old, new):
+    """Rebuild new_raw's per-port clock row of type tn on the new tap set (see TAPOFF-RETAP) -> [report row] or []."""
+    off_o, win_o = _tapoff_tables(old_raw)
+    off_n, win_n = _tapoff_tables(new_raw)
+    form = "offset" if off_o.get(tn) else ("window" if win_o.get(tn) else None)
+    if form is None:
+        return []
+    src = (off_o if form == "offset" else win_o)[tn]
+    dst = (off_n if form == "offset" else win_n).setdefault(tn, {})
+    osite = {n: (x, y) for n, x, y in old}
+    listed = [(n, x, y) for n, x, y in old if n in src]
+    if not listed:
+        return []
+    p95 = 0.0
+    if form == "offset" and len(listed) > 1:
+        err = []
+        for i, (n, x, y) in enumerate(listed):
+            m = _near((x, y), listed[:i] + listed[i + 1:])[0][0]
+            for c in ("TT", "FF"):
+                err.append(abs(float(src[m][c]) - float(src[n][c])))
+        err.sort()
+        p95 = err[min(len(err) - 1, int(0.95 * len(err)))]
+    names = {n for n, _, _ in new}
+    kept = carried = removed = 0
+    for n, x, y in new:
+        if n in src and osite.get(n) == (x, y):
+            dst[n] = copy.deepcopy(src[n])
+            kept += 1
+            continue
+        if form == "offset":
+            m = _near((x, y), listed)[0][0]
+            row = dict(src[m])
+            row["tol"] = _ceil1(max(float(row.get("tol", 0.0)), p95))
+        else:
+            row = max((src[m] for m, _, _ in _near((x, y), listed, 3)), key=lambda v: float(v if not isinstance(v, dict) else max(v.values())))
+            row = copy.deepcopy(row)
+        dst[n] = row
+        carried += 1
+    for n in list(dst):
+        if n not in names and not CORE_RE.match(n):
+            del dst[n]
+            removed += 1
+    return [[f"clock.tap_{form}.per_port_ps", "rows", kept, carried, removed]]
+
+
+def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False,
+            tapoff=True):
     """Re-point new_raw (in place) against old_raw, then re-solve and republish the collector_tree of every type whose
     tap set changed.  taps_fn(raw, path) -> (tn -> [(n, x, y)]) (default schema.tap_grid); tree_fn(raw, path) ->
     (tn -> tree) (default reset_tree.for_type on the re-pointed plan).
@@ -204,6 +279,8 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
         pub = _published(old_raw["partition_types"][tn])
         own = pub is None or _norm(pub) == _norm(tr_old(tn))
         ch = repoint_type(t, a, b, reset=own)
+        if tapoff:
+            ch = (ch or []) + carry_tapoff(old_raw, new_raw, tn, a, b)
         if ch:
             rep[tn] = ch
         if pub is not None:
@@ -235,7 +312,26 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
             ch = republish_tree(new_raw["partition_types"][tn], tr(tn))
             if ch:
                 rep.setdefault(tn, []).extend(ch)
+    if tapoff and todo:
+        rep.update(_tapoff_close(new_raw, new_path, [tn for tn, _, _ in todo]))
     return rep
+
+
+def _tapoff_close(raw, path, tns):
+    """tap_offset_cover.fill on the re-tapped types (whatever carry_tapoff left missing, e.g. a type the old tap grid named
+    only in part) -> {type: [report row]} for the types it touched; a type it must skip is reported, never raised."""
+    off, win = _tapoff_tables(raw)
+    tns = [tn for tn in tns if off.get(tn) or win.get(tn)]
+    if not tns:
+        return {}
+    import tap_offset_cover as TC
+    out = {}
+    rows = TC.fill(raw, path, types="^(" + "|".join(re.escape(t) for t in tns) + ")$")
+    for r in rows:
+        if r.get("added") or r.get("stale_removed") or str(r.get("status", "")).startswith("SKIP"):
+            out[r["type"]] = [[f"clock.tap_{r['form']}.per_port_ps", "cover_fill", r.get("added", 0), r.get("stale_removed", 0),
+                               r.get("status", "")]]
+    return out
 
 
 def main(argv=None):
@@ -244,13 +340,21 @@ def main(argv=None):
     ap.add_argument("--report"); ap.add_argument("--types", default="")
     ap.add_argument("--republish-reset", action="store_true",
                     help="RESETPUB-1122: republish the collector_tree of every selected type with the tree the tools solve now (also a stale one)")
+    ap.add_argument("--no-tapoff", action="store_true", help="TAPOFF-RETAP: leave clock.tap_offset / tap_window per_port_ps rows as they are")
     a = ap.parse_args(argv)
     old, new = json.loads(Path(a.old).read_text()), json.loads(Path(a.new).read_text())
-    rep = repoint(old, new, a.old, a.new, [x for x in a.types.split(",") if x] or None, republish_reset=a.republish_reset)
+    rep = repoint(old, new, a.old, a.new, [x for x in a.types.split(",") if x] or None, republish_reset=a.republish_reset,
+                  tapoff=not a.no_tapoff)
     Path(a.out).write_text(json.dumps(new, indent=1) + "\n")
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     for tn, ch in sorted(rep.items()):
+        tof = [c for c in ch if str(c[0]).startswith("clock.tap_")]
+        ch = [c for c in ch if not str(c[0]).startswith("clock.tap_")]
+        if tof:
+            print("RETAP", tn, "tapoff", " ".join(f"{c[1]}={c[2]}/{c[3]}/{c[4]}" for c in tof))
+        if not ch:
+            continue
         refs = [c for c in ch if c[0] != "landing_contract.collector_tree"]
         tree = [c for c in ch if c[0] == "landing_contract.collector_tree"]
         print("RETAP", tn, "refs", len(refs), "max_um", max([c[4] for c in refs] or [0]),

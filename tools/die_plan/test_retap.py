@@ -210,3 +210,41 @@ def test_own_tree_moves_every_tap_indexed_reset_name():
     assert lc["collector_children"][1]["node"] == f"rst_n_t{len(NEW)}"   # seam output: shifts with the tap count
     assert tt["clock"]["landing_reader_start"]["branches"]["x"]["stages"][0]["raw_reset"] == "rr_t2"
     assert lc["collector_tree"] == NEW_TREE                                # replaced whole, not walked
+
+
+def _tapoff_raw(form="offset"):
+    row = (lambda tt, tol: {"TT": tt, "FF": tt / 2, "tol": tol}) if form == "offset" else (lambda tt, tol: tt)
+    tab = {"clk": row(0.0, 5.0), "clk_t1": row(20.0, 5.0), "clk_t2": row(40.0, 5.0), "clk_t3": row(80.0, 5.0), "clk_c0": row(-300.0, 2.0)}
+    key = "tap_offset" if form == "offset" else "tap_window"
+    return {"clock": {key: {"per_port_ps": {"T": tab}}}, "partition_types": {"T": typ()}}
+
+
+def test_tapoff_rows_follow_the_tap_sites_not_the_names():
+    old = _tapoff_raw(); new = copy.deepcopy(old)
+    ch = retap.carry_tapoff(old, new, "T", OLD, NEW)
+    tab = new["clock"]["tap_offset"]["per_port_ps"]["T"]
+    assert set(tab) == {"clk", "clk_t1", "clk_t2", "clk_c0"}          # old clk_t3 name gone, core row kept
+    assert tab["clk_t1"]["TT"] == 40.0 and tab["clk_t2"]["TT"] == 80.0   # nearest OLD site, not the old row of the same name
+    assert tab["clk"]["TT"] == 0.0 and tab["clk_c0"]["TT"] == -300.0
+    # tol = max(row tol, leave-one-out p95 of the old table): nearest-other estimates err up to 40 ps here
+    assert tab["clk_t1"]["tol"] == 40.0
+    assert ch == [["clock.tap_offset.per_port_ps", "rows", 0, 3, 1]]
+
+
+def test_tapoff_window_form_takes_the_largest_near_window():
+    old = _tapoff_raw("window"); new = copy.deepcopy(old)
+    retap.carry_tapoff(old, new, "T", OLD, NEW)
+    tab = new["clock"]["tap_window"]["per_port_ps"]["T"]
+    assert tab["clk_t2"] == 80.0 and "clk_t3" not in tab and tab["clk_c0"] == -300.0
+
+
+def test_repoint_rebuilds_tapoff_rows_and_closes_with_cover_fill(monkeypatch):
+    old = _tapoff_raw(); new = copy.deepcopy(old)
+    seen = []
+    monkeypatch.setattr(retap, "_tapoff_close", lambda raw, path, tns: seen.append(tns) or {})
+    taps = lambda raw, path: (lambda tn: OLD if raw is old else NEW)  # noqa: E731
+    rep = retap.repoint(old, new, taps_fn=taps, tree_fn=lambda r, p: (lambda tn: None))
+    assert seen == [["T"]] and ["clock.tap_offset.per_port_ps", "rows", 0, 3, 1] in rep["T"]
+    new2 = copy.deepcopy(old)
+    retap.repoint(old, new2, taps_fn=taps, tree_fn=lambda r, p: (lambda tn: None), tapoff=False)
+    assert new2["clock"] == old["clock"] and seen == [["T"]]
