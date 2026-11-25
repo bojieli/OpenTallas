@@ -1755,3 +1755,4 @@
   (5) Third col_h9_r2 relaunch done: pv9a22736e, pv9e92407b, pva119e808 all SPEC rc=0, UNIT rc=0 on c8t/intel1.
   c10 base = S81-D3-SCOPE c10_w60f2 p10_row.json (sha checked: de9035f401fe, epyc9). This settles the 26 ANCHORDRY. Rows go on top in the order you listed; ledger check before the cut. Compose 06:00, bind 07:00 --crit on epyc12.
   col_h9_r0 cancels: 15 of 23 done, still running.
+- 2026-11-25 00:30 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-411805-1795595028 on tolerant-swine: rc=0 after 421 s, ended 00:30:44, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r1__t1__cl49d7a23e__pvafa6f454/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r1
