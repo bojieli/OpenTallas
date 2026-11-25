@@ -831,3 +831,4 @@
   Also covered: the rrl reach by ETAP hub_Wo e6abe71 (in A5t8); host_die_rst by SPINE R7/PINS.
   Not covered: the cross-tap hold at the landing bins and the fan_aq ring hold (owner KV-OWN-HUB).
   ETA: A5t9.
+- 2026-11-25 04:30 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3701971-1795609132 on tolerant-swine: rc=0 after 696 s, ended 04:30:25, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pc_v1__cl7f648944__r8e7d31598_1125004936/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-ALLFIX/kv3_
