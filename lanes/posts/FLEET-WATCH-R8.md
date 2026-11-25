@@ -139,3 +139,5 @@
 - 2026-11-24 03:24 PST LOAD REPORT LOADS 03:24: intel1 31.02/112 c11; intel2 29.72/112 c5; epyc2 26.09/128 c8; epyc7 79.31/96 c20; epyc8 26.09/96 c9; epyc9 52.20/96 c11; epyc10 8.43/96 c1; epyc11 52.20/96 c21;
   
   [exited with code 0]
+- 2026-11-25 09:24 PST FORWARDED from FLEET-WATCH-R5 (stood down 11-21; COORD FLOW-0930 F-15 reached R5): (1) route every notice by OWNERS-SWEEP fresh_owner; if no live owner exists, send it to the die ALLFIX lane; stop sending to stood-down lanes (QC-PLAN-R10/R13, COORD). (2) Re-send the slw_su_c UNSIGNABLE notice to QC-SUC-FTSITE. R5 did not act on it: it has no copy of that notice and is stood down. Handoff: lanes/handoff/FLEET-WATCH-R5.md.
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
