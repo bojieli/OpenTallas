@@ -1488,6 +1488,11 @@ def hub(now=None, post=True):
         files.append("lanes/CANCEL-DESIGN-FAIL.tsv")
     if vis_queue_append(rows, now, post):
         files.append("lanes/VIS-QUEUE.tsv")
+    try:
+        if vis_status_sync() and "lanes/VIS-QUEUE.tsv" not in files:
+            files.append("lanes/VIS-QUEUE.tsv")
+    except Exception as e:
+        print(f"noprog vis status sync failed: {e!r}", file=sys.stderr)
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
@@ -2383,6 +2388,17 @@ def smell_tsv_append(recs, path=None):
     return len(out)
 
 
+def smell_recipients(tag, owner):
+    """lanes a SMELL / RENDER post is addressed to: the die's FP-CONVERGE lane first, then the type owner unless that is COORD (wave kits have no OT_LANE and resolved to COORD:
+    29 SMELL rows went to COORD, 06:2x).  A kit of an unknown die falls back to COORD, the only lane left."""
+    to = []
+    if tag in ("QC", "KV", "S81", "HEAD"):
+        to.append(f"FP-CONVERGE-{tag}")
+    if owner and owner != "COORD":
+        to.append(owner)
+    return ", ".join(to) or "COORD"
+
+
 def smell_pass(rows, seen, now, post=True, render=None, poster=None):
     """HUB: dedupe smelling rows per (host, container, class); dry run for the first SMELL_DRY_S after the first pass (post the would-fire list once), then live:
     render, lanes/SMELL.tsv, post to the die's FP-CONVERGE-<DIE> lane and the type owner.  Never cancels.  -> (mode, fired [dict])"""
@@ -2397,12 +2413,14 @@ def smell_pass(rows, seen, now, post=True, render=None, poster=None):
         if not r.get("smell") or smell_exempt(r):
             continue
         for cls in sorted({c for c, _ in r["smell"]}):
-            k = f"{r.get('host')}|{r.get('container')}|{cls}"
+            k = f"{r.get('kit') or r.get('work') or r.get('container')}|{cls}"      # COORD 06:2x: ONE row per kit + class (a restarted container of the same kit is a repeat)
             e = st.setdefault(k, {"first": now, "fired": False})
+            if any(k == n[0] for n in new):
+                continue
             e["last"] = now
             if not e["fired"]:
                 new.append((k, cls, r))
-    for k in [k for k, e in st.items() if now - float(e.get("last", now)) > 12 * 3600]:
+    for k in [k for k, e in st.items() if now - float(e.get("last", now)) > 24 * 3600]:
         del st[k]
     txt = lambda r, cls: "; ".join(t for c, t in r["smell"] if c == cls)
     if not live:
@@ -2436,15 +2454,19 @@ def smell_pass(rows, seen, now, post=True, render=None, poster=None):
             print(f"noprog smell: cannot write {path}: {e}", file=sys.stderr)
         if post:
             fb = os.path.join(STATE_DIR, "smell_fallback.tsv")
+            groups = {}
             for d in fired:
-                tag = d["die"]
-                msg = (f"SMELL [{poster} -> FP-CONVERGE-{tag}, {d['owner']}; cc {DIE_INT.get(tag, 'COORD')}] {d['type']} {d['stage']} [{d['class']}] on {d['host']}: {d['metric']}. "
-                       f"Render: {d['render']}. Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kit keeps running and is NOT cancelled "
-                       f"unless it also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.")
+                groups.setdefault((d["die"], d["owner"]), []).append(d)
+            for (tag, owner), ds in sorted(groups.items()):
+                to = smell_recipients(tag, owner)
+                body = " | ".join(f"{d['type']} {d['stage']} [{d['class']}] {d['host']}: {d['metric'][:160]}; render {d['render']}" for d in ds[:25])
+                msg = (f"SMELL [{poster} -> {to}; cc {DIE_INT.get(tag, 'COORD')}] {len(ds)} kit-class(es): {body}. "
+                       f"Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kits keep running and are NOT cancelled "
+                       f"unless one also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.")
                 if not _post_ok(poster, msg):
                     os.makedirs(STATE_DIR, exist_ok=True)
                     with open(fb, "a") as f:
-                        f.write(f"{d['t']}\t{msg}\n")
+                        f.write(f"{int(now)}\t{msg}\n")
                     print(f"noprog smell: HUB POST FAILED, wrote {fb}", file=sys.stderr)
     return "live", fired
 
@@ -2458,6 +2480,7 @@ def vis_queue_append(rows, now, post=False):
     path = os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
     known = set(read_lines(path))
     out = []
+    posts = {}
     for r in new:
         v = r["vis"]
         die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
@@ -2465,12 +2488,12 @@ def vis_queue_append(rows, now, post=False):
         if line not in known:
             out.append(line)
             if post:
-                d = v["dir"]
-                _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"),
-                      f"RENDER [{os.environ.get('NOPROG_SMELL_LANE', 'SMELL-WATCH')} -> FP-CONVERGE-{die}, {owner_of([r])}; cc {DIE_INT.get(die, 'COORD')}] {r.get('type', '')} {v['checkpoint']} checkpoint render "
-                      f"started on {r.get('host')}: {r.get('host')}:{d} (floorplan.png, density.png, SMELL.txt with the GRT per-layer overflow, written when the job ends; render.log there). "
-                      f"Launch your own Fable/Opus review of it (OWNER 04:5x: self-launched, no central queue; lanes/VIS-QUEUE.tsv is a log). Not available in the existing tool: "
-                      f"RUDY estimate, pin-to-register flight lines, macro faces, ideal-clock STA.")
+                posts.setdefault((die, owner_of([r])), []).append(f"{r.get('type', '')} {v['checkpoint']} on {r.get('host')}: {r.get('host')}:{v['dir']}")
+    for (die, owner), items in sorted(posts.items()):
+        _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"),
+              f"RENDER [{os.environ.get('NOPROG_SMELL_LANE', 'SMELL-WATCH')} -> {smell_recipients(die, owner)}; cc {DIE_INT.get(die, 'COORD')}] {len(items)} checkpoint render(s) started: " + " | ".join(items[:25])
+              + " (floorplan.png, density.png, SMELL.txt with the GRT per-layer overflow, written when the job ends; render.log there). Launch your own Fable/Opus review (OWNER 04:5x: self-launched, "
+                "no central queue; lanes/VIS-QUEUE.tsv is a log). Not in the existing tool: congestion heatmap; the post-place kit (post_place_review.py) adds RUDY, flight lines, macro/PG overlay.")
     if not out:
         return 0
     new_file = not os.path.exists(path)
@@ -2483,6 +2506,56 @@ def vis_queue_append(rows, now, post=False):
     except OSError:
         pass
     return len(out)
+
+
+def vis_status_sync(path=None, runner=None):
+    """HUB: rows of lanes/VIS-QUEUE.tsv still 'rendering' get their real state from the host that ran them: RENDERED (density.png/floorplan.png written), FAILED (render.log
+    says NOT RUN / ERROR / exit 1 and no PNG, retried by the host up to VIS_MAX_TRIES times) or GONE (the render dir is cleaned).  Verdict rows are left alone.  -> rows changed"""
+    path = path or os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
+    runner = runner or (lambda h, cmd: run_host(h, cmd, timeout=120).stdout)
+    try:
+        lines = open(path).read().splitlines()
+    except OSError:
+        return 0
+    by = {}
+    for ln in lines:
+        c = ln.split("\t")
+        if len(c) >= 6 and c[5] == "rendering" and ":" in c[4]:
+            h, _, d = c[4].partition(":")
+            by.setdefault(h, set()).add(d)
+    state = {}
+    for h, ds in by.items():
+        cmd = "; ".join(f"d={shlex.quote(d)}; if [ -f \"$d/density.png\" ] || [ -f \"$d/floorplan.png\" ]; then echo RENDERED $d; elif [ ! -d \"$d\" ]; then echo GONE $d; "
+                         f"elif grep -q -E 'NOT RUN|AP_REVIEW_ERROR|exit 1' \"$d/render.log\" 2>/dev/null; then echo FAILED $d; else echo rendering $d; fi" for d in sorted(ds))
+        try:
+            for ln in runner(h, cmd).splitlines():
+                st_, _, d = ln.partition(" ")
+                if st_ in ("RENDERED", "GONE", "FAILED"):
+                    state[(h, d)] = st_
+        except (subprocess.SubprocessError, OSError):
+            continue
+    if not state:
+        return 0
+    try:
+        cur = open(path).read().splitlines()
+    except OSError:
+        return 0
+    out, n = [], 0
+    for ln in cur:
+        c = ln.split("\t")
+        if len(c) >= 6 and c[5] == "rendering" and ":" in c[4]:
+            h, _, d = c[4].partition(":")
+            if (h, d) in state:
+                c[5] = state[(h, d)]
+                n += 1
+                ln = "\t".join(c)
+        out.append(ln)
+    if n:
+        tmp = path + f".tmp{os.getpid()}"
+        with open(tmp, "w") as f:
+            f.write("\n".join(out) + "\n")
+        os.replace(tmp, path)
+    return n
 
 
 def vis_as_smell_rows(lines):

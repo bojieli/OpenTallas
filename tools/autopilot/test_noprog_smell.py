@@ -212,3 +212,41 @@ def test_place_checkpoint_queues_the_post_place_review_and_runs_it_when_the_host
     assert nw.pp_launch(item, sd, NOW + 700, popen=lambda argv, **k: calls.append(argv) or type("P", (), {"pid": 0})(), roots=[str(root)]) == "launched"
     assert calls[0][:3] == ["nice", "-n", "10"] and "--kit" in calls[0] and item["odb"] in calls[0]
     assert nw.pp_launch(item, sd, NOW, roots=[str(tmp_path / "none")]) == "no-driver"
+
+
+# ---------------------------------------------------------------- COORD 06:2x: dedupe, routing, VIS status
+def test_one_row_per_kit_and_class_a_restarted_container_is_a_repeat(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "st"))
+    seen = {"smell_t0": NOW - 4000}
+    n = []
+    rend = lambda r, t: n.append(1) or ("rendering", "/rev")
+    nw.smell_pass([srow()], seen, NOW, render=rend)
+    nw.smell_pass([srow(container="dpkit-slw_sc_v2-2", unit="oth-u-2")], seen, NOW + 900, render=rend)       # same kit, new container
+    nw.smell_pass([srow(smell=[("GRT", "overflow 5000 at iteration 10 (> 1000 at iteration >= 10)")])], seen, NOW + 1800, render=rend)      # same kit, new class
+    assert len(n) == 2 and len((tmp_path / "lanes/SMELL.tsv").read_text().splitlines()) == 3
+
+
+def test_wave_kit_smell_goes_to_the_die_fp_lane_never_to_coord(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "st"))
+    assert nw.smell_recipients("KV", "COORD") == "FP-CONVERGE-KV"
+    assert nw.smell_recipients("QC", "QC-ALLFIX") == "FP-CONVERGE-QC, QC-ALLFIX"
+    assert nw.smell_recipients("?", "COORD") == "COORD"
+    r = srow(lane="", kit="/srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3", work="/srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3",
+             ident="dpkit-kv3_pv_v3-1 /srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3", type="kv3_pv_v3")
+    r2 = dict(r, kit=r["kit"] + "b", work=r["work"] + "b", container="dpkit-kv3_pv_v3-2")
+    nw.smell_pass([r, r2], {"smell_t0": NOW - 4000}, NOW, render=lambda *a: ("rendering", "/rev"))
+    p = [x for x in posted(tmp_path) if x.startswith("SMELL-WATCH|SMELL [")]
+    assert len(p) == 1 and "-> FP-CONVERGE-KV;" in p[0] and "COORD" not in p[0].split("]")[0].replace("cc KV-ALLFIX", "") and "2 kit-class(es)" in p[0]
+
+
+def test_vis_queue_status_follows_the_render(tmp_path):
+    q = tmp_path / "VIS-QUEUE.tsv"
+    row = lambda i, st: "\t".join(["1795608007", f"t{i}", "QC", "GRT", f"epyc7:/d/{i}", st, "QC-ALLFIX", "/k", "LOG"])
+    q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + "\n".join([row(1, "rendering"), row(2, "rendering"), row(3, "rendering"), row(4, "rendering"), row(5, "VERDICT")]) + "\n")
+    runner = lambda h, cmd: "RENDERED /d/1\nFAILED /d/2\nGONE /d/3\nrendering /d/4\n"
+    assert nw.vis_status_sync(str(q), runner) == 3
+    st = [ln.split("\t")[5] for ln in q.read_text().splitlines()[1:]]
+    assert st == ["RENDERED", "FAILED", "GONE", "rendering", "VERDICT"]
+    assert nw.vis_status_sync(str(q), lambda h, c: "rendering /d/4\n") == 0
