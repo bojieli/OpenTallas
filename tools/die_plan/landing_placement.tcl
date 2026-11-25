@@ -1036,7 +1036,7 @@ proc cland_dsel_cone_assign {combs fanout ykeys} {
  set out {}
  foreach c $combs {
   if {![regexp $scopere $c -> sc]} continue
-  set best {}; set seen [dict create $c 1]; set front [list $c]
+  set best {}; set besty {}; set seen [dict create $c 1]; set front [list $c]
   for {set d 0} {$d < 6 && [llength $front]} {incr d} {
    set nf {}
    foreach u $front {
@@ -1047,7 +1047,7 @@ proc cland_dsel_cone_assign {combs fanout ykeys} {
      if {[string first $sc $v] != 0} continue
      if {[dict exists $ykeys $v]} {
       set k [dict get $ykeys $v]
-      if {$best eq {} || [string compare $k $best] < 0} { set best $k }
+      if {$best eq {} || [string compare $k $best] < 0} { set best $k; set besty $v }
      } elseif {[dict exists $combset $v]} { lappend nf $v }
     }
    }
@@ -1055,7 +1055,7 @@ proc cland_dsel_cone_assign {combs fanout ykeys} {
   }
   if {$best eq {}} continue
   set f [split $best |]
-  lappend out [list $c [format {%s|%s|%09d|%s} [lindex $f 0] [lindex $f 1] 999999999 $c]]
+  lappend out [list $c [format {%s|%s|%09d|%s} [lindex $f 0] [lindex $f 1] 999999999 $c] $besty]
  }
  return $out
 }
@@ -1081,17 +1081,46 @@ proc cland_dsel_cone_cells {combinsts ffs} {
   }
   dict set fanout $nm $fo
  }
- return [lmap e [cland_dsel_cone_assign $names $fanout $ykeys] { list [lindex $e 1] [dict get $byname [lindex $e 0]] }]
+ return [lmap e [cland_dsel_cone_assign $names $fanout $ykeys] { list [lindex $e 1] [dict get $byname [lindex $e 0]] [lindex $e 2] }]
+}
+# C5 second half: the storage flops that drive the chunk wire dch[c].sd_c[k] into the u_dsel cone are DFF*QNx1 cells; the
+# 21 fF the -78 ps path saw was that wire stretched by the spread cone.  With dsel_cone they are placed on the x2 sibling
+# (the footprint is reserved with the x2 width, as the cell is swapped before it is measured) and, after placement, every
+# cone cell must lie within 60 um (Manhattan) of its y flop, else the hook fails closed.
+proc cland_sdc_size {i} {
+ global ff_blk
+ set mn [[$i getMaster] getName]
+ if {![regexp {^(DFF[HL]QN)x1(_ASAP7_75t_R)$} $mn -> a b]} { return 0 }
+ set m2 [[$ff_blk getDataBase] findMaster "${a}x2$b"]
+ if {$m2 eq "NULL" || $m2 eq ""} { return 0 }
+ $i swapMaster $m2
+ return 1
+}
+proc cland_dsel_cone_reach {cone {lim 60.0}} {
+ global ff_blk ff_dbu
+ set mx 0.0; set bad 0; set n 0
+ foreach e $cone {
+  set y [$ff_blk findInst [lindex $e 2]]
+  if {$y eq "NULL"} continue
+  lassign [[lindex $e 1] getLocation] x0 y0
+  lassign [$y getLocation] x1 y1
+  set d [expr {(abs($x0-$x1)+abs($y0-$y1))/double($ff_dbu)}]
+  if {$d > $mx} { set mx $d }
+  if {$d > $lim} { incr bad }
+  incr n
+ }
+ return [list $n $mx $bad]
 }
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
- set ffs {};set comb 0;set need 0.0;set combinsts {}
+ set ffs {};set comb 0;set need 0.0;set combinsts {};set nsized 0
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb; lappend combinsts $i; continue }
+  if {[lsearch -exact $::cland_dsel_cone $prefix] >= 0 && [regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]} $nm] && [cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }
   lappend ffs [list $nm $i]
   set needw [$m getWidth]
   if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
@@ -1168,7 +1197,7 @@ proc cland_place_ff {prefix rect tag} {
    set m [[lindex $pr 1] getMaster]
    set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
   }
-  set ffs [concat $ffs $cone]
+  set ffs [concat $ffs [lmap e $cone { lrange $e 0 1 }]]
   set comb [expr {$comb-[llength $cone]}]
   puts "OT_CLAND dsel_cone $prefix: [llength $cone] u_dsel AND-OR cone cells FIRM right behind their y flop"
  }
@@ -1238,7 +1267,12 @@ proc cland_place_ff {prefix rect tag} {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
  set cland_cursor {};set cland_col_cursor {}
- if {![info exists ::cland_fill_dry]} { puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement" }
+ if {![info exists ::cland_fill_dry]} { if {[info exists cone] && [llength $cone]} {
+  lassign [cland_dsel_cone_reach $cone] rn rmax rbad
+  puts "OT_CLAND dsel_cone $prefix: $nsized sd_c storage flops sized x1 -> x2; cone-to-y reach max [format %.1f $rmax] um over $rn cells, $rbad beyond 60 um"
+  if {$rbad} { error "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop (max [format %.1f $rmax] um)" }
+ }
+ puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement" }
  return [llength $ffs]
 }
 # FLOW-KITFAIL-3 10-29 (S81-KITS-B iqf__t1, plan_s13r2 band_ring=all): an all-cells ring whose reserved footprints

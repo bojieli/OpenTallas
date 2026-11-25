@@ -48,7 +48,7 @@ def _assign(combs, fanout, ykeys):
     body = proc + "set r [cland_dsel_cone_assign {%s} [dict create %s] [dict create %s]]\n" % (
         " ".join("{%s}" % c for c in combs), fo, yk) + "foreach e $r { puts [join $e \"\\t\"] }\n"
     out = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.strip().split("\n")
-    return dict(l.split("\t") for l in out if l)
+    return {l.split("\t")[0]: l.split("\t")[1] for l in out if l}
 
 
 S0 = "u/ring.dch[0].u_dsel/"
@@ -108,3 +108,29 @@ foreach e $r { puts "[lindex $e 0] [[lindex $e 1] getName]" }
     out = subprocess.run(["tclsh"], input=procs + mock, capture_output=True, text=True, check=True).stdout.strip().split("\n")
     assert len(out) == 2 and {l.split()[1].split("/")[-1] for l in out} == {"_a_", "_o_"}
     assert all(l.startswith("u/r.s_d|000000003|999999999|") for l in out)
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_sd_c_sizing_and_reach_gate():
+    procs = "".join(re.search(r"proc %s \{.*?\n\}\n" % n, TCL, re.S).group(0) for n in ("cland_sdc_size", "cland_dsel_cone_reach"))
+    mock = r'''
+set ff_dbu 1000
+proc mkinst {id name master x y} { proc $id {cmd args} "switch \$cmd getMaster {return \[set ::m_$id\]} getName {return {$name}} getLocation {return {$x $y}} swapMaster {set ::m_$id \[lindex \$args 0\]}"; set ::m_$id $master }
+proc mkmaster {id name} { proc $id {cmd} "switch \$cmd getName {return {$name}}" }
+mkmaster mx1 DFFHQNx1_ASAP7_75t_R; mkmaster mx2 DFFHQNx2_ASAP7_75t_R; mkmaster mdl DFHQNx1_ASAP7_75t_R
+proc dbo {cmd args} { switch $cmd findMaster { if {[lindex $args 0] eq "DFFHQNx2_ASAP7_75t_R"} {return mx2} ; return NULL } }
+proc blk {cmd args} { switch $cmd getDataBase {return dbo} findInst { return [lindex $args 0] } }
+set ff_blk blk
+mkinst f1 s mx1 0 0; mkinst f2 t mdl 0 0
+puts "[cland_sdc_size f1] [[f1 getMaster] getName] [cland_sdc_size f2]"
+mkinst y1 y mx2 0 0; mkinst c1 c mx2 30000 20000; mkinst c2 d mx2 50000 20000
+puts [cland_dsel_cone_reach [list [list k c1 y1]]]
+puts [cland_dsel_cone_reach [list [list k c1 y1] [list k c2 y1]]]
+'''
+    out = subprocess.run(["tclsh"], input=procs + mock, capture_output=True, text=True, check=True).stdout.strip().split("\n")
+    assert out == ["1 DFFHQNx2_ASAP7_75t_R 0", "1 50.0 0", "2 70.0 1"]
+
+
+def test_sizing_and_reach_are_wired_into_place_ff():
+    assert "[cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }" in TCL
+    assert "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop" in TCL
