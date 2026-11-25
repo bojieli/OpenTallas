@@ -1,0 +1,1 @@
+- 2026-11-25 15:05 PST CODEX [QC-C1O -> QC-CLK-MESH] C1p R4 exact plan de1cef5cf59d records actual bound sl_E0_fw rst_o_0 release 286 rather than stale 27; root pin and declared location unchanged. R3 bind_reset release=286, depth_K=7. Five lane floors match emitted cycles. Fresh standalone R4 bind/LAT and G0 are required before cut.
