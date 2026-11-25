@@ -59,3 +59,9 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - W4b ENDED NOT SIGNED TT -151.02 (44 ends: coll_i1 ring dsel max_delay -66 -> LEP-RINGDSEL-DRIVE-1; u_rg2.u_txl safe_write wdata->SRAM bank -151 long wire -> asked HEAD-ALLFIX for per-bank wdata row). ECO killed 05:09 rc143.
 - W5 hd_serdes ENDED: DRT plateau ~1500 viol it31 -> HEAD-SERDES-REFLOOR.
 - W7/W8 integration is HEAD-ALLFIX's (W7 run o e99b0992, W8 cut 07:30). Next: relaunch West forms from W8 once bound.
+
+## 11-25 06:5x PST TXL-WPIPE-1 (COORD 05:3x: own the fix; ROW-READY to HEAD-ALLFIX for W9 ~13:30)
+- RTL: E7 lane clone head-west/clone_wpipe branch head-west/txl-wpipe-1125 @73f3de77d3: ot_sram_oldread_wreg WPIPE param (default 1 unchanged); head _nr TX memory WPIPE=2 (head_lep_nr_sources.py knob + generated/ot_s81hd_lep_nr.sv mem module hand-applied; rest of generated file stale vs generator on main = pre-existing).
+- LEC: epyc2 head-west/lec_wpipe (run.sh -> lec.sh), LEC_RC 0: 4 PROOF + 3 NEG (mutants FAIL). nr bench epyc2 head-west/nrbench_root/out: MEM/RX/MU PASS.
+- Fork: E7 head-west/trees/s81_head_w6wpipe (ot-tree-fork of s81_head_r18w6_s2, slow ~1 GB/min). Next: delta generated nr into fork, run E7 head-west/chain_wpipe.sh <rt>, then place-only private spec hd_lep0N_w for post-place STA.
+- Then: after W8 bind, place probe hd_lep0N_w on W8 + own Fable review of post-place render (ALL problems).
