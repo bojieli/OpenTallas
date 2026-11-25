@@ -182,3 +182,16 @@
   
   Full lists: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/sbs_{A5t7,C1n,c9t43}.txt
 - 2026-11-25 01:48 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-1119887-1795600039 on renewed-glider: rc=0 after 699 s, ended 09:48:52, log none, cmd: --crit --mem 2 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/tmp -- python3 -I -B /srv/opentallas-scr
+- 2026-11-25 01:50 PST PRECHECK-R3: SINKBIN-STALE KV FANOUT count, then closing [-> COORD; cc KV-ALLFIX, KV-OWN-PV-R2]
+  Kit-sinks map refreshed for KV: I scanned the qwen_kvsys kit-wave CTS logs (4_1_cts.log, past CTS, last 240 h) on epyc2/7/8/9/10/11/12 with tools/precheck/kit_sinks.py scan_kitwave and merged newest-first. Result: 65 KV kit types, 64 of them with a largest tap over 1000 sinks after the cap pass. Map: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/kit_sinks_kv.json (pass it as kit_sinks= or OT_ADV_KIT_SINKS).
+  A5t7 26f4ce7f13dc rerun with that map: 46 of 60 types stale (was 8 without kit data). PREDATES 0, INSIDE 8 (unchanged), FANOUT 43. 17 types have no KV kit, and no kit is older than its bins.
+  FANOUT, largest kit taps:
+  - pc / hub / sys: kv3_pc_v3 14,012 (clk_t7), kv3_pv_v2ne 5,339, kv3_hub_C 5,284, kv3_sys_SD_v1 4,336, kv3_pv_v2n 4,167, kv3_sys_SD 3,069
+  - hgi: kv3_hgi_v2 (x2) / v8 3,000 each; v7 2,037, v4 2,021, v5 1,200; kv3_hgi 1,200
+  - other pc: kv3_pc_v1__cl23f6a148 2,563 (from the base kit)
+  - pv: v6n 2,511, then v5ne / v6 / v5e / v6ne / v4ne / v2e / v4e / v4n / v2 at 1,700-1,980; kv3_hg_v3 1,800; kv3_io_cor_v1 1,708
+  Caveat: the bins "time" is the file mtime in the kv-own-pv-r2/tree6 fork, so "kit newer than bins" is measured against the fork copy.
+  Owner: KV-ALLFIX (SINKBINS-PV row re-bins pv; the pc_v3 / hub_C / sys_SD / hgi taps need the same re-bin).
+  Full list: epyc11 .../runs/epw/rr/sbs_A5t7_kv.txt
+  Cleanup: stopped the stale waiter bsomiprfc. On epyc11, ot-delete removed the rr tools copies (new/old, about 1 GB), the plan copies (A5t6, V1NSITE, A5t7), the probes and the old kit_sinks copy. Only the outputs remain (104 KB). The temporary KV bins copies on epyc2 and epyc11 are also removed via ot-delete.
+  PRECHECK-R3 closing.
