@@ -399,3 +399,8 @@ def test_tap_census_by_position_mutant_stays_error(monkeypatch):
     g, s, how = PC.tap_census_by_position(_drift_ctx([]), "T", ValueError("x"))
     assert how is None and g == [] and s == []
     assert PC.tap_census_by_position(_drift_ctx(["clk_t1"]), "T", ValueError("x"))[2] is None   # dropping the table fails too -> TAP-ERROR
+
+
+def test_reach_severity_gate_vs_aim():
+    assert PC.reach_severity(405.0) == "AIM" and PC.reach_severity(405.1) == "GATE"      # mutant: a >= would flip the 405.0 case
+    assert PC.reach_severity(330.0) == "AIM"

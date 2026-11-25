@@ -195,6 +195,13 @@ WIDE_MARGIN = 1.085
 NARROW_MARGIN = 1.25
 
 
+def reach_severity(v):
+    """FP-CONVERGE-S81 11-25: the S81 c9s census flagged 368 types, but 295 had no hop over the registered 405-um gate
+    (CBC.REACH_GATE_UM): the estimator aims at the 300-um generator rule (x margin).  GATE = over 405 (a check-rule
+    violation), AIM = over the generator aim only (info, closes at the gate)."""
+    return "GATE" if v > CBC.REACH_GATE_UM else "AIM"
+
+
 def reach_findings(t, reach=REACH_UM, margin=None):
     """[(value, detail)] station hops above the calibrated limit: reach x 1.085 on >= 256-bit chains, reach x 1.25 on
     narrower ones (margin overrides both).  internal_stations from -> regs -> to (a face-bus chain from / to the worst bit
@@ -660,7 +667,7 @@ def type_findings(ctx, tn, checks, opts):
 
     if "REACH" in checks:
         for v, d in reach_findings(t, opts.reach):
-            add("REACH", v, opts.reach, d)
+            add("REACH", v, opts.reach, reach_severity(v) + " " + d)
     if "MISAIM" in checks:
         for v, d in misaim_findings(ctx, t):
             add("MISAIM", v, CBC.AIM_MIN_BIT_FRAC, d)
