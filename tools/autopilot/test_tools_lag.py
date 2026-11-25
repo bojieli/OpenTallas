@@ -63,6 +63,18 @@ def test_ruling_shas_associates_approved_lines_with_the_nearest_ruling():
     assert TL.ruling_shas("COORD APPROVED: x @" + "e" * 40) == {}                                          # an approval before any ruling belongs to none
 
 
+def test_ruling_without_id_does_not_inherit_the_previous_ruling():
+    text = ("- 2026-11-18 05:58 PST RULING r708 COORD APPROVED: main @" + "a" * 40 + "\n"
+            "- 2026-11-20 03:44 PST RULING [COORD -> X] COORD APPROVED: claude/other @" + "b" * 40 + "\n"
+            "- 2026-11-23 07:32 PST RULING [COORD -> Y] land it\n  COORD APPROVED: claude/third @" + "c" * 40 + "\n")
+    assert TL.ruling_shas(text) == {"r708": ["a" * 40]}
+
+
+def test_tree_tools_die_is_labelled():
+    res = dict(pin="abc", n_commits=5, missing=[], shas={}, tree_tools=True)
+    assert TL.line("qc", res).endswith("tools_from_rt false)")
+
+
 def test_lag_by_ancestry_not_messages(tmp_path):
     repo, pin, t = make(tmp_path)
     rulings = TL.ruling_shas(COORD.format(**t))

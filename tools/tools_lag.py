@@ -24,6 +24,7 @@ DEFAULT_REPO = "/srv/opentallas-scratch2/git/OpenTallas.git"
 RULING_HEAD_RE = re.compile(r"\bRULING (r\d{3,4})\b")
 APPROVED_RE = re.compile(r"COORD APPROVED:\s*\S+\s*@([0-9a-f]{7,40})")
 SHA_RE = re.compile(r"^[0-9a-f]{7,40}$")
+ANY_RULING_RE = re.compile(r"\bRULING\b")
 RULING_ID_RE = re.compile(r"^r\d{3,4}$")
 MAX_LISTED = 40
 SEP_REC, SEP_FLD = "\x1e", "\x1f"
@@ -59,6 +60,8 @@ def ruling_shas(text):
         m = RULING_HEAD_RE.search(ln)
         if m:
             cur = m.group(1)
+        elif ANY_RULING_RE.search(ln):    # QC-TOOLS-LAG-1124: a RULING line without an rNNN id is not the previous ruling's approval
+            cur = None                    # (r708 collected ~100 later shas, so every older pin read "missing r708")
         if cur:
             for sha in APPROVED_RE.findall(ln):
                 if sha not in out.setdefault(cur, []):
@@ -185,7 +188,7 @@ def line(die, res):
         return f"TOOLS-LAG {die} unmeasured ({res.get('why')})"
     miss = res["missing"]
     shown = " ".join(miss[:MAX_LISTED]) + (f" +{len(miss) - MAX_LISTED} more" if len(miss) > MAX_LISTED else "")
-    return f"TOOLS-LAG {die} {res['n_commits']} commits / missing {shown or 'none'}"
+    return f"TOOLS-LAG {die} {res['n_commits']} commits / missing {shown or 'none'}" + (" (tree tools by design: tools_from_rt false)" if res.get("tree_tools") else "")
 
 
 def measure(cfg, repo=DEFAULT_REPO, main_ref="main", dies=None, rulings=None, pins=None):
@@ -202,6 +205,8 @@ def measure(cfg, repo=DEFAULT_REPO, main_ref="main", dies=None, rulings=None, pi
             pin = str((pins or {}).get(die) or "") or pin_of(d)
             out[die] = lag(repo, pin, main_ref, rulings=rulings)
             out[die]["pin_src"] = "rt" if (pins or {}).get(die) else "tree"
+            if out[die]["pin_src"] == "tree" and d.get("tools_from_rt") is False:
+                out[die]["tree_tools"] = True     # bound-cohort die: kits run the tree tools by design, the lag is informational
         except (ValueError, OSError, subprocess.TimeoutExpired) as e:
             out[die] = dict(pin=pin_of(d)[:12], n_commits=None, missing=[], shas={}, why=str(e)[:200])
     return out
