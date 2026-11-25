@@ -62,3 +62,7 @@
 - Compose order 07:00: A5t8 -> ESTRIP (05:30) -> VODCH1 + PVLEGS rebase + IN-leg -> SINKBINS re-solve -> gate epyc12.
 - 02:50 ruling: on A5t8 bind publish launch v1e/v7/v8e/pve (demand <=1.0, recheck on real A5t8) goal route; v8/v3/v1n/v3n wait 07:00. Watch for KV-ALLFIX post.
 - Probes epyc12: v12 runitem-kv3_pv_v12-98977 (CTS done, GRT next), v1n control runitem-kv3_pv_v1n (in place since 01:42), v3n runitem-kv3_pv_v3n spec _1125025436 (A5t7+row, 2-type bind workaround for bind_stream bug a2d2894a).
+
+## 04:47 update
+- v1n SMELL: render epyc12 /srv/opentallas-scratch2/claude/kv-own-pv-r2/v1nrender/{floorplan,density}.png (+layout.json.gz, blocks.txt). Kit in 3_5 DP, not cancelled. A Fable review is running (all problems plus structural fixes). Its fixes go into the 07:00 follow-on rows.
+- A5t8 classes: v7/v8e/pve -> --goal place probes (VIS-CAUSES BOUNDARY). v1e -> route only if A5t8 PRE is clean and the visual clears; otherwise place. Launch at the A5t8 bind (watch b1quwstyt).
