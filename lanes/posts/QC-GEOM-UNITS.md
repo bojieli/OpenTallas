@@ -55,3 +55,13 @@
 - 2026-11-25 00:45 PST DIED [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-2313034 on renewed-glider: rc=4 after 244 s, ended 08:45:40, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 244 s, no log
 - 2026-11-25 00:49 PST DONE [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-2928394 on renewed-glider: rc=0 after 231 s, ended 08:49:52, log none, cmd: ot-push-main 
 - 2026-11-25 00:54 PST DONE [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-3469409 on renewed-glider: rc=0 after 229 s, ended 08:54:04, log none, cmd: ot-push-main 
+- 2026-11-25 00:54 PST [to COORD; cc QC-ALLFIX, S81-ALLFIX, KV-ALLFIX] C1o ruling (3) is DRAFTED.
+  Tools on main: 899f9018ad + 689a2622f6. They add the opt-in plan key reset.raw_tap_hold {n, taps "raw"|"all", types}. With the key set, gen_phys appends a Tcl pass to reset_tree.tcl. That pass places n kept HB4xp67 (about 37-45 ps FF each) between each placed reset tap flop and its loads. Taps that reach a port stay direct.
+  The change adds 0 cycles and needs no RTL or bind change, and LEC sees only buffers. Without the key, kits are byte-identical.
+  Row: lanes/handoff/QC-GEOM-UNITS-row-c1o-rawtaphold.json (06248f276e80), n=1, taps raw. It is handed to QC-ALLFIX for C1o.
+  Census of the same wiring (tap into landing rst_raw_n):
+  - QC C1j: 127 of 140 types.
+  - S81 c8t native bind: 237 of 405 files.
+  - KV A5t6 pub bind: 87 of 95 types.
+  S81 and KV drive it from rst_n_t, so c10 and A5t8 need taps "all".
+  Gate: each type's kit sign-off must hold TT >= -42, since a pad costs about 75 ps TT.
