@@ -2890,10 +2890,39 @@ class Landings:
         self.reset_placements[tn]["count_origin"] = dict(rec, kind="rolestrap", origin_kind=rec["kind"],
                                                        relay=dict(raw_reset=rraw, stages=stages, rx="u_cland_rstart_rx"))
         raw_logic.append("    wire cland_start_org, cland_start_org_d, cland_start_org_raw, cland_start_rly;")
-        logic += [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({rraw}), .d(cland_rstart_in), "
+        # ROLESTRAP-RX-STAGES (QC-FWV1-F51 11-25, slw_fw_v1 clf51c11d8 -116..-142 ps + face_guard shared on cland_rstart_in):
+        # the relay copy's D-side was the raw pin, so cland_rstart_in fed the rx flop AND (through the strap mux) every writer
+        # START stage 0 / FSTART copy, up to ~1.1 mm in one cycle.  landing_relay_rx_stages = n (+ landing_relay_rx_pin_plain)
+        # now applies to the rolestrap form exactly as to the relay form: n kept stages u_cland_rstart_rx_p<i> between the pin
+        # and the rx flop, each on the raw copy nearest its plan site relay_sites u_cland_rstart_rx_p<i>/q; the relay D-side is
+        # the last stage, so the pin loads p0 only.  The bind counts the stages on relay copies only (count_align_bind rx:<part>);
+        # the origin copies tie the pin 0 and never read the chain.  Absent key = byte-identical RTL.
+        T_ = getattr(self, "types", {}).get(tn) or {}
+        plain0 = T_.get("landing_relay_rx_pin_plain", False)
+        if not isinstance(plain0, bool):
+            raise LandingError(f"{tn}: landing_relay_rx_pin_plain must be a boolean")
+        n_rx = _relay_rx_extra_stages(T_)
+        if plain0 and n_rx < 1:
+            raise LandingError(f"{tn}: landing_relay_rx_pin_plain needs landing_relay_rx_stages >= 1")
+        rx_d = "cland_rstart_in"
+        for i in range(n_rx):
+            site = (T_.get("relay_sites") or {}).get(f"u_cland_rstart_rx_p{i}/q")
+            if plain0 and i == 0:
+                logic += ["    wire cland_rstart_rx_p0;",
+                          f'    (* keep = "true" *) ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d({rx_d}), .q(cland_rstart_rx_p0));']
+            else:
+                rawp = rraw if site is None else self._tx_raw(tn, tn, rraw, ca_raw, raw_logic, sfx=f"_rxp{i}", at=site,
+                                                              limit=LOCAL_RESET_REACH_UM)
+                logic += [f"    wire cland_rstart_rx_p{i};",
+                          f'    (* keep = "true" *) ot_dp_landing_relay u_cland_rstart_rx_p{i} (.clk(clk), .rst_raw_n({rawp}), '
+                          f".d({rx_d}), .q(cland_rstart_rx_p{i}));"]
+            rx_d = f"cland_rstart_rx_p{i}"
+        if n_rx:
+            self.reset_placements[tn]["count_origin"]["relay"]["rx_stages"] = n_rx
+        logic += [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({rraw}), .d({rx_d}), "
                   ".q(cland_start_rly));",
                   "    assign cland_start = strap_ca_relay ? cland_start_rly : cland_start_org;",
-                  "    assign cland_start_d = strap_ca_relay ? cland_rstart_in : cland_start_org_d;",
+                  f"    assign cland_start_d = strap_ca_relay ? {rx_d} : cland_start_org_d;",
                   f"    assign cland_start_raw = strap_ca_relay ? {rraw} : cland_start_org_raw;"]
         return logic, oraw
 
@@ -3748,6 +3777,9 @@ class Landings:
                 buses["cland_rstart_in"]["copies"] = copies
             if stages:
                 buses["cland_rstart_in"]["stages"] = stages
+        if role[0] == "rolestrap" and _relay_rx_extra_stages(self.types[tn]) >= 1:
+            # ROLESTRAP-RX-STAGES (QC-FWV1-F51 11-25): the pin cland_rstart_in is sampled only by u_cland_rstart_rx_p0 (as FACEDECL)
+            buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx_p0"}
         if origin:
             buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
         return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None

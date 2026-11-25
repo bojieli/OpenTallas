@@ -96,3 +96,37 @@ def test_role_strap_rejects_non_boolean():
     p["partition_types"]["C"]["landing_role_strap"] = "yes"
     with pytest.raises((LandingError, CAB.BindError), match="landing_role_strap must be a boolean"):
         Landings(p, t)
+
+
+@pytest.mark.parametrize("plain", [False, True])
+def test_role_strap_rx_stages_pipeline_the_relay_pin(plain):
+    """ROLESTRAP-RX-STAGES (QC-FWV1-F51 11-25): landing_relay_rx_stages on a rolestrap type puts the kept rx stages between
+    cland_rstart_in and the rx flop, the relay D-side reads the last stage (the pin has one load), the bind role of the relay
+    copy must count them, the origin copy is unchanged, and land_slots names u_cland_rstart_rx_p0 as the pin's origin."""
+    p, t, _ = mixed_vehicle()
+    base = Landings(p, t).type_rtl("C", C_BODY)
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 2
+    if plain:
+        p["partition_types"]["C"]["landing_relay_rx_pin_plain"] = True
+    with pytest.raises(LandingError, match=r"relay\(b, 4\)"):
+        Landings(p, t)
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    c = Landings(p, t)
+    assert c.ca_type["C"]["role"][0] == "rolestrap"
+    cc = c.type_rtl("C", C_BODY)
+    p0 = ("ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d(cland_rstart_in), .q(cland_rstart_rx_p0));" if plain else
+          ".d(cland_rstart_in), .q(cland_rstart_rx_p0));")
+    assert p0 in cc and ".d(cland_rstart_rx_p0), .q(cland_rstart_rx_p1));" in cc
+    assert ".d(cland_rstart_rx_p1), .q(cland_start_rly));" in cc
+    assert "assign cland_start_d = strap_ca_relay ? cland_rstart_rx_p1 : cland_start_org_d;" in cc
+    assert cc.count("(cland_rstart_in)") == 1 and base.count("(cland_rstart_in)") == 1
+    assert "strap_ca_relay ? cland_rstart_in" not in cc and "strap_ca_relay ? cland_rstart_in" in base
+    assert c.reset_placements["C"]["count_origin"]["relay"]["rx_stages"] == 2
+    assert c.land_slots("C")["buses"]["cland_rstart_in"] == {"form": "origin_start", "origin": "u_cland_rstart_rx_p0"}
+
+
+def test_role_strap_without_rx_stages_is_byte_identical():
+    p, t, _ = mixed_vehicle()
+    a = Landings(p, t).type_rtl("C", C_BODY)
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 0
+    assert Landings(p, t).type_rtl("C", C_BODY) == a
