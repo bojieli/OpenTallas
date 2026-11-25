@@ -1652,3 +1652,4 @@
   Data: intel1 type-contract-spec/cv1m/out4.
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
 - 2026-11-25 00:17 PST QC-ALLFIX
+- 2026-11-25 00:21 PST READY epyc12 (open-snipe, Cherry 1069796; 96 thr, 1 TB, 7.3 TB NVMe, fio 4k randread 850k IOPS): live in ot-run (main ebc6556ec3d0, rt synced by hand, hub follow ok), admits ~947 GB, load 2/96 and running its FIRST REAL KIT: a KV A5t6 type_overlay job (pid 146781) placed by the wave. gen_hosts + place hosts: qwen_kvsys, s81_head. s81 and qwen_compute are still being added (bind/postbind copies running; s81 needs the scratch3 postbind part). 3 failed user units fixed (epyc12->hub ssh mesh both ways). Die slice: FLEET-ADMIT. Not touched: AGIdock keys, known_hosts, Cherry API.
