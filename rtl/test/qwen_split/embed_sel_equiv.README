@@ -1,0 +1,2 @@
+QC-GLUE OBS-STAGE (OT_EMBED_SEL_COPIES): yosys miter proof embed_sel_equiv.ys, gold = one `selected` flop + 512-bit mux, gate = 32 keep_hierarchy copies.
+Run: sed 's/(\* keep_hierarchy="yes" \*) //' rtl/qwen_split/qfd_embedding_word_provider.sv > rtl/test/qwen_split/embed_sel_prov_nokeep.sv; yosys -s rtl/test/qwen_split/embed_sel_equiv.ys (11-25: tempinduct + 12-cycle BMC, rc 0).

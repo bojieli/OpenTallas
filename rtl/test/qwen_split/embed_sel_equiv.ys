@@ -1,0 +1,7 @@
+read_verilog -sv -DOT_EMBED_SEL_COPIES /w/rtl/test/qwen_split/embed_sel_prov_nokeep.sv /w/rtl/test/qwen_split/embed_sel_equiv.sv
+proc; flatten; opt_clean
+miter -equiv -flatten -make_assert embed_sel_gold embed_sel_gate m
+hierarchy -top m
+async2sync
+sat -verify -tempinduct -prove-asserts -set-init-zero -seq 1 -show-ports m
+sat -verify -prove-asserts -set-init-zero -seq 12 m

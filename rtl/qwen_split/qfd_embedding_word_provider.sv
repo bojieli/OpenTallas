@@ -127,7 +127,17 @@ module qfd_embedding_word_provider #(parameter integer ROPE = 0, parameter integ
                 .w_ce_in(word_v && wr_rope && valid_word), .w_addr_in(write_addr), .wd_in(word_data),
                 .w_mask_in({512{1'b1}}), .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         end
+`ifdef OT_EMBED_SEL_COPIES
+        // QC-GLUE OBS-STAGE 11-25: the 512-bit mux was driven by ONE flop (fanout 512, 6 buffer levels, -181 ps TT at GRT on glue).
+        // 32 keep_hierarchy copies of `selected`, 16 mux bits each; same D / enable, so the cycle behaviour is unchanged.
+        genvar gi;
+        for (gi = 0; gi < 32; gi = gi + 1) begin : g_selc
+            qfd_embed_rope_mux #(.W(16), .ID(gi)) u_m (.ck(ck), .en(embed_code_re), .d(rd_rope),
+                .a(rope_q[gi*16 +: 16]), .b(code_q[gi*16 +: 16]), .y(embed_code_q[gi*16 +: 16]));
+        end
+`else
         assign embed_code_q = selected ? rope_q : code_q;
+`endif
         assign rf = bad;
     end else begin : g_no_rope
         assign embed_code_q = code_q;
@@ -135,3 +145,11 @@ module qfd_embedding_word_provider #(parameter integer ROPE = 0, parameter integ
         assign rf = 1'b0;
     end endgenerate
 endmodule
+
+`ifdef OT_EMBED_SEL_COPIES
+(* keep_hierarchy="yes" *) module qfd_embed_rope_mux #(parameter integer W=16, ID=0)(input wire ck, en, d, input wire [W-1:0] a, b, output wire [W-1:0] y);
+    reg sel;
+    always @(posedge ck) if (en) sel <= d;
+    assign y = sel ? a : b;
+endmodule
+`endif
