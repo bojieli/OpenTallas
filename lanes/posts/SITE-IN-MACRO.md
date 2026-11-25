@@ -5,3 +5,4 @@
   S81 c9t43 79052e685d29: 57 types, 11149 core, 12 halo, 26469 off outline (ft_slots bit sites 26411 which gen FT-SITE-SNAP clamps; relay_sites 6910 and clock.soft_reg_banks 4229 in cores; internal station regs 22). 0 internal_stations bit sites. Owner S81-ALLFIX-INT (ft/leaf: S81-OWN-LEAF).
   HEAD W6 b3507e628de6: 0 types. Owner S81-HEAD.
   Cause: core_place.write_type re-routes only regs_um of an internal station; bit_sites_um of per-bit rows were never fixed points nor re-sited (its EQ gate ignores coordinate lists). place_precheck OVERLAP only reads packed in-bus banks, halo 0, post-apply, report-only. Fix proposed/pushed by SITE-IN-MACRO lane next.
+- 2026-11-25 00:27 PST DIED [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-2683694 on tolerant-swine: rc=4 after 17 s, ended 00:27:13, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 17 s, no log
