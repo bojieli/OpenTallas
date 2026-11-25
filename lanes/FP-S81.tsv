@@ -245,7 +245,7 @@ ot_s81sl_kv_leaf__t3	ot_s81sl_kv_leaf	FAIL 6	pass	pass	FAIL 1	pass	FAIL 1			REAC
 ot_s81sl_kv_leaf__t4	ot_s81sl_kv_leaf	FAIL 19	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	2/57	0
 ot_s81sl_kv_leaf__t5	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	FAIL 1	1500	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): tap under u_vsw, 398 seats on one point, ft3 over lane columns	c9s-1	0	0
 ot_s81sl_leaf__t1	ot_s81sl_leaf	FAIL 5	pass	pass	FAIL 1	pass	FAIL 1	2379	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	15/185	1
-ot_s81sl_leaf__t10	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	c11grow5 (chain_resite b4c31cc740): GATE REACH 0 (was 11 on c11grow4), AIM 24; +1 reg leafdn_i0 idx20-22 (latency); adv no worse; PRE/bind running; render c9s_tmpl pending review | prev: FAIL type-review c9s (Fable 11-25): vn knot 30k bits in 59um channel, ft6/ft7 under cores, ft7 station outside outline	c11grow5	6/611	2
+ot_s81sl_leaf__t10	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	GROW5 review (Fable 11-25): HOLD: +185.76 W growth overlaps s_1N_L4 by 30.24 um at die level; ve_m|ve_s abutted breaks 386 mated M4 pins; stale taps/relay seats; core-blind hops 1->14 >405 um	c11grow5	6/611	2
 ot_s81sl_leaf__t11	ot_s81sl_leaf	FAIL 70	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	88/631	3
 ot_s81sl_leaf__t12	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	86/636	2
 ot_s81sl_leaf__t13	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	25/611	2
@@ -289,7 +289,7 @@ ot_s81sl_leaf__t45	ot_s81sl_leaf	FAIL 11	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t46	ot_s81sl_leaf	FAIL 60	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	56/624	1
 ot_s81sl_leaf__t47	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1	8175	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	12/472	2
 ot_s81sl_leaf__t5	ot_s81sl_leaf	FAIL 20	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	29/303	1
-ot_s81sl_leaf__t50	ot_s81sl_leaf	FAIL 92	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	c11grow5: GATE REACH 1 = vn_a.c_s->vn_b 436.4 um direct link (no RTL station, inherited c9s; needs core move >=32um or +1 RTL station), AIM 84; anchor/retap ok | prev: FAIL type-review v2 (Fable 11-25): same leaf form; stations/roots outside outline (t70 t35 t50 t57), vn_a.c_s 406-436 um no station (t35 t50), ft over cores, hub pile 1.06-1.09	c11grow5	84/630	3
+ot_s81sl_leaf__t50	ot_s81sl_leaf	FAIL 92	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	GROW5 review (Fable 11-25): HOLD (place-only probe ok): +125.28 W growth overlaps s_6N_L2 by 125.28 um and shifts N/S pins; core-blind hops 14->29 >405 um; vn_a.c_s 436.4 um GATE unchanged	c11grow5	84/630	3
 ot_s81sl_leaf__t51	ot_s81sl_leaf	FAIL 29	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	80/652	2
 ot_s81sl_leaf__t52	ot_s81sl_leaf	FAIL 42	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	51/623	0
 ot_s81sl_leaf__t53__cl958451dd	ot_s81sl_leaf	FAIL 18	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	128/630	1
