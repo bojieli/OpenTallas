@@ -70,6 +70,11 @@ if [ "${OT_PLACED_SCAN:-1}" = 1 ] && [ -f "$TOOLS/placed_scan.py" ]; then
   timeout 600 python3 -I "$TOOLS/placed_scan.py" "$OUT/geom.tsv" --kit "$KIT" --out "$OUT" --top 0 2>&1 | head -2 | cut -c1-900 \
     || echo "AP_PLACED_SCAN_ERROR"
 fi
+# FP-CONVERGE-S81 PLACED-REACH (FABLE-RC-S81): opt-in stop of a ROUTE-goal kit when the placed scan shows bits over one cycle
+if [ "${OT_PLACED_REACH_STOP:-0}" = 1 ] && [ "${OT_KIT_GOAL:-}" = route ] && [ -s "$OUT/placed_scan.json" ] \
+   && python3 -I -c 'import json,sys;sys.exit(0 if int(json.load(open(sys.argv[1])).get("bits_over_cycle") or 0)>0 else 1)' "$OUT/placed_scan.json"; then
+  echo "AP_PLACED_REACH_STOP route goal: placed scan has bits over one cycle ($OUT/placed_scan.json)"; exit 3
+fi
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")
 # Actual kit models classify synchronous memory boundaries; never infer them from names.

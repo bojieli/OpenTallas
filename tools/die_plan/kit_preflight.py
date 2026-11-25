@@ -707,6 +707,7 @@ def main(argv=None):
     ap.add_argument('--plan-dir', type=Path, help='plan dir resolving freeze.json pins_file (optional)')
     ap.add_argument('--no-emit', action='store_true', help='do not write <kit>/preflight.json')
     ap.add_argument('--contract', action='store_true', help='kit contract binding on any kit (default: core kits)')
+    ap.add_argument('--plan', type=Path, help='die plan json for the LAUNCH-SCOPE / FT-SITE-LEGAL lines (default $OT_LAUNCH_PLAN)')
     args = ap.parse_args(argv)
     record = check(args.kit, args.plan_dir, args.contract)
     if not args.no_emit:
@@ -734,6 +735,16 @@ def main(argv=None):
     for name, row in sorted((record.get('contract_advisory') or {}).items()):
         if row.get('verdict') == 'FAIL':
             print('KIT_PREFLIGHT ADVISORY', name, (row.get('errors') or [''])[0][:200])
+    # FP-CONVERGE-S81 (FABLE-RC-S81): LAUNCH-SCOPE + FT-SITE-LEGAL, report-only; they fail the kit only with OT_LAUNCH_GATES_BLOCK=1
+    try:
+        import launch_gates
+    except ImportError:
+        launch_gates = None
+    gate_lines = launch_gates.lines(args.kit, args.plan) if launch_gates else ['SKIP LAUNCH-GATES no-module']
+    for line in gate_lines:
+        print(line)
+    if launch_gates and launch_gates.blocking() and any(x.startswith('WARN') for x in gate_lines):
+        return 1
     return int(record['verdict'] != 'PASS')
 
 

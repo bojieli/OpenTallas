@@ -63,3 +63,23 @@ def test_station_rows(tmp_path):
     r = json.loads((tmp_path / "o" / "placed_scan_rows.json").read_text())["rows"]
     assert len(r) == 1 and r[0]["stations"] == 2 and len(r[0]["regs_um"]) == 2
     assert r[0]["hop_um"] <= 405 and r[0]["conn"] == "group:u_a->u_b"
+
+
+def test_reach_decision_report_only_until_opt_in():
+    summ = {"bits_over_cycle": 12, "bits_over_reach": 40, "groups_need_station": 2}
+    assert PS.reach_decision(summ, "route", {}) == (False, PS.reach_decision(summ, "route", {})[1])
+    assert "WARN" in PS.reach_decision(summ, "route", {})[1]
+    assert PS.reach_decision(summ, "route", {"OT_PLACED_REACH_STOP": "1"})[0] is True
+    assert PS.reach_decision(summ, "place", {"OT_PLACED_REACH_STOP": "1"})[0] is False      # mutant: not a route goal
+    assert PS.reach_decision({"bits_over_cycle": 0, "bits_over_reach": 9}, "route", {"OT_PLACED_REACH_STOP": "1"}) == (False, "PLACED-REACH ok goal=route bits_over_cycle=0 bits_over_reach=9 groups_need_station=None")
+
+
+def test_main_returns_3_only_with_opt_in(tmp_path, monkeypatch, capsys):
+    g = tmp_path / "geom.tsv"
+    dump(g, 1500)
+    out = tmp_path / "o"
+    monkeypatch.delenv("OT_PLACED_REACH_STOP", raising=False)
+    assert PS.main([str(g), "--out", str(out), "--goal", "route", "--top", "0"]) == 0
+    assert "PLACED-REACH" in capsys.readouterr().out
+    monkeypatch.setenv("OT_PLACED_REACH_STOP", "1")
+    assert PS.main([str(g), "--out", str(out), "--goal", "route", "--top", "0"]) == 3

@@ -173,7 +173,12 @@ def sha256_file(p):
 def read_ledger(path):
     """tsv with a header containing file, sha256, owner, types, pre_verdict -> {file: row}"""
     with open(path, newline="") as f:
-        return {r["file"]: r for r in csv.DictReader(f, delimiter="\t") if r.get("file")}
+        out = {}
+        for r in csv.DictReader(f, delimiter="\t"):
+            k = r.get("file") or r.get("row_file")        # lanes/ROW-LEDGER-S81.tsv header: row_file
+            if k and not k.startswith("#"):
+                out[k] = r
+        return out
 
 
 def row_ledger(applied, ledger):

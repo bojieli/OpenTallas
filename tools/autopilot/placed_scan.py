@@ -180,8 +180,23 @@ def find_plan(kit, plan):
     return None
 
 
+def reach_decision(summ, goal=None, environ=None):
+    """FP-CONVERGE-S81 PLACED-REACH (FABLE-RC-S81, report-only): -> (stop, line).  The line is always printed; the stop is
+    enforced only for a route-goal kit with OT_PLACED_REACH_STOP=1 and bits that need more than one cycle (bits_over_cycle > 0)."""
+    env = os.environ if environ is None else environ
+    goal = goal or env.get("OT_KIT_GOAL") or ""
+    boc, bor = int(summ.get("bits_over_cycle") or 0), int(summ.get("bits_over_reach") or 0)
+    bad = boc > 0
+    stop = bool(bad and goal == "route" and env.get("OT_PLACED_REACH_STOP") == "1")
+    line = (f"PLACED-REACH {'STOP' if stop else ('WARN' if bad else 'ok')} goal={goal or '-'} bits_over_cycle={boc} "
+            f"bits_over_reach={bor} groups_need_station={summ.get('groups_need_station')}"
+            + ("" if stop or not bad else " (report-only: OT_PLACED_REACH_STOP=1 stops a route-goal kit)"))
+    return stop, line
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--goal", default="", help="kit goal (route/place); default $OT_KIT_GOAL")
     ap.add_argument("geom")
     ap.add_argument("--kit")
     ap.add_argument("--plan")
@@ -240,6 +255,10 @@ def main(argv=None):
         print(f"  {r['cls']:12s} {r['src']} -> {r['end']}\tbits {r['bits']} over{a.limit:.0f} {r['over_reach']} "
               f"over{a.cycle:.0f} {r['over_cycle']} max {r['max_um']}um mean {r['mean_um']}um ~{r['est_ps']}ps bufs {r['max_bufs']} "
               f"plan_row {r['row']}")
+    stop, line = reach_decision(summ, a.goal)
+    print(line)
+    if stop:
+        return 3
     return 1 if (a.strict and need) else 0
 
 
