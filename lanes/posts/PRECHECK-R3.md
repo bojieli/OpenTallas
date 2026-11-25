@@ -35,3 +35,4 @@
 - 2026-11-24 16:58 PST DONE [PRECHECK-R2] ot-push-main otpush-tolerant-swine-2973771 on tolerant-swine: rc=0 after 0 s, ended 16:58:36, log none, cmd: ot-push-main --help
   [filed under] PRECHECK-R3: PRECHECK-R2 stood down (chain PRECHECK-R2 > PRECHECK-R3)
 - 2026-11-24 17:02 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-525856 on dear-crayfish: rc=0 after 355 s, ended 17:02:29, log none, cmd: ot-push-main 
+- 2026-11-24 17:02 PST PRE speed: STARTSETTLE (1929 s in the c8 epyc9 profile) now reads the per-run reset-tree cache; its selection joins the prewarm union, test reads==selection. main f41ff2f358 (on top of RESET-TREE-CACHE 38299ec0df). Before profile c8 PRE: TAPOFF 1973 s, STARTSETTLE 1929 s, LANDREMAP 960 s, rest <60 s each; run still going at 5141 s. After profile queued on epyc9 (load cap); before/after wall time posts when it lands.
