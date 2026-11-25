@@ -5995,6 +5995,10 @@ class Binder:
             except reset_replicate.ReplicateError as exc:
                 raise BindError(f"reset_replicate {tn}: {exc}") from exc
             self.__dict__.setdefault("_reset_replicate_rows", {})[tn] = rows
+            # FABLE-FIX-KV-LOCKUP-INERT 11-25: report-only read-back of lockup_regions rows on the bound text (bind_report warnings)
+            for _w in reset_replicate.lockup_region_check(text, t["reset_replicate"], reset_replicate.positions_from_plan(t), tn):
+                self.warns.append(_w)
+                print(f"bind: WARNING {_w}", flush=True)
         if rb_rep:
             import relay_branch
             same = relay_branch.copies_distinct(text, rb_rep)
