@@ -106,3 +106,77 @@ def test_legalize_avoids_blocks_core_edge_and_fixed_sites():
     assert footprint_conflicts(out, (4.32, 4.32), fixed=fixed) == []
     with pytest.raises(ValueError, match='no free grid site'):
         legalize_slots([slot], (4.32, 4.32), (4.32, 4.32, 5.9, 4.59))
+
+
+# FT-SITE-SNAP / FT-SITE-OFFCORE (S81-OWN-LEAF 11-24): core_box clamps into CORE_AREA rows and de-collides
+BOX = (4.32, 4.32, 100.0, 100.0)
+
+
+def _slot(sites, w=1):
+    return dict(name='ft0', width=w, stations=2, bit_site_cell_um=[1.404, .27], bit_sites_um=[sites])
+
+
+def test_core_box_keeps_free_inside_sites_identical():
+    from ft_bit_sites import snap_slots
+    legacy, n0 = snap_slots([GOOD], (4.32, 4.32))
+    out, n1 = snap_slots([GOOD], (4.32, 4.32), core_box=BOX)
+    assert out == legacy and n0 == n1 == 0
+
+
+def test_core_box_moves_colliding_bit_to_nearest_free_site():
+    from ft_bit_sites import snap_slots
+    s = _slot([[77.76, 212.76 - 200], [77.76, 12.77]])        # both snap to one grid point (t41 ft0,2,151 / 221 class)
+    with pytest.raises(ValueError, match='snap to one site'):
+        snap_slots([s], (4.32, 4.32))
+    out, moved = snap_slots([s], (4.32, 4.32), core_box=BOX)
+    a, b = out[0]['bit_sites_um'][0]
+    assert a == [77.76, 12.69] and b != a
+    assert abs(b[0] - a[0]) + abs(b[1] - a[1]) <= 0.27 + 1e-9    # one row away (y is the cheap axis)
+    assert moved == 2
+
+
+def test_core_box_clamps_offcore_margin_sites_onto_core_rows():
+    from ft_bit_sites import snap_slots, site_findings
+    s = _slot([[62.64, 4.05], [62.64, 3.24]])                   # t40 ft1,1,183 class: below CORE_AREA y0 4.32
+    assert site_findings([s], BOX)['offcore'] == 2
+    out, moved = snap_slots([s], (4.32, 4.32), core_box=BOX)
+    ys = sorted(xy[1] for xy in out[0]['bit_sites_um'][0])
+    assert ys[0] == 4.32 and all(y >= 4.32 for y in ys)
+    assert site_findings(out, BOX) == dict(offcore=0, collide=0, sample=[])
+    x1 = max(xy[0] for xy in out[0]['bit_sites_um'][0])
+    assert x1 + 1.404 <= BOX[2]
+
+
+def test_core_box_clamps_top_right_inside_the_cell_footprint():
+    from ft_bit_sites import snap_slots
+    s = _slot([[99.9, 99.9], [99.9, 99.6]])
+    out, _ = snap_slots([s], (4.32, 4.32), core_box=BOX)
+    for x, y in out[0]['bit_sites_um'][0]:
+        assert x + 1.404 <= BOX[2] + 1e-6 and y + 0.27 <= BOX[3] + 1e-6
+
+
+def test_core_box_moved_bits_avoid_blocks_and_refuse_when_full():
+    from ft_bit_sites import snap_slots
+    s = _slot([[10.8, 10.8], [10.8, 10.8]])
+    blk = (0.0, 10.9, 200.0, 200.0)                              # everything above the first row blocked
+    out, _ = snap_slots([s], (4.32, 4.32), core_box=BOX, blocks=[blk])
+    b = out[0]['bit_sites_um'][0][1]
+    assert b[1] + 0.27 <= 10.9 + 1e-6 or b[1] >= 200
+    tiny = (4.32, 4.32, 4.32 + 1.404, 4.32 + 0.27)               # one site only
+    with pytest.raises(ValueError, match='move the station inward'):
+        snap_slots([_slot([[4.32, 4.32], [4.32, 4.32]])], (4.32, 4.32), core_box=tiny)
+
+
+def test_pre_ftsite_reports_offcore_and_collisions_warn_only(tmp_path):
+    import json as _json
+    import plan_gate_pre as G
+    t = dict(outline_um=[100.0, 100.0], ft_slots=[_slot([[62.64, 4.05], [62.64, 3.24]]),
+                                                  dict(_slot([[20.0, 20.0], [20.005, 20.0]]), name='ft1')])
+    ok = dict(outline_um=[100.0, 100.0], ft_slots=[GOOD])
+    p = tmp_path / 'plan.json'
+    p.write_text(_json.dumps({'die': 's81', 'partition_types': {'leaf_bad': t, 'leaf_ok': ok}}))
+    out = G.check_ftsite(str(p))
+    assert not [x for x in out if x.startswith('FAIL')]
+    assert out[0].startswith('WARN FTSITE leaf_bad: 2 explicit FT bit site(s) off CORE_AREA, 1 on an already used grid point')
+    assert out[-1].startswith('WARN FTSITE-SUMMARY 1 type(s), 2 off-core and 1 colliding')
+    assert 'FTSITE' in G.CLASSES

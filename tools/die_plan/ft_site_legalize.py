@@ -59,6 +59,10 @@ def census(P, types=None):
     return rows
 
 
+def type_blocks(t, halo=HALO):
+    return FB.type_blocks(t, halo=halo)
+
+
 def legalize_type(t):
     a = kit_core_area(t)
     blocks = []

@@ -25,33 +25,110 @@ def validate_slot(slot):
             raise ValueError('bit_sites_um coordinates must be finite x/y pairs')
 
 
-def snap_slots(slots, origin, site_w=0.054, row_h=0.27):
+def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=(), radius_um=16.2):
     """FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.2): snap every explicit bit site (cell lower-left) to the
     nearest site column / row of the core grid starting at origin (kit core xMin/yMin, um).  A re-sited plan stage
     (S81 leaf t7 ft3 82.9376 176.8544, t53 ft0 9.3393 1032.3389) was off the grid, which face_flops.tcl refuses
-    ("explicit FT site is not on a row/site").  A move is at most half a site in x and half a row in y; two sites of
-    the type that snap onto one grid point raise.  -> (slots, moved count); slots without bit_sites_um unchanged."""
+    ("explicit FT site is not on a row/site").  A move is at most half a site in x and half a row in y.
+    Without core_box two sites of the type that snap onto one grid point raise (the legacy contract).
+
+    FT-SITE-SNAP / FT-SITE-OFFCORE (S81-OWN-LEAF 11-24, c8s leaf t8/t39/t41/t46 gen refusals 'snap to one site', and
+    t24/t28/t40/t74/t75 place refusals 'explicit FT site is not on a row/site' for 2784 sites in the no-row core margin):
+    with core_box (x0, y0, x1, y1, kit CORE_AREA um) every site is also CLAMPED into the core rows / site columns (the
+    cell footprint bit_site_cell_um stays inside the box), and a site whose grid point is already taken goes to the
+    nearest free grid point (x weighted 2:1 against y, as legalize_slots), inside the box and off every blocks box,
+    within radius_um.  Sites that were free and inside the core are untouched, so a kit that generated before gets the
+    identical table.  Positions only, 0 cycles; raises when no free site exists within radius_um (then the station's
+    bit block does not fit: move the station inward in the plan).
+    -> (slots, moved count); slots without bit_sites_um unchanged."""
     x0, y0 = map(float, origin)
     out, moved, seen = [], 0, {}
+    if core_box is not None:
+        bx0, by0, bx1, by1 = map(float, core_box)
+        nr, nc = int(radius_um / row_h), int(radius_um / site_w)
+        offs = sorted(((2 * abs(dc) * site_w + abs(dr) * row_h, abs(dc), abs(dr), dc, dr)
+                       for dr in range(-nr, nr + 1) for dc in range(-nc, nc + 1)
+                       if abs(dc) * site_w + abs(dr) * row_h <= radius_um + 1e-9))
     for slot in slots:
         if not slot.get('bit_sites_um'):
             out.append(slot)
             continue
+        if core_box is not None:
+            w, h = slot.get('bit_site_cell_um') or (1.404, 0.27)
+            cmin, rmin = math.ceil((bx0 - x0) / site_w - 1e-6), math.ceil((by0 - y0) / row_h - 1e-6)
+            cmax, rmax = math.floor((bx1 - w - x0) / site_w + 1e-6), math.floor((by1 - h - y0) / row_h + 1e-6)
+
+            def free(c, r):
+                if not (cmin <= c <= cmax and rmin <= r <= rmax) or (c, r) in seen:
+                    return False
+                x, y = x0 + c * site_w, y0 + r * row_h
+                return not any(x < b2 and a < x + w and y < d and b < y + h for a, b, b2, d in blocks)
         stages = []
         for j, stage in enumerate(slot['bit_sites_um']):
             st = []
             for bit, (x, y) in enumerate(stage):
                 c, r = round((float(x) - x0) / site_w), round((float(y) - y0) / row_h)
+                lab = f"{slot['name']},{j},{bit}"
+                if core_box is not None:
+                    c, r = min(max(c, cmin), cmax), min(max(r, rmin), rmax)          # off-core margin -> nearest core row/site
+                    if (c, r) in seen:
+                        for _d, _ac, _ar, dc, dr in offs:
+                            if free(c + dc, r + dr):
+                                c, r = c + dc, r + dr
+                                break
+                        else:
+                            raise ValueError(f"FT bit site {lab} at {[x, y]}: no free core grid site within {radius_um} um "
+                                             f"(the station's bit block does not fit: move the station inward in the plan)")
                 q = [round(x0 + c * site_w, 6), round(y0 + r * row_h, 6)]
                 if abs(q[0] - x) > 5e-4 or abs(q[1] - y) > 5e-4:   # > half a dbu: a real move, not float noise
                     moved += 1
                 if (c, r) in seen:
-                    raise ValueError(f"FT bit sites {seen[(c, r)]} and {slot['name']},{j},{bit} snap to one site {q}")
-                seen[(c, r)] = f"{slot['name']},{j},{bit}"
+                    raise ValueError(f"FT bit sites {seen[(c, r)]} and {lab} snap to one site {q}")
+                seen[(c, r)] = lab
                 st.append(q)
             stages.append(st)
         out.append(dict(slot, bit_sites_um=stages))
     return out, moved
+
+
+def type_blocks(t, halo=1.08):
+    """hard-core (+halo um) boxes (x0, y0, x1, y1) of one plan type: placement_obstacles.placement_boxes when it loads,
+    else hard_cores origin_um / outline_um (ft_site_legalize uses the same boxes)."""
+    try:
+        from placement_obstacles import placement_boxes
+        return list(placement_boxes(t, halo=halo).values())
+    except Exception:
+        out = []
+        for h in t.get('hard_cores', []) or []:
+            if h.get('origin_um') and h.get('outline_um'):
+                (x, y), (w, hh) = h['origin_um'], h['outline_um']
+                out.append((x - halo, y - halo, x + w + halo, y + hh + halo))
+        return out
+
+
+def site_findings(slots, core_box, site_w=0.054, row_h=0.27):
+    """Report-only census (PRE FTSITE, S81-OWN-LEAF 11-24): explicit FT bit sites whose cell lies outside core_box
+    (the no-row core margin) and grid points that two sites snap onto.  -> dict(offcore=n, collide=n, sample=[...])."""
+    x0, y0, x1, y1 = map(float, core_box)
+    seen, off, col, sample = {}, 0, 0, []
+    for slot in slots:
+        if not slot.get('bit_sites_um'):
+            continue
+        w, h = slot.get('bit_site_cell_um') or (1.404, 0.27)
+        for j, stage in enumerate(slot['bit_sites_um']):
+            for bit, (x, y) in enumerate(stage):
+                lab = f"{slot['name']},{j},{bit}"
+                if x < x0 - 1e-6 or y < y0 - 1e-6 or x + w > x1 + 1e-6 or y + h > y1 + 1e-6:
+                    off += 1
+                    if len(sample) < 3:
+                        sample.append(f"offcore {lab} {x:g},{y:g}")
+                k = (round((float(x) - x0) / site_w), round((float(y) - y0) / row_h))
+                if k in seen:
+                    col += 1
+                    if len(sample) < 3:
+                        sample.append(f"collide {seen[k]}|{lab}")
+                seen[k] = lab
+    return dict(offcore=off, collide=col, sample=sample)
 
 
 def table(slots):

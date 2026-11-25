@@ -217,7 +217,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1491,6 +1491,43 @@ def check_tapoff(plan, max_list=6):
     return out + warn
 
 
+def check_ftsite(plan, max_list=8):
+    """FTSITE-1124 (S81-OWN-LEAF, report-only, never a FAIL): explicit FT bit sites (ft_slots[*].bit_sites_um) whose cell lies
+    outside the kit CORE_AREA (kit_fit.kit_core_area: the no-row core margin, place refuses 'explicit FT site is not on a
+    row/site', c8s leaf t24/t28/t40/t74/t75 2784 sites) or that snap onto one grid point (gen refused 'snap to one site',
+    c8s leaf t8/t39/t41/t46).  gen's ft_bit_sites.snap_slots(core_box=...) clamps and de-collides them (positions only), so
+    this is an early count per type: WARN FTSITE, plus one WARN FTSITE-SUMMARY.  Seconds."""
+    try:
+        import ft_bit_sites as FB
+        from kit_fit import kit_core_area
+        raw = json.loads(Path(plan).read_text())
+    except Exception as e:
+        return [f"WARN FTSITE-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
+    rows = []
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        slots = [x for x in (t.get("ft_slots") or []) if x.get("bit_sites_um")]
+        if not slots:
+            continue
+        try:
+            r = FB.site_findings(slots, kit_core_area(t))
+        except Exception as e:
+            rows.append(f"WARN FTSITE-UNCHECKED {tn}: {type(e).__name__}: {str(e)[:120]}")
+            continue
+        if r["offcore"] or r["collide"]:
+            rows.append((tn, r))
+    out = [x for x in rows if isinstance(x, str)]
+    hits = [x for x in rows if not isinstance(x, str)]
+    for tn, r in hits[:max_list]:
+        out.append(f"WARN FTSITE {tn}: {r['offcore']} explicit FT bit site(s) off CORE_AREA, {r['collide']} on an already "
+                   f"used grid point ({'; '.join(r['sample'])}); gen clamps / de-collides them (ft_bit_sites.snap_slots "
+                   f"core_box), report only")
+    if hits:
+        out.append(f"WARN FTSITE-SUMMARY {len(hits)} type(s), {sum(r['offcore'] for _, r in hits)} off-core and "
+                   f"{sum(r['collide'] for _, r in hits)} colliding explicit FT bit sites"
+                   + (f" (listed {max_list})" if len(hits) > max_list else ""))
+    return out
+
+
 def check_tapname(plan, base_fn=None, max_list=6, tree=None, base=None, solve_all=False):
     """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable.
     TAPNAME-UNCHECKED-1122 (COORD, QC-PLAN-R13 / QC-SLE-R5: run from a bare rt dir the density base inputs were not found, a WARN was
@@ -2374,6 +2411,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark("TAPOFF")
     if "TAPOFF" not in skip:                             # TAPOFF-1123: appended taps with no tap_offset row, seconds
         findings += check_tapoff(plan)
+    _pt.mark("FTSITE")
+    if "FTSITE" not in skip:                             # FTSITE-1124: off-core / colliding explicit FT bit sites, WARN only
+        findings += check_ftsite(plan)
     _pt.mark("STARTSETTLE")
     if "STARTSETTLE" not in skip:                        # START-SETTLE-1124: root settle >= collector ready bound
         findings += check_startsettle(tree, plan, sidecar, asbuilt)

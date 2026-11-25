@@ -8774,7 +8774,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
     # FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.2): explicit sites on the kit core site/row grid by construction
     from ft_bit_sites import snap_slots as ft_bit_sites_snap
-    ft_kit_slots, ft_snapped = ft_bit_sites_snap(ft_kit_slots, kit_core_area(t)[:2])
+    # FT-SITE-SNAP / FT-SITE-OFFCORE (S81-OWN-LEAF 11-24): clamp into CORE_AREA rows, colliding bits -> nearest free site
+    from ft_bit_sites import type_blocks as ft_type_blocks
+    _fca = kit_core_area(t)
+    ft_kit_slots, ft_snapped = ft_bit_sites_snap(ft_kit_slots, _fca[:2], core_box=_fca, blocks=ft_type_blocks(t))
     if ft_snapped:
         print(f"[gen] {tn}: FT_SITE_SNAP {ft_snapped} explicit bit sites snapped to the core site/row grid")
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
