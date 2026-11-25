@@ -773,6 +773,42 @@ def main_record_shas(git_dir=None, ref='main'):
     return shas
 
 
+def legacy_record_shas(root=None, cache_path=None):
+    """FLEET-OPS 11-25 (fable-fix-qc-n refused for sta_cland_w1574_e_s26): legacy INDEX rows carry an empty 'record' column, so a byte-identical copy of an
+    exported signoff.json was never in exported_records.txt.  On rtx-pro: sha256 of the signoff.json stored next to each such row's DB (cached by
+    path/size/mtime).  -> sorted shas"""
+    root = root or RTX_ROOT
+    cache_path = cache_path or os.path.join(STATE, 'legacy_record_cache.json')
+    try:
+        cache = json.load(open(cache_path))
+    except (OSError, ValueError):
+        cache = {}
+    out = set()
+    try:
+        lines = open(os.path.join(root, 'INDEX.tsv')).read().splitlines()
+    except OSError:
+        return []
+    for l in lines:
+        c = l.split('\t')
+        if len(c) < 8 or re.fullmatch(r'[0-9a-f]{64}', c[3] or ''):
+            continue
+        for db in (c[5], c[4]):
+            so = os.path.join(os.path.dirname(db), 'signoff.json') if db.startswith(root.rstrip('/') + '/') else ''
+            if not so or not os.path.isfile(so):
+                continue
+            st = os.stat(so)
+            k = '%s|%d|%d' % (so, st.st_size, int(st.st_mtime))
+            if k not in cache:
+                cache[k] = hashlib.sha256(open(so, 'rb').read()).hexdigest()
+            out.add(cache[k])
+    try:
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        json.dump(cache, open(cache_path + '.tmp', 'w')); os.replace(cache_path + '.tmp', cache_path)
+    except OSError:
+        pass
+    return sorted(out)
+
+
 def write_guard_exported(L, rows, hosts, push=True, git_dir=None):
     """CLEAN-AGGR-R2 (COORD / FABLE-FLOW-2000 item 5): the delete guard keeps a signed result until it is exported.  Write every exported sign-off record
     sha (INDEX 'record' column + ledger units in state done) and every exported ODB sha to ~/.local/state/ot-delete-guard/exported_records.txt and push it
@@ -788,6 +824,10 @@ def write_guard_exported(L, rows, hosts, push=True, git_dir=None):
                 if isinstance(c, str) and re.fullmatch(r'[0-9a-f]{64}', c):
                     shas.add(c)
     shas |= main_record_shas(git_dir)
+    try:      # legacy INDEX rows (empty record column): their stored signoff.json shas, reported by the rtx-pro cron (legacy_record_shas)
+        shas |= {x.strip() for x in open(os.path.join(STATE, 'rtx_record_shas.txt')) if re.fullmatch(r'[0-9a-f]{64}', x.strip())}
+    except OSError:
+        pass
     d = os.path.join(HOME, '.local/state/ot-delete-guard')
     os.makedirs(d, exist_ok=True)
     out = os.path.join(d, 'exported_records.txt')
@@ -1045,6 +1085,12 @@ def rtx_pull(a):
     if reports:
         subprocess.run(SSH + [a.hub, 'cat >> .local/state/ot-auto-export/rtx_done.jsonl'],
                        input=''.join(json.dumps(x) + '\n' for x in reports), text=True, timeout=120, check=True)
+    try:      # FLEET-OPS 11-25: legacy-row record shas -> hub, unioned into the delete guard exported list
+        leg = legacy_record_shas()
+        subprocess.run(SSH + [a.hub, 'cat > .local/state/ot-auto-export/rtx_record_shas.txt.new && mv -f .local/state/ot-auto-export/rtx_record_shas.txt.new .local/state/ot-auto-export/rtx_record_shas.txt'],
+                       input=''.join(x + '\n' for x in leg), text=True, timeout=300, check=True)
+    except Exception as e:      # noqa: BLE001 -- the guard list just stays as it was
+        say('legacy record shas: %s' % e)
     return 0
 
 

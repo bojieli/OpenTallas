@@ -125,3 +125,17 @@ def test_unit_carries_landing_evidence_and_view_pack(tmp_path):
     assert {'land_slots.json', 'face_guard.json', '1_synth.v', 'views/m/gates.json'} <= names
     got = {f for _, f in AE.meta_files(dict(files=[tuple(x) for x in u['files']]))}
     assert '1_synth.v' not in got and 'views/m/gates.json' not in got and 'land_slots.json' in got   # big evidence stays rtx-pro only
+
+
+def test_legacy_record_shas_cover_empty_record_rows(tmp_path):
+    """FLEET-OPS 11-25: an INDEX row with an empty record column still exports the signoff.json stored next to its DB"""
+    import hashlib
+    u = tmp_path / "qwen_compute" / "sta_x"
+    u.mkdir(parents=True)
+    (u / "signoff.json").write_text("{\"verdict\": \"SIGNED\"}")
+    (u / "6_final.odb").write_bytes(b"x")
+    rows = ["qwen_compute\tsta_x\tc\t\t/archive/a/6_final.odb\t%s\t1\t%s\tp\tm\tARCHIVED-BOTH\ts" % (u / "6_final.odb", "a" * 64),
+            "qwen_compute\tsta_y\tc\t%s\t\t%s\t1\t%s\tp\tm\tARCHIVED-BOTH\ts" % ("b" * 64, u / "6_final.odb", "c" * 64)]
+    (tmp_path / "INDEX.tsv").write_text("\n".join(rows) + "\n")
+    got = AE.legacy_record_shas(str(tmp_path), str(tmp_path / "cache.json"))
+    assert got == [hashlib.sha256(b"{\"verdict\": \"SIGNED\"}").hexdigest()]
