@@ -37,3 +37,10 @@ Next: check the tap-stats (max planned load <= ~900) -> hand the row to QC-ALLFI
 - 33 types still plan over 1000 (stm, su_l1, ctl, fe, sc): C1n second pass (finer tap_radius / tap_target_sinks).
 - Other rows I named for COORD: CB-COREPHASE (QC-CB-PROBE owns it; my override proposal is plan_of_record/c1k_corephase/<type>.json {type, clock_set}) and CB-PIPESEAT-SPREAD (QC-CB-PIPESEAT).
 - intel1 c1k_tree ot-deleted (44 GB freed, 17:1x). Native bins and tsv stay in <host>:/srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/rebin.
+17:45 PST C1n TAPBINS pass 2 (COORD 17:2x):
+- MILESTONE 1: ADV-STALE-BINS recalibrated, main 088be729255. Compares against kit clock-net sinks (kit_sinks.py --kitwave -> precheck-cache/kit_sinks.json, copied to 8 hosts; needs periodic refresh). Fanout is listed only when the kit is newer than the bins.
+- MILESTONE 2: sink_bins_spread.py on main 896c5200545. Tune: per-type tap_target_sinks 800..400, plus spread bins for stm/su_l1. 31/33 plan <=950; su_l1 cla2a/clcc stay at 1005/1098 (die-edge corner).
+- Work dirs: epyc10 + intel1 /srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/p2 (base plan_c1k_cbtapbins48.json 44c9f56d9edc, tune.json, bins c1k_rebin/*__spread.json).
+- Explicit types: explicit_addtaps.py appends clk_t<n> taps from the kit clk-net dump (rebin/tsv). cl622f65d2 149->198 taps, 1956->949; coll_ft 17->20, 1014->900 (p2/ex).
+- Retap: 7 batches on intel1 (p2/b1..b7, OT_REPO_ROOT=cJ tree, ~3.4 h). Then merge_c1k.py base -> b1..b7 -> C1n row sha.
+- cbn_q00 cldbcda913: probe-through --goal place on intel1, spec private_specs/QC-CB-SPREAD-R2/qwen_compute_cbn_q00__cldbcda913_1124172945. Next: dump/native bins/compose/tune/retap.
