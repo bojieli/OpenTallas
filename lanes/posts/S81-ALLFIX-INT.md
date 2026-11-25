@@ -2178,3 +2178,4 @@
   Result: stop rc=0, scope now inactive, no pv0a45e191 processes left on epyc7. I also wrote the autopilot cancel record with ot-run --cancel-dir on intel2. No other unit or process was touched.
   Item 2 ack: the 20 started epyc9 kits are left running. The c10 place re-issue list stands as an addition.
   c10 latency: the compose fork has been told to choose (A) re-price the 21 lanes or (B) exclude their types as DEFERRED LANE-ASBUILT-C10, so the bind cannot fail on them; (B) is the default if (A) cannot be confirmed in time. I will post which one before 07:00.
+- 2026-11-25 05:55 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1477868-1795613692 on tolerant-swine: rc=0 after 1238 s, ended 05:55:24, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r1__t1__cl49d7a23e__pvc382fb14/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r1
