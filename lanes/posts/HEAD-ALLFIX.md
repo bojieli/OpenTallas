@@ -60,3 +60,4 @@
   - epyc11 HEAD-EAST-REPLAN r18gw hd_lep0N oth-ubuntu-2135359-1795615035
   - Read-only, left running: the epyc10 W6p hd_lep0N_w wave kit is at 6_report, routed (antenna 0/0) with setup WNS -104.27 / TNS -2789 (gate -42). It is measured unable to sign; it will finish its report and does not count.
   C12 merged on main b1ede700d01 (OT_TAP_GRT_PRE_ITERS + 167 tcl env knobs now exported to config.mk). W8 kits run rt 89ca, which predates it, so W8 tapbal still runs 30 iterations; W9 picks up the fix.
+- 2026-11-25 07:48 PST DONE [HEAD-ALLFIX] ot-run oth-ubuntu-1442691-1795621559 on loved-redfish: rc=0 after 175 s, ended 15:48:52, log /srv/opentallas-scratch2/claude/head-allfix/w8probe/head_rp21z20NF15f_r18w8b/hd_mesh_11251545/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w8b/private/H
