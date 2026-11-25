@@ -7,3 +7,6 @@ Proofs scripts/proofs.sh: gate = OT_COMPOSE_DROP=fail compose_drop_guard (main b
 If QC-CB-C1L posts a FIX-TAPOFF pre-compose, rerun chain on it (edit B= in chain.sh).
 23:08 ROW-READY posted on C1n-pre2: plan 36ce49445f95, sidecar 0391a5add8e7, row 6b6b3140f537 (hub lanes/handoff/QC-SRCTAP-C1N-row-srctap.json). Gate PASS. TAPBINS2 --row: 523 ROW-LOST, all owned stale node/tap fields, plus 1 base tap_offset.
 NEXT: when QC-CB-C1L posts the post-TAPOFF plan (sidecar stays 9bda), copy it to in/, run ot-run ... bash scripts/chain.sh in/<new>.json, then bash scripts/proofs.sh in/<new>.json and scripts/tb2guard.sh (edit B), and post ROW-READY against that sha. The chain tools do not read sink_bins (ov_tapbins2 overlay not needed).
+23:10 QC-ALLFIX ruling: 523 TAPBINS2 ROW-LOST = SUPERSEDED-BY-SRCTAP -> hub lanes/C1N-SRCTAP-SUPERSEDE.tsv (row 6b6b3140f537); the 1 tap_offset belongs to FIX-TAPOFF, not listed.
+Scripts now take BASE OUTDIR: scripts/final.sh BASE OUTDIR runs chain+proofs+tb2guard (+mksup TSV) into OUTDIR. out/ = pre2 result, keep. Final: final.sh in/<post-TAPOFF>.json out_final, then ROW-READY with new shas + 4 proofs + updated supersede TSV.
+ADVISORY for FAM lane (slw_stm_v1__cle34a73c3): collector root rst_n_t79 is ~345 um from the up-link site collector_root_xy (307.8,199.4); rst_n_t8 is 14.8 um. Not changed by SRCTAP.
