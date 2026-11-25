@@ -2906,6 +2906,24 @@ def pin_spill_args(a, elapsed, fleet, env=None):
     return out
 
 
+LANE_SKIP = {"rt", "autopilot", "hub-coord", "ot-jobs", "tmp", "moved", "flow-canary", "tree-cache", "warm", "archive", "audit"}
+
+
+def derive_lane(d, cwd="", cmd=()):
+    """lane name for a job that has no OT_LANE: a kit wave dir (.../private/<LANE>/..., private_specs/<LANE>/...) names its lane; else the first dir under .../claude/ of the job dir, then of the cwd (never a shared
+    root such as rt, autopilot, ot-jobs, tmp).  -> "" when nothing fits."""
+    texts = [str(d or ""), str(cwd or ""), " ".join(map(str, cmd or ()))[:2000]]
+    for t in texts:
+        m = re.search(r"/(?:private|private_specs)/([A-Za-z0-9][A-Za-z0-9_.-]*)/", t)
+        if m:
+            return m.group(1)
+    for t in texts[:2]:
+        m = re.search(r"/claude/([A-Za-z0-9][A-Za-z0-9_.-]*)", t)
+        if m and m.group(1) not in LANE_SKIP and not re.match(r"kw\d+-wave", m.group(1)):
+            return m.group(1)
+    return ""
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--status"] and len(a) >= 2 and not a[1].startswith("-"):
@@ -3083,6 +3101,10 @@ def main():
             hosts = _dk
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
+    if not os.environ.get("OT_LANE"):                 # FLEET-OPS 11-25 (COORD: 38 die cores on epyc12 carried no lane): fill it from the job dir / cwd / spec path
+        _ln = derive_lane(d, os.getcwd(), cmd)
+        if _ln:
+            os.environ["OT_LANE"] = _ln
     if not pick:
         global RUN_T0
         if d and not os.environ.get("OT_RUN_NO_TICKET"):

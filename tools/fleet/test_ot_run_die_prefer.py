@@ -59,3 +59,12 @@ def test_die_spills_from_a_host_over_2_5x_cores_to_the_next_listed_one(monkeypat
         assert R.choose(dict(res), 64)[0] == "epyc12"          # 0 = the old order
     finally:
         R.PREFER_DIE[0] = False
+
+
+def test_lane_is_derived_from_the_job_dir_when_ot_lane_is_unset():
+    """FLEET-OPS 11-25: 38 die cores on epyc12 had no OT_LANE"""
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/s81-colh9r2-pinface/x", "/") == "s81-colh9r2-pinface"
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891/private/S81-ALLFIX-INT/col_h9", "/") == "S81-ALLFIX-INT"
+    assert R.derive_lane(None, "/srv/opentallas-scratch2/claude/QC-C1O-COMPOSE/tree", ["bash", "x.sh"]) == "QC-C1O-COMPOSE"
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/rt/abc", "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs", []) == ""
+    assert R.derive_lane("/x", "/y", ["python3", "/home/u/coord/autopilot/private_specs/HEAD-SERDES-REFLOOR/s81_head_hd_serdes_1/spec.json"]) == "HEAD-SERDES-REFLOOR"
