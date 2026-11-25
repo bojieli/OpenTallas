@@ -107,6 +107,13 @@ def widen_for(text, root="."):
         parts = t.split("/")
         for n in range(len(parts), 0, -1):          # longest tracked prefix
             cand.add("/".join(parts[:n]))
+    # DIEPLAN-DEPS-1124: "No module named 'goal_table'" names no path; the tracked <name>.py files say where it lives (their dirs)
+    mods = set(re.findall(r"No module named '([A-Za-z_][A-Za-z0-9_]*)'", text))
+    if mods:
+        for f in out("ls-tree", "-r", "--name-only", "HEAD").splitlines():
+            b = os.path.basename(f)
+            if b.endswith(".py") and b[:-3] in mods and "/" in f and not os.path.exists(os.path.join(root, f)):
+                cand.add(f)
     if not cand:
         return []
     cl = sorted(cand)

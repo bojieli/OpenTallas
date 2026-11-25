@@ -116,6 +116,22 @@ class PushMain(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("cone widened after failure", r.stdout)
         self.assertFalse((a / "physical/cfg/data.json").exists())   # SPARSE-RESTORE-1124
 
+    def test_sparse_cone_widened_for_a_missing_module_name(self):
+        """DIEPLAN-DEPS-1124: gen_phys imports tools/autopilot/goal_table via a computed sys.path entry; a narrow cone failed with
+        "No module named 'goal_table'" and no path to widen.  The tracked <name>.py says which dir to add."""
+        b = self.d / "b"
+        (b / "physical/lib").mkdir(parents=True)
+        (b / "physical/lib/helper_zz.py").write_text("W = 7\n")
+        sh("git", "add", "-A", cwd=b); sh("git", "commit", "-qm", "lib", cwd=b); sh("git", "push", "-q", "origin", "HEAD:main", cwd=b)
+        a = self.sparse_clone("import pathlib, sys\nsys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'physical' / 'lib'))\n"
+                              "import helper_zz\n\ndef test_r():\n    assert helper_zz.W == 7\n")
+        r = self.run_("a")
+        if "no pytest" in r.stdout:
+            self.skipTest("no pytest")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("widened sparse cone (+physical/lib)", r.stdout)
+        self.assertFalse((a / "physical/lib/helper_zz.py").exists())   # restored after the push
+
     def test_genuine_red_still_blocks_after_widening(self):
         self.sparse_clone("def test_r():\n    assert False\n")
         m = self.main()

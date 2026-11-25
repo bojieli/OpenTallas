@@ -18,7 +18,9 @@ ROOT = HERE.parents[1]
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-REQUIRED_DIRS = ("physical/common_flow",)
+# DIEPLAN-DEPS-1124 (COORD, KV-RSTREACH: 4 test_bind_stream tests "fail on main"): gen_phys imports tools/autopilot/goal_table.py at
+# import time (149a58c42d0), so a cone with tools/die_plan but not tools/autopilot failed the yosys bind tests with ModuleNotFoundError.
+REQUIRED_DIRS = ("physical/common_flow", "tools/autopilot")
 
 
 def pytest_sessionstart(session):
