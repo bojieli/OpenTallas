@@ -1,0 +1,1 @@
+- 2026-11-25 00:49 PST DIED [QC-HALOCORNER-ROW] ot-run oth-ubuntu-1133982-1795596527 on dear-crayfish: rc=1 after 301 s, ended 00:49:42, log none, cmd: --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-HALOCORNER-ROW --mem 12 --threads 1 -- python3 -I fix.py /srv/opentallas-scratch3/cla | class=NO-PATTERN cause=rc 1 after 301 s, no log
