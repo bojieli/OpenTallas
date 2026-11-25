@@ -1861,6 +1861,27 @@ def kit_rtl_post_cmd(T, W, plan, steps_dir=None):
     return "".join(f" && {env} bash -c {q(p.read_text())} {q('kit_rtl_post.d/' + p.name)}" for p in steps)
 
 
+SEAL_DERIVED_TIMEOUT_S = 900
+
+
+def seal_derived_cmd(tsrc, src, plan, T, W):
+    """STATION-MOVE-HELPER 11-24 (COORD flow review 78d6e61 fix 5): REPORT-ONLY seal check of the records derived from the bound plan
+    (tools/die_plan/seal_derived.py: latency-package digests of the tree, the type's core clock-contract metadata) before gen.  Never
+    fails the kit (|| echo; an rt without the tool prints KW_SEAL_DERIVED absent); the tree is sealed already, so nothing is regenerated
+    here (the lane runs seal_derived.py --regen on its tree before the seal).  The schema form runs per tree, not per kit (gen validates)."""
+    sd = f"{tsrc}/tools/die_plan/seal_derived.py"
+    q = shlex.quote
+    return (f"if test -f {q(sd)}; then cd {q(tsrc)} && timeout {SEAL_DERIVED_TIMEOUT_S} python3 -I {q(sd)} --tree {q(src)} --plan {q(plan)} "
+            f"--types {q(T)} --no-schema --json {q(W)}/logs/seal_derived.json || echo KW_SEAL_DERIVED rc=$?; "
+            f"else echo KW_SEAL_DERIVED absent: {q(sd)}; fi")
+
+
+def seal_derived_summary(txt):
+    """-> (LIST line or '', [WARN / REGEN lines])"""
+    lines = [ln for ln in str(txt or "").splitlines() if ln.startswith(("WARN SEAL-", "REGEN SEAL-", "LIST SEAL-DERIVED"))]
+    return next((ln for ln in reversed(lines) if ln.startswith("LIST ")), ""), [ln for ln in lines if not ln.startswith("LIST ")]
+
+
 def kit_rtl_closure_cmd(W, src, mode="inputs", chain=True, guard=False):
     """Run the current closure tool on the actual stage host (pinned generator stays immutable)."""
     code = (Path(__file__).resolve().parent / "kit_rtl_closure.py").read_text()
@@ -2522,8 +2543,11 @@ def plan_config_drift(d, names):
     out = {}
     only = d.get("only_items")
     if isinstance(only, list):
-        out["only"] = [n for n in names if not any(item_key_matches(o, n) for o in only)]
-        out["only_unmatched"] = [o for o in only if not any(item_key_matches(o, n) for n in names)]
+        # ONLY-REGEN 11-24: select() filters only_items by EXACT name, so the drift check does too (the '<key>__' prefix rule of hold keys
+        # hid 28 KV A5t3 __r8 clones that select dropped as outside configured only_items)
+        allowed = set(only)
+        out["only"] = [n for n in names if n not in allowed]
+        out["only_unmatched"] = [o for o in only if o not in set(names)]
     out["env"] = sorted(k for k in (d.get("item_env") or {}) if not any(env_key_applies(k, n) for n in names))
     keys = set(k for k in (d.get("hold_items") or {}))
     for rec in d.get("hold_records") or []:
@@ -2541,6 +2565,32 @@ def only_items_extend(d, names):
     fams = {str(o).split("__")[0] for o in only}
     add = [n for n in sorted(set(names or [])) if n.split("__")[0] in fams and not any(item_key_matches(o, n) for o in only)]
     d["only_items"] = list(only) + add
+    return add
+
+
+def only_items_event_regen(d, names, st, die):
+    """ONLY-REGEN (STATION-MOVE-HELPER 11-24, COORD): an event switch (CAS apply / plan-event bind publish: dies.<die>.event or .plan changes)
+    keeps a hand only_items list of the OLD plan's names, and the exact-name filter silently drops every renamed / new type and clone of the
+    new bound plan (KV D29 -> A5t3 08:25: 15 east pv + 28 __r8 clones, 0 KV wave rows until a hand patch).  On the first compile that sees a
+    new (event, plan) for the die, every plan item not named in only_items (exact, the select() rule) is added (in memory, every compile while that event stays);
+    holds (hold_items / hold_records) are untouched and still apply, so an explicit hold stays a hold.  The first (event, plan) a wave
+    state sees is the baseline (nothing added).  dies.<die>.only_items_regen: false opts out.  -> the names added"""
+    only = d.get("only_items")
+    if not isinstance(only, list) or d.get("only_items_regen") is False or not names:
+        return []
+    ev = f"{d.get('event')}|{d.get('plan')}"
+    book = st.setdefault("only_items_regen", {})
+    rec = book.get(die)
+    if rec is None:
+        book[die] = {"event": ev, "added": []}
+        return []
+    if rec.get("event") != ev:
+        rec = book[die] = {"event": ev, "from": rec.get("event"), "t": time.time(),
+                           "added": sorted(set(names) - set(only))}          # exact, as select() filters
+    cur, allowed = set(names), set(only)
+    add = [n for n in rec.get("added") or [] if n in cur and n not in allowed]
+    if add:
+        d["only_items"] = list(only) + add
     return add
 
 
@@ -2565,6 +2615,10 @@ def plan_drift_step(AP, cfg, st):
             backfill_norm_blocks(AP, cfg, st, die)
         except Exception as _e:
             AP.log(f"KIT-WAVE NORM-BACKFILL {die} skipped: {type(_e).__name__}: {_e}")
+        regen = only_items_event_regen(d, names, st, die)
+        if regen:
+            AP.log(f"KIT-WAVE ONLY-ITEMS-REGEN {die}: event switch {(st.get('only_items_regen') or {}).get(die, {}).get('from')} -> "
+                   f"{d.get('event')}: {len(regen)} plan item(s) outside the old only_items added in memory (holds still apply): " + " ".join(regen[:20]))
         added = only_items_extend(d, names)
         if added:
             AP.log(f"KIT-WAVE ONLY-ITEMS-EXTEND {die}: {len(added)} plan item(s) of a listed family added in memory: " + " ".join(added[:20]))
@@ -2578,7 +2632,8 @@ def plan_drift_step(AP, cfg, st):
         sigs[die] = sig
         parts = []
         if dr.get("only"):
-            parts.append(f"{len(dr['only'])} plan item(s) outside only_items (rows dropped, never launch): " + " ".join(dr["only"][:25]))
+            parts.append(f"only_items covers {len(set(names)) - len(dr['only'])} of {len(set(names))} plan items; "
+                         f"{len(dr['only'])} plan item(s) outside only_items (rows dropped, never launch): " + " ".join(dr["only"][:25]))
         if dr.get("only_unmatched"):
             parts.append(f"{len(dr['only_unmatched'])} only_items name(s) match no plan item: " + " ".join(dr["only_unmatched"][:15]))
         if dr.get("env"):
@@ -11546,6 +11601,12 @@ def run_item(spec_path):
         rc, txt = run("kit_rtl_closure", remote(kit_rtl_closure_cmd(W, src, "seal", chain=False)), idempotent=True)
         if rc:
             return fail("kit_rtl_closure", txt)
+    if not core and str(sp.get("seal_derived") or "report") != "off":
+        _sdrc, _sdtxt = run("seal_derived", remote(seal_derived_cmd(tsrc, src, plan_ov, T, W)), idempotent=True)
+        _sdl, _sdw = seal_derived_summary(_sdtxt)
+        if _sdl:                                         # report only: recorded with the attempt, never a refusal
+            res["seal_derived"] = dict(list=_sdl[:300], warn=[x[:400] for x in _sdw[:12]])
+        print("KW_SEAL_DERIVED " + (_sdl or (_sdtxt or "").strip()[-200:]) + "".join("\n  " + x[:300] for x in _sdw[:12]), flush=True)
     if not core:
         ps = sp.get("cland_pinslot") or ""
         # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)

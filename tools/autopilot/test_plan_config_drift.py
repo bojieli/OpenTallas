@@ -89,3 +89,27 @@ def test_env_drift_uses_the_item_env_entry_rule():
     assert KW.item_env_entry(d, "col_b__t1__pv2") == {"OT_GEN_M8_GRANT": "1"}
     assert KW.item_env_entry(d, "col_a__t1__pv1") == {}
     assert KW.env_key_applies("col_b__t1__pv*", "col_b__t1__pv2") and not KW.env_key_applies("col_a__t1", "col_a__t1__pv1")
+
+
+def test_event_switch_regenerates_only_items_keeps_holds():
+    # ONLY-REGEN (COORD 11-24): KV D29 -> A5t3 kept the D29 only_items; the exact-name filter dropped 43 renamed types / __r8 clones
+    d = {"enabled": True, "gen_host": "h", "plan": "/p/d29.json", "event": "D29", "only_items": ["kv3_pv_v1", "kv3_hg_v1"],
+         "hold_items": {"kv3_pv_v2e": "held"}}
+    st = {}
+    assert KW.only_items_event_regen(d, ["kv3_pv_v1", "kv3_hg_v1"], st, "kv") == []          # first sight = baseline
+    assert d["only_items"] == ["kv3_pv_v1", "kv3_hg_v1"]
+    d2 = dict(d, plan="/p/a5t3.json", event="A5t3")
+    new = ["kv3_pv_v1", "kv3_pv_v1e", "kv3_pv_v2e", "kv3_hg_v1", "kv3_hg_v1__r88f4bfb40"]
+    add = KW.only_items_event_regen(d2, new, st, "kv")
+    assert add == ["kv3_hg_v1__r88f4bfb40", "kv3_pv_v1e", "kv3_pv_v2e"] and d2["hold_items"] == {"kv3_pv_v2e": "held"}
+    assert KW.plan_config_drift(d2, new) == {}
+    d3 = dict(d, plan="/p/a5t3.json", event="A5t3")                                          # next compile, same event: same adds
+    assert KW.only_items_event_regen(d3, new, st, "kv") == add
+    d4 = dict(d, plan="/p/a5t3.json", event="A5t3", only_items_regen=False)
+    assert KW.only_items_event_regen(d4, new, st, "kv") == [] and d4["only_items"] == d["only_items"]
+
+
+def test_drift_alert_counts_coverage():
+    ap, cfg = AP(), cfg_for()
+    KW.plan_drift_step(ap, cfg, state())
+    assert "only_items covers 1 of 3 plan items" in ap.q[0]
