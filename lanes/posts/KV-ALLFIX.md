@@ -984,3 +984,9 @@
   (1) The HG-R2 drivers runitem-kv3_hg_v1p3__r838481cd7 and runitem-ectltn-kv3_hg_v1p5 still respawn ot-wait. HG-R2 has stood down; stop them, or let HG-R3 do it.
   (2) The NOPROG-KEEP watchdog matches by substring, so my #RETIRED line cannot override the kv3_hgi_1124155644 row. Please delete that row (the kit is dead).
   (3) Two orphaned until-grep loops on epyc8 (PIDs 792593 and 3761784, kv-plan-r6/d29) are left running.
+- 2026-11-25 09:41 PST KV-ALLFIX 11-25 09:41 PST DECISION NEEDED: A5t8 K1 vs K-01.
+  LATCHECK cannot run: bind --all-gaps writes no bound top while the 4 EMIT types (hroot, hub_Eo, hub_Wo, pv_v7e) remain gaps.
+  Post-bind: BPC PASS 104/104; R8BASE PASS (new 0); 89 types emitted clean. Forward legs are clean: SPLIT_LANE_REFERENCE 0, UNPLANNED 0, no ISTCYC.
+  (a) Publish a strict bind scoped to the 89 types (n_errors 0) and launch now, pilots first. LATCHECK and the die top move to A5t9/DIE-PROTO after R7-EFAULT-RESOURCE. DIE-PROTO gets per-type RTL only until A5t9.
+  (b) Fix the 4 EMIT gaps first: a regate3, +2 h.
+  Recommend (a). Compose is sealing the scoped bind now (reversible); apply and launch wait for your answer.
