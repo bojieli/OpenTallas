@@ -6,10 +6,14 @@ The 11-21 pc_v3 obstruction form (OBS-SYNC-1) wrote M1-M5 as one blanket OBS rec
 2-7 % of the area (kv3_pc kits: GRT overflow 4,096-4,317 over the kvpc column).  Re-exports of a kvpc view keep M1-M3
 blanket and take M4/M5 from the same signed ODB (write_abstract_lef -bloat_factor 0, M4 pin-clear cut).
 
+v3 (Fable review 11-25): the pin clearance now removes ONLY the signal pin's own shape from the grown OBS -- never foreign
+metal or its spacing (v2 cut a 48 nm zone around every pin, which uncovered real foreign-net metal), and the splice no longer
+uses abstract_detail's --pin-clear zone either.  OBS slivers below the layer's minimum width (24 nm on M4/M5; residue of the
+pin cuts and of the slab decomposition) are regrown to the minimum width (in place, never over a pin shape or outside the macro) or dropped when it cannot grow; the grown shapes are clipped to the macro outline.
+
 v2 guardrails (COORD 11-25): zero-bloat exact OBS risks DRC against the real internal metal and leaves unusable slivers, so
 after the splice every M4/M5 OBS shape is GROWN by max(min spacing, merge gap / 2) per side and the union is merged (gaps
-< --merge-gap-um, default 2 x track pitch, close), then the zone within --pin-clear-um of every signal pin on the pin's
-own layer is cut again so pin access stays open.  PG pins stay PIN, the PG strap metal stays OBS (grown); PIN, PG, SIZE and
+< --merge-gap-um, default 2 x track pitch, close), then the signal pins' own shapes are cut out again so pin access stays open.  PG pins stay PIN, the PG strap metal stays OBS (grown); PIN, PG, SIZE and
 all other layers are untouched (abstract_detail check).  --grow-um 0 --merge-gap-um 0 gives the v1 exact form.
 
   python3 -I kvpc_exact_m45.py --base signed_view.lef --detail exact_b0.lef --out new.lef [--receipt r.json]
@@ -26,8 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import abstract_detail as A
 
 LAYERS = "M4,M5"
-PIN_CLEAR_UM = "0.048"
-PIN_CLEAR_LAYERS = "M4"
+MIN_WIDTH_UM = 0.024      # ASAP7 M4/M5 min width
 MIN_SPACE_UM = 0.024      # ASAP7 M4/M5 min spacing
 PITCH_UM = 0.048          # ASAP7 M4/M5 track pitch
 # the published base carries the finalize pin stubs, the raw ODB export does not: this one splice finding is expected
@@ -36,8 +39,7 @@ _RECT = re.compile(r"^\s*RECT\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+
 
 
 def splice_args(base, detail, out):
-    return ["splice", "--base", str(base), "--detail", str(detail), "--layers", LAYERS, "--bloat-factor", "0",
-            "--pin-clear-um", PIN_CLEAR_UM, "--pin-clear-layers", PIN_CLEAR_LAYERS, "--out", str(out)]
+    return ["splice", "--base", str(base), "--detail", str(detail), "--layers", LAYERS, "--bloat-factor", "0", "--out", str(out)]
 
 
 def _nm(v):
@@ -140,11 +142,51 @@ def _area(rs):
     return sum((r[2] - r[0]) * (r[3] - r[1]) for r in rs) / 1e6
 
 
-def grow_merge(lef_in, lef_out, grow_um, pin_clear_um=0.048, layers=("M4", "M5")):
-    """grow the M4/M5 OBS of lef_in by grow_um per side, merge, cut the pin-clear zone of the signal pins -> lef_out; stats"""
+def fix_slivers(res, clear, minw, bbox):
+    """regrow every rect narrower than minw (nm) to minw in place (overlapping its neighbours is fine in a LEF OBS): symmetric,
+    else to one side, never over a pin shape in `clear` and never outside bbox; a sliver that cannot grow is dropped (it is
+    the residue of a pin cut).  -> (rects, dict(slivers_found, regrown, dropped))"""
+    out, found, regrown, dropped = [], 0, 0, 0
+    for r in res:
+        r = list(r)
+        bad = [ax for ax in (0, 1) if r[ax + 2] - r[ax] < minw]
+        if not bad:
+            out.append(tuple(r))
+            continue
+        found += 1
+        cand = [r]
+        for ax in bad:
+            e = minw - (r[ax + 2] - r[ax])
+            nxt = []
+            for c in cand:
+                for lo, hi in ((e // 2 + e % 2, e // 2), (e, 0), (0, e)):
+                    q = list(c)
+                    q[ax] -= lo
+                    q[ax + 2] += hi
+                    nxt.append(q)
+            cand = nxt
+        ok = None
+        for q in cand:
+            if q[0] < bbox[0] or q[1] < bbox[1] or q[2] > bbox[2] or q[3] > bbox[3]:
+                continue
+            if any(q[0] < p[2] and q[2] > p[0] and q[1] < p[3] and q[3] > p[1] for p in clear):
+                continue
+            ok = q
+            break
+        if ok:
+            out.append(tuple(ok))
+            regrown += 1
+        else:
+            dropped += 1
+    return out, dict(slivers_found=found, regrown=regrown, dropped=dropped)
+
+
+def grow_merge(lef_in, lef_out, grow_um, layers=("M4", "M5"), min_width_um=MIN_WIDTH_UM):
+    """grow the M4/M5 OBS of lef_in by grow_um per side, merge, cut ONLY the signal pins' own shapes, fix slivers -> stats"""
     text = Path(lef_in).read_text()
     lines, obs_start, obs, pins, (W, H) = _parse(text)
-    g, pc, stats = _nm(grow_um), _nm(pin_clear_um), {}
+    g, mw, stats = _nm(grow_um), _nm(min_width_um), {}
+    bbox = (0, 0, _nm(W), _nm(H))
     # drop the old M4/M5 OBS lines (layer header + its rects), keep every other line
     keep, lay, i = [], None, obs_start + 1
     keep = lines[:i]
@@ -163,13 +205,14 @@ def grow_merge(lef_in, lef_out, grow_um, pin_clear_um=0.048, layers=("M4", "M5")
     new_blocks = []
     for L in layers:
         old = obs.get(L, [])
-        grown = [(r[0] - g, r[1] - g, r[2] + g, r[3] + g) for r in old]
-        clear = [(r[0] - pc, r[1] - pc, r[2] + pc, r[3] + pc) for r in pins.get(L, [])]
-        res = sorted(union_minus(grown, clear))
+        grown = [(max(0, r[0] - g), max(0, r[1] - g), min(bbox[2], r[2] + g), min(bbox[3], r[3] + g)) for r in old]
+        clear = list(pins.get(L, []))
+        res, sl = fix_slivers(union_minus(grown, clear), clear, mw, bbox)
+        res = sorted(res)
         new_blocks.append(f"    LAYER {L} ;")
         new_blocks += [f"     RECT  {a / 1000:.3f} {b / 1000:.3f} {c / 1000:.3f} {d / 1000:.3f} ;" for a, b, c, d in res]
         stats[L] = dict(rects_before=len(old), rects_after=len(res), obs_area_pct_before=round(100 * _area(old) / (W * H), 2),
-                        blocked_area_pct_after=round(100 * _area(res) / (W * H), 2))
+                        blocked_area_pct_after=round(100 * _area(res) / (W * H), 2), **sl)
     Path(lef_out).write_text("\n".join(keep + new_blocks + lines[end:]))
     stats["lef_bytes_before"] = Path(lef_in).stat().st_size
     stats["lef_bytes_after"] = Path(lef_out).stat().st_size
@@ -195,7 +238,7 @@ def run(base, detail, out, receipt=None, grow_um=None, merge_gap_um=None, min_sp
         return 2
     if grow > 0:
         rec["grow_merge"] = dict(grow_um=grow, merge_gap_um=merge_gap_um, min_space_um=min_space_um,
-                                 pin_clear_um=float(PIN_CLEAR_UM), stats=grow_merge(exact, out, grow, float(PIN_CLEAR_UM)))
+                                 min_width_um=MIN_WIDTH_UM, stats=grow_merge(exact, out, grow))
         exact.unlink()
     if receipt:
         Path(receipt).write_text(json.dumps(rec, indent=1))

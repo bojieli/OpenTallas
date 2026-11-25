@@ -9,8 +9,8 @@
  ],
  "why": "OBS-SYNC-1 blanket M1-M5 blocked 94-100 pct of the kvpc macro on M4/M5; real M4/M5 metal is 2-7 pct",
  "m1_m3": "blanket (write_abstract_lef -bloat_occupied_layers)",
- "m4_m5": "exact (write_abstract_lef -bloat_factor 0), then v2: grown by max(min spacing 0.024, merge gap/2) = 0.048 um per side, gaps < 2 x pitch (0.096) merged, M4 pin-clear 0.048 um",
+ "m4_m5": "exact (write_abstract_lef -bloat_factor 0), grown by max(min spacing 0.024, merge gap/2) = 0.048 um per side and clipped to the macro outline, gaps < 2 x pitch (0.096) merged; ONLY the signal pins own shapes are cut out (no clearance zone, foreign metal and its spacing stay OBS); OBS slivers < min width 0.024 regrown in place (never over a pin) or dropped",
  "m6_m7": "exact (unchanged)",
  "command": "python3 -I tools/die_plan/kvpc_exact_m45.py --base <signed view lef> --detail <exact_b0.lef> --out <new lef> --receipt <receipt.json> [--grow-um X --merge-gap-um Y --min-space-um S --pitch-um P]; --grow-um 0 = v1 exact",
- "first_set": "kv_pcsplit_views_1125 (v1 exact, superseded); kv_pcsplit_views_1125b (v2 grow+merge)"
+ "first_set": "kv_pcsplit_views_1125 (v1, superseded); 1125b (v2, superseded); kv_pcsplit_views_1125c (v3)"
 }

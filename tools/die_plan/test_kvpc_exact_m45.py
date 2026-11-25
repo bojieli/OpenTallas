@@ -77,19 +77,63 @@ def test_v2_grow_merge_and_pin_clear(tmp_path):
     assert (19.952, 19.952, 30.048, 20.186) in m4 and len(m4) == 2
     assert min(r[0] for r in m4) == 19.952
     m5 = _rects(new, "M5")
-    assert m5 == [(39.952, -0.048, 40.072, 50.048)]
+    assert m5 == [(39.952, 0.0, 40.072, 50.0)]
     st = json.loads((tmp_path / "r.json").read_text())["grow_merge"]
     assert st["grow_um"] == 0.048 and st["stats"]["M4"]["rects_after"] == 2 and st["stats"]["M4"]["rects_before"] == 3
     assert new.split("  OBS\n")[0] == HEAD
     assert "RECT  30 30 31 31 ;" in new
 
 
-def test_v2_pin_zone_stays_open(tmp_path):
-    # signal pin a is on M4 at (1, 49.5)-(1.05, 50): the grown wire next to it is cut back by the pin clearance
-    obs = "  OBS\n    LAYER M4 ;\n     RECT  1.1 49.5 5 50 ;\n    LAYER M5 ;\n     RECT  40 0 40.024 50 ;\n"
+def test_v3_pin_shape_cut_foreign_spacing_kept(tmp_path):
+    # pin a (M4) is (1, 49.5)-(1.05, 50).  Its own wire (0.5 .. 1.05) must leave the pin shape ...
+    own = "  OBS\n    LAYER M4 ;\n     RECT  0.5 49.5 1.05 50 ;\n    LAYER M5 ;\n     RECT  40 0 40.024 50 ;\n"
+    rc, new = _run(tmp_path, own)
+    assert rc == 0
+    assert not any(r[0] < 1.05 and r[2] > 1.0 and r[1] < 50 and r[3] > 49.5 for r in _rects(new, "M4"))
+    # ... while a FOREIGN wire 0.05 beside the pin keeps its whole grown shape (v2 cut it back to 1.098)
+    foreign = "  OBS\n    LAYER M4 ;\n     RECT  1.1 49.5 5 50 ;\n    LAYER M5 ;\n     RECT  40 0 40.024 50 ;\n"
+    rc, new = _run(tmp_path, foreign)
+    assert rc == 0
+    m4 = _rects(new, "M4")
+    assert min(r[0] for r in m4) == 1.052 and max(r[2] for r in m4) == 5.048
+
+
+def test_v3_no_sliver_below_min_width(tmp_path):
+    # a foreign wire 0.003 wide beside the pin cut would leave slivers; every M4/M5 OBS rect is >= 0.024 in both directions
+    obs = ("  OBS\n    LAYER M4 ;\n     RECT  0.5 49.5 1.05 50 ;\n     RECT  1.1 49.5 5 50 ;\n     RECT  7 10 7.003 20 ;\n"
+           "    LAYER M5 ;\n     RECT  40 0 40.024 50 ;\n")
     rc, new = _run(tmp_path, obs)
     assert rc == 0
-    assert all(r[0] >= 1.098 - 1e-9 for r in _rects(new, "M4"))
+    for L in ("M4", "M5"):
+        for r in _rects(new, L):
+            assert min(round(r[2] - r[0], 3), round(r[3] - r[1], 3)) >= 0.024, (L, r)
+    st = json.loads((tmp_path / "r.json").read_text())["grow_merge"]["stats"]
+    assert st["M4"]["dropped"] == 0
+
+
+def test_fix_slivers_regrow_and_drop():
+    bbox = (0, 0, 10000, 10000)
+    clear = [(0, 0, 100, 1000)]
+    res = [(100, 0, 3000, 1000), (100, 2000, 103, 3000), (50, 1000, 100, 1010), (9990, 5000, 10000, 5010)]
+    out, st = K.fix_slivers(res, clear, 24, bbox)
+    assert st["slivers_found"] == 3 and st["regrown"] == 3 and st["dropped"] == 0
+    assert all(min(r[2] - r[0], r[3] - r[1]) >= 24 for r in out)
+    assert not any(r[0] < 100 and r[2] > 0 and r[1] < 1000 and r[3] > 0 for r in out)      # never over the pin shape
+    assert all(0 <= r[0] and r[2] <= 10000 for r in out)
+    # nothing can grow without touching the pin: dropped
+    out2, st2 = K.fix_slivers([(100, 0, 110, 1000)], [(0, 0, 105, 1000), (105, 0, 400, 1000)], 24, bbox)
+    assert st2["dropped"] == 1 and out2 == []
+
+
+def test_v3_real_metal_stays_covered_and_inside(tmp_path):
+    obs = "  OBS\n    LAYER M4 ;\n     RECT  0 10 0.024 10.024 ;\n     RECT  50 49.99 80 50 ;\n    LAYER M5 ;\n     RECT  40 0 40.024 50 ;\n"
+    rc, new = _run(tmp_path, obs)
+    assert rc == 0
+    for L in ("M4", "M5"):
+        for r in _rects(new, L):
+            assert r[0] >= 0 and r[1] >= 0 and r[2] <= 100 and r[3] <= 50      # inside the macro outline
+    m4 = _rects(new, "M4")
+    assert any(r[0] <= 0 and r[2] >= 0.024 and r[1] <= 10 and r[3] >= 10.024 for r in m4)   # edge wire still covered
 
 
 def test_splice_args_fixed():
