@@ -302,7 +302,11 @@
     "kv3_pc_v1__cl4ea58a5c__r8afe1e027": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 21:00 look-before-launch: PRECHECK OVERLAP>0 on A5t6 (packed bank u_lpad_i_ectl_Q_N_kf overlaps hard macro kvpc1_f); fix in A5t7 pc family row PC-SPINE+OVERLAP",
     "kv3_pc_v1__cl4ea58a5c__r8c9cba7ae": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 21:00 look-before-launch: PRECHECK OVERLAP>0 on A5t6 (packed bank u_lpad_i_ectl_Q_N_kf overlaps hard macro kvpc1_f); fix in A5t7 pc family row PC-SPINE+OVERLAP",
     "kv3_pc_v1__cl4ea58a5c__r8ef700d7c": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 21:00 look-before-launch: PRECHECK OVERLAP>0 on A5t6 (packed bank u_lpad_i_ectl_Q_N_kf overlaps hard macro kvpc1_f); fix in A5t7 pc family row PC-SPINE+OVERLAP",
-    "kv3_hgi_v5": "owner=KV-RSTREACH eta=2026-11-25 06:00 | A5t6 plan unchanged for hgi_v5; D29 kit 1124042059 GRT overflow 22308 flat at it 60 (DESIGN); waits A5t7 HGI-FAM row"
+    "kv3_hgi_v5": "owner=KV-RSTREACH eta=2026-11-25 06:00 | A5t6 plan unchanged for hgi_v5; D29 kit 1124042059 GRT overflow 22308 flat at it 60 (DESIGN); waits A5t7 HGI-FAM row",
+    "kv3_pc__cl254f2e73__r872e39b5a": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
+    "kv3_pc__cl254f2e73__r8b421e514": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
+    "kv3_pc__cl5a95b461__r85c02c25c": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
+    "kv3_pc__cl5a95b461__r882954158": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
