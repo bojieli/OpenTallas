@@ -20,6 +20,10 @@ OT_DELETE_INPUT_MAX_MB (default 5) is packed into <manifest stem>.inputs.tar.gz 
 inside the hash budget; the end line names it ("inputs_tar", "inputs_n").  Tool outputs (odb def spef gds log) are never packed.  Restore:
 tar -xzf <tarball> -C <tree>.  A record only, like the manifest: a failure to pack never changes what is deleted.
 CLI: delete_manifest.py find PATH_SUBSTRING [DAYS]   -> manifest lines naming it (to find which deleted tree held a file)
+     delete_manifest.py rotate [HOURS]                -> FLEET-OPS 11-25 (COORD: the dir grew 3.5 GB a day on the hub root): every day dir whose files are all older
+     than HOURS (24) is packed into <root>/<day>.pack.tar.zst (zstd -19 --long, the .gz members stored decompressed so the near-identical input tarballs of
+     a day dedupe: 4x on a measured day).  Nothing is dropped: the archive is read back and every member's sha256 checked before a source file is unlinked,
+     one file at a time (never a tree delete).  find() reads the packs.  Restore: zstd -dc <day>.pack.tar.zst | tar -x   (members are the originals without .gz).
 """
 import gzip
 import hashlib
@@ -150,15 +154,115 @@ def _pack_inputs(out, small, t0, budget):
         return None, 0
 
 
+def _members(dd):
+    """-> [(arcname, original file name, path)] of one day dir (.gz members are stored decompressed under the original name without .gz)"""
+    out = []
+    for f in sorted(os.listdir(dd)):
+        q = os.path.join(dd, f)
+        if os.path.isfile(q):
+            out.append((os.path.basename(dd) + "/" + (f[:-3] if f.endswith(".gz") else f), f, q))
+    return out
+
+
+def _data(path):
+    with (gzip.open(path, "rb") if path.endswith(".gz") else open(path, "rb")) as fh:
+        return fh.read()
+
+
+def rotate(hours=24.0, root=None, now=None, level=12):
+    """pack every day dir whose files are all older than HOURS into <day>.pack.tar.zst, streamed one member at a time (a day is GBs once decompressed),
+    verified by a sha256 read-back, then unlink the originals one by one.  -> [(day, files, bytes_before, bytes_after)].  One bad day is left as it was."""
+    import subprocess
+    import tarfile
+    import io
+    r = root or root_dir()
+    now = time.time() if now is None else now
+    done = []
+    try:
+        days = sorted(d for d in os.listdir(r) if re.fullmatch(r"\d{4}-\d\d-\d\d", d) and os.path.isdir(os.path.join(r, d)))
+    except OSError:
+        return done
+    for day in days:
+        dd = os.path.join(r, day)
+        pack = os.path.join(r, day + ".pack.tar.zst")
+        tmp = pack + ".tmp"
+        try:
+            names = os.listdir(dd)
+            if not names or os.path.exists(pack) or any(now - os.path.getmtime(os.path.join(dd, n)) < hours * 3600 for n in names):
+                continue
+            before = sum(os.path.getsize(os.path.join(dd, n)) for n in names)
+            mem = _members(dd)
+            want = {}
+            with open(tmp, "wb") as out:
+                z = subprocess.Popen(["zstd", "-q", f"-{level}", "--long=27", "-T2", "-c"], stdin=subprocess.PIPE, stdout=out)
+                with tarfile.open(fileobj=z.stdin, mode="w|") as tf:
+                    for arc, orig, q in mem:
+                        data = _data(q)
+                        ti = tarfile.TarInfo(arc)
+                        ti.size, ti.mtime = len(data), int(os.path.getmtime(q))
+                        tf.addfile(ti, io.BytesIO(data))
+                        want[arc] = hashlib.sha256(data).hexdigest()
+                z.stdin.close()
+                if z.wait() != 0:
+                    raise OSError("zstd failed")
+            back = {}
+            z = subprocess.Popen(["zstd", "-dc", "--long=27", tmp], stdout=subprocess.PIPE)
+            with tarfile.open(fileobj=z.stdout, mode="r|") as tf:
+                for ti in tf:
+                    back[ti.name] = hashlib.sha256(tf.extractfile(ti).read()).hexdigest()
+            if z.wait() != 0 or back != want:
+                os.unlink(tmp)
+                continue
+            os.replace(tmp, pack)
+            for _arc, orig, q in mem:
+                os.unlink(q)
+            if not os.listdir(dd):
+                os.rmdir(dd)
+            done.append((day, len(mem), before, os.path.getsize(pack)))
+        except (OSError, ValueError, EOFError, subprocess.SubprocessError, tarfile.TarError):
+            try:
+                os.unlink(tmp)
+            except OSError:
+                pass
+    return done
+
+
+def _find_packs(sub, r, cut):
+    import subprocess
+    import tarfile
+    out = []
+    for f in sorted(os.listdir(r), reverse=True):
+        m = os.path.join(r, f)
+        if not f.endswith(".pack.tar.zst") or os.path.getmtime(m) < cut:
+            continue
+        try:
+            z = subprocess.Popen(["zstd", "-dc", "--long=27", m], stdout=subprocess.PIPE)
+            with tarfile.open(fileobj=z.stdout, mode="r|") as tf:
+                for ti in tf:
+                    if not ti.name.endswith(".jsonl"):
+                        continue
+                    lines = tf.extractfile(ti).read().decode("utf8", "replace").splitlines()
+                    head = json.loads(lines[0])
+                    for ln in lines[1:]:
+                        rec = json.loads(ln)
+                        if "p" in rec and sub in os.path.join(head.get("tree", ""), rec["p"]):
+                            out.append((m + ":" + ti.name, head.get("tree"), rec))
+            z.wait()
+        except (OSError, ValueError, subprocess.SubprocessError, tarfile.TarError):
+            continue
+    return out
+
+
 def find(sub, days=30):
     """-> [(manifest, tree, line)] entries whose tree/relative path contains SUB, newest first"""
     out = []
     r = root_dir()
     cut = time.time() - days * 86400
     try:
-        dirs = sorted(os.listdir(r), reverse=True)
+        dirs = sorted(d for d in os.listdir(r) if os.path.isdir(os.path.join(r, d)))[::-1]
     except OSError:
         return out
+    out.extend(_find_packs(sub, r, cut))
     for dd in dirs:
         for f in sorted(os.listdir(os.path.join(r, dd)), reverse=True):
             m = os.path.join(r, dd, f)
@@ -181,6 +285,10 @@ if __name__ == "__main__":
     if len(a) >= 2 and a[0] == "find":
         for m, t, rec in find(a[1], float(a[2]) if len(a) > 2 else 30):
             print(f"{m}\t{t}\t{json.dumps(rec)}")
+        sys.exit(0)
+    if a and a[0] == "rotate":
+        for day, n, b, af in rotate(float(a[1]) if len(a) > 1 else 24.0):
+            print(f"ROTATED {day}: {n} files {b} -> {af} bytes")
         sys.exit(0)
     print(__doc__)
     sys.exit(2)
