@@ -9,3 +9,6 @@ OVERLAY for C1l: epyc2 + epyc11 /srv/opentallas-scratch2/claude/QC-SUC-FTSITE/ro
   + 3 su_c types ft_slots bit_sites_um + note only (ledger ftsite_ledger.json a35baeed87a5; max move 5.13 um). Re-run tool on C1l:
   ft_site_legalize.py PLAN OUT LEDGER --types sle_su_c slw_su_c__cl19bb38ef slw_su_c__cl92142dac
 PILOT: epyc11 /srv/opentallas-scratch2/claude/QC-SUC-FTSITE/forkbind.sh (fork cK -> cKf, overlay, G0, PRE, scoped strict bind 3 su_c, LATCHECK).
+- 17:38 fork bind PASS (scoped strict 3 su_c, errors 0; G0 6 ERR inherited non-su_c; PRE ROWS-NO-PROOF only). Launch: intel2 /srv/opentallas-scratch2/claude/QC-SUC-FTSITE/launch.sh GOAL ITEM.
+- Kits (goal route, E11): cl92142dac spec ~/coord/autopilot/private_specs/QC-SUC-FTSITE/qwen_compute_slw_su_c__cl92142dac_1124173840 (gen+place PASS, 366,976 cells, chain CTS->route 21:05; AUTO-GEOM advisory FAIL r2r 1270/relay_collapse 380/channel 2.7);
+  cl19bb38ef spec .../qwen_compute_slw_su_c__cl19bb38ef_1124210740 (launched 21:07).
