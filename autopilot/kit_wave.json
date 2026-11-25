@@ -307,7 +307,9 @@
     "kv3_pc__cl254f2e73__r8b421e514": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
     "kv3_pc__cl5a95b461__r85c02c25c": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
     "kv3_pc__cl5a95b461__r882954158": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
-    "kv3_pv_v3": "owner=KV-ALLFIX eta=2026-11-25 12:00 | COORD anti-churn: live private A5t5 kit kv3_pv_v3_1124133023 at goal route (runitem-kv3_pv_v3, CTS); A5t6 relaunch only if it FAILs"
+    "kv3_pv_v3": "owner=KV-ALLFIX eta=2026-11-25 12:00 | COORD anti-churn: live private A5t5 kit kv3_pv_v3_1124133023 at goal route (runitem-kv3_pv_v3, CTS); A5t6 relaunch only if it FAILs",
+    "kv3_pc_v1__cl7f648944__r8e7d31598": "owner=KV-OWN-RSTREACH eta=2026-11-25 08:00 | FABLE-RC-KV 11-25: cl7f fails place on packed bank vs explicit reservation; no new cl7f launches until PCFIX-ALL (A5t8 row 1) lands",
+    "kv3_pc_v1__cl7f648944__r8f64f1de3": "owner=KV-OWN-RSTREACH eta=2026-11-25 08:00 | FABLE-RC-KV 11-25: cl7f fails place on packed bank vs explicit reservation; no new cl7f launches until PCFIX-ALL (A5t8 row 1) lands"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
