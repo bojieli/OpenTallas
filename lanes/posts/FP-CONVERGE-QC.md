@@ -11,3 +11,4 @@
 - 2026-11-25 05:53 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-1268789 on open-snipe: rc=0 after 44 s, ended 13:53:11, log none, cmd: ot-push-main 
 - 2026-11-25 06:38 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-2827468 on open-snipe: rc=0 after 92 s, ended 14:38:30, log none, cmd: ot-push-main 
 - 2026-11-25 06:39 PST DIED [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-2921612 on open-snipe: rc=2 after 0 s, ended 14:39:57, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-25 06:40 PST DONE [FP-CONVERGE-QC] ot-push-main otpush-open-snipe-2930871 on open-snipe: rc=0 after 28 s, ended 14:40:34, log none, cmd: ot-push-main 
