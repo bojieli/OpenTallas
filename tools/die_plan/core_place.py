@@ -298,8 +298,18 @@ class TypeModel:
         rs = t.get("reset") or {}
         if isinstance(rs.get("tap_um"), list):
             fp.append(rs["tap_um"][:2])
+        # SITE-IN-MACRO 11-25 (KV A5t3-A5t6: 22 i_ectl_Q_N_kf / i_hsl_Q_N_ao bit sites of 8 kv3_pc_v1 types ended on u_kvpc1_f):
+        # write_type re-routes only the regs_um of an internal station; its explicit bit_sites_um / face_bit_sites_um (per-bit
+        # routes) are never re-sited, so they are FIXED points like the ft sites (kept, never under a core + halo), also with
+        # --ft-resite (that one re-sites ft sites only).
+        ist0 = len(fp)
+        for e in t.get("internal_stations", []) or []:
+            for g in e.get("bit_sites_um") or []:
+                fp.extend(q[:2] for q in g if isinstance(q, (list, tuple)) and len(q) >= 2)
+            fp.extend(q[:2] for q in e.get("face_bit_sites_um") or [] if isinstance(q, (list, tuple)) and len(q) >= 2)
+        ist1 = len(fp)
         # a point already inside a core rides on it; clock / reset points keep schema.TAP_CLEAR_UM (8.64) off cores
-        hal = [G if k < nft else 8.65 for k in range(len(fp))]
+        hal = [G if (k < nft or ist0 <= k < ist1) else 8.65 for k in range(len(fp))]
         keep = [k for k, p in enumerate(fp) if self.owner(p, tol=-0.01) is None]
         if self.cfg.get("ft_resite"):
             # --ft-resite (B4L4): ft-station registers / bit sites are re-sited after the search like internal
@@ -307,8 +317,8 @@ class TypeModel:
             # added taps of the ft stations) move with it (ft_resite), and a clock point exactly TAP_CLEAR (8.64) off
             # a core is legal (the 8.65 float guard made such base spots illegal)
             ftp = np.array([q[:2] for q in fp[:nft]], float).reshape(-1, 2)
-            keep = [k for k in keep if k >= nft and not (len(ftp) and (np.abs(ftp - np.array(fp[k][:2])).max(1) < 0.05).any())]
-            hal = [G if k < nft else 8.64 - 1e-4 for k in range(len(fp))]
+            keep = [k for k in keep if k >= nft and (ist0 <= k < ist1 or not (len(ftp) and (np.abs(ftp - np.array(fp[k][:2])).max(1) < 0.05).any()))]
+            hal = [G if (k < nft or ist0 <= k < ist1) else 8.64 - 1e-4 for k in range(len(fp))]
         if self.cfg.get("taps_movable"):
             # --taps-movable (B4L4): grid / added clock taps off cores are re-legalised after the event (tapleg.py
             # moves every covered added tap to the nearest legal point, the collector re-publish re-solves the
