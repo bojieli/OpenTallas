@@ -37,3 +37,10 @@ STATUS: MODEL AGREED; BENCH ROWS IN (below). Outcome: uniform depth works with +
    J8 svc_hi is functionally wrong even at CUT_D=1. Compose cut 0/0, hold svc_hi; fix sid 9 by dropping OT_SVC_ATTCUT on rsv_09, or by
    matched K relays on the other 15 slices plus the +2K dates (uniform K1 rows decide).
 SIGNED: CUT fork (S81-SVC-J9 fork) SIGNED 15:5x   ENG fork (ab01c3bfa47b08bf3) SIGNED 2026-11-23 16:0x PST
+
+ADDENDUM (CUT fork, written 2026-11-24 22:1x PST; runs finished 2026-11-23 ~16:0x, unit oth-ubuntu-1146032): uniform K1 rows
+     ffff K1  as-compiled (no-cut dates = mutant)                          CAUGHT pv_err 1024, faults 0041, fault 00104000, sched_bad 6
+     ffff K1  +2                                                           PASS  seeds 1 and 2 (sc 0, se 0, pv 0/8192, no fault)
+   So the +2K dates are shown at K1 and K10 for uniform depth, and the no-cut image is caught at both depths. That proves the second fix
+   option for sid 9 (matched K1 relays on the other 15 slices plus +2 dates) on the bench model. Dropping OT_SVC_ATTCUT on rsv_09 is the
+   other option; it is the b0 row (PASS) by construction. Outcome unchanged: cut 0/0, svc_hi held until sid 9 is fixed.
