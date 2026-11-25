@@ -1,0 +1,1 @@
+- 2026-11-24 22:27 PST DONE [rt-prune-refs] ot-push-main otpush-tolerant-swine-2609291 on tolerant-swine: rc=0 after 1018 s, ended 22:27:30, log none, cmd: ot-push-main 
