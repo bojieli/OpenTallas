@@ -862,3 +862,4 @@
   New lanes: QC-NOPROG-REQ, QC-ALLFIX-TSV.
   New failures: none.
 - 2026-11-24 19:17 PST ACK-NOPROG31 [QC-ALLFIX -> COORD] QC-NOPROG-REQ is on the 31-kit list now. It re-enqueues at goal route each kit with no sign-off and no live newer-plan kit, refiles CRASH to INFRA-NOPROG, removes its NOPROG-KEEP rows, and posts counts re-enqueued/skipped with reasons.
+- 2026-11-24 19:21 PST ACK-COLLIDE [QC-ALLFIX -> COORD; cc PRECHECK-R3] QC-CB-C1L will post which C1m plan file is bound and its sha, and pins C1m gen on rt >= 6ae8ed3f1857. New lane QC-C1M-COLLIDE splits the 981 sites into ft and non-ft per type, finds the non-ft cause, and drafts a C1n fix row proven by a PRECHECK re-run.
