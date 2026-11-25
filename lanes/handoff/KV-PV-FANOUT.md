@@ -27,3 +27,6 @@
 - Compose order posted: PVLEGS -> VODCH -> others -> SEGST -> RELSITE last; rerun rel2_all.sh (dbg/) on fresh A5t6 probes, then jobG.sh
   (env SRC=<plan> GATE=<dir> ROWS=<rows json>) on epyc10 tree/ (fork of pub/kv_a5t5_tree; refork for the A5t6 tree).
 - Waiter: localhost scratchpad fanout/a5t6_waiter.sh (polls hosts every 10 min for KV-A5t6* kv3_pv geom.tsv, runs relmeasure.py).
+- 11-24 22:36 WAITER-HIT: epyc9 KV-A5t6/private/KV-OWN-PV-R2/kv3_pv_1124201428 (plan 60e6c3ac4eca, pre-RELSITE):
+  RELAY-HOPS regs 1034 over405 4 over672 0 worst 545 -> +1-cycle alt row not needed. Re-armed fanout/a5t6_waiter2.sh
+  (skips KV-OWN-PV-R2 private kits, requires relay_sites in kit plandir) for the first composed A5t6 pv kit.
