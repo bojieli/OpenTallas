@@ -189,6 +189,26 @@ class LaunchTree(unittest.TestCase):
         r = subprocess.run(["bash", "-c", prep], capture_output=True, text=True)
         self.assertIn("KW_RT_MIRROR_HAVE", r.stdout)
 
+    def test_mirror_prune_keeps_young_mirrors(self):
+        """RT-PRUNE-REFS-1124: beyond the 12 newest, only mirrors older than RT_MIRROR_KEEP_H go; a young one a resting kit names stays"""
+        import time
+        sp = {"src": str(self.src), "tools_rt": str(self.rt)}
+        par = Path(KW.rt_mirror_path(self.src, "/x/aaaaaaaaaaaa")).parent
+        now = time.time()
+        for i in range(16):                                    # 16 mirrors, i=0 newest; two of the old ones are older than the floor
+            d = par / f"{i:012x}"
+            (d / "tools/autopilot").mkdir(parents=True)
+            (d / "tools/autopilot/rt_launch_tree.sh").write_text("x")
+            age = (KW.RT_MIRROR_KEEP_H * 3600 + 7200 + i) if i in (14, 15) else 60 + i
+            os.utime(d, (now - age, now - age))
+        prep, rs, fin = KW.rt_mirror_cmds(sp, "localhost", "intel2", tag="t2")
+        subprocess.run(["bash", "-c", fin], capture_output=True, text=True)      # the final test -f of the missing own mirror fails; the prune has run
+        left = sorted(p.name for p in par.iterdir() if p.is_dir())
+        self.assertIn(f"{12:012x}", left)                      # 13th newest but young: kept (the old count-only rule removed it)
+        self.assertIn(f"{13:012x}", left)
+        self.assertNotIn(f"{14:012x}", left)                   # beyond 12 and old: pruned
+        self.assertNotIn(f"{15:012x}", left)
+
     def test_no_tools_anywhere_is_97_fast(self):
         c = KW.rt_tree_cmd({"src": str(self.src), "tools_rt": str(self.rt) + "x"})
         r = subprocess.run(["bash", "-c", c + "echo RAN"], capture_output=True, text=True, timeout=20)

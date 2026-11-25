@@ -14643,6 +14643,9 @@ def rt_tree_cmd(sp):
             f"bash \"$R\"/{sh} {q(str(sp['src']).rstrip('/'))} \"$R\" {q(L)}{pin_sh} || exit 97; }}; ")
 
 
+RT_MIRROR_KEEP_H = float(os.environ.get("OT_RT_MIRROR_KEEP_H", "168"))     # same horizon as ot-tools-sync OT_RT_SPEC_MAX_AGE_H
+
+
 def rt_mirror_cmds(sp, host, hub, tag=""):
     """(prep shell cmd, rsync argv builder, finish shell cmd) that copy the hub's rt/<sha12> tools/ + physical/common_flow to host's mirror, with
     --link-dest on the newest older mirror (only changed files move) into a private <mirror>.part<tag> and a rename, so a reader never sees half
@@ -14662,8 +14665,11 @@ def rt_mirror_cmds(sp, host, hub, tag=""):
                 + ["-e", "ssh -o BatchMode=yes -o ControlPath=none", f"{rt}/./tools", f"{rt}/./physical/common_flow", dest])
     fin = (f"if [ -f {done} ]; then chmod -R u+w {q(part)} 2>/dev/null; rm -rf {q(part)}; else mv -T {q(part)} {q(M)} 2>/dev/null; fi; "
            f"if [ -d {q(part)} ]; then chmod -R u+w {q(part)}; rm -rf {q(part)}; fi; "
-           # keep the 12 newest mirrors (a made launch tree holds its own hardlinks, so pruning a mirror never breaks one)
-           f"for o in $({olds} | tail -n +13); do chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
+           # RT-PRUNE-REFS-1124: keep the 12 newest mirrors AND every mirror younger than RT_MIRROR_KEEP_H.  A kit at rest between stages still names its
+           # mirror in every later --stage path (a made launch tree needs no mirror to RUN, but ot-run refuses a missing --stage path): the count rule alone
+           # removed the mirror of a kit whose src parent had 12 newer rts pushed since (kv-allfix/pub: 13 rts in 10 h -> rc 78 NOT-RUN SETUP).
+           # Mirrors are hardlink copies of a few MB each, so the age floor costs almost nothing.
+           f"for o in $({olds} | tail -n +13); do [ -z \"$(find \"$o\" -maxdepth 0 -mmin -{int(RT_MIRROR_KEEP_H * 60)})\" ] && chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
     return prep, rs, fin
 
 
