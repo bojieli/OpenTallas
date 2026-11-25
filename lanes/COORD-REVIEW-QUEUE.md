@@ -12203,3 +12203,5 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-25 14:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 14:22 PST: 142 running jobs, PROGRESSING 127, PLATEAU 5, SLOW 8, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc12 die_plan run stage 11.0 h job 11.0 h: no new meaningful log line for 11.0 h; last: /out/run.sh: line 8:    15 Killed                  klayout -b -r /OpenROAD-flow-scripts/flow/platfor
   NO-PROGRESS epyc12 gdsdrc hcpg_run stage 8.8 h job 8.8 h: no new meaningful log line for 8.5 h; last: ot-run: RAN on epyc12 (unit oth-ubuntu-1322230-1795614800): exit 0
+- 2026-11-25 14:22 PST DIED [HEAD-WEST] ot-run oth-ubuntu-1079925-1795645181 on ubuntu: rc=2 after 185 s, ended 14:22:39, log none, cmd: --hosts intel1 --mem 28 --threads 6 --disk 7 --priority die --dir /srv/opentallas-scratch2/claude/head-west/c5_land_near_1125 -- bash -c 
+  se | class=NO-PATTERN cause=rc 2 after 185 s, no log
