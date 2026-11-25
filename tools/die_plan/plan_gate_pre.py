@@ -35,6 +35,10 @@ overlay.  Five classes, each finding line starts `FAIL <CLASS> ...`:
            the --baseline-plan (the adopted plan) need none.  QC-SC-ROWS' reset rows had never been dry-run: 9/9 types
            rejected at bind, after 1-2 h.
 
+PRE-DIFF (COMPOSE-FAST 11-25): `check ... --base BASE [--base-tree T]` fails only on FAIL lines that are NEW (or CHANGED) against the
+  same check on BASE; base lines the row repeats are LIST PRE-INHERITED.  The base check runs beside the row check, cached by
+  base/as-built/tools sha (pre_diff.py has the rules).  The canonical row gate (row_gate.py) always passes --base.
+
 BIND-SPEED-1118 adds four classes (bind_rowcheck.py; run inside `bind` after the elab, and by `bind_fast.py precheck`):
   FIXEDCYC lane fixed_cycles vs its latency row (double-counted / stale table); ROWSINK R8 table rows whose sink / port is no leaf of
   the elaborated die (names compared in u_r0_u_x instance form too; --elab-dir OUT); MODULES modules named by asbuilt.substitute_inst /
@@ -3278,6 +3282,10 @@ def main(argv=None):
     c.add_argument("--list", action="store_true", help="print the resolved input paths (cleanup keep set)")
     c.add_argument("--json")
     c.add_argument("--quiet", action="store_true")
+    c.add_argument("--base", help="PRE-DIFF (COMPOSE-FAST 11-25): fail only on findings NEW against this base plan (pre_diff.py); "
+                                   "also the --baseline-plan when none is given.  Relative paths of the base run resolve in --base-tree")
+    c.add_argument("--base-tree", help="PRE-DIFF: the tree the base findings are taken in (default --tree)")
+    c.add_argument("--no-base-cache", action="store_true", help="PRE-DIFF: re-run the base check even when cached")
     lz = sub.add_parser("localize", help="ABSPATH-1122: copy outside absolute inputs into <plan dir>/inputs/, rewrite tree-relative")
     lz.add_argument("--plan", required=True)
     lz.add_argument("--out", required=True)
@@ -3308,6 +3316,13 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(pr, indent=1) + "\n")
         print(f"{a.out}: {len(pr['types'])} types, result {a.result}")
         return 0
+    brun = None
+    if a.base:                                           # PRE-DIFF: the base check runs beside the row check (or comes from the cache)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import pre_diff as PD
+        a.baseline_plan = a.baseline_plan or a.base
+        brun = PD.BaseRun(a.base, a.base_tree or a.tree, a.asbuilt, None, a.skip, use_cache=not a.no_base_cache,
+                          checker=Path(__file__).resolve())
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
                   a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools, remap=a.remap_base,
@@ -3315,6 +3330,15 @@ def main(argv=None):
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2
+    pdiff = None
+    if brun is not None:
+        bf, how = brun.result()
+        if bf is None:
+            f.append(f"FAIL PRE-DIFF-UNCHECKED base {a.base}: {how}")
+        else:
+            rf = [x for x in f if x.startswith("FAIL ")]
+            pdiff = PD.diff(rf, bf, PD.subs_for(a.plan, a.base, a.tree, a.base_tree), PD.subs_for(a.base, None, a.base_tree or a.tree))
+            f = PD.lines(pdiff, a.base, how) + [x for x in f if not x.startswith("FAIL ")] + pdiff["new"] + pdiff["changed"]
     lst = [x for x in f if x.startswith("LIST ")]
     fails = [x for x in f if x.startswith("FAIL ")]
     warns = [x for x in f if x.startswith("WARN ")]
@@ -3328,9 +3352,13 @@ def main(argv=None):
     unchecked = [x for x in fails if x.split()[1].endswith("-UNCHECKED")]
     print(f"PLAN-GATE-PRE {'UNCHECKED' if unchecked and len(unchecked) == len(fails) else 'FAIL' if fails else 'PASS'} tree={a.tree} plan={a.plan} findings={len(fails)}"
           + (" classes=" + ",".join(sorted({x.split()[1].split('-')[0] for x in fails})) if fails else "")
-          + (f" advisories={len(adv)}" if adv else ""))
+          + (f" advisories={len(adv)}" if adv else "")
+          + (f" base={a.base} inherited={len(pdiff['inherited'])} gone={len(pdiff['gone'])}" if pdiff is not None else ""))
     if a.json:
-        Path(a.json).write_text(json.dumps({"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv}, indent=1) + "\n")
+        rec = {"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv}
+        if pdiff is not None:
+            rec.update(base=a.base, inherited=pdiff["inherited"], gone=pdiff["gone"], changed=pdiff["changed"])
+        Path(a.json).write_text(json.dumps(rec, indent=1) + "\n")
     return 1 if fails else 0
 
 
