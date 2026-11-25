@@ -19,6 +19,16 @@ module adv_<name>.py -> one function here):
   ADV-BAND-GAP         a band whose free area (rect minus hard cores + halo and the exact sites inside it) cannot hold its
                        padded_data_storage_flops (else live) at 100 % fill (area_reserve_um2 is a budget, not the rect).  Known positive:
                        KV kv3_hgi_v8 band free-gap.
+  ADV-RECT-OUTLINE     (COORD 11-24) a clock-band rect (landing_contract.bands / band_fixed_um rect_um or rects_um), a
+                       tap_windows_um / band_tap_windows_um window, a tap_reserved_um entry or any other landing-contract rect
+                       that is not inside its type's outline [0, 0, w, h].  Known positive: R9 svc_ytrade_row.py shrank the S81
+                       svc_lo N edges by 34.56 um but moved only two-number points; the band and tap windows stayed outside
+                       (t7 attn_i0).
+  ADV-BITSITE-AREA     (COORD 11-24 flow review) every explicit bit site -- ft_slots[].bit_sites_um, internal_stations
+                       bit_sites_um / face_bit_sites_um and the landing CS banks (clock.soft_reg_banks / soft_reg_banks
+                       bit_sites_um) -- whose cell footprint (bit_site_cell_um) is not inside CORE_AREA (off-core) or not
+                       inside the outline (off-outline), and footprints that overlap on the core site/row grid (collide).
+                       Known positive: S81 c8, 47 types (42 leaf, 5 svc) with bit sites off the core or colliding.
 
 findings(raw, plan_path, tree=None, **kw) -> ["WARN ADV-<NAME> ..."]; an exception is one "not checked" line.
 """
@@ -320,12 +330,195 @@ def _band_gap(raw, plan_path, tree=None, halo=HALO_UM, fill_warn=FILL_WARN, **_k
     return out
 
 
+# ---------------------------------------------------------------- ADV-RECT-OUTLINE
+def _as_rect(v):
+    """[x0, y0, x1, y1] or a corner pair [[x0, y0], [x1, y1]] -> normalised (x0, y0, x1, y1); else None"""
+    if isinstance(v, (list, tuple)) and len(v) == 4 and all(isinstance(x, (int, float)) for x in v):
+        x0, y0, x1, y1 = (float(x) for x in v)
+    elif isinstance(v, (list, tuple)) and len(v) == 2 and all(_pt(p) and len(p) == 2 for p in v):
+        (x0, y0), (x1, y1) = ((float(a), float(b)) for a, b in v)
+    else:
+        return None
+    return min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)
+
+
+def _rect_list(v):
+    """a rect, or a list of rects / corner pairs"""
+    r = _as_rect(v)
+    if r is not None:
+        return [r]
+    return [x for x in (_as_rect(e) for e in v) if x] if isinstance(v, (list, tuple)) else []
+
+
+_LC_RECT_KEY = re.compile(r"(rect|window|reserved|keepout|box|region)", re.I)
+
+
+def clock_rects(t):
+    """-> [(where, rect)] every clock-band / tap-window / tap-reserved / landing-contract rect of a type"""
+    ck = t.get("clock") or {}
+    out = []
+
+    def band(prefix, b):
+        if not isinstance(b, dict):
+            return
+        for k in ("rect_um", "rects_um", "tap_windows_um"):
+            for i, r in enumerate(_rect_list(b.get(k))):
+                out.append((f"{prefix}.{k}" + (f"[{i}]" if k != "rect_um" else ""), r))
+    lc = ck.get("landing_contract") or {}
+    for bn, b in sorted((lc.get("bands") or {}).items() if isinstance(lc.get("bands"), dict) else []):
+        band(f"landing_contract.bands.{bn}", b)
+    for bn, b in sorted((ck.get("band_fixed_um") or {}).items() if isinstance(ck.get("band_fixed_um"), dict) else []):
+        band(f"band_fixed_um.{bn}", b)
+    for k in ("band_tap_windows_um", "tap_windows_um", "tap_reserved_um"):
+        for i, r in enumerate(_rect_list(ck.get(k))):
+            out.append((f"clock.{k}[{i}]", r))
+
+    def walk(x, path):       # other landing-contract rects (bands handled above)
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if path == "landing_contract" and k == "bands":
+                    continue
+                rl = _rect_list(v) if _LC_RECT_KEY.search(k) and k.endswith("_um") else []
+                if rl:
+                    for i, r in enumerate(rl):
+                        out.append((f"{path}.{k}" + (f"[{i}]" if _as_rect(v) is None else ""), r))
+                    continue
+                walk(v, f"{path}.{k}")
+        elif isinstance(x, list):
+            for i, v in enumerate(x):
+                if isinstance(v, (dict, list)):
+                    walk(v, f"{path}[{i}]")
+    walk(lc, "landing_contract")
+    return out
+
+
+def _rect_outline(raw, plan_path, tree=None, **_kw):
+    out, n_types, n_rects = [], 0, 0
+    kinds = {}
+    for tn, t in _types(raw):
+        try:
+            w, h = (float(v) for v in t["outline_um"][:2])
+        except (TypeError, ValueError):
+            continue
+        bad = []
+        for where, r in clock_rects(t):
+            n_rects += 1
+            over = max(-r[0], -r[1], r[2] - w, r[3] - h)
+            if over > EPS:
+                bad.append((where, r, over))
+        if bad:
+            n_types += 1
+            for where, _r, _o in bad:
+                k = re.sub(r"\[\d+\]", "", where.split(".")[0] if not where.startswith("landing_contract.bands") else "landing_contract.bands")
+                kinds[k] = kinds.get(k, 0) + 1
+            worst = max(b[2] for b in bad)
+            ex = "; ".join(f"{wh} {[round(v, 3) for v in r]} ({o:.2f} um out)" for wh, r, o in bad[:MAX_EX])
+            out.append(_w("ADV-RECT-OUTLINE", f"{tn}: {len(bad)} clock rect(s) outside the outline [0, 0, {w:g}, {h:g}] "
+                          f"(worst {worst:.2f} um): {ex}{' ...' if len(bad) > MAX_EX else ''}"))
+    if out:
+        out.append(f"LIST ADV-RECT-OUTLINE {sum(kinds.values())} rect(s) on {n_types} type(s) outside their outline "
+                   f"(of {n_rects} checked): " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
+    return out
+
+
+# ---------------------------------------------------------------- ADV-BITSITE-AREA
+def bit_sites(t):
+    """-> [(family, label, x, y, w, h)] every explicit bit-site cell footprint (lower-left) of a type"""
+    out = []
+    for fam, key in (("ft", "ft_slots"), ("ist", "internal_stations")):
+        for k, e in enumerate(t.get(key) or []):
+            if not isinstance(e, dict):
+                continue
+            w, h = _cell(e)
+            nm = e.get("name") or e.get("conn") or k
+            for j, st in enumerate(e.get("bit_sites_um") or []):
+                for b, xy in enumerate(st or []):
+                    if _pt(xy):
+                        out.append((fam, f"{key}[{nm}],{j},{b}", float(xy[0]), float(xy[1]), w, h))
+            for b, xy in enumerate(e.get("face_bit_sites_um") or []):
+                if _pt(xy):
+                    out.append((fam, f"{key}[{nm}].face,{b}", float(xy[0]), float(xy[1]), w, h))
+    for src in (t.get("soft_reg_banks"), (t.get("clock") or {}).get("soft_reg_banks")):
+        for k, e in enumerate(src or []):
+            if not isinstance(e, dict):
+                continue
+            w, h = _cell(e)
+            for b, xy in enumerate(e.get("bit_sites_um") or []):
+                if _pt(xy):
+                    out.append(("land", f"soft_reg_banks[{e.get('id', k)}],{b}", float(xy[0]), float(xy[1]), w, h))
+    return out
+
+
+def site_collisions(sites, origin, site_w=SITE_W, row_h=ROW_H):
+    """footprints that overlap once snapped to the core grid (ft_bit_sites.footprint_conflicts semantics, sweep per
+    row): -> [(earlier label, label)]; one pair per site that lands on an occupied site/row cell"""
+    x0, y0 = origin
+    rows = {}
+    for i, (_f, lab, x, y, w, h) in enumerate(sites):
+        c, r = round((x - x0) / site_w), round((y - y0) / row_h)
+        cw, rh = max(1, math.ceil(w / site_w - 1e-6)), max(1, math.ceil(h / row_h - 1e-6))
+        for rr in range(r, r + rh):
+            rows.setdefault(rr, []).append((c, c + cw, i))
+    hit = {}
+    for lst in rows.values():
+        lst.sort()
+        end, owner = None, None
+        for c0, c1, i in lst:
+            if end is not None and c0 < end and i != owner:
+                hit.setdefault(i, owner)
+            if end is None or c1 > end:
+                end, owner = c1, i
+    return [(sites[o][1], sites[i][1]) for i, o in sorted(hit.items())]
+
+
+def _bitsite_area(raw, plan_path, tree=None, **_kw):
+    out, tot = [], dict(types=0, off_core=0, off_outline=0, collide=0, sites=0)
+    fams = {}
+    for tn, t in _types(raw):
+        ss = bit_sites(t)
+        if not ss:
+            continue
+        tot["sites"] += len(ss)
+        x0, y0, x1, y1 = (float(v) for v in core_area(t)[:4])
+        w, h = (float(v) for v in t["outline_um"][:2])
+        off_c, off_o = [], []
+        for f, lab, x, y, cw, ch in ss:
+            d = max(x0 - x, y0 - y, x + cw - x1, y + ch - y1)
+            if d > EPS:
+                off_c.append((lab, x, y, d))
+                fams[f] = fams.get(f, 0) + 1
+                if max(-x, -y, x + cw - w, y + ch - h) > EPS:
+                    off_o.append(lab)
+        col = site_collisions(ss, (x0, y0))
+        if off_c or col:
+            tot["types"] += 1
+            tot["off_core"] += len(off_c)
+            tot["off_outline"] += len(off_o)
+            tot["collide"] += len(col)
+            parts = []
+            if off_c:
+                wst = max(off_c, key=lambda e: e[3])
+                parts.append(f"{len(off_c)} off CORE_AREA [{x0:g}, {y0:g}, {x1:g}, {y1:g}] ({len(off_o)} off the outline; worst "
+                             f"{wst[3]:.2f} um: {wst[0]} at ({wst[1]:g}, {wst[2]:g}))")
+            if col:
+                parts.append(f"{len(col)} colliding footprint(s) (e.g. {'; '.join(f'{a} x {b}' for a, b in col[:MAX_EX])})")
+            out.append(_w("ADV-BITSITE-AREA", f"{tn}: {len(ss)} bit sites: " + "; ".join(parts)))
+    if out:
+        out.append(f"LIST ADV-BITSITE-AREA {tot['types']} type(s): {tot['off_core']} off-core ({tot['off_outline']} off-outline), "
+                   f"{tot['collide']} colliding, of {tot['sites']} bit sites; off-core by family "
+                   + (", ".join(f"{k} {v}" for k, v in sorted(fams.items())) or "none"))
+    return out
+
+
 density = _safe("ADV-STATION-DENSITY", _density)
 on_row = _safe("ADV-SITE-ON-ROW", _on_row)
 region = _safe("ADV-PLACE-REGION", _region)
 band_blockage = _safe("ADV-BAND-BLOCKAGE", _band_block)
 band_gap = _safe("ADV-BAND-GAP", _band_gap)
-ALL = (("STATION-DENSITY", density), ("SITE-ON-ROW", on_row), ("PLACE-REGION", region), ("BAND-BLOCKAGE", band_blockage), ("BAND-GAP", band_gap))
+rect_outline = _safe("ADV-RECT-OUTLINE", _rect_outline)
+bitsite_area = _safe("ADV-BITSITE-AREA", _bitsite_area)
+ALL = (("STATION-DENSITY", density), ("SITE-ON-ROW", on_row), ("PLACE-REGION", region), ("BAND-BLOCKAGE", band_blockage), ("BAND-GAP", band_gap),
+       ("RECT-OUTLINE", rect_outline), ("BITSITE-AREA", bitsite_area))
 
 if __name__ == "__main__":
     import json
