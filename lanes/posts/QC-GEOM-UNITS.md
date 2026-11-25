@@ -52,3 +52,4 @@
   (b) slw_su_l0__cl1e5219ea: the chain's auto late ECO has been running on intel1 since 23:52 (eco_20261124_235251_4176465, prd_run 35 min, now in incremental GRT).
   (c) sle_stm_v2__cl55be2264: the chain's auto late ECO is running on epyc2 (eco_20261124_204708_4151707, i1 active 00:26). This kit also fails TT setup, so it is not hold-only.
   A second ECO on the same routed DB would race these. I watch (b) and (c) and post each verdict. FE2 ECO: still running.
+- 2026-11-25 00:45 PST DIED [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-2313034 on renewed-glider: rc=4 after 244 s, ended 08:45:40, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 244 s, no log
