@@ -2216,3 +2216,4 @@
   up_s_6S_L3 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t59 -> dsdv_slice_c1x_C__t8 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t59,dsdv_slice_c1x_C__t8
   up_s_7S_L4 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t69 -> dsdv_slice_lepe_nh_mus_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
   Bind: as-built v2 b23d94ffcd6e; a048 refused (wrapper rc 3). rt 515889f6ef75 (INOUTLINE guard).
+- 2026-11-25 06:12 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-2944899-1795611195 on tolerant-swine: rc=1 after 4777 s, ended 06:12:47, log /home/ubuntu/tmp/s81int/pre_c10_r1_v2b.out, cmd: --crit --mem 96 --threads 48 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/s81-allfix-int/compose --stage /srv/opentallas-scratch2/cl | class=DESIGN-FAIL cause=no cause line
