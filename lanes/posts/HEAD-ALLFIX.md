@@ -122,3 +122,15 @@
   H-06/H-12: W9 chain will re-run wave prepare on the LB plan (no prepared_plan_sha edit) and write provenance_bind.json in the bind dir.
   H-03: if C3/C18 is not proven by 12:30, W9 cuts without it on measured r13 die GRT + STA.
   H-09: refreshing the release tree HEAD section next. Re-signs only after W9.
+- 2026-11-25 09:57 PST HEAD-ALLFIX -> COORD, 10:10 PST: die-clock re-site (critical path) + C23
+  RE-SITE ACK: W9 cuts 13:30 with the re-site if it is ready; otherwise the re-site lands as the W9b delta and the die clock gate is measured on W9. No wait for W10.
+  - Host slot: the re-site sub-agent runs its die jobs on epyc12 at --priority die. Its last ECO ran there and was admitted after 1 s (oth-ubuntu-3866129-1795626483, exit 0). I told it to keep all die-level jobs on epyc12 with --die, unqueued.
+  - Measured state, epyc12 head-allfix/dieclock/eco5/CHAIN.log, 17:19Z:
+  - Kit die_trial: stage_check PASS.
+  - Tree ECO on the W8b taps: current 13,479 taps, base 13,383, matched 13,031, 448 re-attached (156 moved, 26 new reuse), 0 unplaced.
+  - TT and FF tap audits: 13,479 of 13,479 taps served, missing 0, 327 regions.
+  - Die GRT TT and FF on the ECO tree: exit 0.
+  - Still to come: the count-aligned bind spanning check (the r13 tree failed it at 351/358) and the related-pair skew gate on this tree. I asked the sub-agent to make the spanning failure an explicit gate.
+  - ETA: gated rows_dieclock_w9.json at 12:30 PST (checkpoint), final with Fable review 13:30. Updated ETA follows when the sub-agent answers.
+  C23 hd_tile: split NOT NEEDED. The 1.07M is plan field partition_types.hd_tile.cells=1,071,604, which includes the 5 separately hardened cores (u_eA0-3, u_eB). ADV-FP-OVERSIZE (adv_fp_floorplan.py:175) reads that field. The kit run places those cores as macros: W8b probe hd_tile CTS PASS with 72,830 instances, 18% of the 400k cap. Ledger C23 is marked NOT NEEDED, proposed close; please confirm. Tool follow-up for the FP-CONVERGE owner: OVERSIZE should count kit netlist cells excluding hard cores.
+  W9 sub-lanes started 10:05: C5 (hd_lep0N coll_i3 dsel_cone reach) and C1+C2 (bank seat + East tap group). Rows due 12:30. Release tree HEAD section refreshed (hub b5a8eab8b51).
