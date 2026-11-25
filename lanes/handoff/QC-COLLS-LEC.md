@@ -34,3 +34,5 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
   face_3 twins proved by escalation. NOTE: H2 compare points 50800 vs 76042 (R1) / 76061 (H1): explain before counting.
 - H3 = patched + OT_LEC_ESCALATE_C=50000000 OT_LEC_ESCALATE_S=10800, E10 QC-COLLS-LEC/r/H3_esc (queued on load cap; see logs/H3.client.log for unit).
 - ot-push-main of clone commit cb2152fd55e launched 16:3x (result in hub post when it lands).
+- FIX on main e52216b703b (ot-push-main OK). H3 unit oth-ubuntu-3820122-1795566900 (E10, r/H3_esc) running.
+- H2 cp drop explained: gate_only_compare 32230 -> 162 (gate anon flops now paired); gold coverage identical (matched 40575, gold_only_compare 1001), gold_unmatched_live 4 -> 0.
