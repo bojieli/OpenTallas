@@ -10575,3 +10575,4 @@ FAILED [AUTOPILOT 2a203d596dee] 2026-11-25 07:42:35 PST AUTOPILOT -> KIT-WAVE-12
   Skipped: A5t5 kv3_hgi_1124155644 on epyc10 is in NOPROG-KEEP (KV-OWN-RSTREACH). Its DRT is 490k at 70%, still rising. Drop the KEEP row and I cancel it.
   Exempt: the hg_v1p5 depth probe (KV-OWN-HG-R2) and the pc cl254 place kit.
   8 KV-ALLFIX rsm1124 driver units stopped. runitem-kv3_hgi_v7 belongs to the dead lane KV-OWN-RSTREACH and still respawns ot-wait with no job; please stop it or hand it to me.
+- 2026-11-25 07:52 PST DIED [QC-STA-HOP] ot-run oth-ubuntu-3330844-1795621951 on civil-redfish: rc=4 after 20 s, ended 15:52:46, log /srv/opentallas-scratch2/claude/QC-STA-HOP/fork.out, cmd: --crit --priority die --no-spill --mem 4 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/QC-STA-HOP -- python3 -I /srv/open | class=NO-PATTERN cause=TREE-FORK FETCH epyc12:/srv/opentallas-scratch2/claude/QC-C1O-COMPOSE/launch_c1o_bind: 32080 files, 1933 dirs 
