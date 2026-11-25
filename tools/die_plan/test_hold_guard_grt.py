@@ -155,10 +155,13 @@ ZV = "namespace eval sta { proc endpoint_violation_count {m} { return [expr {$::
 
 
 def test_zero_violators_stops_the_margin_chase():
-    out = run("3.0", preamble=ZV)                       # -50 +3 per chunk; margin 10: stops at the first chunk with 0 violators (ws >= 0)
+    # QC-HOLD-CHASE 11-25 (COORD): the default is now to chase to the margin; OT_HOLD_CHASE_MARGIN=0 restores the 11-18 stop at 0 violators
+    out = run("3.0", {"OT_HOLD_CHASE_MARGIN": "0"}, preamble=ZV)   # -50 +3 per chunk; margin 10: stops at the first chunk with 0 violators (ws >= 0)
     assert "0 hold violators" in out and float(out.split("WS ")[1]) < 10.0
-    off = run("3.0", {"OT_HOLD_ZERO_VIOL_STOP": "0"}, preamble=ZV)
+    off = run("3.0", preamble=ZV)
     assert "0 hold violators" not in off and float(off.split("WS ")[1]) >= 10.0
+    off2 = run("3.0", {"OT_HOLD_ZERO_VIOL_STOP": "0", "OT_HOLD_CHASE_MARGIN": "0"}, preamble=ZV)
+    assert "0 hold violators" not in off2 and float(off2.split("WS ")[1]) >= 10.0
 
 
 def test_repeat_call_with_hold_met_runs_no_chunk():
@@ -170,10 +173,12 @@ def test_repeat_call_with_hold_met_runs_no_chunk():
         e.update({"OT_HOLD_CHUNK_S": "0", "OT_HOLD_CHUNK_BUF_MIN": "20"}, **(env or {}))
         out = tcl(MOCK.replace("[MODEL]", "3.0") % (ZV + "\nset ::ws 20.0\nset ::tns 0.0", GUARD + again), e)
         return out, [c for c in calls(out) if "-hold" in c]
-    out, hold = go()
+    out, hold = go({"OT_HOLD_CHASE_MARGIN": "0"})
     assert len(hold) == 1 and "OT_HOLD_DONE: hold ws 23.00 >= 10 ps with 0 violators after 1 earlier chunk(s)" in out
-    out, hold = go({"OT_HOLD_DONE_STOP": "0"})
+    out, hold = go({"OT_HOLD_DONE_STOP": "0", "OT_HOLD_CHASE_MARGIN": "0"})
     assert len(hold) == 2 and "OT_HOLD_DONE" not in out
+    out, hold = go()                      # default: keeps repairing toward the 40 ps margin, no early DONE
+    assert "OT_HOLD_DONE" not in out and len(hold) >= 2
 
 
 def sdclog(out):

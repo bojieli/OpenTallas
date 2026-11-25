@@ -24,6 +24,12 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     (![info exists ::env(OT_HOLD_MM)] || $::env(OT_HOLD_MM) ne "1") &&
     (![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0")} {
   rename ::repair_timing_helper ::ot_hg_rth_orig
+  # QC-HOLD-CHASE 11-25 (COORD ruling, QC-HOLD-STRUCT): the guard keeps repairing until hold ws >= the margin (OT_HOLD_CHASE_MARGIN=1, default).  The early stops at 0 violators
+  # (OT_HOLD_ZERO_VIOL_STOP), at ws >= 10 ps (OT_HOLD_DONE_STOP) and the gain<1 ps stall below the margin (OT_HOLD_STALL_MIN_WS = margin) were ending kits at ws +7..+14 ps vs margin 40
+  # (cbf_q00_s2 and the intel1 QC kits), and routed zero-logic seams then lost 0.1-43 ps.  The window stall (OT_HOLD_STALL_WINDOW_S without gain), the setup guard and the
+  # total buffer budget still end a chase.  OT_HOLD_CHASE_MARGIN=0 restores the 11-18 early stops (each OT_HOLD_*_STOP / OT_HOLD_STALL_MIN_WS env still overrides).
+  set ::ot_hg_stop_dflt 1; set ::ot_hg_stall_dflt 0.0
+  if {![info exists ::env(OT_HOLD_CHASE_MARGIN)] || $::env(OT_HOLD_CHASE_MARGIN) ne "0"} { set ::ot_hg_stop_dflt 0; set ::ot_hg_stall_dflt "margin" }
   proc ::ot_hg_num {k d} { expr {[info exists ::env($k)] && [string is double -strict $::env($k)] ? $::env($k) : $d} }
   proc ::ot_hg_stats {} {
     set w [worst_slack -min]
@@ -105,7 +111,7 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       # 200-buffer chunk of 1300-2200 s toward the 40 ps margin; the gate is internal FF hold >= 0): once a chunk has run in this session, a call that finds
       # 0 violators and ws >= OT_HOLD_DONE_WS (10 ps) runs no chunk.  OT_HOLD_DONE_STOP=0 restores the chase; a negative count (unreadable) never stops.
       lassign $prev pw pt pv
-      if {[::ot_hg_num OT_HOLD_DONE_STOP 1] != 0 && [info exists ::ot_hg_chunks_run] && $::ot_hg_chunks_run >= 1 && $pv == 0 && $pw >= [::ot_hg_num OT_HOLD_DONE_WS 10.0]} {
+      if {[::ot_hg_num OT_HOLD_DONE_STOP $::ot_hg_stop_dflt] != 0 && [info exists ::ot_hg_chunks_run] && $::ot_hg_chunks_run >= 1 && $pv == 0 && $pw >= [::ot_hg_num OT_HOLD_DONE_WS 10.0]} {
         puts [format "OT_HOLD_DONE: hold ws %.2f >= %g ps with 0 violators after %d earlier chunk(s); no further margin chunk" $pw [::ot_hg_num OT_HOLD_DONE_WS 10.0] $::ot_hg_chunks_run]
         break
       }
@@ -141,10 +147,10 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       if {[lindex $cur 0] >= $hm} { break }
       # HOLD-ZERO-VIOL 11-18 (FABLE-CLOSURE 1935 lever 3): at least 20 live kits kept adding chunks at 0 violators (+0.2 .. +2.7 ps each; slw_sc_v1 14.5 h).
       # No endpoint is below 0 any more: the repair has done its job, the margin chase stops.  OT_HOLD_ZERO_VIOL_STOP=0 restores the chase.  (n = -1: count unavailable, no stop.)
-      if {$cv == 0 && [::ot_hg_num OT_HOLD_ZERO_VIOL_STOP 1] != 0} { puts "OT_HOLD_GUARD_GRT: 0 hold violators (ws $cw >= 0), margin chase stops"; break }
+      if {$cv == 0 && [::ot_hg_num OT_HOLD_ZERO_VIOL_STOP $::ot_hg_stop_dflt] != 0} { puts "OT_HOLD_GUARD_GRT: 0 hold violators (ws $cw >= 0), margin chase stops"; break }
       # HOLD-STALL-30 11-18 (FABLE-CLOSURE-STRATEGY 1320, COORD): stall stop floor OT_HOLD_STALL_MIN_WS, default 0 (the old behaviour; the 30 ps default of 944c7e336d1 was withdrawn by FABLE-CLOSURE-STRATEGY 1530; live kits gain only 2-3 ps per chunk, the routed tail is clock-leaf arrival, and hold closes in the post-route ECO).  A 30 ps floor would have been needed for:
       # sle_hc0__cl38badc56 stopped at +6.56 vs the 40 ps target and route then cost 28 ps of hold (routed internal FF hold -21.57 on 152 ends).
-      if {[lindex $cur 0] >= [::ot_hg_num OT_HOLD_STALL_MIN_WS 0.0] && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= stall floor), margin chase stalled, stop"; break }
+      if {[lindex $cur 0] >= [expr {[info exists ::env(OT_HOLD_STALL_MIN_WS)] && [string is double -strict $::env(OT_HOLD_STALL_MIN_WS)] ? $::env(OT_HOLD_STALL_MIN_WS) : ($::ot_hg_stall_dflt eq "margin" ? $hm : $::ot_hg_stall_dflt)}] && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= stall floor), margin chase stalled, stop"; break }
       if {$added <= 0} { puts "OT_HOLD_GUARD_GRT: chunk added no buffer, stop"; break }
       # the chunk ended below its buffer cap = the native repair finished on its own: same end as an unchunked call
       if {!$hit} { puts "OT_HOLD_GUARD_GRT: native hold repair finished inside the chunk, stop"; break }

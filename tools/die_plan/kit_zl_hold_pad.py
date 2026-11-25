@@ -37,6 +37,32 @@ def class_regex(recipe=None, names=None):
     return "|".join(f"({cl[n]})" for n in pick)
 
 
+def check_recipe(kit, recipe=None, force=False):
+    """applies_to / exclude_if of the class recipe, enforced: the kit family must be listed and its base signoff reasons must not name an excluded gate."""
+    import re
+    rec = json.loads(Path(recipe or CLASS_RECIPE).read_text())
+    ap = rec.get("applies_to", {})
+    kit = Path(kit)
+    name = kit.name if kit.name != "" else kit.resolve().name
+    fam = re.sub(r"__.*", "", name)
+    fam = re.sub(r"_[0-9]{10}$", "", fam)
+    why = []
+    if ap.get("families") and fam not in ap["families"]:
+        why.append(f"family {fam} not in applies_to")
+    so = kit / "signoff" / "signoff.json"
+    if so.is_file():
+        try:
+            reasons = str(json.loads(so.read_text()).get("reasons", ""))
+        except ValueError:
+            reasons = ""
+        for ex in ap.get("exclude_if", []):
+            if re.search(r"\b" + re.escape(ex) + r"\b", reasons):
+                why.append(f"base sign-off fails {ex}")
+    if why and not force:
+        raise SystemExit("kit_zl_hold_pad: " + "; ".join(why) + " (--force overrides)")
+    return why
+
+
 def apply(kit: Path, depth=4, slew=20, cap=20, report_only=False, class_re=None):
     kit = Path(kit)
     pre = kit / "pre_cts.tcl"
@@ -75,10 +101,12 @@ def main(argv=None):
     ap.add_argument("--report-only", action="store_true")
     ap.add_argument("--qc-seam", nargs="?", const="all", metavar="CLASS[,CLASS]",
                     help="restrict the pads to the QC seam classes of zl_hold_class/qc_seam_classes.json (all, or a comma list)")
+    ap.add_argument("--force", action="store_true", help="skip the applies_to / exclude_if check of --qc-seam")
     ap.add_argument("--class-regexp", help="restrict the pads to capture registers whose instance name matches this Tcl regexp")
     a = ap.parse_args(argv)
     cre = a.class_regexp
     if a.qc_seam:
+        check_recipe(a.kit, force=a.force)
         cre = class_regex(names=None if a.qc_seam == "all" else a.qc_seam.split(","))
     print(json.dumps(apply(Path(a.kit), a.depth, a.slew_margin, a.cap_margin, a.report_only, cre)))
 

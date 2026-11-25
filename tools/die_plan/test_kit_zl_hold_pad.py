@@ -70,3 +70,21 @@ def test_tcl_class_filter_present():
     t = Z.TCL.read_text()
     assert "OT_ZLP_CLASS" in t and "class_skipped" in t
     assert "regexp -- $zlp_class [$inst getName]" in t
+
+
+def test_recipe_applies_to_and_exclude_if_enforced(tmp_path):
+    import pytest
+    ok = tmp_path / "slw_hc1__cl3449ea95"
+    (ok / "signoff").mkdir(parents=True)
+    (ok / "signoff" / "signoff.json").write_text(json.dumps({"reasons": ["hold_ff: FAIL WNS -12 ps < 0"]}))
+    assert Z.check_recipe(ok) == []
+    bad = tmp_path / "slw_hc1__clzz"
+    (bad / "signoff").mkdir(parents=True)
+    (bad / "signoff" / "signoff.json").write_text(json.dumps({"reasons": ["setup_tt: FAIL WNS -80 ps < -42", "hold_ff: FAIL"]}))
+    with pytest.raises(SystemExit):
+        Z.check_recipe(bad)
+    assert Z.check_recipe(bad, force=True)
+    other = tmp_path / "hd_mesh__cl1"
+    other.mkdir()
+    with pytest.raises(SystemExit):
+        Z.check_recipe(other)
