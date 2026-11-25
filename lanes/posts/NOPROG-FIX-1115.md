@@ -700,3 +700,4 @@
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 24.8 h job 24.8 h: no new meaningful log line for 13.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
 - 2026-11-24 17:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 17:52 PST: 229 running jobs, PROGRESSING 217, SLOW 12, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
 - 2026-11-24 18:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 18:52 PST: 224 running jobs, PROGRESSING 215, SLOW 9, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
+- 2026-11-24 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 19:52 PST: 187 running jobs, PROGRESSING 178, SLOW 9, NO-PROGRESS 0 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
