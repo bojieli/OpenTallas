@@ -1859,6 +1859,7 @@ def grt_label_notice_pass(rows, seen, now, post=True):
 # Wave attempts not yet taken by grt_flat_pass go through it (cancel-rows keeps the wave record right); everything else: ot-run --cancel <unit> --reason design.
 # Never: proofs, ECOs, hold-only, LEC, re-sign, HBM, --priority plan/proof, NOPROG-KEEP rows (verdict KEEP), units with a KEEP <unit> post, decide-only lanes.
 DF_FLAT_S = 2 * 3600
+DF_MIN_AGE_H = 3.0            # NOPROG-GRTHOLD-1124 (COORD): owner rule: cancel only jobs OVER 3 h that are measured unable to sign
 DF_OVF_RE = re.compile(r"overflow (\d+) at round (\d+) > (\d+)")
 
 
@@ -1890,6 +1891,8 @@ def design_fail_evidence(r, track, now):
     if track.get("ov0") is None or ov < float(track["ov0"]) * (1 - MIN_IMPROVE):
         track.update(first=now, ov0=ov)
     track.update(last=now, ov=ov)
+    if float(r.get("age_h") or 0) <= DF_MIN_AGE_H:
+        return                                          # NOPROG-GRTHOLD-1124: a job of 3 h or less is never a design cancel (the overflow clock above keeps running)
     # NOPROG-GRTFALL-1124: flat means no 2 % fall for DF_FLAT_S AND for 1.5 GRT rounds (slow FastRoute rounds are not a stall)
     if now - float(track["first"]) >= max(DF_FLAT_S, 1.5 * float(r.get("grt_round_s") or 0)):
         return f"GRT-LABEL {why}; overflow {float(track['ov0']):.0f} -> {ov:.0f}, no 2 % fall in {(now - float(track['first'])) / 3600:.1f} h; {str(r.get('detail') or '')[:100]}"

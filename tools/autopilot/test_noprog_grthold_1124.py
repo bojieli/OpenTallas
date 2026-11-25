@@ -40,7 +40,7 @@ def kv_row(repair, ovf=12348):
     rounds = [(5, 28316), (10, ovf)]
     lab = nw.judge_grt_rounds(rounds)
     return {"unit": "oth-ubuntu-3854460-1795578998", "host": "epyc10", "container": "dpkit-kv3_hgi-1", "key": "c|k", "verdict": nw.GRT_LABEL,
-            "why": f"{lab[0]}: {lab[1]}", "detail": lab[2], "type": "kv3_hgi", "gb": 25.7, "age_h": 2.5, "lane": "KV-OWN-RSTREACH", "prio": "",
+            "why": f"{lab[0]}: {lab[1]}", "detail": lab[2], "type": "kv3_hgi", "gb": 25.7, "age_h": 3.5, "lane": "KV-OWN-RSTREACH", "prio": "",
             "kit": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t5/private/KV-OWN-RSTREACH/kv3_hgi_1124155644/gen/kv3_hgi",
             "ident": "dpkit-kv3_hgi-1", "kind": "grt", "stage": "5_1_grt", "grt_ovf": ovf, "grt_repair": repair}
 
@@ -73,3 +73,19 @@ def test_grt_flat_and_stuck_spared_for_repair():
     assert nw.grt_flat_candidate(r) == ""
     r["grt_repair"] = ""
     assert nw.grt_flat_candidate(r)
+
+
+def test_design_cancel_needs_a_job_older_than_3_h(tmp_path, monkeypatch):
+    """COORD 11-24 (owner rule: cancel only jobs over 3 h that are measured unable to sign): the 2 h flat overflow clock alone never cancels"""
+    (tmp_path / "bin").mkdir(); (tmp_path / "lanes").mkdir(); (tmp_path / "lanes/posts").mkdir()
+    (tmp_path / "bin/post.sh").write_text("#!/bin/bash\nexit 0\n")
+    monkeypatch.setattr(nw, "COORD", str(tmp_path))
+    calls = []
+    c = lambda u: (calls.append(u), (0, "ok"))[1]
+    young = kv_row("", ovf=12348); young["age_h"] = 2.9          # the real 19:00 kv3_hgi (1.9 h) and 12:30 kv3_hgi_v7 (0.8 h) stops
+    seen = {}
+    for dt in (0, nw.DF_FLAT_S + 1, 3 * nw.DF_FLAT_S):
+        assert nw.design_fail_pass([dict(young)], seen, NOW + dt, cancel=c, wave_cancel=c) == []
+    assert calls == []
+    old = dict(young, age_h=3.1)                                  # flat for > 2 h and now over 3 h: the old rule applies
+    assert len(nw.design_fail_pass([old], seen, NOW + 3 * nw.DF_FLAT_S + 1, cancel=c, wave_cancel=c)) == 1

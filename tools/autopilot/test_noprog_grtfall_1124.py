@@ -31,7 +31,7 @@ def kv_row(rounds, kit="/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen
            lane="KV-OWN-RSTREACH", **k):
     lab = nw.judge_grt_rounds(rounds)
     r = {"unit": "oth-ubuntu-474796-1795568763", "host": "epyc10", "container": "dpkit-kv3_hgi-1", "key": f"c|{kit}", "verdict": nw.GRT_LABEL,
-         "why": f"{lab[0]}: {lab[1]}", "detail": lab[2], "type": "kv3_hgi", "kit": kit, "work": kit, "gb": 26.1, "age_h": 1.9, "lane": lane,
+         "why": f"{lab[0]}: {lab[1]}", "detail": lab[2], "type": "kv3_hgi", "kit": kit, "work": kit, "gb": 26.1, "age_h": 3.5, "lane": lane,
          "ident": f"dpkit-kv3_hgi-1 {kit}", "prio": "", "kind": "grt", "stage": "5_1_grt", "grt_ovf": rounds[-1][1], "grt_falling": nw.grt_falling(rounds)}
     r.update(k)
     return r
