@@ -1643,3 +1643,4 @@
 - 2026-11-25 00:10 PST QC-ALLFIX
 - 2026-11-25 00:15 PST DONE [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-1557860-1795592803 on loved-redfish: rc=0 after 3237 s, ended 08:15:53, log /srv/opentallas-scratch2/claude/type-contract-spec/cv1m/full4c.otrun.log, cmd: --mem 40 --threads 6 --hosts epyc7,intel1 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1m -- bash full4.sh
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-25 00:16 PST QC-ALLFIX
