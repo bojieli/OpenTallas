@@ -1,14 +1,9 @@
-# QC-C1O-COMPOSE handoff (updated 2026-11-25 00:19 PST)
-Lane: stage + compose QC C1o (child of QC-ALLFIX). Work dir intel1 /srv/opentallas-scratch2/claude/QC-C1O-COMPOSE.
-Base: C1n 26036a30b94f + sidecar 0391a5add8e7 (copies in base/). QC-ALLFIX 00:2x: final base = C1n-r (QC-CB-C1L: C1n + QC-RRDRV-FIX rr_tN remap); cut 03:00 PST, later rows -> C1p.
-Guard: rt ebc6556ec3d0 compose_drop_guard bca33ce (has b62de070 + 6009f0ed). OT_COMPOSE_DROP=fail.
-Rows:
-1 CB-PIPEREACH (QC-CB-PIPESEAT) plan 0f77be78cc8d on SPREAD 002c58551eec; row rows/pipereach/x/reach_r2 (tgz 9ac4b9b73c75). C1n pipe keys == 002c on 17/17 types (base consistent). C1o-pre = pre/plan_c1o_pre.json b68ecbabaf17 (338106 keys, 516 stale dropped, all cbf_q00_s2 u_d6 r[5][*], row-intended). Guard rerun with fnmatch-escaped drop list pre/drops_pre_esc.txt.
-2 FWLEAF-1 (QC-FWV1-HOLD) row 739975265b88: probe 23:22 was LBL-refused, never ran. Needs relaunch with OT_PROBE_THROUGH=1.
-3 STB-SPLIT (QC-STB-SPLIT) on 44a145a65013: retap runM died 23:43 (reset_anchor AnchorError). No row.
-4 CORE-TAP-EARLY-STA (QC-STA-CLK) 11d9f716355b on 88374495efff: gate gateCT on intel1 running.
-5 KVQC de-stack script 9a853b931a8b (rows/kvqc): rerun on the composed plan.
-6 rr_tN: QC-RRDRV-FIX row -> C1n-r base. rreval.py (epyc2 scratch3 QC-RRDRV-CHK) in the gate, 0 bad stages.
-Added by COORD: SUL1-FACE-BAND (QC-SUL1-BAND), st_a btab seats + BT_LAT3 (QC-STA-BTLAT3), PG-EDGE-HALO cland (ask QC-STA-CLK), owner-lane fix rows (QC-STA-HOLD, QC-SC-CLAND, QC-COLL-CORE, QC-GLUE, QC-FWV2-BAY, QC-PHY-GEN).
-Scripts: c1o_pre.py, c1o_rows.py (pipereach/fwleaf/coretap per type, OVERLAP report), ledger_keycheck.py (ROW-LEDGER key gate), guard_pre.sh.
-Tree: fork of epyc11 QC-CB-C1L/m/tree -> intel1 tree/ (fork.log), then C1n overlays as n/mkN.sh (ov_tapbins2, m/hold_c1n, ov_rc97, r8seed) + C1o plan/sidecar.
+# QC-C1O-COMPOSE handoff (updated 2026-11-25 01:01 PST)
+Lane: stage + compose QC C1o (child of QC-ALLFIX). Dirs: intel1 + epyc10 /srv/opentallas-scratch2/claude/QC-C1O-COMPOSE (epyc10 mirror, no tree).
+Base: C1n-r2 a372ae84fa2a (C1n 26036a + RRDRV-REMAP ebb40d + RRDRV-FAR 4eb637), sidecar 0391a5add8e7. Cut 03:00 PST; later -> C1p.
+Current candidate: C1o v3 4c5b5a9bb1f7 (c1o_v3/plan_c1o.json) = r2 + CB-PIPEREACH + DEMACRO-QC-C1o f143e6d8 + STA-RELAY-PRUNE 960d3bc4 + COLL-IRN-SEAT 3872208e + KVQC de-stack 7 types (glue + 6 sc; sle_su_c/cbf_q00_s2/cbf_q01_s2 excluded: FTSITE/BITSITE).
+Gate v3: guard PASS 0 silent (3676 intended), SIDECAR 0, rreval 0 (nt/c1n_* only!), far census 0, FTSITE 3/3, BITSITE 1403 (+422 DEMACRO intra-station, flagged to SITE-IN-MACRO), ledger key check PASS.
+PRE: intel1 tree/ (fork of epyc11 QC-CB-C1L/m/tree + C1n overlays ov/), mkO.sh, rt 689a2622f6a4 (has 899f9018, e4ffa951, a0ddbaeb), --crit --priority die; log mkO_v3.log, pre_c1o_v3.log. COORD: no bind before PRE PASS.
+Pending rows: SUL1-FACE-BAND (ROW-STAGED, intel1 QC-SUL1-BAND/out, overlay sink_bins/c1o_sul1 x2), STA-BTLAT3/BTSEAT, HALOCORNER-ROW (02:45), GLUE-CLUSTER (draft), CORE-TAP-EARLY-STA (gateCT2 running; covers st_a only, not coll_core).
+To C1p: FWLEAF-1 (probe LBL-refused; relaunch with OT_PROBE_THROUGH=1 at 01:15 if no ack), STB-SPLIT.
+Scripts: c1o_build.sh NAME STEPS GROWS kvqc KVQC_TYPES PRUNE_ROWS (never edit while running); c1o_rows.py steps pipereach/fwleaf/coretap/jsonpatch/prune/seatset; ledger_pre.sh PLAN SPEC; bitsite_diff.py.
