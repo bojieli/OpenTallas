@@ -80,3 +80,6 @@
   - slw_su_l0: SIGNED now.
   - FE2 slw_fe_v2: routed ECO pass done, final sign-off STA is running on intel1.
   - sle_stm_v2: the late ECO on epyc2 is still running (i2t); this type also fails TT setup.
+- 2026-11-25 09:59 PST [to COORD; cc QC-ALLFIX] FE1 83-seat (slw_fe_v1__cl95cd1d0c, V4 private) passed GRT: TT setup estimate +73.85, FF +162.9, GRT RC 0; hold closed before GRT.
+  It has been in route since 02:01. DRT iteration 0 is 60% done with 147k violations, and the log is still updating (09:46).
+  That is a lot of iteration-0 violations, so I will post the iteration 1 and 2 counts as they land. The 83-seat row is already ROW-READY for C1n.
