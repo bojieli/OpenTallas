@@ -1,0 +1,23 @@
+{
+ "row": "PHY-PHYSINST (hard-wrapper phy kits: place the macro at its kit RTL path)",
+ "lane": "QC-PHY-GEN",
+ "ruling": "QC-ALLFIX 02:2x: physical_inst row accepted as fix",
+ "base": "c1n_r2",
+ "base_sha": "a372ae84fa2a",
+ "out_sha": null,
+ "cause": "kit RTL from bind.py kit-rtl nests the hard macro as u_bound.u_core; plan contents[] names u_io_serdes_1 / u_io_serdes_2 / u_ucie_kv, so KIT_PREFLIGHT macro_instances PLAN-SRC-MACRO fails at place. Same form as kv3_phy (plan_c): physical_inst + physical_master, kit-only, bind identity unchanged.",
+ "family": "all hard partition types with a lef in contents[]: phy_serdes, phy_serdes_b, phy_ucie_kv (checked on plan v4c4; no other hard type has contents with a lef)",
+ "proof_plan": {"sha12_before": "81fd3e6370c0", "sha12_after": "0bbe5213dc24", "path": "epyc10:/srv/opentallas-scratch2/claude/QC-PHY-GEN/trees/phy_v4c4_lintfix/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json", "note": "proof on v4c4, not the bound plan; a sign-off there needs a re-sign on the bound plan"},
+ "types": {
+  "phy_serdes": {"set": {
+   "partition_types.phy_serdes.contents[inst=u_io_serdes_1].physical_inst": "u_bound.u_core",
+   "partition_types.phy_serdes.contents[inst=u_io_serdes_1].physical_master": "ot_qfd_serdes_112g_x12_phy_s597"}},
+  "phy_serdes_b": {"set": {
+   "partition_types.phy_serdes_b.contents[inst=u_io_serdes_2].physical_inst": "u_bound.u_core",
+   "partition_types.phy_serdes_b.contents[inst=u_io_serdes_2].physical_master": "ot_qfd_serdes_112g_x12_phy_s597"}},
+  "phy_ucie_kv": {"set": {
+   "partition_types.phy_ucie_kv.contents[inst=u_ucie_kv].physical_inst": "u_bound.u_core",
+   "partition_types.phy_ucie_kv.contents[inst=u_ucie_kv].physical_master": "ot_qkvd_ucie_x64_phy"}}
+ },
+ "also_needed_outside_plan": ["dies.qwen_compute.hard_wrappers = [phy_serdes, phy_serdes_b, phy_ucie_kv] (kit_wave_edit 17baa774831, done)", "kit_gen_lint.py of the wave tree must be the rt 6ad9ae96d9f7 copy sha256 405e36dcaa1a7671 (or the tree rebuilt on main with that fix)"]
+}
