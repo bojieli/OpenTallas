@@ -24,7 +24,7 @@ LINE = re.compile(r"OT_CLOCK_TAPS (\d+) taps, (\d+) sinks moved off (\S+): (.*)"
 STAGE = re.compile(r"^(.+?)-(route|place|cts|grt|kit|sign|signoff|flow|full)-")
 CAP = re.compile(r"OT_CLOCK_TAPS cap \d+ sinks/tap: \d+ sinks re-assigned; per tap: (.*)")
 RECHECK = re.compile(r"OT_CLOCK_TAPS cap recheck .*?over cap now: (.*)")
-KITWAVE = "/srv/opentallas-scratch*/claude/kw43-wave-1109n/runs/*/kit-wave/*/*/{,private/*/}*/gen/*/run/logs/asap7/*/base/4_1_cts.log"
+KITWAVE = "/srv/opentallas-scratch*/claude/kw43-wave-1109*/runs/*/kit-wave/*/*/{,private/*/}*/gen/*/run/logs/asap7/*/base/4_1_cts.log"
 
 
 def parse_line(ln):
