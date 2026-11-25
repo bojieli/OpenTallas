@@ -40,7 +40,7 @@ module old_style (a, b, c);
     output [`OT_T_W-1:0] c;
 `endif
 endmodule
-module typed_leaf (input my_pkg::t_req r, input wire [3:0] x);
+module typed_leaf (input my_pkg::t_req r, input wire [3:0] x, input wire word_v);
 endmodule
 """
 
@@ -155,3 +155,33 @@ def test_cli(tmp_path, capsys):
     o = capsys.readouterr().out
     assert "WARN ELAB-PORT-WIDTH ot_hdc_v41x_kreg cells=1/2 inst=2/4" in o
     assert json.loads((tmp_path / "r.json").read_text())["masters"]["body_m"]["bad_cells"] == 1
+
+
+def test_cli_reads_defines_and_top_from_the_elab_script(tmp_path, capsys):
+    (tmp_path / "asbuilt.json").write_text(json.dumps(netlist()))
+    (tmp_path / "asbuilt_lib_stubs.sv").write_text(STUBS)
+    (tmp_path / "asbuilt.ys").write_text("read_slang -DOT_WIDE -DX=3 --top top a.sv\nhierarchy -top top\n")
+    assert EPW.main(["--out", str(tmp_path), "--json", str(tmp_path / "r.json")]) == 0
+    js = json.loads((tmp_path / "r.json").read_text())
+    assert js["masters"]["old_style"]["bad_cells"] == 1      # OT_WIDE from the script -> c declared 16, connected 8
+    assert js["masters"]["ot_hdc_v41x_kreg"]["inst"] == 4
+
+
+def test_word_prefix_is_not_a_net_type_and_open_ports_are_not_hits():
+    d = EPW.declarations(STUBS)["typed_leaf"]["ports"]
+    assert "word_v" in d and "d_v" not in d                   # 'wor' of word_v is not the wor net type
+    y = netlist()
+    y["modules"]["mid"]["cells"]["u_ty"]["connections"].update(word_v=[], x=bits(4))
+    rep = EPW.check(y, EPW.declarations(STUBS), top="top")
+    assert rep["typed_leaf"]["bad_cells"] == 0 and rep["typed_leaf"]["open_ports"] == 1
+
+
+def test_plain_blackbox_defaults_do_not_override_derived_parameters():
+    """native yosys: a plain blackbox module lists RTL defaults (PW = FW+51 at FW=546); the cell overrides only FW"""
+    stub = "module face #(parameter integer FW=546, parameter integer PW=FW+51)(input wire [PW-1:0] phy_rx);\nendmodule\n"
+    y = {"modules": {"top": {"cells": {"u": {"type": "face", "parameters": {"FW": b32(514)},
+                                             "connections": {"phy_rx": bits(565)}}}},
+                     "face": {"attributes": {"blackbox": "1"}, "parameter_default_values": {"FW": b32(546), "PW": b32(597)},
+                              "ports": {}, "cells": {}}}}
+    rep = EPW.check(y, EPW.declarations(stub), top="top")
+    assert rep["face"]["bad_cells"] == 0

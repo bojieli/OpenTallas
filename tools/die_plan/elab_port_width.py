@@ -261,7 +261,7 @@ def preprocess(text, defines):
 
 
 _MOD = re.compile(r"(?ms)^\s*(?:module|macromodule)\s+(?:automatic\s+|static\s+)?([A-Za-z_]\w*)\b(.*?)\bendmodule\b")
-_TYPEW = r"(?:wire|reg|logic|bit|var|tri|wand|wor|signed|unsigned|integer|int|byte|shortint|longint|time)"
+_TYPEW = r"(?:(?:wire|reg|logic|bit|var|tri|wand|wor|signed|unsigned|integer|int|byte|shortint|longint|time)\b)"
 
 
 def _params(chunks, local_default=False):
@@ -481,7 +481,11 @@ def check(yjs, decls, top=None, listed=(), max_examples=4):
             elif master in decls and not decls[master].get("error"):
                 r["source"] = "declaration"
                 vals = {}
-                for src in ((sub or {}).get("parameter_default_values", {}), c.get("parameters", {})):
+                # a specialized type ($paramod / bind_slang_abi variant) carries its evaluated parameters; a plain blackbox
+                # module's parameter_default_values are the RTL defaults (derived ones too: PW = FW+51 at the default FW),
+                # so only the cell's own overrides apply there
+                spec = ct.startswith("$paramod") or (sub is not None and master != ct)
+                for src in (((sub or {}).get("parameter_default_values", {}) if spec else {}), c.get("parameters", {})):
                     for k, v in src.items():
                         vals[k] = _pint(v)
                 key = (master, tuple(sorted((k, str(v)) for k, v in vals.items())))
@@ -503,6 +507,9 @@ def check(yjs, decls, top=None, listed=(), max_examples=4):
                 continue
             bad = []
             for pn, bits in c.get("connections", {}).items():
+                if not bits:       # .p() -- explicitly open, not a width bind
+                    r["open_ports"] = r.get("open_ports", 0) + 1
+                    continue
                 w = decl_w.get(pn)
                 if pn not in decl_w:
                     bad.append((pn, None, len(bits)))
@@ -555,6 +562,15 @@ def load_netlist(p):
         return json.load(f)
 
 
+def sources_of(out):
+    """the elab's own lib + full source files (OUT/asbuilt_sources.json): declarations of masters with no stub"""
+    try:
+        d = json.loads((Path(out) / "asbuilt_sources.json").read_text())
+    except (OSError, ValueError):
+        return []
+    return [f for f in list(d.get("full") or []) + list(d.get("lib") or []) if isinstance(f, str) and Path(f).is_file()]
+
+
 def run(yjs, ab=None, stubs=None, srcs=(), defines=(), top=None):
     ab = ab or {}
     defs = list(defines) or [d[2:] if d.startswith("-D") else d for d in ab.get("defines", [])]
@@ -574,7 +590,7 @@ def bind_report(yjs, ab, out):
         out = Path(out)
         stubs = out / "asbuilt_lib_stubs.sv"
         tops = [t for t in (ab.get("_elab_top"), ab.get("top")) if t and t in yjs.get("modules", {})]
-        r = run(yjs, ab, stubs if stubs.is_file() else None, top=tops[0] if tops else None)
+        r = run(yjs, ab, stubs if stubs.is_file() else None, sources_of(out), top=tops[0] if tops else None)
         (out / "elab_port_width.json").write_text(json.dumps(r, indent=1, default=str) + "\n")
         unres = [ln for ln in r["lines"] if "-UNRESOLVED " in ln]
         return ([ln for ln in r["lines"] if "-UNRESOLVED " not in ln][:-1] + unres[:5]
@@ -601,11 +617,19 @@ def main(argv=None):
         ap.error("no netlist (--netlist or --out with asbuilt.json)")
     stubs = a.stubs or (out and (out / "asbuilt_lib_stubs.sv").is_file() and str(out / "asbuilt_lib_stubs.sv")) or None
     ab = json.loads(Path(a.asbuilt).read_text()) if a.asbuilt else {}
+    ys = out / "asbuilt.ys" if out else None
+    if ys and ys.is_file():     # no manifest: the elab script's own -D defines and top
+        yt = ys.read_text(errors="replace")
+        if not ab.get("defines") and not a.define:
+            a.define = sorted(set(re.findall(r"(?<!\S)-D\s*([A-Za-z_]\w*(?:=\S+)?)", yt)))
+        tm = re.search(r"(?:hierarchy\b[^\n]*?-top|--top)\s+(\S+)", yt)
+        if tm and not a.top and not ab.get("top"):
+            a.top = tm.group(1)
     yjs = load_netlist(net)
     if not a.top and not ab.get("top"):
         tops = [n for n, m in yjs["modules"].items() if str(m.get("attributes", {}).get("top", "0")).strip("0")]
         a.top = tops[0] if tops else None
-    r = run(yjs, ab, stubs, a.src, a.define, a.top)
+    r = run(yjs, ab, stubs, list(a.src) + (sources_of(out) if out else []), a.define, a.top)
     for ln in r["lines"]:
         print(ln)
     if a.json:
