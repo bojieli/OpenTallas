@@ -281,6 +281,28 @@ def attempt_dir_of(t):
 PRIVATE_KIT_DIR = re.compile(r"^.*/kit-wave/[^/]+/[^/]+/private/[^/]+/[^/]+(?=/|$)")
 
 
+# CLEAN-DISK-0750 (COORD ruling 11-24): the old kw43-wave-1109 layout has no attempt_N dir: .../kit-wave/<die>/<event>/items/<item>/gen/... is the unit.  Like an attempt it is
+# not held by the rows-container ANCESTOR entry, but only when it is old (LEGACY_MIN_AGE_H) and has no attempt_* child; listed-itself entries, .keep, leases, live
+# processes and a signed record that is not exported still refuse (signed_unexported_refusal), unsigned old rows with no live ref may go.
+LEGACY_ITEM_DIR = re.compile(r"^.*/kit-wave/[^/]+/[^/]+/items/[^/]+(?=/|$)")
+LEGACY_MIN_AGE_H = 6.0
+
+
+def legacy_item_dir_of(t):
+    m = LEGACY_ITEM_DIR.match(t)
+    if not m:
+        return None
+    d = t[:m.end()].rstrip("/")
+    try:
+        if not os.path.isdir(d) or os.path.islink(d) or any(n.startswith("attempt_") for n in os.listdir(d)):
+            return None
+        if time.time() - os.stat(d).st_mtime < LEGACY_MIN_AGE_H * 3600:
+            return None
+    except OSError:
+        return None
+    return d
+
+
 def unit_dir_of(t):
     """the attempt_N dir or private-spec kit dir t is or lies inside, else None"""
     ad = attempt_dir_of(t)
@@ -527,11 +549,13 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     # CLEAN-DISK-0750 (COORD 11-24): a SIGNED attempt whose every own record is in the verified archive index (exported_records.txt, sha256 match) is not held by
     # the rows-container ancestor either; before this every signed attempt stayed refused for ever after its export (1.37 TB fleet-wide).  Still refused when
     # listed itself, holding something listed, .keep / lease / live process, and a signed attempt with any unexported record (signed_unexported_refusal).
-    ad_free = bool(ad) and (not attempt_signed(ad) or signed_attempt_exported(ad))
+    ld = None if ad else legacy_item_dir_of(t)
+    unit = ad or ld
+    ad_free = bool(unit) and (not attempt_signed(unit) or signed_attempt_exported(unit))
     for p in protected:
         if t.startswith(p + "/") and t in allow:
             continue                                  # exact exception: only a protected ANCESTOR is skipped
-        if ad_free and ad.startswith(p + "/"):
+        if ad_free and unit.startswith(p + "/"):
             continue                                  # an ancestor of the attempt dir (the rows container): not a protection of the attempt
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
             if p.endswith("/."):                      # OPS-SUPPORT-R1: "<lane dir>/." = a lane dir a handoff / post of the last 24 h names (build_protected_live.lane_root_paths)

@@ -218,3 +218,47 @@ def test_exported_signed_attempt_is_not_held_by_the_kitwave_ancestor(tmp_path):
         assert G.refuse(str(it / "attempt_2"), **kw) is not None
     finally:
         G.EXPORTED_LIST = old
+
+
+def test_legacy_item_unit_released_from_kitwave_ancestor_when_unsigned_or_exported(tmp_path):
+    """CLEAN-DISK-0750 (COORD 11-24): old items/<item>/gen layout without attempt_N"""
+    import hashlib as _h, time as _t, json, os
+    import ot_delete_guard as G
+    root = tmp_path / "runs" / "qwen_kvsys" / "kit-wave"
+    items = root / "qwen_kvsys" / "KV-D25e" / "items"
+    def mk(name, signed=False):
+        g = items / name / "gen" / name / "run" / "results" / "base"
+        g.mkdir(parents=True)
+        (g / "3_place.odb").write_text("x")
+        if signed:
+            so = items / name / "gen" / name / "signoff"
+            so.mkdir()
+            (so / "signoff.json").write_text(json.dumps({"verdict": "SIGNED"}))
+        old = _t.time() - 48 * 3600
+        os.utime(items / name, (old, old))
+        return items / name
+    kw = dict(protected={str(root)}, ptext="", allow=set())
+    u = mk("unsigned")
+    assert G.refuse(str(u), **kw) is None                                              # unsigned old row, ancestor only: released
+    assert G.refuse(str(u / "gen" / "unsigned" / "run" / "results" / "base"), **kw) is None
+    assert "protected" in G.refuse(str(u), protected={str(root), str(u)}, ptext="", allow=set())    # listed itself
+    (u / ".keep").write_text("")
+    assert ".keep" in G.refuse(str(u), **kw)
+    (u / ".keep").unlink()
+    fresh = mk("fresh"); os.utime(fresh, None)
+    assert "protected" in G.refuse(str(fresh), **kw)                                    # newer than LEGACY_MIN_AGE_H: ancestor still holds it
+    v = mk("signed", signed=True)
+    sha = _h.sha256((v / "gen" / "signed" / "signoff" / "signoff.json").read_bytes()).hexdigest()
+    lst = tmp_path / "exported_records.txt"
+    oldl = G.EXPORTED_LIST
+    try:
+        G.EXPORTED_LIST = str(lst)
+        lst.write_text("# built %d\n" % int(_t.time()))
+        assert G.refuse(str(v), **kw) is not None                                       # signed, not exported
+        lst.write_text("# built %d\n%s\tx\n" % (int(_t.time()), sha))
+        assert G.refuse(str(v), **kw) is None                                           # signed + exported
+    finally:
+        G.EXPORTED_LIST = oldl
+    a = items / "withattempt" / "attempt_1"; a.mkdir(parents=True)
+    old = _t.time() - 48 * 3600; os.utime(items / "withattempt", (old, old))
+    assert G.legacy_item_dir_of(str(items / "withattempt" / "gen")) is None             # attempt_N layout keeps its own rules
