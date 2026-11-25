@@ -277,3 +277,42 @@ def test_identical_regression_at_three_shas_is_stale_baseline_not_regression(tmp
     assert three["verdict"] == "STALE-BASELINE" and "re-baseline" in three["why"]
     other = B.verdict(mkrun(tmp_path, "b4", src="eee111111111", ins=(210.0, 183.4)), tmp_path)   # different numbers
     assert other["verdict"] == "REGRESSION"
+
+
+def test_stale_baseline_and_frozen_metrics_hold_the_gate_and_mutant_regression_fails(tmp_path):
+    """FLOW-CANARY-R3: item 44.  (1) STALE-BASELINE used to release kits through the gate's fall-through; (2) a run whose metric files predate
+    it and equal those of 5 other commits is FROZEN-METRICS; (3) a mutant regression (insertion 20 ps worse, hold endpoints +50 %) fails;
+    (4) deterministic identical numbers from fresh files are NOT frozen; (5) a re-baseline from the current run releases."""
+    repo = tmp_path / "repo"
+    (repo / "tools/flow_canary").mkdir(parents=True)
+    (repo / "tools/flow_canary/canaries.json").write_text(json.dumps(
+        {"watch": ["tools/die_plan/*"], "canaries": [{"die": "s81", "item": "t12"}]}))
+    (repo / "tools/flow_canary/baseline.py").write_text((HERE / "baseline.py").read_text())
+    root = tmp_path / "runs"
+    root.mkdir()
+    row = {"die": "s81", "mode": "submit", "src": "x@abc123456789"}
+    git = lambda *a, **kw: (0, "", "")  # noqa: E731
+    mkrun(root, "r0", src="a00000000000", mtime=10**9)
+    assert G.assess(row, root, repo, git)[0]
+    mutant = mkrun(root, "mut", src="b00000000000", ins=(206.5, 163.4), hold=(-80.0, 1100, "PASS"), mtime=10**9 + 1)
+    v = B.verdict(mutant, root)
+    assert v["verdict"] == "REGRESSION"
+    ok, why = G.assess(row, root, repo, git)
+    assert not ok and "REGRESSION" in why                                           # the mutant must fail the gate
+    for i in range(4):                                                             # same numbers, 4 more commits: stale
+        mkrun(root, f"st{i}", src=f"c{i}0000000000", ins=(206.5, 163.4), hold=(-80.0, 1100, "PASS"), mtime=10**9 + 2 + i)
+    ok, why = G.assess(row, root, repo, git)
+    assert not ok and "STALE-BASELINE" in why                                       # held, not the advisory pass
+    # frozen: the metric files of the newest run predate it
+    for i in range(6):
+        r = mkrun(root, f"fz{i}", src=f"d{i}0000000000", mtime=10**9 + 20 + i)
+        for f in (r / "gen/t12").glob("postcts_gate_*.json"):
+            os.utime(f, ns=(10**9 - 5, 10**9 - 5))
+    fz = B.verdict(r, root, seed=False)
+    assert fz["verdict"] == "FROZEN-METRICS" and "did not run" in fz["why"]
+    for i in range(6):                                                             # fresh deterministic files: not frozen
+        r = mkrun(root, f"fr{i}", src=f"e{i}0000000000", mtime=10**9 + 40 + i)
+    assert B.verdict(r, root, seed=False)["verdict"] == "NO-REGRESSION"
+    # re-baseline from the (current known-good) run releases the gate
+    wrote, _ = B.write(root, B.make_record(B.run_metrics(r), "canary-run-info"), force=True)
+    assert wrote and B.verdict(r, root, seed=False)["verdict"] == "INFO"

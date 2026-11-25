@@ -445,6 +445,39 @@ def identical_other_shas(root, m, bad):
     return out
 
 
+FROZEN_SHAS = 6
+
+
+def metrics_fresh(run):
+    """FLOW-CANARY-R3: True when every kit metric file of the run was written after the run was submitted (canary_meta.json mtime), i.e. this
+    run's own flow produced it; False when any is older (copied / reused output of an earlier run: the canary did not really run)."""
+    run = Path(run)
+    meta = run / "canary_meta.json"
+    try:
+        t0 = meta.stat().st_mtime_ns
+        kit = Path((jload(meta) or {}).get("kit") or (run / "kit"))
+    except OSError:
+        return True
+    files = [kit / "postcts_gate_tt.json", kit / "postcts_gate_ff.json", kit / "hold_gate.log"]
+    files += [Path(x) for x in glob.glob(f"{kit}/signoff*/signoff.json")] + [Path(x) for x in glob.glob(f"{kit}/run/logs/asap7/*/base/5_1_grt.*")]
+    seen = [f for f in files if f.is_file()]
+    return all(f.stat().st_mtime_ns >= t0 for f in seen) if seen else True
+
+
+def frozen_metrics(root, m, run):
+    """FLOW-CANARY-R3: '' or why: this run's metrics are IDENTICAL to those of >= FROZEN_SHAS-1 runs at other source commits AND its metric files
+    predate the run (not written by it): the canary is not really running.  Identical numbers from fresh files are a deterministic flow, not this."""
+    rows = [dict(ctx=c, metric=k) for c in ("grt", "signoff") for k, v in ((m.get("contexts") or {}).get(c) or {}).items()
+            if v is not None and not k.endswith("_bound") and k not in ("from", "src", "run", "kind", "path")]
+    if not rows or metrics_fresh(run):
+        return ""
+    same = identical_other_shas(root, m, rows)
+    if len(same) >= FROZEN_SHAS - 1:
+        return (f"FROZEN-METRICS: all {len(rows)} metrics identical at {len(same) + 1} source commits ({', '.join(sorted(same)[:4])}) and the "
+                "metric files predate this run: the flow did not run; re-run the canary")
+    return ""
+
+
 def flow_not_started(run):
     """CANARY-SPILL-1122 (COORD 22:0x): '' when the physical flow of a generated canary started, else why not.  route.sh prints
     CANARY_FLOW_RC when the flow command returns; a generated run (GENERATED) whose otrun.log has no such line never ran its flow
@@ -489,6 +522,9 @@ def verdict(run, root, spec=None, seed=True):
     v, rows, notes = compare(base, m)
     bad = [r for r in rows if r["verdict"] == "REGRESSED"]
     src = base.get("source") or {}
+    fz = frozen_metrics(root, m, run)
+    if fz:
+        return dict(verdict="FROZEN-METRICS", why=fz, rows=rows, notes=notes, baseline=base, metrics=m)
     if bad:
         why = "; ".join(f"{r['ctx']} {r['metric']} {r.get('base')} -> {r.get('cur')} {r['how']}" for r in bad[:4])
         # FLOW-CANARY-R2 11-21 (COORD FABLE-FLOW-1240 f): the same numbers at >= STALE_SHAS other source commits are not a regression of any of

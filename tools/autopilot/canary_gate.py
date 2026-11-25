@@ -205,6 +205,10 @@ def _bind_any(completed, kit_source, root, repo, run_git, seed, watch, spec, ref
             return False, 'matching canary evaluation error: ' + rwhy
         if rv == 'REGRESSION':
             return False, ('matching reference canary REGRESSION: ' + r['ref'] + ' (' + rwhy[:300] + ')')
+        # FLOW-CANARY-R3: a stale baseline / frozen metrics / any verdict this gate does not know is an ERROR that holds, never the advisory pass
+        # (STALE-BASELINE used to fall through to 'no measured regression' and release kits on a canary that was 11 commits regressed).
+        if rv not in ('INFRA', 'NO-BASELINE'):
+            return False, ('matching reference canary ' + rv + ' (re-baseline / re-run the canary): ' + r['ref'] + ' (' + rwhy[:300] + ')')
     return True, 'background canary advisory: no measured regression of this kit flow'
 
 
