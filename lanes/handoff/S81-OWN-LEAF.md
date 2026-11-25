@@ -34,3 +34,8 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - First relaunch try failed kit_snap (overlay missing on epyc9). Those spec dirs in c8t_ftov/ are dead.
 - T26-CONG-1124: row = HALO-1 2.16 on u_vp.u_b0/u_b1 + u_vn.u_a/u_b (c9s base). Plan sits in my fork epyc9 s81-own-leaf/c9s_t26_tree (forked from c9seal_tree 19:2x). PRE pass, contract equal. Probe waiter epyc9 unit s81ownleaf-t26probe (log t26row/t26probe.log): waits for the c9s bind, forks the bind to s81-own-leaf/c9s_t26_bind, launches grt probe unit intel2 t26cong-probe. ROW-READY to INT after the probes GRT.
 - J7 map: epyc2 /srv/opentallas-scratch3/claude/ot-job-failed-logs/ot_s81sl_leaf__t26-route-dear-crayfish-3825656-1795523939.
+
+## 11-24 23:53 update
+- c8t finished at 23:30, but its final receipt refuses all 9 FT-SITE types and t26 (TYPE_DEFINE_CONFLICT OT_SVC_ATTCUT). The c8t relaunch is void. 8 kits also died at type_overlay: ot-run ISOLATION refused the overlay path (flow bug, posted to FLOW-OPS-R3). I stopped t39 by exact PID.
+- Next: on c9s, leaf kits on kit rt >= 1597ecb1ddbc need no overlay (gen legalizer). Asked INT to launch them on that rt, or to have me launch the 9 plus t26.
+- t26 waiter epyc9 s81ownleaf-t26probe (goal route) still waits on c9s (epyc11, 0/403 emitted at 23:51).
