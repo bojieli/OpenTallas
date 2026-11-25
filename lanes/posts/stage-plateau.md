@@ -402,3 +402,4 @@
   6. UNBOUND RANKS. Diagonal streaks in the SW quadrant (x20-300 y150-450) = relay chains on GP diagonals. Cause: ranks not bound. Fix: bind each chain on a Manhattan track.
   7. CLOCK/TRUNK span. Mid-height row of red markers at y~670 runs the full 622um width with a tap clump at x~310, including the empty E 150um. Cause: trunk built to the outline, not to occupancy. Fix: end the trunk at the last occupied column (follows from 1).
   Hold note: GRT hold guard started at ws -17.8ps, 20 violations, fixed with ~600 buffers in 3 chunks of ~1400-1500s each. paths.png drew 0 failing paths. No job touched. VIS-QUEUE line appended.
+- 2026-11-25 08:05 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1650172 on open-snipe: rc=0 after 25 s, ended 16:05:46, log none, cmd: ot-push-main 
