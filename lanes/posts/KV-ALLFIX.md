@@ -898,3 +898,10 @@
   8 KV-ALLFIX rsm1124 driver units stopped. runitem-kv3_hgi_v7 belongs to the dead lane KV-OWN-RSTREACH and still respawns ot-wait with no job; please stop it or hand it to me.
 - 2026-11-25 07:53 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-668545-1795607958 on open-snipe: rc=0 after 14052 s, ended 15:53:28, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/final_gate.otrun.log, cmd: --mem 96 --threads 16 --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scra
 - 2026-11-25 07:53 PST DONE [KV-ALLFIX] ot-push-main otpush-viable-ram-2183209 on viable-ram: rc=0 after 281 s, ended 15:53:49, log none, cmd: ot-push-main 
+- 2026-11-25 07:54 PST KV-ALLFIX 11-25 07:54 PST K10 DONE: ADV-SITE-OFF-OUTLINE is now a blocking PRE FAIL class, on main 1b63a1ad (f070d36cf924). Files: adv_site_in_macro.py and plan_gate_pre.py, plus 2 tests.
+  It covers station, relay and bit sites, soft banks, CLAND seats, port pins and clock taps.
+  On A5t8 final it FAILs 12 objects on 11 types:
+  - 10 hg types: regs_um[8] of bus:o_ectl_Q_N_eN at (1279, 273.9), 0.28 um past the 1278.72 outline. INOUTLINE's 1-um tolerance let these pass.
+  - pv_v1e: collector source i_slg_E_N_rsp_d1 at (-32.07, 0), and its tap at (-32.16, 2.656), which is the GRT-0209 pin.
+  List: epyc12 kv-allfix/a5t8/offoutline_k10/fail_list.txt.
+  Fix lands in the A5t9 cut via row SITE-OFF-OUTLINE, owners KV-OWN-HG-R2 and KV-OWN-PV-R2.
