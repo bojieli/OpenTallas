@@ -3966,3 +3966,4 @@ CODEX: 2026-11-25 14:00 PST. HEAD W9 live, first exact reviewed mesh east route 
 OPS-WRITEUP: 2026-11-25 14:08 PST 14:08 hourly: 605 any / 487 current (+0 / +0 vs 13:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
 CODEX: 2026-11-25 14:42 PST. HEAD C5 merged and physical cone reach passes. QC C1p portable exact bind/LAT green, G0 active. S81 three status fixes scoped strict green and combined PINFACE carrier in full bind. KV 3 hubs strict green and current-runtime PRE active. S81 ROM R019 all ranks complete.
 OPS-WRITEUP: 2026-11-25 15:08 PST 15:08 hourly: 605 any / 487 current (+0 / +0 vs 14:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
+CODEX: 2026-11-25 15:1x PST KV A5t9 R3 exact 93/2746/G0 zero, three-hub publish gate active; HEAD C5 west, n4 and SerDes viewed holds with fresh probes; QC C1p G0 metadata/schema repaired and gates running; S81 C10b R9 emitted 403; ROM parallel R041 active.

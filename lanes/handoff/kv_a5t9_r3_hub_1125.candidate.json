@@ -1,0 +1,87 @@
+{
+ "marker": {
+  "die": "qwen_kvsys",
+  "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125",
+  "main_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
+  "manifest_hash": "5b20afb22f0465b30a8b3163273b212adf65baaae10fdbdf7b26096477f1f885",
+  "src_manifest_sha": "5b20afb22f0465b30a8b3163273b212adf65baaae10fdbdf7b26096477f1f885",
+  "tools_sha": "7420631d5b9def93642a2268c94189e6047110e4",
+  "hosts": [
+   "intel1",
+   "epyc8",
+   "intel2"
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json",
+  "plan_sha256": "a661a611e626808b076cd060a28f621308da909694468139532a5bea3484e4ef",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r2_1125.json",
+  "asbuilt_sha256": "40dae8c9d2e0a526f0a685f926e2beb0f503f26a3733b60d9659a21ddd53e0ac",
+  "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_hub_banks_1125.json",
+  "sidecar_sha256": "c4edf239165d9d28734edc73d2ba2caa8d6a0e42a2ac4ca6a881e070141fb2f6",
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125",
+  "config": {
+   "event": "KV-A5t9-r3-hub-1125",
+   "plan_event": "KV-A5t9-r3-hub-1125",
+   "tools_sha": "7420631d5b9def93642a2268c94189e6047110e4",
+   "tools_from_rt": true,
+   "tools_refresh": false,
+   "gen_host": "epyc8",
+   "gen_hosts": [
+    "intel1",
+    "epyc8",
+    "intel2"
+   ],
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_hub_banks_1125.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r2_1125.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125"
+   },
+   "only_items": [
+    "kv3_hub_Eo",
+    "kv3_hub_Wi",
+    "kv3_hub_Wo"
+   ],
+   "only_items_regen": false,
+   "review_before_route": {
+    "event": "KV-A5t9-r3-hub-1125",
+    "all_items": true,
+    "required": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ]
+  },
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_KV_HEAD_KST": "2",
+   "OT_PLACE_MAX_TRANSITION": "320",
+   "OT_LAND_RESERVE": "1",
+   "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
+  },
+  "records": {},
+  "smoke": "PASS",
+  "smoke_detail": "Standalone epyc12 strict 93 types/175 partitions, LATCHECK 2746/2746, whole G0 0 errors/0 pending, exact scoped bound PRE 0; raw hub branches Eo/Wi/Wo 58/46/41 at <=300um. Geometry only until exact viewed review.",
+  "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
+  "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t8.json"
+ },
+ "keep_gen_hosts": true,
+ "optimistic": true
+}
