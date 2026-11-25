@@ -1,0 +1,136 @@
+reviewer	type	problem_no	status	allfix_row	owner	class
+A	hg_v1p2/v1p6	1	mapped	L641 STREET-LANE-DEMAND	KV-ALLFIX+KV-OWN-PV-R2+KV-OWN-HG-R3	street width
+A	hg_v1p2/v1p6	2	mapped	L678 HEAD-WLAND-SPLIT	KV-OWN-HG-R3	west-edge pocket
+A	hg_v1p2/v1p6	3	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	ex row not a spine / off grid / orientation
+A	hg_v1p2/v1p6	4	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	ex row not a spine / off grid / orientation
+A	hg_v1p2/v1p6	6	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	ex row not a spine / off grid / orientation
+A	hg_v1p2/v1p6	7	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	ex row not a spine / off grid / orientation
+A	hg_v1p2/v1p6	5	none	NEW CENTRE-STATIONS	KV-OWN-HG-R3	central cross-half station rows
+A	hg_v1p2/v1p6	8	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	small blocks/landings inside streets
+A	hg_v1p2/v1p6	9	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	east stack, u_q street, pin edges
+A	hg_v1p2/v1p6	10	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	east stack, u_q street, pin edges
+A	hg_v1p2/v1p6	11	none	NEW HG-REFLOOR-EXROW	KV-OWN-HG-R3	east stack, u_q street, pin edges
+A	hg_v1p2/v1p6	12	info	-	-	no variant difference (do not spend variants)
+A	hgi_v7/v8	13	partial	L715 HGI-WGATE-V2	KV-HGI-WGATE	west driver fanout 1405 um
+A	hgi_v7/v8	21	partial	L715 HGI-WGATE-V2	KV-HGI-WGATE	west driver fanout 1405 um
+A	hgi_v7/v8	14	none	NEW CENTRE-STATIONS	KV-OWN-HG-R3	central pile / streaks
+A	hgi_v7/v8	22	none	NEW CENTRE-STATIONS	KV-OWN-HG-R3	central pile / streaks
+A	hgi_v7/v8	19	none	NEW CENTRE-STATIONS	KV-OWN-HG-R3	central pile / streaks
+A	hgi_v7/v8	15	info	fixed in v8 (keep v8 pin moves)	-	opposite-face pins
+A	hgi_v7/v8	25	info	fixed in v8 (keep v8 pin moves)	-	opposite-face pins
+A	hgi_v7/v8	16	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hgi_v7/v8	17	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hgi_v7/v8	18	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hgi_v7/v8	20	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hgi_v7/v8	23	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hgi_v7/v8	24	none	NEW LANDING-OFF-STREETS	KV-OWN-HG-R3	landings in streets / top band / asym streets
+A	hroot	26	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	27	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	28	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	29	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	30	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	31	none	NEW HROOT-REFLOOR	KV-OWN-HUB	clock entry, outline, pin columns, fanout, hot gcells
+A	hroot	32	info	-	-	follows from 26/27
+B	pc_v1 cl4ea	1	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	2	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	3	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	4	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	5	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	6	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	7	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	8	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	9	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	10	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	11	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	12	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	stations + re-floor (WNS, funnel, faces, corner, slit, sparse die)
+B	pc_v1 cl4ea	13	partial	STAGE-PLATEAU post (smell inputs)	STAGE-PLATEAU	4 of 6 smells not computable
+C	hub_Eo	1	partial	L708 HUBEO-DEMACRO+TAPSPLIT-EXCL	KV-OWN-HUB-R2	unstationed band / diagonal streaks
+C	hub_Eo	2	partial	L708 HUBEO-DEMACRO+TAPSPLIT-EXCL	KV-OWN-HUB-R2	unstationed band / diagonal streaks
+C	hub_Eo	3	none	NEW HUB-REFLOOR	KV-OWN-HUB	W lumps, macros at pin windows, gutter macros, 520k insts
+C	hub_Eo	4	none	NEW HUB-REFLOOR	KV-OWN-HUB	W lumps, macros at pin windows, gutter macros, 520k insts
+C	hub_Eo	5	none	NEW HUB-REFLOOR	KV-OWN-HUB	W lumps, macros at pin windows, gutter macros, 520k insts
+C	hub_Eo	7	none	NEW HUB-REFLOOR	KV-OWN-HUB	W lumps, macros at pin windows, gutter macros, 520k insts
+C	hub_Eo	6	info	-	-	LOW cluster
+C	hub_Eo	8	partial	STAGE-PLATEAU post	STAGE-PLATEAU	smells not computable
+C	hub_Wo	1	partial	L654 hub_Wo street RC row	KV-ALLFIX+KV-OWN-HUB-R2	WS glue lump / streaks
+C	hub_Wo	3	partial	L654 hub_Wo street RC row	KV-ALLFIX+KV-OWN-HUB-R2	WS glue lump / streaks
+C	hub_Wo	2	none	NEW HUB-REFLOOR	KV-OWN-HUB	WN asymmetry, SE macro, tall macros 20 um, W face macros
+C	hub_Wo	4	none	NEW HUB-REFLOOR	KV-OWN-HUB	WN asymmetry, SE macro, tall macros 20 um, W face macros
+C	hub_Wo	5	none	NEW HUB-REFLOOR	KV-OWN-HUB	WN asymmetry, SE macro, tall macros 20 um, W face macros
+C	hub_Wo	6	none	NEW HUB-REFLOOR	KV-OWN-HUB	WN asymmetry, SE macro, tall macros 20 um, W face macros
+C	hub_Wo	7	partial	STAGE-PLATEAU post	STAGE-PLATEAU	smells not computable
+C	pv_v1	1	mapped	L699 PV-MIDSTREET	KV-PV-ESTRIP	SRAM slot hot spot
+C	pv_v1	2	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	strip / SRAM column / E gutter / S window macros
+C	pv_v1	3	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	strip / SRAM column / E gutter / S window macros
+C	pv_v1	6	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	strip / SRAM column / E gutter / S window macros
+C	pv_v1	8	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	strip / SRAM column / E gutter / S window macros
+C	pv_v1	5	partial	L700 PV FANOUT SEGST	KV-OWN-PV-R2	fanout 2378 NW driver
+C	pv_v1	4	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	31 opposite-face pins, glue fence, top band
+C	pv_v1	7	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	31 opposite-face pins, glue fence, top band
+C	pv_v1	9	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	31 opposite-face pins, glue fence, top band
+C	pv_v3	2	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	SRAM stagger, E gutter macro
+C	pv_v3	3	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	SRAM stagger, E gutter macro
+C	pv_v3	1	partial	L730 ESTRIP-A5t9	KV-PV-ESTRIP	S gap lump, group glue / NW bank
+C	pv_v3	4	partial	L730 ESTRIP-A5t9	KV-PV-ESTRIP	S gap lump, group glue / NW bank
+C	pv_v3	5	partial	STAGE-PLATEAU post	STAGE-PLATEAU	smells not computable
+C	pc_v1 cl4ea r877	1	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	W pin window, _f outer side, streak, 470k parent
+C	pc_v1 cl4ea r877	2	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	W pin window, _f outer side, streak, 470k parent
+C	pc_v1 cl4ea r877	3	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	W pin window, _f outer side, streak, 470k parent
+C	pc_v1 cl4ea r877	4	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	W pin window, _f outer side, streak, 470k parent
+D	pv_v1n	1	partial	L705 pv_v1n 453k cells rows	KV-ALLFIX	826k insts / centre lump
+D	pv_v1n	2	partial	L705 pv_v1n 453k cells rows	KV-ALLFIX	826k insts / centre lump
+D	pv_v1n	3	mapped	L731 pv_v1n place gate line	KV-A5t6 private	place failure root cause (log read)
+D	pv_v1n	4	none	NEW PV1N-SPLIT-CHANNELS	KV-PV-ESTRIP	column spacing, macros, g1_j, SW cluster
+D	pv_v1n	5	none	NEW PV1N-SPLIT-CHANNELS	KV-PV-ESTRIP	column spacing, macros, g1_j, SW cluster
+D	pv_v1n	6	none	NEW PV1N-SPLIT-CHANNELS	KV-PV-ESTRIP	column spacing, macros, g1_j, SW cluster
+D	pv_v1n	7	none	NEW PV1N-SPLIT-CHANNELS	KV-PV-ESTRIP	column spacing, macros, g1_j, SW cluster
+D	pv_v12	1	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	2	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	3	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	5	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	6	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	7	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	E strip, W gap, green macros, band, small macros
+D	pv_v12	4	none	NEW CELLCAP-PV12	KV-PV-ESTRIP	424k insts
+D	pv_v3e	1	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	W bank, E margin, chain, j faces, macros
+D	pv_v3e	2	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	W bank, E margin, chain, j faces, macros
+D	pv_v3e	3	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	W bank, E margin, chain, j faces, macros
+D	pv_v3e	4	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	W bank, E margin, chain, j faces, macros
+D	pv_v3e	5	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	W bank, E margin, chain, j faces, macros
+D	pv_v6n	1	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	fanout copies, E strip, macros
+D	pv_v6n	3	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	fanout copies, E strip, macros
+D	pv_v6n	4	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	fanout copies, E strip, macros
+D	pv_v6n	2	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	58 opposite-face pins, N/S pin tracks, NW bank
+D	pv_v6n	5	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	58 opposite-face pins, N/S pin tracks, NW bank
+D	pv_v6n	6	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	58 opposite-face pins, N/S pin tracks, NW bank
+D	pv_v12/v3e/v1n	1	partial	STAGE-PLATEAU post	STAGE-PLATEAU	smells not computable
+E	hg_v1p5	2	mapped	L678 HEAD-WLAND-SPLIT	KV-OWN-HG-R3	west pocket
+E	hg_v1p5	1	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	3	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	4	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	5	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	6	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	7	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	8	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	9	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	10	none	NEW HG-REFLOOR-EXROW / CENTRE-STATIONS	KV-OWN-HG-R3	centre crossing, ex row, grid, macros, bottom row
+E	hg_v1p5	11	partial	L682 LPADFENCE / CELLCAP	KV-HG-CDE	404k insts + smells
+E	pc_v1 cl4ea r828 + cl7f r8e7d	12	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	13	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	14	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	15	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	16	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	17	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	18	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	19	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	20	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pc_v1 cl4ea r828 + cl7f r8e7d	21	mapped	L728 PCV1-RESTRUCT	KV-PC-BANK	NW bank, faces, cores, blob, f gap, pin bands, 468k split, INFO
+E	pv	23	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	cross macros, density, E strip, centring
+E	pv	25	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	cross macros, density, E strip, centring
+E	pv	26	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	cross macros, density, E strip, centring
+E	pv	28	mapped	L730 ESTRIP-A5t9	KV-PV-ESTRIP	cross macros, density, E strip, centring
+E	pv	24	partial	L730 ESTRIP-A5t9	KV-PV-ESTRIP	j cores off-centre, ta macros
+E	pv	31	partial	L730 ESTRIP-A5t9	KV-PV-ESTRIP	j cores off-centre, ta macros
+E	pv	27	partial	L700 PV FANOUT SEGST	KV-OWN-PV-R2	fanout 2001 NW
+E	pv	22	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	5 opposite-face pins, column order, g2_j faces
+E	pv	29	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	5 opposite-face pins, column order, g2_j faces
+E	pv	30	none	NEW PV-REPIN-FENCE	KV-OWN-PV-R2	5 opposite-face pins, column order, g2_j faces
