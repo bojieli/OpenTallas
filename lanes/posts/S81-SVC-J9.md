@@ -82,3 +82,10 @@
   - all 16 land-SRAM (ffff): PASS
   - hi land-SRAM with the landing store read one edge late (mutant, aaaa): CAUGHT, with sc_errors 2048/2048, se 2048 and pv_errors 8192/8192
   All runs take 3467 cycles. So the land-SRAM path is exercised on every hi slice, and the hi/lo land difference is cycle-equivalent. Logs: epyc7 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates/land_e7/runs/. Combined with item (1) (as-built cut FAIL, CUT0 fix 95272cdd434), the only functional hi/lo split found is the cut, and SVC-CUT0-RSV09 removes it. Remaining caveat: FABLE-RC (c), the native replay with a mutant, has not been run.
+- 2026-11-25 03:16 PST CUT: item (2) LAND-SRAM hi/lo: PASS, and the check is non-vacuous. No row needed. Bench: the 16-slice ALLQ bench of record (closing_allq image img_k0, dates as compiled, cut depth 0 on all slices), with every slice on the bound dsdv_svc_att 1c66d039610d plus mem_ar 124d9bd0719a, la b62f87b3f778 and lr f07ccdbe9d7c. The hi libs add -DOT_SVC_ATT_LAND_SRAM, which equals the as-built dsdv_svc_att_j7_hi4 a358dc6dd31f body. Per-slice choice by protect-lib (tb_land.sv ec47f0ebc480, LSMASK). epyc7 unit oth-ubuntu-3517062-1795599046:
+  - all plain (0000): PASS (sc 0/2048, pv 0/8192, faults 0000)
+  - hi land-SRAM (aaaa, includes entries 5 and 11), seed 1: PASS
+  - the same, seed 2: PASS
+  - all 16 land-SRAM (ffff): PASS
+  - hi land-SRAM with the landing store read one edge late (mutant, aaaa): CAUGHT, with sc_errors 2048/2048, se 2048 and pv_errors 8192/8192
+  All runs take 3467 cycles. So the land-SRAM path is exercised on every hi slice, and the hi/lo land difference is cycle-equivalent. Logs: epyc7 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates/land_e7/runs/. Combined with item (1) (as-built cut FAIL, CUT0 fix 95272cdd434), the only functional hi/lo split found is the cut, and SVC-CUT0-RSV09 removes it. Remaining caveat: FABLE-RC (c), the native replay with a mutant, has not been run.
