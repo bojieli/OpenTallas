@@ -39,3 +39,23 @@ def test_type_job_not_steered(monkeypatch):
     monkeypatch.setattr(R, "_choose", lambda res, mem, threads, die: ("epyc2", False))
     R.PREFER_DIE[0] = False
     assert R.choose({"epyc2": row(900), "epyc12": row(900)}, 64)[0] == "epyc2"
+
+
+def test_die_spills_from_a_host_over_2_5x_cores_to_the_next_listed_one(monkeypatch):
+    """FLEET-OPS 11-25: epyc12 at load 304/96 -> epyc7; epyc8 and epyc10 are on the die list after intel1"""
+    monkeypatch.setattr(R, "physically_capable", lambda r, m: True)
+    res = {"epyc12": row(300, load=304.0), "epyc7": row(300, load=102.0), "intel1": row(300, ncpu=112, load=90.0), "epyc8": row(500, load=78.0), "epyc10": row(600, load=50.0)}
+    R.PREFER_DIE[0] = True
+    try:
+        assert R.choose(dict(res), 64)[0] == "epyc7"
+        res["epyc7"] = row(300, load=300.0); res["intel1"] = row(300, ncpu=112, load=400.0)
+        assert R.choose(dict(res), 64)[0] == "epyc8"
+        res["epyc8"] = row(500, load=300.0)
+        assert R.choose(dict(res), 64)[0] == "epyc10"
+        res["epyc10"] = row(600, load=300.0)
+        assert R.choose(dict(res), 64)[0] == "epyc12"          # all saturated: the first listed host, as before
+        monkeypatch.setenv("OT_RUN_DIE_SPILL_X", "0")
+        res["epyc7"] = row(300, load=10.0)
+        assert R.choose(dict(res), 64)[0] == "epyc12"          # 0 = the old order
+    finally:
+        R.PREFER_DIE[0] = False

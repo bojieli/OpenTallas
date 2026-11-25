@@ -1282,7 +1282,7 @@ def plan_job():
 # DIECLASS_1125 (COORD 11-25 00:3x): die-class jobs (--die / --priority die|plan / --plan-job, or a die-level command: the ot-heavy-reconcile DIE_LEVEL_RE
 # set) go to the first of OT_RUN_DIE_PREFER (default epyc12 = the host with the die slice, then epyc7, intel1) that qualifies (has --dir / inputs / disk);
 # ot-heavy admits die class at once there.  None qualifies -> the normal choice.  OT_RUN_DIE_PREFER= (empty) turns it off.
-DIE_PREFER = [h.strip() for h in os.environ.get("OT_RUN_DIE_PREFER", "epyc12,epyc7,intel1").split(",") if h.strip()]
+DIE_PREFER = [h.strip() for h in os.environ.get("OT_RUN_DIE_PREFER", "epyc12,epyc7,intel1,epyc8,epyc10").split(",") if h.strip()]
 DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|plan_census|"
                           r"(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b|"
                           r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
@@ -1334,7 +1334,20 @@ def die_disk_ask(cmd, die_class, explicit_die, path=None):
 
 def die_preferred(ok):
     """DIECLASS_1125: the first OT_RUN_DIE_PREFER host among the qualifying ones, or None"""
-    return next((h for h in DIE_PREFER if h in ok), None)
+    # FLEET-OPS 11-25 (COORD: die jobs piled on epyc12 at load 233-304/96): die class is admitted at once on any host, but a host at more than OT_RUN_DIE_SPILL_X (2.5) x cores
+    # runs it slowly, so the first listed host at or under that ratio wins (epyc12, epyc7, intel1, epyc8, epyc10); when every listed host is over it, the first listed one.
+    order = [h for h in DIE_PREFER if h in ok]
+    try:
+        x = float(os.environ.get("OT_RUN_DIE_SPILL_X", "2.5"))
+    except ValueError:
+        x = 2.5
+    if x > 0:
+        for h in order:
+            r = ok[h]
+            ld = r.get("load1", r.get("load"))
+            if ld is None or not r.get("ncpu") or float(ld) / r["ncpu"] <= x:
+                return h
+    return order[0] if order else None
 
 
 def choose(res, mem, threads=THREADS, die=False):
