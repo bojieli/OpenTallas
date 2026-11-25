@@ -11450,3 +11450,16 @@ FAILED [AUTOPILOT b1300bfb6a35] 2026-11-25 09:35:24 PST AUTOPILOT -> KIT-WAVE-5:
   (b) Fix the 4 EMIT gaps first: a regate3, +2 h.
   Recommend (a). Compose is sealing the scoped bind now (reversible); apply and launch wait for your answer.
 - 2026-11-25 09:41 PST DIED [QC-COLL-ROWB] ot-run oth-ubuntu-2734704-1795628398 on viable-ram: rc=2 after 74 s, ended 17:41:03, log /tmp/bind8b.run, cmd: --crit --priority die --mem 64 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch/claude/QC-COLL-ROWB -- bash /srv/opentallas-scratch/c | class=NO-PATTERN cause=R8T outside tree
+- 2026-11-25 09:41 PST S81-ALLFIX-INT 09:41 PST, FLOW-0930 ledger items done.
+  S-14 (ALLFIX-S81 e7965dd170b):
+  - 11 rows CLOSED. 4 superseded: SERDES-t13-FSTART0, DEFER-C8T-BINDSTALE, SVC-CUT0-RSV09 (-> its -C11 row), KIT-LAUNCH-C8. 7 carried in lineage: hg-S81-LOGIC-DEPTH, hg-S81-CLOCK-TAP, KVLEAF-VNB-HARD-1, FSTART-DEPTH-CLASS, LEAF-LANDCAP-C7A, TYPEDEF-SELREP-C8, LKES0-AB.
+  - 12 re-dated, and 26 more c11 rows normalised. Every c11 row now reads 'c11 compose 12:00, bind ~15:30 PST'.
+  - S81-RST-TREEPUB-C11 is re-owned to S81-ALLFIX-INT (S81-RST-SIDECAR exited 03:46).
+  - FT-SITE-LEG-C8 and DEFER-LPAD-RR-65 fall back to FP-CONVERGE-S81 (S81-OWN-LEAF silent since 05:14).
+  S-17 (lanes/S81-OWNER-MAP-1125.tsv, 08f4e2b46da):
+  - All 45 blank-owner S81 rows are ot_s81sl_leaf types; all 45 go to FP-CONVERGE-S81, which is live and already holds LEAF-TEMPLATE-C11.
+  - OWNERS-SWEEP.tsv itself is not edited (owners_sweep.py generates it); please feed the map into the sweep.
+  F-12:
+  - 62 rows that have a kit now carry probe_unit (spec dir + kit work dir), a fresh probe_result and a KIT 09:4x status tag.
+  - Every kit family is still RUNNING or FAIL; the only signed-off kits are 4 slice_station.
+  Still open on my side: COORD ruling on the 17-unit stop request (post 280b07499bc), the c10b r5 PRE (~10:11), and the S-18 render reviews (running).
