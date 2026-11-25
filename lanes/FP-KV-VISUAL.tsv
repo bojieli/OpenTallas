@@ -1,0 +1,24 @@
+type	verdict	n_problems	top_causes	owner_proposal	source
+kv3_hg_v1p2	FAIL	11	narrow streets all carrying cells (outline too tight); west-edge 100% pocket; ex row off column grid not a spine; central cross-half pile; landings in streets	KV-ALLFIX (hg covering KV-OWN-HG-R2): street widening + ex spine re-floor	fable-review a9cae844e2a6431af 11-25
+kv3_hg_v1p6	FAIL	11	same floorplan as v1p2, no visible difference	same; do not spend another variant on this floorplan	same
+kv3_hgi_v7	FAIL	8	west-edge driver fanout 1405um; central cross-half pile 1.0; 16 opposite-face pins E->W; landings in streets	KV-HGI-WGATE (HGI-WGATE-V2) + KV-ALLFIX	same
+kv3_hgi_v8	FAIL	5	same fanout 1419um and centre pile 1.031; opposite-face fixed; better base than v7	KV-HGI-WGATE (build on v8)	same
+kv3_hroot	FAIL	7	clock entry SW vs sinks east 1642um; outline far larger than logic, nets share SE corridor; east pin column pile; 3 unexplained HOT gcells at west edge	KV-OWN-HUB-R2 / KV-ALLFIX hroot row	same
+kv3_pc_v1__cl4ea58a5c__r84d0332e1	FAIL	5	family: 4 kvpc cores in corners, 4 centre macros in the channel crossing, unstationed spans (WNS -2128 ps at place), thin cells over 70% of die; slit between _f core and kvpc	KV-PC-BANK one row: stations + re-floor, variants held (COORD)	fable-review a206ae2860279b402 11-25
+kv3_pc_v1__cl4ea58a5c__r884969661	FAIL	4	same family floorplan; corner IO hub + inner faces	same	same
+kv3_pc_v1__cl4ea58a5c__r8afe1e027	FAIL	4	same; highest density 0.85	same	same
+kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	FAIL	3	same; lowest density 0.704 yet GRT failed: structural not density	same	same
+kv3_pc_v1__cl4ea58a5c__r8ef700d7c	FAIL	5	same; right-face strip squeeze	same	same
+kv3_hub_Eo	FAIL	8	unstationed long nets across 1.1 mm (diagonal streaks); EN-ES band bowed; macros within 15 um of pin windows; 4 smells not computable	KV-OWN-HUB-R2: N-S station corridor x~1000, macro sites 40 um off faces	fable-review ac3b370e219b4507b 11-25
+kv3_hub_Wo	FAIL	7	WS glue lump 29200 um2 / 73k insts; asymmetric WN vs WS; unstationed streaks; macros in pin runs	KV-OWN-HUB-R2: fence glue per stack, mirror hub_Eo fix	same
+kv3_pv_v1	FAIL	9	SRAMs block centre channel; 31 opposite-face pins; fanout 2378 um NW driver; pvg2 gutter and S-slot hot	KV-OWN-PV-R2: SRAMs to one column, re-pin, regional fanout copies	same
+kv3_pv_v3	FAIL	5	same floorplan as pv_v1; SRAMs staggered across channel; macro closes E gutter; S gap lump 51k insts	KV-OWN-PV-R2 (apply pv_v1 fixes)	same
+kv3_pc_v1__cl4ea58a5c__r877307f5d	FAIL	4	GRT 9923 gcells>90%; W pin window within 8 um of edge; _f cores outer side leave 55 um gutter; GRT render shows density not congestion	KV-PC-BANK (same stations + re-floor row)	same
+kv3_pv_v1n	FAIL	7	826k insts in one run (2x cap), 4 pvg groups; centre channel ~100 um with >100% lump 35k insts; place failure inferred from size+pile-up (log not read)	KV-PV-ESTRIP: split into two 2-group types + widen centre channel to >=250 um	fable-review a954acada3d030276 11-25
+kv3_pv_v12	FAIL	7	E strip ~50 um >100% (E-face port banks); pvg0 14 um from W outline; 7 green macros staggered across centre channel; 424k insts	KV-PV-ESTRIP: estrip rule (>=35 um on pinned face, ~100 um at port banks), macros in one column	same
+kv3_pv_v3e	FAIL	5	W strip bank stack; pvg3 14 um from E outline; macros on pin faces; chain through j-core gap	KV-PV-ESTRIP (same estrip rule)	same
+kv3_pv_v6n	FAIL	6	fanout 2405 um unstaged control net; 58 opposite-face pins; E strip 60-90%; macros abut core faces	KV-PV-ESTRIP + KV-OWN-PV-R2 (re-pin, relay copies)	same
+kv3_hg_v1p5	FAIL	11	centre street crossing 1.039 pile; west-edge pocket; ex row off-centre; head1_e4 off grid; macros at street mouths; 404k insts	KV-ALLFIX (hg, covering KV-OWN-HG-R2): same hg floorplan fixes	fable-review a2a163c16ec5db198 11-25
+kv3_pc_v1__cl4ea58a5c__r828e1c2a5	FAIL	10	same pc_v1 floorplan: corner cores far from centre macros, NW corner bank, 468k insts over cap; smells not computable	KV-PC-BANK stations+re-floor row; split before any full kit	same
+kv3_pc_v1__cl7f648944__r8e7d31598	FAIL	10	identical floorplan to cl4ea	same	same
+kv3_pv	FAIL	10	5 opposite-face pins; centre cross macros 10 um gaps channel_tracks 1.377; fanout 2001 um NW; j cores off-centre	KV-OWN-PV-R2: re-pin, spread cross, reset relay	same
