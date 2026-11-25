@@ -91,6 +91,16 @@ def param_text(params):
     return "#(" + ", ".join(f".{k}({int(v)})" for k, v in params.items()) + ")"
 
 
+def param_key(text):
+    """BIND-PARAM-ORDER-1125: '#(.A(1), .B(2))' -> sorted (name, int) pairs: named overrides are order-free, so a plan
+    params dict re-serialised with sorted keys still matches the bound ring.  The wrapper keeps the plan order (its text
+    is unchanged).  A non-integer override keeps the exact whitespace-free string compare."""
+    pairs = re.findall(r"\.(\w+)\s*\(\s*(-?\d+)\s*\)", text)
+    if len(pairs) != len(re.findall(r"\.\w+\s*\(", text)):
+        return re.sub(r"\s", "", text)
+    return tuple(sorted((k, int(v)) for k, v in pairs))
+
+
 def wrapper_sv(master, base, params):
     if base not in PORTS:
         raise ValueError(f"param_wrap: base {base} has no port table")
@@ -119,7 +129,7 @@ def wrap_bound(bound, hard_cores):
         if len(hits) != 1:
             raise ValueError(f"param_wrap {hc['inst']}: expected one instance {inst}, got {len(hits)}")
         h = hits[0]
-        if h.group(2) != base or re.sub(r"\s", "", h.group(3)) != re.sub(r"\s", "", param_text(params)):
+        if h.group(2) != base or param_key(h.group(3)) != param_key(param_text(params)):   # BIND-PARAM-ORDER-1125
             raise ValueError(f"param_wrap {hc['inst']}: {inst} is {h.group(2)} {h.group(3)}, plan says {base} {param_text(params)}")
         bound = bound[:h.start()] + f"{h.group(1)}{master} {inst} (" + bound[h.end():]
         txt = wrapper_sv(master, base, params)

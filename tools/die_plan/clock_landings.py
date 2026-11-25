@@ -153,6 +153,21 @@ HARD_RING_BASES = ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas")
 RING_FANOUT_KNOBS = ("landing_ring_fanout_max", "landing_ring_write_chunk")   # die-wide, soft rings only
 
 
+def paramod_key(text):
+    """BIND-PARAM-ORDER-1125: 'mod #(.A(1), .B(2))' -> (mod, sorted (name, int) pairs).  Verilog named parameter
+    overrides are order-free, so a plan param_wrap whose params dict was re-serialised with sorted keys (any json
+    sort_keys writer) names the same paramod as the ring knob order; the old whitespace-only string compare refused it
+    (false 'differs from its signed hard child' on KV A5t6+PINS binds).  Text with a non-integer override keeps the
+    exact whitespace-free string compare."""
+    m = re.fullmatch(r"\s*(\w+)\s*#\((.*)\)\s*", text, re.S)
+    if not m:
+        return re.sub(r"\s", "", text)
+    pairs = re.findall(r"\.(\w+)\s*\(\s*(-?\d+)\s*\)", m.group(2))
+    if len(pairs) != len(re.findall(r"\.\w+\s*\(", m.group(2))):
+        return re.sub(r"\s", "", text)
+    return m.group(1), tuple(sorted((k, int(v)) for k, v in pairs))
+
+
 def hard_ring_params(plan, tn, bus, key=None):
     """QC-PARAMWRAP 11-12: the exact parameters of a count-aligned ring that the plan realises as a SIGNED hard child
     (partition_types[tn].hard_cores[] with param_wrap {base: ot_dp_clk_landing_ca/_cas} at physical_inst
@@ -2410,7 +2425,7 @@ class Landings:
                     got = ring_mod.format(w=w + 2 if self.dataflow else w)
                     want = ("ot_dp_clk_landing_cas" if cat.get("straps") else "ot_dp_clk_landing_ca") + " #(" + ", ".join(
                         f".{k}({int(v)})" for k, v in hard.items()) + ")"
-                    if re.sub(r"\s", "", got) != re.sub(r"\s", "", want):
+                    if paramod_key(got) != paramod_key(want):     # BIND-PARAM-ORDER-1125: named overrides are order-free
                         self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: bound ring {got} differs from its signed hard child param_wrap "
                                            f"{want}: fix the plan param_wrap (re-sign the child) or the ring knobs"))   # BIND-ALL-ERRORS: collect, next item
                         continue

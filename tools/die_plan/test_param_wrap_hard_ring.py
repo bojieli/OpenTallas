@@ -237,3 +237,43 @@ def test_reach_signed_hard_ring_keeps_parent_reach_stage():
     p, t, body = wide()
     _hard(p, base, {k: v for k, v in params.items() if k != "RSTREP"})
     assert CL.reader_start_reach(p, "B") == 0 and CAB.reader_start_depth(p, "B") == 0
+
+
+def test_sorted_key_plan_params_bind_and_wrap():
+    """BIND-PARAM-ORDER-1125 (KV A5t6+PINS hub_Wo ft0_i): a plan whose param_wrap params were re-serialised with sorted
+    keys is the same paramod; before the fix the strict bind refused 9 kv3_hub_Wo rings with 'bound ring
+    ot_dp_clk_landing_cas #(.W(292), .DEPTH(4), .STATUS_REG(1), ...) differs from its signed hard child param_wrap
+    ot_dp_clk_landing_cas #(.DEPTH(4), .DSREP(8), .GUARD_REG(1), .RSTREP(11), ...)'."""
+    base, params = _signed_child()
+    shuffled = {k: params[k] for k in sorted(params)}
+    assert list(shuffled) != list(params)
+    p, t = _vehicle()
+    hcs = _hard(p, base, shuffled)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", B_BODY)
+    assert _params(rtl) == (base, params)
+    bound, receipt, srcs = param_wrap.wrap_bound(rtl, hcs)
+    assert "    b_cland_y u_cland_y (" in bound and receipt[0]["cycles_changed"] == 0
+    assert param_wrap.param_text(shuffled) in srcs["b_cland_y"]       # wrapper text keeps the plan order
+
+
+def test_hub_wo_ft0_i_paramod_key():
+    got = ("ot_dp_clk_landing_cas #(.W(292), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), "
+           ".WRITE_CHUNK(16), .RSTREP(11))")
+    want = ("ot_dp_clk_landing_cas #(.DEPTH(4), .DSREP(8), .GUARD_REG(1), .RSTREP(11), .STATUS_REG(1), .W(292), .WFALL(1), "
+            ".WREG(1), .WRITE_CHUNK(16))")
+    assert CL.paramod_key(got) == CL.paramod_key(want)
+    assert param_wrap.param_key(got.split(" ", 1)[1]) == param_wrap.param_key(want.split(" ", 1)[1])
+    assert CL.paramod_key(got) != CL.paramod_key(want.replace(".RSTREP(11)", ".RSTREP(12)"))
+    assert CL.paramod_key(got) != CL.paramod_key(want.replace(", .WRITE_CHUNK(16)", ""))
+    assert CL.paramod_key(got) != CL.paramod_key(want.replace("ot_dp_clk_landing_cas", "ot_dp_clk_landing_ca"))
+
+
+def test_sorted_key_value_mismatch_still_fails():
+    base, params = _signed_child()
+    bad = {k: params[k] for k in sorted(params)}
+    bad["DEPTH"] += 4
+    p, t = _vehicle()
+    _hard(p, base, bad)
+    with pytest.raises(LandingError, match="signed hard child"):
+        Landings(p, t).type_rtl("B", B_BODY)
