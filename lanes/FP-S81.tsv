@@ -250,7 +250,7 @@ ot_s81sl_leaf__t11	ot_s81sl_leaf	FAIL 70	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t12	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	86/636	2
 ot_s81sl_leaf__t13	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	25/611	2
 ot_s81sl_leaf__t14	ot_s81sl_leaf	FAIL 16	pass	pass	FAIL 1	pass	FAIL 1	9143	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	51/611	0
-ot_s81sl_leaf__t15	ot_s81sl_leaf	FAIL 109	pass	pass	FAIL 1	pass	FAIL 1	7396	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): same leaf form; stations/roots outside outline (t70 t35 t50 t57), vn_a.c_s 406-436 um no station (t35 t50), ft over cores, hub pile 1.06-1.09	c9s-1	84/630	2
+ot_s81sl_leaf__t15	ot_s81sl_leaf	FAIL 109	pass	pass	FAIL 1	pass	FAIL 1	7396	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD (template net negative: V corridor narrowed 75.6->58.3 um, vn_b face shadowed)	c9s-1	84/630	2
 ot_s81sl_leaf__t16	ot_s81sl_leaf	FAIL 16	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	92/607	0
 ot_s81sl_leaf__t17	ot_s81sl_leaf	FAIL 10	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	6/596	0
 ot_s81sl_leaf__t2	ot_s81sl_leaf	FAIL 23	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	8/211	2
@@ -271,7 +271,7 @@ ot_s81sl_leaf__t31	ot_s81sl_leaf	FAIL 20	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t32	ot_s81sl_leaf	FAIL 17	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	26/593	2
 ot_s81sl_leaf__t33	ot_s81sl_leaf	FAIL 55	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	119/623	1
 ot_s81sl_leaf__t34	ot_s81sl_leaf	FAIL 30	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	35/644	0
-ot_s81sl_leaf__t35	ot_s81sl_leaf	FAIL 100	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): same leaf form; stations/roots outside outline (t70 t35 t50 t57), vn_a.c_s 406-436 um no station (t35 t50), ft over cores, hub pile 1.06-1.09	c9s-1	88/605	1
+ot_s81sl_leaf__t35	ot_s81sl_leaf	FAIL 100	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD (gains but stale core taps/relay seats, 4 GATE REACH, ft0 445 um)	c9s-1	88/605	1
 ot_s81sl_leaf__t36	ot_s81sl_leaf	FAIL 62	pass	pass	FAIL 1	pass	FAIL 1	1479	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	120/631	1
 ot_s81sl_leaf__t37	ot_s81sl_leaf	FAIL 9	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	49/609	0
 ot_s81sl_leaf__t38	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	9/598	0
@@ -298,7 +298,7 @@ ot_s81sl_leaf__t54__cl501e5681	ot_s81sl_leaf	FAIL 72	pass	pass	FAIL 1	pass	FAIL 
 ot_s81sl_leaf__t54__cl706d9749	ot_s81sl_leaf	FAIL 78	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins	c9s-1	12/631	0
 ot_s81sl_leaf__t55	ot_s81sl_leaf	FAIL 12	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	115/607	0
 ot_s81sl_leaf__t56	ot_s81sl_leaf	FAIL 35	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	33/603	1
-ot_s81sl_leaf__t57	ot_s81sl_leaf	FAIL 88	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): same leaf form; stations/roots outside outline (t70 t35 t50 t57), vn_a.c_s 406-436 um no station (t35 t50), ft over cores, hub pile 1.06-1.09	c9s-1	54/624	1
+ot_s81sl_leaf__t57	ot_s81sl_leaf	FAIL 88	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD (stale taps, GATE 6 leafdn 450.7 um, TAP-CAP clk_t37 1294)	c9s-1	54/624	1
 ot_s81sl_leaf__t58	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	88/610	0
 ot_s81sl_leaf__t59	ot_s81sl_leaf	FAIL 73	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins	c9s-1	103/622	1
 ot_s81sl_leaf__t6	ot_s81sl_leaf	FAIL 39	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	80/630	0
@@ -311,7 +311,7 @@ ot_s81sl_leaf__t67	ot_s81sl_leaf	FAIL 26	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t68	ot_s81sl_leaf	FAIL 24	pass	pass	FAIL 1	pass	FAIL 1	4135	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	11/611	0
 ot_s81sl_leaf__t69	ot_s81sl_leaf	FAIL 86	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins	c9s-1	66/624	1
 ot_s81sl_leaf__t7	ot_s81sl_leaf	FAIL 43	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	61/635	1
-ot_s81sl_leaf__t70	ot_s81sl_leaf	FAIL 101	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): same leaf form; stations/roots outside outline (t70 t35 t50 t57), vn_a.c_s 406-436 um no station (t35 t50), ft over cores, hub pile 1.06-1.09	c9s-1	104/628	0
+ot_s81sl_leaf__t70	ot_s81sl_leaf	FAIL 101	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD closest (ANCHORDRY, dangling collector sources x=1620, ft hops 402-404 um)	c9s-1	104/628	0
 ot_s81sl_leaf__t71	ot_s81sl_leaf	FAIL 22	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	34/609	1
 ot_s81sl_leaf__t72	ot_s81sl_leaf	FAIL 40	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	102/629	0
 ot_s81sl_leaf__t73	ot_s81sl_leaf	FAIL 13	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	33/611	0
