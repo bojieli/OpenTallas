@@ -12094,3 +12094,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-25 13:28 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 1 event(s): slice_station__t17 AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/items/slice_station__t17/attempt_3/gen/slice_station__t17
 - 2026-11-25 13:30 PST CANARY s81 @ 0d5ba7456d: PASS (STALE-BASELINE STALE-BASELINE: identical 1 regressed metric(s) at 3 source commits (14d6b76ef2e5, 427fe7078f5a); baseline canary-passed-main /srv/opentallas-sc)
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
+- 2026-11-25 13:30 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 slice_station__t21 PLACE-GP owner S81-ALLFIX-INT (60 min since queued, epyc12). 
