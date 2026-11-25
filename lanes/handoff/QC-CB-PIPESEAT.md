@@ -10,3 +10,9 @@
 - QC-CB-C1L composes C1l = C1k + PIPESEAT + CB-TAPBINS + CB-COREPHASE. When it asks, apply with apply_row.py on the TAPBINS plan.
 - Residual (not this row): 2743 pre-existing >405 pipe hops; 457 cl622 seats inside u_t01 on reach-bound crossing stages -> those pipes need stages or a re-solved line (type_relay_sites --pipes on current core boxes).
 - Fork epyc11 QC-CB-PIPESEAT/tree (58 GB): keep until C1l binds, then ot-delete.
+## 19:47 PST CB-PIPEREACH ROW-REBASED posted (also covers COORD 17:2x north-strip ruling)
+- Tool: epyc11 QC-CB-PIPESEAT/pipe_reach_seat.py (not on main yet). Pipe ends come from the bound topology (topo.json: core pin via the pins file + orient; xstn at the core tap face; u_pc_nk -> sink core n_a/n_b pin). Kit segments come from kit_dly_lockup (kitseg.json). Stages sit at even arc length on the BFS street route, bits on a grid; horizontal streets spread up to 0.9 x hop spacing.
+- Row: epyc11 QC-CB-PIPESEAT/reach_r2/<type>/pipereach_sites.json, apply with apply_reach.py on 002c58551eec -> plan 0f77be78cc8d; tarball reach_r2.tgz 9ac4b9b73c75.
+- Result: hops >405: 2743 -> 0 (worst 379.9); buried 0; dup 0; +70k seats for pipes that never had seats; north strip 7-11 columns, max 30 per 10 um cell. Bucket (b) empty: no stages, LATCHECK, LEC or tok/s change.
+- Gate: PRE 0 new; scoped strict bind rc 0, 0 errors, EMIT 17/17 (gate_reach.log, bind_reach2.log).
+- Next: when QC-CB-C1L asks, re-apply on the TAPBINS/C1m plan. Land pipe_reach_seat.py on main. ot-delete the fork after C1m binds.
