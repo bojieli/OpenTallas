@@ -116,6 +116,9 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       set pct [format %.6f [expr {100.0 * max($nb, 1.0) / $inst}]]
       set tc [clock seconds]
       set hit 0
+      # QC-HOLD-STRUCT 11-25: the "[ERROR RSZ-0060] Max buffer count reached." that follows in the log is THIS chunk's own -max_buffer_percent cap (caught below, not a failure,
+      # and not the reason a kit ends with residual hold: FABLE-RC-QC misread it; cbf_q00_s2 chunk 1 = +200 buffers in 3440 s at 0 violators).  Say so in the log.
+      puts [format "OT_HOLD_GUARD_GRT chunk %d: cap %.0f buffers (%.6f %%); an RSZ-0060 line below is this cap, not a failure" $k $nb $pct]
       if {[catch {::ot_hg_rth_orig {*}$base -hold -max_buffer_percent $pct} err opts]} {
         if {![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
         set capped 1; set hit 1

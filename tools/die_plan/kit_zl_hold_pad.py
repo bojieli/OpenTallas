@@ -23,7 +23,21 @@ MARK = "# OT_ZLP kit_zl_hold_pad.py"
 SRC = "source /work/zl_hold_pad.tcl"
 
 
-def apply(kit: Path, depth=4, slew=20, cap=20, report_only=False):
+CLASS_RECIPE = HERE / "zl_hold_class" / "qc_seam_classes.json"
+
+
+def class_regex(recipe=None, names=None):
+    """Joined Tcl regexp of the recipe classes (all, or the named ones)."""
+    rec = json.loads(Path(recipe or CLASS_RECIPE).read_text())
+    cl = rec["classes"]
+    pick = list(cl) if not names else list(names)
+    bad = [n for n in pick if n not in cl]
+    if bad:
+        raise SystemExit(f"kit_zl_hold_pad: unknown class {bad}; recipe has {sorted(cl)}")
+    return "|".join(f"({cl[n]})" for n in pick)
+
+
+def apply(kit: Path, depth=4, slew=20, cap=20, report_only=False, class_re=None):
     kit = Path(kit)
     pre = kit / "pre_cts.tcl"
     cfg = kit / "config.mk"
@@ -39,6 +53,8 @@ def apply(kit: Path, depth=4, slew=20, cap=20, report_only=False):
         lines = [MARK, "export OT_ZLP = 1", f"export OT_ZLP_DEPTH = {int(depth)}"]
         if report_only:
             lines.append("export OT_ZLP_REPORT_ONLY = 1")
+        if class_re:
+            lines.append("export OT_ZLP_CLASS = " + class_re.replace("$", "$$"))
         if slew is not None:
             lines.append(f"export SLEW_MARGIN = {int(slew)}")
         if cap is not None:
@@ -57,8 +73,14 @@ def main(argv=None):
     ap.add_argument("--slew-margin", type=int, default=20)
     ap.add_argument("--cap-margin", type=int, default=20)
     ap.add_argument("--report-only", action="store_true")
+    ap.add_argument("--qc-seam", nargs="?", const="all", metavar="CLASS[,CLASS]",
+                    help="restrict the pads to the QC seam classes of zl_hold_class/qc_seam_classes.json (all, or a comma list)")
+    ap.add_argument("--class-regexp", help="restrict the pads to capture registers whose instance name matches this Tcl regexp")
     a = ap.parse_args(argv)
-    print(json.dumps(apply(Path(a.kit), a.depth, a.slew_margin, a.cap_margin, a.report_only)))
+    cre = a.class_regexp
+    if a.qc_seam:
+        cre = class_regex(names=None if a.qc_seam == "all" else a.qc_seam.split(","))
+    print(json.dumps(apply(Path(a.kit), a.depth, a.slew_margin, a.cap_margin, a.report_only, cre)))
 
 
 if __name__ == "__main__":

@@ -10,11 +10,16 @@
 # logic unchanged.  NOT dont_touch (a dont_touch load blocks repair_design buffering of the driver net, RSZ-3006);
 # zero-logic hops carry no setup demand, so setup repair has no reason to touch them.  CTS detailed_placement legalizes.
 # Env: OT_ZLP (1 = on), OT_ZLP_DEPTH (default 4), OT_ZLP_MAX (abort above, default 150000), OT_ZLP_REPORT_ONLY.
+# QC-HOLD-STRUCT 11-25: OT_ZLP_CLASS = Tcl regexp on the CAPTURE instance name; set, only pads whose capture register matches are inserted (a seam class:
+# pad / relay / ist / rrl / wo_d>wd lines of the QC types, see zl_hold_class/qc_seam_classes.json); the rest of the zero-logic census is still counted
+# (OT_ZLP census ... class_skipped N).  Unset or empty = every zero-logic register (the HEAD-92 behaviour).
 proc zlp_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 if {[zlp_env OT_ZLP 0] eq "1"} {
   set zlp_depth [zlp_env OT_ZLP_DEPTH 4]
   set zlp_max [zlp_env OT_ZLP_MAX 150000]
   set zlp_ronly [zlp_env OT_ZLP_REPORT_ONLY 0]
+  set zlp_class [zlp_env OT_ZLP_CLASS ""]
+  set zlp_cskip 0
   set zlp_blk [ord::get_db_block]
   set zlp_master [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$zlp_master eq "NULL" || $zlp_master eq ""} { error "OT_ZLP: HB4xp67_ASAP7_75t_R master missing" }
@@ -56,11 +61,14 @@ if {[zlp_env OT_ZLP 0] eq "1"} {
       set n [$it getNet]
       if {$n eq "NULL" || $n eq ""} { continue }
       if {[$inst isDoNotTouch] || [$n isDoNotTouch]} { incr zlp_seen_dt; continue }
-      if {[zlp_zero_logic $n $zlp_depth]} { lappend zlp_sinks $it }
+      if {[zlp_zero_logic $n $zlp_depth]} {
+        if {$zlp_class ne "" && ![regexp -- $zlp_class [$inst getName]]} { incr zlp_cskip; continue }
+        lappend zlp_sinks $it
+      }
     }
   }
   set zlp_n [llength $zlp_sinks]
-  puts "OT_ZLP census: $zlp_n zero-logic register/SRAM input pins (depth $zlp_depth, dont_touch skipped $zlp_seen_dt)"
+  puts "OT_ZLP census: $zlp_n zero-logic register/SRAM input pins (depth $zlp_depth, dont_touch skipped $zlp_seen_dt, class_skipped $zlp_cskip)"
   if {$zlp_n > $zlp_max} { error "OT_ZLP: $zlp_n pads > OT_ZLP_MAX $zlp_max" }
   if {$zlp_ronly ne "1"} {
     set i 0

@@ -40,3 +40,33 @@ def test_existing_resume_kept(tmp_path):
 def test_tcl_is_off_by_default():
     t = Z.TCL.read_text()
     assert 'zlp_env OT_ZLP 0] eq "1"' in t and "HB4xp67_ASAP7_75t_R" in t and "setDoNotTouch" not in t and "regexp {^D$} $pn" in t
+
+
+def test_qc_seam_class_recipe(tmp_path):
+    import re
+    k = _kit(tmp_path)
+    cre = Z.class_regex()
+    Z.apply(k, class_re=cre)
+    Z.apply(k, class_re=cre)
+    cfg = (k / "config.mk").read_text()
+    assert cfg.count("export OT_ZLP_CLASS = ") == 1 and "$" not in cfg.split("OT_ZLP_CLASS = ")[1]
+    assert "#" not in cre  # a make comment char would cut the value
+    for hit in ("u_bound.u_pd12_b_hw_i_3.r[4]$_DFF_P_", "u_bound.u_u_xl1_5.wo_d[174]$_DFF_P_",
+                "u_bound.u_u_xl1_2.wctl[26]$_DFF_P_", "u_bound.u_rrl_7/q$_DFF_P_", "u_bound.u_ist_x_su_c_i__u_lane0_1_2/q$_DFF_P_",
+                "u_bound.u_u_r3.u_hi_pad_d.g_line.r[2][5]$_DFF_P_", "u_bound.u_lpad_x_ctl_i.r[1]$_DFF_P_"):
+        assert re.search(cre, hit), hit
+    for miss in ("u_bound.u_core.u_dec.u_out.acc[3]$_DFF_P_", "u_bound.u_core.fsm.state[1]$_DFF_P_"):
+        assert not re.search(cre, miss), miss
+
+
+def test_unknown_class_refused():
+    import pytest
+    with pytest.raises(SystemExit):
+        Z.class_regex(names=["nope"])
+    assert Z.class_regex(names=["pad_line"]).startswith("(")
+
+
+def test_tcl_class_filter_present():
+    t = Z.TCL.read_text()
+    assert "OT_ZLP_CLASS" in t and "class_skipped" in t
+    assert "regexp -- $zlp_class [$inst getName]" in t

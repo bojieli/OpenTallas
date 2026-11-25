@@ -1,0 +1,20 @@
+family	kits	kits_eco_signed	worst_wns	max_ep	classes	host
+coll_ftm	4	4	-1.41	1	u_bound.u_ft_out_data_rd_wi_o_#/q > _out_data_rd_wi_i/u_ring.dch x4	epyc2,epyc7
+coll_s	2	2	-0.27	1	g_face_#_u_face.g_codec.u_codec.u_ctl.rf > erdes_rx__from_io_serdes_#/q x2	epyc8
+sle_hc0	8	4	-5.98	13	u_bound.u_u_xl#_#.g_t > u_bound.u_u_xl#_#.wd x32; u_bound.u_u_xl#_#.wd > u_bound.u_u_xl#_#.wo_d x20; u_bound.u_pd#_b_hw_i_#.r > u_bound.u_pd#_b_hw_i_#.r x20	epyc11,epyc2,epyc8,epyc9
+sle_hc1	4	0	-10.51	7	u_bound.u_pd#_b_hw_i_#.r > u_bound.u_pd#_b_hw_i_#.r x10; u_bound.u_pd#_b_hw_i_#.q$_DFF_P_/D > u_bound.u_pd#_b_hw_i_#.r x4; u_bound.u_ist_cw_n#_#/q > u_bound.u_u_xh#.n_d x2	epyc8,epyc9
+sle_hc2	12	12	-9.32	11	u_bound.u_u_xl#_#.wo_ctl > u_bound.u_u_xl#_#.wctl x24; u_bound.u_u_xl#_#.g_t > u_bound.u_rrl_#/q$_DFF_P_/QN x24; u_bound.u_pd#_b_hw_i_#.r > u_bound.u_pd#_b_hw_i_#.r x6	epyc2,epyc8,epyc9
+sle_st_b_v1	6	0	-12.01	9	u_bound.u_u_r#.g_l# > u_bound.u_u_r#.g_l# x14; u_bound.u_u_r#.u_hi_pad_d.g_line.r > d.u_u_r#.u_hi_pad_d.g_line.r x8; u_bound.u_u_r#.u_nb_in_pad_d.g_line.r > _u_r#.u_nb_in_pad_d.g_line.r x4	epyc11,epyc8
+sle_st_b_v2	6	2	-14.01	8	u_bound.u_u_r#.u_sks.u_m.g_bank > u_bound.u_u_r#.u_sks.wp x10; u_bound.u_u_r#.u_hi_pad_d.g_line.r > d.u_u_r#.u_hi_pad_d.g_line.r x6; u_bound.u_lpad_x_hc#_i.r > u_bound.u_lpad_x_hc#_i.r x4	epyc7,epyc8
+sle_stm_v1	2	0	-5.05	2	u_bound.u_pd#_x_su_l#_i_#.r > u_bound.u_pd#_x_su_l#_i_#.r x4	intel1
+sle_su_l0	2	2	-7.14	12	u_bound.u_ist_x_su_c_p#_i__u_lane#_#_#/q > t_x_su_c_p#_i__u_lane#_#_#/q x8; u_bound.u_ist_x_su_c_p#_i__u_lane#_#_#/q > u_bound.u_lpad_x_su_c_p#_i.q x4; u_bound.u_bin_x_su_c_p#_i/q > cland_x_su_c_p#_i/u_ring.dch x4	epyc8
+slw_fe_v2	2	0	-11.68	1	der_start_x_su_l#_ctl_i_#/q$_SDFF_PN#_/D > bound.u_rrl_#_r/q$_DFF_P_/QN x2	intel1
+slw_hc0	4	0	-30.66	13	u_bound.u_pd#_b_hw_i_#.r > u_bound.u_pd#_b_hw_i_#.r x24; u_bound.u_u_xl#_#.wctl > u_bound.u_u_xl#_#.wo_ctl x8; u_bound.u_u_xh#.ib_c > u_bound.u_u_xh#.ib_q x2	epyc7,epyc8
+slw_hc1	6	0	-24.28	24	u_bound.u_u_xl#_#.wo_d > u_bound.u_u_xl#_#.wd x18; u_bound.u_r#b_strap_r#pad_u_xh#_a_d_f.r > #b_strap_r#pad_u_xh#_a_d_f.r x16; u_bound.u_u_xl#_#.g_t > u_bound.u_u_xl#_#.wd x14	epyc7,epyc8
+slw_hc2	4	0	-16.76	11	u_bound.u_r#b_strap_r#pad_u_xh#_a_d_f.r > #b_strap_r#pad_u_xh#_a_d_f.r x8; u_bound.u_ist_cw_n#_#/q > u_bound.u_u_xh#.n_d x6; u_bound.u_u_xl#_#.g_t > u_bound.u_u_xl#_#.wd x4	epyc11,epyc8
+slw_hc3	2	2	-0.14	1	u_bound.u_u_xh#.p_f > u_bound.u_lpad_b_hw_i.q x2	epyc8
+slw_st_b_v1	6	0	-9.41	7	u_bound.u_u_r#.g_l# > u_bound.u_u_r#.g_l# x18; u_bound.u_u_r#.u_hi_pad_d.g_line.r > d.u_u_r#.u_hi_pad_d.g_line.r x6; u_bound.u_u_r#.u_scale_wait.u_m.g_bank > bound.u_u_r#.u_scale_wait.wp x6	epyc11,epyc8,intel1
+slw_st_b_v2	4	2	-7.93	5	u_bound.u_u_r#.u_sks.g_out > .u_mask_reset/q$_DFF_PN#_/QN x6; u_bound.u_u_r#.u_hi_pad_d.g_line.r > d.u_u_r#.u_hi_pad_d.g_line.r x4; u_bound.u_u_r#.g_l# > u_bound.u_u_r#.g_l# x2	epyc11,epyc7
+slw_stm_v2	6	4	-19.87	10	u_bound.u_pd#_x_fw_i_#.q$_DFF_P_/D > u_bound.u_bin_x_fw_i/q x20; u_bound.u_pd#_x_fe_p#_i_#.q$_DFF_P_/D > u_bound.u_pd#_x_fe_p#_i_#.r x8; u_bound.u_lpad_x_su_l#_i.r > u_bound.u_lpad_x_su_l#_i.r x6	epyc2,epyc9,intel1
+slw_stm_v3	2	0	-5.26	4	u_bound.u_bout_b_tw_data_ctl_o/q > ound.u_core.u_stream.xt_d_hi x4; u_bound.u_core.u_stream.se_q# > pd#_x_fe_p#_i_#.q$_DFF_P_/QN x2; u_bound.u_pd#_x_su_l#_i_#.r > u_bound.u_pd#_x_su_l#_i_#.r x2	epyc7
+slw_su_l0	6	6	-42.88	16	u_bound.u_ist_x_su_c_i__u_lane#_#_#/q > _ist_x_su_c_i__u_lane#_#_#/q x38; u_bound.u_srl_#/q$_DFF_P_/D > u_bound.u_srl_#/q$_DFF_P_/QN x8; u_bound.u_bout_x_su_c_o/q > _ist_x_su_c_o__u_lane#_#_#/q x4	epyc8,intel1

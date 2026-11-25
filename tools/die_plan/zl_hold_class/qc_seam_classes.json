@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.zl_hold_class.v1",
+ "owner": "QC-HOLD-STRUCT",
+ "date": "2026-11-25",
+ "note": "Zero-logic shift-seam classes of the QC hold-only kits (census tools/die_plan/zl_hold_class/census_qc_hold.tsv). Regexps match the CAPTURE register instance name (Tcl regexp, ERE).",
+ "classes": {
+  "pad_line": "\\.u_pd[0-9]+_[A-Za-z0-9_]+\\.(r|q)",
+  "lpad_line": "\\.u_lpad_[A-Za-z0-9_]+\\.(r|q)",
+  "strap_pad": "r[0-9]+b_strap_r[0-9]+pad_|_pad_d\\.g_line\\.r|_pad_[a-z]+\\.g_line\\.r",
+  "relay_wd": "\\.u_u_x[hl][0-9_]*\\.(wo_d|wd|wo_ctl|wctl)[^A-Za-z_]",
+  "rrl": "\\.u_rrl_[0-9a-z_]+[/.]",
+  "ist_bout_bin": "\\.u_(ist|bout|bin)_[A-Za-z0-9_]+(/|\\.)",
+  "st_b_lane": "\\.u_u_r[0-9]+\\.g_l[0-9]+"
+ },
+ "applies_to": {
+  "families": [
+   "sle_hc0",
+   "sle_hc1",
+   "sle_hc2",
+   "slw_hc0",
+   "slw_hc1",
+   "slw_hc2",
+   "slw_hc3",
+   "sle_st_b_v1",
+   "sle_st_b_v2",
+   "slw_st_b_v1",
+   "slw_st_b_v2",
+   "sle_stm_v1",
+   "sle_stm_v2",
+   "sle_stm_v3",
+   "slw_stm_v2",
+   "slw_stm_v3",
+   "sle_su_l0",
+   "slw_su_l0",
+   "slw_fe_v2",
+   "coll_ftm",
+   "coll_s"
+  ],
+  "exclude_if": [
+   "drc",
+   "setup_tt"
+  ],
+  "form": "ZLP pre-CTS (one HB4xp67 on the capture D) restricted to these classes; post-route hold ECO (eco_loop b10) stays the residual closer"
+ },
+ "depth": 4
+}
