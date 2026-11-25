@@ -782,3 +782,18 @@
 - 2026-11-25 04:20 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1437781-1795608997 on ubuntu: rc=0 after 253 s, ended 04:20:34, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/job_sweep2.log, cmd: --die --hosts epyc12 --mem 32 --threads 2 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-allfix/plateau4 -- bash /srv/opentallas-scratch2
 - 2026-11-25 04:21 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1563283-1795609168 on ubuntu: rc=0 after 158 s, ended 04:21:49, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/job_HGI8W2.log, cmd: --die --hosts epyc12 --mem 32 --threads 2 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-allfix/plateau4 -- env ROWOPT=--cd=34.56,25.92,1
 - 2026-11-25 04:22 PST 2026-11-25 04:22 PST PCFIX-ALL probe 2/2 (cl4ea r828e1c2a5, epyc10 crit): place PASSED, so the kvpc1_f macro overlap is gone. Both probes are GEOM PASS (PASS-COND) and both are now at --goal grt for the round-10 overflow. OPEN outside PCFIX on cl4ea: r2r 16969, relay_collapse 25 (to PCBANK-CENTROID/PC-OVM); clock_on_macro 8 (to KV-OWN-RSTREACH); clock_tap_sinks ok here.
+- 2026-11-25 04:22 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_pv_v5ne [KV-ALLFIX -> COORD; cc KV-PV-ESTRIP, KV-SINKBINS] (dispatch 36). The kit ran the old event, KV-D29 (epyc11 private/KV-ALLFIX/kv3_pv_v5ne_1124043625). Causes:
+  (1) pregrt_ff_hold DPL legaliser flat at 29,470 violations / 776 cells (iterations 120-490), after 46.5k hold buffers.
+  (2) FF hold -326 ps on 19,673 endpoints, 11,659 of them cross_tap.
+  (3) TT setup -910 ps (u_rrl_25 -> cland_rstart_rx otdup).
+  (4) 5 taps over cap, up to 1923 sinks (insertion 233-365 ps).
+  (5) W strip channel_v 3.54.
+  (6) r2r 2064 um on vport_W_N_f.
+  (7) 24 STATIONCORE ft lanes on A5t7.
+  Covered:
+  - (6) by A5t7 (5 FIRM stations).
+  - (5) by PV-ESTRIP d43.2 (KV-PV-ESTRIP).
+  - (3) by RST-SIDECAR in A5t7.
+  - (2)/(4) by SINKBINS-PV, but v5ne is one of its 17 no-kit types, so KV-SINKBINS must extend the row (sinks from the D29 CTS log).
+  Not covered: (7), owner KV-ALLFIX.
+  No duplicate row drafted. ETA: A5t9 07:00.

@@ -46098,3 +46098,18 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   NO-PROGRESS epyc8 slw_hc3__cld86a7ad4__pv6c2c33ed signoff stage 10.0 h job 10.0 h: no new meaningful log line for 10.0 h; last: SIGNOFF dp_slw_hc3__cld86a7ad4__pv6c2c33ed: SIGNED [minimal profile, legacy LOCAL_PASS_NEEDS_PARENT,
 - 2026-11-25 04:22 PST 2026-11-25 04:22 PST TAKEOVER FWLEAF-1 [QC-FWLEAF1-RE -> QC-ALLFIX, COORD; cc QC-FWV1-HOLD, QC-C1O-COMPOSE] I own the C1p row FWLEAF-1 (QC-FWV1-HOLD silent since 01:22). Draft row 739975265b88 (6 types, 8 conn entries, leaf_um := from_um) is complete. Probe 1125011806 is stuck at geom, queued on epyc7 for 92+ min (load), so it gives no TT yet. Now running on epyc12 (die, crit): key-patch onto C1o v13 aa3a14fb7484, then PRE by path at rt b7165c47a452 with the v13 drops list. The scoped strict bind waits for BIND-PASS C1o v13. Row-ready or DEFERRED by 06:15.
 - 2026-11-25 04:22 PST 2026-11-25 04:22 PST PCFIX-ALL probe 2/2 (cl4ea r828e1c2a5, epyc10 crit): place PASSED, so the kvpc1_f macro overlap is gone. Both probes are GEOM PASS (PASS-COND) and both are now at --goal grt for the round-10 overflow. OPEN outside PCFIX on cl4ea: r2r 16969, relay_collapse 25 (to PCBANK-CENTROID/PC-OVM); clock_on_macro 8 (to KV-OWN-RSTREACH); clock_tap_sinks ok here.
+- 2026-11-25 04:22 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_pv_v5ne [KV-ALLFIX -> COORD; cc KV-PV-ESTRIP, KV-SINKBINS] (dispatch 36). The kit ran the old event, KV-D29 (epyc11 private/KV-ALLFIX/kv3_pv_v5ne_1124043625). Causes:
+  (1) pregrt_ff_hold DPL legaliser flat at 29,470 violations / 776 cells (iterations 120-490), after 46.5k hold buffers.
+  (2) FF hold -326 ps on 19,673 endpoints, 11,659 of them cross_tap.
+  (3) TT setup -910 ps (u_rrl_25 -> cland_rstart_rx otdup).
+  (4) 5 taps over cap, up to 1923 sinks (insertion 233-365 ps).
+  (5) W strip channel_v 3.54.
+  (6) r2r 2064 um on vport_W_N_f.
+  (7) 24 STATIONCORE ft lanes on A5t7.
+  Covered:
+  - (6) by A5t7 (5 FIRM stations).
+  - (5) by PV-ESTRIP d43.2 (KV-PV-ESTRIP).
+  - (3) by RST-SIDECAR in A5t7.
+  - (2)/(4) by SINKBINS-PV, but v5ne is one of its 17 no-kit types, so KV-SINKBINS must extend the row (sinks from the D29 CTS log).
+  Not covered: (7), owner KV-ALLFIX.
+  No duplicate row drafted. ETA: A5t9 07:00.
