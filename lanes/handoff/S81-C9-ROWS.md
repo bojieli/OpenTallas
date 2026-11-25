@@ -38,3 +38,10 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 ## 2026-11-24 20:3x PST update
 - i027e scoped bind #1 OOM-killed at 240G in EMIT j=8 (unit 2018811, 04:34Z). Relaunched sbind_c9s_i027e2 at --mem 360, EMIT_J=6 (d3w_scope_bind.sh now reads EMIT_J, default 8). Keep it running (COORD).
 - C10 scoped bind: WAIT for BIND-SPEED fix #1 (c71533d1c7a, per-worker snapshot pickle removed) on main + in rt (COORD posts sha). Then run it on the new emit at default J8 (no EMIT_J), with d3w_scope_bind.sh `tools=` pointed at an rt that contains the fix, and record peak memory (journalctl "memory peak" for the unit / ot-run --status).
+
+## 2026-11-25 00:3x PST update
+- C10 row PASS: c10_w60f2/p10_row.json de9035f401fe (E9) = INT c10 base. G0 0 errors; re-sign list 112 types (c10_w60f2/scope_types.txt).
+- Scoped binds on E11 (--priority die, oom_score_adj -1000 on all scope PIDs, nice 0):
+  sbind_c9s_i027e3 unit oth-ubuntu-2939915-1795595309 (i027e, rt 515889f6ef75, 360G, J6) -> CONFIRM/DROP i027e.
+  sbind_c10_w60f2 unit oth-ubuntu-2953680-1795595335 (rt f3a64f1250d1, J8, phases -> sbind_c10_w60f2_phases/bind_phases.json) -> post peak mem + emit time.
+- VPW WREG: ROW-READY by S81-WREG-PARAM (row c134d7e316cc on w60p, hub f2d3a8ba); INT layers it into c10 — not this lane.
