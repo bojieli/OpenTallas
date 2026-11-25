@@ -29,13 +29,17 @@ qwen_compute	slw_fe_v1	clfe325744__cl08d14f0d_1124082558	C7-FE-NEARMISS	autopilo
 qwen_kvsys	kv3_sys_c	1124044024	C8-TIMING-NO-VISUAL	GRT wns -268.8, tns -28920	no review on file (no place render was reviewed)	AFTER-ROUTE	-	MEASURED
 qwen_compute	glue	1124160531	C8-TIMING-NO-VISUAL	route: GRT SETUP_TRIAGE + drv FAIL	no review on file	AFTER-ROUTE	-	MEASURED
 # FP section (VIS-REOWN agg.py from lanes/FP-<die>.tsv): plan checks that FAIL before build; kit '-', visible PLAN, basis FP-PLAN-CHECK <file>
-HEAD	hd_serdes	-	FP:taps>1000+drt_plateau_risk	plan check FAIL: taps>1000, drt_plateau_risk	visual FAIL	PLAN	ADV-TAP-LOAD W7 plan	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_tile	-	FP:taps>1000+lane_latency	plan check FAIL: taps>1000, lane_latency	visual FAIL	PLAN	TAP-LOAD,ISTPRICE,EDGE-STRIP 528 windows	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_spn	-	FP:lane_latency+street>1.0	plan check FAIL: lane_latency, street>1.0	visual FAIL	PLAN	TAP-BUDGET,ROUTE-DEMAND	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_spn_end	-	FP:street>1.0	plan check FAIL: street>1.0	visual FAIL	PLAN	TAP-BUDGET,ROUTE-DEMAND	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_mesh	-	FP:taps>1000	plan check FAIL: taps>1000	visual FAIL	PLAN	TAP-LOAD	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_lep0N	-	FP:taps>1000+macro_channel<14.88+tapstep	plan check FAIL: taps>1000, macro_channel<14.88, tapstep	visual FAIL	PLAN	TAP-LOAD,MACRO-CHANNEL,EDGE-STRIP 7 windows	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_ctl	-	FP:taps>1000	plan check FAIL: taps>1000	visual FAIL	PLAN	TAP-LOAD	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_serdes	-	FP:taps>1000(placed)+drt_plateau_risk+visual_iter1+visual_iter2	plan check FAIL: taps>1000(placed), drt_plateau_risk, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_tile	-	FP:visual_iter1+visual_iter2	plan check FAIL: visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_spn	-	FP:visual_iter1+visual_iter2	plan check FAIL: visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_spn_end	-	FP:visual_iter1+visual_iter2	plan check FAIL: visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh	-	FP:macro_channel<14.88+visual_iter1+visual_iter2	plan check FAIL: macro_channel<14.88, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh_e	-	FP:legs>405+visual_iter1+visual_iter2	plan check FAIL: legs>405, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_w	-	FP:macro_channel<14.88+visual_iter1+visual_iter2	plan check FAIL: macro_channel<14.88, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_e	-	FP:taps>1000(placed)+visual_iter1+visual_iter2	plan check FAIL: taps>1000(placed), visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_lep0N	-	FP:taps>1000(placed)+macro_channel<14.88+tapstep+visual_iter1+visual_iter2	plan check FAIL: taps>1000(placed), macro_channel<14.88, tapstep, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_lep0N_w	-	FP:taps>1000(placed)+macro_channel<14.88+visual_iter1+visual_iter2	plan check FAIL: taps>1000(placed), macro_channel<14.88, visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_ctl	-	FP:visual_iter1+visual_iter2	plan check FAIL: visual_iter1, visual_iter2	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
 KV	kv3_hg	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL-A5T7-RENDER	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_hg_v1__r889141819	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL-A5T7-RENDER	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_hg_v1__r88f4bfb40	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL-A5T7-RENDER	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
