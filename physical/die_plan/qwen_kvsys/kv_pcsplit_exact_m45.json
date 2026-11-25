@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.kvpc.view_recipe.v1",
+ "lane": "KV-PC-ABSTRACT 2026-11-25",
+ "views": ["qkd_kvs_pcc", "qkd_kvs_pcf", "qkd_kvs_pcc_h_head_p", "qkd_kvs_pcf_h_head_p"],
+ "why": "OBS-SYNC-1 blanket M1-M5 blocked 94-100 pct of the kvpc macro on M4/M5; real M4/M5 metal is 2-7 pct",
+ "m1_m3": "blanket (write_abstract_lef -bloat_occupied_layers)",
+ "m4_m5": "exact (write_abstract_lef -bloat_factor 0), M4 pin clear 0.048 um",
+ "m6_m7": "exact (unchanged)",
+ "command": "python3 -I tools/die_plan/kvpc_exact_m45.py --base <signed view lef> --detail <exact_b0.lef> --out <new lef> --receipt <receipt.json>",
+ "first_set": "kv_pcsplit_views_1125 (pcf, pcc)"
+}
