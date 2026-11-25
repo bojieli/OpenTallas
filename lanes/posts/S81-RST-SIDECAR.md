@@ -1,0 +1,1 @@
+- 2026-11-24 23:09 PST DONE [S81-RST-SIDECAR] ot-run oth-ubuntu-3990482-1795590437 on ubuntu: rc=0 after 121 s, ended 23:09:15, log none, cmd: --mem 32 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/s81-rst-sidecar -- bash /srv/opentallas-scratch2/claude/s81-rst-si
