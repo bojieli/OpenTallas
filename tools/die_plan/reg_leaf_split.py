@@ -6,6 +6,9 @@ e0 / e2 / e4 / e6 on three channels.  As one leaf GPL puts it at the centroid an
 x 200-400 channel took 21,000 GRT overflow).  Split per channel, every pin wire stays inside its own channel.  k6 was a hand
 edit of the kit RTL (fable-fix-kv-hg3/k6/split_t2.py); this is the generator form.
 
+A row with ONE copy (HEAD-WGATE 11-25) re-sites the whole leaf at site_um: the upstream gather stages u_hst*_g / ftg / t1
+that feed a split tail.  Rows apply in list order, so a stage row comes before the row of the leaf it feeds.
+
 Opt-in plan key (absent = byte-identical kit):
 
     partition_types[T].reg_leaf_split = [
@@ -75,8 +78,10 @@ def config(t):
             raise ValueError(f"{KEY}: leaf {r['leaf']} listed twice")
         seen.add(r["leaf"])
         cs = r["copies"]
-        if not isinstance(cs, list) or len(cs) < 2:
-            raise ValueError(f"{KEY} {r['leaf']}: >= 2 copies needed")
+        # HEAD-WGATE 11-25 (FABLE-RC-KV): ONE copy = the whole leaf re-sited FIRM at site_um (a gather stage GPL would pull
+        # to the W seam); its pins must still cover every consumer pin, so it is the same kept-register form, 0 cycles.
+        if not isinstance(cs, list) or len(cs) < 1:
+            raise ValueError(f"{KEY} {r['leaf']}: >= 1 copy needed")
         names = set()
         for c in cs:
             if not isinstance(c, dict) or set(c) != {"name", "pins", "site_um"}:

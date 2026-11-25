@@ -4008,7 +4008,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reg_leaf_split"] = {
     "type": "array", "items": {"type": "object", "required": ["leaf", "copies"], "additionalProperties": False,
     "properties": {"leaf": {"type": "string", "minLength": 1},
-                   "copies": {"type": "array", "minItems": 2, "items": {
+                   "copies": {"type": "array", "minItems": 1, "items": {
                        "type": "object", "required": ["name", "pins", "site_um"], "additionalProperties": False,
                        "properties": {"name": {"type": "string", "minLength": 1},
                                       "pins": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}},

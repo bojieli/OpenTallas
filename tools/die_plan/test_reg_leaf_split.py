@@ -136,7 +136,7 @@ def test_fail_closed_on_impure_param_and_stray_use():
 
 
 def test_config_rejects_bad_rows():
-    for bad in ([{"leaf": "u_t2", "copies": [ROW["copies"][0]]}],
+    for bad in ([{"leaf": "u_t2", "copies": []}],
                 [{"leaf": "u_t2", "copies": [ROW["copies"][0], dict(ROW["copies"][1], name="a")]}],
                 [dict(ROW, extra=1)],
                 [{"leaf": "u_t2", "copies": [ROW["copies"][0], dict(ROW["copies"][1], site_um=[1])]}]):
@@ -222,3 +222,23 @@ def test_core_input_lockup_latch_with_two_readers_fails_closed():
     );""")
     with pytest.raises(ValueError, match="not exactly one whole core port"):
         R.split_text(bad, ROW)
+
+
+def test_one_copy_resites_whole_leaf_and_chains(tmp_path):
+    """HEAD-WGATE 11-25: a one-copy row re-sites a whole stage; it applies before the split of the leaf it feeds"""
+    rows = [{"leaf": "u_t1", "copies": [{"name": "a", "pins": ["u_t2.*"], "site_um": [5, 6]}]}, ROW]
+    assert R.config({"reg_leaf_split": rows}) == rows
+    part = PART.replace("    wire [1:0] w_t1_e_b;", "    wire [1:0] w_e;\n    wire [9:0] w_a;\n    assign w_e = e;\n    assign w_a = a;\n    wire [1:0] w_t1_e_b;")
+    part = part.replace(".e_a(e),", ".e_a(w_e),").replace(".ti_a(a),", ".ti_a(w_a),")
+    (tmp_path / "part.sv").write_text(part)
+    rec, _ = R.apply(tmp_path, "part", {"reg_leaf_split": rows})
+    assert [lr["leaf"] for lr in rec["leaves"]] == ["u_t1", "u_t2"]
+    assert [c["site_um"] for c in rec["leaves"][0]["copies"]] == [[5, 6]]
+    assert rec["leaves"][0]["copies"][0]["bits"] == 12
+    txt = (tmp_path / "part.sv").read_text()
+    assert "qkh_head_tstage u_t1" not in txt and "u_t1_rls_a" in txt and "u_t2_rls_b" in txt
+
+
+def test_schema_accepts_one_copy_row():
+    sub = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reg_leaf_split"]
+    assert sub["items"]["properties"]["copies"]["minItems"] == 1
