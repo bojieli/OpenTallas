@@ -773,3 +773,4 @@
   - kv3_pv_v7e: not in the clean census
   The hold commit is retrying: kit_wave.json in the hub tree carries another lane's uncommitted QC edit.
 - 2026-11-25 03:58 PST DIED [KV-ALLFIX] ot-run otrun-open-snipe-637374 on open-snipe: rc=1 after 0 s, ended 11:58:13, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/final_gate.otrun.log, cmd: --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scratch2/claude/kv-allfix/ | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
+- 2026-11-25 04:11 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1071849-1795608511 on ubuntu: rc=0 after 193 s, ended 04:11:38, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/job_PV12E.log, cmd: --die --hosts epyc12 --mem 32 --threads 2 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-allfix/plateau4 -- bash /srv/opentallas-scratch2
