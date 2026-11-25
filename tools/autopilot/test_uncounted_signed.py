@@ -37,6 +37,20 @@ def test_spool_set_aside_skips_canaries(tmp_path):
     assert [(r["die"], r["name"], r["gate"]) for r in rows] == [("qwen_kvsys", "hub_x", "export")]
 
 
+def test_credited_replacement_and_done_export_are_not_alerted(tmp_path):
+    rev = REVOKED + "qwen_compute\tsle_st_b_v2__cl14\tsha256:bf\tPENDING-LEC: never run\t2026-11-21 PST\n"
+    cache = {"credited": [{"die": "qwen_compute", "name": "sle_st_b_v2__cl14", "ruling": "replaces revoked c7ce"}]}
+    assert [r["name"] for r in US.rows_from_revoked(rev)] == ["slice_station__t52", "sle_st_b_v2__cl14"]
+    assert [r["name"] for r in US.rows_from_revoked(rev, US.credited_names(cache))] == ["slice_station__t52"]
+    (tmp_path / "a.json").write_text(json.dumps({"die": "qwen_kvsys", "name": "dp_kv3_hroot", "record": "935f"}))
+    (tmp_path / "a.json.reason").write_text(json.dumps({"reason": "exported, rtx-pro has not verified it (spool age 2.2 h): /x"}))
+    (tmp_path / "b.json").write_text(json.dumps({"die": "qwen_kvsys", "name": "hub_x", "record": "77aa"}))
+    (tmp_path / "b.json.reason").write_text(json.dumps({"reason": "rtx-pro export error: no space"}))
+    ledger = {"units": {"h:/a.odb": {"record": "935f", "state": "done"}, "h:/b.odb": {"record": "77aa", "state": "meta"}}}
+    assert [r["name"] for r in US.rows_from_spool(tmp_path)] == ["dp_kv3_hroot", "hub_x"]
+    assert [r["name"] for r in US.rows_from_spool(tmp_path, US.done_records(ledger))] == ["hub_x"]
+
+
 def test_judge_alerts_once_after_two_hours_and_rearms():
     st = {}
     rows = [dict(die="s81", name="t52", gate="LEC", evidence="e", t=None)]

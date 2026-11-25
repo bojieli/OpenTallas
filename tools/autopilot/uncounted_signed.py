@@ -7,6 +7,9 @@ Sources (read-only):
   * the release-tree cache: plans[*].pending_archive_types / pending_archive_cores -> gate "archive key" (no AGIdock archive / INDEX row), or
     "flow tag" when the record is SIGNED-NO-TAG (provenance)
   * the auto-export spool items set aside (spool/failed/*.reason, F9) that are not canary / test runs -> gate "export"
+Not alerted (LEC-AUTOFILL 11-25): a PENDING row whose die/type the release-tree cache credits from another record (the revoked
+sha was replaced, e.g. "replaces revoked c7ce90ba4af9"), and a set-aside spool item whose record the export ledger has since
+marked done (rtx-pro verified after the set-aside; the stale spool/failed file is not a missing export).
 Age = now - the earliest of (first seen by this tool, a time the record names: COUNT-REVOKED date, ns / s epoch in the path, spool file time).
 Rows older than ALERT_H are written to lanes/UNCOUNTED-SIGNED.md; each new one gets ONE NEEDS-ACTION line in lanes/COORD-REVIEW-QUEUE.md
 (state ~/.local/state/uncounted_signed.json), both through bin/coord-commit.sh.  --dry prints only.
@@ -27,6 +30,7 @@ HOME = Path.home()
 ALERT_H = float(os.environ.get("OT_UNCOUNTED_ALERT_H", "2"))
 CACHE = HOME / ".local/state/fleet-viz/release_tree_plan_cache.json"
 SPOOL_FAILED = HOME / ".local/state/ot-auto-export/spool/failed"
+LEDGER = HOME / ".local/state/ot-auto-export/ledger.json"
 STATE = HOME / ".local/state/uncounted_signed.json"
 OUT = "lanes/UNCOUNTED-SIGNED.md"
 QUEUE = "lanes/COORD-REVIEW-QUEUE.md"
@@ -52,7 +56,18 @@ def _path_epoch(text):
     return float(m.group(1)) if m else None
 
 
-def rows_from_revoked(text):
+def credited_names(cache):
+    """-> {(die, type)} the release-tree cache credits from a replacement record"""
+    return {(c.get("die"), c.get("name")) for c in ((cache or {}).get("credited") or []) if isinstance(c, dict)}
+
+
+def done_records(ledger):
+    """-> record shas the export ledger marks done (rtx-pro verified, INDEX rows written)"""
+    return {u.get("record") for u in ((ledger or {}).get("units") or {}).values()
+            if isinstance(u, dict) and u.get("state") == "done" and u.get("record")}
+
+
+def rows_from_revoked(text, credited=()):
     out = []
     for ln in (text or "").splitlines():
         if not ln.strip() or ln.startswith("#"):
@@ -63,6 +78,8 @@ def rows_from_revoked(text):
         m = re.match(r"\s*PENDING-([A-Z]+)", f[3])
         if not m:
             continue
+        if (f[0], f[1]) in credited:
+            continue                                  # counted from the replacement record
         gate = GATE_WORDS.get(m.group(1), m.group(1).lower())
         out.append(dict(die=f[0], name=f[1], gate=gate, evidence=f[3][:200], t=_date_epoch(f[4] if len(f) > 4 else "")))
     return out
@@ -83,7 +100,7 @@ def rows_from_cache(cache):
     return out
 
 
-def rows_from_spool(d=SPOOL_FAILED):
+def rows_from_spool(d=SPOOL_FAILED, done=()):
     out = []
     for r in sorted(glob.glob(str(Path(d) / "*.reason"))):
         try:
@@ -97,6 +114,8 @@ def rows_from_spool(d=SPOOL_FAILED):
             rec = json.loads(Path(j).read_text())
         except (OSError, ValueError):
             rec = {}
+        if rec.get("record") and rec["record"] in done:
+            continue                                  # exported and verified after it was set aside
         try:
             t = os.stat(j).st_mtime
         except OSError:
@@ -149,14 +168,19 @@ def main(argv=None):
     now = time.time()
     rows = []
     try:
-        rows += rows_from_revoked((coord / "lanes/COUNT-REVOKED.tsv").read_text())
+        cache = json.loads(CACHE.read_text())
+    except (OSError, ValueError):
+        cache = {}
+    try:
+        rows += rows_from_revoked((coord / "lanes/COUNT-REVOKED.tsv").read_text(), credited_names(cache))
     except OSError:
         pass
+    rows += rows_from_cache(cache)
     try:
-        rows += rows_from_cache(json.loads(CACHE.read_text()))
+        done = done_records(json.loads(LEDGER.read_text()))
     except (OSError, ValueError):
-        pass
-    rows += rows_from_spool()
+        done = set()
+    rows += rows_from_spool(done=done)
     try:
         state = json.loads(STATE.read_text())
     except (OSError, ValueError):
