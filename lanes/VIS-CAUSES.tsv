@@ -185,23 +185,7 @@ KV	kv3_pve	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CH
 KV	kv3_sys_SD	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_sys_SD_v1	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_sys_c	-	FP:TAP+LEG405	plan check FAIL: TAP, LEG405	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-QC	cbf_q00__cl1b5a6458	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbf_q00__cl870de686	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbf_q00_s2	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbf_q01	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbf_q01_s2	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbf_q11	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q00__cl622f65d2	-	FP:channel_pile+blanket_obs	plan check FAIL: channel_pile, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q00__cld7bf7197	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q00__cldbcda913	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q01__clab6e67f2	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q01__cld9ff4c40	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q01__cldd6ea846	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q11__cl49ae4555	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbn_q11__cl5cc92dfe	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbx_q10__cl89936551	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbx_q10__cl89936551_h	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	cbx_q10__cl94a12200_h	-	FP:channel_pile	plan check FAIL: channel_pile	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	cbn_q00__cl622f65d2	-	FP:blanket_obs	plan check FAIL: blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_core	-	FP:macro_channel_min_um+blanket_obs	plan check FAIL: macro_channel_min_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_n	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_s	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
