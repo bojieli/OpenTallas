@@ -2171,12 +2171,14 @@ def gendry_kitrtl_cmd(tree, plan, tn, kit, bind_out, asbuilt=None):
     return cmd
 
 
-def gendry_cmd(tree, plan, tn, out, sidecar=None, kit_rtl=None):
+def gendry_cmd(tree, plan, tn, out, sidecar=None, kit_rtl=None, hard=False):
     gen = Path(__file__).resolve().parent / "gen.py"
     cmd = [sys.executable, "-I", "-B", str(gen), "phys", str(Path(plan).absolute()), "--types", tn, "--out", str(out),
            "--rtl-root", str(Path(tree).absolute()), "--trial"]
     if kit_rtl:
         cmd += ["--kit-rtl", f"{tn}={kit_rtl}"]
+        if hard:                                         # GENDRY-HARDWRAP-1124: gen phys builds a hard type only as a wrapper
+            cmd += ["--hard-wrappers", tn]
     sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")
     if sc and Path(sc).is_file():
         cmd += ["--clock-landing", str(Path(sc).absolute())]
@@ -2240,7 +2242,11 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
         kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
     wmode, whow = gendry_wave_mode(raw, env)
     if wmode in ("bind", "script"):                      # GENDRY-WAVEMODE-1124: a kit_rtl die builds every non-core type from bound RTL
-        kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
+        # GENDRY-HARDWRAP-1124 (KV-ALLFIX, kv3_phy_v1): a hard type too.  The wave builds it as a hard wrapper (kit-rtl + gen
+        # --kit-rtl --hard-wrappers; gen refuses a hard wrapper without --kit-rtl) or through core_kit, never plan-native.  The
+        # native dry gen ran the whole-die landed emitter, whose observer check reads the plan `sources` of the observer type
+        # (kv3_hub_C has none: "module qkd_seq_core_static_s not found in kv3_hub_C sources"), a path no kit takes.
+        kitrtl = set(run)
     elif wmode == "plan":                                # a die without kit_rtl: the wave uses the plan wrapper for every type
         kitrtl = set()
     bind_out = gendry_bind_out(elab_dir) if kitrtl else None
@@ -2275,7 +2281,8 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
                     e = next((x for x in reversed(ln) if "ERROR" in x or "Error" in x), ln[-1] if ln else "")
                     return tn, (rc, text if rc is None else f"bind kit-rtl ERROR: {e.strip()}")
                 kf = k / "kit_rtl.f"
-            return tn, runner(gendry_cmd(tree, plan, tn, o, sidecar, kf), str(Path(tree).absolute()), tmo)
+            return tn, runner(gendry_cmd(tree, plan, tn, o, sidecar, kf, bool((raw["partition_types"].get(tn) or {}).get("hard"))),
+                              str(Path(tree).absolute()), tmo)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             res = list(ex.map(one, run))
     for tn, (rc, text) in res:

@@ -399,3 +399,17 @@ def test_start_settle_stays_warn_no_date_switch(tmp_path):
     assert G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=354) == []
     stale = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=331)
     assert any("raw_reset_release_max_cycles 354 != plan max release 331" in w for w in stale)
+
+
+def test_gendry_cmd_hard_wrapper_1124(tmp_path):
+    """GENDRY-HARDWRAP-1124 (KV-ALLFIX kv3_phy_v1): a hard type is dry-generated as a kit-rtl hard wrapper, like the wave."""
+    plan = tmp_path / "plan.json"
+    plan.write_text("{}")
+    kf = tmp_path / "kit_rtl.f"
+    hard = G.gendry_cmd(tmp_path, plan, "kv3_phy_v1", tmp_path / "o", None, kf, True)
+    assert hard[hard.index("--hard-wrappers") + 1] == "kv3_phy_v1"
+    assert "--kit-rtl" in hard
+    soft = G.gendry_cmd(tmp_path, plan, "kv3_pv", tmp_path / "o", None, kf)
+    assert "--hard-wrappers" not in soft
+    native = G.gendry_cmd(tmp_path, plan, "kv3_phy_v1", tmp_path / "o", None, None, True)
+    assert "--hard-wrappers" not in native            # gen refuses a hard wrapper without --kit-rtl
