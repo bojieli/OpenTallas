@@ -1362,8 +1362,11 @@ def _xp_key(P, tn, reach):
         d[tn] = _xp_dig(raw["partition_types"][tn])
     env = _xp_dig(sorted((k, v) for k, v in os.environ.items() if k.startswith("OT_") and k != "OT_RESET_TREE_CACHE"))
     folder = str(Path(P.path).resolve().parent) if getattr(P, "path", None) else None
+    # the effective reset hop cap: env and plan are in the digests above, but cbc_rules.bound_reset_hop_cap() is an in-process
+    # scope (gen_phys solves a bound tree under its receipt's reach_cap_um); without it a 300-um solve was served inside a 405 scope
+    cap = _CBC.reset_hop_cap_um(plan=P)
     return (_xp_tool_sha(), d[tn], d["ctx"], folder, os.path.realpath(os.getcwd()), os.environ.get("OT_REPO_ROOT"), env,
-            None if reach is None else float(reach), tn)
+            None if reach is None else float(reach), cap, tn)
 
 
 def for_type(P, tn, reach=None):

@@ -88,3 +88,19 @@ def test_pool_size_caps(monkeypatch):
     assert RT.pool_size(3, env={"OT_RESET_POOL_J": "8"}) == 3
     assert RT.pool_size(100, env={"OT_RUN_THREADS": "2"}) <= 2
     assert RT.pool_size(100, env={"OT_RESET_POOL_GB": "100000000"}) == 1
+
+
+def test_key_follows_the_bound_reset_hop_cap_scope(monkeypatch):
+    """gen_phys solves a bound tree inside cbc_rules.bound_reset_hop_cap(receipt cap): an in-process scope, not env or plan.
+    A tree cached under the default cap must not be served inside a 405 scope (test_bound_reset_cap refused 405 binds)."""
+    import cbc_rules as CBC
+    monkeypatch.delenv("OT_RESET_HOP_CAP_UM", raising=False)
+    monkeypatch.delenv("OT_RESET_TREE_CACHE", raising=False)
+    P = schema.Plan(copy.deepcopy(_raw("pipelined")))
+    tn = sorted(P.types)[0]
+    k0 = RT._xp_key(P, tn, None)
+    with CBC.bound_reset_hop_cap(405):
+        k405 = RT._xp_key(P, tn, None)
+        with CBC.bound_reset_hop_cap(405):
+            assert RT._xp_key(P, tn, None) == k405
+    assert k0 is not None and k405 != k0 and RT._xp_key(P, tn, None) == k0
