@@ -44,3 +44,4 @@ Next: check the tap-stats (max planned load <= ~900) -> hand the row to QC-ALLFI
 - Explicit types: explicit_addtaps.py appends clk_t<n> taps from the kit clk-net dump (rebin/tsv). cl622f65d2 149->198 taps, 1956->949; coll_ft 17->20, 1014->900 (p2/ex).
 - Retap: 7 batches on intel1 (p2/b1..b7, OT_REPO_ROOT=cJ tree, ~3.4 h). Then merge_c1k.py base -> b1..b7 -> C1n row sha.
 - cbn_q00 cldbcda913: probe-through --goal place on intel1, spec private_specs/QC-CB-SPREAD-R2/qwen_compute_cbn_q00__cldbcda913_1124172945. Next: dump/native bins/compose/tune/retap.
+18:07 PST C1n ROW CB-TAPBINS2 ef5e85aa483b posted: 35 types, bundle intel1 /srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/C1N-TAPBINS2-row. COORD ruled that the su_l1 corner taps 1005/1098 are accepted. Open: cbn_q00 cldbcda913 add-on (probe placement on intel1 -> sink_bins_from_place dump/bins -> compose -> tune -> retap on ef5e85aa483b).
