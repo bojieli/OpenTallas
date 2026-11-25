@@ -2818,7 +2818,7 @@ def wf_open_outs(P):
 _WF_INST = re.compile(r"^    (\w+)(?: #\(.*?\))? (\w+) \(\n(.*?)\n    \);", re.S | re.M)
 
 
-def write_wf_open_pads(P, f, top_text, sv_id, fresh=False):
+def write_wf_open_pads(P, f, top_text, sv_id, fresh=False, only=None):
     """KV-KITS-2 (COORD 10-27 03:41): declare, with the plan proof, the type-uniform wavefront outs
     (rst_o_<k> / start_o_<k>) an instance leaves open (wf_open_outs), as instance entries of the strict port-bind's
     default pad file <top>.pads.json (spare OUTPUT ports: open, never tied).  Only ports the die top really leaves
@@ -2837,6 +2837,8 @@ def write_wf_open_pads(P, f, top_text, sv_id, fresh=False):
     n = 0
     for p, ports in sorted(oo.items()):
         name = sv_id(p)
+        if only is not None and p not in only:
+            continue                          # SCOPED-TOP (bind.py --types): instances outside the scoped top
         if name not in inst_m:
             raise ValueError(f"wavefront open outs: instance {name} not in the bound top")
         for port, why in sorted(ports.items()):

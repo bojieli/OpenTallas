@@ -3509,7 +3509,10 @@ class Landings:
         match = re.search(r"(?m)^module \w+ \([^;]*\);", text)
         text = text[:match.end()] + "\n" + "\n".join(decl) + text[match.end():]
         index = {(r["dst"], r["dst_bus"]): i for i, r in enumerate(self.rows)}
+        scope = getattr(self, "top_scope", None)       # SCOPED-TOP (bind.py): a --types top holds the emitted types' instances only
         for pn, p in self.parts.items():
+            if scope is not None and pn not in scope:
+                continue
             # Anchor on the instance, then the binder's own closing line; leaf
             # parameter parentheses can never terminate this module instance.
             pat = re.compile(r"(?m)^(    " + re.escape(modules[p["type"]]) +

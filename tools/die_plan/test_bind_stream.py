@@ -320,3 +320,38 @@ def test_pre_emit_errors_withhold_records(tmp_path):
     finally:
         BS.write_type = old
     assert calls == ["tb"]
+
+
+def _inst_blocks(text):
+    return {m.group(2): m.group(0) for m in re.finditer(r"(?ms)^    (\w+)(?: #\([^\n]*\))? (\w+) \(\n.*?\n    \);", text)}
+
+
+@pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys (OT_BIND_YOSYS) and no docker")
+def test_scoped_bind_writes_scoped_top_and_strap_files(tmp_path, monkeypatch):
+    """BIND-SPEED-1124 #4 SCOPED-TOP (COORD 11-24): a --types bind writes OUT/probe_top/<die>_bound_top.sv with exactly the
+    full bind's instance blocks of the emitted types, the strap / tie sidecars, and still no rtl/*_bound_top.sv"""
+    import bind
+    plan = EX / "die_plan_lanes.json"
+    raw = json.loads(plan.read_text())
+    full, sc = tmp_path / "full", tmp_path / "sc"
+    for o in (full, sc):
+        assert bind.main(["elab", str(plan), "--out", str(o), "--mem", "4"]) == 0
+    monkeypatch.delenv("OT_BIND_ONLY_TYPES", raising=False)
+    bind.main(["bind", str(plan), "--out", str(full), "--mem", "4"])
+    ftop = next((full / "rtl").glob("*_bound_top.sv"))
+    tn = "bt_ta" if "bt_ta" in raw["partition_types"] else sorted(raw["partition_types"])[0]
+    monkeypatch.setenv("OT_BIND_ONLY_TYPES", tn)
+    bind.main(["bind", str(plan), "--out", str(sc), "--mem", "4"])
+    assert not list((sc / "rtl").glob("*_bound_top.sv"))
+    stop = sc / "probe_top" / ftop.name
+    po = json.loads((sc / "BIND_PROBE_ONLY.json").read_text())
+    assert po["scoped_top"]["path"] == f"probe_top/{ftop.name}"
+    fb, sb = _inst_blocks(ftop.read_text()), _inst_blocks(stop.read_text())
+    assert sb and len(sb) == po["scoped_top"]["instances"] < len(fb)
+    assert all(fb[k] == v for k, v in sb.items())
+    for name in ("bind_tie_audit.json",):
+        assert (sc / name).is_file() == (full / name).is_file()
+    for f in (full / "rtl").glob("*.sv"):
+        s = sc / "rtl" / f.name
+        if s.exists():
+            assert s.read_bytes() == f.read_bytes(), f.name

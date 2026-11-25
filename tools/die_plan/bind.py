@@ -4270,7 +4270,7 @@ class Binder:
             self.probe_only = dict(requested=sorted(only_types_requested()), emitted=sorted(only),
                                    skipped=len(self.by_type) - len(only), of=len(self.by_type))
             print(f"bind: PROBE-ONLY (OT_BIND_ONLY_TYPES) emits {len(only)} of {len(self.by_type)} types: {sorted(only)}; "
-                  f"no bound top; this OUT is a probe, never a die bind", flush=True)
+                  f"scoped top probe_top/ (their instances only; OT_BIND_PROBE_TOP=0: none); this OUT is a probe, never a die bind", flush=True)
         self._emit_set = emit_set
         if getattr(self, "collect_gaps", False):
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
@@ -4328,11 +4328,23 @@ class Binder:
             files.extend(self._native_glue.files)
         if getattr(self, "emit_gaps", None):
             return files                          # --all-gaps: gaps recorded; no bound top from an incomplete type set
+        scope = None
         if getattr(self, "probe_only", None):
-            return files                          # PROBE-ONLY-1123: no bound top from a type subset
-        f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
+            if os.environ.get("OT_BIND_PROBE_TOP", "1") == "0":
+                return files                      # PROBE-ONLY-1123: no bound top from a type subset
+            # SCOPED-TOP (BIND-SPEED-1124 #4, COORD 11-24: a --types bind wrote no strap manifest, so its kits died at gen): the
+            # same top + strap / tie sidecars as a full bind, over the instances of the emitted types only.  The top goes to
+            # OUT/probe_top/ (never rtl/: the whole-die checks key on rtl/*_bound_top.sv) and is never a die netlist.
+            scope = {p for tn in self._emit_set for p in self.by_type[tn]}
+            out_top = out.parent / "probe_top"
+            out_top.mkdir(parents=True, exist_ok=True)
+            f = out_top / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
+        else:
+            f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
+        self._top_scope = scope
         top_text = self.emit_top()
         if getattr(self, "clock_landings", None):
+            self.clock_landings.top_scope = scope
             try:
                 top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()})
             except ValueError as exc:
@@ -4344,17 +4356,22 @@ class Binder:
             (out.parent / "bind_clock_landings.json").write_text(
                 json.dumps(self.clock_landings.manifest(), indent=1) + "\n")
         f.write_text(top_text)
-        files.append(f)
+        if scope is None:
+            files.append(f)
+        else:
+            self.probe_only["scoped_top"] = dict(path=f"probe_top/{f.name}", instances=len(scope))
         if P is not None:
             self.write_wavefront_open_pads(P, f, top_text)
         import spare_ft
         try:
             slots = getattr(self, "spare_ft", {})
+            if scope is not None:
+                slots = {pn: sp for pn, sp in slots.items() if pn in scope}
             masters = {pn: self.types[self.parts[pn]["type"]]["module"] for pn in slots}
             self.spare_ft_ties = spare_ft.write_pads(slots, f, top_text, sv_id, masters)
         except ValueError as exc:
             raise BindError(str(exc)) from exc
-        if P is not None and self._por_spec():
+        if P is not None and self._por_spec() and scope is None:      # the die reset pad gate is whole-die
             # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
             import por_gate
             rec = dict(rebinds=self.por_rebinds, analog=self.por_analog)
@@ -4367,6 +4384,8 @@ class Binder:
                    instances=self.parent_id_values, added_data_cycles=0)
         cl = getattr(self, "clock_landings", None)
         cexp = cl.strap_expected() if cl is not None and getattr(cl, "strap", None) else {}
+        if scope is not None:                 # SCOPED-TOP: the expected count-strap values of the instances in this top
+            cexp = {q: v for q, v in cexp.items() if _in_scope(q, scope)}
         if cexp:
             # MESO-STRAP-1 (OWNER 12.15a): count straps strap_ca_* join the parent strap manifest (same 1.8 rules)
             man = json.loads(json.dumps(man))
@@ -4389,6 +4408,8 @@ class Binder:
         import landing_tie_children as LTC
         try:
             monitor_use = LTC.instance_use(self.plan)
+            if scope is not None:
+                monitor_use = {q: v for q, v in monitor_use.items() if _in_scope(q, scope)}
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         if monitor_use:
@@ -6042,7 +6063,10 @@ class Binder:
         import spare_ft
         for p, sp in getattr(self, "spare_ft", {}).items():
             conn[p].extend(spare_ft.connections(sp))
+        scope = getattr(self, "_top_scope", None)
         for p in sorted(self.members):
+            if scope is not None and p not in scope:
+                continue                      # SCOPED-TOP: instances of the emitted types only (each block as in the full top)
             tn = self.parts[p]["type"]
             t = self.types[tn]
             ov, parent_ids = self._inst_overrides(p)
@@ -6074,7 +6098,7 @@ class Binder:
         (one writer for bind and gen_rtl: reset_tree.write_wf_open_pads)."""
         import reset_tree as RT
         try:
-            n = RT.write_wf_open_pads(P, f, top_text, sv_id)
+            n = RT.write_wf_open_pads(P, f, top_text, sv_id, only=getattr(self, "_top_scope", None))
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         if n:
@@ -6375,6 +6399,14 @@ def _write_provenance(a, step):
     rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
     Path(a.out).mkdir(parents=True, exist_ok=True)
     (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
+
+
+def _in_scope(q, scope):
+    """SCOPED-TOP: instance name q (plan partition name, its sv_id, or a dotted / __ path below it) belongs to a scoped partition"""
+    if q in scope:
+        return True
+    ids = {sv_id(p) for p in scope}
+    return sv_id(q) in ids or any(q.startswith(p + ".") or sv_id(q).startswith(sv_id(p) + "__") for p in scope)
 
 
 def only_types_requested():
