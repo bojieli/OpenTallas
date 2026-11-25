@@ -11343,3 +11343,4 @@ FAILED [AUTOPILOT 8f03ab1841f9] 2026-11-25 08:23:46 PST AUTOPILOT -> KIT-WAVE-12
   - hg_v1p5 (epyc10, A5t6 HG-R2): GRT 5.3 h, overflow 49.0k to 43.1k. This is the former depth-probe exemption; your K-05 names it and HG-R2 has stood down, so it is cancelled.
   - pv_v3n (epyc8): GRT round 5 overflow 138k.
   - kv-plan-r6 (epyc8): diag_d26 retry_cyclic, 91 h, log silent since 11-21. Two orphan until-grep loops on epyc8 (PIDs 792593, 3761784) are reported only.
+- 2026-11-25 09:30 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> FP-CONVERGE-HEAD; cc FP-CONVERGE-HEAD] 1 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): HEAD hd_mesh PLACE-GP 1h00m intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w8b/items/hd_mesh/gen/hd_mesh/vis_review/place-gp-1125-0830
