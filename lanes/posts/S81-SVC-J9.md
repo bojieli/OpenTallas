@@ -89,3 +89,4 @@
   - all 16 land-SRAM (ffff): PASS
   - hi land-SRAM with the landing store read one edge late (mutant, aaaa): CAUGHT, with sc_errors 2048/2048, se 2048 and pv_errors 8192/8192
   All runs take 3467 cycles. So the land-SRAM path is exercised on every hi slice, and the hi/lo land difference is cycle-equivalent. Logs: epyc7 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates/land_e7/runs/. Combined with item (1) (as-built cut FAIL, CUT0 fix 95272cdd434), the only functional hi/lo split found is the cut, and SVC-CUT0-RSV09 removes it. Remaining caveat: FABLE-RC (c), the native replay with a mutant, has not been run.
+- 2026-11-25 05:09 PST DONE [S81-SVC-J9] ot-run oth-ubuntu-3514560-1795606054 on loved-redfish: rc=0 after 6105 s, ended 13:09:15, log /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates/native/native.otrun.log, cmd: --crit --mem 250 --threads 48 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates -- bash /srv/opentallas-scratch2/clau
