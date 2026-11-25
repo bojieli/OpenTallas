@@ -111,3 +111,22 @@
 - 2026-11-24 22:44 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-3062290-1795588632 on renewed-glider: rc=0 after 14885 s, ended 06:44:05, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/s81_c8fix.otrun2.log, cmd: --mem 72 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw -- bash /srv/opentallas-scratch2/clau
 - 2026-11-24 23:08 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-968166 on dear-crayfish: rc=0 after 56 s, ended 23:08:09, log none, cmd: ot-push-main 
 - 2026-11-24 23:11 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-1181182 on dear-crayfish: rc=0 after 33 s, ended 23:11:08, log none, cmd: ot-push-main 
+- 2026-11-24 23:12 PST PRECHECK-R3: ADV-STATION-STACK landed and swept all dies [-> COORD; HAND-OFF S81-ALLFIX-INT, KV-ALLFIX, QC-ALLFIX, HEAD-WEST; cc KV-OWN-PV-R2]
+  Check (report-only): main eae7aedd02 + a938987b28 (tools/die_plan/adv_station_stack.py, in plan_advisory CHECKS as STATION-STACK).
+  - Per soft type it counts station points shared by >= 2 distinct buses. Stations are internal_stations by conn and ft_slots by name; points within 0.1 um are one point, as in the V1NSITE row.
+  - Reported per point: number of buses, and bits (from buses[].width, ft_slots width, or the station's bits).
+  - It also counts stacks with a reset tap/relay or a START stage within 10 um. ft_slots stacks are counted apart.
+  Calibration, A5t6 kv3_pv_v1n: 191 internal_stations stacks before (190 three deep and 1 two deep, 804 bits per point), and 0 after the V1NSITE row 887341f510ca (plan 0eca5044e7fb). That matches the row's 191 -> 0. Separately, it finds 6 ft4/ft5 ft_slots stacks on v1n that the row does not count; those are also gone in the after plan.
+  Counts per die (types hit / soft types; points as internal + ft; max buses / bits per point; near TAP / START):
+  - KV A5t6 (a498941539fd): 53/91; 442 points (299 + 143); max 7 / 1456; TAP 13, START 22. With V1NSITE applied: 251 points (108 + 143); TAP 0, START 19.
+  - Remaining: 20 kv3_pc_v1 variants with 3 two-bus fault stacks each, all with a START nearby; kv3_hub_Wo 13 (44 bits); kv3_hub_C 12 (86 bits); kv3_pv_v4e/v4ne/v6e and kv3_hgi_v4, ft slot pairs or quads of 1-4 bits.
+  - Owner: KV-ALLFIX (fold V1NSITE into A5t7). KV-OWN-PV-R2: the kv3_pv_v3n two-bus fault stacks are below the CROWD limit.
+  - S81 c9s 99f7d3042489 (c9t43 identical): 153/402; 9806 points (9790 + 16); max 57 / 2888; TAP 0, START 13.
+  - 9688 points are ot_s81sl_leaf (75 types): 1-bit core-to-core FIRM stations (S81-LEAF-CYC, "R3 inside cores") placed on shared channel points, up to 57 nets on one point.
+  - Others: col_h9_r1 60 and col_h10_r1 12 two-net points; ot_s81sl_kv_leaf 45 (max 9 buses / 1265 bits); bk_sel 1 (3 buses / 828 bits).
+  - Owner: S81-ALLFIX-INT. Look first at the 13 leaf stacks with a START within 10 um. The 1-bit core-net stacks cost about one cell each per window, so they are a CROWD risk only where a START or status site is nearby.
+  - QC C1m = C1n (TAPBINS2 f0d336): 10/127; 37 points (3 + 34); max 4 / 1096; TAP 0, START 2.
+  - cbf_q00_s2 has 16 ft stacks of serdes_tx_tx_flit + valid (598 bits), 2 with a START. Also cbf_q01_s2 9; sle_su_c 3 (460 bits); sle_sc_v1/v2 and slw_sc_v1, one ft pair each of about 1088 bits; glue 3.
+  - Owner: QC-ALLFIX.
+  - HEAD W6: 1/27, hd_tile 1 point (2 buses, 196 bits), no TAP or START nearby. Low risk. Owner: HEAD-WEST.
+  Outputs: epyc10/epyc11 PRECHECK-R3/runs/epw/ss/*.txt.
