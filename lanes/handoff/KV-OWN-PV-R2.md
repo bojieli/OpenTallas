@@ -49,3 +49,8 @@
   v12 bind oth-ubuntu-537095-1795597679 (SENDER-SKEW v3, plan 3360028a8938) -> chain12 kit. Chains: intel2 ~/tmp/kvownpvr2/chain12.sh, chain12_{v1n,v12}.out.
   Read each at AUTO-GEOM and GRT r10; post. Base a5t5geom kits HELD-A5T8 (OWNER-OVERRIDES 950e0882).
 - epyc7: V1NSITE chain cancelled; PVLEGS7 chain (chainQ6e7.sh) forking tree5 then jobQ6g7 gate.
+
+## 11-25 01:3x PST
+- COORD: ETA accepted. 05:00 combined row (VODCH v1 class A street legs + PVLEGS rebased on A5t8 real cut), 07:00 follow-on gate epyc12 die prio, then probes v4e/v3n/v1n goal route.
+- PV-ESTRIP (class B face strips v1n/v3e/v5e/v5ne/v12e/v7e) -> lane KV-PV-ESTRIP (handover post 396398b3). Key split: me = internal_stations + lanes/latency + routing blockages; ESTRIP = outline/face pins/core origins. ESTRIP row due to me 05:30; compose ESTRIP first, mine on top.
+- Census: /srv/opentallas-scratch2/claude/kv-own-pv-r2/vodch/street_census_A5t8dry_A5t6.txt (intel2). VODCH v0 = scratch fam/ROWS_KV-OWN-PV-R2-VODCH.py (7 PVLEGS drops only).
