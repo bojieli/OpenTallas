@@ -30,7 +30,7 @@ jobs (bind / LATCHECK / G0 / die-proto / chain), and anything matched by a NOPRO
 
 Cancel = `ot-heavy-stop --match <kit dir>` (exact `--unit` when the match would hit another scope), nothing else is killed.
 """
-import argparse, glob, json, os, re, shlex, socket, subprocess, sys, time
+import argparse, glob, json, os, re, shlex, shutil, socket, subprocess, sys, time
 
 WINDOW_S = 6 * 3600
 # PREGRT-HOLD-WATCHDOG-1123 (COORD 17:25, FABLE flow review; owner 12.22 2-h hung-job watchdog): kit steps that are bounded
@@ -1172,7 +1172,7 @@ def scan(now=None, act=False, probe_s=4):
         cg, cpu_a = cg0[c["Id"]]
         row = {"host": hostname, "container": name, "unit": unit, "type": base_type(name), "kit": kit, "work": work,
                "log": log, "stage": stage, "kind": kind, "age_h": round((now - started) / 3600, 1),
-               "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "lane": lane, "_cg": cg, "_cpu0": cpu_a}
+               "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "lane": lane, "image": c["Config"].get("Image", ""), "_cg": cg, "_cpu0": cpu_a}
         ident = " ".join([name, kit or "", work or "", log or ""])
         k = keep_match(keep, ident)
         if k:
@@ -1228,6 +1228,21 @@ def scan(now=None, act=False, probe_s=4):
                     else:
                         v, why, row["klass"] = GRT_STUCK, ev, "GRT-CONGESTION"
                         detail = detail or ""
+            try:
+                drt_vals = drt_totals(log_text) if kind == "drt" else None
+                drc_t = ""
+                if drt_vals:
+                    rdir_ = os.path.dirname(log).replace("/logs/", "/reports/")
+                    reps_ = sorted(glob.glob(os.path.join(rdir_, "5_route_drc.rpt*")), key=lambda q: os.stat(q).st_mtime)
+                    drc_t = read_text(reps_[-1], cap=64 * 2**20) if reps_ else ""
+                cts_ = None
+                if str(stage).startswith("4_1_cts"):
+                    cm = CTS_POST_RE.findall(log_text)
+                    cts_ = (float(cm[-1][0]), float(cm[-1][1]) if cm[-1][1] else None) if cm else None
+                rounds_s = grt_rounds(os.path.dirname(log).replace("/logs/", "/reports/")) if kind == "grt" else None
+                row["smell"] = smell_triggers(kind, stage, (now - mt) / 3600, (now - lbirth) / 3600, rounds_s, drt_vals, drc_t, log_text if kind == "gpl" else "", cts_)
+            except (OSError, ValueError, IndexError):
+                row["smell"] = []
             if kind == "drt" and log:
                 pev = drt_plateau_evidence(drt_totals(log_text))
                 if pev:
@@ -1275,6 +1290,16 @@ def scan(now=None, act=False, probe_s=4):
                 r["cores_now"] = round((c1 - c0) / 1e6 / max(t1 - t_probe, 1e-3), 2)
         if r["verdict"] == "NO-PROGRESS" and r.get("cores_now") is not None and r["cores_now"] < 0.05:
             r["why"] += " (cpu idle: hung)"
+    for r in rows:
+        if r.get("smell") and smell_exempt(r):
+            r["smell"] = []
+    try:
+        vis_pass(rows, state, STATE_DIR, now)
+    except Exception as e:      # advisory render: never stops the scan
+        print(f"noprog vis pass failed: {e!r}", file=sys.stderr)
+    sp, sn = smell_pending_write(rows, hostname)
+    if sn and not os.path.exists(os.path.join(COORD, "bin/post.sh")):
+        print(f"noprog smell: {sn} kit(s) smell on {hostname}; the hub is not reachable from this host, fallback file {sp}", file=sys.stderr)
     reported = state.setdefault("reported", {})
     cancel_units = decide(rows, reported, now, act)
     actions = [do_cancel(u, [r for r in rows if r["unit"] == u and r["verdict"] in BAD_VERDICTS] if u is None else [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
@@ -1450,11 +1475,19 @@ def hub(now=None, post=True):
         files.append("lanes/CANCEL-UNSIGNABLE-1120.tsv")
     gmode, gcand, gdone = grt_flat_pass(rows, seen, now, post=post)
     ddone = design_fail_pass(rows, seen, now, post=post)
+    try:
+        smode, sfired = smell_pass(rows, seen, now, post=post, render=lambda r, t: host_smell_render(dict(r, smell=[(c, x) for c, x in r["smell"] if x in t])) if post else ("dry", ""))
+        if sfired:
+            files.append("lanes/SMELL.tsv")
+    except Exception as e:      # the smell is advisory: it must never stop the cancel passes or the table commit
+        print(f"noprog smell pass failed: {e!r}", file=sys.stderr)
     grt_label_notice_pass(rows, seen, now, post=post)
     if gdone:
         files.append("lanes/CANCEL-GRT-FLAT.tsv")
     if ddone:
         files.append("lanes/CANCEL-DESIGN-FAIL.tsv")
+    if vis_queue_append(rows, now, post):
+        files.append("lanes/VIS-QUEUE.tsv")
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
@@ -2023,6 +2056,366 @@ def plateau_mode_off():
 
 
 
+# ---------------------------------------------------------------- SMELL (OWNER 04:1x via COORD, 11-25): an EARLY bad-design trigger.  It never cancels.
+# A kit that smells gets (a) a render of its current DB next to the kit, (b) a line in lanes/SMELL.tsv, (c) a post to the die's FP-CONVERGE lane and the type
+# owner, so the visual review and the structural root-cause fix start while the slow job still runs.  The kit keeps running until it recovers or meets the
+# existing unsignable-and-over-3-h cancel rules.  The first SMELL_DRY_S (30 min) after deploy is a dry run: the hub posts the would-fire list, then goes live.
+SMELL_DRY_S = int(os.environ.get("NOPROG_SMELL_DRY_S", "1800"))
+SMELL_GRT_ITERS = 5            # more than 5 overflow-repair iterations
+SMELL_GRT_OVF = 1000           # overflow above 1000 after iteration 3
+SMELL_DRT_V0 = 50000           # iteration-0 violations above 50k
+SMELL_DRT_HALVE_IT = 3         # violations not at least halved by iteration 3
+SMELL_DRT_LOW_LAYER = 0.60     # more than 60 % of the marks on M1-M3
+SMELL_CTS_H = 2.0
+SMELL_CTS_SETUP = -100.0
+SMELL_CTS_HOLD = -50.0
+SMELL_PLACE_DENSITY = 0.8
+SMELL_PLACE_TD_ITERS = 8       # timing-driven repair looping: more than 8 timing-driven passes in the placement log (uncalibrated: dry run decides)
+SMELL_SILENT_H = 1.0
+SMELL_DENSITY_RE = re.compile(r"(?i)target[ _]?density\s*[:=]?\s*([0-9]*\.[0-9]+)")
+SMELL_TD_RE = re.compile(r"(?i)timing-driven(?:\s+(?:iteration|pass|overflow)|:\s*(?:repair|resiz))")
+CTS_POST_RE = re.compile(r"(?m)^OT_CTS_POST_TIMING .*?setup_ws (-?[0-9.]+)(?:.*?hold_ws (-?[0-9.]+))?")
+DIE_TAG = {"qwen_compute": "QC", "qwen_kvsys": "KV", "s81": "S81", "s81_head": "HEAD", "hbm": "HBM"}
+DIE_INT = {"QC": "QC-ALLFIX", "KV": "KV-ALLFIX", "S81": "S81-ALLFIX-INT", "HEAD": "HEAD-ALLFIX"}
+
+
+def low_layer_share(drc_text):
+    """share of DRC marks on M1-M3 (0..1) and the mark count.  Pure."""
+    n = low = 0
+    for m in DRC_BBOX.finditer(drc_text or ""):
+        n += 1
+        if re.fullmatch(r"M[123]", m.group(5)):
+            low += 1
+    return (low / n if n else 0.0), n
+
+
+def smell_triggers(kind, stage, log_age_h, stage_age_h, rounds=None, drt_vals=None, drc_text="", log_text="", cts=None):
+    """-> [(class, text)] SMELL triggers of one running stage.  Pure.  cts = (setup_ps, hold_ps|None) from the post-CTS timing line, else None."""
+    out = []
+    rounds = rounds or []
+    if kind == "grt" and rounds:
+        n_last = rounds[-1][0]
+        if n_last > SMELL_GRT_ITERS:
+            out.append(("GRT", f"{n_last} overflow-repair iterations (> {SMELL_GRT_ITERS})"))
+        late = [(n, v) for n, v in rounds if n > 3 and v > SMELL_GRT_OVF]
+        if late:
+            out.append(("GRT", f"overflow {late[-1][1]} at iteration {late[-1][0]} (> {SMELL_GRT_OVF} after iteration 3)"))
+        for (n0, v0), (n1, v1) in zip(rounds, rounds[1:]):
+            if v0 > 0 and v1 > v0 / 2 and n1 > 3:
+                out.append(("GRT", f"overflow not halving: {v0} (it {n0}) -> {v1} (it {n1})"))
+                break
+    if kind == "drt" and drt_vals:
+        if drt_vals[0] > SMELL_DRT_V0:
+            out.append(("DRT", f"iteration-0 violations {drt_vals[0]} (> {SMELL_DRT_V0})"))
+        if len(drt_vals) > SMELL_DRT_HALVE_IT and drt_vals[SMELL_DRT_HALVE_IT] > drt_vals[0] / 2:
+            out.append(("DRT", f"violations not halved by iteration {SMELL_DRT_HALVE_IT}: {drt_vals[0]} -> {drt_vals[SMELL_DRT_HALVE_IT]}"))
+        share, n = low_layer_share(drc_text)
+        if n >= 20 and share > SMELL_DRT_LOW_LAYER:
+            out.append(("DRT", f"{100 * share:.0f} % of {n} DRC marks on M1-M3 (> {100 * SMELL_DRT_LOW_LAYER:.0f} %)"))
+    if str(stage).startswith("4_1_cts") or kind == "cts":
+        if stage_age_h > SMELL_CTS_H:
+            out.append(("CTS", f"CTS stage {stage_age_h:.1f} h (> {SMELL_CTS_H:g} h)"))
+        if cts:
+            if cts[0] is not None and cts[0] < SMELL_CTS_SETUP:
+                out.append(("CTS", f"post-CTS setup {cts[0]:.0f} ps (< {SMELL_CTS_SETUP:g})"))
+            if len(cts) > 1 and cts[1] is not None and cts[1] < SMELL_CTS_HOLD:
+                out.append(("CTS", f"post-CTS hold {cts[1]:.0f} ps (< {SMELL_CTS_HOLD:g})"))
+    if kind == "gpl" or "place" in str(stage):
+        dens = [float(x) for x in SMELL_DENSITY_RE.findall(log_text or "")]
+        if dens and max(dens) > SMELL_PLACE_DENSITY:
+            out.append(("PLACE", f"placement density {max(dens):g} (> {SMELL_PLACE_DENSITY:g})"))
+        td = len(SMELL_TD_RE.findall(log_text or ""))
+        if td > SMELL_PLACE_TD_ITERS:
+            out.append(("PLACE", f"timing-driven repair looping: {td} timing-driven passes (> {SMELL_PLACE_TD_ITERS})"))
+    if log_age_h > SMELL_SILENT_H:
+        out.append(("SILENT", f"log silent {log_age_h:.1f} h (> {SMELL_SILENT_H:g} h)"))
+    return out
+
+
+def smell_exempt(r):
+    """rows never smelled: plan/proof jobs, KEEP, LEC, HBM (parked).  The smell is for design review, so a bind/LATCHECK or an advisory LEC has no design to review."""
+    return bool(r.get("verdict") in ("KEEP", "EXCLUDED") or r.get("kind") == "lec" or r.get("prio") in ("plan", "proof") or is_hbm(str(r.get("ident") or "")))
+
+
+def find_current_odb(work):
+    """newest *.odb the kit's flow wrote (the DB of the stage that is running or just ended), '' when none"""
+    best = ("", 0.0)
+    for g in ("run/results/*/*/*/*.odb", "gen/*/run/results/*/*/*/*.odb", "results/*/*/*/*.odb"):
+        for p in glob.glob(os.path.join(work, g)):
+            try:
+                mt = os.stat(p).st_mtime
+            except OSError:
+                continue
+            if mt > best[1]:
+                best = (p, mt)
+    return best[0]
+
+
+RENDER_TOOLS = ("autopilot/render_review.sh", "autopilot/render_review.py", "ref_tile/layout_dump.tcl", "ref_tile/layout_png.py", "ref_tile/layout_review.tcl")
+
+
+def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False):
+    """HOST half of (a): render the kit's CURRENT DB through the existing render_review.sh (an ot-run --direct job, 2 threads, read-only on the kit).
+    Review dir = <work>/smell_review/<stage>-<time> (next to the kit; else ~/.local/state/noprog/smell_review/<id>).  -> (status, review_dir).
+    The existing tool draws floorplan + density and, when the kit has a sign-off STA log, the failing-path overlay; it has no congestion heatmap, so the GRT
+    congestion reports are named in summary.txt instead."""
+    now = now or time.time()
+    odb = odb or find_current_odb(work or "")
+    if not odb:
+        return "no-odb-yet", ""
+    roots = tools_roots or [os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "/srv/opentallas-scratch2/claude/rt/current/tools",
+                            os.path.expanduser("~/.local/lib/noprog/tools")]
+    root = next((r for r in roots if all(os.path.isfile(os.path.join(r, t)) for t in RENDER_TOOLS)), None)
+    if not root:
+        return "no-render-tools", ""
+    stamp = time.strftime("%m%d-%H%M", time.localtime(now))
+    cands = [os.path.join(work, tag, f"{stage}-{stamp}"), os.path.expanduser(f"~/.local/state/noprog/{tag}/{rid}-{stage}-{stamp}")]
+    rev = ""
+    for c in cands:
+        try:
+            os.makedirs(os.path.join(c, "tools"), exist_ok=True)
+            rev = c
+            break
+        except OSError:
+            continue
+    if not rev:
+        return "no-writable-dir", ""
+    for t in RENDER_TOOLS:
+        with open(os.path.join(root, t), "rb") as f, open(os.path.join(rev, "tools", os.path.basename(t)), "wb") as g:
+            g.write(f.read())
+    try:
+        sz = os.path.getsize(odb)
+    except OSError:
+        sz = 0
+    mem = min(256, int(-(-max(8, 10 * sz / 2**30 + 4) // 1)))
+    sig = os.path.join(rev, "signoff.json")
+    with open(sig, "w") as f:
+        json.dump({"verdict": "SMELL-MIDSTAGE", "reasons": summary}, f)
+    with open(os.path.join(rev, "review.json"), "w") as f:
+        json.dump({"id": rid, "kit": work, "odb": odb, "signoff": sig, "image": image, "mem_gb": mem, "title": f"SMELL {stage}: " + "; ".join(summary)[:160]}, f)
+    cong = sorted(glob.glob(os.path.join(os.path.dirname(odb).replace("/results/", "/reports/"), "congestion-*.rpt")))
+    with open(os.path.join(rev, "SMELL.txt"), "w") as f:
+        f.write(f"kit {work}\nstage {stage}\nodb {odb}\n" + "".join(f"smell {x}\n" for x in summary) + "".join(f"congestion report {c}\n" for c in cong[-3:]))
+        for lg in glob.glob(os.path.join(os.path.dirname(odb).replace("/results/", "/logs/"), "5_1_grt*.log")):
+            lo = grt_layer_overflow(read_text(lg))
+            if lo:
+                f.write(f"GRT per-layer overflow ({os.path.basename(lg)}): {lo}\n")
+    ot_run = shutil.which("ot-run") or os.path.expanduser("~/.local/bin/ot-run")
+    argv = [ot_run, "--mem", str(mem), "--threads", "2", "--dir", rev, "--no-spill", "--direct", "--", "bash", os.path.join(rev, "tools/render_review.sh"), rev]
+    if nice:
+        argv = ["nice", "-n", "10"] + argv
+    try:
+        with open(os.path.join(rev, "render.log"), "w") as lg:
+            popen(argv, stdout=lg, stderr=subprocess.STDOUT, start_new_session=True, stdin=subprocess.DEVNULL)
+    except OSError as e:
+        return f"launch-failed: {e}", rev
+    return "rendering", rev
+
+
+GRT_LAYER_RE = re.compile(r"^(M\d+|V\d+)\s+\d+\s+\d+\s+[\d.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)", re.M)
+
+
+def grt_layer_overflow(text):
+    """per-layer GRT overflow of the LAST congestion table in a GRT log: 'M2 120, M3 15' (total column), '' when none.  Pure."""
+    last = {}
+    for m in GRT_LAYER_RE.finditer(text or ""):
+        last[m.group(1)] = int(m.group(4))
+    return ", ".join(f"{k} {v}" for k, v in sorted(last.items()) if v)
+
+
+# ---------------------------------------------------------------- VIS checkpoints (OWNER 04:3x via COORD): every kit is rendered when global placement ends and when GRT ends
+VIS_CHECKPOINTS = (("PLACE-GP", "3_3_place_gp.odb"), ("GRT", "5_1_grt.odb"))
+
+
+def vis_candidates(work, done):
+    """-> [(checkpoint, odb)] of the kit's checkpoint DBs that exist and were not rendered yet (done: {odb|mtime: t}).  Pure apart from the filesystem."""
+    out = []
+    for cp, name in VIS_CHECKPOINTS:
+        for g in (f"run/results/*/*/*/{name}", f"gen/*/run/results/*/*/*/{name}", f"results/*/*/*/{name}"):
+            for p_ in glob.glob(os.path.join(work or "", g)):
+                try:
+                    k = f"{p_}|{int(os.stat(p_).st_mtime)}"
+                except OSError:
+                    continue
+                if k not in done:
+                    out.append((cp, p_, k))
+    return out
+
+
+def vis_running(state_dir, now):
+    """one render job per host at a time: the marker holds the pid of the last launch; a live pid (or one launched < 10 min ago) blocks the next"""
+    try:
+        m = json.load(open(os.path.join(state_dir, "vis_running.json")))
+    except (OSError, ValueError):
+        return False
+    try:
+        pid = int(m["pid"])
+        if pid > 0:
+            os.kill(pid, 0)
+            return True
+        raise ValueError("no pid")
+    except (OSError, KeyError, ValueError, TypeError):
+        return now - float(m.get("t", 0)) < 600
+
+
+def vis_pass(rows, state, state_dir, now, render=smell_render):
+    """HOST: launch at most ONE checkpoint render (nice 10) this pass, when none is running.  Marks row['vis'] = {checkpoint, status, dir} for the hub's lanes/VIS-QUEUE.tsv."""
+    done = state.setdefault("vis_done", {})
+    if os.environ.get("NOPROG_VIS_MODE") == "off" or vis_running(state_dir, now):
+        return None
+    for r in rows:
+        if smell_exempt(r) or not r.get("work"):
+            continue
+        for cp, odb, key in vis_candidates(r["work"], done):
+            box = {}
+            def popen(argv, **kw):
+                pr = subprocess.Popen(argv, **kw)
+                box["pid"] = pr.pid
+                return pr
+            status, rev = render(r["work"], r.get("kit") or r["work"], cp.lower(), r.get("image", ""), (r.get("container") or "x")[:40], [f"checkpoint {cp}"], now=now,
+                                 popen=popen, odb=odb, tag="vis_review", nice=True)
+            done[key] = now
+            if status == "rendering":
+                os.makedirs(state_dir, exist_ok=True)
+                save_json(os.path.join(state_dir, "vis_running.json"), {"pid": box.get("pid", 0), "t": now, "dir": rev})
+                r["vis"] = {"checkpoint": cp, "status": status, "dir": rev, "odb": odb}
+                return r
+    return None
+
+
+def smell_pending_write(rows, host, path=None):
+    """HOST: every scan writes the smelling kits to a local fallback file, so a down hub loses nothing.  -> (path, n)"""
+    path = path or os.path.join(STATE_DIR, "smell_pending.tsv")
+    ls = [f"{r.get('host')}\t{r.get('type')}\t{r.get('stage')}\t{r.get('container')}\t{'; '.join(t for _, t in r['smell'])[:400]}" for r in rows if r.get("smell")]
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as f:
+            f.write("# SMELL fallback (hub unreachable or not yet read): host, type, stage, container, triggers\n" + "".join(l + "\n" for l in ls))
+    except OSError:
+        return path, 0
+    return path, len(ls)
+
+
+def smell_pass(rows, seen, now, post=True, render=None, poster=None):
+    """HUB: dedupe smelling rows per (host, container, class); dry run for the first SMELL_DRY_S after the first pass (post the would-fire list once), then live:
+    render, lanes/SMELL.tsv, post to the die's FP-CONVERGE-<DIE> lane and the type owner.  Never cancels.  -> (mode, fired [dict])"""
+    if os.environ.get("NOPROG_SMELL_MODE") == "off" or os.path.exists(os.path.join(COORD, "lanes/SMELL-WATCHDOG.off")):
+        return "off", []
+    poster = poster or os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH")
+    st = seen.setdefault("smell", {})
+    t0 = seen.setdefault("smell_t0", now)
+    live = now - t0 >= SMELL_DRY_S
+    new = []
+    for r in rows:
+        if not r.get("smell") or smell_exempt(r):
+            continue
+        for cls in sorted({c for c, _ in r["smell"]}):
+            k = f"{r.get('host')}|{r.get('container')}|{cls}"
+            e = st.setdefault(k, {"first": now, "fired": False})
+            e["last"] = now
+            if not e["fired"]:
+                new.append((k, cls, r))
+    for k in [k for k, e in st.items() if now - float(e.get("last", now)) > 12 * 3600]:
+        del st[k]
+    txt = lambda r, cls: "; ".join(t for c, t in r["smell"] if c == cls)
+    if not live:
+        if new and not seen.get("smell_dry_posted"):
+            seen["smell_dry_posted"] = now
+            ls = [f"{r.get('host')} {r.get('type')} {r.get('stage')} [{cls}] {txt(r, cls)[:110]}" for _, cls, r in new]
+            if post:
+                _post(poster, f"DRYRUN [{poster} -> COORD] SMELL would-fire list ({len(ls)} kit-classes, live in {int((SMELL_DRY_S - (now - t0)) / 60)} min; nothing cancelled, no render yet): " + " | ".join(ls[:60]))
+        return "dry", []
+    fired, path = [], os.path.join(COORD, "lanes/SMELL.tsv")
+    for k, cls, r in new:
+        status, rev = ("no-render-hook", "")
+        if render:
+            status, rev = render(r, [t for c, t in r["smell"] if c == cls])
+        die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
+        rec = {"t": now, "type": r.get("type", ""), "die": die, "stage": r.get("stage", ""), "class": cls, "metric": txt(r, cls)[:300], "host": r.get("host"),
+               "render": f"{r.get('host')}:{rev} ({status})" if rev else status, "owner": owner_of([r]), "unit": r.get("unit") or r.get("container")}
+        fired.append(rec)
+        st[k]["fired"] = True
+        st[k]["rec"] = rec["render"]
+    if fired:
+        try:
+            new_file = not os.path.exists(path)
+            with open(path, "a") as f:
+                if new_file:
+                    f.write("t\ttype\tdie\tstage\tclass\tmetric\trender\towner\tunit\n")
+                for d in fired:
+                    f.write("\t".join(str(d[x]).replace("\t", " ").replace("\n", " ") for x in ("t", "type", "die", "stage", "class", "metric", "render", "owner", "unit")) + "\n")
+        except OSError as e:
+            print(f"noprog smell: cannot write {path}: {e}", file=sys.stderr)
+        if post:
+            fb = os.path.join(STATE_DIR, "smell_fallback.tsv")
+            for d in fired:
+                tag = d["die"]
+                msg = (f"SMELL [{poster} -> FP-CONVERGE-{tag}, {d['owner']}; cc {DIE_INT.get(tag, 'COORD')}] {d['type']} {d['stage']} [{d['class']}] on {d['host']}: {d['metric']}. "
+                       f"Render: {d['render']}. Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kit keeps running and is NOT cancelled "
+                       f"unless it also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.")
+                if not _post_ok(poster, msg):
+                    os.makedirs(STATE_DIR, exist_ok=True)
+                    with open(fb, "a") as f:
+                        f.write(f"{d['t']}\t{msg}\n")
+                    print(f"noprog smell: HUB POST FAILED, wrote {fb}", file=sys.stderr)
+    return "live", fired
+
+
+def vis_queue_append(rows, now, post=False):
+    """HUB: one lanes/VIS-QUEUE.tsv row per checkpoint render a host launched (row['vis']).  The file is a LOG only (OWNER 04:5x: reviews are self-launched by the
+    owning lanes, no central queue); the die's FP-CONVERGE-<DIE> lane and the type owner are told directly, with the render paths.  -> number of rows appended"""
+    new = [r for r in rows if r.get("vis")]
+    if not new:
+        return 0
+    path = os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
+    known = set(read_lines(path))
+    out = []
+    for r in new:
+        v = r["vis"]
+        die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
+        line = "\t".join(str(x).replace("\t", " ") for x in (int(now), r.get("type", ""), die, v["checkpoint"], f"{r.get('host')}:{v['dir']}", v["status"], owner_of([r]), r.get("kit", ""), "LOG"))
+        if line not in known:
+            out.append(line)
+            if post:
+                d = v["dir"]
+                _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"),
+                      f"RENDER [{os.environ.get('NOPROG_SMELL_LANE', 'SMELL-WATCH')} -> FP-CONVERGE-{die}, {owner_of([r])}; cc {DIE_INT.get(die, 'COORD')}] {r.get('type', '')} {v['checkpoint']} checkpoint render "
+                      f"started on {r.get('host')}: {r.get('host')}:{d} (floorplan.png, density.png, SMELL.txt with the GRT per-layer overflow, written when the job ends; render.log there). "
+                      f"Launch your own Fable/Opus review of it (OWNER 04:5x: self-launched, no central queue; lanes/VIS-QUEUE.tsv is a log). Not available in the existing tool: "
+                      f"RUDY estimate, pin-to-register flight lines, macro faces, ideal-clock STA.")
+    if not out:
+        return 0
+    new_file = not os.path.exists(path)
+    with open(path, "a") as f:
+        if new_file:
+            f.write("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n")
+        f.write("\n".join(out) + "\n")
+    return len(out)
+
+
+def _post_ok(lane_from, txt):
+    try:
+        return subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), lane_from, txt], capture_output=True, text=True, timeout=300).returncode == 0
+    except (subprocess.SubprocessError, OSError):
+        return False
+
+
+def host_smell_render(row):
+    """hub -> host: run the render half on row['host'] over ssh (nothing runs on the hub itself).  -> (status, review_dir)"""
+    h = row.get("host")
+    args = [row.get("work") or "", row.get("kit") or "", row.get("stage") or "", row.get("image") or "", (row.get("container") or "x")[:40]]
+    smell = [t for _, t in row.get("smell", [])]
+    cmd = "python3 -I ~/.local/lib/noprog/noprog_watchdog.py smell-render " + " ".join(shlex.quote(a) for a in args) + " " + shlex.quote(json.dumps(smell))
+    try:
+        p = run_host(h, cmd, timeout=120)
+        line = (p.stdout.strip().splitlines() or ["render-failed: no output"])[-1]
+        st, _, rev = line.partition("\t")
+        return st, rev
+    except (subprocess.SubprocessError, OSError) as e:
+        return f"render-failed: {str(e)[:60]}", ""
+
+
+
 def design_fail_exempt(r):
     ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work", "ident"))
     ex = unsignable_exempt(ident, r.get("prio", ""), r.get("kind", ""))
@@ -2124,13 +2517,19 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["scan", "hub", "tick"])
+    ap.add_argument("cmd", choices=["scan", "hub", "tick", "smell-render"])
+    ap.add_argument("args", nargs="*")
     ap.add_argument("--act", action="store_true")
     ap.add_argument("--no-post", action="store_true")
     ap.add_argument("--probe", type=float, default=4)
     a = ap.parse_args(argv)
     if not os.environ.get("XDG_RUNTIME_DIR"):
         os.environ["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
+    if a.cmd == "smell-render":
+        w, k, st_, im, rid, sm = (a.args + [""] * 6)[:6]
+        status, rev = smell_render(w, k, st_, im, rid, json.loads(sm or "[]"))
+        print(f"{status}\t{rev}")
+        return 0
     if a.cmd in ("scan", "tick"):
         rows, actions = scan(act=a.act or a.cmd == "tick", probe_s=a.probe)
         print(f"noprog scan: {len(rows)} containers, {sum(r['verdict'] in ('NO-PROGRESS', 'CANCEL-NOW') for r in rows)} flagged, {len(actions)} cancelled")

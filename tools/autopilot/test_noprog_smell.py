@@ -1,0 +1,147 @@
+"""SMELL (OWNER 04:1x via COORD 11-25): an early, never-cancelling bad-design trigger with render + SMELL.tsv + a post to FP-CONVERGE-<DIE> and the type owner."""
+import json
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
+import noprog_watchdog as nw
+from test_noprog_design_fail import coord, posted, NOW
+
+
+def classes(t):
+    return sorted({c for c, _ in t})
+
+
+def test_grt_triggers():
+    assert nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 900)]) == []
+    t = nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 8000), (10, 6000), (15, 2900)])
+    texts = " | ".join(x for _, x in t)
+    assert "15 overflow-repair iterations" in texts and "overflow 2900 at iteration 15" in texts and "not halving: 8000 (it 5) -> 6000 (it 10)" in texts
+    assert nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 800), (10, 300)]) == [("GRT", "10 overflow-repair iterations (> 5)")]
+
+
+def test_drt_triggers():
+    t = nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[84487, 11326, 7501, 2181])
+    assert [x for _, x in t] == ["iteration-0 violations 84487 (> 50000)"]
+    t = nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[40000, 30000, 25000, 21000])
+    assert "not halved by iteration 3: 40000 -> 21000" in t[0][1]
+    low = "".join("violation type: Short\n\tsrcs: a b\n\tbbox = (1.0, 1.0) - (1.1, 1.1) on Layer M2\n" for _ in range(30))
+    assert any("M1-M3" in x for _, x in nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[900, 300, 100, 40], drc_text=low))
+    assert nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[900, 300, 100, 40], drc_text=low.replace("M2", "M6")) == []
+
+
+def test_cts_place_and_silence_triggers():
+    assert classes(nw.smell_triggers("cts", "4_1_cts", 0.2, 2.5, cts=(-120.0, -60.0))) == ["CTS"]
+    assert len(nw.smell_triggers("cts", "4_1_cts", 0.2, 2.5, cts=(-120.0, -60.0))) == 3
+    assert nw.smell_triggers("cts", "4_1_cts", 0.2, 1.5, cts=(-99.0, -49.0)) == []
+    gp = "TargetDensity: 0.85\n" + "[INFO GPL-0100] timing-driven iteration\n" * 9
+    assert len(nw.smell_triggers("gpl", "3_3_place_gp", 0.1, 1, log_text=gp)) == 2
+    assert nw.smell_triggers("yosys", "1_2_yosys", 1.5, 3) == [("SILENT", "log silent 1.5 h (> 1 h)")]
+
+
+def test_exempt_rows_never_smell():
+    assert nw.smell_exempt({"verdict": "KEEP"}) and nw.smell_exempt({"kind": "lec"}) and nw.smell_exempt({"prio": "plan"})
+    assert not nw.smell_exempt({"verdict": "PROGRESS", "kind": "drt", "ident": "dpkit-col_h9_r1 /srv/x/kit"})
+
+
+def srow(**k):
+    r = {"host": "epyc7", "container": "dpkit-slw_sc_v2-1", "unit": "oth-u-1", "type": "slw_sc_v2", "stage": "5_2_route", "kind": "drt", "verdict": "PROGRESS", "lane": "QC-ALLFIX",
+         "kit": "/srv/x/kit-wave/qwen_compute/E/private/QC-ALLFIX/slw_sc_v2_1/gen/slw_sc_v2", "work": "/srv/x/kit-wave/qwen_compute/E/private/QC-ALLFIX/slw_sc_v2_1/gen/slw_sc_v2",
+         "ident": "dpkit-slw_sc_v2-1 /srv/x/kit-wave/qwen_compute/E/private/QC-ALLFIX/slw_sc_v2_1/gen/slw_sc_v2", "prio": "", "smell": [("DRT", "iteration-0 violations 400194 (> 50000)")]}
+    r.update(k)
+    return r
+
+
+def test_dry_run_posts_the_would_fire_list_then_goes_live_without_cancelling(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "st"))
+    seen, calls = {}, []
+    mode, fired = nw.smell_pass([srow()], seen, NOW, render=lambda r, t: calls.append(r) or ("rendering", "/x/smell_review/a"))
+    assert mode == "dry" and fired == [] and calls == []
+    assert posted(tmp_path)[-1].startswith("SMELL-WATCH|DRYRUN [SMELL-WATCH -> COORD] SMELL would-fire list (1 kit-classes")
+    assert not (tmp_path / "lanes/SMELL.tsv").exists()
+    n = len(posted(tmp_path))
+    nw.smell_pass([srow()], seen, NOW + 600, render=None)
+    assert len(posted(tmp_path)) == n                                         # dry list is posted once
+    mode, fired = nw.smell_pass([srow()], seen, NOW + 1900, render=lambda r, t: calls.append(r) or ("rendering", "/x/smell_review/a"))
+    assert mode == "live" and len(fired) == 1 and len(calls) == 1
+    tsv = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
+    assert len(tsv) == 2 and "slw_sc_v2" in tsv[1] and "QC" in tsv[1] and "epyc7:/x/smell_review/a (rendering)" in tsv[1]
+    p = posted(tmp_path)[-1]
+    assert "-> FP-CONVERGE-QC, QC-ALLFIX; cc QC-ALLFIX]" in p and "NOT cancelled" in p
+    nw.smell_pass([srow()], seen, NOW + 2800, render=lambda r, t: calls.append(r) or ("x", ""))
+    assert len(calls) == 1                                                    # once per kit and class
+
+
+def test_hub_down_writes_the_fallback_file(tmp_path, monkeypatch, capsys):
+    coord(tmp_path, monkeypatch)
+    monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "st"))
+    (tmp_path / "bin/post.sh").write_text("#!/bin/bash\nexit 1\n")
+    seen = {"smell_t0": NOW - 4000}
+    nw.smell_pass([srow()], seen, NOW, render=None)
+    fb = (tmp_path / "st/smell_fallback.tsv").read_text()
+    assert "FP-CONVERGE-QC" in fb and "HUB POST FAILED" in capsys.readouterr().err
+    p, n = nw.smell_pending_write([srow()], "epyc7", str(tmp_path / "pend.tsv"))
+    assert n == 1 and "slw_sc_v2" in open(p).read()
+
+
+def test_switched_off_and_exempt(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    (tmp_path / "lanes/SMELL-WATCHDOG.off").write_text("off\n")
+    assert nw.smell_pass([srow()], {}, NOW)[0] == "off"
+    (tmp_path / "lanes/SMELL-WATCHDOG.off").unlink()
+    assert nw.smell_pass([srow(prio="plan")], {"smell_t0": NOW - 5000}, NOW) == ("live", [])
+
+
+def test_render_launch_writes_the_review_dir_next_to_the_kit(tmp_path):
+    work = tmp_path / "kit"
+    (work / "run/results/asap7/d/base").mkdir(parents=True)
+    (work / "run/results/asap7/d/base/3_place.odb").write_text("odb")
+    root = tmp_path / "tools"
+    for t in nw.RENDER_TOOLS:
+        (root / os.path.dirname(t)).mkdir(parents=True, exist_ok=True)
+        (root / t).write_text("x")
+    launched = []
+    st, rev = nw.smell_render(str(work), str(work), "5_1_grt", "img:1", "c1", ["overflow 9000"], now=NOW, popen=lambda argv, **k: launched.append(argv), tools_roots=[str(root)])
+    assert st == "rendering" and rev.startswith(str(work / "smell_review/5_1_grt-"))
+    meta = json.load(open(os.path.join(rev, "review.json")))
+    assert meta["odb"].endswith("3_place.odb") and meta["image"] == "img:1" and "SMELL" in meta["title"]
+    assert launched and launched[0][-3:] == ["bash", os.path.join(rev, "tools/render_review.sh"), rev] and "--direct" in launched[0]
+    assert nw.smell_render(str(tmp_path / "none"), "", "s", "i", "c", [], tools_roots=[str(root)])[0] == "no-odb-yet"
+
+
+# ---------------------------------------------------------------- VIS checkpoints (OWNER 04:3x)
+def mkkit(tmp_path, names=("3_3_place_gp.odb", "5_1_grt.odb")):
+    work = tmp_path / "kit"
+    d = work / "run/results/asap7/d/base"
+    d.mkdir(parents=True)
+    for n in names:
+        (d / n).write_text("odb")
+    return str(work)
+
+
+def test_grt_layer_overflow_reads_the_last_table():
+    t = "M2 100 90 90.0% 1 / 2 / 3\nM3 100 90 90.0% 0 / 0 / 0\n\nM2 100 90 90.0% 5 / 6 / 120\nM3 100 90 90.0% 1 / 2 / 15\nTotal 1 2 3.0% 6 / 8 / 135\n"
+    assert nw.grt_layer_overflow(t) == "M2 120, M3 15" and nw.grt_layer_overflow("nothing") == ""
+
+
+def test_checkpoint_renders_once_per_db_one_job_per_host(tmp_path):
+    work = mkkit(tmp_path)
+    rows = [{"work": work, "kit": work, "container": "c1", "verdict": "PROGRESS", "kind": "gpl", "image": "i", "ident": "c1 " + work}]
+    calls, st, sd = [], {}, str(tmp_path / "st")
+    render = lambda w, k, stg, img, rid, summ, **kw: calls.append((stg, kw["odb"], kw["nice"], kw["tag"])) or ("rendering", "/rev/a")
+    r = nw.vis_pass(rows, st, sd, NOW, render=render)
+    assert r is rows[0] and r["vis"]["checkpoint"] == "PLACE-GP" and calls[0][0] == "place-gp" and calls[0][2] is True and calls[0][3] == "vis_review"
+    assert nw.vis_pass(rows, st, sd, NOW + 60, render=render) is None                  # a job launched < 10 min ago blocks the next (one per host)
+    r2 = nw.vis_pass(rows, st, sd, NOW + 700, render=render)
+    assert r2["vis"]["checkpoint"] == "GRT" and len(calls) == 2
+    assert nw.vis_pass(rows, st, sd, NOW + 1500, render=render) is None and len(calls) == 2    # both DBs are done
+    assert nw.vis_pass([dict(rows[0], prio="plan")], {}, str(tmp_path / "st2"), NOW, render=render) is None
+
+
+def test_vis_queue_rows_reach_the_hub_file_once(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    r = srow(vis={"checkpoint": "GRT", "status": "rendering", "dir": "/rev/a", "odb": "/x/5_1_grt.odb"})
+    assert nw.vis_queue_append([r], NOW) == 1 and nw.vis_queue_append([r], NOW) == 0
+    ls = (tmp_path / "lanes/VIS-QUEUE.tsv").read_text().splitlines()
+    assert len(ls) == 2 and "GRT" in ls[1] and "epyc7:/rev/a" in ls[1] and ls[1].endswith("LOG")
