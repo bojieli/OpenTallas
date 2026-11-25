@@ -61,6 +61,17 @@ def test_probe_scan_spool_hash(tmp_path):
     assert u['top'] == 'ot_top_m' and [f for _, f in u['files']] == ['6_final.odb', '6_final.v', 'lec.json', 'signoff.json']
     assert sorted(os.path.basename(f) for _, f in u['display']) == ['m.lef', 'render.png']
     assert [f for _, f in AE.meta_files(u)] == ['lec.json', 'signoff.json']     # AGIdock never gets the 6_final.* DB files
+    # VIEW-FF-1125: the sign-off timing models travel with the full record and the view pack, above the 50 MB render cap
+    with open(sod / 'ot_top_m_ff.lib', 'wb') as f:
+        f.truncate(60 << 20)
+    (sod / 'ot_top_m_tt.lib').write_text('library (ot_top_m_tt) {}\n')
+    with open(base / 'huge_render.png', 'wb') as f:
+        f.truncate(60 << 20)
+    u, = run('scan', dict(hours=1, roots=[str(tmp_path / 'claude')]))
+    assert [f for _, f in u['files']] == ['6_final.odb', '6_final.v', 'lec.json', 'ot_top_m_ff.lib', 'ot_top_m_tt.lib', 'signoff.json']
+    assert sorted(os.path.basename(f) for _, f in u['display']) == ['m.lef', 'ot_top_m_ff.lib', 'ot_top_m_tt.lib', 'render.png']
+    assert [f for _, f in AE.meta_files(u)] == ['lec.json', 'ot_top_m_ff.lib', 'ot_top_m_tt.lib', 'signoff.json']
+    (sod / 'ot_top_m_ff.lib').unlink(); (sod / 'ot_top_m_tt.lib').unlink(); (base / 'huge_render.png').unlink()
     h, = run('hash', dict(paths=[str(base / '6_final.odb')]))
     assert h[str(base / '6_final.odb')][1] == 2 << 20
     os.environ['OT_AUTO_EXPORT_SPOOL'] = str(home / AE.SPOOL_REL)

@@ -138,10 +138,14 @@ def unit(so, hint=None):
     if not odb or not os.path.isfile(odb) or os.path.getsize(odb) < 1 << 20:
         o["err"] = "no routed DB %%s" %% odb; return o
     dbd, sod = os.path.dirname(os.path.realpath(odb)), os.path.dirname(so)
+    VLIB = re.compile(r"_(tt|ff)\.lib$")
     files = [(dbd, f) for f in DB if os.path.isfile(os.path.join(dbd, f))]
     for f in sorted(os.listdir(sod)):
         p = os.path.join(sod, f)
         if f.endswith(".json") and os.path.isfile(p) and os.path.getsize(p) < 20 << 20 and f not in [x[1] for x in files]:
+            files.append((sod, f))
+        # VIEW-FF-1125 (Fable 03:35 item 47): the sign-off's own timing models <design>_tt.lib / _ff.lib (signoff.py ETM) travel with the record
+        elif VLIB.search(f) and os.path.isfile(p) and f not in [x[1] for x in files]:
             files.append((sod, f))
     # EVIDENCE-EXPORT-1119 (QC-RING-REBUILD: exports held only 6_final.* + signoff.json, so a signed child's views could not be regenerated once its kit was cleaned): the landing evidence
     # (land_slots.json, face_guard.json, 1_synth.v) and the view pack (export_view output: a view/ or views/ dir next to the record, the DB or the kit) travel with the record, 2 GB cap.
@@ -165,7 +169,7 @@ def unit(so, hint=None):
                     rel = os.path.basename(vr) + "/" + os.path.relpath(q, vr)
                     if rel not in have_f:
                         files.append((os.path.dirname(vr), rel)); have_f.add(rel); vt += os.path.getsize(q)
-    disp, taken, tot = [], set(), 0
+    disp, taken, tot, vtot = [], set(), 0, 0
     DISP = re.compile(r"\.(png|svg|webp|jpe?g|lef|lib|lib\.gz)$|(^|_)(pins|abstract|layout_dump|bb)\.(json|v)$|_bb\.v$")
     roots = [sod, os.path.dirname(sod), dbd, inp.get("kit"), os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(sod), "views"),
              os.path.join(os.path.dirname(dbd), "view")]
@@ -177,6 +181,10 @@ def unit(so, hint=None):
                 rq = os.path.realpath(q)
                 if not DISP.search(f) or rel in taken or rq in taken or not os.path.isfile(q): continue
                 z = os.path.getsize(q)
+                if VLIB.search(f) and r in (sod, os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(dbd), "view")):
+                    # VIEW-FF-1125: the view's own TT/FF Liberty is the view pack, not a render: its own 1 GB budget, no 50 MB file cap
+                    if vtot + z > 1 << 30: continue
+                    taken.update((rel, rq)); vtot += z; disp.append((r, rel)); continue
                 if z > 50 << 20 or tot + z > 300 << 20: continue
                 taken.update((rel, rq)); tot += z; disp.append((r, rel))
     tt = ((rec.get("checks") or {}).get("setup_tt") or {}).get("wns_ps")
