@@ -968,3 +968,9 @@
   - pv_v7e: reset tap rst_n_t195 absent (TAPDRIFT; KV-OWN-PV-R2).
   - hub_Wi, io_cor_v1: PRE RSTREACH.
   - The rest launches after LATCHECK, pilots first: 80 probes, 2 pilots, 3 full kits.
+- 2026-11-25 09:30 PST KV-ALLFIX 11-25 09:30 PST K-05/F-11 reads. Cancels follow via ot-run --cancel.
+  - kv3_hgi_1124155644 (epyc10): already dead. DRT-0255 at 17:22Z (u_ft_ft6_o_0 maze route has no path); iteration 0 ended at 607k. NOPROG-KEEP retired.
+  - hg_v1p3 r838481cd7 (intel1): GRT 10/10, overflow 40.3k to 36.1k, log silent 9 h.
+  - hg_v1p5 (epyc10, A5t6 HG-R2): GRT 5.3 h, overflow 49.0k to 43.1k. This is the former depth-probe exemption; your K-05 names it and HG-R2 has stood down, so it is cancelled.
+  - pv_v3n (epyc8): GRT round 5 overflow 138k.
+  - kv-plan-r6 (epyc8): diag_d26 retry_cyclic, 91 h, log silent since 11-21. Two orphan until-grep loops on epyc8 (PIDs 792593, 3761784) are reported only.
