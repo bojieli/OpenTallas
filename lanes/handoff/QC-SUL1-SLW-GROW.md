@@ -25,3 +25,4 @@ Base C1o v13 aa3a14fb7484 / sidecar a142fe516f24 (epyc10 launch_c1o_bind). Work 
 - Fable v1 and v2 (scratchpad fable_review*.txt): (a) geometry ADOPT-WITH-FIXES, (b) bindable row FAIL.
 - Blockers: per-type retap + tap_offset_cover + reset-tree re-anchor/landing_remap on 14 widened types; snap st_a bank sites to the site grid; START relay re-plan (clean provider); seam stations / hop check for 48 gap ports + 24 _00 ports; st_a_v2 x_fw_ctl landing group; regenerate CA/feed/taps; RR sha = row sha.
 - ETA 11-25 15:30 PST for a v3 rerun of guard+PRE+Fable.
+- PRE v2 (row 4e86eee925d8, absbins copy d425320da70e) done 09:58: FAIL 27 (same classes as v1; TAPOFF-MISSING 7). Guard PASS.
