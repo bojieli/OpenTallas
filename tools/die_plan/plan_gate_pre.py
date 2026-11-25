@@ -116,6 +116,13 @@ R8BOUND-1124 (COORD flow review #2, report-only WARN per r703): every DIRECT R8 
   sink_part) must carry bound == the plan's latency.lanes[<lane>].cycles (the bind's bound depth); a mismatch is a strict-bind
   R8_STALE found in seconds instead of after a 1-3 h bind (C1m: 6 dvs_E*.so_w flt members, table 2, plan 4).  check_r8bound.
 
+HALOCORNER-1125 (COORD, QC-ALLFIX; FLOW-OPS-R3 DIEPLAN-GREEN 11-24 23:33; report-only WARN per r703): reset_tree._free bounds its
+  row-high / cell-wide free runs only by halos the point is strictly inside in x or y, so a point on a SHARED corner of 2+ grown
+  halos (reset_tree.blockages) has unbounded runs and is called a legal relay site (q_su31: four halos meet at (825.12, 816.48)).
+  Every planned relay site (type relay_sites), published reset-tree node (collector_tree root / start_in / relays / outs) and
+  reset.in_sites entry that touches 2+ halos at a corner of one of them, in no halo interior, with no run under inclusive face
+  contact, is listed per type.  _free is unchanged (bound trees keep their sites); the sites move in plan rows.  --skip HALOCORNER.
+
 TAPOFF-1123 (TAP-GRID-R5, COORD class ruling; KV x10): a type with a plan clock.tap_offset.per_port_ps row (R-CLOCK-7)
   times every tap port at its row; a port with no row silently takes the window [-W, 0].  Every tap of such a type
   (schema.tap_grid, core clk_c* ports aside) must have a row: FAIL TAPOFF-MISSING per type with the missing ports and the fix
@@ -210,6 +217,7 @@ import argparse
 import ast
 import hashlib
 import json
+import math
 import time
 import os
 import re
@@ -221,7 +229,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1290,6 +1298,155 @@ def check_r8bound(tree, plan, asbuilt=None, max_list=8, raw=None):
     if bad or skipped:
         out.append(f"LIST R8BOUND members {len(merged)} judged {len(merged) - skipped} stale {sum(map(len, bad.values()))} "
                    f"not judged (forwarded / no cycles row) {skipped}")
+    return out
+
+
+HALOCORNER_LEVEL = "WARN"  # HALOCORNER-1125 (COORD, QC-ALLFIX): report-only; the sites move in plan rows (C1o / A5t8 / c10), never in bound trees
+HALOCORNER_EPS = 1e-6      # um; far below one DBU (0.001), above the decimal roundoff of abutting faces (816.48 vs 816.4799999999999)
+
+
+def halo_corner_hit(p, boxes, eps=HALOCORNER_EPS, row_um=None, cell_w_um=None):
+    """HALOCORNER-1125: number of grown halos the point p sits on at a SHARED CORNER, else 0.
+    p is a hit when it touches (closed box) 2 or more halos of `boxes`, is a corner of at least one of them, lies in no halo's
+    interior (that is a different class), and has no free row-high (ROW_UM, y) or cell-wide (CELL_W_UM, x) run under INCLUSIVE
+    face contact (the intended reset_tree._free rule, FLOW-OPS-R3 11-24 23:33).  reset_tree._free bounds its runs only by boxes
+    the point is strictly inside in x or y, so at such a corner the runs are unbounded and the point is called a legal site.
+    Two halos on one straight seam (p mid-seam, no corner) are not a hit: _free already rejects them (zero-width run)."""
+    if row_um is None or cell_w_um is None:
+        import reset_tree as RT
+        row_um, cell_w_um = RT.ROW_UM, RT.CELL_W_UM
+    x, y = p
+    touch, corner = 0, False
+    ylo, yhi, xlo, xhi = -math.inf, math.inf, -math.inf, math.inf
+    for a, b, c, d in boxes:
+        ix, iy = a - eps <= x <= c + eps, b - eps <= y <= d + eps
+        if not (ix and iy):
+            if ix:
+                if b >= y - eps:
+                    yhi = min(yhi, b)
+                elif d <= y + eps:
+                    ylo = max(ylo, d)
+            if iy:
+                if a >= x - eps:
+                    xhi = min(xhi, a)
+                elif c <= x + eps:
+                    xlo = max(xlo, c)
+            continue
+        if a + eps < x < c - eps and b + eps < y < d - eps:
+            return 0
+        touch += 1
+        corner = corner or ((abs(x - a) <= eps or abs(x - c) <= eps) and (abs(y - b) <= eps or abs(y - d) <= eps))
+        if b >= y - eps:
+            yhi = min(yhi, b)
+        elif d <= y + eps:
+            ylo = max(ylo, d)
+        if a >= x - eps:
+            xhi = min(xhi, a)
+        elif c <= x + eps:
+            xlo = max(xlo, c)
+    if touch < 2 or not corner:
+        return 0
+    if yhi - ylo >= row_um - eps and xhi - xlo >= cell_w_um - eps:
+        return 0
+    return touch
+
+
+def _xy(v):
+    if isinstance(v, (list, tuple)) and len(v) >= 2 and all(isinstance(q, (int, float)) and not isinstance(q, bool) for q in v[:2]):
+        return (float(v[0]), float(v[1]))
+    return None
+
+
+def halocorner_points(raw, tn, t):
+    """[(source, name, (x, y))]: every planned relay site and published reset-tree node of type tn (type frame).
+    relay_sites{name: xy}; clock.landing_contract.collector_tree root / start_in / relays[].xy / outs[]; reset.in_sites[tn]."""
+    pts = []
+    for nm, v in sorted(((t.get("relay_sites") or {}) if isinstance(t.get("relay_sites"), dict) else {}).items()):
+        q = _xy(v)
+        if q:
+            pts.append(("relay_sites", nm, q))
+    ct = ((t.get("clock") or {}).get("landing_contract") or {}).get("collector_tree")
+    if isinstance(ct, dict):
+        for k in ("root", "start_in"):
+            q = _xy(ct.get(k))
+            if q:
+                pts.append(("reset_tree", k, q))
+        for r in ct.get("relays") or []:
+            q = _xy(r.get("xy")) if isinstance(r, dict) else None
+            if q:
+                pts.append(("reset_tree", str(r.get("name")), q))
+        for i, o in enumerate(ct.get("outs") or []):
+            q = _xy(o)
+            if q:
+                pts.append(("reset_tree", f"out[{i}]", q))
+    q = _xy(((raw.get("reset") or {}).get("in_sites") or {}).get(tn))
+    if q:
+        pts.append(("reset_in_site", "in_site", q))
+    return pts
+
+
+def halocorner_rows(raw, eps=HALOCORNER_EPS):
+    """(rows, stats): rows = [(die, type, source, name, x, y, halos)] of every planned relay site / reset-tree node on a shared
+    halo corner (halo_corner_hit), halos from reset_tree.blockages (the geometry reset_tree._free judges); stats = counts."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import reset_tree as RT
+    die = str((raw.get("die") or {}).get("name") or "?") if isinstance(raw.get("die"), dict) else "?"
+    rows, n_types, n_pts, errs = [], 0, 0, []
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        if not isinstance(t, dict):
+            continue
+        pts = halocorner_points(raw, tn, t)
+        if not pts:
+            continue
+        try:
+            boxes = [tuple(map(float, b)) for b in RT.blockages(t)]
+        except Exception as e:  # noqa: BLE001 - a type whose halos cannot be built is named, never silently passed
+            errs.append(f"{tn} ({type(e).__name__}: {str(e)[:80]})")
+            continue
+        n_types += 1
+        n_pts += len(pts)
+        if len(boxes) < 2:
+            continue
+        g = 1e-4                                         # corner index: only points within eps of some halo corner are judged
+        keys = set()
+        for a, b, c, d in boxes:
+            for cx in (a, c):
+                for cy in (b, d):
+                    keys.add((round(cx / g), round(cy / g)))
+        memo = {}
+        for src, nm, (x, y) in pts:
+            kx, ky = round(x / g), round(y / g)
+            if not any((kx + i, ky + j) in keys for i in (-1, 0, 1) for j in (-1, 0, 1)):
+                continue
+            if (x, y) not in memo:
+                memo[(x, y)] = halo_corner_hit((x, y), boxes, eps, RT.ROW_UM, RT.CELL_W_UM)
+            if memo[(x, y)]:
+                rows.append((die, tn, src, nm, x, y, memo[(x, y)]))
+    return rows, {"die": die, "types": n_types, "points": n_pts, "errors": errs}
+
+
+def check_halocorner(plan, max_list=6, raw=None):
+    """HALOCORNER-1125 (COORD; FLOW-OPS-R3 DIEPLAN-GREEN 11-24 23:33, reset_tree._free corner escape since 42eeacf87f7): one
+    HALOCORNER_LEVEL line per type with planned relay sites / reset-tree nodes on a shared corner of 2+ grown halos (not a legal
+    site: no row-high / cell-wide run), plus one LIST line.  Report-only: never a FAIL; the fix is a plan row that moves them."""
+    raw = raw if raw is not None else _load(plan)
+    if not isinstance(raw, dict):
+        return []
+    rows, st = halocorner_rows(raw)
+    by = {}
+    for r in rows:
+        by.setdefault(r[1], []).append(r)
+    out = []
+    for tn, rs in sorted(by.items()):
+        nxy = len({(r[4], r[5]) for r in rs})
+        ex = "; ".join(f"{r[2]}:{r[3]} ({r[4]:g}, {r[5]:g}) x{r[6]}" for r in rs[:max_list])
+        out.append(f"{HALOCORNER_LEVEL} HALOCORNER {st['die']}/{tn}: {len(rs)} relay site(s) / reset-tree node(s) at {nxy} shared halo "
+                   f"corner(s) (reset_tree._free accepts them; no row-high / cell-wide run; report-only, move in the next plan row): "
+                   f"{ex}{' ...' if len(rs) > max_list else ''}")
+    for e in st["errors"]:
+        out.append(f"{HALOCORNER_LEVEL} HALOCORNER {st['die']}/{e}: halos not built; not checked")
+    out.append(f"LIST HALOCORNER die {st['die']} types {st['types']} points {st['points']} flagged {len(rows)} at "
+               f"{len({(r[1], r[4], r[5]) for r in rows})} corner(s) in {len(by)} type(s)")
     return out
 
 
@@ -2528,6 +2685,12 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
             findings += check_r8bound(tree, plan, asbuilt)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
             findings.append(f"WARN R8BOUND not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("HALOCORNER")
+    if "HALOCORNER" not in skip:                         # HALOCORNER-1125: relay sites / reset nodes on shared halo corners, report-only
+        try:
+            findings += check_halocorner(plan)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
+            findings.append(f"WARN HALOCORNER not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("EMITNAME")
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
