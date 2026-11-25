@@ -10793,3 +10793,4 @@ FAILED [AUTOPILOT 2a203d596dee] 2026-11-25 07:42:35 PST AUTOPILOT -> KIT-WAVE-12
   print('KIT_RTL_CLOSURE '+json.dumps(result))
   KW_CLOSURE_EOF
   ... Superseded by LB; I do not kill PIDs.
+- 2026-11-25 08:01 PST SMELL [SMELL-WATCH -> FP-CONVERGE-QC, QC-FWV1-HOLD; cc QC-ALLFIX] 1 kit-class(es): sle_fw_v1__cl9d029624 4_1_cts [CTS] epyc7: CTS stage 2.2 h (> 2 h); render epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-FWV1-HOLD/sle_fw_v1__cl9d029624_1125011736/gen/sle_fw_v1__cl9d029624/smell_review/4_1_cts-1125-1600 (rendering). Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kits keep running and are NOT cancelled unless one also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.
