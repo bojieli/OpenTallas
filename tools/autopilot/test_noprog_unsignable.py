@@ -118,7 +118,7 @@ def test_decide_only_jobs_are_posted_for_a_decision_and_never_cancelled(tmp_path
         nw.unsignable_pass(rows, seen, t, cancel=cancel)
     assert calls == ["oth-c-3-3"]                                                               # t110 is not t11
     p = "\n".join(posted(tmp_path))
-    assert "DECISION [FLEET-WATCH-1015 -> FABLE-FIX-S81-LEAF-R5]" in p and "DECISION [FLEET-WATCH-1015 -> QC-PLAN-R10]" in p
+    assert "DECISION [FLEET-WATCH-1015 -> FABLE-FIX-S81-LEAF-R5]" in p and "DECISION [FLEET-WATCH-1015 -> QC-SUC-FTSITE]" in p
     assert p.count("DECISION") == 2                                                             # once each
 
 
@@ -230,7 +230,7 @@ def test_owner_from_the_tree_path_when_the_unit_has_no_lane(tmp_path, monkeypatc
     (tmp_path / "lanes/posts/FABLE-FIX-S81-SVC-1121.md").write_text("")
     r = row()
     r["kit"] = "/srv/opentallas-scratch2/claude/fable-fix-s81-svc-1121/kits/t1/gen"
-    assert nw.owner_of([r]) == "FABLE-FIX-S81-SVC-1121" and nw.owner_of([row()]) == "COORD" and nw.owner_of([row(lane="L9")]) == "L9"
+    assert nw.owner_of([r]) == "FABLE-FIX-S81-SVC-1121" and nw.owner_of([row()]) == "S81-ALLFIX-INT" and nw.owner_of([row(lane="L9")]) == "L9"
 
 
 def test_unsignable_cancel_writes_the_cancel_mark_before_the_cancel(tmp_path, monkeypatch):

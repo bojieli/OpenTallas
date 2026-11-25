@@ -117,3 +117,15 @@ def test_stage_class_plateau_for_a_flat_drt_kit_and_progressing_when_the_iterati
 def _route(text):
     from test_noprog_stage import run
     return run("route", text, 10.0)
+
+
+def test_one_routing_path_owner_of_uses_fresh_owner_then_own_lane_then_allfix(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    sweep_file(tmp_path, [("QC", "slw_fe_v1", "yes", at(NOW, 5), "QC-DRT-TAIL"), ("QC", "slw_hc1", "no", at(NOW, 900), "QC-OLD")])
+    (tmp_path / "lanes/LANE-STATUS.tsv").write_text("QC-GONE\tstood-down\tnone\t11-21\tx\n")
+    kit = "/srv/x/kit-wave/qwen_compute/E/items/slw_fe_v1/gen/slw_fe_v1"
+    assert nw.owner_of([prow()]) == "QC-DRT-TAIL"                                              # live fresh_owner wins over the job's own lane
+    assert nw.owner_of([prow(type="slw_hc1", lane="QC-LIVE")]) == "QC-LIVE"                    # owner dead: the job's own lane when it is not stood down
+    assert nw.owner_of([prow(type="slw_hc1", lane="QC-GONE")]) == "QC-ALLFIX"                  # ... stood down: the die ALLFIX lane
+    assert nw.owner_of([prow(type="slw_hc1", lane="")]) == "QC-ALLFIX"
+    assert nw.smell_recipients("QC", "QC-ALLFIX") == "FP-CONVERGE-QC, QC-ALLFIX"

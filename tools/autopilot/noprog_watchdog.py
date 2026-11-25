@@ -1642,10 +1642,55 @@ def _private_lane(path, coord=None):
     return m.group(1)
 
 
-def owner_of(rs):
+def legacy_owner_of(rs):
     """the job's OT_LANE, else the lane of its tree / kit path (most units carry no OT_LANE), else COORD (wave jobs)"""
     return (next((r["lane"] for r in rs if r.get("lane")), "") or next((l for r in rs for l in [_private_lane(r.get("kit") or ""), lane_from_path(r.get("kit") or ""), lane_from_path(r.get("ident") or "")] if l), "")
             or "COORD")
+
+
+_FILE_CACHE = {}
+
+
+def _cached_file(path, loader):
+    """loader(path) cached by (path, mtime): the sweep table is read by every notice of a pass"""
+    try:
+        mt = os.stat(path).st_mtime
+    except OSError:
+        return loader(None)
+    c = _FILE_CACHE.get(path)
+    if not c or c[0] != mt:
+        c = _FILE_CACHE[path] = (mt, loader(path))
+    return c[1]
+
+
+def stood_down_lanes(coord=None):
+    """lane names whose lanes/LANE-STATUS.tsv row says stood-down"""
+    def load(path):
+        out = set()
+        if path:
+            for l in open(path, errors="replace").read().splitlines():
+                f = l.split("\t")
+                if len(f) >= 2 and f[1].startswith("stood-down"):
+                    out.add(f[0])
+        return out
+    return _cached_file(os.path.join(coord or COORD, "lanes/LANE-STATUS.tsv"), load)
+
+
+def owner_of(rs):
+    """FLEET-WATCH F-15 (COORD FLOW-0930, PLATEAU-ACT 11-25): THE routing path of every noprog notice.  The live OWNERS-SWEEP fresh_owner of the job's (die, type); else the job's own lane (OT_LANE /
+    tree path) unless that lane is stood down; else the die's ALLFIX lane; COORD only for a job of no known die."""
+    own = legacy_owner_of(rs)
+    r0 = rs[0] if rs else {}
+    ident = " ".join(str(r0.get(x) or "") for x in ("container", "kit", "work", "ident"))
+    tag = DIE_TAG.get(die_of(ident), "")
+    sw = owners_sweep()
+    if tag and sw:
+        lane, state = route_owner(tag, str(r0.get("type") or ""), sw, "")
+        if state == "alive":
+            return lane
+    if own and own != "COORD" and own not in stood_down_lanes():
+        return own
+    return ALLFIX_LANE.get(tag) or own
 
 
 def _post(lane_from, txt):
@@ -2075,11 +2120,14 @@ def drt_plateau3(vals):
 
 def owners_sweep(coord=None):
     """lanes/OWNERS-SWEEP.tsv -> {(die tag, type): dict(owner, alive, last_post)}; owner = the first lane of fresh_owner ('A+B').  {} when unreadable"""
-    path = os.path.join(coord or COORD, "lanes/OWNERS-SWEEP.tsv")
+    return _cached_file(os.path.join(coord or COORD, "lanes/OWNERS-SWEEP.tsv"), _load_sweep)
+
+
+def _load_sweep(path):
     out = {}
     try:
         lines = open(path, errors="replace").read().splitlines()
-    except OSError:
+    except (OSError, TypeError):
         return out
     hdr = next((i for i, l in enumerate(lines) if l.startswith("die\ttype\t")), None)
     if hdr is None:
