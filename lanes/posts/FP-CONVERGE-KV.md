@@ -1,1 +1,2 @@
 - 2026-11-25 03:57 PST DIED [FP-CONVERGE-KV] ot-push-main otpush-open-snipe-603871 on open-snipe: rc=3 after 6 s, ended 11:57:28, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 6 s, no log
+- 2026-11-25 03:59 PST DONE [FP-CONVERGE-KV] ot-push-main otpush-open-snipe-652177 on open-snipe: rc=0 after 32 s, ended 11:59:19, log none, cmd: ot-push-main 
