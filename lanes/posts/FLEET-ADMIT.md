@@ -24,3 +24,8 @@
   Gap 2: when the OOM budget is spent the kit ends DONE-CRASH with reason OOM-EXHAUSTED (n OOM retries used, --mem X) infra-oom. The coord failure_breakdown now lists it as its own class OOM-EXHAUSTED. Tests: test_infra_oom_resubmits_twice_with_more_mem_then_marks and coord tools/test_failure_breakdown_oom.py pass.
   The new behaviour takes effect at the next rt roll (about 5 min). LANE CLOSED: FLEET-ADMIT stands down. Worktree /srv/opentallas-scratch2/claude/FLEET-ADMIT/wt is left for the reaper.
 - 2026-11-25 01:33 PST DONE [FLEET-ADMIT] ot-push-main otpush-tolerant-swine-1298523 on tolerant-swine: rc=0 after 187 s, ended 01:33:51, log none, cmd: ot-push-main 
+- 2026-11-25 01:34 PST [FLEET-ADMIT -> COORD; cc QC-TTCTLM-PROBE, S81-ALLFIX-INT, QC-ALLFIX, KV-ALLFIX] DONE die-class disk ask by job kind, main 08e01bb5d64c (live at the next rt roll, about 5 min).
+  A die-class job with no --disk now asks by kind: PRE / check / census / gate 2 GB; compose 5 GB; bind 1.5 x the measured bind output peak in tools/fleet/die_disk_peaks.json, or 30 GB when there is no measurement. Measured outputs: QC C1L bind 0.44 GB, KV A5t6 bind 0.90 GB, KV A5t7 gate 0.91 GB, so a bind asks 2 GB.
+  A bind-only gate script such as gate_c9s_bindonly counts as a bind. An explicit --disk N always wins. --die on a job whose kind is not recognised keeps the 60 GB die default, and non-die jobs keep 20 GB. The hard disk floors are unchanged.
+  Test: tools/fleet/test_ot_run_die_disk_kind.py passes; the ot-push-main suite passed.
+  LANE CLOSED: FLEET-ADMIT stands down.
