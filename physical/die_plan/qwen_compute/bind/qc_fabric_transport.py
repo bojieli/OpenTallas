@@ -14,7 +14,13 @@ Stations: E(r) = the stream arrival shift of the far S word.  SKEW_S / SKEW_N ma
 pair, HI_PAD delays the N pair sum so both pair sums meet (mode 1 and mode 2), and the region's result shifts by E(r).
 RD_PAD / NB_PAD align r_d and nb_od at their shared-valid join (the valid comes from region 0 only).  NB_IN_PAD delays the
 received neighbour word by E(r) - E(0) so that the mode-2 result keeps the same region shape as modes 0/1.  The bt_q return
-needs no change when its lane shift equals E(r) - E(0); that is asserted."""
+needs no change when its lane shift equals E(r) - E(0); that is asserted.
+
+BT_LAT (QC-RC97-BT2 11-24, rc97 registered btab read): a slice whose plan region hard cores pin param_wrap BT_LAT b != 1
+(the st_a u_r0-u_r3 masters, e.g. sta_region_nb0_*_bt2) binds BT_LAT b on ALL EIGHT regions of the slice: the st_b
+regions u_r4-u_r7 read the same btab (bt_qh) and their r_d joins ctl on region 0's r_v, so one value per slice is
+required.  The +1 edge itself is the registered-read btab core (verilog define OT_BTAB_S4R on the slice's st_a type);
+the hook fails closed when the define and BT_LAT 2 do not come together.  A plan without such a row binds unchanged."""
 
 SLICES = ["W5", "W4", "W3", "W2", "W1", "W0", "E0", "E1", "E2", "E3", "E4", "E5"]
 HOST = {(1, 0): (1, 0), (1, 1): (0, 1), (1, 2): (2, 0), (1, 3): (3, 1), (1, 4): (0, 2), (1, 5): (0, 3), (1, 6): (3, 2),
@@ -76,6 +82,30 @@ class CtxView:
                 if len(hit) != 1:
                     raise ValueError(f"HI_PAD hold {p['name']}: hard core {hc['inst']} binds {len(hit)} leaves (need 1)")
                 out[ctx.F.cells[hit[0]].path] = int(hp)
+        return out
+
+    def bt_lat_targets(self):
+        """QC-RC97-BT2 11-24: {station leaf path: (BT_LAT, OT_BTAB_S4R in its partition type's verilog_defines)} of every
+        plan hard core whose param_wrap pins BT_LAT; derive() binds that BT_LAT on all eight regions of the slice.
+        A type with the define but no BT_LAT 2 region core is refused (a registered btab read with BT_LAT 1 consumers)."""
+        ctx = self.ctx
+        pt = ctx.plan.get("partition_types") or {}
+        out = {}
+        for p in ctx.plan.get("partitions") or []:
+            t = pt.get(p["type"]) or {}
+            dfn = "OT_BTAB_S4R" in (t.get("verilog_defines") or [])
+            bls = []
+            for hc in t.get("hard_cores") or []:
+                bl = ((hc.get("param_wrap") or {}).get("params") or {}).get("BT_LAT")
+                if bl is None:
+                    continue
+                bls.append(int(bl))
+                hit = [ci for ci in (ctx.members.get(p["name"]) or []) if hc["inst"] in (ctx.rel_of(ci), "u_" + ctx.rel_of(ci))]
+                if len(hit) != 1:
+                    raise ValueError(f"BT_LAT {p['name']}: hard core {hc['inst']} binds {len(hit)} leaves (need 1)")
+                out[ctx.F.cells[hit[0]].path] = (int(bl), dfn)
+            if dfn and 2 not in bls:
+                raise ValueError(f"BT_LAT {p['name']}: type {p['type']} defines OT_BTAB_S4R but no region core binds BT_LAT 2")
         return out
 
     def source(self, path, port):
@@ -159,6 +189,7 @@ def _heads(view, s, side):
 def derive(view):
     params, slices, flops = {}, {}, dict(head=0, hi=0, rd=0, nb_out=0, nb_in=0)
     targets = view.hi_pad_targets() if hasattr(view, "hi_pad_targets") else {}
+    bt_targets = view.bt_lat_targets() if hasattr(view, "bt_lat_targets") else {}
     for s in SLICES:
         pads = {side: _column_pads(view, s, side) for side in "SN"}
         hold = None
@@ -218,6 +249,14 @@ def derive(view):
             rows[r] = dict(SKEW_S=sks, SKEW_N=skn, HI_PAD=sh - nh, E=sh)
             if u in targets and rows[r]["HI_PAD"] != targets[u]:
                 raise ValueError(f"{u}: HI_PAD {rows[r]['HI_PAD']} after the hold, plan hard core has {targets[u]}")
+        bts = {bt_targets[f"{sub}.u_r{r}"] for r in range(8) if f"{sub}.u_r{r}" in bt_targets}
+        if len({b for b, _d in bts}) > 1:
+            raise ValueError(f"{s}: region cores pin BT_LAT {sorted(bts)} (one value per slice required)")
+        bt = None
+        if bts and next(iter(bts))[0] != 1:
+            bt = next(iter(bts))[0]
+            if bt != 2 or not all(d for _b, d in bts):
+                raise ValueError(f"{s}: BT_LAT {bt} needs BT_LAT 2 with OT_BTAB_S4R on the st_a type (the registered btab read)")
         rd = [rows[r]["E"] + view.delta(f"{sub}.u_ctl", "r_d", (64 * r, 64 * r + 63)) for r in range(8)]
         if rd[0] != max(rd):
             raise ValueError(f"{s}: r_d of region 0 is not the latest; its r_v would need a pad")
@@ -241,11 +280,15 @@ def derive(view):
             if view.delta(u, "bt_q_p") - bt0 != row["E"] - rows[0]["E"]:
                 raise ValueError(f"{u}: bt_q return shift differs from the region shift")
             params[u] = {k: row[k] for k in ("SKEW_S", "SKEW_N", "HI_PAD", "NB_IN_PAD", "RD_PAD", "NB_PAD")}
+            if bt is not None:
+                params[u]["BT_LAT"] = bt
             flops["hi"] += row["HI_PAD"] * W_HI
             flops["rd"] += row["RD_PAD"] * W_RD
             flops["nb_out"] += row["NB_PAD"] * W_NB
             flops["nb_in"] += row["NB_IN_PAD"] * W_NB
         slices[s] = dict(column_pads=pads, roots=root, lanes=lane, regions=rows)
+        if bt is not None:
+            slices[s]["bt_lat"] = bt
         if hold is not None:
             slices[s]["hi_pad_hold"] = hold
     return params, dict(rule=__doc__.split("\n\n")[0], slices=slices, added_flops=flops, added_flops_total=sum(flops.values()))

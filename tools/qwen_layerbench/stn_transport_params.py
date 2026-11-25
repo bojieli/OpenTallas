@@ -105,7 +105,11 @@ def derive(record, lanes, cfg_pin):
         if min(cfg) - c < 0:
             raise ParamError(f'{s}: a stream word arrives earlier than the moved STN config ({cfg}, config pins +{c})')
         busy = max((rows[str(r)] if str(r) in rows else rows[r])['E'] for r in range(8)) - c
-        slices[s] = dict(result=rd[0], cfg=min(cfg) - c, busy=busy, rd=rd, word_regions=cfg, cfg_pin=c)
+        # QC-RC97-BT2 11-24 (rc97): a slice bound at BT_LAT b (registered btab read, hook record bt_lat) answers every
+        # region b - 1 edges later after the last word: result and the STN window move by that, the word / cfg ages do not.
+        bx = int(record['slices'][s].get('bt_lat', 1)) - 1
+        slices[s] = dict(result=rd[0] + bx, cfg=min(cfg) - c, busy=busy + bx, rd=rd, word_regions=cfg, cfg_pin=c,
+                         **({'bt_lat': bx + 1} if bx else {}))
     return slices
 
 
