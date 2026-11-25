@@ -112,3 +112,19 @@ def test_diff_ops_roundtrip_and_old_value_checks():
     stale["partition_types"]["t"]["clock"]["tap_max_sinks"] = 1200
     with pytest.raises(ValueError, match="old-value"):
         TS.apply_ops(stale, ops)
+
+
+def test_explicit_type_ops_append_to_taps_with_guards():
+    ck = {"tap_mode": "explicit", "tap_max_sinks": 1500,
+          "taps": [{"name": "clk", "xy": [1, 1]}, {"name": "clk_t7", "xy": [5, 5]},
+                   {"name": "clk_c0", "xy": [3, 3], "kind": "core", "insertion_ps": 400}]}
+    assert [t[0] for t in TS.explicit_taps(ck)] == ["clk", "clk_t7"]
+    ops = TS.explicit_type_ops("x", ck, [(10.0, 20.0), (30.0, 40.0)], 1000)
+    doc = {"partition_types": {"x": {"clock": copy.deepcopy(ck)}}}
+    TS.apply_ops(doc, ops)
+    got = doc["partition_types"]["x"]["clock"]
+    assert [t["name"] for t in got["taps"]][-2:] == ["clk_t8", "clk_t9"] and got["tap_max_sinks"] == 1000
+    bad = copy.deepcopy({"partition_types": {"x": {"clock": ck}}})
+    bad["partition_types"]["x"]["clock"]["taps"].append({"name": "clk_t99", "xy": [0, 0]})
+    with pytest.raises(ValueError):
+        TS.apply_ops(bad, ops)

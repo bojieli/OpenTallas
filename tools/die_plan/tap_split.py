@@ -33,6 +33,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import sys
 
 import numpy as np
@@ -254,6 +255,41 @@ def _sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()[:12]
 
 
+def explicit_taps(ck):
+    """the sink-carrying explicit taps of an explicit-mode type: clock.taps entries without a `kind` (core / pin taps carry one)."""
+    return [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in ck.get("taps") or []
+            if isinstance(t, dict) and "kind" not in t and t.get("xy")]
+
+
+def type_taps(schema, P, ck, tn):
+    """-> taps [(name,x,y)] and the count of fixed (non-added) ones: grid + added (grid+explicit) or the explicit list (explicit)."""
+    if ck.get("tap_mode") == "explicit":
+        t = explicit_taps(ck)
+        return t, len(t)
+    grid = schema._grid_taps(P, tn)
+    return [(g[0], g[1], g[2]) for g in grid] + [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in ck.get("added_taps") or []], len(grid)
+
+
+def explicit_type_ops(tn, ck, new_xy, cap):
+    """explicit-mode row ops (S81HEAD-TAPSPLIT 11-25): guards on clock.taps length / last name and tap_mode, tap_max_sinks, new taps
+    appended to clock.taps named clk_t<max existing index + 1 ...> (no tap renamed; sink_bins_file untouched: explicit taps do not
+    derive from bins)."""
+    base = f"/partition_types/{tn}/clock"
+    taps = ck.get("taps") or []
+    if not taps:
+        raise ValueError(f"{tn}: explicit type without clock.taps")
+    ops = [dict(op="test", path=f"{base}/taps", len=len(taps)),
+           dict(op="test", path=f"{base}/taps/{len(taps) - 1}/name", value=taps[-1]["name"]),
+           dict(op="test", path=f"{base}/tap_mode", value="explicit")]
+    if ck.get("tap_max_sinks") != cap:
+        ops.append(dict(op="replace" if "tap_max_sinks" in ck else "add", path=f"{base}/tap_max_sinks", old=ck.get("tap_max_sinks"), value=cap))
+    idx = [int(m.group(1)) for t in taps for m in [re.match(r"clk_t(\d+)$", str(t.get("name")))] if m]
+    nxt = max(idx, default=0) + 1
+    for i, (x, y) in enumerate(new_xy):
+        ops.append(dict(op="add", path=f"{base}/taps/-", value=dict(name=f"clk_t{nxt + i}", xy=[round(x, 3), round(y, 3)])))
+    return ops
+
+
 def cmd_plan(a):
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import schema
@@ -273,14 +309,12 @@ def cmd_plan(a):
             continue
         src = alias.get(tn, tn)
         ck = raw["partition_types"][tn]["clock"]
-        if ck.get("tap_mode") != "grid+explicit" or not ck.get("added_taps"):
+        expl = ck.get("tap_mode") == "explicit" and bool(explicit_taps(ck))
+        if not expl and (ck.get("tap_mode") != "grid+explicit" or not ck.get("added_taps")):
             skipped[tn] = f"tap_mode {ck.get('tap_mode')} (density / grid types are re-binned, not split)"
             print(f"{tn}: SKIP {skipped[tn]}", flush=True)
             continue
-        grid = schema._grid_taps(P, tn)
-        added = ck.get("added_taps") or []
-        names = [t[0] for t in grid] + [t["name"] for t in added]
-        taps_all = [(t[0], t[1], t[2]) for t in grid] + [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in added]
+        taps_all, n_fixed = type_taps(schema, P, ck, tn)
         sinks = read_dump(dumps[src])
         bins = make_bins(sinks)
         bins.update(type=tn, placed_kit=src, source=f"tap_split.py dump {os.path.basename(dumps[src])}")
@@ -298,18 +332,22 @@ def cmd_plan(a):
         def legalize(x, y, taken, typ=typ):
             return schema.tap_clear(typ, x, y, taken, strict=True)[:2]
         _, load0, far0 = nearest(taps_all, pts)
-        new_xy, info = split_type(taps_all, len(grid), pts, legalize, a.cap, a.target, a.far_added, a.far_grid,
+        new_xy, info = split_type(taps_all, n_fixed, pts, legalize, a.cap, a.target, a.far_added, a.far_grid,
                                   split_above=a.split_above)
-        t_ops = type_ops(tn, ck, len(grid), new_xy, rel, a.cap)
-        json.dump(bins, open(bpath, "w"))
+        if expl:
+            t_ops = explicit_type_ops(tn, ck, new_xy, a.cap)
+        else:
+            t_ops = type_ops(tn, ck, n_fixed, new_xy, rel, a.cap)
+            json.dump(bins, open(bpath, "w"))
         ops += t_ops
         load1, far1 = np.array(info["load"]), np.array(info["far"])
-        lim = np.array([a.far_grid if i < len(grid) else a.far_added for i in range(len(load1))])
+        lim = np.array([a.far_grid if i < n_fixed else a.far_added for i in range(len(load1))])
         rep[tn] = dict(sinks=len(sinks), taps_before=len(taps_all), taps_after=len(taps_all) + len(new_xy), new=len(new_xy),
                        max_load_before=float(load0.max()), max_load_after=float(load1.max()),
                        max_far_before=float(far0.max()), max_far_after=float(far1.max()),
                        over_cap_after=int((load1 > a.cap).sum()), stuck_taps=[taps_all[j][0] if j < len(taps_all) else f"new{j - len(taps_all)}" for j in info["stuck"]], far_violations_after=int((far1 > lim + 1e-9).sum()),
-                       history=info["history"], source_dump=src, bins=rel, aliased=(src != tn))
+                       history=info["history"], source_dump=src, bins=None if expl else rel, aliased=(src != tn),
+                       mode=ck.get("tap_mode"))
         print(f"{tn}{'<-'+src if src != tn else ''}: sinks {len(sinks)} taps {len(taps_all)} -> {len(taps_all) + len(new_xy)}  max load {load0.max():.0f} -> "
               f"{load1.max():.0f}  max far {far0.max():.0f} -> {far1.max():.0f}  over-cap {rep[tn]['over_cap_after']} "
               f"far-viol {rep[tn]['far_violations_after']}", flush=True)
@@ -339,8 +377,7 @@ def cmd_loads(a):
     P = schema.Plan(raw, a.plan)
     for tn, d in sorted(_kv(a.dump).items()):
         ck = raw["partition_types"][tn]["clock"]
-        taps_all = [(t[0], t[1], t[2]) for t in schema._grid_taps(P, tn)] + \
-                   [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in ck.get("added_taps") or []]
+        taps_all, _ = type_taps(schema, P, ck, tn)
         pts = np.array(make_bins(read_dump(d))["bins"], dtype=float)
         _, load, far = nearest(taps_all, pts)
         j = int(load.argmax())
@@ -385,8 +422,7 @@ def cmd_render(a):
         raw = json.load(open(path))
         P = schema.Plan(raw, path)
         ck = raw["partition_types"][a.type]["clock"]
-        grid = schema._grid_taps(P, a.type)
-        t = [(g[0], g[1], g[2]) for g in grid] + [(x["name"], float(x["xy"][0]), float(x["xy"][1])) for x in ck.get("added_taps") or []]
+        t, _ = type_taps(schema, P, ck, a.type)
         if n_before is None:
             n_before = len(t)
         _, load, far = nearest(t, pts)
