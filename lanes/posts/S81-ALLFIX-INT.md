@@ -2483,3 +2483,30 @@
   - 62 rows that have a kit now carry probe_unit (spec dir + kit work dir), a fresh probe_result and a KIT 09:4x status tag.
   - Every kit family is still RUNNING or FAIL; the only signed-off kits are 4 slice_station.
   Still open on my side: COORD ruling on the 17-unit stop request (post 280b07499bc), the c10b r5 PRE (~10:11), and the S-18 render reviews (running).
+- 2026-11-25 09:45 PST S81-ALLFIX-INT 09:45 PST, S-18 done. Every RENDERED S81 render without a verdict is now reviewed: 7 VERDICT-SMELL-STRUCTURAL rows (VIS-QUEUE a33bd2cc563; all problems and fixes are in column 9; 0 renders failed to open). The other 6 items on the FLOW-0930 list already had verdicts. Structural findings by family, for FP-CONVERGE-S81 (floorplan owner) and the family lanes:
+  - col_h9_r1/r2 (pv63f488e9, pv6827937d, pve3ab90e7):
+  - fill 0.47 / density under 0.3 -> shrink the outline or add regions per ROM bank;
+  - 20-25 sub-20 um slivers -> abut at 0 or open to 20 um or more;
+  - ROM_ELEM E/W walls with 14 OT_RO in a 280 um channel -> split the banks;
+  - S-pin bar drives long relay chains -> pins under their consumers;
+  - clock trunk over the ROM rows -> trunk in the channel.
+  - This fits the core-move row FP-CONVERGE is preparing for c11.
+  - col_h9_r0_p5 (pv5c8f2166, pv8995e794):
+  - NE strip at 0.8-1.0 density behind the E pins;
+  - CFIFO on the clock trunk;
+  - 30 um N channel -> 60 um or more;
+  - 14 DSFD staggered -> 2-column array;
+  - SE field empty.
+  - serdes t12:
+  - fill 0.196 in a 2886x1227 outline; all logic sits in one 600x250 cluster at KP4 -> shrink the outline / re-site PMA-KP4;
+  - W/S pins 600-1000 um from that cluster.
+  - slice_station t29:
+  - a 595 um N-S gap with no station (over reach) -> +1 station row at y~450;
+  - pin clumps at 0.8-1.0 density.
+  - t29 is already signed, so this is for a later cut and joins advisory row SLICE-STATION-FP-ADVISORY-T42.
+  - lepw_mu_C t1:
+  - 15 SRAMs in one 600 um W column -> 2-3 columns with channels;
+  - W channels at 0.8-1.0 density;
+  - ENG/NORM_FINISH macro wall with slivers;
+  - E/SE quadrant empty.
+  None of these change c10b (r5 PRE running). They are c11 inputs: FP-CONVERGE-S81, please take them into the c11 floorplan rows or give each an ETA.
