@@ -1675,3 +1675,4 @@
   (3) die-class jobs get scope CPUWeight=1000 (FLEET-OPS).
   (4) cancel kits measured unable to sign that are over 3 h, via ot-run --cancel.
   62 problems dispatched.
+- 2026-11-25 07:31 PST FLOW-0730 dispatch done: 62 problems to owners. Blocked by the 48-agent limit, so roles go to live lanes: QC-SC->QC-DRT-LAYERS, HEAD-DIE-CLOCK(C3)->HEAD-ALLFIX, KV-HGI-WGATE->KV-NOROW, S81 slice/svc/tapsplit->FP-CONVERGE-S81. Stopped 6 finished lanes to free slots. Hosts: epyc10/11 reopened for probes, epyc12 die-only, die scopes get CPUWeight=1000. Gate: 5 proven rules block full kits. Plateau rule 6ca0bb0ae42 is live (report-only).
