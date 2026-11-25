@@ -13,3 +13,12 @@ Brief + rules: localhost scratchpad rules.txt (session c228d9e1). Lane dir: inte
 ## Next
 1. Read synth1/eq1; post measured composition + row/RTL plan with owner + ETA to COORD, FIX-LEDGER, FABLE-RC-S81.
 2. Run tools/s81_dv/rtlgap_sukv_1021/hard_rq.py form with HARD_RQ=2 (Verilator, ot-run) if fixtures found; then push via ot-push-main with tests.
+
+## 11-24 08:xx PST fresh lane S81-KVLEAF-T2-ARCH (post-limit; supersedes R2 for the B job)
+Clone: E2 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/wt_1124 (branch s81-kvt2-lepk-gate-1124, pushed).
+- (1) eq3 died 06:01 (EQUIV_INDUCT: no SAT model for black-box ikr). eq4 (E2 blk97c, cutpoint -blackbox after equiv_struct; 47 black boxes shared once): base case diverges on 18,159 points where XMRG gate side is constant (u_xc/u_xn lines, cd/nd/cm/ca/na/cv/nv, ...). eq7 intel1 blk97c (equiv_make -blacklist eq7_blacklist.txt, 254 internal names) running; log eq7.log, rc7.txt.
+- (2) Estimator: intel1 s81-kvleaf-t2-arch/rde (rde_dump.py openroad -python, rde.py RUDY+cover model, cutcount.py exact cut counts, cut_census.py). v8 placed probe: cut H 0.91 @x1966, V 0.94 @y572 (incl ft 6,823 bits); spine band 5-17x; 80% crossings kvi/kvx relay hops. Master LEFs 15-39k shape OBS = 3.4M GRT blockages.
+- Fix: seats t2b_seats_d3fit_ch2x43_1124.json 98c505a87106 (E9 lane dir) = d3fit b40f43dd1dad + 43.2 channels at y760.32 and y1209.6 (chan_insert.py), 2211.84 tall, schedules XD/KST/XST unchanged, inter-relay <=401.8, last kvi->engine 391.0, store 469.6 (= base). cover_obs.py = cover-OBS abstracts. probe_v10 (E9 mk_probe10.py) = place+CTS+GRT(30 it, allow_congestion) on these.
+- Die: refloor/spec_t2B_ch86.json on D3 49332d346d48 (E2 refloor/), s_3N_L0 +86.4 tall + 22 parts above +86.4 (top margin 103.68 -> 17.28). price_t2B_ch86.json running.
+- (4) LEPK gate: annotate_soft_dest KeyError 'id'; fix 245ed6cdf98 on main (with 0f1a09d6d5cc). Mixed LEPK/UNIT held.
+- Cancelled: probe_v9 waiter (never started). probe_v8 (intel1, stuck GRT on shape OBS) still running.
