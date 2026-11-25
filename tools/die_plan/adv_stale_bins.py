@@ -7,13 +7,16 @@ types kept a tap over 1,000 sinks after the cap pass, 19 over 5,000 (cbf_q01 bin
 sle_hc2 root clk 17,747).  Per type with a clock.sink_bins_file:
 
   bins        = the file's n (else the sum of its bin weights)
-  placed regs = n_regs of the newest placed kit of the type (flops cache placed_bins / placed; exact type, else the newest kit
-                of the base type, __cl/__pv stripped)
-  WARN when |placed / bins - 1| > 5 %, and when the placed kit's largest tap fanout (placed regs on the kit's taps, nearest
-  tap, flops cache placed.max_load) is over 1,000.  Fix: re-bin from the placed kit (sink_bins_from_place.py dump / bins
-  --native-only, sink_bins_compose.py) so the density solve re-sizes the taps.
+  kit sinks   = the CLOCK-NET sinks the newest kit of the type split over its taps (CTS log OT_CLOCK_TAPS summary line), from
+                kit_sinks.py --kitwave JSON (kit_sinks= path(s) / dict, env OT_ADV_KIT_SINKS, default KIT_SINKS_DEFAULT);
+                exact type, else the newest kit of the base type (__cl/__pv stripped)
+  WARN when |kit sinks / bins - 1| > 5 %, and when that kit's largest tap after the cap pass is over 1,000 sinks -- the
+  fanout only when the kit is NEWER than the bins file (a kit built before a re-bin measured the old taps; counted, not listed).
+  Recalibrated 11-24 (COORD): v1 compared placed n_regs (all flops, incl. edge-clock rings / non-clock regs) and the placed
+  load on the old kit taps, and fired on 110 of 115 QC types.  No clock-net count -> the type is not checked (counted).
+  Fix: re-bin from the placed kit (sink_bins_from_place.py dump / bins --native-only, sink_bins_compose.py) and re-solve.
 
-    findings(raw, plan_path, tree=None, flops_cache=None|path|dict, frac=0.05, fanout_max=1000)
+    findings(raw, plan_path, tree=None, kit_sinks=None|path[,path]|dict, frac=0.05, fanout_max=1000)
 """
 import json
 import os
@@ -28,6 +31,26 @@ CHECK = "STALE-BINS"
 FRAC = 0.05
 FANOUT_MAX = 1000
 MAX_LINES = 25
+KIT_SINKS_ENV = "OT_ADV_KIT_SINKS"
+KIT_SINKS_DEFAULT = "/srv/opentallas-scratch2/claude/precheck-cache/kit_sinks.json"
+
+
+def load_kit_sinks(src):
+    """{type: {sinks, taps, max_tap, max_sinks, mtime, log}} merged newest-first from dict / comma paths / env / default."""
+    if isinstance(src, dict):
+        return src, "<dict>"
+    paths = [p for p in (src or os.environ.get(KIT_SINKS_ENV) or KIT_SINKS_DEFAULT).split(",") if p]
+    out, used = {}, []
+    for p in paths:
+        try:
+            d = json.loads(Path(p).read_text())
+        except (OSError, ValueError):
+            continue
+        used.append(Path(p).name)
+        for k, v in d.items():
+            if isinstance(v, dict) and (k not in out or v.get("mtime", 0) > out[k].get("mtime", 0)):
+                out[k] = v
+    return (out, ",".join(used)) if used else (None, None)
 
 
 def _w(obj, msg):
@@ -55,31 +78,28 @@ def bins_count(doc):
     return float(sum(float(b[2]) if len(b) > 2 else 1.0 for b in doc.get("bins") or []))
 
 
-def findings(raw, plan_path, tree=None, flops_cache=None, frac=FRAC, fanout_max=FANOUT_MAX, max_lines=MAX_LINES, **_kw):
+def findings(raw, plan_path, tree=None, kit_sinks=None, frac=FRAC, fanout_max=FANOUT_MAX, max_lines=MAX_LINES, **_kw):
     try:
-        return _findings(raw, plan_path, tree, flops_cache, frac, fanout_max, max_lines)
+        return _findings(raw, plan_path, tree, kit_sinks, frac, fanout_max, max_lines)
     except Exception as e:  # noqa: BLE001 -- an estimator reports, never stops
         return [_w("not checked", f"{type(e).__name__}: {str(e)[:200]}")]
 
 
-def _findings(raw, plan_path, tree, flops_cache, frac, fanout_max, max_lines):
-    cache, src = ATL.load_cache(flops_cache)
-    if not cache:
-        return [_w("not checked", f"no flops cache (set {ATL.CACHE_ENV} or run harvest_flops.py + merge_flops.py)")]
-    pl, pb = cache.get("placed") or {}, cache.get("placed_bins") or {}
+def _findings(raw, plan_path, tree, kit_sinks, frac, fanout_max, max_lines):
+    ks, src = load_kit_sinks(kit_sinks)
+    if not ks:
+        return [_w("not checked", f"no kit clock-sink map (kit_sinks.py --kitwave JSON; set {KIT_SINKS_ENV} or write {KIT_SINKS_DEFAULT})")]
     by_base = {}
-    for n in set(pl) | set(pb):
+    for n in ks:
         by_base.setdefault(ATL.base_type(n), []).append(n)
     placed_types = {p.get("type") for p in raw.get("partitions") or [] if isinstance(p, dict)}
-    hits, n_cmp, n_stale, n_fan, n_nofile, n_nokit = [], 0, 0, 0, 0, 0
+    hits, n_cmp, n_stale, n_fan, n_old, n_nofile, n_nokit = [], 0, 0, 0, 0, 0, 0
     for tn, t in sorted((raw.get("partition_types") or {}).items()):
         ck = t.get("clock") if isinstance(t, dict) else None
         if not isinstance(ck, dict) or not ck.get("sink_bins_file") or (placed_types and tn not in placed_types):
             continue
-        rec_b, basis_b = ATL.lookup(pb, tn, by_base)
-        rec_p, basis_p = ATL.lookup(pl, tn, by_base)
-        regs = (rec_b or {}).get("n_regs") or (rec_p or {}).get("n_regs")
-        if not regs:
+        rec, basis = ATL.lookup(ks, tn, by_base)
+        if not rec or not rec.get("sinks"):
             n_nokit += 1
             continue
         bp = bins_path(ck["sink_bins_file"], plan_path, tree)
@@ -94,25 +114,28 @@ def _findings(raw, plan_path, tree, flops_cache, frac, fanout_max, max_lines):
             continue
         n_cmp += 1
         why, score = [], 0.0
-        r = regs / nb if nb else float("inf")
+        sk = float(rec["sinks"])
+        r = sk / nb if nb else float("inf")
         if abs(r - 1.0) > frac:
             n_stale += 1
-            why.append(f"sink bins {nb:,.0f} vs {regs:,.0f} placed regs ({basis_b or basis_p}) = x{r:.2f}, off by more than "
-                       f"{frac:.0%}: density taps sized on stale bins")
+            why.append(f"sink bins {nb:,.0f} vs {sk:,.0f} clock-net sinks of kit {basis} = x{r:.2f}, off by more than {frac:.0%}")
             score = max(score, abs(r - 1.0))
-        ml = (rec_p or {}).get("max_load")
-        if ml and ml > fanout_max:
-            n_fan += 1
-            why.append(f"largest tap fanout {ml:,} sinks ({(rec_p or {}).get('max_tap', '?')}, placed kit {basis_p}) > {fanout_max}")
-            score = max(score, ml / fanout_max - 1.0)
+        ms = rec.get("max_sinks")
+        if ms and ms > fanout_max:
+            if float(rec.get("mtime") or 0) >= bp.stat().st_mtime:
+                n_fan += 1
+                why.append(f"kit largest tap after the cap pass {ms:,} sinks ({rec.get('max_tap', '?')}) > {fanout_max}")
+                score = max(score, ms / fanout_max - 1.0)
+            else:
+                n_old += 1
         if why:
             hits.append((score, _w(tn, "; ".join(why) + "; fix: re-bin from the placed kit (sink_bins_from_place.py --native-only, "
                                    "sink_bins_compose.py) and re-solve the density taps (CB-TAPBINS)")))
     hits.sort(key=lambda h: -h[0])
     out = [m for _, m in hits[:max_lines]]
-    out.append(_w("summary", f"{n_stale} of {n_cmp} types with sink bins off placed regs by > {frac:.0%}, {n_fan} with a placed tap "
-                             f"fanout > {fanout_max}; {n_nokit} without a placed kit, {n_nofile} bins files missing; cache "
-                             f"{Path(src).name if src and src != '<dict>' else src} {cache.get('made', '')}"))
+    out.append(_w("summary", f"{n_stale} of {n_cmp} types with sink bins off kit clock-net sinks by > {frac:.0%}, {n_fan} with a kit tap "
+                             f"> {fanout_max} after the cap pass ({n_old} more on kits older than their bins: not listed); {n_nokit} "
+                             f"without a kit clock-sink count, {n_nofile} bins files missing; kit sinks {src}"))
     return out
 
 
@@ -120,5 +143,5 @@ if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         _raw = json.load(f)
     for ln in findings(_raw, sys.argv[1], sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else None,
-                       flops_cache=sys.argv[3] if len(sys.argv) > 3 else None):
+                       kit_sinks=sys.argv[3] if len(sys.argv) > 3 else None):
         print(ln)
