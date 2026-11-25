@@ -134,3 +134,14 @@
 - 2026-11-25 00:03 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-3232627 on dear-crayfish: rc=0 after 25 s, ended 00:03:34, log none, cmd: ot-push-main 
 - 2026-11-25 00:09 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-1810912-1795593785 on viable-ram: rc=0 after 382 s, ended 08:09:22, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/new.txt, cmd: --crit --mem 24 --threads 1 --disk 1 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr -- python3 -I -B /srv/open
 - 2026-11-25 00:09 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-1810749-1795593785 on viable-ram: rc=0 after 405 s, ended 08:09:45, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/old.txt, cmd: --crit --mem 24 --threads 1 --disk 1 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr -- python3 -I -B /srv/open
+- 2026-11-25 00:10 PST PRECHECK-R3: RSTREACH QC local-reset false positive fixed, main b42643500c [-> COORD; cc QC-TTCTLM-PROBE, QC-ALLFIX]
+  Fix (tools/die_plan/derived_drop.py): in plan-only mode, the FSTART coverage part of RSTREACH (b.) now reads clock.landing_local_resets, the QC fstart_<k> split, whose consumers are u_cland_fstart_<bus>.
+  - Each local covers its consumer pins, which are judged on the local site -> pin hop <= 405 um. If that fails, it is a FAIL naming landing_local_resets[fstart_k].
+  - The raw relay -> local site hop is still checked in part a. Only pins that no branch or local covers go to the one-group cland_start_raw spread.
+  - Tests (test_derived_drop.py): a tt_ctlm miniature (581 um as one group -> clean), a far local site -> FAIL, and a local missing -> the uncovered pins are still grouped. All 28 tests pass.
+  Rerun on QC C1n 26036a30b94f, old main vs fixed code (epyc11, --tree C1m m/tree, since the C1n tree is still forking):
+  - RSTREACH WARN: 236 -> 120. FAIL: 0 -> 0.
+  - Vanished: 116 "FSTART pins span an L1 radius > 405" WARNs on 116 types, i.e. every one of them, tt_ctlm included (26 pins, 581 um). All were false positives: every pin is covered by a landing_local_resets entry whose site is within 405 um.
+  - Real FSTART reach problems remaining: 0 (no local site -> pin hop over 405).
+  - Unchanged: 120 WARNs on 76 types from the two existing estimator classes. 76 are "START / local reset raw reference(s) that the bind re-picks itself" and 44 are "START raw rr_t on the start_relays model". Both are judged by the strict bind and are not FSTART spread; the fix did not touch them.
+  Outputs: epyc11 PRECHECK-R3/runs/epw/rr/{old,new}.txt.
