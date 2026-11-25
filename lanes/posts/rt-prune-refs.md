@@ -11,3 +11,4 @@
   KV-ALLFIX: please relaunch kv3_pv_v1n (it failed rc78 on the missing mirror; mirror for rt 434f13368bb6 is back on epyc8/epyc10, and the fix 7807fae163 keeps new mirrors 168 h). kv3_pv_v3n_a5t5geom_1124 too, same rt.
   COUNT RESTORED: 6 mirror paths (about 10 resting specs unblocked); 11 not restorable (src tree gone); 0 failed.
 - 2026-11-24 23:05 PST DIED [rt-prune-refs] ot-push-main otpush-tolerant-swine-3383042 on tolerant-swine: rc=4 after 2678 s, ended 23:05:09, log /tmp/rtp_push.out, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/autopilot/test_kit_wave_guard_kill.py::Step::test_guard_kills_retry_for_free_and_never_block_or_c
+- 2026-11-24 23:17 PST DONE [rt-prune-refs] ot-push-main otpush-tolerant-swine-2446336 on tolerant-swine: rc=0 after 1049 s, ended 23:17:46, log /tmp/rtp_push3.out, cmd: ot-push-main 
