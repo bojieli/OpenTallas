@@ -358,8 +358,40 @@ def config_var_stages(config, texts, stage):
     return out
 
 
-def checkpoint(K):
-    """state of K/run: {base, steps: {step: {complete, passed, outputs{name: [size, mtime]}, why}}, upto}"""
+def edge_sha(p):
+    """FLEET-OPS 11-25: content identity of a (possibly multi-GB) step output that survives a copy: sha256 of the size and the first and last 1 MiB"""
+    import hashlib
+    h = hashlib.sha256()
+    n = os.path.getsize(p)
+    h.update(str(n).encode())
+    with open(p, "rb") as f:
+        h.update(f.read(1 << 20))
+        if n > (2 << 20):
+            f.seek(n - (1 << 20))
+            h.update(f.read(1 << 20))
+    return h.hexdigest()
+
+
+def ck_identity(K, ck):
+    """{step: {output name: [size, edge_sha]}} of the complete and passed steps of checkpoint(K): the copy-proof identity of a reusable checkpoint"""
+    out = {}
+    if not ck.get("base"):
+        return out
+    B = os.path.join(K, ck["base"])
+    for s in STEPS[:-1]:
+        st = ck["steps"].get(s) or {}
+        if not (st.get("complete") and st.get("passed")):
+            break
+        try:
+            out[s] = {n: [os.path.getsize(os.path.join(B, n)), edge_sha(os.path.join(B, n))] for n in st["outputs"]}
+        except OSError:
+            break
+    return out
+
+
+def checkpoint(K, ident=None):
+    """state of K/run: {base, steps: {step: {complete, passed, outputs{name: [size, mtime]}, why}}, upto}.
+    ident = ck_identity() recorded in an earlier resume plan: a step whose outputs still have that content is in order whatever a copy did to the mtimes"""
     import glob
     bases = sorted(glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base")))
     out = {"base": None, "steps": {}, "upto": None}
@@ -382,7 +414,9 @@ def checkpoint(K):
         else:
             t0 = min(v[1] for v in st["outputs"].values())
             t1 = max(v[1] for v in st["outputs"].values())
-            if t0 + 1 < prev_t:
+            same_content = bool(ident and ident.get(s)) and all(
+                n in st["outputs"] and ident[s][n] == [st["outputs"][n][0], edge_sha(os.path.join(B, n))] for n in ident[s])
+            if t0 + 1 < prev_t and not same_content:
                 st["why"] = "outputs older than the previous step (stale / out of order)"
             else:
                 st["complete"] = True
@@ -591,12 +625,13 @@ def _load_baseline(K):
         return {}
 
 
-def auto_plan(K, goal="route", now=None, why_out=None):
+def auto_plan(K, goal="route", now=None, why_out=None, prior=None):
     """FLOW-FIX-2045 (S81-GEOM-OPUS 39ed0e56: run_kit.sh restarted in place with no resume file redid floorplan onward, keeping only synth): the plan of an IN-PLACE restart.  The newest step of
     K/run that is complete, passed, and whose inputs are not newer than its outputs is reused; the run starts at the step after it.  Input = a kit file classify() says is read at that step or
     earlier (gates and files nobody reads do not count; logs, markers and the helpers the wave ships are never inputs).  -> resume record (not yet written) or None when nothing past synth can be reused"""
     why_out = why_out if why_out is not None else {}
-    ck = checkpoint(K)
+    prior = prior or {}
+    ck = checkpoint(K, prior.get("ck_id"))
     if not ck.get("upto") or IDX[ck["upto"]] < IDX["floorplan"]:
         why_out["why"] = ("checkpoint reaches only " + str(ck.get("upto")) + "; " + "; ".join(f"{k}: {v.get('why')}" for k, v in ck.get("steps", {}).items() if v.get("why"))
                           + (f"; {ck['why']}" if ck.get("why") else ""))[:600]
@@ -631,7 +666,9 @@ def auto_plan(K, goal="route", now=None, why_out=None):
         except OSError:
             pass
     valid = "synth"
-    base, notes = _load_baseline(K), []
+    # FLEET-OPS 11-25 (HEAD-OBSGC 03:56: a kit copied to a new dir lost its resume plan and redid floorplan): the content baseline travels inside the auto plan itself
+    # (input_sha, ck_id), so it survives a copy that drops the dotfile baseline and reorders every mtime.  Identity is content (sha256), never path or mtime.
+    base, notes = {**(prior.get("input_sha") or {}), **_load_baseline(K)}, []
     for s in STEPS[:-1]:
         st = ck["steps"].get(s) or {}
         if not (st.get("complete") and st.get("passed")):
@@ -655,10 +692,18 @@ def auto_plan(K, goal="route", now=None, why_out=None):
         valid = s
     else:
         valid_why = ""
+    # a step the earlier plan reused must still have the content that plan recorded (a copy that changed an output is not trusted)
+    if prior.get("ck_id"):
+        cur_id = ck_identity(K, ck)
+        for s in prior.get("reused_steps", []):
+            if s in prior["ck_id"] and s in IDX and IDX[s] <= IDX[valid] and cur_id.get(s) != prior["ck_id"][s]:
+                valid = STEPS[max(IDX[s] - 1, 0)]
+                valid_why = f"output of {s} differs from the content the earlier resume plan recorded"
+                break
     # record the content baseline of every input whose mtime is not newer than the last complete step (trusted unchanged), keeping earlier entries
+    nb = dict(base)
     try:
         t_last = max(v["end"] for v in ck["steps"].values() if v.get("end"))
-        nb = dict(base)
         for rel, t in mt.items():
             if t <= t_last + 2 and rel not in nb and os.path.getsize(os.path.join(K, rel)) <= SHA_MAX:
                 nb[rel] = _sha(os.path.join(K, rel))
@@ -668,6 +713,7 @@ def auto_plan(K, goal="route", now=None, why_out=None):
             os.replace(tmp_, os.path.join(K, INPUT_SHA_FILE))
     except (OSError, ValueError):
         pass
+    plan_sha = dict(nb)
     if IDX[valid] < IDX["floorplan"]:
         why_out["why"] = (f"checkpoint complete through {ck['upto']} but {locals().get('valid_why') or 'no step is valid'}")[:600]
         return None
@@ -678,20 +724,50 @@ def auto_plan(K, goal="route", now=None, why_out=None):
             return None
     return {"schema": SCHEMA, "auto": True, "start": start, "reused_steps": list(STEPS[:IDX[valid] + 1]), "why": f"in-place restart: newest valid step {valid}" + (f" ({valid_why})" if locals().get("valid_why") else ""),
             "source": {"host": os.uname().nodename, "kit": K, "attempt": None, "attempt_dir": K, "relay": False}, "links": [], "changed": [], "applied": time.time(), "applied_on": os.uname().nodename,
-            "n_link": 0, "n_copy": 0, "bytes_link": 0, "bytes_copy": 0, "markers_dropped": [], "keep_created": False, "keep_path": None, "source_checkpoint": {}, "fingerprints": None}
+            "n_link": 0, "n_copy": 0, "bytes_link": 0, "bytes_copy": 0, "markers_dropped": [], "keep_created": False, "keep_path": None, "source_checkpoint": {}, "fingerprints": None,
+            "input_sha": plan_sha, "ck_id": ck_identity(K, ck)}
+
+
+def _prior_valid(K, prior):
+    """an existing auto plan is still exact when every reused step output and every input it recorded has the recorded content (copy-proof, path- and mtime-free)"""
+    try:
+        ck_id, sha = prior.get("ck_id") or {}, prior.get("input_sha") or {}
+        reused = [s for s in prior.get("reused_steps", []) if s != "synth"]
+        if not ck_id or not sha or not reused:
+            return False
+        cur = ck_identity(K, checkpoint(K, ck_id))
+        if any(cur.get(s) != ck_id.get(s) for s in reused):
+            return False
+        files, _ = input_files(K)
+        for rel in files:
+            if AUTO_SKIP_RE.search(rel):
+                continue
+            q = os.path.join(K, rel)
+            if os.path.getsize(q) <= SHA_MAX and (rel not in sha or _sha(q) != sha[rel]):
+                return False
+        return True
+    except (OSError, ValueError, KeyError):
+        return False
 
 
 def auto_write(K, goal="route"):
     """write K/resume.json for an in-place restart.  A resume.json that is not auto (the wave's own stage-resume plan) is never touched; an auto one is recomputed.  -> the record or None"""
     p = os.path.join(K, RESUME_FILE)
+    prior = None
     if os.path.exists(p):
         try:
-            if not _load(p).get("auto"):
+            prior = _load(p)
+            if not prior.get("auto"):
                 return None
         except (OSError, ValueError):
             return None
     why = {}
-    rec = auto_plan(K, goal, why_out=why)
+    rec = auto_plan(K, goal, why_out=why, prior=prior)
+    if rec is None and prior and _prior_valid(K, prior):
+        # the plan this kit arrived with is exact by content: keep it, pointing its source at this directory
+        rec = dict(prior)
+        rec["source"] = dict(prior.get("source") or {}, host=os.uname().nodename, kit=K, attempt_dir=K)
+        rec["why"] = "kept: recorded checkpoint and input content verified by sha (" + str(prior.get("why", ""))[:200] + ")"
     if rec is None:
         # STAGE-PLATEAU 11-25: never silent.  The reason is printed (run_kit.sh shows KW_RESUME_AUTO) and kept in K/resume_auto_none.json.
         try:
