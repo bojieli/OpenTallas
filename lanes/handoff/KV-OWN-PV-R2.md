@@ -77,3 +77,9 @@
 - PVSTN v1 is ROW-READY (partial): epyc12 kv-own-pv-r2/pvstn/ROWS_KV-OWN-PV-R2-PVSTN.py e0b8296505e4. Open items are DEFERRED in ALLFIX-KV ce76874f. Compose order: ESTRIP -> PVFOLD -> PVSTN.
 - Launch bug fixed: private plans outside plan_of_record loaded 0 pin tables, so 0 pad tail splits. job12.sh cdc51ddb1013 and job12a7.sh 4f1e672ebd2b now copy the plan into $L/$P. The v1n/v12/v3n probe timing is NOT-REPRESENTATIVE.
 - I offered KV-ALLFIX help on the A5t8 bind3 native_istations crash (pv_N_2 v2n o_astk_E). Their dbg run started 06:11.
+
+## 07:2x update
+- PINS-GUARD is on main 0491ff6e1a. STN-DEADLANE (tool + ADV PRE, report-only) is on main ca696ff260.
+- A5t8 STN-DEADLANE row: epyc12 kv-own-pv-r2/deadlane/ops_STN-DEADLANE_A5t8.json 6a7d89d43cf8 (54 rows in 12 types). The A5t7 control is clean (rt not the cause). The compose lane is regating (oth-ubuntu-3059356-1795617810), ETA 08:30 applied.
+- Next: after A5t8 is applied, launch place probes v2, v4, v4n, v5, v5n, v6, v6ne, v7, v8e, pve, plus v1e (route if clean), on epyc7/intel1 with the fixed job scripts (plan inside plan_of_record). Then compose the follow-on: ESTRIP -> PVFOLD 83ea83009089 -> PVSTN e0b8296505e4.
+- Lane clone: epyc12 kv-own-pv-r2/clone_guard (pushed; clean).
