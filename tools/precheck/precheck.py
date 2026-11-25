@@ -506,6 +506,32 @@ def _taps_and_sinks(ctx, tn):
     return grid, sinks
 
 
+def tap_census_by_position(ctx, tn, err):
+    """(grid, sinks, how) of a type whose tap table raised an error: added_taps renamed by position to the density sequence
+    (how = 'renamed'), else dropped (how = 'dropped'); ('', '', None)-style empty result when neither works.  The plan is restored."""
+    ck = (ctx.P.types[tn].get("clock") or {})
+    table = ck.get("added_taps")
+    if not table:
+        return [], [], None
+    saved = copy.deepcopy(table)
+    try:
+        try:
+            import taps as T
+            base = T._density_base(ctx.P, tn)
+            for i, p in enumerate(table):
+                p["name"] = f"clk_t{len(base) + i}"
+            g, s = _taps_and_sinks(ctx, tn)
+            return g, s, "renamed"
+        except Exception:  # noqa: BLE001
+            ck["added_taps"] = []
+            g, s = _taps_and_sinks(ctx, tn)
+            return g, s, "dropped"
+    except Exception:  # noqa: BLE001
+        return [], [], None
+    finally:
+        ck["added_taps"] = saved
+
+
 def monitor_pin_findings(lc, reach=None):
     """[(worst um, detail)] per landing monitor whose seat is farther than the MONITOR-PIN rule from one of its pins"""
     reach = CBC.MONITOR_PIN_REACH_UM if reach is None else reach
@@ -646,8 +672,15 @@ def type_findings(ctx, tn, checks, opts):
         try:
             grid, sinks = taps_and_sinks(ctx, tn)
         except Exception as e:  # noqa: BLE001 -- an estimator reports, never stops
-            add("TAP-ERROR", 0, 0, f"{type(e).__name__}: {str(e)[:200]}")
-            grid, sinks = [], []
+            # FP-CONVERGE-KV 11-25: a tap-name drift (added_taps clk_t<n> vs the density count) or a tap that violates halo/spacing
+            # made the whole TAP census silently empty on 61 of 93 KV types.  Census by POSITION: rename the added taps to the
+            # density sequence (or, if a tap violates halo/spacing, drop them) on a scratch copy, count the sinks anyway, and
+            # report the drift as TAP-NAMEDRIFT (a blocking class) next to the real cap / cover numbers.
+            grid, sinks, how = tap_census_by_position(ctx, tn, e)
+            if how:
+                add("TAP-NAMEDRIFT", len((t.get("clock") or {}).get("added_taps") or []), 0, f"{type(e).__name__}: {str(e)[:160]}; census by position ({how})")
+            else:
+                add("TAP-ERROR", 0, 0, f"{type(e).__name__}: {str(e)[:200]}")
         cap = min(int(ck.get("tap_max_sinks") or opts.tap_cap), opts.tap_cap)     # CBC r713: <= 1,000 per tap
         if "TAP-CAP" in checks and grid and sinks:
             cnt = tap_assign(grid, sinks)

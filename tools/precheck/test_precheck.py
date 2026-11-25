@@ -365,3 +365,37 @@ def test_run_types_parallel_equals_serial(monkeypatch):
     par = PC.run_types(None, ts, set(), None, 3)
     assert ser == par and [f["type"] for f in par[0]] == ["a", "bb", "cccc", "d"]
     assert par[1] == [("bad", "RuntimeError: boom")]            # an error is reported per type, never stops the run
+
+
+def _drift_ctx(names):
+    import types
+    t = {"clock": {"added_taps": [{"name": n, "xy": [1, 1]} for n in names]}}
+    return types.SimpleNamespace(P=types.SimpleNamespace(types={"T": t}))
+
+
+def test_tap_census_by_position_recovers_name_drift(monkeypatch):
+    # FP-CONVERGE-KV: kv3_hgi_v5 added_taps clk_t98.. vs density 107 taps raised and emptied the census of 61 of 93 KV types
+    import types
+    fake = types.ModuleType("taps")
+    fake._density_base = lambda P, tn, control=True: list(range(107))
+    monkeypatch.setitem(sys.modules, "taps", fake)
+
+    def seen(ctx, tn):
+        names = [p["name"] for p in ctx.P.types[tn]["clock"]["added_taps"]]
+        if names != ["clk_t107", "clk_t108"]:
+            raise ValueError("density added tap names/order must be clk_t107..clk_t108")
+        return [("clk_t0", 0.0, 0.0)], [(1.0, 1.0)]
+    monkeypatch.setattr(PC, "_taps_and_sinks", seen)
+    ctx = _drift_ctx(["clk_t98", "clk_t99"])
+    g, s, how = PC.tap_census_by_position(ctx, "T", ValueError("x"))
+    assert how == "renamed" and s == [(1.0, 1.0)]
+    assert [p["name"] for p in ctx.P.types["T"]["clock"]["added_taps"]] == ["clk_t98", "clk_t99"]      # plan restored
+
+
+def test_tap_census_by_position_mutant_stays_error(monkeypatch):
+    def boom(ctx, tn):
+        raise ValueError("boom")
+    monkeypatch.setattr(PC, "_taps_and_sinks", boom)
+    g, s, how = PC.tap_census_by_position(_drift_ctx([]), "T", ValueError("x"))
+    assert how is None and g == [] and s == []
+    assert PC.tap_census_by_position(_drift_ctx(["clk_t1"]), "T", ValueError("x"))[2] is None   # dropping the table fails too -> TAP-ERROR
