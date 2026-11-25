@@ -104,7 +104,8 @@ class PushMain(unittest.TestCase):
         if "no pytest" in r.stdout:
             self.skipTest("no pytest")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("widened sparse cone (+physical/cfg)", r.stdout)
-        self.assertTrue((a / "physical/cfg/data.json").exists()); self.assertIn("PUSHED", r.stdout)
+        self.assertIn("PUSHED", r.stdout)     # SPARSE-RESTORE-1124: the widening is undone after the push
+        self.assertFalse((a / "physical/cfg/data.json").exists()); self.assertIn("restored the original sparse cone", r.stdout)
 
     def test_sparse_cone_widened_after_failure_names_missing_path(self):
         a = self.sparse_clone("import pathlib\nR = pathlib.Path(__file__).resolve().parents[2]\n\ndef test_r():\n"
@@ -113,7 +114,7 @@ class PushMain(unittest.TestCase):
         if "no pytest" in r.stdout:
             self.skipTest("no pytest")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("cone widened after failure", r.stdout)
-        self.assertTrue((a / "physical/cfg/data.json").exists())
+        self.assertFalse((a / "physical/cfg/data.json").exists())   # SPARSE-RESTORE-1124
 
     def test_genuine_red_still_blocks_after_widening(self):
         self.sparse_clone("def test_r():\n    assert False\n")

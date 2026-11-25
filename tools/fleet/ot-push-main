@@ -18,7 +18,10 @@ moved files re-run, none when nothing overlaps; (3) the default --test-timeout i
 Lane line: bash+python3 -I ot-push-main, nothing else (no branch, gate record, READY or APPROVED line).
 PUSH-TRAIN-0100: tests run with pytest-xdist (-n min(16, ncpu/2), --dist loadfile; OT_PUSH_XDIST=N overrides, 0 = serial); a rebase
 conflict lists its files; after a moved main only the affected test files re-run, at most 3 times.
-origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here."""
+origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here.
+SPARSE-RESTORE-1124 (COORD): the auto-widen in (1) is temporary: the caller's sparse-checkout file is saved before the run and put back
+(+ `git sparse-checkout reapply`, which drops the widened dirs from disk) on every exit, pushed, refused, failed or crashed.  A widened
+cone left behind wrote ~40 GB per push into intel2 onboard-epyc12/wt and took scratch2 under its 150 GB floor."""
 import argparse
 import os
 import re
@@ -134,6 +137,45 @@ def widen_for(text, root="."):
     return add
 
 
+def sparse_file():
+    p = out("rev-parse", "--git-path", "info/sparse-checkout")
+    return os.path.abspath(p) if p else ""
+
+
+def sparse_snapshot():
+    """SPARSE-RESTORE-1124: -> (path, text) of this worktree's sparse-checkout file, or None when the clone is not sparse"""
+    if not sparse_on():
+        return None
+    p = sparse_file()
+    try:
+        return p, Path(p).read_text()
+    except OSError:
+        return None
+
+
+def sparse_restore(snap):
+    """put the saved sparse set back and reapply it (widened dirs leave the disk); no-op when nothing changed.  -> True if restored"""
+    if not snap:
+        return False
+    p, text = snap
+    try:
+        if Path(p).read_text() == text:
+            return False
+    except OSError:
+        pass
+    try:
+        Path(p).write_text(text)
+    except OSError as e:
+        print(f"ot-push-main: WARN could not restore the sparse set ({e}); run: git sparse-checkout reapply")
+        return False
+    r = git("sparse-checkout", "reapply", timeout=1800)
+    if r.returncode:
+        print("ot-push-main: WARN sparse-checkout reapply failed: " + (r.stderr or r.stdout).strip()[-200:])
+        return False
+    print("ot-push-main: restored the original sparse cone (widened test dirs removed from disk)")
+    return True
+
+
 def test_sources(tests):
     txt = []
     for t in tests:
@@ -229,6 +271,18 @@ def kit_stage_refusal(files, base):
 
 
 def main():
+    top = out("rev-parse", "--show-toplevel")
+    if not top:
+        return _main()
+    os.chdir(top)
+    snap = sparse_snapshot()
+    try:
+        return _main()
+    finally:
+        sparse_restore(snap)
+
+
+def _main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-test", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="rebase + test, no push")
