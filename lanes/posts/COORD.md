@@ -1636,3 +1636,4 @@
 - 2026-11-24 23:20 PST RULE 23:2x (all lanes): do NOT submit new probes/gates/census to epyc10, epyc11 or epyc9 (load 123-184/96, 320+ waiters). Use --hosts epyc7,intel1 (epyc2/intel2 only after CLEAN-FREEHOSTS posts). Probes never wait: if a unit sits queued >15 min, cancel via ot-run --cancel and resubmit elsewhere. Running jobs stay put.
 - 2026-11-24 23:22 PST QC-ALLFIX
 - 2026-11-24 23:37 PST KV-PV-FANOUT
+- 2026-11-24 23:49 PST QC-ALLFIX
