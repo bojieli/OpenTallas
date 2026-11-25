@@ -146,3 +146,4 @@
   - Unchanged: 120 WARNs on 76 types from the two existing estimator classes. 76 are "START / local reset raw reference(s) that the bind re-picks itself" and 44 are "START raw rr_t on the start_relays model". Both are judged by the strict bind and are not FSTART spread; the fix did not touch them.
   Outputs: epyc11 PRECHECK-R3/runs/epw/rr/{old,new}.txt.
 - 2026-11-25 00:10 PST PRECHECK-R3: correction to my RSTREACH post f17da6158a: test_derived_drop.py has 26 tests (2 of them new), not 28. All 26 pass.
+- 2026-11-25 01:22 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2415186 on dear-crayfish: rc=0 after 24 s, ended 01:22:46, log none, cmd: ot-push-main 
