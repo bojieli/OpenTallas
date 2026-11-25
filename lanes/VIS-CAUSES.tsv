@@ -28,3 +28,11 @@ qwen_kvsys	kv3_hgi_v5	1124042111	C6-KVHGI-LEG	noprog/design cancel at GRT, no fi
 qwen_compute	slw_fe_v1	clfe325744__cl08d14f0d_1124082558	C7-FE-NEARMISS	autopilot NEAR-MISS TT -166.4, FF -117	central blob of logic only (no plan feature visible)	AFTER-PLACE	-	MEASURED
 qwen_kvsys	kv3_sys_c	1124044024	C8-TIMING-NO-VISUAL	GRT wns -268.8, tns -28920	no review on file (no place render was reviewed)	AFTER-ROUTE	-	MEASURED
 qwen_compute	glue	1124160531	C8-TIMING-NO-VISUAL	route: GRT SETUP_TRIAGE + drv FAIL	no review on file	AFTER-ROUTE	-	MEASURED
+# FP section (VIS-REOWN agg.py from lanes/FP-<die>.tsv): plan checks that FAIL before build; kit '-', visible PLAN, basis FP-PLAN-CHECK <file>
+HEAD	hd_serdes	-	FP:taps>1000+drt_plateau_risk	plan check FAIL: taps>1000, drt_plateau_risk	visual PENDING	PLAN	ADV-TAP-LOAD W7 plan	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_tile	-	FP:taps>1000+lane_latency	plan check FAIL: taps>1000, lane_latency	visual PENDING	PLAN	TAP-LOAD,ISTPRICE,EDGE-STRIP 528 windows	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_spn	-	FP:lane_latency+street>1.0	plan check FAIL: lane_latency, street>1.0	visual PENDING	PLAN	TAP-BUDGET,ROUTE-DEMAND	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_spn_end	-	FP:street>1.0	plan check FAIL: street>1.0	visual PENDING	PLAN	TAP-BUDGET,ROUTE-DEMAND	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh	-	FP:taps>1000	plan check FAIL: taps>1000	visual PENDING	PLAN	TAP-LOAD	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_lep0N	-	FP:taps>1000+macro_channel<14.88+tapstep	plan check FAIL: taps>1000, macro_channel<14.88, tapstep	visual PENDING	PLAN	TAP-LOAD,MACRO-CHANNEL,EDGE-STRIP 7 windows	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_ctl	-	FP:taps>1000	plan check FAIL: taps>1000	visual PENDING	PLAN	TAP-LOAD	FP-PLAN-CHECK FP-HEAD.tsv
