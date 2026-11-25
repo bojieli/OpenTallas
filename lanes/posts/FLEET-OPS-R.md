@@ -1390,3 +1390,4 @@
 - 2026-11-25 06:26 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on intel1 wrote 54 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
 - 2026-11-25 06:34 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: scratch3:kw45 on epyc2 wrote 107 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
 - 2026-11-25 06:35 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays e35d1896d56d: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-25 06:42 PST STATE tools sync recovered after 6 min (rt/current 234e2dffcc31)
