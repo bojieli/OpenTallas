@@ -9732,6 +9732,30 @@
     "relay_avoid_cores": {
      "type": "boolean"
     },
+    "raw_tap_hold": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "n"
+     ],
+     "properties": {
+      "n": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 4
+      },
+      "types": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "reach_cap_um": {
      "type": "number",
      "exclusiveMinimum": 0

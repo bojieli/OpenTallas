@@ -3274,6 +3274,73 @@ def relay_driver(P, tn):
     return bool(P.reset.get("relay_driver")) or tn in (P.reset.get("relay_driver_types") or [])
 
 
+def raw_tap_hold(P, tn):
+    """RAW-TAP-HOLD (QC-GEOM-UNITS C1o 11-25, class RRL-SDFF-HOLD, opt-in reset.raw_tap_hold {"n": N, "types": [...]}):
+    the number of kept HB4xp67 hold pads the kit puts between each raw START tap relay (u_rrl_<k>_r, q net rr_t<i>) and
+    its loads, for type tn (all types when "types" is absent); 0 = absent (kits byte-identical).  The raw tap drives
+    the synchronous reset of ot_dp_landing_relay flops (rst_raw_n, an SDFF D pin after synthesis) on the same leaf clock:
+    a zero-logic flop -> flop hold path whose only margin is the leaf skew (C1j: 127 of 140 QC types; signed-off misses
+    slw_fe_v2 -11.68, sle_st_b_v1 -5.39, slw_su_l0 -3.78, sle_stm_v2 -0.01 ps).  One pad is ~37-45 ps FF, so the class is
+    hold-safe by construction; 0 register stages, LEC sees a Liberty buffer.  Inserted by raw_tap_hold_tcl."""
+    cfg = P.reset.get("raw_tap_hold")
+    if not cfg:
+        return 0
+    if not isinstance(cfg, dict) or int(cfg.get("n") or 0) < 1:
+        raise ResetError('reset.raw_tap_hold must be {"n": N >= 1, "types": [type, ...] (optional)}')
+    types = cfg.get("types")
+    if types is not None:
+        bad = sorted(set(types) - set(P.types))
+        if bad:
+            raise ResetError(f"reset.raw_tap_hold names unknown types {bad[:5]}")
+        if tn not in types:
+            return 0
+    return int(cfg["n"])
+
+
+RAW_TAP_HOLD_TCL = """# RAW-TAP-HOLD (tools/die_plan/reset_tree.py raw_tap_hold, plan reset.raw_tap_hold): N kept HB4xp67 between each
+# placed raw START tap relay (rtr_place key rr_t<i>) and its loads (ot_dp_landing_relay rst_raw_n, deeper raw relays).
+# Taps whose net reaches a port (rst_o pin registers, face rule) stay direct.  Appended to reset_tree.tcl (gen_phys).
+proc rtr_raw_hold {n} {
+  global ff_blk rtr_qnets rtr_at
+  set m [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
+  if {$m eq "NULL" || $m eq ""} { error "OT_RAW_TAP_HOLD: no HB4xp67_ASAP7_75t_R master" }
+  set done 0; set skip {}
+  foreach key [lsort -dictionary [dict keys $rtr_qnets]] {
+    if {![regexp {^rr_t[0-9]+$} $key]} continue
+    set net [dict get $rtr_qnets $key]
+    if {[llength [$net getBTerms]]} { lappend skip $key; continue }
+    set drv {}
+    foreach it [$net getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend drv $it } }
+    if {[llength $drv] != 1} { error "OT_RAW_TAP_HOLD $key: [llength $drv] drivers on [$net getName]" }
+    set drv [lindex $drv 0]
+    lassign [dict get $rtr_at $key] x y
+    if {[$ff_blk findNet ot_rth_${key}_n0] ne "NULL"} { error "OT_RAW_TAP_HOLD $key: pads already present (no replay)" }
+    set up [odb::dbNet_create $ff_blk ot_rth_${key}_n0]
+    $up setDoNotTouch 1
+    $drv disconnect; $drv connect $up
+    for {set k 0} {$k < $n} {incr k} {
+      set i [odb::dbInst_create $ff_blk $m ot_rth_${key}_$k]
+      $i setLocation $x $y; $i setPlacementStatus PLACED; $i setDoNotTouch 1
+      [$i findITerm A] connect $up
+      if {$k == $n - 1} { set out $net } else { set out [odb::dbNet_create $ff_blk ot_rth_${key}_n[expr {$k + 1}]]; $out setDoNotTouch 1 }
+      [$i findITerm Y] connect $out
+      set up $out
+    }
+    incr done
+  }
+  puts "OT_RAW_TAP_HOLD $done raw taps x $n HB4xp67 (port taps kept direct: [llength $skip] $skip)"
+  if {!$done} { error "OT_RAW_TAP_HOLD: plan sets reset.raw_tap_hold for this type but no internal rr_t raw tap was placed" }
+}
+"""
+
+
+def raw_tap_hold_tcl(n):
+    """reset_tree.tcl tail for raw_tap_hold n (needs the rtr_qnets / rtr_at of the rtr_place calls above it)."""
+    if int(n) < 1:
+        return ""
+    return RAW_TAP_HOLD_TCL + f"rtr_raw_hold {int(n)}\n"
+
+
 def relay_driver_any(P):
     """any type of the plan carries relay drivers (the bound cell library then needs the *_drive cells)."""
     return bool(P.reset.get("relay_driver")) or bool(P.reset.get("relay_driver_types"))

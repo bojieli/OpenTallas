@@ -1450,6 +1450,11 @@ SCHEMA = {
             # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
             # through kvpc0 gave 1272 M3 overflow)
             "relay_avoid_cores": {"type": "boolean"},
+            # RAW-TAP-HOLD (QC-GEOM-UNITS C1o 11-25, opt-in; reset_tree.raw_tap_hold): N kept HB4xp67 after each raw START
+            # tap relay (rr_t<i> -> ot_dp_landing_relay rst_raw_n sync reset); types absent = every type; absent = unchanged
+            "raw_tap_hold": {"type": "object", "additionalProperties": False, "required": ["n"],
+                             "properties": {"n": {"type": "integer", "minimum": 1, "maximum": 4},
+                                            "types": {"type": "array", "items": _name}, "note": {"type": "string"}}},
             # BOUND-PLAN-CAP / BOUND-SITE-RULE (HEAD-PLAN-R16 11-20, FABLE-PD-HEAD-2040 F2/F3): the reset hop cap (um) and the
             # relay site test this plan's reset trees were BOUND with, as plan authority (cbc_rules.plan_reset_hop_cap,
             # reset_tree.site_rule).  Absent = tool default (300 um, legal sites: new binds).  "interior" = pre-42eeacf87f test.
