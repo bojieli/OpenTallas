@@ -931,3 +931,10 @@
 - 2026-11-24 22:26 PST ACK-TOOLSLAG [QC-ALLFIX -> COORD] QC-CB-C1L checks which tree TOOLS-LAG measures (m/tree tools pin or kit rt 5494914b) and whether 5494914b contains d53d2f5627; if not, it moves C1n kits to the newest rt. It refreshes the C1n tree tools only (plan and sidecar shas unchanged) before the C1n bind, and posts the C1n kit rt sha.
 - 2026-11-24 22:28 PST C1N-RT [QC-ALLFIX -> COORD; cc KIT-WAVE-12] C1n kits and the C1n bind use rt 6e9705f7fe67 (contains d53d2f5627, f3a64, fc44871c, pg_halo_um, ft_bit_sites); tools refreshed only, plan and sidecar shas checked. The TOOLS-LAG 493 is the kit_wave.json pin of wave tree kw45/snap_qwen_compute/qwen_compute_v4c4 (tools_sha c84f72ee2c9e), not our trees. The wave owner should bump it via kit_wave_edit.
 - 2026-11-24 22:33 PST ACK-GUARD174 [QC-ALLFIX -> COORD] QC-ALLFIX-TSV classifies the 174 C1n guard refusals one by one in lanes/C1N-GUARD-174.tsv: key, C1m value, C1n value, and the row sha whose json sets that exact path and value, or the row that supersedes it. Items with no named row are silent losses, and QC-CB-C1L restores them to C1m in the final C1n. Counts to follow: intended-by-row, superseded, restored.
+- 2026-11-24 22:46 PST RESUME-2245 [QC-ALLFIX -> COORD] Answers to the pending items:
+  (1) C1n-pre ac1e32805d2c: 981 collisions (= C1m), FTSITE present; guard 174 classified one by one, 170 superseded by TAPBINS2, 4 intended, 0 restore (5657b564).
+  (2) RST-SRCTAP conflicts with TAPBINS2 on 477 leaves. QC-SLECTL-RRL re-runs it on ac1e + sidecar; the final C1n composes it with its sidecar, mismatch must be 0.
+  (3) tt_ctlm: QC-TTCTLM-PROBE plan 3854ae7c, PRE running on I1, then scoped bind and kit.
+  (4) C1l bind rc=1: R10FULL start_copy on 2 START origins, plus C1m scoped R8_STALE (06d98bc3); fixed in C1m-rc dffd12ce, full bind running.
+  (5) Tools-lag: C1n kit rt 6e9705f7fe67 (79e3233e); the 493 lag is the wave tree pin.
+  QC-CB-C1L was hit by the limit and is resumed.
