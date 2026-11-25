@@ -14,7 +14,8 @@ QC-RST-SRCTAP builder (hub lanes/handoff/QC-SLECTL-RRL-srctap2.py):
   CHILD   collector child (by order): max |status pin - sidecar node relay| > REACH_UM (405)
   MISSING the sidecar node is not a relay of the plan tree (nor rst_root_n)
 Fix: python3 QC-SLECTL-RRL-srctap2.py (re-node to the RTL ring tap) or collector_reattach --sidecar.
-Sidecar: kw sidecar= / env OT_ADV_RST_SIDECAR / OT_ADV_COLSYNC_SIDECAR, else adv_colsync's search under the tree.
+Sidecar: kw sidecar= / env OT_ADV_RST_SIDECAR, else the as-built manifest's clock_landing_table (kw asbuilt=, the file bind
+reads), else adv_colsync's search under the tree (OT_ADV_COLSYNC_SIDECAR / newest runtime *sidecar*.json).
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import json
@@ -106,8 +107,23 @@ def judge_type(lc, st):
     return res
 
 
+def _asbuilt_table(tree, asbuilt):
+    """the as-built manifest's clock_landing_table (the file bind reads), resolved against the tree; None when absent"""
+    if not asbuilt:
+        return None
+    try:
+        ab = asbuilt if isinstance(asbuilt, dict) else json.loads(Path(asbuilt).read_text())
+    except (OSError, ValueError):
+        return None
+    t = (ab or {}).get("clock_landing_table")
+    if not t:
+        return None
+    p = Path(t) if os.path.isabs(t) or not tree else Path(tree) / t
+    return str(p) if p.is_file() else None
+
+
 def _sidecar_path(tree, kw):
-    p = kw.get("sidecar") or os.environ.get("OT_ADV_RST_SIDECAR")
+    p = kw.get("sidecar") or os.environ.get("OT_ADV_RST_SIDECAR") or _asbuilt_table(tree, kw.get("asbuilt"))
     if p:
         return str(p)
     return _CS._find_sidecar(tree, kw) if tree or os.environ.get("OT_ADV_COLSYNC_SIDECAR") else None

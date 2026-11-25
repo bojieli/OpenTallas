@@ -40,3 +40,12 @@ def test_findings_summary_and_never_raises():
     assert ls[0].startswith("WARN ADV-RST-SIDECAR t: 1 reset copy") and "summary 1 of 1 types" in ls[-1]
     assert "NOT-RUN" in A.findings(plan(lc()), "p", None)[0]
     assert A.findings(None, "p", None, sidecar="x")[0].startswith("WARN ADV-RST-SIDECAR not checked")
+
+
+def test_sidecar_from_asbuilt_table(tmp_path):
+    sc = tmp_path / "zz_sidecar_x.json"
+    sc.write_text('{"collector": {"types": {"t": {"local_sources": [{"name": "busx", "tap": 1}]}}}}')
+    ab = tmp_path / "asbuilt_run.json"
+    ab.write_text('{"clock_landing_table": "zz_sidecar_x.json"}')
+    ls = A.findings(plan(lc()), "p", str(tmp_path), asbuilt=str(ab))
+    assert "1 reset copy" in ls[0] and str(sc) in ls[-1]
