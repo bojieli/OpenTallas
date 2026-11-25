@@ -1310,7 +1310,172 @@ def part_depth(P):
     return cache["K"]
 
 
+# ---------------------------------------------------------------- RESET-TREE-CACHE-1124
+# COORD 11-24 (PRE profile: LANDREMAP 960 s of one S81 PRE, the same per-type solve repeated by RSTREACH, the LANDREMAP re-pick, RESETPUB,
+# ANCHORDRY and TAPNAME, each on its own schema.Plan so the per-Plan _reset_tree_cache never hit across them): for_type results are kept
+# in one process-wide cache keyed by the tool sha (content of tools/die_plan/*.py), the type's plan-block digest, a context digest (the
+# plan outside partition_types; the whole partition_types too when the type's tree depends on other types: wavefront release, or
+# pipelined without reset.part_depth), the plan folder, cwd / OT_REPO_ROOT (repo-relative inputs) and the OT_* environment, plus reach.
+# Every caller gets a deep copy; a solve error is cached and raised again.  A Plan carrying bound native contracts (gen_phys installs
+# them on the Plan object) is never cached.  prewarm() solves many types in a fork pool sized to the cores and the free memory.
+# OT_RESET_TREE_CACHE=0 turns the cache off (every call solves, as before).
+_XP_TREES = {}
+XP_STATS = {"hit": 0, "miss": 0, "pool": 0}
+XP_PREWARMED = set()       # keys prewarm() solved
+XP_READ = set()            # keys some for_type caller read
+_XP_TOOL = []
+
+
+def _xp_tool_sha():
+    if not _XP_TOOL:
+        import hashlib
+        h = hashlib.sha256()
+        for f in sorted(Path(__file__).resolve().parent.glob("*.py")):
+            try:
+                h.update(f.name.encode() + b"\0" + f.read_bytes())
+            except OSError:
+                pass
+        _XP_TOOL.append(h.hexdigest()[:16])
+    return _XP_TOOL[0]
+
+
+def _xp_dig(obj):
+    import hashlib
+    import json as _json
+    return hashlib.sha256(_json.dumps(obj, sort_keys=True, default=str).encode()).hexdigest()[:20]
+
+
+def _xp_key(P, tn, reach):
+    """the cache key of for_type(P, tn, reach), or None (not cacheable)"""
+    if os.environ.get("OT_RESET_TREE_CACHE", "1") == "0" or getattr(P, "_bound_native_reset_contracts", None):
+        return None
+    raw = getattr(P, "raw", None)
+    if not isinstance(raw, dict) or tn not in (raw.get("partition_types") or {}):
+        return None
+    d = P.__dict__.setdefault("_xp_digests", {})
+    if "ctx" not in d:
+        reset = raw.get("reset") or {}
+        wide = reset.get("release") == "wavefront" or (reset.get("release") == "pipelined" and reset.get("part_depth") is None)
+        d["ctx"] = _xp_dig([{k: v for k, v in raw.items() if k != "partition_types"},
+                            raw["partition_types"] if wide else None])
+    if tn not in d:
+        d[tn] = _xp_dig(raw["partition_types"][tn])
+    env = _xp_dig(sorted((k, v) for k, v in os.environ.items() if k.startswith("OT_") and k != "OT_RESET_TREE_CACHE"))
+    folder = str(Path(P.path).resolve().parent) if getattr(P, "path", None) else None
+    return (_xp_tool_sha(), d[tn], d["ctx"], folder, os.path.realpath(os.getcwd()), os.environ.get("OT_REPO_ROOT"), env,
+            None if reach is None else float(reach), tn)
+
+
 def for_type(P, tn, reach=None):
+    """the reset tree of a plan type (see for_type_uncached), from the process-wide RESET-TREE-CACHE-1124 when it holds it"""
+    import copy
+    key = _xp_key(P, tn, reach)
+    if key is None:
+        return for_type_uncached(P, tn, reach)
+    XP_READ.add(key)
+    hit = _XP_TREES.get(key)
+    if hit is None:
+        XP_STATS["miss"] += 1
+        try:
+            hit = ("ok", for_type_uncached(P, tn, reach))
+        except Exception as e:  # noqa: BLE001 - the same error is raised again on every later call
+            hit = ("err", e)
+        _XP_TREES[key] = hit
+    else:
+        XP_STATS["hit"] += 1
+    if hit[0] == "err":
+        raise copy.copy(hit[1])
+    return copy.deepcopy(hit[1])
+
+
+def pool_size(n_todo, env=None):
+    """RESET-TREE-CACHE-1124: workers = min(cores this process may use, $OT_RUN_THREADS, free memory / $OT_RESET_POOL_GB (4) per
+    worker, $OT_RESET_POOL_MAX (32), the types to solve); $OT_RESET_POOL_J sets it outright"""
+    env = os.environ if env is None else env
+    if env.get("OT_RESET_POOL_J"):
+        return max(1, min(int(env["OT_RESET_POOL_J"]), n_todo))
+    try:
+        cores = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        cores = os.cpu_count() or 1
+    if env.get("OT_RUN_THREADS"):
+        cores = min(cores, max(1, int(env["OT_RUN_THREADS"])))
+    try:
+        avail = next(int(ln.split()[1]) for ln in open("/proc/meminfo") if ln.startswith("MemAvailable:")) / 2 ** 20
+    except (OSError, StopIteration, ValueError):
+        avail = 8.0
+    mem = int(avail // float(env.get("OT_RESET_POOL_GB") or 4))
+    return max(1, min(cores, mem, int(env.get("OT_RESET_POOL_MAX") or 32), n_todo))
+
+
+_POOL_PLAN = []
+
+
+def _pool_one(tn):
+    import pickle
+    P = _POOL_PLAN[0]
+    try:
+        return tn, ("ok", for_type_uncached(P, tn))
+    except Exception as e:  # noqa: BLE001
+        try:
+            pickle.dumps(e)
+            return tn, ("err", e)
+        except Exception:  # noqa: BLE001 - an unpicklable error: the parent solves this type itself when asked
+            return tn, None
+
+
+def prewarm(P, types, jobs=None):
+    """solve for_type(P, tn) for every tn of types not cached yet, in a fork pool (the die-wide solve first, in this process, so every
+    worker inherits it); -> {"todo", "jobs", "seconds"}.  Results land in the cache exactly as a serial for_type would store them."""
+    import time as _time
+    t0 = _time.time()
+    keys = {tn: _xp_key(P, tn, None) for tn in types}
+    todo = [tn for tn, k in keys.items() if k is not None and k not in _XP_TREES]
+    XP_PREWARMED.update(keys[tn] for tn in todo)
+    if not todo:
+        return {"todo": 0, "jobs": 0, "seconds": 0.0}
+    try:                                    # die-level state every type tree reads, solved once here and inherited by the workers
+        if wavefront(P):
+            wf_solve(P)
+        elif pipelined(P):
+            part_depth(P)
+    except Exception:  # noqa: BLE001 - each type then reports the error itself
+        pass
+    n = jobs or pool_size(len(todo))
+    if n <= 1:
+        for tn in todo:
+            try:
+                for_type(P, tn)
+            except Exception:  # noqa: BLE001 - cached, raised again to the caller that asks
+                pass
+        return {"todo": len(todo), "jobs": 1, "seconds": round(_time.time() - t0, 1)}
+    import multiprocessing as _mp
+    _POOL_PLAN[:] = [P]
+    try:
+        with _mp.get_context("fork").Pool(n) as pool:
+            for tn, res in pool.imap_unordered(_pool_one, todo):
+                if res is not None:
+                    _XP_TREES[keys[tn]] = res
+                    XP_STATS["pool"] += 1
+    finally:
+        _POOL_PLAN[:] = []
+    return {"todo": len(todo), "jobs": n, "seconds": round(_time.time() - t0, 1)}
+
+
+def cache_report():
+    """-> (reads, hits, on-demand solves, prewarmed, prewarmed but never read)"""
+    return (len(XP_READ), XP_STATS["hit"], XP_STATS["miss"], len(XP_PREWARMED), len(XP_PREWARMED - XP_READ))
+
+
+def cache_clear():
+    _XP_TREES.clear()
+    XP_PREWARMED.clear()
+    XP_READ.clear()
+    for k in XP_STATS:
+        XP_STATS[k] = 0
+
+
+def for_type_uncached(P, tn, reach=None):
     """the reset tree of a plan type in its own frame (taps = schema.tap_grid, entry = gen_phys reset tap).
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
     type's own depth."""

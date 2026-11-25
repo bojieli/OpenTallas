@@ -704,17 +704,54 @@ def default_bind_rtl(plan_path, elab_dir=None):
     return None
 
 
+def derived_todo(raw):
+    """the (type, block) pairs findings() checks per type"""
+    types = (raw or {}).get("partition_types") or {}
+    only = set(filter(None, os.environ.get("OT_DERIVED_TYPES", "").split(",")))
+    return [(tn, t) for tn, t in sorted(types.items()) if isinstance(t, dict) and not t.get("hard")
+            and (not only or tn in only) and ((t.get("clock") or {}).get("landing_contract") or name_refs(t)
+                                              or t.get("internal_stations"))]
+
+
+def _raw_hop_reads(t, broadcast):
+    """reach_rules.raw_hops solves the type's reset tree when a START / local raw names rst_rl_<k> (or rr_t<k> on a START broadcast
+    plan); broadcast() -> reset_tree.start_broadcast of the plan, asked only when an rr_t raw exists"""
+    import reach_rules as R
+    items = [(st.get("raw_reset"), st.get("xy_um")) for _k, _b, _i, st in R._start_stages(t)]
+    items += [(lr.get("raw"), lr.get("xy_um")) for lr in ((t.get("clock") or {}).get("landing_local_resets") or [])
+              if isinstance(lr, dict)]
+    for raw, xy in items:
+        m = R._RAW.match(str(raw or ""))
+        if not m or not isinstance(xy, list) or len(xy) != 2:
+            continue
+        if m.group(1) == "rst_rl_" or (m.group(1) == "rr_t" and broadcast()):
+            return True
+    return False
+
+
+def reset_tree_types(raw, classes=CLASSES, broadcast=lambda: False):
+    """RESET-TREE-CACHE-1124: the types findings() reads the solved reset tree of whatever the trees hold (Solver.relays / tree):
+    DERIVEDNAME on a relay-name reference or landing_raw_branches, RSTREACH on a raw_hops raw relay or FSTART branches.  A read
+    that only follows a finding (the re-pick of a type with tap-only references, the base tree of an rstnode rename) is not in it."""
+    want = {c.upper() for c in classes}
+    out = set()
+    for tn, t in derived_todo(raw):
+        branches = [b for b in ((t.get("clock") or {}).get("landing_raw_branches") or []) if isinstance(b, dict)]
+        if "DERIVEDNAME" in want and (branches or any(RELAY.match(v) for v in name_refs(t).values())):
+            out.add(tn)
+        elif "RSTREACH" in want and ((branches and fstart_pins(t)) or _raw_hop_reads(t, broadcast)):
+            out.add(tn)
+    return out
+
+
 def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=None, budget_s=None, base=None,
              base_solver=None):
     """FAIL / WARN lines of the three classes (a type the solver cannot build is WARN ... not checked: the bind names it)"""
     want = {c.upper() for c in classes}
     if not want & set(CLASSES):
         return []
-    types = (raw or {}).get("partition_types") or {}
+    todo = derived_todo(raw)
     only = set(filter(None, os.environ.get("OT_DERIVED_TYPES", "").split(",")))
-    todo = [(tn, t) for tn, t in sorted(types.items()) if isinstance(t, dict) and not t.get("hard")
-            and (not only or tn in only) and ((t.get("clock") or {}).get("landing_contract") or name_refs(t)
-                                              or t.get("internal_stations"))]
     S = solver or Solver(raw, plan_path, tree)
     base_raw = None
     if base:

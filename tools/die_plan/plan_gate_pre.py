@@ -185,6 +185,11 @@ PRE-INPUT-STOP-1124 (COORD; FAM-S81-COL-H9R0 3.5 h PRE then INPUT-MISSING): TREE
   input (FAIL INPUT-MISSING / SCHEMA-UNKNOWN-KEY / SCHEMA-LOAD, a TREE-SOURCES path line) ends the check there with LIST PRE-INPUT-STOP
   (FAIL PRE-INPUT-STOP when only a TREE-SOURCES line triggered it), before the slow classes ($OT_PRE_INPUT_STOP=0: run them anyway).  PRE-TIME-1124: LIST PRE-TIME names the seconds per class; a class
   over $OT_PRE_TIME_TRACE_S (30) prints PRE-TIME to stderr when it ends.
+RESET-TREE-CACHE-1124 (COORD; S81 c8 PRE profile: LANDREMAP 960 s): after the input stop, reset_solve_types() takes the union of the
+  reset trees LANDREMAP (+ its re-pick), RESETPUB / ANCHORDRY (solve modes), RSTREACH / DERIVEDNAME would solve, from each class's own
+  selection, and reset_prewarm() solves them once in a fork pool (reset_tree.prewarm: cores / $OT_RUN_THREADS / free memory) into
+  reset_tree's process-wide cache, which every class reads.  LIST RESET-PREWARM / RESET-TREE-CACHE name the work and any read the
+  prewarm missed or solve no class read.  OT_PRE_RESET_PREWARM=0 skips the prewarm; OT_RESET_TREE_CACHE=0 turns the cache off.
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -858,6 +863,17 @@ def _shifted(old, new, shifts):
     return None
 
 
+def landremap_same(raw, braw, tn):
+    """{plan path: relay} of the type's landing reset references unchanged vs the base: LANDREMAP solves both trees when non-empty"""
+    rn = landing_reset_refs(raw["partition_types"][tn])
+    rb = landing_reset_refs(braw["partition_types"][tn])
+    return {p: v for p, v in rn.items() if rb.get(p) == v}
+
+
+def landremap_types(raw, braw):
+    """the moved types check_landremap solves (plan and base tree; the bind re-pick reads the same plan tree)"""
+    return sorted(tn for tn in moved_types(raw, braw) if landremap_same(raw, braw, tn))
+
 def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None, tree=None):
     """FAIL LANDREMAP per moved type whose landing reset references were not remapped (see LANDREMAP-1122 in the doc).
     tree_fn(raw, plan_path, type) -> {relay name: identity}; injectable for tests.
@@ -896,9 +912,7 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None, tr
                 return _in_tree(tree, lambda: RA.repicked_paths(tn, r["partition_types"][tn], _tree(r, pp, tn), root))
     out, bad = [], []
     for tn in sorted(mv):
-        rn = landing_reset_refs(raw["partition_types"][tn])
-        rb = landing_reset_refs(braw["partition_types"][tn])
-        same = {p: v for p, v in rn.items() if rb.get(p) == v}
+        same = landremap_same(raw, braw, tn)
         if not same:
             continue
         try:
@@ -1403,6 +1417,32 @@ def _tap_clock(ck):
     return json.dumps({k: v for k, v in (ck or {}).items() if k not in TAPNAME_KIT_ONLY_KEYS}, sort_keys=True)
 
 
+_FORK_FN = []
+
+
+def _fork_one(x):
+    return x, _FORK_FN[0](x)
+
+
+def fork_map(fn, items, jobs=None):
+    """{item: fn(item)} computed in a fork pool (reset_tree.pool_size: cores / $OT_RUN_THREADS / free memory; $OT_RESET_POOL_J), serially
+    when one worker or one item; fn must not raise and must return a picklable value"""
+    items = list(items)
+    try:
+        import reset_tree as RT
+        n = jobs or RT.pool_size(len(items))
+    except Exception:  # noqa: BLE001
+        n = 1
+    if n <= 1 or len(items) < 2:
+        return {x: fn(x) for x in items}
+    import multiprocessing as _mp
+    _FORK_FN[:] = [fn]
+    try:
+        with _mp.get_context("fork").Pool(n) as pool:
+            return dict(pool.imap_unordered(_fork_one, items))
+    finally:
+        _FORK_FN[:] = []
+
 def check_tapoff(plan, max_list=6):
     """FAIL TAPOFF-MISSING per type whose per-port clock row (clock.tap_offset.per_port_ps, or clock.tap_window.per_port_ps
     for a type without an offsets row) misses a tap port, in EVERY tap mode (tap_offset_cover census; see TAPOFF-1123)."""
@@ -1412,7 +1452,11 @@ def check_tapoff(plan, max_list=6):
         return []
     try:
         import tap_offset_cover as TC
-        rows = TC.census(raw, plan)
+        # TAPOFF-POOL-1124 (S81 c8 PRE profile: TAPOFF 1973 s, one serial tap_grid solve per listed type): the per-type port solve
+        # (tap_offset_cover.type_ports, the census's own) runs in a fork pool; census() reads the results unchanged
+        P = TC.S.Plan(raw, Path(plan))
+        tns = sorted({tn for _f, tn, _t in TC.tables(raw)})
+        rows = TC.census(raw, plan, port_results=fork_map(lambda tn: TC.type_ports(P, raw, tn), tns))
     except Exception as e:                                  # an unloadable plan is SCHEMA-LOAD's finding, not this one
         return [f"WARN TAPOFF-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
     out, warn = [], []
@@ -1597,6 +1641,14 @@ def check_resetpub(tree, plan, tree_fn=None, max_list=4, base=None, solve=False)
             braw = _load(base).get("partition_types") or {}
         except (OSError, ValueError):
             braw = None
+    todo = resetpub_todo(raw, braw, solve, max_list)
+    if not todo:
+        return []
+    return _resetpub_solve(tree, plan, raw, todo, tree_fn, max_list, solve)
+
+
+def resetpub_todo(raw, braw, solve, max_list=4):
+    """[(type, published tree, nets)] check_resetpub judges; with solve every one is solved (reset_tree.for_type)"""
     todo = []
     for tn, ty in (raw.get("partition_types") or {}).items():
         if not isinstance(ty, dict) or ty.get("hard"):
@@ -1617,8 +1669,10 @@ def check_resetpub(tree, plan, tree_fn=None, max_list=4, base=None, solve=False)
                 continue                                 # inputs unchanged, or the tree was republished with them
             nets = nets + ["@" + ",".join(_diff_keys(json.loads(_reset_inputs(bt)), json.loads(_reset_inputs(ty)))[:max_list])]
         todo.append((tn, pub, nets))
-    if not todo:
-        return []
+    return todo
+
+
+def _resetpub_solve(tree, plan, raw, todo, tree_fn, max_list, solve):
     if tree_fn is None:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import schema
@@ -2153,6 +2207,79 @@ class PreTimer:
         return f"LIST PRE-TIME {time.time() - self.t0:.0f} s: " + ", ".join(f"{k} {v:.0f}s" for k, v in top)
 
 
+
+def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=None, env=None):
+    """RESET-TREE-CACHE-1124 (COORD ruling): {"plan": {type: [classes]}, "base": {type: [classes]}} of the reset trees this check()
+    solves, from each class's own selection: LANDREMAP (landremap_types, plan + base; its bind re-pick reads the same plan tree),
+    RESETPUB with OT_RESETPUB_SOLVE=1 (resetpub_todo), ANCHORDRY with OT_ANCHORDRY_SOLVE=1 (types with clock.reset_tree_anchor),
+    RSTREACH / DERIVEDNAME (derived_drop.reset_tree_types).  TAPNAME solves density tap grids, not reset trees: nothing.
+    derived_base is not prewarmed: its trees are read only after an rstnode finding."""
+    env = os.environ if env is None else env
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    sel = {"plan": {}, "base": {}}
+
+    def add(side, tns, cls):
+        for tn in tns:
+            sel[side].setdefault(tn, []).append(cls)
+    if "LANDREMAP" not in skip and landremap_base:
+        braw = _load(landremap_base)
+        if raw and braw:
+            lt = landremap_types(raw, braw)
+            add("plan", lt, "LANDREMAP")
+            add("base", lt, "LANDREMAP")
+    if "RESETPUB" not in skip and env.get("OT_RESETPUB_SOLVE") == "1":
+        add("plan", [tn for tn, _p, _n in resetpub_todo(raw, None, True)], "RESETPUB")
+    if "ANCHORDRY" not in skip and env.get("OT_ANCHORDRY_SOLVE") == "1":
+        import reset_anchor as RA
+        add("plan", [tn for tn, t in (raw.get("partition_types") or {}).items()
+                     if isinstance(t, dict) and (t.get("clock") or {}).get(RA.KEY)], "ANCHORDRY")
+    dcls = [c for c in ("RSTREACH", "DERIVEDNAME") if c not in skip]
+    if dcls:
+        import derived_drop as DD
+        bc = {}
+
+        def broadcast():
+            if "v" not in bc:
+                import reset_tree as RT
+                try:
+                    bc["v"] = bool(_in_tree(tree, lambda: RT.start_broadcast(_shared_plan(plan, raw))))
+                except Exception:  # noqa: BLE001 - raw_hops then treats rr_t as unjudged, no tree read
+                    bc["v"] = False
+            return bc["v"]
+        add("plan", sorted(DD.reset_tree_types(raw, dcls, broadcast)), "DERIVED")
+    return sel
+
+
+def reset_prewarm(tree, plan, sel, landremap_base=None):
+    """solve the selected trees once, in a fork pool, into reset_tree's process-wide cache -> LIST line"""
+    import schema
+    import reset_tree as RT
+    t0 = time.time()
+    info = []
+    for side, path in (("plan", plan), ("base", landremap_base)):
+        tns = sorted(sel.get(side) or ())
+        if not tns or not path:
+            continue
+        r = _load(path)
+        try:
+            P = schema.Plan(json.loads(json.dumps(r)), Path(path).parent / "die_plan.json")
+            res = _in_tree(tree, lambda: RT.prewarm(P, tns))
+        except Exception as e:  # noqa: BLE001 - each class then solves (and reports) on demand
+            info.append(f"{side} {len(tns)} type(s) not prewarmed ({type(e).__name__}: {str(e)[:120]})")
+            continue
+        info.append(f"{side} {res['todo']}/{len(tns)} type(s) in {res['seconds']:.0f} s on {res['jobs']} worker(s)")
+    return f"LIST RESET-PREWARM {'; '.join(info) or 'nothing to solve'} ({time.time() - t0:.0f} s)"
+
+
+def reset_cache_line():
+    import reset_tree as RT
+    if not hasattr(RT, "cache_report"):
+        return "LIST RESET-TREE-CACHE not available"
+    reads, hits, miss, pre, unread = RT.cache_report()
+    return (f"LIST RESET-TREE-CACHE {reads} tree(s) read, {hits} cache hit(s), {miss} solved on demand (not prewarmed), "
+            f"{pre} prewarmed, {unread} prewarmed but never read")
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None, remap=None, gendry=False):
@@ -2181,6 +2308,15 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _stop = input_stop(findings)                       # PRE-INPUT-STOP-1124: missing inputs stop PRE here, in seconds
     if _stop:
         return findings + [_stop, _pt.line()]
+    _warm = (os.environ.get("OT_RESET_TREE_CACHE", "1") != "0" and os.environ.get("OT_PRE_RESET_PREWARM", "1") != "0"
+             and ("PYTEST_CURRENT_TEST" not in os.environ or os.environ.get("OT_PRE_RESET_PREWARM") == "on"))
+    if _warm:                                            # RESET-TREE-CACHE-1124: every reset tree the classes below solve, once, in a pool
+        _pt.mark("RESETWARM")
+        try:
+            _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline)
+            findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb))
+        except Exception as e:  # noqa: BLE001 - the classes solve on demand
+            findings.append(f"LIST RESET-PREWARM not run: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("TOOLS")
     if "TOOLS" not in skip:
         findings += check_tools(tree)
@@ -2317,6 +2453,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark(None)
     findings.append(pre_mode(elab_dir, skip))                       # PRE-MODE-1124
     findings.append(_pt.line())                         # PRE-TIME-1124: where the PRE time went
+    if _warm:
+        findings.append(reset_cache_line())
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
