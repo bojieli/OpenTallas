@@ -741,6 +741,12 @@ def main(argv=None):
     except ImportError:
         launch_gates = None
     gate_lines = launch_gates.lines(args.kit, args.plan) if launch_gates else ['SKIP LAUNCH-GATES no-module']
+    # FP-CONVERGE-S81 (COORD FLOW-0930 S-08): SEAT-ORIENT from the PLAN (no kit seats needed), guarded import, report-only like the rest
+    try:
+        import seat_resite
+        gate_lines = list(gate_lines) + seat_resite.orient_lines(args.kit, args.plan)
+    except ImportError:
+        pass
     for line in gate_lines:
         print(line)
     if launch_gates and launch_gates.blocking() and any(x.startswith('WARN') for x in gate_lines):
