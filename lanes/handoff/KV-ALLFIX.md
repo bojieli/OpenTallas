@@ -70,3 +70,9 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - Wave KV-A5t5 items kv3_hub_Wo/kv3_hub_Eo on intel2 patched the same way; preflight PASS (~/tmp/kvallfix/hubwo-a5t5/preflight_wave_*.log).
 - GRT notify to KV-OWN-HUB-R2: intel2 unit allfix-hubwo-grt-notify.
 - Any new seam=true kit (hub_C/Ei/Eo/Wo) before the class fix lands: copy the file in after gen.
+
+## 20:2x update (KV-ALLFIX)
+- KV event = KV-A5t6 (applied 19:5x): plan a498941539fd, tree pub/kv_a5t6_tree (manifest 9249249be101), bind pub/kv_a5t6_bind (fp 23d7f57cf76d), rt efc09e5e6036, receipt lanes/handoff/qwen_kvsys_atomic_apply_1795579392875396613.json. Gate E10 a5t6e10/grow (compose3.py 3-way, report tmp/A5t6_try2.json.report.json). Publish scripts pub/{seal,bind,dist_bind,publish}_a5t6.sh; apply intel2 ~/tmp/kvallfix/apply_A5t6.sh.
+- A5t6 holds (kit_wave 1ca63e86): 12 live-kit types + kv3_phy_v1 (GENDRY) + kv3_hub_Wo (KV-OWN-HUB-R2 probe gate); kv3_hgi, kv3_hgi_v7 kept; cl7f lifted (7316c436); pv_v12e lifted.
+- A5t7 queue (ALLFIX-KV.tsv): HUBCTAP v2 0f637bf7afd4 READY; ZL-LEAF2 1bc95aba27dc READY; FTLOCKUP 22be918f30c6 BLOCKED (pv col regen, KV-OWN-PV-R2); PCPACK-FAM e081f73f4282 needs rebase (12 conflicts vs R4, KV-OWN-RSTREACH); HROOT-BAND (KV-ALLFIX, to build); PHYGENDRY fix (helper running, a5t7e10/rows/PHYGENDRY); PVLEGS/VODCH/PINS when posted. A5t7 composes <=4 h after A5t6 bind (by ~23:40).
+- Watching: pc family first GRT (VIS-REOWN spine) -> owner KV-OWN-RSTREACH if overflow; hub_Wo private kit GRT notify unit allfix-hubwo-grt-notify (intel2).
