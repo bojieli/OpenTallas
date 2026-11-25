@@ -1,0 +1,28 @@
+{
+ "row": "C1o-RAW-TAP-HOLD",
+ "lane": "QC-GEOM-UNITS",
+ "class": "RRL-SDFF-HOLD",
+ "cause": "raw reset tap relay (u_rrl_<k>_r, q rr_t<i>) drives ot_dp_landing_relay rst_raw_n = SDFF D on the same leaf clock: zero-logic flop->flop hold, margin = leaf skew only",
+ "measured_misses_ps": {
+  "slw_fe_v2__clf110fab2": -11.68,
+  "sle_st_b_v1__pv0e7b1dcc": -5.39,
+  "slw_su_l0__cl1e5219ea": -3.78,
+  "sle_stm_v2__cl55be2264": -0.01
+ },
+ "plan_keys": {
+  "reset.raw_tap_hold": {
+   "n": 1,
+   "taps": "raw",
+   "note": "C1o RRL-SDFF-HOLD: 1 kept HB4xp67 (~37-45 ps FF) after each raw START tap"
+  }
+ },
+ "tools_required": "main >= 899f9018ad (reset_tree.raw_tap_hold, gen_phys appends rtr_raw_hold to reset_tree.tcl; taps 'all' in the follow-up commit)",
+ "effect": "0 register stages, 0 cycles, no RTL/bind change (kit-only PRE_GLOBAL_PLACE Tcl, dont_touch); LEC sees Liberty buffers; port taps (rst_o pin registers) stay direct",
+ "scope": {
+  "qc_c1j": "127 of 140 types carry rr_t -> rst_raw_n (QC-GEOM-UNITS-class-rrl-sdff-hold.tsv)",
+  "s81_c8t_native_bind": "237 of 405 bound rtl files; wiring is rst_n_t -> rst_raw_n (no rr_t): needs taps 'all'",
+  "kv_a5t6_pub_bind": "87 of 95 types; mostly rst_n_t (8,563 pins) + rr_t (253): needs taps 'all'"
+ },
+ "gate": "PRE + scoped bind unchanged (kit-only); per type kit sign-off: internal hold >= 0, TT >= -42 (pad adds ~70-83 ps TT on tap->landing hops), DRC 0, LEC",
+ "risk": "setup on long rr_t hops; types with hop slack < 90 ps TT should be listed by the C1o gate before compose"
+}
