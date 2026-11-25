@@ -497,7 +497,7 @@ class TestSkips(Base):
 
     def test_c_old_keep_finished_only(self):
         # COORD 11-08 08:0x / 09:2x (DISK-URGENT-1): an ancestor .keep older than --c-old-keep-h does not stop the
-        # class c trim of a FINISHED or SUPERSEDED kit; young .keep, .keep inside the kit, unfinished kits and every
+        # class c trim of a FINISHED or SUPERSEDED kit (since ROMW-LOSS-1124 the delete guard still refuses it); young .keep, .keep inside the kit, unfinished kits and every
         # other guard still protect
         day3 = time.time() - 72 * 3600
         touch(os.path.join(self.root, "ok/.keep"), n=0, mtime=day3)
@@ -525,9 +525,12 @@ class TestSkips(Base):
             self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
         self.run_job("--queuename-skip-trim-c", "--classes", "c", "--c-old-keep-h", "48")
         self.assertTrue(self.row(bsig)[4].startswith("counted"), self.row(bsig))   # a signed kit stays counted
+        # ROMW-LOSS-1124 (01a61a3ddd): ot_delete_guard refuses any path under a .keep, whatever its age, so the old-keep pass picks
+        # the finished kits but the guard refuses the delete and every file stays (only removing the .keep file allows it)
         for b in (bfin, ba1):
-            self.assertEqual(self.row(b)[3], "DELETED", self.row(b))
-            self.assertFalse(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
+            self.assertNotEqual(self.row(b)[3], "DELETED", self.row(b))
+            self.assertIn(".keep", self.row(b)[4], self.row(b))
+            self.assertTrue(os.path.exists(os.path.join(b, "3_3_place_gp.odb")))
             self.assertTrue(os.path.exists(os.path.join(b, "3_place.odb")))
             self.assertTrue(os.path.exists(os.path.join(b, "2_floorplan.odb")))
         for b in (bunf, binner, byoung):
@@ -1100,7 +1103,10 @@ class TestExpiry(Base):
         self.assertTrue(os.path.isdir(d))
         self.assertTrue(self.row(d)[4].startswith("keep"), self.row(d))
         self.run_job("--classes", "a", "--keep-expire-h", "168")
-        self.assertFalse(os.path.exists(d), self.row(d))
+        # ROMW-LOSS-1124 (01a61a3ddd): the delete guard refuses any path under a .keep whatever its age; expiry only selects it
+        self.assertTrue(os.path.isdir(d), self.row(d))
+        self.assertNotEqual(self.row(d)[3], "DELETED", self.row(d))
+        self.assertIn(".keep file keeps it", self.row(d)[4], self.row(d))
 
     def test_young_keep_still_holds_with_expiry_on(self):
         d = self.attempt("item_ky", 1)
