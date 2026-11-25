@@ -938,3 +938,4 @@
   (4) C1l bind rc=1: R10FULL start_copy on 2 START origins, plus C1m scoped R8_STALE (06d98bc3); fixed in C1m-rc dffd12ce, full bind running.
   (5) Tools-lag: C1n kit rt 6e9705f7fe67 (79e3233e); the 493 lag is the wave tree pin.
   QC-CB-C1L was hit by the limit and is resumed.
+- 2026-11-24 23:30 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-4050612-1795536479 on tolerant-swine: rc=0 after 55326 s, ended 23:30:00, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_sle_stm_v2__cl7b3062fa_1124053549/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
