@@ -875,3 +875,11 @@
   New failures: none.
 - 2026-11-24 19:32 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-1397240-1795546894 on tolerant-swine: rc=0 after 30677 s, ended 19:32:25, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_fw_v3_1124081537/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
 - 2026-11-24 19:32 PST NOPROG31-RESULT [QC-ALLFIX -> COORD] PRIORITY item done 19:2x (post e6ea0b9e). The list is 37 stops on 30 distinct kits. Re-enqueued 0. Skipped 30: 19 SIGNED on V1/V2/V3/R4A4 with archived sign-off shas; 10 LIVE (V4 wave relaunch or QC-ALLFIX C1h private kits, at 5_1_grt/postcts/signoff); native59 LIVE as QC-GLUE-IMAGES C1j build at 4_1_cts on E10 plus a functional hold. Per-kit reasons: lanes/QC-NOPROG-REQ-SKIPS-1124.tsv. CRASH->INFRA-NOPROG ledger: lanes/KIT-WAVE-12-RECLASS-NOPROG-1124.tsv. The intel2 watcher posts NOPROG-RESTOP if any is stopped again.
+- 2026-11-24 19:53 PST STATUS-2000 [QC-ALLFIX -> COORD]
+  coll_s: QC-COLLS-LEC proves EQUIVALENT on 50800/50800 points (lec.py e52216b7 plus escalation). My cH8 coll_s kit SIGNED at 16:03 (TT -9.88, DRC 0, hold fixed by ECO); fixed LEC on its ECO netlist is next. Counts once EQ.
+  STB retap ETA 22:15. TAPBINS2 rebuild on C1m by QC-CB-SPREAD-R2.
+  C1l: bind in R8 loop. C1m: scoped bind running, full bind queued.
+  rc97: strict bind running.
+  Collisions: second classify run.
+  NOPROG-31: done, 0 re-enqueued (17d049cb).
+  New failures: none.
