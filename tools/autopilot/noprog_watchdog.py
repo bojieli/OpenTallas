@@ -1227,6 +1227,14 @@ def scan(now=None, act=False, probe_s=4):
                     else:
                         v, why, row["klass"] = GRT_STUCK, ev, "GRT-CONGESTION"
                         detail = detail or ""
+            if kind == "drt" and log:
+                pev = drt_plateau_evidence(drt_totals(log_text))
+                if pev:
+                    row.update(plateau=pev, plateau_class=DRT_PLATEAU, drc_summary=latest_drc_summary(log)[:700])
+            elif kind == "other" and log:
+                pev = hold_stall_evidence(stage, res, v, why, detail, anchors, now, sw if exact else sw * EST_MARGIN)
+                if pev:
+                    row.update(plateau=pev, plateau_class=HOLD_STALL)
             if kind == "lec" and now - started > LEC_MAX_S:
                 # COORD 11-14: LEC is advisory under R-MINIMAL.  A LEC-only job (the route result exists) older than 24 h goes,
                 # alive or not; a LEC whose route stage has not produced its result is never cancelled here.
@@ -1863,6 +1871,139 @@ DF_MIN_AGE_H = 3.0            # NOPROG-GRTHOLD-1124 (COORD): owner rule: cancel 
 DF_OVF_RE = re.compile(r"overflow (\d+) at round (\d+) > (\d+)")
 
 
+# ---------------------------------------------------------------- STAGE-PLATEAU (COORD 11-25, FABLE flow review 02:4x): DRT-PLATEAU and HOLD-STALL
+# (A) detailed route that plateaus (hd_serdes 31 iterations at 1.4-1.8k with -droute_end_iter 64; sle_fw_v2 25k -> 15k -> 63.5k; sle_sc_v1 2761 -> 13398) and
+# (B) pregrt_ff_hold with a flat repair_TNS (hours at 145,595 / 275,514) had no cancel rule.  Both are judged on the job's own log; the HUB cancels through
+# design_fail_pass (same exemptions, same keep/decide-only posts, same ot-run --cancel --reason design, lanes/CANCEL-DESIGN-FAIL.tsv, actions.jsonl on the host).
+# A TNS of 0 or better is converged and is NEVER HOLD-STALL (11-23 incident: converged TNS 0 kits were killed).
+DRT_MIN_ITER = 6          # rules (a)/(b) apply only after iteration 6 (DRT-0199 total number 7 or later)
+DRT_FLAT_FALL = 0.05      # (a) each of the last 3 iterations falls less than 5 %
+DRT_FLAT_ITERS = 3
+DRT_FLAT_OVER = 1000      # (a) ... and the count is still over 1k
+DRT_HIGH = 10000          # (b) over 10k after iteration 6
+DRT_RISE = 3.0            # (c) more than 3x the best total so far
+HOLD_STALL = "HOLD-STALL"
+DRT_PLATEAU = "DRT-PLATEAU"
+
+
+def drt_totals(text):
+    """DRT-0199 violation totals, one per completed iteration (iteration 0 first).  Pure."""
+    return [int(m.group(1)) for m in DRT_ITER.finditer(text)]
+
+
+def drt_plateau_evidence(vals):
+    """-> evidence text when the detailed-route violation totals VALS (iteration 0 first) match DRT-PLATEAU, else ''.  Pure.
+    (a) FLAT: after iteration 6, still > 1k and the total fell < 5 % over the last 3 iterations (v[n] > 0.95 v[n-3]);
+    (b) HIGH: after iteration 6, > 10k, unless it fell >= 10 % over the last 3 iterations (the dry run showed 10k+ counts that went on to fall 60-90 %) or just rose / just fell > 5 % in the last step (a spike or its recovery is rule (c)'s);
+    (c) RISE: more than 3x the best total, on two consecutive totals (the dry run showed a one-iteration 4x spike that recovered below the best)."""
+    n = len(vals) - 1
+    if n < 2:
+        return ""
+    last = vals[-1]
+    if n >= 2 and len(vals) >= 3:
+        best = min(vals[:-2])
+        if best > 0 and last > DRT_RISE * best and vals[-2] > DRT_RISE * best:
+            return f"DRT-PLATEAU rise: {vals[-2]} -> {last} violations at iteration {n} = {last / best:.1f}x the best {best} for 2 iterations (> {DRT_RISE:g}x)"
+    if n > DRT_MIN_ITER:
+        k = DRT_FLAT_ITERS
+        ref = vals[n - k]
+        if last > DRT_HIGH and vals[-2] * 0.95 < last <= vals[-2] and last > ref * 0.90:
+            return f"DRT-PLATEAU high: {last} violations at iteration {n} (> {DRT_HIGH} after iteration {DRT_MIN_ITER}), fell {100 * (1 - last / ref):.1f} % over the last {k} iterations (< 10 %)"
+        if last > DRT_FLAT_OVER and vals[-2] * 0.95 < last <= vals[-2] and last > ref * (1 - DRT_FLAT_FALL):
+            return (f"DRT-PLATEAU flat: {last} violations at iteration {n}, fell {100 * (1 - last / ref):.1f} % (< {DRT_FLAT_FALL * 100:g} %) over the last {k} iterations "
+                    f"({'->'.join(str(v) for v in vals[-k - 1:])}), still > {DRT_FLAT_OVER}")
+    return ""
+
+
+def hold_stall_evidence(stage, res, verdict, why, detail="", anchors=None, now=None, window=None):
+    """-> evidence text when the running step is pregrt_ff_hold, its repair_TNS is still below 0 and has not improved by MIN_IMPROVE in the step window (2 h)
+    (judge() says NO-PROGRESS), else ''.  Pure.  A TNS of 0 or better (tns_converged), a young step and a step without a TNS row are never stalled.
+    Dry run 11-25: one repair pass prints only its iteration-0 row and then runs for hours (kv3_pv_v3: 10,099 s, TNS -169,360 -> -3,862, then 0), so a flat
+    window needs REAL rows: >= 3 rows of the current table, one at least `window` old and one inside it (with anchors given), never a single quiet row."""
+    if not str(stage or "").startswith("pregrt_ff_hold") or res.get("name") != "repair_TNS" or not res.get("series"):
+        return ""
+    if tns_converged(res) or verdict != "NO-PROGRESS" or len(res["series"]) < 3:
+        return ""
+    if anchors is not None and now is not None and window:
+        ts = [interp_time(i, anchors) for i, _ in res["series"]]
+        if not (min(ts) <= now - window < max(ts)):
+            return ""
+    return f"HOLD-STALL pregrt_ff_hold: {why}; {detail}"[:300]
+
+
+DRC_BLOCK = re.compile(r"^violation type:\s*(.+?)\s*$")
+DRC_BBOX = re.compile(r"bbox = \(([-\d.]+), ([-\d.]+)\) - \(([-\d.]+), ([-\d.]+)\) on Layer (\S+)")
+DRC_CELL_UM = 50.0
+
+
+def drc_region_summary(text, top=5):
+    """worst layers / violation types and the densest 50 um bbox clusters of an OpenROAD -output_drc report.  -> one line.  Pure."""
+    types, layers, cells, n = {}, {}, {}, 0
+    cur = ""
+    for ln in text.splitlines():
+        m = DRC_BLOCK.match(ln)
+        if m:
+            cur = m.group(1)
+            continue
+        b = DRC_BBOX.search(ln)
+        if b and cur:
+            n += 1
+            x = (float(b.group(1)) + float(b.group(3))) / 2
+            y = (float(b.group(2)) + float(b.group(4))) / 2
+            types[cur] = types.get(cur, 0) + 1
+            layers[b.group(5)] = layers.get(b.group(5), 0) + 1
+            c = (int(x // DRC_CELL_UM) * int(DRC_CELL_UM), int(y // DRC_CELL_UM) * int(DRC_CELL_UM))
+            cells[c] = cells.get(c, 0) + 1
+    if not n:
+        return ""
+    fmt = lambda d: ", ".join(f"{k} {v}" for k, v in sorted(d.items(), key=lambda kv: -kv[1])[:top])
+    cl = ", ".join(f"({x}..{x + int(DRC_CELL_UM)},{y}..{y + int(DRC_CELL_UM)}) um {v}" for (x, y), v in sorted(cells.items(), key=lambda kv: -kv[1])[:top])
+    return f"DRC {n} marks; types: {fmt(types)}; layers: {fmt(layers)}; bbox clusters ({int(DRC_CELL_UM)} um cells): {cl}"
+
+
+def latest_drc_summary(log):
+    """summary of the newest 5_route_drc.rpt-N.rpt next to a 5_2_route log (logs/ -> reports/), '' when none.  The N-th report is written every 5 iterations."""
+    if not log:
+        return ""
+    rdir = os.path.dirname(log).replace("/logs/", "/reports/")
+    cands = []
+    for p in glob.glob(os.path.join(rdir, "5_route_drc.rpt*")):
+        try:
+            cands.append((os.stat(p).st_mtime, p))
+        except OSError:
+            pass
+    for _, p in sorted(cands, reverse=True):
+        try:
+            s = drc_region_summary(read_text(p, cap=64 * 2**20))
+        except OSError:
+            continue
+        if s:
+            return f"{os.path.basename(p)}: {s}"
+    return ""
+
+
+def plateau_exempt(r):
+    """exemption for the plateau rules.  design_fail_exempt() reads the log path too, and a pregrt_ff_hold.log path matches HOLD_ONLY_RE: judge the NAME / kit only."""
+    ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work"))
+    ex = unsignable_exempt(ident, r.get("prio", ""), r.get("kind", ""))
+    if ex:
+        return ex
+    return "re-sign" if re.search(r"(?i)re-?sign", ident) else ""
+
+
+def plateau_evidence(r):
+    """-> (class, evidence) from the host scan's row (r['plateau'], r['plateau_class']) when the job may be cancelled for it, else None.  Pure."""
+    if not r.get("plateau") or r.get("verdict") in ("KEEP", "EXCLUDED") or float(r.get("age_h") or 0) <= DF_MIN_AGE_H or plateau_exempt(r):
+        return None
+    ev = r["plateau"] + (f"; {r['drc_summary']}" if r.get("drc_summary") else "")
+    return r.get("plateau_class") or "PLATEAU", ev
+
+
+def plateau_mode_off():
+    return os.environ.get("NOPROG_PLATEAU_MODE") == "report" or os.path.exists(os.path.join(COORD, "lanes/PLATEAU-WATCHDOG.off"))
+
+
+
 def design_fail_exempt(r):
     ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work", "ident"))
     ex = unsignable_exempt(ident, r.get("prio", ""), r.get("kind", ""))
@@ -1914,10 +2055,12 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
         units.setdefault(k, []).append(r)
     done = []
     for k, rs in sorted(units.items()):
-        evs = [design_fail_evidence(r, track.setdefault(f"{r.get('host')}|{r.get('container')}", {}), now) for r in rs]
+        pls = [None if plateau_mode_off() else plateau_evidence(r) for r in rs]
+        evs = [(p[1] if p else design_fail_evidence(r, track.setdefault(f"{r.get('host')}|{r.get('container')}", {}), now)) for r, p in zip(rs, pls)]
         if not rs[0].get("unit") or not all(evs) or k in done_k:
             continue                                     # every container of the unit must have failed (a sibling stage still running keeps it)
         r, ev = rs[0], evs[0]
+        cls = pls[0][0] if pls[0] else "DESIGN-FAIL GRT-LABEL"
         u = r["unit"]
         if u in keeps or decide_only(" ".join([r.get("container", ""), r.get("ident", ""), r.get("kit") or ""])):
             continue
@@ -1926,7 +2069,7 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
         if ident and "|".join(ident) in gfc and now - float(gfc["|".join(ident)]) < MIN_REPORT_AGE_S:
             continue                                     # grt_flat_pass / this pass just cancelled it through the wave: give the stop a pass to land
         if ident and "|".join(ident) not in gfc and not r.get("lane"):
-            rc, line = wave_cancel(ident, f"{GRT_FLAT_CLASS}: {ev}; die owner: plan fix, no unchanged retry")
+            rc, line = wave_cancel(ident, f"{GRT_FLAT_CLASS if cls.startswith('DESIGN') else 'design:' + cls.lower()}: {ev}; die owner: plan fix, no unchanged retry")
             gfc["|".join(ident)] = now                   # a later pass that still sees the container running uses ot-run --cancel (leak path 2)
             how = f"kit_wave cancel-rows rc={rc}: {line}"
         else:
@@ -1935,7 +2078,7 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
             how = f"ot-run --cancel {u} --reason design rc={rc}: {line}"
             done_k[k] = now
         done.append({"t": now, "unit": u, "host": r.get("host"), "type": r.get("type", ""), "plan": plan_of(r.get("kit")), "evidence": ev,
-                     "freed_gb": round(sum(x.get("gb", 0) for x in rs), 1), "class": "DESIGN-FAIL GRT-LABEL", "cancel_method": how, "owner": owner_of(rs),
+                     "freed_gb": round(sum(x.get("gb", 0) for x in rs), 1), "class": cls, "cancel_method": how, "owner": owner_of(rs),
                      "age_h": r.get("age_h"), "stage": r.get("stage")})
     for k in [k for k, t in done_k.items() if now - t > 3 * 86400]:
         del done_k[k]
@@ -1954,8 +2097,8 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
         for d in done:
             by.setdefault(d["owner"], []).append(d)
         for owner, ds in sorted(by.items()):
-            _post(poster, f"CANCELLED [{poster} -> {owner}] DESIGN-FAIL watchdog (LAUNCH-GUARD 11-23): {len(ds)} container unit(s) whose GRT already failed "
-                  + "; ".join(f"{d['host']} {d['unit']} {d['type']} {d['stage']} {d['age_h']} h ({d['evidence'][:150]}; {d['freed_gb']} GB; {d['cancel_method'][-70:]})" for d in ds[:40])
+            _post(poster, f"CANCELLED [{poster} -> {owner}] DESIGN-FAIL watchdog (LAUNCH-GUARD 11-23; STAGE-PLATEAU 11-25 DRT-PLATEAU / HOLD-STALL): {len(ds)} container unit(s) measured unable to sign (GRT failed, DRT plateau or flat pregrt_ff_hold TNS) "
+                  + "; ".join(f"{d['host']} {d['unit']} {d['type']} {d['stage']} {d['age_h']} h [{d['class']}] ({d['evidence'][:(900 if d['class'] == DRT_PLATEAU else 150)]}; {d['freed_gb']} GB; {d['cancel_method'][-70:]})" for d in ds[:40])
                   + ". Evidence lanes/CANCEL-DESIGN-FAIL.tsv; kit dirs kept; no unchanged retry.")
     return done
 
