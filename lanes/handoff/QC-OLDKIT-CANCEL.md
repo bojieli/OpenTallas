@@ -113,3 +113,26 @@ None of the 5 has a live process: no ps line matches the kit name on its host. T
 | V2 private FAM-QC-FEFW-R3 sle_fe_v1__cl1cbb7497_1122013030 (epyc10) | eco_20261123_040953_1214866 | 11-25 07:44 (ARCHIVED to AGIdock) | PASS, SIGNED, DRC 0 | 3564 ep, worst -15.97 | +47.35 | 0.0 | YES (drv slew advisory only). Archived; check that the counter reads it |
 | V2 items glue (epyc8) | eco_20261123_140713_549985 | 11-24 06:11 | EXHAUSTED "no improvement at iteration 2" | n/a | i1 -61.73 (81 ep), i2 -98.25 (71 ep) | 0.0 | NO by ECO: setup beyond -42 and worsening. Structural setup fix (glue rows, C1p QC-GLUE); not a hold problem |
 Finding for QC-HOLD-STRUCT: none of the 5 is a live hold failure. In all 5, FF non-port/core hold is 0.0 after ECO. Four are SIGNED in eco_loop and only missing count/LEC. Glue is a TT setup miss.
+
+## F7 / Q7 verdicts, 07:4x PST (COORD FLOW-0730 (4): cancel over 3 h + measured unable; no BIND-PASS wait)
+Rule applied: CANCEL means a DRT plateau: latest count over 10k, iteration 3-6 fall under 70%, and recent per-iteration fall under 20%. CANCEL also covers a COORD Q7 ruling. KEEP covers anything still converging (1k-10k and still falling at least 15% per iteration: recheck in 2 h) and any DRC of 1-398 (sent to QC-DRT-TAIL).
+| host | unit | kit | age h | latest DRT | setup | verdict |
+|---|---|---|---|---|---|---|
+| epyc8 | oth-ubuntu-3976397-1795536410 | slw_su_l1__clcc9d0155_1124052823 | 23.4 | it16 8519, it17 40739, it18 16569; 3-6 29% | +18.9 | CANCEL (Q7, plateau) |
+| epyc7 | oth-ubuntu-3731323-1795587855 | slw_su_l1__cla2a78701_1124082633 | 9.1 | it3 45479, it4 39810 (-12%) | +17.1 | CANCEL (Q7, plateau) |
+| epyc7 | oth-ubuntu-504334-1795589349 | slw_su_l1__cla2a78701_1124145701 | 8.7 | none; 5_1_grt.log untouched since 08:50 UTC (6.7 h no progress) | -43.1 | CANCEL (Q7, no progress) |
+| epyc8 | oth-ubuntu-46526-1795536673 | sle_sc_v1__cl7479a5ec_1124053232 | 23.3 | it9 23437, it10 19851 (-15%); 3-6 24% | +95.6 | CANCEL (plateau) |
+| epyc10 | oth-ubuntu-3748913-1795546209 | slw_fe_v2__cle312294d_1124082715 | 20.7 | it7 18029, it8 16920 (-6%) | +101.9 | CANCEL (plateau; wave twin intel2 is at it15 995) |
+| epyc9 | oth-ubuntu-819767-1795547628 | sle_fe_v2_1124081835 | 20.3 | it10 36163, it11 30892; 3-6 22% | -33.6 | CANCEL (listed earlier) |
+| epyc8 | oth-ubuntu-3135343-1794696222 / -3142624-1794696238 / -2063722-1794715554 | S2 sle_hc2 attempt_8 | 250+ | route FAILED DRT-0255 | - | CANCEL (listed earlier) |
+| epyc8 | oth-ubuntu-4162619-1795536591 | slw_sc_v1__cl64543eaf__cl4590432d_1124054102 | 23.3 | it10 8974, it11 7256, it12 5896 (-19%/iter) | +112.0 | KEEP, still converging; recheck 09:45 |
+| epyc8 | oth-ubuntu-4037539-1795536466 | slw_fe_v1__cl95cd1d0c_1124052635 | 23.4 | it22 136 | +150.7 | KEEP -> QC-DRT-TAIL |
+| epyc11 | oth-ubuntu-59304-1795541430 | sle_fe_v1__cl1cbb7497_1124052207 | 22.0 | it23 71 (flat at 71) | +139.4 | KEEP -> QC-DRT-TAIL |
+| epyc10 | oth-ubuntu-3727046-1795546147 | slw_fe_v1__clfe325744__cldb4efe33_1124082623 | 20.7 | it22 398 | +158.6 | KEEP -> QC-DRT-TAIL |
+| epyc9 | oth-ubuntu-626515-1795547086 | slw_fe_v1__clfe325744__cl08d14f0d_1124082533 | 20.4 | it52 4 | +21.9 | KEEP -> QC-DRT-TAIL |
+| intel1 | oth-ubuntu-4033076-1795553498 | sle_su_l0__cl086d85ba_1124115227 | 18.6 | it41 1 | +149.0 | KEEP -> QC-DRT-TAIL |
+| epyc7 | oth-ubuntu-1262125-1795566948 | sle_ctl__cla4f6f12f_1124055733 | 14.9 | GRT repair: setup -56.5 -> -16.9 (13 ep), hold ws 4.63 | -16.9 | KEEP (converging) |
+| epyc7 | oth-ubuntu-3492655-1795587542 | cbf_q00_s2_1124051617 | 9.2 | GRT done, setup -51.2 | -51.2 | KEEP (-42..-300 never cancelled) |
+| epyc7 | oth-ubuntu-3812875-1795613164 | sle_ctl__cla4f6f12f_1124144512 | 2.1 | CTS | - | KEEP (<3 h) |
+| epyc7 | oth-ubuntu-16759-1795619756 | sle_sc_v2_1124052934 | 0.2 (resumed) | it6 68573, it7 68058 (flat) | +118.8 | KEEP for now: resumed run under 3 h (rule). Flag: it is flat at 68k, so recheck at 3 h |
+Cmdlines re-checked just before the cancels (unit active; its cgroup procs name the kit).
