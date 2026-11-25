@@ -48,6 +48,26 @@ def write_top(ly, top, path):
     out.write(path)
 
 
+PIN_DATATYPE = 251   # the ASAP7 KLayout tech maps DEF PINS (BTerm shapes) to <layer>/251; the deck reads <layer>/0 only
+
+
+def pins_to_drawing(ly):
+    """BTerm pin shapes are real metal: copy every <layer>/251 shape into <layer>/0 so the DRC deck sees the pin metal (without
+    it a parent wire ending inside a core pin looks like a line end 29 nm from the core's via stub: M7.S.2 false errors)"""
+    n = 0
+    for li in list(ly.layer_indexes()):
+        info = ly.get_info(li)
+        if info.datatype != PIN_DATATYPE:
+            continue
+        dst = ly.layer(info.layer, 0)
+        for c in ly.each_cell():
+            for sh in c.shapes(li).each():
+                if sh.is_box() or sh.is_polygon() or sh.is_path():
+                    c.shapes(dst).insert(sh)
+                    n += 1
+    return n
+
+
 def fill_std(ly, top, gds_files):
     """clear every LEF-abstract child cell (keep VIA_ and DEF fill), then read the platform GDS (same names fill them)"""
     for c in ly.each_cell():
@@ -61,13 +81,14 @@ if mode == "core":
     ly = read_def(in_def, tech_file)  # noqa: F821
     top = top_cell(ly, design_name)  # noqa: F821
     fill_std(ly, top, gds_files.split())  # noqa: F821
+    npins = pins_to_drawing(ly)
     out = pya.Layout()
     out.dbu = ly.dbu
     t = out.create_cell(master)  # noqa: F821
     t.copy_tree(top)
     empty = sorted({c.name for c in out.each_cell() if c.is_empty() and c.cell_index() != t.cell_index()})
     out.write(out_file)  # noqa: F821
-    json.dump(dict(master=master, empty_cells=empty, dbu=out.dbu), open(out_file + ".json", "w"), indent=1)  # noqa: F821
+    json.dump(dict(master=master, empty_cells=empty, dbu=out.dbu, pin_shapes_to_drawing=npins), open(out_file + ".json", "w"), indent=1)  # noqa: F821
 
 elif mode == "parent":
     ly = read_def(in_def, tech_file)  # noqa: F821
@@ -88,6 +109,7 @@ elif mode == "parent":
         cell.clear()
         cell.copy_tree(sc)           # children are created anew in ly: no name clash with the parent's own cells
         filled[m] = gds
+    pins_to_drawing(ly)              # parent BTerms + core pins (also core GDS written before this fix); idempotent overlap
     # instances of the hard cores and of empty cells
     insts, empties, missing = [], [], set()
     for inst in top.each_inst():
