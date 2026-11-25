@@ -14,3 +14,10 @@
 - intel1 cJ fork too slow (2 MB/s), cancelled; partial dirs to ot-delete: epyc2 QC-STB-SPLIT/tree.forking-3515291, epyc10 QC-STB-SPLIT/tree.forking-2682303
 - Fork now: E7 cK (C1k, plan 7fbc73d3f7cf) -> epyc2 QC-STB-SPLIT/tree, unit oth-ubuntu-3859112-1795556126, log fork2.ot. Then bind_stb.sh (epyc2 QC-STB-SPLIT/bind_stb.sh PLAN PINSDIR).
 - delta has --views-rel for the lef/lib rows once the 6 views are installed in the tree.
+## 18:37 ROW-REBASED (bind clean)
+- Row: epyc2 /srv/opentallas-scratch2/claude/QC-STB-SPLIT/row/plan_stb_44a145a65013.json (base 7fbc73d3f7cf, C1j=C1k) + row/cores/st_b/*_pins.json + receipts (tapname.json, remap_receipt1.json, localreset_receipt.txt)
+- Views installed in tree epyc2 QC-STB-SPLIT/tree physical/die_plan/qwen_compute/qcviews_1111/views_stb/<m>/ (lef, tt/ff lib, core.json); 6/6 masters SIGNED 833 ps
+- Chain: delta (dev/outv, c123f67f5f5f) -> stb_tapname.py (added_taps renamed to density base; 2 taps moved 8.64 um off ring halo) -> landing_remap resel on 11 types -> stb_localreset.py on slw_st_b_v1__cl6357f1cc__pv6ace3e48 (7 local resets re-pointed by consumer site, depth 5, hops <=247 um; anchor re-recorded) = 44a145a65013. Driver dev/stb_retap.sh.
+- PRE: only ROWS-NO-PROOF (sc types). Scoped strict bind 12/12 EMIT, 0 errors, BIND_RC 0 (bind_stb.ot, bind -> scratch3).
+- Open: parent st_b kits from the row (QC-ALLFIX compose or this lane on COORD word); child boundary hold -27..-34 closes in the parent. Second lever if needed: harden u_u_r4..r7 regions (62.7k each).
+- Tree stays on epyc2 (fork finished before the epyc11 MOVE request; partials ot-deleted).
