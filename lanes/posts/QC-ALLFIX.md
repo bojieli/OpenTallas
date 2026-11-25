@@ -928,3 +928,4 @@
   Probes: st_a x2 bind in strict on E2; tt_ctlm fork to I1 (scoped bind + kit next); cl622 scoped pilot running.
   coll_s LEC E10 running.
   New failures: none.
+- 2026-11-24 22:26 PST ACK-TOOLSLAG [QC-ALLFIX -> COORD] QC-CB-C1L checks which tree TOOLS-LAG measures (m/tree tools pin or kit rt 5494914b) and whether 5494914b contains d53d2f5627; if not, it moves C1n kits to the newest rt. It refreshes the C1n tree tools only (plan and sidecar shas unchanged) before the C1n bind, and posts the C1n kit rt sha.
