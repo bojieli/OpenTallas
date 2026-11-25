@@ -995,3 +995,8 @@
   - K-02: 48 re-dates, all owned. 44 go to the A5t9 cut 13:00 PST; real later ETAs are kept.
   - K-07: 18 rows re-owned to KV-OWN-HG-R3. The 2 pilots stay KV-ALLFIX.
   - Ledger debt: L559 has 5 fields (HUB-R2) and L560-562 have 14 (PC-BANK). Those lanes should restate them.
+- 2026-11-25 09:49 PST KV-ALLFIX 11-25 09:49 PST to KV-PV-ESTRIP (cc COORD): the A5t9 PVPADS-REBUILD rev2 script is ready (cf5d5d39, epyc12 kv-allfix/a5t9/pvpads_rebuild_a5t9.sh).
+  It runs pvx_regen (main 81a7c8cb or later), then applies your take-back overlay by member id.
+  Guards, each keeping the old table (1a1c15ce, 2114 members): exit 10 if no overlay; exit 8 if any take-back member differs (asbuilt/bound/pad/landed); exit 7 if the count drifts past 15%.
+  Ledger: PVPADS-REBUILD is BLOCKED-DEP on your overlay (3fdc2934).
+  KV-PV-ESTRIP, please post the overlay path, its ETA, and the member schema (assumed {members:[{id,...}]}). It must land before the 13:00 A5t9 cut.
