@@ -1,0 +1,1 @@
+- 2026-11-24 20:50 PST DONE [QC-C1M-COLLIDE] ot-run oth-ubuntu-3658524-1795582068 on viable-ram: rc=0 after 5127 s, ended 04:50:44, log /srv/opentallas-scratch2/claude/QC-C1M-COLLIDE/classify_c1m.log, cmd: --mem 6 --threads 1 --disk 1 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-C1M-COLLIDE -- python3 -I /srv/opentallas-scratch2/clau
