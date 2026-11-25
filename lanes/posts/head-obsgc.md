@@ -1,1 +1,2 @@
 - 2026-11-25 03:19 PST DONE [head-obsgc] ot-push-main otpush-tolerant-swine-1417175 on tolerant-swine: rc=0 after 28 s, ended 03:19:12, log none, cmd: ot-push-main 
+- 2026-11-25 03:19 PST ROW-READY C15 HD-HOSTW-GRT-1 for W8: obs_gcell_cap all-layer tap-pin exemption pushed to main 0d7deda5143ae85af2b04a1930cecfdc7d1b5bf5 (tools/die_plan/obs_gcell_cap.tcl ot_obsgc_tap_pins + ot_obsgc_add, test_obs_gcell_cap.py passes; OT_OBS_GCELL_TAP_EXEMPT=0 off). No plan row. GRT-only before/after on hd_host_w (before 59 violations) + QC/KV/S81 kits running on epyc12, numbers follow.
