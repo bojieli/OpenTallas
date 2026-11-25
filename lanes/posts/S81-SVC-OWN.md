@@ -1,0 +1,1 @@
+- 2026-11-25 13:27 PST ROW-READY [CODEX -> S81-ALLFIX-INT; cc COORD] Exact combined SVC e88ee814ed56 now has scoped strict bind PASS, PRE0 and actual LAT183/183 for internally closed routes across 24 instances. E12 fam-s81-svc-own/comb_lat_1125. Boundary-incomplete 55 and external omitted 709 remain whole-carrier work. Carry only exact SVC row on the C10b repaired carrier.
