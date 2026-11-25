@@ -52,3 +52,12 @@ def test_checks_registered():
     for k in ("STATUS-UP-REACH", "CORE-LEG-OVERMACRO", "RELAY-COHORT-SPAN"):
         assert k in names
         assert k in R.findings_by_check
+
+
+def test_relay_without_tap_is_not_a_cohort():
+    m = _t()
+    for r in m["clock"]["landing_contract"]["collector_tree"]["relays"]:
+        r["tap"] = None
+        r["xy"] = [r["xy"][0], r["xy"][1] + 900]
+    m["clock"]["landing_contract"]["collector_tree"]["relays"][0]["xy"] = [900, 900]
+    assert R.relay_cohort_span(m) == []

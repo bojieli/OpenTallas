@@ -86,7 +86,7 @@ def relay_cohort_span(t):
     by = {}
     for r in rl:
         xy = _xy(r.get("xy")) if isinstance(r, dict) else None
-        if xy:
+        if xy and r.get("tap") is not None:         # a relay without a clock tap belongs to no cohort
             by.setdefault(r.get("tap"), set()).add(xy)
     out = []
     for tap, pts in by.items():
