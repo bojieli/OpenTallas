@@ -1,0 +1,227 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81su_kvleaf_kvtcp_h18",
+ "top": "dsfd_su_t_kvtc",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  702.0,
+  155.52
+ ],
+ "core": [
+  2.16,
+  2.16,
+  699.84,
+  153.36
+ ],
+ "why": "spec outline",
+ "std_area_um2": 4311.438,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "S": [
+   "ck",
+   "rst",
+   "dn_st",
+   "dn_kind",
+   "dn_gsel",
+   "dn_jid",
+   "dn_v",
+   "i_f",
+   "dn_d",
+   "e_cs",
+   "e_nb"
+  ],
+  "N": [
+   "e_d",
+   "e_v",
+   "e_gk",
+   "e_gr",
+   "e_gw",
+   "e_go",
+   "e_ob",
+   "e_eps",
+   "o_fu",
+   "o_fo",
+   "o_alive",
+   "o_den",
+   "o_rdy",
+   "o_rjid",
+   "e_mode"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [
+  [
+   "INFO",
+   "util",
+   "utilisation 4% outside 40%-60% (std 4311 + macro 0 in core 105489 um2); outline roomy; acceptable",
+   ""
+  ],
+  [
+   "WARN",
+   "clock_span",
+   "702.0 x 155.52 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ],
+  [
+   "WARN",
+   "pin_bound",
+   "outline set by the pin demand ({'N': 5.99, 'S': 3.82, 'E': 0.0, 'W': 0.0} pins/um at <= {'N': 6.0, 'S': 6.0, 'E': 3.0, 'W': 3.0}), std fill 2%: the tile is interface-limited",
+   "narrow / time-multiplex the interface or move pins to free faces; a lower fill is the honest cost of this interface"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cmp_pool.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kvcn.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+  "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_sram_bank.sv",
+  "rtl/hdc/ot_sram_dline.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "physical/common_flow/pin_reg_face_fence.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/kit.env",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/clock.sdc",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/signoff.sdc",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/signoff_ffrepair.sdc",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pdn.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_cts.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/post_cts.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/post_grt.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_drt.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_fill.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/post_fill.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_grt.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pins_ns.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_gpl.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pre_dpl.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/s81su_kvleaf_kvtcp_h18/spine_ins.tcl"
+ ],
+ "tile_plan": {
+  "w": 704.16,
+  "h": 352.08,
+  "bound": "pins",
+  "aspect_capped": true,
+  "area_core": 7557.0,
+  "fill": 0.018,
+  "breakdown": {
+   "logic_um2": 3552.8,
+   "band_um2": 4004.3,
+   "macro_um2": 0,
+   "macros": 0,
+   "fixed_blocks": 0,
+   "pin_regs": 6866,
+   "util": 0.65
+  },
+  "pin_density": {
+   "N": 5.99,
+   "S": 3.82,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "pin_cap": {
+   "N": 6.0,
+   "S": 6.0,
+   "E": 3.0,
+   "W": 3.0
+  },
+  "pin_layers": {
+   "h": [
+    "M4"
+   ],
+   "v": [
+    "M3",
+    "M5"
+   ]
+  },
+  "pin_check": {
+   "N": {
+    "face": "N",
+    "pins": 4195,
+    "avg": 5.974,
+    "peak": 5.974,
+    "layers": [
+     "M3",
+     "M5"
+    ],
+    "tracks_per_um": 48.61,
+    "ratio": 0.123,
+    "cap": 6.0,
+    "window_max": 6.0,
+    "ok": true,
+    "why": [],
+    "overlap": []
+   },
+   "S": {
+    "face": "S",
+    "pins": 2671,
+    "avg": 3.804,
+    "peak": 3.804,
+    "layers": [
+     "M3",
+     "M5"
+    ],
+    "tracks_per_um": 48.61,
+    "ratio": 0.078,
+    "cap": 6.0,
+    "window_max": 6.0,
+    "ok": true,
+    "why": [],
+    "overlap": []
+   }
+  },
+  "slot": null,
+  "why": "content: std 4311/0.65 + band 4004 (6866 pin regs) + macros 0 um2 (0 hard blocks) -> 704.16 x 352.08 (pins-bound, aspect capped, pins <= N 6/S 6/E 3/W 3/um, std fill 2%)",
+  "widths_exact": true
+ }
+}

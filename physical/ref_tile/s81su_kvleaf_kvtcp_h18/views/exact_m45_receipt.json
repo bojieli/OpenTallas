@@ -1,0 +1,59 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/S81-KVTC-PINS/signoff/kvtcp_h18/export/views/dsfd_su_t_kvtc.lef",
+ "base_sha256": "4e16866d060d3f03dae0d320e2e677be8f5f49f617960e23ea648bbe75877c59",
+ "detail": "/srv/opentallas-scratch2/claude/S81-KVTC-PINS/signoff/kvtcp_h18/exact/exact_b0.lef",
+ "out": "/srv/opentallas-scratch2/claude/S81-KVTC-PINS/signoff/kvtcp_h18/exact/dsfd_su_t_kvtc.lef.exact.tmp",
+ "out_sha256": "8dd176f7adbab322acab9c2c080330afdb682f6526a66b6cfa5f2e8228be2547",
+ "layers_detailed": [
+  "M4",
+  "M5"
+ ],
+ "rects": {
+  "M4": 116774,
+  "M5": 8379
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VDD": [
+   "M5"
+  ],
+  "VSS": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": false,
+ "check_ok": false,
+ "problems": [
+  "detailed export PIN section != base (different ODB?)"
+ ],
+ "bloat_factor": 0,
+ "grow_merge": {
+  "grow_um": 0.048,
+  "merge_gap_um": 0.096,
+  "min_space_um": 0.024,
+  "min_width_um": 0.024,
+  "stats": {
+   "M4": {
+    "rects_before": 116774,
+    "rects_after": 115186,
+    "obs_area_pct_before": 5.53,
+    "blocked_area_pct_after": 23.08,
+    "slivers_found": 1284,
+    "regrown": 1284,
+    "dropped": 0
+   },
+   "M5": {
+    "rects_before": 8379,
+    "rects_after": 16768,
+    "obs_area_pct_before": 5.39,
+    "blocked_area_pct_after": 12.44,
+    "slivers_found": 283,
+    "regrown": 283,
+    "dropped": 0
+   },
+   "lef_bytes_before": 6773904,
+   "lef_bytes_after": 7180716
+  }
+ }
+}
