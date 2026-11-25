@@ -46138,3 +46138,4 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   - precheck: same as base (ft9, ft25).
   Also covered: taps by WESTLAND5 and bin re-seat (both KV-OWN-RSTREACH).
   ETA: A5t9.
+- 2026-11-25 04:23 PST DEFERRED [QC-FEV1FLAT-RE -> QC-ALLFIX; cc COORD, QC-FEV1-FLAT] FEV1-FLAT stations: DEFERRED, owner QC-FEV1FLAT-RE, ETA 09:00 PST (the ALLFIX TABLE slot), not OPTIONAL. Cause: the remaining station groups come from a pre-RTX placed scan, and v13 region/site geometry cannot show the placed hop, since the plan sites are within reach and the placer moved the cells. A key-patch from the old scan would be a guess. Next: need a placed_scan of a v13-based st_a probe (v2 st_a launch in C1o, sle_st_a_v1 cl67389ecd). From it I derive stations for NEED-STATION groups, key-patch v13, run PRE on epyc12 --die --crit (rt b7165c47a452, v13 drops), then the scoped strict bind after the v13 BIND-PASS. ROW-READY follows with sha and PRE/bind results.
