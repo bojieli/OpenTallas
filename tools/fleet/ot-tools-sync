@@ -94,6 +94,8 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
         out.append(cmd)
         try: out.append(os.readlink(os.path.join(base, "cwd")))
         except OSError: pass
+        try: out.append(open(os.path.join(base, "environ"), "rb").read().replace(b"\0", b" ").decode(errors="replace"))   # DISK-RECLAIM 11-25: env names rt/<sha> too
+        except OSError: pass
         try:
             for f in os.listdir(os.path.join(base, "fd")):
                 try: out.append(os.readlink(os.path.join(base, "fd", f)))
@@ -113,7 +115,7 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
     return "\n".join(out)
 
 
-RECENT_LAUNCH_H = float(os.environ.get("OT_RT_RECENT_LAUNCH_H", "48"))
+RECENT_LAUNCH_H = float(os.environ.get("OT_RT_RECENT_LAUNCH_H", "6"))
 RT_TOKEN = re.compile(r"rt/([0-9a-f]{8,40})")
 
 
@@ -130,7 +132,7 @@ def recent_launch_text(hours=None, journal=None):
     return "\n".join(sorted({"rt/" + m for m in RT_TOKEN.findall(journal)}))
 
 
-SPEC_MAX_AGE_H = float(os.environ.get("OT_RT_SPEC_MAX_AGE_H", "168"))
+SPEC_MAX_AGE_H = float(os.environ.get("OT_RT_SPEC_MAX_AGE_H", "12"))
 HUB_COORD = Path(os.environ.get("OT_HUB_COORD", "/srv/opentallas-scratch2/claude/hub-coord"))
 
 

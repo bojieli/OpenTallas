@@ -1,6 +1,6 @@
 """ot-tools-sync (MERGE-QUEUE-1): main@sha becomes a read-only versioned tree, rt/current flips by one rename only after the
 smoke test passes, an older version is never touched, and a live edit of the current tree is reported as drift."""
-import importlib.machinery, importlib.util, json, os, pathlib, subprocess, sys, tempfile, unittest
+import importlib.machinery, importlib.util, json, os, pathlib, subprocess, sys, tempfile, time, unittest
 
 P = str(pathlib.Path(__file__).with_name("ot-tools-sync"))
 
@@ -392,3 +392,26 @@ def test_a_partial_dir_in_use_is_set_aside_not_refused(tmp_path):
     assert m.set_aside_partial(d, in_use_fn=lambda p: [], rt=tmp_path) is None and d.exists()        # unused: caller removes it as before
     st = m.set_aside_partial(d, in_use_fn=lambda p: [1234], rt=tmp_path)                              # in use: renamed aside, name is free again
     assert st is not None and st.name.startswith(".stale-abc123-") and (st / "f").exists() and not d.exists()
+
+
+class DiskReclaimWindows(unittest.TestCase):
+    load = Guard.load
+    """DISK-RECLAIM 11-25: about 160 snapshots a day, 0 of 582 prunable because a 1.1 GB dump (168 h of private specs, 48 h of journal) named them all."""
+
+    def test_reference_windows_are_short(self):
+        m = self.load()
+        self.assertLessEqual(m.RECENT_LAUNCH_H, 6); self.assertLessEqual(m.SPEC_MAX_AGE_H, 12)
+        sp = pathlib.Path(tempfile.mkdtemp()); f = sp / "autopilot/private_specs/L/x/spec.json"; f.parent.mkdir(parents=True)
+        f.write_text("rt/aaaaaaaaaaaa")
+        os.utime(f, (time.time() - 20 * 3600,) * 2)
+        self.assertEqual(m.private_spec_text(roots=[sp]), "")           # a 20 h old spec no longer pins its rt
+        os.utime(f, (time.time() - 2 * 3600,) * 2)
+        self.assertIn("aaaaaaaaaaaa", m.private_spec_text(roots=[sp]))   # a live one does
+
+    def test_live_process_environ_pins_its_rt(self):
+        m = self.load(); sha = "abcdef012345"
+        p = subprocess.Popen(["sleep", "30"], env=dict(os.environ, OT_X="/srv/x/rt/" + sha + "/tools"))
+        try:
+            self.assertIn("rt/" + sha, m.live_reference_text())
+        finally:
+            p.terminate(); p.wait()
