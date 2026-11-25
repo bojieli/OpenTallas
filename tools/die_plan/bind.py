@@ -5037,6 +5037,11 @@ class Binder:
         except ValueError as exc:
             raise BindError(str(exc)) from exc
         ts_on = ts_cfg is not None and TS.selected(ts_cfg, tn)
+        if ts_on:
+            try:
+                TS.require_pin_tables(t.get("hard_cores"), self.plan_dir, tn)
+            except ValueError as exc:
+                raise BindError(str(exc)) from exc
         ts_tab = TS.pin_table(t.get("hard_cores"), self.plan_dir) if ts_on else {}
         ts_ltab = TS.leaf_table(t.get("hard_cores")) if ts_on else {}
         # KV-D23-REACH pipe tail split (sub-key "pipes": true): an intra-partition pipe whose last flop feeds pins of

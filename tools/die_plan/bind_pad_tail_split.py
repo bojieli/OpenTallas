@@ -84,7 +84,9 @@ the bus; short = need - pad when positive) in bind_pad_tail_split.json; "require
 kv_pv_v_pads.py --e-min-pad -- or lane cycles).  pad_reach_census.py runs the same rule on a bound kit RTL + the plan.
 """
 import math
+import os
 import re
+from pathlib import Path
 
 KEY = "land_pad_tail_split"
 
@@ -191,6 +193,28 @@ def pin_table(hard_cores, plan_dir):
             tx, ty = CK._orient_pt(o, w, h, x, y)
             t.setdefault(pn, {})[bit.rstrip("]")] = (hc["origin_um"][0] + dx + tx, hc["origin_um"][1] + dy + ty)
     return tab
+
+
+NO_PINS_ENV = "OT_BIND_ALLOW_NO_PINS"
+
+
+def require_pin_tables(hard_cores, plan_dir, tn, environ=None):
+    """PINS-GUARD (KV-OWN-PV-R2 11-25, COORD: a silent mis-bind is a correctness gate, not a new rule).  A selected type whose
+    hard cores declare pins_file, none of which resolves under plan_dir (a private plan copied outside plan_of_record, no
+    pins/ beside it), makes pin_table() return {} and the bind split 0 landing pads: every pad then drives all its cores from
+    one flop and the kit timing is not representative (kv3_pv_v1n/v12/v3n private binds 11-24/25: split_pads 0 of 1374).
+    Raises ValueError naming the folder unless OT_BIND_ALLOW_NO_PINS=1.  Returns the unresolved paths (empty = fine)."""
+    env = os.environ if environ is None else environ
+    decl = [hc["pins_file"] for hc in hard_cores or [] if hc.get("pins_file") and not hc.get("pins")]
+    if not decl:
+        return []
+    base = Path(plan_dir or ".")
+    miss = [f for f in decl if not (base / f).is_file()]
+    if len(miss) < len(decl) or env.get(NO_PINS_ENV) == "1":
+        return miss
+    raise ValueError(f"{KEY} {tn}: {len(decl)} hard core(s) declare pins_file but none resolves under {base} "
+                     f"(first: {base / miss[0]}); the bind would load 0 pin tables and split 0 landing pads. "
+                     f"Bind a plan that sits in plan_of_record with pins/ beside it, or set {NO_PINS_ENV}=1 to accept")
 
 
 def leaf_table(hard_cores):

@@ -547,3 +547,17 @@ def test_r8_keep_config_and_rule():
     for i in changed:
         assert body[i] == base[i].replace("    ot_dp_dly #(", "    ot_dp_dly_keep #(", 1)
     assert TS.r8_keep(list(base[4:9])) == []                # no shared group: nothing changes
+
+
+def test_require_pin_tables_fails_closed_when_no_pins_resolve(tmp_path):
+    """PINS-GUARD: declared pins_file, nothing resolves beside the plan -> ValueError; env override; partial / present ok."""
+    hcs = [dict(inst="u_a", pins_file="pins/a.json"), dict(inst="u_b", pins_file="pins/b.json")]
+    with pytest.raises(ValueError, match="none resolves"):
+        TS.require_pin_tables(hcs, tmp_path, "t0", environ={})
+    assert TS.require_pin_tables(hcs, tmp_path, "t0", environ={TS.NO_PINS_ENV: "1"}) == ["pins/a.json", "pins/b.json"]
+    (tmp_path / "pins").mkdir()
+    (tmp_path / "pins" / "a.json").write_text("[]")
+    assert TS.require_pin_tables(hcs, tmp_path, "t0", environ={}) == ["pins/b.json"]
+    assert TS.require_pin_tables([dict(inst="u_c")], tmp_path / "nowhere", "t0", environ={}) == []
+    assert TS.require_pin_tables([dict(inst="u_d", pins=[{"name": "x"}], pins_file="pins/zz.json")], tmp_path / "nowhere",
+                                 "t0", environ={}) == []
