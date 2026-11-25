@@ -44,3 +44,10 @@ Job: lec.py LEC-FILL-AUTO (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on
 - hd_mesh relay-alias (old hints) verdict NOT EQ 9556 (all u_lb SRAM addr/CE). CAUSE: 85/360 relay hints wrong-phase (u_srl_52/53/55 run chain) -> rrl_68 (gate u_lb reset root) alias lost; probe E12 LEC-AUTOFILL/tmp/hdm_probe (pt_probe*.py, probe*.log).
 - Only hd_mesh run: E12 --crit oth-ubuntu-1138235-1795608607, dir r/hd_mesh_relayfix_e12 (hints from relay_hints.py = structural relay classes, sha 7e406f347f1c). E10/E12 stale runs cancelled.
 - LEC-PART-1 (cone partitioning): epyc9 clone branch lec-cone-part c15b330894 (lec.py OT_LEC_PART_RE/coi_partition, OT_LEC_AIG_ONLY, tools/die_plan/lec_part.py, test_lec_partition.py). Not pushed yet. Probe: E12 r/hd_mesh_part_ulb (u_lb SRAM pins only, private rt LEC-AUTOFILL/rt_part).
+
+## 11-25 05:0x
+- LANDED main 8d52eab845ae (LEC-PART-1 cone partitioning: OT_LEC_PART_RE, OT_LEC_AIG_ONLY, lec_part.py) and 0072ec715148 (LEC-RELAYHINT-1: structural relay hints default in lec.py, relay_hints.py CLI).
+- Census: 423 non-EQ lec.json since 11-18; only hd_mesh kits carry relay hints (kit lec_hints 67/111 wrong-phase). Scanner: LEC-AUTOFILL/tmp/rhscan on every host.
+- Private rt with main tools: LEC-AUTOFILL/rt_part on E12 and E7. Kits copied: E12 k/hd_ctl_0ce42, k/col774; E7 k/coll_eco, k/hc3p, k/sle_hc2_cf529.
+- Runs (all --crit): E12 hd_mesh whole 1138235 (r/hd_mesh_relayfix_e12), u_lb partition 1452665 (r/hd_mesh_part_ulb), hd_ctl g_seqf part 3290913, col774 whole 3307302; E7 coll_s codec part 2913689, hc3 pvcca u_leaf part 2936573, sle_hc2 pvcf529 whole 2955672 (dirs r/relay_<kit>). Summary: bash LEC-AUTOFILL/tmp/sumlec.sh DIR.
+- Pending: table verdicts to COORD; CE register pairing by function only if the u_lb partition leaves CE points open.
