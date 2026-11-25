@@ -128,7 +128,7 @@ def man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def plan_type(tn, t, pins, log, ign=None, moved=None):
+def plan_type(tn, t, pins, log, ign=None, moved=None, site_upstream=".*"):
     W, H = t["outline_um"]
     bx = boxes(t, ign)
     lanes = lanes_of(t, moved)
@@ -182,7 +182,7 @@ def plan_type(tn, t, pins, log, ign=None, moved=None):
             s2 = [sx, round(best[1], 2)]
             # g on the street: equal hops src -> g -> s2, kept inside the street (<= top of the head rows)
             tot = man(src, s2)
-            gy = max(s2[1], min(yhi, src[1] - max(0.0, tot / 2 - abs(src[0] - sx))))
+            gy = max(s2[1], min(yhi - 10, src[1] - max(0.0, tot / 2 - abs(src[0] - sx))))
             gs = [sx, round(gy, 2)]
             hops = dict(src_g=round(man(src, gs)), g_s2=round(man(gs, s2)),
                         s2_copy=round(max(man(s2, c[1]) for c in csites)))
@@ -203,13 +203,16 @@ def plan_type(tn, t, pins, log, ign=None, moved=None):
         pick = min(near, key=lambda c: (c[0] > 1.02, max(c[7].values()), c[0]))
         g, gs, s2, hops = pick[2], pick[5], pick[6], pick[7]
         alts = [dict(street=[round(c[2][0]), round(c[2][1])], ratio=round(c[0], 2), max_hop=max(c[7].values())) for c in near]
-        for leaf, site, pins_pat in ((g_leaf, gs, [s2_leaf + ".*"]), (s2_leaf, s2, [t2_leaf + ".*"])):
-            new_rows.append({"leaf": leaf, "copies": [{"name": "a", "pins": pins_pat, "site_um": site}]})
+        upstream = re.search(site_upstream, t2_leaf) is not None
+        if upstream:
+            for leaf, site, pins_pat in ((g_leaf, gs, [s2_leaf + ".*"]), (s2_leaf, s2, [t2_leaf + ".*"])):
+                new_rows.append({"leaf": leaf, "copies": [{"name": "a", "pins": pins_pat, "site_um": site}]})
         new_rows.append(row)
         rep["chains"].append(dict(leaf=t2_leaf, street=[round(g[0], 1), round(g[1], 1)], street_bits=pick[3],
-                                  street_cap60=round(pick[4]), ratio_with_gather=round(pick[0], 2), g_site=gs, s2_site=s2,
+                                  street_cap60=round(pick[4]), ratio_with_gather=round(pick[0], 2), g_site=gs if upstream else None,
+                                  s2_site=s2 if upstream else None,
                                   copies=[dict(name=n, site=s, old=o, pins=k) for n, s, k, o in csites], hops=hops, alternatives=alts))
-        log(f"{tn} {t2_leaf}: street {g[0]:.0f}-{g[1]:.0f} ({pick[3]}+1559)/{pick[4]:.0f}={pick[0]:.2f} g@{gs} s2@{s2} "
+        log(f"{tn} {t2_leaf}: {'' if upstream else '[copies only] '}street {g[0]:.0f}-{g[1]:.0f} ({pick[3]}+1559)/{pick[4]:.0f}={pick[0]:.2f} g@{gs} s2@{s2} "
             + " ".join(f"{n}@{s}<-{o}" for n, s, k, o in csites) + f" hops {hops} alts {alts}")
     keep = [r for r in t.get("reg_leaf_split", []) if r["leaf"] not in {x["leaf"] for x in new_rows}]
     t["reg_leaf_split"] = keep + new_rows
@@ -221,6 +224,7 @@ def main():
     ap.add_argument("plan_in"); ap.add_argument("plan_out"); ap.add_argument("types"); ap.add_argument("pins_base")
     ap.add_argument("--report")
     ap.add_argument("--moved-lanes", default=None, help="regex of station/ft lanes another row moves out (excluded from street demand)")
+    ap.add_argument("--site-upstream", default=".*", help="regex of t2 leaves whose g/s2 stages get one-copy rows (others: copies only)")
     ap.add_argument("--ignore-cores", default=None, help="regex of hard cores treated as moved (e.g. ^cl_ft\\d+_i$ under part 1)")
     a = ap.parse_args()
     p = json.load(open(a.plan_in))
@@ -233,7 +237,7 @@ def main():
         tns = a.types.split(",")
     reps = []
     for tn in tns:
-        reps.append(plan_type(tn, pt[tn], load_pins(pt[tn], a.pins_base), print, a.ignore_cores, a.moved_lanes))
+        reps.append(plan_type(tn, pt[tn], load_pins(pt[tn], a.pins_base), print, a.ignore_cores, a.moved_lanes, a.site_upstream))
     json.dump(p, open(a.plan_out, "w"), indent=1)
     if a.report:
         json.dump(reps, open(a.report, "w"), indent=1)
