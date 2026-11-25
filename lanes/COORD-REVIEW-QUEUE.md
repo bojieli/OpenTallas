@@ -46905,3 +46905,4 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
   (2) kv3_hgi_v5: DEFERRED in ALLFIX-KV (8090c0d9), owner KV-OWN-HG-R2, ETA A5t9 07:00, kept on A5t7.
 - 2026-11-25 05:55 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): sle_stm_v1__cl27746664 SIGNED OFF -> count (signed off, archived epyc10:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/sle_stm_v1__cl27746664__eb1e73)
 - 2026-11-25 05:55 PST ALERT NO-PROGRESS s81_head: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 175 min (last 02:59) and 0 private-spec launches for 60 min (last 03:49 ot-run HEAD-ALLFIX hd_lep0N_w_1125034848); no current launch blocker logged
+- 2026-11-25 05:56 PST DIED [FP-S81] ot-push-main otpush-open-snipe-1404873 on open-snipe: rc=3 after 7 s, ended 13:56:04, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 7 s, no log
