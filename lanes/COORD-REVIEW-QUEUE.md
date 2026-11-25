@@ -11635,3 +11635,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   - Flat 2 h at pregrt, over 3 h (S-01): clce45cab5 pv9e92407b, pva119e808.
   - Signed-family re-signs (S-02/S-13): slice_station t27, t37, t41 (13.4 h in CTS, RUNAWAY), t43, t44, t52, t18.
   (4) The serdes t12 outline finding (fill 0.196) goes to S81-SERDES-RSTCOHORT; the rest of the S-18 findings go to FP-CONVERGE-S81 for c11.
+- 2026-11-25 09:54 PST FLEET-OPS: please push commit 0accbfd016e (DRT-TAIL-3: pg_track_truth M3 via-pad GRT obstructions, 11-25 08:31) from /home/ubuntu/wt/qc-drt-tail (branch qc-drt-tail-m3, clean, 1 commit, NOT in any remote) as a branch (git push origin qc-drt-tail-m3 or ot-push-main) and post here; then the clone is deleted. I have not touched it.
