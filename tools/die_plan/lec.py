@@ -1867,8 +1867,9 @@ def port_key(n, b):
     return n if re.search(r"\[\d+\]$", n) else f"{n}[{b}]"
 
 
-def key_points(aig, amap):
-    """-> pis {key: lit of the logical value}, cps {key: lit}, free (unnamed) input lits, anonymous latch lits."""
+def key_points(aig, amap, idx_keys=None):
+    """-> pis {key: lit of the logical value}, cps {key: lit}, free (unnamed) input lits, anonymous latch lits.
+    idx_keys (optional dict): filled with latch index -> its compare point key (anonymous latches: None)."""
     I = aig["I"]
     pis, cps, xs, anon, alias = {}, {}, [], [], {}
     for idx, names in amap["input"].items():
@@ -1885,9 +1886,13 @@ def key_points(aig, amap):
                 break
         if not key:
             anon.append((lit, nxt))
+            if idx_keys is not None:
+                idx_keys[idx] = None
             continue
         if key.startswith("lec_po_"):          # wrapper output capture: compare point only
             cps["po:" + key[7:]] = nxt
+            if idx_keys is not None:
+                idx_keys[idx] = "po:" + key[7:]
             continue
         nk = GENBLK.sub("", key)          # unnamed generate scopes: read_verilog 'genblk1.', slang none
         if "ff:" + nk not in pis:
@@ -1896,10 +1901,16 @@ def key_points(aig, amap):
             raise LecError(f"duplicate flop key {key}")
         if f".{BB}i_" in key:                   # black-box input pin: compare point only
             cps["bb:" + key] = nxt
+            if idx_keys is not None:
+                idx_keys[idx] = "bb:" + key
             continue
         if f".{BB}o_" in key:                   # black-box output pin: shared free input only
             pis["bb:" + key] = lit
+            if idx_keys is not None:
+                idx_keys[idx] = "bb:" + key
             continue
+        if idx_keys is not None:
+            idx_keys[idx] = "ff:" + key
         pis["ff:" + key] = lit ^ inv
         cps["ff:" + key] = nxt ^ inv
         if not inv:            # other public wires on the same (logical) Q net: alias names of this register
@@ -1913,6 +1924,68 @@ def key_points(aig, amap):
                     al.add("ff:" + n)
             alias["ff:" + key] = al
     return pis, cps, xs, anon, alias
+
+
+def coi_partition(aig, amap, include, exclude=None):
+    """LEC-PART-1 (COORD 11-25, cone-level partitioning): cut one side's AIG to the sequential cone of influence of
+    the compare points whose key matches `include` (and not `exclude`; regexes, re.search).  Every selected point's
+    next-state cone is walked through ANDs; a latch it reaches is kept and its own next state walked in turn, so the
+    kept latch set is closed under the next-state relation: a kept latch's behaviour is the same in the cut AIG as in
+    the whole one for every input sequence and every initial state.  Correspondence, reset analysis and the miter
+    then see exactly the logic the selected points depend on; latches outside the cone cannot influence them, so a
+    proof (or a counterexample) of a selected point in the cut AIG is one in the whole AIG.  Inputs are all kept
+    (numbering stable, unused inputs cost nothing).  Unselected points that sit inside the cone are kept as state
+    and are compared too (their result is equally valid); the driver merges by the selected point lists.
+    -> (aig, amap, info)."""
+    inc = re.compile(include)
+    exc = re.compile(exclude) if exclude else None
+    idx_keys = {}
+    key_points(aig, amap, idx_keys)
+    I, L = aig["I"], aig["L"]
+    ands, lat = aig["ands"], aig["latches"]
+    first_and = I + L + 1
+    sel = sorted(i for i, k in idx_keys.items() if k and inc.search(k) and not (exc and exc.search(k)))
+    keep_l, seen = set(sel), bytearray(first_and + aig["A"])
+    stack = [lat[i] >> 1 for i in sel]
+    while stack:
+        v = stack.pop()
+        if v == 0 or seen[v]:
+            continue
+        seen[v] = 1
+        if v >= first_and:
+            k = 2 * (v - first_and)
+            stack.append(ands[k] >> 1)
+            stack.append(ands[k + 1] >> 1)
+        elif v > I:
+            li = v - I - 1
+            if li not in keep_l:
+                keep_l.add(li)
+                stack.append(lat[li] >> 1)
+    kl = sorted(keep_l)
+    vmap = {0: 0}
+    for v in range(1, I + 1):
+        vmap[v] = v
+    for n, li in enumerate(kl):
+        vmap[I + li + 1] = I + n + 1
+    nxt_var = I + len(kl) + 1
+    new_ands = array("q")
+    for k in range(aig["A"]):
+        v = first_and + k
+        if not seen[v]:
+            continue
+        a, b = ands[2 * k], ands[2 * k + 1]
+        vmap[v] = nxt_var
+        nxt_var += 1
+        new_ands.append(2 * vmap[a >> 1] | (a & 1))
+        new_ands.append(2 * vmap[b >> 1] | (b & 1))
+    new_lat = [2 * vmap[lat[li] >> 1] | (lat[li] & 1) for li in kl]
+    out = dict(I=I, L=len(kl), O=0, A=len(new_ands) // 2, latches=new_lat, outputs=[], ands=new_ands)
+    pos = {li: n for n, li in enumerate(kl)}
+    omap = {"input": amap["input"], "output": {},
+            "latch": {pos[li]: names for li, names in amap["latch"].items() if li in pos}}
+    info = dict(selected=len(sel), latches_kept=len(kl), latches_total=L, ands_kept=out["A"], ands_total=aig["A"],
+                outputs_dropped=aig["O"], points=sorted(idx_keys[i] for i in sel))
+    return out, omap, info
 
 
 class Aig:
@@ -8538,6 +8611,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 fg.result()
                 ft.result()
         rec["t_aig_s"] = round(time.time() - t1, 1)
+        if os.environ.get("OT_LEC_AIG_ONLY") == "1":      # LEC-PART-1 driver pre-pass: AIGs for the partitions only
+            raise Unproven("AIG-only pre-pass (OT_LEC_AIG_ONLY=1): no proof run")
         # latch phase at the output ports (LATCH-FACE 11-03): cycle equivalence + equal port phase classes
         phase_diff = latch_phase_diff(rec["lockup_latches"]) if rec.get("lockup_latches") else []
         if rec.get("lockup_latches"):
@@ -8548,8 +8623,19 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         gmap = read_map(out / "gold.map")
         if os.environ.get("OT_LEC_MEM_LANES") == "1":   # LEC-IQN-1 proof option (default off)
             rec["gold_memory_lanes"] = gold_lane_rename(gmap, out / "gold.ys.log", log)
-        L = Lec(read_aig(out / "gold.aig"), gmap,
-                read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
+        gold_aig, gate_aig, tmap = read_aig(out / "gold.aig"), read_aig(out / "gate.aig"), read_map(out / "gate.map")
+        part_inc = os.environ.get("OT_LEC_PART_RE")
+        if part_inc:                     # LEC-PART-1: prove only the cone of a point subset (see coi_partition)
+            part_exc = os.environ.get("OT_LEC_PART_EXCLUDE_RE") or None
+            gold_aig, gmap, gi = coi_partition(gold_aig, gmap, part_inc, part_exc)
+            gate_aig, tmap, ti = coi_partition(gate_aig, tmap, part_inc, part_exc)
+            sel = sorted(set(gi.pop("points")) | set(ti.pop("points")))
+            (out / "partition_points.json").write_text(json.dumps(sel) + "\n")
+            rec["partition"] = dict(include=part_inc, exclude=part_exc, gold=gi, gate=ti, selected_points=len(sel),
+                                    points_file="partition_points.json")
+            log.append(f"LEC PART include={part_inc!r} exclude={part_exc!r}: {len(sel)} selected points; gold latches "
+                       f"{gi['latches_kept']}/{gi['latches_total']}, gate {ti['latches_kept']}/{ti['latches_total']}")
+        L = Lec(gold_aig, gmap, gate_aig, tmap, port_map)
         L.kit_reset_ports = kit_reset_ports(kit)
         L.async_reset_regs = {s: read_async_resets(out / f"{s}.ys.log", out / f"{s}_b.ys.log") for s in ("gold", "gate")}
         rec["async_reset_regs"] = {s: len(v) for s, v in L.async_reset_regs.items()}
@@ -8924,7 +9010,7 @@ def _provenance(kit=None):
 
 PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE",
                  "OT_LEC_ENABLE_FILL_GUARD", "OT_LEC_REPLICA_MATCH",
-                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS")
+                 "OT_LEC_MEM_LANES", "OT_LEC_PARITY_TERMS", "OT_LEC_PART_RE")
 
 
 def nowiden_retry(r, out, run):
