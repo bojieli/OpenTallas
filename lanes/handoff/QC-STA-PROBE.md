@@ -68,3 +68,10 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
   log epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE/dm12.log; unit oth-ubuntu-615045-1795597901; rt 670bc8374862.
 - qcstaprobe-w5launch (hub) watches dm12.log -> private-spec --host epyc12 --rt 670bc8374862 -> unit runitem-slw_st_a_v2__clf4365a62.
 - 01:15 COORD fixed epyc12 self-ssh (verified): new epyc12 jobs submit from epyc12 directly; the running W5 bind (submitted via epyc2 run12.sh) is left as is.
+
+## 01:52 PST 11-25
+- E5 + v1 in CTS (01:45) on epyc2. Work dirs (epyc2): /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-STA-PROBE/
+  sle_st_a_v2__pv30dda31f__pv88773f93_1125004943/gen/<type> and sle_st_a_v1__cl67389ecd_1125005028/gen/<type>.
+- CTS skew: read postcts_gate_{tt,ff}.json (POST-hook), never 4_cts_final.rpt. GRT timing: final 5_1_grt.odb.
+- Placed scan worst group both: u_u_r0 -> u_u_btab...g_btb.u_m 28b 800 um row=none (unstaged origin-to-pin candidate; posted 01:51).
+- W5 epyc12 bind ELAB_OK 01:5x.
