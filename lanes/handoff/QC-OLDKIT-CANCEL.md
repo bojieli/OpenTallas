@@ -95,3 +95,8 @@ S2 epyc8 LEC-async units: now owned by this lane (ruling 4); investigation in pr
 
 ## Log
 - 05:2x census + classification. Waiter armed for "BIND-PASS C1o v13 aa3a14fb7484" in lanes/posts/QC-C1O-COMPOSE.md.
+- 05:4x S2 verdict (ruling 4). The wait is blocked because the flow's route FAILED on 11-15. Error: `[ERROR DRT-0255] Maze Route cannot find path ... Error: detail_route.tcl, 83`, `make ... 5_2_route.odb Error 2` (run_route.log 11-15 10:05 / 11:13).
+  results/base holds only 3_5_place_dp.odb and 5_1_grt.odb; there is no 5_2_route.odb, so no routed DB exists to sign.
+  lec_async.sh `finish` loops `until lec_async.done` with sleep 5. Its LEC unit (ot-heavy --mem 112) has never been admitted on civil-redfish, so `done` never appears.
+  Running LEC cannot make these signable: there is no route, which is a hard flow failure. Current-plan V4 kits of both types are live (sle_hc2 cl3edce1b8_1124053119 and clf60c5152__pvcf529cc9_1124053155 at epyc8 abstract, items/...clf60c5152__pv0d63d22b attempt_2).
+  Verdict: CANCEL after BIND-PASS: oth-ubuntu-3135343-1794696222, oth-ubuntu-3142624-1794696238, oth-ubuntu-2063722-1794715554. The cmdline check is done: each is ot-heavy-exit over s29q103S2 items/sle_hc2__cl9c4c4509__{cl3edce1b8,clf60c5152}/attempt_8 run_kit.sh/lec_async.sh.
