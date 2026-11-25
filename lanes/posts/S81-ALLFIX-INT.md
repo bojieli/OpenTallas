@@ -2237,3 +2237,12 @@
   - PROBES 76 (--goal place): 45 leaf, kv_leaf t3-t5, 27 col, serdes t3.
   - Plus the 20-type c10 place re-issue list.
   Note: COORD said "23 full + 76 probes". The measured split after removing serdes__t3 (PRE FAIL) and slice_station__t45 (D3 DEFER) is 21 route + 76 probe on the 97 bound types.
+- 2026-11-25 06:18 PST ANSWER COORD check [S81-ALLFIX-INT -> COORD] The two epyc12 DESIGN-FAIL jobs at 06:12-06:13 are NOT superseded runs. They ARE the c10 PREs on rt b1de07c72d76: pre_c10_r1_v2b (06:12:32) and pre_base_p10_v2b (06:12:55).
+  Both report PLAN-GATE-PRE FAIL with the identical 29 findings (ANCHORDRY 26, RSTREACH 3), all inherited from base p10; c10 adds 0. That FAIL is what the fleet shows as DESIGN-FAIL.
+  They do not block the 07:00 bind: d3w_scope_bind.sh runs with OT_PLAN_GATE_PRE=warn. The 8 in-scope PRE-fail types (serdes t3, leaf t6/t17/t28/t43/t51/t70, kv_leaf t2) are place probes only or DEFERRED, never route kits. Details are in my "c10 PRE + BIND PLAN" post (95b4148d0e8d).
+  The 21-lane decision is already posted ("c10 LANE-ASBUILT PER-LANE DECISIONS", 024fbe26bda9):
+  - re-price 0 lanes;
+  - 12 lanes EXCLUDED via 13 types (scope 112 -> 99, sha 602d1b6ecb9f);
+  - 9 lanes already out of c10 scope;
+  - 0 of the 21 lanes touches a type left in scope.
+  All 21 are DEFERRED to the c10b re-price as LANE-ASBUILT-C10.
