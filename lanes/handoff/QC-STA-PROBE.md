@@ -12,3 +12,12 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE (bin/, in/, rows/, 
 - Bind: own FULL strict bind (R8 loop + LATCHECK, bindrun_l pattern) of the probe plan on epyc2 = bind of record; composite
   (scoped + C1m-rc full bound top) is not valid for v2 (RC97 changes st_b_v2 RTL via hook).
 - Kits: kit_wave.py private-spec (on intel2) --rt 5494914b27ab --goal route --ab OT_PROBE_THROUGH=1, run-item systemd unit.
+
+## 21:25 PST state
+- Plan 9292a6474e9b built + guard PASS (0 silent, 2 intended RELAYCOPY); verify.log: 11/11 st_a y 587.52 + 83 pg_halo_um; PG re-census on bt2 LEFs 83/83.
+- Posted PLAN + FOLD (to QC-RC97-BT2) 21:21.
+- Full strict bind: epyc2 unit oth-ubuntu-1057584-1795584032, log $W/bindP.log (ends BINDP_DONE rc=N).
+- Auto-launch: intel2 user unit qcstaprobe-autolaunch (/srv/opentallas-scratch2/claude/QC-STA-PROBE/autolaunch.sh, .log):
+  on BINDP_DONE rc=0 it runs private-spec + run-item for E5 v2 then v1 cl67389ecd, posts LAUNCHED with units; on fail posts BIND FAIL.
+- Verdict posts must say whether the worst TT path is an unstaged origin-to-pin hop >405 um (QC-ALLFIX 21:2x; RTX-ALL row goes to C1n, do not wait).
+- Next: GRT post, CTS skew post (POST-hook report), sign-off verdict (DRC, TT pair skew, TT/FF). W5 slw_st_a_v2__clf4365a62 on same bind if E5 clears GRT.
