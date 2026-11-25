@@ -80,3 +80,8 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - W5 LAUNCHED 01:57: unit runitem-slw_st_a_v2__clf4365a62 (hub), gen epyc12, plan 64729ba8d8bb (bind dir s8; LAUNCHED post text says s7 = typo), at kit_rtl.
 - Placed >405 list: hub lanes/handoff/QC-STA-PROBE-placed405.tsv; C1o v8 does not stage r0->btab write hop (posted 01:54).
 - All 3 probes live: E5 + v1 in CTS (epyc2), W5 kit_rtl (epyc12). Next: CTS skew (postcts_gate), GRT, sign-off verdicts.
+
+## 02:12 PST 11-25
+- W5 gen FAIL 02:10 = missing view src kits on epyc12 (hard_landing.capture reads provenance src abs paths). rsync'd read-only from epyc2:
+  tl-qcstav2/rk/sta_cland_{w1574_e_s26,w1081_e_s18,w515_s_s10_2,w515_s_s10_3,w537_s_s10_1,w632_e_s11} + QC-RC97-BT2/cores/sta_region_nb0_h15_n9_s11_bt2.
+  Relaunched same spec 02:1x (unit runitem-slw_st_a_v2__clf4365a62); watcher restarted.
