@@ -21,9 +21,27 @@ def _ports(v):
     return {x.strip() for x in re.search(r"module \S+ \(([^)]*)\);", v).group(1).split(",")}
 
 
+def _plan_of_its_era(plan):
+    """these die_plan.json files are the 10-28 base plans: bound before the 300-um generator default (aced0fb2106, 11-20) and
+    before the legal relay-site rule (42eeacf87f7: a row-high / cell-wide free run, thin macro channels are no sites).  The
+    test is about stand-in ports, not reset geometry: record the 405 cap they were bound with (reset.reach_cap_um) and drop
+    local reset taps the current site rule rejects (s81_head hd_lep0N [725.76, 168.48])."""
+    import reset_tree as RT
+    raw = S.load(plan)
+    raw.setdefault("reset", {}).setdefault("reach_cap_um", 405.0)
+    for t in raw["partition_types"].values():
+        lt = (t.get("reset") or {}).get("local_taps_um")
+        if lt:
+            w, h = t["outline_um"]
+            boxes = RT.blockages(t)
+            t["reset"]["local_taps_um"] = [xy for xy in lt if RT._free(
+                tuple(map(float, xy)), boxes, (RT.CLEAR_UM, RT.CLEAR_UM, w - RT.CLEAR_UM, h - RT.CLEAR_UM))]
+    return S.Plan(raw, plan)
+
+
 @pytest.mark.parametrize("plan", [p for p in PLANS if p.is_file()], ids=lambda p: p.parent.name)
 def test_every_die_top_connection_has_a_standin_port(plan):
-    P = S.Plan(S.load(plan), plan)
+    P = _plan_of_its_era(plan)
     smod = T.standin_module_names(P)
     mods = {}
     for tn, t in P.types.items():

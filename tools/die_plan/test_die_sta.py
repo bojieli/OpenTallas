@@ -401,7 +401,8 @@ def test_spine_tree_equals_flattened(tmp_path):
         assert abs(float(s["max"]["launch"]) - ref["l"]) < 0.01 and abs(float(s["max"]["capture"]) - ref["c"]) < 0.01
         ps = c["pairskew"]["u0->u1/a_i"]
         # late capture - early launch >= late - late (min/max arrival spread of the ~0.5 ps per stage)
-        assert ps["n"] == 1 and 0.0 <= ps["max"] - (ref["c"] - ref["l"]) < 3.0
+        # pairskew max is reported to 0.01 ps (37.62 vs 187.983734 - 150.362625 = 37.6211): allow that rounding
+        assert ps["n"] == 1 and -0.01 <= ps["max"] - (ref["c"] - ref["l"]) < 3.0
         assert ps["crpr_hold"] is not None and ps["crpr_hold"] >= 0.0
         assert c["pair_skew"]["seam_worst_abs"] > 20.0                         # the 2 k-ohm tap is late
     assert res["verdict"]["pairskew_TT"] == res["corners"]["TT"]["pair_skew"]["worst_abs"]

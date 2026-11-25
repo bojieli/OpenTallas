@@ -145,7 +145,7 @@ def test_valid_wrong_source_bit_mutant_is_rejected_by_frozen_payload_receipt():
 
 def production_toy(monkeypatch, enabled):
     import native_istations, reset_carriers, split_source_guard
-    for name in ("annotate", "annotate_kit", "annotate_kit_dest"):
+    for name in ("annotate", "annotate_kit", "annotate_kit_dest", "annotate_soft_dest"):  # soft_dest: d41248a1008
         monkeypatch.setattr(native_istations,name,lambda b:None)
     monkeypatch.setattr(reset_carriers,"register",lambda b:None)
     monkeypatch.setattr(split_source_guard,"validate_guard",lambda ref,b:{"test_guard":True})

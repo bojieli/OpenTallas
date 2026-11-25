@@ -113,7 +113,7 @@ def test_parent_budget_trial_exports_means_release_refuses(tmp_path, monkeypatch
     b = CC.from_budget(c['lib'], dict(clk=dict(tt=390., ff=312.)), 'parent_budget A0 centre entry')
     (tmp_path/'clock_contract.json').write_text(json.dumps(b))
     p = SimpleNamespace(types={'tile': dict(hard_cores=[c], clock=dict(core_taps='early', taps=[
-        dict(name='u_node.clk', kind='core', insertion_ps=390., insertion_ff_ps=312.,
+        dict(name='u_node.clk', kind='core', xy=[0., 0.], insertion_ps=390., insertion_ff_ps=312.,
              budget_owner='parent_budget A0 centre entry')]))}, clock=dict(insertion_ps=250.))
     monkeypatch.setattr(G, 'core_tap_rows', lambda *_, **__: [('clk_c0', 'u_node', 'clk', 140., 390.)])
     out = tmp_path/'out'; out.mkdir()
@@ -190,7 +190,7 @@ def test_release_parent_budget_without_view_contract_uses_plan_budget(tmp_path, 
     from types import SimpleNamespace
     import gen_phys as G
     c = core(tmp_path)
-    tap = dict(name='u_node.clk', kind='core', insertion_ps=364.38, insertion_ff_ps=291.94,
+    tap = dict(name='u_node.clk', kind='core', xy=[0., 0.], insertion_ps=364.38, insertion_ff_ps=291.94,
                budget_owner='parent_budget pin_register_mean ROUTED NOT SIGNED')
     p = SimpleNamespace(types={'tile': dict(hard_cores=[c], clock=dict(core_taps='early', taps=[tap]))},
                         clock=dict(insertion_ps=250.))
