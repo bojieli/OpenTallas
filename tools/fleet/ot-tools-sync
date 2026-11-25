@@ -94,7 +94,8 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
         out.append(cmd)
         try: out.append(os.readlink(os.path.join(base, "cwd")))
         except OSError: pass
-        try: out.append(open(os.path.join(base, "environ"), "rb").read().replace(b"\0", b" ").decode(errors="replace"))   # DISK-RECLAIM 11-25: env names rt/<sha> too
+        try:       # DISK-RECLAIM 11-25: the environment names rt/<sha> too; only those tokens, a bare 12-digit match in an env value must not pin a snapshot
+            out += sorted({"rt/" + t for t in RT_TOKEN.findall(open(os.path.join(base, "environ"), "rb").read().decode(errors="replace"))})
         except OSError: pass
         try:
             for f in os.listdir(os.path.join(base, "fd")):
