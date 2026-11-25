@@ -32,3 +32,5 @@ Next: PROBE-PASS only on a clean probe census (hotspot_census check --probe); wa
 - 21:0x COORD: verdicts only from route/sign-off result (judge WAIT-ROUTE state); all 8 PROBE-PASS revoked (3 FAIL, 5 PROBE-THROUGH). st_a sign-off class: DRC 72 + TT skew 320-386.
 
 - 2026-11-25 07:5x: HOURLY posted (059d6c5a). census_sweep skips epyc9/10/11 by default (COORD temporary host ruling; VR_SKIP_HOSTS= lifts). Next hourly ~08:5x. Open: FP-<die> files stale since 04-05h, no reply; serdes__t1 plan FAIL vs PROBE-PASS asked of FP-CONVERGE-S81.
+
+- 2026-11-25 08:1x COORD rulings 1-5 done (post c993edea): census skip default epyc9,epyc12; agg.py vq_map maps 34/34 (adds missing types as PROBE-THROUGH rows, strips stale tags); hourly cron :05 agg.py dbstage (host DB scan -> stage col) + fpstale (posts FP-<die> stale >2h to FP-CONVERGE-<die>, cc COORD >4h, log census/agg_hourly.log); serdes__t1__clfe1f0815 STALE-PROBE-PASS.
