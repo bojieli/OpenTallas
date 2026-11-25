@@ -189,18 +189,22 @@ def test_tap_changed_only_in_plan_flagged(tmp_path, capsys, monkeypatch):
     lc["collector_local_sources"][0].update(tap=84, node="rst_n_t84")     # plan-only retap (the sidecar keeps t5)
     lc["collector_children"][0]["tap"] = 11
     mm = G.sidecar_mismatches(p, s)
-    assert ("partition_types.st_a.clock.landing_contract.collector_local_sources[name=cws1_i].tap", 84, 5) in mm
-    assert len(mm) == 3
+    assert mm == [("partition_types.st_a.clock.landing_contract.collector_local_sources[name=cws1_i].node", "rst_n_t84", "rst_n_t5")]
+    lc["collector_local_sources"][1]["tap"] = 70                          # tap-only row: its effective node moves too
+    raw = G.Counter()
+    mm = G.sidecar_mismatches(p, s, raw)
+    assert len(mm) == 2 and mm[1][1:] == ("rst_n_t70", "rst_n_t7")
+    assert raw == {"local_sources.node": 1, "local_sources.tap": 2, "children.tap": 1}   # child tap beside its node: raw only
     pp, sp = _w(tmp_path, "p.json", p), _w(tmp_path, "s.json", s)
     monkeypatch.delenv("OT_COMPOSE_DROP", raising=False)
     assert G.main([pp, pp, "--sidecar", sp, "--sidecar-max", "1"]) == 0              # WARN by default
     out = capsys.readouterr().out
-    assert "WARN SIDECAR-MISMATCH 3 tap fields" in out and "node 1" in out and "tap 2" in out
-    assert "collector_local_sources[name=cws1_i].node" in out and "... 2 more" in out
+    assert "WARN SIDECAR-MISMATCH 2 collector reset nodes" in out and "source_node 2" in out and "raw node/tap field diffs 4" in out
+    assert "collector_local_sources[name=cws1_i].node" in out and "... 1 more" in out
     monkeypatch.setenv("OT_COMPOSE_DROP", "fail")
     assert G.main([pp, pp, "--sidecar", sp]) == 1
     out = capsys.readouterr().out
-    assert "FAIL SIDECAR-MISMATCH 3" in out and "REFUSED 0 silent losses" in out
+    assert "FAIL SIDECAR-MISMATCH 2" in out and "REFUSED 0 silent losses" in out
     dl = tmp_path / "d.txt"
     dl.write_text("SIDECAR-MISMATCH partition_types.st_a.* # intended\n")
     assert G.main([pp, pp, "--sidecar", sp, "--drop-list", str(dl)]) == 0
@@ -222,7 +226,8 @@ def test_sidecar_row_change_lost_in_compose_flagged(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "ROW-LOST sidecar:collector.types.st_a" in out and "(sidecar row srctap)" in out
     assert "DROP sidecar:collector.types.st_a" in out and "local_sources[name=x_st_b_i]" in out
-    assert "SIDECAR-MISMATCH 3 tap fields" in out                            # retap node + tap, and the absent row
+    assert "SIDECAR-MISMATCH 2 collector reset nodes" in out                 # the retapped node, and the absent row
+    assert "source_node 1" in out and "source_row_one_side 1" in out
     good = _w(tmp_path, "sgood.json", srow)
     assert G.main([pn, pn, "--sidecar", good, "--prev-sidecar", good,
                    "--sidecar-row", "srctap=%s:%s" % (_w(tmp_path, "sb2.json", sbase), good)]) == 0
