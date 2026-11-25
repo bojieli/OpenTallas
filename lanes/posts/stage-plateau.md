@@ -300,3 +300,4 @@
   NOT DETERMINED: where the 19.3k DRT violations are (no DRC marker file in the kit; problem 1 is the visual suspect, not a measured location); failing-path geometry (0 paths drawn); no logs dir under run/, no review/ post-place images.
 - 2026-11-25 05:56 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1427446 on open-snipe: rc=0 after 25 s, ended 13:56:56, log none, cmd: ot-push-main 
 - 2026-11-25 06:11 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1893891 on open-snipe: rc=0 after 27 s, ended 14:11:42, log none, cmd: ot-push-main 
+- 2026-11-25 06:16 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-2072352 on open-snipe: rc=0 after 24 s, ended 14:16:29, log none, cmd: ot-push-main 
