@@ -2384,7 +2384,7 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
                 save_json(os.path.join(state_dir, "vis_running.json"), {"pid": box.get("pid", 0), "t": now, "dir": rev})
                 r["vis"] = {"checkpoint": cp, "status": status, "dir": rev, "odb": odb}
                 state.setdefault("vis_pending", {})[key] = {"dir": rev, "tries": state.get("vis_pending", {}).get(key, {}).get("tries", 1), "t": now}
-                if cp == "PLACE-GP" and key not in state.setdefault("pp_done", {}) and not any(x["key"] == key for x in todo):
+                if key not in state.setdefault("pp_done", {}) and not any(x["key"] == key for x in todo):
                     todo.append({"key": key, "kit": r["work"], "odb": odb, "image": r.get("image", ""), "id": (r.get("container") or "x")[:40]})
                 return r
     return None

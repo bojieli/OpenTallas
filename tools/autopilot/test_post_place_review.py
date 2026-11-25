@@ -138,3 +138,42 @@ def test_finish_writes_products(tmp_path):
     assert {"density", "rudy", "flight_lines", "macro_pg_overlay"} <= {f.split(".")[0] for f in s["files"]}
     assert all((tmp_path / f).stat().st_size > 0 for f in s["files"])
     assert s["paths"]["n"] == 2 and s["paths"]["worst_slack_ps"] == -9.5
+
+
+DRC_RPT = ("violation type: Short\n\tsrcs: a b\n\tbbox = (10.0, 10.0) - (10.2, 10.2) on Layer M2\n"
+           "violation type: Lef58EolKeepOut\n\tsrcs: c\n\tbbox = (50.0, 60.0) - (50.4, 60.2) on Layer M3\n")
+
+
+def test_read_drt_marks_and_find_report(tmp_path):
+    m = P.read_drt_marks(DRC_RPT)
+    assert [(round(x, 1), round(y, 1), layer, t) for x, y, layer, t in m] == [(10.1, 10.1, "M2", "Short"), (50.2, 60.1, "M3", "Lef58EolKeepOut")]
+    d = tmp_path / "run/reports/asap7/dp/base"
+    d.mkdir(parents=True)
+    (d / "5_route_drc.rpt-5.rpt").write_text(DRC_RPT)
+    assert P.find_drt_report(str(tmp_path)).endswith("5_route_drc.rpt-5.rpt") and P.find_drt_report(str(tmp_path / "none")) == ""
+    assert P.slack_label(-123.4) == "-123"
+
+
+def test_flight_lines_carry_slack_labels_and_drt_markers(tmp_path):
+    """COORD 06:2x: every render drew 0 failing paths; the kit now labels each of the top paths with its slack and overlays the DRT violations"""
+    kit = tmp_path / "kit"
+    d = kit / "run/reports/asap7/dp/base"
+    d.mkdir(parents=True)
+    (d / "5_route_drc.rpt").write_text(DRC_RPT)
+    rev = tmp_path / "rev"
+    rev.mkdir()
+    (rev / "review.json").write_text(json.dumps({"kit": str(kit)}))
+    (rev / "layout.json").write_text(json.dumps({"top": "t", "die": [0, 0, 100, 100], "pg": [], "density": {"nx": 1, "ny": 1, "grid": [0.5]}}))
+    (rev / "paths_ideal_raw.txt").write_text(REPORT)
+    (rev / "pins.tsv").write_text(PINS)
+    (rev / "macros.tsv").write_text("name\tmaster\tx0\ty0\tx1\ty1\thl\thb\thr\tht\n")
+    s = P.finish(rev)
+    assert s["drt_report"]["marks"] == 2
+    fl = next(f for f in s["files"] if f.startswith("flight_lines"))
+    assert (rev / fl).stat().st_size > 0
+    if fl.endswith(".svg"):
+        txt = (rev / fl).read_text()
+        assert "<text" in txt and "-9" in txt and "DRT violations" in txt
+    (d / "5_route_drc.rpt").unlink()
+    s3 = P.finish(rev)
+    assert any("no 5_route_drc report" in n for n in s3["notes"]) and "drt_report" not in s3

@@ -17,6 +17,7 @@ from the DB and drawn here.  Pure helpers (parse_paths, hpwl, rudy_grid, pg_over
 from __future__ import annotations
 
 import argparse
+import glob
 import json
 import math
 import os
@@ -266,6 +267,20 @@ class Canvas:
         if self.pil:
             self.pil[1].ellipse([a[0] - r, a[1] - r, a[0] + r, a[1] + r], fill=color)
 
+    def text(self, x, y, s, color=(0, 0, 0)):
+        a = self.xy(x, y)
+        self.items.append(("text", a, color, s))
+        if self.pil:
+            self.pil[1].text((a[0] + 3, a[1] - 5), s, fill=color)
+
+    def cross(self, x, y, color, r=3):
+        a = self.xy(x, y)
+        self.items.append(("line", [(a[0] - r, a[1] - r), (a[0] + r, a[1] + r)], color, 1))
+        self.items.append(("line", [(a[0] - r, a[1] + r), (a[0] + r, a[1] - r)], color, 1))
+        if self.pil:
+            self.pil[1].line([a[0] - r, a[1] - r, a[0] + r, a[1] + r], fill=color)
+            self.pil[1].line([a[0] - r, a[1] + r, a[0] + r, a[1] - r], fill=color)
+
     def save(self, path_png):
         """-> path actually written (.png with PIL, else .svg)"""
         if self.pil:
@@ -282,6 +297,8 @@ class Canvas:
                 out.append(f'<rect x="{a[0]:.1f}" y="{a[1]:.1f}" width="{max(0.5, c[0] - a[0]):.1f}" height="{max(0.5, c[1] - a[1]):.1f}" fill="{col(fill)}" stroke="{col(outline)}" stroke-width="{width}"/>')
             elif it[0] == "line":
                 out.append('<polyline fill="none" stroke="%s" stroke-width="%d" points="%s"/>' % (col(it[2]), it[3], " ".join(f"{x:.1f},{y:.1f}" for x, y in it[1])))
+            elif it[0] == "text":
+                out.append(f'<text x="{it[1][0] + 3:.1f}" y="{it[1][1]:.1f}" font-size="9" fill="{col(it[2])}">{_esc(it[3])}</text>')
             else:
                 out.append(f'<circle cx="{it[1][0]:.1f}" cy="{it[1][1]:.1f}" r="{it[3]}" fill="{col(it[2])}"/>')
         out.append("</svg>")
@@ -368,10 +385,23 @@ def finish(rev, npath=50):
         draw_macros(cv, macros, fill=None, outline=(255, 255, 255))
         summary["files"].append(os.path.basename(cv.save(rev / "rudy.png")))
         summary["rudy"] = {"nets": len(nets), "p99.5": round(vmax, 4), "max": round(max(flat), 4)}
-    # 3. flight lines
+    # 3. flight lines (every one of the top paths labelled with its slack in ps) + DRT violation markers when the kit has a detail-route report
+    marks = []
+    try:
+        kit_dir = json.loads(_read(rev / "review.json") or "{}").get("kit", "")
+        drc = find_drt_report(kit_dir) if kit_dir else ""
+        if drc:
+            marks = read_drt_marks(_read(drc))
+            summary["drt_report"] = {"file": drc, "marks": len(marks)}
+        else:
+            summary["notes"].append("no 5_route_drc report in the kit yet: no DRT markers")
+    except (OSError, ValueError):
+        pass
     if rows:
-        cv = Canvas(die, f"top {len(rows)} setup paths, ideal clock, placement RC (red = worst) {ttl}")
+        cv = Canvas(die, f"top {len(rows)} setup paths, ideal clock, placement RC (red = worst, label = slack ps)" + (f"; magenta x = {len(marks)} DRT violations" if marks else "") + f" {ttl}")
         draw_macros(cv, macros, fill=(225, 225, 225), outline=(170, 170, 170))
+        for x, y, _l, _t in marks:
+            cv.cross(x, y, (200, 0, 200), 2)
         for r in reversed(rows):
             col = slack_color(r["rank"], len(rows))
             if len(r["pts"]) > 1:
@@ -379,7 +409,14 @@ def finish(rev, npath=50):
             if r["pts"]:
                 cv.dot(r["sx"], r["sy"], (0, 140, 0), 3)
                 cv.dot(r["ex"], r["ey"], (0, 0, 0), 3)
+                cv.text(r["ex"], r["ey"], slack_label(r["slack"]), col)
         summary["files"].append(os.path.basename(cv.save(rev / "flight_lines.png")))
+    elif marks:
+        cv = Canvas(die, f"{len(marks)} DRT violations (magenta x); no path report {ttl}")
+        draw_macros(cv, macros, fill=(225, 225, 225), outline=(170, 170, 170))
+        for x, y, _l, _t in marks:
+            cv.cross(x, y, (200, 0, 200), 2)
+        summary["files"].append(os.path.basename(cv.save(rev / "drt_markers.png")))
     # 4. macro halo / pin vs PG strap overlay
     mpins = read_macro_pins(_read(rev / "macro_pins.tsv"))
     straps = [tuple([s[0], s[1]] + [float(v) for v in s[2:6]]) for s in lay.get("pg", [])]
@@ -403,6 +440,42 @@ def finish(rev, npath=50):
             summary["notes"].append("macro pin rects not available from the DB: only halo overlaps judged")
     (rev / "summary.json").write_text(json.dumps(summary, indent=1))
     return summary
+
+
+DRT_BBOX = re.compile(r"bbox = \(([-\d.]+), ([-\d.]+)\) - \(([-\d.]+), ([-\d.]+)\) on Layer (\S+)")
+DRT_TYPE = re.compile(r"^violation type:\s*(.+?)\s*$")
+
+
+def read_drt_marks(text, limit=30000):
+    """OpenROAD -output_drc report text -> [(x, y, layer, type)] (bbox centres, at most `limit`).  Pure."""
+    out, cur = [], ""
+    for ln in text.splitlines():
+        m = DRT_TYPE.match(ln)
+        if m:
+            cur = m.group(1)
+            continue
+        b = DRT_BBOX.search(ln)
+        if b and len(out) < limit:
+            out.append(((float(b.group(1)) + float(b.group(3))) / 2, (float(b.group(2)) + float(b.group(4))) / 2, b.group(5), cur))
+    return out
+
+
+def find_drt_report(kit):
+    """newest 5_route_drc.rpt* of the kit (run/reports/*/*/base or gen/*/run/reports/...), '' when none"""
+    best = ("", 0.0)
+    for g in ("run/reports/*/*/base/5_route_drc.rpt*", "gen/*/run/reports/*/*/base/5_route_drc.rpt*", "reports/*/*/base/5_route_drc.rpt*"):
+        for p_ in glob.glob(os.path.join(kit, g)):
+            try:
+                mt = os.stat(p_).st_mtime
+            except OSError:
+                continue
+            if mt > best[1]:
+                best = (p_, mt)
+    return best[0]
+
+
+def slack_label(slack):
+    return f"{slack:.0f}"
 
 
 # ------------------------------------------------------------------------------------------------ launch
