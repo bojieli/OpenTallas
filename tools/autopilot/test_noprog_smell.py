@@ -111,12 +111,14 @@ def test_render_launch_writes_the_review_dir_next_to_the_kit(tmp_path):
 
 
 # ---------------------------------------------------------------- VIS checkpoints (OWNER 04:3x)
-def mkkit(tmp_path, names=("3_3_place_gp.odb", "5_1_grt.odb")):
+def mkkit(tmp_path, names=("3_3_place_gp.odb", "5_1_grt.odb"), old=True):
     work = tmp_path / "kit"
     d = work / "run/results/asap7/d/base"
     d.mkdir(parents=True)
     for n in names:
         (d / n).write_text("odb")
+        if old:
+            os.utime(d / n, (1_000_000, 1_000_000))
     return str(work)
 
 
@@ -129,7 +131,10 @@ def test_checkpoint_renders_once_per_db_one_job_per_host(tmp_path):
     work = mkkit(tmp_path)
     rows = [{"work": work, "kit": work, "container": "c1", "verdict": "PROGRESS", "kind": "gpl", "image": "i", "ident": "c1 " + work}]
     calls, st, sd = [], {}, str(tmp_path / "st")
-    render = lambda w, k, stg, img, rid, summ, **kw: calls.append((stg, kw["odb"], kw["nice"], kw["tag"])) or ("rendering", "/rev/a")
+    rev = tmp_path / "rev"
+    rev.mkdir()
+    (rev / "render.log").write_text("AP_REVIEW_PNG /rev/density.png\n")
+    render = lambda w, k, stg, img, rid, summ, **kw: calls.append((stg, kw["odb"], kw["nice"], kw["tag"])) or ("rendering", str(rev))
     r = nw.vis_pass(rows, st, sd, NOW, render=render)
     assert r is rows[0] and r["vis"]["checkpoint"] == "PLACE-GP" and calls[0][0] == "place-gp" and calls[0][2] is True and calls[0][3] == "vis_review"
     assert nw.vis_pass(rows, st, sd, NOW + 60, render=render) is None                  # a job launched < 10 min ago blocks the next (one per host)
@@ -165,3 +170,25 @@ def test_one_row_per_trigger_and_vis_rows_backfill_into_smell_tsv(tmp_path, monk
     assert nw.smell_tsv_append(nw.vis_as_smell_rows(q)) == 1 and nw.smell_tsv_append(nw.vis_as_smell_rows(q)) == 0
     last = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()[-1].split("\t")
     assert last[1] == "/srv/k" and last[5] == "CHECKPOINT" and last[7] == "epyc10:/x/vis_review/grt" and last[8] == "QC-ALLFIX"
+
+
+def test_vis_retry_reruns_a_failed_or_not_run_render_up_to_three_times(tmp_path):
+    rev = tmp_path / "rev"
+    rev.mkdir()
+    state = {"vis_done": {"k1": 1}, "vis_pending": {"k1": {"dir": str(rev), "tries": 1, "t": NOW}}}
+    assert nw.vis_retry(state, NOW + 600) == []                                       # < 20 min: wait
+    (rev / "render.log").write_text("ot-run: NOT RUN: SETUP: --dir x\n")
+    assert nw.vis_retry(state, NOW + 1300) == [("k1", "retry")] and "k1" not in state["vis_done"] and state["vis_pending"]["k1"]["tries"] == 2
+    state["vis_pending"]["k1"]["tries"] = 3
+    assert nw.vis_retry(state, NOW + 2600) == [("k1", "failed")] and not state["vis_pending"]
+    state["vis_pending"]["k2"] = {"dir": str(rev), "tries": 1, "t": NOW}
+    (rev / "render.log").write_text("AP_REVIEW_PNG /x/density.png\n")
+    assert nw.vis_retry(state, NOW + 3000) == [("k2", "rendered")]
+
+
+def test_vis_waits_for_the_db_to_settle(tmp_path):
+    work = mkkit(tmp_path, old=False)
+    assert nw.vis_candidates(work, {}) == []                                          # just written (mtime = now): still being written
+    for f in (tmp_path / "kit/run/results/asap7/d/base").iterdir():
+        os.utime(f, (1_000_000, 1_000_000))
+    assert len(nw.vis_candidates(work, {})) == 2

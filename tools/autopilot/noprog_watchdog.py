@@ -2224,6 +2224,39 @@ def grt_layer_overflow(text):
 VIS_CHECKPOINTS = (("PLACE-GP", "3_3_place_gp.odb"), ("GRT", "5_1_grt.odb"))
 
 
+VIS_SETTLE_S = 180        # the checkpoint DB must be untouched for 3 min: 6 of 28 first renders read a DB still being written (ORD-0054 odb invalid: basic_ios::clear)
+VIS_MAX_TRIES = 3
+
+
+def vis_retry(state, now, read=read_text):
+    """HOST: a render whose log says NOT RUN (ot-run could not place it), a failed dump or an ERROR is retried (the DB key leaves vis_done) up to VIS_MAX_TRIES times, 20 min apart;
+    one that wrote AP_REVIEW_PNG is finished.  state['vis_pending'] = {key: {dir, tries, t}}.  -> [(key, outcome)]"""
+    pend = state.setdefault("vis_pending", {})
+    done = state.setdefault("vis_done", {})
+    out = []
+    for key, e in list(pend.items()):
+        if now - float(e.get("t", 0)) < 1200:
+            continue
+        try:
+            txt = read(os.path.join(e["dir"], "render.log"))
+        except OSError:
+            txt = ""
+        if "AP_REVIEW_PNG" in txt:
+            del pend[key]
+            out.append((key, "rendered"))
+        elif ("NOT RUN" in txt or "AP_REVIEW_ERROR" in txt or "exit 1" in txt or not txt) and int(e.get("tries", 1)) < VIS_MAX_TRIES:
+            done.pop(key, None)
+            e["tries"] = int(e.get("tries", 1)) + 1
+            e["t"] = now
+            out.append((key, "retry"))
+        elif "ot-run:" in txt and "RAN" not in txt and "NOT RUN" not in txt:
+            continue
+        else:
+            del pend[key]
+            out.append((key, "failed"))
+    return out
+
+
 def vis_candidates(work, done):
     """-> [(checkpoint, odb)] of the kit's checkpoint DBs that exist and were not rendered yet (done: {odb|mtime: t}).  Pure apart from the filesystem."""
     out = []
@@ -2231,8 +2264,11 @@ def vis_candidates(work, done):
         for g in (f"run/results/*/*/*/{name}", f"gen/*/run/results/*/*/*/{name}", f"results/*/*/*/{name}"):
             for p_ in glob.glob(os.path.join(work or "", g)):
                 try:
-                    k = f"{p_}|{int(os.stat(p_).st_mtime)}"
+                    mt_ = os.stat(p_).st_mtime
+                    k = f"{p_}|{int(mt_)}"
                 except OSError:
+                    continue
+                if time.time() - mt_ < VIS_SETTLE_S:
                     continue
                 if k not in done:
                     out.append((cp, p_, k))
@@ -2258,6 +2294,7 @@ def vis_running(state_dir, now):
 def vis_pass(rows, state, state_dir, now, render=smell_render):
     """HOST: launch at most ONE checkpoint render (nice 10) this pass, when none is running.  Marks row['vis'] = {checkpoint, status, dir} for the hub's lanes/VIS-QUEUE.tsv."""
     done = state.setdefault("vis_done", {})
+    vis_retry(state, now)
     if os.environ.get("NOPROG_VIS_MODE") == "off" or vis_running(state_dir, now):
         return None
     for r in rows:
@@ -2276,6 +2313,7 @@ def vis_pass(rows, state, state_dir, now, render=smell_render):
                 os.makedirs(state_dir, exist_ok=True)
                 save_json(os.path.join(state_dir, "vis_running.json"), {"pid": box.get("pid", 0), "t": now, "dir": rev})
                 r["vis"] = {"checkpoint": cp, "status": status, "dir": rev, "odb": odb}
+                state.setdefault("vis_pending", {})[key] = {"dir": rev, "tries": state.get("vis_pending", {}).get(key, {}).get("tries", 1), "t": now}
                 return r
     return None
 
