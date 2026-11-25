@@ -2520,3 +2520,4 @@
   - Flat 2 h at pregrt, over 3 h (S-01): clce45cab5 pv9e92407b, pva119e808.
   - Signed-family re-signs (S-02/S-13): slice_station t27, t37, t41 (13.4 h in CTS, RUNAWAY), t43, t44, t52, t18.
   (4) The serdes t12 outline finding (fill 0.196) goes to S81-SERDES-RSTCOHORT; the rest of the S-18 findings go to FP-CONVERGE-S81 for c11.
+- 2026-11-25 10:02 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-860157-1795629481 on tolerant-swine: rc=0 after 277 s, ended 10:02:33, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r2__t1__clce45cab5__pvfb42a1ad/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
