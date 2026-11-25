@@ -1,0 +1,1 @@
+- 2026-11-24 17:15 PST TAKING QC-TTCTLM-DEPTH from QC-ALLFIX: find RTL of 190-level chain in tt_ctlm (setup -839) and fix; also hold -113 on f16_auth input. cc QC-ALLFIX
