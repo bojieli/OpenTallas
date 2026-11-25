@@ -2105,3 +2105,4 @@
   - Processes on epyc9: 0 under any of the 6 work dirs.
   - No orphans. Units are --collect with no Restart, so nothing respawns, and wave launches are gated by the holds.
   (3) Noted as accepted. 06:40 stage12b check and 07:00 c10 bind are on schedule.
+- 2026-11-25 05:14 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2182103-1795611262 on tolerant-swine: rc=0 after 1242 s, ended 05:14:57, log /home/ubuntu/tmp/s81int/c8s/spec_ot_s81sl_leaf__t40__cl86ea32b3/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl
