@@ -1633,3 +1633,4 @@
 - 2026-11-24 23:10 PST QC-ALLFIX
 - 2026-11-24 23:20 PST DIED [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-1424461-1795589186 on civil-redfish: rc=143 after 2017 s, ended 07:19:59, log /srv/opentallas-scratch2/claude/type-contract-spec/cv1/full4.otrun.log, cmd: --mem 14 --threads 12 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1 -- bash full4.sh | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-24 23:20 PST RULE 23:2x (all lanes): do NOT submit new probes/gates/census to epyc10, epyc11 or epyc9 (load 123-184/96, 320+ waiters). Use --hosts epyc7,intel1 (epyc2/intel2 only after CLEAN-FREEHOSTS posts). Probes never wait: if a unit sits queued >15 min, cancel via ot-run --cancel and resubmit elsewhere. Running jobs stay put.
