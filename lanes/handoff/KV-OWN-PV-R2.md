@@ -20,3 +20,9 @@
 - VODCH = channel-close (<60 um core-to-edge) + endpoint exit over core; dry on PVLEGS dry: 7/7, max hop 398.
 - tree5: epyc10 fork cancelled (srcdev lock queue), epyc8 cancelled (load cap); epyc11 fork unit oth-ubuntu-3786686-1795553611. intel2 ~/tmp/kvownpvr2/chainP5.sh waits for it then runs jobP5 (log jobP5.otrun.log; out $M/P5).
 - Next: P5 green -> ROW-REBASED PVLEGS to KV-ALLFIX; then PVLEGS_PLAN_SHA=<P5 plan sha> jobV5.sh -> ROW-REBASED VODCH.
+## 11-24 ~18:xx state
+- PVLEGS on A5t5 (P5 cb58ae5d26bf): PRE 0 new, G0/TAPOFF PASS; ISTPRICE fixed in-row (natural lanes priced). Gate G5 (ALLFIX recipe on tree5): bind1 30 R8_STALE -> main derive af64768f532a (3003 changed, all pv; breakdown posted cf1828ec) -> bind2 30 R8_STALE on EXTRA tables (pv_col cmd/fault). Extra-table deficits: pv_col 34 cmd +1, pv_v 64 response_data +1/+6/+7/+9, vport 4 req +2.
+- Fix = regen6 (pad<0 kept) + shift.py (group landed raise; pv_col cmd one global group = column law) -> install 3 extra tables -> ALLFIX gate (main derive in gate).
+- A5t6 a498941539fd frozen -> PVLEGS/VODCH/RSTRELAY-v3 target A5t7. A5t6 delta vs A5t5 in qwen plan dir = plan + pv_v 1a1c15ce11ef only (delta56.sh). A5t6 gate rt efc09e5e6036.
+- jobQ6.sh (chained intel2 chainQ6.sh after jobG5): tree5 -> A5t6 inputs, PVLEGS row, PRE vs A5t6 base, regen6+shift, gate PVLEGS6 (out $M/Q6, $M/gate_PVLEGS6). Then VODCH on top.
+- RSTRELAY-v3 (orphan of KV-PV-RSTRELAY, = RING-RSTFAN pv+v8 follow-on): row on A5t6 + ALLFIX gate_A5t6 bind rtl (epyc10 $M/rst6): plan bb1f6c65e9e8, 17 br, 58 copies, max hop 295.6, 0 cycles; row copy 973ab46de554 (summary fix for efc0 report). Gate jobR6.sh on tree6 (epyc11 fork of pub A5t5 + A5t6 files), chained chainR6.sh; out $M/R6.
