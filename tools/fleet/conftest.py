@@ -18,3 +18,12 @@ os.environ.setdefault("OT_SPILL_NO_SUDO", "1")
 # read this host's live admission.  Off for the session; test_ot_run_ticket.py turns it on for its own cases.
 os.environ.setdefault("OT_RUN_ADMIT_FIRST", "0")
 os.environ.setdefault("OT_RUN_TICKETS", os.path.join(tempfile.gettempdir(), "ot-run-test-tickets.json"))
+
+# SCOPE-ENV-1124 (COORD green-main): a suite run INSIDE an ot-run / ot-heavy job (merge gates, ot-run test jobs) inherits that job's scope
+# markers.  The ot-heavy tests then ran their fake jobs as crit (OT_HEAVY_CPU=crit skips the load cap), as an admitted child
+# (OT_HEAVY_PARENT_UNIT) or with the job's thread count, and 5 tests failed there while passing direct.  Drop the markers for the session;
+# a test that needs one sets it itself.
+for _k in ("OT_HEAVY_CPU", "OT_HEAVY_DIRECT", "OT_HEAVY_DISK_GB", "OT_HEAVY_MEM_GB", "OT_HEAVY_PARENT_UNIT", "OT_HEAVY_PRIO",
+           "OT_HEAVY_SHORT_SLOTS", "OT_HEAVY_TAG", "OT_HEAVY_THREADS", "OT_HEAVY_UNIT", "OT_HEAVY_WAIT_SINCE", "OT_VL_JCAP_N",
+           "OT_VL_JCAP_WHY", "OT_RUN_CRIT", "OT_TOOLSTALE_RT"):
+    os.environ.pop(_k, None)
