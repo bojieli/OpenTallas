@@ -1,0 +1,1161 @@
+{
+ "rows": [
+  {
+   "item": "C4->C1g cb rows (b25/x12 tapoff, rc99 NK lockup, rc101 piles, CBN-RSF-SEAT, rst_row cbf_q00)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 246,
+    "REPLACED": 470,
+    "DROP-DECLARED": 4
+   },
+   "example": {
+    "CARRIED": "partition_types.cbn_q00__cl622f65d2.relay_sites.u_u_fab_u_x_0_1.u_st.b_d[455]",
+    "REPLACED": "partition_types.cbn_q00__cl622f65d2.relay_sites.u_d6_u_fab_u_x_0_0_a_d.r[4][366]",
+    "DROP-DECLARED": "partition_types.cbx_q10__cl89936551.clock.added_taps"
+   }
+  },
+  {
+   "item": "C4->C1g su rows (SU-2/SU2R, rc105 su_c re-floor, FIX3v2, FIX4, SUL1-UNBURY, RED+2, rc103)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 11534,
+    "REPLACED": 11
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_su_c__cl92142dac.relay_sites.u_u_suvm_u_vm8q_u_vwc/q[384]",
+    "REPLACED": "partition_types.slw_su_c__cl92142dac.note"
+   }
+  },
+  {
+   "item": "C4->C1g ctl/hc rows (ctlclk 14 hc, SLE CTL B_TW, CTL clock entry)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 17,
+    "DROP-DECLARED": 1,
+    "REPLACED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.clock.landing_local_resets",
+    "DROP-DECLARED": "partition_types.sle_ctl__cla4f6f12f.clock.added_taps",
+    "REPLACED": "partition_types.sle_ctl__cla4f6f12f.clock.landing_contract"
+   }
+  },
+  {
+   "item": "C4->C1g coll rows (coll_core reset clock-open, ORGRP-SYNC)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_core.internal_stations"
+   }
+  },
+  {
+   "item": "C4->C1g tt_ctlm rows (F16 auth transport, TTC-NECK-1)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 2
+   },
+   "example": {
+    "CARRIED": "partition_types.tt_ctlm.buses"
+   }
+  },
+  {
+   "item": "C4->C1g other types (glue, native59, sc, stm, fe)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 204,
+    "REPLACED": 18
+   },
+   "example": {
+    "CARRIED": "partition_types.glue.relay_sites.u_sys_face.u_ot_pr_core.dh_prog_a[115]",
+    "REPLACED": "partition_types.slw_stm_v1__cle34a73c3.clock.landing_contract"
+   }
+  },
+  {
+   "item": "C4->C1g die keys (tap_offset, lanes, latency, ports)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 8,
+    "CARRIED": 86
+   },
+   "example": {
+    "REPLACED": "clock.tap_offset.per_port_ps.cbx_q10__cl94a12200_h",
+    "CARRIED": "latency.lanes.sl_E2_hc1__cws1.stations"
+   }
+  },
+  {
+   "item": "C1h F16 tie (tt_ctlm f16_obs/init_u0 ties)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 1
+   },
+   "example": {
+    "REPLACED": "partition_types.tt_ctlm.dead_inputs"
+   }
+  },
+  {
+   "item": "C1h DEADIN-QC (fw/ctl dead-input proofs) + note",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 11
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_fw_v2__cl8f84514c.dead_inputs"
+   }
+  },
+  {
+   "item": "SC3-MONLEG",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 1
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_sc_v3.clock.landing_contract"
+   }
+  },
+  {
+   "item": "sc3_col (C1h)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 3,
+    "CARRIED": 2
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_sc_v3.clock.landing_contract",
+    "CARRIED": "partition_types.slw_su_c__cl19bb38ef.clock.landing_contract"
+   }
+  },
+  {
+   "item": "QC-OPEN-SU",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 13,
+    "REPLACED": 3
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_sc_v1__cl115da35f.internal_stations",
+    "REPLACED": "partition_types.sle_sc_v3.clock.landing_contract"
+   }
+  },
+  {
+   "item": "QC-RSTCNT 256 root counter",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 1,
+    "CARRIED": 2
+   },
+   "example": {
+    "REPLACED": "partition_types.slw_sc_v1__cl63e5a7a2.clock.landing_contract",
+    "CARRIED": "reset.source.hold.note"
+   }
+  },
+  {
+   "item": "SEAT-MATCH sle_ctl re-key",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 36044,
+    "REPLACED": 8418
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.relay_sites.u_pd11_x_fw_i_0.q",
+    "REPLACED": "partition_types.sle_ctl__cla4f6f12f.relay_sites.u_r8b_strap_r8pad_u_ctl_r_d/r[0][0]"
+   }
+  },
+  {
+   "item": "SLECTL spread",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 1,
+    "CARRIED": 4722
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_ctl__cla4f6f12f.internal_stations",
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.relay_sites.u_ist_b_hw_hc1_o_0.eq"
+   }
+  },
+  {
+   "item": "QC-SC-FARRST",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 4,
+    "REPLACED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.clock.landing_reader_start",
+    "REPLACED": "partition_types.slw_sc_v3.clock.landing_reader_start"
+   }
+  },
+  {
+   "item": "FWCPL-2",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 9
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_fw_v1__cl9d029624.verilog_defines"
+   }
+  },
+  {
+   "item": "CBN-TAP",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 1
+   },
+   "example": {
+    "REPLACED": "partition_types.cbn_q00__cl622f65d2.clock.taps"
+   }
+  },
+  {
+   "item": "r10 QC-OPEN-STA (11 st_a)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 117671,
+    "REPLACED": 32,
+    "DROP-DECLARED": 1744
+   },
+   "example": {
+    "CARRIED": "clock.tap_offset.per_port_ps.sle_st_a_v1__cl67389ecd",
+    "REPLACED": "clock.tap_offset.source",
+    "DROP-DECLARED": "partition_types.sle_st_a_v1__cl67389ecd.relay_sites.u_pd1_b_tw_data_i_0_u_r0_1.q"
+   }
+  },
+  {
+   "item": "C1j TT-T20 (tt_ctlm core 43059362f4bf + pads, latency 19/19/19/17/17)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 6,
+    "REPLACED": 1
+   },
+   "example": {
+    "CARRIED": "latency.lanes.tt_ctlm__hr_hr_wi.pad",
+    "REPLACED": "partition_types.tt_ctlm.dead_inputs"
+   }
+  },
+  {
+   "item": "C1j coll_ftn north collector sources",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_ftn.clock.landing_contract"
+   }
+  },
+  {
+   "item": "C1j COLL row b (coll_core added_taps/reset anchor)",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 29
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_core.relay_sites.u_io_collective_u_io_u_collective.u_coll.g_gsel[2].u_gs/q[2]"
+   }
+  },
+  {
+   "item": "C1j SU/SC spread (sc3 draft) + OPEN-SU",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 14,
+    "REPLACED": 4
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_su_l0__cl76fb247e.clock.taps",
+    "REPLACED": "partition_types.slw_sc_v1__cl63e5a7a2.clock.landing_contract"
+   }
+  },
+  {
+   "item": "C1j sle_ctl internal_stations",
+   "status": "KIT-RUNNING",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 4723
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.relay_sites.u_ist_b_hw_hc1_o_1.q[739]"
+   }
+  },
+  {
+   "item": "C1j die keys (RST+259 reset.source, tap_offset coll_core, latency)",
+   "status": "BOUND",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 7
+   },
+   "example": {
+    "CARRIED": "latency.lanes.sl_W5_fw__ag_wo_ag5.cycles"
+   }
+  },
+  {
+   "item": "PIPESEAT CB-PIPESEAT-SPREAD (17 cb)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 254288,
+    "DROP-DECLARED": 516
+   },
+   "example": {
+    "REPLACED": "partition_types.cbn_q01__clab6e67f2.relay_sites.u_d10_u_t_0_2_n_y_sg0.q[237]",
+    "DROP-DECLARED": "partition_types.cbf_q00_s2.relay_sites.u_d6_u_fab_u_x_0_0_a_d.r[5][353]"
+   }
+  },
+  {
+   "item": "STSLW-R1 (r10 carry 9 st_a + flt_o stations 5 stm)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 101017,
+    "DROP-DECLARED": 1419,
+    "REPLACED": 25
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_st_a_v1__clb036e152.relay_sites.u_bin_x_fw_i/q[51]",
+    "DROP-DECLARED": "partition_types.slw_st_a_v1__clfc5867a6__pvdf8e5ca4.relay_sites.u_pd1_b_tw_data_i_20_u_r1_1.q",
+    "REPLACED": "partition_types.sle_st_a_v1__cl67389ecd.internal_stations"
+   }
+  },
+  {
+   "item": "R10FULL COMPOSE-GUARD restore (STSLW-R1 + r10 2 types + relay copy)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 117693,
+    "REPLACED": 32,
+    "DROP-DECLARED": 1747
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_st_a_v1__clb036e152.relay_sites.u_bin_x_fw_i/q[51]",
+    "REPLACED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores",
+    "DROP-DECLARED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.relay_sites.u_pd1_b_tw_data_i_8_u_r0_1.q"
+   }
+  },
+  {
+   "item": "FIX-STSLW (added_taps null, sl_E0..5_stm__flt fixed_cycles 0->2)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 117695,
+    "REPLACED": 31,
+    "DROP-DECLARED": 1746
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_st_a_v1__clb036e152.relay_sites.u_bin_x_fw_i/q[51]",
+    "REPLACED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores",
+    "DROP-DECLARED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.relay_sites.u_pd1_b_tw_data_i_8_u_r0_1.q"
+   }
+  },
+  {
+   "item": "FTSITE QC-SUC-FTSITE (3 su_c ft_slots)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 6
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_su_c__cl92142dac.note"
+   }
+  },
+  {
+   "item": "N59RELAY native59 relay row",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 464
+   },
+   "example": {
+    "CARRIED": "partition_types.native59.relay_sites.u_bin_dd_i/q[112]"
+   }
+  },
+  {
+   "item": "ZL-LEAF clock.zl_lockup.<t>={leaf:true} (14 cb, incl. FLOW-OPS-R3 5 nonzero: cbn_q01 cldd6ea846/cld9ff4c40, cbn_q11 cl49ae4555, cbf_q00_s2, cbf_q00 cl870de686)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 14
+   },
+   "example": {
+    "CARRIED": "clock.zl_lockup.cbn_q01__cld9ff4c40.leaf"
+   }
+  },
+  {
+   "item": "FIX-TAPOFF tap_offset_cover fill (TAPBINS density taps; cbf_q01 --max-tol 60)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 47
+   },
+   "example": {
+    "REPLACED": "clock.tap_offset.per_port_ps.cbx_q10__cl94a12200_h"
+   }
+  },
+  {
+   "item": "TTCTLM-RESYNTH+DEADIN (core 2c21ec82950f, proof d5d6178d1718)",
+   "status": "DEFERRED -> 12:00; owner QC-TTCTLM-RE; state F16 fix in v13, place probe after BIND-PASS; ETA 12:00",
+   "verdict": "DEFERRED/PRESENT",
+   "counts": {
+    "REPLACED": 1
+   }
+  },
+  {
+   "item": "STB-SPLIT cland ring masters (12 st_b)",
+   "status": "DEFERRED -> C1p cut 06:30; owner QC-STB-SPLIT; state PRE; ETA none posted",
+   "verdict": "DEFERRED/PARTIAL 17/109",
+   "counts": {
+    "LOST": 80,
+    "REPLACED": 11,
+    "DROP-DECLARED": 6,
+    "ABSENT": 12
+   }
+  },
+  {
+   "item": "SLECTL-PILE LINE-SEATS+RP-BANK (sle_ctl 11493 relay_sites + rp_chdq1_bank)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 11495
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_ctl__cla4f6f12f.relay_sites.u_r8b_strap_r8pad_u_ctl_r_d/r[13][209]"
+   }
+  },
+  {
+   "item": "CB-TAPBINS2 + TAPOFF fill (replaces ef5e85aa483b)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 135,
+    "CARRIED": 197
+   },
+   "example": {
+    "REPLACED": "partition_types.cbx_q10__cl94a12200_h.clock.landing_writer_start",
+    "LOST": "partition_types.slw_stm_v1__cle34a73c3.clock.landing_writer_start",
+    "CARRIED": "clock.tap_offset.per_port_ps.cbx_q10__cl94a12200_h"
+   },
+   "superseded_by": {
+    "RRDRV-FAR (2322 START raws, 42 types -> ": 9
+   }
+  },
+  {
+   "item": "RC97-BT2 (st_a_v2 regions BT_LAT 2 + 6 st_b)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 10
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores"
+   }
+  },
+  {
+   "item": "FIX-RELAYCOPY (drop landing_relay_start_copy on sle_st_a_v1 cl18eece69 + slw_st_a_v1 clb036e152)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 2
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_st_a_v1__clb036e152.landing_relay_start_copy"
+   }
+  },
+  {
+   "item": "PG-EDGE-HALO-STA (83 cores, 11 st_a, pg_halo_um 1.296)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 5,
+    "CARRIED": 6
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores",
+    "CARRIED": "partition_types.sle_st_a_v1__cl989804f6__cled3c1d7b.hard_cores"
+   }
+  },
+  {
+   "item": "RTX-ALL r4 FINAL (26 types, no sle_hc1; on C1m-rc dffd12ce2cfe)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 83
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_fw_v1__cl9d029624.relay_sites.u_cland_rstart_tx_p1/q"
+   }
+  },
+  {
+   "item": "RST-SRCTAP collector source node/tap := RTL ring tap (46 types, 692 fields) + sidecar zz_sidecar_n46r4_final_preview",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 8,
+    "CARRIED": 76
+   },
+   "example": {
+    "REPLACED": "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract",
+    "CARRIED": "partition_types.slw_st_a_v1__clb036e152.clock.landing_contract"
+   }
+  },
+  {
+   "item": "R8-REFRESH land_r8 table (r8_refresh, so_w x6 R8_STALE dvs_E0..E5)",
+   "status": "IN launch tree (R8BOUND 0 on C1o v11 PRE rt b716)",
+   "verdict": "NOTPLAN",
+   "detail": "launch-tree R8 table, not plan json"
+  },
+  {
+   "item": "FE1-SEAT83 QC-GEOM-UNITS (slw_fe_v1__cl95cd1d0c 83 relay_sites)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 83
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_fe_v1__cl95cd1d0c.relay_sites.u_pd11_x_fw_p2_i_525.r[3]"
+   }
+  },
+  {
+   "item": "FWCPL2-SEAT QC-GEOM-UNITS (slw_fw_v1__clf51c11d8__cl592e3d37 relay_sites 41->17690)",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 17649
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_fw_v1__clf51c11d8__cl592e3d37.relay_sites.u_ist_x_fe_p2_o_3/q[336]"
+   }
+  },
+  {
+   "item": "RRDRV-REMAP (643 bad START raws, 35 types -> nearest consumer tap)",
+   "status": "IN-PLAN (completed by RRDRV-FAR; alone leaves 2 no-driver + 2016 >405)",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 56,
+    "CARRIED": 3
+   },
+   "example": {
+    "REPLACED": "partition_types.sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59.clock.landing_writer_start",
+    "CARRIED": "partition_types.sle_hc1__cl22c1ff36__pve230954c.clock.landing_writer_start"
+   }
+  },
+  {
+   "item": "RRDRV-FAR (2322 START raws, 42 types -> nearest consumer tap)",
+   "status": "IN-PLAN (C1n-r2, r3, C1o v13)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 78
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59.clock.landing_writer_start"
+   }
+  },
+  {
+   "item": "VISQC-FEFW-1",
+   "status": "IN-PLAN (5/6 keys)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 5,
+    "REPLACED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_fw_v3.internal_stations",
+    "REPLACED": "partition_types.slw_fe_v2__clf110fab2.internal_stations"
+   }
+  },
+  {
+   "item": "VISQC-DIE-COLL-BANDS",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 2
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_core.clock.landing_contract.bands.io_collective__in_last.rect_um"
+   }
+  },
+  {
+   "item": "VISQC-COLL-1",
+   "status": "IN-PLAN",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 4
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_core.hard_cores[inst=g_xf_0].origin_um[0]"
+   }
+  },
+  {
+   "item": "CB-PIPEREACH (QC-CB-PIPESEAT)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 338622
+   },
+   "example": {
+    "CARRIED": "partition_types.cbn_q01__clab6e67f2.relay_sites.u_d10_u_t_0_2_n_y_sg0.q[237]"
+   }
+  },
+  {
+   "item": "SUL1-FACE-BAND (QC-SUL1-BAND)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "REPLACED": 2,
+    "CARRIED": 4
+   },
+   "example": {
+    "REPLACED": "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract",
+    "CARRIED": "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701"
+   }
+  },
+  {
+   "item": "STA-BTLAT3 (QC-STA-BTLAT3)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 3950
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.hard_cores"
+   }
+  },
+  {
+   "item": "STA-RELAY-PRUNE (QC-STA-HOLD)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 3160
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_st_a_v1__cl67389ecd.relay_sites"
+   }
+  },
+  {
+   "item": "KVQC-DESTACK (KVQC-STACK)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 7
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_sc_v1__cl64543eaf__cl4590432d.ft_slots"
+   }
+  },
+  {
+   "item": "C1o v13 compose (QC-C1O-COMPOSE)",
+   "status": "COMPOSED; PRE by-path PASS 03:56; installed-tree gate PRE pending",
+   "verdict": "NOTPLAN",
+   "detail": "the plan itself"
+  },
+  {
+   "item": "DEMACRO-QC-C1o",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 32
+   },
+   "example": {
+    "CARRIED": "/partition_types/sle_st_a_v1__cl67389ecd/internal_stations/0/bit_sites_um"
+   }
+  },
+  {
+   "item": "COLL-IRN-SEAT",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 21
+   },
+   "example": {
+    "CARRIED": "partition_types.coll_core.relay_sites.u_io_collective_u_io_u_collective.u_coll.ir_n[285]"
+   }
+  },
+  {
+   "item": "HALOCORNER (QC-HALOCORNER-ROW)",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 8
+   },
+   "example": {
+    "CARRIED": "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.clock.landing_contract"
+   }
+  },
+  {
+   "item": "MONLEG + MONLEG-RSN",
+   "status": "IN-C1o (PRE pending)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 8
+   },
+   "example": {
+    "CARRIED": "/partition_types/sle_sc_v2/clock/landing_contract/collector_local_sources/13/node"
+   }
+  },
+  {
+   "item": "CA-REDERIVE (sidecar count_aligned)",
+   "status": "IN C1n-r3 + C1o v13 (no-op vs r3)",
+   "verdict": "NOTPLAN",
+   "detail": "sidecar-only row (0391a5add8e7 -> d09c4516e77c); v13 sidecar a142fe516f24 composed on it"
+  },
+  {
+   "item": "RESETPUB (slw_sc_v3 253->381 relays)",
+   "status": "IN C1n-r3",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 1
+   },
+   "example": {
+    "CARRIED": "partition_types.slw_sc_v3.clock.landing_contract"
+   }
+  },
+  {
+   "item": "GLUE-IMAGES rows 1-5 (QC-GLUE-IMAGES)",
+   "status": "IN-PLAN since C1n (closed); content: RTL overlay 3/3 files sha-equal in C1o launch tree launch_c1o_bind (14faef2260a2, 9e47f133745e, 49294586c7c6)",
+   "verdict": "PRESENT",
+   "counts": {
+    "CARRIED": 3
+   },
+   "example": {
+    "CARRIED": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh"
+   }
+  },
+  {
+   "item": "RRL-RAWTAPHOLD (reset.raw_tap_hold, hold-safe tap)",
+   "status": "DEFERRED -> C1p cut 06:30; owner QC-FEV2-F110; state PRE (v13+row on epyc12); ETA 07:00",
+   "verdict": "DEFERRED/ABSENT",
+   "counts": {
+    "ABSENT": 1
+   }
+  }
+ ],
+ "bad_paths": {
+  "STB-SPLIT cland ring masters (12 st_b)": [
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.clock.added_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.hard_cores"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.cells"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.note"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.landing_reader_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.note"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.clock.taps"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.hard_cores"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.clock.reset_tree_anchor"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.note"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.hard_cores"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.landing_contract"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.landing_reader_start"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.note"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.hard_cores"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v2__clfde1249e.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.landing_contract"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.note"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.clock.reset_tree_anchor"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv38472fb8.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.note"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.clock.added_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pvffd43fdc.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.clock.landing_local_resets"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v1__cle6023ec2.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pv3d7bec84.clock.landing_local_resets"
+   ],
+   [
+    "ABSENT",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v1__cle6023ec2.clock.landing_local_resets"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pv41c959f3.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.clock.added_taps"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.clock.taps"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pvc2ec5bfb.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pv0e7b1dcc.clock.taps"
+   ],
+   [
+    "ABSENT",
+    "partition_types.slw_st_b_v1__cl6357f1cc__pv6ace3e48.clock.core_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.note"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__cl14c98df5__pvcd986c42.cells"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v1__pvc5a85fd4__pv7b7fafb4.clock.added_taps"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_st_b_v2__clfde1249e.hard_cores"
+   ],
+   [
+    "LOST",
+    "partition_types.slw_st_b_v2__pva66d0f22__pvb80e2003.hard_cores"
+   ]
+  ],
+  "CB-TAPBINS2 + TAPOFF fill (replaces ef5e85aa483b)": [
+   [
+    "LOST",
+    "partition_types.slw_stm_v1__cle34a73c3.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.coll_n.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_hc0__cl929603c0__cl38badc56.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59.clock.landing_reader_start"
+   ],
+   [
+    "LOST",
+    "partition_types.cbf_q00__cl1b5a6458.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_stm_v2__cl55be2264.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_fe_v3.clock.landing_writer_start"
+   ],
+   [
+    "LOST",
+    "partition_types.sle_hc0__cl929603c0__cl38badc56.clock.landing_reader_start"
+   ]
+  ]
+ }
+}

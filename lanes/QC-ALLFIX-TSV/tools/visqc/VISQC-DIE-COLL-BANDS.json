@@ -1,0 +1,25 @@
+{
+ "row": "VISQC-DIE-COLL-BANDS",
+ "lane": "VIS-QC",
+ "source": "VIS-QC post 2026-11-22 23:46 PST \"DIE ROW\" + hub lanes/handoff/VIS-QC-DIE-COLL-BANDS.json (no key/value block; values transcribed from the post)",
+ "keys": [
+  {
+   "path": "partition_types.coll_core.clock.landing_contract.bands.io_collective__in_last.rect_um",
+   "value": [
+    501.32,
+    1488.24,
+    509.96,
+    1572.48
+   ]
+  },
+  {
+   "path": "partition_types.coll_core.clock.landing_contract.bands.io_collective__in_valid.rect_um",
+   "value": [
+    510.92,
+    1488.24,
+    519.56,
+    1572.48
+   ]
+  }
+ ]
+}

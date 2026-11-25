@@ -1,0 +1,532 @@
+{
+ "plans": {
+  "C4": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c4.json",
+  "C1g": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1g.json",
+  "C1h": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1h.json",
+  "C1i": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1i.json",
+  "C1j": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+  "C1l": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1l.json",
+  "C1m": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1m.json",
+  "C1mrc": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_c1m_rc.json",
+  "C1n": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1n.json",
+  "C1nF": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_final.json",
+  "C1nR2": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_r2.json",
+  "C1nR3": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/base/plan_c1n_r3_fa8944bb0a39.json"
+ },
+ "rowchk": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/an/rows_vs_c1k.json",
+ "rows": [
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.cb[fnx]_",
+   "drop_cache": false,
+   "item": "C4->C1g cb rows (b25/x12 tapoff, rc99 NK lockup, rc101 piles, CBN-RSF-SEAT, rst_row cbf_q00)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.sl[ew]_su_",
+   "drop_cache": false,
+   "item": "C4->C1g su rows (SU-2/SU2R, rc105 su_c re-floor, FIX3v2, FIX4, SUL1-UNBURY, RED+2, rc103)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.(sle_ctl|sl[ew]_hc[0-3])",
+   "drop_cache": false,
+   "item": "C4->C1g ctl/hc rows (ctlclk 14 hc, SLE CTL B_TW, CTL clock entry)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.coll_",
+   "drop_cache": false,
+   "item": "C4->C1g coll rows (coll_core reset clock-open, ORGRP-SYNC)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.tt_",
+   "drop_cache": false,
+   "item": "C4->C1g tt_ctlm rows (F16 auth transport, TTC-NECK-1)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^partition_types\\.",
+   "nrx": "^partition_types\\.(cb[fnx]_|sl[ew]_su_|sle_ctl|sl[ew]_hc[0-3]|coll_|tt_|sl[ew]_st_|sta_)",
+   "drop_cache": false,
+   "item": "C4->C1g other types (glue, native59, sc, stm, fe)"
+  },
+  {
+   "kind": "step",
+   "frm": "C4",
+   "to": "C1g",
+   "rx": "^(?!partition_types\\.)",
+   "drop_cache": false,
+   "item": "C4->C1g die keys (tap_offset, lanes, latency, ports)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1g",
+   "to": "C1h",
+   "rx": "tt_ctlm|f16",
+   "drop_cache": false,
+   "item": "C1h F16 tie (tt_ctlm f16_obs/init_u0 ties)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1g",
+   "to": "C1h",
+   "rx": ".",
+   "nrx": "tt_ctlm|f16",
+   "drop_cache": false,
+   "item": "C1h DEADIN-QC (fw/ctl dead-input proofs) + note"
+  },
+  {
+   "kind": "rowchk",
+   "key": "sc3monleg",
+   "drop_cache": false,
+   "item": "SC3-MONLEG"
+  },
+  {
+   "kind": "rowchk",
+   "key": "sc3col_c1h",
+   "drop_cache": false,
+   "item": "sc3_col (C1h)"
+  },
+  {
+   "kind": "rowchk",
+   "key": "opensu_lp",
+   "drop_cache": false,
+   "item": "QC-OPEN-SU"
+  },
+  {
+   "kind": "rowchk",
+   "key": "rstcnt",
+   "drop_cache": false,
+   "item": "QC-RSTCNT 256 root counter"
+  },
+  {
+   "kind": "rowchk",
+   "key": "slectl_rekey_c1h",
+   "drop_cache": false,
+   "item": "SEAT-MATCH sle_ctl re-key"
+  },
+  {
+   "kind": "rowchk",
+   "key": "slectl_spread",
+   "drop_cache": false,
+   "item": "SLECTL spread"
+  },
+  {
+   "kind": "rowchk",
+   "key": "scfarrst",
+   "drop_cache": false,
+   "item": "QC-SC-FARRST"
+  },
+  {
+   "kind": "rowchk",
+   "key": "fwcpl2",
+   "drop_cache": false,
+   "item": "FWCPL-2"
+  },
+  {
+   "kind": "rowchk",
+   "key": "cbn_tap",
+   "drop_cache": false,
+   "item": "CBN-TAP"
+  },
+  {
+   "kind": "rowchk",
+   "key": "r10",
+   "drop_cache": false,
+   "item": "r10 QC-OPEN-STA (11 st_a)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "tt_ctlm|f16",
+   "drop_cache": false,
+   "item": "C1j TT-T20 (tt_ctlm core 43059362f4bf + pads, latency 19/19/19/17/17)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.cb[fnx]_",
+   "drop_cache": false,
+   "item": "C1j CB pipe seats (13 cb, u_d relay_sites)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.coll_ftn\\.",
+   "drop_cache": false,
+   "item": "C1j coll_ftn north collector sources"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.coll_(?!ftn\\.)",
+   "drop_cache": false,
+   "item": "C1j COLL row b (coll_core added_taps/reset anchor)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.(sle_st_a_v2__pv30dda31f__pvd2ec7769|sle_st_a_v2__pv4242de79)\\.",
+   "drop_cache": false,
+   "item": "C1j FWD6 measured repoint (2 sle_st_a_v2)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.sl[ew]_(su|sc)_",
+   "drop_cache": false,
+   "item": "C1j SU/SC spread (sc3 draft) + OPEN-SU"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^partition_types\\.",
+   "nrx": "tt_ctlm|f16|^partition_types\\.(cb[fnx]_|coll_|sle_st_a_v2__pv30dda31f__pvd2ec7769\\.|sle_st_a_v2__pv4242de79\\.|sl[ew]_(su|sc)_)",
+   "drop_cache": false,
+   "item": "C1j sle_ctl internal_stations"
+  },
+  {
+   "kind": "step",
+   "frm": "C1i",
+   "to": "C1j",
+   "rx": "^(?!partition_types\\.)",
+   "nrx": "tt_ctlm|f16",
+   "drop_cache": false,
+   "item": "C1j die keys (RST+259 reset.source, tap_offset coll_core, latency)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_pipeseat.json",
+   "drop_cache": true,
+   "item": "PIPESEAT CB-PIPESEAT-SPREAD (17 cb)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_stslw.json",
+   "drop_cache": true,
+   "item": "STSLW-R1 (r10 carry 9 st_a + flt_o stations 5 stm)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/rows/plan_c1k_stslw_r10full.json",
+   "drop_cache": true,
+   "item": "R10FULL COMPOSE-GUARD restore (STSLW-R1 + r10 2 types + relay copy)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1j",
+   "to": "C1l",
+   "rx": "sl[ew]_st|lanes|latency",
+   "drop_cache": false,
+   "item": "FIX-STSLW (added_taps null, sl_E0..5_stm__flt fixed_cycles 0->2)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_ftsite.json",
+   "drop_cache": true,
+   "item": "FTSITE QC-SUC-FTSITE (3 su_c ft_slots)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_n59.json",
+   "drop_cache": true,
+   "item": "N59RELAY native59 relay row"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_tapbins.json",
+   "drop_cache": true,
+   "item": "CB-TAPBINS (48 types, sink_bins c1k_rebin)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_c1k_zlleaf.json",
+   "drop_cache": true,
+   "item": "ZL-LEAF clock.zl_lockup.<t>={leaf:true} (14 cb, incl. FLOW-OPS-R3 5 nonzero: cbn_q01 cldd6ea846/cld9ff4c40, cbn_q11 cl49ae4555, cbf_q00_s2, cbf_q00 cl870de686)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1l",
+   "to": "C1m",
+   "rx": "^clock\\.tap_offset",
+   "drop_cache": false,
+   "item": "FIX-TAPOFF tap_offset_cover fill (TAPBINS density taps; cbf_q01 --max-tol 60)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_stb.json",
+   "drop_cache": true,
+   "item": "STB-SPLIT cland ring masters (12 st_b)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_slectl.json",
+   "drop_cache": true,
+   "item": "SLECTL-PILE LINE-SEATS+RP-BANK (sle_ctl 11493 relay_sites + rp_chdq1_bank)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_tapbins2_c1m.json",
+   "drop_cache": true,
+   "item": "CB-TAPBINS2 + TAPOFF fill (replaces ef5e85aa483b)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1l.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_rc97bt2.json",
+   "drop_cache": true,
+   "item": "RC97-BT2 (st_a_v2 regions BT_LAT 2 + 6 st_b)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1m.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_c1m_rc.json",
+   "drop_cache": false,
+   "item": "FIX-RELAYCOPY (drop landing_relay_start_copy on sle_st_a_v1 cl18eece69 + slw_st_a_v1 clb036e152)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1m.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_rtxall_88eac.json",
+   "drop_cache": true,
+   "item": "RTX-ALL landing_relay_tx_stages + u_cland_rstart_tx relay_sites (25 types)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_c1m_rc.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_rtxall_out3.json",
+   "drop_cache": true,
+   "item": "RTX-ALL r3 (28 types, on C1m-rc dffd12ce2cfe)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/plans/c1m.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_pgedge.json",
+   "drop_cache": true,
+   "item": "PG-EDGE-HALO-STA (83 cores, 11 st_a, pg_halo_um 1.296)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_c1m_rc.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_rtxall_out4.json",
+   "drop_cache": true,
+   "item": "RTX-ALL r4 FINAL (26 types, no sle_hc1; on C1m-rc dffd12ce2cfe)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/srctap_final/plan_c1n_tf.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/srctap_final/plan_c1n_srctap.json",
+   "drop_cache": true,
+   "item": "RST-SRCTAP collector source node/tap := RTL ring tap (46 types, 692 fields) + sidecar zz_sidecar_n46r4_final_preview"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_final.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_r.json",
+   "drop_cache": true,
+   "item": "RRDRV-REMAP (643 bad START raws, 35 types -> nearest consumer tap)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_r.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/final/plan_c1n_r2.json",
+   "drop_cache": true,
+   "item": "RRDRV-FAR (2322 START raws, 42 types -> nearest consumer tap)"
+  },
+  {
+   "kind": "step",
+   "frm": "C1nR2",
+   "to": "C1nR3",
+   "rx": "^partition_types\\.slw_sc_v3",
+   "item": "RESETPUB (slw_sc_v3 253->381 relays)"
+  },
+  {
+   "kind": "notplan",
+   "note": "sidecar-only row (0391a5add8e7 -> d09c4516e77c); v13 sidecar a142fe516f24 composed on it",
+   "item": "CA-REDERIVE (sidecar count_aligned)"
+  },
+  {
+   "kind": "notplan",
+   "note": "launch-tree R8 table, not plan json",
+   "item": "R8-REFRESH land_r8 table (r8_refresh, so_w x6 R8_STALE dvs_E0..E5)"
+  },
+  {
+   "kind": "notplan",
+   "note": "launch-tree sink_bins files (144, 1ea8b7f32b4d)",
+   "item": "TAPBINS2-SINKBINS launch plan_of_record/sink_bins/c1k_rebin (144 files: 34 __spread, 54 __composed, 56 .native; replaces 108 TAPBINS bins)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/pipereach/plan_pipeseat.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/pipereach/plan_reach2.json",
+   "drop_cache": true,
+   "item": "CB-PIPEREACH (QC-CB-PIPESEAT)"
+  },
+  {
+   "kind": "jsonpatch",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/demacro2/DEMACRO-QC-C1o.json",
+   "item": "DEMACRO-QC-C1o"
+  },
+  {
+   "kind": "prune",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/prune/row_prune_r2.json",
+   "item": "STA-RELAY-PRUNE (QC-STA-HOLD)"
+  },
+  {
+   "kind": "seatset",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/collirn/row_coll_irn.json",
+   "item": "COLL-IRN-SEAT"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/base/plan_c1n_r2_a372ae84fa2a.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/halo/plan_hc3.json",
+   "drop_cache": true,
+   "item": "HALOCORNER (QC-HALOCORNER-ROW)"
+  },
+  {
+   "kind": "jsonpatch",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/monleg/MONLEG-QC-C1o.json",
+   "item": "MONLEG + MONLEG-RSN"
+  },
+  {
+   "kind": "jsonpatch",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/monleg/MONLEG-QC-C1o-RSN.json",
+   "item": "MONLEG + MONLEG-RSN"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/base/plan_c1n_r2_a372ae84fa2a.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/sul1/plan_sul1_7ae1.json",
+   "drop_cache": true,
+   "item": "SUL1-FACE-BAND (QC-SUL1-BAND)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/base/plan_c1n_r2_a372ae84fa2a.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/rows/btlat3/plan_r2_btlat3_4557.json",
+   "drop_cache": true,
+   "item": "STA-BTLAT3 (QC-STA-BTLAT3)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/c1o_src/c1o_v13_plan_rows.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-C1O-COMPOSE/c1o_v13/plan_c1o.json",
+   "drop_cache": true,
+   "item": "KVQC-DESTACK (KVQC-STACK)"
+  },
+  {
+   "kind": "notplan",
+   "note": "the plan itself",
+   "item": "C1o v13 compose (QC-C1O-COMPOSE)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_fe1seat83.json",
+   "drop_cache": true,
+   "item": "FE1-SEAT83 QC-GEOM-UNITS (slw_fe_v1__cl95cd1d0c 83 relay_sites)"
+  },
+  {
+   "kind": "file",
+   "base": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/cg/plans/c1k.json",
+   "row": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/rows/plan_fwcpl2seat.json",
+   "drop_cache": true,
+   "item": "FWCPL2-SEAT QC-GEOM-UNITS (slw_fw_v1__clf51c11d8__cl592e3d37 relay_sites 41->17690)"
+  },
+  {
+   "item": "VISQC-FEFW-1",
+   "kind": "visrow",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/visqc/row_fefw1.json"
+  },
+  {
+   "item": "RRL-RAWTAPHOLD",
+   "kind": "keys",
+   "source": "QC-FEV2-F110 row 7d6f548bb7d6 (from 06248f276e80)",
+   "keys": [
+    {
+     "path": "reset.raw_tap_hold",
+     "value": {
+      "n": 1,
+      "note": "RRL-SDFF-HOLD, 1 HB4 per raw tap; scoped to 4 measured-miss types",
+      "taps": "raw",
+      "types": [
+       "slw_fe_v2__clf110fab2",
+       "sle_st_b_v1__pv0e7b1dcc",
+       "slw_su_l0__cl1e5219ea",
+       "sle_stm_v2__cl55be2264"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "item": "VISQC-DIE-COLL-BANDS",
+   "kind": "keys",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/visqc/VISQC-DIE-COLL-BANDS.json"
+  },
+  {
+   "item": "VISQC-COLL-1",
+   "kind": "keys",
+   "file": "/srv/opentallas-scratch2/claude/QC-ALLFIX-TSV/visqc/VISQC-COLL-1.json"
+  },
+  {
+   "item": "GLUE-IMAGES rows 1-5 (QC-GLUE-IMAGES)",
+   "kind": "files",
+   "files": [
+    {
+     "rel": "rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh",
+     "sha12": "14faef2260a2"
+    },
+    {
+     "rel": "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv",
+     "sha12": "9e47f133745e"
+    },
+    {
+     "rel": "rtl/qwen_split/qfd_native59_mctx_helpers.sv",
+     "sha12": "49294586c7c6"
+    }
+   ],
+   "source": "QC-GLUE-IMAGES ROW-READY 11-24 08:35 overlay rows/c1h/overlay"
+  },
+  {
+   "kind": "step",
+   "frm": "C1g",
+   "to": "C1h",
+   "rx": "tt_ctlm|f16",
+   "drop_cache": false,
+   "item": "TTCTLM-RESYNTH+DEADIN (core 2c21ec82950f, proof d5d6178d1718)"
+  }
+ ]
+}

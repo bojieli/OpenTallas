@@ -1,0 +1,23 @@
+{
+ "row": "VISQC-COLL-1",
+ "lane": "VIS-QC / OPUS-FIX-QC-COLL-R3",
+ "source": "posts: \"VISQC-COLL-1, g_xf row re-spaced to x 17.28/298.08/579.0\" (pkg14 cb72612ca874) + \"hard_cores origin_um: g_xf_0..3 at x 17.28/298.08/579.0/579.0\"",
+ "keys": [
+  {
+   "path": "partition_types.coll_core.hard_cores[inst=g_xf_0].origin_um[0]",
+   "value": 17.28
+  },
+  {
+   "path": "partition_types.coll_core.hard_cores[inst=g_xf_1].origin_um[0]",
+   "value": 298.08
+  },
+  {
+   "path": "partition_types.coll_core.hard_cores[inst=g_xf_2].origin_um[0]",
+   "value": 579.0
+  },
+  {
+   "path": "partition_types.coll_core.hard_cores[inst=g_xf_3].origin_um[0]",
+   "value": 579.0
+  }
+ ]
+}
