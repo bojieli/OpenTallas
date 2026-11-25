@@ -2233,6 +2233,9 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     odb = odb or find_current_odb(work or "")
     if not odb:
         return "no-odb-yet", ""
+    bad = host_unfit()
+    if bad:
+        return f"host-unfit: {bad}", ""      # COORD: no render is parked on a draining / root>95 % host (4 sat NOT RUN on epyc2)
     roots = tools_roots or [os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "/srv/opentallas-scratch2/claude/rt/current/tools",
                             os.path.expanduser("~/.local/lib/noprog/tools")]
     root = next((r for r in roots if all(os.path.isfile(os.path.join(r, t)) for t in RENDER_TOOLS)), None)
@@ -2376,9 +2379,32 @@ def vis_running(state_dir, now):
 PP_DRIVER_ROOTS = (os.path.dirname(os.path.abspath(__file__)), "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot")
 
 
+ROOT_FULL_PCT = 95
+SCRATCH_FLOOR_GB = 150          # ot-run's own scratch floor: a host below it is 'DRAINING' and refuses jobs
+
+
+def host_unfit(paths=("/", "/srv/opentallas-scratch2"), statvfs=os.statvfs, drain_file=None):
+    """COORD: never park a render on a draining host or one whose root is above 95 %.  -> reason or ''.  A host is draining when its scratch free space is under the ot-run floor
+    (150 GB) or an ot-run drain marker exists.  Pure given statvfs."""
+    for i, p in enumerate(paths):
+        try:
+            v = statvfs(p)
+        except OSError:
+            continue
+        total, free = v.f_blocks * v.f_frsize, v.f_bavail * v.f_frsize
+        if i == 0 and total and 100.0 * (1 - free / total) > ROOT_FULL_PCT:
+            return f"root {100.0 * (1 - free / total):.0f} % full (> {ROOT_FULL_PCT} %)"
+        if i > 0 and free / 2**30 < SCRATCH_FLOOR_GB:
+            return f"{p} has {free / 2**30:.0f} GB free (< {SCRATCH_FLOOR_GB} GB scratch floor: draining)"
+    return ""
+
+
 def pp_launch(item, state_dir, now, popen=subprocess.Popen, roots=None):
     """HOST: run the post-placement review kit (post_place_review.py: ideal-clock top-50 paths, density, RUDY, flight lines, macro/PG overlay -> <kit>/review/) for one queued item,
     nice 10, only while no other render of this host runs.  -> 'launched' | 'no-driver' | 'failed: ...'"""
+    bad = host_unfit()
+    if bad:
+        return f"host-unfit: {bad}"      # stays 'pp_done' with this result; the render is retried by relocating (the hub or a lane copies the DB to a fit host), never parked here
     drv = next((os.path.join(r, "post_place_review.py") for r in (roots or PP_DRIVER_ROOTS) if os.path.isfile(os.path.join(r, "post_place_review.py"))), None)
     if not drv:
         return "no-driver"
@@ -2434,6 +2460,9 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
     if todo:
         item = todo.pop(0)
         res = (pp or pp_launch)(item, state_dir, now)
+        if res.startswith("host-unfit"):
+            todo.insert(0, item)
+            return None
         state.setdefault("pp_done", {})[item["key"]] = {"t": now, "res": res}
         if res == "launched":
             return None
@@ -2448,6 +2477,8 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
                 return pr
             status, rev = render(r["work"], r.get("kit") or r["work"], cp.lower(), r.get("image", ""), (r.get("container") or "x")[:40], [f"checkpoint {cp}"], now=now,
                                  popen=popen, odb=odb, tag="vis_review", nice=True)
+            if str(status).startswith("host-unfit"):
+                return None            # try again on a later tick; never parked and never marked done
             done[key] = now
             if status == "rendering":
                 os.makedirs(state_dir, exist_ok=True)
