@@ -107,3 +107,4 @@
   - QC: C1m 41/125 types (RAW 93, far 12 REATTACH, MISSING 12, worst 1530). C1n (TAPBINS2 f0d336) 43/125 (RAW 107, far 22 STATUS + 5 CHILD, MISSING 12). This class is already owned by QC-SLECTL-RRL (srctap2 row).
   Caveat: RAW assumes the shared clock_landings convention (the RTL raw copy taps the ring tap nearest the pin). The KV RAW count of 218 depends on it, so KV-ALLFIX should confirm on one kv3_hub type.
   Outputs: epyc11/epyc10 PRECHECK-R3/runs/epw/rsc/*.v2.txt.
+- 2026-11-24 22:44 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-3072472-1795588638 on renewed-glider: rc=0 after 14883 s, ended 06:44:03, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/s81_c8.otrun2.log, cmd: --mem 72 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw -- bash /srv/opentallas-scratch2/clau
