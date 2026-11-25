@@ -17,6 +17,12 @@ def put(p, t, txt="x"):
     os.utime(p, (t, t))
 
 
+def edit(p, t):
+    """a real edit: new bytes and a newer mtime (a bare utime is only a reordered mtime, which the content baseline ignores)"""
+    p.write_text(p.read_text() + "# edited\n")
+    os.utime(p, (t, t))
+
+
 def kit(tmp, upto="cts"):
     k = Path(tmp)
     put(k / "config.mk", T0, "export POST_CTS_TCL = /work/cts_post.tcl\nexport PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl\n")
@@ -44,10 +50,10 @@ def test_failed_grt_restart_resumes_at_grt_from_the_newest_valid_step(tmp_path):
 
 def test_an_input_newer_than_a_step_invalidates_that_step_and_later_ones(tmp_path):
     k = kit(tmp_path, "cts")
-    os.utime(k / "cts_post.tcl", (T0 + 900, T0 + 900))            # the CTS hook was edited after CTS ran
+    edit(k / "cts_post.tcl", T0 + 900)            # the CTS hook was edited after CTS ran
     r = KR.auto_write(str(k), "route")
     assert r["start"] == "cts" and r["reused_steps"] == ["synth", "floorplan", "place"] and "cts_post.tcl" in r["why"]
-    os.utime(k / "config.mk", (T0 + 900, T0 + 900))                # a synth-class input newer than synth: nothing past synth is reusable
+    edit(k / "config.mk", T0 + 900)                # a synth-class input newer than synth: nothing past synth is reusable
     assert KR.auto_write(str(k), "route") is None and not (k / "resume.json").exists()
 
 
@@ -96,7 +102,7 @@ def test_hooks_that_name_config_mk_stay_at_their_own_step(tmp_path):
     put(k / "grt_pre.tcl", T0 + 900, "source hold_guard_grt.tcl\n"); put(k / "hold_guard_grt.tcl", T0 + 900, "proc g {} {}\n")
     r = KR.auto_plan(str(k), "route")
     assert r and r["start"] == "cts" and r["reused_steps"] == ["synth", "floorplan", "place"]
-    os.utime(k / "config.mk", (T0 + 900, T0 + 900))                # config.mk itself is still a synth input
+    edit(k / "config.mk", T0 + 900)                # config.mk itself is still a synth input
     assert KR.auto_plan(str(k), "route") is None
 
 
@@ -114,5 +120,5 @@ def test_hdl_identifiers_are_not_reads_but_includes_are(tmp_path):
     put(k / "cts_post.tcl", T0, "source tap_reset_split.tcl\n")
     r = KR.auto_plan(str(k), "route")
     assert r and r["start"] == "cts", r
-    os.utime(k / "rtl" / "defs.svh", (T0 + 900, T0 + 900))         # the included header is a synth input
+    edit(k / "rtl" / "defs.svh", T0 + 900)         # the included header is a synth input
     assert KR.auto_plan(str(k), "route") is None

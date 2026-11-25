@@ -570,15 +570,36 @@ def decide(new, old, allow_nochange=False):
 KWRS_MARKER = ".kwrs_done."           # run_kit.sh stage-resume step markers (/work/.kwrs_done.$PPID)
 
 
-AUTO_SKIP_RE = re.compile(r"(\.log|\.jsonl|\.tmp|\.new)$|^(FAIL_|DONE|PASS_|GATE_|\.kwrs|kwrs_|stale_reports/|stage_odb_|tools_rev|flow_refresh|KIT_FORK)")
+AUTO_SKIP_RE = re.compile(r"(\.log|\.jsonl|\.tmp|\.new)$|^(FAIL_|DONE|PASS_|GATE_|\.kwrs|kwrs_|stale_reports/|stage_odb_|tools_rev|flow_refresh|KIT_FORK|\.kit_resume_inputs|resume_auto_none)")
+INPUT_SHA_FILE = ".kit_resume_inputs.json"     # STAGE-PLATEAU 11-25: sha256 of every kit input at the time its mtime was <= the newest step end (content baseline)
+SHA_MAX = 8 << 20
 
 
-def auto_plan(K, goal="route", now=None):
+def _sha(p):
+    import hashlib
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def _load_baseline(K):
+    try:
+        return json.load(open(os.path.join(K, INPUT_SHA_FILE)))
+    except (OSError, ValueError):
+        return {}
+
+
+def auto_plan(K, goal="route", now=None, why_out=None):
     """FLOW-FIX-2045 (S81-GEOM-OPUS 39ed0e56: run_kit.sh restarted in place with no resume file redid floorplan onward, keeping only synth): the plan of an IN-PLACE restart.  The newest step of
     K/run that is complete, passed, and whose inputs are not newer than its outputs is reused; the run starts at the step after it.  Input = a kit file classify() says is read at that step or
     earlier (gates and files nobody reads do not count; logs, markers and the helpers the wave ships are never inputs).  -> resume record (not yet written) or None when nothing past synth can be reused"""
+    why_out = why_out if why_out is not None else {}
     ck = checkpoint(K)
     if not ck.get("upto") or IDX[ck["upto"]] < IDX["floorplan"]:
+        why_out["why"] = ("checkpoint reaches only " + str(ck.get("upto")) + "; " + "; ".join(f"{k}: {v.get('why')}" for k, v in ck.get("steps", {}).items() if v.get("why"))
+                          + (f"; {ck['why']}" if ck.get("why") else ""))[:600]
         return None
     files, how = input_files(K)
     files = [f for f in files if not AUTO_SKIP_RE.search(f)]
@@ -593,6 +614,7 @@ def auto_plan(K, goal="route", now=None):
     try:
         config = parse_config(open(os.path.join(K, "config.mk")).read())
     except OSError:
+        why_out["why"] = "config.mk unreadable"
         return None
     # FLOW-OPS-R3 11-24 (QC STB dff1e9a2ad86, unit 3561932): config.mk is a root (parse_config), never a producer.
     # Its text names every hook, and once a hook names "config.mk" the propagation made config.mk synth and then every
@@ -609,18 +631,45 @@ def auto_plan(K, goal="route", now=None):
         except OSError:
             pass
     valid = "synth"
+    base, notes = _load_baseline(K), []
     for s in STEPS[:-1]:
         st = ck["steps"].get(s) or {}
         if not (st.get("complete") and st.get("passed")):
             break
         newer = [rel for rel, t in mt.items() if stage.get(rel) not in (None, GATE) and IDX[stage[rel]] <= IDX[s] and t > st["end"] + 2]
+        # STAGE-PLATEAU 11-25 (HEAD-OBSGC: valid cts checkpoints were discarded and the kit redid floorplan): a kit copy, a tools refresh or a move reorders mtimes
+        # without changing a byte.  A file whose content equals the baseline sha recorded when it was last known unchanged is not newer.
+        same = []
+        for rel in list(newer):
+            try:
+                if os.path.getsize(os.path.join(K, rel)) <= SHA_MAX and base.get(rel) and _sha(os.path.join(K, rel)) == base[rel]:
+                    newer.remove(rel)
+                    same.append(rel)
+            except OSError:
+                pass
+        if same:
+            notes.append(f"{len(same)} input(s) with a newer mtime but the baseline content ({','.join(sorted(same)[:3])}) are not counted")
         if newer:
-            valid_why = f"inputs newer than {s}: " + ",".join(sorted(newer)[:4])
+            valid_why = f"inputs newer than {s} and changed or without a content baseline: " + ",".join(sorted(newer)[:6])
             break
         valid = s
     else:
         valid_why = ""
+    # record the content baseline of every input whose mtime is not newer than the last complete step (trusted unchanged), keeping earlier entries
+    try:
+        t_last = max(v["end"] for v in ck["steps"].values() if v.get("end"))
+        nb = dict(base)
+        for rel, t in mt.items():
+            if t <= t_last + 2 and rel not in nb and os.path.getsize(os.path.join(K, rel)) <= SHA_MAX:
+                nb[rel] = _sha(os.path.join(K, rel))
+        if nb != base:
+            tmp_ = os.path.join(K, INPUT_SHA_FILE + ".tmp")
+            json.dump(nb, open(tmp_, "w"))
+            os.replace(tmp_, os.path.join(K, INPUT_SHA_FILE))
+    except (OSError, ValueError):
+        pass
     if IDX[valid] < IDX["floorplan"]:
+        why_out["why"] = (f"checkpoint complete through {ck['upto']} but {locals().get('valid_why') or 'no step is valid'}")[:600]
         return None
     start = STEPS[IDX[valid] + 1]
     if goal in IDX and IDX[goal] < IDX[start]:
@@ -641,8 +690,15 @@ def auto_write(K, goal="route"):
                 return None
         except (OSError, ValueError):
             return None
-    rec = auto_plan(K, goal)
+    why = {}
+    rec = auto_plan(K, goal, why_out=why)
     if rec is None:
+        # STAGE-PLATEAU 11-25: never silent.  The reason is printed (run_kit.sh shows KW_RESUME_AUTO) and kept in K/resume_auto_none.json.
+        try:
+            json.dump({"t": time.time(), "why": why.get("why", "nothing past synth is reusable"), "discarded_resume": os.path.exists(p)}, open(os.path.join(K, "resume_auto_none.json"), "w"))
+        except OSError:
+            pass
+        print("KW_RESUME_AUTO_DISCARD " + json.dumps({"kit": K, "why": why.get("why", "nothing past synth is reusable")}), file=sys.stderr)
         if os.path.exists(p):
             os.unlink(p)
         return None
@@ -865,7 +921,7 @@ def main(argv):
             return 3
     elif a.cmd == "auto":
         r = auto_write(os.path.abspath(a.kit), a.goal)
-        print("KW_RESUME_AUTO " + (json.dumps({"start": r["start"], "reused": r["reused_steps"], "why": r["why"]}) if r else "none (full flow: nothing past synth is reusable, or the kit has a wave resume plan)"), file=sys.stderr)
+        print("KW_RESUME_AUTO " + (json.dumps({"start": r["start"], "reused": r["reused_steps"], "why": r["why"]}) if r else "none (full flow: nothing past synth is reusable, or the kit has a wave resume plan; reason in K/resume_auto_none.json)"), file=sys.stderr)
     elif a.cmd == "verify":
         bad = verify(a.kit)
         print("KW_RESUME_VERIFY " + json.dumps({"ok": not bad, "bad": bad[:20]}))
