@@ -243,7 +243,7 @@ ot_s81sl_kv_leaf__t1	ot_s81sl_kv_leaf	FAIL 10	pass	FAIL 1	FAIL 1	pass	FAIL 1	110
 ot_s81sl_kv_leaf__t2	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	pass			REACH,BOUNDARY-REG	FAIL die:oversized s_3N_L0(item 10)	c9s-1	0	0
 ot_s81sl_kv_leaf__t3	ot_s81sl_kv_leaf	FAIL 6	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	0	0
 ot_s81sl_kv_leaf__t4	ot_s81sl_kv_leaf	FAIL 19	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	2/57	0
-ot_s81sl_kv_leaf__t5	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	FAIL 1	1500	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): tap under u_vsw, 398 seats on one point, ft3 over lane columns	c9s-1	0	0
+ot_s81sl_kv_leaf__t5	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	FAIL 1	1500	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): tap under u_vsw, 398 seats on one point, ft3 over lane columns | SETUP-AT-CTS (VIS-CAUSES): see ALLFIX LEAF-T25-T36-SETUP-C11 / KVLEAF-T5-SETUP-CHECK	c9s-1	0	0
 ot_s81sl_leaf__t1	ot_s81sl_leaf	FAIL 5	pass	pass	FAIL 1	pass	FAIL 1	2379	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	15/185	1
 ot_s81sl_leaf__t10	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	GROW5 review (Fable 11-25): HOLD: +185.76 W growth overlaps s_1N_L4 by 30.24 um at die level; ve_m|ve_s abutted breaks 386 mated M4 pins; stale taps/relay seats; core-blind hops 1->14 >405 um	c11grow5	6/611	2
 ot_s81sl_leaf__t11	ot_s81sl_leaf	FAIL 70	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	88/631	3
@@ -260,7 +260,7 @@ ot_s81sl_leaf__t23	ot_s81sl_leaf	FAIL 26	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t24__cl2456157b	ot_s81sl_leaf	FAIL 20	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	8/610	0
 ot_s81sl_leaf__t24__cl81374cd8	ot_s81sl_leaf	FAIL 50	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	15/615	0
 ot_s81sl_leaf__t25__cl431c660f	ot_s81sl_leaf	FAIL 32	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	47/623	1
-ot_s81sl_leaf__t25__cl55642d17	ot_s81sl_leaf	FAIL 78	pass	pass	FAIL 1	pass	FAIL 1	5045	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins	c9s-1	65/624	1
+ot_s81sl_leaf__t25__cl55642d17	ot_s81sl_leaf	FAIL 78	pass	pass	FAIL 1	pass	FAIL 1	5045	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins | SETUP-AT-CTS (VIS-CAUSES): see ALLFIX LEAF-T25-T36-SETUP-C11 / KVLEAF-T5-SETUP-CHECK	c9s-1	65/624	1
 ot_s81sl_leaf__t26	ot_s81sl_leaf	FAIL 60	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	135/624	1
 ot_s81sl_leaf__t27	ot_s81sl_leaf	FAIL 18	pass	pass	pass	pass	FAIL 1			REACH,CORE-TAP-OWNER	not-reviewed	c9s-1	10/613	1
 ot_s81sl_leaf__t28	ot_s81sl_leaf	FAIL 31	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	92/638	0
@@ -272,7 +272,7 @@ ot_s81sl_leaf__t32	ot_s81sl_leaf	FAIL 17	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t33	ot_s81sl_leaf	FAIL 55	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	119/623	1
 ot_s81sl_leaf__t34	ot_s81sl_leaf	FAIL 30	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	35/644	0
 ot_s81sl_leaf__t35	ot_s81sl_leaf	FAIL 100	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD (gains but stale core taps/relay seats, 4 GATE REACH, ft0 445 um)	c9s-1	88/605	1
-ot_s81sl_leaf__t36	ot_s81sl_leaf	FAIL 62	pass	pass	FAIL 1	pass	FAIL 1	1479	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	120/631	1
+ot_s81sl_leaf__t36	ot_s81sl_leaf	FAIL 62	pass	pass	FAIL 1	pass	FAIL 1	1479	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed | SETUP-AT-CTS (VIS-CAUSES): see ALLFIX LEAF-T25-T36-SETUP-C11 / KVLEAF-T5-SETUP-CHECK	c9s-1	120/631	1
 ot_s81sl_leaf__t37	ot_s81sl_leaf	FAIL 9	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	49/609	0
 ot_s81sl_leaf__t38	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	9/598	0
 ot_s81sl_leaf__t39	ot_s81sl_leaf	FAIL 23	pass	pass	FAIL 1	pass	FAIL 1	6335	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	54/616	1
