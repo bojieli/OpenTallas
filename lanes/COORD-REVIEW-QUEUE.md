@@ -10511,3 +10511,21 @@ FAILED [AUTOPILOT 2a203d596dee] 2026-11-25 07:42:35 PST AUTOPILOT -> KIT-WAVE-12
   8. DENSITY clumps (minor). Green 0.5-0.7 bins in and beside the W strip (x0-60 y1020-1045; x80-130 y595-635) and x570-640 y620-760; no red bin. Cause: lander fan-in logic squeezed into the W slot of problem 1. Fix: same as 1.
   OK: macro/PG overlay 0 halo hits, 0 pin hits (465 straps, 23 macros); head array regular 4x4, column channels ~95um. Renders: paths.png drew 0 failing paths (cloud only); slack read from kit review/paths_ideal.tsv and 4_cts_final.rpt. No job touched. VIS-QUEUE line appended.
 - 2026-11-25 07:48 PST DIED [QC-FWV1-F51] ot-run otrun-viable-ram-2170477 on viable-ram: rc=1 after 0 s, ended 15:48:32, log /srv/opentallas-scratch2/claude/QC-FWV1-F51/pre_run.out, cmd: --crit --priority die --no-spill --mem 48 --threads 2 --hosts epyc11 --name f51-pre-fwv1 --dir /srv/opentallas-scratch2/claude/QC-FWV1-F51 - | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
+- 2026-11-25 07:48 PST W8 CUT + APPLY DONE [HEAD-ALLFIX -> COORD; cc FP-CONVERGE-HEAD, HEAD-WEST, FAIL-ROUTE-1115]. The W8 cut was taken at 07:30 PST.
+  - Event head_rp21z20NF15f_r18w8b. Plan prep_r18w8_b 6b2c670d0ae4 = W7 + C7 + C5 dsel_cone + LATNOFIC-REPRICE-1 + HEAD-SINKBIN re-bin (4 types) + C9 LEP-PUSHDUP-3 (RTL + 2 native_stage_groups, EQUIVALENT).
+  - Snapshot kw45/snap_s81_head/s81_head_r18w8b_s1 (manifest c3fd4681e867), rt pin 89ca451775e0, sidecar ba968452ea5a.
+  - BIND DIR: epyc12 /srv/opentallas-scratch2/claude/head-allfix/bind_w8_b (strict bind PASS, cohort 27/27, LATCHECK 334/334 --fixed-in-core, native release RC 0, G0 0 errors / 201 warnings; PRE PASS 0 findings on the rt-composed launch tree). Tree head-allfix/trees/s81_head_w8b.
+  - APPLY: publish_apply RC 0, receipt lanes/handoff/s81_head_atomic_apply_1795621139542216390.json.
+  - HOSTS (hub 6b600f2d): hosts epyc7/intel1/epyc8, place_prefer epyc8/intel1/epyc7, gen_host intel1, gen_hosts intel1/epyc8/epyc2/intel2/epyc7. epyc12 is not a launch host (6c8efbe0); epyc2 is tree/gen only (root fs under the ot-run reserve).
+  LAUNCH SPLIT:
+  - ROUTE to sign-off via the wave, only_items = 19 clean types: hd_ctl, hd_ctl_e, hd_ctl_n, hd_host_e, hd_host_n, hd_mesh_e, hd_spn_eshim_rx/tx, hd_spn_wshim_rx/tx, hd_st_k5, hd_st_m, hd_st_n3_transit, hd_st_n3_turn, hd_st_n4, hd_st_str, hd_st_turn, hd_turn_a, hd_turn_b. kit_wave plan --probe: s81_head ON, 17 eligible + hd_ctl RESIGN-LAST (H10: hd_ctl + the 8 re-signs go now). hd_spn and hd_st_n4 are already signed on this plan block.
+  - PROBES, 8 private kits, unit w8b-probe-<type>-11251545, out head-allfix/w8probe/head_rp21z20NF15f_r18w8b/:
+  - --goal grt (CTS + GRT + post-GRT TT/FF gate): hd_lep0N and hd_lep0N_w on epyc8.
+  - --goal cts (through CTS + tapbal STA, H1/H4): hd_tile on epyc8; hd_mesh and hd_host_w on epyc7; hd_spn, hd_spn_end and hd_serdes on intel1.
+  - epyc10 is not used, per the temporary host ruling (kits on epyc7/intel1/epyc8). Plan priority is refused for type builds, so normal admission.
+  H2 STALE KITS CANCELLED at the apply (ot-run --cancel --reason design):
+  - epyc12 W6p hd_lep0N tapbal oth-ubuntu-2149452-1795602628
+  - intel2 W6p hd_serdes route oth-ubuntu-3245528-1795612940
+  - epyc11 HEAD-EAST-REPLAN r18gw hd_lep0N oth-ubuntu-2135359-1795615035
+  - Read-only, left running: the epyc10 W6p hd_lep0N_w wave kit is at 6_report, routed (antenna 0/0) with setup WNS -104.27 / TNS -2789 (gate -42). It is measured unable to sign; it will finish its report and does not count.
+  C12 merged on main b1ede700d01 (OT_TAP_GRT_PRE_ITERS + 167 tcl env knobs now exported to config.mk). W8 kits run rt 89ca, which predates it, so W8 tapbal still runs 30 iterations; W9 picks up the fix.
