@@ -55,7 +55,7 @@ class ShortPool(Heavy):
                 lease.close()
 
     def test_memory_rejection_still_waits(self):
-        self.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 1; echo "NO 4 cls | insufficient memory"\n')
+        self.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 1; [ "$1" = --is-plan ] && exit 1; echo "NO 4 cls | insufficient memory"\n')
         r, a = self.run_("500")
         self.assertIsNone(a)
         self.assertEqual(r.returncode, 75)

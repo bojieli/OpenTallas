@@ -39,6 +39,7 @@ class Heavy(unittest.TestCase):
         self.rec = w('reconcile', '[ "$1" = --is-die ] && exit 1; [ "$1" = --is-plan ] && exit 1; echo "OK 4 cls | need 4, available 100 GB, growth charged 0 GB"')
         self.prot = w('protect', '[ "$1" = --pid ] && { echo "$2" > "$OUT_ARGS.prot"; exit 0; }; [ -n "${DIE_TEST:-}" ]')
         w('systemd-run', 'printf "%s\\n" "$@" > "$OUT_ARGS"')
+        w('sudo', 'echo "$@" >> "$OUT_ARGS.sudo"')   # DIECLASS_1125: die class runs `sudo -n choom -n -1000`; never the real sudo in a test
         w('nproc', 'echo 10')
         self.load = d / 'loadavg'
         s = (HERE / 'ot-heavy').read_text()
@@ -57,8 +58,9 @@ class Heavy(unittest.TestCase):
         env.pop('OT_HEAVY_CPU', None); env.pop('OT_HEAVY_PRIO', None)
         env.pop('OT_HEAVY_CONF', None)   # this harness rewrites the conf path in a copy of ot-heavy (HERMETIC_CONF_1114)
         if crit: env['OT_HEAVY_CPU'] = 'crit'
-        try: (self.d / 'args').unlink()
-        except FileNotFoundError: pass
+        for f in ('args', 'args.sudo'):
+            try: (self.d / f).unlink()
+            except FileNotFoundError: pass
         r = subprocess.run([str(self.h), '--mem', mem, '--max-wait', maxwait, '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
         a = (self.d / 'args').read_text().split('\n') if (self.d / 'args').exists() else None
         return r, a

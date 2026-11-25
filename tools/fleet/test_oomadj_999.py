@@ -45,9 +45,10 @@ class DockerShim(unittest.TestCase):
                 cls.LAYOUTS[name] = INS.patch_docker(f.read_text())
 
     def test_die_container_is_minus_999(self):
+        # the INSTALLER's -999 patch of pre-11-25 deployed layouts; the repo shim is DIECLASS_1125 (-1000, no cap; test_ot_heavy_dieclass.py)
         for name, s in self.LAYOUTS.items():
             out = shim_run(s, ["run", "--oom-score-adj", "-1000", "img"], prio="die")
-            self.assertEqual(adj_flags(out), ["--oom-score-adj=-999"], name)
+            self.assertEqual(adj_flags(out), ["--oom-score-adj=" + ("-1000" if name == "repo" else "-999")], name)
             self.assertIn("--label=opentallas.priority=die", out, name)
 
     def test_non_die_container_is_zero_or_own_non_negative(self):
@@ -87,7 +88,7 @@ class OtHeavy(unittest.TestCase):
         self.assertEqual(self.block_adj(300, "die"), "300")
 
     def test_repo_and_deployed_layouts_patched(self):
-        self.assertIn(INS.HEAVY_BLOCK, (HERE / "ot-heavy").read_text())      # later edits (PLANBYPASS_1114) sit between the block and the exec anchor
+        self.assertIn("DIECLASS_1125", (HERE / "ot-heavy").read_text())      # 11-25: the 0-adj block became the die-class / KIT_OOM_ADJ block
         f = EVID / "oomadj_999_1022/ot-heavy.ep5.before"
         p = INS.patch_heavy(f.read_text())
         self.assertIn(INS.HEAVY_BLOCK + INS.HEAVY_ANCHOR, p)
@@ -97,16 +98,13 @@ class OtHeavy(unittest.TestCase):
 
 
 class ProtectDie(unittest.TestCase):
-    def test_target_is_minus_999(self):
-        self.assertEqual(PD.TARGET, "-999")
-        src = (HERE / "ot-protect-die").read_text()
-        self.assertNotRegex(src, r"write_text\(\s*'-1000")
+    def test_target_is_minus_1000(self):
+        self.assertEqual(PD.TARGET, "-1000")              # DIECLASS_1125 (OWNER 11-25): die class has no memory cap, so -1000 cannot livelock
 
-    def test_legacy_minus1000_left_alone(self):
-        self.assertFalse(PD.wants_write("-999", False))
+    def test_die_target_set(self):
+        self.assertFalse(PD.wants_write("-1000", False))
         self.assertTrue(PD.wants_write("0", False))
-        self.assertTrue(PD.wants_write("-1000", False))   # -1000 inherited after the cutoff -> -999
-        self.assertFalse(PD.wants_write("-1000", True))   # legacy (possibly livelocked): report only
+        self.assertTrue(PD.wants_write("-999", False))    # an older -999 die process is raised to the owner's -1000
 
     def test_legacy_set(self):
         bt, hz = PD.boot_time(), os.sysconf("SC_CLK_TCK")
@@ -143,7 +141,9 @@ SET_MINUS_1000 = re.compile(
 class GrepGuard(unittest.TestCase):
     def test_no_minus_1000_oom_adj_in_tools(self):
         # the installer names the old -1000 text it replaces
-        skip = {HERE / "evidence", Path(__file__).resolve(), HERE / "install_oomadj_999.py"}
+        # DIECLASS_1125 (OWNER 11-25): the die class itself sets -1000 where it also removes the memory cap
+        skip = {HERE / "evidence", Path(__file__).resolve(), HERE / "install_oomadj_999.py", HERE / "ot-heavy", HERE / "ot-heavy-docker",
+                HERE / "test_ot_heavy_dieclass.py", HERE / "ot-protect-die", HERE / "test_ot_heavy_crit.py"}
         bad = []
         for p in TOOLS.rglob("*"):
             if not p.is_file() or p.suffix in (".json", ".jsonl", ".log", ".c", ".md", ".before") or \

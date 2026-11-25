@@ -7,6 +7,9 @@
 # an explicit larger --memory/-m is lowered to the declaration, a smaller one is kept.  Everything else passes through.
 REAL=/usr/bin/docker
 MEM=${OT_HEAVY_MEM_GB:-}
+# DIECLASS_1125 (OWNER 11-25): a die-level container (OT_HEAVY_PRIO die / plan) runs with NO memory cap at oom_score_adj -1000 (a cap at -1000 would
+# livelock in its memcg OOM) and cpu.weight ~1000; a type-level container gets the job's OT_HEAVY_OOM_ADJ (500) unless it asks for more.
+_die=; case "${OT_HEAVY_PRIO:-}" in die|plan) [ "${OT_HEAVY_DIECLASS:-1}" != 0 ] && _die=1;; esac
 case "$MEM" in ''|*[!0-9.]*) exec "$REAL" "$@";; esac
 sub=; i=0; args=("$@")
 for a in "$@"; do
@@ -25,12 +28,12 @@ j=0; n=${#rest[@]}
 while [ $j -lt $n ]; do
   a=${rest[$j]}
   case "$a" in
-    --oom-score-adj=*) hadj=1; [ "${OT_HEAVY_PRIO:-}" = die ] || out+=("--oom-score-adj=$(oadj "${a#--oom-score-adj=}")");;
-    --oom-score-adj) hadj=1; [ "${OT_HEAVY_PRIO:-}" = die ] || out+=("$a" "$(oadj "${rest[$((j+1))]}")"); j=$((j+1));;
+    --oom-score-adj=*) hadj=1; [ -n "$_die" ] || out+=("--oom-score-adj=$(oadj "${a#--oom-score-adj=}")");;
+    --oom-score-adj) hadj=1; [ -n "$_die" ] || out+=("$a" "$(oadj "${rest[$((j+1))]}")"); j=$((j+1));;
     --cpu-shares=*) hshares=1; out+=("$a");;
     --cpu-shares|-c) hshares=1; out+=("$a" "${rest[$((j+1))]}"); j=$((j+1));;
-    --memory=*) have=1; lim=$(cap "${a#--memory=}"); out+=("--memory=$lim");;
-    --memory|-m) have=1; j=$((j+1)); lim=$(cap "${rest[$j]}"); out+=("$a" "$lim");;
+    --memory=*) have=1; lim=$(cap "${a#--memory=}"); [ -n "$_die" ] || out+=("--memory=$lim");;
+    --memory|-m) have=1; j=$((j+1)); lim=$(cap "${rest[$j]}"); [ -n "$_die" ] || out+=("$a" "$lim");;
     --memory-swap=*|--memory-swap) [ "$a" = --memory-swap ] && j=$((j+1));;   # replaced below: no swap above the cap
     -v|-e|-w|-u|-p|-l|-h|--name|--network|--net|--entrypoint|--env|--env-file|--mount|--volume|--workdir|--user|--cpus|\
     --shm-size|--ulimit|--label|--hostname|--ipc|--pid|--gpus|--device|--add-host|--cap-add|--cap-drop|--security-opt|\
@@ -43,11 +46,13 @@ while [ $j -lt $n ]; do
   j=$((j+1))
 done
 [ -z "$have" ] && lim="${MEM}g"
-[ -z "$have" ] && out=("--memory=$lim" "${out[@]}")
+[ -z "$have" ] && [ -z "$_die" ] && out=("--memory=$lim" "${out[@]}")
+_ms=("--memory-swap=$lim"); [ -n "$_die" ] && _ms=()
 # OOMADJ_999_1022: Docker daemon starts outside the caller scope, so the adjustment is explicit: a die container -999
 # (never -1000: that also exempts it from its own --memory cgroup OOM, a livelock at the cap), anything else >= 0.
-if [ "${OT_HEAVY_PRIO:-}" = die ]; then out=("--oom-score-adj=-999" "--label=opentallas.priority=die" "${out[@]}")
-elif [ -z "$hadj" ]; then out=("--oom-score-adj=0" "${out[@]}"); fi
+if [ -n "$_die" ]; then out=("--oom-score-adj=-1000" "--label=opentallas.priority=die" "${out[@]}")
+  [ -z "$hshares" ] && out=("--cpu-shares=17600" "${out[@]}") && hshares=1
+elif [ -z "$hadj" ]; then _ka=${OT_HEAVY_OOM_ADJ:-0}; case "$_ka" in ''|*[!0-9]*) _ka=0;; esac; out=("--oom-score-adj=$_ka" "${out[@]}"); fi
 # CANCEL-LABEL-1120 (FLEET-WATCH-1015): every container carries its admitting unit and ot-run tag as labels; ot-heavy-stop / ot-run --cancel find it by them (no client needed).
 [ -n "${OT_HEAVY_UNIT:-}" ] && out=("--label=ot.unit=$OT_HEAVY_UNIT" "${out[@]}")
 [ -n "${OT_HEAVY_TAG:-}" ] && out=("--label=ot.tag=$OT_HEAVY_TAG" "${out[@]}")
@@ -68,7 +73,7 @@ if [ "${OT_HEAVY_DOCKER_TRAP:-1}" != 0 ]; then
   done
   if [ -n "$_isrun" ] && [ -z "$_skip" ]; then
     [ -n "$_name" ] || { _name="otc-$$-$RANDOM"; out=("--name=$_name" "${out[@]}"); }
-    "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}" <&0 &
+    "$REAL" "${pre[@]}" "${_ms[@]}" "${out[@]}" <&0 &
     _cp=$!
     trap '"$REAL" stop -t "${OT_HEAVY_STOP_S:-20}" "$_name" >/dev/null 2>&1; kill -TERM $_cp 2>/dev/null; wait $_cp 2>/dev/null; exit 143' TERM INT HUP
     wait $_cp; _rc=$?
@@ -76,4 +81,4 @@ if [ "${OT_HEAVY_DOCKER_TRAP:-1}" != 0 ]; then
     exit $_rc
   fi
 fi
-exec "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}"
+exec "$REAL" "${pre[@]}" "${_ms[@]}" "${out[@]}"

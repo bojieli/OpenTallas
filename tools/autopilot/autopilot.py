@@ -1536,6 +1536,8 @@ def classify(c, client):
         why = w.split(" why ", 1)[1] if " why " in w else "reason not logged (WATCHDOG.txt of that tick)"
         kind = "watchdog-superseded" if why.startswith("SUPERSEDED") else "watchdog-stopped"
         return "CRASH", kind, f"exit {client['exit']}: stopped by the hub WATCHDOG ({w[:16]}): {why}"[:600]
+    if client.get("exit") in (137, 143) and client.get("oom_report"):
+        return "CRASH", "infra-oom", f"exit {client['exit']}: {client['oom_report']}"[:600]
     if client.get("exit") in (137, 143):
         # COORD 11-05 07:01: exit 137/143 with no memory line in the logs is a signal from outside, usually a lane's
         # docker stop, not an OOM (opstore_b stopped by ruling 06:51 came back 06:58). Not in INFRA_KINDS: no retry.
@@ -1592,6 +1594,9 @@ def parse_client_log(text, *, unit=None, started=0):
     fr = re.findall(r"^KIT_FLOW_REFRESH FAIL FLOW-REFRESH-PARTIAL:[^\n]*", text, re.M)
     if fr:                                              # FLOW-PROC-A: the all-or-nothing refresh deferred the stage before the runner
         o["flow_refresh_partial"] = fr[-1][:400]
+    oomr = re.findall(r"^ot-heavy: (?:EARLYOOM|MEMCG-OOM) on [^\n]*", text, re.M)
+    if oomr:            # DIECLASS_1125 (OWNER 11-25): ot-heavy-exit's own OOM report is memory evidence (was filed infra-stopped, never retried)
+        o["oom_report"] = oomr[-1][:400]
     if "ot-run: NOT COMPLETED" in text:
         o["not_completed"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT COMPLETED" in l][-1][:300]

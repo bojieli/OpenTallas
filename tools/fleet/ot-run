@@ -2912,6 +2912,8 @@ def main():
         elif o == "--threads": threads = int(a.pop(0))
         elif o == "--crit": os.environ["OT_RUN_CRIT"] = "1"
         elif o == "--direct": os.environ["OT_RUN_CRIT"] = os.environ["OT_RUN_DIRECT"] = "1"
+        elif o == "--die":           # DIECLASS_1125 (OWNER 11-24 00:05): die-level job (compose, PRE / gate, bind, bind-check, R8, census) = --priority die
+            os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         elif o == "--priority":
             prio = a.pop(0)
             if prio not in ("die", "plan", "proof"): sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials), 'plan' (plan-event jobs: strict bind, G0, die-proto) or 'proof' (r712 proof kits, PROOF-PRIO-1119)")

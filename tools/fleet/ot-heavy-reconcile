@@ -962,7 +962,7 @@ DEFAULTS = dict(THREAD_CAP_FACTOR=1.0, GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_A
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0, PLAN_GAP_FACTOR=1.0, MEASURED_GAP_FACTOR=1.0, MEASURED_GAP_CAP=0.5,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
                 SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_PROBE_GB=40.0, SMALL_THREADS=4.0, SMALL_PROBE_MAX=8.0,
-                CPU_CHARGE=1.0, CPU_FACTOR=1.0, CPU_FALLBACK_SHARE=0.35, CPU_PCT=0.75, CPU_MIN_N=3.0, CPU_MIN_LOAD=0.6, CPU_LOAD_ADMIT=1.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                CPU_CHARGE=1.0, CPU_FACTOR=1.0, CPU_FALLBACK_SHARE=0.35, CPU_PCT=0.75, CPU_MIN_N=3.0, CPU_MIN_LOAD=0.6, CPU_LOAD_ADMIT=1.0, DIE_SLICE_GB=0.0, DIE_SLICE_CORES=0.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1673,6 +1673,18 @@ def cpu_committed(units, hist, threads_of, pct, min_n, fallback, young=(), recen
     return tot
 
 
+def die_slice_gb(prio=None):
+    """DIECLASS_1125 (OWNER 11-24 00:05: e.g. epyc12 32 cores + 300 GB for die-level work): DIE_SLICE_GB / DIE_SLICE_CORES in /etc/ot-heavy.conf are held
+    back from every type-level admission; die-class jobs (OT_HEAVY_PRIO die / plan) never pass the gate and may use them."""
+    prio = os.environ.get("OT_HEAVY_PRIO") if prio is None else prio
+    return 0.0 if prio in ("die", "plan") else max(0.0, conf("DIE_SLICE_GB"))
+
+
+def die_slice_cores(prio=None):
+    prio = os.environ.get("OT_HEAVY_PRIO") if prio is None else prio
+    return 0.0 if prio in ("die", "plan") else max(0.0, conf("DIE_SLICE_CORES"))
+
+
 def cpu_charge_check(cls, threads, units, hist, threads_of, nproc, load1, young=(), factor=1.0, pct=0.9, min_n=3, fallback=0.5, min_load=0.6, recent=None, load_admit=1.0):
     """FLOW-FLEET-R2 F1 (FABLE-FLOW-0800): CPU is charged the way memory is: the expected cores (p90 of the class's measured runs) of every running unit plus this job must stay
     under FACTOR x nproc.  Only while the host is really busy (load1 >= MIN_LOAD x nproc): a declared-only cap refused 31 admits at load 50/96.  -> (ok, why)"""
@@ -1836,10 +1848,10 @@ def gate_locked(mem, argv):
                 if _fs > 0:
                     _need = min(_need, math.ceil(_fs))
             _grow += _sg    # STAGE_PEAK_1114: every running build is charged its measured stage peak (current + next stage), not its RSS now
-            _free = avail - conf("INV_HEADROOM_GB") - _grow - _young
+            _free = avail - conf("INV_HEADROOM_GB") - _grow - _young - die_slice_gb()   # DIECLASS_1125: a host's die slice is not for type-level jobs
             _ok = _free >= _need
             _cpu_note = ""
-            if _ok and conf("CPU_CHARGE") and not os.environ.get("OT_HEAVY_CPU") == "crit" and not os.environ.get("OT_HEAVY_DIRECT") == "1":
+            if _ok and conf("CPU_CHARGE") and not os.environ.get("OT_HEAVY_CPU") == "crit" and not os.environ.get("OT_HEAVY_DIRECT") == "1" and os.environ.get("OT_HEAVY_PRIO") not in ("die", "plan"):   # DIECLASS_1125
                 try:     # FLOW-FLEET-R2 F1: CPU charged by measured class cores, like memory by stage peak
                     _young_c = []
                     for _f in glob.glob(f"{D}/res.*"):
@@ -1848,7 +1860,7 @@ def gate_locked(mem, argv):
                             if _u2 not in _live:
                                 _mm2 = rd(f"{D}/meta.{_u2}").split()
                                 _young_c.append((_mm2[1] if len(_mm2) > 1 else "?", int(num(f"{D}/cthr.{_u2}") or 8)))
-                    online_cores = os.cpu_count() or 1
+                    online_cores = max(1, (os.cpu_count() or 1) - int(die_slice_cores()))   # DIECLASS_1125: die slice cores are not for type-level jobs
                     _cok, _cwhy = cpu_charge_check(cls, job_threads(), _units, cpu_history(), lambda u: int(num(f"{D}/cthr.{u}") or 8), online_cores,
                                                    float(rd("/proc/loadavg").split()[0]), _young_c, conf("CPU_FACTOR"), conf("CPU_PCT"), conf("CPU_MIN_N"), conf("CPU_FALLBACK_SHARE"), conf("CPU_MIN_LOAD"),
                                                    recent_cores(json.loads(rd(STATE) or "{}"), max_cores=online_cores), conf("CPU_LOAD_ADMIT"))
@@ -1911,6 +1923,11 @@ def gate_locked(mem, argv):
 
 
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
+# DIECLASS_1125 (OWNER 11-24 00:05): die-level tools are die class automatically: plan PRE / gate checks, bind phases, die-plan bind / check (never the
+# per-kit `bind.py kit-rtl` of a wave kit: BYPASS-ENV-1119), plan compose scripts, gate chain scripts, bind*.sh launchers, plan census.
+DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|plan_census|"
+                          r"(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b|"
+                          r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
 PRIO_FILE = f"{D}/prio_die.re"
 PROOF_FILE = f"{D}/prio_proof.re"      # PROOF-PRIO-1119: one regex per line; marks proof kits that are ALREADY queued / running (their env cannot change): matched on command line + cwd
 
@@ -1937,6 +1954,8 @@ def die_like(argv, cwd="", environ=()):
         return True
     text = " ".join(argv) + " " + cwd
     if DIE_RE.search(text):
+        return True
+    if DIE_LEVEL_RE.search(" ".join(argv)) and not re.search(r"\bkit-rtl\b", " ".join(argv)):   # DIECLASS_1125: on the command only (a kit's cwd may sit under a bind dir)
         return True
     for ln in rd(PRIO_FILE).splitlines():
         ln = ln.strip()

@@ -11,7 +11,7 @@ reported in "legacy_minus1000".  A missing/invalid cutoff file treats every -100
 """
 import argparse, glob, json, os, re, subprocess, sys, time
 from pathlib import Path
-TARGET = '-999'          # OOMADJ_999_1022: never -1000 (memcg OOM livelock)
+TARGET = '-1000'         # DIECLASS_1125 (OWNER 11-25 00:0x): die jobs -1000; ot-heavy runs die class with NO MemoryMax / docker --memory, so no memcg livelock (was -999, OOMADJ_999_1022)
 LEGACY = '-1000'
 CUTOFF_FILE = '/etc/ot-oomadj-legacy-cutoff'
 DIE = re.compile(r'(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|/(die-evidence[^/ ]*|kv-die)/)')
