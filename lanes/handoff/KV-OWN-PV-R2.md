@@ -88,3 +88,4 @@
 - C9-KVPV-CLAND-LEG: LEG405 widened (main 551fa8b9c9); START tool snap fix (main 1543d5b353); row c9row/ROWS_KV-OWN-PV-R2-C9START.sh 78cd1900707e, dry A5t8 e7723cf0fae7 (15 pv types). ALLFIX-KV 0aa80cc0. Sent to compose lane a602519c571628d7c.
 - OWED: C9 raw step (kv_start_corridor_event raw --bind-rtl) after the follow-on strict bind.
 - FLOW-0730 K6: cancelled A5t6 kits v12_1125012925, v1n_1125012928, v3n_1125025422 (+ run-item drivers 606752, 1242331). Rebind inside plan_of_record on A5t8 when published, as place/GRT probes on epyc8/epyc10.
+- 07:51 COORD accepted C9 row and LEG405/tool fixes. RULE: never kill run-item/client pids, even by exact pid; post leftovers to FLEET-OPS (host, pid, cmdline). Disclosure posted 6cfa1c87. C9 raw step stays DEFERRED; run it right after the follow-on strict bind.
