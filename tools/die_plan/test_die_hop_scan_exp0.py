@@ -75,3 +75,11 @@ def test_slot_bit_worst_landed_full_reports_ring_to_bs1(monkeypatch):
     w, b, i = _worst(monkeypatch, s, landed=True)
     # ring (in pin) -> bs[1]: |600-4-220.7| + |5-250.1| ~ 620 um, the real landed first hop (st_a b_hw_ctl_hc0 class)
     assert i == 0 and 600 < w < 640
+
+
+def test_landed_regs_only_stage0_is_ring():
+    regs = [[500.0, 100.0], [220.0, 250.0], [7.0, 363.0], [7.0, 688.0], [7.0, 1013.0]]
+    s = {"name": "s", "stations": 5, "width": 0, "regs_um": regs}
+    assert D.station_site(s, 0, 0, AP, BP, normal=False) == D.input_site(AP)
+    assert D.station_site(s, 0, 0, AP, BP, normal=True) == D.input_site(AP)
+    assert D.station_site(s, 2, 0, AP, BP, normal=False) == (7.0, 363.0)

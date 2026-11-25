@@ -78,7 +78,8 @@ def station_site(slot, stage, bit, ap, bp, *, normal=True):
       Unlanded (normal): ff_place_explicit_stage0 puts station 0 at bs[0], station j at bs[j].  Landed (not normal): the
       landed loop never calls ff_place_explicit_stage0; station i takes key i+1 = bs[i+1] and the last station sits at
       the out face, so bs[0] is never placed: stage 0 = in pin (ring), stage j = bs[j].
-    - explicit_stage0 with stations-1 stages, unlanded: station 0 goes to (lane-adjusted) regs_um[0], not the in pin.
+    - explicit_stage0 with stations-1 stages, unlanded: station 0 goes to regs_um[0], not the in pin (plan point: the kit adds
+      the bit lane offset ff_lane_xy t=0; not modelled here, no such slot in C1o v13).
     The old mapping (stage j -> bs[j-1]) made the st_a b_hw_ctl_hc0 census line '651 um last -> out pin'."""
     a, b = input_site(ap), input_site(bp)
     bs = slot.get('bit_sites_um')
@@ -97,6 +98,8 @@ def station_site(slot, stage, bit, ap, bp, *, normal=True):
         w, h = slot['bit_site_cell_um']
         return x+w/2, y+h/2
     if slot.get('bit_sites_um'):
+        return a
+    if stage == 0 and not normal:   # QC-STA-HOP (Fable r2 #3): landed regs-only slot: the ring at the in face is stage 0, regs_um[0] is unused
         return a
     if slot.get('regs_um'):
         return tuple(slot['regs_um'][stage])
