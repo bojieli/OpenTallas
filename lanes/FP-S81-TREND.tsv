@@ -1,2 +1,3 @@
 iter	plan	types	REACH_gate_types	REACH_aim_only	CORE-TAP-OWNER	BOUNDARY-REG	MISAIM	TAP-CAP_plan	RESET-FANOUT	clean	visual_die	precheck_s
 c9s-1	99f7d3042489	403	73	295	298	196	160	24	2	13	FAIL(13 die-level problems, Fable 11-25)	350
+# LIVENESS 11-25 scoped PREs (60 s CPU sample, epyc12): R +1.7 s/60 s, A +0.9 s, B +0.6 s, S +1.8 s CPU per unit (8 procs: 4 PRE + 4 base children all advancing, 10-30% of a core each on load ~200/96): ALIVE, none cancelled, none relaunched
