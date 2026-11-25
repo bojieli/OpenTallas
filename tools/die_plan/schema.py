@@ -1454,6 +1454,7 @@ SCHEMA = {
             # tap relay (rr_t<i> -> ot_dp_landing_relay rst_raw_n sync reset); types absent = every type; absent = unchanged
             "raw_tap_hold": {"type": "object", "additionalProperties": False, "required": ["n"],
                              "properties": {"n": {"type": "integer", "minimum": 1, "maximum": 4},
+                                            "taps": {"enum": ["raw", "all"]},
                                             "types": {"type": "array", "items": _name}, "note": {"type": "string"}}},
             # BOUND-PLAN-CAP / BOUND-SITE-RULE (HEAD-PLAN-R16 11-20, FABLE-PD-HEAD-2040 F2/F3): the reset hop cap (um) and the
             # relay site test this plan's reset trees were BOUND with, as plan authority (cbc_rules.plan_reset_hop_cap,

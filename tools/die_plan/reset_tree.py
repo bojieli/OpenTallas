@@ -3274,6 +3274,17 @@ def relay_driver(P, tn):
     return bool(P.reset.get("relay_driver")) or tn in (P.reset.get("relay_driver_types") or [])
 
 
+# "raw": the START raw taps rr_t<i> (QC: rr_t -> landing rst_raw_n).  "all": also the consumer taps rst_n_t<i> (S81 c8t
+# and KV A5t6 bind the landing relay rst_raw_n to rst_n_t: 5,553 / 8,563 pins), which also pads their core resets.
+RAW_TAP_HOLD_TAPS = ("raw", "all")
+RAW_TAP_HOLD_RE = {"raw": "^rr_t[0-9]+$", "all": "^(rr_t|rst_n_t)[0-9]+$"}
+
+
+def raw_tap_hold_taps(P):
+    """the reset.raw_tap_hold tap class ("raw" default | "all")."""
+    return (P.reset.get("raw_tap_hold") or {}).get("taps", "raw")
+
+
 def raw_tap_hold(P, tn):
     """RAW-TAP-HOLD (QC-GEOM-UNITS C1o 11-25, class RRL-SDFF-HOLD, opt-in reset.raw_tap_hold {"n": N, "types": [...]}):
     the number of kept HB4xp67 hold pads the kit puts between each raw START tap relay (u_rrl_<k>_r, q net rr_t<i>) and
@@ -3287,6 +3298,8 @@ def raw_tap_hold(P, tn):
         return 0
     if not isinstance(cfg, dict) or int(cfg.get("n") or 0) < 1:
         raise ResetError('reset.raw_tap_hold must be {"n": N >= 1, "types": [type, ...] (optional)}')
+    if cfg.get("taps", "raw") not in RAW_TAP_HOLD_TAPS:
+        raise ResetError(f"reset.raw_tap_hold.taps must be one of {RAW_TAP_HOLD_TAPS}")
     types = cfg.get("types")
     if types is not None:
         bad = sorted(set(types) - set(P.types))
@@ -3300,13 +3313,13 @@ def raw_tap_hold(P, tn):
 RAW_TAP_HOLD_TCL = """# RAW-TAP-HOLD (tools/die_plan/reset_tree.py raw_tap_hold, plan reset.raw_tap_hold): N kept HB4xp67 between each
 # placed raw START tap relay (rtr_place key rr_t<i>) and its loads (ot_dp_landing_relay rst_raw_n, deeper raw relays).
 # Taps whose net reaches a port (rst_o pin registers, face rule) stay direct.  Appended to reset_tree.tcl (gen_phys).
-proc rtr_raw_hold {n} {
+proc rtr_raw_hold {n {keyre {^rr_t[0-9]+$}}} {
   global ff_blk rtr_qnets rtr_at
   set m [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$m eq "NULL" || $m eq ""} { error "OT_RAW_TAP_HOLD: no HB4xp67_ASAP7_75t_R master" }
   set done 0; set skip {}
   foreach key [lsort -dictionary [dict keys $rtr_qnets]] {
-    if {![regexp {^rr_t[0-9]+$} $key]} continue
+    if {![regexp $keyre $key]} continue
     set net [dict get $rtr_qnets $key]
     if {[llength [$net getBTerms]]} { lappend skip $key; continue }
     set drv {}
@@ -3334,11 +3347,11 @@ proc rtr_raw_hold {n} {
 """
 
 
-def raw_tap_hold_tcl(n):
+def raw_tap_hold_tcl(n, taps="raw"):
     """reset_tree.tcl tail for raw_tap_hold n (needs the rtr_qnets / rtr_at of the rtr_place calls above it)."""
     if int(n) < 1:
         return ""
-    return RAW_TAP_HOLD_TCL + f"rtr_raw_hold {int(n)}\n"
+    return RAW_TAP_HOLD_TCL + f"rtr_raw_hold {int(n)} {{{RAW_TAP_HOLD_RE[taps]}}}\n"
 
 
 def relay_driver_any(P):

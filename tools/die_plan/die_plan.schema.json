@@ -9744,6 +9744,12 @@
        "minimum": 1,
        "maximum": 4
       },
+      "taps": {
+       "enum": [
+        "raw",
+        "all"
+       ]
+      },
       "types": {
        "type": "array",
        "items": {

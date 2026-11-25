@@ -72,3 +72,15 @@ def test_tcl_inserts_pads_internal_taps_only():
     assert res[1] != "net" and res[1] != res[2]  # tap flop moved onto the pad chain net
     assert res[2].startswith("net") and res[3].startswith("net")   # port tap and internal relay net untouched
     assert res[4] == "2"                      # original rr_t6 net: its load + the last pad Y (pad drives the loads)
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="tclsh")
+def test_tcl_all_taps_class():
+    assert R.raw_tap_hold_taps(_plan({"n": 1, "taps": "all"})) == "all"
+    with pytest.raises(R.ResetError):
+        R.raw_tap_hold(_plan({"n": 1, "taps": "x"}), "a")
+    mock = MOCK.replace("rst_rl_3 $nrl]", "rst_n_t3 $nrl]").replace("rst_rl_3 {0 0}]", "rst_n_t3 {0 0}]")
+    out = subprocess.run(["tclsh"], input=mock + R.raw_tap_hold_tcl(1, "all") + '\nputs "RES $::NPAD"\n',
+                         text=True, capture_output=True)
+    assert out.returncode == 0, out.stderr
+    assert "OT_RAW_TAP_HOLD 2 raw taps x 1 HB4xp67" in out.stdout and "RES 2" in out.stdout

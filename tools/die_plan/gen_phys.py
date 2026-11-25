@@ -8773,7 +8773,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     _raw_hold = RT.raw_tap_hold(P, tn)
     if _raw_hold and (kd / "reset_tree.tcl").is_file():
         with open(kd / "reset_tree.tcl", "a") as fh:
-            fh.write(RT.raw_tap_hold_tcl(_raw_hold))
+            fh.write(RT.raw_tap_hold_tcl(_raw_hold, RT.raw_tap_hold_taps(P)))
     # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
     # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
     # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
