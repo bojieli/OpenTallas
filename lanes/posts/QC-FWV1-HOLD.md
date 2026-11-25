@@ -1,0 +1,1 @@
+- 2026-11-24 18:37 PST TAKING: QC sle_fw_v1 GRT exit-6 (cl9d029624, clf58b4dfb, plan 3e46eb E9): read final DBs/logs, find family structural cause (west flop/tap column + spine tap column), draft one family row -> QC-ALLFIX, private-kit probe
