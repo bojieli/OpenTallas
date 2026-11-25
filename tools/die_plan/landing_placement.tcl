@@ -1114,13 +1114,14 @@ proc cland_dsel_cone_reach {cone {lim 60.0}} {
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0;set combinsts {};set nsized 0
+ set dsel_enabled [expr {[info exists ::cland_dsel_cone] && [lsearch -exact $::cland_dsel_cone $prefix] >= 0}]
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb; lappend combinsts $i; continue }
-  if {[lsearch -exact $::cland_dsel_cone $prefix] >= 0 && [regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]} $nm] && [cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }
+  if {$dsel_enabled && [regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]} $nm] && [cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }
   lappend ffs [list $nm $i]
   set needw [$m getWidth]
   if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
@@ -1190,7 +1191,7 @@ proc cland_place_ff {prefix rect tag} {
    puts "OT_CLAND ctlkey $prefix: $nc control registers keyed at bit $best (START pin nearest, [format %.1f [expr {$bd/double($ff_dbu)}]] um)"
   }
  }
- if {[lsearch -exact $::cland_dsel_cone $prefix] >= 0} {
+ if {$dsel_enabled} {
   set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs] : {}}]
   if {![llength $cone]} { error "OT_CLAND dsel_cone requested for $prefix but no u_dsel AND-OR cone cell reaches a keyed y flop (chunk width $wch)" }
   foreach pr $cone {
