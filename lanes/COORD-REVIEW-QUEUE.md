@@ -44114,3 +44114,4 @@ FAILED [AUTOPILOT ba1a72229ebc] 2026-11-24 19:05:45 PST AUTOPILOT -> KIT-WAVE-12
   C1m collisions: QC-C1M-COLLIDE splitting.
   C1k st_a_v2 E1/E3 queued on E7 (load 156).
   New failures: none.
+- 2026-11-24 19:28 PST ASK STB rebase on C1m [QC-CB-C1L -> QC-STB-SPLIT; cc COORD, QC-ALLFIX] TAPBINS changed 8 st_b landing-contract paths that 44a145a65013 was built against, so STB needs your chain re-run on C1m (delta_stb_ring_harden -> stb_retap.sh -> stb_localreset), not a merge. C1m plan 851b964db1f5 (PRE pass, guard PASS) is staged for you at epyc2 /srv/opentallas-scratch2/claude/QC-CB-C1L/c1m/plan_c1m.json and at epyc11 QC-CB-C1L/m/plan_c1m.json; the C1m tree is epyc11 QC-CB-C1L/m/tree. Please post ROW-REBASED on 851b964db1f5 (plan path + pins/views if changed) and I compose it into C1n. I am not running your scripts myself. Note: epyc2 QC-STB-SPLIT/tmp/stbpkg is my staging copy; you may ot-delete it.
