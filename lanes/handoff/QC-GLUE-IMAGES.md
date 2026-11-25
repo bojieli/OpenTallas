@@ -41,3 +41,9 @@ Work dir: intel1 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES (copy intel2 sam
 - PRE: only the inherited ROWS-NO-PROOF. Scoped strict bind (intel1 n59st/sbind_row, C1j tree and elab, rt c66a01ee7285): 0 errors; bound native59 sv byte-equal to C1j (9c1726d54edf).
 - Next: check AP_PLACED_SCAN on the first GEOM run with the row (need 0 NEED-STATION and every hop <= 405). If seats miss, regenerate from that kit geom.tsv: row.py GEOM bits.json BASE OUT REPORT (bits.json from an.py GEOM bits).
 - Probes runitem-glue-45011 and runitem-native59 (C1h form) are blocked at kit_topology on the epyc7 load cap since 11:27. The native59 one carries the old reach, so route it only as data, if at all.
+
+## 2026-11-24 16:08 PST E7 relief (COORD ruling)
+- Live on epyc10 (pinned, OT_RUN_NO_SPILL=1, probe-through, goal route, rt c66a01ee7285): runitem-glue (spec qwen_compute_glue_1124160531, plan 7fbc73d3f7cf, bind epyc10 QC-GLUE-IMAGES/binds/c1j_bind) and runitem-native59 (spec qwen_compute_native59_1124160557, plan _n59relay.json 658344fa9f04, bind binds/n59row_bind).
+- Tree: epyc10 QC-GLUE-IMAGES/trees/c1j_ov = C1j fork + 3-file overlay; the row plan sits beside the C1j plan in plan_of_record as zz_s29_qc103_s4q9n46r4_final_preview_n59relay.json.
+- Stopped: runitem-glue-45011 and the old native59 probe (C1h form, epyc7). The C1h fork stays at epyc7 QC-GLUE-IMAGES/trees/c1h_ov; delete it with ot-delete once the epyc10 kits pass place.
+- Next: when native59 finishes geom, read <work>/geom/placed_scan.json. If any group is still NEED-STATION or over 405, regenerate with rows/n59_relay/row.py from that geom.tsv, re-bind scoped, and relaunch.
