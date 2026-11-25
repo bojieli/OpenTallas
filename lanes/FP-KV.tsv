@@ -1,97 +1,98 @@
-# FP-KV.tsv FP-CONVERGE-KV 11-25 iteration it1 on plan A5t8 (fin4, read-only). Cell = FAIL:<n findings> or pass. TAP counts TAP-ERROR (tap check could not run: tap-name drift, 61 types) + TAP-COVER; GRID/TAPNAME/R8/OBS columns need the full PRE (plan_gate_pre check, running on epyc12) and read pass until it lands. VISUAL = fable review of the A5t7 render: FAIL (18 problems; 23 street types, spine/hub tap piles); A5t8 render pending.
-# TREND (types failing any class / street>1.0 / oversize / overlap): it0 A5t7 -/33/1/0 ; it1 A5t8 89/23/1/0
-# OWNERS: STREET -> KV-ALLFIX + KV-OWN-PV + KV-OWN-HG-R2 (widen streets, per fable table); TAP -> KV-SINKBINS + KV-TAPSPLIT (tap names clk_t<n> drift: kv3_hgi_v5 family 52 types; die proto kit refuses A5t8 on it); LEG405 -> KV-OWN-RSTREACH (RSTREACH) + KV-PC-BANK (pc_v3 23 hops) + KV-OWN-PV (pv_v3/v3e 1471 um); OVERSIZE kv3_pc_v3 998k -> KV-PC-BANK; BOUNDARY/COREOWNER -> KV-OWN-HUB
-type	STREET	TAP	LEG405	BOUNDARY	OVERSIZE	OVERLAP	GRID	TAPNAME	R8	OBS	COREOWNER	VISUAL	CLEAN
-kv3_hg	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1__r889141819	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1__r88f4bfb40	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1__r8dffc461a	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p2	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p3__r81da466fe	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p3__r838481cd7	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p3__r8c662a835	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p4	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p5	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v1p6	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hg_v3	FAIL:1	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL:1	FAIL-A5t7-render	NO
-kv3_hgi	pass	pass	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v1__cl141fc26e	FAIL:1	FAIL:1	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v1__cl42bc8b12	FAIL:1	FAIL:1	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v2__cl2862d491	pass	FAIL:1	FAIL:3	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v2__cle0015330	pass	FAIL:1	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v3	pass	pass	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v4	pass	pass	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v5	pass	FAIL:1	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v6	pass	pass	FAIL:1	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v7	pass	pass	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hgi_v8	pass	FAIL:1	FAIL:2	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hroot	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hub_C	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hub_Ei	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hub_Eo	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hub_Wi	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_hub_Wo	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_io_cor	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_io_cor_v1	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_io_ft	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_io_ft_v1	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc__cl254f2e73__r872e39b5a	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc__cl254f2e73__r8b421e514	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc__cl5a95b461__r85c02c25c	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc__cl5a95b461__r882954158	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl23f6a148	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r828e1c2a5	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r84d0332e1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r877307f5d	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r884969661	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r8afe1e027	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl4ea58a5c__r8ef700d7c	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r817e6c402	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r825eb3cd0	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8422a4b86	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r87bd89c1f	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8898d69cf	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8b2213035	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8c6505067	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8d9b5d53e	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8e08b358d	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8e7d31598	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v1__cl7f648944__r8f64f1de3	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pc_v3	pass	FAIL:1	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_phy	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_phy_v1	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv	FAIL:1	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v1	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v12	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v12e	pass	FAIL:1	FAIL:1	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v1e	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v1n	FAIL:1	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v2	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v2e	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v2n	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v2ne	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v3	FAIL:1	pass	FAIL:3	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v3e	pass	FAIL:1	FAIL:3	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v3n	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v3ne	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v4	pass	FAIL:1	FAIL:1	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v4e	FAIL:1	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v4n	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v4ne	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v5	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v5e	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v5n	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v5ne	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v6	pass	FAIL:1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v6e	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v6n	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v6ne	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v7	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v7e	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v8	FAIL:1	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pv_v8e	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_pve	pass	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_sys_SD	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_sys_SD_v1	pass	FAIL:1	pass	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
-kv3_sys_c	pass	FAIL:1	FAIL:4	pass	pass	pass	pass	pass	pass	pass	pass	FAIL-A5t7-render	NO
+# FP-KV.tsv FP-CONVERGE-KV 11-25 iteration it2 (09:1x PST) on plan A5t8 cut1 sha 6cd026683af9 (read-only copy of epyc12 kv-allfix/a5t8/final/A5t8.json). Cell = FAIL:<n> or pass; STREET cell = worst lane demand (>1.0 fails). Tools: plan_advisory (all checks, no tree) + precheck.py (--die qwen_kvsys, no tree) on rt 031e61512813 (includes street model 6d3b0bd722f, FT-CROSSES-CORE, SITE-IN-MACRO); RSTREACH from gate_A5t8/pre.log (plan-only PRE, rt 65957f66ecee, same plan sha). Outputs: epyc8 /srv/opentallas-scratch2/claude/FP-CONVERGE-KV/it2/{adv2.out,pc2/findings.tsv}.
+# CAVEATS: (1) TAP-ERR=ERR on 45 types: precheck without the plan tree cannot resolve hard-core pin tables (ResetError), so TAP-CAP/TAP-COVER are NOT censused there; TAP-CAP fails only on 3 types (io_cor 1401, io_cor_v1 1063, pv_v6 1114), none >5000. (2) HOLDCELL-BUDGET not run: no hold cache (adv_harvest_hold.py needed). (3) R8STALE is per table, not per type: 4 WARN tables in pre.log (r8_k3f 1349 members/475 lanes, vport 4, pv_col_pads 168, pv_v_pads 604); gate bind1 had 31 R8_STALE errors, R8_REFRESH at 16:25Z rewrote 190 members (A5t8 gate still running, so the post-refresh state is not yet in this table). (4) OVERSIZE kv3_pc_v3 998k is a stale plan key per ALLFIX L231. (5) LEG405 = ADV-LEG405-ZERO findings, REACH = precheck REACH hops (>300); both advisory. VISUAL pending the A5t8 render.
+# TREND (types failing any class / street>1.0 / oversize / overlap / ft-crosses-core / boundary-reg): it0 A5t7 -/33/1/0/-/- ; it1 A5t8 89/23/1/0/-/- ; it2 A5t8 85/40/1/0/78/53. STREET 23->40 is the new street model (core interiors zero capacity), not a plan change.
+# OWNERS (ALLFIX-KV rows): STREET -> STREET-LANE-DEMAND (KV-ALLFIX+KV-OWN-PV-R2+KV-OWN-HG-R2, DEFERRED A5t9); BOUNDARY-REG -> FP-BOUNDARY-49 (KV-OWN-HUB-R2) + FP-COREOWNER-HG; CORE-TAP-OWNER -> FP-COREOWNER-HG; LEG405/REACH -> SYSC-LEG405 (KV-ALLFIX), PCBANK-LEGS (KV-PC-BANK), C9-KVPV-CLAND-LEG (KV-OWN-PV-R2); RSTREACH -> RSTREACH leftovers (KV-PV-ESTRIP); SITE-IN-MACRO -> SITE-OFF-OUTLINE (KV-OWN-HG-R2 + KV-OWN-PV-R2); OVERSIZE -> PC-V3-OVERSIZE (KV-PC-BANK); TAP drift -> ADDED-TAPS-REDERIVE (FP-CONVERGE-KV, DEFERRED A5t9). NO ROW FOUND: FT-CROSSES-CORE (78 types, new class), TAP-CAP 3 types (io_cor, io_cor_v1, pv_v6), R8STALE tables -> proposed to KV-ALLFIX.
+type	STREET	TAP-CAP	TAP-ERR(unchecked)	LEG405	REACH	BOUNDARY-REG	OVERLAP	SITE-IN-MACRO	RSTREACH	FT-CROSSES-CORE	CORE-TAP-OWNER	OVERSIZE	R8STALE	HOLDCELL	VISUAL	CLEAN
+kv3_hg	FAIL:14.23	pass	ERR	pass	FAIL:1	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1__r889141819	FAIL:1.54	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1__r88f4bfb40	FAIL:2.21	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1__r8dffc461a	FAIL:2.21	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p2	FAIL:1.55	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p3__r81da466fe	FAIL:1.56	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p3__r838481cd7	FAIL:1.56	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p3__r8c662a835	FAIL:1.56	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p4	FAIL:1.57	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p5	FAIL:1.58	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v1p6	FAIL:1.59	pass	ERR	pass	FAIL:9	FAIL:1	pass	FAIL:1	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hg_v3	FAIL:2.91	pass	ERR	pass	FAIL:1	FAIL:1	pass	pass	pass	FAIL:1	FAIL:1	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi	FAIL:1.77	pass	ok	pass	FAIL:6	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v1__cl141fc26e	FAIL:1.52	pass	ERR	pass	FAIL:2	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v1__cl42bc8b12	FAIL:1.52	pass	ERR	pass	FAIL:2	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v2__cl2862d491	pass	pass	ERR	FAIL:2	FAIL:8	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v2__cle0015330	pass	pass	ERR	FAIL:2	FAIL:3	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v3	pass	pass	ok	FAIL:2	FAIL:3	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v4	FAIL:1.05	pass	ok	FAIL:2	FAIL:2	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v5	pass	pass	ok	FAIL:2	pass	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v6	FAIL:1.23	pass	ok	FAIL:2	FAIL:2	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v7	FAIL:1.07	pass	ok	FAIL:2	pass	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hgi_v8	FAIL:1.27	pass	ERR	FAIL:2	pass	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hroot	pass	pass	ok	pass	FAIL:3	FAIL:1	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hub_C	pass	pass	ERR	pass	pass	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hub_Ei	pass	pass	ok	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hub_Eo	pass	pass	ERR	FAIL:4	FAIL:6	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hub_Wi	FAIL:3.49	pass	ERR	pass	pass	FAIL:1	pass	pass	FAIL:1	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_hub_Wo	pass	pass	ERR	FAIL:2	FAIL:6	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_io_cor	pass	FAIL:1401	ok	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_io_cor_v1	pass	FAIL:1063	ok	pass	pass	FAIL:1	pass	pass	FAIL:1	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_io_ft	pass	pass	ok	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_io_ft_v1	pass	pass	ok	pass	pass	FAIL:1	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc__cl254f2e73__r872e39b5a	pass	pass	ERR	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc__cl254f2e73__r8b421e514	pass	pass	ERR	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc__cl5a95b461__r85c02c25c	pass	pass	ERR	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc__cl5a95b461__r882954158	pass	pass	ERR	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl23f6a148	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r828e1c2a5	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r84d0332e1	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r877307f5d	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r884969661	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r8afe1e027	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl4ea58a5c__r8ef700d7c	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r817e6c402	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r825eb3cd0	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8422a4b86	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r87bd89c1f	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8898d69cf	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8b2213035	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8c6505067	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8d9b5d53e	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8e08b358d	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8e7d31598	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v1__cl7f648944__r8f64f1de3	pass	pass	ERR	pass	pass	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pc_v3	pass	pass	ERR	pass	FAIL:23	pass	pass	pass	pass	FAIL:1	pass	FAIL:1	global	not-run	A5t8-render-pending	NO
+kv3_phy	pass	pass	ok	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_phy_v1	pass	pass	ok	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv	FAIL:1.16	pass	ok	FAIL:19	FAIL:8	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v1	FAIL:1.16	pass	ok	FAIL:31	FAIL:10	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v12	pass	pass	ok	FAIL:18	FAIL:11	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v12e	FAIL:1.36	pass	ok	FAIL:11	FAIL:10	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v1e	pass	pass	ok	FAIL:12	FAIL:9	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v1n	FAIL:3.54	pass	ok	pass	FAIL:13	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v2	FAIL:1.25	pass	ok	FAIL:13	FAIL:12	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v2e	pass	pass	ok	FAIL:11	FAIL:11	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v2n	FAIL:1.25	pass	ok	FAIL:17	FAIL:12	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v2ne	FAIL:2.73	pass	ok	FAIL:13	FAIL:11	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v3	FAIL:1.61	pass	ok	FAIL:19	FAIL:5	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v3e	FAIL:2.79	pass	ok	FAIL:11	FAIL:6	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v3n	FAIL:3.54	pass	ok	FAIL:24	FAIL:14	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v3ne	pass	pass	ok	FAIL:14	FAIL:9	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v4	FAIL:1.18	pass	ok	FAIL:16	FAIL:8	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v4e	FAIL:2.68	pass	ok	FAIL:11	FAIL:9	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v4n	pass	pass	ok	FAIL:20	FAIL:7	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v4ne	pass	pass	ok	FAIL:13	FAIL:9	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v5	FAIL:1.17	pass	ok	FAIL:21	FAIL:16	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v5e	FAIL:1.92	pass	ok	FAIL:12	FAIL:14	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v5n	FAIL:1.17	pass	ok	FAIL:25	FAIL:15	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v5ne	FAIL:1.21	pass	ok	FAIL:14	FAIL:12	pass	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v6	FAIL:1.37	FAIL:1114	ok	FAIL:28	FAIL:7	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v6e	pass	pass	ok	FAIL:11	FAIL:9	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v6n	FAIL:1.37	pass	ok	FAIL:33	FAIL:7	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v6ne	pass	pass	ok	FAIL:13	FAIL:11	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v7	pass	pass	ok	FAIL:17	FAIL:13	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v7e	FAIL:1.05	pass	ok	FAIL:11	FAIL:9	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v8	FAIL:1.16	pass	ok	FAIL:19	FAIL:8	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pv_v8e	pass	pass	ok	FAIL:11	FAIL:2	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_pve	pass	pass	ok	FAIL:11	FAIL:3	FAIL:1	pass	pass	pass	FAIL:1	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_sys_SD	pass	pass	ok	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_sys_SD_v1	pass	pass	ok	pass	pass	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
+kv3_sys_c	pass	pass	ok	pass	FAIL:5	pass	pass	pass	pass	pass	pass	pass	global	not-run	A5t8-render-pending	NO
