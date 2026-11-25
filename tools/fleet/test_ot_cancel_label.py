@@ -56,6 +56,7 @@ def test_container_stop_cmd_finds_a_labelled_container_with_no_matching_process(
 
 
 def test_clientless_cancel_by_exact_unit_runs_ot_heavy_stop_on_every_host(monkeypatch, capsys):
+    monkeypatch.setenv("OT_RUN_CANCEL_NO_REMOTE", "1")   # CANCEL-XHOST-1124: this node only (test_ot_run_cancel_xhost covers the other-node hop)
     calls = []
     def run(cmd, **k):
         calls.append(cmd[-1]); h = cmd[-2]
@@ -73,6 +74,7 @@ def test_clientless_cancel_by_exact_unit_runs_ot_heavy_stop_on_every_host(monkey
 
 
 def test_clientless_cancel_refuses_a_non_exact_selector_and_reports_a_survivor(monkeypatch):
+    monkeypatch.setenv("OT_RUN_CANCEL_NO_REMOTE", "1")   # CANCEL-XHOST-1124: this node only (test_ot_run_cancel_xhost covers the other-node hop)
     monkeypatch.setattr(RUN, "clients", lambda: {})
     assert RUN.cancel("dpkit", False) == 1 and RUN.cancel("oth-", False) == 1
     monkeypatch.setattr(RUN, "HOSTS", ["epyc9"]); monkeypatch.setattr(RUN, "log_signal", lambda m: None)

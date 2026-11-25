@@ -1965,11 +1965,103 @@ def cancel_ledger(sub, all_dirs=False, ledger=None, run=None, fleet=None):
     return rc
 
 
+NODE_HOST = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2", "loved-redfish": "epyc7",
+             "outgoing-giraffe": "epyc8", "renewed-glider": "epyc9", "civil-redfish": "epyc10", "viable-ram": "epyc11"}
+RT_CURRENT_RUN = "/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-run"
+
+
+def _this_node():
+    return {os.uname().nodename, socket.gethostname().split(".")[0]}
+
+
+def remote_clients(sub, run=None, fleet=None):
+    """CANCEL-XHOST-1124 (COORD: KV-OWN-PV --cancel matched nothing twice, pid 94665 killed by hand; queued clients not found): a client is
+    found only on the node it runs on (clients() and the ot-status records are local), so a cancel issued anywhere else missed it, stopped
+    at most the scope and never the queued client.  The selector itself says where the client is: a tag otrun-<node>-<pid>-[ms] names its
+    node; an admitted unit oth-... is looked up in the running ot-status records of every fleet host (unit + client pid, whatever rt started
+    it).  -> [(fleet host, node, pid)] of clients on OTHER nodes"""
+    run = run or subprocess.run
+    me = _this_node()
+    m = re.fullmatch(r"otrun-([A-Za-z0-9_.]+(?:-[A-Za-z][A-Za-z0-9_.]*)*)-(\d+)-(\d+)?", sub)
+    if m:
+        node, pid = m.group(1), int(m.group(2))
+        return [] if node in me else [(NODE_HOST.get(node, node), node, pid)]
+    if not re.fullmatch(r"oth-[A-Za-z0-9_-]+", sub):
+        return []
+    hosts = [h for h in dict.fromkeys(list(NODE_HOST.values()) if fleet is None else fleet) if h != "localhost"]
+    q = ("cd ~/.local/state/ot-status 2>/dev/null && grep -l -F " + shlex.quote(f'"unit": "{sub}"') + " otrun-*.json 2>/dev/null"
+         " | xargs -r grep -l -F '\"state\": \"running\"' 2>/dev/null | head -5")
+    out = []
+    for h in hosts:
+        try:
+            r = _host_run(run, h, q, timeout=60)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        for fn in (r.stdout or "").split():
+            mm = re.fullmatch(r"otrun-(.+)-(\d+)\.json", fn.strip())
+            if mm and mm.group(1) not in me and (NODE_HOST.get(mm.group(1), mm.group(1)), mm.group(1), int(mm.group(2))) not in out:
+                out.append((NODE_HOST.get(mm.group(1), mm.group(1)), mm.group(1), int(mm.group(2))))
+    return out
+
+
+def cancel_remote(sub, reason, found, run=None):
+    """run the same --cancel SUB on the client's own node (its exact local match: pid, tag, unit via its status record), once (no further
+    remote hop).  -> rc (worst of the nodes)"""
+    run = run or subprocess.run
+    rc = 0
+    for host, node, pid in found:
+        print(f"ot-run --cancel: client of {sub!r} is pid {pid} on {node} ({host}), not this node: running the cancel there")
+        cmd = (f"OT_RUN_CANCEL_NO_REMOTE=1 OT_LANE={shlex.quote(os.environ.get('OT_LANE', ''))} python3 -I {RT_CURRENT_RUN} --cancel "
+               f"{shlex.quote(sub)} --reason {shlex.quote(reason)} 2>&1")
+        try:
+            r = _host_run(run, host, cmd, timeout=900)
+        except (OSError, subprocess.SubprocessError) as e:
+            print(f"ot-run --cancel: {host}: could not run the cancel there: {type(e).__name__}: {e}")
+            rc = max(rc, 1)
+            continue
+        for ln in (r.stdout or "").splitlines():
+            print(f"  [{host}] {ln}")
+        rc = max(rc, r.returncode or 0)
+    log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: client on other node(s) {found} -> rc {rc}")
+    return rc
+
+
+def client_exit_report(pids, wait_s=None, alive=None, sleep=time.sleep):
+    """CANCEL-XHOST-1124: the per-host stop lines say "0 scope(s) stopped" when the client's own SIGTERM handler stopped its scope first; one
+    RESULT line states what actually happened to the signalled client(s).  -> [pids still alive]"""
+    alive = alive or (lambda p: os.path.exists(f"/proc/{p}") and not open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[0] == "Z")
+    wait_s = float(os.environ.get("OT_RUN_CANCEL_EXIT_WAIT_S", "20")) if wait_s is None else wait_s
+    t0 = time.time()
+    left = list(pids)
+    while True:
+        left = [p for p in left if _safe_alive(alive, p)]
+        if not left or time.time() - t0 >= wait_s:
+            break
+        sleep(1)
+    gone = [p for p in pids if p not in left]
+    if left:
+        print(f"ot-run --cancel: RESULT: client(s) {gone} exited; {left} still exiting after {int(wait_s)} s (SIGTERM sent; check again or kill the exact pid)")
+    else:
+        print(f"ot-run --cancel: RESULT: CANCELLED, client(s) {gone} exited (their own stop ended the job's scope; per-host '0 scope(s)' lines above mean nothing was left to stop)")
+    return left
+
+
+def _safe_alive(alive, p):
+    try:
+        return alive(p)
+    except OSError:
+        return False
+
+
 def cancel(sub, all_dirs, reason="manual"):
     cl = clients()
     hit = {p: v for p, v in cl.items() if client_matches(sub, p, v[0], v[1])}
     if not hit and re.fullmatch(r"oth-[A-Za-z0-9_-]+", sub):      # OTRUN-ORPHAN 11-23: an admitted unit -> the client whose status record names it
         hit = {p: cl[p] for p in unit_clients(sub) if p in cl}
+    if not hit and sub.startswith(("oth-", "otrun-")) and not os.environ.get("OT_RUN_CANCEL_NO_REMOTE"):
+        found = remote_clients(sub)                   # CANCEL-XHOST-1124: the client runs on another node -> cancel it there
+        if found:
+            return cancel_remote(sub, reason, found)
     if not hit and sub.startswith(("oth-", "otrun-")):
         return cancel_unit(sub)
     if not hit and sub.startswith("/srv/"):             # no client left (died / stale): the exact kit dir still names the container it mounts
@@ -2016,6 +2108,7 @@ def cancel(sub, all_dirs, reason="manual"):
     if re.fullmatch(r"oth-[A-Za-z0-9_-]+|otrun-[A-Za-z0-9_.-]+-\d+-(\d+)?", sub) and not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
         if cancel_unit(sub, after_client=sorted(hit)) == 3:
             return 3
+    client_exit_report(sorted(hit))
     return 0
 
 
