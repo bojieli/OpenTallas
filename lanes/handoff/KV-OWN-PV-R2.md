@@ -72,3 +72,8 @@
 - PVFOLD row: epyc12 /srv/opentallas-scratch2/claude/kv-own-pv-r2/pvfold/ROWS_KV-OWN-PV-R2-PVFOLD.py (sha 83ea83009089). It moves 28 r26c pairs to the fMX view (R0->MX, MY->R180). A5t8dry out 371b0f27ef4a. PRE run vs A5t7 in pvfold/pre.otrun.log.
 - PVSTN: a Fable agent is drafting into epyc12 kv-own-pv-r2/pvstn/ (ETA 06:30). It was told the PVFOLD orient is truth.
 - A5t8 bind: place probes for v2, v4, v4n, v5, v5n, v6, v6ne, v7, v8e, pve. v1e goes to route if clean.
+
+## 06:15 update
+- PVSTN v1 is ROW-READY (partial): epyc12 kv-own-pv-r2/pvstn/ROWS_KV-OWN-PV-R2-PVSTN.py e0b8296505e4. Open items are DEFERRED in ALLFIX-KV ce76874f. Compose order: ESTRIP -> PVFOLD -> PVSTN.
+- Launch bug fixed: private plans outside plan_of_record loaded 0 pin tables, so 0 pad tail splits. job12.sh cdc51ddb1013 and job12a7.sh 4f1e672ebd2b now copy the plan into $L/$P. The v1n/v12/v3n probe timing is NOT-REPRESENTATIVE.
+- I offered KV-ALLFIX help on the A5t8 bind3 native_istations crash (pv_N_2 v2n o_astk_E). Their dbg run started 06:11.
