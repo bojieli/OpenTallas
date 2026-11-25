@@ -13,3 +13,9 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - Residue declared (gen_ties.py, 41 declared_ties rows, bit-exact vs srx_fused formula): tr_x.w_g 41,472 non-fused fill bits =0; kreg.d=1 112 bits = W1 reset relays u_rn/u_rn_a/u_rn_e/u_rs0.
 - ROW v2: plan c9 99f7d3042489 + asbuilt c9 b23d94ffcd6e (row/asbuilt_run_c9_svctied2.json); c8 twin fbd98e560cd9. INT c9s gate runs f0b6 (v1): expect the same 201 TIED; swap v2 in (bind-only).
 - Running: E9 c8fix_bind2.sh (v2 recheck, unit oth-ubuntu-3514937). Then: ROW-REBASED post, svc kit probes (svc_lo rs t3, svc_hi pvso_entry t1), ot-delete my 3 files in INT amd1_tree (plan_svctied_c8_*, native_bind/asbuilt_run_allfix2_svctied{,2}.json).
+## 17:5x PST state
+- DONE: scoped strict c8 v2 (24 svc types): BIND_RC=0 n_errors 0 (E9 c8fix_out/bind_report.json 5b2bf2c71a42). ROW-REBASED posted 17:21: plan c9 99f7d3042489 + asbuilt c9 b23d94ffcd6e. INT to swap b23d into c9s bind (bind-only); c9s runs f0b6 at EMIT_J=8 (OOM risk; my svc-only j=8 OOMed at 240G).
+- FINDINGS 17:26: svc_width_gate checks only listed modules (blind to kreg/dly) -> PRECHECK-R3; c8s svc_hi 10 ATTCUT kits build the bench-FAIL cut form -> asked INT to cancel; c8s svc_lo kits adopted as probes.
+- PROBE: intel2 unit svctied-svc-hi-dsdv-svc-pvso-entry--t1 (goal grt), launcher intel2 ~/tmp/s81-svc-tied/launch_probe.sh (+probe_types.txt), specs ~/tmp/s81-svc-tied/probe/. Tree E9 s81-svc-tied/trees/c8svctied (fork of c8seal_tree) + bind trees/c8svctied_bind. Uses --allow-bind-stale + INT specfix.py (KITWAVE-BINDOUT); bind_matches verified True with v2 asbuilt.
+- Cleanup done: ot-deleted my 3 files in INT amd1_tree.
+- Next: watch probe; when c9s bind with b23d lands, launch/adopt c9 svc kits (svc_hi route once L0-FIXTURES clears).
