@@ -40,3 +40,8 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - Pending: drc_edge.py per-pin match on epyc9 runs/epw/drc (t1.log, col_h10_p1.json) is queued on CPU_CHARGE. Post a follow-up only if it changes the verdict.
 - HEAD gap fixed: extra pins root fable-fix-head-lep0n-1122/ctl_wrcap_1122/prepared_r18m. W6 is now 1251 pins on 11 cores; lep_pair 214 each.
 - Disclosure: I left /tmp/pgcal_precheck.txt on intel2 (post body; outside my scratch tmp, so it was not removed).
+
+## 11-25 05:4x PST C1n census posted (hub 364729955c)
+- Cancelled the epyc7 C1h/C1k queued clients (C1h/C1k superseded) by killing exact PIDs.
+- C1n = TAPBINS2 f0d336a16743 (copied to epyc11 runs/epw/plan_c1n_f0d336.json). RECT 0; BITSITE 10107 colliding on 7 types (new: slw_su_c x2 4302 each, sle_su_c 522, all ft_slots[cws1]); PG 15445/181, same as C1m; ELAB: C1m bind 0, and the C1n bind runs it via the hook.
+- Open: rerun on the composed C1n once QC-ALLFIX posts it. Run with --crit on epyc10/11 (static checks take seconds). S81 c8/c8fix ELAB reruns are still queued on epyc9.
