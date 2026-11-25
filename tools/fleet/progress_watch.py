@@ -3,7 +3,7 @@
 anything (owner rules r703/r704).  It reads the kit wave's own record (autopilot/log.txt, plus autopilot/kit_wave_stages.tsv and
 autopilot/kit_wave.json when present) and prints / posts one line per finding:
 
-  NO-PROGRESS <die>   a die with eligible rows and no KIT-WAVE LAUNCH for 60 min
+  NO-PROGRESS <die>   a die with eligible rows and no KIT-WAVE LAUNCH and no private-spec launch for 60 min
   SELF-STOP <die>     the wave REAPed a queue job within 30 min of its own SUBMIT or REAP-REVIVE of that same job
   NO-ADVANCE <die>    an item had 2+ FAIL attempts in 6 h and the later one did not reach a later stage
   STUCK-STATE <die>   current-plan rows CANCELLED/SUPERSEDED with no successor row for 60 min (needs the stages tsv)
@@ -17,7 +17,11 @@ Each alert is one `bash <coord>/bin/post.sh PROGRESS-WATCH "..."` line, at most 
   python3 -I progress_watch.py --dry-run       # print what would be posted, change nothing
   python3 -I progress_watch.py --replay LOG --from 'YYYY-MM-DD HH:MM' --to 'YYYY-MM-DD HH:MM' [--step 10]
                                                # walk the log in steps, print every alert the live run would have posted
-Log times are the hub's Los Angeles wall clock (PST/PDT), compared as naive datetimes."""
+Log times are the hub's Los Angeles wall clock (PST/PDT), compared as naive datetimes.
+PRIVATE-LAUNCH-1124 (COORD: "no S81 KIT-WAVE launch for 618 min" while S81 launched private c8s kits all evening): private-spec launches
+count as launches of their die too: every <coord>/autopilot/private_specs/<LANE>/<die>_<type>_<MMDDhhmmss> dir and every ot-run submit
+ledger record (~/.local/state/ot-run/submit.jsonl) whose --dir is a private kit (.../runs/<die>/kit-wave/<die>/.../private/...).
+Still an alert only."""
 import argparse
 import csv
 import json
@@ -92,6 +96,75 @@ def parse_lines(lines):
     return ev
 
 
+DIES = ("s81_head", "s81", "qwen_compute", "qwen_kvsys", "hbm")      # longest first: s81_head_x is s81_head, not s81
+SUBMIT_LEDGER = os.path.expanduser("~/.local/state/ot-run/submit.jsonl")
+_SPEC_RE = re.compile(r"(?P<rest>.+)_(?P<st>\d{10})$")
+_PRIV_DIR_RE = re.compile(r"/runs/(?P<die>[a-z0-9_]+)/kit-wave/(?P=die)/[^/]+/private/(?P<lane>[^/]+)/")
+
+
+def spec_die(name):
+    for d in DIES:
+        if name.startswith(d + "_"):
+            return d
+    return None
+
+
+def private_spec_events(root, now, since):
+    """PRIVATE-LAUNCH-1124: one private_launch event per autopilot/private_specs/<LANE>/<die>_<type>_<MMDDhhmmss> dir (the stamp is the
+    launch, hub LA clock; the year is now's, or the one before for a December stamp read in January)"""
+    out = []
+    try:
+        lanes = sorted(os.listdir(root))
+    except OSError:
+        return out
+    for lane in lanes:
+        try:
+            names = os.listdir(os.path.join(root, lane))
+        except OSError:
+            continue
+        for n in names:
+            m = _SPEC_RE.match(n)
+            die = spec_die(n)
+            if not m or not die:
+                continue
+            st = m.group("st")
+            try:
+                t = datetime(now.year, int(st[0:2]), int(st[2:4]), int(st[4:6]), int(st[6:8]), int(st[8:10]))
+            except ValueError:
+                continue
+            if t > now + timedelta(days=1):
+                t = t.replace(year=now.year - 1)
+            if since <= t <= now:
+                out.append({"t": t, "kind": "private_launch", "die": die, "src": f"private_specs/{lane}/{n}"})
+    return out
+
+
+def ledger_private_events(path, now, since, tz="America/Los_Angeles", max_bytes=32 << 20):
+    """PRIVATE-LAUNCH-1124: ot-run submits (S81 c8s kits, FAM / FIX lane kits) whose --dir is a private kit of a die -> private_launch events"""
+    from zoneinfo import ZoneInfo
+    z = ZoneInfo(tz)
+    out = []
+    try:
+        size = os.path.getsize(path)
+        with open(path, "rb") as f:
+            f.seek(max(0, size - max_bytes))
+            data = f.read().decode("utf-8", "replace").splitlines()
+    except OSError:
+        return out
+    for ln in data:
+        if "/private/" not in ln:
+            continue
+        try:
+            r = json.loads(ln)
+            m = _PRIV_DIR_RE.search((r.get("dir") or "") + "/")
+            t = datetime.fromtimestamp(float(r["ts"]), z).replace(tzinfo=None)
+        except (ValueError, KeyError, TypeError):
+            continue
+        if m and since <= t <= now:
+            out.append({"t": t, "kind": "private_launch", "die": m.group("die"), "src": f"ot-run {r.get('lane') or m.group('lane')} {os.path.basename(r['dir'].rstrip('/'))}"})
+    return out
+
+
 def stage_rank(s):
     return STAGE_ORDER.index(s) if s in STAGE_ORDER else -1
 
@@ -156,10 +229,13 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
                             f"({(now - ticks[-1]).total_seconds() / 60:.0f} min; no launch or classify meanwhile){(' ' + prog) if prog else ''}. "
                             f"Look: systemctl --user status autopilot.service; autopilot/tick_stack.log"})
     parked = set(parked) | set(state.get("parked", ()))
-    last_launch, dies = {}, set(state.get("known", ()))
+    last_launch, last_private, dies = {}, {}, set(state.get("known", ()))
     for e in ev:
         if e["kind"] == "launch":
             last_launch[e["die"]] = e["t"]
+        elif e["kind"] == "private_launch":
+            last_private[e["die"]] = e
+            continue                                  # a private launch alone never makes a die "known" to the wave checks
         if "die" in e:
             dies.add(e["die"])
     # 1. NO-PROGRESS / PARKED
@@ -168,6 +244,9 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
         age = (now - ll) if ll else None
         if age is not None and age < timedelta(minutes=NO_PROGRESS_MIN):
             continue
+        lp = last_private.get(die)
+        if lp and now - lp["t"] < timedelta(minutes=NO_PROGRESS_MIN):
+            continue                                  # PRIVATE-LAUNCH-1124: the die is launching, through private specs
         if die in parked:
             if any(e["kind"] == "die_off" and e["die"] == die and now - e["t"] < timedelta(hours=2) for e in ev):
                 out.append({"die": die, "cls": "PARKED", "state": "parked", "text": f"PARKED {die}: DIE-OFF is intentional (parked), not alerting"})
@@ -205,7 +284,8 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
         why = "; ".join(details) or "no current launch blocker logged"
         mins = f"{int(age.total_seconds() // 60)} min" if age is not None else f">{ACTIVE_LOOKBACK_H} h"
         out.append({"die": die, "cls": "NO-PROGRESS", "state": "alert",
-                    "text": f"NO-PROGRESS {die}: {elig_txt}, 0 KIT-WAVE LAUNCH for {mins} (last {ll.strftime('%H:%M') if ll else 'none in window'}); {why}"})
+                    "text": f"NO-PROGRESS {die}: {elig_txt}, 0 KIT-WAVE LAUNCH for {mins} (last {ll.strftime('%H:%M') if ll else 'none in window'}) "
+                            f"and 0 private-spec launches for {NO_PROGRESS_MIN} min (last {lp['t'].strftime('%H:%M') + ' ' + lp['src'][:80] if lp else 'none in window'}); {why}"})
     # 2. SELF-STOP: a REAP of a job the wave itself submitted / revived <= 30 min before
     mark, hits = {}, {}
     for e in ev:
@@ -389,6 +469,8 @@ def main(argv=None):
     coord = Path(a.coord)
     state = load_state(coord)
     events = parse_lines(read_tail(a.log or str(coord / "autopilot" / "log.txt"), now - timedelta(hours=ACTIVE_LOOKBACK_H + 1)))
+    since = now - timedelta(hours=ACTIVE_LOOKBACK_H + 1)
+    events += private_spec_events(str(coord / "autopilot" / "private_specs"), now, since) + ledger_private_events(SUBMIT_LEDGER, now, since)
     tsv = coord / "lanes" / "PROGRESS-WATCH.tsv"
     found = dedup(detect(events, now, state), recent_posts(tsv), now)
     newfile, posted = not tsv.exists(), 0
