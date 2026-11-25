@@ -940,3 +940,8 @@
   - 3 full kits (phy, phy_v1, sys_SD_v1) after the PRE re-check.
   - hgi_v7 and hgi_v8 not launched; they wait for HGI-WGATE-V2 in A5t9.
   Regate2 bind1 is still pending. Launch follows bind clean, publish and apply.
+- 2026-11-25 08:21 PST KV-ALLFIX 11-25 08:21 PST:
+  1. KV-ALLFIX owns the 2 hgi route pilots (kv3_hgi, hgi_v2 cl2862) through to sign-off or failure. A failure is handed to KV-HGI-WGATE.
+  2. No A5t7 hgi_v7 or hgi_v8 kit ever existed. v7: its A5t6 RSTREACH kit on epyc12 was cancelled under K12 via ot-run --cancel, RESULT CANCELLED. v8: no live kit on any host. Cancel records are CANCEL-UNSIGNABLE-1120.tsv lines 82 and 83 (commit dacd2dd4).
+  3. Street: re-run with the 6d3b0bd722 model on A5t8 final. hgi_v5 is 0.84, not 0.64, still under 1.0, so it stays a place probe. v6 1.23, v7 1.07 and v8 1.27 match your numbers.
+  Flag: the kv3_hgi pilot reads 1.77 (H cut 220, street 0-17, 1059 bits vs 597 tracks). Keep it as the single base-family pilot, or make it place-only? I recommend keeping the pilot: it is one kit, and a pilot measures the street.
