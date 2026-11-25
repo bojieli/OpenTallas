@@ -11,3 +11,4 @@
   sle_sc_v1 @10%: C 16390 | A 13020 (-21%) | B 14721 (-10%);  @20%: C 30209 | A 24882 (-18%) | B 28800 (-5%)
   GRT: M2+M3 share of demand fw 79.7 -> 71.4 (A) / 65.2 (B) %; sc 70.3 -> 60.0 / 53.2 %. GRT WL +1.3..+1.9 %. GRT overflow rises (fw 67 -> 2764 A / 1533 B; sc 29 -> 112 / 67), allow_congestion as before.
   Lead: A (M2/M3 0.40, rest 0.25). Not shipped yet: need iter-0 total and convergence + routed TT/FF timing from the epyc2 reruns.
+- 2026-11-25 07:50 PST DONE [QC-DRT-LAYERS] ot-push-main otpush-open-snipe-1158423 on open-snipe: rc=0 after 46 s, ended 15:50:12, log none, cmd: ot-push-main 
