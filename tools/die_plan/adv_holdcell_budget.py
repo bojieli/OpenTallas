@@ -27,7 +27,7 @@ from pathlib import Path
 CHECK = "HOLDCELL-BUDGET"
 PAD_PCT = 5.0
 MAX_LINES = 25
-SUFFIX = re.compile(r"(?:__(?:cl|pv)[0-9a-f]{6,})+$")
+SUFFIX = re.compile(r"(?:__(?:cl|pv|r)[0-9a-f]{6,})+$")
 CACHE_ENV = "OT_ADV_HOLD_CACHE"
 CACHE_DEFAULTS = ("adv_cache/hold_cache.json", "/srv/opentallas-scratch2/claude/precheck-cache/hold_cache.json")
 

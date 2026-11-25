@@ -15,7 +15,7 @@ import re
 import sys
 import time
 
-SUFFIX = re.compile(r"(?:__(?:cl|pv)[0-9a-f]{6,})+$")
+SUFFIX = re.compile(r"(?:__(?:cl|pv|r)[0-9a-f]{6,})+$")
 PAD = re.compile(r"^OT_HOLD_PAD rr\d+ margin ([\d.]+) ends (\d+) padded (\d+) cells (\d+)")
 AFTER = re.compile(r"OT_PREGRT_FF_HOLD after wns (-?[\d.]+) endpoints (\d+) cross_tap_wns \S+ tap_ports \d+ hold_cells (\d+) insts (\d+)")
 KIT = re.compile(r"(kv3_\w+?|[a-z0-9_]+?)_(\d{10})$")
