@@ -14646,6 +14646,40 @@ def rt_tree_cmd(sp):
 RT_MIRROR_KEEP_H = float(os.environ.get("OT_RT_MIRROR_KEEP_H", "168"))     # same horizon as ot-tools-sync OT_RT_SPEC_MAX_AGE_H
 
 
+RT_REF_CACHE = {"t": 0.0, "v": frozenset()}
+RT_REF_ROOTS = ("/srv/opentallas-scratch2/claude/hub-coord/autopilot",)
+
+
+def rt_live_refs(roots=None, now=None, max_age_h=336.0, ttl=300.0):
+    """RT-PRUNE-REFS-1124b: rt sha12 names of every kit_wave / private spec that is not terminal (no result.json, or verdict not FAIL / SIGNED: a kit at rest between
+    stages, a queued or running one), whatever its age within max_age_h; tools_rt and gen_pins.rt both.  Cached for ttl seconds."""
+    import glob
+    now = time.time() if now is None else now
+    if roots is None and now - RT_REF_CACHE["t"] < ttl:
+        return RT_REF_CACHE["v"]
+    out = set()
+    for r in (roots if roots is not None else RT_REF_ROOTS):
+        for f in glob.glob(f"{r}/private_specs/*/*/spec.json") + glob.glob(f"{r}/*/items/*/*/spec.json") + glob.glob(f"{r}/*/*/items/*/*/spec.json"):
+            try:
+                if now - os.stat(f).st_mtime > max_age_h * 3600:
+                    continue
+                try:
+                    v = (json.loads(Path(f).with_name("result.json").read_text()) or {}).get("verdict")
+                except (OSError, ValueError):
+                    v = None
+                if v in ("FAIL", "SIGNED"):
+                    continue
+                sp = json.loads(Path(f).read_text())
+            except (OSError, ValueError):
+                continue
+            for rt in (sp.get("tools_rt"), (sp.get("gen_pins") or {}).get("rt")):
+                if rt and RT_NAME_RE.fullmatch(os.path.basename(str(rt).rstrip("/"))):
+                    out.add(os.path.basename(str(rt).rstrip("/")))
+    if roots is None:
+        RT_REF_CACHE.update(t=now, v=frozenset(out))
+    return frozenset(out)
+
+
 def rt_mirror_cmds(sp, host, hub, tag=""):
     """(prep shell cmd, rsync argv builder, finish shell cmd) that copy the hub's rt/<sha12> tools/ + physical/common_flow to host's mirror, with
     --link-dest on the newest older mirror (only changed files move) into a private <mirror>.part<tag> and a rename, so a reader never sees half
@@ -14669,7 +14703,11 @@ def rt_mirror_cmds(sp, host, hub, tag=""):
            # mirror in every later --stage path (a made launch tree needs no mirror to RUN, but ot-run refuses a missing --stage path): the count rule alone
            # removed the mirror of a kit whose src parent had 12 newer rts pushed since (kv-allfix/pub: 13 rts in 10 h -> rc 78 NOT-RUN SETUP).
            # Mirrors are hardlink copies of a few MB each, so the age floor costs almost nothing.
-           f"for o in $({olds} | tail -n +13); do [ -z \"$(find \"$o\" -maxdepth 0 -mmin -{int(RT_MIRROR_KEEP_H * 60)})\" ] && chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
+           # RT-PRUNE-REFS-1124b: whatever its age, a mirror named by a non-terminal spec (hub list), a process command line or an ot-run status record on this host stays
+           f"KEEP=' {' '.join(sorted(rt_live_refs()))} '; PS=$(ps -eo args 2>/dev/null); "
+           f"for o in $({olds} | tail -n +13); do n=$(basename \"$o\"); case \"$KEEP\" in *\" $n \"*) continue;; esac; "
+           f"case \"$PS\" in *\"$n\"*) continue;; esac; grep -qsF \"$n\" \"$HOME\"/.local/state/ot-status/*.json && continue; "
+           f"[ -z \"$(find \"$o\" -maxdepth 0 -mmin -{int(RT_MIRROR_KEEP_H * 60)})\" ] && chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
     return prep, rs, fin
 
 

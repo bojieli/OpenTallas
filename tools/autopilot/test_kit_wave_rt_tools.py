@@ -209,6 +209,38 @@ class LaunchTree(unittest.TestCase):
         self.assertNotIn(f"{14:012x}", left)                   # beyond 12 and old: pruned
         self.assertNotIn(f"{15:012x}", left)
 
+    def test_mirror_prune_keeps_referenced_old_mirror(self):
+        """RT-PRUNE-REFS-1124b: an OLD mirror (beyond 12 newest and 168 h) named by a non-terminal spec stays; a terminal-only one goes"""
+        import time
+        d0 = Path(self.t.name) / "ap"
+        for nm, res in (("000000000014", None), ("000000000015", {"verdict": "FAIL"})):
+            sd = d0 / "private_specs/L" / nm
+            sd.mkdir(parents=True)
+            (sd / "spec.json").write_text(json.dumps({"tools_rt": f"/x/rt/{nm}"}))
+            if res:
+                (sd / "result.json").write_text(json.dumps(res))
+        refs = KW.rt_live_refs(roots=[str(d0)])
+        self.assertEqual(refs, {"000000000014"})
+        KW.RT_REF_CACHE.update(t=time.time(), v=frozenset(refs))
+        try:
+            sp = {"src": str(self.src), "tools_rt": str(self.rt)}
+            par = Path(KW.rt_mirror_path(self.src, "/x/aaaaaaaaaaaa")).parent
+            now = time.time()
+            for i in range(16):
+                d = par / f"{i:012x}"
+                (d / "tools/autopilot").mkdir(parents=True)
+                (d / "tools/autopilot/rt_launch_tree.sh").write_text("x")
+                age = KW.RT_MIRROR_KEEP_H * 3600 + 7200 + i if i >= 12 else 60 + i
+                os.utime(d, (now - age, now - age))
+            prep, rs, fin = KW.rt_mirror_cmds(sp, "localhost", "intel2", tag="t3")
+            subprocess.run(["bash", "-c", fin], capture_output=True, text=True)
+            left = {p.name for p in par.iterdir() if p.is_dir()}
+            self.assertIn("000000000014", left)
+            self.assertNotIn("000000000013", left)
+            self.assertNotIn("000000000015", left)
+        finally:
+            KW.RT_REF_CACHE.update(t=0.0, v=frozenset())
+
     def test_no_tools_anywhere_is_97_fast(self):
         c = KW.rt_tree_cmd({"src": str(self.src), "tools_rt": str(self.rt) + "x"})
         r = subprocess.run(["bash", "-c", c + "echo RAN"], capture_output=True, text=True, timeout=20)
