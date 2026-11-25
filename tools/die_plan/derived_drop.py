@@ -17,6 +17,8 @@ RSTREACH (FAIL; generic, every die, plan-only):
   b. every type with FSTART flops (landing_contract cland_fstart_out_<bus>) has its raw reset within reach of each of them:
      - with clock.landing_raw_branches: each branch's hops base relay -> copies -> its FSTART pin <= 405 um; the FSTART pins
        no branch covers stay on the one cland_start_raw net and are judged as in the next case;
+     - with clock.landing_local_resets (QC fstart_<k> split; consumers u_cland_fstart_<bus>): each local's site -> its
+       FSTART pins <= 405 um (its raw relay -> site hop is a.); covered pins leave the one-relay group (QC-TTCTLM-PROBE 11-25);
      - without (or for the uncovered pins): the one cland_start_raw relay must reach all of them, so their L1 enclosing
        radius must be <= 405 um; with --elab-dir (a bind of this plan) the bound relay site is used instead (exact), and a
        co-sited chain (all stages on one site) is named.
@@ -61,6 +63,7 @@ TAP = re.compile(r"^clk_t\d+$")
 SKIP_KEYS = ("collector_tree", "taps", "added_taps", "core_taps")
 CONS = re.compile(r"^(origin|fstart:(\w+)|(reader|writer):(\w+):(\d+))$")
 FS = "cland_fstart_out_"
+LOCAL_FS = "u_cland_fstart_"   # landing_local_resets consumer of FSTART pin cland_fstart_out_<bus> (QC fstart_<k> split)
 BOUND_REL = re.compile(r"ot_dp_rrelay\s+(\w+)\s*\(\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\);\s*//[^\n]*?depth (\d+) "
                        r"@ \(([-\d.]+), ([-\d.]+)\)")
 
@@ -311,11 +314,26 @@ def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
                 leg = ("base " + str(b.get("base")) + " -> copy 0") if base and k == 0 else \
                       ("last copy -> pin" if k == len(legs) - 1 else f"copy {k - (1 if base else 0)} -> {k + (0 if base else 1)}")
                 far.append((h, b.get("name"), pn, cos, len(chain), leg))
+    # QC form (QC-TTCTLM-PROBE 11-25): the FSTART reset split into clock.landing_local_resets (fstart_<k>: own raw relay +
+    # site, consumers u_cland_fstart_<bus>); each local drives only its consumers, so a covered pin is judged on its local
+    # site -> pin hop (the raw relay -> site hop is part a), not in the one-group cland_start_raw spread below
+    for lr in (t.get("clock") or {}).get("landing_local_resets") or []:
+        if not isinstance(lr, dict) or not isinstance(lr.get("xy_um"), list):
+            continue
+        pins = [str(c)[len(LOCAL_FS):] for c in lr.get("consumers") or [] if str(c).startswith(LOCAL_FS)]
+        pins = [pn for pn in pins if pn in fs]
+        covered.update(pins)
+        for pn in pins:
+            h = man(lr["xy_um"], fs[pn])
+            if h > reach + EPS:
+                far.append((h, f"landing_local_resets[{lr.get('name')}]", pn, False, 1, "local site -> pin"))
     if far:
         far.sort(key=lambda r: -r[0])
         ex = "; ".join(f"{n} -> fstart:{p} {h:.0f} um at {lg}" + (f" (all {k} stages co-sited)" if c else "")
                        for h, n, p, c, k, lg in far[:MAX_LIST])
-        out.append(f"FAIL RSTREACH {tn}: {len(far)} landing_raw_branches hop(s) to FSTART flops over {reach:g} um ({ex}); "
+        nloc = sum(1 for r in far if str(r[1]).startswith("landing_local_resets["))
+        src = "landing_raw_branches" if not nloc else ("landing_local_resets" if nloc == len(far) else "landing_raw_branches / landing_local_resets")
+        out.append(f"FAIL RSTREACH {tn}: {len(far)} {src} hop(s) to FSTART flops over {reach:g} um ({ex}); "
                    f"re-derive the branches on the current floorplan: kv_start_corridor_event.py raw --bind-rtl <strict bind>")
     rest = {k: v for k, v in fs.items() if k not in covered}
     if not rest:

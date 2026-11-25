@@ -331,3 +331,32 @@ def test_entryfoot_is_warn_only_and_other_classes_keep_fail(monkeypatch):
     assert out == ["FAIL DERIVEDNAME die: 1 of 1 reset.die_relays", "WARN ENTRYFOOT t: tap off footprint",
                    "WARN ENTRYFOOT t: STALE-EXPORT-TAP 1 of 1", "LIST ENTRYFOOT x"]
     assert not any(l.startswith("FAIL ENTRYFOOT") for l in out)
+
+
+def _ttctlm(far=False):
+    """QC tt_ctlm (plan 3854ae7ced25 / C1n 26036a30b94f): 4 landing_local_resets split the FSTART pins (581 um as one group)"""
+    pins = {"cal_descriptor_obs": (20.064, 2.656), "cal_image_ready": (28.704, 2.656), "cmd": (775.456, 165.216),
+            "hr": (790.0, 200.0), "tl": (770.0, 410.0), "native_pos": (230.0, 2.656)}
+    lc = {"pins": [{"name": "cland_fstart_out_" + k, "xy_um": list(v)} for k, v in pins.items()], "bands": {}}
+    loc = [{"name": "fstart_0", "raw": "rst_rl_6", "xy_um": [770.094, 222.21], "consumers": ["u_cland_fstart_cmd", "u_cland_fstart_hr"]},
+           {"name": "fstart_1", "raw": "rst_rl_117", "xy_um": [765.936, 399.06], "consumers": ["u_cland_fstart_tl"]},
+           {"name": "fstart_2", "raw": "rst_rl_80", "xy_um": [90.558, 8.37] if not far else [700.0, 700.0],
+            "consumers": ["u_cland_fstart_cal_descriptor_obs", "u_cland_fstart_cal_image_ready"]},
+           {"name": "fstart_3", "raw": "rst_rl_144", "xy_um": [220.139, 23.808], "consumers": ["u_cland_origin", "u_cland_fstart_native_pos"]}]
+    return {"clock": {"landing_contract": lc, "landing_local_resets": loc}}
+
+
+def test_qc_local_reset_split_is_not_one_group():
+    assert D.l1_radius([tuple(p["xy_um"]) for p in _ttctlm()["clock"]["landing_contract"]["pins"]]) > 405
+    assert D.findings({"partition_types": {"tt_ctlm": _ttctlm()}}, "/x/p.json", solver=Fake({"tt_ctlm": TREE}),
+                      classes=("RSTREACH",)) == []
+
+
+def test_qc_local_reset_far_site_fails_and_uncovered_pins_still_grouped():
+    out = D.findings({"partition_types": {"tt_ctlm": _ttctlm(far=True)}}, "/x/p.json", solver=Fake({"tt_ctlm": TREE}),
+                     classes=("RSTREACH",))
+    assert len(out) == 1 and out[0].startswith("FAIL RSTREACH tt_ctlm: 2 landing_local_resets hop(s)") \
+        and "landing_local_resets[fstart_2] -> fstart:cal_" in out[0]
+    t = _ttctlm(); t["clock"]["landing_local_resets"] = t["clock"]["landing_local_resets"][:1]
+    out = D.findings({"partition_types": {"tt_ctlm": t}}, "/x/p.json", solver=Fake({"tt_ctlm": TREE}), classes=("RSTREACH",))
+    assert len(out) == 1 and out[0].startswith("WARN RSTREACH tt_ctlm: 4 FSTART pin(s) span")
