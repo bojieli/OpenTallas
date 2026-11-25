@@ -121,3 +121,74 @@ def test_fork_json_names_the_owner(tmp_path, monkeypatch):
     (root / ".fork.json").write_text(json.dumps({"lane": "KV-WAITBIND-R1"}))
     assert "belongs to lane KV-WAITBIND-R1" in TWG.refusal(root / "physical" / "p.json", lane="FLOW-OPS-R2")
     assert TWG.refusal(root / "physical" / "p.json", lane="kv_waitbind_r1") == ""
+
+
+def _fake_derive(monkeypatch, seen):
+    class R:
+        returncode, stdout, stderr = 0, "LAND_R8 DERIVED\n", ""
+
+    def run(cmd, **k):
+        seen.append(cmd)
+        return R()
+    monkeypatch.setattr(RR.subprocess, "run", run)
+
+
+def test_r8_refresh_symlinked_launch_view_inside_root_allowed(tmp_path, monkeypatch, capsys):
+    """QC-R8-SYMLINK 11-24: a table reached through a symlinked launch view whose target is inside the real tree --root is written"""
+    monkeypatch.delenv("OT_LANE", raising=False)
+    S, P = trees(tmp_path)
+    V = tmp_path / "lane/view"; os.symlink(S, V)                        # whole launch view is a symlink to the real tree
+    ab = S / "ab.json"; ab.write_text(json.dumps({"land_r8_extra": []}))
+    for table in (P / REL, V / REL):
+        assert TWG.root_for(table, str(S)) == str(S)
+        assert TWG.refusal(table, TWG.root_for(table, str(S))) == ""
+        seen = []; _fake_derive(monkeypatch, seen)
+        assert RR.main(["plan.json", "bg.json", str(table), "--asbuilt", str(ab), "--root", str(S)]) == 0, capsys.readouterr().out
+        cmd = seen[0]
+        assert cmd[cmd.index("--root") + 1] == str(S)                    # the derive's --out guard gets the same root
+    assert TWG.root_for(V / REL, str(V)) == str(V)                       # root given as the view itself: also inside
+
+
+def test_r8_refresh_symlink_escaping_root_refused(tmp_path, monkeypatch, capsys):
+    monkeypatch.delenv("OT_LANE", raising=False)
+    S, P = trees(tmp_path)
+    own = tmp_path / "lane/own"; (own / "r8").mkdir(parents=True); (own / ".fork.json").write_text("{}")
+    os.symlink(S / "physical", own / "r8/esc")                           # a link inside --root that leaves it
+    t = own / "r8/esc/die_plan/qwen_compute/qc_start_1106/runtime/zz_r8.json"
+    before = t.read_bytes()
+    assert TWG.root_for(t, str(own)) == str(own)                         # lexically under --root ...
+    assert "through symlink" in TWG.refusal(t, TWG.root_for(t, str(own)))   # ... but its real path is outside: refused
+    ab = own / "ab.json"; ab.write_text(json.dumps({"land_r8_extra": []}))
+    seen = []; _fake_derive(monkeypatch, seen)
+    assert RR.main(["plan.json", "bg.json", str(t), "--asbuilt", str(ab), "--root", str(own)]) == 3
+    assert "R8_REFRESH REFUSED" in capsys.readouterr().out and not seen and t.read_bytes() == before
+    assert RR.main(["plan.json", "bg.json", str(P / REL), "--asbuilt", str(ab), "--root", str(own)]) == 3   # unrelated root: marker root P
+
+
+def test_r8_refresh_plain_path_unchanged(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_LANE", raising=False)
+    own = tmp_path / "lane/own"; (own / "r8").mkdir(parents=True); (own / ".fork.json").write_text("{}")
+    t = own / "r8/t.json"; t.write_text(json.dumps({"members": []}))
+    ab = own / "ab.json"; ab.write_text(json.dumps({"land_r8_extra": []}))
+    assert TWG.root_for(t, str(own)) == str(own) and TWG.root_for(t, None) is None
+    assert TWG.root_for(t, str(tmp_path / "elsewhere")) is None
+    for extra in ([], ["--root", str(own)]):
+        seen = []; _fake_derive(monkeypatch, seen)
+        assert RR.main(["plan.json", "bg.json", str(t), "--asbuilt", str(ab)] + extra) == 0
+        assert ("--root" in seen[0]) == bool(extra)
+
+
+def test_r8_refresh_relative_table_through_symlinked_launch_view(tmp_path, monkeypatch, capsys):
+    """COORD 11-24 (QC-STA-PROBE): cwd = the launch view, table and --root given relative; the table resolves through the view's
+    symlinked physical/die_plan into the real tree named by --root -> written; the same table with --root . (the view) stays refused"""
+    monkeypatch.delenv("OT_LANE", raising=False)
+    S, P = trees(tmp_path)
+    ab = P / "ab.json"; ab.write_text(json.dumps({"land_r8_extra": []}))
+    monkeypatch.chdir(P)
+    rel_root = os.path.relpath(S, P)
+    seen = []; _fake_derive(monkeypatch, seen)
+    assert RR.main(["plan.json", "bg.json", REL, "--asbuilt", "ab.json", "--root", rel_root]) == 0, capsys.readouterr().out
+    assert os.path.realpath(seen[0][seen[0].index("--root") + 1]) == os.path.realpath(S)
+    seen.clear()
+    assert RR.main(["plan.json", "bg.json", REL, "--asbuilt", "ab.json", "--root", "."]) == 3   # the shared tree is not the view's
+    assert not seen

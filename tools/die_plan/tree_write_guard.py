@@ -30,6 +30,16 @@ def inside(p, root):
     return p == root or root == "/" or p.startswith(root + "/")
 
 
+def root_for(path, root):
+    """QC-R8-SYMLINK 11-24: ROOT when PATH lies under it lexically OR by real path (a table reached through a symlinked launch view
+    whose target is inside the real tree ROOT), else None (the caller falls back to the nearest tree marker).  Only picks the root:
+    refusal() still refuses a real path outside realpath(ROOT)."""
+    if not root:
+        return None
+    p, r = os.path.abspath(path), os.path.abspath(root)
+    return r if inside(p, r) or inside(os.path.realpath(p), os.path.realpath(r)) else None
+
+
 def tree_root(path, cwd=None):
     """nearest lexical ancestor dir of PATH with a tree marker, else the cwd when PATH is lexically under it, else ''"""
     p = os.path.abspath(path)

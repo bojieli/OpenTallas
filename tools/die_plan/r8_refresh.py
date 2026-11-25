@@ -54,11 +54,14 @@ def main(argv=None):
     import tree_write_guard as TWG
     extras = json.loads(Path(A.asbuilt).read_text()).get("land_r8_extra", [])
     targets = [Path(A.table)] + [Path(xf) if Path(xf).is_absolute() else root / xf for xf in extras]
-    gr = os.path.abspath(A.root) if A.root else None
-    bad = [w for w in (TWG.refusal(t, gr if gr and TWG.inside(os.path.abspath(t), gr) else None) for t in targets) if w]
+    # QC-R8-SYMLINK 11-24: --root applies when the target lies under it lexically or by real path (symlinked launch view)
+    bad = [w for w in (TWG.refusal(t, TWG.root_for(t, A.root)) for t in targets) if w]
     if bad:
         print("R8_REFRESH REFUSED " + " | ".join(bad)); return 3
     cmd = [sys.executable, "-I", str(tool), "derive", A.plan, A.bus_groups, "--like", A.table, "--out", A.table]
+    troot = TWG.root_for(A.table, A.root)
+    if troot and '"--root"' in tool.read_text(errors="replace"):   # the derive's own --out guard judges against the same root
+        cmd += ["--root", troot]
     if A.pin_pre:
         cmd += ["--pin-pre", A.pin_pre] + (["--pin-extra", A.pin_extra] if A.pin_extra is not None else [])
     r = subprocess.run(cmd, capture_output=True, text=True)
