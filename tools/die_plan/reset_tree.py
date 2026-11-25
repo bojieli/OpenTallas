@@ -120,6 +120,19 @@ def relay_um(P, tn=None):
     return min(v, cap)
 
 
+def plan_margin_um(P, tn):
+    """per-type relay planning slack (CB-REFLOOR 11-25, cbf_q00_s2: planned max hop 275.0 placed 300.8 > 300): the type tree
+    is PLANNED at relay_um - plan_margin_um and still CHECKED at relay_um.  partition_types[tn].reset.plan_margin_um may only
+    WIDEN the default MARGIN_UM (more relays, never a looser check); it must leave a positive planning reach."""
+    v = ((P.types.get(tn) or {}).get("reset") or {}).get("plan_margin_um")
+    if v is None:
+        return MARGIN_UM
+    v = float(v); reach = relay_um(P, tn)
+    if not (MARGIN_UM <= v < reach):
+        raise ResetError(f"type {tn}: reset.plan_margin_um {v:g} must be in [{MARGIN_UM:g}, relay_um {reach:g})")
+    return v
+
+
 def sync_stages(P, tn=None):
     t = P.types[tn] if tn else {}
     return int((t.get("reset", {}) or {}).get("sync_stages", P.reset.get("sync_stages", 2)))
@@ -1302,15 +1315,16 @@ def _type_tree0(P, tn, depth, reach):
 
 def _type_tree00(P, tn, depth, reach):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
-    if ("topo", tn, reach) not in cache:
+    mg = plan_margin_um(P, tn)
+    if ("topo", tn, reach, mg) not in cache:
         t = P.types[tn]
         w, h = t["outline_um"]
-        cache[("topo", tn, reach)] = topology(consumer_taps(P, tn), reset_pin(P, tn), reach=reach,
-                                              boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
-                                                                           h - CLEAR_UM), walls=walls(P, tn),
-                                              avoid_cores=bool(P.reset.get("relay_avoid_cores")))
+        cache[("topo", tn, reach, mg)] = topology(consumer_taps(P, tn), reset_pin(P, tn), reach=reach, margin=mg,
+                                                  boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
+                                                                               h - CLEAR_UM), walls=walls(P, tn),
+                                                  avoid_cores=bool(P.reset.get("relay_avoid_cores")))
     t = P.types[tn]; w, h = t["outline_um"]
-    T = assign(cache[("topo", tn, reach)], depth,
+    T = assign(cache[("topo", tn, reach, mg)], depth,
                pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
                site_names=t.get("reset_relay_names") == "site")
@@ -2457,7 +2471,7 @@ def _wf_type_tree0(P, tn):
         used = {(round(x, 3), round(y, 3)) for _, x, y in outs}
         column = dict(axis=cs["axis"], band=cs["band"],
                       end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used else None)
-    topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
+    topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), margin=plan_margin_um(P, tn), boxes=blockages(t),
                     box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                     avoid_cores=bool(P.reset.get("relay_avoid_cores")), column=column)
     T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),

@@ -998,6 +998,8 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # per-type reset relay reach (reset_tree.relay_um): only tightens the die reset.relay_um
                         "relay_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
+                        # per-type relay planning slack (reset_tree.plan_margin_um): only widens the default 25 um
+                        "plan_margin_um": {"type": "number", "minimum": 25, "maximum": 300},
                         # reset column mode (reset_tree.column_spec): entry/exit on one line, straight relay chain
                         "column": {"type": "object", "additionalProperties": False, "properties": {
                             "axis": {"enum": ["x", "y"]}, "at_um": {"type": "number"}, "entry": {"enum": ["lo", "hi"]}}},
