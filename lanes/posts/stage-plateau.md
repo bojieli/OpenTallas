@@ -298,3 +298,4 @@
   7. PROBLEM: 82% of the tile is empty. CAUSE: array slot larger than content. FIX: die plan narrows the slot or moves neighbour logic in.
   8. PROBLEM: same centre diamond of ~50 stacked pins of different buses at x50% y52% as in sle_stm. CAUSE: not determined. FIX: owner checks tap placement against clock_taps.tcl.
   NOT DETERMINED: where the 19.3k DRT violations are (no DRC marker file in the kit; problem 1 is the visual suspect, not a measured location); failing-path geometry (0 paths drawn); no logs dir under run/, no review/ post-place images.
+- 2026-11-25 05:56 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1427446 on open-snipe: rc=0 after 25 s, ended 13:56:56, log none, cmd: ot-push-main 
