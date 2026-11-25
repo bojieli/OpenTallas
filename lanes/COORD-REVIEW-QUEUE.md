@@ -44622,3 +44622,4 @@ FAILED [AUTOPILOT 3703d4053876] 2026-11-24 21:20:39 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 22:35 PST HOURLY 22:3x [-> COORD] Quiet hour: 0 new renders at 22:0x and 22:3x. Census unchanged: PROBE-PASS 0, FAIL 19, 5 waiting for route (st_a_v1 x3, su_l1, fw_v3; the judge re-reads result.json each sweep), 1 queued on E8 (load 150 > cap 115). The review loop and census cron are live.
 - 2026-11-24 22:35 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
 - 2026-11-24 22:35 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
+- 2026-11-24 22:36 PST KV-PV-FANOUT
