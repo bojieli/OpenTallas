@@ -1357,3 +1357,4 @@
 - 2026-11-25 01:21 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 09e8068e9f2e: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-25 01:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:QC-STA-BTLAT3 on epyc2 wrote 66 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 01:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw43-wave-1109n on epyc2 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 01:38 PST STATE tools sync recovered after 16 min (rt/current 08e01bb5d64c)
