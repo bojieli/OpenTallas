@@ -36,3 +36,9 @@
 - kv3_pv E column = CB-TAPBINS stale sink_bins (D23H) + duplicate face sink_sites_um rows; family row SINKBINS-PV to build (sink_bins_from_place.py / sink_bins_compose.py).
 - v3n: no static site cause; KV-ALLFIX route kit kv3_pv_v3n_a5t5route_1124 live.
 - ot-run --cancel cannot see older-rt clients: kill exact pid after cmdline check.
+
+## 11-24 23:25 PST update
+- V1NSITE chain: intel2 ~/tmp/kvownpvr2/chainV1i2b.sh relaunched with OT_RUN_SCRATCH_DISK_FLOOR_GB=140 + OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS=localhost=140,intel2=140 (the _HOSTS map default localhost=150 wins over the plain var). Waiting on ot-run HOLD disk-ETA (scratch2 falling ~96 GB/h). On BIND_ERRORS 0 it makes the private spec + run-item --goal route (unit to post).
+- SINKBINS-PV handed to KV-SINKBINS (post 5ae1c058).
+- PVLEGS (a) applied: intel1 kv-own-pv-r2/regen6/groupeq.py -> out_r2/vport_r2_eq.json abb016dc0b00. (b) = strap-pad sites (land_r8_strap_pads true; bind emits strap_r8pad_slg_vreq; audit PASS). Re-gate PVLEGS7: intel1 jobQ6g7.sh (gate Q6/gate7.sh = r8check --strap-pads), launched from intel2 ~/tmp/kvownpvr2/jobQ6g7.otrun.log, HOLD disk-ETA. Next: ROW-REBASED post, then VODCH row.
+- kv3_pv probe (epyc9 runitem-kv3_pv): owed reset-reach + hold at CTS.
