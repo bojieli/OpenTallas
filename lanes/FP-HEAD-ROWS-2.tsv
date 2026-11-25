@@ -1,0 +1,14 @@
+iter	type	class	plan_key_and_fix	status	ledger_for	note
+2	hd_mesh_e	leg>405	ft_slots[m_rx_ft].stations +1 (bit 19 hop 407um)	ROW-READY	HEAD-ALLFIX W8	G0-HOPS static
+2	hd_mesh,hd_host_w,hd_host_e	macro overlap 0.024um	SRAM 32x64 stack pitch 17.28 -> >=17.304 (or 25.92): 26+13+13 pairs	ROW-READY-NEEDS-REGEN	HEAD-ALLFIX W8/W9	new ADV-MACRO-CHANNEL overlap line; review2
+2	hd_mesh,hd_host_w	macro channel	abut NS pairs (1.85um x36/x18); EW pitch +8.64 (7.9/8.62um)	DEFERRED W9	HEAD-ALLFIX	needs colfix regen
+2	hd_spn,hd_spn_end	pile/hot spot 3.11/1.87	move W-entry leg to x=155.52 and E-entry leg to x=319.68, keep S-through 235.65 (SUPERSEDES iter1 outline W 587.52->691.2: UNSOUND, exceeds E shim and die margin)	DEFERRED W9 ETA after W8	HEAD-ALLFIX	review2
+2	hd_spn	hot spot 1.25-1.32	widen x=86.126 leg box or stagger station rows y 260/530/800/1070/1340/1610	DEFERRED W9	HEAD-ALLFIX	NEW
+2	hd_tile	gcell/hot spot 1.44	u_eB origin y 734.4->743.04 (cap +8.64) AND move 512-bit leg to y 700-730; larger shift needs outline H +17.28	DEFERRED W9	HEAD-ALLFIX	review2
+2	hd_lep0N	pile 1.33	coll_o leg to x 975-1005; rx bank[2] SRAM row 60um west (907.2-958.6,550.8-571.6)	DEFERRED W9 (C1 BANKSEAT in flight)	HEAD-ALLFIX	review2
+2	hd_lep0N	macro channel	24 pairs min 2.42um: abut or re-pitch >=14.88 (shelf y545-690; W stack x40-132 y249-475 3.77um)	DEFERRED W9	HEAD-ALLFIX	
+2	hd_lep0N_w	gcell 1.42	end coll_o leg at x<=60 (off u_rg2.u_pair W face 69.12); pair cores -8.64 in x (8.64um from E edge, PG strap); SRAM row pitch +0.84 (10 channels 12.97-14.04)	DEFERRED W9	HEAD-ALLFIX	
+2	hd_ctl	hot spot 1.04	cores xa0/xb0/xa1/xb1 y=95.04/207.36/319.68/432.0 (SUPERSEDES iter1 y+86.4: UNSOUND, leaves outline by 64.8); offset 1104-bit dogleg corners 20um	DEFERRED W9	HEAD-ALLFIX	
+2	hd_host_e	PG edge	u_epc core x -8.64 (89um free west)	DEFERRED W9	HEAD-ALLFIX	
+2	hd_serdes	gcell 0.93	land coll_i0 leg at y<=100 (crosses u_chn S edge x1550-1650)	DEFERRED W8 serdes re-floor lane	owner of hd_serdes W8	
+2	all	latency	NO ROWS: the 12 nofic re-price rows are WITHDRAWN (G0 rejects: table says N, plan gives N-1)	WITHDRAWN	HEAD-ALLFIX	fic latcheck 334/334 PASS
