@@ -202,3 +202,15 @@ def test_widen_steps_last_cut_off_a_raster_truncating_width():
     assert abs(g["outline_um"][0] - 1477.44) < 1e-6 and rep[-1][-1] > rep[0][-1]
     import adv_seatgap as SG
     assert SG.macro_gap(g)[1] == [] and LG.check_rows(t, g, cuts=ncut) == []
+
+
+def test_widen_face_grows_an_inherited_truncating_width_on_an_uncut_axis():
+    t = widen_row_fixture(with_contents=True)
+    t["hard_cores"] = [h for h in t["hard_cores"] if h["inst"] == "far"]      # no x gap: only the contents y cut
+    t["internal_stations"] = t["internal_stations"][1:]
+    t["outline_um"] = [1546.56, 800.0]                                        # c1x_C t8 W: 1546.56 / 4.32 truncates
+    t["ft_slots"] = [{"name": "e", "face": "E", "xy": [1546.56, 400.0]}]
+    g, rep, ncut = LG.widen_row(t)
+    assert abs(g["outline_um"][0] - 1550.88) < 1e-6 and not LG.raster_bad(g["outline_um"][1])
+    assert g["hard_cores"][0]["origin_um"] == [700.0, 300.0]                  # no core moved in x
+    assert LG.check_rows(t, g, cuts=ncut) == []

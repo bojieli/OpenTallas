@@ -314,6 +314,13 @@ def widen_row(t):
             t2 = grow_row(t2, add, 0.0, None, cut) if ax == "x" else grow_row(t2, 0.0, add, cut, None)
             off[ax] += add
             rep.append((ax, round(g, 2), lo[4], hi[4], bits, round(need, 1), add))
+        face = 0.0
+        while not cuts and raster_bad(round(t["outline_um"][k] + face, 4)):
+            face = round(face + LATTICE, 4)  # an inherited truncating width on an uncut axis: grow the face only (no core moves)
+        if face:
+            e = t2["outline_um"][k]
+            t2 = grow_row(t2, face, 0.0, None, e) if ax == "x" else grow_row(t2, 0.0, face, e, None)
+            rep.append((ax, "raster-face", t["outline_um"][k], t2["outline_um"][k], 0, 0.0, face))
     return t2, rep, sum(1 for p in plan if p[0] and _lattice_up(max(0.0, p[2] - p[1])) > 0)
 
 
