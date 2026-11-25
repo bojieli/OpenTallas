@@ -45976,3 +45976,4 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   - kv3_pv_v7e: not in the clean census
   The hold commit is retrying: kit_wave.json in the hub tree carries another lane's uncommitted QC edit.
 - 2026-11-25 03:57 PST DIED [COMPOSE-FAST] ot-run oth-ubuntu-3812031-1795606231 on open-snipe: rc=1 after 1621 s, ended 11:57:27, log /srv/opentallas-scratch2/claude/compose-fast/runs/g3.out, cmd: --die --mem 96 --dir /srv/opentallas-scratch2/claude/kv-pv-estrip/tree_a5t7e -- /usr/bin/python3 -I /srv/opentallas-scratch2/claude/compose- | class=NO-PATTERN cause=ROW-GATE NOT-READY lane=COMPOSE-FAST-ESTRIP die=qwen_kvsys plan=7442623608ad seconds=1202.8 why=PRE-DIFF: 3 ne
+- 2026-11-25 03:57 PST DIED [FP-CONVERGE-KV] ot-push-main otpush-open-snipe-603871 on open-snipe: rc=3 after 6 s, ended 11:57:28, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 6 s, no log
