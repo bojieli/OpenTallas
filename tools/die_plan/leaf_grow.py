@@ -265,6 +265,7 @@ def blocked_plan_gaps(t):
     ADV-MACRO-GAP flags (a sub-9 um facing pair that carries a bus lane); need_gap = bits / (tracks/um x SUPPLY_FRAC), the
     ADV-CHANNEL-WIDTH width.  Only pairs whose BOTH macros are plan hard_cores can be moved by the outline; a pair of macros
     with no plan origin_um is returned as kit_internal (contents macros with an origin_um move like cores)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))      # python3 -I does not put the script dir on sys.path
     import adv_seatgap as SG
     import adv_slot_gap as SL
     inst = {h["inst"] for h in t.get("hard_cores") or []}
