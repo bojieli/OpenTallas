@@ -107,3 +107,38 @@ def test_build_memo_off_matches_on(monkeypatch):
         m, _ = L.build_memo()
         res.append((list(m.ands), dict(L.dlit)))
     assert res[0] == res[1]
+
+
+# ---- automatic cone partitioning (autopart) ----
+def _parts(verdicts, sel):
+    return [dict(name=f"p{i}", include="x", exclude=None, selected=s, verdict=v, counts=dict(differs=int(v == "NOT EQUIVALENT"), undecided=0),
+                 reason=f"r{i}", failing=[dict(point=s[0])] if v == "NOT EQUIVALENT" else [])
+            for i, (v, s) in enumerate(zip(verdicts, sel))]
+
+
+def test_autopart_plan_covers_every_point_once():
+    pts = [f"ff:u{i % 7}.a.b.c{i}" for i in range(500)] + ["po:o[0]", "bb:x.y"]
+    inc = lec.autopart_includes(pts, 4)
+    plan = lec.autopart_plan(inc)
+    cnt = {p: 0 for p in pts}
+    for i, e in plan:
+        for p in lec.autopart_select(pts, i, e):
+            cnt[p] += 1
+    assert set(cnt.values()) == {1}
+
+
+def test_autopart_merge_equivalent_only_when_all_equivalent_and_covered():
+    pts = ["ff:a", "ff:b", "ff:c"]
+    ok = lec.autopart_merge(pts, _parts(["EQUIVALENT"] * 2, [["ff:a", "ff:b"], ["ff:c"]]), {})
+    assert ok["verdict"] == "EQUIVALENT" and ok["counts"]["proved"] == 3
+    neq = lec.autopart_merge(pts, _parts(["EQUIVALENT", "NOT EQUIVALENT"], [["ff:a", "ff:b"], ["ff:c"]]), {})
+    assert neq["verdict"] == "NOT EQUIVALENT" and neq["failing"][0]["point"] == "ff:c"
+    unp = lec.autopart_merge(pts, _parts(["EQUIVALENT", "UNPROVEN"], [["ff:a", "ff:b"], ["ff:c"]]), {})
+    assert unp["verdict"] == "UNPROVEN"
+
+
+def test_autopart_coverage_gap_is_refused():
+    pts = ["ff:a", "ff:b", "ff:c"]
+    gap = lec.autopart_merge(pts, _parts(["EQUIVALENT"] * 2, [["ff:a"], ["ff:c"]]), {})   # ff:b in no partition
+    assert gap["verdict"] == "UNPROVEN" and "coverage gap" in gap["reason"] and "ff:b" in gap["reason"]
+    assert gap["counts"]["proved"] == 0

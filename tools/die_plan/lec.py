@@ -9326,6 +9326,206 @@ def commonshape_retry(r, out, run):
     return keep
 
 
+# ---- LEC-SPEED 2 (COORD 11-25): automatic cone partitioning of big kit LECs ---------------------------------------------
+# One whole-design correspondence is single-threaded Python.  Above AUTOPART_BYTES of gate netlist and AUTOPART_POINTS
+# compare points, main() builds the AIGs once (the pre-pass every run does anyway), splits the compare points by instance
+# prefix into N partitions plus a catch-all, proves each on the sequential cone of influence of its points (OT_LEC_PART_RE,
+# coi_partition) in parallel child processes of this same slot / container, and merges.  EQUIVALENT only when every
+# partition is EQUIVALENT and the selected point lists cover every compare point.  OPT-IN (OT_LEC_AUTOPART=1): on U2_t40 the catch-all kept 32539 of 45984 points (617 of 1516 CPU s) so wall did not improve.  Same rules as tools/die_plan/lec_part.py
+# (the ot-run-per-partition driver); this copy lives in lec.py because kits stage lec.py alone.
+AUTOPART_BYTES = int(os.environ.get("OT_LEC_AUTOPART_BYTES", str(8 * 2 ** 20)))
+AUTOPART_POINTS = int(os.environ.get("OT_LEC_AUTOPART_POINTS", "20000"))
+AUTOPART_RANK = {"EQUIVALENT": 0, "UNPROVEN": 1, "NOT EQUIVALENT": 2, "KEEP FAIL": 2, "LINT FAIL": 2}
+AUTOPART_KEEP = ("lec.json", "lec.log", "miter.aig", "miter_swept.aig", "partition_points.json")
+
+
+def autopart_points(gold_aig, gmap, gate_aig, tmap):
+    pts = set()
+    for aig, amap in ((gold_aig, gmap), (gate_aig, tmap)):
+        pts |= set(key_points(aig, amap)[1])
+    return sorted(pts)
+
+
+def autopart_prefix(key, depth):
+    name = key.partition(":")[2]
+    return ".".join(re.split(r"\.(?![^\[]*\])", name)[:depth])
+
+
+def autopart_includes(points, n, depth=4):
+    """instance-prefix groups packed (largest first) into n-1 bins -> include regexes; the catch-all is added by plan"""
+    groups = collections.Counter(autopart_prefix(p, depth) for p in points)
+    if n <= 1 or len(groups) <= 1:
+        return []
+    bins = [[0, []] for _ in range(n - 1)]
+    for g, c in sorted(groups.items(), key=lambda x: (-x[1], x[0]))[: (n - 1) * 64]:
+        b = min(bins, key=lambda x: x[0])
+        b[0] += c
+        b[1].append(g)
+    return ["^(ff|bb|po):(" + "|".join(re.escape(g) for g in sorted(b[1])) + r")(\.|\[|$)" for b in bins if b[1]]
+
+
+def autopart_plan(includes):
+    """-> [(include, exclude)]: the includes, then the catch-all (everything not in an earlier partition)"""
+    return [(r, None) for r in includes] + [(".*", "|".join(f"(?:{r})" for r in includes) or None)]
+
+
+def autopart_select(points, inc, exc):
+    i, e = re.compile(inc), (re.compile(exc) if exc else None)
+    return [p for p in points if i.search(p) and not (e and e.search(p))]
+
+
+def autopart_merge(points, parts, template):
+    """parts: [{include, exclude, selected (list), verdict, counts, failing, unproven_points}] -> merged lec record.
+    EQUIVALENT only if every partition is EQUIVALENT and the union of the selected lists is exactly the point list."""
+    allp = set(points)
+    covered = set()
+    for r in parts:
+        covered |= set(r["selected"])
+    gap = sorted(allp - covered)
+    worst = max((r["verdict"] for r in parts), key=lambda v: AUTOPART_RANK.get(v, 1), default="UNPROVEN")
+    rec = dict(template)
+    differs = sum((r.get("counts") or {}).get("differs", 0) for r in parts)
+    undecided = sum((r.get("counts") or {}).get("undecided", 0) for r in parts)
+    if gap:
+        rec["verdict"] = "UNPROVEN"
+        rec["reason"] = (f"partition coverage gap: {len(gap)} of {len(allp)} compare points are in no partition "
+                         f"(first: {', '.join(gap[:6])}); refused, not proved")
+        worst = "UNPROVEN"
+    else:
+        rec["verdict"] = worst
+        bad = [f"{r['name']} {r['verdict']}" for r in parts if r["verdict"] != "EQUIVALENT"]
+        if worst == "EQUIVALENT":
+            rec.pop("reason", None)
+            rec["note"] = (f"{len(allp)} compare points proved in {len(parts)} cone partitions (union of the selected "
+                           f"points covers every compare point; each partition EQUIVALENT)")
+        else:
+            first = next(r for r in parts if r["verdict"] == worst)
+            rec["reason"] = f"{', '.join(bad)}; {first.get('reason')}"
+    n = len(allp)
+    rec["counts"] = dict(compare_points=n, proved=max(0, n - differs - undecided) if not gap else 0,
+                         differs=differs, undecided=undecided + len(gap), overlap_summed=True)
+    seen, failing, unproven = set(), [], []
+    for r in parts:
+        for e in r.get("failing") or []:
+            if e.get("point") not in seen:
+                seen.add(e.get("point"))
+                failing.append(e)
+        for e in r.get("unproven_points") or []:
+            if e.get("point") not in seen:
+                seen.add(e.get("point"))
+                unproven.append(e)
+    rec["failing"], rec["unproven_points"] = failing[:500], unproven[:500]
+    rec["autopart"] = dict(points=len(allp), covered=len(allp) - len(gap), gap=len(gap), verdict=rec["verdict"],
+                           parts=[{k: r.get(k) for k in ("name", "include", "exclude", "verdict", "counts", "reason",
+                                                           "t_total_s", "t_cpu_s")} | dict(points=len(r["selected"]))
+                                  for r in parts])
+    return rec
+
+
+def autopart_mem_gb():
+    for f in ("/sys/fs/cgroup/memory.max", "/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        try:
+            v = Path(f).read_text().strip()
+            if v.isdigit() and int(v) < 2 ** 50:
+                return int(v) / 2 ** 30
+        except OSError:
+            pass
+    try:
+        return os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") / 2 ** 30
+    except (ValueError, OSError):
+        return 64.0
+
+
+def autopart_eligible(a, out):
+    if os.environ.get("OT_LEC_AUTOPART", "0") != "1" or os.environ.get("OT_LEC_PART_RE") or \
+            os.environ.get("OT_LEC_AIG_ONLY") == "1" or a.reuse:
+        return False
+    try:
+        net = Path(a.netlist) if a.netlist else next(iter(sorted(Path(a.kit).glob("run/results/asap7/*/base/1_2_yosys.v"))))
+        return net.stat().st_size >= AUTOPART_BYTES
+    except (OSError, StopIteration):
+        return False
+
+
+def autopart_run(a, out, pm, run, run_reuse):
+    """-> final lec record (also written to OUT/lec.json), or None to let the caller run the whole design"""
+    t0 = time.time()
+    os.environ["OT_LEC_AIG_ONLY"] = "1"
+    try:
+        run_reuse_base = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, False, a.hints)
+        run_reuse_base()
+    finally:
+        del os.environ["OT_LEC_AIG_ONLY"]
+    if not all((out / f).is_file() for f in ("gold.aig", "gold.map", "gate.aig", "gate.map")):
+        return None
+    points = autopart_points(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
+                             read_aig(out / "gate.aig"), read_map(out / "gate.map"))
+    n = int(os.environ.get("OT_LEC_AUTOPART_N", "0")) or min(8, max(a.jobs, 4))
+    n = max(1, min(n, int(autopart_mem_gb() // 6)))
+    includes = autopart_includes(points, n) if len(points) >= AUTOPART_POINTS and n > 1 else []
+    if not includes:
+        return None                                    # small design / one instance group: the whole-design proof
+    plan = autopart_plan(includes)
+    rows = []
+    for k, (inc, exc) in enumerate(plan):
+        sel = autopart_select(points, inc, exc)
+        if sel:
+            rows.append(dict(name=f"p{k}", include=inc, exclude=exc, selected=sel))
+    procs = []
+    for r in rows:
+        wd = out / f"part_{r['name']}"
+        wd.mkdir(exist_ok=True)
+        for f in out.iterdir():
+            if f.is_file() and f.name not in AUTOPART_KEEP and not f.name.startswith(("hyp", "rawbase", "rawprefix")):
+                shutil.copyfile(f, wd / f.name)
+        env = dict(os.environ, OT_LEC_PART_RE=r["include"], OT_LEC_AUTOPART="0")
+        if r["exclude"]:
+            env["OT_LEC_PART_EXCLUDE_RE"] = r["exclude"]
+        cmd = [sys.executable, "-I", os.path.abspath(__file__), str(a.kit), "--out", str(wd), "--reuse", "--jobs", "1",
+               "--conflicts", str(a.conflicts)]
+        for flag, v in (("--netlist", a.netlist), ("--hints", a.hints), ("--gold-frontend", a.gold_frontend),
+                        ("--port-map", a.port_map)):
+            if v:
+                cmd += [flag, str(v)]
+        procs.append((r, wd, subprocess.Popen(cmd, env=env, stdout=(wd / "child.log").open("w"),
+                                              stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)))
+    cpu0 = time.process_time()
+    for r, wd, p in procs:
+        p.wait()
+        try:
+            j = json.loads((wd / "lec.json").read_text())
+        except (OSError, ValueError):
+            j = dict(verdict="UNPROVEN", reason=f"{r['name']}: no lec.json (exit {p.returncode})")
+        try:
+            child_sel = set(json.loads((wd / "partition_points.json").read_text()))
+        except (OSError, ValueError):
+            child_sel = set()
+        if child_sel != set(r["selected"]):
+            # the child cut a different point set than the plan: the plan's selection is not proved by it
+            r["selected"] = sorted(child_sel & set(r["selected"]))
+        r.update(verdict=j.get("verdict"), counts=j.get("counts"), reason=j.get("reason"), failing=j.get("failing"),
+                 unproven_points=j.get("unproven_points"), t_total_s=j.get("t_total_s"), t_cpu_s=j.get("t_cpu_s"),
+                 _rec=j)
+    # retry classes that need the whole design's own second run (widened gold memories, common-shape arrays)
+    if any(r["verdict"] == "NOT EQUIVALENT" for r in rows):
+        glog = out / "gold.ys.log"
+        if os.environ.get("OT_LEC_GOLD_NOWIDEN") != "1" and glog.is_file() and \
+                "Merging ports" in glog.read_text(errors="replace"):
+            return None
+        if os.environ.get("OT_LEC_COMMON_SHAPE", "1") != "0" and any(
+                "; common shape " in (r_wd / "lec.log").read_text(errors="replace")
+                for r_, r_wd, _ in procs if (r_wd / "lec.log").is_file()):
+            return None
+    template = dict(next(r["_rec"] for r in rows if r["verdict"] == max((x["verdict"] for x in rows),
+                                                                         key=lambda v: AUTOPART_RANK.get(v, 1))))
+    rec = autopart_merge(points, rows, template)
+    rec["t_total_s"] = round(time.time() - t0, 1)
+    rec["t_cpu_s"] = round(time.process_time() - cpu0 + sum((r.get("t_cpu_s") or 0) for r in rows), 1)
+    rec["autopart"]["parts_run"] = len(rows)
+    (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def main(argv=None):
     global PROVE_JOBS
     argv = list(sys.argv[1:] if argv is None else argv)
@@ -9369,7 +9569,17 @@ def main(argv=None):
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
     run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
     out = Path(a.out or Path(a.kit) / "lec")
-    r = commonshape_retry(nowiden_retry(run(), out, run), out, run)
+    r, attempted = None, autopart_eligible(a, out)
+    if attempted:
+        r = autopart_run(a, out, pm, run, None)
+        if r is None and all((out / f).is_file() for f in ("gold.aig", "gold.map", "gate.aig", "gate.map")):
+            # whole-design proof on the AIGs the pre-pass built (reuse skips only the AIG build); retries rebuild
+            r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, True, a.hints)
+    if r is None:
+        r = run()
+    if attempted:         # the AIGs on disk are the pre-pass's: a retry must rebuild its own
+        run = lambda: check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, False, a.hints)
+    r = commonshape_retry(nowiden_retry(r, out, run), out, run)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
