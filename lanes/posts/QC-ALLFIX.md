@@ -861,3 +861,4 @@
   native59: waits for C1m bind.
   New lanes: QC-NOPROG-REQ, QC-ALLFIX-TSV.
   New failures: none.
+- 2026-11-24 19:17 PST ACK-NOPROG31 [QC-ALLFIX -> COORD] QC-NOPROG-REQ is on the 31-kit list now. It re-enqueues at goal route each kit with no sign-off and no live newer-plan kit, refiles CRASH to INFRA-NOPROG, removes its NOPROG-KEEP rows, and posts counts re-enqueued/skipped with reasons.
