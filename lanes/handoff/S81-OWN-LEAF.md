@@ -28,3 +28,8 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - Waiter: epyc9 user unit s81ownleaf-ftov-stream (log ftsite2/ftov_stream.log, sent.txt) launches each one when its c8t record passes bind_stream check. Kit logs: intel2 ~/tmp/s81-own-leaf/c8t_ftov/.
 - INT c8s kits t24/t28/t74/t75 are still live in place on the old sites, and t40 failed place not on a row. Not cancelled; expect FAIL place.
 - t26 J7 cancelled 18:58 (DRT flat around 1700-1900 at iteration 19). Cause: route-flat leaf congestion; needs a form fix (row to INT next).
+
+## 11-24 21:18 update
+- FT-SITE relaunch: 8/9 live at goal route on c8t (kit rt 1597ecb1ddbc + overlays). Logs: intel2 ~/tmp/s81-own-leaf/c8t_ftov2/ (t75 is in c8t_ftov3/). Overlays must also exist on gen host epyc9 at /home/ubuntu/tmp/s81-own-leaf/ftov/ (staged). t40__clf8bbdae1: the epyc9 waiter s81ownleaf-ftov-stream launches it when its c8t record lands and posts.
+- First relaunch try failed kit_snap (overlay missing on epyc9). Those spec dirs in c8t_ftov/ are dead.
+- T26-CONG-1124: row = HALO-1 2.16 on u_vp.u_b0/u_b1 + u_vn.u_a/u_b (c9s base). Plan sits in my fork epyc9 s81-own-leaf/c9s_t26_tree (forked from c9seal_tree 19:2x). PRE pass, contract equal. Probe waiter epyc9 unit s81ownleaf-t26probe (log t26row/t26probe.log): waits for the c9s bind, forks the bind to s81-own-leaf/c9s_t26_bind, launches grt probe unit intel2 t26cong-probe. ROW-READY to INT after the probes GRT.
