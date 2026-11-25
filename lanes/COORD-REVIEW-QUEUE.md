@@ -47286,3 +47286,23 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
   (11) hd_host_e merged-GDS: 992 M7 tip-to-tip = gate artifact; e4 rerun 293 core + 44 parent real markers, parent bound a core LEF that differs from the signed ODB. No ALLFIX row. Draft HEAD-HOSTE-EXACTVIEW-1.
   (12) Wave hd_serdes W6p is at route goal on intel2 (tapbal GRT) on the plan that plateaued at 1.5k; your call under the place-only rule.
   (13) Ledger trace: C5, C7, C10, C15 rows still read NEEDS-TOOLS / TO-BIND / DIAGNOSED though the fixes are in W8b; HEAD-OBSGC never posted the hd_host_w after-GRT number; hd_serdes W10 outline row and TXL-WPIPE-1 are missing; spn shim stale-bin row dropped between FP iter1 and iter2.
+- 2026-11-25 07:03 PST DIED [QC-STAV2-F436] ot-run oth-ubuntu-3170143-1795618028 on ubuntu: rc=3 after 982 s, ended 07:03:24, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/f436/step1.out, cmd: --crit --priority die --no-spill --mem 32 --threads 2 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/QC-STAV2-F436 -- bash /srv/openta | class=TOOL-TRACEBACK cause=retap.RetapError: pin fclk_out_x_st_b_o source_clock_port clk_t256 is neither an old nor a new tap
+- 2026-11-25 07:03 PST c10b COMPOSED, PRE waits for the c10 bind [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS, S81-OWN-LEAF, S81-OWN-COLH10, FAM-S81-COL-H9R0]
+  - Recipe: epyc12 compose/recipe_c10b.json (5e750986beb6) on p12_seam ecdac0d16c74 with sidecar landed_sidecar_c11seam 61a63bc8c601 (shas verified).
+  - Composed plan: compose/c10b_r1/11_lane_reprice_c10b.json (5e98f4211e76).
+  - Scope: 112 types = c10's 99 plus the 13 LANE-ASBUILT types; kv_leaf t2 and slice_station t45 are back.
+  - Rows: the 37 c10 rows plus SLST-T45-COLLECTOR-C11 are IN-BASE. D3-FSTART-kv_leaf_t2 and D3-COLLECTOR-slice_station_t45 are RESOLVED IN-BASE (4d7b2ee457c). FT-SITE-LEG-C8 is applied on 24 types (0 conflicts on p12_seam).
+  - LANE-ASBUILT-C10 re-price: 21 lanes, +65 cycles. The die-wide tool refuses on an unrelated lane (xtier__gunit__s_3S_C), so a scoped tool, lane_reprice_c10b.py, re-derives each lane from the plan and fails closed if it mismatches the as-built.
+  - The 6 LEP lanes get soft_latency.in ROS 3 declared on the LP receiver buses (+3).
+  - The 15 leafup lanes get fixed = source n + receiver m (+2..+5).
+  - Every new table value equals the as-built delivered count (21/21). The per-lane old->new values are in the fork report and recipe.
+  - Lane-only check (12 s, ot-run --priority die): 21/21 PASS.
+  - 27 other lanes show -1..-3. That is p12 table drift against the old c9s bind's pads (the shortfall equals p12 table minus old bind_plan_cycles exactly); a fresh c10b bind re-pads from the table, so 0 LANE_ASBUILT is predicted, verified only by the c10b bind.
+  - Note: this check read the c9s bind dir, which exists only on epyc11, so it ran there. It ran no kits and took 12 s.
+  - Pending, each as a separate skip step so it can go in or out at freeze (else DEFERRED to c11 with owner):
+  - S81-OWN-LEAF re-leg of the 22 FT types (ETA 10:00);
+  - COL-H9R0-SRCSTAGE (b08411015f11, awaits ROW-REBASED with 0 new PRE);
+  - col_h10_r0_p4 macro grow (ETA 10:30, abutment check per instance).
+  - Still DEFERRED: SVC-CUT0-RSV09 (RTL overlay).
+  - Open, my lane: SEQHOST-T1-OBSERVER-C11.
+  Next: c10b PRE (rt b1de07c72d76, as-built v2, ot-run --priority die on epyc12, nice 0) starts the moment the c10 bind ends.
