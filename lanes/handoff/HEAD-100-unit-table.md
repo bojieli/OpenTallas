@@ -1,2 +1,3 @@
+# RETIRED 2026-11-24 16:56 PST by FLOW-OPS-R3 (COORD 16:55 flow review): this table had no unit rows; its loop (intel2 ~/tmp/head100_utable*.sh, pids 419710 / 1445349) committed "(0 done)" since 11-15 and is stopped. HEAD die route runs through HEAD-WEST W-rows. Kept for history; nothing deleted.
 # HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-24 16:55:18 PST by intel2 ~/tmp/head100_utable.sh
 # DONE 0, DONE with DRC>0: 0, DONE with RSS>20 GB: 0; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
