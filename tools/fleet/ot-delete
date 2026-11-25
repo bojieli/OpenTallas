@@ -55,8 +55,17 @@ def root_fallback_ok(t):
 
 
 def main(argv, guard=None, rmtree=None, rootrm=None, root_ok=None):
-    dry = "--dry" in argv
-    targets = [a for a in argv if a != "--dry"]
+    # FLEET-OPS 11-25 (COORD safety bug: KV-HGI-WGATE ran `ot-delete --help` and the tool took --help as a path): -h / --help print usage (exit 0); an argument that starts with
+    # '-' and is not a known flag (--dry) is refused with exit 2 BEFORE anything is looked at or deleted; a literal path that starts with '-' goes after `--`.
+    if any(a in ("-h", "--help") for a in argv[:argv.index("--")] if True) if "--" in argv else any(a in ("-h", "--help") for a in argv):
+        print(__doc__); return 0
+    opts, rest = (argv[:argv.index("--")], argv[argv.index("--") + 1:]) if "--" in argv else (argv, [])
+    bad = [a for a in opts if a.startswith("-") and a != "--dry"]
+    if bad:
+        print("ot-delete: unknown option %s (nothing deleted; usage: ot-delete [--dry] [--] TREE...; a path that starts with '-' goes after --)" % ", ".join(bad), file=sys.stderr)
+        return 2
+    dry = "--dry" in opts
+    targets = [a for a in opts if a != "--dry"] + rest
     if not targets:
         print(__doc__); return 2
     g = guard or load_guard()
