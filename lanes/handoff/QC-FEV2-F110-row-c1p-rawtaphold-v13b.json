@@ -1,0 +1,24 @@
+{
+ "base": "aa3a14fb7484",
+ "derived_from": "06248f276e80",
+ "lane": "QC-FEV2-F110",
+ "op": "key-patch",
+ "row": "C1p-RAWTAPHOLD-RRL7-v13",
+ "set": {
+  "reset.raw_tap_hold": {
+   "n": 1,
+   "note": "RRL-RAWTAPHOLD rrl class, COORD 07:4x ruling (7 types) + st_b_v1 pv0e7b1dcc measured -5.39",
+   "taps": "raw",
+   "types": [
+    "sle_st_a_v2__pv4242de79",
+    "sle_st_b_v1__pv0e7b1dcc",
+    "sle_stm_v2__cl55be2264",
+    "slw_fe_v2__clf110fab2",
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+    "slw_su_l0__cl1e5219ea",
+    "slw_su_l0__cl76fb247e"
+   ]
+  }
+ }
+}
