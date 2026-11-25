@@ -2855,8 +2855,9 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     if "FTSITE" not in skip:                             # FTSITE-1124: off-core / colliding explicit FT bit sites, WARN only
         findings += check_ftsite(plan)
     _pt.mark("MONLEG")
-    if "MONLEG" not in skip:                             # MONLEG-REACH-1125: monitor band to its collector node over 405 um, WARN only
-        findings += check_monleg(plan)
+    if "MONLEG" in skip:                                 # FP-CONVERGE-S81 11-25 (FABLE-RC-S81): MONLEG-REACH runs in EVERY PRE, not skippable (WARN only)
+        findings.append("WARN MONLEG --skip ignored: MONLEG-REACH is not skippable (report only, seconds)")
+    findings += check_monleg(plan)
     _pt.mark("STARTSETTLE")
     if "STARTSETTLE" not in skip:                        # START-SETTLE-1124: root settle >= collector ready bound
         findings += check_startsettle(tree, plan, sidecar, asbuilt)
