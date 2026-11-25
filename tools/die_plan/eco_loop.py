@@ -797,11 +797,13 @@ def docker():
 
 ABSTRACT_SH = r'''set -uo pipefail
 D=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6
+# COUNT-AUDIT-1700: a kit that lists a BC library set gets both abstract corners (<mod>_tc.lib + <mod>_bc.lib), else only _typ.lib (no FF view)
+ABS_CORNERS=''; grep -q '^export BC_LIB_FILES' "$D/config.mk" 2>/dev/null && ABS_CORNERS="'CORNERS=tc bc'"
 PATCH=true; [ "$MM" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
 [ -f "$D/kwrs_busfit.py" ] && PATCH="python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH"
 $DK run --rm --name eco-abs-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work -w /OpenROAD-flow-scripts/flow \
   "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
-  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract" > "$D/run_eco_abstract.log" 2>&1
+  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract $ABS_CORNERS" > "$D/run_eco_abstract.log" 2>&1
 rc=$?
 $DK run --rm -v "$D":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 exit $rc

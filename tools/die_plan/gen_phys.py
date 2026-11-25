@@ -8215,6 +8215,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # NOMCAP-1118 (OWNER r708, default ON; OT_NOMCAP=0 at generation = stock libraries): nominal input-pin load
            # on clock buffer/inverter inputs + sequential CLK pins in synth, placement, CTS, hold repair, GRT and STA
            *_nomcap_cfg(kd),
+           # COUNT-AUDIT-1700: a macro kit keeps the TT-only implementation corner (no CORNERS line), but its generate_abstract step
+           # passes CORNERS="tc bc" (run script) so the abstract writes <mod>_tc.lib AND <mod>_bc.lib: the autopilot view needs the FF lib.
            # Native TT/FF repair for macro-free kits. Macro parents need their
            # child timing libraries separated explicitly by corner.
            *(["export CORNERS = tc bc",
@@ -9876,7 +9878,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then if grep -q '^export BC_LIB_FILES' /work/config.mk; then \$M do-generate_abstract \"CORNERS=tc bc\"; else \$M do-generate_abstract; fi; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/m8_grant.json ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then for L in /work/run/results/asap7/*/base/*.lef; do [ -f \"\$L\" ] && python3 -I /work/m8_grant.py fixlef --grant /work/m8_grant.json \"\$L\"; done; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \

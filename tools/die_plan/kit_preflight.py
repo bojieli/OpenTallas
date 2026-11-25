@@ -494,6 +494,24 @@ def cland_band_sites(kit, family_w=CLAND_FAMILY_W_UM, row_h=CLAND_ROW_H_UM):
 RETIRED_GRT_STOP = re.compile(r"gstop=timecap|OT_GRT_TIMECAP|OT_GRT_EARLY(?!_SETTLE)|GRT_NO_PROGRESS|grt_early_stop")
 
 
+def no_bc_corner(kit):
+    """COUNT-AUDIT-1700 (report only, never fails a kit): a kit whose config.mk has no bc corner in CORNERS and whose abstract step does not pass
+    CORNERS=tc bc writes only <mod>_typ.lib, so the signed view lacks <mod>_ff.lib (autopilot INCOMPLETE view, 11 QC types 11-24).  -> advisory lines"""
+    cfg = kit / 'config.mk'
+    if not cfg.is_file():
+        return []
+    text = cfg.read_text(errors='replace')
+    m = re.findall(r'^\s*(?:override\s+)?export\s+CORNERS\s*[:?]?=\s*(.*)$', text, re.M)
+    if m and 'bc' in m[-1].lower().split():
+        return []
+    for sh in sorted(kit.glob('*.sh')):
+        for ln in sh.read_text(errors='replace').splitlines():
+            if 'do-generate_abstract' in ln and re.search(r'CORNERS=\\?"?tc\s+bc', ln, re.I) and not ln.lstrip().startswith('#'):
+                return []
+    return ['config.mk CORNERS has no bc corner (%s) and no abstract step passes CORNERS=tc bc: generate_abstract writes <mod>_typ.lib only, '
+            'the signed view will lack <mod>_ff.lib (INCOMPLETE)' % (m[-1].strip() if m else 'unset')]
+
+
 def retired_grt_stop(kit):
     """COORD 11-17 (KV-ABSPIN kv3_hgi_v2 kit GRT killed by an OT_GRT_STOP timecap, rc 137): GRT early stops and the post-route time cap were DELETED 11-14 (OWNER); a kit
     carries its own copy of grt183_make.sh, so one generated from an older tree still stops GRT.  A kit whose copy still has a retired stop, or whose config.mk sets a positive
@@ -649,6 +667,10 @@ def check(kit, plan_dir=None, contract=False):
     checks['core_tap_reach'] = dict(verdict='PASS', errors=[], advisory=_ctr)
     for _line in _ctr:
         print('KIT_PREFLIGHT ADVISORY core_tap_reach: ' + _line, flush=True)
+    _nbc = no_bc_corner(kit)
+    checks['no_bc_corner'] = dict(verdict='PASS', errors=[], advisory=_nbc)
+    for _line in _nbc:
+        print('KIT_PREFLIGHT ADVISORY no_bc_corner: ' + _line, flush=True)
     if (kit/'master_slice.json').is_file():
         def slice_check():
             import master_slice
