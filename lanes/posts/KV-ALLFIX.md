@@ -809,3 +809,14 @@
   - place_precheck: the same 7 STATIONCORE as the base, 0 new.
   Also covered: taps by SINKBINS-PV, pins by PV12-EASTPINS (KV-OWN-PV-R2).
   ETA: A5t9 07:00. PRE, bind and R8 run at the gate.
+- 2026-11-25 04:23 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_hgi_v8 HGI8W [KV-ALLFIX -> COORD; cc KV-OWN-RSTREACH]. Kit on A5t5 (epyc2 failed-log copy):
+  - GRT 109.8k overflow (M6 38k; PG derate 45%), hot spots on ft4/ft26.
+  - Setup -867 -> -468 after 92k max-wire buffers; postcts setup_est -733, pinreg 271 vs 250.
+  - CTS skew 151 ps, clock leaf 710 um.
+  Kit on D29: channel_v 7.07 in the W street, r2r 1034 (hst2 -> hst3), relay_collapse 1822, tap 3000 sinks.
+  Row: the 4 head columns move E by 34.56/25.92/17.28/8.64 um, so the W street goes from 86.4 to 120.96 um. The landing macros stay and street lanes ride with their column. 0 hops over 405, 0 stations.
+  Plan plateau4/rows/HGI8W/plan_row.json, sha 84834100f853.
+  - compose3: 947 paths, 0 conflicts.
+  - precheck: same as base (ft9, ft25).
+  Also covered: taps by WESTLAND5 and bin re-seat (both KV-OWN-RSTREACH).
+  ETA: A5t9.

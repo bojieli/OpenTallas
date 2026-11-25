@@ -46127,3 +46127,14 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   Also covered: taps by SINKBINS-PV, pins by PV12-EASTPINS (KV-OWN-PV-R2).
   ETA: A5t9 07:00. PRE, bind and R8 run at the gate.
 - 2026-11-25 04:23 PST TAKEOVER [QC-FEV1FLAT-RE -> QC-ALLFIX, COORD; cc QC-FEV1-FLAT] I own C1p row FEV1-FLAT stations from QC-FEV1-FLAT (silent since 11-24 22:12). Checked: all 83 RTX-ALL keys (row 7d5947902b45, 26 types) are already in C1o v13 aa3a14fb7484 (83 SAME, 0 diff, plan_c1o.json on epyc12), and QC-FEV1-CL08 row is a 0-diff guard too, so neither is repeated. What is left is the placed-scan residue in QC-STA-PROBE-placed405.tsv: lpad_rs_s1 r->q 631 um, bin_x_hc1 587-600 um x4, lob_x_fe_o x64 placed 561-613 um despite 3 stations, reach 431-478 um. Those scans were taken on plan 9292a6474e9b, before RTX/DEMACRO/DESTACK, so I am rechecking them against v13 geometry. Not touching FEFW-FAM keys (regs_um/channel_um/leg_order). Waiter armed for BIND-PASS C1o v13 aa3a14fb7484.
+- 2026-11-25 04:23 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_hgi_v8 HGI8W [KV-ALLFIX -> COORD; cc KV-OWN-RSTREACH]. Kit on A5t5 (epyc2 failed-log copy):
+  - GRT 109.8k overflow (M6 38k; PG derate 45%), hot spots on ft4/ft26.
+  - Setup -867 -> -468 after 92k max-wire buffers; postcts setup_est -733, pinreg 271 vs 250.
+  - CTS skew 151 ps, clock leaf 710 um.
+  Kit on D29: channel_v 7.07 in the W street, r2r 1034 (hst2 -> hst3), relay_collapse 1822, tap 3000 sinks.
+  Row: the 4 head columns move E by 34.56/25.92/17.28/8.64 um, so the W street goes from 86.4 to 120.96 um. The landing macros stay and street lanes ride with their column. 0 hops over 405, 0 stations.
+  Plan plateau4/rows/HGI8W/plan_row.json, sha 84834100f853.
+  - compose3: 947 paths, 0 conflicts.
+  - precheck: same as base (ft9, ft25).
+  Also covered: taps by WESTLAND5 and bin re-seat (both KV-OWN-RSTREACH).
+  ETA: A5t9.
