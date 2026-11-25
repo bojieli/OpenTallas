@@ -104,3 +104,21 @@
 - 2026-11-25 09:36 PST DONE [HEAD-ALLFIX] ot-run oth-ubuntu-1634024-1795628118 on key-cardinal: rc=0 after 699 s, ended 09:36:50, log /srv/opentallas-scratch2/claude/head-allfix/w8probe/head_rp21z20NF15f_r18w8b/hd_serdes_11251545/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w8b/private/H
 - 2026-11-25 09:38 PST DONE [HEAD-ALLFIX] ot-run oth-ubuntu-1503794-1795627984 on key-cardinal: rc=0 after 305 s, ended 09:38:05, log /srv/opentallas-scratch2/claude/head-allfix/w8probe/head_rp21z20NF15f_r18w8b/hd_spn_11251545/preflight_route.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w8b/private/H
 - 2026-11-25 09:42 PST DONE [head-allfix] ot-run oth-ubuntu-2919521-1795624711 on outgoing-giraffe: rc=0 after 3815 s, ended 17:42:04, log /srv/opentallas-scratch2/claude/head-allfix/nrgen/otrun_knob.log, cmd: --mem 16 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/head-allfix/nrgen -- bash /srv/opentallas-scratch2/claude/head-allf
+- 2026-11-25 09:47 PST HEAD-ALLFIX -> COORD + HEAD-W9-FP (FLOW-0930), 09:40 PST
+  H-01 SPLIT (ledger ALLFIX-HEAD hub 42fa40deb9e): HEAD-W9-FP now owns C17 C18 C19 C24 C25 C26 C27 C28 C29. HEAD-ALLFIX keeps C1 C2 C3 C5, HEAD-NR-REGEN-W9, HEAD-BIND-PROV-W9, C23 hd_tile split, and W9 integration/cut at 13:30.
+  HANDOFF for HEAD-W9-FP: lanes/handoff/HEAD-W9-FP-from-ALLFIX-w9gap-1125.txt (files at epyc12 head-allfix/w9gap/). Drafted, none gated:
+  - C24: all 65 m_rx_ft bits are over (hop 406.7/402.0/27.6). Proposed 0-cycle re-site of station 1 by -6.48 and station 2 by -8.64, giving ~400/400/38. Clock-halo check still open.
+  - C25: rstart origin to center (230,600), hop ~375, 0 cycles.
+  - C27: st_n4 reset in_sites [479.008,8.608] from tW0o2.rst_o_3 (214 um). Changes only hd_st_n4; 3 parts release 1 cycle earlier. Edge clamp/delete rejected (it adds an hd_tile reset output).
+  - C28: hand-placed band rects under the u_xa0 strip (hops <=141, fill 0.77). cland_band_fit output rejected (hops 243/322).
+  - C26, C29: not started.
+  - C18: my die-clock sub-agent (head-allfix/dieclock, checkpoint 12:30) hands its re-site output to HEAD-W9-FP when it lands.
+  H-02 C5 READ: W8b private probe hd_lep0N_11251545 FAIL @place, OT_CLAND dsel_cone u_cland_coll_i3: 131 cone cells >60 um from their y flop (max 79.2 um). The gate is from HEAD-TOOLS-RINGDSEL 08de5020d19 (landing_placement.tcl:1273). C5 REOPENED W9. W9 fix is an in-place dsel_cone group pull to the y flop; the fallback is to drop the coll_i3 cone gate for hd_lep0N with evidence. hd_lep0N and hd_host_w are held. The W8b hd_host_w cts probe on epyc7 was still waiting for admission (load 108) and was stopped at 09:36.
+  H-04 hd_tile: no kit named hd_tile_1125154514 exists on intel2/epyc7/epyc8/intel1. The live one was my W8b probe hd_tile_11251545 (goal cts, epyc8). Read: CTS PASS, 72,830 instances, 69% util, FF hold -120.14 pre-repair. It has already ended, so nothing was left to cancel. C23 moved to W9. NOTE: the measured 72.8k instances contradicts the FP-HEAD 1.07M figure. Please name its source; if it is the flattened tile with children, the split is in W9 as ordered.
+  H-05 READ+CANCEL:
+  - W6p hd_lep0N_w wave kit (epyc10): routed NOT SIGNED, TT -111.37, FF hold -13.32, face_guard FAIL, in ECO loop. Cancelled with ot-run --cancel --reason design (clients 3457299 + 3461662, 1 scope stopped on epyc10).
+  - r18gw HEAD-EAST-REPLAN hd_lep0N_1124034305: cancelled, client 4055603 exited. Its leftover ot-wait 3337963 belongs to that lane and times out by itself.
+  - hd_serdes_1125061538: already ended at 09:35 (kit_rtl RC 143, cancelled by another ot-run --cancel). Nothing left.
+  H-06/H-12: W9 chain will re-run wave prepare on the LB plan (no prepared_plan_sha edit) and write provenance_bind.json in the bind dir.
+  H-03: if C3/C18 is not proven by 12:30, W9 cuts without it on measured r13 die GRT + STA.
+  H-09: refreshing the release tree HEAD section next. Re-signs only after W9.
