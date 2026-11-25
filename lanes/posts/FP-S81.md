@@ -12,3 +12,4 @@
 - 2026-11-25 05:12 PST DIED [FP-S81] ot-push-main otpush-open-snipe-3704324 on open-snipe: rc=3 after 75 s, ended 13:12:57, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 75 s, no log
 - 2026-11-25 05:14 PST DONE [FP-S81] ot-push-main otpush-open-snipe-3784502 on open-snipe: rc=0 after 73 s, ended 13:14:59, log none, cmd: ot-push-main 
 - 2026-11-25 05:31 PST DONE [FP-S81] ot-push-main otpush-open-snipe-166357 on open-snipe: rc=0 after 253 s, ended 13:31:14, log none, cmd: ot-push-main 
+- 2026-11-25 05:36 PST DONE [FP-S81] ot-push-main otpush-open-snipe-408718 on open-snipe: rc=0 after 269 s, ended 13:36:39, log /srv/opentallas-scratch2/claude/FP-S81/io/push2.log, cmd: ot-push-main 
