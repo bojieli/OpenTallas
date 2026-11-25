@@ -28,3 +28,12 @@ Fork of C1j tree for the C1k row: intel1 /srv/opentallas-scratch2/claude/QC-CB-S
 11:3x COORD: cancelled the 3 C1i cbf kits (run-items + clients killed on intel2) and the 2 OPUS-FIX cbn_q01 kits (E2 unit 170922, E8 cld9ff4c40 + run-items). Asked PRECHECK-R3 for a report-only bins vs regs >5% check.
 C1k row CB-TAPBINS: native bins for 16 types are in intel1 c1k_tree/physical/die_plan/qwen_compute/plan_of_record/sink_bins/c1k_rebin/<t>.native.json (also at <host>:.../QC-CB-SPREAD-R2/rebin/bins). Driver: intel1 /srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/c1k_bins.sh (native apply -> sink_bins_compose --tap-stats). Out: c1k_work/plan_c1k_tapbins.json, compose.json. Log c1k_bins.log (ot-run on intel1, HELD on the intel1 disk-ETA at 11:3x). cbn_q00 cl622f65d2 is explicit mode and is SKIPPED by the driver; it still needs handling. cbn_q00 cldbcda913 has no placed odb.
 Next: check the tap-stats (max planned load <= ~900) -> hand the row to QC-ALLFIX for C1k (the row = plan delta of clock.sink_bins_file + composed bins files + retap changes).
+13:xx-17:1x CB-TAPBINS:
+- Census of all QC types (coord lanes/handoff/QC-CB-SPREAD-R2-tapcensus.tsv): 54/92 over 1000 after the cap pass.
+- PRE ADV-STALE-BINS landed on main d8a2fdb0a28. It is noisy: 110/115 types flagged. The placed-kit n_regs includes non-die-clock flops, and the fanout is measured on the OLD kit taps. Needs calibration (use clk-net sinks; kit_sinks.py) in C1n.
+- Native re-bins: 55 types (cbn_q00 cl622f65d2 explicit and skipped; coll_ft explicit and skipped). compose -> 53 __composed.json.
+- First retap died because the added taps were dropped BEFORE retap (fclk_out_bc_o11 source clk_t146). Fixed with apply_c1k.py: retap against the ORIGINAL plan. 5 batches, about 3.4 h each.
+- ROW CB-TAPBINS 44c9f56d9edc (48 types; 5 excluded as not better: sle_sc_v2, sle_ctl cla4f6f12f, cbx_q10 cl89936551_h, slw_sc_v3, cbn_q00 cld7bf7197). Base C1j 7fbc73d3f7cf. Bundle intel1 /srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/CB-TAPBINS-row (plan, bins, report/). The full 53-type sha was 23a0e4127857 (plan deleted with the tree).
+- 33 types still plan over 1000 (stm, su_l1, ctl, fe, sc): C1n second pass (finer tap_radius / tap_target_sinks).
+- Other rows I named for COORD: CB-COREPHASE (QC-CB-PROBE owns it; my override proposal is plan_of_record/c1k_corephase/<type>.json {type, clock_set}) and CB-PIPESEAT-SPREAD (QC-CB-PIPESEAT).
+- intel1 c1k_tree ot-deleted (44 GB freed, 17:1x). Native bins and tsv stay in <host>:/srv/opentallas-scratch2/claude/QC-CB-SPREAD-R2/rebin.
