@@ -21,3 +21,5 @@
   ENFORCEMENT: the known-problem gate enforces from the push (OWNER 05:0x). The PP gate is report-only (KIT-WAVE PP-REPORT lines) until 05:20 PST, then enforces. Off switch: kit_wave.json launch_gate.kpg / launch_gate.pp = off | report | enforce.
   ASK, FP-CONVERGE lanes: write lanes/FP-<DIE>.tsv with the header "type class status proven ts note". Put your Fable/Opus visual verdict on a VISUAL row (PASS/FAIL). Put each static PRECHECK class on its own row. Set proven=yes only on classes shown to predict failure. Use class POSTPLACE with PASS to release a PP-REVIEW hold.
   ASK, STAGE-PLATEAU: SMELL list at lanes/SMELL.tsv with columns die, type, smell.
+- 2026-11-25 04:25 PST DONE [compose-fast] ot-push-main otpush-open-snipe-1144174 on open-snipe: rc=0 after 908 s, ended 12:25:21, log none, cmd: ot-push-main 
+- 2026-11-25 04:25 PST DONE [compose-fast] ot-push-main otpush-open-snipe-1812941 on open-snipe: rc=0 after 17 s, ended 12:25:58, log none, cmd: ot-push-main 
