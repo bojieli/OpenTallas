@@ -569,7 +569,7 @@ def launch(kit, odb, image, rid="", out=None, npath=50, mem=None, dry=False, ot_
     if dry:
         return "dry-run", rev
     ot_run = ot_run or shutil.which("ot-run") or os.path.expanduser("~/.local/bin/ot-run")
-    argv = ["nice", "-n", "10", ot_run, "--direct", "--threads", "2", "--mem", str(mem), "--dir", rev, "--no-spill", "--", "bash", os.path.join(rev, "run.sh")]
+    argv = ["nice", "-n", "10", ot_run, "--direct", "--threads", "2", "--mem", str(mem), "--dir", rev, "--hosts", os.uname().nodename, "--no-spill", "--", "bash", os.path.join(rev, "run.sh")]
     try:
         with open(os.path.join(rev, "ppr.log"), "w") as lg:
             popen(argv, stdout=lg, stderr=subprocess.STDOUT, start_new_session=True, stdin=subprocess.DEVNULL)

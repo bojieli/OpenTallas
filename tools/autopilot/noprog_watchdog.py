@@ -2205,7 +2205,7 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
             if lo:
                 f.write(f"GRT per-layer overflow ({os.path.basename(lg)}): {lo}\n")
     ot_run = shutil.which("ot-run") or os.path.expanduser("~/.local/bin/ot-run")
-    argv = [ot_run, "--mem", str(mem), "--threads", "2", "--dir", rev, "--no-spill", "--direct", "--", "bash", os.path.join(rev, "tools/render_review.sh"), rev]
+    argv = [ot_run, "--mem", str(mem), "--threads", "2", "--dir", rev, "--hosts", socket.gethostname(), "--no-spill", "--direct", "--", "bash", os.path.join(rev, "tools/render_review.sh"), rev]      # the review dir exists only on this host: 4 renders died 'NOT RUN ... exists on none of the candidate hosts' when ot-run picked another
     if nice:
         argv = ["nice", "-n", "10"] + argv
     try:
