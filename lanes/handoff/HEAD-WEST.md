@@ -53,3 +53,9 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - W4b: intel2 unit head-west-w4b-route (west-w3/run_w4b_route.sh, log kit_w4b_route.log); GRT TT +74.0 / internal hold +18.23; DRT from 11:02 on E7.
 - W5 hd_serdes: intel2 unit head-west-w5-route (west-w3/run_w5_route.sh, log kit_w5_route.log); resumed 11:16 from place.
 - W7 pending: W6 + HEAD-R18 start_q row (+1 fixed on host_tx,m0S_tx,m7S_tx,m7N_tx,kd,lepf,unit_lep) + root settle 64->88 + KLOCK 25b59295d4 (hd_serdes variant) + CTL write factor d890c8202b (hd_ctl/host_e/host_w). Ruling posted 09:2x.
+
+## 11-25 05:3x PST
+- Live HEAD event now head_rp21z20NF15f_r18w6p (tree s81_head_r18w6_s2, tools_from_rt true rt dce92f0c92a9); fixed b4ed80c90c (wave_prepare sidecar sha + tree-tools schema). hd_ctl/hd_host_w passed kit_rtl, placing 14:5x 11-24.
+- W4b ENDED NOT SIGNED TT -151.02 (44 ends: coll_i1 ring dsel max_delay -66 -> LEP-RINGDSEL-DRIVE-1; u_rg2.u_txl safe_write wdata->SRAM bank -151 long wire -> asked HEAD-ALLFIX for per-bank wdata row). ECO killed 05:09 rc143.
+- W5 hd_serdes ENDED: DRT plateau ~1500 viol it31 -> HEAD-SERDES-REFLOOR.
+- W7/W8 integration is HEAD-ALLFIX's (W7 run o e99b0992, W8 cut 07:30). Next: relaunch West forms from W8 once bound.
