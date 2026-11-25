@@ -98,7 +98,7 @@ def pads(bind_dir, r8, e_min_pad=0, allow_empty=False):
     rows = rule(B, e_min_pad)
     if not rows:     # EMPTY-GUARD-1125: a bind whose bank sinks this rule does not match (native_composite_pv_* names) gave members 0 / banks 0
         raise SystemExit(f"{bind_dir}: no pvw_<c>__u_s<k>_b<b> bank members in this bind (banks 0): refusing to write an empty pad table "
-                         "(native_composite_* binds are not supported by this generator)")
+                         "(native_composite_* binds: use `kv_pv_v_pads.py regen TREE R8_MAIN OUT_COL OUT_V`, i.e. pvx_regen.py)")
     by_key = collections.defaultdict(list)
     for x in r8["members"]:
         by_key[(x["sink"], x["sink_port"], x["source"])].append(x)
@@ -138,10 +138,16 @@ def pads(bind_dir, r8, e_min_pad=0, allow_empty=False):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
+    sp.add_parser("regen", help="composed binds (native_composite_pv_*): pvx_regen.py TREE R8_MAIN OUT_COL OUT_V [opts] (pass its args after 'regen')")
     p = sp.add_parser("pads"); p.add_argument("bind_dir"); p.add_argument("r8"); p.add_argument("out")
     p.add_argument("--allow-empty", action="store_true", help="accept a table with 0 members (default: exit non-zero, EMPTY-GUARD-1125)")
     p.add_argument("--e-min-pad", type=int, default=0, help="smallest landing pad of any pe2 member (stages; default 0)")
     c = sp.add_parser("check"); c.add_argument("bind_dir"); c.add_argument("--json")
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "regen":          # PVX-PORT-1125: the composed-bind regen of the tables of record lives in pvx_regen.py
+        sys.path.insert(0, str(Path(__file__).resolve().parent))      # python3 -I does not put the script dir on the path
+        import pvx_regen
+        return pvx_regen.main(argv[1:])
     a = ap.parse_args(argv)
     if a.cmd == "pads":
         t = pads(a.bind_dir, json.load(open(a.r8)), a.e_min_pad, a.allow_empty)
