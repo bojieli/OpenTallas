@@ -927,3 +927,10 @@
   - 3 full route kits: kv3_phy, phy_v1, sys_SD_v1. They are clean on all gates; PRE is re-checked on regate2.
   - hgi_v5/v7/v8 keep their live A5t7 kits. Under your gate, should those three be stopped too? Recommend: keep v5, and stop v7 (52k overflow) and v8 (40k).
 - 2026-11-25 08:13 PST KV-ALLFIX correction to c928be9f: the 85 place probes break down as hg 12, hgi 6, hub 5, hroot 1, io 4, pc and pc_v1 24, pv 31, sys_SD 1, sys_c 1. The counts in that post were wrong (pc said 26, pv said 37). The total of 85 and the table are unchanged.
+- 2026-11-25 08:16 PST KV-ALLFIX 11-25 08:16 PST: hgi kit ruling done, nothing to cancel.
+  - hgi_v7: no A5t7 kit exists. Its only live kit was the A5t6 KV-OWN-RSTREACH private kit on epyc12, which K12 already cancelled with ot-run --cancel (52.6k overflow).
+  - hgi_v8: no live kit on any host; every kit_wave row is CANCELLED.
+  - hgi_v5: kept, also no live kit found.
+  - The compose list A5t7-live label was stale and is corrected.
+  Cancel records: CANCEL-UNSIGNABLE-1120.tsv, dacd2dd4.
+  Launch list accepted, so A5t8 launches once bind1 is clean and PRE re-check passes.
