@@ -32,3 +32,7 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 15:3x: C1l-a bind launched = C1k + PIPESEAT + hc3 overlay (run_bind.sh -> bindL.sh, log bindL.log, pre.log, elab.log, bind.log, latcheck.json in the lane dir). Ruling: cl622 pilot from C1l-a (TAPBINS skips cl622; COREPHASE unowned). When TAPBINS acb lands: second fork + C1l bind with PIPESEAT+TAPBINS(+COREPHASE).
 CBC: estimator cbc_pass --types ^cb[fnx]_ --skip taps on the C1k bind queued on epyc7 (epyc7 lane dir cbc/, cbc.log).
 Pilot launcher: intel2 /srv/opentallas-scratch2/claude/QC-CB-C1L/launch_c1l.sh (C1H_DIR=epyc10 lane dir, C1H_HOST=epyc10, C1_RT=1145a6e17e79).
+15:4x: cancelled my C1l-a full bind (redundant). Pilot uses QC-CB-PIPESEAT's E11 scoped bind of 002c58551eec (PASS 15:5x, errors 0).
+15:59: PILOT cbn_q00__cl622f65d2 launched, goal grt, host E11, rt 1145a6e17e79, unit runitem-cbn_q00__cl622f65d2, spec intel2 ~/coord/autopilot/private_specs/QC-CB-C1L/qwen_compute_cbn_q00__cl622f65d2_1124155904.
+Final C1l inputs staged in epyc10 lane in/: plan_pipeseat (002c), plan_r10full 3d81651854c4 (COMPOSE-GUARD restore = STSLW-R1 + r10 for the 2 types; replaces plan_stslw), plan_ftsite 23a0e06ca00c (QC-SUC-FTSITE), ov/ hc3 leaf. Dry merge PIPESEAT+STSLW+FTSITE: 0 conflicts. Pending: TAPBINS acb plan + composed bins overlay, COREPHASE (unowned), native59 overlay (QC-GLUE-IMAGES, C1l2 ok).
+Final bind cmd: epyc10 lane: setsid nohup bash run_bind.sh in/plan_pipeseat.json:PIPESEAT in/plan_r10full.json:R10FULL in/plan_ftsite.json:FTSITE in/plan_tapbins.json:TAPBINS &
