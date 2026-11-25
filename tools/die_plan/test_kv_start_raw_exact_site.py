@@ -53,3 +53,23 @@ def test_consumer_within_one_hop_of_the_raw_relay_needs_no_branch(tmp_path):
     assert rep["consumers"]["fstart:near"]["copies"] == 0
     names = [b["consumers"] for b in t["clock"]["landing_raw_branches"]]
     assert ["fstart:near"] not in names and ["fstart:far"] in names
+
+
+def test_part_named_tree_json_is_read(tmp_path):
+    (tmp_path / "kvx_part.reset_tree.json").write_text(json.dumps({"tree": {"relays": [
+        {"q": "rst_rl_0", "d": "rst_root_n", "depth": 1, "xy": [20.0, 100.0]}]}}))
+    assert KS._relay_table("", str(tmp_path), "kvx") == {"rst_rl_0": dict(d="rst_root_n", depth=1, xy=(20.0, 100.0))}
+
+
+def test_existing_raw_branch_net_maps_back_to_its_original_relay(tmp_path):
+    body = ("    ot_dp_rrelay u_rrl_0 (.clk(clk), .d(rst_root_n), .q(rst_rl_0));  // raw pad tap 9 depth 1 @ (300.0, 100.0)\n"
+            "    ot_dp_rrelay u_rrl_1 (.clk(clk), .d(rst_rl_0), .q(rst_n_t9));  // raw pad tap 9 depth 2 @ (300.0, 100.0)\n"
+            "    assign cland_start_raw = cland_raw_o_0;\n")
+    (tmp_path / "kvx_part.sv").write_text("module kvx_part (input wire clk);\n" + body + "endmodule\n")
+    t = {"outline_um": [600.0, 600.0], "clock": {"landing_raw_branches": [
+        {"name": "o", "base": "rst_rl_0", "stages": [{"original": "rst_n_t9", "xy_um": [300.0, 200.0]}], "consumers": ["origin"]}],
+        "landing_contract": {"pins": [
+            {"name": "cland_tstart_in", "xy_um": [300.0, 300.0]},
+            {"name": "cland_fstart_out_far", "xy_um": [580.0, 300.0]}], "bands": {}}}}
+    rep = KS.raw_type(None, "kvx", t, str(tmp_path), 4.32, 10.8)
+    assert rep["raw"] == "rst_n_t9"

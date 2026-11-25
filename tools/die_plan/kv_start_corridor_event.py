@@ -425,8 +425,8 @@ def _relay_table(text, rtl_dir, tn):
     at y 773.28 -> 773.3), which made every raw corridor fail 'START endpoint inside keepout'.  A tree json with
     relays and no .sv comments (the bind no longer writes them) gives the whole table."""
     by_q = {q: dict(d=d, depth=int(dep), xy=(float(x), float(y))) for _, d, q, dep, x, y in REL.findall(text)}
-    j = Path(rtl_dir) / f"{tn}.reset_tree.json"
-    if j.exists():
+    j = next((q for q in (Path(rtl_dir) / f"{tn}_part.reset_tree.json", Path(rtl_dir) / f"{tn}.reset_tree.json") if q.exists()), None)
+    if j is not None:       # the bind writes <type>_part.reset_tree.json for split types (KV), <type>.reset_tree.json otherwise
         tree = (json.loads(j.read_text()) or {}).get("tree") or {}
         for r in tree.get("relays") or []:
             xy = (float(r["xy"][0]), float(r["xy"][1]))
@@ -462,6 +462,13 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     if not m:
         raise SystemExit(f"kv_start_corridor_event raw {tn}: no cland_start_raw in {f}")
     raw, rstfan_copy = rstfan_original(text, m.group(1))
+    # a type that already carries landing_raw_branches binds cland_start_raw to a branch net cland_raw_<branch>_<i>: map it
+    # back to the original chain relay that stage copies (stage[i].original), the node the corridor chain is built on
+    mb = re.fullmatch(r"cland_raw_(\w+)_(\d+)", raw)
+    if mb:
+        br = next((b for b in ck.get("landing_raw_branches") or [] if b.get("name") == mb.group(1)), None)
+        if br and int(mb.group(2)) < len(br.get("stages") or []):
+            raw = br["stages"][int(mb.group(2))]["original"]
     by_q = _relay_table(text, rtl_dir, tn)
     if raw not in by_q:
         # KV-RAWFIX 11-15 (rule part 1): cland_start_raw of a type without a START plan is the default ring reset relay
