@@ -1,0 +1,19 @@
+# QC-CB-REFLOOR census 2026-11-25 07:3x PST. GRT overflow it5/it10 from run/failfast_state.json; FP-QC v13 aa3a14fb7484 channel_pile class. No cb kit has reached DRT; none signed.
+type	class(v13 FP-QC)	best/last attempts (plan host lane/kit: stage it5/it10)	live	cause
+cbf_q00__cl1b5a6458	central TAPGRID 5143 sinks/5 taps (need 6)	V4 epyc7 QC-ALLFIX/1124051526 GRT 6528/6453; V4 1123214631 6892/6731; V3 epyc10 FAM-QC-CB-R4 8198/8148	no	tap load + central congestion
+cbf_q00__cl870de686	central TAPGRID 7196/5 (need 8)	V3 epyc8 OPUS-FIX-QC-V4-R2/1123235930 GRT 4939/4225; V4 epyc8 QC-ALLFIX/1124052412 no GRT	no	tap load
+cbf_q00_s2	central TAPGRID 9836/5 (need 11) + RESET hop 300.8>275 planned	V4 epyc7 QC-ALLFIX/1124051617 GRT 87022/54031 (5_1_grt 5 h, RSZ-0060 cap); V3 epyc8 91995/83281	YES epyc7 5_1_grt	tap load + reset hop over stop (3_3_place_gp.log OT_RESET_TREE FAIL)
+cbf_q01	E strip 5661 wires/86.4um util 2.0	V3 epyc8 OPUS-FIX-QC-V4-R2/1123235741 GRT 10680/1919; V4 epyc8 1124052447 ended CTS	no	E strip width
+cbf_q01_s2	E strip util 2.0	V3 epyc8 1123235801 GRT 8931/1612; V4 epyc7 1124051707 ended CTS	no	E strip width
+cbf_q11	central TAPGRID 10600/5 (need 12)	V3 epyc8 QC-ALLFIX/1123180630 GRT 6370/6108; V4 epyc8 1124052522 ended CTS	no	tap load
+cbn_q00__cl622f65d2	central WIDTH 4115/172.8um util 0.74; macro_channel FAIL	V4 epyc11 QC-CB-PROBE/1124043411 GRT 5066/3160; QC-CB-PROBE/1124184823	YES epyc11 4_1_cts	central congestion + tap (cdp) 
+cbn_q00__cld7bf7197	central WIDTH util 0.62	V4 epyc7 QC-ALLFIX/1123214602 GRT 31282/27979; 1124051757 ended CTS	no	central congestion
+cbn_q00__cldbcda913	central WIDTH util 0.87	V4 intel1 QC-CB-SPREAD-R2/1124172914 place only; epyc8 QC-ALLFIX/1124052557 no GRT	no	central congestion
+cbn_q01__clab6e67f2	E strip 6178/86.4 util 2.2	V3 epyc8 OPUS-FIX/1123235824 GRT 90242/85145; V4 epyc7 1124051916 place	no	E strip width
+cbn_q01__cld9ff4c40	E strip util 2.2	V3 epyc8 1123235845 GRT 87660/82099; V4 epyc8 1124052632 no GRT	no	E strip width
+cbn_q01__cldd6ea846	E strip util 2.2	V4 epyc7 QC-ALLFIX/1124052007 GRT 75607 setup -560.8 (rerun in 5_1_grt 17 min); V3 epyc8 92167/84774	YES epyc7 5_1_grt	E strip width
+cbn_q11__cl49ae4555	central TAPGRID 10600/5 (need 12)	V3 epyc8 OPUS-FIX/1123235951 GRT 166101/149070; V4 epyc11 QC-CB-PROBE 1124043618 floorplan	no	tap load + central congestion
+cbn_q11__cl5cc92dfe	central TAPGRID 10600/5 (need 12)	V4 epyc7 QC-ALLFIX/1124052056 GRT 1741/1299; V3 epyc8 6626/6422	no	tap load (mildest)
+cbx_q10__cl89936551	central TAPGRID 12657/5 (need 15)	V3 epyc8 QC-ALLFIX/1123180807 GRT 17738/17579; V4 epyc8 1124052742 ended CTS	no	tap load
+cbx_q10__cl89936551_h	central TAPGRID 12454/5 (need 14)	V3 epyc8 1123180831 GRT 27566/24464; V4 epyc7 1124052147 ended CTS	no	tap load
+cbx_q10__cl94a12200_h	central TAPGRID 12454/5 (need 14)	V3 epyc8 1123180858 GRT 29571/27022; V4 epyc8 1124052818 no GRT	no	tap load
