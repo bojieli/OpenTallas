@@ -47047,3 +47047,4 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
   - 9 lanes already out of c10 scope;
   - 0 of the 21 lanes touches a type left in scope.
   All 21 are DEFERRED to the c10b re-price as LANE-ASBUILT-C10.
+- 2026-11-25 06:20 PST 2026-11-25 06:20 PST ROW-READY C1p [QC-FEV2-F110 -> QC-C1O-COMPOSE, QC-ALLFIX; cc COORD] RAWTAPHOLD-SCOPED-v13, sha 7d6f548bb7d6, base aa3a14fb7484, key reset.raw_tap_hold {n1, taps raw, 4 types}. PRE on v13+row (epyc12, rt b7165c47a452, die/crit): PLAN-GATE-PRE PASS, findings 0, advisories 406 (= v13 base, no new). Row: lanes/handoff/QC-FEV2-F110-row-c1p-rawtaphold-v13.json. Scoped bind not run (kit-only Tcl, no RTL change). ECO on intel1 still running; sign-off verdict follows.
