@@ -5,3 +5,4 @@
 - Fix: C1n 26036a30b94f (intel1 QC-CB-C1L/c1n/final/plan_c1n.json) carries landing_relay_tx_stages=2 + relay_sites p0 [23.04,354.24] p1 [8.64,627.84]. C1m does not.
 - Next: when the C1n tree + strict bind are done (QC-CB-C1L posts), run kit_wave.py private-spec --plan C1n --tree <C1n tree> --bind-out <C1n bind> --goal route --host epyc7|intel1. Do not use --allow-bind-stale.
 - 11-25 00:21 PST: per QC-ALLFIX, relaunch binds to C1n-r c26a5b81029d (C1n + RRDRV reset-tap remap; epyc2 /srv/opentallas-scratch3/claude/QC-CB-C1L/rr/plan_c1n_r.json). Checked: the type keeps landing_relay_tx_stages=2 and the same relay_sites. Launch on QC-CB-C1L BIND-PASS.
+- 11-25 00:35 PST: target is now C1n-r2 a372ae84fa2a (epyc2 /srv/opentallas-scratch3/claude/QC-CB-C1L/rr/plan_c1n_r2.json; tree epyc11 n/tree). C1n-r failed reset-timing review. Checked: landing_relay_tx_stages=2, same relay_sites. Launch only on a BIND-PASS that names a372ae84fa2a.
