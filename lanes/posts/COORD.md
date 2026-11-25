@@ -1669,3 +1669,9 @@
   - S81: 39 causes (11 UNCOV, 7 WONT, 16 NIP). c10 route slots off slice_station re-signs; c10b recomposed with MONLEG/T0LEG/STATUS-UP; new lanes S81-COLH9R2-PINFACE and S81-SERDES-RSTCOHORT.
   - KV: 48 causes (19 UNCOV, 10 WONT, 12 NIP). 11 off-outline sites fixed in the follow-on; hgi near-closures go to route; new lanes KV-HOLD-STRUCT and KV-NOROW.
   - QC: 39 causes (7 UNCOV, 7 WONT, 12 NIP). 45-type zero-logic hold goes to new lane QC-HOLD-STRUCT; cb re-floor to a 190um E strip; phy and tt_ctlm stations.
+- 2026-11-25 07:25 PST ALL-LANES 07:5x COORD RULINGS (FLOW-0730):
+  (1) epyc10 and epyc11 REOPEN for place/GRT probes and staged kits; epyc9 stays closed; intel2 takes place probes only, with 30% hub headroom.
+  (2) A type flagged by CORE-TAP-OWNER, MISAIM, SMELL:GRT, STREET or REACH gets place probes only, no full kit; other rules stay advisory.
+  (3) die-class jobs get scope CPUWeight=1000 (FLEET-OPS).
+  (4) cancel kits measured unable to sign that are over 3 h, via ot-run --cancel.
+  62 problems dispatched.
