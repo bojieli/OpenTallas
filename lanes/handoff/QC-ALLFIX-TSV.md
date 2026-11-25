@@ -38,3 +38,11 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - compose_drop_guard e827d53ab617 per step with --history C4.. and --row r10 (intel2 lane lin/*.log/json, chain.sh): gh 127709 + hi 127709 + ij 127701 silent = all r10 ROW-DROP/ROW-LOST; other: hi 15996 sle_ctl re-key DROP (intended 1d3b); ij 5 coll_core anchor DROP (intended re-solve) + 63 su_c collector tap/node REVERT to C4 = OPEN-SU rst_n KeyError fix (intended); jl PASS 0 silent (232 int); lm PASS 0 silent (674 int).
 - rowstat over C1g..C1m (out/rowstat_lin.json): no composed row falls back to base later. Only lineage loss: r10 (C1h..C1k), restored C1l, present C1m. Nothing still lost in C1m.
 - TSV has a lineage column now.
+
+## C1n ac1e32805d2c scan (11-24 22:10 PST)
+- Rowstat (out/rowstat_c1n.json): newly IN-PLAN in C1n: HOLD_C1N tt_ctlm module_sha256 df62aafd98db; SLECTL-PILE 11495/11495; TAPBINS2 (f0d336a16743) 325/332; RC97-BT2; PGHALO; FIX-RELAYCOPY 2/2; RTX-ALL-r4 83/83. TAPBINS -> SUPERSEDED-BY TAPBINS2. STB-SPLIT = STAGED-C1n-PENDING-RETAP (left out by ruling).
+- RC97 + PGHALO share the 5 st_a_v2 hard_cores lists: C1n holds both (_bt2 masters on u_r0..3 + pg_halo_um).
+- FTSITE: su_c ft_slots C1n == C1m on all 3 su_c. ZLLEAF 14/14 (assert_equal_base PASS).
+- TAPBINS2 CHANGED 7 = cb tap_offset per_port_ps keys: C1n lacks 1-13 row ports per key, other values differ (FIX-TAPOFF re-run on C1n pending). st_a tap_offset kept C1m values (st_a are not TAPBINS2 types).
+- Guard C1m->C1n (lin/mn.json, rows r10..n59, no tapbins2 row): 174 silent; out/silchk.log shows all 174 C1n values == TAPBINS2-C1m row value (tap_offset/added_taps/relay taps drops, 24 st_b/fe/hc1 source_clock REVERT to C4 = TAPBINS2 retap) + 2 start_copy = FIX-RELAYCOPY. 0 unexplained.
+- start_copy: 39 types in C1n, identical set+value to bound C1j (C1k); the remaining st_a one (sle_st_a_v1 cl989804f6__cled3c1d7b) had it in C1j bound PASS and carries relay_sites: real relay type, not a START origin.
