@@ -2,3 +2,4 @@
 - 2026-11-25 09:30 PST DIED [S81-STAGE-SEAT] ot-push-main otpush-outgoing-giraffe-2100228 on outgoing-giraffe: rc=2 after 0 s, ended 17:30:11, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
 - 2026-11-25 09:34 PST DIED [S81-STAGE-SEAT] ot-push-main otpush-outgoing-giraffe-2407894 on outgoing-giraffe: rc=3 after 13 s, ended 17:34:50, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 3 after 13 s, no log
 - 2026-11-25 09:35 PST DIED [S81-STAGE-SEAT] ot-push-main otpush-outgoing-giraffe-2462995 on outgoing-giraffe: rc=3 after 9 s, ended 17:35:34, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 3 after 9 s, no log
+- 2026-11-25 09:39 PST DONE [S81-STAGE-SEAT] ot-push-main otpush-outgoing-giraffe-2604237 on outgoing-giraffe: rc=0 after 99 s, ended 17:39:09, log none, cmd: ot-push-main 
