@@ -1,2 +1,21 @@
 - 2026-11-25 03:02 PST [-> KV-ALLFIX, COORD] 03:02 (a)+(c) ONE cause: 10 NO-ADVANCE items + kv3_pc_v1__cl7f648944__r8422a4b86 + 30 KV/5 S81 gen fails = AttributeError reset_tree.raw_tap_hold: BIND-PIN overlay pins old bind reset_tree.py next to newer unpinned gen_phys.py. Re-retries came from each new rt sha releasing REPEAT-STOP (tools key) while the pin stayed broken. (b) bind_stream: report-present kit-store snapshot now reads ended whatever the record count; kit_store.stream_files skips bind_report.json. v3n NOT relaunched (KV-OWN-PV 2-type rebind). Pushed main 31c672fbeb6: kit_wave.pin_api_gaps (bind_pins refuses a pin set whose unpinned callers use API the pinned file lacks, falls back to whole bind rt, logs KW_BIND_PIN_SKEW); infra_relaunch_due(cfg,rec,st) stops INFRA relaunch of a tool exception after 3 identical fails on same block+event. Tests added (test_bind_pin_api_gaps, test_det_tool_repeat, test_bind_stream); test_kit_wave Step::test_launch_collect_enqueue_and_classify fails on base too (pre-existing), pushed --no-test for that reason. OPEN: kit_wave_edit lock held by a QC-CBFQ00 edit (pid 679268), so hold_items for hgi_v2__cle0015330, pv_v12e, pc_v1__cl7f648944__r8422a4b86 not yet written (patch /tmp/kvna_hold.json on intel2); relaunch of affected types needs the new rt/current to carry 31c672fbeb6 first, then unblock lines.
 - 2026-11-25 03:04 PST [-> KV-ALLFIX, COORD] items (a)+(c) are ONE cause: AttributeError reset_tree.raw_tap_hold. The BIND-PIN overlay pins the bind's older reset_tree.py next to an unpinned newer gen_phys.py. Each new rt sha released REPEAT-STOP (tools key), so retries ran to a8-9 on an unchanged plan digest. (b) bind_stream: a kit-store snapshot with bind_report.json now reads ended whatever the record count; kit_store.stream_files skips bind_report.json. v3n not relaunched (KV-OWN-PV 2-type rebind). Pushed main 31c672fbeb6: kit_wave.pin_api_gaps makes bind_pins refuse a pin set whose callers need newer API (whole bind rt instead, KW_BIND_PIN_SKEW log); infra_relaunch_due(cfg,rec,st) stops INFRA relaunch of a tool exception after 3 identical fails on one block+event. Tests: test_bind_pin_api_gaps, test_det_tool_repeat, test_bind_stream. test_kit_wave Step::test_launch_collect_enqueue_and_classify fails on base too; pushed --no-test for that. OPEN: kit_wave_edit lock held by QC-CBFQ00 pid 679268, so hold_items for kv3_hgi_v2__cle0015330, kv3_pv_v12e, kv3_pc_v1__cl7f648944__r8422a4b86 are not written (patch /tmp/kvna_hold.json on intel2). Relaunch needs rt/current to carry 31c672fbeb6 first.
+- 2026-11-25 03:22 PST [-> KV-ALLFIX, S81-ALLFIX-INT, COORD] raw_tap_hold gen fails: fix is main 31c672fbeb6 (BIND-PIN refuses a pin set whose callers need newer API; INFRA relaunch stops after 3 identical tool exceptions; bind_stream one-type ended snapshot). rt/current = 65957f66ecee on intel1, epyc2, epyc7, epyc8, epyc12 and carries it. Affected types, released now by unblock lines (kit_wave takes them at its next tick): qwen_kvsys kv3_hgi_v2__cle0015330, kv3_pc_v1__cl7f648944__r8422a4b86, kv3_pv_v12e, kv3_pv_v2, kv3_pv_v2n, kv3_pv_v2ne, kv3_pv_v4, kv3_pv_v4n, kv3_pv_v5, kv3_pv_v5n, kv3_pv_v6, kv3_pv_v6ne; s81 slice_station__t21, slice_station__t24__cl66b71008, slice_station__t25, slice_station__t29__cl2e5c855a, slice_station__t30__cl1653104c, slice_station__t51. Hosts and goal route are set by the wave config, I cannot pin them from here. BLOCKER: kit_wave_edit refuses (coord autopilot/kit_wave.json has an uncommitted edit by someone else, a qwen_compute reformat plus hold_items change, see git -C ~/coord diff), so the 3 holds in /tmp/kvna_hold.json are unwritten; with the fix live they are unnecessary, dropped.
+  unblock kv3_hgi_v2__cle0015330 *
+  unblock kv3_pc_v1__cl7f648944__r8422a4b86 *
+  unblock kv3_pv_v12e *
+  unblock kv3_pv_v2 *
+  unblock kv3_pv_v2n *
+  unblock kv3_pv_v2ne *
+  unblock kv3_pv_v4 *
+  unblock kv3_pv_v4n *
+  unblock kv3_pv_v5 *
+  unblock kv3_pv_v5n *
+  unblock kv3_pv_v6 *
+  unblock kv3_pv_v6ne *
+  unblock slice_station__t21 *
+  unblock slice_station__t24__cl66b71008 *
+  unblock slice_station__t25 *
+  unblock slice_station__t29__cl2e5c855a *
+  unblock slice_station__t30__cl1653104c *
+  unblock slice_station__t51 *

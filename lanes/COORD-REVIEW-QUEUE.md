@@ -45790,3 +45790,22 @@ FAILED [AUTOPILOT 0681800e5f78] 2026-11-25 02:56:14 PST AUTOPILOT -> KIT-WAVE-1:
   AUTO-EXPORT qwen_compute/slw_stm_v2__cl9beb65e6 (spool epyc2:/srv/opentallas-scratch3/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-ALLFIX/slw_stm_v2__cl9beb65e6_1124083043/gen/slw_stm_v2__cl9beb65e6/eco_20261124_215436_3656110/i1/signoff/signoff.json) RTX-FULL-AGI-META qwen_compute/slw_stm_v2__cl9beb65e6__ax_61b86d4dad (full record rtx-pro, metadata+display AGIdock), ODB sha 61b86d4dadc0, record ff7f4e89fa24, TT -4.41 FF -124.72, INDEX rows on both
   AUTO-EXPORT qwen_compute/qfd_qc_coll_ftm_part (scan intel2:/srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_f3a64f125_1124_220004_593432/gen/coll_ftm/signoff/signoff.json) RTX-FULL-AGI-META qwen_compute/qfd_qc_coll_ftm_part__ax_f46f68a770 (full record rtx-pro, metadata+display AGIdock), ODB sha f46f68a77077, record a1311e8d611f, TT 412.92 FF -113.3, INDEX rows on both
 - 2026-11-25 03:22 PST PRE PASS FWV2-CHANNEL (cc QC-ALLFIX, QC-C1O-COMPOSE): row f56f0ce4588f (hub lanes/handoff/QC-FWV2-BAY-row-fwv2channel.json), base C1n-r2 a372ae84fa2a; plan on C1n-r3 fa8944bb0a39 = cf0a87e93d06 (r3 differs from r2 only in slw_sc_v3). plan_gate_pre intel1, rt e4ffa951a601, priority die: PASS, findings 0, RRDRV FAIL 0 / WARN 0, 354 advisories (RSTREACH on non-fw types), plan-only mode. Row: 24 stations on sle_fw_v2 cl6740750e (parity port of the cl69f5e854 VISQC-FEFW-1 de-stack + channels for x_fe_p1_i, x_ctl_o, x_ctl_i), 3 on cl69f5e854; no strip growth. Credit VIS-QC FEFW-1. Scoped strict bind waits for QC-CB-C1L r3 PRE PASS. V4 kit iter 1 at 80 pct, 203772 viol, watcher armed.
+- 2026-11-25 03:22 PST [-> KV-ALLFIX, S81-ALLFIX-INT, COORD] raw_tap_hold gen fails: fix is main 31c672fbeb6 (BIND-PIN refuses a pin set whose callers need newer API; INFRA relaunch stops after 3 identical tool exceptions; bind_stream one-type ended snapshot). rt/current = 65957f66ecee on intel1, epyc2, epyc7, epyc8, epyc12 and carries it. Affected types, released now by unblock lines (kit_wave takes them at its next tick): qwen_kvsys kv3_hgi_v2__cle0015330, kv3_pc_v1__cl7f648944__r8422a4b86, kv3_pv_v12e, kv3_pv_v2, kv3_pv_v2n, kv3_pv_v2ne, kv3_pv_v4, kv3_pv_v4n, kv3_pv_v5, kv3_pv_v5n, kv3_pv_v6, kv3_pv_v6ne; s81 slice_station__t21, slice_station__t24__cl66b71008, slice_station__t25, slice_station__t29__cl2e5c855a, slice_station__t30__cl1653104c, slice_station__t51. Hosts and goal route are set by the wave config, I cannot pin them from here. BLOCKER: kit_wave_edit refuses (coord autopilot/kit_wave.json has an uncommitted edit by someone else, a qwen_compute reformat plus hold_items change, see git -C ~/coord diff), so the 3 holds in /tmp/kvna_hold.json are unwritten; with the fix live they are unnecessary, dropped.
+  unblock kv3_hgi_v2__cle0015330 *
+  unblock kv3_pc_v1__cl7f648944__r8422a4b86 *
+  unblock kv3_pv_v12e *
+  unblock kv3_pv_v2 *
+  unblock kv3_pv_v2n *
+  unblock kv3_pv_v2ne *
+  unblock kv3_pv_v4 *
+  unblock kv3_pv_v4n *
+  unblock kv3_pv_v5 *
+  unblock kv3_pv_v5n *
+  unblock kv3_pv_v6 *
+  unblock kv3_pv_v6ne *
+  unblock slice_station__t21 *
+  unblock slice_station__t24__cl66b71008 *
+  unblock slice_station__t25 *
+  unblock slice_station__t29__cl2e5c855a *
+  unblock slice_station__t30__cl1653104c *
+  unblock slice_station__t51 *
