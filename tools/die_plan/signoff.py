@@ -1448,7 +1448,37 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     ep = ep_dump_tcl(corner)
     if ep and t.count(EP_MARK) == 1:
         t = t.replace(EP_MARK, ep + EP_MARK)
+    if t.count("so DONE 1\n") == 1:
+        t = t.replace("so DONE 1\n", ETM_TCL.replace("@c@", corner.lower()) + "so DONE 1\n")
     return t
+
+
+# VIEW-FF-1125 (Fable review 03:35 item 47: 74 sign-offs exported INCOMPLETE views, <mod>_ff.lib missing): ORFS writes
+# only the TYPICAL abstract lib (base/<mod>_typ.lib / _tc.lib), so no FF Liberty existed for the view.  Every sign-off
+# corner session now writes the block's own timing model from the signed routed DB + SPEF it just timed; cmd_run
+# publishes it as <signoff dir>/<design>_<corner>.lib, where the autopilot view read (kit/views, signoff dir, base) and
+# AUTO-EXPORT find it.  Information for the view only: a write failure is logged and never changes the verdict.
+ETM_TCL = """# ---- VIEW-FF-1125: this corner's timing model of the signed block (view <design>_@c@.lib), never a reason ----
+if {[catch {write_timing_model -library_name "[current_design]_@c@" /out/etm_@c@.lib} so_etm_err]} {
+  so ETM_FAILED @c@ [string map {"\n" " "} $so_etm_err]
+} else { so ETM @c@ /out/etm_@c@.lib }
+"""
+
+
+def publish_etms(out, corners):
+    """copy <out>/<c>/etm_<c>.lib to <out>/<design>_<c>.lib for every finished corner; -> {corner: path or reason}"""
+    res = {}
+    for c, r in (corners or {}).items():
+        src, design = Path(out) / c / f"etm_{c}.lib", (r or {}).get("design")
+        if not design or not re.fullmatch(r"[A-Za-z0-9_$.\-]+", design):
+            res[c] = "no design name in the session"
+        elif not src.is_file() or src.stat().st_size == 0:
+            res[c] = "no timing model written"
+        else:
+            dst = Path(out) / f"{design}_{c}.lib"
+            shutil.copyfile(src, dst)
+            res[c] = str(dst)
+    return res
 
 
 UNC_POLICY_TCL = """# ---- OWNER 12.24b/c sign-off clock uncertainty (in-session over the golden SDC: a re-sign of a 60 / 25 kit SDC is
@@ -3071,6 +3101,8 @@ def cmd_run(a):
     with cf.ThreadPoolExecutor(len(corners)) as ex:
         futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol, retain_clock, parent_targets, parent_std_limit) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
+    if not a.dry:
+        rec["view_libs"] = publish_etms(out, rec["corners"])
     if dinfo is not None and "tt" in rec["corners"]:
         tt = rec["corners"]["tt"]
         dinfo.update(nominal_tt_setup_wns_ps=tt.get("std_wns_max"), droop665_tt_setup_wns_ps=tt.get("droop665_wns_max"))
