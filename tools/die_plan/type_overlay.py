@@ -36,6 +36,7 @@ import gzip
 import hashlib
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -438,6 +439,67 @@ def g0_errors(raw, tn, full=False, plan_path=None):
             if i["level"] == "ERROR" and (tn in i["msg"] or i.get("type") == tn or i.get("lane") in lanes)}
 
 
+# G0-DRIFT-1125 (COORD; KV-OWN-PV V1NSITE): G0 findings are matched on (check, key), not on exact text.  The key is the
+# message with its directional metrics masked: 'cos <x>' (lower is worse, core_faces mean cos) and '<x> um' (larger is
+# worse: hops, overlaps).  Every other number (pin counts, coordinates, indices) stays in the key, as before.  A finding is
+# new when its key is new, its key occurs more often, or a metric gets worse by more than the tolerance; a metric that only
+# drifts (better, or worse within the tolerance) is reported in the receipt (g0_metric_drift), never an overlay error.
+# Real case: kv3_pv_v1n V1NSITE moved stations 12 um and 5 pre-existing core_faces ERRORs re-printed with cos -0.34 -> -0.33
+# (-0.20 -> -0.19, -0.66 -> -0.64): exact text called them new and blocked the overlay.
+_G0_METRIC = re.compile(r"(?P<cos>(?<=cos )[-+]?\d+(?:\.\d+)?)|(?P<um>(?<![\w.\[])[-+]?\d+(?:\.\d+)?(?=\s?um\b))")
+G0_COS_TOL = 0.05
+G0_UM_TOL = 1.0
+G0_UM_REL = 0.02
+
+
+def g0_key(msg):
+    """(masked message, [(kind, value)]) -- kind 'cos' (lower is worse) or 'um' (larger is worse)"""
+    metrics = []
+
+    def sub(m):
+        kind = "cos" if m.group("cos") is not None else "um"
+        metrics.append((kind, float(m.group(0))))
+        return "<" + kind + ">"
+    return _G0_METRIC.sub(sub, msg), metrics
+
+
+def _worse(old, new):
+    """how much new is worse than old beyond the tolerance (0 = not worse past it); same kinds by position"""
+    w = 0.0
+    for (k, a), (_, b) in zip(old, new):
+        d = (a - b) if k == "cos" else (b - a)
+        tol = G0_COS_TOL if k == "cos" else max(G0_UM_TOL, G0_UM_REL * abs(a))
+        if d > tol + 1e-9:
+            w = max(w, d)
+    return w
+
+
+def g0_new(old_e, new_e):
+    """(new findings [(check, msg, base msg or None)], drift [(check, base msg, msg)]) of G0 ERROR sets {(check, msg)}"""
+    def group(E):
+        g = {}
+        for c, m in E:
+            k, mt = g0_key(m)
+            g.setdefault((c, k), []).append((mt, m))
+        return {k: sorted(v) for k, v in g.items()}
+    go, gn = group(old_e), group(new_e)
+    new, drift = [], []
+    for key, rows in sorted(gn.items()):
+        base = go.get(key, [])
+        for i, (mt, m) in enumerate(rows):
+            if i >= len(base):
+                new.append((key[0], m, None))
+                continue
+            bmt, bm = base[i]
+            if bm == m:
+                continue
+            if _worse(bmt, mt):
+                new.append((key[0], m, bm))
+            else:
+                drift.append((key[0], bm, m))
+    return new, drift
+
+
 def _skip(skipped, check, why):
     """a check that cannot run is never silent: WARN line on stderr and an entry in the result record"""
     print(f"TYPE_OVERLAY WARN skipped check {check}: {why}", file=sys.stderr)
@@ -445,7 +507,7 @@ def _skip(skipped, check, why):
         skipped.append({"check": check, "why": why})
 
 
-def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None):
+def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None, drift=None):
     """All type-scoped checks of the overlaid plan `new` against the bound plan `base`; list of error strings."""
     errs = [f"changed outside the allowlist: {'.'.join(map(str, p))}" for p in _diff(base, new)
             if not _is_note(p, tn) and not pos_key(p, tn) and not _is_place_regions(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
@@ -494,10 +556,14 @@ def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None)
         _skip(skipped, "seam_hop", "module seam_hop.py is not in this source")
     except Exception as exc:
         errs.append(f"seam_hop check failed ({type(exc).__name__}: {exc})")
-    # 5. G0 subset: no new ERROR naming the type or its lanes
-    old_e = g0_errors(base, tn, g0_full, plan_path)
-    for c, m in sorted(g0_errors(new, tn, g0_full, plan_path) - old_e):
-        errs.append(f"G0 {c}: {m}")
+    # 5. G0 subset: no new ERROR naming the type or its lanes (matched by (check, key); G0-DRIFT-1125 above)
+    nw, dr = g0_new(g0_errors(base, tn, g0_full, plan_path), g0_errors(new, tn, g0_full, plan_path))
+    for c, m, bm in nw:
+        errs.append(f"G0 {c}: {m}" + ("" if bm is None else f" (worse than the bound plan's: {bm})"))
+    for c, bm, m in dr:
+        print(f"TYPE_OVERLAY NOTE G0 {c} metric drift within tolerance or better (report only): {bm} -> {m}", file=sys.stderr)
+        if drift is not None:
+            drift.append({"check": c, "base": bm, "overlay": m})
     return errs
 
 
@@ -505,8 +571,8 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
     """(overlaid plan, receipt).  The single entry point of gen_phys --type-overlay and the CLI."""
     new = apply_overlay(raw, ov)
     tn = ov["type"]
-    skipped = []
-    errs = validate_overlay(raw, new, tn, g0_full, plan_path, skipped)
+    skipped, drift = [], []
+    errs = validate_overlay(raw, new, tn, g0_full, plan_path, skipped, drift)
     if errs:
         raise OverlayError(errs)
     changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations", "type_positions") if ov.get(k)}
@@ -516,7 +582,7 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
                  "changed": changed, "checks": [c for c in ("allowlist", "schema(type-scoped)", "rtl_projection", "collector_reach",
                                                         "seam_hop", "g0_full" if g0_full else "g0_subset")
                            if c not in {x["check"] for x in skipped}],
-                 "skipped_checks": skipped}
+                 "skipped_checks": skipped, "g0_metric_drift": drift}
 
 
 def main(argv=None):

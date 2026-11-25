@@ -285,3 +285,31 @@ def test_place_regions_overlay_bad_rows_rejected(plan):
         TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "place_regions": {"x": 1}})
     new = TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "place_regions": [{"name": "x", "inst_re": "a", "kind": "hard"}]})
     assert TO.validate_overlay(plan, new, "mid")                  # schema (type-scoped) refuses kind hard
+
+
+V1N = ("type kv3_pv_v1n core {c} port {p}: 32 pins on face N face away from its partner(s) station i_vport_E_N_vo, station "
+       "i_vport_E_N_vo_d1: mean cos {cos}, 32 pins on the far side (re-pin to face E)")
+
+
+def test_g0_metric_drift_is_not_new_v1nsite():
+    """KV-OWN-PV V1NSITE (A5t6 kv3_pv_v1n): 5 pre-existing core_faces ERRORs re-print with a slightly better cos"""
+    rows = [("pvg0_p3", "s0__pe2", "-0.20", "-0.19"), ("pvg0_p3", "s1__pe2", "-0.20", "-0.19"),
+            ("pvg1_p3", "s0__pe2", "-0.34", "-0.33"), ("pvg1_p3", "s1__pe2", "-0.34", "-0.33"),
+            ("pvg2_p3", "s0__pe2", "-0.66", "-0.64")]
+    old = {("core_faces", V1N.format(c=c, p=p, cos=a)) for c, p, a, _ in rows}
+    new = {("core_faces", V1N.format(c=c, p=p, cos=b)) for c, p, _, b in rows}
+    nw, dr = TO.g0_new(old, new)
+    assert nw == [] and len(dr) == 5
+
+
+def test_g0_worse_metric_new_key_and_count_are_new():
+    old = {("core_faces", V1N.format(c="pvg1_p3", p="s0__pe2", cos="-0.34"))}
+    worse = {("core_faces", V1N.format(c="pvg1_p3", p="s0__pe2", cos="-0.45"))}
+    nw, _ = TO.g0_new(old, worse)
+    assert len(nw) == 1 and nw[0][2] is not None
+    other = {("core_faces", V1N.format(c="pvg3_p3", p="s0__pe2", cos="-0.34"))}
+    assert TO.g0_new(old, old | other)[0][0][2] is None              # new core/port key
+    hop = {("geometry", "type t lane l3: hop 410.0 um over 405 um")}
+    assert TO.g0_new(hop, {("geometry", "type t lane l3: hop 410.5 um over 405 um")})[0] == []
+    assert len(TO.g0_new(hop, {("geometry", "type t lane l3: hop 440.0 um over 405 um")})[0]) == 1
+    assert TO.g0_key("rs_n_hi_p[8] at 12 um")[0] == "rs_n_hi_p[8] at <um> um"
