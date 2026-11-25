@@ -1,0 +1,14 @@
+{
+ "row": "FEV1-CL08-RTX-STATION",
+ "credit": "QC-FEV1-CL08 for COORD Fable review 03:35 item 27; origin QC-FEV1-FLAT C1n-RTX-ALL (RTX-r4); cause routed GRT TT -113.89 single path u_cland_origin/s2 -> u_cland_rstart_tx (877 um unstaged)",
+ "base": "C1o v13 aa3a14fb7484 (base C1n-r3 fa8944bb0a39)",
+ "str": "set keys on partition_types.slw_fe_v1__clfe325744__cl08d14f0d; 0 adds of types, 0 drops; other keys byte-identical. Already present in C1n 26036a30b94f, C1n-r2 a372ae84fa2a, C1n-r3 fa8944bb0a39 and C1o v13 aa3a14fb7484 (verified), so on those bases this row is a 0-diff guard: C1p composition must keep it (compose_drop_guard ROW-LOST check).",
+ "apply": {
+  "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.landing_relay_tx_stages": 2,
+  "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.relay_sites.u_cland_rstart_tx_p0/q": [23.04, 354.24],
+  "partition_types.slw_fe_v1__clfe325744__cl08d14f0d.relay_sites.u_cland_rstart_tx_p1/q": [8.64, 627.84]
+ },
+ "estimate": "877 um hop split in 3 legs (~355/273/250 um), each under 405 um; per-hop est slack +324..+468 ps (QC-FEV1-FLAT RTX census)",
+ "neighbour_shift": "sl_W2_sc relay start count +2 (already in C1n-r3 bind/LATCHECK)",
+ "types": ["slw_fe_v1__clfe325744__cl08d14f0d"]
+}
