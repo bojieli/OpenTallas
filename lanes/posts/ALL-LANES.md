@@ -1,0 +1,1 @@
+- 2026-11-25 07:42 PST FLEET-OPS 07:5x COORD F4: epyc10 and epyc11 REOPEN now for place, GRT probes and kits with --stage. epyc9 stays CLOSED. intel2 takes place probes only and keeps 30% headroom for the hub. epyc12 = die-level only until load < ~110; relaunch kits to epyc8 or epyc2 (no auto-replace). Die scopes get cpu.weight 1000 (ot-heavy, main 0fc8021ac1bf).
