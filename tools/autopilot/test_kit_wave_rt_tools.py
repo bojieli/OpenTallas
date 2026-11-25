@@ -213,14 +213,14 @@ class LaunchTree(unittest.TestCase):
         """RT-PRUNE-REFS-1124b: an OLD mirror (beyond 12 newest and 168 h) named by a non-terminal spec stays; a terminal-only one goes"""
         import time
         d0 = Path(self.t.name) / "ap"
-        for nm, res in (("000000000014", None), ("000000000015", {"verdict": "FAIL"})):
+        for nm, res in (("00000000000e", None), ("00000000000f", {"verdict": "FAIL"})):
             sd = d0 / "private_specs/L" / nm
             sd.mkdir(parents=True)
             (sd / "spec.json").write_text(json.dumps({"tools_rt": f"/x/rt/{nm}"}))
             if res:
                 (sd / "result.json").write_text(json.dumps(res))
         refs = KW.rt_live_refs(roots=[str(d0)])
-        self.assertEqual(refs, {"000000000014"})
+        self.assertEqual(refs, {"00000000000e"})
         KW.RT_REF_CACHE.update(t=time.time(), v=frozenset(refs))
         try:
             sp = {"src": str(self.src), "tools_rt": str(self.rt)}
@@ -235,9 +235,9 @@ class LaunchTree(unittest.TestCase):
             prep, rs, fin = KW.rt_mirror_cmds(sp, "localhost", "intel2", tag="t3")
             subprocess.run(["bash", "-c", fin], capture_output=True, text=True)
             left = {p.name for p in par.iterdir() if p.is_dir()}
-            self.assertIn("000000000014", left)
-            self.assertNotIn("000000000013", left)
-            self.assertNotIn("000000000015", left)
+            self.assertIn("00000000000e", left)
+            self.assertNotIn("00000000000d", left)
+            self.assertNotIn("00000000000f", left)
         finally:
             KW.RT_REF_CACHE.update(t=0.0, v=frozenset())
 
