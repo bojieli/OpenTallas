@@ -313,6 +313,12 @@ def bind_summary(bind_dir):
     return dict(report=True, errors=len(e), classes=cl, first=[str(x)[:240] for x in e[:12]])
 
 
+def r8_only(rep):
+    """a strict bind that failed on R8 staleness only (R8_STALE / R8_STALE_TOTAL rows)"""
+    cl = rep.get("classes") or {}
+    return bool(cl) and all(k.startswith("R8_STALE") for k in cl)
+
+
 def touched_bound_types(raw, braw):
     used = {p.get("type") for p in raw.get("partitions") or []}
     return [t for t in RN.touched_types(raw, braw) if t in used]
@@ -488,6 +494,16 @@ def gate(a):
                "--mem", str(a.bind_mem), "--strict", "--all-gaps"] + (["--types", ",".join(types)] if types else [])
         r["bind"], s["bind"] = run_logged(cmd, str(L), benv, str(out / "logs/bind.log"))
         r["bind_report"] = bind_summary(B)
+        if r["bind"] and r8_only(r["bind_report"]) and not a.no_r8 and (B / "bus_groups.json").is_file():
+            # R8 LOOP (bind_r8_loop of the die bind scripts): the pre-pass bus groups can price a member one stage off the full bind
+            # (KV g4 11-25: pv_v_pads_ffkpv 68 members bound 43 vs table 42 after the pre-pass refresh) -> refresh from THIS bind, bind again once
+            t1 = time.time()
+            tr2 = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json"))
+            s["r8_loop"] = round(time.time() - t1, 1)
+            r["r8_loop"] = tr2
+            if not tr2["rc"]:
+                r["bind"], s["bind2"] = run_logged(cmd, str(L), benv, str(out / "logs/bind2.log"))
+                r["bind_report"] = bind_summary(B)
         if (B / "bind_report.json").is_file():
             r["lat"], s["lat"] = run_logged([sys.executable, "-I", "-B", "tools/die_plan/lane_asbuilt_latency.py", str(B), prel,
                                              "--asbuilt", a.asbuilt, "--json", str(out / "latency.json")], str(L), dict(base_env),
@@ -516,6 +532,9 @@ def gate(a):
     if cr.get("elab"):
         done("NOT", f"elab rc {cr['elab']}")
     tr = cr.get("r8")
+    if tr is not None and cr.get("r8_loop") and not cr["r8_loop"]["rc"]:
+        tr = dict(tr, fixed=dict(tr.get("fixed") or {}, **(cr["r8_loop"].get("fixed") or {})))
+        tr["r8"] = f"R8 drift fixed in {len(tr['fixed'])} table(s) (pre-pass + one bind loop)" if tr["fixed"] else tr["r8"]
     if tr is not None:
         R["r8"] = dict(rc=tr["rc"], status=tr["r8"], fixed=tr.get("fixed"), log=(tr.get("log") or "")[-800:] if tr["rc"] else "")
         if tr["rc"]:

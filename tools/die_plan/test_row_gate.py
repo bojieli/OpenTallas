@@ -89,3 +89,8 @@ def test_gate_missing_input_is_not_ready(tmp_path, monkeypatch):
                   "--out", str(tmp_path / "o"), "--local", "--ledger", str(tmp_path / "led")])
     rec = json.loads((tmp_path / "o" / "ROW-READY.json").read_text())
     assert rc == 1 and rec["verdict"] == "NOT-READY" and "input missing" in rec["why"][0] and rec["schema"] == RG.SCHEMA
+
+
+def test_r8_only_triggers_the_bind_loop():
+    assert RG.r8_only(dict(classes={"R8_STALE": 30, "R8_STALE_TOTAL": 1}))
+    assert not RG.r8_only(dict(classes={"R8_STALE": 3, "GAP": 1})) and not RG.r8_only(dict(classes={}))
