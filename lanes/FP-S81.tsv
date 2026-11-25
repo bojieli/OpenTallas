@@ -96,7 +96,7 @@ col_h9_r0_p6__t1__pvb38a9d6c	col_h9_r0_p6	FAIL 3	pass	pass	pass	pass	FAIL 1			RE
 col_h9_r0_p6__t1__pvbdbd69f2	col_h9_r0_p6	FAIL 3	pass	pass	pass	pass	FAIL 1			REACH,CORE-TAP-OWNER	not-reviewed	c9s-1
 col_h9_r0_p6__t1__pvde240d6d	col_h9_r0_p6	FAIL 3	pass	pass	pass	pass	FAIL 1			REACH,CORE-TAP-OWNER	not-reviewed	c9s-1
 col_h9_r0_p6__t1__pvea45abf3	col_h9_r0_p6	FAIL 3	pass	pass	pass	pass	FAIL 1			REACH,CORE-TAP-OWNER	not-reviewed	c9s-1
-col_h9_r1__t1__cl49d7a23e__pv047ea3b3	col_h9_r1	FAIL 3	FAIL 1	pass	pass	pass	FAIL 1			REACH,MISAIM,CORE-TAP-OWNER	not-reviewed	c9s-1
+col_h9_r1__t1__cl49d7a23e__pv047ea3b3	col_h9_r1	FAIL 3	FAIL 1	pass	pass	pass	FAIL 1			REACH,MISAIM,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): core overlaps 0.5-0.9um, frame_int_i1 misaim, 373um ROM-crossing leg	c9s-1
 col_h9_r1__t1__cl49d7a23e__pv0a45e191	col_h9_r1	FAIL 3	FAIL 1	pass	pass	pass	FAIL 1	4161	no	REACH,MISAIM,CORE-TAP-OWNER	not-reviewed	c9s-1
 col_h9_r1__t1__cl49d7a23e__pv0bab1162	col_h9_r1	FAIL 3	FAIL 1	pass	pass	pass	FAIL 1			REACH,MISAIM,CORE-TAP-OWNER	not-reviewed	c9s-1
 col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	col_h9_r1	FAIL 3	FAIL 1	pass	pass	pass	FAIL 1			REACH,MISAIM,CORE-TAP-OWNER	not-reviewed	c9s-1
@@ -226,7 +226,7 @@ dsdv_slice_c1x_C__t7	dsdv_slice_c1x_C	FAIL 4	FAIL 3	pass	pass	pass	pass			REACH,
 dsdv_slice_c1x_C__t8	dsdv_slice_c1x_C	FAIL 10	FAIL 4	pass	FAIL 1	pass	pass	11915	no	REACH,MISAIM,BOUNDARY-REG	not-reviewed	c9s-1
 dsdv_slice_c1x_C__t9	dsdv_slice_c1x_C	FAIL 4	FAIL 4	pass	FAIL 1	pass	pass			REACH,MISAIM,BOUNDARY-REG	not-reviewed	c9s-1
 dsdv_slice_c3x_C__t1	dsdv_slice_c3x_C	FAIL 7	FAIL 4	pass	FAIL 1	pass	pass			REACH,MISAIM,BOUNDARY-REG	not-reviewed	c9s-1
-dsdv_slice_iq_C__t1	dsdv_slice_iq_C	FAIL 6	FAIL 3	pass	pass	pass	pass	27453	no	REACH,MISAIM	not-reviewed	c9s-1
+dsdv_slice_iq_C__t1	dsdv_slice_iq_C	FAIL 6	FAIL 3	pass	pass	pass	pass	27453	no	REACH,MISAIM	FAIL type-review c9s (Fable 11-25): u_cap pin faces, W margin 2200 bits, tap pile, slots<14.88	c9s-1
 dsdv_slice_kv512_C__t1	dsdv_slice_kv512_C	FAIL 6	FAIL 4	pass	FAIL 1	pass	pass	15597	no	REACH,MISAIM,BOUNDARY-REG	not-reviewed	c9s-1
 dsdv_slice_lepe_mu_C__t1	dsdv_slice_lepe_mu_C	FAIL 9	FAIL 5	pass	pass	pass	pass	21048	no	REACH,MISAIM	not-reviewed	c9s-1
 dsdv_slice_lepe_mu_LP__t2	dsdv_slice_lepe_mu_LP	FAIL 3	pass	pass	FAIL 1	pass	pass	1000	yes	REACH,BOUNDARY-REG	not-reviewed	c9s-1
@@ -243,9 +243,9 @@ ot_s81sl_kv_leaf__t1	ot_s81sl_kv_leaf	FAIL 10	pass	FAIL 1	FAIL 1	pass	FAIL 1	110
 ot_s81sl_kv_leaf__t2	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	pass			REACH,BOUNDARY-REG	FAIL die:oversized s_3N_L0(item 10)	c9s-1
 ot_s81sl_kv_leaf__t3	ot_s81sl_kv_leaf	FAIL 6	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
 ot_s81sl_kv_leaf__t4	ot_s81sl_kv_leaf	FAIL 19	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
-ot_s81sl_kv_leaf__t5	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	FAIL 1	1500	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
+ot_s81sl_kv_leaf__t5	ot_s81sl_kv_leaf	FAIL 2	pass	pass	FAIL 1	pass	FAIL 1	1500	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): tap under u_vsw, 398 seats on one point, ft3 over lane columns	c9s-1
 ot_s81sl_leaf__t1	ot_s81sl_leaf	FAIL 5	pass	pass	FAIL 1	pass	FAIL 1	2379	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
-ot_s81sl_leaf__t10	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
+ot_s81sl_leaf__t10	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review c9s (Fable 11-25): vn knot 30k bits in 59um channel, ft6/ft7 under cores, ft7 station outside outline	c9s-1
 ot_s81sl_leaf__t11	ot_s81sl_leaf	FAIL 70	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
 ot_s81sl_leaf__t12	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
 ot_s81sl_leaf__t13	ot_s81sl_leaf	FAIL 15	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1
