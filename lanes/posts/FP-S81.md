@@ -43,3 +43,4 @@
 - 2026-11-25 09:27 PST DONE [FP-S81] ot-push-main otpush-open-snipe-218341 on open-snipe: rc=0 after 31 s, ended 17:27:16, log none, cmd: ot-push-main 
 - 2026-11-25 09:28 PST DONE [FP-S81] ot-run oth-ubuntu-3411208-1795625716 on open-snipe: rc=0 after 2012 s, ended 17:28:45, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/launch_anchor3.log, cmd: --die --crit --mem 96 --disk 10 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/FP-S81/tmpl -- bash -c bash /srv/opentallas-scratch2/cl
 - 2026-11-25 09:31 PST DONE [FP-S81] ot-push-main otpush-open-snipe-318820 on open-snipe: rc=0 after 27 s, ended 17:31:00, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/push_gen.log, cmd: ot-push-main 
+- 2026-11-25 09:34 PST DONE [FP-S81] ot-push-main otpush-open-snipe-424489 on open-snipe: rc=0 after 32 s, ended 17:34:12, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/push_gen2.log, cmd: ot-push-main 
