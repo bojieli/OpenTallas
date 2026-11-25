@@ -149,7 +149,9 @@ def variants(st, tn):
 
 def yosys_cmd(script, work, image, paths=()):
     y = shutil.which("yosys")
-    if y:
+    # host yosys only where the ORFS cell libs (CELL_LIBS, container paths) exist too; a host with yosys but no
+    # /OpenROAD-flow-scripts failed every variant on read_liberty (epyc2 11-25) -- the image has both
+    if y and all(Path(f).is_file() for f in CELL_LIBS):
         return [y, "-q", "-s", str(script)]
     uid = f"{os.getuid()}:{os.getgid()}"
     vols = sorted({str(work)} | {str(Path(p).resolve().parent) for p in paths})

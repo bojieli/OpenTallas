@@ -252,7 +252,8 @@ def test_wave_mode_kit_rtl_sends_every_nonhard_type_through_kit_rtl(tmp_path):
     out = P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
     gens = [c for c in cmds if " phys " in f" {c} "]
     assert any("leafy" in c and "--kit-rtl" in c for c in gens), cmds
-    assert any("hardy" in c and "--kit-rtl" not in c for c in gens), cmds
+    # GENDRY-HARDWRAP-1124 (062654cb742): a hard type is a kit-rtl hard wrapper (gen refuses one without --kit-rtl)
+    assert any("hardy" in c and "--kit-rtl" in c and "--hard-wrappers hardy" in c for c in gens), cmds
     assert "wave kit_rtl mode bind" in out[-1], out
     cmds.clear()
     out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)          # no bind OUT: classified WARN, never the plan-wrapper FAIL

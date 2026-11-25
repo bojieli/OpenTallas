@@ -31,6 +31,7 @@ def test_bind_rowcheck_reference_tree_is_pinned_on_first_use(tmp_path, monkeypat
     cur = root / "current"
     cur.symlink_to(root / "aaaa11112222")
     monkeypatch.delenv("OT_RT_CURRENT", raising=False)
+    monkeypatch.delenv("OT_TOOLSTALE_RT", raising=False)   # set in every ot-run unit (TOOLSTALE-GATE-RT-1123); wins over rt/current
     first = RC.find_ref_tools(str(cur))
     assert first == (root / "aaaa11112222").resolve()
     cur.unlink()
