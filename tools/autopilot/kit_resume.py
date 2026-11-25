@@ -275,6 +275,13 @@ def classify(texts, files, config):
             if rel in files and not is_gate_root(rel):
                 cur = stage.get(rel)
                 stage[rel] = vs if cur in (None, GATE) else minstage(cur, vs)
+    # STAGE-PLATEAU 11-25 (HEAD-OBSGC: valid cts checkpoints discarded): a Tcl file nobody names was assumed read at synth, and that synth guess then propagated to every file it names
+    # (hold_repair_pre.tcl -> grt_pre.tcl -> grt_layers / hold_guard_grt / obs_gcell_cap / grt_clock_first: 14 grt-time hooks of kits2/hostw/hd_host_w were 'synth', so editing one
+    # re-ran floorplan).  A file whose basename carries the grt / hold token is read at grt at the latest (pre-GRT hold build and GRT hooks); a producer that really names it earlier
+    # still lowers it (minstage), so only the unnamed-file default changes.
+    for rel in files:
+        if rel not in stage and rel.endswith(".tcl") and GRT_HINT_RE.search(os.path.basename(rel)):
+            stage[rel] = "grt"
     by_name = {}
     for rel in files:
         for n in _names(rel):
@@ -324,6 +331,7 @@ def classify(texts, files, config):
     return stage
 
 
+GRT_HINT_RE = re.compile(r"(?:^|_)(?:grt|hold)(?:_|\.)")
 HDL_EXT = (".v", ".sv", ".svh", ".vh")
 HDL_STR_RE = re.compile(r'"([^"\n]*)"')
 
