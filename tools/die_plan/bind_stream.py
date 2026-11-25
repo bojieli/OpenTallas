@@ -309,17 +309,14 @@ def _ended_snapshot(out, tn):
     """KV-A5t6 kv3_pc_v1__cl7f648944__r8f64f1de3 11-24: in a kit-store snapshot every file is a link to a content blob, so mtimes
     are the blobs' and say nothing about bind order (_context.json came out 64 ms newer than bind_report.json, the ended bind read as
     live, its heartbeat absent -> 'void').  kit_store takes an ended bind's OUT whole (every type's record); a stream snapshot
-    (kit_store.stream_files) carries only type tn's own records.  -> True for a snapshot that holds another type's record."""
+    (kit_store.stream_files) never carries bind_report.json (it skips it), so a kit-store snapshot with a bind_report.json is an ended bind
+    whatever its record count (KV-NOADVANCE 11-25, v3n: a one-type scoped bind read as live, deduped heartbeat 59 min old -> void)."""
     out = Path(out)
     if not (out / "bind_report.json").is_file():
         return False
     if not any(p.name == "root" and (p.parent / "MANIFEST.json").is_file() for p in out.parents):
         return False
-    try:
-        names = [e.name for e in os.scandir(out / DIR) if e.name.endswith(".json") and e.name != CTX]
-    except OSError:
-        return False
-    return any(n != f"{tn}.json" and not n.startswith(tn + "__") for n in names)
+    return True
 
 
 def launch_check(bind_out, tn, plan, asbuilt=None):

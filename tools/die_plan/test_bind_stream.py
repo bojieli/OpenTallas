@@ -374,7 +374,10 @@ def test_ended_bind_snapshot_reads_report_not_mtimes(tmp_path, monkeypatch):
     os.utime(out / 'bind_report.json', (old, old))
     rc, line = BS.launch_check(out, 'ta', plan, ab)
     assert rc == 0 and line == 'BIND errors 0'
-    (out / BS.DIR / 'tb.json').unlink()           # stream snapshot: own type only -> liveness still decides
+    (out / BS.DIR / 'tb.json').unlink()           # one-type scoped bind, report present: still ended (KV-NOADVANCE v3n)
+    rc, line = BS.launch_check(out, 'ta', plan, ab)
+    assert rc == 0 and line == 'BIND errors 0'
+    (out / 'bind_report.json').unlink()           # stream snapshot: no bind_report.json -> liveness still decides
     rc, line = BS.launch_check(out, 'ta', plan, ab)
     assert rc == 3 and 'heartbeat absent' in line
     shutil.rmtree(snap.parent)
@@ -404,7 +407,8 @@ def test_ended_marker_beats_snapshot_mtimes_for_scoped_bind(tmp_path, monkeypatc
     os.utime(out / 'bind_report.json', (old, old))
     rc, line = BS.launch_check(out, 'ta', plan, ab)
     assert rc == 0 and line == 'BIND errors 0'
-    # a marker of another run (stale) does not end the live stream
+    # a marker of another run (stale) does not end the live stream (no bind_report.json: a stream snapshot)
+    (out / 'bind_report.json').unlink()
     (out / BS.DIR / BS.ENDED).write_text(json.dumps(dict(run_id="other")))
     rc, line = BS.launch_check(out, 'ta', plan, ab)
     assert rc == 3 and 'heartbeat absent' in line

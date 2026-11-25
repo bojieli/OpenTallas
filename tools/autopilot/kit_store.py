@@ -294,7 +294,7 @@ def stream_files(d, tn):
         dns.sort()
         for n in sorted(fns):
             p = os.path.join(dp, n)
-            if n.endswith(".tmp") or not os.path.isfile(p) or os.stat(p).st_mtime >= ct:
+            if n.endswith(".tmp") or n == "bind_report.json" or not os.path.isfile(p) or os.stat(p).st_mtime >= ct:
                 continue                              # written by the running bind (other types, end sidecars): not this kit's
             out[os.path.relpath(p, d)] = p
     out[os.path.join(STREAM_DIR, STREAM_CTX)] = ctx

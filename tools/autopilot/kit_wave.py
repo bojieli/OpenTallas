@@ -9453,7 +9453,43 @@ def bind_pins(stamp, new_rt, bind_rt, bind_sha=""):
     have = rt_generator_hashes(bind_rt)
     if any(have.get(n) != old[n] for n in want):
         return None
+    miss = pin_api_gaps(new_rt, bind_rt, want)
+    if miss:
+        print(f"KW_BIND_PIN_SKEW pin refused: {', '.join(miss[:6])} (newest rt calls a pinned generator API the bind's file lacks); whole bind rt instead", flush=True)
+        return None
     return {"rt": str(bind_rt).rstrip("/"), "sha": str(bind_sha or os.path.basename(str(bind_rt).rstrip("/"))), "files": {n: old[n] for n in sorted(want)}}
+
+
+def pin_api_gaps(new_rt, bind_rt, names):
+    """KV-NOADVANCE 11-25 (30 KV + 5 S81 gen fails, 'module reset_tree has no attribute raw_tap_hold'): a pin set must be self-consistent.
+    Static scan: every `<alias>.<attr>` that an UNPINNED tools/die_plan module of new_rt uses on a pinned module (alias from
+    `import <mod> [as alias]`) must be defined at top level of the bind rt's pinned file.  -> ['gen_phys.py: reset_tree.raw_tap_hold', ...]"""
+    import re
+    dp_new, dp_old = Path(new_rt) / "tools" / "die_plan", Path(bind_rt) / "tools" / "die_plan"
+    gaps = []
+    for n in names:
+        mod = n[:-3]
+        try:
+            defs = set(re.findall(r"^(?:def|class)\s+(\w+)|^(\w+)\s*[:=]", (dp_old / n).read_text(errors="replace"), re.M))
+            defs = {a or b for a, b in defs}
+            imps = set(re.findall(r"^\s*(?:from\s+\S+\s+)?import\s+[^\n]*", (dp_old / n).read_text(errors="replace"), re.M))
+            for line in imps:
+                defs |= set(re.findall(r"(\w+)", line))
+        except OSError:
+            continue
+        for f in sorted(dp_new.glob("*.py")):
+            if f.name in names or f.name.startswith("test_"):
+                continue
+            try:
+                txt = f.read_text(errors="replace")
+            except OSError:
+                continue
+            aliases = {mod} | set(re.findall(rf"^\s*import\s+{mod}\s+as\s+(\w+)", txt, re.M))
+            for al in aliases:
+                for a in set(re.findall(rf"\b{al}\.([A-Za-z_]\w*)", txt)):
+                    if a not in defs and not a.startswith("__"):
+                        gaps.append(f"{f.name}: {mod}.{a}")
+    return sorted(set(gaps))
 
 
 def pins_tag(pins):
@@ -18705,9 +18741,36 @@ def superseded_unstarted(cfg, st, rec):
     return ""
 
 
-def infra_relaunch_due(cfg, rec):
+DET_TOOL_N = 3          # KV-NOADVANCE 11-25: identical tool-exception fails on one plan block after which no INFRA relaunch is due
+
+
+def _fail_text(r):
+    return re.sub(r"\s+", " ", str(r.get("q_reason") or r.get("reason") or ""))[:300]
+
+
+def deterministic_tool_repeat(st, rec):
+    """KV-NOADVANCE 11-25 (kv3_hgi_v2__cle0015330 x9, kv3_pv_v12e x8: 'module reset_tree has no attribute raw_tap_hold', every new rt sha released REPEAT-STOP while the
+    pin overlay stayed broken): a FAIL INFRA that is a python exception / plan-schema refusal (TOOL_INFRA_RE, not a host fault) and has already ended DET_TOOL_N
+    times with the same text on the same plan block + event of the item is deterministic, not infra -> True (no relaunch until its plan block / event changes or a
+    retry key / unblock line names it)."""
+    if not st or rec.get("class") != "INFRA" or rec.get("status") not in ("FAIL", "RETRY-INFRA"):
+        return False
+    txt = _fail_text(rec)
+    if not TOOL_INFRA_RE.search(txt) or HOST_FAIL_RE.search(txt) or is_host_fail("INFRA", txt):
+        return False
+    n = 0
+    for r in (st.get("items") or {}).values():
+        if (r.get("die"), r.get("item"), r.get("event"), r.get("block_sha")) == (rec.get("die"), rec.get("item"), rec.get("event"), rec.get("block_sha")) \
+                and r.get("class") == "INFRA" and _fail_text(r) == txt:
+            n += 1
+    return n >= DET_TOOL_N
+
+
+def infra_relaunch_due(cfg, rec, st=None):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
+        return False
+    if deterministic_tool_repeat(st, rec):               # KV-NOADVANCE: a deterministic tool exception on an unchanged plan block is no infra retry
         return False
     if rec.get("blocked"):                               # KIT-STAGE-1 retry cap
         return False
@@ -20803,12 +20866,12 @@ def _step(AP, ap_dir):
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
-        if infra_relaunch_due(cfg, rec) and counted_now(cfg, st, rec["die"], rec["item"], rec.get("block_sha")):
+        if infra_relaunch_due(cfg, rec, st) and counted_now(cfg, st, rec["die"], rec["item"], rec.get("block_sha")):
             rec.update(status="CANCELLED", **{"class": "COUNTED"}, updated=time.time(),
                        reason="counted by the sign-off counter, not relaunched (KW-FIX-27)")
             AP.log(f"KIT-WAVE COUNTED {rec['die']}/{rec['item']}: not relaunched")
             continue
-        if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+        if infra_relaunch_due(cfg, rec, st) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             _sup = superseded_unstarted(cfg, st, rec)
             if _sup:
                 AP.log(f"KIT-WAVE LAUNCH-SKIP SUPERSEDED {rec['die']}/{rec['item']}@{rec.get('attempt')}: event {rec.get('event')} is not current and {_sup} (current event) is queued or running")
