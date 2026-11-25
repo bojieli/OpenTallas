@@ -8458,6 +8458,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         bit0 = LC.bit0_ports((kd / "rtl" / f"{t['module']}.sv").read_text()) if plain_rings else frozenset()
         (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn, bit0))
         (kd / "landing_export_check.tcl").write_text(LC.export_check_tcl(P, tn, bit0))  # sourced by cts_post.tcl
+        fel = LC.export_leaf_rows(P, tn, bit0)
+        if fel:
+            # KV-SENDER-SKEW clock.fwd_export.<T>.from = leaf: export buffers onto their ring's launch leaf at POST_CTS,
+            # before the first balance pass and again after leaf_affinity (absent key = kit unchanged)
+            (kd / "fwd_export_leaf.txt").write_text("\n".join(fel) + "\n")
+            shutil.copyfile(Path(__file__).with_name("fwd_export_leaf.tcl"), kd / "fwd_export_leaf.tcl")
+            hook = kd / "cts_post.tcl"
+            body = hook.read_text()
+            a1, a2 = "# DIE-CORETAP-1119 (FABLE-CLOSURE lever 1, kit side)", "leaf_affinity.tcl]] }\n"
+            assert body.count(a1) == 1 and body.count(a2) == 1, "cts_post.tcl: fwd_export leaf anchors"
+            hook.write_text(body.replace(a1, LC.FWD_LEAF_HOOK + a1).replace(a2, a2 + LC.FWD_LEAF_AGAIN))
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP

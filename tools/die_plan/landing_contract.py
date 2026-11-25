@@ -802,3 +802,65 @@ def export_check_tcl(P,tn,bit0=frozenset()):
         "}",
         "ot_cland_export_check {"+" ".join("{"+n+"}" for n in names)+"}",
         ""])
+
+
+# KV-SENDER-SKEW 11-24 (COORD ruling: leaf-tap export, pre-approved clock-landing change).  The fwd_buffer export hangs on
+# the ROOT of its source tap (fclk ~115 ps at the port) while the ring's last-station flops launch from that tap's
+# LEAVES (~400 ps): kv3_pv_v12 A5t5 CTS probe d = data - fclk max 186..370 ps on all 53 rings vs the 147 ps target.
+# Plan clock.fwd_export.<type> = {"from": "leaf", "match_insertion": true} (key = exact type or 'prefix*', optional
+# "ports" = the forwarded outputs it covers, default all): POST_CTS, every covered export buffer moves onto the clock net
+# that drives the CLK pins of its ring's launch flops (majority, of the flops on the export's source tap), next to them,
+# so CTS's leaf balance gives fclk the same insertion as the data launch.  Absent key / "from": "tap" = unchanged kits.
+FWD_EXPORT_FROM = ("tap", "leaf")
+
+
+def fwd_export_spec(P, tn):
+    """clock.fwd_export.<type> (exact name, else the longest 'prefix*' key) or None; validated."""
+    v = ((getattr(P, "raw", None) or {}).get("clock") or {}).get("fwd_export") or {}
+    if tn in v:
+        s = v[tn]
+    else:
+        hit = [b for b in v if b.endswith("*") and tn and str(tn).startswith(b[:-1])]
+        s = v[max(hit, key=len)] if hit else None
+    if s is None:
+        return None
+    if s.get("from", "tap") not in FWD_EXPORT_FROM:
+        raise ValueError(f"{tn}: clock.fwd_export.from {s.get('from')!r}")
+    if s.get("match_insertion", True) is not True:
+        raise ValueError(f"{tn}: clock.fwd_export.match_insertion must be true (the leaf form is the insertion match)")
+    return s
+
+
+def export_leaf_rows(P, tn, bit0=frozenset()):
+    """rows of /work/fwd_export_leaf.txt for a type with clock.fwd_export.from = leaf: `port src buffer base...` (port and
+    src as BTerm names, buffer = the export_tcl_fwd instance, base = the ring's data port names: `<b>` and
+    `cland_fstart_out_<b>` for fclk_out_<b>, as bits or scalars).  [] = no leaf export (kit unchanged)."""
+    s = fwd_export_spec(P, tn)
+    if not s or s.get("from", "tap") != "leaf":
+        return []
+    if export_form(P, tn) != "fwd_buffer":
+        raise ValueError(f"{tn}: clock.fwd_export.from leaf needs clock.landing_export_form fwd_buffer")
+    pins = [p for p in P.types[tn].get("clock", {}).get("landing_contract", {}).get("pins", [])
+            if p["kind"] == "clock" and p["dir"] == "out"]
+    want = s.get("ports")
+    names = {p["name"] for p in pins}
+    if want is not None and set(want) - names:
+        raise ValueError(f"{tn}: clock.fwd_export.ports not forwarded outputs: {sorted(set(want) - names)}")
+    rows = []
+    for p in pins:
+        n = p["name"]
+        if want is not None and n not in want:
+            continue
+        if not n.startswith("fclk_out_"):
+            raise ValueError(f"{tn}: leaf export {n}: ring data ports are named after fclk_out_<bus>")
+        b = n[len("fclk_out_"):]
+        rows.append(" ".join([_bterm(n, bit0), _bterm(p["source_clock_port"], bit0), "cland_fwd_" + n,
+                              b, "cland_fstart_out_" + b]))
+    return rows
+
+
+FWD_LEAF_HOOK = ("# KV-SENDER-SKEW clock.fwd_export leaf: forwarded-clock export buffers onto their ring's launch leaf\n"
+                 "if {[file exists [file join $cp_dir fwd_export_leaf.tcl]]} {\n"
+                 "  uplevel #0 [list source [file join $cp_dir fwd_export_leaf.tcl]]; fwd_export_leaf cts\n"
+                 "}\n")
+FWD_LEAF_AGAIN = ("if {[llength [info procs fwd_export_leaf]]} { fwd_export_leaf after_leaf_affinity }\n")

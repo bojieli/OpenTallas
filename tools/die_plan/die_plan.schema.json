@@ -9082,6 +9082,34 @@
       }
      }
     },
+    "fwd_export": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "from": {
+        "enum": [
+         "tap",
+         "leaf"
+        ]
+       },
+       "match_insertion": {
+        "const": true
+       },
+       "note": {
+        "type": "string"
+       },
+       "ports": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+       }
+      }
+     }
+    },
     "core_input_lockup": {
      "type": "object",
      "additionalProperties": false,

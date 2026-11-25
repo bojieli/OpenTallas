@@ -1635,6 +1635,13 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
         "capture_tap": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "pattern": "^[^\\s]+$"}},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
         "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}
+# KV-SENDER-SKEW 11-24 (COORD ruling, landing_contract.fwd_export_spec): per type (exact name or 'prefix*') the forwarded
+# clock export form; from = leaf hangs each export buffer on its ring's launch-flop leaf at POST_CTS (fwd_export_leaf.tcl),
+# ports = the forwarded outputs covered (default all); absent / from = tap = the source-tap root form, byte-identical kits.
+SCHEMA["properties"]["clock"]["properties"]["fwd_export"] = {"type": "object", "additionalProperties": {
+    "type": "object", "additionalProperties": False, "properties": {
+        "from": {"enum": ["tap", "leaf"]}, "match_insertion": {"const": True}, "note": {"type": "string"},
+        "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
     "type": "object", "additionalProperties": False, "required": ["modules"],
     "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {
