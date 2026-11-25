@@ -145,3 +145,21 @@ class UnstampedContinuation(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AutoDoneTests(unittest.TestCase):
+    """QUEUE-DONE-1124: an automatic rc=0 DONE stays in the lane file; DIED / rc!=0 / hand-written posts reach the queue"""
+    def test_auto_done_rc0_not_queued(self):
+        d = Path(tempfile.mkdtemp())
+        (d / "lanes/posts").mkdir(parents=True)
+        (d / "lanes/archive").mkdir(parents=True)
+        (d / Q).write_text("")
+        (d / "lanes/posts/S81-ALLFIX-INT.md").write_text(
+            "- 2026-11-24 16:56 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1-2 on tolerant-swine: rc=0 after 414 s, ended 16:56:41, log x, cmd: y\n"
+            "- 2026-11-24 16:57 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-3-4 on tolerant-swine: rc=1 after 9 s, ended 16:57:00, log x, cmd: y\n"
+            "- 2026-11-24 16:58 PST DONE [S81-ALLFIX-INT] ot-push-main main@abc on tolerant-swine: rc=2 after 30 s, ended 16:58:00, log x, cmd: y\n"
+            "- 2026-11-24 16:59 PST DONE [S81-ALLFIX-INT -> COORD] c8 rows landed, rc=0 after review\n")
+        got = [l[0] for _t, _f, _i, l in QV.missing(str(d))]
+        self.assertEqual(len(got), 3)
+        self.assertFalse(any("oth-ubuntu-1-2" in g for g in got))
+        self.assertTrue(any("DIED" in g for g in got) and any("rc=2" in g for g in got) and any("-> COORD" in g for g in got))

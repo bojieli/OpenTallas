@@ -28,6 +28,10 @@ TS = re.compile(r"(20\d\d-\d\d-\d\d)[ T](\d\d:\d\d)(?::(\d\d))?\s*(PST|PDT|UTC|Z
 QUEUE = "lanes/COORD-REVIEW-QUEUE.md"
 POSTS = "lanes/posts"
 ARCH_GLOB = "lanes/archive/COORD-REVIEW-QUEUE-*.md"
+# QUEUE-DONE-1124 (COORD 16:55 flow review: S81-ALLFIX-INT made 331 rc=0 DONE posts in 2 h): the automatic ot_status DONE of an ot-run unit /
+# ot-push-main that ended rc=0 stays in the lane's own posts file and is never appended to the queue view.  DIED, a non-zero rc and every
+# hand-written post (any other text after the stamp) still go to the queue.
+AUTO_DONE = re.compile(r"^- 20\d\d-\d\d-\d\d \d\d:\d\d (?:PST|PDT) DONE \[[^\]]+\] (?:ot-run|ot-push-main) \S+ on \S+: rc=0 after ")
 
 
 def stamp(line):
@@ -92,7 +96,7 @@ def missing(coord):
         if os.path.basename(p).startswith(("_", ".", "README")):
             continue
         for i, (key, lines, t) in enumerate(blocks(read(p))):
-            if key in have or key in seen:
+            if key in have or key in seen or AUTO_DONE.match(key):
                 continue
             seen.add(key)
             todo.append((t or D.datetime.min, os.path.basename(p), i, lines))
