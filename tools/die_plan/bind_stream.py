@@ -31,6 +31,7 @@ SCHEMA_CTX = "opentallas.native_topology_stream_context.v1"
 SCHEMA_TYPE = "opentallas.native_topology_stream.v1"
 DIR = "native_topology.d"
 CTX = "_context.json"
+ENDED = "_ended"            # BIND-STREAM-ENDED 11-25: JSON {run_id} after bind_report.json; not *.json, so no record scan sees it
 
 
 def _sha(path):
@@ -56,7 +57,7 @@ def start(out, receipt, plan_path, asbuilt=None):
     d = Path(out) / DIR
     d.mkdir(parents=True, exist_ok=True)
     for e in os.scandir(d):
-        if e.is_file(follow_symlinks=False) and e.name.endswith((".json", ".tmp")):
+        if e.is_file(follow_symlinks=False) and (e.name.endswith((".json", ".tmp")) or e.name == ENDED):
             os.unlink(e.path)
     import socket
     ctx = dict(schema=SCHEMA_CTX, run_id=f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}-{uuid.uuid4().hex[:12]}",
@@ -169,6 +170,23 @@ def finish(ctx, errors, refused=None):
     return out
 
 
+def mark_ended(ctx):
+    """bind end, right after bind_report.json is written: OUT/native_topology.d/_ended = {run_id} (BIND-STREAM-ENDED)"""
+    if ctx:
+        _write(Path(ctx["dir"]) / ENDED, dict(run_id=ctx.get("run_id")))
+
+
+def _ended(out, ctx):
+    """KV-SENDER-SKEW 11-25 (KV-A5t6 kv3_pv_v6e probe): a kit-store snapshot of an ENDED scoped (probe-only) bind holds only its
+    own type record, so _ended_snapshot cannot tell it from a stream snapshot, and its blob mtimes make it look live ('bind
+    heartbeat ... void').  The bind end's own marker (same run_id as _context.json) says ended, whatever the mtimes."""
+    try:
+        e = json.loads((Path(out) / DIR / ENDED).read_text())
+    except (OSError, ValueError):
+        return False
+    return bool(e.get("run_id")) and e.get("run_id") == (ctx or {}).get("run_id")
+
+
 def _live(out):
     """-> (context, context sha) while this OUT's bind has not ended, else None"""
     out = Path(out)
@@ -179,9 +197,12 @@ def _live(out):
     if rep.is_file() and rep.stat().st_mtime >= c.stat().st_mtime:
         return None                       # the bind ended: bind_report.json / native_topology.json decide
     try:
-        return json.loads(c.read_text()), _sha(c)
+        ctx = json.loads(c.read_text())
     except (OSError, ValueError):
         return None
+    if _ended(out, ctx):
+        return None                       # the bind wrote its end marker (BIND-STREAM-ENDED)
+    return ctx, _sha(c)
 
 
 def _context(out):

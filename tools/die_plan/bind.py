@@ -7206,6 +7206,11 @@ def cmd_bind(a):
     except Exception as exc:
         print(f"bind: WARN BIND_STREAM finish: {type(exc).__name__}: {exc}", flush=True)
     _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
+    try:                                     # BIND-STREAM-ENDED 11-25: the end marker a kit-store snapshot keeps (blob mtimes do not)
+        import bind_stream
+        bind_stream.mark_ended(getattr(B, "_stream", None))
+    except Exception as exc:
+        print(f"bind: WARN BIND_STREAM mark_ended: {type(exc).__name__}: {exc}", flush=True)
     write_all_errors(out, B.errors, B.types)     # BIND-ALL-ERRORS: the full list (bind_report keeps the first 2000)
     try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
         import bind_tool_stamp

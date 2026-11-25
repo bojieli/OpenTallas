@@ -133,6 +133,7 @@ def test_tiny_bind_streams_and_kit_rtl_reads_stream(tmp_path, monkeypatch, jobs)
     # the same OUT as it was while the bind ran (before the end files): kit_topology + kit-rtl read the type's record
     for n in ("bind_report.json", "native_topology.json", "bind.f"):
         (out / n).rename(tmp_path / n)
+    (out / BS.DIR / BS.ENDED).rename(tmp_path / BS.ENDED)       # the end marker is an end file too (BIND-STREAM-ENDED)
     raw = json.loads(plan.read_text())
     tn = "bt_ta" if "bt_ta" in raw["partition_types"] else sorted(raw["partition_types"])[0]
     assert K.bind_matches(raw, tn, out, None, plan)
@@ -381,3 +382,37 @@ def test_ended_bind_snapshot_reads_report_not_mtimes(tmp_path, monkeypatch):
     os.utime(out0 / 'bind_report.json', (old, old))  # not a snapshot: mtimes still decide
     rc, line = BS.launch_check(out0, 'ta', plan, ab)
     assert rc == 3 and 'heartbeat absent' in line
+
+
+def test_ended_marker_beats_snapshot_mtimes_for_scoped_bind(tmp_path, monkeypatch):
+    """KV-SENDER-SKEW 11-25 (A5t6 kv3_pv_v6e probe): a whole-OUT snapshot of an ENDED probe-only bind holds one type record and
+    blob mtimes (_context.json newer than bind_report.json); finish()'s _ended.json (same run_id) makes it read ended"""
+    raw, plan, ab, out0, ctx = fixture(tmp_path)
+    emit(out0, ctx, 'ta')
+    BS.finish(ctx, [])
+    assert not (out0 / BS.DIR / BS.ENDED).exists()     # finish withdraws only; the marker follows bind_report.json
+    BS.mark_ended(ctx)
+    e = json.loads((out0 / BS.DIR / BS.ENDED).read_text())
+    assert e["run_id"] == ctx["run_id"]
+    monkeypatch.setattr(BS, "alive", lambda out, why=None: (why.append("bind heartbeat absent") if why is not None else None) and False)
+    snap = tmp_path / 'snaps' / 'x' / 'root'
+    out = snap / 'b'
+    shutil.copytree(out0, out)
+    (snap.parent / 'MANIFEST.json').write_text('{}')
+    (out / 'bind_report.json').write_text(json.dumps(dict(errors=[])))
+    old = time.time() - 900
+    os.utime(out / 'bind_report.json', (old, old))
+    rc, line = BS.launch_check(out, 'ta', plan, ab)
+    assert rc == 0 and line == 'BIND errors 0'
+    # a marker of another run (stale) does not end the live stream
+    (out / BS.DIR / BS.ENDED).write_text(json.dumps(dict(run_id="other")))
+    rc, line = BS.launch_check(out, 'ta', plan, ab)
+    assert rc == 3 and 'heartbeat absent' in line
+
+
+def test_start_clears_old_end_marker(tmp_path):
+    raw, plan, ab, out0, ctx = fixture(tmp_path)
+    BS.mark_ended(ctx)
+    assert (out0 / BS.DIR / BS.ENDED).is_file() and BS._live(out0) is None
+    ctx2 = BS.start(out0, K.bind_receipt(raw, str(ab), plan_path=plan), plan, str(ab))
+    assert not (out0 / BS.DIR / BS.ENDED).is_file() and BS._live(out0) is not None
