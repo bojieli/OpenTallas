@@ -1111,6 +1111,58 @@ proc cland_dsel_cone_reach {cone {lim 60.0}} {
  }
  return [list $n $mx $bad]
 }
+# Seat the cone after its capture registers have their final FIRM sites. A
+# pin-column spill can assign widely separated sites to adjacent abstract keys.
+proc cland_place_dsel_near {cone rects tag} {
+ global ff_blk ff_dbu
+ set saved [info exists ::cland_pinslot_fit]
+ if {$saved} { set old $::cland_pinslot_fit }
+ set ::cland_pinslot_fit 1
+ try {
+  foreach e $cone {
+   set i [lindex $e 1]
+   set y [$ff_blk findInst [lindex $e 2]]
+   if {$y eq "NULL"} { error "OT_CLAND dsel_cone [$i getName]: capture flop missing" }
+   lassign [$y getLocation] xd yd
+   set x [expr {double($xd)/$ff_dbu}]
+   set y [expr {double($yd)/$ff_dbu}]
+   set placed 0
+   foreach radius {8.0 14.0 20.0 28.0} {
+    foreach r $rects {
+     lassign $r ax ay bx by
+     set lo_x [expr {max($ax,$x-$radius)}]
+     set lo_y [expr {max($ay,$y-$radius)}]
+     set hi_x [expr {min($bx,$x+$radius)}]
+     set hi_y [expr {min($by,$y+$radius)}]
+     if {$lo_x >= $hi_x || $lo_y >= $hi_y} { continue }
+     set box [list $lo_x $lo_y $hi_x $hi_y]
+     if {![catch {cland_put $i $box "dsel-near:$tag" 0.6 0} err opts]} {
+      set placed 1
+      break
+     }
+     if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
+    }
+    if {$placed} { break }
+   }
+   if {!$placed} {
+    # The face pin pack can seat a capture outside the nominal ring rectangle.
+    # Stay near the actual capture, with core rows, macro halos and pending
+    # foreign ring bands still enforced by cland_put.
+    foreach radius {8.0 14.0 20.0 28.0} {
+     set box [list [expr {$x-$radius}] [expr {$y-$radius}] [expr {$x+$radius}] [expr {$y+$radius}]]
+     if {![catch {cland_put $i $box "dsel-near:$tag" 0.6 0} err opts]} {
+      set placed 1
+      break
+     }
+     if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
+    }
+   }
+   if {!$placed} { error "OT_CLAND dsel_cone [$i getName]: no legal site near capture [lindex $e 2] at ($x,$y) in core / bands $rects" }
+  }
+ } finally {
+  if {$saved} { set ::cland_pinslot_fit $old } else { unset -nocomplain ::cland_pinslot_fit }
+ }
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0;set combinsts {};set nsized 0
@@ -1198,9 +1250,8 @@ proc cland_place_ff {prefix rect tag} {
    set m [[lindex $pr 1] getMaster]
    set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
   }
-  set ffs [concat $ffs [lmap e $cone { lrange $e 0 1 }]]
   set comb [expr {$comb-[llength $cone]}]
-  puts "OT_CLAND dsel_cone $prefix: [llength $cone] u_dsel AND-OR cone cells FIRM right behind their y flop"
+  puts "OT_CLAND dsel_cone $prefix: [llength $cone] u_dsel AND-OR cone cells FIRM after locating each y flop"
  }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
  # multi-rect band: the fill spread uses the summed area of its rects
@@ -1269,6 +1320,7 @@ proc cland_place_ff {prefix rect tag} {
  }
  set cland_cursor {};set cland_col_cursor {}
  if {![info exists ::cland_fill_dry]} { if {[info exists cone] && [llength $cone]} {
+  cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag}
   lassign [cland_dsel_cone_reach $cone] rn rmax rbad
   puts "OT_CLAND dsel_cone $prefix: $nsized sd_c storage flops sized x1 -> x2; cone-to-y reach max [format %.1f $rmax] um over $rn cells, $rbad beyond 60 um"
   if {$rbad} { error "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop (max [format %.1f $rmax] um)" }
