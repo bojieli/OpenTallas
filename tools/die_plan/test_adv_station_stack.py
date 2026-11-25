@@ -39,3 +39,9 @@ def test_findings_summary_and_never_raises():
     ls = A.findings({"partition_types": {"kv3_pv_v1n": typ([[1640.0, 140.0], [520.0, 1400.0]]), "h": {"hard": True}}}, "p")
     assert ls[0].startswith("WARN ADV-STATION-STACK kv3_pv_v1n: 2 station point(s)") and "1 of 1 soft types" in ls[-1]
     assert A.findings(None, "p")[0].startswith("WARN ADV-STATION-STACK not checked")
+
+
+def test_core_net_bits_field():
+    t = {"internal_stations": [{"conn": "core:a|core:b", "bits": "1", "regs_um": [[10.0, 10.0]]},
+                               {"conn": "core:a|core:c", "bits": 2, "regs_um": [[10.0, 10.0]]}]}
+    assert A.judge_type(t)["max_bits"] == 3

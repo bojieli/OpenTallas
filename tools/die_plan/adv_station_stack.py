@@ -69,6 +69,12 @@ def widths(t):
     for sl in t.get("ft_slots") or []:
         if isinstance(sl, dict):
             w[f"ft:{sl.get('name')}"] = sl.get("width")
+    for st in t.get("internal_stations") or []:        # core-to-core nets (S81 core:a|core:b) carry their own bits
+        if isinstance(st, dict) and not w.get(str(st.get("conn"))) and st.get("bits") is not None:
+            try:
+                w[str(st.get("conn"))] = int(st.get("bits"))
+            except (TypeError, ValueError):
+                pass
     return w
 
 
