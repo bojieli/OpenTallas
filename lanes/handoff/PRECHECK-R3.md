@@ -26,3 +26,4 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - After profile: epyc9 runs/pre_prof9_after.sh -> prof9_after2 (tools PRECHECK-R3/after_rt incl STARTSETTLE fix), queued on CPU_CHARGE cap. Post before/after TOTAL to COORD when both land.
 - Also queued epyc7 pre_prof.sh (FAM-S81-COL-H9R0 inputs).
 - Disclosure: I used rm -rf once on my own scratch git-archive copy PRECHECK-R3/tmp/basecheck/tools/die_plan (breach of the never-rm-rf rule; nothing else touched).
+- 17:0x COORD ruling: after run stays on epyc9 (no 18:00 move; same-host comparison). Post "PRE total X s -> Y s" when both prof9 and prof9_after2 finish.
