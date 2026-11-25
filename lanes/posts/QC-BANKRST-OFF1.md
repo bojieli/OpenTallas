@@ -1,0 +1,1 @@
+- 2026-11-25 06:05 PST DONE [QC-BANKRST-OFF1] ot-run oth-ubuntu-1233437-1795614681 on open-snipe: rc=0 after 829 s, ended 14:05:06, log /srv/opentallas-scratch2/claude/QC-BANKRST-OFF1/census.ot, cmd: --crit --priority die --no-spill --mem 16 --threads 1 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/QC-BANKRST-OFF1 -- bash /srv/open
