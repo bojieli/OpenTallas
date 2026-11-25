@@ -1,0 +1,92 @@
+{
+ "advisory": [
+  "dry_gen",
+  "pre_g0"
+ ],
+ "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w7_s/source_plan.json",
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/c3fd4681e867/hd_lep0N",
+   "gen_host": "intel1",
+   "item": "hd_lep0N",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/c3fd4681e867/hd_lep0N/published_gen_origin.json",
+   "origin_sha256": "84d53f8c2e90320c4c04cdff1f4431bb4e32e5b359ec707905b0c6c5681249fa",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "2f7fea3fc7ebd0033c2c99f607aa4acee1060724a214623e71a58647d85dfe64",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1",
+   "stage": "kit_rtl",
+   "verdict": "FAIL",
+   "why": "stage kit_rtl: Traceback (most recent call last):\nValueError: bootstrap GEN failed: 1"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-jb49wius/g0_report.json",
+   "pre_rc": 1,
+   "tail": "PRE: PLAN-GATE-PRE FAIL tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json findings=7 classes=SCHEMA\n\nG0: T-INFO hd_lep0N: explicit tap clk_t165 load=190/800, radius=213.832/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N: explicit tap clk_t178 load=886/800, radius=64.24/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N_w: explicit tap clk_t49 load=794/800, radius=262.832/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N: explicit tap clk_t137 load=800/800, radius=213.824/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N: explicit tap clk_t165 load=190/800, radius=213.832/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N: explicit tap clk_t178 load=886/800, radius=64.24/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_lep0N_w: explicit tap clk_t49 load=794/800, radius=262.832/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/89ca451775e0/tools/die_plan",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_sidecar.json"
+  ]
+ },
+ "gate_s": 5319.5,
+ "hosts": [
+  "intel1",
+  "epyc8",
+  "epyc2",
+  "intel2",
+  "epyc7"
+ ],
+ "item": "hd_lep0N",
+ "manifest_hash": "c3fd4681e86798297bbf29d7c7d78b5b5176cc882793c2117536f482125fa2af",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/results/head_native_release_nf15f_r18w8b/native_release_receipt.json",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+ "plan_sha256": "6b2c670d0ae4e95a09c9de8cecdc121f50baf29263e350001c468195cec7a7c2",
+ "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w7_s/source_plan.json",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 107.0,
+ "t": 1795621149.6506867,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1",
+ "verdict": "FAIL"
+}
