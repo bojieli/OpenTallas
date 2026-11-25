@@ -65,15 +65,15 @@ def _resolve(path, root):
     return p if p.is_absolute() else Path(root) / p
 
 
-def cache_key(base, base_tree, asbuilt=None, sidecar=None, skip=()):
+def cache_key(base, base_tree, asbuilt=None, sidecar=None, skip=(), types=None):
     parts = [f"v{VERSION}", _sha_file(_resolve(base, base_tree)), _sha_file(_resolve(asbuilt, base_tree)) if asbuilt else "-",
              _sha_file(_resolve(sidecar, base_tree)) if sidecar else "-", tools_digest(base_tree),
              os.path.realpath(base_tree), ",".join(sorted({s.upper() for s in skip})),
-             os.environ.get("OT_PLAN_ABSPATH", ""), os.environ.get("OT_TAPNAME_ALL", "")]
+             os.environ.get("OT_PLAN_ABSPATH", ""), os.environ.get("OT_TAPNAME_ALL", ""), "types=" + str(types or "")]
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:32]
 
 
-def base_cmd(base, base_tree, asbuilt=None, sidecar=None, skip=(), out_json=None, checker=None):
+def base_cmd(base, base_tree, asbuilt=None, sidecar=None, skip=(), out_json=None, checker=None, types=None):
     cmd = [sys.executable, "-I", "-B", str(checker or (HERE / "plan_gate_pre.py")), "check", "--tree", str(base_tree),
            "--plan", str(base), "--baseline-plan", str(base), "--quiet"]
     if asbuilt:
@@ -82,6 +82,8 @@ def base_cmd(base, base_tree, asbuilt=None, sidecar=None, skip=(), out_json=None
         cmd += ["--sidecar", str(sidecar)]
     for s in skip:
         cmd += ["--skip", s]
+    if types:
+        cmd += ["--types", str(types)]
     if out_json:
         cmd += ["--json", str(out_json)]
     return cmd
@@ -90,9 +92,9 @@ def base_cmd(base, base_tree, asbuilt=None, sidecar=None, skip=(), out_json=None
 class BaseRun:
     """the base findings: a cache hit, or a child plan_gate_pre run started now (call .result() after the row check)"""
 
-    def __init__(self, base, base_tree, asbuilt=None, sidecar=None, skip=(), use_cache=True, checker=None):
+    def __init__(self, base, base_tree, asbuilt=None, sidecar=None, skip=(), use_cache=True, checker=None, types=None):
         self.base, self.base_tree = str(base), str(base_tree)
-        self.key = cache_key(base, base_tree, asbuilt, sidecar, skip)
+        self.key = cache_key(base, base_tree, asbuilt, sidecar, skip, types)
         self.cfile = cache_dir() / f"{self.key}.json"
         self.proc, self.how, self.t0 = None, "", time.time()
         self.fails = None
@@ -113,7 +115,7 @@ class BaseRun:
         self.log = self.tmp.with_suffix(".log")
         try:
             with open(self.log, "w") as lf:
-                self.proc = subprocess.Popen(base_cmd(base, base_tree, asbuilt, sidecar, skip, self.tmp, checker), cwd=self.base_tree,
+                self.proc = subprocess.Popen(base_cmd(base, base_tree, asbuilt, sidecar, skip, self.tmp, checker, types), cwd=self.base_tree,
                                              stdout=lf, stderr=subprocess.STDOUT, env=env)
         except OSError as e:
             self.how = f"base check not started: {e}"

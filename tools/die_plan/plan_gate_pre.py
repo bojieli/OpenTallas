@@ -1853,8 +1853,9 @@ def check_tapoff(plan, max_list=6):
         # TAPOFF-POOL-1124 (S81 c8 PRE profile: TAPOFF 1973 s, one serial tap_grid solve per listed type): the per-type port solve
         # (tap_offset_cover.type_ports, the census's own) runs in a fork pool; census() reads the results unchanged
         P = TC.S.Plan(raw, Path(plan))
-        tns = sorted({tn for _f, tn, _t in TC.tables(raw)})
-        rows = TC.census(raw, plan, port_results=fork_map(lambda tn: TC.type_ports(P, raw, tn), tns))
+        tns = sorted({tn for _f, tn, _t in TC.tables(raw) if _in_scope(tn)})
+        rows = TC.census(raw, plan, types=None if _SCOPE is None else "^(" + "|".join(re.escape(t) for t in tns) + ")$",
+                         port_results=fork_map(lambda tn: TC.type_ports(P, raw, tn), tns))
     except Exception as e:                                  # an unloadable plan is SCHEMA-LOAD's finding, not this one
         return [f"WARN TAPOFF-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
     out, warn = [], []
@@ -2774,7 +2775,7 @@ def reset_cache_line():
             f"{pre} prewarmed, {unread} prewarmed but never read")
 
 
-def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
+def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None, remap=None, gendry=False):
     findings = []
@@ -2809,6 +2810,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         try:
             _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline,
                                      sidecar=sidecar, asbuilt=asbuilt)
+            if _SCOPE is not None:
+                _sel = {side: {tn: v for tn, v in d.items() if tn in _SCOPE} for side, d in _sel.items()}
             findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb))
         except Exception as e:  # noqa: BLE001 - the classes solve on demand
             findings.append(f"LIST RESET-PREWARM not run: {type(e).__name__}: {str(e)[:200]}")
@@ -2994,6 +2997,65 @@ INST_NAME = re.compile(r"^\s*(?:\(\*[^*]*\*\)\s*)?([A-Za-z_]\w*)\s*(?:#|[A-Za-z_
 
 
 NETLIST_INST = re.compile(r"^\s*([A-Za-z_]\w*)\s+(?:#\s*\((?:[^()]|\([^()]*\))*\)\s*)?([A-Za-z_]\w*|\\\S+)\s*\(", re.M)
+
+
+
+_SCOPE = None            # FP-CONVERGE-S81 11-25: --types: the set of type names this PRE judges (None = every type)
+
+
+def _in_scope(tn):
+    return _SCOPE is None or tn in _SCOPE
+
+
+def parse_types(spec, names):
+    """'a*,b' / '@file' -> the set of plan type names matching any fnmatch glob (a glob matching nothing is an error)"""
+    import fnmatch
+    globs = []
+    for g in str(spec).split(","):
+        g = g.strip()
+        if g.startswith("@"):
+            globs += [x.strip() for x in Path(g[1:]).read_text().replace(",", "\n").split() if x.strip()]
+        elif g:
+            globs.append(g)
+    out = set()
+    for g in globs:
+        hit = {n for n in names if fnmatch.fnmatchcase(n, g)}
+        if not hit:
+            raise ValueError(f"--types {g!r} matches no type of the plan")
+        out |= hit
+    return out
+
+
+def scope_lines(lines, scope, names):
+    """drop a finding line whose subject types are ALL outside scope; a line naming no type (whole-plan) or one in scope stays"""
+    out = []
+    for x in lines:
+        toks = set(re.findall(r"[A-Za-z0-9_]+", x)) & names
+        if toks and not (toks & scope):
+            continue
+        out.append(x)
+    return out
+
+
+def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
+          skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
+          toolstale_level="FAIL", abspath_level=None, remap=None, gendry=False, types=None):
+    """_check_unscoped, restricted to the types of `types` (glob list / @file): the per-type classes only solve those types
+    (reset-tree prewarm, TAPOFF), every finding line naming only other types is dropped; whole-plan classes (SCHEMA, INPUT, TREEPRE,
+    TOOLS ...) run in full.  types=None is the unscoped PRE."""
+    global _SCOPE
+    if not types:
+        return _check_unscoped(tree, plan, sidecar, asbuilt, compose_tree, baseline, proofs, rows_files, skip, want_list,
+                               require_asbuilt, strict_cores, halo, elab_dir, ref_tools, toolstale_level, abspath_level, remap, gendry)
+    names = set((json.loads(Path(plan).read_text()).get("partition_types") or {}))
+    scope = parse_types(types, names)
+    _SCOPE = scope
+    try:
+        f = _check_unscoped(tree, plan, sidecar, asbuilt, compose_tree, baseline, proofs, rows_files, skip, want_list,
+                            require_asbuilt, strict_cores, halo, elab_dir, ref_tools, toolstale_level, abspath_level, remap, gendry)
+    finally:
+        _SCOPE = None
+    return scope_lines(f, scope, names) + [f"LIST PRE-SCOPE {len(scope)} of {len(names)} types"]
 
 
 def netlist_roots(ab, base, raw, idx):
@@ -3434,6 +3496,8 @@ def main(argv=None):
     c.add_argument("--list", action="store_true", help="print the resolved input paths (cleanup keep set)")
     c.add_argument("--json")
     c.add_argument("--quiet", action="store_true")
+    c.add_argument("--types", help="FP-CONVERGE-S81: judge only these types (fnmatch globs, comma list or @file); per-type classes solve only them, "
+                                   "findings naming only other types are dropped, whole-plan classes run in full; with --base the base check is scoped the same")
     c.add_argument("--base", help="PRE-DIFF (COMPOSE-FAST 11-25): fail only on findings NEW against this base plan (pre_diff.py); "
                                    "also the --baseline-plan when none is given.  Relative paths of the base run resolve in --base-tree")
     c.add_argument("--base-tree", help="PRE-DIFF: the tree the base findings are taken in (default --tree)")
@@ -3475,11 +3539,11 @@ def main(argv=None):
         import pre_diff as PD
         a.baseline_plan = a.baseline_plan or a.base
         brun = PD.BaseRun(a.base, a.base_tree or a.tree, a.asbuilt, None, a.skip, use_cache=not a.no_base_cache,
-                          checker=Path(__file__).resolve())
+                          checker=Path(__file__).resolve(), types=a.types)
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
                   a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools, remap=a.remap_base,
-                  gendry=os.environ.get("OT_PRE_GENDRY", "1") != "0")
+                  gendry=os.environ.get("OT_PRE_GENDRY", "1") != "0", types=a.types)
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2
