@@ -73,3 +73,19 @@ def test_result_line_names_what_happened_to_the_client(capsys):
     assert "RESULT: CANCELLED, client(s) [11, 12] exited" in o and "nothing was left to stop" in o
     assert RUN.client_exit_report([11, 12], wait_s=0, alive=lambda p: p == 12) == [12]
     assert "[12] still exiting" in capsys.readouterr().out
+
+
+def test_kit_dir_selector_finds_a_client_on_another_node_and_ignores_wrappers():
+    """FLEET-OPS 11-25: `ot-run --cancel /srv/.../it2` from the hub missed the queued clients on epyc8"""
+    import types
+    d = "/srv/opentallas-scratch2/claude/FP-CONVERGE-KV/it2"
+    ps = (f"151343 python3 -I /x/rt/current/tools/fleet/ot-run --mem 24 --hosts epyc8 --dir {d} --max-wait 900 -- python3 plan_advisory.py\n"
+          f"151344 bash -c cd {d} && python3 -I /x/ot-run --dir {d} -- true\n"
+          f"151345 ssh epyc8 export X; ot-heavy --mem 24 --dir {d}\n"
+          f"151346 python3 -I /x/rt/current/tools/fleet/ot-run --cancel {d}\n")
+    def run(argv, **k):
+        host = argv[-2] if argv[0] == "ssh" else "local"
+        return types.SimpleNamespace(stdout=ps if host == "epyc8" else "", stderr="", returncode=0)
+    got = RUN.remote_dir_clients(d, run=run, fleet=["epyc8", "epyc7"])
+    assert got == [("epyc8", "epyc8", 151343)]
+    assert RUN.remote_dir_clients("dpkit", run=run, fleet=["epyc8"]) == []
