@@ -179,12 +179,17 @@ def annotate_kit_dest(b):
 
 def annotate_soft_dest(b):
     """Charge explicitly declared receiver soft cycles once, in place of a lane pad."""
-    fixed = {row["id"]: int(row.get("fixed_cycles", 0)) for row in b.plan.get("lanes", [])}
-    for part, links in b.in_bus.items():
-        typ = b.types.get(b.parts[part].get("type"), {})
-        for link in links:
+    # Table access mirrors annotate_kit_dest: walk the plan partitions (a bound in_bus also holds die-port and other
+    # non-partition destinations, which carry no type and so no soft_latency); lane rows without an id are skipped.
+    fixed = {row.get("id"): int(row.get("fixed_cycles", 0) or 0) for row in (b.plan.get("lanes") or []) if row.get("id")}
+    in_bus = getattr(b, "in_bus", None) or {}
+    for part, p in b.parts.items():
+        typ = b.types.get((p or {}).get("type"), {})
+        if not (typ or {}).get("soft_latency"):
+            continue
+        for link in in_bus.get(part, []):
             lid = link.get("lane")
-            if not lid or link.get("spine"):
+            if not lid or link.get("spine") or not link.get("iname"):
                 continue
             cycles = CL.soft_in_cycles(typ, link["iname"])
             if not cycles:

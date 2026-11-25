@@ -4,6 +4,7 @@
 Reproduces the QC s28 ev2st LANE_ASBUILT class (60 lanes, +2/+3/+4): sl_E3_su_c__x_su_c_su_l0_p1 table 7 = 2 boundary
 flops + 2 clock landing + 3 stations of a core pin-face chain at the su_l0 receiver (internal_stations rows with
 'core').  Before the fix the bind padded u_lpad D3 AND the kit built the 3-stage core chain: delivered 10."""
+from collections import defaultdict
 import sys
 import unittest
 from pathlib import Path
@@ -135,6 +136,21 @@ class ReceiverSoftChain(unittest.TestCase):
             self.assertEqual(len(b.errors), 1)
             self.assertIn("SOFT_DEST_LATENCY", b.errors[0])
 
+
+    def test_non_partition_destinations_and_bare_rows(self):
+        # LEPK canonical gate (0f1a09d6d5cc): a bound in_bus is keyed by every link dst, including die ports that are
+        # not plan partitions, and lane rows may lack an id; the annotator must not index them.
+        b, link = fixture(cycles=5, regs=0, fixed=3, landing=0)
+        b.types["rx"]["soft_latency"] = {"in": {"lepf_i0": 3}, "inst": "u_lep"}
+        link["iname"] = "lepf_i0"
+        b.in_bus = defaultdict(list, b.in_bus)
+        b.in_bus["@die"].append({"lane": "die_x", "oname": "o", "src": "p", "dst": "@die", "cycles": 2, "ft": []})
+        b.in_bus["q"].append({"lane": "no_iname", "src": "p", "dst": "q", "cycles": 2, "ft": []})
+        b.plan["lanes"].append({"fixed_cycles": 1})
+        native_istations.annotate_soft_dest(b)
+        self.assertEqual(b.errors, [])
+        self.assertEqual(link["internal_dest_soft_cycles"], 3)
+        self.assertEqual(bind.lane_pad(link), 0)
 
 if __name__ == "__main__":
     unittest.main()
