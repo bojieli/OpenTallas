@@ -20,7 +20,7 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 ## 11-24 13:06 PST GENDRY-STOPITER landed main 1fc2d02b43
 - PRE GENDRY sidecar = as-built clock_landing_table (gendry_sidecar); landing_place LandingSourceUnmodeled -> WARN GENDRY-UNMODELED. Repro epyc11 PRECHECK-R3/gdry_sc.sh rc 0 both hubs.
 
-## 11-24 ~01:0x PST (11-25) PRE speed
+## 11-24 17:03 PST PRE speed
 - Landed: PRE-INPUT-STOP + PreTimer (plan_gate_pre input_stop; bind refuses before elab), RESET-TREE-CACHE 38299ec0df (reset_tree for_type cache keyed tool sha + type/ctx digest; prewarm pool = union of check selections), TAPOFF fork_map, STARTSETTLE on cache f41ff2f358.
 - Before profile epyc9 PRECHECK-R3/prof9 (c8 plan_allfix_c8_9b25d6714339 on s81-allfix-int/c8seal_tree, main tools b2003c8a0830): TAPOFF 1973 s, STARTSETTLE 1929 s, LANDREMAP 960 s, rest <60 s; still running at 5141 s.
 - After profile: epyc9 runs/pre_prof9_after.sh -> prof9_after2 (tools PRECHECK-R3/after_rt incl STARTSETTLE fix), queued on CPU_CHARGE cap. Post before/after TOTAL to COORD when both land.
