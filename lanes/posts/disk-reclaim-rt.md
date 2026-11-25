@@ -5,3 +5,4 @@
 - 2026-11-25 04:06 PST DIED [disk-reclaim-rt] ot-push-main otpush-open-snipe-928634 on open-snipe: rc=4 after 52 s, ended 12:06:12, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 52 s, no log
 - 2026-11-25 04:08 PST DONE [disk-reclaim-rt] ot-push-main otpush-open-snipe-1012268 on open-snipe: rc=0 after 88 s, ended 12:08:37, log none, cmd: ot-push-main 
 - 2026-11-25 04:19 PST DONE [disk-reclaim-rt] ot-push-main otpush-open-snipe-1518739 on open-snipe: rc=0 after 83 s, ended 12:19:33, log none, cmd: ot-push-main 
+- 2026-11-25 05:03 PST DIED [disk-reclaim-rt] ot-push-main otpush-open-snipe-3360531 on open-snipe: rc=2 after 1 s, ended 13:03:09, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
