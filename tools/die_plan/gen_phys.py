@@ -7614,6 +7614,20 @@ def hook_closure(names):
     return tuple(out)
 
 
+def raw_tap_hold_pinned(RT, P, tn):
+    """FAIL-CLASS 52b3512588 (KV-A5t6 kv3_pv_v12e gen a3..a7, 11-25): BIND-PIN runs the kit on the newest rt with reset_tree.py pinned
+    at the bind's content; a bind older than RAW-TAP-HOLD (899f9018ad2) has no reset_tree.raw_tap_hold, and every gen died on
+    AttributeError.  The key is opt-in: a plan without reset.raw_tap_hold gets 0 (kit byte-identical, the old reset_tree's own
+    behaviour); a plan that opts in on such a pin is refused with the cause (rebind on an rt with RAW-TAP-HOLD)."""
+    fn = getattr(RT, "raw_tap_hold", None)
+    if fn is not None:
+        return fn(P, tn)
+    if (getattr(P, "reset", None) or {}).get("raw_tap_hold"):
+        raise RuntimeError(f"{tn}: plan sets reset.raw_tap_hold but the pinned reset_tree.py ({getattr(RT, '__file__', '?')}) predates "
+                           "RAW-TAP-HOLD 899f9018ad2: rebind on an rt that has it")
+    return 0
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -8770,7 +8784,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(reset_model,
             unused_bootstrap=unused_bootstrap))
     # RAW-TAP-HOLD (C1o, opt-in reset.raw_tap_hold): hold pads on the raw START taps, whichever branch wrote the tree
-    _raw_hold = RT.raw_tap_hold(P, tn)
+    _raw_hold = raw_tap_hold_pinned(RT, P, tn)
     if _raw_hold and (kd / "reset_tree.tcl").is_file():
         with open(kd / "reset_tree.tcl", "a") as fh:
             fh.write(RT.raw_tap_hold_tcl(_raw_hold, RT.raw_tap_hold_taps(P)))
