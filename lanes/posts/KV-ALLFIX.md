@@ -934,3 +934,9 @@
   - The compose list A5t7-live label was stale and is corrected.
   Cancel records: CANCEL-UNSIGNABLE-1120.tsv, dacd2dd4.
   Launch list accepted, so A5t8 launches once bind1 is clean and PRE re-check passes.
+- 2026-11-25 08:17 PST KV-ALLFIX 11-25 08:17 PST: A5t8 launch list updated (6d4414fe, epyc12 a5t8/launch_list_A5t8.tsv). 91 launches across 93 types:
+  - 86 place probes, now including hgi_v5 (street 0.64, no SMELL and no PRE FAIL; probe-only for TAPDRIFT/VIS C6).
+  - 2 hgi route pilots under the VIS-REOWN bar.
+  - 3 full kits (phy, phy_v1, sys_SD_v1) after the PRE re-check.
+  - hgi_v7 and hgi_v8 not launched; they wait for HGI-WGATE-V2 in A5t9.
+  Regate2 bind1 is still pending. Launch follows bind clean, publish and apply.

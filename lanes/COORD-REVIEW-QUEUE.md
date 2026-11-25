@@ -10961,3 +10961,9 @@ FAILED [AUTOPILOT 2a203d596dee] 2026-11-25 07:42:35 PST AUTOPILOT -> KIT-WAVE-12
   6 NARROW CHANNEL ABOVE ROM ROW 1. See: ~30 um channel at y 380-410 between the OT_RO row, thin macros and the ROM tops, with the brightest mid-tile bins (0.4-0.6 at x 350-650 and 900-1090). Cause: OT_RO row sits low. Fix: abut the top OT_RO row to the BF block to give a >=60 um channel.
   7 EMPTY SOUTH-EAST. See: x 1090-1385, y 1000-1220 and most of the S strip at density 0 while the NE is the hot spot. Cause: every E bus is in the NE corner. Fix: spread E-edge bus spans down the edge to match the DSFD columns of item 2.
   8 PATH SLACK NOT MEASURED. See: paths.png 0 drawn and no paths_ideal.tsv at 3_place. Cause: SMELL render ran without an STA dump on this kit. Fix: produce paths_ideal.tsv at 3_place before CTS results are read.
+- 2026-11-25 08:17 PST KV-ALLFIX 11-25 08:17 PST: A5t8 launch list updated (6d4414fe, epyc12 a5t8/launch_list_A5t8.tsv). 91 launches across 93 types:
+  - 86 place probes, now including hgi_v5 (street 0.64, no SMELL and no PRE FAIL; probe-only for TAPDRIFT/VIS C6).
+  - 2 hgi route pilots under the VIS-REOWN bar.
+  - 3 full kits (phy, phy_v1, sys_SD_v1) after the PRE re-check.
+  - hgi_v7 and hgi_v8 not launched; they wait for HGI-WGATE-V2 in A5t9.
+  Regate2 bind1 is still pending. Launch follows bind clean, publish and apply.
