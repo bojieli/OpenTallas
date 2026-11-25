@@ -4,7 +4,7 @@ Keeps every seat of the base probe except: the 4 kvtc bars (new height H, centre
 v11 = u0|u1 side by side, or v12 = u0/u1 stacked at one x (fix A)), and any macro the grown bars now overlap, which
 moves to the nearest free 4.32-um grid spot (2-um halo) inside the core.
 usage: reseat.py BASE_DIR NEW_KVTC_LEF ARR(v11|v12) OUT_DIR"""
-import re, sys, shutil, json, math
+import re, sys, shutil, json, math, os
 from pathlib import Path
 base, lef, arr, out = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4])
 sz = {}
@@ -26,24 +26,25 @@ def master(n):
 seats = {}
 for m in RX.finditer(mp):
     seats[m.group(1)] = [float(m.group(2)), float(m.group(3))]
-G = 4.32; HALO = 2.0; CX0, CY0, CX1, CY1 = 4.32, 4.32, 3209.76, 2207.52
+G = 4.32; HALO = float(os.environ.get("OT_MHALO", 2.0)); BHALO = float(os.environ.get("OT_BHALO", HALO)); CX0, CY0, CX1, CY1 = 4.32, 4.32, 3209.76, 2207.52
 snap = lambda v: round(round(v / G) * G, 2)
 bars = sorted(n for n in seats if 'u_kvt' in n)
 assert len(bars) == 4
 ycen = 933.12 + (1045.44 - 933.12) / 2
-gap = 8.64
+gap = float(os.environ.get("OT_GAP", 8.64))
 yl = snap(ycen - gap / 2 - H); yu = snap(yl + H + gap)
 xa, xb = 1550.88, 2268.0
-assert xb - xa >= W + gap
+assert xb - xa >= W + 8.64
 pos = {'v11': [(xa, yl), (xb, yl), (xa, yu), (xb, yu)], 'v12': [(xa, yl), (xa, yu), (xb, yl), (xb, yu)]}[arr]
 for i, n in enumerate(bars):
     assert f'g_u\\[{i}\\]' in n, n
     seats[n] = list(pos[i])
-def rect(n, x=None, y=None):
+def rect(n, x=None, y=None, hl=None):
+    hl = HALO if hl is None else hl
     w, h = sz[master(n)]; x = seats[n][0] if x is None else x; y = seats[n][1] if y is None else y
-    return (x - HALO, y - HALO, x + w + HALO, y + h + HALO)
+    return (x - hl, y - hl, x + w + hl, y + h + hl)
 def ov(a, b): return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
-fixed = {n: rect(n) for n in bars}
+fixed = {n: rect(n, hl=BHALO) for n in bars}
 moved = []
 others = [n for n in seats if n not in fixed]
 # cells that overlap a bar move; everyone else stays where it is
@@ -72,5 +73,5 @@ out.mkdir(parents=True, exist_ok=True)
 txt = RX.sub(sub, mp)
 txt = f"# S81-KVTC-PINS probe seats: kvtc {W} x {H} position-major, bars {arr}, {len(moved)} displaced macros moved (reseat.py)\n" + txt
 (out / 'macro_place.tcl').write_text(txt)
-(out / 'reseat.json').write_text(json.dumps(dict(kvtc=[W, H], arr=arr, bars={n: seats[n] for n in bars}, moved=moved), indent=1) + "\n")
+(out / 'reseat.json').write_text(json.dumps(dict(kvtc=[W, H], arr=arr, gap=gap, bar_halo=BHALO, macro_halo=HALO, bars={n: seats[n] for n in bars}, moved=moved), indent=1) + "\n")
 print("bars", {n: seats[n] for n in bars}, "moved", len(moved), "max move", max((m[5] for m in moved), default=0))
