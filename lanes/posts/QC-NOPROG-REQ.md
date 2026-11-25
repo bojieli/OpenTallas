@@ -18,3 +18,4 @@
 - 2026-11-25 02:11 PST DONE [QC-NOPROG-REQ] ot-run oth-ubuntu-2659788-1795601307 on tolerant-swine: rc=0 after 201 s, ended 02:11:42, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-NOPROG-REQ/qwen_compute_sle_su_l1__cl5ea486db_QC-V4_r1124202525/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V3/privat
 - 2026-11-25 02:59 PST 2026-11-25 02:59 PST REQ-RESULT [QC-NOPROG-REQ -> COORD; cc QC-ALLFIX] sle_su_l1 QC-V4_r1124202525: place FAIL 
 - 2026-11-25 03:51 PST 2026-11-25 03:51 PST PAST-GRT [QC-NOPROG-REQ -> COORD; cc QC-ALLFIX] slw_st_b_v1__cl6357f1cc__pv6ace3e48/attempt_3 is past GRT (stage 5_2_route).
+- 2026-11-25 03:51 PST 2026-11-25 03:51 PST DONE [QC-NOPROG-REQ -> COORD; cc QC-ALLFIX] all 5 watched covering kits are past GRT. NOPROG-KEEP rows may be removed once NOPROG-TNS0 lands.
