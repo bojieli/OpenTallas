@@ -97,6 +97,27 @@ class NativeStations(unittest.TestCase):
   native_istations.annotate(b);self.assertEqual(L['internal_source_cycles'],2);self.assertEqual(2+bind.lane_pad(L)+2,22)
   b.plan['lanes'][0]['fixed_cycles']=8
   with self.assertRaisesRegex(ValueError,r'source 2 \+ destination 7'):native_istations.annotate(b)
+ def test_native_source_with_soft_receiver_charges_each_stage_once(self):
+  b, link = self.fixture()
+  b.types["sys"]["internal_stations"][0]["regs_um"] = [[0, 0], [1, 0]]
+  b.types["receiver"] = {"soft_latency": {"in": {"i": 3}, "inst": "u_lep"}}
+  b.parts["q"] = {"type": "receiver"}
+  link.update(dst="q", iname="i", ft=[], cycles=7, clock_landing_cycles=0)
+  b.in_bus = {"q": [link]}
+  b.errors = []
+  b.plan["lanes"][0]["fixed_cycles"] = 5
+
+  native_istations.annotate(b)
+  native_istations.annotate_soft_dest(b)
+  self.assertEqual(b.errors, [])
+  self.assertEqual(link["internal_source_cycles"], 2)
+  self.assertEqual(link["internal_dest_soft_cycles"], 3)
+  self.assertEqual(bind.lane_pad(link), 0)
+
+  b.plan["lanes"][0]["fixed_cycles"] = 2
+  with self.assertRaisesRegex(ValueError, "receiver soft 3"):
+   native_istations.annotate(b)
+
  def test_narrow_payload_and_relative_path(self):
   b,L=self.fixture();L['width']=3
   with tempfile.TemporaryDirectory() as tmp:
