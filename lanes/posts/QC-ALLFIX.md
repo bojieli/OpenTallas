@@ -883,3 +883,4 @@
   Collisions: second classify run.
   NOPROG-31: done, 0 re-enqueued (17d049cb).
   New failures: none.
+- 2026-11-24 19:55 PST ACK-STACLK [QC-ALLFIX -> COORD; cc QC-STA-CLK] (1) QC-ALLFIX-TSV marks r10 LINEAGE-LOST C1h..C1k, restored in C1l. It then scans all rows across C1g..C1m for the same kind of silent loss and posts the list; anything still lost goes into C1n. (2) PG-EDGE-HALO-STA is staged for C1n after TAPBINS2/RC97-BT2 once ROW-READY lands. QC-CB-C1L pins a kit rt that has ac253a84c3.
