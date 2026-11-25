@@ -1,37 +1,54 @@
-# QC-STA-PROBE handoff (Opus 5.5, child of QC-ALLFIX, started 11-24 21:05 PST). Report to COORD, cc QC-ALLFIX.
-Job: first st_a kits on a plan with both st_a fixes (r10 btab seat y 587.52 + PG-EDGE-HALO-STA pg_halo_um), to sign-off.
-Work dir: epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE (bin/, in/, rows/, tree/, logs). OT_LANE=QC-STA-PROBE.
+# S81-C9-ROWS handoff (Opus 5.5; fresh post-limit lane, started 11-24 07:45 PST). Report to S81-ALLFIX-INT.
+Job: drive S81 scoped c9 rows to ROW-REBASED / ROW-DROP. NOT tapskew, NOT kv_leaf rows (other lanes).
+Lane dir: epyc9 /srv/opentallas-scratch2/claude/s81-c9-rows (c9_oldcheck.py, oldcheck_c9.json 7536827c6576, bits_other.txt).
+c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a2.
+## 08:07 verdicts posted
+- ROW-REBASED: SELLK 1109984697f5 1/1 (plan side; scope gate pending), BITS d2 d3d6e6e041df 588/603 (15 superseded by FT-MACRO/ft geom/COL-FT405),
+  LP-CORETAP 2ef1a5f50c30 14/14, LEP-RIP 40ea48d792bf 20/20, SERDES-RING revert 877bf1f92e06 22/22, lk_ES0 AB sidecar 3badadef97b7 in stage.
+- BKSEL-ETM-C9: ROW-REBASED as post-seal tree row (copy main b102021b views_off_main dsdv_bksel_q_{ff,tt}.lib 60a761d3fea9/74bf4e996541; pins equal). Offered to run swap+re-seal.
+## Open (background ot-wait waiters from localhost)
+- SELLK scope gate E9 oth-ubuntu-483920-1795527839 (s81-allfix-svc/gate_c9sellk), in PRE at 07:48.
+- VPW WREG scope gate E9 oth-ubuntu-2118116-1795531627 (s81-vpw-cone/gate_wreg_sitegrid, c8 base, 6 scope types); define-append 80/80 appendable on c9; outside exact c9 gate.
+- D3 E11 oth-ubuntu-1734004-1795534036 (s81-t2-refloor/rows/D3tapfix_e11_recovery_1124), FILL then ANCHOR/PRE/G0/CENSUS; base = B1 b1_tree -> needs rebase onto c9 after.
+## 08:15 COORD orders
+- (1) BKSEL swap is MINE after the c9 seal: E11 s81-c9-rows/bksel/bksel_swap.sh (copy+mv both libs, re-seal -> bksel/postseal_bksel_1124.json.gz). Posted to INT 08:13 (reply HOLD to wait). Run via ot-run --hosts epyc11 once materialize_1124 RAN rc0 + prebind_src_1124.json.gz exists; check INT posts for HOLD first.
+- (2) D3 rebased directly on c9 in parallel: E9 s81-c9-rows/d3c9 (rec_D3_c9.json, d3c9_row.sh, out/, d3c9.otrun.log); tools rt d56b624b5029. Gate whichever of E9 d3c9 / E11 1734004 finishes first.
+## 08:18 kit pointer (COORD: agree with INT)
+- kit_wave private kits (--tree, no pinned src_manifest_hash) re-seal the src tree AT GEN (logs/src_manifest.sealed.json.gz); they never read a seal file. Proposed to INT 08:18: (a) bk_sel__t* use --tree c9seal_tree --src-manifest seal, no pinned hash (or pin MY postseal hash), (b) launch only after my BKSEL SWAPPED post, (c) I verify each bk_sel__t* kit's logs seal lists the new lib shas. Awaiting INT ACK; then post AGREED pointer.
+## 09:20
+- Consumers posted (hub lanes/handoff/S81-C9-ROMHW-CONSUMERS.txt: 216 rom_elem_hw col_h9/h10 types + bk_sel__t2).
+- C9 SEALED 09:17 (46059fa2b359). Swap+re-seal running E11 s81-c9-rows/bksel (swap.otrun.log) -> then post SWAPPED + postseal hash.
+- D3 B1 run terminal: G0 56 = 52 legacy + 4 D3 (t2 ft2/3/5 regs in macros; cut @20750 s_4N_L1=t43 0.64).
+- D3 fix (E9 s81-c9-rows/d3fix): regseat_b1/ops.json (t2_regseat.py: stage regs moved 9-18 um, max hop 371.79) + cut_t43_frac.ops.json (t43 ft_track_frac 0.27). Validation fix_b1 (d3fix_g0.sh on B1 p4) running; reuse on c9 d3c9 p4 (rerun t2_regseat on that plan if ops old mismatch).
 
-## Plan
-- Probe plan = C1m 851b964db1f5 + FIX-RELAYCOPY (fixM.sh, = C1m-rc) + PG-EDGE-HALO-STA ac4b82116adb (QC-STA-CLK epyc2 rows/)
-  + RC97-BT2 regenerated on C1m (main generator d89536ec63ca), merged by plan_merge3 (rt fc44871c3df0): rows/probe_m3.json.
-  One plan for both probes (RC97 touches only st_a_v2 + st_b_v2 via hook).
-- Guard: compose_drop_guard prev=C1m, rows relaycopy/pghalo/rc97 -> rows/guard_m3.log.
-- Types: v1 sle_st_a_v1__cl67389ecd (not the 2 RELAYCOPY types), v2 sle_st_a_v2__pv30dda31f__pv88773f93 (E5). No live kit on either.
-- Tree: ot-tree-fork of epyc2 QC-STA-CLK/tree (C1m fork) -> tree/, + RC97 overlay (epyc10 QC-RC97-BT2/c/ov: btab RTL, bind hook, views).
-- Bind: own FULL strict bind (R8 loop + LATCHECK, bindrun_l pattern) of the probe plan on epyc2 = bind of record; composite
-  (scoped + C1m-rc full bound top) is not valid for v2 (RC97 changes st_b_v2 RTL via hook).
-- Kits: kit_wave.py private-spec (on intel2) --rt 5494914b27ab --goal route --ab OT_PROBE_THROUGH=1, run-item systemd unit.
+## 2026-11-24 15:25 PST update
+- c9s D3/T43 row = i027e (E9 s81-c9-rows/c9s_i027e/p8_row.json 23f7e1c701d5): G0 PASS, 20750 s_4N_L1 0.596, 21000 s_3N_L1 0.582; ROW-REBASED posted. PRE pending; scoped strict bind (24 types) E11 sbind_c9s_i027e (--mem 240).
+- PARKED i027f2 (c9s_i027f2/p10_row.json cae84d513500, G0 PASS, 21000 0.564): geometric kv_leaf__t3 form (CUT-WALL @21000 + unbury + clear_added_taps) = C10 structural replacement of the t3 0.28 budget row.
+- C10 t43 structural row: d3w_row.sh w60p (DX 60.48, die +60.48 E, svc_10/11 rigid, depth pad, path_respace, SID-STATION s_5S_C ft2 +1 cycle, post_shift_die io/PG/channel layers, static gate). w60s G0: 20750 0.595 pass; left 21000 t3 (stack i027e/f2 t3 row) + die io/PG/channel (fixed in w60p).
+- Re-seal: e55d1bef9124 VOID (fired on cancelled c9s gate). Waiter re-armed on 3822590 -> bksel/postseal_c9s_gate2_1124.json.gz.
+- VPW WREG: gate 2118116 OOM 192 GiB; rerun s81-c9-rows/vpw gate_wreg_sitegrid2 --mem 320 E9.
+- Main 897ca0ea96: rigid_refloor holds reset depth for every re-shaped type (RESHAPE-RESET-DEPTH-1124).
 
-## 21:25 PST state
-- Plan 9292a6474e9b built + guard PASS (0 silent, 2 intended RELAYCOPY); verify.log: 11/11 st_a y 587.52 + 83 pg_halo_um; PG re-census on bt2 LEFs 83/83.
-- Posted PLAN + FOLD (to QC-RC97-BT2) 21:21.
-- Full strict bind: epyc2 unit oth-ubuntu-1057584-1795584032, log $W/bindP.log (ends BINDP_DONE rc=N).
-- Auto-launch: intel2 user unit qcstaprobe-autolaunch (/srv/opentallas-scratch2/claude/QC-STA-PROBE/autolaunch.sh, .log):
-  on BINDP_DONE rc=0 it runs private-spec + run-item for E5 v2 then v1 cl67389ecd, posts LAUNCHED with units; on fail posts BIND FAIL.
-- Verdict posts must say whether the worst TT path is an unstaged origin-to-pin hop >405 um (QC-ALLFIX 21:2x; RTX-ALL row goes to C1n, do not wait).
-- Next: GRT post, CTS skew post (POST-hook report), sign-off verdict (DRC, TT pair skew, TT/FF). W5 slw_st_a_v2__clf4365a62 on same bind if E5 clears GRT.
+## 2026-11-24 20:0x PST update
+- C10: w60p (d3w_w60p/p5_row.json 0420a62e2eb5) G0 1 error (21000 t3) -> stack c10_w60f2 (c10_stack_row.sh: w60p + t3 CUT-WALL@21000 + unbury + clear_added_taps) running E9.
+- VPW WREG: ROW-DROP for c9 (define is file-global). RTL fix owned by lane S81-WREG-PARAM (per-instance parameter + LEC, c10). Do NOT draft it here; when S81-WREG-PARAM posts ROW-READY, stack its row onto the C10 row and re-run G0/PRE/scoped bind.
+- Re-seal b197b38a932b: HOLD until INT's c9s v2 bind passes (ETA ~01:00-02:00); then re-seal if INT asks, and only then release the 216 rom_elem_hw + bk_sel__t2 kits.
+- i027e: PROVISIONAL; PRE OK (36 = base); scoped bind E11 sbind_c9s_i027e pending -> CONFIRMED or ROW-DROP.
 
-## 22:48 PST state
-- Bind pass 1 R8_STALE; refresh REFUSED by tree-write guard (relative table via symlinked launch view). Cancelled, resumed with
-  bin/bindP2.sh (table = $T/$r8t absolute + --root $T): R8 OK f88f310ea379 -> 04648b1e3a08; unit oth-ubuntu-4077160-1795589180, log bindP2.log.
-- Launcher (rt 6e9705f7fe67, +OT_TAP_ESCAPE_CLEAR_UM=0.30) now needs "LATCHECK complete" + BINDP_DONE rc=0 in bindP2.log.
-  An empty bindP2.sh run (22:42) made a false pass; private-spec refused BIND_STALE, nothing launched.
-- r8_refresh symlink fix on main: handed to QC-ALLFIX to assign (not this lane).
-- Lane waiter: localhost scratchpad wake.sh <baseline lines> on posts/QC-STA-PROBE.md.
+## 2026-11-24 20:3x PST update
+- i027e scoped bind #1 OOM-killed at 240G in EMIT j=8 (unit 2018811, 04:34Z). Relaunched sbind_c9s_i027e2 at --mem 360, EMIT_J=6 (d3w_scope_bind.sh now reads EMIT_J, default 8). Keep it running (COORD).
+- C10 scoped bind: WAIT for BIND-SPEED fix #1 (c71533d1c7a, per-worker snapshot pickle removed) on main + in rt (COORD posts sha). Then run it on the new emit at default J8 (no EMIT_J), with d3w_scope_bind.sh `tools=` pointed at an rt that contains the fix, and record peak memory (journalctl "memory peak" for the unit / ot-run --status).
 
-## 23:54 PST state
-- Full bind (bindP2, rt 5494914b) FAILED 23:51: EMIT 290 (281 "START raw reset rr_tN has no registered wavefront driver", 9 RSTREP), 0 on st_a; likely C1m-wide (posted).
-- Now: SCOPED-TOP strict bind (rt 6e9705f7fe67, probe_top, QC-STA-CLK s4 form) of E5 v2 + v1 cl67389ecd + W5 on epyc2: bin/scopedP.sh,
-  dir s6/, log scopedP.log, unit oth-ubuntu-2827406-1795593183. Launcher now watches scopedP.log, --bind-out $W/s6/bind; W5 held to E5 GRT.
-- epyc2 / at 91% (321G free); QC-STA-CLK runs its kit builds on epyc10 (roam).
+## 2026-11-25 00:3x PST update
+- C10 row PASS: c10_w60f2/p10_row.json de9035f401fe (E9) = INT c10 base. G0 0 errors; re-sign list 112 types (c10_w60f2/scope_types.txt).
+- Scoped binds on E11 (--priority die, oom_score_adj -1000 on all scope PIDs, nice 0):
+  sbind_c9s_i027e3 unit oth-ubuntu-2939915-1795595309 (i027e, rt 515889f6ef75, 360G, J6) -> CONFIRM/DROP i027e.
+  sbind_c10_w60f2 unit oth-ubuntu-2953680-1795595335 (rt f3a64f1250d1, J8, phases -> sbind_c10_w60f2_phases/bind_phases.json) -> post peak mem + emit time.
+- VPW WREG: ROW-READY by S81-WREG-PARAM (row c134d7e316cc on w60p, hub f2d3a8ba); INT layers it into c10 — not this lane.
+
+## 00:55 PST 11-25 state
+- Scoped-top bind s6 PASS (0 errors, probe_top) 00:49. Specs: hub autopilot/private_specs/QC-STA-PROBE/qwen_compute_<type>_1125005002|_1125005048.
+- Kits run under own units runitem-sle_st_a_v2__pv30dda31f__pv88773f93 and runitem-sle_st_a_v1__cl67389ecd (relaunched 00:54 from plain ssh:
+  run-item inside a systemd unit does NOT re-exec, dies with the parent unit -> never launch run-item from qcstaprobe-autolaunch again).
+- W5: private-spec with --bind-out $W/s6/bind (W5 is in s6 TYPES) + run-item from a plain ssh shell, after E5 GRT.
+- qcstaprobe-watch active (posts cts/grt/route/signoff + RESULT). Lane waiter: wake.sh <lines>.
