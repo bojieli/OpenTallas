@@ -225,6 +225,31 @@ def corridor_obstacles(t, margin, min_um):
     return out
 
 
+def legal_target(tgt, obs, W, H):
+    """C9-KVPV-CLAND-LEG (KV-OWN-PV-R2 11-25): a reader START target (landing band centre) that sits inside a macro box
+    grown by CLEAR_UM (kv3_pv_v4n / v6n / v2 pvw and vport bands drawn over the pv_pair columns) made path() fail the
+    whole type, so 15 pv types kept one-cycle cland origin -> reader_start legs up to 2.1 mm (v4n route setup -1117 ps).
+    -> (target, snapped): a legal target is returned unchanged; otherwise the nearest (Manhattan) legal point among the
+    projections of tgt onto every grown-box edge and the grown-box corners, clipped to the outline.  None when no such
+    point is legal (caller keeps failing closed)."""
+    x, y = float(tgt[0]), float(tgt[1])
+    e = [(a - CLEAR_UM, b - CLEAR_UM, c + CLEAR_UM, d + CLEAR_UM) for a, b, c, d in obs]
+
+    def ok(q):
+        return 0.0 <= q[0] <= W and 0.0 <= q[1] <= H and not any(a < q[0] < c and b < q[1] < d for a, b, c, d in e)
+    if ok((x, y)):
+        return (tgt, False)
+    cand = []
+    for a, b, c, d in e:
+        cand += [(a, y), (c, y), (x, b), (x, d), (a, b), (a, d), (c, b), (c, d)]
+    cand = [(min(max(u, 0.0), W), min(max(v, 0.0), H)) for u, v in cand]
+    cand = [q for q in cand if ok(q)]
+    if not cand:
+        return (None, True)
+    best = min(cand, key=lambda q: (abs(q[0] - x) + abs(q[1] - y), q))
+    return (best, True)   # unrounded: a 3-decimal round can step back inside the grown box (path() strict test)
+
+
 def _route(o, tgt, obs, W, H):
     from start_obstacle_path import path
     return path(tuple(o), tuple(tgt), obs, clearance_um=CLEAR_UM, bounds=(0.0, 0.0, W, H))
@@ -353,8 +378,14 @@ def start_type(P, tn, t, margin, min_um):
                                    (lc["bands"][b]["rect_um"][1] + lc["bands"][b]["rect_um"][3]) / 2))):
         routes = {}
         for b in names:
+            tgt = tgt_of(b)
+            if key == "landing_reader_start":
+                snap, moved = legal_target(tgt, obs, W, H)
+                if moved and snap is not None:
+                    rep.setdefault("reader_target_snap", {})[b] = dict(centre=[round(v, 3) for v in tgt], target=list(snap))
+                    tgt = snap
             try:
-                r = _route(o, tgt_of(b), obs, W, H)
+                r = _route(o, tgt, obs, W, H)
             except ValueError as e:
                 fails.append(dict(group=key, bus=b, error=str(e)))
                 continue
@@ -375,7 +406,9 @@ def start_type(P, tn, t, margin, min_um):
         sub = rep["writer" if key == "landing_writer_start" else "reader"]
         for b, r in sorted(routes.items()):
             tgt = r[-1]
-            occupied = [x for x in bands if not (x[0] <= tgt[0] <= x[2] and x[1] <= tgt[1] <= x[3])]
+            own = (lc["bands"].get(b) or {}).get("rect_um") if key == "landing_reader_start" else None
+            # C9: a snapped reader target sits just outside its own band; that band is still the destination (no exclusion)
+            occupied = [x for x in bands if not (x[0] <= tgt[0] <= x[2] and x[1] <= tgt[1] <= x[3]) and x != own]
             st, r = sited(o, tgt, r, depth, obs, occupied, W, H)
             if st is None:
                 fails.append(dict(group=key, bus=b, depth=depth, corridor_um=round(length(r), 1)))
