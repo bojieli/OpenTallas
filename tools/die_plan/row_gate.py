@@ -330,6 +330,7 @@ def gate(a):
     rt = rt_dir(a.rt)
     src = Path(a.src).resolve()
     lane = a.lane or os.environ.get("OT_LANE") or "row"
+    os.environ["OT_LANE"] = lane                          # the fork's .fork.json lane: in-process tree writers (R8 refresh) must match it
     specs = [parse_spec(s) for s in a.row]
     sec, R = {}, dict(schema=SCHEMA, lane=lane, die=a.die, host=socket.gethostname(), started=utc(), out=str(out),
                       cmd=" ".join(map(shlex.quote, sys.argv)), rt=dict(path=rt, sha=os.path.basename(rt)),
@@ -476,7 +477,7 @@ def gate(a):
                 r["r8"] = dict(rc=2, r8=f"R8 refresh not run: r8-prepass rc {r['r8_prepass']} wrote no bus_groups.json", fixed={})
                 return r, s
         try:
-            tr = RN.normalize_tables(str(plan), str(L), a.asbuilt, str(B / "bus_groups.json")) if not a.no_r8 else dict(rc=0, r8="skipped", fixed={})
+            tr = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json")) if not a.no_r8 else dict(rc=0, r8="skipped", fixed={})
         except Exception as e:  # noqa: BLE001
             tr = dict(rc=2, r8=f"R8 refresh crashed: {type(e).__name__}: {str(e)[:300]}", fixed={})
         s["r8"] = round(time.time() - t0, 1)
@@ -516,7 +517,7 @@ def gate(a):
         done("NOT", f"elab rc {cr['elab']}")
     tr = cr.get("r8")
     if tr is not None:
-        R["r8"] = dict(rc=tr["rc"], status=tr["r8"], fixed=tr.get("fixed"))
+        R["r8"] = dict(rc=tr["rc"], status=tr["r8"], fixed=tr.get("fixed"), log=(tr.get("log") or "")[-800:] if tr["rc"] else "")
         if tr["rc"]:
             done("NOT", tr["r8"])
         keep = out / "tables"
