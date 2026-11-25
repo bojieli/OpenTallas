@@ -2255,3 +2255,4 @@
   - Staging the c10 tree from epyc11 (the source of truth, 73 GB, rsync -a keeping mtimes, no --delete, verified by file count and as-built v2 sha) to epyc7 (728G free), intel1 (439G) and epyc8 (898G).
   - epyc2 is skipped: 107G free cannot hold the tree plus kits.
   - Kits launch from those 3 hosts (KHOST epyc7/intel1/epyc8) after the bind emits: 21 route, 76 probe, plus the 20 re-issue probes.
+- 2026-11-25 06:30 PST c10 06:30 fallback: no S81-D3-SCOPE ROW-READY; kv_leaf__t2 (fstart depth 19 vs 17) and slice_station__t45 (collector ft1_i -> removed rst_n_t16) DEFERRED in ALLFIX-S81 (owner S81-D3-SCOPE, ETA next c10 iteration). Rest of c10 binds on time.
