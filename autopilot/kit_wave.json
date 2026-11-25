@@ -50977,7 +50977,11 @@
    "hold_items_prev_tlqcphysdb": {
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
-   "hard_wrappers": [],
+   "hard_wrappers": [
+    "phy_serdes",
+    "phy_serdes_b",
+    "phy_ucie_kv"
+   ],
    "note_tlqcphysdb": "TL-QCPHYSDB 11-14: phy_serdes_b hold KW-FIX-45 reason gone: the s29 plan content u_io_serdes_2 had lib but no lef, so type_macros() was empty -> gen refused. Overlay plan adds lef+origin_um [0,0] (macro LEF/tt/ff/ss exist in physical/qwen_missing_phy/nface_tall_1017). Revert: restore hold_items_prev_tlqcphysdb, drop item_inputs.phy_serdes_b, hard_wrappers, only_items entry",
    "hard_wrappers_prev_kitops3": [
     "phy_serdes_b"
