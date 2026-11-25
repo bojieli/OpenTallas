@@ -1601,3 +1601,49 @@ def test_declared_ring_reset_unused_capacity_is_reported():
         assert face_guard.guard(mutant, ring_reset=True)["verdict"] == "FAIL"
     for mutant in (clock, macro):
         assert "ring_reset" in face_guard.guard(mutant, ring_reset=True)["fail_counts"]
+
+
+def _rx_pin_plain_vehicle():
+    """FACEDECL (HEAD-TOOLS-FACEGUARD 11-25): rx_pin_plain relay: the pin start is sampled by the bare ot_dp_rrelay pin flop p0
+    only; the later stage u_cland_rstart_rx samples p0's Q (not the pin)."""
+    cells = f"""module ot_dp_rrelay(clk, d, q);
+input clk; input d; output q;
+DFFHQNx1{_X} ff (.CLK(clk), .D(d), .QN(nq));
+INVx1{_X} out_inv (.A(nq), .Y(q));
+endmodule
+module ot_dp_landing_relay(clk, st, rq, q);
+input clk; input st; input rq; output q;
+AND2x2{_X} gate (.A(st), .B(rq), .Y(d));
+DFFHQNx1{_X} ff (.CLK(clk), .D(d), .QN(nq));
+INVx1{_X} out_inv (.A(nq), .Y(q));
+endmodule
+"""
+    top = """module top(clk, rst_n, st, o);
+input clk; input rst_n; input st; output o;
+DFFHQNx1_ASAP7_75t_R reset_ff (.CLK(clk), .D(rst_n), .QN(rq));
+ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d(st), .q(p0));
+ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .st(p0), .rq(rq), .q(o));
+endmodule
+""".replace("_ASAP7_75t_R", _X)
+    return cells + top
+
+
+def test_rx_pin_plain_origin_declared_on_first_rx_stage():
+    text = _rx_pin_plain_vehicle()
+    spec = {"st": {"form": "origin_start", "origin": "u_cland_rstart_rx_p0"}}
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "PASS", got["fails"]
+    assert got["ring_start"]["st"]["sampler_flops"] == ["u_cland_rstart_rx_p0/ff"]
+    # The old declaration (the rx flop is the origin) fails: the pin is not sampled there.
+    old = {"st": {"form": "origin_start", "origin": "u_cland_rstart_rx"}}
+    assert face_guard.guard(text, "top", land=old)["verdict"] == "FAIL"
+    # An unlisted type still grants nothing, and the pin must not feed a second flop or an inverted sampler.
+    for bad in (text.replace("ot_dp_rrelay u_cland_rstart_rx_p0", "unrelated_cell u_cland_rstart_rx_p0")
+                    .replace("module ot_dp_rrelay", "module unrelated_cell"),
+                text.replace("output o;", "output o; DFFHQNx1" + _X + " leak (.CLK(clk), .D(st), .QN(lq));"),
+                text.replace(".d(st), .q(p0)", ".d(rq), .q(p0)"),
+                text.replace("u_cland_rstart_rx_p0 (.clk(clk)", "u_cland_rstart_rx_p0 (.clk(st)")):
+        assert face_guard.guard(bad, "top", land=spec)["verdict"] == "FAIL", bad
+    # rrelay origin cannot carry copies (they require actual landing_relay instances).
+    withcopy = {"st": dict(spec["st"], copies=["u_cland_rstart_rx"])}
+    assert face_guard.guard(text, "top", land=withcopy)["verdict"] == "FAIL"

@@ -903,3 +903,19 @@ def test_relay_rx_stages_emit_a_chain_before_the_rx_flop():
     assert ".d(cland_rstart_rx_p0), .q(cland_rstart_rx_p1));" in cc
     assert ".d(cland_rstart_rx_p1), .q(cland_start));" in cc and ".d(cland_rstart_in), .q(cland_start));" not in cc
     assert "u_cland_rstart_rx_p0" not in base
+
+
+@pytest.mark.parametrize("plain", [False, True])
+def test_land_slots_relay_rx_stages_declare_the_first_rx_stage_origin(plain):
+    """FACEDECL (HEAD-TOOLS-FACEGUARD 11-25): with RELAY-RX-STAGES the pin cland_rstart_in is sampled only by u_cland_rstart_rx_p0,
+    so land_slots names that stage as the typed origin and declares no copies/stages (they sample the last stage, not the pin)."""
+    p, t = ca_relay_vehicle()
+    p["partition_types"]["C"]["landing_relay_start_copy"] = True
+    base = Landings(p, t).land_slots("C")["buses"]["cland_rstart_in"]
+    assert base == {"form": "origin_start", "origin": "u_cland_rstart_rx", "copies": base.get("copies", [])} or base["origin"] == "u_cland_rstart_rx"
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 2
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    if plain:
+        p["partition_types"]["C"]["landing_relay_rx_pin_plain"] = True
+    got = Landings(p, t).land_slots("C")["buses"]["cland_rstart_in"]
+    assert got == {"form": "origin_start", "origin": "u_cland_rstart_rx_p0"}

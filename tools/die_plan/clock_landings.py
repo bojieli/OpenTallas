@@ -3700,6 +3700,13 @@ class Landings:
             # The existing same-clock relay is the typed count-origin sampler.
             # Its input is die-timed; adding another input FF would shift K.
             buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx"}
+            if _relay_rx_extra_stages(self.types[tn]) >= 1:
+                # FACEDECL (HEAD-TOOLS-FACEGUARD 11-25): with RELAY-RX-STAGES the pin cland_rstart_in is sampled only by the first
+                # rx stage u_cland_rstart_rx_p0 (ot_dp_landing_relay, or the bare ot_dp_rrelay pin flop under rx_pin_plain).  The
+                # rx flop and every FSTART/writer-start copy sample the last stage's Q, not the pin, so they are not samplers of
+                # this start; declaring them as copies/stages made the guard reject the type (land_slot, 1/5374).
+                buses["cland_rstart_in"]["origin"] = "u_cland_rstart_rx_p0"
+                return {"schema": LAND_SLOTS_SCHEMA, "buses": buses}
             # Declare the actual first sampler of the original input. Writer
             # transport changes the direct D loads; the final FSTART face flop
             # is no longer a same-D copy after an explicit writer branch.

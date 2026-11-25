@@ -1677,7 +1677,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             if origin is not None:
                 declared = {origin, *copies, *stages}
                 if par != declared or not any(_module_is(origin, t) for t in
-                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_origin_s_regional", "ot_dp_landing_relay")):
+                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_origin_s_regional", "ot_dp_landing_relay",
+                                               "ot_dp_rrelay")):   # FACEDECL: bare rx_pin_plain pin flop
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
                 if (copies or stages) and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
                     return "origin face copies require actual typed relay instances", None
