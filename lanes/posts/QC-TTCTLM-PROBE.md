@@ -1,0 +1,1 @@
+- 2026-11-24 22:08 PST DONE [QC-TTCTLM-PROBE] ot-run oth-ubuntu-1584920-1795586755 on key-cardinal: rc=0 after 163 s, ended 22:08:36, log /srv/opentallas-scratch2/claude/QC-TTCTLM-PROBE/guard2.out, cmd: --mem 8 --threads 1 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-TTCTLM-PROBE -- bash /srv/opentallas-scratch2/claude/QC-TTCTLM-P
