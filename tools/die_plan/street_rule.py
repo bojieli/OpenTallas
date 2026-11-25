@@ -2090,30 +2090,76 @@ def _q_roles(tr):
     return out
 
 
-def _carry_cland_copies(old_tree, new_tree):
-    """PCTAP-CX-1124: plan-inserted collector relays (kind cland_copy, ROWS_KV-RCOLL-REBASE-RINS: X1.d = N, Xi+1.d = Xi)
-    are not part of the solved reset tree, so a republished collector_tree dropped them while collector_children /
-    local_sources still named them (KV pc_v1 rst_cx_3, pc_v3 rst_cx_2).  Carry each chain into new_tree verbatim when its
-    predecessor is unchanged there (same q, xy and depth, or a carried copy); a chain whose base moved or is gone raises,
-    so the type is restored instead of left with a dangling reference."""
+CLAND_COPY_REACH_UM = 405.0     # the 405 um hop rule (close-by-construction): a re-anchored chain head never hops further
+
+
+def _cx_l1(a, b):
+    return abs(float(a[0]) - float(b[0])) + abs(float(a[1]) - float(b[1]))
+
+
+def _carry_cland_copies(old_tree, new_tree, reach_um=CLAND_COPY_REACH_UM, info=None):
+    """PCTAP-CX-1124 / CX-REANCHOR-1125: plan-inserted collector relays (kind cland_copy, ROWS_KV-RCOLL-REBASE-RINS: X1.d = N,
+    Xi+1.d = Xi) are not part of the solved reset tree, so a republished collector_tree dropped them while collector_children /
+    local_sources still named them (KV pc_v1 rst_cx_3, pc_v3 rst_cx_2).  Carry each chain into new_tree.  The chain body (xy, depth, q)
+    is kept verbatim; only its head predecessor N is re-checked against the re-solved tree:
+      * N unchanged (same q, xy, depth)                                   -> carried as is;
+      * N moved / renumbered (a row that moves taps renumbers rst_n_t<i>: the name now belongs to another tap) but the relay of that
+        name still has N's depth and is within reach_um (L1) of the chain head                                      -> kept (same release depth);
+      * otherwise the chain is RE-ANCHORED: N' = the relay of the re-solved tree with N's kind and N's DEPTH nearest to the chain head,
+        within reach_um of it (X1.d / base_node of the whole chain follow N'; the chain's own depths, q names and sites are unchanged,
+        so the downstream latency is the old one by construction: N'.depth == N.depth);
+      * no such relay (depth gone, nothing within reach, predecessor not in the old tree)  -> ValueError, the type is restored by the
+        caller instead of left with a dangling reference (fail closed).
+    A chain whose predecessor is another cland_copy is carried after it.  info (a list) receives one dict per re-anchored head."""
     old = old_tree.get("relays") or []
     todo = [r for r in old if r.get("kind") == "cland_copy"]
     have = {r.get("q"): r for r in new_tree.get("relays") or []}
     oldq = {r.get("q"): r for r in old}
-    kept = []
+    kept, rebase = [], {}
+
+    def reanchor(r, o, why):
+        if not o or o.get("kind") == "cland_copy" or o.get("depth") is None:
+            raise ValueError("cland_copy %s: predecessor %s is not a relay of the old tree (nothing to re-anchor)" % (r.get("q"), r.get("d")))
+        cand = [x for x in have.values() if x.get("kind") != "cland_copy" and x.get("depth") == o.get("depth")
+                and (o.get("kind") is None or x.get("kind") == o.get("kind")) and x.get("xy")]
+        if not cand:
+            raise ValueError("cland_copy %s: predecessor %s %s and the re-solved tree has no %s relay of depth %s"
+                             % (r.get("q"), r.get("d"), why, o.get("kind") or "same-kind", o.get("depth")))
+        n = min(cand, key=lambda x: (_cx_l1(x["xy"], r["xy"]), str(x.get("q"))))
+        d = _cx_l1(n["xy"], r["xy"])
+        if d > reach_um + 1e-9:
+            raise ValueError("cland_copy %s: predecessor %s %s; the nearest depth-%s relay %s is %.1f um from the chain head (> %g um reach)"
+                             % (r.get("q"), r.get("d"), why, o.get("depth"), n.get("q"), d, reach_um))
+        if info is not None:
+            info.append(dict(q=r.get("q"), old_pred=r.get("d"), new_pred=n.get("q"), why=why, hop_um=round(d, 3), depth=o.get("depth")))
+        return n
+
     while todo:
         nxt = []
         for r in todo:
             if r.get("q") in have:
                 continue
-            p = have.get(r.get("d"))
-            if p is None:
-                nxt.append(r)
-                continue
             o = oldq.get(r.get("d")) or {}
-            if p.get("kind") != "cland_copy" and (p.get("xy") != o.get("xy") or p.get("depth") != o.get("depth")):
-                raise ValueError("cland_copy %s: predecessor %s moved in the re-solved tree" % (r.get("q"), r.get("d")))
+            p = have.get(r.get("d"))
+            newd = None
+            if p is None:
+                if not o or o.get("kind") == "cland_copy":
+                    nxt.append(r)           # a copy not carried yet (or a dangling name: reported below when nothing progresses)
+                    continue
+                newd = reanchor(r, o, "gone from the re-solved tree")
+            elif p.get("kind") != "cland_copy":
+                same = p.get("xy") == o.get("xy") and p.get("depth") == o.get("depth")
+                if not same:
+                    ok = (o.get("depth") is not None and p.get("depth") == o.get("depth") and p.get("xy")
+                          and _cx_l1(p["xy"], r["xy"]) <= max(reach_um, _cx_l1(o["xy"], r["xy"]) if o.get("xy") else 0.0) + 1e-9)
+                    if not ok:
+                        newd = reanchor(r, o, "moved in the re-solved tree")
             c = json.loads(json.dumps(r))
+            if newd is not None:
+                rebase[r.get("d")] = newd["q"]
+                c["d"] = newd["q"]
+            if c.get("base_node") in rebase:
+                c["base_node"] = rebase[c["base_node"]]
             new_tree.setdefault("relays", []).append(c)
             have[c["q"]] = c
             kept.append(c["q"])
@@ -2160,9 +2206,12 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 # the published collector_tree = the tree the bind re-solves (added_tap_recentre.republish rule); the
                 # collector sources / children are re-attached after this (collector_reattach.reattach_plan)
                 new = json.loads(json.dumps(tb))
-                cx = _carry_cland_copies(lc["collector_tree"], new)
+                cxi = []
+                cx = _carry_cland_copies(lc["collector_tree"], new, info=cxi)
                 if cx:
                     rec["cland_copy_kept"] = cx
+                if cxi:
+                    rec["cland_copy_reanchored"] = cxi
                 if json.dumps(new, sort_keys=True) != json.dumps(lc["collector_tree"], sort_keys=True):
                     rec["tree_republished"] = [len(lc["collector_tree"].get("relays") or []), len(new.get("relays") or [])]
                     lc["collector_tree"] = new

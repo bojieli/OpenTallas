@@ -1233,6 +1233,96 @@ def test_reset_resel_keeps_cland_copy_chain_pctap_1124(monkeypatch, tmp_path):
     assert "error" not in rec, rec
     qs = [r["q"] for r in t["clock"]["landing_contract"]["collector_tree"]["relays"]]
     assert "rst_n_t200" in qs and qs[-2:] == ["rst_cx_0", "rst_cx_1"] and rec["cland_copy_kept"] == ["rst_cx_0", "rst_cx_1"]
+    # CX-REANCHOR-1125: a base that moved but keeps its depth and is within the 405 um reach of the chain head keeps the chain
     moved = [dict(base[0], xy=[500.0, 1283.04])]
     t2, rec2 = run(dict(relays=moved))
-    assert "error" in rec2 and "moved" in str(rec2["error"]), rec2
+    assert "error" not in rec2 and rec2["cland_copy_kept"] == ["rst_cx_0", "rst_cx_1"] and "cland_copy_reanchored" not in rec2, rec2
+    # a base whose depth changed and no same-depth relay within reach: fail closed (the type is restored)
+    far = [dict(base[0], xy=[900.0, 1283.04], depth=9)]
+    t3, rec3 = run(dict(relays=far))
+    assert "error" in rec3 and "depth 10" in str(rec3["error"]), rec3
+
+
+# ---- CX-REANCHOR-1125: cland_copy chain whose predecessor moved / was renumbered by a tap-moving row -------------------------------
+import inspect as _cx_inspect
+
+
+def _cx_old(pred_q="rst_n_t130", pred_xy=(1042.2, 523.8), pred_depth=10, pred_kind="tap"):
+    pred = dict(name="u_" + pred_q, q=pred_q, d="root", depth=pred_depth, kind=pred_kind, xy=list(pred_xy))
+    cx = [dict(name="u_rst_cx_0", q="rst_cx_0", d=pred_q, depth=pred_depth + 1, kind="cland_copy", base_node=pred_q, xy=[697.5, 531.4]),
+          dict(name="u_rst_cx_1", q="rst_cx_1", d="rst_cx_0", depth=pred_depth + 2, kind="cland_copy", base_node=pred_q, xy=[352.8, 531.4])]
+    return dict(relays=[pred] + cx)
+
+
+def _cx_new(*relays):
+    return dict(relays=[dict(name="u_" + q, q=q, d="root", depth=dep, kind=kind, xy=list(xy)) for q, xy, dep, kind in relays])
+
+
+# (new tree relays, old tree kwargs) -> outcome of the real function is pinned in test_cx_scenarios; mutants must change one
+_CX_SCEN = {
+    "same":      (dict(), [("rst_n_t130", (1042.2, 523.8), 10, "tap")]),
+    "moved_ok":  (dict(), [("rst_n_t130", (750.6, 793.8), 10, "tap")]),                      # renumbered, 315 um from the head
+    "renum_far": (dict(), [("rst_n_t130", (1500.0, 1400.0), 10, "tap"), ("rst_n_t7", (600.0, 600.0), 10, "tap")]),   # name far -> re-anchor to t7
+    "depth_chg": (dict(), [("rst_n_t130", (700.0, 540.0), 11, "tap"), ("rst_n_t7", (690.0, 530.0), 11, "tap")]),     # no depth-10 relay
+    "too_far":   (dict(), [("rst_n_t130", (1500.0, 1400.0), 10, "tap"), ("rst_n_t7", (1200.0, 1100.0), 10, "tap")]), # nearest depth-10 is 1100 um away
+    "wrong_kind": (dict(), [("rst_n_t130", (1500.0, 1400.0), 10, "tap"), ("rst_pad_9", (697.5, 531.4), 10, "pad")]),
+    "gone":      (dict(pred_q="rst_n_t999"), [("rst_n_t1", (700.0, 540.0), 10, "tap")]),
+    "dangling":  (dict(), None),
+}
+
+
+def _cx_outcome(fn, name):
+    kw, new = _CX_SCEN[name]
+    old = _cx_old(**kw)
+    if name == "dangling":
+        old["relays"][1]["d"] = "rst_n_nowhere"
+        nt = _cx_new(("rst_n_t1", (700.0, 540.0), 10, "tap"))
+    else:
+        nt = _cx_new(*new)
+    info = []
+    try:
+        kept = fn(old, nt, info=info)
+    except ValueError as e:
+        return ("err", str(e)[:220])
+    cp = [(r["q"], r["d"], r.get("base_node"), tuple(r["xy"]), r["depth"]) for r in nt["relays"] if r.get("kind") == "cland_copy"]
+    return ("ok", tuple(kept), tuple(cp), tuple((i["new_pred"], i["why"], i["hop_um"]) for i in info))
+
+
+def test_cland_copy_reanchor_cx_reanchor_1125():
+    fn = SR._carry_cland_copies
+    same = _cx_outcome(fn, "same")
+    assert same[0] == "ok" and same[3] == () and same[2][0][1] == "rst_n_t130"
+    ok = _cx_outcome(fn, "moved_ok")                                    # same depth, in reach: name kept, no re-anchor
+    assert ok[0] == "ok" and ok[3] == () and ok[2][0][1] == "rst_n_t130" and ok[2][0][2] == "rst_n_t130"
+    rn = _cx_outcome(fn, "renum_far")                                   # name's relay is far: whole chain follows rst_n_t7
+    assert rn[0] == "ok" and rn[3] and rn[3][0][0] == "rst_n_t7" and rn[3][0][2] <= 405.0
+    assert [c[1] for c in rn[2]] == ["rst_n_t7", "rst_cx_0"] and {c[2] for c in rn[2]} == {"rst_n_t7"}
+    assert [c[3] for c in rn[2]] == [(697.5, 531.4), (352.8, 531.4)] and [c[4] for c in rn[2]] == [11, 12]      # sites + depths untouched
+    gn = _cx_outcome(fn, "gone")                                        # name vanished: nearest same-depth relay takes the chain
+    assert gn[0] == "ok" and gn[3][0][:2] == ("rst_n_t1", "gone from the re-solved tree")
+    for k, frag in (("depth_chg", "no tap relay of depth 10"), ("too_far", "reach"),
+                    ("wrong_kind", "reach"), ("dangling", "gone from the re-solved tree")):
+        o = _cx_outcome(fn, k)
+        assert o[0] == "err" and frag in o[1], (k, o)
+
+
+def test_cland_copy_reanchor_mutants_are_killed():
+    """each mutant of the re-anchor rule changes at least one scenario outcome"""
+    src = _cx_inspect.getsource(SR._carry_cland_copies)
+    good = {k: _cx_outcome(SR._carry_cland_copies, k) for k in _CX_SCEN}
+    muts = {
+        "no depth filter":  ('x.get("depth") == o.get("depth")\n', 'True\n'),
+        "no reach limit":   ("if d > reach_um + 1e-9:", "if False:"),
+        "no kind filter":   ('(o.get("kind") is None or x.get("kind") == o.get("kind"))', "True"),
+        "keep ignores depth": ('p.get("depth") == o.get("depth") and p.get("xy")', "p.get(\"xy\")"),
+        "head d not moved": ('c["d"] = newd["q"]', "pass"),
+        "base_node stale":  ('c["base_node"] = rebase[c["base_node"]]', "pass"),
+        "never re-anchor":  ("newd = reanchor(r, o, \"moved in the re-solved tree\")", "pass"),
+        "reach cap 4x":     ("reach_um=CLAND_COPY_REACH_UM", "reach_um=4 * CLAND_COPY_REACH_UM"),
+    }
+    for name, (a, b) in muts.items():
+        assert src.count(a) >= 1, name
+        ns = dict(SR.__dict__)
+        exec(src.replace(a, b, 1), ns)
+        got = {k: _cx_outcome(ns["_carry_cland_copies"], k) for k in _CX_SCEN}
+        assert got != good, "mutant survived: " + name
