@@ -51,7 +51,7 @@ HOLD_MIN_PS = 0.0        # FF hold >= 0
 STALE_MIN = 120
 SETTLE_S = 300           # a crash/congestion signature counts once the log has been quiet this long
 ACTIVE_S = 1800          # any log of the build written in the last 30 min: alive (sealed ot-job / bwrap / docker runs hide their processes)
-DEFAULT_HOSTS = "local,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,intel1"
+DEFAULT_HOSTS = "local,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,epyc12,intel1"
 RETIRED_HOSTS = {"epyc4"}   # terminated (COORD 11-20)          # a stage log with no result and no write for this long: the run died
 SKIP_DIRS = {"results", "objects", "rtl", "reports", ".git", "__pycache__", "node_modules", "plandir", "future_lec", "geom"}
 MAX_DEPTH = 14

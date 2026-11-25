@@ -3,7 +3,7 @@
 # Undo: systemctl --user disable --now ot-auto-clean.timer
 set -eu
 case "$(hostname -s)" in
-  tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "install_auto_clean: REFUSED on $(hostname -s): build hosts only (intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11)" >&2; exit 64;;
+  tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "install_auto_clean: REFUSED on $(hostname -s): build hosts only (intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11 epyc12)" >&2; exit 64;;
 esac
 T=${AC_TOOLS:-/srv/opentallas-scratch2/claude/rt/current/tools/fleet}
 [ -f "$T/systemd/ot-auto-clean.timer" ] && [ -x "$T/ot-auto-retire-run.sh" -o -f "$T/ot-auto-retire-run.sh" ] || { echo "rt/current has no ot-auto-clean units: sync first" >&2; exit 3; }

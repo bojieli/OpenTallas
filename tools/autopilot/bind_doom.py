@@ -321,7 +321,7 @@ def step(AP):
             run = ap_dir / RUNFILE
             if not (run.exists() and now - run.stat().st_mtime < RUN_STALE_S):
                 run.write_text(str(os.getpid()))
-                hosts = [h for h in os.environ.get("OT_FLEET_HOSTS", "intel2,intel1,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11").split(",") if h]
+                hosts = [h for h in os.environ.get("OT_FLEET_HOSTS", "intel2,intel1,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,epyc12").split(",") if h]
                 subprocess.Popen([sys.executable, "-I", str(Path(__file__).resolve()), "sweep", str(ap_dir), ",".join(hosts), str(AP.HUB_NAME)],
                                  stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
                 AP.log(f"BIND-DOOM sweep started ({len(hosts)} hosts, rt {Path(rt_now).name}; {len(state.get('binds') or {})} bind(s) known, "

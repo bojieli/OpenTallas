@@ -237,7 +237,7 @@ def skew_section(cfg, rpy=ssh_rpy, blob=None, compare_mod=None, now=None):
     return out
 
 
-HOSTS = ("epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "intel1", "intel2")
+HOSTS = ("epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "epyc12", "intel1", "intel2")
 RESOLVE_PY = r"""
 import json, socket, sys
 h = socket.gethostname()
@@ -312,7 +312,7 @@ def ot_run_drift_section(blob=None, wrapper=WRAPPER, host=os.uname().nodename):
 
 NOPROG_FILES = ("noprog_watchdog.py", "noprog_stage.py")
 NOPROG_DIR = "~/.local/lib/noprog"
-NOPROG_HOSTS = ("intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11")
+NOPROG_HOSTS = ("intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "epyc12")
 SHA_PY = r"""
 import hashlib, json, os, sys
 out = {}

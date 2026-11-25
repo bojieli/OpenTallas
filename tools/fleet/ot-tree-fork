@@ -70,7 +70,7 @@ STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "2"))
 # STREAMS_FAR parallel streams (4 streams measured 67 MB/s).  An explicit OT_TREE_FORK_STREAMS always wins.
 STREAMS_FAR = int(os.environ.get("OT_TREE_FORK_STREAMS_FAR", "2"))
 FAR_RTT_MS = float(os.environ.get("OT_TREE_FORK_FAR_RTT_MS", "50"))
-HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11").split(",") if h]
+HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,epyc12").split(",") if h]
 VERSION = 1
 
 

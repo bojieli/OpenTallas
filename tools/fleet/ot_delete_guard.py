@@ -133,7 +133,7 @@ def load_list(path=None, now=None):
 
 
 HOST_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2", "loved-redfish": "epyc7",
-              "outgoing-giraffe": "epyc8", "renewed-glider": "epyc9", "civil-redfish": "epyc10", "viable-ram": "epyc11"}
+              "outgoing-giraffe": "epyc8", "renewed-glider": "epyc9", "civil-redfish": "epyc10", "viable-ram": "epyc11", "open-snipe": "epyc12"}
 
 
 def self_alias():

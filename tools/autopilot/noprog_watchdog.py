@@ -50,7 +50,7 @@ def step_window(log):
     return WINDOW_S, False
 MIN_IMPROVE = 0.02
 HUB = os.environ.get("OT_HUB_NAME", "intel2")
-HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "epyc12"]
 STATE_DIR = os.path.expanduser(os.environ.get("NOPROG_DIR", "~/.local/state/noprog"))
 COORD = os.path.expanduser(os.environ.get("OT_COORD_DIR", "~/coord"))
 MAX_SAMPLES = 80

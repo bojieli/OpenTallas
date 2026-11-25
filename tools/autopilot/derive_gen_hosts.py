@@ -5,7 +5,7 @@ current list is kept and an ALERT line is printed.  Dry by default; --apply rewr
 usage: derive_gen_hosts.py [--coord ~/coord] [--hosts h1,h2,..] [--apply]"""
 import argparse, fcntl, json, os, shlex, shutil, subprocess, sys
 
-HOSTS = ("epyc10", "epyc11", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
+HOSTS = ("epyc10", "epyc11", "epyc12", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
 HASHFILE = ".src-manifest.sha256"
 HARD_FLOOR, MARGIN = 50, 20
 # COORD 11-17: ~/.local/opentallas-pdk-asap7 (the legacy PDK root ref_tile.py gen routes use) existed on intel1 and epyc2 only, so svc core routes failed on epyc8.  A host that lacks a required

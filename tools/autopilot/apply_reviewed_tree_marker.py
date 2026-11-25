@@ -26,7 +26,7 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
-FLEET_POOL = ("epyc10", "epyc11", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
+FLEET_POOL = ("epyc10", "epyc11", "epyc12", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
 
 
 def old_tree_holders(old_src, pool, skip, run=None):

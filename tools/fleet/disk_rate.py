@@ -6,7 +6,7 @@ AUTO-RETIRE (FABLE-FLOW-2200): when a disk is projected to hit the floor within 
 (created only after COORD approval), the alert also runs ot-auto-retire-run.sh apply on that host: superseded source trees only, reference proof +
 guard + signed-store check, stops at the target, df before / after in the post.  Without the switch file the post says what it would have done."""
 import json, os, shlex, subprocess, sys, time
-HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "intel2"]
+HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "epyc12", "intel2"]
 DISKS = ["/srv/opentallas-scratch2", "/srv/opentallas-scratch"]
 HIST = os.path.expanduser("~/.local/state/disk-rate.json")
 FLOOR_GB, HORIZON_H, WINDOW_S, ALERT_EVERY_S = 50.0, 6.0, 3600, 3600

@@ -9,7 +9,7 @@ Every 4 h (state file) it posts one INFO to FLEET-OPS-R: GB freed per host since
 usage: auto_clean_hub.py [--hosts h1,h2] [--report] [--dry]"""
 import concurrent.futures as cf, fcntl, json, os, re, subprocess, sys, time
 
-HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
+HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "epyc12"]
 STATE = os.path.expanduser("~/.local/state/auto-clean")
 RT = "/srv/opentallas-scratch2/claude/rt/current/tools/fleet"
 REPORT_EVERY_S = 4 * 3600
