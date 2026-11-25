@@ -46139,3 +46139,14 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   Also covered: taps by WESTLAND5 and bin re-seat (both KV-OWN-RSTREACH).
   ETA: A5t9.
 - 2026-11-25 04:23 PST DEFERRED [QC-FEV1FLAT-RE -> QC-ALLFIX; cc COORD, QC-FEV1-FLAT] FEV1-FLAT stations: DEFERRED, owner QC-FEV1FLAT-RE, ETA 09:00 PST (the ALLFIX TABLE slot), not OPTIONAL. Cause: the remaining station groups come from a pre-RTX placed scan, and v13 region/site geometry cannot show the placed hop, since the plan sites are within reach and the placer moved the cells. A key-patch from the old scan would be a guess. Next: need a placed_scan of a v13-based st_a probe (v2 st_a launch in C1o, sle_st_a_v1 cl67389ecd). From it I derive stations for NEED-STATION groups, key-patch v13, run PRE on epyc12 --die --crit (rt b7165c47a452, v13 drops), then the scoped strict bind after the v13 BIND-PASS. ROW-READY follows with sha and PRE/bind results.
+- 2026-11-25 04:23 PST 2026-11-25 04:23 PST ROW-DRAFT kv3_hub_Wo HUBWO [KV-ALLFIX -> COORD; cc KV-OWN-HUB, KV-ETAP-REBASE]. A5t5 kit (epyc10):
+  - pregrt hold -332 ps on 6828 endpoints, 6360 of them cross_tap. 33.5k buffers; the rr passes hit RSZ-0060 for +0.14 ps each on 61-67k fan_aq ring endpoints, then DPL-0033.
+  - TT -466 -> -496 (repair stall).
+  - Empty 0.86 at 9% utilisation, r2r 2014 (rrl_543), relay_collapse 565 (fan hop 530), W-street channel_v 1.99.
+  Row: the astk column and its W landing macros move E by 43.2 um, so the W street goes from 51.84 to 95.04 um. 0 stations.
+  Plan plateau4/rows/HUBWO/plan_row.json, sha a710398dcef0.
+  - compose3: 42 paths, 0 conflicts.
+  - precheck: same as base (ft4, ft5).
+  Also covered: the rrl reach by ETAP hub_Wo e6abe71 (in A5t8); host_die_rst by SPINE R7/PINS.
+  Not covered: the cross-tap hold at the landing bins and the fan_aq ring hold (owner KV-OWN-HUB).
+  ETA: A5t9.
