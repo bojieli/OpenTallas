@@ -914,3 +914,4 @@
   GRT-11: 2 sle_su_l1 re-enqueued.
   fe_v1 flat kit had already ended.
   New failures: none.
+- 2026-11-24 21:47 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-1485142-1795567413 on tolerant-swine: rc=0 after 20810 s, ended 21:47:39, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_sc_v1__cl63e5a7a2_1124082519/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
