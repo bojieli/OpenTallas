@@ -142,7 +142,7 @@ fi
 # REPO-STATE-1 11-14: replay only this call's own changes (OWN~1..OWN) onto origin/$B in a private index and push it.
 replay_own() {
 [ -n "$OWN" ] || return 1
-git fetch -q origin "$B" || return 1
+git fetch -q origin "+refs/heads/$B:refs/remotes/origin/$B" || return 1
 R=$(OWN="$OWN" UP="origin/$B" MSG="$msg (replayed own files on origin)" python3 -I - <<'PY_REPLAY'
 import os, subprocess as S, sys, tempfile
 own, up, msg = os.environ["OWN"], os.environ["UP"], os.environ["MSG"]
@@ -180,7 +180,7 @@ PY_REPLAY
 ) || return 1
 [ -n "$R" ] || return 1
 if on_origin "$R" || git push -q origin "$R:refs/heads/$B"; then
-  git fetch -q origin "$B" || true; OWN="$R"; return 0
+  git fetch -q origin "+refs/heads/$B:refs/remotes/origin/$B" || true; OWN="$R"; return 0
 fi
 return 1
 }
@@ -194,13 +194,13 @@ done_now() { if [ -n "$OWN" ]; then on_origin "$OWN"; else on_origin "$(git rev-
 for i in 1 2 3; do
   t=$(now); flock 8; W8=$(echo "$W8+$(now)-$t" | bc)
   # coalesce: an earlier pusher already carried our commit
-  if [ -n "$OWN" ] && git fetch -q origin "$B" && on_origin "$OWN"; then tlog coalesced; succeed; fi
+  if [ -n "$OWN" ] && git fetch -q origin "+refs/heads/$B:refs/remotes/origin/$B" && on_origin "$OWN"; then tlog coalesced; succeed; fi
   t=$(now); flock 9; W9=$(echo "$W9+$(now)-$t" | bc)
   ok=0
   merged=1
   discard_generated
   if ! preserve_append_logs 2>"$E"; then LASTWHY="preserving concurrent append journals failed: $(firstline)"
-  elif ! git fetch -q origin "$B" 2>"$E"; then LASTWHY="fetch of origin/$B failed: $(firstline)"
+  elif ! git fetch -q origin "+refs/heads/$B:refs/remotes/origin/$B" 2>"$E"; then LASTWHY="fetch of origin/$B failed: $(firstline)"
   elif ! git merge -q --no-edit "origin/$B" >"$E" 2>&1; then
     LASTWHY="merge of origin/$B refused in the shared tree (dirty files overlap upstream changes?): $(firstline)"
     git merge --abort 2>/dev/null || true; merged=0
@@ -219,8 +219,19 @@ for i in 1 2 3; do
     t=$(now)
     if git push -q origin "$P:refs/heads/$B" 2>"$E"; then
       TP=$(echo "$TP+$(now)-$t" | bc)
-      git fetch -q origin "$B" || true
+      git fetch -q origin "+refs/heads/$B:refs/remotes/origin/$B" || true
       if done_now || { [ -z "$OWN" ] && on_origin "$P"; }; then tlog pushed; succeed; fi
+      # HUB-PUSH-ROTATE 11-25: the push succeeded but the local tracking ref does not show it (a fetch refspec that omits $B left origin/$B stale from
+      # 02:52 and every post "FAILED" after 3 x ~500 s).  Ask the remote itself, once, with a short bound; on a match repair the tracking ref and succeed.
+      # No match = one failed verify: give up now (releases the push lock on exit) instead of retrying while ~130 posts queue behind it.
+      rt=$(timeout ${COORD_VERIFY_TIMEOUT:-20} git ls-remote origin "refs/heads/$B" 2>/dev/null | cut -f1)
+      if [ -n "$rt" ] && git merge-base --is-ancestor "$P" "$rt" 2>/dev/null; then
+        echo "coord-commit: WARNING origin/$B tracking ref was stale after a successful push; repaired (check remote.origin.fetch)" >&2
+        git update-ref "refs/remotes/origin/$B" "$rt" 2>/dev/null || true
+        tlog pushed-staleref; succeed
+      fi
+      tlog FAILED
+      echo "FAILED push of $P to origin/$B was accepted but the remote tip ${rt:-unreadable} does not contain it (one verify, no retry)" | tee /dev/stderr; exit 1
     else
       LASTWHY="push to origin/$B rejected: $(firstline)"
       TP=$(echo "$TP+$(now)-$t" | bc)
