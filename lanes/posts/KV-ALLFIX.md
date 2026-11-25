@@ -960,3 +960,11 @@
   - K-05 + F-11: cancel sub-lane is reading the 4 kits plus kv-plan-r6. Reads get posted, then each is cancelled via ot-run --cancel. The hgi_1124155644 NOPROG-KEEP is retired per K-05.
   - K-02 / F-12 / K-07: ledger sub-lane is replacing the F12-PROBE-READ statuses with real status and probe_unit, re-dating the 41 passed and 10 missing ETAs, and moving hg/hgi rows to KV-OWN-HG-R3 (the 2 pilots stay with KV-ALLFIX).
   - Pad tolerance 15% noted.
+- 2026-11-25 09:25 PST KV-ALLFIX 11-25 09:25 PST RESULT 9fdb1674e8 CLOSED.
+  - The A5t8 strict bind ran end to end on its own bind rt, so the heartbeat-absent class is gone.
+  - regate2 bind1: 31 errors, all R8_STALE. After the refresh, bind2 has 4, all EMIT and each on one type (log: epyc12 kv-allfix/a5t8/gate_A5t8/bind2.log). SPLIT_LANE_REFERENCE 0, UNPLANNED 0, R8_STALE 0.
+  - Under K-01, 6 types are held for A5t9:
+  - hroot, hub_Eo, hub_Wo: the R7 lane delete left the i_host_die_rst_n efault stage with no source (new row R7-EFAULT-RESOURCE, KV-OWN-HUB-R2).
+  - pv_v7e: reset tap rst_n_t195 absent (TAPDRIFT; KV-OWN-PV-R2).
+  - hub_Wi, io_cor_v1: PRE RSTREACH.
+  - The rest launches after LATCHECK, pilots first: 80 probes, 2 pilots, 3 full kits.
