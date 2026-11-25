@@ -1,0 +1,98 @@
+{
+ "advisory": [
+  "dry_gen",
+  "foreign_tree",
+  "pre_g0"
+ ],
+ "band_base": null,
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/9249249be101/kv3_hg_v1",
+   "gen_host": "epyc10",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/9249249be101/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "db9d4036fc4af9bdf64fbfe6cfc7d45f0137cac5a66afd643ec855edf2de4e41",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "2cb9642040a97aa9cdbf4618e63cd771f67550deecf99d46df84cc536b70419e",
+   "spec_src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree",
+   "stage": "kit_rtl",
+   "verdict": "FAIL",
+   "why": "stage kit_rtl: bind: ERROR kit-rtl: no partition type kv3_hg_v1 in the plan"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE kit_rtl.bind_out /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind is outside the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree"
+   ],
+   "n": 1,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 83
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-1whudyiy/g0_report.json",
+   "pre_rc": 1,
+   "tail": "PRE: PLAN-GATE-PRE FAIL tree=/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree plan=/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json findings=3 classes=SCHEMA\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/efc09e5e6036/tools/die_plan",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind/bind.f",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 1684.6,
+ "hosts": [
+  "epyc10",
+  "epyc11",
+  "epyc9",
+  "intel1",
+  "epyc8",
+  "intel2"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "9249249be101aa99274be42681dc1afaa7e6718f8b2b5879a0f154d8bc8680ee",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
+ "plan_sha256": "a498941539fd1b3df600e6864132581c828ce2f84f9881c1ed459afc4c33a012",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1684.6,
+ "t": 1795579405.0632226,
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree",
+ "verdict": "FAIL"
+}
