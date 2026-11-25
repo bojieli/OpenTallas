@@ -485,6 +485,15 @@ def copy_back(host, src, K, stage=None):
     got = stage.rstrip("/") if stage else K
     if stage and os.path.basename(got) != base:
         return 99
+    if not stage and otrun_host(host) == otrun_host(src):
+        # SEAL-COPYBACK-1124: the job roamed onto the host that holds K (fetch hosts intel1, then ot-run admitted epyc9 = src) and
+        # returned into K itself, so the copy-back would tar K into its own parent: a SELF-COPY.  Its extraction rewrites the tree it
+        # is reading, so tar reported 'file changed as we read it' on every directory (macros, base, layout_review, __pycache__) on every
+        # try -> KW_PLACE_RC=97 (S81 col_h9_r2__t1__clce45cab5__pva8c07948 11-24 19:07, after 3_place.odb was written) -- and a copy that
+        # ever succeeded would have run the rm -rf of K below.  Nothing to copy, nothing to remove.
+        print(f"ot-run-sealed: COPY-BACK {host}:{got}: job ran on the holder of K, returned in place; nothing to copy",
+              file=sys.stderr, flush=True)
+        return 0
     try:            # the job never ran there (NOT RUN): nothing came back, nothing to copy
         if subprocess.run(on(host, f"test -d {shlex.quote(got)}", timeout_flag=False), timeout=60).returncode:
             return 0
