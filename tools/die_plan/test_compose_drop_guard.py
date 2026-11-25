@@ -148,3 +148,87 @@ def test_plan_gate_pre_composedrop_class(tmp_path, monkeypatch):
     dl.write_text("partition_types.st_a.landing_relay_start_copy # intended\n")
     monkeypatch.setenv("OT_COMPOSE_DROP_LIST", str(dl))
     assert not cd(P.check(str(tmp_path), pb, baseline=pa, skip=others))
+
+
+# QC-GUARD-SIDECAR: the bind reads collector tap fields from the launch sidecar, kit gen / landing_place from the plan.
+def _sc_plan():
+    p = _plan()
+    p["partition_types"]["st_a"]["clock"]["landing_contract"] = {
+        "collector_root_node": "rst_root_n",
+        "collector_local_sources": [{"name": "cws1_i", "tap": 5, "node": "rst_n_t5", "xy_um": [0, 1]},
+                                    {"name": "x_st_b_i", "tap": 7, "xy_um": [3, 4]}],
+        "collector_children": [{"index": 0, "node": "rst_n_t9", "tap": 9, "xy_um": [8, 8]}]}
+    return p
+
+
+def _sidecar_of(plan):
+    types = {}
+    for tn, t in plan["partition_types"].items():
+        lc = (t.get("clock") or {}).get("landing_contract")
+        if lc:
+            types[tn] = {"collector_root_node": lc["collector_root_node"], "tree": {"relays": []},
+                         "local_sources": copy.deepcopy(lc["collector_local_sources"]),
+                         "children": copy.deepcopy(lc["collector_children"])}
+    return {"schema": "t", "collector": {"types": types}}
+
+
+def test_sidecar_in_sync_passes(tmp_path, capsys, monkeypatch):
+    monkeypatch.setenv("OT_COMPOSE_DROP", "fail")
+    p = _sc_plan()
+    pp, sp = _w(tmp_path, "p.json", p), _w(tmp_path, "s.json", _sidecar_of(p))
+    assert G.main([pp, pp, "--sidecar", sp, "--prev-sidecar", sp]) == 0
+    out = capsys.readouterr().out
+    assert "SIDECAR PASS" in out and "PASS 0 silent" in out
+    assert G.sidecar_mismatches(p, _sidecar_of(p)) == []
+
+
+def test_tap_changed_only_in_plan_flagged(tmp_path, capsys, monkeypatch):
+    p = _sc_plan()
+    s = _sidecar_of(p)
+    lc = p["partition_types"]["st_a"]["clock"]["landing_contract"]
+    lc["collector_local_sources"][0].update(tap=84, node="rst_n_t84")     # plan-only retap (the sidecar keeps t5)
+    lc["collector_children"][0]["tap"] = 11
+    mm = G.sidecar_mismatches(p, s)
+    assert ("partition_types.st_a.clock.landing_contract.collector_local_sources[name=cws1_i].tap", 84, 5) in mm
+    assert len(mm) == 3
+    pp, sp = _w(tmp_path, "p.json", p), _w(tmp_path, "s.json", s)
+    monkeypatch.delenv("OT_COMPOSE_DROP", raising=False)
+    assert G.main([pp, pp, "--sidecar", sp, "--sidecar-max", "1"]) == 0              # WARN by default
+    out = capsys.readouterr().out
+    assert "WARN SIDECAR-MISMATCH 3 tap fields" in out and "node 1" in out and "tap 2" in out
+    assert "collector_local_sources[name=cws1_i].node" in out and "... 2 more" in out
+    monkeypatch.setenv("OT_COMPOSE_DROP", "fail")
+    assert G.main([pp, pp, "--sidecar", sp]) == 1
+    out = capsys.readouterr().out
+    assert "FAIL SIDECAR-MISMATCH 3" in out and "REFUSED 0 silent losses" in out
+    dl = tmp_path / "d.txt"
+    dl.write_text("SIDECAR-MISMATCH partition_types.st_a.* # intended\n")
+    assert G.main([pp, pp, "--sidecar", sp, "--drop-list", str(dl)]) == 0
+
+
+def test_sidecar_row_change_lost_in_compose_flagged(tmp_path, capsys):
+    base = _sc_plan()
+    sbase = _sidecar_of(base)
+    srow = copy.deepcopy(sbase)                                               # the row retaps cws1_i in plan AND sidecar
+    srow["collector"]["types"]["st_a"]["local_sources"][0].update(tap=84, node="rst_n_t84")
+    row = copy.deepcopy(base)
+    row["partition_types"]["st_a"]["clock"]["landing_contract"]["collector_local_sources"][0].update(tap=84, node="rst_n_t84")
+    snew = copy.deepcopy(sbase)                                               # compose merged the plan only
+    del snew["collector"]["types"]["st_a"]["local_sources"][1]                # ... and lost a sidecar entry
+    pn, sn = _w(tmp_path, "new.json", row), _w(tmp_path, "snew.json", snew)
+    args = [pn, pn, "--sidecar", sn, "--prev-sidecar", _w(tmp_path, "sprev.json", srow),
+            "--sidecar-row", "srctap=%s:%s" % (_w(tmp_path, "sb.json", sbase), _w(tmp_path, "sr.json", srow))]
+    assert G.main(args) == 1
+    out = capsys.readouterr().out
+    assert "ROW-LOST sidecar:collector.types.st_a" in out and "(sidecar row srctap)" in out
+    assert "DROP sidecar:collector.types.st_a" in out and "local_sources[name=x_st_b_i]" in out
+    assert "SIDECAR-MISMATCH 3 tap fields" in out                            # retap node + tap, and the absent row
+    good = _w(tmp_path, "sgood.json", srow)
+    assert G.main([pn, pn, "--sidecar", good, "--prev-sidecar", good,
+                   "--sidecar-row", "srctap=%s:%s" % (_w(tmp_path, "sb2.json", sbase), good)]) == 0
+
+
+def test_sidecar_usage_errors_rc2(tmp_path):
+    p = _w(tmp_path, "p.json", _sc_plan())
+    assert G.main([p, p, "--prev-sidecar", p]) == 2                           # needs --sidecar
+    assert G.main([p, p, "--sidecar", p]) == 2                                # a plan is not a sidecar

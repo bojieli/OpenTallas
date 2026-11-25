@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """compose_drop_guard.py PREV.json NEW.json [--history OLDER.json ...] [--row NAME=BASE.json:ROW.json ...]
                        [--drop-list FILE] [--max-list N] [--json OUT.json]
+                       [--sidecar NEW_SIDECAR.json [--prev-sidecar PREV_SIDECAR.json] [--sidecar-row NAME=BASE_SC:ROW_SC ...]
+                        [--sidecar-max N]]
 
 COMPOSE-GUARD-1124 (QC-COMPOSE-GUARD, COORD 11-24): refuse a composed die plan that silently loses what the previous
 event's plan (or an adopted private row) carried.  QC C1k lost the QC-OPEN-STA r10 st_a row (3c17478ed804, built on C1g,
@@ -17,6 +19,16 @@ Findings (each is one plan path, dotted; list elements that are dicts with a uni
 Drop list FILE: one fnmatch pattern per line over the dotted path, optional ' # reason'; a matching finding is reported
 as INTENDED and does not fail.  '#' lines and blank lines are ignored.  A pattern may be prefixed with the finding kind
 ('REVERT partition_types.x.clock.*'); without a kind it matches every kind.
+Sidecar (QC-GUARD-SIDECAR 11-24, QC-RST-SRCTAP fb9de8c76e09): the strict bind reads the collector source / child reset
+nodes (tap index) from the launch sidecar's collector.types[T].local_sources[name] / children[index] {node, tap} and
+collector_root_node; landing_place and kit gen read the same fields from the plan's
+partition_types[T].clock.landing_contract.collector_local_sources / collector_children / collector_root_node.  A compose
+that merges only the plan silently loses a fix that lives in the sidecar (C1m + zz_sidecar_n46r4: 692 fields apart).
+  SIDECAR-MISMATCH  (--sidecar) per type in both, a tap field of NEW's plan != the sidecar's (or a source/child row present
+          on one side only).  The count and the first --sidecar-max are printed.  WARN; OT_COMPOSE_DROP=fail makes it rc 1.
+  DROP / ROW-LOST / ROW-DROP on 'sidecar:<path>'  (--prev-sidecar / --sidecar-row) the same checks as for the plan, run on
+          the sidecars: an entry PREV_SIDECAR carries that NEW_SIDECAR lacks, or a row's sidecar change the composed sidecar
+          lost.  rc 1 like plan drops; --drop-list patterns match the 'sidecar:' path.
 rc 0 = nothing silent; rc 1 = silent drops/reverts/row losses (listed); rc 2 = usage / unreadable input.
 Compose scripts call it after writing NEW and before PRE/bind, for example:
   python3 -I tools/die_plan/compose_drop_guard.py C1j.json C1k.json --history C1g.json C1h.json C1i.json \
@@ -27,6 +39,7 @@ import argparse
 import fnmatch
 import hashlib
 import json
+import os
 import sys
 from collections import Counter, OrderedDict
 
@@ -141,7 +154,7 @@ def load_drop_list_lines(lines):
         if not s or s.startswith("#"):
             continue
         kind, _, pat = s.partition(" ")
-        if kind in ("DROP", "REVERT", "ROW-LOST", "ROW-DROP") and pat.strip():
+        if kind in ("DROP", "REVERT", "ROW-LOST", "ROW-DROP", "SIDECAR-MISMATCH") and pat.strip():
             pats.append((kind, pat.strip()))
         else:
             pats.append((None, s))
@@ -162,7 +175,7 @@ def intended(kind, path, pats):
 
 def group(path):
     parts = path.replace("[", ".[").split(".")
-    return ".".join(parts[:3] if parts[0] == "partition_types" else parts[:2])
+    return ".".join(parts[:3] if parts[0] in ("partition_types", "sidecar:collector") else parts[:2])
 
 
 def guard(prev, new, history=(), rows=(), drop_pats=()):
@@ -174,6 +187,77 @@ def guard(prev, new, history=(), rows=(), drop_pats=()):
     for name, base, row in rows:
         found += [(k, show(p), "row " + name) for k, p in row_check(base, row, new)]
     return [(k, p, x, intended(k, p, drop_pats)) for k, p, x in found]
+
+
+SC_GROUPS = (("collector_local_sources", "local_sources", "name"), ("collector_children", "children", "index"))
+SC_FIELDS = ("node", "tap")
+_ABSENT = "<absent>"
+
+
+def _sc_rows(rows, key):
+    """OrderedDict key -> row (sources by name, children by their 'index' field, else list position)"""
+    out = OrderedDict()
+    for i, r in enumerate(rows or []):
+        if isinstance(r, dict):
+            out[r.get(key, i) if key == "index" else r.get(key)] = r
+    return out
+
+
+def sidecar_mismatches(plan, side):
+    """[(plan path, plan value, sidecar value)] for every tap field the bind reads from the sidecar that disagrees with
+    the plan field kit gen / landing_place read: per type in both (plan landing_contract + sidecar collector.types),
+    sources by name, children by index, {node, tap} each, and collector_root_node (when the sidecar names one).
+    A row present on one side only is one finding on the row path."""
+    st = ((side or {}).get("collector") or {}).get("types") or {}
+    out = []
+    for tn, t in sorted((plan.get("partition_types") or {}).items()):
+        lc = ((t or {}).get("clock") or {}).get("landing_contract") if isinstance(t, dict) else None
+        if not isinstance(lc, dict) or not isinstance(st.get(tn), dict):
+            continue
+        row, base = st[tn], f"partition_types.{tn}.clock.landing_contract."
+        for pg, sg, k in SC_GROUPS:
+            pm, sm = _sc_rows(lc.get(pg), k), _sc_rows(row.get(sg), k)
+            for kv in list(pm) + [x for x in sm if x not in pm]:
+                p, q = pm.get(kv), sm.get(kv)
+                where = f"{base}{pg}[{k}={kv}]"
+                if p is None or q is None:
+                    out.append((where, _ABSENT if p is None else "row", _ABSENT if q is None else "row"))
+                    continue
+                for f in SC_FIELDS:
+                    if p.get(f, _ABSENT) != q.get(f, _ABSENT):
+                        out.append((f"{where}.{f}", p.get(f, _ABSENT), q.get(f, _ABSENT)))
+        sr = row.get("collector_root_node")
+        if sr is not None and lc.get("collector_root_node", _ABSENT) != sr:
+            out.append((base + "collector_root_node", lc.get("collector_root_node", _ABSENT), sr))
+    return out
+
+
+def sidecar_guard(plan, side, prev_side=None, rows=(), drop_pats=()):
+    """(mismatch findings, loss findings), each [(kind, path, extra, intended)]; losses use 'sidecar:'-prefixed paths"""
+    mm = [("SIDECAR-MISMATCH", p, f"plan={json.dumps(a)} sidecar={json.dumps(b)}") for p, a, b in sidecar_mismatches(plan, side)]
+    loss = []
+    if prev_side is not None:
+        loss += [("DROP", "sidecar:" + show(p), "") for p in drops(prev_side, side)]
+    for name, b, r in rows:
+        loss += [(k, "sidecar:" + show(p), "sidecar row " + name) for k, p in row_check(b, r, side)]
+    tag = lambda fs: [(k, p, x, intended(k, p, drop_pats)) for k, p, x in fs]  # noqa: E731
+    return tag(mm), tag(loss)
+
+
+def sidecar_report(mm, n_first=20, level="WARN"):
+    """lines for the SIDECAR-MISMATCH findings: the count by field, the types, and the first n_first"""
+    silent = [f for f in mm if not f[3]]
+    if not silent:
+        return [f"SIDECAR PASS plan and sidecar agree on every collector tap field ({len(mm)} intended)"]
+    by = Counter(p.rsplit(".", 1)[-1] if p.endswith((".node", ".tap", ".collector_root_node")) else "row" for _, p, _, _ in silent)
+    types = {p.split(".")[1] for _, p, _, _ in silent}
+    lines = [f"{level} SIDECAR-MISMATCH {len(silent)} tap fields of the plan disagree with the sidecar in {len(types)} types "
+             f"({', '.join(f'{k} {v}' for k, v in sorted(by.items()))}; {len(mm) - len(silent)} intended): the strict bind reads "
+             f"the sidecar, landing_place / kit gen read the plan -- carry the row's sidecar (collector_reattach --sidecar)"]
+    lines += [f"{level} SIDECAR-MISMATCH {p} {x}" for _, p, x, _ in silent[:n_first]]
+    if len(silent) > n_first:
+        lines.append(f"{level} SIDECAR-MISMATCH ... {len(silent) - n_first} more (--sidecar-max / --json)")
+    return lines
 
 
 def report(found, max_list=12):
@@ -213,6 +297,10 @@ def main(argv=None):
     ap.add_argument("--drop-list", help="intended drops, fnmatch patterns over dotted paths")
     ap.add_argument("--max-list", type=int, default=12)
     ap.add_argument("--json", help="write every finding as JSON")
+    ap.add_argument("--sidecar", help="NEW's launch sidecar: its collector tap fields must equal NEW's plan fields")
+    ap.add_argument("--prev-sidecar", help="PREV's sidecar: entries it carries that --sidecar lacks are DROPs")
+    ap.add_argument("--sidecar-row", action="append", default=[], help="NAME=BASE_SC.json:ROW_SC.json a row's sidecar change")
+    ap.add_argument("--sidecar-max", type=int, default=20, help="SIDECAR-MISMATCH lines listed (the count is always printed)")
     a = ap.parse_args(argv)
     try:
         ld = lambda p: json.load(open(p))
@@ -226,20 +314,44 @@ def main(argv=None):
                 raise ValueError("--row wants NAME=BASE.json:ROW.json, got " + r)
             rows.append((name, ld(b), ld(rw)))
         pats = load_drop_list(a.drop_list)
+        if (a.prev_sidecar or a.sidecar_row) and not a.sidecar:
+            raise ValueError("--prev-sidecar / --sidecar-row need --sidecar NEW_SIDECAR")
+        side = ld(a.sidecar) if a.sidecar else None
+        if a.sidecar and not ((side.get("collector") or {}).get("types") if isinstance(side, dict) else None):
+            raise ValueError(f"--sidecar {a.sidecar} has no collector.types section")
+        prev_side = ld(a.prev_sidecar) if a.prev_sidecar else None
+        side_rows = []
+        for r in a.sidecar_row:
+            name, _, br = r.partition("=")
+            b, _, rw = br.partition(":")
+            if not (name and b and rw):
+                raise ValueError("--sidecar-row wants NAME=BASE_SC.json:ROW_SC.json, got " + r)
+            side_rows.append((name, ld(b), ld(rw)))
     except (OSError, ValueError) as e:
         print(f"compose_drop_guard: {type(e).__name__}: {e}", file=sys.stderr)
         return 2
     found = guard(prev, new, hist, rows, pats)
+    mm = []
+    if side is not None:
+        mm, sloss = sidecar_guard(new, side, prev_side, side_rows, pats)
+        found += sloss
     lines, silent = report(found, a.max_list)
     for ln in lines:
         print(ln)
+    fail_mm = os.environ.get("OT_COMPOSE_DROP", "").strip().lower() == "fail"
+    mm_silent = [f for f in mm if not f[3]]
+    if side is not None:
+        for ln in sidecar_report(mm, a.sidecar_max, "FAIL" if fail_mm else "WARN"):
+            print(ln)
     if a.json:
-        json.dump([dict(kind=k, path=p, note=x, intended=i) for k, p, x, i in found], open(a.json, "w"), indent=0)
+        json.dump([dict(kind=k, path=p, note=x, intended=i) for k, p, x, i in found + mm], open(a.json, "w"), indent=0)
     n_int = len(found) - len(silent)
-    if silent:
-        print(f"REFUSED {len(silent)} silent losses ({n_int} intended): name them in --drop-list or restore them")
+    if silent or (fail_mm and mm_silent):
+        extra = f"; {len(mm_silent)} sidecar tap mismatches (OT_COMPOSE_DROP=fail)" if fail_mm and mm_silent else ""
+        print(f"REFUSED {len(silent)} silent losses ({n_int} intended){extra}: name them in --drop-list or restore them")
         return 1
-    print(f"PASS 0 silent losses ({n_int} intended)")
+    warn = f"; WARN {len(mm_silent)} sidecar tap mismatches (OT_COMPOSE_DROP=fail refuses them)" if mm_silent else ""
+    print(f"PASS 0 silent losses ({n_int} intended){warn}")
     return 0
 
 
