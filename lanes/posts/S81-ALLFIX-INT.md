@@ -2192,3 +2192,27 @@
 - 2026-11-25 06:04 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2592786-1795614639 on tolerant-swine: rc=0 after 826 s, ended 06:04:19, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r0_p5__t1__pvf71da13a/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
 - 2026-11-25 06:05 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2848691-1795614855 on tolerant-swine: rc=0 after 662 s, ended 06:05:11, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r0_p5__t1__pv8995e794/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
 - 2026-11-25 06:11 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2805819-1795614825 on tolerant-swine: rc=0 after 1048 s, ended 06:11:06, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r2__t1__clce45cab5__pvb3258867/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r2
+- 2026-11-25 06:12 PST c10 LANE-ASBUILT PER-LANE DECISIONS [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS] Re-price: 0 lanes (no verified re-price before 07:00; all 21 go to the c10b re-price, ETA c10b). EXCLUDE (LANE-ASBUILT-C10): 13 types removed from c10 scope; epyc12 c10_w60f2/scope_types.txt 112->99, sha 602d1b6ecb9f. Check: 0 of the 21 lanes has an endpoint type left in scope.
+  lane | class +cycles | src -> dst type | decision
+  kd_s_7N | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_mu_C__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  kd_s_7S | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_nh_mus_C__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  lepf__s_7N_C__s_7N_LP | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_mu_C__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  lepf__s_7S_C__s_7S_LP | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_nh_mus_C__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  unit__seqhost__s_7N_LP | LEP_ROS_UNDECLARED +3 | seqhost__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  unit__seqhost__s_7S_LP | LEP_ROS_UNDECLARED +3 | seqhost__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_0S_L1 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t3 -> dsdv_slice_lepw_mus_C__t1 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t3
+  up_s_0S_L4 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t5 -> dsdv_slice_lepw_mus_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_1N_L2 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t16 -> dsdv_slice_c1x_C__t10 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t10
+  up_s_1S_L3 | UNPRICED_KIT_STATIONS +5 | ot_s81sl_leaf__t15 -> dsdv_slice_c1x_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_2N_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t27 -> dsdv_slice_c1x_C__t4 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t4
+  up_s_2S_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t22 -> dsdv_slice_c1x_C__t3 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t22
+  up_s_3S_L1 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t33 -> dsdv_slice_iq_C__t1 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t33
+  up_s_4N_L3 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t44__clf6cf8492 -> dsdv_slice_c1x_C__t5 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t44__clf6cf8492,dsdv_slice_c1x_C__t5
+  up_s_4N_L4 | UNPRICED_KIT_STATIONS +5 | ot_s81sl_leaf__t40__cl86ea32b3 -> dsdv_slice_c1x_C__t5 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t5
+  up_s_4S_L2 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t37 -> dsdv_slice_c3x_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_5N_L3 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t53__cl958451dd -> dsdv_slice_c1x_C__t7 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t53__cl958451dd,dsdv_slice_c1x_C__t7
+  up_s_6N_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t61 -> dsdv_slice_c1x_C__t9 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t61,dsdv_slice_c1x_C__t9
+  up_s_6S_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t57 -> dsdv_slice_c1x_C__t8 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t8
+  up_s_6S_L3 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t59 -> dsdv_slice_c1x_C__t8 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t59,dsdv_slice_c1x_C__t8
+  up_s_7S_L4 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t69 -> dsdv_slice_lepe_nh_mus_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  Bind: as-built v2 b23d94ffcd6e; a048 refused (wrapper rc 3). rt 515889f6ef75 (INOUTLINE guard).

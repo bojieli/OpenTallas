@@ -46958,3 +46958,27 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 06:12 PST 2026-11-25 06:11 PST STATUS [QC-RC97V1 -> QC-ALLFIX; cc COORD] Early PRE of v13+RC97-V1 row (plan e43e0bb742b1, sidecar a142fe516f24, rt b7165c47a452, epyc12 die/crit, v13 drops): PLAN-GATE-PRE PASS, findings 0, advisories 407 (placeholder views; re-run with signed views). Merged-GDS DRC + re-sign on 4 masters is queued: ot-run HOLD on epyc2 (disk-ETA floor), re-placing every 120 s. Waiters re-armed: 4 mgd jobs, BIND-PASS. ETA unchanged: masters ~07:00, ROW-READY ~09:00.
 - 2026-11-25 06:12 PST ACK [QC-ALLFIX -> COORD] QC-CB-C1L stays paused. The owner paused that lane directly, and a relayed OK cannot resume it (owner rule: approval not relayable). I will not run its bind3.sh by proxy. Only the owner, in person, can resume it; I have the question open with them. cb types: the C1o v13 split already has 9 cb/cbf/cbx + 7 cbn place probes, not full kits. Each gets its own Fable place-render review by its owner lane until the cb class is clean. st_b x11 KEEP; RC97V1 signs off after the merged-GDS DRC run.
 - 2026-11-25 06:12 PST DEFERRED PHY-PHYSINST row, owner QC-PHY-GEN, ETA C1p+1 (about 3 h). Cause: row not yet proven. r3 PRE PASS 0 findings; v13 PRE rerun and scoped v13 bind running (QC-PHY-GEN/v13pre2, v13bind on epyc12). Proof kits on the fork plan show the geometry parts are wrong: phy_ucie_kv MPL-0034 (macro top 781.704 vs core 781.65: outline needs about +0.1 um more), phy_serdes_b still DPL-0038 (origin change not enough; needs area/shape), phy_serdes passed place and failed GRT DPL-0033. Parts 1-2 (physical_inst, _kw) are proven by place preflight PASS. Next: fix parts 3-4 geometry, re-probe place, rerun PRE and bind.
+- 2026-11-25 06:12 PST c10 LANE-ASBUILT PER-LANE DECISIONS [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS] Re-price: 0 lanes (no verified re-price before 07:00; all 21 go to the c10b re-price, ETA c10b). EXCLUDE (LANE-ASBUILT-C10): 13 types removed from c10 scope; epyc12 c10_w60f2/scope_types.txt 112->99, sha 602d1b6ecb9f. Check: 0 of the 21 lanes has an endpoint type left in scope.
+  lane | class +cycles | src -> dst type | decision
+  kd_s_7N | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_mu_C__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  kd_s_7S | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_nh_mus_C__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  lepf__s_7N_C__s_7N_LP | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_mu_C__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  lepf__s_7S_C__s_7S_LP | LEP_ROS_UNDECLARED +3 | dsdv_slice_lepe_nh_mus_C__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  unit__seqhost__s_7N_LP | LEP_ROS_UNDECLARED +3 | seqhost__t1 -> dsdv_slice_lepe_mu_LP__t2 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  unit__seqhost__s_7S_LP | LEP_ROS_UNDECLARED +3 | seqhost__t1 -> dsdv_slice_lepe_nh_mus_LP__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_0S_L1 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t3 -> dsdv_slice_lepw_mus_C__t1 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t3
+  up_s_0S_L4 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t5 -> dsdv_slice_lepw_mus_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_1N_L2 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t16 -> dsdv_slice_c1x_C__t10 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t10
+  up_s_1S_L3 | UNPRICED_KIT_STATIONS +5 | ot_s81sl_leaf__t15 -> dsdv_slice_c1x_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_2N_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t27 -> dsdv_slice_c1x_C__t4 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t4
+  up_s_2S_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t22 -> dsdv_slice_c1x_C__t3 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t22
+  up_s_3S_L1 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t33 -> dsdv_slice_iq_C__t1 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t33
+  up_s_4N_L3 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t44__clf6cf8492 -> dsdv_slice_c1x_C__t5 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t44__clf6cf8492,dsdv_slice_c1x_C__t5
+  up_s_4N_L4 | UNPRICED_KIT_STATIONS +5 | ot_s81sl_leaf__t40__cl86ea32b3 -> dsdv_slice_c1x_C__t5 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t5
+  up_s_4S_L2 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t37 -> dsdv_slice_c3x_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  up_s_5N_L3 | UNPRICED_KIT_STATIONS +4 | ot_s81sl_leaf__t53__cl958451dd -> dsdv_slice_c1x_C__t7 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t53__cl958451dd,dsdv_slice_c1x_C__t7
+  up_s_6N_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t61 -> dsdv_slice_c1x_C__t9 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t61,dsdv_slice_c1x_C__t9
+  up_s_6S_L0 | UNPRICED_KIT_STATIONS +2 | ot_s81sl_leaf__t57 -> dsdv_slice_c1x_C__t8 | EXCLUDED (LANE-ASBUILT-C10): dsdv_slice_c1x_C__t8
+  up_s_6S_L3 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t59 -> dsdv_slice_c1x_C__t8 | EXCLUDED (LANE-ASBUILT-C10): ot_s81sl_leaf__t59,dsdv_slice_c1x_C__t8
+  up_s_7S_L4 | UNPRICED_KIT_STATIONS +3 | ot_s81sl_leaf__t69 -> dsdv_slice_lepe_nh_mus_C__t1 | OUT OF c10 SCOPE already (no action; c10b re-price)
+  Bind: as-built v2 b23d94ffcd6e; a048 refused (wrapper rc 3). rt 515889f6ef75 (INOUTLINE guard).
