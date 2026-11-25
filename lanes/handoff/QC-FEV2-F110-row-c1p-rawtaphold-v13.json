@@ -1,0 +1,25 @@
+{
+ "base": "aa3a14fb7484",
+ "derived_from": "06248f276e80",
+ "lane": "QC-FEV2-F110",
+ "op": "key-patch",
+ "row": "C1p-RAWTAPHOLD-SCOPED-v13",
+ "set": {
+  "reset.raw_tap_hold": {
+   "n": 1,
+   "note": "RRL-SDFF-HOLD, 1 HB4 per raw tap; scoped to 4 measured-miss types",
+   "taps": "raw",
+   "types": [
+    "slw_fe_v2__clf110fab2",
+    "sle_st_b_v1__pv0e7b1dcc",
+    "slw_su_l0__cl1e5219ea",
+    "sle_stm_v2__cl55be2264"
+   ]
+  }
+ },
+ "types_measured": {
+  "sle_st_b_v1__pv0e7b1dcc": -5.39,
+  "slw_fe_v2__clf110fab2": -11.68,
+  "slw_su_l0__cl1e5219ea": -3.78
+ }
+}
