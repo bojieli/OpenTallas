@@ -33,3 +33,9 @@ Job: lec.py LEC-FILL-AUTO (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on
 - COORD LEC-DETERMINISM: pushed main 3b9462e9eba (lec.py re-execs with PYTHONHASHSEED=0, sorted merged_proposals frozenset loops, lec.json hash_seed; test_lec_hash_seed.py). 3 identical-netlist runs on E9: r/det_hc3_run{1,2,3} (client pids 4192109/15/23, tools tmp/det = commit 6c74664dec). Compare failing sets when done.
 - Paired-sibling census scan: scratchpad ps_scan.sh per host (lec.log since 11-20 with nonzero paired sibling closure).
 - hd_mesh relaunched E11 client pid 1258058, hints_in.json, log otrun2.log.
+
+## 11-24 20:1x
+- DETERMINISM PASS: 4 runs identical (digest caf0f1bb27), EQUIVALENT 172089/172089 on 5fe05a; RELEC row hub 39b1180.
+- Count fixes landed: 9cd3574dfde (private archive credit + module dedupe), dce92f0c92a (odb/src revoke match). Recount 486 current / 573 any.
+- Census for RELEC: lanes/handoff/LEC-PAIRED-SIBLING-CENSUS-1124.tsv (26 RECHECK).
+- Open: hd_mesh relay alias proof E11 client pid 1258058 (r/hd_mesh_relay_alias_rev/otrun2.log), started ~10:4x.
