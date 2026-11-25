@@ -53,3 +53,9 @@ def test_bind_and_run_kit_call_it():
     gp = (HERE.parent / "die_plan/gen_phys.py").read_text()
     assert "seal_gate.py\" \"$K\" run_kit" in gp.replace("\\", "") or 'seal_gate.py" "$K" run_kit' in gp
     assert '"fleet" / "seal_gate.py"' in gp
+
+
+def test_walk_budget_is_advisory_in_block_mode(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(SG, "findings", lambda *a: [f"{SG.WALK_CUT}60 s)"])
+    assert SG.gate(tmp_path, "bind", env={"OT_SEAL_GATE": "block"}) == 0
+    assert "walk cut" in capsys.readouterr().err

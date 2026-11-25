@@ -10,6 +10,7 @@ import sys
 import time
 
 SEAL_BLOCK_AFTER = 1795633675          # epoch: report-only before this, blocking after
+WALK_CUT = "(walk cut after "
 SCRATCH_TREE_RE = re.compile(r"^/srv/opentallas-scratch\d*/claude/")
 
 
@@ -23,7 +24,7 @@ def findings(tree, sub=("physical",), skip=("run",), budget_s=60.0):
             continue
         for dp, dn, fn in os.walk(root):
             if time.time() - t0 > budget_s:
-                bad.append(f"(walk cut after {budget_s:.0f} s)")
+                bad.append(f"{WALK_CUT}{budget_s:.0f} s)")
                 return bad
             if dp == tree:
                 dn[:] = [d for d in dn if d not in skip]
@@ -65,6 +66,8 @@ def gate(tree, who, sub=("physical",), skip=("run",), out=None, now=None, env=No
     except OSError as e:
         print(f"SEAL-GATE {who}: could not check {tree}: {e}", file=out)
         return 0
+    if bad and bad[-1].startswith(WALK_CUT):
+        print(f"SEAL-GATE {who}: {bad.pop()}", file=out)
     if not bad:
         return 0
     for b in bad[:20]:
