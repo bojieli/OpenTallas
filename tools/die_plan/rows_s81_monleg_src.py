@@ -35,6 +35,7 @@ import reset_tree as RT  # noqa: E402
 import collector_reach as CR  # noqa: E402
 
 REACH, PLAN_UM, TOL = 405.0, 360.0, 1e-6
+FROM_BAND = set()      # id() of sources whose xy_um was set to the band centre (no extra key is written into the plan)
 argv = [a for a in sys.argv[1:]]
 rep_path = None
 if "--json" in argv:
@@ -60,7 +61,7 @@ def pins_of(s, nxy, commit=True):
             # (xy_um = status or point); pin_xy_um keeps the pin.  The bind rule then judges the same point the chain reaches.
             if commit:
                 s["xy_um"] = list(bc)
-                s["status_from_band"] = True
+                FROM_BAND.add(id(s))
             return [bc]
         pts.append(bc)
     return pts
@@ -173,7 +174,7 @@ for tn in sorted(types):
                 continue
         s["node"] = tgt
         s.pop("tap", None)
-        moves.append(dict(grp=key, src=s.get("name") if key == "local_sources" else s.get("index", i), node=n,
+        moves.append(dict(grp=key, src=s.get("name") if key == "local_sources" else s.get("index", i), node=n, xy=(list(s['xy_um']) if id(s) in FROM_BAND else None),
                           new=tgt, old_hop=round(hop, 1), new_hop=round(max(man(p, nodes[tgt]["xy"]) for p in pins), 1),
                           added_depth=nodes[tgt]["depth"] - nodes[n]["depth"], node_depth=nodes[n]["depth"]))
     tr["relays"].extend(added)
@@ -199,6 +200,8 @@ if not DRY:
             if len(hit) != 1:
                 sys.exit(f"RINS REFUSED: sidecar {st}.{m['grp']} {m['src']}: {len(hit)} matches")
             hit[0]["node"] = m["new"]; hit[0].pop("tap", None)
+            if m.get("xy"):
+                hit[0]["xy_um"] = list(m["xy"])      # the bind reads the status point from the sidecar
 
 def ready_bound(coll):
     """reach_relay_plan.ready_bound on the sidecar collector (root ready deadline, cycles after external reset release)."""

@@ -127,6 +127,7 @@ def test_src_relay_insertion_cli(tmp_path):
     lc2 = out["partition_types"]["T"]["clock"]["landing_contract"]
     s2 = lc2["collector_local_sources"][0]
     assert s2["node"].startswith("rst_cx_") and "tap" not in s2
+    assert "status_from_band" not in s2 and s2["xy_um"] == [900.0, 900.0]      # no extra key; status point = band centre
     R = {x["q"]: x for x in lc2["collector_tree"]["relays"]}
     assert R[s2["node"]]["kind"] == "cland_copy" and R[s2["node"]]["depth"] > 1      # longer, never shorter
     chain = s2["node"]
