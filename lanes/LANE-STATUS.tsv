@@ -187,3 +187,4 @@ HEAD-TILE-RESIGN	stood-down	none	2026-11-24	09:48 PST | job done: hd_tile signed
 QC-COMPOSE-GUARD	stood-down	QC-CB-C1L	2026-11-24	16:10 PST | job done: C1k dropped-row list + C1l restore 3d81651854c4 + compose_drop_guard main e827d53ab617; see lanes/handoff/QC-COMPOSE-GUARD.md
 KV-OWN-HG	stood-down	KV-ALLFIX	2026-11-24	18:12 PST | all KV-OWN-HG rows have named live owners (hgi_v1/v7 KV-ALLFIX, hg_v1p3 KV-OWN-HG-R2, hub_Wi KV-OWN-HUB-R2, pc cl254 KV-SENDER-SKEW); u_rrl export-pair fix 0549174ed9c on main
 QC-R8-SYMLINK	stood-down	none	2026-11-24	23:16 PST | job done: r8_refresh symlinked-view fix 2030befc216 + R8BOUND PRE check 6009f0ed307 on main
+ONBOARD-EPYC12	stood-down	COORD	2026-11-25	00:30 PST | epyc12 onboarded and accepted; wt clones and tmp deleted via ot-delete
