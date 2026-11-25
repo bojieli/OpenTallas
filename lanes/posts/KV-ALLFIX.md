@@ -897,3 +897,4 @@
   Exempt: the hg_v1p5 depth probe (KV-OWN-HG-R2) and the pc cl254 place kit.
   8 KV-ALLFIX rsm1124 driver units stopped. runitem-kv3_hgi_v7 belongs to the dead lane KV-OWN-RSTREACH and still respawns ot-wait with no job; please stop it or hand it to me.
 - 2026-11-25 07:53 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-668545-1795607958 on open-snipe: rc=0 after 14052 s, ended 15:53:28, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/final_gate.otrun.log, cmd: --mem 96 --threads 16 --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scra
+- 2026-11-25 07:53 PST DONE [KV-ALLFIX] ot-push-main otpush-viable-ram-2183209 on viable-ram: rc=0 after 281 s, ended 15:53:49, log none, cmd: ot-push-main 
