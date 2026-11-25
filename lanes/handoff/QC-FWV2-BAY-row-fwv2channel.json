@@ -1,8 +1,9 @@
 {
  "row": "FWV2-CHANNEL",
- "apply": "per type, internal_stations entry matched by conn: overwrite the listed keys (0 adds, 0 drops, other keys byte-identical)",
- "credit": "VIS-QC VISQC-FEFW-1 form (hub lanes/handoff/VIS-QC-form_fefw.md); values are the sle_fw_v2__cl69f5e854 stations already in C1n-r2 a372ae84fa2a (same bus set, identical bits)",
+ "credit": "VIS-QC VISQC-FEFW-1 (hub lanes/handoff/VIS-QC-form_fefw.md)",
  "base": "C1n-r2 a372ae84fa2a",
+ "apply": "per type, internal_stations entry matched by conn: overwrite the listed keys; 0 adds, 0 drops, all other keys byte-identical",
+ "note": "cl6740750e = parity port of the cl69f5e854 de-stack (23 stations) + residual channels for x_fe_p1_i, x_ctl_o, x_ctl_i on both types; no strip growth (FWV2-GROW is the contingency)",
  "types": {
   "sle_fw_v2__cl6740750e": [
    {
@@ -308,6 +309,39 @@
     }
    },
    {
+    "conn": "bus:x_ctl_o",
+    "set": {
+     "regs_um": [
+      [
+       515.0,
+       1007.0
+      ],
+      [
+       515.0,
+       1172.0
+      ],
+      [
+       515.0,
+       1337.0
+      ],
+      [
+       515.0,
+       1502.0
+      ],
+      [
+       515.0,
+       1667.0
+      ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      488.0,
+      542.0
+     ],
+     "leg_order": "channel"
+    }
+   },
+   {
     "conn": "bus:x_ctl_p1_o",
     "set": {
      "regs_um": [
@@ -562,22 +596,28 @@
     "set": {
      "regs_um": [
       [
-       321.66,
-       1587.91
+       250.0,
+       1620.0
       ],
       [
-       313.157,
-       1344.141
+       250.0,
+       1380.0
       ],
       [
-       304.655,
-       1100.371
+       250.0,
+       1140.0
       ],
       [
-       306.668,
-       867.413
+       250.0,
+       930.0
       ]
-     ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | KNEE-1 11-10: 2->3 stations, kit knee worst 457.07->304.71 um | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      218.0,
+      281.0
+     ],
+     "leg_order": "channel"
     }
    },
    {
@@ -610,14 +650,109 @@
        882.267
       ],
       [
-       414.72,
-       899.053
+       450.0,
+       895.0
       ],
       [
-       359.284,
-       714.932
+       385.0,
+       905.0
       ]
-     ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 5: x_fe_p1_i +2 stations, WNS path -467.6 ps | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      433.0,
+      488.2
+     ],
+     "leg_order": "channel"
+    }
+   }
+  ],
+  "sle_fw_v2__cl69f5e854": [
+   {
+    "conn": "bus:x_ctl_o",
+    "set": {
+     "regs_um": [
+      [
+       515.0,
+       1007.0
+      ],
+      [
+       515.0,
+       1172.0
+      ],
+      [
+       515.0,
+       1337.0
+      ],
+      [
+       515.0,
+       1502.0
+      ],
+      [
+       515.0,
+       1667.0
+      ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      488.0,
+      542.0
+     ],
+     "leg_order": "channel"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "set": {
+     "regs_um": [
+      [
+       250.0,
+       1620.0
+      ],
+      [
+       250.0,
+       1380.0
+      ],
+      [
+       250.0,
+       1140.0
+      ],
+      [
+       250.0,
+       930.0
+      ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | KNEE-1 11-10: 2->3 stations, kit knee worst 457.07->304.71 um | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      218.0,
+      281.0
+     ],
+     "leg_order": "channel"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       518.4,
+       882.267
+      ],
+      [
+       450.0,
+       895.0
+      ],
+      [
+       385.0,
+       905.0
+      ]
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 5: x_fe_p1_i +2 stations, WNS path -467.6 ps | FWV2-CHANNEL 11-25 (QC-FWV2-BAY): channel in free band, off the x_fe_p2_o channel (327-381) and the x~315 spine; VIS-QC FEFW-1 form",
+     "channel_um": [
+      433.0,
+      488.2
+     ],
+     "leg_order": "channel"
     }
    }
   ]
