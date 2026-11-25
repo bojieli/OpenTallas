@@ -30,3 +30,5 @@ Next: PROBE-PASS only on a clean probe census (hotspot_census check --probe); wa
 - 10:3x COORD correction: probe_visual picks by plan sha (e52463abec). Withdrawn ISSUES: sle_su_c, slw_su_l1 cla2a, pv_v12, hd_lep0N r7, serdes t13/14/16. cb renders were C1h (sha 894e6f), but the CB-1-absent claim was wrong. Re-review hd_lep0N r8 once it renders.
 - 14:5x: revoked 9 PROBE-PASS (chain FAIL x8, no final DB x1); judge = chain first + final DB required; 6 PROBE-PASS stand.
 - 21:0x COORD: verdicts only from route/sign-off result (judge WAIT-ROUTE state); all 8 PROBE-PASS revoked (3 FAIL, 5 PROBE-THROUGH). st_a sign-off class: DRC 72 + TT skew 320-386.
+
+- 2026-11-25 07:5x: HOURLY posted (059d6c5a). census_sweep skips epyc9/10/11 by default (COORD temporary host ruling; VR_SKIP_HOSTS= lifts). Next hourly ~08:5x. Open: FP-<die> files stale since 04-05h, no reply; serdes__t1 plan FAIL vs PROBE-PASS asked of FP-CONVERGE-S81.
