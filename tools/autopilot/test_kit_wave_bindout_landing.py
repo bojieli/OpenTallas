@@ -99,6 +99,7 @@ def test_bind_naming_a_missing_asbuilt_fails_loudly(private_plan, monkeypatch):
 
 def test_bind_asbuilt_without_sidecar_fails_loudly(private_plan, monkeypatch):
     Path(private_plan["ab"]).write_text(json.dumps({}))
+    (Path(private_plan["bind"]) / "native_topology.json").write_text(json.dumps({"asbuilt_sha256": hashlib.sha256(Path(private_plan["ab"]).read_bytes()).hexdigest()}))   # the bind read this as-built (sha-checked)
     with pytest.raises(KW.BindLandingMissing, match="clock_landing_table"):
         KW.private_spec(cfg_with_landing(), D, I, "intel2", plan=private_plan["plan"], bind_out=private_plan["bind"], host="epyc11")
 

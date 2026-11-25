@@ -9902,22 +9902,34 @@ def bind_asbuilt(bind_out, src):
     if not os.path.isabs(m) and not src:
         return None
     f = Path(m) if os.path.isabs(m) else Path(src) / m
-    if f.is_file():
-        return str(f)
-    # BIND-COPY-1124 (COORD, KV-PV-CAP lost ~7 h: a bind copied epyc11 -> epyc10 records the as-built at its ORIGIN tree path): the same file
-    # in this tree, by the tree's .fork.json (origin -> this tree) or the physical/... suffix, accepted when its sha256 equals the bind's
-    # native_topology.json asbuilt_sha256; a bind without that sha takes only the exact .fork.json mapping
     import hashlib
     try:
         want = json.loads((Path(bind_out) / "native_topology.json").read_text()).get("asbuilt_sha256")
     except (OSError, ValueError, AttributeError):
         want = None
+    # BIND-ASBUILT-SHA 11-25 (QC-C1O-BINDPATH, FLOW-0930 F-05): the recorded absolute path is only a hint.  A different (stale) tree can sit at that
+    # path on another host (epyc11: the paused QC-CB-C1L/n/tree), so a file there counts only when its sha256 is the bind's asbuilt_sha256.
+    if f.is_file() and (not want or hashlib.sha256(f.read_bytes()).hexdigest() == want):
+        return str(f)
+    # BIND-COPY-1124 (COORD, KV-PV-CAP lost ~7 h: a bind copied epyc11 -> epyc10 records the as-built at its ORIGIN tree path): the same file
+    # in this tree, by the tree's .fork.json (origin -> this tree) or the physical/... suffix, accepted when its sha256 equals the bind's
+    # native_topology.json asbuilt_sha256; a bind without that sha takes only the exact .fork.json mapping
     for c, exact in _tree_map(m, src):
         if c.is_file():
             if want and hashlib.sha256(c.read_bytes()).hexdigest() == want:
                 return str(c)
             if not want and exact:
                 return str(c)
+    # by sha: a file of the same name anywhere under the tree (and the bind's own dir) whose sha256 is the bind's
+    if want:
+        roots = [r for r in (Path(src) / "physical" if src else None, Path(bind_out)) if r and r.is_dir()]
+        for r in roots:
+            for c in r.rglob(os.path.basename(m)):
+                try:
+                    if c.is_file() and hashlib.sha256(c.read_bytes()).hexdigest() == want:
+                        return str(c)
+                except OSError:
+                    continue
     return None
 
 
