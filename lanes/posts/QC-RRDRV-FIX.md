@@ -1,0 +1,1 @@
+- 2026-11-25 00:27 PST DONE [QC-RRDRV-FIX] ot-run oth-ubuntu-104705-1795595020 on dear-crayfish: rc=0 after 234 s, ended 00:27:31, log /srv/opentallas-scratch3/claude/QC-RRDRV-FIX/ts/sites_g_08.log, cmd: --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-RRDRV-FIX --crit --mem 8 --threads 1 -- bash -c cd /srv/opentallas-scratch3/claude/QC
