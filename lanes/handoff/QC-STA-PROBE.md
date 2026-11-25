@@ -75,3 +75,8 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - CTS skew: read postcts_gate_{tt,ff}.json (POST-hook), never 4_cts_final.rpt. GRT timing: final 5_1_grt.odb.
 - Placed scan worst group both: u_u_r0 -> u_u_btab...g_btb.u_m 28b 800 um row=none (unstaged origin-to-pin candidate; posted 01:51).
 - W5 epyc12 bind ELAB_OK 01:5x.
+
+## 01:59 PST 11-25
+- W5 LAUNCHED 01:57: unit runitem-slw_st_a_v2__clf4365a62 (hub), gen epyc12, plan 64729ba8d8bb (bind dir s8; LAUNCHED post text says s7 = typo), at kit_rtl.
+- Placed >405 list: hub lanes/handoff/QC-STA-PROBE-placed405.tsv; C1o v8 does not stage r0->btab write hop (posted 01:54).
+- All 3 probes live: E5 + v1 in CTS (epyc2), W5 kit_rtl (epyc12). Next: CTS skew (postcts_gate), GRT, sign-off verdicts.
