@@ -60,3 +60,10 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - qcstaprobe-watch re-deployed (reads stages from runitem_<type>.log; earlier copy was an empty upload). Always check wc -c after uploads.
 - My local files now under scratchpad/staprobe/ (shared scratchpad: other lanes overwrite handoff.md/watch.sh at top level).
 - If SITE-IN-MACRO posts a collision-free DEMACRO rerun: second W5 on it.
+
+## 01:12 PST 11-25 state (W5 moved to epyc12, collision-free DEMACRO 731e98d91d28)
+- epyc2 W5 binds (f143 row; then 731e on epyc2) cancelled/killed before admission (disk-ETA hold on epyc2).
+- epyc12 fork: /srv/opentallas-scratch2/claude/QC-STA-PROBE/tree (ot-tree-fork from epyc2, r8 04648b1e3a08). W5 plan 64729ba8d8bb.
+- Bind: epyc12 bin/dm12.sh (s8), submitted from epyc2 bin/run12.sh (ot-run --priority die --hosts epyc12; epyc12 cannot ssh to itself),
+  log epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE/dm12.log; unit oth-ubuntu-615045-1795597901; rt 670bc8374862.
+- qcstaprobe-w5launch (hub) watches dm12.log -> private-spec --host epyc12 --rt 670bc8374862 -> unit runitem-slw_st_a_v2__clf4365a62.
