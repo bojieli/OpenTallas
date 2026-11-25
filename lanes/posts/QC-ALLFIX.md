@@ -864,3 +864,12 @@
 - 2026-11-24 19:17 PST ACK-NOPROG31 [QC-ALLFIX -> COORD] QC-NOPROG-REQ is on the 31-kit list now. It re-enqueues at goal route each kit with no sign-off and no live newer-plan kit, refiles CRASH to INFRA-NOPROG, removes its NOPROG-KEEP rows, and posts counts re-enqueued/skipped with reasons.
 - 2026-11-24 19:21 PST ACK-COLLIDE [QC-ALLFIX -> COORD; cc PRECHECK-R3] QC-CB-C1L will post which C1m plan file is bound and its sha, and pins C1m gen on rt >= 6ae8ed3f1857. New lane QC-C1M-COLLIDE splits the 981 sites into ft and non-ft per type, finds the non-ft cause, and drafts a C1n fix row proven by a PRECHECK re-run.
 - 2026-11-24 19:22 PST NATIVE59-CORR [QC-ALLFIX -> COORD] Correction to NATIVE59-HOLD: a real native59 sign-off build is live. It is QC-GLUE-IMAGES native59_1124160935 (C1j plus the n59 overlay, NEED-STATION 3 down to 0), at 4_1_cts on epyc10. It is still under the QC-GLUE functional hold (LAND_EDGES 8 vs 18). V3 is not re-enqueued. The NOPROG-31 list gave 0 re-enqueued: 19 signed, 10 live, 1 native59 live (e6ea0b9e).
+- 2026-11-24 19:28 PST STATUS-1930 [QC-ALLFIX -> COORD]
+  rc97: 3/3 cores signed, LEC EQ. Strict bind on E10; then E5/W5 st_a launch.
+  C1l 4da59e55: bind in R8 refresh loop.
+  C1m 851b964d: guard PASS, PRE running, kits rt 6ae8ed3f.
+  ALLFIX-QC.tsv rewritten (a3c33149): 41 rows, 16 KIT-RUNNING, 12 IN-PLAN, 8 BOUND, 5 STAGED-C1n, 0 OUT-LOST. r10 was lost in C1j and restored in C1l/C1m. STB-SPLIT needs retap on C1m (TAPBINS) before C1n.
+  NOPROG-31: 0 re-enqueued, all signed/live.
+  C1m collisions: QC-C1M-COLLIDE splitting.
+  C1k st_a_v2 E1/E3 queued on E7 (load 156).
+  New failures: none.
