@@ -65,8 +65,18 @@ def normal_slot(P, tn, sn, *, full=None):
 
 
 def station_site(slot, stage, bit, ap, bp, *, normal=True):
-    """Normal constructor targets; internal legacy placement stays unchanged."""
+    """Normal constructor targets; internal legacy placement stays unchanged.
+
+    QC-STA-HOP 11-25: an explicit_stage0 slot whose bit_sites_um holds one stage per station is placed by the
+    kit with bit_sites_um[j] at stage j, stage 0 included (ft_bit_sites.table first=0, face_flops.tcl
+    ff_place_explicit_stage0).  The legacy mapping (stage j -> bit_sites_um[j-1], stage 0 = in pin) dropped the
+    last stage and measured S(k-2) -> out pin: the phantom 651 um st_a b_hw_ctl_hc0 hop in the C1o v13 census."""
     a, b = input_site(ap), input_site(bp)
+    bs = slot.get('bit_sites_um')
+    if bs and slot.get('explicit_stage0') is True and len(bs) == int(slot.get('stations', 1)):
+        x, y = bs[stage][bit]
+        w, h = slot['bit_site_cell_um']
+        return x+w/2, y+h/2
     if stage == 0 and normal:
         return a
     if slot.get('bit_sites_um') and stage > 0:

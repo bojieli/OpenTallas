@@ -56,21 +56,26 @@ def _findings(raw, plan_path, tree=None, **kw):
 
 
 def slot_bit_worst(P, tn, slot, pins):
-    """(worst per-bit hop um, bit, hop index) of one ft slot; hop index k-1 = last bit site -> out pin."""
+    """(worst per-bit hop um, bit, hop index) of one ft slot; hop index k-1 = last bit site -> out pin; -1 = in pin -> explicit S0."""
     import die_hop_scan as D
     sn, k = slot["name"], int(slot.get("stations", 1))
     pi, po = pins.get(sn + "_i", {}), pins.get(sn + "_o", {})
     nm = D.normal_slot(P, tn, sn)
+    bs = slot.get("bit_sites_um")
+    exp0 = bool(bs) and slot.get("explicit_stage0") is True and len(bs) == k
     best = (0.0, None, None)
     for b in set(pi) | set(po):
         a, z = pi.get(b) or po[b], po.get(b) or pi[b]
         st = [D.station_site(slot, j, b, a, z, normal=nm) for j in range(k)]
+        if exp0 and b in pi:   # QC-STA-HOP: explicit stage 0 is a placed site, so in pin -> S0 is a real hop (index -1)
+            st = [D.input_site(pi[b])] + st
         h = [D.md(x, y) for x, y in zip(st, st[1:])]
         if b in po:
             h.append(D.md(st[-1], D.input_site(po[b])))
+        off = -1 if (exp0 and b in pi) else 0
         for i, v in enumerate(h):
             if v > best[0]:
-                best = (v, b, i)
+                best = (v, b, i + off)
     return best
 
 
