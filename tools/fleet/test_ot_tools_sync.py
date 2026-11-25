@@ -420,6 +420,10 @@ class DiskReclaimWindows(unittest.TestCase):
         m = self.load(); f = pathlib.Path(tempfile.mkdtemp()) / "spec.json"; f.write_text("UNIQUE-MARK-7731 rt/0123456789ab")
         ps = [subprocess.Popen(["sleep", "30", str(f)]) for _ in range(5)]
         try:
+            for p in ps:
+                for _ in range(100):             # wait for the exec: until then the cmdline is the forked test process
+                    if b"sleep" in open("/proc/%d/cmdline" % p.pid, "rb").read(): break
+                    time.sleep(0.05)
             self.assertEqual(m.live_reference_text().count("UNIQUE-MARK-7731"), 1)
         finally:
             for p in ps: p.terminate(); p.wait()
