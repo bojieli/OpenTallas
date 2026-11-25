@@ -1,0 +1,625 @@
+{
+ "row": "FWV2-CHANNEL",
+ "apply": "per type, internal_stations entry matched by conn: overwrite the listed keys (0 adds, 0 drops, other keys byte-identical)",
+ "credit": "VIS-QC VISQC-FEFW-1 form (hub lanes/handoff/VIS-QC-form_fefw.md); values are the sle_fw_v2__cl69f5e854 stations already in C1n-r2 a372ae84fa2a (same bus set, identical bits)",
+ "base": "C1n-r2 a372ae84fa2a",
+ "types": {
+  "sle_fw_v2__cl6740750e": [
+   {
+    "conn": "bus:ag_eo",
+    "set": {
+     "regs_um": [
+      [
+       29.0,
+       805.892
+      ],
+      [
+       29.0,
+       529.341
+      ],
+      [
+       29.0,
+       252.791
+      ]
+     ],
+     "channel_um": [
+      27.0,
+      31.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 27.0-31.0 (was normal_first vertical leg at leaf x 275.0)"
+    }
+   },
+   {
+    "conn": "bus:ard_eo",
+    "set": {
+     "regs_um": [
+      [
+       257.6,
+       727.584
+      ],
+      [
+       257.6,
+       498.476
+      ],
+      [
+       257.6,
+       269.368
+      ],
+      [
+       229.108,
+       68.752
+      ]
+     ],
+     "channel_um": [
+      232.0,
+      283.2
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 232.0-283.2 (was normal_first vertical leg at leaf x 296.0)"
+    }
+   },
+   {
+    "conn": "bus:arl_eo",
+    "set": {
+     "regs_um": [
+      [
+       126.0,
+       885.223
+      ],
+      [
+       126.0,
+       665.375
+      ],
+      [
+       126.0,
+       445.528
+      ],
+      [
+       126.0,
+       225.68
+      ]
+     ],
+     "channel_um": [
+      123.0,
+      127.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 123.0-127.0 (was normal_first vertical leg at leaf x 313.2)"
+    }
+   },
+   {
+    "conn": "bus:arm_eo",
+    "set": {
+     "regs_um": [
+      [
+       287.0,
+       726.427
+      ],
+      [
+       287.0,
+       506.438
+      ],
+      [
+       287.0,
+       286.449
+      ],
+      [
+       219.989,
+       133.472
+      ]
+     ],
+     "channel_um": [
+      284.0,
+      288.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 284.0-288.0 (was normal_first vertical leg at leaf x 344.0)"
+    }
+   },
+   {
+    "conn": "bus:art_eo",
+    "set": {
+     "regs_um": [
+      [
+       129.0,
+       885.172
+      ],
+      [
+       129.0,
+       665.973
+      ],
+      [
+       129.0,
+       446.774
+      ],
+      [
+       129.0,
+       227.575
+      ]
+     ],
+     "channel_um": [
+      127.0,
+      131.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 127.0-131.0 (was normal_first vertical leg at leaf x 314.4)"
+    }
+   },
+   {
+    "conn": "bus:arv_eo",
+    "set": {
+     "regs_um": [
+      [
+       122.0,
+       908.435
+      ],
+      [
+       122.0,
+       688.306
+      ],
+      [
+       122.0,
+       468.177
+      ],
+      [
+       122.0,
+       248.049
+      ]
+     ],
+     "channel_um": [
+      119.0,
+      123.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 119.0-123.0 (was normal_first vertical leg at leaf x 323.5)"
+    }
+   },
+   {
+    "conn": "bus:dd_eo",
+    "set": {
+     "regs_um": [
+      [
+       158.4,
+       903.335
+      ],
+      [
+       158.4,
+       699.329
+      ],
+      [
+       158.4,
+       495.323
+      ],
+      [
+       158.4,
+       291.318
+      ]
+     ],
+     "channel_um": [
+      131.0,
+      185.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 131.0-185.8 (was normal_first vertical leg at leaf x 332.6)"
+    }
+   },
+   {
+    "conn": "bus:flt_wo",
+    "set": {
+     "regs_um": [
+      [
+       389.657,
+       1200.856
+      ],
+      [
+       306.0,
+       1052.09
+      ],
+      [
+       306.0,
+       819.668
+      ],
+      [
+       306.0,
+       587.245
+      ],
+      [
+       232.423,
+       428.4
+      ]
+     ],
+     "channel_um": [
+      303.0,
+      307.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 303.0-307.0 (was normal_first vertical leg at leaf x 622.1)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "from_um": [
+      609.257,
+      1193.457
+     ],
+     "regs_um": [
+      [
+       385.649,
+       6.171
+      ],
+      [
+       309.4,
+       166.354
+      ],
+      [
+       309.4,
+       402.786
+      ],
+      [
+       309.4,
+       639.217
+      ],
+      [
+       236.431,
+       802.68
+      ]
+     ],
+     "channel_um": [
+      307.0,
+      311.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | KNEE-1 11-10: 3->4 stations, kit knee worst 400.23->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 307.0-311.8 (was normal_first vertical leg at leaf x 622.1)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       439.421,
+       1427.953
+      ],
+      [
+       256.762,
+       1427.953
+      ],
+      [
+       74.104,
+       1427.953
+      ],
+      [
+       62.4,
+       1256.998
+      ],
+      [
+       62.4,
+       1074.339
+      ]
+     ],
+     "channel_um": [
+      8.0,
+      116.7
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 8.0-116.7 (was normal_first vertical leg at leaf x 622.1)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       354.039,
+       409.718
+      ],
+      [
+       401.67,
+       347.144
+      ],
+      [
+       511.875,
+       347.144
+      ]
+     ],
+     "channel_um": [
+      327.239,
+      380.839
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 327.2-380.8 (was normal_first vertical leg at leaf x 304.2)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       433.239,
+       538.856
+      ],
+      [
+       495.984,
+       475.504
+      ]
+     ],
+     "channel_um": [
+      435.143,
+      488.743
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 435.1-488.7 (was normal_first vertical leg at leaf x 307.1)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_o",
+    "set": {
+     "regs_um": [
+      [
+       408.722,
+       478.578
+      ],
+      [
+       408.722,
+       635.302
+      ],
+      [
+       465.356,
+       735.392
+      ]
+     ],
+     "channel_um": [
+      381.722,
+      435.622
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 381.7-435.6 (was normal_first vertical leg at leaf x 304.7)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       525.087,
+       455.468
+      ],
+      [
+       586.786,
+       606.069
+      ],
+      [
+       586.786,
+       818.37
+      ]
+     ],
+     "channel_um": [
+      559.786,
+      613.686
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 559.8-613.7 (was normal_first vertical leg at leaf x 312.8)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       354.001,
+       789.725
+      ],
+      [
+       354.001,
+       990.568
+      ],
+      [
+       421.237,
+       1124.176
+      ]
+     ],
+     "channel_um": [
+      327.101,
+      380.901
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 327.1-380.9 (was normal_first vertical leg at leaf x 296.1)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       472.575,
+       988.434
+      ],
+      [
+       472.575,
+       1174.494
+      ]
+     ],
+     "channel_um": [
+      470.175,
+      474.975
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 470.2-475.0 (was normal_first vertical leg at leaf x 318.2)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       409.375,
+       1273.694
+      ],
+      [
+       447.39,
+       1410.368
+      ]
+     ],
+     "channel_um": [
+      381.875,
+      436.775
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 381.9-436.8 (was normal_first vertical leg at leaf x 314.9)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       397.745,
+       1300.546
+      ],
+      [
+       586.287,
+       1309.862
+      ],
+      [
+       586.287,
+       1507.719
+      ]
+     ],
+     "channel_um": [
+      558.887,
+      613.687
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 558.9-613.7 (was normal_first vertical leg at leaf x 199.9)"
+    }
+   },
+   {
+    "conn": "bus:cmd_ei",
+    "set": {
+     "regs_um": [
+      [
+       36.8,
+       276.572
+      ],
+      [
+       36.8,
+       428.72
+      ],
+      [
+       36.8,
+       580.868
+      ],
+      [
+       36.8,
+       733.016
+      ],
+      [
+       165.253,
+       756.711
+      ]
+     ],
+     "channel_um": [
+      31.0,
+      42.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 31.0-42.6 (was normal_first vertical leg at leaf x 317.4)"
+    }
+   },
+   {
+    "conn": "bus:dr_ei",
+    "set": {
+     "regs_um": [
+      [
+       69.0,
+       443.568
+      ],
+      [
+       69.0,
+       591.127
+      ],
+      [
+       69.0,
+       738.687
+      ],
+      [
+       174.085,
+       781.161
+      ]
+     ],
+     "channel_um": [
+      43.0,
+      95.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | KNEE-1 11-10: 1->2 stations, kit knee worst 461.07->321.64 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 43.0-95.0 (was normal_first vertical leg at leaf x 321.6)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "set": {
+     "regs_um": [
+      [
+       321.66,
+       1587.91
+      ],
+      [
+       313.157,
+       1344.141
+      ],
+      [
+       304.655,
+       1100.371
+      ],
+      [
+       306.668,
+       867.413
+      ]
+     ]
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       502.552,
+       201.976
+      ],
+      [
+       404.803,
+       223.756
+      ]
+     ],
+     "channel_um": [
+      373.203,
+      436.303
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 373.2-436.3 (was normal_first vertical leg at leaf x 318.2)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       518.4,
+       882.267
+      ],
+      [
+       414.72,
+       899.053
+      ],
+      [
+       359.284,
+       714.932
+      ]
+     ]
+    }
+   }
+  ]
+ }
+}
