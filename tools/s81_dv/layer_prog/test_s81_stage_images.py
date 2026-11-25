@@ -58,6 +58,16 @@ def test_stage_spec_rules(half, dense, keep_wq_b, shared):
     assert SF.stage_experts(s) == [(0, 5), (0, 6), (0, 7)]
 
 
+@pytest.mark.parametrize("storage_dtype, storage_cols", [("uint8", 1024), ("uint16", 512)])
+def test_compressor_operand_matches_bf16_projection_width(storage_dtype, storage_cols):
+    # The checkpoint records storage shape, while xs_bf multiplies the BF16 view.
+    weight = np.zeros((2, storage_cols), dtype=storage_dtype)
+    files = {"weights/indexer.wk.bin": dict(format="BF16", dtype=storage_dtype, shape=list(weight.shape))}
+    shape = SF.compressor_x_shape(files)
+    assert shape == (weight.view("<u2").shape[1],) == (512,)
+    assert SF.synth_x("attn.cmp.norm.scale", shape).shape == shape
+
+
 def _safetensors(path, tensors):
     hdr, off, blobs = {}, 0, []
     for name, (dt, shape, b) in tensors.items():
