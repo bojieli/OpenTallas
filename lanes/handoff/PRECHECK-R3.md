@@ -33,3 +33,10 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - ELAB-PORT-WIDTH main 072d86845f + fix 74d8c8796f (in a7727d2f56): tools/die_plan/elab_port_width.py; bind.py hook after asbuilt.json load -> OUT/elab_port_width.json. Census: S81 c8 912 cells (kreg/dly, S81-SVC-TIED fixed); QC C1i/j/l 0; KV A5t5/6 0; HEAD N/A. Runs: <host> PRECHECK-R3/runs/epw/epw_<tag>.txt. Pending reruns: S81 c8 + c8fix_out (epyc9), QC C1h/C1k (epyc7).
 - ADV-RECT-OUTLINE + ADV-BITSITE-AREA main a7727d2f56 (adv_geom_static.py, plan_advisory CHECKS). Counts posted; per-type ro2_<tag>.txt in runs/epw on epyc9/10/11.
 - ADV-PG-EDGE-PIN main afa7481009; counts posted (pg_<tag>.txt in runs/epw on epyc9/10/11). Open: S81 c8 + c8fix ELAB-PORT-WIDTH reruns (epyc9), QC C1h/C1k census (epyc7); tree_precheck on c9seal_tree.
+
+## 11-25 05:2x PST PG-EDGE-PIN calibration posted (hub 1ed50ddbdf)
+- Verdict: no pg_halo_um row candidates. On the col_h10 masters (rom_elem_q_qxpq hw/he, dsfd_qbank_S, sstn_base566/payload536) the risk is not realized: all 8 finished kits end with final DRC 0. s81c_attn_hcore, kv3_pv_pair and qkd_kvs_pcc are UNMEASURED (no kit reached detail route).
+- Failed kit col_h10_r0_p1 cl574cc59d: 10 M5 Shorts at dsfd_cfifo_crs4 u_cf, signal vs obstruction, not PG.
+- Pending: drc_edge.py per-pin match on epyc9 runs/epw/drc (t1.log, col_h10_p1.json) is queued on CPU_CHARGE. Post a follow-up only if it changes the verdict.
+- HEAD gap fixed: extra pins root fable-fix-head-lep0n-1122/ctl_wrcap_1122/prepared_r18m. W6 is now 1251 pins on 11 cores; lep_pair 214 each.
+- Disclosure: I left /tmp/pgcal_precheck.txt on intel2 (post body; outside my scratch tmp, so it was not removed).
