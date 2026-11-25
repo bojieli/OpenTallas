@@ -1651,3 +1651,4 @@
   - INSIDE 17257. UNMODELLED 23930: 2782 core (no signed view, includes the 1243 ROM elem), 21148 grid (CW6 predates added taps).
   Data: intel1 type-contract-spec/cv1m/out4.
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-25 00:17 PST QC-ALLFIX
