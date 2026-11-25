@@ -1,0 +1,13 @@
+iter	type	class	plan_key	fix	ledger_for	source
+1	hd_serdes	tap>1000,DRT-plateau	clock.sink_bins_file,clock.tap_mode	placed-kit bins; tap_mode=density (clk_t13 5648, t12 4668, t29 2654)	HEAD-ALLFIX W8 (serdes re-floor lane owns; coordinate)	FP-CONVERGE-HEAD fable review
+1	hd_serdes	channel,PG	dmem/cmem origin_um y 267.8->291; u_chn pg_halo_um	20.16um channel, 78 M5 pins on stripes	HEAD-ALLFIX	review
+1	hd_tile	tap>1000,leg>405	clock.added_taps ~120um grid y700-1037; tap_max_sinks=1000	eB tap holds 17622/25879 glue sinks; farthest 493um	HEAD-ALLFIX	review
+1	hd_tile	channel,PG,pile	u_eB origin_um y 734.4->743.04, outline H +8.64; pg_halo_um on 5 cores; move one bus 12um	eA2/A3-eB route util 1.44	HEAD-ALLFIX	review
+1	hd_mesh,hd_host_w	channel	g_256 pair gap ->0 or >=14.88; column gap 7.9->17.28; re-derive sink_bins_file	1.85um channels (mesh 48, host_w 24 per ADV-MACRO-CHANNEL)	HEAD-ALLFIX (HD-HOSTW-GRT-1)	review+ADV-MACRO-CHANNEL
+1	hd_host_e	tap>1000,sliver,PG	sink_bins_file+density; u_epc origin y 60.48->77.76; pg_halo_um	11 taps >1500; 8.64um E strip	HEAD-ALLFIX	review
+1	hd_lep0N	channel,tap,hotspot	rx_mem bank gap >=14.88 or abut (24 pairs, min 2.42); split clk_t49 (1719 sinks); re-key tap_offset by site; outline W 1071.36->1114.56; pg_halo_um	tap step 125ps; util 1.33 x930-960	HEAD-ALLFIX C3 LEP-TAPSTEP-1	review
+1	hd_lep0N_w	leg>405,channel,bins	internal_stations coll_i2 5 stages (2005.7um); pair-to-bank gap ->17.28; re-bin	10 channels 12.97-14.04um	HEAD-ALLFIX C4	review
+1	hd_ctl	band-blocked,pile	four cores origin y +86.4, outline H 518.4->604.8; lepk_o0 bit sites over 30um	u_xa0 blocks h_rx_i 49%	HEAD-ALLFIX	review
+1	hd_spn,hd_spn_end	hotspot,latency	outline W 587.52->691.2; spread ft_slots windows; fixed_cycles +delta on sp_x1-5	util 3.11 x220-250 y500-1890	HEAD-ALLFIX	review+ISTPRICE
+1	hd_spn_eshim_rx,wshim_rx,wshim_tx	stale-bins	re-derive sink_bins_file	bins 69/54/34% below placed	HEAD-ALLFIX	review
+1	hd_mesh_e,hd_host	leg>405	ft_slots[m_rx_ft].stations +1; hd_host au/ad stations 3->4	407um hop; 1335um	HEAD-ALLFIX	review

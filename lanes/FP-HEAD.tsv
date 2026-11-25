@@ -1,10 +1,10 @@
 type	taps>1000	sinks_under_cores	gcell_obstruction	macro_channel<14.88	legs>405	lane_latency	tapstep	street>1.0	drt_plateau_risk	visual	basis
-hd_serdes	FAIL placed clk_t4 10250 clk_t5 9557 clk_t3 9183 (+2 >1500)	UNCHECKED(no bins)	PASS(static)	PASS	PASS	PASS	PASS	PASS	FAIL (taps>1000 proxy)	PENDING	ADV-TAP-LOAD W7 plan
-hd_tile	FAIL plan x8.5 under-sized (28848 flops / 6 taps)	UNCHECKED	PASS	PASS	PASS	FAIL 12 chE*_h lanes PRICE-SHORT	UNPRICED (no tap_offset table)	PASS	WARN	PENDING	TAP-LOAD,ISTPRICE,EDGE-STRIP 528 windows
-hd_spn	WARN tap clk_t31 1697 pin regs est 576ps>450	UNCHECKED	PASS	PASS	PASS	FAIL sp_x1..5 PRICE-SHORT (2<8)	PASS	FAIL ROUTE-DEMAND peak 2.49 (519 gcells>=0.8)	PASS	PENDING	TAP-BUDGET,ROUTE-DEMAND
-hd_spn_end	WARN tap clk_t23 1697 est 576ps	UNCHECKED	PASS	PASS	PASS	PASS	PASS	FAIL ROUTE-DEMAND peak 1.87 (408 gcells)	PASS	PENDING	TAP-BUDGET,ROUTE-DEMAND
-hd_mesh	FAIL plan x5.5 under-sized (49418 flops / 16 taps cap 24000)	UNCHECKED(7% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	PENDING	TAP-LOAD
-hd_lep0N	FAIL plan x2.7 (57952 flops / 16 taps; needs >=39)	UNCHECKED(15% ref)	PASS	FAIL 40 bank pairs 8.35 um (new ADV-MACRO-CHANNEL)	PASS	PASS	FAIL 16 pairs >42ps (W6, kit)	PASS	WARN	PENDING	TAP-LOAD,MACRO-CHANNEL,EDGE-STRIP 7 windows
-hd_ctl	FAIL 38549 flops / 16 taps (needs >=26)	UNCHECKED(11% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	PENDING	TAP-LOAD
-hd_host(_w)	n/a	n/a	UNCHECKED: no static rule (GRT 139; obs_gcell_cap fix 0d7deda5143)	PASS	PASS	PASS	PASS	PASS	n/a	PENDING	HD-HOSTW-GRT-1
-other types	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PENDING	no finding
+hd_serdes	FAIL placed clk_t4 10250 clk_t5 9557 clk_t3 9183 (+2 >1500)	UNCHECKED(no bins)	PASS(static)	PASS	PASS	PASS	PASS	PASS	FAIL (taps>1000 proxy)	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	ADV-TAP-LOAD W7 plan
+hd_tile	FAIL plan x8.5 under-sized (28848 flops / 6 taps)	UNCHECKED	PASS	PASS	PASS	FAIL 12 chE*_h lanes PRICE-SHORT	UNPRICED (no tap_offset table)	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD,ISTPRICE,EDGE-STRIP 528 windows
+hd_spn	WARN tap clk_t31 1697 pin regs est 576ps>450	UNCHECKED	PASS	PASS	PASS	FAIL sp_x1..5 PRICE-SHORT (2<8)	PASS	FAIL ROUTE-DEMAND peak 2.49 (519 gcells>=0.8)	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-BUDGET,ROUTE-DEMAND
+hd_spn_end	WARN tap clk_t23 1697 est 576ps	UNCHECKED	PASS	PASS	PASS	PASS	PASS	FAIL ROUTE-DEMAND peak 1.87 (408 gcells)	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-BUDGET,ROUTE-DEMAND
+hd_mesh	FAIL plan x5.5 under-sized (49418 flops / 16 taps cap 24000)	UNCHECKED(7% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD
+hd_lep0N	FAIL plan x2.7 (57952 flops / 16 taps; needs >=39)	UNCHECKED(15% ref)	PASS	FAIL 40 bank pairs 8.35 um (new ADV-MACRO-CHANNEL)	PASS	PASS	FAIL 16 pairs >42ps (W6, kit)	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD,MACRO-CHANNEL,EDGE-STRIP 7 windows
+hd_ctl	FAIL 38549 flops / 16 taps (needs >=26)	UNCHECKED(11% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD
+hd_host(_w)	n/a	n/a	UNCHECKED: no static rule (GRT 139; obs_gcell_cap fix 0d7deda5143)	PASS	PASS	PASS	PASS	PASS	n/a	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	HD-HOSTW-GRT-1
+other types	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	no finding
