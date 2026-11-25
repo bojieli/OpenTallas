@@ -371,6 +371,19 @@ def grt_falling(rounds, improve=MIN_IMPROVE):
     return len(rounds) >= 2 and rounds[-1][1] < rounds[-2][1] * (1 - improve)
 
 
+def grt_round_interval(report_dir, rounds):
+    """seconds between the last two congestion-N.rpt writes (0 when unknown).  NOPROG-GRTFALL-1124: a flat clock shorter than one GRT round
+    judges a kit that simply has not reached its next round."""
+    if len(rounds) < 2:
+        return 0.0
+    try:
+        a = os.path.getmtime(os.path.join(report_dir, f"congestion-{rounds[-2][0]}.rpt"))
+        b = os.path.getmtime(os.path.join(report_dir, f"congestion-{rounds[-1][0]}.rpt"))
+    except OSError:
+        return 0.0
+    return max(0.0, b - a)
+
+
 def judge_grt_rounds(rounds, log_text=""):
     """-> None | (verdict, why, detail, klass).  DESIGN-FAIL (GRT-CONGESTION): the first GRT-0273 (a clock NDR dropped under
     congestion), or the overflow at round >= 10 above GRT_STOP_OVF or still rising.  NO-PROGRESS: the overflow has not fallen
@@ -1170,6 +1183,7 @@ def scan(now=None, act=False, probe_s=4):
                 if rounds_:
                     row["grt_ovf"] = rounds_[-1][1]       # GRT-LABEL-NOTICE-1122: latest total overflow (hub tracks it over time)
                 row["grt_falling"] = grt_falling(rounds_)      # NOPROG-GRTFALL-1124: a falling overflow is progress, never a design cancel
+                row["grt_round_s"] = round(grt_round_interval(rdir, rounds_))
                 special = judge_grt_rounds(rounds_, read_text(log) if os.path.isfile(log) else "")
                 if special:
                     # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
@@ -1845,7 +1859,8 @@ def design_fail_evidence(r, track, now):
     if track.get("ov0") is None or ov < float(track["ov0"]) * (1 - MIN_IMPROVE):
         track.update(first=now, ov0=ov)
     track.update(last=now, ov=ov)
-    if now - float(track["first"]) >= DF_FLAT_S:
+    # NOPROG-GRTFALL-1124: flat means no 2 % fall for DF_FLAT_S AND for 1.5 GRT rounds (slow FastRoute rounds are not a stall)
+    if now - float(track["first"]) >= max(DF_FLAT_S, 1.5 * float(r.get("grt_round_s") or 0)):
         return f"GRT-LABEL {why}; overflow {float(track['ov0']):.0f} -> {ov:.0f}, no 2 % fall in {(now - float(track['first'])) / 3600:.1f} h; {str(r.get('detail') or '')[:100]}"
     return ""
 

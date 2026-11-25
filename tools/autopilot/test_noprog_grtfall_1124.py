@@ -68,3 +68,23 @@ def test_wave_kit_falling_overflow_is_no_grt_flat_candidate():
     assert falling["verdict"] == nw.GRT_LABEL and nw.grt_flat_candidate(falling) == ""
     flat = kv_row([(5, 20442), (10, 20300)], kit=kit, lane="", age_h=6.1)
     assert nw.grt_flat_candidate(flat).startswith("NOPROG label")
+
+
+def test_flat_clock_waits_for_one_and_a_half_slow_grt_rounds(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    calls, seen = [], {}
+    c = lambda u: (calls.append(u), (0, "ok"))[1]
+    r = kv_row([(5, 83232), (10, 63283)], grt_round_s=4 * 3600, grt_falling=False)     # rounds 4 h apart
+    nw.design_fail_pass([r], seen, NOW, cancel=c)
+    nw.design_fail_pass([r], seen, NOW + 2.2 * 3600, cancel=c)
+    assert calls == []                                                     # 2.2 h flat < 1.5 rounds (6 h)
+    nw.design_fail_pass([r], seen, NOW + 6 * 3600 + 1, cancel=c)
+    assert calls == [r["unit"]]
+
+
+def test_round_interval_from_report_mtimes(tmp_path):
+    d = reports(tmp_path, 28701, 12166)
+    os.utime(os.path.join(d, "congestion-5.rpt"), (NOW, NOW))
+    os.utime(os.path.join(d, "congestion-10.rpt"), (NOW + 1980, NOW + 1980))
+    assert nw.grt_round_interval(d, nw.grt_rounds(d)) == 1980
+    assert nw.grt_round_interval(d, [(10, 1)]) == 0.0
