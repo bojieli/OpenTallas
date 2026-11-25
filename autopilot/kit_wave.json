@@ -39462,7 +39462,8 @@
     "hd_st_turn",
     "hd_tile",
     "hd_turn_a",
-    "hd_turn_b"
+    "hd_turn_b",
+    "hd_lep0N_w"
    ],
    "die_max_inflight": 100000,
    "owner_lane": "HEAD die owner (HEAD-100)",
@@ -39530,9 +39531,7 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
-   "hold_items": {
-    "hd_lep0N": "HEAD-R18 11-23 22:3x: the published hold record head-r18g-east-cap10-census-1123 (FABLE-RC-ALL 11:33: hold exact East until the rc138 cap10 census + East route/timing dispositions are accepted) does not block on s81_head (stops_off, r703), so it is mirrored here. owner=HEAD-R18 eta=2026-11-24 03:00. Lift = delete this key on result:HEAD-R18:R18G_E_CAP10_ACCEPTED."
-   },
+   "hold_items": {},
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
@@ -39601,7 +39600,8 @@
      "OT_PG_TRACK_TRUTH": "1",
      "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
      "OT_PG_CELL_KEEPOUT": "0",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_TAP_GRT_PRE_ITERS": "5"
     },
     "hd_mesh": {
      "OT_IO_HOLD": "sender_min",
@@ -41545,21 +41545,7 @@
     "hd_tile@3"
    ],
    "src_manifest": true,
-   "hold_records": [
-    {
-     "id": "head-r18g-east-cap10-census-1123",
-     "plan_sha": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
-     "items": [
-      "hd_lep0N"
-     ],
-     "owner": "HEAD-R18",
-     "cause": "East cap10 open channel and site congestion (rc136\u2013139) and measured reset-relay routed RC tail",
-     "reason": "FABLE-RC-ALL 11:33 verdict. Hold exact East until rc138 cap10 congestion census and required East route/timing dispositions are accepted.",
-     "release": [
-      "result:HEAD-R18:R18G_E_CAP10_ACCEPTED"
-     ]
-    }
-   ],
+   "hold_records": [],
    "proof_items": {
     "head-serdes-fanout": [
      "sd5"
