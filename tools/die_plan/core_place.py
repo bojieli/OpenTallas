@@ -1577,46 +1577,46 @@ def write_type(M, t_new, cfg, log):
 
 
 BANK_CLEAR_UM = 2.16          # a bank site stays this far off every hard core (the kit HALO) or the core's own halo_um if larger
-BANK_RADIUS_UM = 43.2
+BANK_RADIUS_UM = 86.4
+_SITE_W, _ROW_H = 0.054, 0.27
 
 
 def resite_station_banks(base, t_new, rep):
-    """SITE-IN-MACRO 11-25 (COORD ruling): write_type re-sites regs_um of an internal station; the explicit bank sites that depend on
-    them (bit_sites_um stage j <- regs_um[j], face_bit_sites_um <- to_um) used to stay behind (KV A5t3-A5t6: 22 sites of 8 kv3_pc_v1
-    types on kvpc1_f).  Each bank is shifted by the move of its register / capture end (the same bank geometry offset), then every
-    site is legalised: inside the kit CORE_AREA, on the site grid, off every hard core + halo and off every other bank site
-    (ft_bit_sites.snap_slots, move_off_blocks).  Rows whose stage count differs from regs_um (take-regs rows) are legalised only.
+    """SITE-IN-MACRO 11-25 (COORD ruling): write_type re-sites regs_um of an internal station; the explicit bank sites that depend
+    on them (bit_sites_um stage j <- regs_um[j], face_bit_sites_um <- to_um) used to stay behind (KV A5t3-A5t6: 22 sites of 8
+    kv3_pc_v1 types on kvpc1_f).  Each bank is shifted by the move of its register / capture end (same bank geometry offset), then
+    a site that is shifted or lies on a core + halo goes to the nearest legal grid site: inside the kit CORE_AREA, off every hard
+    core + halo, and with its WHOLE cell footprint (bit_site_cell_um, 26 site columns) clear of every other site of the type (ft,
+    soft banks, every station bank, the bank's own sites).  Sites that did not move and are legal stay (only snapped to the grid).
+    Rows whose stage count differs from regs_um (take-regs rows) are legalised only.
     rep: bank_rows, bank_shifted, bank_sites_moved, bank_failed."""
-    import ft_bit_sites as FB
+    import math
     import kit_fit
     rows = [(i, s) for i, s in enumerate(t_new.get("internal_stations") or []) if s.get("bit_sites_um") or s.get("face_bit_sites_um")]
     if not rows:
         return
     bst = base.get("internal_stations") or []
-    pseudo = []
+    items = []          # [dict(i, key, grp, idx, orig, pos, cell)]
     for i, s in rows:
         b = bst[i] if i < len(bst) and bst[i].get("conn") == s.get("conn") else None
-        groups = [[list(q[:2]) for q in g] for g in s.get("bit_sites_um") or []]
+        cell = [float(v) for v in (s.get("bit_site_cell_um") or (1.404, 0.27))[:2]]
         o, n = (b or {}).get("regs_um") or [], s.get("regs_um") or []
+        groups = s.get("bit_sites_um") or []
         shifted = False
-        if b is not None and len(groups) == len(o) == len(n):
-            for j, (po, pn) in enumerate(zip(o, n)):
-                dx, dy = pn[0] - po[0], pn[1] - po[1]
-                if abs(dx) > 1e-6 or abs(dy) > 1e-6:
-                    groups[j] = [[q[0] + dx, q[1] + dy] for q in groups[j]]
-                    shifted = True
-        face = [list(q[:2]) for q in s.get("face_bit_sites_um") or []]
-        if b is not None and face and b.get("to_um") and s.get("to_um"):
+        for j, g in enumerate(groups):
+            dx = dy = 0.0
+            if b is not None and len(groups) == len(o) == len(n):
+                dx, dy = n[j][0] - o[j][0], n[j][1] - o[j][1]
+            shifted = shifted or abs(dx) > 1e-6 or abs(dy) > 1e-6
+            for k, q in enumerate(g):
+                items.append(dict(i=i, key="bit_sites_um", j=j, k=k, orig=(q[0], q[1]), pos=(q[0] + dx, q[1] + dy), cell=cell))
+        dx = dy = 0.0
+        if b is not None and b.get("to_um") and s.get("to_um"):
             dx, dy = s["to_um"][0] - b["to_um"][0], s["to_um"][1] - b["to_um"][1]
-            if abs(dx) > 1e-6 or abs(dy) > 1e-6:
-                face = [[q[0] + dx, q[1] + dy] for q in face]
-                shifted = True
+        shifted = shifted or abs(dx) > 1e-6 or abs(dy) > 1e-6
+        for k, q in enumerate(s.get("face_bit_sites_um") or []):
+            items.append(dict(i=i, key="face_bit_sites_um", j=None, k=k, orig=(q[0], q[1]), pos=(q[0] + dx, q[1] + dy), cell=cell))
         rep["bank_shifted"] = rep.get("bank_shifted", 0) + int(shifted)
-        cell = s.get("bit_site_cell_um") or (1.404, 0.27)
-        if groups:
-            pseudo.append((i, "bit_sites_um", dict(name=f"is{i}", bit_sites_um=groups, bit_site_cell_um=cell)))
-        if face:
-            pseudo.append((i, "face_bit_sites_um", dict(name=f"is{i}.face", bit_sites_um=[face], bit_site_cell_um=cell)))
     blocks = []
     for h in t_new.get("hard_cores") or []:
         try:
@@ -1628,20 +1628,93 @@ def resite_station_banks(base, t_new, rep):
         m = max(BANK_CLEAR_UM, float(h.get("halo_um") or 0.0))
         blocks.append((x - m, y - m, x + w + m, y + hh + m))
     try:
-        fca = kit_fit.kit_core_area(t_new)
-        slots, moved = FB.snap_slots([p[2] for p in pseudo], fca[:2], core_box=fca, blocks=blocks, radius_um=BANK_RADIUS_UM,
-                                     move_off_blocks=True)
-    except Exception as e:  # noqa: BLE001 -- no free site near: keep the shifted banks, report (ADV-SITE-IN-MACRO flags them)
+        fca = [float(v) for v in kit_fit.kit_core_area(t_new)[:4]]
+    except Exception as e:  # noqa: BLE001
         rep["bank_failed"] = str(e)[:200]
-        slots, moved = [p[2] for p in pseudo], 0
+        return
+    x0, y0, bx1, by1 = fca
+    occ = set()         # (col, row) cells covered by a site footprint
+
+    def cells(c, r, w, h):
+        cw, rh = max(1, math.ceil(w / _SITE_W - 1e-6)), max(1, math.ceil(h / _ROW_H - 1e-6))
+        return [(cc, rr) for rr in range(r, r + rh) for cc in range(c, c + cw)]
+
+    def cr(x, y):
+        return round((x - x0) / _SITE_W), round((y - y0) / _ROW_H)
+
+    def on_block(c, r, w, h):
+        x, y = x0 + c * _SITE_W, y0 + r * _ROW_H
+        return any(x < b2 and a < x + w and y < d and b < y + h for a, b, b2, d in blocks)
+
+    own_ids = {id(e) for i, e in rows}
+    others = []
+    for key in ("ft_slots", "internal_stations"):
+        for e in t_new.get(key) or []:
+            if id(e) in own_ids:
+                continue
+            w, h = (e.get("bit_site_cell_um") or (1.404, 0.27))[:2]
+            for g in e.get("bit_sites_um") or []:
+                others += [(q[0], q[1], w, h) for q in g]
+            others += [(q[0], q[1], w, h) for q in e.get("face_bit_sites_um") or []]
+    for src in (t_new.get("soft_reg_banks"), (t_new.get("clock") or {}).get("soft_reg_banks")):
+        for e in src or []:
+            w, h = (e.get("bit_site_cell_um") or (1.404, 0.27))[:2]
+            others += [(q[0], q[1], w, h) for q in e.get("bit_sites_um") or []]
+    rl = t_new.get("relay_sites")
+    if isinstance(rl, dict):                       # relay flops: single cells at their plan points
+        others += [(p_[0], p_[1], 1.404, 0.27) for p_ in rl.values() if isinstance(p_, (list, tuple)) and len(p_) >= 2]
+    for x, y, w, h in others:
+        occ.update(cells(*cr(x, y), w, h))
+    # the rows' own sites: those that stay (unmoved, legal) first, in plan order; the rest search a free site
+    def in_core(c, r, w, h):
+        return 0 <= c <= math.floor((bx1 - w - x0) / _SITE_W + 1e-6) and 0 <= r <= math.floor((by1 - h - y0) / _ROW_H + 1e-6)
+
+    todo = []
+    for it in items:
+        w, h = it["cell"]
+        c, r = cr(*it["pos"])
+        stay = it["pos"] == it["orig"] and in_core(c, r, w, h) and not on_block(c, r, w, h)
+        if stay:
+            it["cr"] = (c, r)
+            occ.update(cells(c, r, w, h))
+        else:
+            todo.append(it)
+    nr, nc = int(BANK_RADIUS_UM / _ROW_H), int(BANK_RADIUS_UM / _SITE_W)
+    offs = None
+    for it in todo:
+        w, h = it["cell"]
+        c0, r0 = cr(*it["pos"])
+        fc = min(max(c0, 0), math.floor((bx1 - w - x0) / _SITE_W)); fr = min(max(r0, 0), math.floor((by1 - h - y0) / _ROW_H))
+
+        def free(c, r):
+            return in_core(c, r, w, h) and not on_block(c, r, w, h) and not any(q in occ for q in cells(c, r, w, h))
+        if free(fc, fr):
+            it["cr"] = (fc, fr)
+        else:
+            if offs is None:
+                offs = sorted((2 * abs(dc) * _SITE_W + abs(dr) * _ROW_H, dc, dr) for dr in range(-nr, nr + 1) for dc in range(-nc, nc + 1)
+                              if abs(dc) * _SITE_W + abs(dr) * _ROW_H <= BANK_RADIUS_UM)
+            for _d, dc, dr in offs:
+                if free(fc + dc, fr + dr):
+                    it["cr"] = (fc + dc, fr + dr)
+                    break
+            else:
+                rep["bank_failed"] = f"no free site within {BANK_RADIUS_UM} um for station row {it['i']} {it['key']}"
+                it["cr"] = (fc, fr)
+        occ.update(cells(*it["cr"], w, h))
+    moved = 0
+    for it in items:
+        c, r = it["cr"]
+        q = [round(x0 + c * _SITE_W, 6), round(y0 + r * _ROW_H, 6)]
+        if abs(q[0] - it["orig"][0]) > 5e-4 or abs(q[1] - it["orig"][1]) > 5e-4:
+            moved += 1
+        s = t_new["internal_stations"][it["i"]]
+        if it["key"] == "bit_sites_um":
+            s["bit_sites_um"][it["j"]][it["k"]] = q
+        else:
+            s["face_bit_sites_um"][it["k"]] = q
     rep["bank_sites_moved"] = moved
     rep["bank_rows"] = len(rows)
-    for (i, key, _), sl in zip(pseudo, slots):
-        s = t_new["internal_stations"][i]
-        if key == "bit_sites_um":
-            s["bit_sites_um"] = sl["bit_sites_um"]
-        else:
-            s["face_bit_sites_um"] = sl["bit_sites_um"][0]
 
 
 def slot_mask(R, rects, W, H, um):

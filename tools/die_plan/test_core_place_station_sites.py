@@ -71,3 +71,20 @@ def test_fixed_points_only_when_bank_resite_is_off():
         me = SimpleNamespace(t=t, cfg=dict(bank_resite=on), W=500.0, H=500.0, owner=lambda p, tol=0.0: None)
         CP.TypeModel._fixed_geometry(me)
         assert len(me.FP) == n
+
+
+def test_legaliser_keeps_whole_footprints_clear_of_ft_relay_and_own_sites():
+    import adv_geom_static as G
+    base, t_new, rep = moved((993.6, 246.24), [[967.68, 379.68], [915.84, 522.72], [915.84, 669.6]])
+    # ft sites and a relay flop right where the cleared bank wants to land (just below the 2.16 um core halo), one column apart
+    ft = [[1060.02, 240.0 + 0.27 * k] for k in range(0, 3)]
+    t_new["ft_slots"] = [dict(name="ft0", width=3, stations=1, bit_site_cell_um=[1.404, 0.27], bit_sites_um=[[list(p) for p in ft]])]
+    t_new["relay_sites"] = {"r0": [1062.0, 240.0]}
+    base2 = copy.deepcopy(t_new)
+    for e in base2["internal_stations"]:
+        e["regs_um"] = copy.deepcopy(base["internal_stations"][0]["regs_um"])
+    rep = {}
+    CP.resite_station_banks(base2, t_new, rep)
+    ss = G.bit_sites(t_new)
+    assert G.site_collisions(ss, (0.0, 0.0)) == []                                  # ADV-BITSITE-AREA: 0 colliding footprints
+    assert AS.counts({"partition_types": {"t": t_new}}) == {}
