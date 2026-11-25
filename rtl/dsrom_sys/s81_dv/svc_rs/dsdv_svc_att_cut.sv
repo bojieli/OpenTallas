@@ -15,6 +15,8 @@
 // CUT_D (SVC-CUT-DEPTH, FABLE-UNC-S81-SVC 11-23; default 1 = this file as built; dsdv_svc_rs_c passes 1 + `OT_SVC_CUT_KA): uniform
 // cut depth on the att side.  CUT_D - 1 plain relay stages on EVERY registered in-lane ahead of the capture register and on
 // EVERY registered out-lane ahead of the output relay, so the lock-step is kept.  The HBM page-cache lanes stay unregistered.
+// CUT_D = 0 (SVC-CUT0-RSV09, S81-SVC-J9 11-24): no register on any lane, u_att = dsdv_svc_att in a pass-through shell (the
+// hi row then runs in step with the plain-core lo row); CUTMUT has no effect at CUT_D 0.
 // CUTMUT (bench only, 0 in every kit): 1 = hw lane not captured, 2 = pv_o lane not registered, 3 = SM row lane
 // (sm_rv / sm_rp / sm_rj / sm_rd) not registered.
 module dsdv_svc_att_cut #(
@@ -87,10 +89,11 @@ module dsdv_svc_att_cut #(
     reg [511:0] cq_d;
     reg [290:0] chw_d;
     localparam integer CIW = 1 + 512 + 1 + 291;
+    localparam integer CDV = (CUT_D < 1) ? 1 : CUT_D;   // vector depth (CUT_D 0 uses the stage-0 slice only)
     wire [CIW-1:0] cut_in_x = {q_v, q_d, hw_v, hw_d};
     wire [CIW-1:0] cut_in_s;
     // plain flop vectors per stage (no array: nothing a memory pass could collect); CUT_D = 1 elaborates no stage
-    wire [CUT_D*CIW-1:0] cut_in_c;
+    wire [CDV*CIW-1:0] cut_in_c;
     assign cut_in_c[CIW-1:0] = cut_in_x;
     genvar cut_gi;
     generate
@@ -100,14 +103,20 @@ module dsdv_svc_att_cut #(
             assign cut_in_c[cut_gi*CIW +: CIW] = st;
         end
     endgenerate
-    assign cut_in_s = cut_in_c[(CUT_D-1)*CIW +: CIW];
+    assign cut_in_s = cut_in_c[(CDV-1)*CIW +: CIW];
     wire         s_q_v, s_hw_v;
     wire [511:0] s_q_d;
     wire [290:0] s_hw_d;
     assign {s_q_v, s_q_d, s_hw_v, s_hw_d} = cut_in_s;
-    always @(posedge clk) begin
-        cq_v <= s_q_v; cq_d <= s_q_d; chw_v <= s_hw_v; chw_d <= s_hw_d;
-    end
+    generate if (CUT_D == 0) begin : g_cap0
+        always @* begin
+            cq_v = s_q_v; cq_d = s_q_d; chw_v = s_hw_v; chw_d = s_hw_d;
+        end
+    end else begin : g_cap
+        always @(posedge clk) begin
+            cq_v <= s_q_v; cq_d <= s_q_d; chw_v <= s_hw_v; chw_d <= s_hw_d;
+        end
+    end endgenerate
     wire         a_l_v, a_pv_ov, a_sm_st, a_sm_rv, a_sm_rp, a_go, a_done, a_fault, a_hb;
     wire [H*132+19:0] a_l_d;
     wire [512:0] a_pv_od;
@@ -161,7 +170,7 @@ module dsdv_svc_att_cut #(
     wire [COW-1:0] cut_out_s;
     assign {a_l_v, a_l_d, a_pv_ov, a_pv_od, a_sm_st, a_sm_kind, a_sm_jid, a_sm_rv, a_sm_rp, a_sm_rj, a_sm_rd, a_go, a_tjob, a_done, a_tagj, a_hcr, a_hack, a_fault, a_fc, a_pio, a_pvo, a_jc, a_st, a_hb} = cut_out_s;
 `endif
-    wire [CUT_D*COW-1:0] cut_out_c;
+    wire [CDV*COW-1:0] cut_out_c;
     assign cut_out_c[COW-1:0] = cut_out_x;
     generate
         for (cut_gi = 1; cut_gi < CUT_D; cut_gi = cut_gi + 1) begin : g_cout
@@ -170,7 +179,7 @@ module dsdv_svc_att_cut #(
             assign cut_out_c[cut_gi*COW +: COW] = st;
         end
     endgenerate
-    assign cut_out_s = cut_out_c[(CUT_D-1)*COW +: COW];
+    assign cut_out_s = cut_out_c[(CDV-1)*COW +: COW];
     // ---- output relays
     reg         r_pv_ov;
     reg [512:0] r_pv_od;
@@ -183,15 +192,29 @@ module dsdv_svc_att_cut #(
     assign sm_rp = (CUTMUT == 3) ? a_sm_rp : r_sm_rp;
     assign sm_rj = (CUTMUT == 3) ? a_sm_rj : r_sm_rj;
     assign sm_rd = (CUTMUT == 3) ? a_sm_rd : r_sm_rd;
-    always @(posedge clk) begin
-        l_v <= a_l_v; l_d <= a_l_d; r_pv_ov <= a_pv_ov; r_pv_od <= a_pv_od;
-        sm_st <= a_sm_st; sm_kind <= a_sm_kind; sm_jid <= a_sm_jid;
-        r_sm_rv <= a_sm_rv; r_sm_rp <= a_sm_rp; r_sm_rj <= a_sm_rj; r_sm_rd <= a_sm_rd;
-        go_o <= a_go; tjob_o <= a_tjob; done <= a_done; tagj <= a_tagj; hcr <= a_hcr; hack <= a_hack;
-        fault <= a_fault; fault_code <= a_fc; pio_o <= a_pio; pvo_o <= a_pvo; jc_o <= a_jc; st_o <= a_st;
+    generate if (CUT_D == 0) begin : g_out0
+        always @* begin
+            l_v = a_l_v; l_d = a_l_d; r_pv_ov = a_pv_ov; r_pv_od = a_pv_od;
+            sm_st = a_sm_st; sm_kind = a_sm_kind; sm_jid = a_sm_jid;
+            r_sm_rv = a_sm_rv; r_sm_rp = a_sm_rp; r_sm_rj = a_sm_rj; r_sm_rd = a_sm_rd;
+            go_o = a_go; tjob_o = a_tjob; done = a_done; tagj = a_tagj; hcr = a_hcr; hack = a_hack;
+            fault = a_fault; fault_code = a_fc; pio_o = a_pio; pvo_o = a_pvo; jc_o = a_jc; st_o = a_st;
 `ifdef OT_SVC_ALLQ
-        allq_o <= a_allq;
+            allq_o = a_allq;
 `endif
-        hb_o <= a_hb;
-    end
+            hb_o = a_hb;
+        end
+    end else begin : g_out
+        always @(posedge clk) begin
+            l_v <= a_l_v; l_d <= a_l_d; r_pv_ov <= a_pv_ov; r_pv_od <= a_pv_od;
+            sm_st <= a_sm_st; sm_kind <= a_sm_kind; sm_jid <= a_sm_jid;
+            r_sm_rv <= a_sm_rv; r_sm_rp <= a_sm_rp; r_sm_rj <= a_sm_rj; r_sm_rd <= a_sm_rd;
+            go_o <= a_go; tjob_o <= a_tjob; done <= a_done; tagj <= a_tagj; hcr <= a_hcr; hack <= a_hack;
+            fault <= a_fault; fault_code <= a_fc; pio_o <= a_pio; pvo_o <= a_pvo; jc_o <= a_jc; st_o <= a_st;
+`ifdef OT_SVC_ALLQ
+            allq_o <= a_allq;
+`endif
+            hb_o <= a_hb;
+        end
+    end endgenerate
 endmodule
