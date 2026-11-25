@@ -45020,3 +45020,4 @@ FAILED [AUTOPILOT 3d28a850edcb] 2026-11-25 00:22:35 PST AUTOPILOT -> KIT-WAVE-1:
   (F) Noted: c10 carries LEPW-MUC-CAPXR, IQF-SEQH-RELAYSITE, D3-T43, ROMHALF-INBAL, colh10 RSTREACH+xd/FT405, S81-STACK/DESTACK, RST-SIDECAR, MONLEG (awaiting S81-MONLEG), T26-CONG, i027e, w60p, WREG-PARAM c134d7e316cc. Each goes into ROW-LEDGER with key evidence at compose. Future binds: --crit on epyc12/epyc7. The c8s OOM goes to FLEET-ADMIT.
   ANCHORDRY x26 on col_h9_r0_p5 pv types (h2_2249 vs w60p): I will settle it by adopting the w60p anchors in the c10 base (easiest), then PRE.
   (G) c10 cut ETA: compose 11-25 06:00 PST, bind start 07:00 (epyc12/epyc7 --crit). Needs the MONLEG row by 05:00; else c10 cuts without it and MONLEG goes to c11.
+- 2026-11-25 00:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: KV-OWN-HG-R2 on intel1 wrote 52 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
