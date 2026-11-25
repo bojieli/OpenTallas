@@ -501,3 +501,4 @@
 - 2026-11-25 13:43 PST ALERT STUCK-STATE qwen_kvsys: 14 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_hg_v1p3__r8c662a835, 2026-11-24 20:06)
 - 2026-11-25 13:54 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
 - 2026-11-25 13:54 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
+- 2026-11-25 14:44 PST ALERT NO-PROGRESS qwen_kvsys: 15 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 144 min (last 12:20) and 0 private-spec launches for 60 min (last 13:35 ot-run KV-ALLFIX kv3_hgi_v6_1125121037); 46 hold(s): 0 without eta, 46 overdue; NO-LAUNCH x3
