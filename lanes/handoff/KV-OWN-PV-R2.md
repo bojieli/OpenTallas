@@ -83,3 +83,8 @@
 - A5t8 STN-DEADLANE row: epyc12 kv-own-pv-r2/deadlane/ops_STN-DEADLANE_A5t8.json 6a7d89d43cf8 (54 rows in 12 types). The A5t7 control is clean (rt not the cause). The compose lane is regating (oth-ubuntu-3059356-1795617810), ETA 08:30 applied.
 - Next: after A5t8 is applied, launch place probes v2, v4, v4n, v5, v5n, v6, v6ne, v7, v8e, pve, plus v1e (route if clean), on epyc7/intel1 with the fixed job scripts (plan inside plan_of_record). Then compose the follow-on: ESTRIP -> PVFOLD 83ea83009089 -> PVSTN e0b8296505e4.
 - Lane clone: epyc12 kv-own-pv-r2/clone_guard (pushed; clean).
+
+## 2026-11-25 07:50 PST update
+- C9-KVPV-CLAND-LEG: LEG405 widened (main 551fa8b9c9); START tool snap fix (main 1543d5b353); row c9row/ROWS_KV-OWN-PV-R2-C9START.sh 78cd1900707e, dry A5t8 e7723cf0fae7 (15 pv types). ALLFIX-KV 0aa80cc0. Sent to compose lane a602519c571628d7c.
+- OWED: C9 raw step (kv_start_corridor_event raw --bind-rtl) after the follow-on strict bind.
+- FLOW-0730 K6: cancelled A5t6 kits v12_1125012925, v1n_1125012928, v3n_1125025422 (+ run-item drivers 606752, 1242331). Rebind inside plan_of_record on A5t8 when published, as place/GRT probes on epyc8/epyc10.
