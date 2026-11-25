@@ -1065,9 +1065,21 @@ def gate_workdir(cmd, d):
     return GATE_WORKSPACE if d is None and gate_like(cmd) else d
 
 
+# DIECLASS_1125 (COORD 11-25 Fable (45): 24 die-level jobs ran without --die / --priority): the same command patterns as ot-heavy-reconcile's
+# DIE_LEVEL_RE (PRE / gate checks, bind phases, die-plan bind / check, plan census, compose, gate_*.sh, bind*.sh), on the command only; a per-kit
+# `bind.py kit-rtl` is not die class.
+DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|plan_census|"
+                          r"(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b|"
+                          r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
+
+
 def die_like(cmd, d):
-    """die-level by name: die STA / GEN / GRT / chain scripts (owner 2026-10-18: die jobs go ahead of tile gates)"""
-    return bool(DIE_RE.search(" ".join(cmd) + " " + (d or "")))
+    """die-level by name: die STA / GEN / GRT / chain scripts (owner 2026-10-18: die jobs go ahead of tile gates), and the DIECLASS_1125
+    die-level tools (compose, PRE / gate, bind, bind-check, R8, census) by command"""
+    text = " ".join(cmd)
+    if DIE_LEVEL_RE.search(text) and not re.search(r"\bkit-rtl\b", text):
+        return True
+    return bool(DIE_RE.search(text + " " + (d or "")))
 
 
 def ratio(r, threads):

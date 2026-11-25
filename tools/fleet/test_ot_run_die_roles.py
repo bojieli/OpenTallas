@@ -31,6 +31,18 @@ class DieRolePlacement(unittest.TestCase):
     def test_non_die_selection_unchanged(self):
         self.assertEqual(m.choose({"ot-gold1":row(-27),"ot-epyc9":row(160)},150),("ot-epyc9",False))
 
+class DieLevelAutoClass(unittest.TestCase):
+    """COORD 11-25 (45): compose / PRE / gate / bind / census commands are die class without --die"""
+    def test_die_level_commands(self):
+        for c in (["python3", "-I", "tools/die_plan/plan_gate_pre.py", "x.json"], ["bash", "compose3.sh"], ["python3", "compose3.py", "in.json"],
+                  ["bash", "/srv/x/gate_sp.sh", "W"], ["bash", "bind_w.sh"], ["python3", "tools/die_plan/bind.py", "strict", "p.json"],
+                  ["python3", "tools/die_plan/check.py", "p.json"], ["python3", "plan_census.py"]):
+            self.assertTrue(m.die_like(c, "/srv/x"), c)
+
+    def test_kits_are_not_die_level(self):
+        for c in (["bash", "run_kit.sh", "slw_fw_v3", "route", "48", "8"], ["python3", "tools/die_plan/bind.py", "kit-rtl", "k"], ["openroad", "-exit", "gcompose_not.tcl"]):
+            self.assertFalse(m.die_like(c, "/srv/kit-wave/x"), c)
+
 if __name__ == "__main__":
     unittest.main()
 
