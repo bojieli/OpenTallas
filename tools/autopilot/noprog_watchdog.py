@@ -2061,11 +2061,16 @@ def plateau_mode_off():
 # owner, so the visual review and the structural root-cause fix start while the slow job still runs.  The kit keeps running until it recovers or meets the
 # existing unsignable-and-over-3-h cancel rules.  The first SMELL_DRY_S (30 min) after deploy is a dry run: the hub posts the would-fire list, then goes live.
 SMELL_DRY_S = int(os.environ.get("NOPROG_SMELL_DRY_S", "1800"))
-SMELL_GRT_ITERS = 5            # more than 5 overflow-repair iterations
-SMELL_GRT_OVF = 1000           # overflow above 1000 after iteration 3
-SMELL_DRT_V0 = 50000           # iteration-0 violations above 50k
-SMELL_DRT_HALVE_IT = 3         # violations not at least halved by iteration 3
-SMELL_DRT_LOW_LAYER = 0.60     # more than 60 % of the marks on M1-M3
+# CALIBRATED 11-25 on the 24-48 h replay of all 9 hosts (calib.py: 349 DRT logs, 45 bad / 304 good; 272 GRT logs, 95 bad / 177 good; bad = never reached 0 / GRT odb never written
+# and the kit ended or ran > 10 h; good = route reached 0 / GRT odb written).  The owner's first-cut triggers fired on kits that finished (DRT iteration-0 > 50k: precision 0.29;
+# GRT > 5 iterations: 0.53; M1-M3 share > 60 %: 0.33), so they were replaced:
+#   GRT overflow > 1000 at iteration >= 10 : precision 0.72, recall 0.95
+#   DRT v0 > 300k OR v3 > 1500 OR v6 > 0.3 v3 (fell < 70 % from it 3 to 6) : precision 0.74, recall 0.76
+SMELL_GRT_OVF = 1000
+SMELL_GRT_IT = 10
+SMELL_DRT_V0 = 300000
+SMELL_DRT_V3 = 1500
+SMELL_DRT_FALL36 = 0.3
 SMELL_CTS_H = 2.0
 SMELL_CTS_SETUP = -100.0
 SMELL_CTS_HOLD = -50.0
@@ -2094,24 +2099,16 @@ def smell_triggers(kind, stage, log_age_h, stage_age_h, rounds=None, drt_vals=No
     out = []
     rounds = rounds or []
     if kind == "grt" and rounds:
-        n_last = rounds[-1][0]
-        if n_last > SMELL_GRT_ITERS:
-            out.append(("GRT", f"{n_last} overflow-repair iterations (> {SMELL_GRT_ITERS})"))
-        late = [(n, v) for n, v in rounds if n > 3 and v > SMELL_GRT_OVF]
+        late = [(n, v) for n, v in rounds if n >= SMELL_GRT_IT and v > SMELL_GRT_OVF]
         if late:
-            out.append(("GRT", f"overflow {late[-1][1]} at iteration {late[-1][0]} (> {SMELL_GRT_OVF} after iteration 3)"))
-        for (n0, v0), (n1, v1) in zip(rounds, rounds[1:]):
-            if v0 > 0 and v1 > v0 / 2 and n1 > 3:
-                out.append(("GRT", f"overflow not halving: {v0} (it {n0}) -> {v1} (it {n1})"))
-                break
+            out.append(("GRT", f"overflow {late[-1][1]} at iteration {late[-1][0]} (> {SMELL_GRT_OVF} at iteration >= {SMELL_GRT_IT})"))
     if kind == "drt" and drt_vals:
         if drt_vals[0] > SMELL_DRT_V0:
             out.append(("DRT", f"iteration-0 violations {drt_vals[0]} (> {SMELL_DRT_V0})"))
-        if len(drt_vals) > SMELL_DRT_HALVE_IT and drt_vals[SMELL_DRT_HALVE_IT] > drt_vals[0] / 2:
-            out.append(("DRT", f"violations not halved by iteration {SMELL_DRT_HALVE_IT}: {drt_vals[0]} -> {drt_vals[SMELL_DRT_HALVE_IT]}"))
-        share, n = low_layer_share(drc_text)
-        if n >= 20 and share > SMELL_DRT_LOW_LAYER:
-            out.append(("DRT", f"{100 * share:.0f} % of {n} DRC marks on M1-M3 (> {100 * SMELL_DRT_LOW_LAYER:.0f} %)"))
+        if len(drt_vals) > 3 and drt_vals[3] > SMELL_DRT_V3:
+            out.append(("DRT", f"iteration-3 violations {drt_vals[3]} (> {SMELL_DRT_V3})"))
+        if len(drt_vals) > 7 and drt_vals[6] > SMELL_DRT_FALL36 * drt_vals[3]:
+            out.append(("DRT", f"fell < {100 * (1 - SMELL_DRT_FALL36):.0f} % from iteration 3 to 6: {drt_vals[3]} -> {drt_vals[6]}"))
     if str(stage).startswith("4_1_cts") or kind == "cts":
         if stage_age_h > SMELL_CTS_H:
             out.append(("CTS", f"CTS stage {stage_age_h:.1f} h (> {SMELL_CTS_H:g} h)"))

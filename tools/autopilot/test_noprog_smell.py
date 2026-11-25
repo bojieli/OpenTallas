@@ -12,22 +12,19 @@ def classes(t):
     return sorted({c for c, _ in t})
 
 
-def test_grt_triggers():
-    assert nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 900)]) == []
-    t = nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 8000), (10, 6000), (15, 2900)])
-    texts = " | ".join(x for _, x in t)
-    assert "15 overflow-repair iterations" in texts and "overflow 2900 at iteration 15" in texts and "not halving: 8000 (it 5) -> 6000 (it 10)" in texts
-    assert nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 800), (10, 300)]) == [("GRT", "10 overflow-repair iterations (> 5)")]
+def test_grt_trigger_is_calibrated_overflow_over_1000_at_iteration_10():
+    assert nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 90000), (10, 900)]) == []              # iteration 5 is early; 900 is under the line
+    t = nw.smell_triggers("grt", "5_1_grt", 0.1, 3, rounds=[(5, 8000), (10, 2900), (15, 1200)])
+    assert t == [("GRT", "overflow 1200 at iteration 15 (> 1000 at iteration >= 10)")]
 
 
-def test_drt_triggers():
+def test_drt_triggers_are_calibrated():
+    assert [x for _, x in nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[84487, 11326, 7501, 1400, 900, 500, 200, 100])] == []     # converging: no smell
+    assert nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[400194, 120000, 100000, 1000])[0][1].startswith("iteration-0 violations 400194")
     t = nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[84487, 11326, 7501, 2181])
-    assert [x for _, x in t] == ["iteration-0 violations 84487 (> 50000)"]
-    t = nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[40000, 30000, 25000, 21000])
-    assert "not halved by iteration 3: 40000 -> 21000" in t[0][1]
-    low = "".join("violation type: Short\n\tsrcs: a b\n\tbbox = (1.0, 1.0) - (1.1, 1.1) on Layer M2\n" for _ in range(30))
-    assert any("M1-M3" in x for _, x in nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[900, 300, 100, 40], drc_text=low))
-    assert nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[900, 300, 100, 40], drc_text=low.replace("M2", "M6")) == []
+    assert [x for _, x in t] == ["iteration-3 violations 2181 (> 1500)"]
+    t = nw.smell_triggers("drt", "5_2_route", 0.1, 3, drt_vals=[50000, 9000, 1400, 1300, 1200, 1100, 1000, 900])
+    assert "fell < 70 %" in t[0][1] and "1300 -> 1000" in t[0][1]
 
 
 def test_cts_place_and_silence_triggers():
