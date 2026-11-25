@@ -22,6 +22,8 @@ PLAN_DIE = {'s81': 's81', 's81_head': 's81_head', 'results': 's81_head', 'qwen_c
 
 # (pattern on class+reason, short label); first match wins
 FAIL_MAP = [
+    # DIECLASS_1125 (COORD 11-25, FLEET-ADMIT): autopilot spent its OOM retry budget (4 earlyoom / 2 x1.5-mem resubmits): CRASH, listed on its own for an owner
+    (r'OOM-EXHAUSTED', 'OOM-EXHAUSTED'),
     (r'signed off but no flow release tag', 're-sign (flow tag)'),
     # RSZ-CRASH-2200 11-20 (COORD): a crashed repair_timing (RSZ-0074, kit kept the unrepaired DB) is infra, never a timing result
     (r'RSZ-0074|tt_setup_repair_fallback|OT_TT_SETUP_REPAIR (?:FAIL|FALLBACK)', 'INFRA[rsz_crash]'),
