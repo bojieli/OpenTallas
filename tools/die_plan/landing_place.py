@@ -863,8 +863,8 @@ def collector_instances(ev):
     """the u_cland_collect_* instance names of a collector event"""
     instances = {'u_cland_collect_'+safe(n) for n in collector_nodes(ev)[0]}
     if ev.get("collector_egress_um") is not None:
-        from landing_collector import COLLECTOR_EGRESS_INSTANCE
-        instances.add(COLLECTOR_EGRESS_INSTANCE)
+        from landing_collector import egress_instances
+        instances.update(egress_instances(ev["collector_egress_um"], ev.get("collector_root_node")))
     return instances
 
 
@@ -953,8 +953,13 @@ def tcl(P,tn,macro_moves=None):
     if root:
         active,xy=collector_nodes(ev)
         if c.get("collector_egress_um") is not None:
-            from landing_collector import COLLECTOR_EGRESS_INSTANCE
-            groups.append((COLLECTOR_EGRESS_INSTANCE, near(c["collector_egress_um"], "egress"), "collector:egress"))
+            # STATUS-UP 11-25: every egress stage (stations + face register) at its own site; a station reset by a
+            # local relay that is on no active path gets that relay's optional raw copy group at the relay site.
+            from landing_collector import egress_chain
+            for name, p, node in egress_chain(c["collector_egress_um"], root):
+                groups.append((name, near(p, name[len("u_cland_collect_"):]), "collector:" + name[len("u_cland_collect_"):]))
+                if node not in active and node != 'rst_root_n' and node in xy:
+                    groups.append(('u_cland_reset_'+safe(node), near(xy[node], node), 'raw-copy-optional'))
         for n in sorted(set(xy)-active):
             for k in ('collect','reset'):
                 stale[f'u_cland_{k}_'+safe(n)]=f'collector node {n} is in the tree but on no active path (tree re-solved)'

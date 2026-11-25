@@ -145,26 +145,77 @@ def check_local_resets(tree, text, sites=None):
 COLLECTOR_EGRESS_INSTANCE = "u_cland_collect_egress"
 
 
+def _finite_xy(v):
+    import math
+    return (isinstance(v, list) and len(v) == 2 and
+            all(type(c) in (int, float) and math.isfinite(c) for c in v))
+
+
+def egress_chain(xy, root_node):
+    """collector_egress_um -> [(instance, [x, y], reset node)] in order root -> pins.
+
+    One [x, y]: the single registered status pair (the face register), reset by the collector root (original form).
+    STATUS-UP 11-25 (FABLE-RC-S81, leaf t36 c8s post-CTS: u_cland_collect_rst_n_t63 at (588,104) -> cland_up_ready on
+    the E face, 20 x BUFx6f, -547.7 ps): a LIST of sites = stations u_cland_collect_egress_s<k> along the leg, then the
+    face register u_cland_collect_egress last.  Each element is [x, y] (reset: the collector root) or
+    {"xy_um": [x, y], "node": <collector-tree relay q>} (reset: that local relay, raw_reset form, so the station has
+    no long reset-recovery leg back to the root -- the MONLEG class).  Each element is one status cycle."""
+    if xy is None:
+        return []
+    pts = [xy] if _finite_xy(xy) else xy
+    if not isinstance(pts, list) or not pts:
+        raise ValueError("collector egress requires one finite xy_um site or a non-empty list of sites")
+    out = []
+    for k, e in enumerate(pts):
+        p, node = (e, root_node) if not isinstance(e, dict) else (e.get("xy_um"), e.get("node", root_node))
+        if not _finite_xy(p) or not isinstance(node, str):
+            raise ValueError(f"collector egress site {k}: needs a finite [x, y] (and a relay node name)")
+        name = COLLECTOR_EGRESS_INSTANCE if k == len(pts) - 1 else f"{COLLECTOR_EGRESS_INSTANCE}_s{k}"
+        out.append((name, p, node))
+    return out
+
+
+def egress_instances(xy, root_node=None):
+    """the instance names of collector_egress_um (empty when absent)"""
+    return [n for n, _, _ in egress_chain(xy, root_node or "rst_root_n")]
+
+
 def collector_egress(tree, contract, root_node, reach_um):
-    """Validate a single registered status pair against the root and both fixed output pins."""
+    """Validate the registered status chain (one face pair, or STATUS-UP stations + face pair) against the root
+    and both fixed output pins."""
     xy = contract.get("collector_egress_um")
     if xy is None:
         return None
-    import math
-    if (not isinstance(xy, list) or len(xy) != 2 or
-            any(type(v) not in (int, float) or not math.isfinite(v) for v in xy)):
-        raise ValueError("collector egress requires one finite xy_um site")
-    if tree.get("hard") or root_node != "rst_root_n":
-        raise ValueError("collector egress requires the soft partition native reset root")
+    chain = egress_chain(xy, root_node)
+    if tree.get("hard"):
+        raise ValueError("collector egress requires a soft partition reset tree")
+    relays = {r["q"]: r["xy"] for r in tree["relays"]}
+    sites = {"rst_root_n": tree["root"], **relays}
+    if root_node not in sites:
+        raise ValueError(f"collector egress root {root_node} is not a collector-tree node")
+    if len(chain) == 1 and root_node != "rst_root_n":
+        raise ValueError("a single collector egress register requires the soft partition native reset root; "
+                         "a local-relay root takes a station list (STATUS-UP)")
+    for name, _, node in chain:
+        if node not in sites:
+            raise ValueError(f"collector egress {name}: reset node {node} is not a collector-tree relay")
     pins = {p["name"]: p["xy_um"] for p in contract.get("pins", [])
             if p["name"] in ("cland_up_ready", "cland_up_fault") and p["dir"] == "out"}
     if len(pins) != 2:
         raise ValueError("collector egress requires the two declared status output pins")
-    legs = {name: sum(abs(a-b) for a,b in zip(xy, point))
-            for name, point in {"reset_and_status_root": tree["root"], **pins}.items()}
+    md = lambda a, b: sum(abs(u - v) for u, v in zip(a, b))
+    legs, prev, prev_name = {}, sites[root_node], "reset_and_status_root"
+    for name, p, node in chain:
+        legs[prev_name if len(chain) == 1 else f"{prev_name}->{name}"] = md(prev, p)
+        if node != root_node:
+            legs[f"{name}:reset {node}"] = md(sites[node], p)
+        prev, prev_name = p, name
+    for pn, point in pins.items():
+        legs[pn] = md(chain[-1][1], point)
     if max(legs.values()) > reach_um + 1e-6:
         raise ValueError(f"collector egress {max(legs.values()):.3f}um exceeds R4 {reach_um:g}um")
-    return dict(xy_um=xy, legs_um=legs, added_collector_cycles=1, added_data_cycles=0)
+    return dict(xy_um=xy, chain=[dict(name=n, xy_um=p, node=r) for n, p, r in chain], legs_um=legs,
+                added_collector_cycles=len(chain), added_data_cycles=0)
 
 
 def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n", egress=None):
@@ -249,17 +300,30 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n", eg
     egress_cycles = 0
     if egress:
         ready, fault = nets(root)
-        lines += [
-            f"    ot_dp_landing_collect #(.N(1)) {COLLECTOR_EGRESS_INSTANCE} (",
-            f"        .clk(clk), .rst_n({root}), .ready_i({ready}), .fault_i({fault}),",
-            "        .ready_o(cland_up_ready), .fault_o(cland_up_fault));",
-        ]
+        chain = egress.get("chain") or [dict(name=COLLECTOR_EGRESS_INSTANCE, xy_um=egress["xy_um"], node=root)]
         egress_cycles = egress["added_collector_cycles"]
         for row in insts:
             if row["module"] == "ot_dp_landing_collect":
                 row["depth_to_root"] += egress_cycles
-        insts.append(dict(name=COLLECTOR_EGRESS_INSTANCE, module="ot_dp_landing_collect", xy_um=egress["xy_um"],
-                         flops=2, active_inputs=1, raw_reset=root, depth_to_root=1))
+        for k, st in enumerate(chain):
+            last = k == len(chain) - 1
+            ro, fo = ("cland_up_ready", "cland_up_fault") if last else (f"cland_eg_r{k}", f"cland_eg_f{k}")
+            if st["node"] == root:
+                reset = root
+            else:
+                reset, added, copies = raw_reset(tree, st["node"], body+"\n"+"\n".join(lines), sites)
+                lines.extend(added)
+                insts.extend(copies)
+            if not last:
+                lines += [f"    wire {ro}, {fo};"]
+            lines += [
+                f"    ot_dp_landing_collect #(.N(1)) {st['name']} (",
+                f"        .clk(clk), .rst_n({reset}), .ready_i({ready}), .fault_i({fault}),",
+                f"        .ready_o({ro}), .fault_o({fo}));",
+            ]
+            insts.append(dict(name=st["name"], module="ot_dp_landing_collect", xy_um=st["xy_um"],
+                              flops=2, active_inputs=1, raw_reset=reset, depth_to_root=len(chain) - k))
+            ready, fault = ro, fo
         hops.extend(dict(src=root, dst=name, hop_um=distance) for name,distance in egress["legs_um"].items())
     check_local_resets(tree, body+"\n"+"\n".join(lines), sites)
     report = dict(rtl=lines, instances=insts, active=True, depth=max(depth.values())+1+egress_cycles,

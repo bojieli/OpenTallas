@@ -504,12 +504,18 @@ class Verification:
                     self.equal_input(c,port,list(reversed(want)))
             contract = self._tclock(pn).get("landing_contract", {})
             if contract.get("collector_egress_um") is not None:
-                c = self.instance(self.root_collect[pn], "ot_dp_landing_collect")
-                if c:
-                    self.clock(c,pn);self.check_reset(c,pn,root)
-                    root_path = ident(pn) + ".u_cland_collect_" + ident(root)
-                    for key in ("ready", "fault"):
-                        self.equal_input(c, key + "_i", [self.output(root_path, key + "_o")])
+                # STATUS-UP 11-25: root -> stations u_cland_collect_egress_s<k> -> face u_cland_collect_egress, each
+                # one N=1 collect stage fed by the previous one, reset by its planned node (root or a local relay).
+                from landing_collector import egress_chain
+                prev = ident(pn) + ".u_cland_collect_" + ident(root)
+                for name, _, node in egress_chain(contract["collector_egress_um"], root):
+                    path = ident(pn) + "." + name
+                    c = self.instance(path, "ot_dp_landing_collect")
+                    if c:
+                        self.clock(c,pn);self.check_reset(c,pn,node)
+                        for key in ("ready", "fault"):
+                            self.equal_input(c, key + "_i", [self.output(prev, key + "_o")])
+                    prev = path
         actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca','ot_dp_landing_face',
                                                              'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
                                                              'ot_dp_clk_landing_cas','ot_dp_landing_origin_s','ot_dp_landing_origin_s_regional',
