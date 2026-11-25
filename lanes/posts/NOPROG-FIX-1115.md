@@ -698,3 +698,4 @@
 - 2026-11-24 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 16:52 PST: 215 running jobs, PROGRESSING 207, SLOW 6, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 28.6 h job 28.6 h: no new meaningful log line for 13.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 24.8 h job 24.8 h: no new meaningful log line for 13.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
+- 2026-11-24 17:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 17:52 PST: 229 running jobs, PROGRESSING 217, SLOW 12, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
