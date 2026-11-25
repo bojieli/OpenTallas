@@ -11,6 +11,7 @@ T = (Path(__file__).resolve().parent / "hold_guard_grt.tcl").read_text()
 def test_defaults_chase_margin():
     assert "OT_HOLD_CHASE_MARGIN" in T
     assert 'set ::ot_hg_stop_dflt 0; set ::ot_hg_stall_dflt "margin"' in T
+    assert '$::env(OT_HOLD_CHASE_MARGIN) eq "1"' in T   # opt-in: the default is the 11-18 early stops
     assert "OT_HOLD_DONE_STOP $::ot_hg_stop_dflt" in T
     assert "OT_HOLD_ZERO_VIOL_STOP $::ot_hg_stop_dflt" in T
     assert "$hm : $::ot_hg_stall_dflt" in T

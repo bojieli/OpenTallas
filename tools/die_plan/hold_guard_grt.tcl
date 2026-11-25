@@ -24,12 +24,12 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     (![info exists ::env(OT_HOLD_MM)] || $::env(OT_HOLD_MM) ne "1") &&
     (![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0")} {
   rename ::repair_timing_helper ::ot_hg_rth_orig
-  # QC-HOLD-CHASE 11-25 (COORD ruling, QC-HOLD-STRUCT): the guard keeps repairing until hold ws >= the margin (OT_HOLD_CHASE_MARGIN=1, default).  The early stops at 0 violators
+  # QC-HOLD-CHASE 11-25 (COORD re-ruling 11-25: OPT-IN, default OFF = the 11-18 early stops; the chase cost 1-1.5 h per kit for +1..+2 ps and the post-route hold ECO closes hold): OT_HOLD_CHASE_MARGIN=1 makes the guard keep repairing until hold ws >= the margin.  The early stops at 0 violators
   # (OT_HOLD_ZERO_VIOL_STOP), at ws >= 10 ps (OT_HOLD_DONE_STOP) and the gain<1 ps stall below the margin (OT_HOLD_STALL_MIN_WS = margin) were ending kits at ws +7..+14 ps vs margin 40
   # (cbf_q00_s2 and the intel1 QC kits), and routed zero-logic seams then lost 0.1-43 ps.  The window stall (OT_HOLD_STALL_WINDOW_S without gain), the setup guard and the
-  # total buffer budget still end a chase.  OT_HOLD_CHASE_MARGIN=0 restores the 11-18 early stops (each OT_HOLD_*_STOP / OT_HOLD_STALL_MIN_WS env still overrides).
+  # total buffer budget still end a chase.  The default (unset or 0) keeps the 11-18 early stops (each OT_HOLD_*_STOP / OT_HOLD_STALL_MIN_WS env still overrides).
   set ::ot_hg_stop_dflt 1; set ::ot_hg_stall_dflt 0.0
-  if {![info exists ::env(OT_HOLD_CHASE_MARGIN)] || $::env(OT_HOLD_CHASE_MARGIN) ne "0"} { set ::ot_hg_stop_dflt 0; set ::ot_hg_stall_dflt "margin" }
+  if {[info exists ::env(OT_HOLD_CHASE_MARGIN)] && $::env(OT_HOLD_CHASE_MARGIN) eq "1"} { set ::ot_hg_stop_dflt 0; set ::ot_hg_stall_dflt "margin" }
   proc ::ot_hg_num {k d} { expr {[info exists ::env($k)] && [string is double -strict $::env($k)] ? $::env($k) : $d} }
   proc ::ot_hg_stats {} {
     set w [worst_slack -min]
