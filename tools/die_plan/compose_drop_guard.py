@@ -27,7 +27,8 @@ that merges only the plan silently loses a fix that lives in the sidecar (C1m 85
 560 raw node/tap fields apart; C1n ac1e: 334 / 664).
   SIDECAR-MISMATCH  (--sidecar) per type in both, the reset node a source (by name) / child (by index) names in NEW's plan
           != the sidecar's, compared as the emitter reads it (node, else rst_n_t<tap>), a source/child row present on one
-          side only, or collector_root_node.  The raw node/tap field difference count is printed beside it.  The count and the first --sidecar-max are printed.  WARN; OT_COMPOSE_DROP=fail makes it rc 1.
+          side only, or collector_root_node.  The raw node/tap field difference count is printed beside it.  The count
+          and the first --sidecar-max are printed.  WARN; OT_COMPOSE_DROP=fail makes it rc 1.
   DROP / ROW-LOST / ROW-DROP on 'sidecar:<path>'  (--prev-sidecar / --sidecar-row) the same checks as for the plan, run on
           the sidecars: an entry PREV_SIDECAR carries that NEW_SIDECAR lacks, or a row's sidecar change the composed sidecar
           lost.  rc 1 like plan drops; --drop-list patterns match the 'sidecar:' path.
