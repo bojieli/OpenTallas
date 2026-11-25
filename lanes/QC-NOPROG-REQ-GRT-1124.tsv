@@ -1,0 +1,12 @@
+cancel_pst	host	plan	type	unit	owner	decision	reason
+11-23 07:15	epyc9	V3	slw_fe_v2__clf110fab2	oth-ubuntu-2974722-1795407181	COORD	SKIP	LIVE QC-ALLFIX/slw_fe_v2__clf110fab2_1123180947@intel1 5_2_route (+ _1124082809@epyc10 postcts_gate_TT)
+11-23 20:15	epyc2	V3	cbf_q01	oth-ubuntu-3915736-1795484512	OPUS-FIX-QC-V4-R2	SKIP	HELD-C1n CB-TAPBINS2 97baac87b6cc changes cbf_q01 (tapoff_report changed list, 55 types)
+11-23 20:45	epyc8	V3	sle_su_l1__cl5ea486db	oth-ubuntu-2389479-1795488203	QC-V4	REQ	runitem-sle_su_l1__cl5ea486db (systemd), spec private_specs/QC-NOPROG-REQ/qwen_compute_sle_su_l1__cl5ea486db_QC-V4_r1124202525, goal route, resume_from epyc8 kit (4_cts.odb)
+11-23 22:00	epyc8	V3	cbf_q01_s2	oth-ubuntu-3851108-1795484093	OPUS-FIX-QC-V4-R2	SKIP	HELD-C1n CB-TAPBINS2 changes cbf_q01_s2
+11-24 03:15	epyc8	V3	sle_ctl__cla4f6f12f	oth-ubuntu-196239-1795497018	QC-ALLFIX	SKIP	HELD-C1n SLECTL-PILE 21ad720986aa (sle_ctl only) + TAPBINS2; LIVE QC-ALLFIX/sle_ctl__cla4f6f12f_1124055733@epyc7 4_1_cts, _1124081348@epyc9 pregrt_ff_hold
+11-24 04:30	epyc7	V4	sle_su_l1__cl5ea486db	oth-ubuntu-3400929-1795518150	QC-RSN-PROBE	SKIP	superseded: QC-RSN-PROBE handed the type to QC-ALLFIX (05:05 RSN HOLD LIFT); its C1i successor kit is re-enqueued (row 9)
+11-24 05:15	epyc8	V4	sle_ctl__cla4f6f12f	oth-ubuntu-1529982-1795506219	QC-SLECTL-RESYN	SKIP	HELD-C1n SLECTL-PILE; LIVE as row 5
+11-24 10:00	epyc11	V4	sle_ctl__cla4f6f12f	oth-ubuntu-2273341-1795514761	QC-SLECTL-RESYN	SKIP	HELD-C1n SLECTL-PILE; LIVE as row 5
+11-24 11:45	epyc2	V4(C1i)	sle_su_l1__cl5ea486db	oth-ubuntu-3600519-1795544109	QC-ALLFIX	REQ	run-item (no systemd unit: name taken by row 3), spec private_specs/QC-NOPROG-REQ/qwen_compute_sle_su_l1__cl5ea486db_QC-ALLFIX_r1124202525, goal route, resume_from epyc2/epyc9 kit (4_cts.odb)
+11-24 13:00	epyc2	V4	cbn_q00__cl622f65d2	oth-ubuntu-3556220-1795543960	QC-CB-PROBE	SKIP	HELD-C1n CB-TAPBINS2 (explicit add-taps type)
+11-24 13:30	intel1	V4	cbn_q11__cl5cc92dfe	oth-ubuntu-4035231-1795543022	QC-ALLFIX	SKIP	HELD-C1n CB-TAPBINS2 changes cbn_q11__cl5cc92dfe
