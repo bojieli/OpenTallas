@@ -772,3 +772,4 @@
   - kv3_pv_v3n: 3.54; covers kv3_pv_v3n_a5t5geom_1124 (its private spec failed ENV-PROVENANCE stale)
   - kv3_pv_v7e: not in the clean census
   The hold commit is retrying: kit_wave.json in the hub tree carries another lane's uncommitted QC edit.
+- 2026-11-25 03:58 PST DIED [KV-ALLFIX] ot-run otrun-open-snipe-637374 on open-snipe: rc=1 after 0 s, ended 11:58:13, log /srv/opentallas-scratch2/claude/kv-allfix/a5t8/final_gate.otrun.log, cmd: --die --hosts epyc12 --priority plan --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t8 -- bash /srv/opentallas-scratch2/claude/kv-allfix/ | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
