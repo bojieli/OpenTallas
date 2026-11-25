@@ -1,0 +1,4240 @@
+{
+ "row": "BANKRST-LAND (C1p): landed ft bank reset taps re-derived at the real landed site (stage k+1), QC family, excl. sle_su_l1 x2 (SUL1-SLE-LAND)",
+ "lane": "QC-BANKRST-OFF1",
+ "base": "c1o_v13",
+ "base_sha": "aa3a14fb7484",
+ "out_sha": "93fa00b39e96",
+ "overlay": {},
+ "script": "bankrst_land.py (idempotent)",
+ "types": {
+  "cbf_q01": {
+   "set": {
+    "partition_types.cbf_q01.reset.bank_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_a00_o_7",
+       "u_ft_a00_o_6"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_a00_o_5"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_a00_o_4"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bout_y_o12",
+       "u_ft_a00_o_3"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bin_bc_i02"
+      ]
+     },
+     {
+      "tap": 12,
+      "sinks": [
+       "u_bin_bc_i12"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_a00_o_2"
+      ]
+     },
+     {
+      "tap": 22,
+      "sinks": [
+       "u_ft_a00_o_1"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_ft_a00_o_0"
+      ]
+     },
+     {
+      "tap": 104,
+      "sinks": [
+       "u_bin_nb_i12"
+      ]
+     }
+    ]
+   }
+  },
+  "cbf_q01_s2": {
+   "set": {
+    "partition_types.cbf_q01_s2.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_bc_i02",
+       "u_ft_serdes_tx_tx_flit_o_0",
+       "u_ft_serdes_tx_valid_tx_v_o_0"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_a00_o_7",
+       "u_ft_a00_o_6"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_a00_o_5"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_y_o12"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_ft_a00_o_3"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bin_bc_i12"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_ft_a00_o_4"
+      ]
+     },
+     {
+      "tap": 12,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_9"
+      ]
+     },
+     {
+      "tap": 13,
+      "sinks": [
+       "u_ft_tx_up_serdes_up_o_8"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_9"
+      ]
+     },
+     {
+      "tap": 20,
+      "sinks": [
+       "u_ft_tx_up_serdes_up_o_7"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_a00_o_2"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_1",
+       "u_ft_serdes_tx_valid_tx_v_o_1",
+       "u_ft_rx_v_serdes_rx_valid_o_8"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_8",
+       "u_ft_tx_up_serdes_up_o_6"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_ft_a00_o_1"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_7"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_2",
+       "u_ft_serdes_tx_valid_tx_v_o_2"
+      ]
+     },
+     {
+      "tap": 43,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_7"
+      ]
+     },
+     {
+      "tap": 45,
+      "sinks": [
+       "u_ft_tx_up_serdes_up_o_5"
+      ]
+     },
+     {
+      "tap": 52,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_6"
+      ]
+     },
+     {
+      "tap": 57,
+      "sinks": [
+       "u_ft_a00_o_0"
+      ]
+     },
+     {
+      "tap": 58,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_3",
+       "u_ft_serdes_tx_valid_tx_v_o_3",
+       "u_ft_serdes_tx_tx_flit_o_4",
+       "u_ft_serdes_tx_valid_tx_v_o_4"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_6",
+       "u_ft_rx_v_serdes_rx_valid_o_5"
+      ]
+     },
+     {
+      "tap": 66,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_5",
+       "u_ft_serdes_tx_valid_tx_v_o_5",
+       "u_ft_tx_up_serdes_up_o_4"
+      ]
+     },
+     {
+      "tap": 69,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_4"
+      ]
+     },
+     {
+      "tap": 80,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_6",
+       "u_ft_serdes_tx_valid_tx_v_o_6"
+      ]
+     },
+     {
+      "tap": 87,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_5",
+       "u_ft_tx_up_serdes_up_o_3"
+      ]
+     },
+     {
+      "tap": 103,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_3"
+      ]
+     },
+     {
+      "tap": 106,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_4",
+       "u_ft_tx_up_serdes_up_o_2"
+      ]
+     },
+     {
+      "tap": 110,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_3",
+       "u_ft_rx_v_serdes_rx_valid_o_2"
+      ]
+     },
+     {
+      "tap": 111,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_7",
+       "u_ft_serdes_tx_valid_tx_v_o_7"
+      ]
+     },
+     {
+      "tap": 112,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_2",
+       "u_ft_tx_up_serdes_up_o_1"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_1"
+      ]
+     },
+     {
+      "tap": 118,
+      "sinks": [
+       "u_ft_serdes_tx_tx_flit_o_8",
+       "u_ft_serdes_tx_valid_tx_v_o_8",
+       "u_ft_serdes_tx_tx_flit_o_9",
+       "u_ft_serdes_tx_valid_tx_v_o_9"
+      ]
+     },
+     {
+      "tap": 122,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_1"
+      ]
+     },
+     {
+      "tap": 130,
+      "sinks": [
+       "u_ft_rx_v_serdes_rx_valid_o_0",
+       "u_ft_tx_up_serdes_up_o_0"
+      ]
+     },
+     {
+      "tap": 137,
+      "sinks": [
+       "u_ft_rx_flit_serdes_rx_o_0"
+      ]
+     },
+     {
+      "tap": 139,
+      "sinks": [
+       "u_bin_nb_i12"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q00__cl622f65d2": {
+   "set": {
+    "partition_types.cbn_q00__cl622f65d2.reset.bank_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bout_y_o00"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_rsf_o_9"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_bin_bc_i00"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bin_bc_i10"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 57,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 80,
+      "sinks": [
+       "u_ft_rsf_o_4"
+      ]
+     },
+     {
+      "tap": 93,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 101,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 117,
+      "sinks": [
+       "u_bin_na_i00"
+      ]
+     },
+     {
+      "tap": 121,
+      "sinks": [
+       "u_bout_bc_o01"
+      ]
+     },
+     {
+      "tap": 125,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 127,
+      "sinks": [
+       "u_bin_nb_i00"
+      ]
+     },
+     {
+      "tap": 129,
+      "sinks": [
+       "u_bout_y_o11"
+      ]
+     },
+     {
+      "tap": 130,
+      "sinks": [
+       "u_bout_bc_o11"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q00__cld7bf7197": {
+   "set": {
+    "partition_types.cbn_q00__cld7bf7197.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_y_o00"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_bc_i00"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_ft_rsf_o_9"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bin_bc_i10"
+      ]
+     },
+     {
+      "tap": 17,
+      "sinks": [
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 22,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 54,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_ft_rsf_o_4"
+      ]
+     },
+     {
+      "tap": 88,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 94,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 108,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 109,
+      "sinks": [
+       "u_bout_y_o11"
+      ]
+     },
+     {
+      "tap": 110,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_bout_bc_o01"
+      ]
+     },
+     {
+      "tap": 117,
+      "sinks": [
+       "u_bin_na_i00"
+      ]
+     },
+     {
+      "tap": 119,
+      "sinks": [
+       "u_bin_nb_i00"
+      ]
+     },
+     {
+      "tap": 121,
+      "sinks": [
+       "u_bout_bc_o11"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q00__cldbcda913": {
+   "set": {
+    "partition_types.cbn_q00__cldbcda913.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_ft_rsf_o_9"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bout_y_o00"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_bc_i10"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_bc_i00"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 57,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 69,
+      "sinks": [
+       "u_ft_rsf_o_4"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 86,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 100,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 103,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 104,
+      "sinks": [
+       "u_bout_y_o11"
+      ]
+     },
+     {
+      "tap": 106,
+      "sinks": [
+       "u_bout_bc_o01"
+      ]
+     },
+     {
+      "tap": 108,
+      "sinks": [
+       "u_bin_na_i00"
+      ]
+     },
+     {
+      "tap": 110,
+      "sinks": [
+       "u_bout_bc_o11"
+      ]
+     },
+     {
+      "tap": 112,
+      "sinks": [
+       "u_bin_nb_i00"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q01__clab6e67f2": {
+   "set": {
+    "partition_types.cbn_q01__clab6e67f2.reset.bank_taps": [
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_a00_o_7",
+       "u_ft_a00_o_6",
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_a00_o_5"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_ft_a00_o_4"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bout_y_o12"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_ft_a00_o_3"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bin_bc_i02"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bin_bc_i12"
+      ]
+     },
+     {
+      "tap": 19,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 22,
+      "sinks": [
+       "u_ft_a00_o_2"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_ft_a00_o_1"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_ft_a00_o_0"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_ft_rsf_o_4",
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 97,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 105,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 117,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 129,
+      "sinks": [
+       "u_bin_nb_i12"
+      ]
+     },
+     {
+      "tap": 132,
+      "sinks": [
+       "u_bout_bc_o03"
+      ]
+     },
+     {
+      "tap": 134,
+      "sinks": [
+       "u_bout_bc_o13"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q01__cld9ff4c40": {
+   "set": {
+    "partition_types.cbn_q01__cld9ff4c40.reset.bank_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_a00_o_7",
+       "u_ft_a00_o_6",
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_a00_o_5"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_a00_o_4"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_y_o12"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_ft_a00_o_3"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bin_bc_i02"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bin_bc_i12"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 23,
+      "sinks": [
+       "u_ft_a00_o_2"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_a00_o_1"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_ft_a00_o_0"
+      ]
+     },
+     {
+      "tap": 79,
+      "sinks": [
+       "u_ft_rsf_o_4",
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 98,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 106,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 121,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 133,
+      "sinks": [
+       "u_bin_nb_i12"
+      ]
+     },
+     {
+      "tap": 135,
+      "sinks": [
+       "u_bout_bc_o03"
+      ]
+     },
+     {
+      "tap": 137,
+      "sinks": [
+       "u_bout_bc_o13"
+      ]
+     }
+    ]
+   }
+  },
+  "cbn_q01__cldd6ea846": {
+   "set": {
+    "partition_types.cbn_q01__cldd6ea846.reset.bank_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_rsf_o_8"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_a00_o_7",
+       "u_ft_a00_o_6"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_a00_o_5"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_ft_a00_o_4"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bout_y_o12",
+       "u_ft_a00_o_3"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_bin_bc_i02"
+      ]
+     },
+     {
+      "tap": 13,
+      "sinks": [
+       "u_bin_bc_i12"
+      ]
+     },
+     {
+      "tap": 19,
+      "sinks": [
+       "u_ft_rsf_o_7"
+      ]
+     },
+     {
+      "tap": 22,
+      "sinks": [
+       "u_ft_a00_o_2"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_rsf_o_6"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_a00_o_1"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_rsf_o_5"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_ft_a00_o_0"
+      ]
+     },
+     {
+      "tap": 78,
+      "sinks": [
+       "u_ft_rsf_o_4"
+      ]
+     },
+     {
+      "tap": 79,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 99,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 105,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 119,
+      "sinks": [
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 125,
+      "sinks": [
+       "u_bin_nb_i12"
+      ]
+     },
+     {
+      "tap": 128,
+      "sinks": [
+       "u_bout_bc_o03"
+      ]
+     },
+     {
+      "tap": 135,
+      "sinks": [
+       "u_bout_bc_o13"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_ctl__cla4f6f12f": {
+   "set": {
+    "partition_types.sle_ctl__cla4f6f12f.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_bout_x_su_c_o"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bout_x_su_c_p1_o"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bout_x_su_c_p2_o"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bin_x_su_c_i",
+       "u_bout_x_stm_o"
+      ]
+     },
+     {
+      "tap": 12,
+      "sinks": [
+       "u_ft_cws2_o_4"
+      ]
+     },
+     {
+      "tap": 13,
+      "sinks": [
+       "u_bin_x_sc_i"
+      ]
+     },
+     {
+      "tap": 17,
+      "sinks": [
+       "u_ft_cws1_o_3"
+      ]
+     },
+     {
+      "tap": 21,
+      "sinks": [
+       "u_bout_x_sc_o"
+      ]
+     },
+     {
+      "tap": 51,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 100,
+      "sinks": [
+       "u_bout_b_hw_hc0_o"
+      ]
+     },
+     {
+      "tap": 113,
+      "sinks": [
+       "u_bout_b_hw_hc3_o"
+      ]
+     },
+     {
+      "tap": 125,
+      "sinks": [
+       "u_ft_cws2_o_3"
+      ]
+     },
+     {
+      "tap": 126,
+      "sinks": [
+       "u_ft_cws1_o_2"
+      ]
+     },
+     {
+      "tap": 132,
+      "sinks": [
+       "u_ft_cws2_o_2"
+      ]
+     },
+     {
+      "tap": 134,
+      "sinks": [
+       "u_bout_b_tw_data_st_a_o"
+      ]
+     },
+     {
+      "tap": 140,
+      "sinks": [
+       "u_bin_x_fw_p2_i"
+      ]
+     },
+     {
+      "tap": 166,
+      "sinks": [
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 182,
+      "sinks": [
+       "u_bin_x_st_a_i"
+      ]
+     },
+     {
+      "tap": 186,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 188,
+      "sinks": [
+       "u_ft_cws1_o_1"
+      ]
+     },
+     {
+      "tap": 189,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 195,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 204,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 222,
+      "sinks": [
+       "u_ft_cws2_o_1"
+      ]
+     },
+     {
+      "tap": 230,
+      "sinks": [
+       "u_ft_cws1_o_0"
+      ]
+     },
+     {
+      "tap": 232,
+      "sinks": [
+       "u_ft_cws2_o_0"
+      ]
+     },
+     {
+      "tap": 263,
+      "sinks": [
+       "u_bin_flt_hc2_i",
+       "u_bin_x_hc2_i",
+       "u_bin_x_hc3_i"
+      ]
+     },
+     {
+      "tap": 264,
+      "sinks": [
+       "u_bin_flt_hc1_i",
+       "u_bin_x_hc0_i",
+       "u_bin_x_hc1_i"
+      ]
+     },
+     {
+      "tap": 267,
+      "sinks": [
+       "u_bout_b_hw_hc1_o"
+      ]
+     },
+     {
+      "tap": 270,
+      "sinks": [
+       "u_bout_b_hw_hc2_o"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v1__cl67389ecd": {
+   "set": {
+    "partition_types.sle_st_a_v1__cl67389ecd.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 15,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 109,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 132,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 139,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 199,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 210,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 232,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 244,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 270,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 304,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 355,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 378,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 382,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+   "set": {
+    "partition_types.sle_st_a_v1__cl989804f6__cl18eece69.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 98,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 122,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 136,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 178,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 214,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 221,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 228,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 252,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 282,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 330,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 352,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 355,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+   "set": {
+    "partition_types.sle_st_a_v1__cl989804f6__cled3c1d7b.reset.bank_taps": [
+     {
+      "tap": 23,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 36,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 98,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 114,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 130,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 173,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 212,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 222,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 228,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 254,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 289,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 332,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 345,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 369,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v2__pv30dda31f__pv88773f93": {
+   "set": {
+    "partition_types.sle_st_a_v2__pv30dda31f__pv88773f93.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s0",
+       "u_ft_x_ctl_fw_o_2"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_x_fe_o",
+       "u_ft_x_fw_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 88,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 92,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 111,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 114,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 118,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 128,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 149,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 172,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 194,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 200,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 227,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 230,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v2__pv30dda31f__pvd2ec7769": {
+   "set": {
+    "partition_types.sle_st_a_v2__pv30dda31f__pvd2ec7769.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s0",
+       "u_ft_x_ctl_fw_o_2"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_x_fe_o",
+       "u_ft_x_fw_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 88,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 92,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 111,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 114,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 118,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 128,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 149,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 172,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 194,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 200,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 227,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 230,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_st_a_v2__pv4242de79": {
+   "set": {
+    "partition_types.sle_st_a_v2__pv4242de79.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s0",
+       "u_ft_x_ctl_fw_o_2"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_x_fe_o",
+       "u_ft_x_fw_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 88,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 92,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 111,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 114,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 116,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 118,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 128,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 149,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 172,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 194,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 200,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 227,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 230,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_stm_v1__cl27746664": {
+   "set": {
+    "partition_types.sle_stm_v1__cl27746664.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_bin_x_fe_i"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_fe_o_1"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_x_fw_fe_o_2"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_x_fw_fe_o_0"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_2",
+       "u_ft_x_fe_fw_p1_o_1"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_0"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_0"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_1"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_2"
+      ]
+     },
+     {
+      "tap": 49,
+      "sinks": [
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 50,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 62,
+      "sinks": [
+       "u_bin_x_fe_p1_i"
+      ]
+     },
+     {
+      "tap": 64,
+      "sinks": [
+       "u_bin_x_fw_i",
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 68,
+      "sinks": [
+       "u_bout_x_fe_p1_o"
+      ]
+     },
+     {
+      "tap": 72,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bout_b_tw_data_ctl_o"
+      ]
+     },
+     {
+      "tap": 78,
+      "sinks": [
+       "u_bin_flt_ctl_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_stm_v1__clbe630b9c": {
+   "set": {
+    "partition_types.sle_stm_v1__clbe630b9c.reset.bank_taps": [
+     {
+      "tap": 0,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_1"
+      ]
+     },
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bin_x_fe_i"
+      ]
+     },
+     {
+      "tap": 23,
+      "sinks": [
+       "u_ft_x_fw_fe_o_2"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_fe_o_1"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_2",
+       "u_ft_x_fw_fe_o_0"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_0"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_0"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_1"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_2"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 49,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 53,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 62,
+      "sinks": [
+       "u_bin_x_fe_p1_i"
+      ]
+     },
+     {
+      "tap": 63,
+      "sinks": [
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 68,
+      "sinks": [
+       "u_bout_x_fe_p1_o"
+      ]
+     },
+     {
+      "tap": 72,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_bin_flt_ctl_i",
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bout_b_tw_data_ctl_o"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_stm_v2__cl55be2264": {
+   "set": {
+    "partition_types.sle_stm_v2__cl55be2264.reset.bank_taps": [
+     {
+      "tap": 0,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_1"
+      ]
+     },
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bin_x_fe_i"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fw_fe_o_2"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_x_fw_fe_o_0"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_x_fw_fe_o_1"
+      ]
+     },
+     {
+      "tap": 29,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_0"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_2"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_2"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_0"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_1"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 49,
+      "sinks": [
+       "u_bin_x_fw_i",
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 57,
+      "sinks": [
+       "u_bin_x_fe_p1_i"
+      ]
+     },
+     {
+      "tap": 62,
+      "sinks": [
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 66,
+      "sinks": [
+       "u_bout_x_fe_p1_o"
+      ]
+     },
+     {
+      "tap": 71,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_bout_b_tw_data_ctl_o"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bin_flt_ctl_i"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_su_c": {
+   "set": {
+    "partition_types.sle_su_c.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o",
+       "u_ft_cws1_o_4"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_cws2_o_4"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_flt_su_l0_i",
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bout_x_su_l0_o"
+      ]
+     },
+     {
+      "tap": 12,
+      "sinks": [
+       "u_bout_x_su_l1_o"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_bin_x_su_l0_p1_i"
+      ]
+     },
+     {
+      "tap": 29,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_cws1_o_3"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_ft_cws2_o_3"
+      ]
+     },
+     {
+      "tap": 38,
+      "sinks": [
+       "u_bout_x_su_l0_p1_o"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_bin_x_su_l1_p1_i",
+       "u_bout_x_su_l1_p1_o",
+       "u_ft_cws1_o_2"
+      ]
+     },
+     {
+      "tap": 53,
+      "sinks": [
+       "u_ft_cws2_o_2"
+      ]
+     },
+     {
+      "tap": 62,
+      "sinks": [
+       "u_ft_cws1_o_1"
+      ]
+     },
+     {
+      "tap": 63,
+      "sinks": [
+       "u_ft_cws1_o_0"
+      ]
+     },
+     {
+      "tap": 64,
+      "sinks": [
+       "u_ft_cws2_o_1",
+       "u_ft_cws2_o_0"
+      ]
+     },
+     {
+      "tap": 66,
+      "sinks": [
+       "u_ft_x_st_a_fe_o_1"
+      ]
+     },
+     {
+      "tap": 67,
+      "sinks": [
+       "u_ft_x_st_a_fe_o_2",
+       "u_ft_x_su_l0_stm_o_0"
+      ]
+     },
+     {
+      "tap": 68,
+      "sinks": [
+       "u_ft_x_st_a_fe_o_3"
+      ]
+     },
+     {
+      "tap": 70,
+      "sinks": [
+       "u_ft_x_st_a_fe_o_0"
+      ]
+     },
+     {
+      "tap": 71,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_1",
+       "u_ft_x_su_l1_sc_o_1"
+      ]
+     },
+     {
+      "tap": 72,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_0"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 79,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_2",
+       "u_bin_x_ctl_i",
+       "u_bin_x_ctl_p1_i",
+       "u_ft_x_su_l1_ctl_o_3"
+      ]
+     },
+     {
+      "tap": 80,
+      "sinks": [
+       "u_bin_x_ctl_p2_i",
+       "u_ft_x_su_l0_stm_o_1"
+      ]
+     },
+     {
+      "tap": 81,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_3"
+      ]
+     },
+     {
+      "tap": 82,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_2"
+      ]
+     },
+     {
+      "tap": 83,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_3",
+       "u_bout_x_sc_o"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_su_l0__cl086d85ba": {
+   "set": {
+    "partition_types.sle_su_l0__cl086d85ba.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bout_x_su_c_o"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_cws3_o_4"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_ft_cws3_o_3"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_bin_x_su_c_i"
+      ]
+     },
+     {
+      "tap": 12,
+      "sinks": [
+       "u_bout_x_su_c_p1_o"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_cws3_o_2"
+      ]
+     },
+     {
+      "tap": 20,
+      "sinks": [
+       "u_bin_x_su_c_p1_i"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_cws3_o_1"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_cws3_o_0"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_bout_x_ctl_o",
+       "u_bout_x_stm_o"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_bout_x_sc_o"
+      ]
+     }
+    ]
+   }
+  },
+  "sle_su_l0__cl7a55c676": {
+   "set": {
+    "partition_types.sle_su_l0__cl7a55c676.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o",
+       "u_ft_cws3_o_4"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bout_x_su_c_o"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_ft_cws3_o_3"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_bin_x_su_c_i"
+      ]
+     },
+     {
+      "tap": 13,
+      "sinks": [
+       "u_bout_x_su_c_p1_o"
+      ]
+     },
+     {
+      "tap": 16,
+      "sinks": [
+       "u_ft_cws3_o_2"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_bin_x_su_c_p1_i"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_cws3_o_1"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_cws3_o_0"
+      ]
+     },
+     {
+      "tap": 34,
+      "sinks": [
+       "u_bout_x_ctl_o",
+       "u_bout_x_stm_o"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_bout_x_sc_o"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_st_a_v1__clb036e152": {
+   "set": {
+    "partition_types.slw_st_a_v1__clb036e152.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 93,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 115,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 136,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 187,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 197,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 226,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 239,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 263,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 295,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 351,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 374,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 377,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
+   "set": {
+    "partition_types.slw_st_a_v1__clfc5867a6__pvdf8e5ca4.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 99,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 124,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 140,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 184,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 193,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 217,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 226,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 245,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 276,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 328,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 350,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 353,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
+   "set": {
+    "partition_types.slw_st_a_v1__clfc5867a6__pvf82a6c28.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 6,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 99,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 124,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 140,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 184,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 193,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 217,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 226,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 245,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 276,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 328,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 350,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 353,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+   "set": {
+    "partition_types.slw_st_a_v2__cl9f076a5c.reset.bank_taps": [
+     {
+      "tap": 25,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 38,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 101,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2",
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 109,
+      "sinks": [
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 112,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 118,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 160,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 177,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 180,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 203,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 223,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 234,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 238,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 275,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 311,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 330,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 364,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 372,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 396,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 399,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_st_a_v2__clf4365a62": {
+   "set": {
+    "partition_types.slw_st_a_v2__clf4365a62.reset.bank_taps": [
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_2"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_bin_rs_s1"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_bin_rs_s0"
+      ]
+     },
+     {
+      "tap": 120,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_1"
+      ]
+     },
+     {
+      "tap": 128,
+      "sinks": [
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 132,
+      "sinks": [
+       "u_bin_b_tw_data_i"
+      ]
+     },
+     {
+      "tap": 137,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_0"
+      ]
+     },
+     {
+      "tap": 186,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 190,
+      "sinks": [
+       "u_ft_x_fw_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 191,
+      "sinks": [
+       "u_ft_x_ctl_fw_o_0"
+      ]
+     },
+     {
+      "tap": 229,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 232,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_1"
+      ]
+     },
+     {
+      "tap": 235,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 237,
+      "sinks": [
+       "u_bin_x_st_b_i"
+      ]
+     },
+     {
+      "tap": 261,
+      "sinks": [
+       "u_bout_x_st_b_o"
+      ]
+     },
+     {
+      "tap": 289,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_2"
+      ]
+     },
+     {
+      "tap": 310,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 338,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_3"
+      ]
+     },
+     {
+      "tap": 360,
+      "sinks": [
+       "u_ft_b_hw_ctl_hc0_o_4"
+      ]
+     },
+     {
+      "tap": 364,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 366,
+      "sinks": [
+       "u_bin_x_hc1_i"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_stm_v1__cle34a73c3": {
+   "set": {
+    "partition_types.slw_stm_v1__cle34a73c3.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_x_fe_i"
+      ]
+     },
+     {
+      "tap": 24,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_2",
+       "u_ft_x_fe_fw_p1_o_1"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_0"
+      ]
+     },
+     {
+      "tap": 29,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_1"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_0",
+       "u_ft_x_fw_fe_p2_o_0"
+      ]
+     },
+     {
+      "tap": 31,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_2"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_ft_x_fw_fe_p2_o_1"
+      ]
+     },
+     {
+      "tap": 36,
+      "sinks": [
+       "u_ft_x_fw_fe_p2_o_2"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 58,
+      "sinks": [
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_bin_x_fe_p1_i"
+      ]
+     },
+     {
+      "tap": 66,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 68,
+      "sinks": [
+       "u_bout_x_fe_p1_o"
+      ]
+     },
+     {
+      "tap": 75,
+      "sinks": [
+       "u_bin_flt_ctl_i",
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_bout_b_tw_data_ctl_o"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_stm_v3": {
+   "set": {
+    "partition_types.slw_stm_v3.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_bin_x_fe_i"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 21,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_2",
+       "u_ft_x_fe_fw_p1_o_1"
+      ]
+     },
+     {
+      "tap": 25,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_0"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_x_fe_fw_p1_o_0"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_1"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_ft_x_fw_fe_p1_o_2"
+      ]
+     },
+     {
+      "tap": 32,
+      "sinks": [
+       "u_ft_x_fw_fe_p2_o_0"
+      ]
+     },
+     {
+      "tap": 33,
+      "sinks": [
+       "u_ft_x_fw_fe_p2_o_1"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_bout_x_fw_o"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_ft_x_fw_fe_p2_o_2"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_bin_x_fw_i"
+      ]
+     },
+     {
+      "tap": 50,
+      "sinks": [
+       "u_bout_x_fe_o"
+      ]
+     },
+     {
+      "tap": 57,
+      "sinks": [
+       "u_bin_x_fe_p1_i"
+      ]
+     },
+     {
+      "tap": 60,
+      "sinks": [
+       "u_bout_x_fw_p1_o"
+      ]
+     },
+     {
+      "tap": 66,
+      "sinks": [
+       "u_bout_x_fe_p1_o"
+      ]
+     },
+     {
+      "tap": 69,
+      "sinks": [
+       "u_bin_x_fw_p1_i"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_bin_flt_ctl_i",
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 76,
+      "sinks": [
+       "u_bout_b_tw_data_ctl_o"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_su_c__cl19bb38ef": {
+   "set": {
+    "partition_types.slw_su_c__cl19bb38ef.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o",
+       "u_ft_cws1_o_4"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_cws2_o_4"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bin_flt_su_l0_i"
+      ]
+     },
+     {
+      "tap": 15,
+      "sinks": [
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 19,
+      "sinks": [
+       "u_bout_x_su_l1_o"
+      ]
+     },
+     {
+      "tap": 20,
+      "sinks": [
+       "u_bout_x_su_l0_o"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_bin_x_su_l0_p1_i"
+      ]
+     },
+     {
+      "tap": 38,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 43,
+      "sinks": [
+       "u_ft_cws1_o_3"
+      ]
+     },
+     {
+      "tap": 46,
+      "sinks": [
+       "u_ft_cws2_o_3"
+      ]
+     },
+     {
+      "tap": 50,
+      "sinks": [
+       "u_bout_x_su_l1_p1_o"
+      ]
+     },
+     {
+      "tap": 51,
+      "sinks": [
+       "u_bout_x_su_l0_p1_o"
+      ]
+     },
+     {
+      "tap": 54,
+      "sinks": [
+       "u_bin_x_su_l1_p1_i",
+       "u_ft_cws1_o_2"
+      ]
+     },
+     {
+      "tap": 55,
+      "sinks": [
+       "u_ft_cws2_o_2"
+      ]
+     },
+     {
+      "tap": 81,
+      "sinks": [
+       "u_ft_cws1_o_1"
+      ]
+     },
+     {
+      "tap": 82,
+      "sinks": [
+       "u_ft_cws1_o_0"
+      ]
+     },
+     {
+      "tap": 83,
+      "sinks": [
+       "u_ft_cws2_o_1"
+      ]
+     },
+     {
+      "tap": 84,
+      "sinks": [
+       "u_ft_cws2_o_0"
+      ]
+     },
+     {
+      "tap": 92,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_3"
+      ]
+     },
+     {
+      "tap": 95,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_1"
+      ]
+     },
+     {
+      "tap": 96,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_1"
+      ]
+     },
+     {
+      "tap": 100,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_0"
+      ]
+     },
+     {
+      "tap": 103,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 104,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_1"
+      ]
+     },
+     {
+      "tap": 106,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 107,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_2"
+      ]
+     },
+     {
+      "tap": 114,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_0"
+      ]
+     },
+     {
+      "tap": 115,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 123,
+      "sinks": [
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 125,
+      "sinks": [
+       "u_bin_x_ctl_p1_i"
+      ]
+     },
+     {
+      "tap": 129,
+      "sinks": [
+       "u_bout_x_sc_o"
+      ]
+     },
+     {
+      "tap": 131,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_2"
+      ]
+     },
+     {
+      "tap": 132,
+      "sinks": [
+       "u_bin_x_ctl_p2_i"
+      ]
+     },
+     {
+      "tap": 133,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_3"
+      ]
+     },
+     {
+      "tap": 134,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_3"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_su_c__cl92142dac": {
+   "set": {
+    "partition_types.slw_su_c__cl92142dac.reset.bank_taps": [
+     {
+      "tap": 1,
+      "sinks": [
+       "u_bout_flt_o"
+      ]
+     },
+     {
+      "tap": 2,
+      "sinks": [
+       "u_ft_cws1_o_4"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_ft_cws2_o_4"
+      ]
+     },
+     {
+      "tap": 10,
+      "sinks": [
+       "u_bin_flt_su_l0_i",
+       "u_bin_x_su_l0_i"
+      ]
+     },
+     {
+      "tap": 17,
+      "sinks": [
+       "u_bout_x_su_l0_o"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_bout_x_su_l1_o"
+      ]
+     },
+     {
+      "tap": 30,
+      "sinks": [
+       "u_bin_x_su_l1_i"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_bin_x_su_l0_p1_i"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_ft_cws1_o_3"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_ft_cws2_o_3"
+      ]
+     },
+     {
+      "tap": 47,
+      "sinks": [
+       "u_bout_x_su_l0_p1_o"
+      ]
+     },
+     {
+      "tap": 48,
+      "sinks": [
+       "u_bin_x_su_l1_p1_i",
+       "u_bout_x_su_l1_p1_o",
+       "u_ft_cws1_o_2"
+      ]
+     },
+     {
+      "tap": 63,
+      "sinks": [
+       "u_ft_cws2_o_2"
+      ]
+     },
+     {
+      "tap": 72,
+      "sinks": [
+       "u_ft_cws1_o_1",
+       "u_ft_cws1_o_0"
+      ]
+     },
+     {
+      "tap": 74,
+      "sinks": [
+       "u_ft_cws2_o_1",
+       "u_ft_cws2_o_0"
+      ]
+     },
+     {
+      "tap": 77,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_3"
+      ]
+     },
+     {
+      "tap": 79,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_1",
+       "u_ft_x_su_l1_sc_o_0"
+      ]
+     },
+     {
+      "tap": 80,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_1"
+      ]
+     },
+     {
+      "tap": 81,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_0"
+      ]
+     },
+     {
+      "tap": 82,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_0"
+      ]
+     },
+     {
+      "tap": 87,
+      "sinks": [
+       "u_ft_x_su_l1_ctl_o_2"
+      ]
+     },
+     {
+      "tap": 88,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_2"
+      ]
+     },
+     {
+      "tap": 90,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_1"
+      ]
+     },
+     {
+      "tap": 95,
+      "sinks": [
+       "u_bout_x_ctl_o"
+      ]
+     },
+     {
+      "tap": 96,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_3"
+      ]
+     },
+     {
+      "tap": 100,
+      "sinks": [
+       "u_bin_x_ctl_i"
+      ]
+     },
+     {
+      "tap": 102,
+      "sinks": [
+       "u_bin_x_ctl_p1_i"
+      ]
+     },
+     {
+      "tap": 105,
+      "sinks": [
+       "u_bin_x_ctl_p2_i"
+      ]
+     },
+     {
+      "tap": 106,
+      "sinks": [
+       "u_ft_x_su_l1_sc_o_3",
+       "u_bout_x_sc_o"
+      ]
+     },
+     {
+      "tap": 109,
+      "sinks": [
+       "u_ft_x_su_l0_stm_o_2"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_su_l1__cla2a78701": {
+   "set": {
+    "partition_types.slw_su_l1__cla2a78701.reset.bank_taps": [
+     {
+      "tap": 0,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_cws0_o_4",
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_flt_su_c_i",
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 5,
+      "sinks": [
+       "u_bin_x_su_c_i"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bout_x_su_c_o"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_ft_rsf_o_1",
+       "u_bin_x_su_c_p1_i"
+      ]
+     },
+     {
+      "tap": 16,
+      "sinks": [
+       "u_ft_rsn_o_0"
+      ]
+     },
+     {
+      "tap": 19,
+      "sinks": [
+       "u_bout_x_su_c_p1_o"
+      ]
+     },
+     {
+      "tap": 26,
+      "sinks": [
+       "u_ft_rsn_o_1"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 35,
+      "sinks": [
+       "u_ft_rsn_o_2"
+      ]
+     },
+     {
+      "tap": 36,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_bout_x_stm_o"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_ft_rsn_o_3"
+      ]
+     },
+     {
+      "tap": 41,
+      "sinks": [
+       "u_ft_rsf_o_4",
+       "u_bout_x_ctl_o",
+       "u_bout_x_sc_o"
+      ]
+     }
+    ]
+   }
+  },
+  "slw_su_l1__clcc9d0155": {
+   "set": {
+    "partition_types.slw_su_l1__clcc9d0155.reset.bank_taps": [
+     {
+      "tap": 0,
+      "sinks": [
+       "u_ft_cws0_o_1"
+      ]
+     },
+     {
+      "tap": 3,
+      "sinks": [
+       "u_ft_cws0_o_4",
+       "u_ft_cws0_o_3"
+      ]
+     },
+     {
+      "tap": 4,
+      "sinks": [
+       "u_bin_flt_su_c_i",
+       "u_ft_rsf_o_0"
+      ]
+     },
+     {
+      "tap": 7,
+      "sinks": [
+       "u_bin_x_su_c_i",
+       "u_bout_x_su_c_o"
+      ]
+     },
+     {
+      "tap": 8,
+      "sinks": [
+       "u_ft_rsf_o_1"
+      ]
+     },
+     {
+      "tap": 9,
+      "sinks": [
+       "u_ft_cws0_o_2"
+      ]
+     },
+     {
+      "tap": 11,
+      "sinks": [
+       "u_bin_x_su_c_p1_i"
+      ]
+     },
+     {
+      "tap": 18,
+      "sinks": [
+       "u_ft_rsn_o_0"
+      ]
+     },
+     {
+      "tap": 20,
+      "sinks": [
+       "u_bout_x_su_c_p1_o"
+      ]
+     },
+     {
+      "tap": 27,
+      "sinks": [
+       "u_ft_rsn_o_1"
+      ]
+     },
+     {
+      "tap": 28,
+      "sinks": [
+       "u_ft_rsf_o_2"
+      ]
+     },
+     {
+      "tap": 36,
+      "sinks": [
+       "u_ft_rsn_o_2"
+      ]
+     },
+     {
+      "tap": 37,
+      "sinks": [
+       "u_ft_cws0_o_0"
+      ]
+     },
+     {
+      "tap": 38,
+      "sinks": [
+       "u_ft_rsf_o_3"
+      ]
+     },
+     {
+      "tap": 39,
+      "sinks": [
+       "u_bout_x_stm_o"
+      ]
+     },
+     {
+      "tap": 40,
+      "sinks": [
+       "u_ft_rsn_o_3"
+      ]
+     },
+     {
+      "tap": 42,
+      "sinks": [
+       "u_ft_rsf_o_4",
+       "u_bout_x_ctl_o",
+       "u_bout_x_sc_o"
+      ]
+     }
+    ]
+   }
+  }
+ }
+}
