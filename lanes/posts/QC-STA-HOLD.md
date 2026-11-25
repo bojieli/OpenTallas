@@ -1,0 +1,1 @@
+- 2026-11-25 00:28 PST DONE [QC-STA-HOLD] ot-run oth-ubuntu-39614-1795594915 on dear-crayfish: rc=0 after 397 s, ended 00:28:30, log /srv/opentallas-scratch3/claude/QC-STA-HOLD/out/f82/run.log, cmd: --mem 24 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-STA-HOLD --crit -- bash out/f82/cmd.sh
