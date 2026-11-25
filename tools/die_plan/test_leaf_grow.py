@@ -97,3 +97,36 @@ def test_raster_truncation_guard():
     r = row(); r["outline_um"] = [1442.88, 800.0]
     assert any("RASTER" in b for b in LG.check_rows(r, LG.grow_row(r, 120.96)))
     assert not any("RASTER" in b for b in LG.check_rows(r, LG.grow_row(r, 125.28)))
+
+
+def test_ints_kept_and_bits_untouched():
+    r = row(); r["relay_depth"] = [{"bits": [0, 31]}]; r["relay_sites"]["r"] = [30, 40]
+    g = LG.grow_row(r, 100.0)
+    assert g["relay_depth"] == [{"bits": [0, 31]}] and isinstance(g["relay_sites"]["r"][0], int)
+
+
+def _gx():
+    r = row(); r["outline_um"] = [1512.0, 1226.88]
+    r["clock"]["tap_mode"] = "grid+explicit"
+    r["clock"]["added_taps"] = [{"name": "clk_t16", "xy": [700.0, 300.0]}, {"name": "clk_t17", "xy": [710.0, 300.0]}]
+    r["clock"]["taps"] = [{"name": "clk_t3", "xy": [300.0, 300.0]}, {"name": "clk_t17", "xy": [710.0, 300.0]}]
+    return r
+
+
+def test_added_taps_renamed_when_grid_grows():
+    r = _gx(); g, mp = LG.rename_added_taps(r, 20)
+    assert [a["name"] for a in g["clock"]["added_taps"]] == ["clk_t20", "clk_t21"]
+    assert [a["name"] for a in g["clock"]["taps"]] == ["clk_t3", "clk_t21"]      # grid tap kept, reference follows
+    assert r["clock"]["added_taps"][0]["name"] == "clk_t16"                       # input untouched
+    assert LG.rename_added_taps(g, 20)[1] == {}                                   # idempotent
+
+
+def test_rename_overlapping_ranges_single_pass():
+    g, _ = LG.rename_added_taps(_gx(), 17)                                       # 16->17, 17->18, never 16->17->18
+    assert [a["name"] for a in g["clock"]["added_taps"]] == ["clk_t17", "clk_t18"]
+    assert [a["name"] for a in g["clock"]["taps"]] == ["clk_t3", "clk_t18"]
+
+
+def test_mutant_no_rename_keeps_stale_names():
+    g = LG.grow_row(_gx(), 185.76)                                               # grow_row alone (the old behaviour)
+    assert [a["name"] for a in g["clock"]["added_taps"]] != ["clk_t20", "clk_t21"]
