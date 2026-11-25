@@ -29,3 +29,9 @@ Work dir: epyc2 /srv/opentallas-scratch3/claude/QC-STA-PROBE (bin/, in/, rows/, 
   An empty bindP2.sh run (22:42) made a false pass; private-spec refused BIND_STALE, nothing launched.
 - r8_refresh symlink fix on main: handed to QC-ALLFIX to assign (not this lane).
 - Lane waiter: localhost scratchpad wake.sh <baseline lines> on posts/QC-STA-PROBE.md.
+
+## 23:54 PST state
+- Full bind (bindP2, rt 5494914b) FAILED 23:51: EMIT 290 (281 "START raw reset rr_tN has no registered wavefront driver", 9 RSTREP), 0 on st_a; likely C1m-wide (posted).
+- Now: SCOPED-TOP strict bind (rt 6e9705f7fe67, probe_top, QC-STA-CLK s4 form) of E5 v2 + v1 cl67389ecd + W5 on epyc2: bin/scopedP.sh,
+  dir s6/, log scopedP.log, unit oth-ubuntu-2827406-1795593183. Launcher now watches scopedP.log, --bind-out $W/s6/bind; W5 held to E5 GRT.
+- epyc2 / at 91% (321G free); QC-STA-CLK runs its kit builds on epyc10 (roam).
