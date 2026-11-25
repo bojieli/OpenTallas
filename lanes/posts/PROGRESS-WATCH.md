@@ -460,3 +460,4 @@
 - 2026-11-25 02:39 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
 - 2026-11-25 02:39 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 - 2026-11-25 02:49 PST ALERT NO-ADVANCE s81: 5 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slice_station__t21 x2@gen, slice_station__t25 x2@gen, slice_station__t29__cl2e5c855a x2@gen)
+- 2026-11-25 03:23 PST ALERT STUCK-STATE qwen_kvsys: 13 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_hg_v1p3__r8c662a835, 2026-11-24 20:06)
