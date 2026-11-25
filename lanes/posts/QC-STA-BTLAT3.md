@@ -1,0 +1,1 @@
+- 2026-11-25 00:30 PST DONE [QC-STA-BTLAT3] ot-run oth-ubuntu-293198-1795595298 on dear-crayfish: rc=0 after 122 s, ended 00:30:18, log /srv/opentallas-scratch3/claude/QC-STA-BTLAT3/forkB.log, cmd: --crit --mem 8 --threads 2 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-STA-BTLAT3 -- python3 -I /srv/opentallas-scratch2/claude/r
