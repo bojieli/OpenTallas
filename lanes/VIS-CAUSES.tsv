@@ -89,12 +89,12 @@ s81	slice_station__t24__cl64811a5d	slice_station__t24__cl64811a5d_1123210525	SIG
 s81	slice_station__t30__cl6a190133	slice_station__t30__cl6a190133_1123210625	SIGNED	6_final (chain PASS): CTS post-hook setup_ws 168.03 tns 0.0, hold_ws -61.32; GRT wns 0.00 (pre-repair screen); GRT overflow 0; DRT viol 0; setup_est 211.86; hold_est -73.88; TT insertion band dev 32.95 > 20 (advisory); TT/FF 107.6; DRC 0	geom FAIL fill,empty,pin_reg_p90,pin_reg_max,r2r,r2r_count	PLAN	FP-S81 flags BOUNDARY-REG; placed_scan need_station 0 over405 1	MEASURED-HARVEST c8 S81-PROBE-LAUNCH epyc10
 s81	slice_station__t7__cl362204c4	slice_station__t7__cl362204c4_1123210831	SIGNED	6_final (chain PASS): CTS post-hook setup_ws 37.16 tns 0.0, hold_ws -67.75; GRT wns 0.00 (pre-repair screen); GRT overflow 0; DRT viol 0; setup_est 80.8; hold_est -71.55; TT insertion band dev 24.54 > 20 (advisory); TT/FF 65.8; DRC 0	geom FAIL fill,empty,pin_reg_p90,pin_reg_max,partial_face	PLAN	FP-S81 flags BOUNDARY-REG; placed_scan need_station 0 over405 0	MEASURED-HARVEST c8 S81-PROBE-LAUNCH epyc10
 # FP section (VIS-REOWN agg.py from lanes/FP-<die>.tsv): plan checks that FAIL before build; kit '-', visible PLAN, basis FP-PLAN-CHECK <file>
-HEAD	hd_serdes	-	FP:TAP-CAP(>5000 blocks)	plan check FAIL: TAP-CAP(>5000 blocks)	visual FAIL	PLAN	FAIL tap-cap	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_mesh	-	FP:OVERLAP+MACRO-CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO-CHANNEL<14.88	visual FAIL	PLAN	FAIL overlap+channel	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_mesh_e	-	FP:LEG405/REACH	plan check FAIL: LEG405/REACH	visual PASS	PLAN	FAIL leg405	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_host_w	-	FP:OVERLAP+MACRO-CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO-CHANNEL<14.88	visual PENDING	PLAN	FAIL overlap+channel	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_host_e	-	FP:OVERLAP	plan check FAIL: OVERLAP	visual PENDING	PLAN	FAIL overlap+taps	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_lep0N	-	FP:LEG405/REACH+MACRO-CHANNEL<14.88	plan check FAIL: LEG405/REACH, MACRO-CHANNEL<14.88	visual FAIL	PLAN	FAIL	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_serdes	-	FP:TAP-CAP	plan check FAIL: TAP-CAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh	-	FP:OVERLAP+MACRO_CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO_CHANNEL<14.88	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh_e	-	FP:LEG405	plan check FAIL: LEG405	visual PASS	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_w	-	FP:OVERLAP+MACRO_CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO_CHANNEL<14.88	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_e	-	FP:OVERLAP	plan check FAIL: OVERLAP	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_lep0N	-	FP:LEG405+MACRO_CHANNEL<14.88	plan check FAIL: LEG405, MACRO_CHANNEL<14.88	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-HEAD.tsv
 KV	kv3_hg	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_hg_v1__r889141819	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
 KV	kv3_hg_v1__r88f4bfb40	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
