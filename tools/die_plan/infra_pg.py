@@ -412,7 +412,7 @@ def coarse_map(P, model, grid, pitch, origin, domain, bumps, fixed_rects=(), vdd
 
 
 def _bump_origin(P, pitch):
-    nxb, nyb = int(P.W // pitch), int(P.H // pitch)
+    nxb, nyb = int(P.W / pitch + 1e-9), int(P.H / pitch + 1e-9)
     return (P.W - (nxb - 1) * pitch) / 2, (P.H - (nyb - 1) * pitch) / 2
 
 

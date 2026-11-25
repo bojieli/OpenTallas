@@ -317,7 +317,7 @@ class Raster:
     def __init__(self, W, H, rects, halo=HALO):
         import numpy as np
         self.W, self.H = W, H
-        self.nx, self.ny = int(W / G) + 1, int(H / G) + 1
+        self.nx, self.ny = int(W / G + 1e-9) + 1, int(H / G + 1e-9) + 1   # epsilon-safe: 1563.84 / 4.32 = 361.99999999999994
         f = np.ones((self.nx, self.ny), dtype=bool)
         for (x0, y0, x1, y1) in rects:
             i0, i1 = max(0, int(math.ceil((x0 - halo) / G - 1e-9))), min(self.nx - 1, int((x1 + halo) / G + 1e-9))
@@ -480,6 +480,58 @@ def astar(R, a, b, step=2):
     return None
 
 
+OBSTACLE_AWARE = False   # FP-CONVERGE-S81 (Fable leaf template review): core_place --obstacle-aware sets it; default OFF = unchanged results
+
+
+def poly_crosses_core(R, poly, tol=0.5):
+    """True when any Manhattan segment of poly passes through a core rect (shrunk by tol): a leg over a core is blocked on
+    M5/M7 (cores obstruct up to M7), so its straight length is not routable."""
+    for p, q in zip(poly, poly[1:]):
+        x0, x1 = sorted((p[0], q[0]))
+        y0, y1 = sorted((p[1], q[1]))
+        for (rx0, ry0, rx1, ry1) in R.rects:
+            if x1 > rx0 + tol and x0 < rx1 - tol and y1 > ry0 + tol and y0 < ry1 - tol:
+                return True
+    return False
+
+
+def _hops_clear(R, pts):
+    """every hop has an L (HV or VH) that crosses no core"""
+    for p, q in zip(pts, pts[1:]):
+        if poly_crosses_core(R, [p, (q[0], p[1]), q]) and poly_crosses_core(R, [p, (p[0], q[1]), q]):
+            return False
+    return True
+
+
+def _hop_len(R, p, q):
+    """obstacle-model length of one hop: Manhattan when an L (HV or VH) crosses no core, else the street A* length, else
+    Manhattan (nothing routable: the hop keeps its straight length)"""
+    m = abs(q[0] - p[0]) + abs(q[1] - p[1])
+    if not (poly_crosses_core(R, [p, (q[0], p[1]), q]) and poly_crosses_core(R, [p, (p[0], q[1]), q])):
+        return m
+    try:
+        poly = astar(R, escape(R, p), escape(R, q))
+    except Exception:  # noqa: BLE001
+        poly = None
+    if poly is None:
+        return m
+    return max(m, sum(abs(b[0] - a[0]) + abs(b[1] - a[1]) for a, b in zip(poly, poly[1:])))
+
+
+def chain_metrics(R, pts):
+    """(max hop, total path) of a pin/register chain in the obstacle model"""
+    hops = [_hop_len(R, tuple(a), tuple(b)) for a, b in zip(pts, pts[1:])]
+    return (max(hops) if hops else 0.0, sum(hops))
+
+
+def resite_no_worse(R, old_pts, new_pts, tol=1e-6):
+    """FP-CONVERGE-S81 (t70 ft4 627.6 um): an obstacle-aware re-site is accepted only when its max hop AND its total path
+    are no worse than the old (pre-move) site's, both measured with the same obstacle model"""
+    om, ot = chain_metrics(R, old_pts)
+    nm, nt = chain_metrics(R, new_pts)
+    return nm <= om + tol and nt <= ot + tol
+
+
 def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
     """(poly incl. pins, regs, n_min, kind) for pins a -> b."""
     ea, eb = escape(R, a), escape(R, b)
@@ -495,6 +547,8 @@ def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
     best = None
     for kind, poly in cands:
         poly = [p for i, p in enumerate(poly) if i == 0 or p != poly[i - 1]]
+        if OBSTACLE_AWARE and poly_crosses_core(R, poly):
+            continue
         L = sum(abs(q[0] - p[0]) + abs(q[1] - p[1]) for p, q in zip(poly, poly[1:]))
         if best is not None and L >= best[0]:
             continue
@@ -511,6 +565,8 @@ def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
                 best = (L, "astar", poly, regs, n_min)
     if (best is None or len(best[3]) > n_old) and n_old:
         bb = place_regs_bbox(R, a, b, n_old, reach)
+        if bb is not None and OBSTACLE_AWARE and not _hops_clear(R, [tuple(a)] + list(bb) + [tuple(b)]):
+            bb = None            # --obstacle-aware: a staircase hop that must cross a core either way is not routable
         if bb is not None:
             regs = bb
             pts = [tuple(a)] + list(regs) + [tuple(b)]
@@ -530,8 +586,8 @@ def place_regs_bbox(R, a, b, n_old, reach):
     the free point within reach of the previous point (and able to finish: Manhattan to b <= (left + 1) x reach)
     that minimises max(hop, rest / (left + 1)), so the hops come out balanced.  Returns [(x, y)] or None."""
     x0, x1 = sorted((a[0], b[0])); y0, y1 = sorted((a[1], b[1]))
-    xs = [sn(x0) + k * G for k in range(int((x1 - x0) / G) + 2)]
-    ys = [sn(y0) + k * G for k in range(int((y1 - y0) / G) + 2)]
+    xs = [sn(x0) + k * G for k in range(int((x1 - x0) / G + 1e-9) + 2)]
+    ys = [sn(y0) + k * G for k in range(int((y1 - y0) / G + 1e-9) + 2)]
     free = [(x, y) for x in xs if x0 - G <= x <= x1 + G for y in ys if y0 - G <= y <= y1 + G and R.free(x, y)]
     if not free:
         return None

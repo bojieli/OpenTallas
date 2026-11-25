@@ -56,21 +56,25 @@ def _findings(raw, plan_path, tree=None, **kw):
 
 
 def slot_bit_worst(P, tn, slot, pins):
-    """(worst per-bit hop um, bit, hop index) of one ft slot; hop index k-1 = last bit site -> out pin."""
+    """(worst per-bit hop um, bit, hop index) of one ft slot; hop index k-1 = last bit site -> out pin; -1 = in pin -> explicit S0."""
     import die_hop_scan as D
     sn, k = slot["name"], int(slot.get("stations", 1))
     pi, po = pins.get(sn + "_i", {}), pins.get(sn + "_o", {})
     nm = D.normal_slot(P, tn, sn)
+    exp0 = bool(nm) and slot.get("explicit_stage0") is True   # unlanded explicit S0: in pin -> S0 is a placed hop
     best = (0.0, None, None)
     for b in set(pi) | set(po):
         a, z = pi.get(b) or po[b], po.get(b) or pi[b]
         st = [D.station_site(slot, j, b, a, z, normal=nm) for j in range(k)]
+        if exp0 and b in pi:   # QC-STA-HOP: explicit stage 0 is a placed site, so in pin -> S0 is a real hop (index -1)
+            st = [D.input_site(pi[b])] + st
         h = [D.md(x, y) for x, y in zip(st, st[1:])]
         if b in po:
             h.append(D.md(st[-1], D.input_site(po[b])))
+        off = -1 if (exp0 and b in pi) else 0
         for i, v in enumerate(h):
             if v > best[0]:
-                best = (v, b, i)
+                best = (v, b, i + off)
     return best
 
 
@@ -101,7 +105,7 @@ def bit_lines(P, reach=405.0):
             if w > reach + 1e-6:
                 rows.append((w, tn, s["name"], b, i, int(s.get("stations", 1))))
     rows.sort(reverse=True)
-    out = [_w("BIT", f"type {tn} slot {sn}: bit {b} hop {i}{' (last -> out pin)' if i == k - 1 else ''} is {w:.0f} um > reach {reach:.0f}"
+    out = [_w("BIT", f"type {tn} slot {sn}: bit {b} hop {i}{' (last -> out pin)' if i == k - 1 else ' (in pin -> S0)' if i == -1 else ''} is {w:.0f} um > reach {reach:.0f}"
               " (station centres may pass; re-shape the bit group along the pin line or add a station)")
            for w, tn, sn, b, i, k in rows[:MAX_LINES]]
     out.append(_w("bit summary", f"{len(rows)} ft slot(s) with a per-bit hop over reach (worst {rows[0][0] if rows else 0:.0f} um) of {done} checked"

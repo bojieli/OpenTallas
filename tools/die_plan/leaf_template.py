@@ -261,6 +261,140 @@ def cmd_check(a):
         Path(a.json).write_text(json.dumps(res, indent=1) + "\n")
 
 
+def _load_model(plan, tn, die, repo):
+    """TypeModel + Grid of core_place.py for one type, set up exactly as core_place.main does (scoring only)"""
+    import gzip
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import core_place as CP
+    RS = CP.RS
+    plan = Path(plan)
+    repo = Path(repo)
+    raw = plan.read_bytes()
+    P = json.loads(gzip.decompress(raw)) if plan.suffix == ".gz" else json.loads(raw)
+    RS.REF_DIRS[:] = [str(plan.parent)]
+    die_dir = repo / "physical" / "die_plan" / die
+    if not die_dir.is_dir():
+        die_dir = plan.parent
+    rs_cfg = dict(RS.DEFAULTS, derate=dict(RS.DERATE), core_ceiling=RS.DEFAULTS["core_ceiling"])
+    here = Path(CP.__file__).resolve().parent
+    try:
+        rs_cfg["views"] = json.loads((here / "route_supply_views.json").read_text()).get("views", {})
+    except (OSError, ValueError):
+        rs_cfg["views"] = {}
+    try:
+        rs_cfg["kit_views"] = json.loads((here / "route_supply_kit_views.json").read_text()).get(die, {})
+    except (OSError, ValueError, AttributeError):
+        rs_cfg["kit_views"] = {}
+    conns = RS.load_conns(die_dir, None, plan.parent, [])
+    cfg = dict(gap=34.56, sweeps=12, topk=4, lam=4.0, reach=360.0, grid_um=21.6, grt_halving="full", fixed_re="", rs=rs_cfg,
+               flips_only=False, gap_pinface=None, face_clear=[], slot_clear=[".*"], window_clear=False, ft_resite=True,
+               taps_movable=False, bus_reg=False, detour_fix=False, take_regs=False, slot_ft=0.0, block_shift=False, link_reg=[])
+    t = P["partition_types"][tn]
+    M = CP.TypeModel(tn, t, die_dir, repo, conns, cfg)
+    mg = 34.56
+    for k in range(M.m):
+        for j in range(k + 1, M.m):
+            x, y, w, h = M.cbb[k]
+            X, Y, Wj, Hj = M.cbb[j]
+            mg = min(mg, max(X - (x + w), x - (X + Wj), Y - (y + h), y - (Y + Hj)))
+    cfg["gap"] = max(CP.G, math.floor(mg / CP.G + 1e-6) * CP.G)
+    Gd = CP.Grid(M, cfg)
+    M.init_limits()
+    return CP, P, t, M, Gd
+
+
+def _score(M, Gd, lam=4.0):
+    SH, SV = Gd.supply()
+    DH, DV = Gd.demand()
+    oH, oV, _, _ = Gd.ovf(DH, DV, SH, SV)
+    q = range(len(M.L))
+    bit = M.cost(q)
+    tv = M.tviol(q)
+    return bit + 25.0 * oH / 1e3 + 11.0 * oV / 1e3 + 2e5 * tv, dict(bit_mm=round(bit / 1e3), ovfH=round(oH), ovfV=round(oV), tv=tv)
+
+
+def cmd_optimize(a):
+    """connectivity-aware seed: start from the template floor, then swap identical lane cores between template slots (and mirror whole
+    groups) while the core_place objective (bit-um + overflow + timing violations) improves; writes the seed for core_place --seed"""
+    import random
+    P0 = json.loads(Path(a.plan).read_text())
+    out = {}
+    for tn, t in sorted(P0["partition_types"].items()):
+        if not LEAF_RE.match(tn) or not re.search(a.types, tn) or not t.get("hard_cores"):
+            continue
+        try:
+            seed, notes = build_seed(t, a.street, a.corridor)
+        except ValueError as e:
+            print(tn, "INFEASIBLE", e)
+            continue
+        CP, _, _, M, Gd = _load_model(a.plan, tn, a.die, a.repo)
+        log = lambda s: print(s, flush=True)   # noqa: E731
+        CP.apply_seed(M, seed, log)
+        sc0, d0 = _score(M, Gd)
+        lanes = [k for k in range(M.m) if re.search(r"g_ln\[\d+\]", M.inst[M.CL[k][0]])]
+        print(tn, "template seed", d0, "lanes", len(lanes), flush=True)
+        rnd = random.Random(1)
+        best, bd = sc0, d0
+        for sweep in range(a.sweeps):
+            imp = 0
+            pairs = [(x, y) for i, x in enumerate(lanes) for y in lanes[i + 1:]]
+            rnd.shuffle(pairs)
+            for x, y in pairs:
+                px, py = tuple(M.cpos[x]), tuple(M.cpos[y]); M.cpos[x] = py; M.cpos[y] = px
+                sc, d = _score(M, Gd)
+                if sc < best - 1e-6:
+                    best, bd, imp = sc, d, imp + 1
+                else:
+                    px, py = tuple(M.cpos[x]), tuple(M.cpos[y]); M.cpos[x] = py; M.cpos[y] = px
+            print(" sweep", sweep, "swaps", imp, bd, flush=True)
+            if not imp:
+                break
+        # phase 2: orientation flips of every cluster (pins face the right way) and short shifts of the hub/service clusters
+        shifts = [(dx * STREET, dy * STREET) for dx in (-2, -1, 0, 1, 2) for dy in (-2, -1, 0, 1, 2) if (dx or dy)]
+        for sweep in range(a.sweeps):
+            imp = 0
+            order = list(range(M.m))
+            rnd.shuffle(order)
+            for k in order:
+                for fo in ("R0", "MY", "MX", "R180"):
+                    if fo == M.cflip[k]:
+                        continue
+                    old = M.cflip[k]
+                    M.cflip[k] = fo
+                    if not M.legal(k, *M.cpos[k]):
+                        M.cflip[k] = old
+                        continue
+                    sc, d = _score(M, Gd)
+                    if sc < best - 1e-6:
+                        best, bd, imp = sc, d, imp + 1
+                    else:
+                        M.cflip[k] = old
+                if k in lanes:
+                    continue
+                x0, y0 = M.cpos[k]
+                bpos = None
+                for dx, dy in shifts:
+                    pos = (snap(x0 + dx), snap(y0 + dy))
+                    if not M.legal(k, *pos):
+                        continue
+                    M.cpos[k] = pos
+                    sc, d = _score(M, Gd)
+                    if sc < best - 1e-6:
+                        best, bd, bpos = sc, d, pos
+                M.cpos[k] = bpos if bpos else (x0, y0)
+                imp += 1 if bpos else 0
+            print(" flip/shift sweep", sweep, "improved", imp, bd, flush=True)
+            if not imp:
+                break
+        res = {}
+        for k in range(M.m):
+            i = M.CL[k][0]
+            res[M.inst[i]] = {"origin_um": [float(M.core_origin(i)[0]), float(M.core_origin(i)[1])], "orient": M.core_orient(i)}
+        out[tn] = res
+        print(tn, "optimised", bd, "from", d0, flush=True)
+    Path(a.out).write_text(json.dumps(out) + "\n")
+
+
 def cmd_run(a, rest):
     import subprocess
     seedf = str(Path(a.out_plan).with_suffix(".seed.json"))
@@ -277,14 +411,18 @@ def cmd_run(a, rest):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for n in ("seed", "check", "run"):
+    for n in ("seed", "check", "run", "optimize"):
         p = sub.add_parser(n)
         p.add_argument("plan")
         p.add_argument("--types", default=".*")
         p.add_argument("--street", type=float, default=STREET)
         p.add_argument("--corridor", type=float, default=CORRIDOR)
-        if n == "seed":
+        if n in ("seed", "optimize"):
             p.add_argument("--out", required=True)
+        if n == "optimize":
+            p.add_argument("--die", default="s81")
+            p.add_argument("--repo", default=".")
+            p.add_argument("--sweeps", type=int, default=6)
         if n == "check":
             p.add_argument("--json")
         if n == "run":
@@ -295,6 +433,8 @@ def main(argv=None):
         cmd_seed(a)
     elif a.cmd == "check":
         cmd_check(a)
+    elif a.cmd == "optimize":
+        cmd_optimize(a)
     else:
         return cmd_run(a, [x for x in rest if x != "--"])
     return 0

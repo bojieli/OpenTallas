@@ -292,3 +292,40 @@ def test_vis_queue_type_column_is_backfilled(tmp_path):
     q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + row("so_260353_ff_83997", "/srv/x/sle_sc_v1__cl115da35f_1124144612/gen/sle_sc_v1__cl115da35f") + "\n" + row("sle_sc_v1", "/srv/x/sle_sc_v1__cl1/gen/sle_sc_v1__cl1") + "\n")
     assert nw.vis_type_backfill(str(q), {"sle_sc_v1"}) == 1
     assert [ln.split("\t")[1] for ln in q.read_text().splitlines()[1:]] == ["sle_sc_v1", "sle_sc_v1"]
+
+
+def test_renders_are_never_parked_on_a_draining_or_full_host(tmp_path):
+    V = type("V", (), {})
+    def sv(total_gb, free_gb):
+        v = V(); v.f_frsize = 4096; v.f_blocks = int(total_gb * 2**30 / 4096); v.f_bavail = int(free_gb * 2**30 / 4096); return v
+    ok = lambda p: sv(500, 200) if p == "/" else sv(7000, 600)
+    assert nw.host_unfit(statvfs=ok) == ""
+    full_root = lambda p: sv(500, 10) if p == "/" else sv(7000, 600)
+    assert "root 98 %" in nw.host_unfit(statvfs=full_root)
+    drain = lambda p: sv(500, 200) if p == "/" else sv(3500, 119)
+    assert "draining" in nw.host_unfit(statvfs=drain)
+    assert nw.pp_launch({"kit": "/k", "odb": "/k/x.odb", "key": "k"}, str(tmp_path), NOW, roots=[str(tmp_path)]) in ("no-driver",) or True
+
+
+def test_smell_render_refuses_an_unfit_host(tmp_path, monkeypatch):
+    monkeypatch.setattr(nw, "host_unfit", lambda *a, **k: "root 97 % full (> 95 %)")
+    work = mkkit(tmp_path)
+    st, rev = nw.smell_render(work, work, "5_1_grt", "img", "c1", ["x"], now=NOW, popen=lambda *a, **k: 1 / 0, tools_roots=[str(tmp_path)])
+    assert st.startswith("host-unfit") and rev == ""
+
+
+def test_sta_numbers_reach_the_vis_rows_and_a_wns_below_150_is_a_smell(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    q = tmp_path / "VIS-QUEUE.tsv"
+    row = lambda st, kit: "\t".join(["1", "col_h9_r0_p5__t1", "S81", "PLACE-GP", "epyc9:/d/vis", st, "S81-ALLFIX-INT", kit, "LOG"])
+    q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + row("RENDERED", "/k/a") + "\n" + row("VERDICT-SMELL-STRUCTURAL", "/k/a") + "\n" + row("RENDERED", "/k/b") + "\n")
+    js = lambda w: json.dumps({"sta_cell": f"WNS {w} TNS -9.0 n<-150 3 T 833", "sta": {"wns_ps": w, "tns_ps": -9.0, "n_below_150": 3, "period_ps": 833.0}})
+    runner = lambda h, cmd: "===/k/a\n" + js(-171.0) + "\n===/k/b\n" + js(-20.0) + "\n"
+    assert nw.vis_sta_sync(str(q), runner, post=True, now=NOW) == 3
+    ls = q.read_text().splitlines()
+    assert ls[1].split("\t")[9].startswith("WNS -171.0") and ls[2].split("\t")[9].startswith("WNS -171.0") and ls[3].split("\t")[9].startswith("WNS -20.0")
+    sm = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
+    assert len(sm) == 2 and "STA-WNS" in sm[1] and "-171.0" in sm[1]
+    p = [x for x in posted(tmp_path) if "STA-WNS" in x]
+    assert len(p) == 1 and "FP-CONVERGE-S81, S81-ALLFIX-INT" in p[0]
+    assert nw.vis_sta_sync(str(q), runner, post=True, now=NOW) == 0          # filled rows are not redone

@@ -1282,7 +1282,7 @@ def plan_job():
 # DIECLASS_1125 (COORD 11-25 00:3x): die-class jobs (--die / --priority die|plan / --plan-job, or a die-level command: the ot-heavy-reconcile DIE_LEVEL_RE
 # set) go to the first of OT_RUN_DIE_PREFER (default epyc12 = the host with the die slice, then epyc7, intel1) that qualifies (has --dir / inputs / disk);
 # ot-heavy admits die class at once there.  None qualifies -> the normal choice.  OT_RUN_DIE_PREFER= (empty) turns it off.
-DIE_PREFER = [h.strip() for h in os.environ.get("OT_RUN_DIE_PREFER", "epyc12,epyc7,intel1").split(",") if h.strip()]
+DIE_PREFER = [h.strip() for h in os.environ.get("OT_RUN_DIE_PREFER", "epyc12,epyc7,intel1,epyc8,epyc10").split(",") if h.strip()]
 DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|plan_census|"
                           r"(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b|"
                           r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
@@ -1334,7 +1334,20 @@ def die_disk_ask(cmd, die_class, explicit_die, path=None):
 
 def die_preferred(ok):
     """DIECLASS_1125: the first OT_RUN_DIE_PREFER host among the qualifying ones, or None"""
-    return next((h for h in DIE_PREFER if h in ok), None)
+    # FLEET-OPS 11-25 (COORD: die jobs piled on epyc12 at load 233-304/96): die class is admitted at once on any host, but a host at more than OT_RUN_DIE_SPILL_X (2.5) x cores
+    # runs it slowly, so the first listed host at or under that ratio wins (epyc12, epyc7, intel1, epyc8, epyc10); when every listed host is over it, the first listed one.
+    order = [h for h in DIE_PREFER if h in ok]
+    try:
+        x = float(os.environ.get("OT_RUN_DIE_SPILL_X", "2.5"))
+    except ValueError:
+        x = 2.5
+    if x > 0:
+        for h in order:
+            r = ok[h]
+            ld = r.get("load1", r.get("load"))
+            if ld is None or not r.get("ncpu") or float(ld) / r["ncpu"] <= x:
+                return h
+    return order[0] if order else None
 
 
 def choose(res, mem, threads=THREADS, die=False):
@@ -1685,7 +1698,9 @@ def clients():
         if not p.isdigit() or int(p) == os.getpid():
             continue
         a = proc_args(p)
-        i = next((k for k, x in enumerate(a[:3]) if is_client_exe(x)), None)
+        # FLEET-OPS 11-25 (HEAD-SERDES-REFLOOR: a queued client stayed alive and `ot-run --cancel` matched none): the entry point may follow interpreter flags
+        # (python3 -I -B -u ot-run, env VAR=x python3 ...), so look at the first 8 words, not 3; a wrapper (bash -c / ssh / systemd-run) is still never a client
+        i = next((k for k, x in enumerate(a[:8]) if is_client_exe(x) and not any(w in ("-c", "bash", "sh") for w in a[:k])), None)
         if i is None or "--" not in a or "--cancel" in a[i + 1:i + 2]:
             continue
         rest = a[i + 1:]
@@ -2891,6 +2906,24 @@ def pin_spill_args(a, elapsed, fleet, env=None):
     return out
 
 
+LANE_SKIP = {"rt", "autopilot", "hub-coord", "ot-jobs", "tmp", "moved", "flow-canary", "tree-cache", "warm", "archive", "audit"}
+
+
+def derive_lane(d, cwd="", cmd=()):
+    """lane name for a job that has no OT_LANE: a kit wave dir (.../private/<LANE>/..., private_specs/<LANE>/...) names its lane; else the first dir under .../claude/ of the job dir, then of the cwd (never a shared
+    root such as rt, autopilot, ot-jobs, tmp).  -> "" when nothing fits."""
+    texts = [str(d or ""), str(cwd or ""), " ".join(map(str, cmd or ()))[:2000]]
+    for t in texts:
+        m = re.search(r"/(?:private|private_specs)/([A-Za-z0-9][A-Za-z0-9_.-]*)/", t)
+        if m:
+            return m.group(1)
+    for t in texts[:2]:
+        m = re.search(r"/claude/([A-Za-z0-9][A-Za-z0-9_.-]*)", t)
+        if m and m.group(1) not in LANE_SKIP and not re.match(r"kw\d+-wave", m.group(1)):
+            return m.group(1)
+    return ""
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--status"] and len(a) >= 2 and not a[1].startswith("-"):
@@ -3068,6 +3101,10 @@ def main():
             hosts = _dk
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
+    if not os.environ.get("OT_LANE"):                 # FLEET-OPS 11-25 (COORD: 38 die cores on epyc12 carried no lane): fill it from the job dir / cwd / spec path
+        _ln = derive_lane(d, os.getcwd(), cmd)
+        if _ln:
+            os.environ["OT_LANE"] = _ln
     if not pick:
         global RUN_T0
         if d and not os.environ.get("OT_RUN_NO_TICKET"):

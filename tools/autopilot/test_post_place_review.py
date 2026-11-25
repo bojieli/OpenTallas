@@ -177,3 +177,25 @@ def test_flight_lines_carry_slack_labels_and_drt_markers(tmp_path):
     (d / "5_route_drc.rpt").unlink()
     s3 = P.finish(rev)
     assert any("no 5_route_drc report" in n for n in s3["notes"]) and "drt_report" not in s3
+
+
+def test_parse_sta_and_cell():
+    below = "Endpoint                 Required   Actual   Slack\n--------\na/D  800.0  1000.0  -200.5\nb/D  800.0  1010.0  -210.0\nc/D  800.0  945.0  -145.0\n"
+    s = P.parse_sta("wns max -210.000\n", "tns max -4321.500\n", below, "clk 833.0\n")
+    assert s == {"wns_ps": -210.0, "tns_ps": -4321.5, "n_below_150": 2, "period_ps": 833.0}
+    assert P.sta_cell(s) == "WNS -210.0 TNS -4321.5 n<-150 2 T 833" and P.sta_cell({}) == "STA n/a"
+
+
+def test_finish_reports_sta_and_wns_smell(tmp_path):
+    lay = {"top": "t", "die": [0, 0, 100, 100], "pg": [], "density": {"nx": 1, "ny": 1, "grid": [0.5]}}
+    (tmp_path / "layout.json").write_text(json.dumps(lay))
+    (tmp_path / "paths_ideal_raw.txt").write_text(REPORT)
+    (tmp_path / "pins.tsv").write_text(PINS)
+    (tmp_path / "macros.tsv").write_text("name\tmaster\tx0\ty0\tx1\ty1\thl\thb\thr\tht\n")
+    (tmp_path / "sta_wns.txt").write_text("wns max -171.0\n")
+    (tmp_path / "sta_tns.txt").write_text("tns max -900.0\n")
+    (tmp_path / "sta_below150.txt").write_text("a/D 1 2 -171.0\n")
+    s = P.finish(tmp_path)
+    assert s["sta"]["wns_ps"] == -171.0 and s["smell_wns"] is True and s["sta_cell"].startswith("WNS -171.0 TNS -900.0 n<-150 1")
+    (tmp_path / "sta_wns.txt").write_text("wns max -20.0\n")
+    assert P.finish(tmp_path)["smell_wns"] is False

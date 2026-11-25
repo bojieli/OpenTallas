@@ -17,7 +17,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parents[1]))
 import schema as S  # noqa: E402
 import check as C  # noqa: E402
-from die_hop_scan import pin_table, first_internal_hops, station_site, input_site, md  # noqa: E402
+from die_hop_scan import pin_table, first_internal_hops, station_site, input_site, md, explicit_full  # noqa: E402
 from placement_obstacles import placement_boxes  # noqa: E402
 from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 from ft_nudge import KEEPOFF, CELL_DEFAULT, clock_points  # noqa: E402
@@ -63,6 +63,8 @@ def main():
                     alloc.reserve_rectangle((x, y, x + cw_, y + ch_))
         for s in slots:
             if s["name"] not in bad:
+                continue
+            if explicit_full(s):   # QC-STA-HOP: bit_sites_um[0] is S0 here, not S1; this fixer would move the wrong stage
                 continue
             cw_, ch_ = s.get("bit_site_cell_um", CELL_DEFAULT)
             pi, po = pins[s["name"] + "_i"], pins[s["name"] + "_o"]

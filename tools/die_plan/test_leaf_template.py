@@ -64,3 +64,16 @@ def test_infeasible_outline_raises():
     except ValueError:
         return
     raise AssertionError("a 700 x 500 outline cannot hold the template")
+
+
+def test_optimize_skips_infeasible_and_writes(tmp_path, capsys):
+    """optimize: an outline that cannot hold the template is reported INFEASIBLE (no model load) and the seed file is still written"""
+    import json
+    t = row()
+    t["outline_um"] = [700.0, 500.0]
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"partition_types": {"ot_s81sl_leaf__t99": t, "other__t1": {"hard_cores": []}}}))
+    out = tmp_path / "seed.json"
+    assert LT.main(["optimize", str(plan), "--out", str(out)]) == 0
+    assert "INFEASIBLE" in capsys.readouterr().out
+    assert json.loads(out.read_text()) == {}

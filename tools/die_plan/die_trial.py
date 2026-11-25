@@ -5437,11 +5437,11 @@ def bump_grid(P, io, pitch=None, size=60.0, pads=False):
         raise ValueError("PG bump pitch must exceed the pad width")
     if "edge_margin_um" in cfg:
         m = cfg["edge_margin_um"]
-        nx, ny = int((P.W - 2*m) // pitch) + 1, int((P.H - 2*m) // pitch) + 1
+        nx, ny = int((P.W - 2*m) / pitch + 1e-9) + 1, int((P.H - 2*m) / pitch + 1e-9) + 1
         if min(nx, ny) < 1:
             raise ValueError("PG edge margin leaves no bump sites")
     else:
-        nx, ny = int(P.W // pitch), int(P.H // pitch)
+        nx, ny = int(P.W / pitch + 1e-9), int(P.H / pitch + 1e-9)
     x0 = (P.W - (nx - 1) * pitch) / 2
     y0 = (P.H - (ny - 1) * pitch) / 2
     for i in range(nx):

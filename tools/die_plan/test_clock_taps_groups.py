@@ -602,3 +602,27 @@ def test_clock_ancestry_allows_buffer_only_clock_rewire(tmp_path,monkeypatch):
     assert p.returncode == 0,p.stderr
     assert 'OT_CLOCK_ANCESTRY PASS 1 FF clock pins' in p.stdout
     assert 'NET ck_gated_ff nclk' in p.stdout
+
+
+def _rtap_mutant(tmp_path, monkeypatch, name, net):
+    path=tmp_path/f'rtap_mutant_{name}.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        f'mkflop {name} 800\nset ::NET(ck_{name}) {net}\nif {{$ct_clock_guard_on}} {{ct_clock_guard_verify}}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    return run(tmp_path,GATED_CLOCK+'\nmkflop rst_ff 100\n',env=GUARD_ON)
+
+
+def test_clock_ancestry_accepts_reset_split_copy_with_same_ancestry(tmp_path,monkeypatch):
+    """ANCESTRY-RTAP 11-25: a tap_reset_split copy <inst>_rtap_<tap> of a guarded FF with the same master and clock ancestry
+    is accepted (the serdes__t2 c9s kit died at CTS on 9 such copies)."""
+    p=_rtap_mutant(tmp_path,monkeypatch,'rst_ff_rtap_clk_t1','$::NET(ck_rst_ff)')
+    assert p.returncode == 0,p.stderr
+    assert 'reset-split copies accepted: 1' in p.stdout and 'OT_CLOCK_ANCESTRY PASS 3 FF clock pins' in p.stdout
+
+
+def test_clock_ancestry_refuses_copy_with_other_ancestry_or_unknown_new_ff(tmp_path,monkeypatch):
+    p=_rtap_mutant(tmp_path,monkeypatch,'gated_ff_rtap_clk_t1','nclk')      # a "copy" that bypasses the clock gate
+    assert p.returncode != 0 and 'not a reset-split copy' in p.stderr
+    p=_rtap_mutant(tmp_path,monkeypatch,'stray_ff','$::NET(ck_rst_ff)')        # a new FF that is no reset-split copy
+    assert p.returncode != 0 and 'not a reset-split copy' in p.stderr

@@ -57,7 +57,7 @@ def check_ft(slot, tol):
     bs, regs = slot.get("bit_sites_um"), slot.get("regs_um")
     if not bs or not regs:
         return None
-    off = 0 if (slot.get("explicit_stage0") is True and len(bs) == slot.get("stations", 1)) else 1
+    off = 0 if (slot.get("explicit_stage0") is True and len(bs) == int(slot.get("stations", 1))) else 1
     bad = judge_stages(bs, regs, off, tol)
     return ("SEAT", bad, len(bs)) if bad else None
 
@@ -99,7 +99,7 @@ def seated_map(raw, tol):
         for s in t.get("ft_slots") or []:
             bs, regs = (s.get("bit_sites_um"), s.get("regs_um")) if isinstance(s, dict) else (None, None)
             if bs and regs:
-                off = 0 if (s.get("explicit_stage0") is True and len(bs) == s.get("stations", 1)) else 1
+                off = 0 if (s.get("explicit_stage0") is True and len(bs) == int(s.get("stations", 1))) else 1
                 m[(tn, f"ft {s.get('name')}")] = {j: bbox_dist(st, regs[j + off]) for j, st in enumerate(bs) if st and j + off < len(regs)}
         for e in t.get("internal_stations") or []:
             bs, regs = (e.get("bit_sites_um") or e.get("face_bit_sites_um"), e.get("regs_um")) if isinstance(e, dict) else (None, None)

@@ -186,3 +186,22 @@ def test_lockstep_hop_flop_is_one_more_station(tmp_path, mutant, expect):
     assert r.returncode == 0, r.stderr
     r = subprocess.run(["vvp", str(tmp_path / "a.out")], capture_output=True, text=True)
     assert expect in r.stdout, r.stdout + r.stderr
+
+
+def test_landed_slot_station_i_is_plan_stage_i_plus_1():
+    """QC-BANKRST-OFF1 11-25: a landed slot (band <slot>_i) seats station i at plan stage i+1 and the last station at the
+    out face (face_flops.tcl landed path); the unlanded form put each landed station one stage early."""
+    taps = [("clk", 50.0, 50.0), ("clk_t1", 50.0, 250.0)]
+    bands = {"landing_contract": {"bands": {"z_i": {"rect_um": [0, 0, 100, 10]}}}}
+    t = {"outline_um": [100.0, 300.0], "clock": bands}
+    P = types.SimpleNamespace(types={"T": t}, parts={}, ports={})
+    s = {"name": "z", "in_face": "S", "out_face": "N", "width": 2, "stations": 4,
+         "bit_sites_um": [[[40, 90], [60, 90]], [[40, 160], [60, 160]], [[40, 290], [60, 290]]]}
+    st, _ = ft_xtap.station_sites(P, "T", s)
+    assert st[0] == [(40.0, 90.0), (60.0, 90.0)] and st[2] == [(40.0, 290.0), (60.0, 290.0)]
+    assert st[3] == [(40.0, 300.0), (60.0, 300.0)]          # out-face projection of station 2
+    # stations at y 90, 160, 290, 300: taps clk, t1, t1, t1 -> only hop 0 crosses (unlanded form said hop 1)
+    assert ft_xtap.predict_slot(P, "T", s, taps) == [0]
+    t2 = {"outline_um": [100.0, 300.0]}
+    P2 = types.SimpleNamespace(types={"T": t2}, parts={}, ports={})
+    assert ft_xtap.predict_slot(P2, "T", s, taps) == [1]

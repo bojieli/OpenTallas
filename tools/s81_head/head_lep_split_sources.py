@@ -14,6 +14,13 @@ LEP master rtl/dsrom_sys/s81_head/generated/ot_s81hd_lep_nr.sv, which stays byte
 ot_s81hd_lep0N_split.sv) is checked equal to ot_s81hd_lep0N_noidx_core by tools/s81_head/head_lep_split_equiv.sh.
 
     python3 -I tools/s81_head/head_lep_split_sources.py [--check]
+
+LEP-PUSHDUP-3 knob (HEAD-ALLFIX 11-25, COORD H9) for the DEPLOYED split form.  hd_lep0N binds the tree-only
+rtl/dsrom_sys/s81_head/ot_s81hd_lep0N_split_tx_io_stages.sv (Codex derive_r16_split.py + io_stage_split + LEP-PUSHDUP-1;
+none of those derivations is on main, and this generator's own output above is not in any hd_lep0N source list).  Its TX
+pre-stage is emitted by tools/s81_head/head_lep_pushdup3.py; this entry point applies it to a tree's file:
+
+    python3 -I tools/s81_head/head_lep_split_sources.py --io-stages IN.sv --io-out OUT.sv --txp "4'b1000"
 """
 import argparse
 import re
@@ -129,7 +136,20 @@ def derive(src):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--io-stages", type=Path, help="tree split_tx_io_stages.sv to give the LEP-PUSHDUP-3 TXP stage")
+    ap.add_argument("--io-out", type=Path, help="output of --io-stages (required with it)")
+    ap.add_argument("--txp", default=None, help="LEP-PUSHDUP-3 head wrapper default TXP, e.g. 4'b1000 (W8); default off")
     a = ap.parse_args()
+    if a.io_stages:
+        import importlib.util
+        sp = importlib.util.spec_from_file_location("head_lep_pushdup3", ROOT / "tools/s81_head/head_lep_pushdup3.py")
+        h = importlib.util.module_from_spec(sp)
+        sp.loader.exec_module(h)
+        if not a.io_out:
+            raise SystemExit("--io-stages needs --io-out")
+        a.io_out.write_text(h.apply(a.io_stages.read_text(), "split", a.txp))
+        print("HEAD_LEP_SPLIT_IO_STAGES PASS; LEP-PUSHDUP-3 TXP", h.txp_value(a.txp) or "off", a.io_out)
+        return
     text = derive(SRC.read_text())
     if a.check:
         if OUT.read_text() != text:

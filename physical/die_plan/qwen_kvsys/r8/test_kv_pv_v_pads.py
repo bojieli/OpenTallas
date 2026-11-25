@@ -113,3 +113,61 @@ if __name__ == "__main__":
     test_fail_pad_pass_mutant()
     test_v_after_command_fails_closed()
     print("2 passed")
+
+
+# ---- EMPTY-GUARD-1125 (KV-PV-ESTRIP: pads on a native_composite bind wrote a 0-member table and a vacuous clean rebind) ----------------
+def _composite_bind(d):
+    g = [dict(sink="native_composite_pv_N_0_pvg0_p0", sink_part="pv_N_0", src_part="pv_N_3",
+              members=[mk("s0__pv2", [0, 127], "vport_WN_0.out_v_lo", 80, 43), mk("s0__bc", [0, 22], "pvw_1__u_ctl.cmd", 50, 53)])]
+    return write(d, g)
+
+
+def _met_bind(tmp_path):
+    """a bind whose banks already meet the rule (the table's own pads applied): pads has nothing to add"""
+    g = landing()
+    pre = write(tmp_path / "pre", g)
+    done = apply(g, P.pads(str(pre), table(g)))
+    return write(tmp_path / "met", done), table(done)
+
+
+def test_pads_refuses_a_bind_with_no_bank_members(tmp_path):
+    import pytest
+    d = _composite_bind(tmp_path / "b")
+    r8t = tmp_path / "r8.json"; r8t.write_text(json.dumps(dict(members=[])))
+    out = tmp_path / "out.json"
+    with pytest.raises(SystemExit) as e:
+        P.pads(str(d), json.loads(r8t.read_text()))
+    assert "banks 0" in str(e.value)
+    with pytest.raises(SystemExit):
+        P.main(["pads", str(d), str(r8t), str(out)])
+    assert not out.exists()                                     # nothing written
+    assert P.check(RC.Bound(str(d)))[0]["verdict"] == "FAIL"
+
+
+def test_pads_refuses_zero_member_table_unless_allowed(tmp_path):
+    import pytest
+    d, t = _met_bind(tmp_path)
+    with pytest.raises(SystemExit) as e:
+        P.pads(str(d), t)
+    assert "0 members" in str(e.value)
+    assert P.pads(str(d), t, allow_empty=True)["members"] == []
+
+
+def test_empty_guard_mutants_are_killed(tmp_path):
+    d_bad = _composite_bind(tmp_path / "bad")
+    d_met, t_met = _met_bind(tmp_path)
+    src = open(P.__file__).read()
+    # (mutation, bind, table, message the real guard raises with)
+    muts = [("    if not rows:     # EMPTY-GUARD-1125", "    if False:     # EMPTY-GUARD-1125", d_bad, dict(members=[]), "banks 0"),
+            ("    if not out and not allow_empty:", "    if False:", d_met, t_met, "0 members")]
+    for k, (a, b, d, tab, needle) in enumerate(muts):
+        assert src.count(a) == 1, a
+        ns = {"__name__": f"pvv_mut{k}", "__file__": P.__file__}
+        exec(compile(src.replace(a, b), P.__file__, "exec"), ns)
+        for fn, expect in ((P.pads, True), (ns["pads"], False)):       # real guard raises with the needle, the mutant does not
+            try:
+                fn(str(d), tab)
+                msg = ""
+            except SystemExit as e:
+                msg = str(e)
+            assert (needle in msg) == expect, f"mutant {k}: {fn.__module__} -> {msg[:80]!r}"

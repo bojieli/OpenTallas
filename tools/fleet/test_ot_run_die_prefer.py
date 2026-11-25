@@ -39,3 +39,32 @@ def test_type_job_not_steered(monkeypatch):
     monkeypatch.setattr(R, "_choose", lambda res, mem, threads, die: ("epyc2", False))
     R.PREFER_DIE[0] = False
     assert R.choose({"epyc2": row(900), "epyc12": row(900)}, 64)[0] == "epyc2"
+
+
+def test_die_spills_from_a_host_over_2_5x_cores_to_the_next_listed_one(monkeypatch):
+    """FLEET-OPS 11-25: epyc12 at load 304/96 -> epyc7; epyc8 and epyc10 are on the die list after intel1"""
+    monkeypatch.setattr(R, "physically_capable", lambda r, m: True)
+    res = {"epyc12": row(300, load=304.0), "epyc7": row(300, load=102.0), "intel1": row(300, ncpu=112, load=90.0), "epyc8": row(500, load=78.0), "epyc10": row(600, load=50.0)}
+    R.PREFER_DIE[0] = True
+    try:
+        assert R.choose(dict(res), 64)[0] == "epyc7"
+        res["epyc7"] = row(300, load=300.0); res["intel1"] = row(300, ncpu=112, load=400.0)
+        assert R.choose(dict(res), 64)[0] == "epyc8"
+        res["epyc8"] = row(500, load=300.0)
+        assert R.choose(dict(res), 64)[0] == "epyc10"
+        res["epyc10"] = row(600, load=300.0)
+        assert R.choose(dict(res), 64)[0] == "epyc12"          # all saturated: the first listed host, as before
+        monkeypatch.setenv("OT_RUN_DIE_SPILL_X", "0")
+        res["epyc7"] = row(300, load=10.0)
+        assert R.choose(dict(res), 64)[0] == "epyc12"          # 0 = the old order
+    finally:
+        R.PREFER_DIE[0] = False
+
+
+def test_lane_is_derived_from_the_job_dir_when_ot_lane_is_unset():
+    """FLEET-OPS 11-25: 38 die cores on epyc12 had no OT_LANE"""
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/s81-colh9r2-pinface/x", "/") == "s81-colh9r2-pinface"
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891/private/S81-ALLFIX-INT/col_h9", "/") == "S81-ALLFIX-INT"
+    assert R.derive_lane(None, "/srv/opentallas-scratch2/claude/QC-C1O-COMPOSE/tree", ["bash", "x.sh"]) == "QC-C1O-COMPOSE"
+    assert R.derive_lane("/srv/opentallas-scratch2/claude/rt/abc", "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs", []) == ""
+    assert R.derive_lane("/x", "/y", ["python3", "/home/u/coord/autopilot/private_specs/HEAD-SERDES-REFLOOR/s81_head_hd_serdes_1/spec.json"]) == "HEAD-SERDES-REFLOOR"

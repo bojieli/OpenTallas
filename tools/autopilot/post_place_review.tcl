@@ -93,7 +93,7 @@ proc ppr_sta {} {
   if {[info exists ::env(PPR_LIBS)]} { foreach p $::env(PPR_LIBS) { foreach f [glob -nocomplain $p] { catch {read_liberty $f} } } }
   if {[file exists $gen/config.mk]} {
     foreach l [split [exec sh -c "grep -h 'ADDITIONAL_LIBS' $gen/config.mk || true"] "\n"] {
-      foreach w [lrange [split $l " ="] 1 end] { if {[string match *.lib $w] && [file exists $w]} { catch {read_liberty $w} } }
+      foreach w [lrange [split $l " ="] 1 end] { set w [string map [list /work/ $gen/] $w]; if {[string match *.lib $w] && [file exists $w]} { catch {read_liberty $w} } }      ;# the kit is mounted at /kit here, config.mk names /work/macros/*.lib
     }
   }
   set sdc ""
@@ -107,6 +107,11 @@ proc ppr_sta {} {
   source $ppr_plat/setRC.tcl
   estimate_parasitics -placement
   report_checks -path_delay max -group_path_count $ppr_n -sort_by_slack -format full -digits 3 > $ppr_out/paths_ideal_raw.txt
+  # quick setup STA summary (COORD 08:xx): clock period, WNS, TNS and every endpoint below -150 ps (the SDC's time unit is ps), read by post_place_review.py finish()
+  catch {report_wns -digits 3 > $ppr_out/sta_wns.txt}
+  catch {report_tns -digits 3 > $ppr_out/sta_tns.txt}
+  catch {report_checks -path_delay max -group_path_count 200000 -slack_max -150 -format end -digits 3 > $ppr_out/sta_below150.txt}
+  catch {set pf [open $ppr_out/sta_clocks.txt w]; foreach c [all_clocks] { puts $pf "[get_name $c] [get_property $c period]" }; close $pf}
   # pin table for every pin that appears in the report
   set txt [read [set fh [open $ppr_out/paths_ideal_raw.txt]]]; close $fh
   array set seen {}
