@@ -27,3 +27,10 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
 3. Census (find lec.json *coll*, mtime<10d; E10/E2/intel1/intel2 done): coll_s 6x NOT EQ (re0 class);
    coll_core 2 faces SAFE=0 = same latent risk (opus-fix-qc-coll-r3: 3x UNPROVEN 3 undecided u_ctl face_1, 1x EQ);
    coll_n 1 face EQ (no cross-face pairing); coll_ft*, ftc, ftm, ftn, ucie: no face, EQ / N/A.
+
+## 16:35 results
+- H2 (patched, no hints) UNPROVEN 50797/50800, differs 0; H1 (old + 4 hints, all kept) UNPROVEN 76058/76061, differs 0.
+  Remaining 3 undecided = face_4 u_ctl epoch_abort / fault_cause[0] / rx_v, 0 unmatched keys, solver limit (5M conf, 1800 s);
+  face_3 twins proved by escalation. NOTE: H2 compare points 50800 vs 76042 (R1) / 76061 (H1): explain before counting.
+- H3 = patched + OT_LEC_ESCALATE_C=50000000 OT_LEC_ESCALATE_S=10800, E10 QC-COLLS-LEC/r/H3_esc (queued on load cap; see logs/H3.client.log for unit).
+- ot-push-main of clone commit cb2152fd55e launched 16:3x (result in hub post when it lands).
