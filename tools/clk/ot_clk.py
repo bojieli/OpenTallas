@@ -32,6 +32,12 @@ Usage:
                                                 connect exact new clock graph to native M7 taps, with actual row/site geometry
   ot_clk.py rec     CONFIG --trial DIR --stage grt|drt   region.form mesh: routed trial -> explicit_mesh_signoff rec
 
+eco (CLK-ECO-1): a config with an `eco` section {base_tree, resite_types: [T..], max_leaf_leg_um, lift_tol_ps, match_um,
+plan_root} makes `kit` (and `argv`) INCREMENTAL: before die_trial runs, tools/clk/tree_eco.py re-sites the tree of record
+base_tree on the config's plan (site-matched taps keep their leaf; moved/new taps reuse freed leaves or hang on the best
+region node; stranded leaves and pile-ups at stale keep-outs re-site) into OUT/eco/tree_eco.json, and die_trial kit gets
+--tree-json on it (the kit re-lays the touched legs on its own legal-site map and fixes parity).
+
 region.form mesh (CLK-TOOL-6): the region clock is built by tools/clk/mesh_form.py from the config section region.mesh
 (every die value explicit, no defaults), not by die_trial.  check/argv/kit/replay/rec take the same CONFIG; kit writes
 OUT/mesh/<part>/ per region of region.parts; replay compares each part with event.reference_mesh_dirs[part]; refit
@@ -441,6 +447,44 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a.append("--cell-paths")
     for x in cfg.get("extra_argv") or []:      # flags not yet modelled as config keys (listed in the README)
         a.append(str(x))
+    if cfg.get("eco"):                         # CLK-ECO-1: the re-sited tree of record replaces the built tree
+        if "--tree-json" in a:
+            raise ConfigError("eco and an explicit --tree-json in extra_argv are exclusive")
+        a += ["--tree-json", str(eco_tree_path(out))]
+    return a
+
+
+def eco_tree_path(kit_out):
+    """CLK-ECO-1: the eco tree of a kit dir OUT/kit is OUT/eco/tree_eco.json"""
+    return Path(kit_out).parent / "eco" / "tree_eco.json"
+
+
+ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root"}
+
+
+def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
+    """CLK-ECO-1: tree_eco.py argv for the config's eco section (plan root: eco.plan_root, else the kit's --plan-root)"""
+    e = cfg["eco"]
+    bad = set(e) - ECO_KEYS
+    if bad or "base_tree" not in e:
+        raise ConfigError(f"eco: keys {sorted(ECO_KEYS)} (base_tree required); unknown {sorted(bad)}")
+    xa = [str(x) for x in cfg.get("extra_argv") or []]
+    root = e.get("plan_root") or (xa[xa.index("--plan-root") + 1] if "--plan-root" in xa else None)
+    if not root:
+        raise ConfigError("eco: no plan root (eco.plan_root or --plan-root in extra_argv)")
+    a = [str(HERE / "tree_eco.py"), str(e["base_tree"]), str(plan), "--plan-root", str(root), "--out",
+         str(eco_tree_path(kit_out)), "--tools", str(Path(die_trial).resolve().parent),
+         "--rep-um", _fmt(cfg["top"].get("rep_um", 150))]
+    if cal:
+        a += ["--stage-cal", str(cal)]
+    if region_map:
+        a += ["--regions", str(region_map)]
+    rt = e.get("resite_types") or []
+    if rt:
+        a += ["--resite-types", ",".join(rt if isinstance(rt, list) else [rt])]
+    for k, f in (("max_leaf_leg_um", "--max-leaf-leg-um"), ("lift_tol_ps", "--lift-tol-ps"), ("match_um", "--match-um")):
+        if e.get(k) is not None:
+            a += [f, _fmt(e[k])]
     return a
 
 
@@ -816,6 +860,15 @@ def main(argv=None):
         rc = 0
     else:
         # CLK-DME-LOG (11-02): say where the die_trial log goes (die_trial logs its stages and DME progress there, flushed)
+        if cfg.get("eco"):          # CLK-ECO-1: re-site the tree of record first (same python, same die_trial tools)
+            ea = eco_argv(cfg, out / "kit", cal, rmap, plan, dt)
+            eco_tree_path(out / "kit").parent.mkdir(parents=True, exist_ok=True)
+            erc = subprocess.call([getattr(a, "python", sys.executable), "-I"] + ea,
+                                  stdout=open(out / "eco.log", "w"), stderr=subprocess.STDOUT)
+            print(f"ot_clk: {time.strftime('%F %T')} tree_eco rc={erc} log {out / 'eco.log'}", file=sys.stderr, flush=True)
+            if erc:
+                print(json.dumps(dict(rc=erc, stage_check="PASS" if ok else "FAIL", out=str(out), failed="eco")))
+                return erc
         print(f"ot_clk: {time.strftime('%F %T')} die_trial kit running, log {out / 'kit.log'}", file=sys.stderr, flush=True)
         t0 = time.time()
         rc = subprocess.call([getattr(a, "python", sys.executable), str(dt)] + args,
