@@ -1,23 +1,18 @@
 {
- "row": "PHY-PHYSINST (hard-wrapper phy kits: place the macro at its kit RTL path)",
+ "row": "PHY-PHYSINST (hard-wrapper phy kits: kit wrapper name + macro path + origin/outline)",
  "lane": "QC-PHY-GEN",
- "ruling": "QC-ALLFIX 02:2x: physical_inst row accepted as fix",
- "base": "c1n_r2",
- "base_sha": "a372ae84fa2a",
- "out_sha": null,
- "cause": "kit RTL from bind.py kit-rtl nests the hard macro as u_bound.u_core; plan contents[] names u_io_serdes_1 / u_io_serdes_2 / u_ucie_kv, so KIT_PREFLIGHT macro_instances PLAN-SRC-MACRO fails at place. Same form as kv3_phy (plan_c): physical_inst + physical_master, kit-only, bind identity unchanged.",
- "family": "all hard partition types with a lef in contents[]: phy_serdes, phy_serdes_b, phy_ucie_kv (checked on plan v4c4; no other hard type has contents with a lef)",
- "proof_plan": {"sha12_before": "81fd3e6370c0", "sha12_after": "0bbe5213dc24", "path": "epyc10:/srv/opentallas-scratch2/claude/QC-PHY-GEN/trees/phy_v4c4_lintfix/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json", "note": "proof on v4c4, not the bound plan; a sign-off there needs a re-sign on the bound plan"},
- "types": {
-  "phy_serdes": {"set": {
-   "partition_types.phy_serdes.contents[inst=u_io_serdes_1].physical_inst": "u_bound.u_core",
-   "partition_types.phy_serdes.contents[inst=u_io_serdes_1].physical_master": "ot_qfd_serdes_112g_x12_phy_s597"}},
-  "phy_serdes_b": {"set": {
-   "partition_types.phy_serdes_b.contents[inst=u_io_serdes_2].physical_inst": "u_bound.u_core",
-   "partition_types.phy_serdes_b.contents[inst=u_io_serdes_2].physical_master": "ot_qfd_serdes_112g_x12_phy_s597"}},
-  "phy_ucie_kv": {"set": {
-   "partition_types.phy_ucie_kv.contents[inst=u_ucie_kv].physical_inst": "u_bound.u_core",
-   "partition_types.phy_ucie_kv.contents[inst=u_ucie_kv].physical_master": "ot_qkvd_ucie_x64_phy"}}
+ "base": "c1n_r3",
+ "base_sha": "fa8944bb0a39",
+ "out_sha": "0cf63d7db3ef",
+ "apply": "epyc12:/srv/opentallas-scratch2/claude/QC-PHY-GEN/r3pre/pp4.py BASE OUT (asserts keys unchanged first; no other key)",
+ "cause": "hard type kit RTL: wrapper module has the macro's name (dedup drops it) and nests the macro as u_bound.u_core, so place preflight PLAN-SRC-MACRO fails; phy_serdes_b origin [0,0] leaves no row (DPL-0038); phy_ucie_kv LEF = outline, no rows (PDN-0190).",
+ "parts": {
+  "1_physical_inst": "partition_types.{phy_serdes,phy_serdes_b,phy_ucie_kv}.contents[0].physical_inst = u_bound.u_core; physical_master = contents[0].module",
+  "2_type_module_rename": "partition_types.<t>.module = <module>_kw (kit wrapper only; contents[].module, LEF master and bound module names unchanged; bound-name check pending)",
+  "3_phy_serdes_b_origin": "partition_types.phy_serdes_b.contents[0].origin_um [0,0] -> [0,4.104] (as phy_serdes)",
+  "4_phy_ucie_kv_outline": "partition_types.phy_ucie_kv.outline_um [777.6,777.6] -> [777.6,781.704]; contents[0].origin_um [0,0] -> [0,4.104] (growth lever)"
  },
- "also_needed_outside_plan": ["dies.qwen_compute.hard_wrappers = [phy_serdes, phy_serdes_b, phy_ucie_kv] (kit_wave_edit 17baa774831, done)", "kit_gen_lint.py of the wave tree must be the rt 6ad9ae96d9f7 copy sha256 405e36dcaa1a7671 (or the tree rebuilt on main with that fix)"]
+ "family": "all 3 hard types with a lef in contents on v4c4",
+ "proof_kits": "fork plan; phy_serdes passed place and chain_probe (grt running)",
+ "also_needed_outside_plan": ["dies.qwen_compute.hard_wrappers [phy_serdes, phy_serdes_b, phy_ucie_kv] (kit_wave_edit 17baa774831, done)", "kit_gen_lint.py from rt 6ad9ae96d9f7 (sha256 405e36dcaa1a7671) in the wave tree"]
 }
