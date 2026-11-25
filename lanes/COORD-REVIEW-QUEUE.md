@@ -10607,3 +10607,4 @@ FAILED [AUTOPILOT 2a203d596dee] 2026-11-25 07:42:35 PST AUTOPILOT -> KIT-WAVE-12
   - pv_v1e: collector source i_slg_E_N_rsp_d1 at (-32.07, 0), and its tap at (-32.16, 2.656), which is the GRT-0209 pin.
   List: epyc12 kv-allfix/a5t8/offoutline_k10/fail_list.txt.
   Fix lands in the A5t9 cut via row SITE-OFF-OUTLINE, owners KV-OWN-HG-R2 and KV-OWN-PV-R2.
+- 2026-11-25 07:55 PST DIED [QC-STA-HOP] ot-run oth-ubuntu-3409762-1795622098 on civil-redfish: rc=1 after 9 s, ended 15:55:01, log none, cmd: --crit --priority die --no-spill --mem 16 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/QC-STA-HOP -- python3 -I -B row_s | class=SETUP cause=died after 9 s with no log: the command failed at start (rc 1)
