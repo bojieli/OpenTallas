@@ -16,8 +16,8 @@ Row STA-BTLAT3 (st_a types already at BT_LAT 2: OT_BTAB_S4R + four region cores 
     (rq_* flops) at the SRAM stack in front of the registered-read core: +1 edge, bt round trip +2 vs btab_safe;
   * region hard cores u_r0..u_r3 <m>_bt2 -> <m>_bt3, param_wrap BT_LAT 3 (every other param, outline, pins, origin
     unchanged; 494 pins), lef/lib -> --views-dir (NEEDS-BUILD until the private child kit signs off + LEC);
-  * relay_sites for the request flops rq_re, rq_word[*], rq_we, rq_kind[*], rq_addr[2..8] at the stack W face, middle
-    height (equal reach to the four banks' r_addr / r_ce pins);
+  * relay_sites for the request flops rq_re, rq_word[*], rq_we, rq_kind[*], rq_addr[2..8] at the midpoint of the u_r0
+    bt_word pins and the far bank (both hops <= 405 um, asserted);
   * the paired st_b regions u_r4..u_r7 take BT_LAT 3 from the bind hook qc_fabric_transport (fail closed unless the st_a
     type has OT_BTAB_S4R + OT_BTAB_RQ and its region cores BT_LAT 3).
 Latency: no lane, station, boundary or core_latency change (LATCHECK lane tables unchanged); in-slice bt round trip +1
@@ -30,6 +30,7 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 
 BASE = "qfd_dv_s8_station_tail1_nb0"
 PRE = "u_u_btab.u_bt.u_core"
@@ -68,12 +69,26 @@ def seat_rows(t, tn):
     return out
 
 
-def rq_rows(t, tn):
+def rq_rows(t, tn, pins_dir):
+    """request flops on the u_r0 -> stack leg at the MIDPOINT of the u_r0 bt_word / bt_re pin centroid and the far bank's
+    r_addr / r_ce pins, so both hops are <= 405 um (FABLE 405 rule on placed hops; at the stack face the first hop would be
+    ~584 um)."""
     xw, yb = stack(t, tn)
+    r0 = next(h for h in t["hard_cores"] if h["inst"] == "u_r0")
+    pf = json.load(open(os.path.join(pins_dir, r0["pins_file"])))
+    src = [(r0["origin_um"][0] + x["x"], r0["origin_um"][1] + x["y"]) for x in pf["pins"]
+           if x["name"] == "bt_re" or x["name"].startswith("bt_word[")]
+    sx, sy = sum(a for a, _ in src) / len(src), sum(b for _, b in src) / len(src)
+    banks = [(h["origin_um"][0], h["origin_um"][1] + 0.9) for h in t["hard_cores"] if h["inst"].startswith(f"u_bound.{PRE}.g_btb[")]
+    far = max(banks, key=lambda b: abs(b[0] - sx) + abs(b[1] - sy))
+    q = ((sx + xw) / 2.0, (sy + far[1]) / 2.0)
+    L = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])          # noqa: E731
+    h1, h2 = L((sx, sy), q), max(L(q, b) for b in banks)
+    assert h1 <= 405 and h2 <= 405, (tn, h1, h2)
     names = ["rq_re", "rq_we"] + [f"rq_word[{b}]" for b in range(9)] + [f"rq_kind[{b}]" for b in range(2)] + \
             [f"rq_addr[{b}]" for b in range(2, 9)]
-    y0 = yb + 1.632 - 4 * PITCH_Y                             # just below slot 0
-    return {f"{RQ}.{n}": r3([xw - PITCH_X * (k % 10), y0 - PITCH_Y * (k // 10)]) for k, n in enumerate(names)}
+    rows = {f"{RQ}.{n}": r3([q[0] - PITCH_X * (k % 5), q[1] + PITCH_Y * (k // 5)]) for k, n in enumerate(names)}
+    return rows, (round(h1, 1), round(h2, 1))
 
 
 def main():
@@ -83,6 +98,7 @@ def main():
     ap.add_argument("--row", action="append", choices=("seats", "bt3"), required=True)
     ap.add_argument("--views-dir", default="physical/die_plan/qwen_compute/qcviews_btlat3")
     ap.add_argument("--delta")
+    ap.add_argument("--pins-dir", help="dir the plan pins_file paths resolve against (default: the base plan's dir)")
     a = ap.parse_args()
     raw = open(a.base, "rb").read()
     q = copy.deepcopy(json.loads(raw))
@@ -123,10 +139,11 @@ def main():
                                                 "outline_um": h["outline_um"], "rows": []})["rows"].append(f"{tn}.{h['inst']}")
                 ch.append(f"STA-BTLAT3 {h['inst']}: {m0} -> {m} (BT_LAT 2 -> 3)")
             t["verilog_defines"] = d + ["OT_BTAB_RQ"]
-            new = rq_rows(t, tn)
+            new, hops = rq_rows(t, tn, a.pins_dir or os.path.dirname(os.path.abspath(a.base)))
             assert not set(new) & set(rs), tn
             rs.update(new)
-            ch.append(f"STA-BTLAT3 verilog_defines += OT_BTAB_RQ; relay_sites +{len(new)} request flops")
+            ch.append(f"STA-BTLAT3 verilog_defines += OT_BTAB_RQ; relay_sites +{len(new)} request flops; "
+                      f"hops u_r0 bt_word -> rq {hops[0]} um, rq -> far bank {hops[1]} um")
     bt3 = {tn for tn, c in delta["types"].items() if any("OT_BTAB_RQ" in x for x in c)}
     delta["slices"] = {pp["name"].split("_")[1]: pp["type"] for pp in q["partitions"] if pp["type"] in bt3}
     delta["latency"] = {"lanes_changed": 0, "core_latency_changed": 0,
