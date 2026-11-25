@@ -48,3 +48,11 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 ## STATUS 2026-11-24 23:3x PST: probe PASS
 - Private kit (spec qwen_kvsys_kv3_pv_v12_1124175206) CTS: 56/56 leaf, export check 59/59 live. TT d -201..+95, mixed FF -164..+69 (probe outputs epyc10 kv-sender-skew-e10/pl/). Posted RESULT PASS + ROW-REBASED.
 - Row v3 epyc10 kv-sender-skew-e10/ROWS_KV-SENDER-SKEW-PV12-v3.py b752be95811e: key (58 ports, pad_ps 176) + ctl_cmd/vport_W_vqN -> clk_t1 (unproven in a kit; ENTRYFOOT pins, cc KV-HG-CAP). Next: KV-ALLFIX folds v3 into A5t6/A5t7, then re-probe on that bind; other pv types are candidates for the same key.
+
+## STATUS 2026-11-25 01:4x PST: family row + v6e probe
+- COORD family rule: PVFAM-v1 epyc10 kv-sender-skew-e10/ROWS_KV-SENDER-SKEW-PVFAM-v1.py d34ebf089bc3 (superset of v3) posted ROW-REBASED to KV-ALLFIX for A5t8. 28 types, 885 ports, per-type pad_ps, 732 sources moved to the launch tap; dry run A5t7 schema 0, ENTRYFOOT 687 -> 240 of 941.
+- Tool: main 8f6cd2449e7 = leaf export re-spaces the export repeater chain (far-launch types such as v6e). Kits need rt >= 8f6cd.
+- What-if data: epyc11 kv-sender-skew-e11/fam (base = stock, leafrs<n> = leaf+repoint+respace with n pads, pick_final.json); scripts run_fam4.sh/fam_both.tcl/fam_pre.tcl. epyc10 famrun/ = second half of the runs.
+- v6e probe: epyc7 kv-sender-skew-e7 (tree_fam fork of A5t6, plan_fam_A5t6.json cc674501f8f3 = A5t6 + v6e key pad 44, bind lb/bind 0 errors). Spec qwen_kvsys_kv3_pv_v6e_1125011107, unit runitem-kv3_pv_v6e-fam on intel2, goal cts. Next: measure TT/FF at CTS (smp4 + smp_min/smp3) and post.
+- Classes 89770c2f5a/9752a75802: one-line CLASS-INFO posted for COORD to assign (both SUPERSEDED on A5t5).
+- Note: my scp into the shared session scratchpad dir fam/ (11-24 23:41) overwrote smp3.tcl/smp4.sh/fwd_export_leaf.tcl that may have belonged to another lane; my copies are now in scratchpad/kvss_fam.
