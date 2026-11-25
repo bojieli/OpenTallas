@@ -13,6 +13,17 @@ class TerminalThreads(unittest.TestCase):
   self.assertEqual(self.reap(),[self.u]);self.assertFalse((self.p/('cthr.'+self.u)).exists());self.assertEqual((self.p/('res.'+self.u)).read_text(),self.u+' 96\n');self.assertTrue((self.p/'completions'/self.u).exists());self.assertEqual(json.loads((self.p/'completed-thread-ledger'/(self.u+'.json')).read_text())['threads'],'24')
  def test_active_scope(self):self.state='LoadState=loaded\nActiveState=active\nControlGroup=/scope\n';self.kept()
  def test_pending_without_completion(self):(self.p/'completions'/self.u).unlink();self.kept()
+ # STALE-RECEIPT-1124: no completion record (killed with its scope) + res older than THREAD_RECEIPT_STALE_H + scope gone + no container -> retired
+ def _old(self,h):
+  import os,time;(self.p/'completions'/self.u).unlink();t=time.time()-h*3600;os.utime(self.p/('res.'+self.u),(t,t))
+ def test_stale_without_completion_retired(self):self._old(7);self.assertEqual(self.reap(),[self.u]);self.assertFalse((self.p/('cthr.'+self.u)).exists());self.assertTrue((self.p/('res.'+self.u)).exists())
+ def test_young_without_completion_kept(self):self._old(5);self.kept()
+ def test_stale_without_completion_live_scope_kept(self):self._old(48);self.state='LoadState=loaded\nActiveState=active\nControlGroup=/scope\n';self.kept()
+ def test_stale_without_completion_container_kept(self):self._old(48);self.inventory=[{'Name':self.u}];self.kept()
+ def test_stale_rule_off(self):
+  import os;self._old(48);os.environ['THREAD_RECEIPT_STALE_H']='0'
+  try:self.kept()
+  finally:os.environ.pop('THREAD_RECEIPT_STALE_H',None)
  def test_unknown_completion(self):(self.p/'completions'/self.u).write_text('bad');self.kept()
  def test_bus_failure(self):self.bus='';self.kept()
  def test_scope_lookup_failure(self):self.state='';self.kept()

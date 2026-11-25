@@ -1257,10 +1257,25 @@ def _reap_completed_thread_charges_locked():
     if not sh("systemctl", "--user", "is-system-running"):
         return []
     candidates = []
+    # STALE-RECEIPT-1124 (COORD: epyc9 queue): a unit killed with its scope (no ot-heavy-exit) never writes a completion, so its cthr/res
+    # pair stayed charged forever (epyc9: units 9-108 h old, scope not-found, no container, still counted in the thread cap).  With no
+    # completion record a receipt is a candidate once res.<unit> is THREAD_RECEIPT_STALE_H (default 6) hours old; the scope and docker
+    # checks below still decide, so a live or detached job keeps its charge.  0 = completion required, as before.
+    stale_s = float(os.environ.get("THREAD_RECEIPT_STALE_H", "6")) * 3600
     for path in glob.glob(f"{D}/cthr.*"):
         unit = os.path.basename(path)[5:]
-        if os.path.exists(f"{D}/res.{unit}") and completion_status(unit).isdigit():
+        res = f"{D}/res.{unit}"
+        if not os.path.exists(res):
+            continue
+        st = completion_status(unit)
+        if st.isdigit():
             candidates.append((unit, path))
+        elif st == "legacy" and stale_s > 0:
+            try:
+                if time.time() - os.path.getmtime(res) >= stale_s:
+                    candidates.append((unit, path))
+            except OSError:
+                pass
     if not candidates:
         return []
     rc_ps, out_ps = docker_cmd("ps", "-q")
