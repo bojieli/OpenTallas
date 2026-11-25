@@ -156,3 +156,28 @@
   Tests (test_type_overlay.py, 31/31 pass): the 5 v1n rows -> 0 new and 5 drift; a cos made worse past the tolerance, a new core/port key, and a hop that got worse are still new; a 0.5 um hop drift is not; bit indices like [8] stay in the key.
   Real check: A5t6 a498941539fd vs V1NSITE 0eca5044e7fb, G0 subset with the tree6 pins: 0 new, 5 drift. V1NSITE now passes the G0 step as a type overlay. The other overlay checks (allowlist, rtl_projection, seam_hop) are unchanged, and I did not rerun the whole overlay.
 - 2026-11-25 01:34 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2806054 on dear-crayfish: rc=0 after 55 s, ended 01:34:36, log none, cmd: ot-push-main 
+- 2026-11-25 01:35 PST PRECHECK-R3: ADV-SINKBIN-STALE added, report-only, main 3472e05efc (plan_advisory SINKBIN-STALE) [-> COORD; cc QC-ALLFIX, QC-STB-SPLIT, KV-ALLFIX, KV-OWN-PV-R2]
+  Checks every type that has a clock.sink_bins_file. WARN on any of:
+  - PREDATES: the bins doc names a type that is gone from the plan, or one whose outline or hard-core placement differs. A param variant sharing an unchanged parent's bins is not flagged. Optional row_times (env OT_ADV_SINKBIN_ROWS) also flag bins older than the type's last row. No row-time source exists in the plans, so in the counts below PREDATES means the bins-type test only.
+  - INSIDE: more than 5% of bin sinks fall inside a hard core or lef child (rect shrunk by half a bin) or outside the outline.
+  - FANOUT: the newest kit built after the bins has a tap over 1000 sinks after the cap pass (kit_sinks map, the same source as ADV-STALE-BINS). The plan's own density solve balances to tap_target_sinks by construction, so a plan-only tap load can never exceed 1000.
+  Tests: test_adv_sinkbin_stale.py, 5 tests (STB-split children, edge bins, split/variant/row-time, kit newer or older than the bins, end to end).
+  
+  Per-die counts. kit_sinks.json is from 11-24 17:19, so FANOUT only judges kits built after the bins.
+  
+  A5t7 26f4ce7f13dc (bins from kv-own-pv-r2/tree6): 8 of 60 types. PREDATES 0, INSIDE 8, FANOUT 0. No kv kit is in the kit-sinks map yet, so the FANOUT leg is not judged on KV.
+  - INSIDE: kv3_hgi_v7 17%, hgi_v5 15%, hgi_v6 15%, hgi_v4 12%, hgi_v3 12%, kv3_hgi 9% (bins under cl_ft*_i / cl_i_ectl_Q_N_tN / head2_e* cores); kv3_pv_v3n 6% (pvg2_p2 3110); kv3_hg_v3 5%.
+  - The pv kit-vs-bins mismatch KV-OWN-PV found stays ADV-STALE-BINS territory (it needs a kit).
+  - Owner: KV-ALLFIX (SINKBINS row).
+  
+  C1n 26036a30b94f (n/tree): 51 of 125 types. PREDATES 13, INSIDE 20, FANOUT 31.
+  - INSIDE 11 st_a types at 45-52%: the bins put sinks under the hardened u_r0..u_r3 children. This is the st_a class.
+  - INSIDE also hits cbn_q00, sle_su_c, sle_ctl, slw_su_l1 x2, slw_su_c x2, slw_sc_v1, slw_sc_v2.
+  - PREDATES 13: hc0-hc3 x9 and st_a_v2 x3 have bins named for a cl parent that is no longer in the plan; st_b x2 likewise.
+  - FANOUT 31, the largest kit taps: sle_hc1 14,882 (clk_t131), sle_hc2 14,818, slw_hc3 12,489, sle_hc0 10,263; st_b 4,076 / 3,589.
+  - The 12 st_b types show PREDATES/FANOUT but not INSIDE: in C1n their station children are still flattened. INSIDE fires as soon as the STB split hardens them (test case).
+  - Owners: QC-ALLFIX, plus QC-STB-SPLIT for st_b.
+  
+  c9t43: 0 types. S81 plans have no density sink_bins_file, so the check does not apply.
+  
+  Full lists: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/sbs_{A5t7,C1n,c9t43}.txt
