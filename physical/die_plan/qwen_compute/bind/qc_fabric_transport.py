@@ -20,7 +20,9 @@ BT_LAT (QC-RC97-BT2 11-24, rc97 registered btab read): a slice whose plan region
 (the st_a u_r0-u_r3 masters, e.g. sta_region_nb0_*_bt2) binds BT_LAT b on ALL EIGHT regions of the slice: the st_b
 regions u_r4-u_r7 read the same btab (bt_qh) and their r_d joins ctl on region 0's r_v, so one value per slice is
 required.  The +1 edge itself is the registered-read btab core (verilog define OT_BTAB_S4R on the slice's st_a type);
-the hook fails closed when the define and BT_LAT 2 do not come together.  A plan without such a row binds unchanged."""
+the hook fails closed when the define and BT_LAT 2 do not come together.  A plan without such a row binds unchanged.
+QC-STA-BTLAT3 11-25: BT_LAT 3 = OT_BTAB_S4R + OT_BTAB_RQ (request-leg register at the SRAM stack, +2 edges on the round
+trip); same slice-wide rule, fail closed on any other define / BT_LAT pairing."""
 
 SLICES = ["W5", "W4", "W3", "W2", "W1", "W0", "E0", "E1", "E2", "E3", "E4", "E5"]
 HOST = {(1, 0): (1, 0), (1, 1): (0, 1), (1, 2): (2, 0), (1, 3): (3, 1), (1, 4): (0, 2), (1, 5): (0, 3), (1, 6): (3, 2),
@@ -85,7 +87,8 @@ class CtxView:
         return out
 
     def bt_lat_targets(self):
-        """QC-RC97-BT2 11-24: {station leaf path: (BT_LAT, OT_BTAB_S4R in its partition type's verilog_defines)} of every
+        """QC-RC97-BT2 11-24: {station leaf path: (BT_LAT, btab define level of its partition type: 0, 1 OT_BTAB_S4R,
+        2 OT_BTAB_S4R + OT_BTAB_RQ)} of every
         plan hard core whose param_wrap pins BT_LAT; derive() binds that BT_LAT on all eight regions of the slice.
         A type with the define but no BT_LAT 2 region core is refused (a registered btab read with BT_LAT 1 consumers)."""
         ctx = self.ctx
@@ -93,7 +96,12 @@ class CtxView:
         out = {}
         for p in ctx.plan.get("partitions") or []:
             t = pt.get(p["type"]) or {}
-            dfn = "OT_BTAB_S4R" in (t.get("verilog_defines") or [])
+            dfs = t.get("verilog_defines") or []
+            rq = "OT_BTAB_RQ" in dfs
+            if rq and "OT_BTAB_S4R" not in dfs:
+                raise ValueError(f"BT_LAT {p['name']}: type {p['type']} defines OT_BTAB_RQ without OT_BTAB_S4R")
+            # QC-STA-BTLAT3 11-25: the define level = added btab edges (0 none, 1 OT_BTAB_S4R, 2 + OT_BTAB_RQ request leg)
+            dfn = (2 if rq else 1) if "OT_BTAB_S4R" in dfs else 0
             bls = []
             for hc in t.get("hard_cores") or []:
                 bl = ((hc.get("param_wrap") or {}).get("params") or {}).get("BT_LAT")
@@ -104,8 +112,9 @@ class CtxView:
                 if len(hit) != 1:
                     raise ValueError(f"BT_LAT {p['name']}: hard core {hc['inst']} binds {len(hit)} leaves (need 1)")
                 out[ctx.F.cells[hit[0]].path] = (int(bl), dfn)
-            if dfn and 2 not in bls:
-                raise ValueError(f"BT_LAT {p['name']}: type {p['type']} defines OT_BTAB_S4R but no region core binds BT_LAT 2")
+            if dfn and dfn + 1 not in bls:
+                raise ValueError(f"BT_LAT {p['name']}: type {p['type']} defines OT_BTAB_S4R{' + OT_BTAB_RQ' if rq else ''} "
+                                 f"but no region core binds BT_LAT {dfn + 1}")
         return out
 
     def source(self, path, port):
@@ -255,8 +264,12 @@ def derive(view):
         bt = None
         if bts and next(iter(bts))[0] != 1:
             bt = next(iter(bts))[0]
-            if bt != 2 or not all(d for _b, d in bts):
-                raise ValueError(f"{s}: BT_LAT {bt} needs BT_LAT 2 with OT_BTAB_S4R on the st_a type (the registered btab read)")
+            # QC-STA-BTLAT3 11-25: BT_LAT 2 = OT_BTAB_S4R alone (registered read); BT_LAT 3 = OT_BTAB_S4R + OT_BTAB_RQ (request-leg
+            # register at the SRAM stack too).  The define level of every st_a region core must equal BT_LAT - 1 (d is a bool
+            # in older views: True == 1).
+            if bt not in (2, 3) or not all(int(d) == bt - 1 for _b, d in bts):
+                raise ValueError(f"{s}: BT_LAT {bt} needs BT_LAT 2 with OT_BTAB_S4R (registered btab read) or BT_LAT 3 with "
+                                 f"OT_BTAB_S4R + OT_BTAB_RQ (request-leg register) on the st_a type")
         rd = [rows[r]["E"] + view.delta(f"{sub}.u_ctl", "r_d", (64 * r, 64 * r + 63)) for r in range(8)]
         if rd[0] != max(rd):
             raise ValueError(f"{s}: r_d of region 0 is not the latest; its r_v would need a pad")
