@@ -35,6 +35,10 @@ overlay.  Five classes, each finding line starts `FAIL <CLASS> ...`:
            the --baseline-plan (the adopted plan) need none.  QC-SC-ROWS' reset rows had never been dry-run: 9/9 types
            rejected at bind, after 1-2 h.
 
+INOUTLINE (FP-CONVERGE-S81 11-25, COORD 06:2x, BLOCKING): FAIL INOUTLINE <type> when a planned coordinate (station regs / bit-site footprints, ft slots, relay sites,
+  reach/sink sites, added taps, landing bands, landing-contract collector root / outs / relays / local sources / pins) lies > 1 um outside outline_um.
+  With --base only NEW or CHANGED lines block (PRE-DIFF).  No escape switch.  Replaces the WARN ADV-IN-OUTLINE / ADV-FT-OUTSIDE lines in this gate.
+
 PRE-DIFF (COMPOSE-FAST 11-25): `check ... --base BASE [--base-tree T]` fails only on FAIL lines that are NEW (or CHANGED) against the
   same check on BASE; base lines the row repeats are LIST PRE-INHERITED.  The base check runs beside the row check, cached by
   base/as-built/tools sha (pre_diff.py has the rules).  The canonical row gate (row_gate.py) always passes --base.
@@ -244,7 +248,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2969,6 +2973,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark("RSTPIN")
     if "RSTPIN" not in skip:                             # PIN-REACH-1124: report only, never a FAIL
         findings += rstpin_findings(tree, plan)
+    _pt.mark("INOUTLINE")
+    if "INOUTLINE" not in skip:                          # FP-CONVERGE-S81 11-25 (COORD 06:2x): a coordinate outside the outline is a FAIL
+        findings += inoutline_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
@@ -3257,6 +3264,91 @@ def rstpin_findings(tree, plan):
     return out
 
 
+INOUTLINE_TOL_UM = 1.0
+_LC_XY_KEYS = ("xy", "xy_um", "pin_xy_um", "pin_um", "root")
+
+
+def _lc_points(lc):
+    """[(category, x, y)] of every xy a landing contract carries: bands are rects (adv_fpconv), here the collector tree (root, outs,
+    relays, core_resets), collector_children / collector_local_sources and the pins."""
+    out = []
+
+    def xy(v):
+        return isinstance(v, (list, tuple)) and len(v) == 2 and all(isinstance(a, (int, float)) and not isinstance(a, bool) for a in v)
+
+    def walk(o, cat):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k in _LC_XY_KEYS and xy(v):
+                    out.append((cat, float(v[0]), float(v[1])))
+                else:
+                    walk(v, cat)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v, cat)
+    ct = lc.get("collector_tree") or {}
+    for k, v in ct.items():
+        if k == "outs" and isinstance(v, list):
+            out += [("collector out", float(a[0]), float(a[1])) for a in v if xy(a)]
+        elif k == "root" and xy(v):
+            out.append(("collector root", float(v[0]), float(v[1])))
+        else:
+            walk(v, f"collector {k}")
+    for k in ("collector_children", "collector_local_sources", "pins"):
+        walk(lc.get(k), f"landing {k}")
+    return out
+
+
+def inoutline_findings(plan):
+    """FP-CONVERGE-S81 11-25 (COORD 06:2x, Fable flow review): BLOCKING.  One FAIL INOUTLINE line per type whose planned coordinates
+    lie outside its outline_um by more than 1 um: station regs / bit-site footprints, relay sites, reach/sink sites, added taps, landing
+    bands (adv_fpconv.in_outline), ft_slots regs and bit sites (adv_ft_outside.type_hits), and the landing contract's collector root,
+    outs, relays, core resets, local sources and pins.  Violations that a --base plan already has are inherited by PRE-DIFF
+    (LIST PRE-INHERITED), so only NEW or CHANGED lines block a row; a plan gated without --base blocks on all of them.  Seconds."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import adv_fpconv as AF
+        import adv_ft_outside as FO
+    except ImportError as e:
+        return [f"WARN INOUTLINE-UNCHECKED {e}"]
+    try:
+        raw = _load(plan)
+    except Exception as e:  # noqa: BLE001
+        return [f"WARN INOUTLINE-UNCHECKED {type(e).__name__}: {str(e)[:120]}"]
+    out, n = [], 0
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        o = t.get("outline_um")
+        if not o or not isinstance(t, dict):
+            continue
+        W, H = o
+        bits = []
+        for name, cnt, worst in AF.in_outline(t, tn, raw):
+            if worst > INOUTLINE_TOL_UM:
+                bits.append(f"{cnt} {name}(s) worst +{worst:g} um")
+        nsite = nreg = 0
+        worst = 0.0
+        for _slot, ns, nr, w in FO.type_hits(t):
+            nsite += ns
+            nreg += nr
+            worst = max(worst, w)
+        if worst > INOUTLINE_TOL_UM:
+            bits.append(f"{nsite} ft bit site(s) + {nreg} ft reg(s) worst +{worst:g} um")
+        by = {}
+        for cat, x, y in _lc_points((t.get("clock") or {}).get("landing_contract") or {}):
+            ov = max(-x, -y, x - W, y - H)
+            if ov > INOUTLINE_TOL_UM:
+                c, m = by.get(cat, (0, 0.0))
+                by[cat] = (c + 1, max(m, ov))
+        bits += [f"{c} {cat} point(s) worst +{round(m, 2):g} um" for cat, (c, m) in sorted(by.items())]
+        if bits:
+            n += 1
+            out.append(f"FAIL INOUTLINE {tn}: outside the {W:g}x{H:g} outline: " + "; ".join(bits)
+                       + " (fix: clamp inside, 0 cycles; ADV-IN-OUTLINE / ADV-FT-OUTSIDE detail)")
+    if n:
+        out.append(f"LIST INOUTLINE-SUMMARY {n} type(s) with coordinates outside the outline")
+    return out
+
+
 def advisory_lines(tree, plan, asbuilt=None, baseline=None):
     """PRECHECK-R2: plan_advisory.run() lines, each forced to a WARN (an estimator never refuses); [] when the tree has no module."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
@@ -3265,7 +3357,7 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None):
     except ImportError:
         return []
     try:
-        lines = PA.run(_load(plan), plan, tree, checks=[c for c, _ in PA.CHECKS if c != "IST-PRICE"], asbuilt=asbuilt, baseline=baseline)   # IST-PRICE is a FAIL class now
+        lines = PA.run(_load(plan), plan, tree, checks=[c for c, _ in PA.CHECKS if c not in ("IST-PRICE", "IN-OUTLINE", "FT-OUTSIDE")], asbuilt=asbuilt, baseline=baseline)   # IST-PRICE is a FAIL class now
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
     return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
