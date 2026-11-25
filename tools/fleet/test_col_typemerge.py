@@ -101,7 +101,7 @@ def _sup_plan():
     pt = {}
     for n, kids, tree in (("col_h9_r1__t1__cla__pv1", [ch(0, 10.0)], "T1"), ("col_h9_r1__t1__cla__pv2", [ch(0, 20.0)], "T2"),
                           ("col_h9_r1__t1__cla__pv3", None, None)):
-        t = dict(clock=dict(edge_clocks=[], added_taps=[]))
+        t = dict(outline_um=[100.0, 100.0], clock=dict(edge_clocks=[], added_taps=[]))   # every plan type has it; the collector reads it (88ca6ed2f6b)
         if kids is not None:
             t["clock"]["landing_contract"] = lc(kids, tree)
         pt[n] = t
