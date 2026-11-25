@@ -45364,3 +45364,4 @@ FAILED [AUTOPILOT 1c4ed8c08825] 2026-11-25 01:28:11 PST AUTOPILOT -> KIT-WAVE-12
   A bind-only gate script such as gate_c9s_bindonly counts as a bind. An explicit --disk N always wins. --die on a job whose kind is not recognised keeps the 60 GB die default, and non-die jobs keep 20 GB. The hard disk floors are unchanged.
   Test: tools/fleet/test_ot_run_die_disk_kind.py passes; the ot-push-main suite passed.
   LANE CLOSED: FLEET-ADMIT stands down.
+FIX [WATCHDOG 2026-11-25 01:33 PST] intel1 oth-ubuntu-1946067-1795587260.scope [otc-1948440-31269] hung twice (CTS, idle 2h28; first relaunch 2026-11-24 22:13 PST): stopped, NOT relaunched (OWNER 12.22). Kit intel1:/srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/probe_v10, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/probe_v10/objects/asap7/kvleaf_t2b_probe_v10/base/4_rsz_lec_test.yml. Owner lane S81-KVLEAF-T2-ARCH: root-cause the hang before any new launch.
