@@ -248,3 +248,4 @@
   P6 SEE: 72 clock taps scattered irregularly (rows hugging the top/bottom pin edges, a column at the right edge) on the same outline where t12 has 16. CAUSE: taps created per bus/cluster with no merging. FIX: one shared sink-driven tap grid (~20 taps).
   P7 SEE: GRT checkpoint but paths.png "0 DRAWN" and no review/ dir (no rudy/congestion, flight_lines, paths_ideal). CAUSE: checkpoint render without GRT congestion/timing data. FIX: emit GRT congestion map + worst paths at this checkpoint.
   NOT DETERMINED: GRT overflow, timing, whether the ~60-um-pitch station rows are separate flop stages (would be over-pipelined vs 405-um hops) or flop/inverter sub-rows of staggered buses.
+- 2026-11-25 05:35 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-521774 on open-snipe: rc=0 after 18 s, ended 13:34:59, log none, cmd: ot-push-main 
