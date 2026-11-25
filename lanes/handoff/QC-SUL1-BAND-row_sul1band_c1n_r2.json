@@ -1,0 +1,1587 @@
+{
+ "row": "SUL1-FACE-BAND (part 3: tap re-bin from the placed kit)",
+ "lane": "QC-SUL1-BAND",
+ "ruling": "FABLE-RC-QC c33df62a 11-25 00:14",
+ "base": "c1n_r2",
+ "base_sha": "a372ae84fa2a",
+ "out_sha": "7ae1f6fdd22f",
+ "overlay": {
+  "physical/die_plan/qwen_compute/plan_of_record/sink_bins/c1o_sul1/slw_su_l1__cla2a78701__placed.json": "c751196a8227",
+  "physical/die_plan/qwen_compute/plan_of_record/sink_bins/c1o_sul1/slw_su_l1__clcc9d0155__placed.json": "095ebf1f0bb9"
+ },
+ "types": {
+  "slw_su_l1__cla2a78701": {
+   "set": {
+    "partition_types.slw_su_l1__cla2a78701.clock.sink_bins_file": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/c1o_sul1/slw_su_l1__cla2a78701__placed.json",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_cws0_o].source_clock_port": "clk_t4",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_cws0_o].source_clock_tap": "clk_t4",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_rsf_o].source_clock_port": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_rsf_o].source_clock_tap": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_rsn_o].source_clock_port": "clk_t134",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_rsn_o].source_clock_tap": "clk_t134",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_ctl_o].source_clock_port": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_ctl_o].source_clock_tap": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_sc_o].source_clock_port": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_sc_o].source_clock_tap": "clk_t139",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_stm_o].source_clock_port": "clk_t131",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_stm_o].source_clock_tap": "clk_t131",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_su_c_o].source_clock_port": "clk_t16",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_su_c_o].source_clock_tap": "clk_t16",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_su_c_p1_o].source_clock_port": "clk_t37",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_x_su_c_p1_o].source_clock_tap": "clk_t37",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_cland_up].source_clock_port": "clk_t50",
+    "partition_types.slw_su_l1__cla2a78701.clock.landing_contract.pins[name=fclk_out_cland_up].source_clock_tap": "clk_t50",
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701": {
+     "clk": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_c0": {
+      "TT": -108.6,
+      "FF": -95.3,
+      "tol": 10.1
+     },
+     "clk_c1": {
+      "TT": -113.3,
+      "FF": -85.8,
+      "tol": 10.1
+     },
+     "clk_c2": {
+      "TT": -106.9,
+      "FF": -89.3,
+      "tol": 10.1
+     },
+     "clk_c3": {
+      "TT": -164.9,
+      "FF": -145.3,
+      "tol": 10.1
+     },
+     "clk_c4": {
+      "TT": -21.0,
+      "FF": -15.7,
+      "tol": 10.1
+     },
+     "clk_c5": {
+      "TT": -20.3,
+      "FF": -17.8,
+      "tol": 10.1
+     },
+     "clk_c6": {
+      "TT": -39.5,
+      "FF": -32.2,
+      "tol": 10.1
+     },
+     "clk_c7": {
+      "TT": 3.2,
+      "FF": 0.8,
+      "tol": 10.1
+     },
+     "clk_c8": {
+      "TT": -27.7,
+      "FF": -21.1,
+      "tol": 10.1
+     },
+     "clk_c9": {
+      "TT": -10.3,
+      "FF": -8.8,
+      "tol": 10.1
+     },
+     "clk_t1": {
+      "TT": 5.8,
+      "FF": 3.3,
+      "tol": 30.6
+     },
+     "clk_t10": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t11": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t12": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t13": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t14": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t15": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t16": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t17": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t18": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t19": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t2": {
+      "TT": 8.0,
+      "FF": 4.0,
+      "tol": 30.6
+     },
+     "clk_t20": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t21": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t22": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t23": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t24": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t25": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t26": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t27": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t28": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t29": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t3": {
+      "TT": 8.0,
+      "FF": 4.0,
+      "tol": 30.6
+     },
+     "clk_t30": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t31": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t32": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t33": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t34": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t35": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t36": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t37": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t38": {
+      "TT": 7.9,
+      "FF": 3.9,
+      "tol": 30.6
+     },
+     "clk_t39": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t4": {
+      "TT": 8.0,
+      "FF": 4.0,
+      "tol": 30.6
+     },
+     "clk_t40": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t41": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t5": {
+      "TT": 5.8,
+      "FF": 3.3,
+      "tol": 30.6
+     },
+     "clk_t6": {
+      "TT": 8.0,
+      "FF": 4.0,
+      "tol": 30.6
+     },
+     "clk_t7": {
+      "TT": 8.0,
+      "FF": 4.0,
+      "tol": 30.6
+     },
+     "clk_t8": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t9": {
+      "TT": -7.0,
+      "FF": -5.8,
+      "tol": 30.6
+     },
+     "clk_t42": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t43": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t44": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t45": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t46": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t47": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t48": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t49": {
+      "TT": -16.0,
+      "FF": -9.9,
+      "tol": 30.6
+     },
+     "clk_t50": {
+      "TT": 14.5,
+      "FF": 15.7,
+      "tol": 30.6
+     },
+     "clk_t51": {
+      "TT": 14.1,
+      "FF": 16.9,
+      "tol": 30.6
+     },
+     "clk_t52": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t53": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t54": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t55": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t56": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t57": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t58": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t59": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t60": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t61": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t62": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t63": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t64": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t65": {
+      "TT": -8.2,
+      "FF": -6.8,
+      "tol": 30.6
+     },
+     "clk_t66": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t67": {
+      "TT": -31.8,
+      "FF": -25.2,
+      "tol": 30.6
+     },
+     "clk_t68": {
+      "TT": -4.7,
+      "FF": -3.9,
+      "tol": 30.6
+     },
+     "clk_t69": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t70": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t71": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t72": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t73": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t74": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t75": {
+      "TT": -4.7,
+      "FF": -3.9,
+      "tol": 30.6
+     },
+     "clk_t76": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t77": {
+      "TT": -4.7,
+      "FF": -3.9,
+      "tol": 30.6
+     },
+     "clk_t78": {
+      "TT": -20.0,
+      "FF": -14.6,
+      "tol": 30.6
+     },
+     "clk_t79": {
+      "TT": -4.7,
+      "FF": -3.9,
+      "tol": 30.6
+     },
+     "clk_t80": {
+      "TT": -4.7,
+      "FF": -3.9,
+      "tol": 30.6
+     },
+     "clk_t81": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t82": {
+      "TT": -22.0,
+      "FF": -16.1,
+      "tol": 30.6
+     },
+     "clk_t83": {
+      "TT": 7.4,
+      "FF": 8.4,
+      "tol": 30.6
+     },
+     "clk_t84": {
+      "TT": -23.4,
+      "FF": -17.4,
+      "tol": 30.6
+     },
+     "clk_t85": {
+      "TT": 7.1,
+      "FF": 8.2,
+      "tol": 30.6
+     },
+     "clk_t86": {
+      "TT": 7.1,
+      "FF": 8.2,
+      "tol": 30.6
+     },
+     "clk_t87": {
+      "TT": 3.0,
+      "FF": 4.7,
+      "tol": 30.6
+     },
+     "clk_t88": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t89": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t90": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t91": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t92": {
+      "TT": 3.0,
+      "FF": 4.7,
+      "tol": 30.6
+     },
+     "clk_t93": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t94": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t95": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t96": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t97": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t98": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t99": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t100": {
+      "TT": -10.8,
+      "FF": -7.5,
+      "tol": 30.6
+     },
+     "clk_t101": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t102": {
+      "TT": 11.8,
+      "FF": 9.6,
+      "tol": 30.6
+     },
+     "clk_t103": {
+      "TT": 11.8,
+      "FF": 9.6,
+      "tol": 30.6
+     },
+     "clk_t104": {
+      "TT": 11.8,
+      "FF": 9.6,
+      "tol": 30.6
+     },
+     "clk_t105": {
+      "TT": 11.9,
+      "FF": 9.7,
+      "tol": 30.6
+     },
+     "clk_t106": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t107": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t108": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t109": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t110": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t111": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t112": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t113": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t114": {
+      "TT": 15.4,
+      "FF": 11.3,
+      "tol": 30.6
+     },
+     "clk_t115": {
+      "TT": 15.4,
+      "FF": 11.3,
+      "tol": 30.6
+     },
+     "clk_t116": {
+      "TT": -2.1,
+      "FF": -1.5,
+      "tol": 30.6
+     },
+     "clk_t117": {
+      "TT": -2.1,
+      "FF": -1.5,
+      "tol": 30.6
+     },
+     "clk_t118": {
+      "TT": -2.1,
+      "FF": -1.5,
+      "tol": 30.6
+     },
+     "clk_t119": {
+      "TT": -2.1,
+      "FF": -1.5,
+      "tol": 30.6
+     },
+     "clk_t120": {
+      "TT": -2.1,
+      "FF": -1.5,
+      "tol": 30.6
+     },
+     "clk_t121": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t122": {
+      "TT": -21.6,
+      "FF": -16.2,
+      "tol": 30.6
+     },
+     "clk_t123": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t124": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t125": {
+      "TT": 0.0,
+      "FF": 0.0,
+      "tol": 30.6
+     },
+     "clk_t126": {
+      "TT": -0.0,
+      "FF": -0.0,
+      "tol": 30.6
+     },
+     "clk_t127": {
+      "TT": -0.0,
+      "FF": -0.0,
+      "tol": 30.6
+     },
+     "clk_t128": {
+      "TT": -0.6,
+      "FF": -0.5,
+      "tol": 30.6
+     },
+     "clk_t129": {
+      "TT": -0.6,
+      "FF": -0.5,
+      "tol": 30.6
+     },
+     "clk_t130": {
+      "TT": -0.6,
+      "FF": -0.5,
+      "tol": 30.6
+     },
+     "clk_t131": {
+      "TT": -0.6,
+      "FF": -0.5,
+      "tol": 30.6
+     },
+     "clk_t132": {
+      "TT": -0.6,
+      "FF": -0.6,
+      "tol": 30.6
+     },
+     "clk_t133": {
+      "TT": 0.6,
+      "FF": 3.2,
+      "tol": 30.6
+     },
+     "clk_t134": {
+      "TT": 0.6,
+      "FF": 3.2,
+      "tol": 30.6
+     },
+     "clk_t135": {
+      "TT": 0.6,
+      "FF": 3.2,
+      "tol": 30.6
+     },
+     "clk_t136": {
+      "TT": -0.6,
+      "FF": -0.6,
+      "tol": 30.6
+     },
+     "clk_t137": {
+      "TT": -0.6,
+      "FF": -0.6,
+      "tol": 30.6
+     },
+     "clk_t138": {
+      "TT": -0.6,
+      "FF": -0.6,
+      "tol": 30.6
+     },
+     "clk_t139": {
+      "TT": -0.6,
+      "FF": -0.6,
+      "tol": 30.6
+     }
+    }
+   },
+   "drops": [
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701.clk_t140",
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701.clk_t141",
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701.clk_t142",
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701.clk_t143",
+    "clock.tap_offset.per_port_ps.slw_su_l1__cla2a78701.clk_t144"
+   ]
+  },
+  "slw_su_l1__clcc9d0155": {
+   "set": {
+    "partition_types.slw_su_l1__clcc9d0155.clock.sink_bins_file": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/c1o_sul1/slw_su_l1__clcc9d0155__placed.json",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_cws0_o].source_clock_port": "clk_t5",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_cws0_o].source_clock_tap": "clk_t5",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_rsf_o].source_clock_port": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_rsf_o].source_clock_tap": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_rsn_o].source_clock_port": "clk_t136",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_rsn_o].source_clock_tap": "clk_t136",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_ctl_o].source_clock_port": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_ctl_o].source_clock_tap": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_sc_o].source_clock_port": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_sc_o].source_clock_tap": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_stm_o].source_clock_port": "clk_t133",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_stm_o].source_clock_tap": "clk_t133",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_su_c_o].source_clock_port": "clk_t17",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_su_c_o].source_clock_tap": "clk_t17",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_su_c_p1_o].source_clock_port": "clk_t43",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_x_su_c_p1_o].source_clock_tap": "clk_t43",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_cland_up].source_clock_port": "clk_t140",
+    "partition_types.slw_su_l1__clcc9d0155.clock.landing_contract.pins[name=fclk_out_cland_up].source_clock_tap": "clk_t140",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155": {
+     "clk": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_c0": {
+      "TT": -134.4,
+      "FF": -120.9,
+      "tol": 10.1
+     },
+     "clk_c1": {
+      "TT": -112.8,
+      "FF": -88.2,
+      "tol": 10.1
+     },
+     "clk_c2": {
+      "TT": -102.6,
+      "FF": -87.8,
+      "tol": 10.1
+     },
+     "clk_c3": {
+      "TT": -161.2,
+      "FF": -144.3,
+      "tol": 10.1
+     },
+     "clk_c4": {
+      "TT": -37.3,
+      "FF": -33.4,
+      "tol": 10.1
+     },
+     "clk_c5": {
+      "TT": -13.7,
+      "FF": -15.5,
+      "tol": 10.1
+     },
+     "clk_c6": {
+      "TT": -33.0,
+      "FF": -30.1,
+      "tol": 10.1
+     },
+     "clk_c7": {
+      "TT": 3.9,
+      "FF": -1.8,
+      "tol": 10.1
+     },
+     "clk_c8": {
+      "TT": -9.5,
+      "FF": -8.6,
+      "tol": 10.1
+     },
+     "clk_c9": {
+      "TT": -35.1,
+      "FF": -31.7,
+      "tol": 10.1
+     },
+     "clk_t1": {
+      "TT": 6.6,
+      "FF": 0.7,
+      "tol": 30.5
+     },
+     "clk_t10": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t11": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t12": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t13": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t14": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t15": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t16": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t17": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t18": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t19": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t2": {
+      "TT": 10.5,
+      "FF": 4.1,
+      "tol": 30.5
+     },
+     "clk_t20": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t21": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t22": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t23": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t24": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t25": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t26": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t27": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t28": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t29": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t3": {
+      "TT": 10.5,
+      "FF": 4.1,
+      "tol": 30.5
+     },
+     "clk_t30": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t31": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t32": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t33": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t34": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t35": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t36": {
+      "TT": 13.2,
+      "FF": 8.6,
+      "tol": 30.5
+     },
+     "clk_t37": {
+      "TT": 13.4,
+      "FF": 8.8,
+      "tol": 30.5
+     },
+     "clk_t38": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t39": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t4": {
+      "TT": 10.5,
+      "FF": 4.1,
+      "tol": 30.5
+     },
+     "clk_t40": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t41": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t42": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t5": {
+      "TT": 10.5,
+      "FF": 4.1,
+      "tol": 30.5
+     },
+     "clk_t6": {
+      "TT": 10.5,
+      "FF": 4.1,
+      "tol": 30.5
+     },
+     "clk_t7": {
+      "TT": 4.4,
+      "FF": 3.6,
+      "tol": 30.5
+     },
+     "clk_t8": {
+      "TT": 6.2,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t9": {
+      "TT": 10.4,
+      "FF": 4.0,
+      "tol": 30.5
+     },
+     "clk_t43": {
+      "TT": 13.4,
+      "FF": 8.8,
+      "tol": 30.5
+     },
+     "clk_t44": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t45": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t46": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t47": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t48": {
+      "TT": 6.2,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t49": {
+      "TT": 17.6,
+      "FF": 16.3,
+      "tol": 30.5
+     },
+     "clk_t50": {
+      "TT": 17.6,
+      "FF": 16.3,
+      "tol": 30.5
+     },
+     "clk_t51": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t52": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t53": {
+      "TT": -23.8,
+      "FF": -21.5,
+      "tol": 30.5
+     },
+     "clk_t54": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t55": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t56": {
+      "TT": -2.7,
+      "FF": -5.0,
+      "tol": 30.5
+     },
+     "clk_t57": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t58": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t59": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t60": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t61": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t62": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t63": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t64": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t65": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t66": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t67": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t68": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t69": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t70": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t71": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t72": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t73": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t74": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t75": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t76": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t77": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t78": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t79": {
+      "TT": -5.0,
+      "FF": -7.7,
+      "tol": 30.5
+     },
+     "clk_t80": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t81": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t82": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t83": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t84": {
+      "TT": -5.3,
+      "FF": -7.9,
+      "tol": 30.5
+     },
+     "clk_t85": {
+      "TT": -22.2,
+      "FF": -19.0,
+      "tol": 30.5
+     },
+     "clk_t86": {
+      "TT": 7.1,
+      "FF": 5.5,
+      "tol": 30.5
+     },
+     "clk_t87": {
+      "TT": -23.7,
+      "FF": -20.3,
+      "tol": 30.5
+     },
+     "clk_t88": {
+      "TT": 6.8,
+      "FF": 5.4,
+      "tol": 30.5
+     },
+     "clk_t89": {
+      "TT": 6.8,
+      "FF": 5.4,
+      "tol": 30.5
+     },
+     "clk_t90": {
+      "TT": 7.4,
+      "FF": 6.2,
+      "tol": 30.5
+     },
+     "clk_t91": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t92": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t93": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t94": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t95": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t96": {
+      "TT": 7.4,
+      "FF": 6.2,
+      "tol": 30.5
+     },
+     "clk_t97": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t98": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t99": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t100": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t101": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t102": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t103": {
+      "TT": -7.0,
+      "FF": -6.4,
+      "tol": 30.5
+     },
+     "clk_t104": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t105": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t106": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t107": {
+      "TT": 15.1,
+      "FF": 10.4,
+      "tol": 30.5
+     },
+     "clk_t108": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t109": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t110": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t111": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t112": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t113": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t114": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t115": {
+      "TT": 19.8,
+      "FF": 12.9,
+      "tol": 30.5
+     },
+     "clk_t116": {
+      "TT": 19.8,
+      "FF": 12.9,
+      "tol": 30.5
+     },
+     "clk_t117": {
+      "TT": -3.0,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t118": {
+      "TT": -3.0,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t119": {
+      "TT": -3.0,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t120": {
+      "TT": -3.0,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t121": {
+      "TT": -3.0,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t122": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t123": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t124": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t125": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t126": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t127": {
+      "TT": 0.0,
+      "FF": -3.1,
+      "tol": 30.5
+     },
+     "clk_t128": {
+      "TT": -5.8,
+      "FF": -4.1,
+      "tol": 30.5
+     },
+     "clk_t129": {
+      "TT": -5.8,
+      "FF": -4.1,
+      "tol": 30.5
+     },
+     "clk_t130": {
+      "TT": -2.5,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t131": {
+      "TT": -5.8,
+      "FF": -4.1,
+      "tol": 30.5
+     },
+     "clk_t132": {
+      "TT": -5.8,
+      "FF": -4.1,
+      "tol": 30.5
+     },
+     "clk_t133": {
+      "TT": -5.8,
+      "FF": -4.1,
+      "tol": 30.5
+     },
+     "clk_t134": {
+      "TT": -0.3,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t135": {
+      "TT": -0.3,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t136": {
+      "TT": -0.3,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t137": {
+      "TT": -0.3,
+      "FF": 0.0,
+      "tol": 30.5
+     },
+     "clk_t138": {
+      "TT": -2.5,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t139": {
+      "TT": -2.5,
+      "FF": -4.7,
+      "tol": 30.5
+     },
+     "clk_t140": {
+      "TT": -2.5,
+      "FF": -4.7,
+      "tol": 30.5
+     }
+    }
+   },
+   "drops": [
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t141",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t142",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t143",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t144",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t145",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t146",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t147",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t148",
+    "clock.tap_offset.per_port_ps.slw_su_l1__clcc9d0155.clk_t149"
+   ]
+  }
+ }
+}
