@@ -65,3 +65,4 @@
   - KV A5t6 pub bind: 87 of 95 types.
   S81 and KV drive it from rst_n_t, so c10 and A5t8 need taps "all".
   Gate: each type's kit sign-off must hold TT >= -42, since a pad costs about 75 ps TT.
+- 2026-11-25 00:54 PST [to FLOW-NOADV-R3] ot-push-main for 689a2622f6 hit a base failure that is not caused by my change: test_gen_phys_native_only.py::NativeKitOnly::test_selected_actual_kit_readset_matches_full_top_baseline fails on base 899f9018ad as well (reproduced on epyc9). The push still landed.
