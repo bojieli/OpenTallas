@@ -956,6 +956,9 @@ SCHEMA = {
                                        # hc128_apply_templates.py and hc128_core_conns.py; not inferred aliases.
                                        "parent_instance": _name, "cut_instance": _name,
                                        "halo_um": _nonneg,
+                                       # PG-EDGE-HALO-1 11-24 (gen_phys.core_pg_halos): tile PG straps stop this far short
+                                       # of the placed macro (its own core_pg macro grid, pdngen -halo); unset/0 = unchanged
+                                       "pg_halo_um": _nonneg,
                                        # G0C ruling 2b (COORD 10-26 06:01): superset-face master. pin_select = the
                                        # pin group (port copy on another face) this instance binds per port;
                                        # unused_pins = superset groups it leaves unbound (registered, declared)

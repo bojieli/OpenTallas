@@ -6065,6 +6065,7 @@ def core_pg_grids(P, tn, macros, root=None, exclude=()):
         return []
     import cores as C
     groups, skipped, published = {}, [], []
+    halo = core_pg_halos(P, tn)
     for inst, _mod, lef, *_ in macros:
         if inst in exclude:
             continue
@@ -6078,17 +6079,39 @@ def core_pg_grids(P, tn, macros, root=None, exclude=()):
         if mode[0] == "publish":
             published.append(inst)
         else:
-            groups.setdefault(mode[1:], []).append(inst)
+            groups.setdefault(mode[1:] + (halo.get(inst, 0.0),), []).append(inst)
     t = [f"# PG-CORECONN-2 (default-on): macro {i} skipped, view has no landable PG geometry: {e[:200]}"
          for i, e in skipped]
     t += [f"# PG-CORECONN-3: macro {i} M7 PG straps published as tile VDD/VSS pins (pg_publish.tcl); die M8 lands them"
           for i in published]
-    for (lo, hi), insts in sorted(groups.items(), key=lambda kv: int(kv[0][0][1:])):
-        g = f"core_pg_{lo}"
-        t += [f"# PG-CORECONN-1 (core_pg_connect): {len(insts)} placed macro(s) with {lo} PG pins onto the tile {hi} straps",
-              f"define_pdn_grid -macro -name {{{g}}} -instances {{{_pdn_inst_patterns(insts)}}} -voltage_domains {{CORE}} -halo {{0}}",
+    for (lo, hi, h), insts in sorted(groups.items(), key=lambda kv: (int(kv[0][0][1:]), kv[0][2])):
+        g = f"core_pg_{lo}" if not h else f"core_pg_{lo}_h{round(h * 1000)}"
+        hs = "0" if not h else _fmt_um(h)
+        t += [f"# PG-CORECONN-1 (core_pg_connect): {len(insts)} placed macro(s) with {lo} PG pins onto the tile {hi} straps"
+              + ("" if not h else f"; PG-EDGE-HALO-1: tile straps stop {hs} um short of these macros (hard_cores[].pg_halo_um)"),
+              f"define_pdn_grid -macro -name {{{g}}} -instances {{{_pdn_inst_patterns(insts)}}} -voltage_domains {{CORE}} -halo {{{hs}}}",
               f"add_pdn_connect -grid {{{g}}} -layers {{{lo} {hi}}}"]
     return t
+
+
+def _fmt_um(v):
+    return f"{float(v):.4f}".rstrip("0").rstrip(".")
+
+
+# PG-EDGE-HALO-1 (QC-STA-CLK 11-24; FABLE-CLOSURE lever 5 11-20 pilot, QC-SUST-MACRO-1119 R4 E3 PDN proof): opt-in
+# hard_cores[].pg_halo_um > 0 puts that placed macro in its own core_pg macro grid with pdngen -halo h, so the tile PG
+# straps stop h um short of the macro instead of at its edge.  Cores that put M5 signal pins on every M5 track of an
+# edge (st_a regions, cland S cores) otherwise land ~2/15 of those pins under the 4.32-um tile M5 VDD/VSS stripes, whose
+# ends sit 0.1 um off the edge under an M6 strap: the pins have no escape and DRT leaves Short/Spacing (st_a: 72 DRC,
+# all M5).  The M6 straps over the core (its M5 PG pins -> M6 connect) are unchanged.  Unset/0 = kit bytes unchanged.
+def core_pg_halos(P, tn):
+    """{placed macro inst (physical_inst or inst): pg_halo_um} of the type's hard_cores with pg_halo_um > 0."""
+    out = {}
+    for c in P.types[tn].get("hard_cores", []):
+        h = float(c.get("pg_halo_um") or 0.0)
+        if h > 0:
+            out[c.get("physical_inst") or c["inst"]] = h
+    return out
 
 
 def core_pg_unconnected(pdn, macros, root=None, exclude=(), strict=True, published=()):

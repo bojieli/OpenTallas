@@ -266,3 +266,25 @@ def test_kit_post_pdn_publish_and_composition(monkeypatch):
         assert "export POST_PDN_TCL = /work/post_pdn.tcl" in (k / "config.mk").read_text()
         assert (k / "post_pdn.tcl").read_text().splitlines()[1:] == ["source /work/pg_island_cut.tcl",
                                                                      "source /work/pg_publish.tcl"]
+
+
+def test_pg_edge_halo_own_grid_opt_in():
+    """PG-EDGE-HALO-1: hard_cores[].pg_halo_um > 0 moves that macro to its own core_pg grid with pdngen -halo; the other
+    macros and the default (unset) keep the exact legacy line; the connect census still sees every macro."""
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        mac = gen_phys.type_macros(P, "hd")
+        base = gen_phys.core_pg_grids(P, "hd", mac)
+        P.types["hd"]["hard_cores"][0]["pg_halo_um"] = 0.0
+        assert gen_phys.core_pg_grids(P, "hd", mac) == base
+        P.types["hd"]["hard_cores"][0]["pg_halo_um"] = 1.296
+        t = gen_phys.core_pg_grids(P, "hd", mac)
+        txt = "\n".join(t)
+        assert r"define_pdn_grid -macro -name {core_pg_M5_h1296} -instances {{^u_b\.g_cv\\\[0\\\]\.u_eA$}} -voltage_domains {CORE} -halo {1.296}" in txt
+        assert "add_pdn_connect -grid {core_pg_M5_h1296} -layers {M5 M6}" in txt
+        assert "define_pdn_grid -macro -name {core_pg_M4} -instances {{^u_b\\.u_eB$}} -voltage_domains {CORE} -halo {0}" in txt
+        assert "{core_pg_M5}" not in txt
+        assert gen_phys.core_pg_unconnected(txt, mac) == []
+        assert gen_phys.core_pg_halos(P, "hd") == {"u_b.g_cv[0].u_eA": 1.296}
+        assert schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"][
+            "items"]["properties"]["pg_halo_um"]["minimum"] == 0

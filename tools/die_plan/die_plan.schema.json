@@ -4721,6 +4721,10 @@
          "type": "number",
          "minimum": 0
         },
+        "pg_halo_um": {
+         "type": "number",
+         "minimum": 0
+        },
         "pin_select": {
          "type": "object",
          "additionalProperties": {
