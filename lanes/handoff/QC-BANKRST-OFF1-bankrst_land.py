@@ -14,7 +14,8 @@ usage: python3 -I bankrst_land.py PLAN_IN PLAN_OUT REPORT.json ROW.json --rt RT 
 import argparse, hashlib, json, re, sys
 from pathlib import Path
 
-EXCLUDE = ("sle_su_l1__cl5ea486db", "sle_su_l1__clc6d66f5b")
+EXCLUDE = ("sle_su_l1__cl5ea486db", "sle_su_l1__clc6d66f5b",   # SUL1-SLE-LAND (QC-SUL1-PLACE)
+           "slw_st_a_v2__clf4365a62")                          # STAV2-F436 re-floors it: F436 re-runs this op on its own output
 REACH_UM = 275.0
 LEAF_MAX = 32
 
@@ -111,7 +112,7 @@ def main(argv=None):
     rep["out_sha"] = osha; rep["changed_types"] = sorted(sets)
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     row = dict(row="BANKRST-LAND (C1p): landed ft bank reset taps re-derived at the real landed site (stage k+1), QC family, "
-                   "excl. sle_su_l1 x2 (SUL1-SLE-LAND)", lane="QC-BANKRST-OFF1", base="c1o_v13", base_sha=rep["base_sha"],
+                   "excl. sle_su_l1 x2 (SUL1-SLE-LAND) and slw_st_a_v2__clf4365a62 (STAV2-F436)", lane="QC-BANKRST-OFF1", base="c1o_v13", base_sha=rep["base_sha"],
                out_sha=osha, overlay={}, script="bankrst_land.py (idempotent)", types=sets)
     Path(a.row).write_text(json.dumps(row, indent=1) + "\n")
     print(f"BANKRST-LAND base {rep['base_sha']} -> {osha}; changed {len(sets)} types")

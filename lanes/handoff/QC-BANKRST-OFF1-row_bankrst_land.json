@@ -1,9 +1,9 @@
 {
- "row": "BANKRST-LAND (C1p): landed ft bank reset taps re-derived at the real landed site (stage k+1), QC family, excl. sle_su_l1 x2 (SUL1-SLE-LAND)",
+ "row": "BANKRST-LAND (C1p): landed ft bank reset taps re-derived at the real landed site (stage k+1), QC family, excl. sle_su_l1 x2 (SUL1-SLE-LAND) and slw_st_a_v2__clf4365a62 (STAV2-F436)",
  "lane": "QC-BANKRST-OFF1",
  "base": "c1o_v13",
  "base_sha": "aa3a14fb7484",
- "out_sha": "93fa00b39e96",
+ "out_sha": "c78ca1b08c5b",
  "overlay": {},
  "script": "bankrst_land.py (idempotent)",
  "types": {
@@ -3185,150 +3185,6 @@
      },
      {
       "tap": 399,
-      "sinks": [
-       "u_bin_x_hc1_i"
-      ]
-     }
-    ]
-   }
-  },
-  "slw_st_a_v2__clf4365a62": {
-   "set": {
-    "partition_types.slw_st_a_v2__clf4365a62.reset.bank_taps": [
-     {
-      "tap": 2,
-      "sinks": [
-       "u_ft_x_ctl_fw_o_2"
-      ]
-     },
-     {
-      "tap": 5,
-      "sinks": [
-       "u_bout_x_fe_o"
-      ]
-     },
-     {
-      "tap": 26,
-      "sinks": [
-       "u_ft_x_fw_ctl_o_0"
-      ]
-     },
-     {
-      "tap": 37,
-      "sinks": [
-       "u_bin_rs_s1"
-      ]
-     },
-     {
-      "tap": 47,
-      "sinks": [
-       "u_bin_rs_s0"
-      ]
-     },
-     {
-      "tap": 120,
-      "sinks": [
-       "u_ft_x_ctl_fw_o_1"
-      ]
-     },
-     {
-      "tap": 128,
-      "sinks": [
-       "u_ft_cws0_o_3"
-      ]
-     },
-     {
-      "tap": 132,
-      "sinks": [
-       "u_bin_b_tw_data_i"
-      ]
-     },
-     {
-      "tap": 137,
-      "sinks": [
-       "u_ft_b_hw_ctl_hc0_o_0"
-      ]
-     },
-     {
-      "tap": 186,
-      "sinks": [
-       "u_ft_x_fw_ctl_o_2"
-      ]
-     },
-     {
-      "tap": 190,
-      "sinks": [
-       "u_ft_x_fw_ctl_o_1"
-      ]
-     },
-     {
-      "tap": 191,
-      "sinks": [
-       "u_ft_x_ctl_fw_o_0"
-      ]
-     },
-     {
-      "tap": 229,
-      "sinks": [
-       "u_bout_x_ctl_o"
-      ]
-     },
-     {
-      "tap": 232,
-      "sinks": [
-       "u_ft_b_hw_ctl_hc0_o_1"
-      ]
-     },
-     {
-      "tap": 235,
-      "sinks": [
-       "u_ft_cws0_o_2"
-      ]
-     },
-     {
-      "tap": 237,
-      "sinks": [
-       "u_bin_x_st_b_i"
-      ]
-     },
-     {
-      "tap": 261,
-      "sinks": [
-       "u_bout_x_st_b_o"
-      ]
-     },
-     {
-      "tap": 289,
-      "sinks": [
-       "u_ft_b_hw_ctl_hc0_o_2"
-      ]
-     },
-     {
-      "tap": 310,
-      "sinks": [
-       "u_ft_cws0_o_1"
-      ]
-     },
-     {
-      "tap": 338,
-      "sinks": [
-       "u_ft_b_hw_ctl_hc0_o_3"
-      ]
-     },
-     {
-      "tap": 360,
-      "sinks": [
-       "u_ft_b_hw_ctl_hc0_o_4"
-      ]
-     },
-     {
-      "tap": 364,
-      "sinks": [
-       "u_ft_cws0_o_0"
-      ]
-     },
-     {
-      "tap": 366,
       "sinks": [
        "u_bin_x_hc1_i"
       ]
