@@ -1,0 +1,97 @@
+{
+ "row": "ROWS_KVQC-STACK-DESTACK",
+ "plan_in_sha": "ac1e32805d2c",
+ "types": {
+  "cbf_q00_s2": {
+   "stacked_before": 16,
+   "moved": 17,
+   "strict_pass": 17,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 636.7,
+   "max_hop_after": 636.7
+  },
+  "cbf_q01_s2": {
+   "stacked_before": 9,
+   "moved": 9,
+   "strict_pass": 9,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 417.7,
+   "max_hop_after": 417.7
+  },
+  "glue": {
+   "stacked_before": 3,
+   "moved": 9,
+   "strict_pass": 9,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 325.8,
+   "max_hop_after": 325.8
+  },
+  "sle_sc_v1__cl115da35f": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 327.8,
+   "max_hop_after": 327.8
+  },
+  "sle_sc_v1__cl7479a5ec": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 327.8,
+   "max_hop_after": 327.8
+  },
+  "sle_sc_v2": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 313.1,
+   "max_hop_after": 323.0
+  },
+  "sle_su_c": {
+   "stacked_before": 3,
+   "moved": 3,
+   "strict_pass": 3,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 478.8,
+   "max_hop_after": 478.8
+  },
+  "slw_sc_v1__cl63e5a7a2": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 327.4,
+   "max_hop_after": 327.4
+  },
+  "slw_sc_v1__cl64543eaf__cl4590432d": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 327.4,
+   "max_hop_after": 327.4
+  },
+  "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+   "stacked_before": 1,
+   "moved": 1,
+   "strict_pass": 1,
+   "loose_pass": 0,
+   "refused": [],
+   "max_hop_before": 327.4,
+   "max_hop_after": 327.4
+  }
+ },
+ "plan_out_sha": "f6564a184442"
+}
