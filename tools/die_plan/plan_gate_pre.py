@@ -123,6 +123,14 @@ HALOCORNER-1125 (COORD, QC-ALLFIX; FLOW-OPS-R3 DIEPLAN-GREEN 11-24 23:33; report
   reset.in_sites entry that touches 2+ halos at a corner of one of them, in no halo interior, with no run under inclusive face
   contact, is listed per type.  _free is unchanged (bound trees keep their sites); the sites move in plan rows.  --skip HALOCORNER.
 
+CABIND-1125 (QC-CA-PRECHK, COORD; C1n-r2 plan a372ae84fa2a vs sidecar 0391a5add8e7: 36 of 60 relay parts mismatch): FAIL when --sidecar is
+  given and its count_aligned disagrees with the plan where the bind does.  Per relay part: stages == count_align_bind.RELAY_STAGES + tx
+  stages of the origin's type + rx stages of its own type (count_align_bind.relay_extra_from_plan; the clock_landings relay-role check),
+  EVERY mismatch listed with a part table (the bind stops at the first).  Also: plan count_aligned_cycles == sidecar sched_lat per port,
+  plan count_aligned_bind == sidecar schema/root/pad/root_settle_cycles, landing_output_qreg == port output_qreg, FREG declaration
+  (clock_landings.check_ca_freg_declared), one origin per region == regions.origin_part.  Not covered (needs a bind): K / n_nominal
+  frames (count_align_bind.bind_parts), ring depths, port endpoints vs regions.  --skip CABIND.
+
 TAPOFF-1123 (TAP-GRID-R5, COORD class ruling; KV x10): a type with a plan clock.tap_offset.per_port_ps row (R-CLOCK-7)
   times every tap port at its row; a port with no row silently takes the window [-W, 0].  Every tap of such a type
   (schema.tap_grid, core clk_c* ports aside) must have a row: FAIL TAPOFF-MISSING per type with the missing ports and the fix
@@ -229,7 +237,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1447,6 +1455,130 @@ def check_halocorner(plan, max_list=6, raw=None):
         out.append(f"{HALOCORNER_LEVEL} HALOCORNER {st['die']}/{e}: halos not built; not checked")
     out.append(f"LIST HALOCORNER die {st['die']} types {st['types']} points {st['points']} flagged {len(rows)} at "
                f"{len({(r[1], r[4], r[5]) for r in rows})} corner(s) in {len(by)} type(s)")
+    return out
+
+
+CABIND_LEVEL = "FAIL"
+
+
+def cabind_rows(plan_raw, sidecar_raw):
+    """CABIND-1125 (QC-CA-PRECHK): the bind's count-aligned sidecar-vs-plan equalities, computed by the bind's own functions.
+    Returns (parts, other): parts = [(part, region, role, src, have, expect, why, tail)] for every sidecar count_aligned.parts row
+    (expect = RELAY_STAGES + tx(origin type) + rx(own type) from count_align_bind.relay_extra_from_plan, the rule bind_parts and
+    the clock_landings relay-role check apply; n_nominal(relay) = n_nominal(origin) + expect) and other = [msg] for the remaining
+    equalities clock_landings.Landings checks at bind time (see check_cabind)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import count_align_bind as CAB
+    ca = (sidecar_raw or {}).get("count_aligned") or {}
+    net = ((plan_raw.get("clock") or {}).get("landing_network") or {})
+    plist = plan_raw.get("partitions") or []
+    plist = list(plist.values()) if isinstance(plist, dict) else plist
+    ptype = {p["name"]: p.get("type") for p in plist}
+    parts, other = [], []
+    cp = ca.get("parts")
+    if cp:
+        try:
+            extra = CAB.relay_extra_from_plan(plan_raw)
+        except CAB.BindError as e:
+            extra = {}
+            other.append(f"relay stage key invalid: {e}")
+        regs = ca.get("regions") or {}
+        origins = {}
+        for q, v in cp.items():
+            if v.get("role") == "origin":
+                origins.setdefault(v.get("region"), []).append(q)
+        for q, v in sorted(cp.items()):
+            role, src, have = v.get("role"), v.get("src"), int(v.get("stages", -1))
+            why = []
+            if role == "relay":
+                if q not in ptype:
+                    why.append("relay partition not in the plan")
+                tx, rx = int(extra.get(src, 0)), int(extra.get("rx:" + q, 0))
+                expect = CAB.RELAY_STAGES + tx + rx
+                if (cp.get(src) or {}).get("role") != "origin":
+                    why.append(f"src {src} is not an origin part")
+                elif cp[src].get("region") != v.get("region"):
+                    why.append(f"src {src} is in region {cp[src].get('region')}")
+                tail = f"2 + tx[{ptype.get(src)}]={tx} + rx[{ptype.get(q)}]={rx}"
+            elif role == "origin":
+                expect, tail = 0, "origin"
+            else:
+                expect, tail = have, f"role {role!r}"
+                why.append(f"role {role!r} is neither origin nor relay")
+            if have != expect:
+                why.insert(0, f"stages {have} != {tail} = {expect}")
+            parts.append((q, v.get("region"), role, src, have, expect, "; ".join(why), tail))
+        for r, qs in sorted(origins.items()):
+            org = (regs.get(r) or {}).get("origin_part")
+            if len(qs) != 1 or (org is not None and org not in qs):
+                other.append(f"region {r}: sidecar origin parts {qs} vs regions.origin_part {org}")
+    cyc = net.get("count_aligned_cycles")
+    cports = ca.get("ports") or {}
+    if ca and net.get("data_cycles_per_crossing") == "count_aligned":
+        if not isinstance(cyc, dict):
+            other.append("plan landing_network has no count_aligned_cycles dict")
+        else:
+            bad = sorted(p for p, c in cports.items() if p in cyc and int(cyc[p]) != int(c["sched_lat"]))
+            if bad:
+                other.append(f"{len(bad)} port(s) plan count_aligned_cycles != sidecar sched_lat: "
+                             + ", ".join(f"{p} {cyc[p]}!={cports[p]['sched_lat']}" for p in bad[:6]))
+            if not ca.get("mixed"):
+                miss = sorted(set(cports) - set(cyc))
+                stale = sorted(set(cyc) - set(cports))
+                if miss:
+                    other.append(f"{len(miss)} sidecar port(s) without a plan count_aligned_cycles entry: {miss[:4]}")
+                if stale:
+                    other.append(f"{len(stale)} plan count_aligned_cycles entr(ies) without a sidecar port: {stale[:4]}")
+        bb = net.get("count_aligned_bind")
+        if isinstance(bb, dict):
+            d = [f"{k} plan {bb[k]!r} != sidecar {ca.get(k)!r}" for k in sorted(bb) if bb[k] != ca.get(k)]
+            if d:
+                other.append("count_aligned_bind " + "; ".join(d))
+        try:
+            import clock_landings as CL
+            pports = {p["id"]: p for p in plan_raw.get("ports") or []}
+            bad = []
+            for pid, c in sorted(cports.items()):
+                p = pports.get(pid)
+                if p is None:
+                    continue
+                tn = ptype.get(p["dst"]["part"])
+                bus = p["dst"]["bus"]
+                q = bool(CL.output_qreg(plan_raw, tn, bus))
+                if q != bool(c.get("output_qreg")):
+                    bad.append(f"{pid} ({tn}.{bus}) output_qreg plan {q} sidecar {bool(c.get('output_qreg'))}")
+                try:
+                    CL.check_ca_freg_declared(plan_raw, tn, bus, c, pid)
+                except CL.LandingError as e:
+                    bad.append(str(e)[:160])
+            if bad:
+                other.append(f"{len(bad)} port(s) QREG/FREG declaration vs plan: " + " | ".join(bad[:4]))
+        except ImportError as e:
+            other.append(f"QREG/FREG declaration not checked: {e}")
+    return parts, other
+
+
+def check_cabind(plan, sidecar, raw=None):
+    """CABIND-1125 (QC-CA-PRECHK; C1n-r2: 36 of 60 relay parts stale after the RTX-ALL / st_a landing_relay_tx_stages rows, the bind
+    raised only on the first): FAIL per sidecar count_aligned.parts row whose stages differ from the bind's rule (every one, no cap),
+    a per-part LIST table, and FAIL per other sidecar-vs-plan equality the bind enforces.  No sidecar count_aligned: no line."""
+    raw = raw if raw is not None else _load(plan)
+    sc = _load(sidecar) if sidecar else None
+    if not isinstance(raw, dict) or not isinstance(sc, dict) or not sc.get("count_aligned"):
+        return []
+    parts, other = cabind_rows(raw, sc)
+    out = []
+    rel = [r for r in parts if r[2] == "relay"]
+    bad = [r for r in parts if r[6]]
+    for q, reg, role, src, have, exp, why, tail in bad:
+        out.append(f"{CABIND_LEVEL} CABIND {q}: {why} (sidecar role {role} src {src}; the bind refuses relay role != relay(origin, N))")
+    for m in other:
+        out.append(f"{CABIND_LEVEL} CABIND {m}")
+    if rel:
+        out.append("LIST CABIND part table: part, region, src, sidecar stages, expected stages, expected dN vs origin, status")
+        for q, reg, role, src, have, exp, why, tail in rel:
+            out.append(f"LIST CABIND   {q}\t{reg}\t{src}\t{have}\t{exp}\t+{exp}\t{'MISMATCH' if why else 'ok'}")
+    out.append(f"LIST CABIND parts {len(parts)} relay {len(rel)} mismatching {len(bad)} other {len(other)}")
     return out
 
 
@@ -2722,6 +2854,12 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
             findings += check_halocorner(plan)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
             findings.append(f"WARN HALOCORNER not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("CABIND")
+    if "CABIND" not in skip and sidecar:                 # CABIND-1125: sidecar count_aligned vs plan (relay stages ...), every mismatch, seconds
+        try:
+            findings += check_cabind(plan, sidecar)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself
+            findings.append(f"WARN CABIND not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("EMITNAME")
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
