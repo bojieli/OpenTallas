@@ -12035,3 +12035,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-25 12:49 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 2 event(s): sle_stm_v2__cl7b3062fa LAUNCHED (kw-qwenco-slestmv2cl7b3062fa-1-39752); sle_stm_v2__cl55be2264 LAUNCHED (kw-qwenco-slestmv2cl55be2264-1-39769)
 - 2026-11-25 12:50 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_su_c__cl19bb38ef=FAIL
 - 2026-11-25 12:53 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
+- 2026-11-25 12:53 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
