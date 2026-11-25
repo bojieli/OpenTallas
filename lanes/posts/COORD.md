@@ -1627,3 +1627,4 @@
 - 2026-11-24 22:36 PST KV-PV-FANOUT
 - 2026-11-24 22:42 PST KV-PV-FANOUT
 - 2026-11-24 22:49 PST QC-ALLFIX
+- 2026-11-24 22:50 PST SWEEP 22:48 acted: pv_v1n/pv_v3n no-CLAND-site -> KV-OWN-PV structural row for A5t7; tt_ctlm owned by QC-TTCTLM-PROBE (PRE on I1). R8 guard fix: one owner QC-R8-SYMLINK (dup R8-REFRESH-PATH stopped). SRCTAP root mismatch slw_stm_v1 rst_n_t23/t79 -> QC-SRCTAP-C1N; C1n gate = compose_drop_guard b62de070c852, 0 mismatch + 0 ROW-LOST. tools_lag false r708 fixed c8101cc887b.
