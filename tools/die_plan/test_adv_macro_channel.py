@@ -35,3 +35,9 @@ def test_ns_channel_rotation_and_short_run():
 
 def test_registered():
     assert ("MACRO-CHANNEL", "adv_macro_channel") in PA.CHECKS
+
+
+def test_small_overlap_mutant_and_clean():
+    out = run(core("a", 0, 0), core("b", 0, 99.976))        # 0.024 um overlap, the 32x64 SRAM stack case
+    assert any(x.startswith("WARN ADV-MACRO-CHANNEL ty: 1 core pair(s) overlap by <= 0.5 um (max 0.024") for x in out)
+    assert not any("overlap" in x for x in run(core("a", 0, 0), core("b", 0, 100)))        # abutted

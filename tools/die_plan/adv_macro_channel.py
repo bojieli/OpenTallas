@@ -51,6 +51,22 @@ def channels(t, min_um=None, min_run=MIN_RUN_UM):
     return sorted(out)
 
 
+def overlaps(t, max_um=0.5):
+    """-> [(overlap_um, name_a, name_b)] core pairs whose boxes overlap by 0 < d <= max_um in one axis and by more than 1 um in the other
+    (a LEF-size / pitch mismatch, FP-CONVERGE-HEAD review 2: 32x64 SRAM stacks 17.304 um tall on a 17.28 pitch overlap 0.024 um)"""
+    r = M.core_rects(t)
+    out = []
+    for i in range(len(r)):
+        for j in range(i + 1, len(r)):
+            a, b = r[i], r[j]
+            ox = min(a[2], b[2]) - max(a[0], b[0])
+            oy = min(a[3], b[3]) - max(a[1], b[1])
+            for d, other in ((ox, oy), (oy, ox)):
+                if EPS < d <= max_um and other > 1.0:
+                    out.append((round(d, 4), a[5], b[5]))
+    return sorted(out)
+
+
 def findings(raw, plan_path=None, tree=None, **_kw):
     out = []
     n = 0
@@ -63,6 +79,10 @@ def findings(raw, plan_path=None, tree=None, **_kw):
         n += len(ch)
         ex = "; ".join(f"{a} / {b} {g:g} um over {r:g} um ({ax})" for g, r, a, b, ax in ch[:MAX_EX])
         out.append(f"WARN {CHECK} {tn}: {len(ch)} core pair(s) with a channel < {MIN_CHANNEL_UM:g} um (min {ch[0][0]:g}): {ex}")
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        ov = overlaps(t) if isinstance(t, dict) else []
+        if ov:
+            out.append(f"WARN {CHECK} {tn}: {len(ov)} core pair(s) overlap by <= 0.5 um (max {ov[-1][0]:g}; e.g. {ov[0][1]} / {ov[0][2]} {ov[0][0]:g} um): LEF size vs pitch mismatch, fix: pitch >= LEF size")
     if out:
         out.append(f"LIST {CHECK} {len(out)} type(s), {n} narrow channel(s) (fix: widen to >= {MIN_CHANNEL_UM:g} um or abut the cores)")
     return out
