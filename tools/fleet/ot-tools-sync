@@ -169,10 +169,15 @@ def named_in(name, text):
 MIN_KEEP = 3          # the newest three snapshots stay whatever OT_RT_KEEP says (a rollback of the runtime must always be possible)
 
 
+# DISK-RECLAIM 11-25: only the CURRENT cut's pins (kit_wave.json, the tool-skew pins, tree switches) name a snapshot; the caches and histories
+# (flow_manifest_cache.json, kit_wave_state.json, state.json, WATCHDOG.state.json) name every snapshot ever used and kept 59 + 31 + 6 of epyc2's 194 alive
+COORD_REF_JSON = tuple(os.environ.get("OT_RT_COORD_JSON", "autopilot/kit_wave.json,autopilot/kit_wave_tool_skew.json,lanes/handoff/tree_switch_*.json").split(","))
+
+
 def names_in_use_text():
     """text in which a snapshot sha may be named: coord autopilot / handoff json, the crontab, user units (read-only, best effort)"""
     t = ""
-    for pat in ("autopilot/*.json", "lanes/handoff/tree_switch_*.json"):
+    for pat in COORD_REF_JSON:
         for f in COORD.glob(pat):
             try: t += f.read_text(errors="replace")
             except OSError: pass

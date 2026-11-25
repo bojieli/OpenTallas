@@ -427,3 +427,12 @@ class DiskReclaimWindows(unittest.TestCase):
             self.assertEqual(m.live_reference_text().count("UNIQUE-MARK-7731"), 1)
         finally:
             for p in ps: p.terminate(); p.wait()
+
+    def test_only_the_current_cut_json_names_a_snapshot(self):
+        m = self.load(); c = pathlib.Path(tempfile.mkdtemp()); (c / "autopilot").mkdir(); (c / "lanes/handoff").mkdir(parents=True)
+        (c / "autopilot/kit_wave.json").write_text("rt/aaaaaaaaaaaa"); (c / "autopilot/flow_manifest_cache.json").write_text("rt/bbbbbbbbbbbb")
+        (c / "autopilot/kit_wave_state.json").write_text("rt/cccccccccccc"); (c / "lanes/handoff/tree_switch_x.json").write_text("rt/dddddddddddd")
+        m.COORD = c; m.live_reference_text = lambda *a, **k: ""; m.private_spec_text = lambda *a, **k: ""
+        t = m.names_in_use_text()
+        self.assertIn("aaaaaaaaaaaa", t); self.assertIn("dddddddddddd", t)
+        self.assertNotIn("bbbbbbbbbbbb", t); self.assertNotIn("cccccccccccc", t)
