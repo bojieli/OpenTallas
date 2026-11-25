@@ -3959,3 +3959,4 @@ OPS-WRITEUP: 2026-11-25 10:09 PST 10:09 hourly: 605 any / 487 current (+0 / +0 v
 CODEX: 2026-11-25 10:36 PST takeover on intel2. Recovered S81 t70, HEAD W9 hold-C27, QC su_c and KV HGI gates; admitted S81 R012 all ranks. Existing route reviews and live plan gates stay in force. See CODEX-LOG.md and lanes/CODEX.md.
 
 CODEX: 2026-11-25 11:05 PST closure. FLEET seal merged 6a07aa0fa11. HEAD W9 scoped PRE0 with route holds from the exact views, QC C1p cut 9274cdbaabf2 gating, KV HGI regenerated exact 256 stale V pads, S81 R012 all ranks generated clean. Active work in CODEX-LOG.md.
+OPS-WRITEUP: 2026-11-25 11:08 PST 11:08 hourly: 605 any / 487 current (+0 / +0 vs 10:05). VIS-COVERAGE: 435/462 types with a verdict (94%); PROBE-PASS 1
