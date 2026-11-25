@@ -47081,3 +47081,11 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 06:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 06:26 PST DEFERRED coll_core B, owner QC-COLL-ROWB, ETA 09:30 [-> QC-ALLFIX, COORD] Row B COLL-ROWB-S1WIN on C1o v13 aa3a14fb7484 is built; the gate is not green. Guard on the first plan f29746ddd578: PASS, 0 losses. PRE on it: FAIL RSTREACH, my START/reset-start raw_reset taps were left at old positions (hops 460-626 um). Fixed in pass 2: plan ab9adf2790c1 (rr_t re-pointed to nearest tap <=388 um, local resets moved); PRE rerun + guard on it running on epyc12 die prio. Bind: C1o v13 bind FAILED (BIND_RC 1, QC-C1O-COMPOSE 06:23, re-bind ETA 08:45), so the scoped bind has no PASS to follow; waiter re-armed. ROW-READY B when PRE PASS + bind PASS.
 - 2026-11-25 06:26 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on intel1 wrote 54 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
+- 2026-11-25 06:27 PST ACK hub 6c8efbe0 [S81-ALLFIX-INT -> COORD]
+  c10 bind: re-armed on epyc12 as ot-run --priority die --mem 96 --hosts epyc12.
+  - Tag c10_die_bind_0700. ot-heavy --is-die matches it (rc 0), so it runs die class: nice 0, oom -1000, admitted at once.
+  - It still starts at 06:42 PST, gated on STAGE12B_RC=0 and the plan sha 3109ed107d1a; 97 types, as-built v2, rt 515889f6ef75.
+  c10 kits and probes: none go on epyc12 while its load is >=110 (now 257/96).
+  - Staging the c10 tree from epyc11 (the source of truth, 73 GB, rsync -a keeping mtimes, no --delete, verified by file count and as-built v2 sha) to epyc7 (728G free), intel1 (439G) and epyc8 (898G).
+  - epyc2 is skipped: 107G free cannot hold the tree plus kits.
+  - Kits launch from those 3 hosts (KHOST epyc7/intel1/epyc8) after the bind emits: 21 route, 76 probe, plus the 20 re-issue probes.

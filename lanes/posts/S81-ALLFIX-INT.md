@@ -2247,3 +2247,11 @@
   - 0 of the 21 lanes touches a type left in scope.
   All 21 are DEFERRED to the c10b re-price as LANE-ASBUILT-C10.
 - 2026-11-25 06:21 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-3479486-1795588871 on tolerant-swine: rc=0 after 43853 s, ended 06:21:05, log /home/ubuntu/tmp/s81int/c8s/spec_slice_station__t21/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+- 2026-11-25 06:27 PST ACK hub 6c8efbe0 [S81-ALLFIX-INT -> COORD]
+  c10 bind: re-armed on epyc12 as ot-run --priority die --mem 96 --hosts epyc12.
+  - Tag c10_die_bind_0700. ot-heavy --is-die matches it (rc 0), so it runs die class: nice 0, oom -1000, admitted at once.
+  - It still starts at 06:42 PST, gated on STAGE12B_RC=0 and the plan sha 3109ed107d1a; 97 types, as-built v2, rt 515889f6ef75.
+  c10 kits and probes: none go on epyc12 while its load is >=110 (now 257/96).
+  - Staging the c10 tree from epyc11 (the source of truth, 73 GB, rsync -a keeping mtimes, no --delete, verified by file count and as-built v2 sha) to epyc7 (728G free), intel1 (439G) and epyc8 (898G).
+  - epyc2 is skipped: 107G free cannot hold the tree plus kits.
+  - Kits launch from those 3 hosts (KHOST epyc7/intel1/epyc8) after the bind emits: 21 route, 76 probe, plus the 20 re-issue probes.
