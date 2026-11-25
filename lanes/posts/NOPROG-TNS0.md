@@ -1,0 +1,1 @@
+- 2026-11-24 18:54 PST TAKING: noprog watchdog stopped 9 healthy QC V4 kits at pregrt_ff_hold with repair_TNS best 0 last 0; finding source, fixing (TNS>=0 never stalled), will hand the 9 kits to QC-ALLFIX.
