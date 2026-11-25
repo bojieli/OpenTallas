@@ -939,3 +939,4 @@
   (5) Tools-lag: C1n kit rt 6e9705f7fe67 (79e3233e); the 493 lag is the wave tree pin.
   QC-CB-C1L was hit by the limit and is resumed.
 - 2026-11-24 23:30 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-4050612-1795536479 on tolerant-swine: rc=0 after 55326 s, ended 23:30:00, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_sle_stm_v2__cl7b3062fa_1124053549/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
+- 2026-11-25 00:11 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-442371-1795589237 on tolerant-swine: rc=0 after 6055 s, ended 00:11:04, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_coll_ftn_1124144444/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
