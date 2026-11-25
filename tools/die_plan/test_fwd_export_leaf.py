@@ -208,3 +208,42 @@ def test_tcl_pad_chain_between_leaf_and_export(tmp_path):
     assert ("PAD0 leafA PAD1 cland_fwd_fclk_out_r_o_padnet0 XB cland_fwd_fclk_out_r_o_padnet2 "
             "DRV2 cland_fwd_fclk_out_r_o_padnet2 N 3 LOC 51000 40000") in r.stdout
     assert "after_leaf_affinity: 0 export(s) hung on their launch leaf, 1 already there" in r.stdout
+
+
+# export net placed along the old route: xb -> r1 -> r2 -> fclk port at (91000, 40000); once xb moves next to its flops
+# (51000, 40000) the two repeaters go evenly on the straight line to the port
+CHAIN = r"""
+mk xb {switch $m {
+  findITerm {return xb_a} getITerms {return {xb_a xb_y}} getMaster {return xm} getLocation {return $::LOC(xb)}
+  setLocation {set ::LOC(xb) $args} getPlacementStatus {return PLACED} setPlacementStatus {}}}
+mk xb_a {switch $m {getNet {return $::NET(xb_a)} disconnect {set ::NET(xb_a) NULL} connect {set ::NET(xb_a) [lindex $args 0]}
+  isOutputSignal {return 0} isInputSignal {return 1}}}
+mk xb_y {switch $m {isOutputSignal {return 1} isInputSignal {return 0} getNet {return n_x}}}
+mk n_x {switch $m {getBTerms {return {}} getITerms {return {xb_y r1_a}}}}
+mk n_r {switch $m {getBTerms {return {}} getITerms {return {r1_y r2_a}}}}
+mk n_p {switch $m {getBTerms {return {bt_fclk}} getITerms {return {r2_y}}}}
+mk bt_fclk {switch $m {getIoType {return OUTPUT} getName {return fclk_out_r_o} getNet {return n_p} getBBox {return pbb}}}
+mk pbb {switch $m {xMin {return 91000} xMax {return 91000} yMin {return 40000} yMax {return 40000}}}
+foreach {r i o} {r1 n_x n_r r2 n_r n_p} {
+  set ::LOC($r) {5000 5000}
+  mk $r "switch \$m {getITerms {return {${r}_a ${r}_y}} getMaster {return xm} getPlacementStatus {return PLACED}
+    setLocation {set ::LOC($r) \$args} setPlacementStatus {}}"
+  mk ${r}_a "switch \$m {isOutputSignal {return 0} isInputSignal {return 1} getInst {return $r} getNet {return $i}}"
+  mk ${r}_y "switch \$m {isOutputSignal {return 1} isInputSignal {return 0} getInst {return $r} getNet {return $o}}"
+}
+"""
+
+
+def test_tcl_respaces_export_repeaters_on_buffer_to_port_line(tmp_path):
+    r = _run(tmp_path, [ROW], tail=CHAIN + "fwd_export_leaf cts\nputs \"XB $::LOC(xb) R1 $::LOC(r1) R2 $::LOC(r2)\"\n")
+    assert r.returncode == 0, r.stderr
+    assert "1 moved next to their flops (1 repeater chain(s) re-spaced), 0 failed" in r.stdout
+    # 51000 + (91000 - 51000) * j / 3
+    assert "XB 51000 40000 R1 64333 40000 R2 77667 40000" in r.stdout
+
+
+def test_tcl_no_respace_when_export_net_forks(tmp_path):
+    fork = CHAIN + "mk n_x {switch $m {getBTerms {return {}} getITerms {return {xb_y r1_a r2_a}}}}\n"
+    r = _run(tmp_path, [ROW], tail=fork + "fwd_export_leaf cts\nputs \"R1 $::LOC(r1)\"\n")
+    assert r.returncode == 0, r.stderr
+    assert "(0 repeater chain(s) re-spaced)" in r.stdout and "R1 5000 5000" in r.stdout

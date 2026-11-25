@@ -44,6 +44,26 @@ proc fel_upport {net} {
   }
   return ""
 }
+# repeater chain of an export: buffer Y -> single-load single-input cells -> the output port; {} if the net forks or
+# ends elsewhere.  Placement repair buffered the export net along its OLD route (source tap -> port): once the buffer
+# moves next to the launch flops, those repeaters would make fclk run back to the tap and out again (kv3_pv_v6e D29
+# what-if: launch flops 1000-1400 um from the source tap, fclk +840 ps on the first repeater hop).
+proc fel_rchain {bi} {
+  set out {}; set net ""
+  foreach it [$bi getITerms] { if {[$it isOutputSignal]} { set net [$it getNet] } }
+  for {set hop 0} {$hop < 200} {incr hop} {
+    if {$net eq "" || $net eq "NULL"} { return {} }
+    foreach b [$net getBTerms] { if {[$b getIoType] eq "OUTPUT"} { return [list $out $b] } }
+    set ld {}; foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend ld $it } }
+    if {[llength $ld] != 1} { return {} }
+    set ri [[lindex $ld 0] getInst]
+    set o {}; set ni 0
+    foreach it [$ri getITerms] { if {[$it isOutputSignal]} { lappend o $it } elseif {[$it isInputSignal]} { incr ni } }
+    if {[llength $o] != 1 || $ni != 1} { return {} }
+    lappend out $ri; set net [[lindex $o 0] getNet]
+  }
+  return {}
+}
 proc fwd_export_leaf {tag} {
   set f /work/fwd_export_leaf.txt
   if {![file exists $f]} { puts "OT_FWD_LEAF $tag: no $f"; return }
@@ -59,7 +79,7 @@ proc fwd_export_leaf {tag} {
     dict lappend byb $k $b
   }
   set up [dict create]
-  set n 0; set same 0; set moved 0; set bad {}
+  set n 0; set same 0; set moved 0; set respaced 0; set bad {}
   set h [open $f]
   while {[gets $h l] >= 0} {
     if {[string match "#*" $l] || [llength $l] < 5} continue
@@ -133,12 +153,28 @@ proc fwd_export_leaf {tag} {
       $bi setLocation $cx $cy; $bi setPlacementStatus PLACED
       foreach pi $chain { $pi setLocation $cx $cy; $pi setPlacementStatus PLACED }
       incr moved
+      # the export repeaters go evenly on the straight line buffer -> port (fel_rchain)
+      set rc [fel_rchain $bi]
+      if {[llength $rc] == 2 && [llength [lindex $rc 0]]} {
+        lassign $rc reps pbt
+        set bb [$pbt getBBox]; set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+        set k [llength $reps]; set j 0
+        foreach ri $reps {
+          incr j
+          if {[$ri getPlacementStatus] in {FIRM LOCKED COVER}} continue
+          set rm [$ri getMaster]
+          $ri setLocation [expr {min(max(round($cx + ($px - $cx) * double($j) / ($k + 1)), [$ca xMin]), [$ca xMax] - [$rm getWidth])}] \
+                          [expr {min(max(round($cy + ($py - $cy) * double($j) / ($k + 1)), [$ca yMin]), [$ca yMax] - [$rm getHeight])}]
+          $ri setPlacementStatus PLACED
+        }
+        incr respaced
+      }
     }
     puts [format "OT_FWD_LEAF %s %s <- %s (src %s): %d of %d launch flop(s) on it, %d on other leaves of the tap, %d off the tap, buffer %.1f um from them, %d pad cell(s)" \
       $tag $port [$best getName] $src $bc $tot [expr {$tot - $xtap - $bc}] $xtap [expr {double($d) / $dbu}] $npad]
   }
   close $h
-  puts "OT_FWD_LEAF $tag: $n export(s) hung on their launch leaf, $same already there, $moved moved next to their flops, [llength $bad] failed"
+  puts "OT_FWD_LEAF $tag: $n export(s) hung on their launch leaf, $same already there, $moved moved next to their flops ($respaced repeater chain(s) re-spaced), [llength $bad] failed"
   if {[llength $bad]} {
     set fh [open /work/FAIL_POSTCTS a]
     foreach b $bad { puts $fh "FAIL_POSTCTS forwarded clock leaf export $b" }
