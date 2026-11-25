@@ -709,3 +709,4 @@
   - dpkit-kv3_hg_v1p6-706840 epyc10 (client intel2 2900007)
   - dpkit-kv3_hg_v1p5-2367108 epyc11 and dpkit-kv3_hg_v1p5-2606530 epyc2 (one kit; client epyc11 2364727)
   Exempt and untouched: KV-OWN-HG-R2 fence-span and v1p5 depth probes (qwen_kvsys_kv3_hg_v1p5_1124201339). Hold: 11 kv3_hg items (kv3_hg, v1, v1 r889/r88f4/r8dff, v1p2, v1p3, v1p3 r81da/r838, v1p5, v3) added to hold_items, owner KV-OWN-HG-R2, until A5t8 brings HEAD-WGATE (kit_wave 89011fd3). Live hg kits keep running.
+- 2026-11-25 01:08 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-2512869-1795597289 on tolerant-swine: rc=0 after 403 s, ended 01:08:07, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pc_v1__cl7f648944__r8e7d31598_1125004936/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-ALLFIX/kv3_
