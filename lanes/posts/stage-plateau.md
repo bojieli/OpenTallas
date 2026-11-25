@@ -155,3 +155,4 @@
   P9 A/B lever is a no-op. SEE: env_provenance_check.log: 'A/B key read by nothing in the source tree and not in config.mk (no effect?): OT_TAP_ESCAPE_CLEAR_UM'. So this kit is functionally a duplicate of the plain wave kit. CAUSE: key not wired in tree 1145a6e17e79. FIX: wire the key or drop the A/B kit.
   P10 GRT (from SMELL.txt): overflow M4 3, M6 22, M8 4 - small, horizontal layers only, consistent with the W-E streets of P1; location not rendered, so not confirmed.
   P11 could not determine: floorplan.png diamond of coloured squares at x225-270,y690-755 on the clock row (no legend); paths.png has 0 paths drawn although hold fails after CTS - the PLACE-GP render carries no timing overlay.
+- 2026-11-25 05:12 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-3735567 on open-snipe: rc=0 after 30 s, ended 13:12:56, log none, cmd: ot-push-main 
