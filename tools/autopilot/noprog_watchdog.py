@@ -2291,12 +2291,38 @@ def vis_running(state_dir, now):
         return now - float(m.get("t", 0)) < 600
 
 
-def vis_pass(rows, state, state_dir, now, render=smell_render):
+PP_DRIVER_ROOTS = (os.path.dirname(os.path.abspath(__file__)), "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot")
+
+
+def pp_launch(item, state_dir, now, popen=subprocess.Popen, roots=None):
+    """HOST: run the post-placement review kit (post_place_review.py: ideal-clock top-50 paths, density, RUDY, flight lines, macro/PG overlay -> <kit>/review/) for one queued item,
+    nice 10, only while no other render of this host runs.  -> 'launched' | 'no-driver' | 'failed: ...'"""
+    drv = next((os.path.join(r, "post_place_review.py") for r in (roots or PP_DRIVER_ROOTS) if os.path.isfile(os.path.join(r, "post_place_review.py"))), None)
+    if not drv:
+        return "no-driver"
+    argv = ["nice", "-n", "10", "python3", "-I", drv, "--kit", item["kit"], "--odb", item["odb"], "--image", item.get("image", ""), "--id", item.get("id", "x")]
+    try:
+        pr = popen(argv, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, stdin=subprocess.DEVNULL)
+    except OSError as e:
+        return f"failed: {e}"
+    os.makedirs(state_dir, exist_ok=True)
+    save_json(os.path.join(state_dir, "vis_running.json"), {"pid": getattr(pr, "pid", 0), "t": now, "dir": os.path.join(item["kit"], "review")})
+    return "launched"
+
+
+def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
     """HOST: launch at most ONE checkpoint render (nice 10) this pass, when none is running.  Marks row['vis'] = {checkpoint, status, dir} for the hub's lanes/VIS-QUEUE.tsv."""
     done = state.setdefault("vis_done", {})
     vis_retry(state, now)
     if os.environ.get("NOPROG_VIS_MODE") == "off" or vis_running(state_dir, now):
         return None
+    todo = state.setdefault("pp_todo", [])
+    if todo:
+        item = todo.pop(0)
+        res = (pp or pp_launch)(item, state_dir, now)
+        state.setdefault("pp_done", {})[item["key"]] = {"t": now, "res": res}
+        if res == "launched":
+            return None
     for r in rows:
         if smell_exempt(r) or not r.get("work") or ECO_RE.search(str(r.get("work"))) or ECO_RE.search(str(r.get("container"))) or re.search(r"/eco_\d", str(r.get("work"))):
             continue            # an ECO loop re-runs a kit that was already rendered at its checkpoints (dry run 04:09: eco_2026... containers filled the first queue)
@@ -2314,6 +2340,8 @@ def vis_pass(rows, state, state_dir, now, render=smell_render):
                 save_json(os.path.join(state_dir, "vis_running.json"), {"pid": box.get("pid", 0), "t": now, "dir": rev})
                 r["vis"] = {"checkpoint": cp, "status": status, "dir": rev, "odb": odb}
                 state.setdefault("vis_pending", {})[key] = {"dir": rev, "tries": state.get("vis_pending", {}).get(key, {}).get("tries", 1), "t": now}
+                if cp == "PLACE-GP" and key not in state.setdefault("pp_done", {}) and not any(x["key"] == key for x in todo):
+                    todo.append({"key": key, "kit": r["work"], "odb": odb, "image": r.get("image", ""), "id": (r.get("container") or "x")[:40]})
                 return r
     return None
 

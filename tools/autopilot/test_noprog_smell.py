@@ -138,7 +138,7 @@ def test_checkpoint_renders_once_per_db_one_job_per_host(tmp_path):
     r = nw.vis_pass(rows, st, sd, NOW, render=render)
     assert r is rows[0] and r["vis"]["checkpoint"] == "PLACE-GP" and calls[0][0] == "place-gp" and calls[0][2] is True and calls[0][3] == "vis_review"
     assert nw.vis_pass(rows, st, sd, NOW + 60, render=render) is None                  # a job launched < 10 min ago blocks the next (one per host)
-    r2 = nw.vis_pass(rows, st, sd, NOW + 700, render=render)
+    r2 = nw.vis_pass(rows, st, sd, NOW + 700, render=render, pp=lambda *a, **k: 'no-driver')
     assert r2["vis"]["checkpoint"] == "GRT" and len(calls) == 2
     assert nw.vis_pass(rows, st, sd, NOW + 1500, render=render) is None and len(calls) == 2    # both DBs are done
     assert nw.vis_pass([dict(rows[0], prio="plan")], {}, str(tmp_path / "st2"), NOW, render=render) is None
@@ -192,3 +192,23 @@ def test_vis_waits_for_the_db_to_settle(tmp_path):
     for f in (tmp_path / "kit/run/results/asap7/d/base").iterdir():
         os.utime(f, (1_000_000, 1_000_000))
     assert len(nw.vis_candidates(work, {})) == 2
+
+
+def test_place_checkpoint_queues_the_post_place_review_and_runs_it_when_the_host_is_free(tmp_path):
+    work = mkkit(tmp_path, names=("3_3_place_gp.odb",))
+    rows = [{"work": work, "kit": work, "container": "c1", "verdict": "PROGRESS", "kind": "gpl", "image": "img", "ident": "c1 " + work}]
+    st, sd = {}, str(tmp_path / "st")
+    rev = tmp_path / "rev"
+    rev.mkdir()
+    (rev / "render.log").write_text("AP_REVIEW_PNG /rev/density.png\n")
+    render = lambda *a, **k: ("rendering", str(rev))
+    assert nw.vis_pass(rows, st, sd, NOW, render=render) is rows[0]
+    assert len(st["pp_todo"]) == 1 and st["pp_todo"][0]["odb"].endswith("3_3_place_gp.odb")
+    root = tmp_path / "drv"
+    root.mkdir()
+    (root / "post_place_review.py").write_text("")
+    calls = []
+    item = st["pp_todo"][0]
+    assert nw.pp_launch(item, sd, NOW + 700, popen=lambda argv, **k: calls.append(argv) or type("P", (), {"pid": 0})(), roots=[str(root)]) == "launched"
+    assert calls[0][:3] == ["nice", "-n", "10"] and "--kit" in calls[0] and item["odb"] in calls[0]
+    assert nw.pp_launch(item, sd, NOW, roots=[str(tmp_path / "none")]) == "no-driver"
