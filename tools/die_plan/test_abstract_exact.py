@@ -144,3 +144,16 @@ def test_merged_gds_gate_required_only_for_exact_views(tmp_path):
     assert MG.gate_check(kit)["verdict"] == "NOT RUN"
     kp = MG.kit_plan(kit)
     assert kp["required"] and kp["allow_empty"] == "core"             # no core.gds beside the view yet
+
+
+def test_signoff_merged_gds_guard_blocks_under_every_profile():
+    import signoff
+    rec = {"verdict": "SIGNED", "reasons": [], "local_verdict": "SIGNED",
+           "checks": {"merged_gds_drc": {"verdict": "NOT RUN"}}}
+    signoff.merged_gds_guard(rec)
+    assert rec["verdict"] == "NOT SIGNED" and rec["local_verdict"] == "NOT SIGNED"
+    assert rec["reasons"][-1].startswith("merged_gds_drc: NOT RUN")
+    ok = {"verdict": "SIGNED", "reasons": [], "checks": {"merged_gds_drc": {"verdict": "PASS"}}}
+    assert signoff.merged_gds_guard(ok)["verdict"] == "SIGNED"
+    none = {"verdict": "SIGNED", "reasons": [], "checks": {}}
+    assert signoff.merged_gds_guard(none)["verdict"] == "SIGNED"

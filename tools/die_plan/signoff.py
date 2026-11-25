@@ -2922,6 +2922,23 @@ def evaluate(rec, insertion_target=None):
     # The full legacy verdict/reasons stay in the record as legacy_verdict / legacy_reasons.
     _SP.apply(rec)
     probe_guard(rec)
+    merged_gds_guard(rec)
+    return rec
+
+
+def merged_gds_guard(rec):
+    """MERGED-GDS-DRC 11-25 (COORD; Fable 03:35 item 34): the merged-GDS DRC is the DRC of a kit that binds an exact-abstract
+    view (route DRC only saw the abstracts), so it blocks under every profile -- R-MINIMAL's DRC 0 gate included.  Applied after
+    the profile hook like probe_guard; kits without such a view carry no merged_gds_drc check and are unchanged."""
+    c = (rec.get("checks") or {}).get("merged_gds_drc")
+    if not c or c.get("verdict") == "PASS":
+        return rec
+    why = f"merged_gds_drc: {c.get('verdict')} (exact-abstract view bound; real-GDS DRC of the routed block)"
+    rec["reasons"] = [r for r in (rec.get("reasons") or []) if not str(r).startswith("merged_gds_drc:")] + [why]
+    rec["verdict"] = "NOT SIGNED"
+    for k in ("local_verdict", "release_qualified"):
+        if k in rec:
+            rec[k] = "NOT SIGNED" if k == "local_verdict" else False
     return rec
 
 
