@@ -60,5 +60,38 @@ All 11 finished main route at DRC 0 (5_2_route.log final 0). 6_finish worst setu
 oth-ubuntu-3135343-1794696222, oth-ubuntu-3142624-1794696238, oth-ubuntu-2063722-1794715554: s29q103S2 sle_hc2 attempt_8.
 Each has been in the lec_async `sleep 5` loop since 11-14/15, with its route log untouched for 10 days. They use almost no CPU or RAM. Owner: COORD/KV? (QC wave). Not a route kit.
 
+## REVISION 05:4x (QC-ALLFIX rulings + full SMELL coverage)
+The rows below cover all 48 QC DRT SMELL rows in lanes/SMELL.tsv, which reduce to 21 distinct kits. The census covered every live QC unit, 114 in all; that includes every old-block route kit over 12 h.
+Columns: it0 | last completed iteration | fall over iterations 3-6 | GRT setup after repair | verdict.
+| kit | host/unit | it0 | last | fall 3-6 | setup | verdict |
+|---|---|---|---|---|---|---|
+
+| private sle_fe_v2_1124081835 | epyc9 oth-ubuntu-819767-1795547628 | 474459 | it10 36163 | 22% | -33.6 | CANCEL after BIND-PASS |
+| items/slw_fw_v2__cl8f84514c | intel1 oth-ubuntu-1377941-1795524507 | 398476 | it7 8323 | 46% | +85.8 | CANCEL after BIND-PASS, once QC-FWV2-BAY OKs it or 30 min pass |
+| items/sle_fw_v2__cl6740750e | epyc10 oth-ubuntu-2179782-1795542318 | 416066 | it2 121450 (it3 ~94k at 60%) | not reached | +69.5 | KEEP (ruling), handed to QC-FWV2-BAY (<5% next drop rule) |
+| items/slw_fe_v2__cle312294d | intel2 oth-ubuntu-528313-1795541716 | 367946 | it15 995 | 51% | -48.8 | KEEP, still falling ~31%/iter (1440->995) |
+| private slw_fe_v2__cle312294d_1124082715 | epyc10 oth-ubuntu-3748913-1795546209 | 378938 | it1 109612 | not reached | +101.9 | KEEP, unmeasured |
+| private sle_su_l0__cl086d85ba_1124115227 | intel1 oth-ubuntu-4033076-1795553498 | 187976 | it39 1 | 58% | +149.0 | KEEP, near zero |
+| private sle_sc_v2_1124052934 | - | 412199 | - | 9% (SMELL) | - | N/A, not live |
+| items/sle_fe_v1__cl8210183c | intel1 oth-ubuntu-1318463-1795524322 | 317907 | it2 55124 | not reached | +120.2 | QC-DUP-KITS |
+| private sle_fe_v1__cl8210183c_1124052744 | epyc8 oth-ubuntu-4099462-1795536522 | 320246 | it8 8478 | 41% | +164.3 | QC-DUP-KITS |
+| private sle_fe_v1__cl1cbb7497_1124052207 | epyc11 oth-ubuntu-59304-1795541430 | 329677 | it18 90 | 50% | +139.4 | QC-DUP-KITS (falling, near zero) |
+| items/sle_sc_v1__cl115da35f | epyc2 oth-ubuntu-3997324-1795524415 | 521993 | it17 33693 | 33% | +104.7 | QC-DUP-KITS |
+| items/sle_sc_v1__cl7479a5ec | epyc7 oth-ubuntu-1934637-1795524432 | 510309 | it10 15333 | 29% | +108.5 | QC-DUP-KITS |
+| private sle_sc_v1__cl7479a5ec_1124053232 | epyc8 oth-ubuntu-46526-1795536673 | 478667 | it8 24770 | 24% | +95.6 | QC-DUP-KITS |
+| private QC-OPEN-SU sle_sc_v1__cl115da35f_1123214858 | epyc7 oth-ubuntu-2782498-1795505868 | 490378 | it18 5839 | 44% | +107.9 | QC-DUP-KITS |
+| private QC-OPEN-SU sle_sc_v1__cl115da35f_1124012159 | epyc7 oth-ubuntu-4029420-1795519597 | 504597 | it13 5691 | 38% | +109.0 | QC-DUP-KITS |
+| items/slw_sc_v1__cl64543eaf__cl4590432d | epyc7 oth-ubuntu-2030663-1795524619 | 457993 | it12 7139 | 40% | +73.2 | QC-DUP-KITS |
+| private slw_sc_v1__cl64543eaf__cl4590432d_1124054102 | epyc8 oth-ubuntu-4162619-1795536591 | 450083 | it8 14524 | 34% | +112.0 | QC-DUP-KITS |
+| private slw_fe_v1__cl95cd1d0c_1124052635 | epyc8 oth-ubuntu-4037539-1795536466 | 266434 | it6 5291 | 55% | +150.7 | QC-DUP-KITS |
+| private slw_fe_v1__clfe325744__cl08d14f0d_1124082533 | epyc9 oth-ubuntu-626515-1795547086 | 274895 | it47 4 | 50% | +21.9 | QC-DUP-KITS (near zero) |
+| private slw_fe_v1__clfe325744__cldb4efe33_1124082623 | epyc10 oth-ubuntu-3727046-1795546147 | 272423 | it13 1960 | 41% | +158.6 | QC-DUP-KITS |
+| private slw_su_l1__clcc9d0155_1124052823 | epyc8 oth-ubuntu-3976397-1795536410 | 274214 | it17 40739 | 29% | +18.9 | QC-DUP-KITS |
+Check 2:
+- Neither CANCEL type is in a QC-DUP-KITS set.
+- sle_fe_v2 and slw_fw_v2 are in neither the C1o launch list nor c1o_full_route nor probe_from_held (QC-C1O-COMPOSE-launch-list.json); both are HELD for C1p rows (FEFW-FAM / FWV2).
+- So neither cancel removes the only live kit of a C1o launch type.
+S2 epyc8 LEC-async units: now owned by this lane (ruling 4); investigation in progress.
+
 ## Log
 - 05:2x census + classification. Waiter armed for "BIND-PASS C1o v13 aa3a14fb7484" in lanes/posts/QC-C1O-COMPOSE.md.
