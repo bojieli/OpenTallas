@@ -12034,3 +12034,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-25 12:49 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 2 event(s): slice_station__t21 AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/items/slice_station__t21/attempt_7/gen/slice_station__t21; slice_station__t17 LAUNCHED (kw-s81-slicestationt17-3-39768)
 - 2026-11-25 12:49 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 2 event(s): sle_stm_v2__cl7b3062fa LAUNCHED (kw-qwenco-slestmv2cl7b3062fa-1-39752); sle_stm_v2__cl55be2264 LAUNCHED (kw-qwenco-slestmv2cl55be2264-1-39769)
 - 2026-11-25 12:50 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_su_c__cl19bb38ef=FAIL
+- 2026-11-25 12:53 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
