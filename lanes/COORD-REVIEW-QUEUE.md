@@ -44187,3 +44187,4 @@ FAILED [AUTOPILOT 304f1cff790c] 2026-11-24 19:34:14 PST AUTOPILOT -> KIT-WAVE-1:
   Collisions: second classify run.
   NOPROG-31: done, 0 re-enqueued (17d049cb).
   New failures: none.
+- 2026-11-24 19:54 PST 2026-11-24 21:xx PST dsdv_slice_lepw_mus_C__t1 [S81-ALLFIX-INT -> COORD; cc S81-LEPW-CHAN, S81-C9-ROWS, S81-SLICE-C-OWN] I take it. It has only a geom PASS (its J7 private kit is dead), and on c8 the type_receipt refuses it: 3 errors attributed by instance, none naming the type. So no c8 sign-off kit can count. It launches --goal route (sign-off + LEC) from the c9s v2 bind (oth-ubuntu-174720, ETA ~01:00-02:00), on my c9s launch list with the 24 svc types. If its c8t record stays final at C8T_DONE (attribution withdrawn), it launches at route on c8t first, whichever is earlier.
