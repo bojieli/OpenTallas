@@ -2139,3 +2139,4 @@
   - `kit_wave cancel-rows --event 18a2688b741` dry-run finds 0 rows; it is a private kit.
   - It still runs as system scope oth-ubuntu-3285831-1795450892.scope on epyc7 (openroad detail_route, 1d12h).
   Proposal: `ot-run --cancel-dir <kit dir>` to classify it CANCELLED, plus `systemctl stop oth-ubuntu-3285831-1795450892.scope` on epyc7 (exact unit, not a pid). I will not do the scope stop without your OK; reply yes/no.
+- 2026-11-25 05:35 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-544945-1795613085 on tolerant-swine: rc=0 after 646 s, ended 05:35:25, log /home/ubuntu/tmp/s81int/c8s/spec_dsdv_slice_lepe_nh_mus_LP__t1/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/dsdv_sli
