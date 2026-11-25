@@ -7714,6 +7714,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                     if f"/work/macros/{f.name}" not in lst:
                         shutil.copyfile(f, kd / "macros" / f.name)
                         lst.append(f"/work/macros/{f.name}")
+                        # MERGED-GDS-DRC 11-25: a view published with its real core GDS (<core>.gds beside the LEF) brings
+                        # it along, so the kit's merged-GDS DRC can check the routed parent against the real core metal
+                        if lst is mlef and f.with_suffix(".gds").is_file():
+                            shutil.copyfile(f.with_suffix(".gds"), kd / "macros" / f.with_suffix(".gds").name)
                     if lst is mlib:
                         # Keep per-corner timing views beside the declared TT view.
                         # signoff.py selects TT/FF by filename; ORFS still uses only
@@ -8907,6 +8911,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     write_cap_budget(P, tn, kd)
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
+    # ABSTRACT-EXACT 11-25 (COORD): do-generate_abstract writes write_abstract_lef -bloat_occupied_layers (one OBS rect per
+    # layer, M4/M5 94-100 % blocked over 2-40 % real metal); the post-abstract step re-forms the blanket routing layers M4-M6
+    # from the exact export of the same 6_final.odb (abstract_exact.py form: grown by >= min spacing, merged, pin zones open).
+    # MERGED-GDS-DRC 11-25: the post-route gate signoff.py requires for kits that bind an exact-abstract view
+    for _ae in ("abstract_exact.py", "abstract_detail.py", "kvpc_exact_m45.py", "merged_gds_drc.py", "merged_gds_drc_pya.py"):
+        shutil.copyfile(Path(__file__).with_name(_ae), kd / _ae)
     shutil.copyfile(Path(__file__).with_name("native_pin_contract.py"), kd / "native_pin_contract.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
@@ -9932,6 +9942,14 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then if grep -q '^export BC_LIB_FILES' /work/config.mk; then \$M do-generate_abstract \"CORNERS=tc bc\"; else \$M do-generate_abstract; fi; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/m8_grant.json ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then for L in /work/run/results/asap7/*/base/*.lef; do [ -f \"\$L\" ] && python3 -I /work/m8_grant.py fixlef --grant /work/m8_grant.json \"\$L\"; done; fi; \
+  if [ \$rc = 0 ] && [ -f /work/abstract_exact.py ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then O6=\$(ls /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
+    for L in /work/run/results/asap7/*/base/*.lef; do [ -f \"\$L\" ] && [ -n \"\$O6\" ] || continue; \
+      printf 'read_db %s\\nwrite_abstract_lef -bloat_factor 0 %s\\n' \"\$O6\" /work/abstract_exact_b0.lef > /work/abstract_exact.tcl; \
+      if openroad -no_init -exit /work/abstract_exact.tcl > /work/abstract_exact.log 2>&1 && cp \"\$L\" \"\$L.blanket\"; then \
+        python3 -I /work/abstract_exact.py form --base \"\$L.blanket\" --detail /work/abstract_exact_b0.lef --out \"\$L\" --receipt /work/abstract_exact_receipt.json >> /work/abstract_exact.log 2>&1; ar=\$?; \
+        [ \$ar = 2 ] && cp \"\$L.blanket\" \"\$L\"; echo \"ABSTRACT_EXACT rc \$ar \$L\" | tee -a /work/abstract_exact.log; rm -f /work/abstract_exact_b0.lef; \
+      else echo \"ABSTRACT_EXACT export failed \$L (blanket view kept)\" | tee -a /work/abstract_exact.log; fi; done; fi; \
+  if [ \$rc = 0 ] && [ -f /work/merged_gds_drc.py ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then python3 -I /work/merged_gds_drc.py kit --kit /work --local > /work/merged_gds_drc.log 2>&1; echo \"MERGED_GDS_DRC rc \$? (/work/merged_gds_drc/verdict.json; signoff.py gates it when an exact-abstract view is bound)\" | tee -a /work/merged_gds_drc.log; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
   if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1

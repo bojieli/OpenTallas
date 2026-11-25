@@ -2833,6 +2833,19 @@ def evaluate(rec, insertion_target=None):
         count=rc.get("drc"), source=rc.get("drc_source"))
     put("antenna", "NOT RUN" if rc.get("antenna_nets") is None else ("PASS" if rc["antenna_nets"] == 0 else "FAIL"),
         count=rc.get("antenna_nets"), source=rc.get("antenna_source"))
+    # MERGED-GDS-DRC 11-25 (ABSTRACT-EXACT; COORD / Fable 03:35 items 23, 34): route DRC above is checked against the hard-core
+    # ABSTRACTS.  A kit that binds an exact-abstract view (abstract_exact / kvpc_exact_m45 splice: the parent may route over the
+    # core on M4-M6) must also pass the merged-GDS DRC (real core GDS merged into the routed parent, KLayout ASAP7 deck, NEW
+    # markers at hard cores = FAIL); a missing verdict is NOT RUN, which blocks.  Kits without such a view are unchanged.
+    try:
+        import merged_gds_drc as _MGD
+        _mg = _MGD.gate_check((rec.get("inputs") or {}).get("kit"))
+    except Exception as _e:  # noqa: BLE001 - fail closed only where the kit binds views at all
+        _k = (rec.get("inputs") or {}).get("kit")
+        _mg = (dict(verdict="NOT RUN", reason=f"merged-GDS DRC gate not evaluated: {type(_e).__name__}: {str(_e)[:160]}")
+               if _k and any(Path(_k, "macros").glob("*.lef")) else None)
+    if _mg is not None:
+        put("merged_gds_drc", _mg["verdict"], **{k: v for k, v in _mg.items() if k != "verdict"})
     # FLOW 10-26 PG: supply binding of the signed ODB (census in every corner session; NOT RUN blocks too)
     pgc = {c: C[c] for c in ("tt", "ff") if ok_corner(c)}
     if not pgc or any(x.get("pg_open") is None or not x.get("pg_terms") for x in pgc.values()):
@@ -2882,6 +2895,7 @@ def evaluate(rec, insertion_target=None):
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
             (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
             (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()) + \
+            (("merged_gds_drc",) if "merged_gds_drc" in ch else ()) + \
             (("latch_swap",) if ch.get("latch_swap", {}).get("verdict") in ("PASS", "FAIL") else ()):
         v = ch[k]["verdict"]
         if v != "PASS":

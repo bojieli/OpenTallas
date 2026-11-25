@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""ABSTRACT-EXACT (11-25, COORD; generalises KV-PC-ABSTRACT kvpc_exact_m45 to every die): routing-layer OBS of a hard-core
+view from the REAL metal of its signed routed DB instead of one blanket rect per layer.
+
+Cause (census lanes/ABSTRACT-CENSUS.tsv, 190 of 282 hard-core views on S81/HEAD/QC/KV): ORFS do-generate_abstract
+(scripts/generate_abstract.tcl: write_abstract_lef -bloat_occupied_layers) writes ONE OBS rect per occupied layer, so M4/M5
+read 94-100 % blocked while the real metal there is 2-40 % (median M4 10-14 %, M5 22 %).  The parent router then has no
+M4/M5 over any hard core and detours around it (GRT overflow in the kits that hold them).
+
+Form (COORD guardrails 11-25): only routing layers M4-M6 whose OBS is BLANKET (>= 80 % of the macro) while the real metal
+is < 40 % are replaced; M1-M3 stay blanket.  The replacement is the -bloat_factor 0 export of the SAME signed ODB, every
+shape GROWN by max(min spacing, merge gap / 2) per side (gaps < 2 x track pitch close, so no unusable slivers) and clipped
+to the macro outline, the union merged, and the zone within --pin-clear-um of every signal pin on that layer cut back so
+pin access stays open.  PG pins stay PIN; PG strap metal is metal, so it stays OBS (grown).  PINs, SIZE, FOREIGN and every
+other layer are byte-identical (abstract_detail check).
+
+  python3 -I abstract_exact.py form --base signed.lef --detail exact_b0.lef --out new.lef [--receipt r.json] [--layers auto|M4,M5]
+  python3 -I abstract_exact.py census --lef view.lef [--detail exact_b0.lef]      per-layer OBS % (and metal % with --detail)
+  python3 -I abstract_exact.py tcl --odb 6_final.odb --out exact_b0.lef           OpenROAD Tcl of the exact export
+PRECHECK: plan_gate_pre ABSTRACT-BLANKET-OBS (report-only WARN) calls findings(plan, tree) for every bound hard-core view.
+"""
+import argparse
+import contextlib
+import io
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import abstract_detail as A  # noqa: E402
+import kvpc_exact_m45 as K  # noqa: E402
+
+ROUTING = ("M4", "M5", "M6")        # layers this form may replace (M1-M3 stay blanket, COORD guardrail 1)
+# ASAP7 (asap7_tech_1x_201209.lef): track pitch / min spacing per routing layer, um
+PITCH = {"M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064}
+MIN_SPACE = {"M4": 0.024, "M5": 0.024, "M6": 0.032, "M7": 0.032}
+BLANKET_OBS_PCT = 80.0
+SPARSE_METAL_PCT = 40.0
+EXPECTED_PROBLEM = K.EXPECTED_PROBLEM
+_RECT = re.compile(r"^\s*RECT\s+(?:MASK\s+\d+\s+)?(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;")
+
+
+def _nm(v):
+    return int(round(float(v) * 1000))
+
+
+def layer_rects(path, want_pins=True):
+    """-> (W, H, {layer: [obs rect nm]}, {layer: [pin rect nm]} (all pins, PG included)); streams big files"""
+    W = H = None
+    obs, pins, in_obs, in_pin, lay = {}, {}, False, False, None
+    with open(path) as fh:
+        for ln in fh:
+            s = ln.strip()
+            if W is None:
+                m = re.match(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", s)
+                if m:
+                    W, H = float(m.group(1)), float(m.group(2))
+            if s == "OBS":
+                in_obs, in_pin, lay = True, False, None
+                continue
+            if s.startswith("PIN "):
+                in_pin, lay = True, None
+                continue
+            if in_obs and s == "END":
+                in_obs = False
+                continue
+            m = re.match(r"LAYER\s+(\S+)", s)
+            if m:
+                lay = m.group(1)
+                continue
+            m = _RECT.match(ln)
+            if m and lay:
+                r = tuple(_nm(v) for v in m.groups())
+                if in_obs:
+                    obs.setdefault(lay, []).append(r)
+                elif in_pin and want_pins:
+                    pins.setdefault(lay, []).append(r)
+    return W, H, obs, pins
+
+
+def union_area_um2(rects):
+    return K._area(K.union_minus(rects, []))
+
+
+def coverage(path, layers=ROUTING, with_pins=False):
+    """{layer: (pct of macro area, rect count)} of OBS (plus pins when with_pins: the real-metal figure of an exact export)"""
+    W, H, obs, pins = layer_rects(path, want_pins=with_pins)
+    out = {}
+    for L in layers:
+        rs = obs.get(L, []) + (pins.get(L, []) if with_pins else [])
+        out[L] = (round(100.0 * union_area_um2(rs) / (W * H), 2) if rs else 0.0, len(obs.get(L, [])))
+    return out
+
+
+def blanket_layers(base, detail=None, layers=ROUTING):
+    """layers of `base` whose OBS covers >= BLANKET_OBS_PCT of the macro; with an exact `detail`, only those whose real metal
+    is < SPARSE_METAL_PCT (the census rule).  -> {layer: {obs_pct, rects, metal_pct}}"""
+    cov = coverage(base, layers)
+    met = coverage(detail, layers, with_pins=True) if detail else {}
+    out = {}
+    for L in layers:
+        o, n = cov[L]
+        if o < BLANKET_OBS_PCT:
+            continue
+        m = met.get(L, (None,))[0]
+        if m is not None and m >= SPARSE_METAL_PCT:
+            continue
+        out[L] = dict(obs_pct=o, rects=n, metal_pct=m)
+    return out
+
+
+MIN_WIDTH = {"M4": 0.024, "M5": 0.024, "M6": 0.032, "M7": 0.032}
+
+
+def regrow(lef_in, lef_out, layers):
+    """v3 (Fable 11-25, = KV-PC-ABSTRACT v3): grow each OBS rect of `layers` by max(min spacing, pitch) (= merge gap 2 x pitch / 2),
+    clip to the outline, merge, cut ONLY each signal pin's own shape (foreign metal and its spacing stay OBS), regrow slivers
+    below the layer min width in place (never over a pin, never outside the macro) -> lef_out; -> per-layer stats"""
+    text = Path(lef_in).read_text()
+    lines, obs_start, obs, sig_pins, (W, H) = K._parse(text)
+    Wn, Hn = _nm(W), _nm(H)
+    keep, lay, end = lines[:obs_start + 1], None, None
+    for j in range(obs_start + 1, len(lines)):
+        s = lines[j].strip()
+        m = re.match(r"LAYER\s+(\w+)", s)
+        if m:
+            lay = m.group(1)
+        if s == "END" and lines[j].startswith("  END"):
+            end = j
+            break
+        if lay in layers:
+            continue
+        keep.append(lines[j])
+    blocks, stats = [], {}
+    for L in layers:
+        g = _nm(max(MIN_SPACE.get(L, 0.024), PITCH.get(L, 0.048)))
+        old = obs.get(L, [])
+        grown = [(max(0, r[0] - g), max(0, r[1] - g), min(Wn, r[2] + g), min(Hn, r[3] + g)) for r in old]
+        clear = list(sig_pins.get(L, []))
+        res, sl = K.fix_slivers(K.union_minus(grown, clear), clear, _nm(MIN_WIDTH.get(L, 0.024)), (0, 0, Wn, Hn))
+        res = sorted(res)
+        if res:
+            blocks.append(f"    LAYER {L} ;")
+            blocks += [f"     RECT  {a / 1000:.3f} {b / 1000:.3f} {c / 1000:.3f} {d / 1000:.3f} ;" for a, b, c, d in res]
+        stats[L] = dict(grow_um=g / 1000, exact_rects=len(old), rects=len(res),
+                        exact_area_pct=round(100 * K._area(K.union_minus(old, [])) / (W * H), 2),
+                        blocked_pct=round(100 * K._area(K.union_minus(res, [])) / (W * H), 2), **sl)
+    Path(lef_out).write_text("\n".join(keep + blocks + lines[end:]))
+    return stats
+
+
+def form(base, detail, out, receipt=None, layers="auto"):
+    """splice exact OBS of the blanket routing layers, regrow, check -> rc (0 ok, 1 nothing to do, 2 refused)"""
+    base, detail, out = Path(base), Path(detail), Path(out)
+    if layers == "auto":
+        bl = blanket_layers(base, detail)
+        sel = [L for L in ROUTING if L in bl]
+    else:
+        bl = {}
+        sel = [L for L in layers.split(",") if L]
+    rec = dict(schema="opentallas.abstract_exact.v3", base=str(base), base_sha256=A._sha(str(base)), detail=str(detail),
+               detail_sha256=A._sha(str(detail)), layers=sel, blanket=bl, obs_before=coverage(base, ROUTING))
+    if not sel:
+        rec["verdict"] = "NOTHING-TO-DO"
+        if receipt:
+            Path(receipt).write_text(json.dumps(rec, indent=1))
+        return 1
+    tmp = out.with_name(out.name + ".exact.tmp")
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = A.main(["splice", "--base", str(base), "--detail", str(detail), "--layers", ",".join(sel), "--bloat-factor", "0",
+                     "--out", str(tmp)])
+    sp = json.loads(buf.getvalue() or "{}")
+    problems = [p for p in sp.get("problems", []) if p != EXPECTED_PROBLEM]
+    rec["splice"] = {k: sp.get(k) for k in ("rects", "pin_clear", "pg_pin_layers", "problems")}
+    if rc not in (0, 1) or problems:
+        rec["verdict"] = "REFUSED"
+        rec["problems"] = problems or ["splice rc %s" % rc]
+        if tmp.exists():
+            tmp.unlink()
+        if receipt:
+            Path(receipt).write_text(json.dumps(rec, indent=1))
+        return 2
+    rec["regrow"] = regrow(tmp, out, sel)
+    tmp.unlink()
+    with contextlib.redirect_stdout(io.StringIO()):
+        crc = A.main(["check", "--base", str(base), "--new", str(out), "--layers", ",".join(sel)])
+    acc = A.access_report(Path(out).read_text().split("\n"))
+    rec.update(check_ok=crc == 0, obs_after=coverage(out, ROUTING), lef_bytes_before=base.stat().st_size,
+               lef_bytes_after=out.stat().st_size, obs_rects_before=sum(1 for ln in open(base) if _RECT.match(ln)),
+               obs_rects_after=sum(1 for ln in open(out) if _RECT.match(ln)),
+               pins_without_access=sorted(p for p, e in acc["pins"].items() if not e["ok"]),
+               out_sha256=A._sha(str(out)), verdict="OK" if crc == 0 else "CHECK-FAIL")
+    if receipt:
+        Path(receipt).write_text(json.dumps(rec, indent=1))
+    return 0 if crc == 0 else 2
+
+
+# --------------------------------------------------------------------------- PRECHECK ABSTRACT-BLANKET-OBS (report-only)
+LEVEL = "WARN"          # r703: a new check is report-only until COORD rules otherwise
+
+
+def _hard_core_lefs(raw):
+    seen = {}
+
+    def walk(o, t):
+        if isinstance(o, dict):
+            lef = o.get("lef")
+            if isinstance(lef, str) and lef.endswith(".lef"):
+                seen.setdefault(lef, set()).add(t)
+            for k, v in o.items():
+                if k != "lef":
+                    walk(v, t)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v, t)
+    for t, d in (raw.get("partition_types") or {}).items():
+        walk((d or {}).get("hard_cores"), t)
+    return seen
+
+
+def findings(raw, tree, max_list=40):
+    """one WARN line per bound hard-core view whose M4-M6 OBS is BLANKET (>= 80 % with <= 4 rects: the
+    -bloat_occupied_layers signature), plus one LIST line.  Generated memory macros are skipped.  Never a FAIL."""
+    die = raw.get("die", "?")
+    out, n, flagged = [], 0, 0
+    for lef, types in sorted(_hard_core_lefs(raw).items()):
+        if "asap7_memory_macros" in lef or os.path.basename(lef).endswith("_phy.lef"):
+            continue
+        p = lef if os.path.isabs(lef) else os.path.join(tree or ".", lef)
+        if not os.path.isfile(p):
+            continue
+        n += 1
+        try:
+            cov = coverage(p)
+        except Exception as e:  # noqa: BLE001
+            out.append(f"{LEVEL} ABSTRACT-BLANKET-OBS {die}/{os.path.basename(lef)}: not read ({type(e).__name__})")
+            continue
+        bl = {L: c for L, c in cov.items() if c[0] >= BLANKET_OBS_PCT and c[1] <= 4}
+        if not bl:
+            continue
+        flagged += 1
+        if flagged <= max_list:
+            ly = ", ".join(f"{L} {c[0]:.0f}%/{c[1]} rect" for L, c in sorted(bl.items()))
+            out.append(f"{LEVEL} ABSTRACT-BLANKET-OBS {die}/{os.path.basename(lef)[:-4]}: {ly} (one-rect blanket OBS, "
+                       f"write_abstract_lef -bloat_occupied_layers; {len(types)} type(s) e.g. {sorted(types)[0]}); "
+                       f"report-only: re-export with tools/die_plan/abstract_exact.py form (exact routing-layer OBS)")
+    out.append(f"LIST ABSTRACT-BLANKET-OBS die {die} hard-core views {n} blanket {flagged}")
+    return out
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    f = sub.add_parser("form")
+    f.add_argument("--base", required=True)
+    f.add_argument("--detail", required=True)
+    f.add_argument("--out", required=True)
+    f.add_argument("--receipt")
+    f.add_argument("--layers", default="auto")
+    c = sub.add_parser("census")
+    c.add_argument("--lef", required=True)
+    c.add_argument("--detail")
+    t = sub.add_parser("tcl")
+    t.add_argument("--odb", required=True)
+    t.add_argument("--out", required=True)
+    a = ap.parse_args(argv)
+    if a.cmd == "form":
+        return form(a.base, a.detail, a.out, a.receipt, a.layers)
+    if a.cmd == "census":
+        res = dict(obs=coverage(a.lef, ("M1", "M2", "M3") + ROUTING + ("M7",)))
+        if a.detail:
+            res["metal"] = coverage(a.detail, ("M1", "M2", "M3") + ROUTING + ("M7",), with_pins=True)
+            res["blanket"] = blanket_layers(a.lef, a.detail)
+        print(json.dumps(res))
+        return 0
+    print("read_db %s\nwrite_abstract_lef -bloat_factor 0 %s" % (a.odb, a.out))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

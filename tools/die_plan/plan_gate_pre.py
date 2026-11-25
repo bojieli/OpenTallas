@@ -120,6 +120,9 @@ R8BOUND-1124 (COORD flow review #2, report-only WARN per r703): every DIRECT R8 
   sink_part) must carry bound == the plan's latency.lanes[<lane>].cycles (the bind's bound depth); a mismatch is a strict-bind
   R8_STALE found in seconds instead of after a 1-3 h bind (C1m: 6 dvs_E*.so_w flt members, table 2, plan 4).  check_r8bound.
 
+ABSTRACT-BLANKET-OBS (ABSTRACT-EXACT 11-25, COORD; report-only WARN per r703): every bound hard-core view (partition_types.*.hard_cores
+[].lef, generated memory macros skipped) whose M4/M5/M6 OBS is one blanket rect over >= 80 % of the macro (write_abstract_lef
+-bloat_occupied_layers) gets a WARN line naming the layers; LIST line with the count.  Fix: tools/die_plan/abstract_exact.py form.
 HALOCORNER-1125 (COORD, QC-ALLFIX; FLOW-OPS-R3 DIEPLAN-GREEN 11-24 23:33; report-only WARN per r703): reset_tree._free bounds its
   row-high / cell-wide free runs only by halos the point is strictly inside in x or y, so a point on a SHARED corner of 2+ grown
   halos (reset_tree.blockages) has unbounded runs and is called a legal relay site (q_su31: four halos meet at (825.12, 816.48)).
@@ -2879,6 +2882,14 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
             findings += check_halocorner(plan)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
             findings.append(f"WARN HALOCORNER not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("ABSTRACT-BLANKET-OBS")
+    if "ABSTRACT-BLANKET-OBS" not in skip:               # ABSTRACT-EXACT-1125: blanket routing-layer OBS on bound hard-core views, report-only
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import abstract_exact as _AE
+            findings += _AE.findings(_load(plan) or {}, tree)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
+            findings.append(f"WARN ABSTRACT-BLANKET-OBS not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("CABIND")
     if "CABIND" not in skip and sidecar:                 # CABIND-1125: sidecar count_aligned vs plan (relay stages ...), every mismatch, seconds
         try:
