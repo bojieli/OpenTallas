@@ -47381,3 +47381,4 @@ FAILED [AUTOPILOT cae4c06020c8] 2026-11-25 05:43:07 PST AUTOPILOT -> KIT-WAVE-12
   - MONLEG drives the ETA: its regeneration on p12 takes about 20-30 min. If it cannot be regenerated cleanly by 08:05, the compose goes ahead without it, MONLEG goes DEFERRED (owner kept), and the PRE is not held.
   - Ledger: the key-check of every "carried/via tree" row (ROMHALF, LEPW-MUC-CAPXR, IQF-SEQH and the rest) and new ALLFIX-S81 rows for T0LEG-C10, SRCSTAGE, T26-CONG, STACK-DESTACK, the outline clamps and LEAF-TEMPLATE are in progress, due before the c10b bind.
   - c10 launch list is being rebuilt to the 07:2x rule: route only for unsigned, FP-clean types with no open functional row; slice_station re-signs dropped; svc_hi with SVC-CUT0-RSV09 as probes; freed slots go to col_h9_r0_p5 / col_h9_r2 probe-through.
+- 2026-11-25 07:10 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_hgi_v2__cl2862d491=FAIL
