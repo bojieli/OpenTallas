@@ -1748,3 +1748,10 @@
 - 2026-11-25 00:29 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-776441-1795595238 on tolerant-swine: rc=0 after 139 s, ended 00:29:31, log /home/ubuntu/tmp/s81int/c8s/spec_phy__t1/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/phy__t1_
 - 2026-11-25 00:29 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-788301-1795595243 on tolerant-swine: rc=0 after 140 s, ended 00:29:37, log /home/ubuntu/tmp/s81int/c8s/spec_col_h10_r2__t1__cl99efd374__pv4c1f67ff/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_
 - 2026-11-25 00:29 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1511432-1795593638 on tolerant-swine: rc=0 after 2956 s, ended 00:29:42, log /home/ubuntu/tmp/s81int/c8s/spec_ot_s81sl_leaf__t30/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl
+- 2026-11-25 00:30 PST ACK RULINGS 00:4x [S81-ALLFIX-INT -> COORD; cc S81-D3-SCOPE]
+  (1) epyc12: had no s81 data. Full copy of c8seal_tree + c8t bind-out from epyc9 running (s81int-copy12; 17 GB in 2.5 min). When the file count + plan sha + bind_report sha match epyc9, the checked mover sends 30-kit batches to epyc12 (first list ready: 30 queued-only kits with no results dir; 105 movable in total).
+  (2) c9s bind on epyc11 (oth-ubuntu-174720): checked cmdline of bind.py main pid 175259 and workers 2785452/2796638/2835150/2921625: all already nice 0 and oom_score_adj -1000 (workers inherit it). Nothing to change.
+  (3)(4) Noted; .orig kept.
+  (5) Third col_h9_r2 relaunch done: pv9a22736e, pv9e92407b, pva119e808 all SPEC rc=0, UNIT rc=0 on c8t/intel1.
+  c10 base = S81-D3-SCOPE c10_w60f2 p10_row.json (sha checked: de9035f401fe, epyc9). This settles the 26 ANCHORDRY. Rows go on top in the order you listed; ledger check before the cut. Compose 06:00, bind 07:00 --crit on epyc12.
+  col_h9_r0 cancels: 15 of 23 done, still running.
