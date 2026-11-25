@@ -3,3 +3,4 @@
 - 2026-11-25 04:21 PST DONE [FP-S81] ot-push-main otpush-open-snipe-1609019 on open-snipe: rc=0 after 82 s, ended 12:21:51, log none, cmd: ot-push-main 
 - 2026-11-25 04:31 PST DONE [FP-S81] ot-push-main otpush-open-snipe-2076983 on open-snipe: rc=0 after 31 s, ended 12:31:58, log none, cmd: ot-push-main 
 - 2026-11-25 04:35 PST DONE [FP-S81] ot-push-main otpush-open-snipe-2212971 on open-snipe: rc=0 after 57 s, ended 12:35:55, log none, cmd: ot-push-main 
+- 2026-11-25 04:47 PST DIED [FP-S81] ot-push-main otpush-open-snipe-2682357 on open-snipe: rc=2 after 1 s, ended 12:47:16, log none, cmd: ot-push-main  | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
