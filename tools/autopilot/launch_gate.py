@@ -16,6 +16,7 @@ Decision per (die, type) -> FULL | PILOT | PROBE (+ reason)
               RULES   lanes/LAUNCH-GATE-RULES.tsv: a rule whose status is PROVEN blocks whatever its source; the wave rewrites the
                       advisory rows' measured hit rates hourly (rule_stats / promote: PROVEN when >= MIN_FLAGGED flagged and unflagged types,
                       flagged fail rate >= 0.5 and >= 2x the unflagged rate).  New / unproven rules never block (guardrail 1).
+              HAND    HAND_PLACE_ONLY (FLOW-0730 F9): CORE-TAP-OWNER, MISAIM, SMELL:GRT, STREET, REACH are PROVEN-HAND: PROBE (place only), never a pilot.
             A row whose cells say FIXED / RESOLVED / CLOSED is not a flag.
   FULL      no proven flag, and the family is a single type or its pilot SIGNED (family release, guardrail 4)
   PILOT     the first full kit of a family: every replicated family runs ONE full pilot (guardrail 4), and a family with proven flags
@@ -55,6 +56,10 @@ FP_META = ("type", "family", "die", "note", "notes", "iter", "kit", "fails", "sc
 CLEARED = re.compile(r"\b(FIXED|RESOLVED|CLOSED)\b", re.I)
 TRUE = ("yes", "y", "1", "true", "proven")
 MIN_FLAGGED = 4
+# FLOW-0730 F9 (COORD ruling 11-25): five rules measured to separate failing from passing types (CORE-TAP-OWNER 87/87, MISAIM 25/25, SMELL:GRT 15/15,
+# STREET 7/7, REACH 95/102 vs 63/95) are PROVEN by hand: a type any of them flags gets PLACE PROBES ONLY (no pilot, no full route kit) until the flag
+# clears.  Applied in code so the hourly rule-table rewrite cannot demote them; the table rows are written PROVEN-HAND.  Everything else stays advisory.
+HAND_PLACE_ONLY = frozenset({"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:STREET", "FP:REACH"})
 IDLE_RATIO = 0.8
 IDLE_KIT_CORES = 32
 PP_SETUP_PS = -150.0
@@ -188,6 +193,9 @@ def flags(die, item, T):
             f["proven"] = True
         elif s.startswith("ADVISORY") and f["source"] == "FP" and not f["rule"].startswith("PRE:"):
             f["proven"] = False                       # an FP class marked proven by hand but measured as not predictive
+        if f["rule"] in HAND_PLACE_ONLY:
+            f["proven"] = True
+            f["hand"] = True                          # FLOW-0730 F9: place probes only
     return fl
 
 
@@ -218,6 +226,9 @@ def decide(die, item, fl, family, members, pilots, pilot_state, event=""):
     """-> (mode, reason, pilot_key or '').  members: distinct types seen in the family; pilots: st['kpg_pilots'];
     pilot_state(item) -> 'SIGNED' | 'LIVE' | 'FAILED' | ''"""
     proven = [f for f in fl if f["proven"]]
+    hand = sorted(f["rule"] for f in proven if f.get("hand"))
+    if hand:                                          # FLOW-0730 F9: no pilot, no full kit while a hand-proven rule flags the type
+        return "PROBE", f"hand-proven rule(s) {','.join(hand)} (FLOW-0730 F9): place-only probe until the flag clears", ""
     replicated = len(set(members) | {item}) > 1
     s = sig(fl)
     fam_key = f"{die}|{family}|{event}|family"
@@ -307,7 +318,7 @@ def rules_tsv(stats, keep=None, now=None):
              "rule\tstatus\tflagged_n\tflagged_fail\tunflagged_n\tunflagged_fail\tupdated"]
     for r, s in sorted(stats.items()):
         k = (keep or {}).get(r, "")
-        st = k if k.endswith("-HAND") else promote(s)
+        st = k if k.endswith("-HAND") else ("PROVEN-HAND" if r in HAND_PLACE_ONLY else promote(s))
         lines.append("\t".join([r, st] + [str(x) for x in s] + [ts]))
     return "\n".join(lines) + "\n"
 

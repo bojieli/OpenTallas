@@ -163,9 +163,33 @@ def test_real_table_layouts():
     assert proven(G.flags("qwen_kvsys", "kv3_pc_v1__cl4ea58a5c", kv)) == []
     assert proven(G.flags("qwen_kvsys", "kv3_pv_v8", kv)) == ["SMELL:DENSITY-PILE"]
     fl = G.flags("qwen_kvsys", "kv3_hg__r889141819", kv)
-    assert proven(fl) == ["PRE:TAPNAME"] and {"FP:STREET", "FP:VISUAL", "FP:NOT-CLEAN"} <= {f["rule"] for f in fl}
+    assert proven(fl) == ["FP:STREET", "PRE:TAPNAME"] and {"FP:STREET", "FP:VISUAL", "FP:NOT-CLEAN"} <= {f["rule"] for f in fl}
     assert G.flags("qwen_kvsys", "kv3_hg_v2", kv) == []
     assert [f["rule"] for f in G.flags("qwen_kvsys", "kv3_hg_v3", kv)] == ["FP:NOT-CLEAN"]
     s81 = {"fp": G.parse_tsv("type\tfamily\tREACH\tfails\tvisual\titer\ncol_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97\tcol_h10_r0_p1\tFAIL 11\tREACH\tFAIL die:x\tc9s-1\n")}
     assert {f["rule"] for f in G.flags("s81", "col_h10_r0_p1__t1__cl574cc59d", s81)} == {"FP:REACH", "FP:VISUAL", "FP:NOT-CLEAN"}
     assert G.flags("s81", "col_h10_r0_p1__t2", s81) == [dict(rule="FP:NOT-CLEAN", source="FP", proven=False, detail="no VISUAL PASS / CLEAN row")]
+
+
+def test_hand_proven_rules_place_only():
+    """FLOW-0730 F9: five measured rules block a full kit by hand, whatever the rule table says; everything else stays advisory"""
+    fp = "type\tclass\tstatus\tproven\tts\n" + "".join(f"t_{c}\t{c}\tFAIL\t\t\n" for c in ("CORE-TAP-OWNER", "MISAIM", "STREET", "REACH", "TAP", "BOUNDARY"))
+    smell = "die\ttype\tsmell\nKV\tt_grt\tGRT\nKV\tt_drt\tDRT\n"
+    rules = "rule\tstatus\nFP:STREET\tADVISORY\nFP:REACH\tADVISORY\nFP:TAP\tADVISORY\n"
+    files = {"lanes/FP-KV.tsv": fp, G.SMELL_REL: smell, G.RULES_REL: rules}
+    G.reset_cache()
+    kv = G.tables("qwen_kvsys", reader=lambda rel: files.get(rel))
+    for c in ("CORE-TAP-OWNER", "MISAIM", "STREET", "REACH"):
+        fl = G.flags("qwen_kvsys", "t_" + c, kv)
+        assert proven(fl) == ["FP:" + c]                                        # PROVEN even though the table says ADVISORY
+        m, why, key = G.decide("qwen_kvsys", "t_" + c, fl, "f", {"t_" + c}, {}, _st({}))
+        assert m == "PROBE" and "FLOW-0730" in why and key == ""                # no pilot
+    fl = G.flags("qwen_kvsys", "t_grt", kv)
+    assert proven(fl) == ["SMELL:GRT"] and G.decide("qwen_kvsys", "t_grt", fl, "f", {"t_grt"}, {}, _st({}))[0] == "PROBE"
+    for t_ in ("t_TAP", "t_BOUNDARY", "t_drt"):                                  # mutants: advisory classes keep the old behaviour
+        assert not any(f.get("hand") for f in G.flags("qwen_kvsys", t_, kv))
+    assert proven(G.flags("qwen_kvsys", "t_TAP", kv)) == [] and proven(G.flags("qwen_kvsys", "t_BOUNDARY", kv)) == []
+    assert G.decide("qwen_kvsys", "t_TAP", G.flags("qwen_kvsys", "t_TAP", kv), "f", {"t_TAP"}, {}, _st({}))[0] == "FULL"
+    txt = G.rules_tsv({"FP:REACH": [102, 95, 95, 63], "FP:TAP": [22, 20, 175, 138]})
+    rows = {r["rule"]: r["status"] for r in G.parse_tsv(txt)}
+    assert rows == {"FP:REACH": "PROVEN-HAND", "FP:TAP": "ADVISORY"}
