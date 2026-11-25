@@ -64,19 +64,32 @@ def normal_slot(P, tn, sn, *, full=None):
                    for pid, p in getattr(P, 'ports', {}).items())
 
 
+def explicit_full(slot):
+    """explicit_stage0 slot whose bit_sites_um holds one stage per station (ft_bit_sites.table first=0)."""
+    bs = slot.get('bit_sites_um')
+    return bool(bs) and slot.get('explicit_stage0') is True and len(bs) == int(slot.get('stations', 1))
+
+
 def station_site(slot, stage, bit, ap, bp, *, normal=True):
     """Normal constructor targets; internal legacy placement stays unchanged.
 
-    QC-STA-HOP 11-25: an explicit_stage0 slot whose bit_sites_um holds one stage per station is placed by the
-    kit with bit_sites_um[j] at stage j, stage 0 included (ft_bit_sites.table first=0, face_flops.tcl
-    ff_place_explicit_stage0).  The legacy mapping (stage j -> bit_sites_um[j-1], stage 0 = in pin) dropped the
-    last stage and measured S(k-2) -> out pin: the phantom 651 um st_a b_hw_ctl_hc0 hop in the C1o v13 census."""
+    QC-STA-HOP 11-25 (the kit, face_flops.tcl + ft_bit_sites.table, is the ground truth):
+    - explicit_stage0 with one bit_sites_um stage per station (explicit_full): ft_bit_sites.table keys bs[j] as stage j.
+      Unlanded (normal): ff_place_explicit_stage0 puts station 0 at bs[0], station j at bs[j].  Landed (not normal): the
+      landed loop never calls ff_place_explicit_stage0; station i takes key i+1 = bs[i+1] and the last station sits at
+      the out face, so bs[0] is never placed: stage 0 = in pin (ring), stage j = bs[j].
+    - explicit_stage0 with stations-1 stages, unlanded: station 0 goes to (lane-adjusted) regs_um[0], not the in pin.
+    The old mapping (stage j -> bs[j-1]) made the st_a b_hw_ctl_hc0 census line '651 um last -> out pin'."""
     a, b = input_site(ap), input_site(bp)
     bs = slot.get('bit_sites_um')
-    if bs and slot.get('explicit_stage0') is True and len(bs) == int(slot.get('stations', 1)):
+    if explicit_full(slot):
+        if stage == 0 and not normal:
+            return a
         x, y = bs[stage][bit]
         w, h = slot['bit_site_cell_um']
         return x+w/2, y+h/2
+    if stage == 0 and normal and slot.get('explicit_stage0') is True and slot.get('regs_um'):
+        return tuple(slot['regs_um'][0][:2])
     if stage == 0 and normal:
         return a
     if slot.get('bit_sites_um') and stage > 0:
@@ -101,9 +114,14 @@ def first_internal_hops(P, tn, slot, *, pins=None, full=None):
         return []
     pins = pin_table(P, tn) if pins is None else pins
     pi, po = pins[slot['name']+'_i'], pins[slot['name']+'_o']
-    return [(bit, md(station_site(slot, 0, bit, ap, po.get(bit) or ap),
-                     station_site(slot, 1, bit, ap, po.get(bit) or ap)))
-            for bit, ap in sorted(pi.items())]
+    out = []
+    for bit, ap in sorted(pi.items()):
+        s0, s1 = station_site(slot, 0, bit, ap, po.get(bit) or ap), station_site(slot, 1, bit, ap, po.get(bit) or ap)
+        d = md(s0, s1)
+        if slot.get('explicit_stage0') is True:   # QC-STA-HOP: explicit S0 is a placed register, so in pin -> S0 is a real hop too
+            d = max(d, md(input_site(ap), s0))
+        out.append((bit, d))
+    return out
 
 
 def type_tables(P, tn):

@@ -61,8 +61,7 @@ def slot_bit_worst(P, tn, slot, pins):
     sn, k = slot["name"], int(slot.get("stations", 1))
     pi, po = pins.get(sn + "_i", {}), pins.get(sn + "_o", {})
     nm = D.normal_slot(P, tn, sn)
-    bs = slot.get("bit_sites_um")
-    exp0 = bool(bs) and slot.get("explicit_stage0") is True and len(bs) == k
+    exp0 = bool(nm) and slot.get("explicit_stage0") is True   # unlanded explicit S0: in pin -> S0 is a placed hop
     best = (0.0, None, None)
     for b in set(pi) | set(po):
         a, z = pi.get(b) or po[b], po.get(b) or pi[b]
@@ -106,7 +105,7 @@ def bit_lines(P, reach=405.0):
             if w > reach + 1e-6:
                 rows.append((w, tn, s["name"], b, i, int(s.get("stations", 1))))
     rows.sort(reverse=True)
-    out = [_w("BIT", f"type {tn} slot {sn}: bit {b} hop {i}{' (last -> out pin)' if i == k - 1 else ''} is {w:.0f} um > reach {reach:.0f}"
+    out = [_w("BIT", f"type {tn} slot {sn}: bit {b} hop {i}{' (last -> out pin)' if i == k - 1 else ' (in pin -> S0)' if i == -1 else ''} is {w:.0f} um > reach {reach:.0f}"
               " (station centres may pass; re-shape the bit group along the pin line or add a station)")
            for w, tn, sn, b, i, k in rows[:MAX_LINES]]
     out.append(_w("bit summary", f"{len(rows)} ft slot(s) with a per-bit hop over reach (worst {rows[0][0] if rows else 0:.0f} um) of {done} checked"
