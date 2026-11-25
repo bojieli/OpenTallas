@@ -1326,6 +1326,17 @@ def _reap_completed_thread_charges_locked():
     return retired
 
 
+# FLEET-OPS 11-25 (COORD 06:1x: epyc9, 20 S81 c8 kits hold a 48 GB / 8-thread place slot each and wait 13 h on their LEC sub-jobs): the CPU books count the 91 running units'
+# declared cores (137-213 "committed" vs 96) and measured load1 sat at 92-144, so every LEC sub-job (docker run --name dpkit-<kit>-lec --cpus=8, nice 10) was refused by
+# CPU_CHARGE while the kit that needs it keeps its slot idle.  A LEC sub-job of an already running kit is exempt from the CPU gate only (memory admission, disk floors and its
+# --cpus cgroup cap stay): it finishes the kit and frees that kit's slot.  $OT_HEAVY_LEC_CPU_EXEMPT=0 turns it off.
+LEC_SUBJOB_RE = re.compile(r"--name\s+dpkit-\S+-lec(?:\s|$)")
+
+
+def lec_subjob(argv):
+    return os.environ.get("OT_HEAVY_LEC_CPU_EXEMPT", "1") != "0" and bool(LEC_SUBJOB_RE.search(" ".join(map(str, argv or []))))
+
+
 def gate(mem, argv):
     """ot-heavy asks under its admission lock: may this request start now, and at what charge.  v12: a caller that does
     not hold the lock gets it taken here, so two admissions never read the same books."""
@@ -1859,7 +1870,7 @@ def gate_locked(mem, argv):
             _free = avail - conf("INV_HEADROOM_GB") - _grow - _young - die_slice_gb()   # DIECLASS_1125: a host's die slice is not for type-level jobs
             _ok = _free >= _need
             _cpu_note = ""
-            if _ok and conf("CPU_CHARGE") and not os.environ.get("OT_HEAVY_CPU") == "crit" and not os.environ.get("OT_HEAVY_DIRECT") == "1" and os.environ.get("OT_HEAVY_PRIO") not in ("die", "plan"):   # DIECLASS_1125
+            if _ok and conf("CPU_CHARGE") and not lec_subjob(argv) and not os.environ.get("OT_HEAVY_CPU") == "crit" and not os.environ.get("OT_HEAVY_DIRECT") == "1" and os.environ.get("OT_HEAVY_PRIO") not in ("die", "plan"):   # DIECLASS_1125
                 try:     # FLOW-FLEET-R2 F1: CPU charged by measured class cores, like memory by stage peak
                     _young_c = []
                     for _f in glob.glob(f"{D}/res.*"):

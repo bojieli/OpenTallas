@@ -118,3 +118,13 @@ def test_cpu_charge_admits_on_measured_load_when_books_overstate():
     assert not ok
     ok, why = R.cpu_charge_check("route", 16, units, hist, th, 96, 146.0)                     # epyc11 load 146 > 96: still refused
     assert not ok and "> 96" in why
+
+
+def test_lec_subjob_of_a_running_kit_is_exempt_from_the_cpu_gate_only():
+    """FLEET-OPS 11-25: epyc9 LEC sub-jobs starved 13 h behind CPU_CHARGE"""
+    lec = ["docker", "run", "--name", "dpkit-col_h9_r1__t1__cl49d7a23e-4029031-lec", "--cpus=8", "--memory=48g", "img"]
+    assert R.lec_subjob(lec) and R.lec_subjob(["bash", "-c", " ".join(lec)])
+    assert not R.lec_subjob(["docker", "run", "--name", "dpkit-col_h9_r1-4029031", "--cpus=8", "img"])
+    assert not R.lec_subjob(["docker", "run", "--name", "dpkit-x-lecture", "img"])
+    with patch.dict(os.environ, {"OT_HEAVY_LEC_CPU_EXEMPT": "0"}):
+        assert not R.lec_subjob(lec)
