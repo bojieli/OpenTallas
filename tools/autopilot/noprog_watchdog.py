@@ -365,6 +365,12 @@ def grt_flat(rounds, iters=GRT_FLAT_ITERS, improve=MIN_IMPROVE):
     return ""
 
 
+def grt_falling(rounds, improve=MIN_IMPROVE):
+    """NOPROG-GRTFALL-1124: True when the latest GRT round's overflow is >= `improve` below the round before it (FastRoute still
+    converging).  KV HGI kits 11-24 19:3x were cancelled 'design' at 28701 -> 12166 and 25885 -> 10162 (round 5 -> 10).  Pure."""
+    return len(rounds) >= 2 and rounds[-1][1] < rounds[-2][1] * (1 - improve)
+
+
 def judge_grt_rounds(rounds, log_text=""):
     """-> None | (verdict, why, detail, klass).  DESIGN-FAIL (GRT-CONGESTION): the first GRT-0273 (a clock NDR dropped under
     congestion), or the overflow at round >= 10 above GRT_STOP_OVF or still rising.  NO-PROGRESS: the overflow has not fallen
@@ -1163,6 +1169,7 @@ def scan(now=None, act=False, probe_s=4):
                 row["grt_flat"] = grt_flat(rounds_)
                 if rounds_:
                     row["grt_ovf"] = rounds_[-1][1]       # GRT-LABEL-NOTICE-1122: latest total overflow (hub tracks it over time)
+                row["grt_falling"] = grt_falling(rounds_)      # NOPROG-GRTFALL-1124: a falling overflow is progress, never a design cancel
                 special = judge_grt_rounds(rounds_, read_text(log) if os.path.isfile(log) else "")
                 if special:
                     # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
@@ -1696,7 +1703,7 @@ def grt_flat_candidate(r):
         return ""
     if r.get("grt_flat"):
         return r["grt_flat"]
-    if r.get("verdict") == GRT_LABEL:
+    if r.get("verdict") == GRT_LABEL and not r.get("grt_falling"):     # NOPROG-GRTFALL-1124: a falling overflow is progress
         return "NOPROG label " + str(r.get("why") or "") + "; " + str(r.get("detail") or "")
     return ""
 
@@ -1806,7 +1813,7 @@ def grt_label_notice_pass(rows, seen, now, post=True):
 # A container whose GRT already carries the DESIGN-FAIL label holds cores and memory for a result that cannot sign.  Leak paths found 11-23 01:xx:
 #   (1) lane (OT_LANE) and private kits: grt_flat_pass takes wave attempts only, grt_label_notice_pass only posts a notice;
 #   (2) wave attempts whose cancel-rows call was recorded (gf_cancelled) but whose container kept running (old-event rows the wave no longer tracks): never retried.
-# Rule: GRT-LABEL DESIGN-FAIL and either the round-10+ overflow is above GRT_STOP_OVF (the label itself), or the overflow has not fallen 2 % for DF_FLAT_S (2 h).
+# Rule: GRT-LABEL DESIGN-FAIL and the overflow has not fallen 2 % for DF_FLAT_S (2 h) (NOPROG-GRTFALL-1124: the round-10 threshold alone no longer cancels).
 # Wave attempts not yet taken by grt_flat_pass go through it (cancel-rows keeps the wave record right); everything else: ot-run --cancel <unit> --reason design.
 # Never: proofs, ECOs, hold-only, LEC, re-sign, HBM, --priority plan/proof, NOPROG-KEEP rows (verdict KEEP), units with a KEEP <unit> post, decide-only lanes.
 DF_FLAT_S = 2 * 3600
@@ -1828,9 +1835,9 @@ def design_fail_evidence(r, track, now):
     if r.get("verdict") != GRT_LABEL or not str(r.get("why") or "").startswith("DESIGN-FAIL") or design_fail_exempt(r):
         return ""
     why = str(r.get("why") or "")
-    m = DF_OVF_RE.search(why)
-    if m and int(m.group(2)) >= 10 and int(m.group(1)) > int(m.group(3)):
-        return f"GRT-LABEL {why}; {str(r.get('detail') or '')[:120]}"
+    # NOPROG-GRTFALL-1124 (COORD): the round-10 'overflow > 1000' label used to cancel on the FIRST pass, so 3 KV HGI GRT kits ~2 h in whose
+    # overflow was still falling (28701 -> 12166, 25885 -> 10162) were stopped 'design'.  The label alone is never cancel evidence now:
+    # every DESIGN-FAIL label (threshold, GRT-0273, rising) cancels only after the overflow has not fallen 2 % for DF_FLAT_S.
     ov = r.get("grt_ovf")
     if ov is None:
         return ""

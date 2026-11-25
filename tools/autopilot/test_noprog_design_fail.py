@@ -29,9 +29,11 @@ def grow(unit="oth-ubuntu-1-2", host="intel1", why="DESIGN-FAIL: overflow 9688 a
     return r
 
 
-def test_round10_overflow_label_cancels_on_the_first_pass_with_evidence(tmp_path, monkeypatch):
+def test_round10_overflow_label_cancels_only_after_two_flat_hours_with_evidence(tmp_path, monkeypatch):
+    # NOPROG-GRTFALL-1124: the round-10 threshold label no longer cancels on the first pass
     coord(tmp_path, monkeypatch)
     calls, seen = [], {}
+    assert nw.design_fail_pass([grow()], seen, NOW - 7300, cancel=lambda u: (calls.append(u), (0, "x"))[1]) == [] and calls == []
     done = nw.design_fail_pass([grow()], seen, NOW, cancel=lambda u: (calls.append(u), (0, "containers stopped"))[1])
     assert calls == ["oth-ubuntu-1-2"] and done[0]["class"] == "DESIGN-FAIL GRT-LABEL"
     assert "--reason design" in done[0]["cancel_method"]
@@ -81,6 +83,8 @@ def test_wave_attempt_goes_through_cancel_rows_then_ot_run_if_it_kept_running(tm
     kit = "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/465cb9fe2d3/items/dsdv_slice_c1x_C__t4/attempt_3/gen/dsdv_slice_c1x_C__t4"
     r = grow(unit="oth-w-1", kit=kit, lane="", why="DESIGN-FAIL: overflow 83085 at round 10 > 1000")
     wave, ot, seen = [], [], {}
+    nw.design_fail_pass([r], seen, NOW - 7300, cancel=lambda u: (ot.append(u), (0, "ok"))[1], wave_cancel=lambda i, w: (wave.append(i), (0, "x"))[1])
+    assert wave == [] and ot == []                                             # NOPROG-GRTFALL-1124: first sight starts the 2 h clock
     nw.design_fail_pass([r], seen, NOW, cancel=lambda u: (ot.append(u), (0, "ok"))[1], wave_cancel=lambda i, w: (wave.append(i), (0, "cancelled 1 row"))[1])
     assert wave == [("s81", "465cb9fe2d3", "dsdv_slice_c1x_C__t4", "3")] and ot == []
     nw.design_fail_pass([r], seen, NOW + 600, cancel=lambda u: (ot.append(u), (0, "ok"))[1], wave_cancel=lambda i, w: (wave.append(i), (0, "x"))[1])
