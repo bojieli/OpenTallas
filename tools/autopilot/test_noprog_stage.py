@@ -250,7 +250,7 @@ def test_tsv_sorts_no_progress_first_and_summary_lists_evidence():
     assert lines[2].split("\t")[0] == "NO-PROGRESS" and lines[-1].split("\t")[0] == "PROGRESSING"
     s = ns.summary(rows, "2026-11-15 17:00 PST", ["epyc9"])
     assert s.startswith("STATE [NOPROG-FIX-1115 -> COORD]") and "NO-PROGRESS 1" in s and "kv3_hgi_v2 5_1_grt stage 20" in s
-    assert "repair_TNS best 534718" in s and "epyc9" in s and "no cancel" in s
+    assert "repair_TNS best 534718" in s and "epyc9" in s and "no cancel" not in s and "DOES ot-heavy-stop" in s and "advisory" in s
 
 
 def test_hub_writes_tsv_and_posts_through_post_sh_only(monkeypatch):

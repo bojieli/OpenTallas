@@ -36,6 +36,8 @@ WINDOW_S = 6 * 3600
 # PREGRT-HOLD-WATCHDOG-1123 (COORD 17:25, FABLE flow review; owner 12.22 2-h hung-job watchdog): kit steps that are bounded
 # repairs get a 2 h no-progress window, and a metric that reached 0 counts as progress only while the step still writes
 # (five KV kits sat in pregrt_ff_hold 11-13 h after repair_TNS reached 0: "reached 0" kept them PROGRESS forever).
+# NOPROG-TNS0-1124 overrides the zero half of that rule for TNS metrics: TNS >= 0 is converged, never NO-PROGRESS (tns_converged);
+# the 2 h window still applies to a non-zero flat TNS.
 STEP_WINDOW_S = {"pregrt_ff_hold": 2 * 3600}
 
 
@@ -242,6 +244,15 @@ def interp_time(idx, anchors):
 EST_MARGIN = 1.25      # line times that are interpolated (no own samples over a full window yet) get a 25 % longer window
 
 
+def tns_converged(res):
+    """NOPROG-TNS0-1124 (COORD; healthy QC V4 kits were ot-heavy-stopped at pregrt_ff_hold with "repair_TNS best 0 last 0"): a TNS
+    metric (stored as |TNS|) whose last row is 0 means TNS >= 0, i.e. the repair is done or converged.  That is never a stall: such a
+    job is PROGRESS whatever its log silence (a clean-corner repair_timing pass can write nothing for hours)."""
+    name = res.get("name") or ""
+    ser = res.get("series") or []
+    return "TNS" in name and bool(ser) and ser[-1][1] <= 0
+
+
 def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False, zero_needs_growth=False):
     """-> (verdict, why, detail).  verdict: PROGRESS | NO-PROGRESS | YOUNG | NO-DATA.
     metric series: improved if the best value inside the last `window` is <= best_before_window * (1 - improve), or 0.
@@ -259,6 +270,8 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False, 
         recent = [v for t, v in pts if t > now - window]
         best_all = min(v for _, v in pts)
         detail = f"{res['name']} best {best_all:g} last {pts[-1][1]:g} rows {len(pts)}"
+        if tns_converged(res):
+            return "PROGRESS", f"{res['name']} last 0 (TNS >= 0: converged/done, not stalled; never cancelled)", detail
         if recent and min(recent) == 0:
             gi = res["growth_idx"]
             if not zero_needs_growth or (gi >= 0 and now - interp_time(gi, anchors) < window) or span < window:

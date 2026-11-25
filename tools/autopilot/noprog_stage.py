@@ -57,6 +57,10 @@ HOSTS = W.HOSTS
 STATE_DIR = os.path.expanduser(os.environ.get("NOPROG_DIR", "~/.local/state/noprog"))
 COORD = os.path.expanduser(os.environ.get("OT_COORD_DIR", "~/coord"))
 POST_LANE = os.environ.get("NOPROG_POST_LANE", "NOPROG-FIX-1115")
+# NOPROG-TNS0-1124: the hourly post said "advisory, no cancel", which readers took for the whole NOPROG system; only THIS table is advisory.
+# The separate noprog.timer watchdog (noprog_watchdog.py tick) DOES ot-heavy-stop NO-PROGRESS jobs (9 healthy QC V4 kits at pregrt_ff_hold on 11-24).
+WATCHDOG_NOTE = ("this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, "
+                 "per-host log ~/.local/state/noprog/actions.jsonl")
 LIB = "~/.local/lib/noprog"
 CLASSES = ["NO-PROGRESS", "SLOW", "PROGRESSING"]
 
@@ -356,7 +360,7 @@ TSV_COLS = ["cls", "host", "kit", "type", "stage", "stage_h", "job_h", "cores_no
 def tsv(rows, stamp, missing):
     rows = sorted(rows, key=lambda r: (CLASSES.index(r["cls"]), -float(r.get("stage_h") or 0), r["host"], r["container"]))
     n = {c: sum(1 for r in rows if r["cls"] == c) for c in CLASSES}
-    out = [f"# NOPROG (NOPROG-FIX-1115, advisory only, generated {stamp}): {len(rows)} running jobs {n}; hosts without report: {missing or 'none'}",
+    out = [f"# NOPROG (NOPROG-FIX-1115, {WATCHDOG_NOTE}, generated {stamp}): {len(rows)} running jobs {n}; hosts without report: {missing or 'none'}",
            "\t".join("class" if c == "cls" else c for c in TSV_COLS)]
     for r in rows:
         out.append("\t".join(str(r.get(c, "")).replace("\t", " ").replace("\n", " ") for c in TSV_COLS))
@@ -367,7 +371,7 @@ def summary(rows, stamp, missing):
     n = {c: sum(1 for r in rows if r["cls"] == c) for c in CLASSES}
     bad = sorted((r for r in rows if r["cls"] == "NO-PROGRESS"), key=lambda r: -float(r.get("stage_h") or 0))
     head = (f"STATE [{POST_LANE} -> COORD] NOPROG hourly {stamp}: {len(rows)} running jobs, PROGRESSING {n['PROGRESSING']}, "
-            f"SLOW {n['SLOW']}, NO-PROGRESS {n['NO-PROGRESS']} (advisory, no cancel); table lanes/NOPROG.tsv")
+            f"SLOW {n['SLOW']}, NO-PROGRESS {n['NO-PROGRESS']} ({WATCHDOG_NOTE}); table lanes/NOPROG.tsv")
     if missing:
         head += f"; hosts without report {missing}"
     lines = [head]
