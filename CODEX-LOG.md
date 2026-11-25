@@ -14539,3 +14539,19 @@ Claude resumed. Codex stopped launching and changing project work. Admitted runs
 - **OWNER?** No active new owner question. E10 stop request resolved by terminal exits, exact collision products remain uncredited. FOR-CLAUDE combined HEAD W6 acceptance and separate S81 Norm Finish/RXSB/t43 exact intakes, with original holds and proof gates preserved.
 
 Takeover drop-in removed with ot-delete between timer runs, daemon-reload complete, exact environment count 0. Admitted jobs left running.
+
+## Takeover 2026-11-25 10:36 PST
+
+Live queue supersedes historical 11-16 plan names. HBM stays parked. Starting archive 487 current / 605 any at 10:05 PST. Existing jobs continue on their pinned inputs.
+- S81 FP-S81 R3/B3/S4 PRE failed on 8/4/7 ANCHORDRY findings. c11leaf v4 has one t70 depth regression (four local reset reads at 16 vs baseline 17); separate depth-17 candidate 07fa444975e8 under PRE, epyc12 FP-S81/rowsS/pre_t70_depth17_1125.out, unit 2446267. Inherited v4 scoped bind 993643 remains active. Exact v4 type images viewed; no routing released.
+- HEAD W9 C27 held: base 6b2c670d0ae4, 134 independent ops, anchored remap and raw export checks 0 bad, private 84a700abf5bf. epyc12 head-w9-fp/gate_hold_c27_1125.out unit 2442123. C27 full form failed missing anchors and reselect moved raw6 1082 um away. C23 cap measured 72830 physical insts, handled as a false positive.
+- QC su_c C1o v13 floor change continuation resumed from cand2.json after stale b7165c tool lacked repick_start_raws. New exact pin 427fe7078f5a, intel1 QC-SUC-FTSITE/c1o/sucC/continue_v2_1125.log, unit 260537. SUL1 growth PRE 25/27 findings chiefly SITEGRID and stale/reset tap names. C1o v13 earlier strict bind was 130 types, zero errors.
+- KV A5t8 scoped 89-type bind completed at 10:27. Whole-die LATCHECK blocked by hroot, hub_Eo, hub_Wo, pv_v7e EMIT. Current live event preserved. KV HGI WGATE g4 had 492 stale members/27144 bits including an authoritative PV table. Fresh isolated g5 on current tools, epyc12 KV-HGI-WGATE/gate5_1125.log, unit 2403950. Existing private probes failed before place due to bind stream/readiness.
+- ROM/token inherited R000–R011 S81 all ranks, HEAD R18gw 4/4, QC C4 overlays 8/8, C1h +1024 stage37 replay +640 edges with mutants detected. Four R012 jobs now admitted on epyc2 scratch3 romw-1119-s81, logs/R012_r{0,1,2,3}_1125.otrun.log. Production die GDS and token replay remain open.
+- Fleet FLEET-OPS push f724676875 hit missing rtl/lib/ot_reset_sync.sv in a sparse test clone then lost origin/main race. QC-CB-REFLOOR margin 0df24d6ed9e stopped at launcher rc2; local dirty result separate. Existing new-job guards stay active.
+
+FOR-CLAUDE: Independent Fable scope where specifically required for W9, C1p/C1q, A5t9 and S81 structural rows; continue concrete gate work meanwhile.
+
+### OWNER?
+
+No new owner-level question in this pass.

@@ -10614,3 +10614,17 @@ Current owners and cut conditions come from the 11-23 queue and live handoffs. H
 | Cross-die geometry / acceptance | Exact visual reviews and Fable scopes remain binding | Collect viewed receipts, flag failed layouts and Fable-only scopes |
 | LANEAGE / bind tooling / shared qualification | LANEAGE recovery, CORE-TAP-BUDGET FF lib regens, LEC failures | Resume next concrete proof and merge green SHAs |
 | HBM | Owner parked | Retain state |
+
+## Live takeover coverage — 2026-11-25 10:36 PST
+
+| Scope | Result or job | Next action |
+|---|---|---|
+| S81 ALLFIX / FP / stage seating / cores | c10 evidence; c10b launch basis. R3/B3/S4 PRE 8/4/7 ANCHORDRY; t70 v4 4 raws at depth16 instead of 17, repaired private 07fa444975e8 PRE ongoing. c11leaf v4 strict inherited. | Collect c10b gate and scoped rows. Repair geometry causes before route; t35 406 um leg, t57 narrow east trunk, t70 reset depth. T2 growth v18 is already running; v17 had missing exit stage, v12 overflow 16,823,166. |
+| HEAD W9 / SERDES / thermal and clock | W8b current. C27 17 anchors missing or raw6 1082 um after reselect. Remap + raw exports clean 84a700abf5bf with all C27 held, prepare active. C23 72830 physical cells. | Collect independent W9 PRE/bind work; fix N4 raw driver, re-prepare SERDES v2 via proper prepare, prove R1–R5 and exact image. |
+| QC ALLFIX / C1o / C1p / families | C1o v13 strict 0/130 types; su_c resumed at republish using current tool. SUL1 growth PRE failed 25/27, FEV1FLAT host absent, family C1q cut. | Recover row jobs against real materialized trees. Clear native59 functional hold only on exact boot and return witness. |
+| KV ALLFIX / A5t8/9 / HGI | A5t8 scoped 89 bind completed, whole-die gap 4 types. HGI g5 unit 2403950. g4 stale PV table. | Stage gated scoped evidence privately, clear four emit gaps for adoption. Regenerate PV extras by own law if R8 prepass still refuses. |
+| Token, model and ROM | E2 exact S81 R012 four admitted units, prior R000–R011 all ranks. +1024 stage37 component replay PASS, 640 edges slack. | Collect R012. Continue next stage, physical die media and live exact token cuts. |
+| Fleet, flow and merge | E8 drain remains 150 GB, E9 no new jobs, E10/E11 open per current host ruling. FLEET-OPS sparse miss plus concurrent main advance; QC-CB-REFLOOR startup failure. | Maintain admission, preserve active jobs, fix sparse gate and land screened branches. |
+| HBM | Owner parked. | Preserve state. |
+
+S81 review opened epyc12 FP-S81/render/c9s_tmpl/v4/type_ot_s81sl_leaf__{t35,t57,t70}.png. t35 FAIL (406 um leg, four narrow gaps); t57 PASS-COND for static gate only (403 um max, three narrow gaps, visibly converging east trunk); t70 BLOCKED (precheck max404 um, anchor depth changes and compressed central corridors). Exact placed view needed to check pin access and PG continuity before routing.

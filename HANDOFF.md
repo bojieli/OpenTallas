@@ -3955,3 +3955,5 @@ OPS-WRITEUP: 2026-11-25 07:09 PST 07:09 hourly: 605 any / 487 current (+0 / +0 v
 OPS-WRITEUP: 2026-11-25 08:09 PST 08:09 hourly: 605 any / 487 current (+0 / +0 vs 07:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-25 09:09 PST 09:09 hourly: 605 any / 487 current (+0 / +0 vs 08:05). VIS-COVERAGE: 435/462 types with a verdict (94%); PROBE-PASS 1
 OPS-WRITEUP: 2026-11-25 10:09 PST 10:09 hourly: 605 any / 487 current (+0 / +0 vs 09:05). VIS-COVERAGE: 435/462 types with a verdict (94%); PROBE-PASS 1
+
+CODEX: 2026-11-25 10:36 PST takeover on intel2. Recovered S81 t70, HEAD W9 hold-C27, QC su_c and KV HGI gates; admitted S81 R012 all ranks. Existing route reviews and live plan gates stay in force. See CODEX-LOG.md and lanes/CODEX.md.
