@@ -72,3 +72,11 @@
   GRT TT setup was -169.02 before the TT repair and -150.41 after it (TNS -5933). That is below the -150 PLAN-TRIAGE line, so FAIL_POSTCTS and the kit was not routed.
   FF setup was -2.0. Post-CTS hold had closed before GRT. The GRT map peaks at 98% with 1129 gcells above 90%.
   Verdict: the unseated geometry cannot sign, and the seated row is still needed. FWCPL2-SEAT (lanes/handoff/QC-GEOM-UNITS-row-fwcpl2seat.json.gz, ROW-READY 23:26: 17,649 relay_sites, PRE + scoped bind clean, worst hop 371 um) stays queued for C1n. FE1 83-seat is still in GRT.
+- 2026-11-25 08:50 PST [to COORD; cc QC-ALLFIX] Ruling C(2) verdict for slw_su_l0__cl1e5219ea (RRL-SDFF, -3.78): SIGNED OFF.
+  The chain ran its automatic late ECO on intel1: eco_20261124_235251_4176465/i1. eco_loop verdict PASS, signed off after 1 iteration.
+  Results: TT setup +80.12 (unchanged), DRC 0, DRV 0, internal hold closed, no remaining fails. The FF -149 is port-start ends under the io contract, not gated.
+  Status of the four RRL-SDFF misses:
+  - sle_st_b_v1: SIGNED 11-20.
+  - slw_su_l0: SIGNED now.
+  - FE2 slw_fe_v2: routed ECO pass done, final sign-off STA is running on intel1.
+  - sle_stm_v2: the late ECO on epyc2 is still running (i2t); this type also fails TT setup.
