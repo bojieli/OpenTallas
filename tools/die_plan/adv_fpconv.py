@@ -7,6 +7,10 @@ IN-OUTLINE      any planned xy outside the type outline: station regs and bit-si
                 sink sites, added taps, edge-clock taps, the reset root (reset.in_sites).  S81 t70 root (1611.8, 12.9) on a 1494.7 um
                 outline, t35 ft3 station y -4.3.  (ADV-FT-OUTSIDE keeps the ft slots; this one covers everything else.)
 LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S81 vn_a.c_s -> vn_b 406 / 436 um, rxsf 417 um).
+                Also (C9-KVPV-CLAND-LEG, KV-OWN-PV-R2 11-25): a clock-landing type (clock.landing_contract) with no
+                clock.landing_reader_start whose cland origin (landing_raw_branches consumer 'origin', last stage) is > 405 um
+                (Manhattan) from an input ring's cland_fstart_in_<bus> pin: origin -> reader_start is one cycle (kv3_pv_v4n
+                route setup -1117 ps on u_cland_origin -> u_cland_reader_start_ft42).  Fix: kv_start_corridor_event.py start.
 RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point (S81 t15 32 seats in lane cores).
 SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
 PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
@@ -99,9 +103,39 @@ def in_outline(t, tn, raw):
     return hits
 
 
+def cland_origin_xy(t):
+    """last stage xy of the clock.landing_raw_branches branch whose consumers include 'origin' (the cland origin seat), else None"""
+    for b in (t.get("clock") or {}).get("landing_raw_branches") or []:
+        if isinstance(b, dict) and "origin" in (b.get("consumers") or []) and b.get("stages"):
+            xy = b["stages"][-1].get("xy_um")
+            if isinstance(xy, (list, tuple)) and len(xy) == 2 and _num(xy[0]) and _num(xy[1]):
+                return float(xy[0]), float(xy[1])
+    return None
+
+
+def cland_reader_legs(t):
+    """C9: [(origin, reader_start_<bus>, Manhattan um, 0)] over 405 for a landing type without clock.landing_reader_start"""
+    c = t.get("clock") or {}
+    if not c.get("landing_contract") or c.get("landing_reader_start") is not None:
+        return []
+    o = cland_origin_xy(t)
+    if o is None:
+        return []
+    out = []
+    for p in (c["landing_contract"] or {}).get("pins") or []:
+        nm, xy = p.get("name", ""), p.get("xy_um")
+        if not nm.startswith("cland_fstart_in_") or not isinstance(xy, (list, tuple)) or len(xy) != 2:
+            continue
+        d = round(abs(float(xy[0]) - o[0]) + abs(float(xy[1]) - o[1]), 1)
+        if d > LEG_UM:
+            out.append(("cland_origin", "reader_start_" + nm[len("cland_fstart_in_"):], d, 0))
+    return sorted(out, key=lambda h: -h[2])
+
+
 def leg405_zero(t):
     return [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D")) for r in t.get("relay_depth") or []
-            if isinstance(r, dict) and _num(r.get("path_um")) and r["path_um"] > LEG_UM and not (r.get("stages_existing") or 0)]
+            if isinstance(r, dict) and _num(r.get("path_um")) and r["path_um"] > LEG_UM and not (r.get("stages_existing") or 0)] \
+        + cland_reader_legs(t)
 
 
 def relay_seats(t):

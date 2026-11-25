@@ -115,3 +115,17 @@ def test_registered_and_runs_through_plan_advisory():
     out = PA.run(r, "p.json", checks=["IN-OUTLINE"], jobs=1)
     assert any("ADV-IN-OUTLINE T" in x for x in out)
     assert PA.run(copy.deepcopy(base()), "p.json", checks=list(F.F), jobs=2) is not None
+
+
+def test_leg405_flags_cland_origin_to_far_reader_without_reader_start():
+    """C9-KVPV-CLAND-LEG: origin (400, 75) -> cland_fstart_in_ft42_i (3, 1410) = 1732 um, one cycle, no landing_reader_start"""
+    import adv_fpconv as F
+    t = {"clock": {"landing_contract": {"pins": [
+            {"name": "cland_fstart_in_ft42_i", "xy_um": [3.0, 1410.0]},
+            {"name": "cland_fstart_in_near_i", "xy_um": [420.0, 100.0]},
+            {"name": "fclk_in_ft42_i", "xy_um": [3.0, 1400.0]}]},
+        "landing_raw_branches": [{"name": "o", "consumers": ["origin"], "stages": [{"xy_um": [400.0, 75.0]}]}]}}
+    assert F.leg405_zero(t) == [("cland_origin", "reader_start_ft42_i", 1732.0, 0)]
+    t["clock"]["landing_reader_start"] = {"branches": {}}
+    assert F.leg405_zero(t) == []
+    assert F.leg405_zero({"clock": {}}) == []
