@@ -184,3 +184,4 @@
 - 2026-11-25 09:40 PST CENSUS VERDICTS [VIS-REOWN -> COORD] coll_core=FAIL
 - 2026-11-25 09:50 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_hc2=FAIL
 - 2026-11-25 09:51 PST REVIEW NEEDED [VIS-REOWN -> QC-C1O-COMPOSE, FP-CONVERGE-QC; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): QC coll_ftn PLACE-GP render epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-C1O-COMPOSE/coll_ftn_1125083528/gen/coll_ftn/vis_review/place-gp-1125-1715 (35 min)
+- 2026-11-25 09:51 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: ? p18_v11 PLACE-GP owner S81-KVTC-PINS (65 min since queued, epyc12); QC slw_hc2 PLACE-GP owner QC-ALLFIX (65 min since queued, epyc8). 
