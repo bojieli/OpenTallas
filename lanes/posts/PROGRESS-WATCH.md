@@ -489,3 +489,4 @@
 - 2026-11-25 09:49 PST ALERT STUCK-STATE qwen_compute: 4 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
 - 2026-11-25 09:49 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 - 2026-11-25 10:39 PST ALERT STUCK-STATE qwen_kvsys: 14 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_hg_v1p3__r8c662a835, 2026-11-24 20:06)
+- 2026-11-25 10:49 PST ALERT NO-PROGRESS s81_head: 2 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 63 min (last 09:46) and 0 private-spec launches for 60 min (last 09:49 ot-run HEAD-SERDES-REFLOOR hd_serdes_1125094336); no current launch blocker logged
