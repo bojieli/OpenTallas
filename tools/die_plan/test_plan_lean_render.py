@@ -50,3 +50,27 @@ def test_core_slots_abut_wide_and_vertical():
     assert [s[4] for s in R.core_slots([a, (10, 56.17, 40, 90)])][0] == pytest.approx(6.17) and len(R.core_slots([a, (10, 56.17, 40, 90)])) == 1
     assert R.core_slots([a, (200, 200, 250, 250)]) == []                  # no facing extent
     assert R.core_slots([a, (40, 40, 100, 100)])[0][4] == -10             # overlap
+
+
+def test_header_numbers_come_from_the_checkers(tmp_path):
+    """t57-style disagreement: a face-bus chain whose WORST pin (far end of the window) is > 405 um from its first station.  The drawn
+    from_um is the window centre, so the drawn hop is short; precheck.reach_findings measures from the far end and flags it."""
+    import copy
+    P = copy.deepcopy(PLAN)
+    ty = P["partition_types"]["ty__t1"]
+    ty["outline_um"] = [1000, 300]
+    ty["buses"] = [{"name": "b", "width": 300, "face": "N", "dir": "in", "window_um": [0, 500]}]
+    ty["internal_stations"] = [{"conn": "bus:b", "bits": 300, "from_um": [250, 300], "regs_um": [[700, 250]], "to_um": [800, 250]}]
+    ty["ft_slots"] = [{"name": "ft0", "in_face": "N", "in_window_um": [10, 20], "out_face": "S", "out_window_um": [10, 20],
+                       "regs_um": [[15, 150]], "bit_sites_um": [[[15, 150]]], "bit_site_cell_um": [1.0, 1.0]}]
+    cn = R.checker_numbers(ty, 405.0, [], [])
+    assert cn["reach_gate"] + cn["reach_aim"] == len(R.PC.reach_findings(ty, 405.0)) >= 1
+    assert cn["ft_out_sites"] == cn["ft_out_regs"] == 0
+    ty["ft_slots"][0]["regs_um"] = [[15, 150], [15, 460]]
+    ty["ft_slots"][0]["bit_sites_um"] = [[[15, 460]]]
+    cn2 = R.checker_numbers(ty, 405.0, [], [])
+    assert cn2["ft_out_sites"] == 1 and cn2["ft_out_regs"] == 1          # identical to adv_ft_outside.type_hits
+    R.type_png(P, "ty__t1", tmp_path / "h.png", {}, 405.0)
+    assert R.LAST["checker"]["reach_gate"] + R.LAST["checker"]["reach_aim"] >= 1
+    # mutant: a reach of 1e9 makes the checker report no hop at all
+    assert R.checker_numbers(ty, 1e9, [], [])["reach_gate"] == 0

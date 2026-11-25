@@ -23,6 +23,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.patches import Rectangle  # noqa: E402
 
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent / "precheck"))
+import adv_ft_outside as FO  # noqa: E402  ADV-FT-OUTSIDE: the same hit test as the PRE check
+import adv_slot_gap as SG  # noqa: E402  ADV-SLOT-GAP: the same slot test as the PRE check
+import precheck as PC  # noqa: E402  REACH (WINDOW-HOP, GATE/AIM) and tap_assign: the same functions as the census
+
 SLOT_UM = 28.0
 ROT = ("R90", "R270", "MXR90", "MYR90")
 LAST = {}     # extra counts of the last type_png call
@@ -112,6 +119,19 @@ def die_png(P, out):
     fig.savefig(out, dpi=110, bbox_inches="tight"); plt.close(fig)
 
 
+def checker_numbers(t, reach, taps_xy, bins):
+    """Header numbers computed by the SAME functions as the checkers, so a render can never disagree with PRE / precheck
+    (t57: the header said hops>405: 0 while precheck.reach_findings found a 450.7 um leafdn first hop measured from the far
+    end of its pin window).  -> dict(reach_gate, reach_aim, reach_worst, ft_out_sites, ft_out_regs, slots, tap_over)"""
+    rf = PC.reach_findings(t, reach)
+    gate = [v for v, _ in rf if PC.reach_severity(v) == "GATE"]
+    out = FO.type_hits(t)
+    cnt = PC.tap_assign(taps_xy, bins) if taps_xy and bins else {}
+    return dict(reach_gate=len(gate), reach_aim=len(rf) - len(gate), reach_worst=max([v for v, _ in rf], default=0.0),
+                ft_out_sites=sum(h[1] for h in out), ft_out_regs=sum(h[2] for h in out),
+                slots=len(SG.slot_gaps(t)), tap_over=sum(1 for v in cnt.values() if v > 1000))
+
+
 def type_png(P, name, out, kit, reach):
     t = P["partition_types"][name]
     w, h = t["outline_um"]
@@ -177,14 +197,18 @@ def type_png(P, name, out, kit, reach):
         ax.plot(*tp["xy"], "*", color="red" if bad else ("c" if kind == "added" else "blue"), ms=7 if bad else 3)
         if n >= 300:
             ax.annotate(f"{n:.0f}", tp["xy"], fontsize=5, color="red" if bad else "k")
+    cn = checker_numbers(t, PC.REACH_UM, [(tp["name"], tp["xy"][0], tp["xy"][1]) for tp, _ in taps],
+                         [(b[0], b[1], (b[2] if len(b) > 2 else 1)) for b in bins])
     km = (kit or {}).get(name, {})
     ax.set_xlim(min(xs) - 20, max(xs) + 20); ax.set_ylim(min(ys) - 20, max(ys) + 20); ax.set_aspect("equal")
-    ax.set_title(f"{name} {w:.0f}x{h:.0f}: {len(taps) - len(added)}+{len(added)} added taps, planned >1000: {over}, "
-                 f"hops>{reach:.0f}um: {nlong} chains + {nftlong} ft ({nft} ft slots), out-of-outline stations: {nout}, "
-                 f"slots<{SLOT_UM:.0f}um: {nslot}, core overlaps: {nover}, kit max tap {km.get('max_sinks', 'n/a')} "
+    ax.set_title(f"{name} {w:.0f}x{h:.0f}: {len(taps) - len(added)}+{len(added)} added taps, planned >1000 (plan bins only): {cn['tap_over']}, "
+                 f"REACH (precheck): {cn['reach_gate']} GATE >{PC.CBC.REACH_GATE_UM:.0f}um + {cn['reach_aim']} AIM, worst {cn['reach_worst']:.0f}um "
+                 f"({nlong} chains + {nftlong} ft drawn red, {nft} ft slots), ft outside outline (ADV-FT-OUTSIDE): "
+                 f"{cn['ft_out_sites']} sites + {cn['ft_out_regs']} regs, "
+                 f"slots<{SLOT_UM:.0f}um (ADV-SLOT-GAP): {cn['slots']}, core overlaps: {nover}, kit max tap {km.get('max_sinks', 'n/a')} "
                  f"({km.get('max_tap', '')})", fontsize=7)
     LAST.clear()
-    LAST.update(ft_long=nftlong, out_of_outline=nout, slots=nslot, overlaps=nover, added_taps=len(added), chain_long=nlong)
+    LAST.update(checker=cn, ft_long=nftlong, out_of_outline=nout, slots=nslot, overlaps=nover, added_taps=len(added), chain_long=nlong)
     fig.savefig(out, dpi=110, bbox_inches="tight"); plt.close(fig)
     return over, nlong + nftlong
 
