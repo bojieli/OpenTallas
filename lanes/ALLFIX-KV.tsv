@@ -75,3 +75,14 @@ STRIPRAW	a08fcfef9c14	-	never	-	-	-	-	-	-	OUT: dropped per COORD, replaced by RS
 2026-11-24T08:13Z	STREETSTN	ae8fb066997c	OUT-A6	COORD ruling A: G0 errors in A5
 2026-11-24T08:13Z	TAPSPLIT-HGPV	f2bd37c2e6f9	OUT	withdrawn, needs rebind
 2026-11-24T08:13Z	INCORE-R2-B1	c644daff4f26	OUT	full strict + LATCHECK first
+2026-11-25T01:35Z	ECH+SEQLP	7926cbd1af90	IN-A5t6	3-way on A5t5 669cbe6e39bd: 6 paths clock/core_link_pipe + partition_types/kv3_hub_Eo,Wo; 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	HEADLEG2 (on HEADLEG 9b17603c455f)	243c307db476	IN-A5t6	3-way on A5t5: 2363 paths partition_types/kv3_hgi,kv3_hg(+hgi_v2); 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	HGI-LEAF	5c7ff415fb05	IN-A5t6	clock/zl_lockup/kv3_hgi leaf=true; 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	ZL-LEAF (KV-ALLFIX, census 17:01)	e71aad13903a	IN-A5t6	clock/zl_lockup +18 types leaf (zl_lockup 19 total); only diff vs beb6f0d99388 is clock.zl_lockup; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	PCPACK R4 (supersedes R3)	24ab4c00eeee	IN-A5t6	3-way vs A5t3 cbee82715bca: 67 paths, partition_types/kv3_pc_v1__cl7f648944__* x11; 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	PV V4LEGS (KV-OWN-PV-R2)	7112b2fc4e5e	IN-A5t6	3-way vs A5t3: 20 paths lanes, latency/lanes, kv3_pv_v4,v4n internal_stations (merged per conn); pv_v_pads 321c805aa876->1a1c15ce11ef installed (gate try1 R8_STALE x30 without it); plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	SYSC-LPAD	fb7695f00c8a	IN-A5t6	3-way vs A5t3: 12 paths kv3_sys_c internal_stations (merged per conn); 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	io_cor_v1 c3 (RSTREACH)	f85fccc81a99	IN-A5t6	3-way vs A5t3: 845 paths kv3_io_cor_v1 + clock/tap_offset; 0 conflicts; plan a498941539fd (E10 kv-allfix/a5t6e10/grow/A5t6/plan.json; compose3 report tmp/A5t6_try2.json.report.json)
+2026-11-25T01:35Z	PVLEGS/VODCH, PINS	-	OUT-A5t7	not posted ROW-REBASED before A5t6 compose (COORD 14:5x: next event)
+2026-11-25T01:35Z	KV-PV-RSTRELAY-v3, KV-DIE-SEAMHOLD	8f760516f9ba, dddecdff1714	OUT-A5t7	not ROW-REBASED on A5t5; not in A5t6 compose list
+2026-11-25T01:35Z	FTLOCKUP, HUBCTAP, ADV-PORT-PIN	ab49a5a7df98, 98de46da0ec2, -	BUILDING-A5t7	COORD 18:0x: rebuild on A5t6 a498941539fd (FTLOCKUP: clock.ft_hop_lockup == A3g, never landed)
