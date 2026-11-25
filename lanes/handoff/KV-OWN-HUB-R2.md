@@ -25,3 +25,7 @@ DONE: PINS plan 8349284a6981 on 7926cbd1af90 = row 9f5237a75a63 + reach_rules fi
 raw step: raw_run.py patches kv_start_corridor_event 5fe8e200 in memory (<tn>_part.reset_tree.json; raw-branch copy -> origin original). hub_Wi raw not derivable (W-face pins 2164 um from chain, base finding too).
 Watching (owner, watch only): kv3_hub_Wi A5t5 prelint (no kit); KV-ALLFIX private kv3_hub_Wi_1124080753 (A5t3, no seam, pipeline FAIL systemctl timeout, idle after place); hub_Wo kit KV-A5t5 kv3_hub_Wo_1124141832 epyc10 (seam tcl present) -> read its routed seam box as PINS validation.
 Next: validation post when that hub_Wo kit routes; answer KV-ALLFIX questions.
+
+## 11-24 17:40 HUB-EPZO taken + VIS reply
+- HUB-EPZO (COORD 17:3x): ROW-REBASED IN-BASE, no row (hub cfd51c38). KV-HUB-HOLD keys (seam, max 1200, added_taps = H3) are in A5t6 a498941539fd on all 4 hubs. The dch -182 is KV-DIE-SEAMHOLD. Open: measure post-CTS cland->bin hold on private hub_Wo kit (epyc10 kv3_hub_Wo_1124141832, waiter bspujvmub) + hub_C epyc8; if < 0 -> build dch fclk-insertion cap row.
+- VIS pass1733 hub_Wo piles = A5t5 render without ECH (in A5t6) and PINS (A5t7). PINS-APPLY clean on A5t6 -> 4aa47564b80b (epyc10 kv-own-hub-r2/a5t7). hub 770166a3.
