@@ -163,7 +163,8 @@ def steps(a, work):
                  "--report", str(w / "resite.json")] + (["--extra-reg"] if a.extra_reg else [])
     add("chain_resite", argv, w / "s4_resite.json")
     add("retap", py + [str(HERE / "leaf_grow.py"), "retap", cur, "--types", ty_re, "--any-type", "--out", str(w / "s5_retap.json")], w / "s5_retap.json")
-    add("anchor", py + ["-u", "-B", str(HERE / "reset_anchor.py"), "record", cur, str(w / "s6_anchor.json"), "--types", types, "--repick"],
+    add("anchor", py + ["-u", "-B", str(HERE / "reset_anchor.py"), "record", cur, str(w / "s6_anchor.json"), "--types", types, "--repick",
+                  "--root", a.tree],
         w / "s6_anchor.json")
     return st
 
@@ -188,6 +189,8 @@ def run_chain(a, run=subprocess.run):
     if a.dry:
         return 0
     final = st[-1][3]
+    os.environ.update(env)                      # the bind's own tap check reads the tree's views / plan dir
+    os.chdir(a.tree)
     base_raw = json.loads(Path(a.base).read_text())
     new_raw = json.loads(Path(final).read_text())
     types = [t for t in a.types.split(",") if t]

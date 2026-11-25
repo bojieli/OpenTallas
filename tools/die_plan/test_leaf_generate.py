@@ -89,6 +89,7 @@ def test_chain_order_and_plan_handover():
             assert nxt[2] == prev[3]                                         # every step reads the previous step's output
     refresh = st[2][1]
     assert refresh[refresh.index("run") + 1] == "/w/s1_grow.json"            # deltas against the plan core_place started from
+    assert st[5][1][st[5][1].index("--root") + 1] == "/tree"                 # reset_anchor reads the tree's views, not the sparse worktree
     assert "--extra-reg" in st[3][1] and "--obstacle-aware" in st[1][1] and "--repick" in st[5][1]
     a.grow, a.no_core_place, a.extra_reg = 0.0, True, False
     st2 = LG.steps(a, "/w")
