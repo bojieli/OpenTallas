@@ -1,0 +1,31 @@
+item	decision	reason
+sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59	SKIP	SIGNED s29q103S4Q9N46R6V2 (ba69619b8443)
+sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304	SKIP	SIGNED s29q103S4Q9N46R6V2 (47196299f57c)
+sle_hc1__cl7d360508__pv97423966	SKIP	SIGNED s29q103S4Q9N46R6V2 (3bfc707b8c48)
+sle_hc2__cl9c4c4509__cl3edce1b8	SKIP	SIGNED s29q103S4Q9N46R6V3 (70c8156ac72d)
+sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b	SKIP	SIGNED s29q103S4Q9N46R6V1 (e713c9b098aa)
+sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9	SKIP	SIGNED s29q103S4Q9N46R6V1 (acb309a88ed8)
+sle_st_b_v1__pv0e7b1dcc	SKIP	SIGNED s29q103S4Q9N46R4A4 (fe76c313f9b4)
+sle_st_b_v1__pvc5a85fd4__pv38472fb8	SKIP	SIGNED s29q103S4Q9N46R4A4 (3c6823e286dc)
+sle_st_b_v2__cl14c98df5__pv41c959f3	SKIP	SIGNED s29q103S4Q9N46R4A4 (c7ce90ba4af9)
+sle_st_b_v2__cl14c98df5__pvcd986c42	SKIP	SIGNED s29q103S4Q9N46R4A4 (9539b84479dc)
+sle_st_b_v2__clfde1249e	SKIP	SIGNED s29q103S4Q9N46R4A4 (242fbad1030a)
+slw_hc1__cl68f9248e__cle683a076	SKIP	SIGNED s29q103S4Q9N46R6V3 (63a679b5faab)
+slw_hc3__clccfc3e6b__pv39aac7a1	SKIP	SIGNED s29q103S4Q9N46R6V1 (d5f3d7812269)
+slw_hc3__clccfc3e6b__pvcca9ff41	SKIP	SIGNED s29q103S4Q9N46R6V1 (827de5708c20)
+slw_hc3__cld86a7ad4__pvfd488b8f	SKIP	SIGNED s29q103S4Q9N46R6V1 (822d3873e2eb)
+slw_st_b_v1__cl6357f1cc__pv6ace3e48	SKIP	SIGNED s29q103S4Q9N46R4A4 (2033cb1c084a)
+slw_st_b_v1__cle6023ec2	SKIP	SIGNED s29q103S4Q9N46R6V2 (89435a5f3334)
+slw_st_b_v2__pva66d0f22__pv3d7bec84	SKIP	SIGNED s29q103S4Q9N46R4A4 (38bbc6f12fed)
+slw_st_b_v2__pva66d0f22__pvb80e2003	SKIP	SIGNED s29q103S4Q9N46R6V1 (28691315fdb9)
+sle_hc0__cl05696ed1	SKIP	LIVE V4 wave attempt_2 job 4abe14f76374@intel1 5_1_grt (+ C1h private)
+sle_hc0__cl929603c0__cl38badc56	SKIP	LIVE V4 wave attempt_2 job 5bbcbd818466@epyc11 postcts_gate_FF (+ C1h8 private epyc8 5_2_route)
+sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	SKIP	LIVE V4 wave attempt_2 job a59feebf3301@intel1 5_1_grt (+ C1h private)
+slw_hc0__cl1bc59e1c	SKIP	LIVE V4 wave attempt_2 job 3a5c51ec89fe@intel1
+slw_hc1__cl3449ea95	SKIP	LIVE C1h8 QC-ALLFIX/slw_hc1__cl3449ea95_1124053803@epyc8 postcts_gate_FF
+slw_hc1__cl68f9248e__cl144ee7b3	SKIP	LIVE C1h QC-ALLFIX/slw_hc1__cl68f9248e__cl144ee7b3_1124054224@epyc7 postcts_gate_FF
+slw_hc2__cl6bcaba89	SKIP	LIVE C1h QC-ALLFIX/slw_hc2__cl6bcaba89_1124054316@epyc11 signoff
+slw_hc2__cla3497502__cldc737267	SKIP	LIVE V4 wave attempt_2 job ba4ef551dd99@intel1 5_1_grt (+ C1h private epyc7 5_2_route)
+slw_st_b_v1__cl6357f1cc__pvffd43fdc	SKIP	LIVE V4 wave attempt_2 job 85d744aa6664@epyc10 postcts_gate_FF (+ C1h private)
+slw_st_b_v2__pvc2ec5bfb	SKIP	LIVE V4 wave attempt_3 job 76a8a817754b@intel1 pregrt_ff_hold (+ C1h private)
+native59	SKIP	LIVE C1j+row QC-GLUE-IMAGES/native59_1124160935@epyc10 4_1_cts (real sign-off build, not the GEOM probe); V3/V4 also under hold_items native59 functional hold (QC-GLUE, FABLE-RC-QC)
