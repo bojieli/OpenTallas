@@ -873,3 +873,4 @@
   C1m collisions: QC-C1M-COLLIDE splitting.
   C1k st_a_v2 E1/E3 queued on E7 (load 156).
   New failures: none.
+- 2026-11-24 19:32 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-1397240-1795546894 on tolerant-swine: rc=0 after 30677 s, ended 19:32:25, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_fw_v3_1124081537/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
