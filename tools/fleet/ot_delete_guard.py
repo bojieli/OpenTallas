@@ -445,6 +445,16 @@ def signed_unexported_refusal(t, exported=None, host=None):
     return None
 
 
+def signed_attempt_exported(ad, exported=None):
+    """True when the attempt holds own signed records and every one is in the verified archive index; a missing / stale index, no own record or any
+    unexported record -> False (fail closed: the ancestor protection stays)"""
+    try:
+        recs = own_signed_records(ad)
+        return bool(recs) and signed_unexported_refusal(ad, exported) is None
+    except OSError:
+        return False
+
+
 def keep_refusal(target):
     """ROMW-LOSS-1124 (COORD 11-24): a .keep file at or above the target keeps it.  Until now only ot-autoclean honoured .keep, so ot-delete of
     romw-1119/ckpt, head, logs, venv, wt ... (lane dir held a .keep) removed 323 GB of checkpoints on 11-23.  No list, allow_exact entry or flag
@@ -514,7 +524,10 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     # build_protected_live.live_attempt_paths), holds something listed (PROTECTED-DBS, binds of record), holds a signed result, holds an unsigned routed result
     # (routed_unsigned_refusal above), or a live process / ot-run command line names it (below).
     ad = unit_dir_of(t)
-    ad_free = bool(ad) and not attempt_signed(ad)
+    # CLEAN-DISK-0750 (COORD 11-24): a SIGNED attempt whose every own record is in the verified archive index (exported_records.txt, sha256 match) is not held by
+    # the rows-container ancestor either; before this every signed attempt stayed refused for ever after its export (1.37 TB fleet-wide).  Still refused when
+    # listed itself, holding something listed, .keep / lease / live process, and a signed attempt with any unexported record (signed_unexported_refusal).
+    ad_free = bool(ad) and (not attempt_signed(ad) or signed_attempt_exported(ad))
     for p in protected:
         if t.startswith(p + "/") and t in allow:
             continue                                  # exact exception: only a protected ANCESTOR is skipped

@@ -189,3 +189,32 @@ def test_keep_file_at_or_above_target_refuses_romw_loss_1124(tmp_path):
     assert G.refuse(str(lane / "ckpt"), [], "", allow=set()) is None
     (idle / "tree/.keep").write_text("x")                              # a .keep inside the target itself keeps the dir too
     assert ".keep" in G.refuse(str(idle / "tree"), [], "", allow=set())
+
+
+def test_exported_signed_attempt_is_not_held_by_the_kitwave_ancestor(tmp_path):
+    """CLEAN-DISK-0750: a signed attempt with an exported record passes the rows-container ancestor entry; unexported, listed-itself, .keep stay refused"""
+    import hashlib as _h, time as _t, json
+    import ot_delete_guard as G
+    root = tmp_path / "runs" / "s81" / "kit-wave"
+    it = root / "s81" / "ev" / "items" / "t9"
+    so = it / "attempt_2" / "gen" / "t9" / "signoff"
+    so.mkdir(parents=True)
+    (so / "signoff.json").write_text(json.dumps({"verdict": "SIGNED"}))
+    sha = _h.sha256((so / "signoff.json").read_bytes()).hexdigest()
+    lst = tmp_path / "exported_records.txt"
+    old = G.EXPORTED_LIST
+    try:
+        G.EXPORTED_LIST = str(lst)
+        kw = dict(protected={str(root)}, ptext="", allow=set())
+        lst.write_text("# built %d\n" % int(_t.time()))
+        assert "protected" in G.refuse(str(it / "attempt_2"), **kw)
+        lst.write_text("# built %d\n%s\tx\n" % (int(_t.time()), sha))
+        assert G.refuse(str(it / "attempt_2"), **kw) is None
+        assert "protected" in G.refuse(str(it / "attempt_2"), protected={str(root), str(it / "attempt_2")}, ptext="", allow=set())
+        (it / "attempt_2" / ".keep").write_text("")
+        assert ".keep" in G.refuse(str(it / "attempt_2"), **kw)
+        lst.unlink()
+        (it / "attempt_2" / ".keep").unlink()
+        assert G.refuse(str(it / "attempt_2"), **kw) is not None
+    finally:
+        G.EXPORTED_LIST = old
