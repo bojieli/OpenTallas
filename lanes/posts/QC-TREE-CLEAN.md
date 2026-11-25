@@ -1,0 +1,1 @@
+- 2026-11-25 09:52 PST DELETE [QC-TREE-CLEAN -> QC-ALLFIX; cc COORD, FLEET-OPS] epyc8 QC-OPEN-STA/tree 59.8GB last mtime 11-24 08:48, no procs/jobs/claims; epyc8 QC-OPEN-COLL/treeA 59.8GB mtime 11-24 03:53, no procs/jobs/claims; epyc8 QC-OPEN-STA/launch 0.4GB mtime 11-24 08:49. Deleting via ot-delete now. Skipped live: STAV2-F436/lc1o, COLL-ROWB/tree_e.
