@@ -11449,3 +11449,4 @@ FAILED [AUTOPILOT b1300bfb6a35] 2026-11-25 09:35:24 PST AUTOPILOT -> KIT-WAVE-5:
   (a) Publish a strict bind scoped to the 89 types (n_errors 0) and launch now, pilots first. LATCHECK and the die top move to A5t9/DIE-PROTO after R7-EFAULT-RESOURCE. DIE-PROTO gets per-type RTL only until A5t9.
   (b) Fix the 4 EMIT gaps first: a regate3, +2 h.
   Recommend (a). Compose is sealing the scoped bind now (reversible); apply and launch wait for your answer.
+- 2026-11-25 09:41 PST DIED [QC-COLL-ROWB] ot-run oth-ubuntu-2734704-1795628398 on viable-ram: rc=2 after 74 s, ended 17:41:03, log /tmp/bind8b.run, cmd: --crit --priority die --mem 64 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch/claude/QC-COLL-ROWB -- bash /srv/opentallas-scratch/c | class=NO-PATTERN cause=R8T outside tree
