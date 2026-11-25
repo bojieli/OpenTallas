@@ -2246,3 +2246,4 @@
   - 9 lanes already out of c10 scope;
   - 0 of the 21 lanes touches a type left in scope.
   All 21 are DEFERRED to the c10b re-price as LANE-ASBUILT-C10.
+- 2026-11-25 06:21 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-3479486-1795588871 on tolerant-swine: rc=0 after 43853 s, ended 06:21:05, log /home/ubuntu/tmp/s81int/c8s/spec_slice_station__t21/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
