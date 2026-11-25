@@ -16,3 +16,4 @@
   - KV kv3_pv_v12 x2 (epyc10, GRT overflow 58,944 / 59,159, 8-14 h): GRT-LABEL DESIGN-FAIL, cancels through design_fail_pass once flat 2 h. KV kv3_hgi_v8 (epyc2, 8.8 h, setup -907.89 ps): UNSIGNABLE, NOTICE then cancel after 30 min without KEEP. kv3_hub_Wo (epyc10, 9.8 h): pregrt_ff_hold TNS 0 (converged), no CTS row now: nothing to cancel.
   Item 41: LEC jobs are exempt from NO-PROGRESS (tested). Item 42: stall_watch probes all 9 hosts; STALLS.txt 03:35 lists intel2 intel1 epyc2 epyc7-12, no epyc4. Main 54230861e0f. Next: SMELL dry-run list at the 04:00 hub tick, live 30 min later; VIS renders at 3_3_place_gp / 5_1_grt (one per host, nice 10).
 - 2026-11-25 04:09 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1049759 on open-snipe: rc=0 after 59 s, ended 12:09:00, log none, cmd: ot-push-main 
+- 2026-11-25 04:10 PST DONE [stage-plateau] ot-push-main otpush-open-snipe-1128905 on open-snipe: rc=0 after 24 s, ended 12:10:15, log none, cmd: ot-push-main 
