@@ -43,3 +43,4 @@
   FWCPL2 (unseated): base pass running since 20:14. 19,678 hold ends, WNS -45 TNS -40.1k, setup -38.
   FE2 route finished (DRT 0); I am reading the gates now.
   FWCPL2-SEAT PRE + bind: still waiting for admission on E9; ot-run is re-placing it.
+- 2026-11-24 23:26 PST DONE [QC-GEOM-UNITS] ot-run oth-ubuntu-4045900-1795584805 on renewed-glider: rc=0 after 12795 s, ended 07:26:14, log /srv/opentallas-scratch2/claude/QC-GEOM-UNITS/fwseat/bind.ot, cmd: --hosts epyc9 --mem 48 -- bash /srv/opentallas-scratch2/claude/QC-GEOM-UNITS/fwseat/bind_fwseat.sh
