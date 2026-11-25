@@ -102,3 +102,14 @@ S2 epyc8 LEC-async units: now owned by this lane (ruling 4); investigation in pr
   Verdict: CANCEL after BIND-PASS: oth-ubuntu-3135343-1794696222, oth-ubuntu-3142624-1794696238, oth-ubuntu-2063722-1794715554. The cmdline check is done: each is ot-heavy-exit over s29q103S2 items/sle_hc2__cl9c4c4509__{cl3edce1b8,clf60c5152}/attempt_8 run_kit.sh/lec_async.sh.
 - 05:5x FINAL cancel set (QC-FWV2-BAY answered KEEP for both fw_v2 kits; slw_fw_v2__cl8f84514c moved to KEEP, owned by QC-FWV2-BAY):
   epyc9 oth-ubuntu-819767-1795547628 (sle_fe_v2_1124081835); epyc8 oth-ubuntu-3135343-1794696222, oth-ubuntu-3142624-1794696238, oth-ubuntu-2063722-1794715554 (S2 sle_hc2 attempt_8, route failed with DRT-0255). Cancel after C1o v13 BIND-PASS, re-checking each cmdline first.
+
+## HOLD-ECO-STALE review (FABLE-RC-QC row "ALL (hold ECO stale)"), 07:2x PST
+None of the 5 has a live process: no ps line matches the kit name on its host. There is nothing to cancel.
+| kit (host) | eco dir | last change (UTC) | eco_loop verdict | ECO hold plan | i-final TT WNS | FF nonport hold | can sign? |
+|---|---|---|---|---|---|---|---|
+| V4 private QC-ALLFIX coll_ftm_1124051759 (epyc7; archive copy on epyc2) | eco_20261124_130140_1782962 | 11-24 22:54 | PASS, "signed off after 1 ECO iteration", DRC 0 | 3 ep, worst -1.41 | +38.97 | 0.0 | YES. Already physically SIGNED in i1. Not counted: no kit_wave_stages/signed-store row (count/export gap) |
+| V4 private QC-ALLFIX coll_s_1124052522 (epyc8) | eco_20261124_211939_3874698 | 11-25 00:03 | PASS, SIGNED i1, DRC 0 | 605 ep (1 padded HB4, 604 skipped), worst -0.27 | -9.88 (2 ep, inside -42) | 0.0 | Physically yes. Blocked by LEC NOT EQ class g_face_4 (QC-COLLS-LEC), not by hold |
+| V2 items sle_hc1__cl22c1ff36__pve230954c (epyc2 i1; epyc9 attempt_3) | eco_20261123_092856_2078955 / eco_20261122_223653_314236 | 11-24 20:49 / 11-23 02:20 | PASS, SIGNED, DRC 0 (both) | 8 ep, worst -3.98 / -0.47 | -1.52 (1 ep) / +29.77 | 0.0 | YES, any-plan. Row SUPERSEDED (V2/V3) so not counted: re-sign/count gap |
+| V2 private FAM-QC-FEFW-R3 sle_fe_v1__cl1cbb7497_1122013030 (epyc10) | eco_20261123_040953_1214866 | 11-25 07:44 (ARCHIVED to AGIdock) | PASS, SIGNED, DRC 0 | 3564 ep, worst -15.97 | +47.35 | 0.0 | YES (drv slew advisory only). Archived; check that the counter reads it |
+| V2 items glue (epyc8) | eco_20261123_140713_549985 | 11-24 06:11 | EXHAUSTED "no improvement at iteration 2" | n/a | i1 -61.73 (81 ep), i2 -98.25 (71 ep) | 0.0 | NO by ECO: setup beyond -42 and worsening. Structural setup fix (glue rows, C1p QC-GLUE); not a hold problem |
+Finding for QC-HOLD-STRUCT: none of the 5 is a live hold failure. In all 5, FF non-port/core hold is 0.0 after ECO. Four are SIGNED in eco_loop and only missing count/LEC. Glue is a TT setup miss.
