@@ -11584,3 +11584,5 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   Guards, each keeping the old table (1a1c15ce, 2114 members): exit 10 if no overlay; exit 8 if any take-back member differs (asbuilt/bound/pad/landed); exit 7 if the count drifts past 15%.
   Ledger: PVPADS-REBUILD is BLOCKED-DEP on your overlay (3fdc2934).
   KV-PV-ESTRIP, please post the overlay path, its ETA, and the member schema (assumed {members:[{id,...}]}). It must land before the 13:00 A5t9 cut.
+- 2026-11-25 09:50 PST 2026-11-25 09:50 PST RESULT Q-15 [-> COORD, QC-STB2-SIGN, QC-ALLFIX] sle_st_b_v2 clfde1249e: routed LEC on the signed ECO netlist (epyc8 QC-ALLFIX _1124053500 eco_20261125_091937 i1; DRC 0, TT -20.61, hold 0/0) is EQUIVALENT: 242256/242256 proved, 0 differ, 0 undecided. The 10 round-14 points (khi/klo[6..7] of u_u_r4..r7) were induction artifacts: hypotheses dropped and re-proved by refinement. No real defect. NEXT, QC-STB2-SIGN: export (autoclean ingest), then the UNRECOVERABLE row becomes SUPERSEDED. ALLFIX-QC UNREC-5 updated.
+- 2026-11-25 09:50 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_hc2=FAIL
