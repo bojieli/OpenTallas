@@ -9025,6 +9025,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     shutil.copyfile(Path(__file__).with_name("kit_reports.py"), kd / "kit_reports.py")
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "fleet" / "seal_gate.py", kd / "seal_gate.py")           # FLEET-OPS 11-25 F-06: run_kit.sh seal gate
     shutil.copyfile(Path(__file__).resolve().parents[1] / "autopilot" / "kit_resume.py", kd / "kit_resume.py")           # FLOW-FIX-2045: run_kit.sh writes its own resume file for an in-place restart       # FLOW-FIX-2045: run_kit.sh quarantines reports that are not this kit's own
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
@@ -9476,6 +9477,8 @@ set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 # AUTO-RESUME block (FLOW-FIX-2045; S81-GEOM-OPUS 39ed0e56: an in-place restart with no resume.json redid floorplan onward): a kit that already has stage results and no wave resume plan gets K/resume.json for
 # the newest valid step (complete, passed, inputs not newer); OT_RESUME=0 opts out; any doubt = the full flow as before.  Refusal-free; no physical step  # KWRS-BEGIN
+# FLEET-OPS 11-25 (F-06): a kit whose physical/ holds a symlink into another lane's scratch tree is reported (1 h), then refused; OT_SEAL_GATE=0 disables
+if [ -f "$K/seal_gate.py" ]; then python3 -I "$K/seal_gate.py" "$K" run_kit >&2; [ $? = 4 ] && { echo "run_kit: SEAL-GATE refused (symlink into another scratch tree)" >&2; exit 4; }; fi
 if [ "${OT_RESUME:-1}" != 0 ] && [ ! -f "$K/.no_auto_resume" ] && [ -f "$K/kit_resume.py" ] && [ "$GOAL" != synth ] && ls "$K"/run/results/asap7/*/base/1_synth.odb >/dev/null 2>&1; then
   python3 -I "$K/kit_resume.py" auto "$K" "$GOAL" >&2 || true
 fi
