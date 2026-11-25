@@ -136,14 +136,15 @@ def test_plan_gate_pre_composedrop_class(tmp_path, monkeypatch):
     del b["partition_types"]["st_a"]["landing_relay_start_copy"]
     pa, pb = _w(tmp_path, "base.json", a), _w(tmp_path, "plan.json", b)
     others = [c for c in P.CLASSES if c != "COMPOSEDROP"] + ["TAPOFF", "STARTSETTLE"]
+    cd = lambda fs: [x for x in fs if x.split()[1:2] == ["COMPOSEDROP"]]  # noqa: E731 - not the LIST PRE-TIME line
     monkeypatch.setenv("OT_TREE_PRECHECK", "off")
-    f = [x for x in P.check(str(tmp_path), pb, baseline=pa, skip=others) if "COMPOSEDROP" in x]
+    f = cd(P.check(str(tmp_path), pb, baseline=pa, skip=others))
     assert f and all(x.startswith("WARN COMPOSEDROP") for x in f)
     assert any("landing_relay_start_copy" in x for x in f)
-    assert not [x for x in P.check(str(tmp_path), pb, skip=others) if "COMPOSEDROP" in x]      # no baseline: not run
+    assert not cd(P.check(str(tmp_path), pb, skip=others))      # no baseline: not run
     monkeypatch.setenv("OT_COMPOSE_DROP", "fail")
-    assert [x for x in P.check(str(tmp_path), pb, baseline=pa, skip=others) if x.startswith("FAIL COMPOSEDROP")]
+    assert [x for x in cd(P.check(str(tmp_path), pb, baseline=pa, skip=others)) if x.startswith("FAIL ")]
     dl = tmp_path / "drops.txt"
     dl.write_text("partition_types.st_a.landing_relay_start_copy # intended\n")
     monkeypatch.setenv("OT_COMPOSE_DROP_LIST", str(dl))
-    assert not [x for x in P.check(str(tmp_path), pb, baseline=pa, skip=others) if "COMPOSEDROP" in x]
+    assert not cd(P.check(str(tmp_path), pb, baseline=pa, skip=others))
