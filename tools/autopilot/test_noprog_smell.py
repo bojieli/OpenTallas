@@ -261,3 +261,14 @@ def test_place_checkpoint_falls_back_to_3_place_when_3_3_is_an_empty_placeholder
     (d / "3_3_place_gp.odb").write_text("odb")
     os.utime(d / "3_3_place_gp.odb", (1_000_000, 1_000_000))
     assert [os.path.basename(o) for c, o, _ in nw.vis_candidates(work, {})] == ["3_3_place_gp.odb"]
+
+
+def test_a_smelling_kit_also_queues_the_post_place_review_once_a_day(tmp_path):
+    work = mkkit(tmp_path, names=("3_place.odb",))
+    r = {"work": work, "kit": work, "container": "c1", "verdict": "PROGRESS", "kind": "drt", "image": "img", "ident": "c1 " + work, "smell": [("DRT", "iteration-3 violations 2181 (> 1500)")]}
+    st = {}
+    assert nw.pp_queue_smells([r], st, NOW) == 1 and st["pp_todo"][0]["odb"].endswith("3_place.odb") and st["pp_todo"][0]["key"] == "smell|" + work
+    assert nw.pp_queue_smells([r], st, NOW + 60) == 0                         # already queued
+    st["pp_todo"].clear(); st["pp_done"] = {"smell|" + work: {"t": NOW}}
+    assert nw.pp_queue_smells([r], st, NOW + 3600) == 0 and nw.pp_queue_smells([r], st, NOW + 90000) == 1
+    assert nw.pp_queue_smells([dict(r, smell=[])], {}, NOW) == 0

@@ -2322,6 +2322,37 @@ def pp_launch(item, state_dir, now, popen=subprocess.Popen, roots=None):
     return "launched"
 
 
+def placed_odb(work):
+    """the kit's post-global-placement DB: 3_3_place_gp.odb, else 3_place.odb (first non-empty), '' when none"""
+    for name in ("3_3_place_gp.odb", "3_place.odb"):
+        for g in (f"run/results/*/*/*/{name}", f"gen/*/run/results/*/*/*/{name}", f"results/*/*/*/{name}"):
+            for p_ in glob.glob(os.path.join(work or "", g)):
+                try:
+                    if os.stat(p_).st_size > 0:
+                        return p_
+                except OSError:
+                    pass
+    return ""
+
+
+def pp_queue_smells(rows, state, now):
+    """COORD 06:1x item 3: a kit that SMELLs also gets the post-place review kit (once per kit per 24 h).  -> number queued"""
+    todo = state.setdefault("pp_todo", [])
+    done = state.setdefault("pp_done", {})
+    n = 0
+    for r in rows:
+        if not r.get("smell") or smell_exempt(r) or not r.get("work") or ECO_RE.search(str(r.get("work"))) or re.search(r"/eco_\d", str(r.get("work"))):
+            continue
+        key = f"smell|{r['work']}"
+        if (key in done and now - float(done[key].get("t", 0)) < 86400) or any(x["key"] == key for x in todo):
+            continue
+        odb = placed_odb(r["work"])
+        if odb:
+            todo.append({"key": key, "kit": r["work"], "odb": odb, "image": r.get("image", ""), "id": (r.get("container") or "x")[:40]})
+            n += 1
+    return n
+
+
 def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
     """HOST: launch at most ONE checkpoint render (nice 10) this pass, when none is running.  Marks row['vis'] = {checkpoint, status, dir} for the hub's lanes/VIS-QUEUE.tsv."""
     done = state.setdefault("vis_done", {})
@@ -2329,6 +2360,7 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
     if os.environ.get("NOPROG_VIS_MODE") == "off" or vis_running(state_dir, now):
         return None
     todo = state.setdefault("pp_todo", [])
+    pp_queue_smells(rows, state, now)
     if todo:
         item = todo.pop(0)
         res = (pp or pp_launch)(item, state_dir, now)
