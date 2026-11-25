@@ -39778,18 +39778,15 @@
     "hd_turn_b"
    ],
    "hosts": [
+    "epyc7",
     "intel1",
-    "epyc8",
-    "epyc2",
-    "intel2",
-    "epyc12"
+    "epyc8"
    ],
    "live_claim_h": 0,
    "place_prefer": [
-    "intel1",
     "epyc8",
-    "intel2",
-    "epyc2"
+    "intel1",
+    "epyc7"
    ],
    "only_items_l48rc": [
     "hd_ctl_e",
