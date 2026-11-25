@@ -8532,6 +8532,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text(hook.read_text() + "\nsource /work/reserved_banks.tcl\n")
         hook = kd / "face_flops_release.tcl"
         hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
+    # QC-GLUE 11-25 (QC-ALLFIX): opt-in plan key logic_cluster_rects_um -> odb region/group, last in PRE_GLOBAL_PLACE
+    import logic_cluster
+    lc_tcl = logic_cluster.tcl(P, tn)
+    if lc_tcl:
+        (kd / "logic_cluster.tcl").write_text(lc_tcl)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/logic_cluster.tcl\n")
     if t.get("rck_band"):
         # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;
         # face_flops_release.tcl releases them (ot_face_flops.txt rows tagged RCKB) for DPL
