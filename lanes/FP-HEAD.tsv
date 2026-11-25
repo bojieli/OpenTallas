@@ -1,10 +1,14 @@
-type	taps>1000	sinks_under_cores	gcell_obstruction	macro_channel<14.88	legs>405	lane_latency	tapstep	street>1.0	drt_plateau_risk	visual	basis
-hd_serdes	FAIL placed clk_t4 10250 clk_t5 9557 clk_t3 9183 (+2 >1500)	UNCHECKED(no bins)	PASS(static)	PASS	PASS	PASS	PASS	PASS	FAIL (taps>1000 proxy)	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	ADV-TAP-LOAD W7 plan
-hd_tile	FAIL plan x8.5 under-sized (28848 flops / 6 taps)	UNCHECKED	PASS	PASS	PASS	FAIL 12 chE*_h lanes PRICE-SHORT	UNPRICED (no tap_offset table)	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD,ISTPRICE,EDGE-STRIP 528 windows
-hd_spn	WARN tap clk_t31 1697 pin regs est 576ps>450	UNCHECKED	PASS	PASS	PASS	FAIL sp_x1..5 PRICE-SHORT (2<8)	PASS	FAIL ROUTE-DEMAND peak 2.49 (519 gcells>=0.8)	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-BUDGET,ROUTE-DEMAND
-hd_spn_end	WARN tap clk_t23 1697 est 576ps	UNCHECKED	PASS	PASS	PASS	PASS	PASS	FAIL ROUTE-DEMAND peak 1.87 (408 gcells)	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-BUDGET,ROUTE-DEMAND
-hd_mesh	FAIL plan x5.5 under-sized (49418 flops / 16 taps cap 24000)	UNCHECKED(7% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD
-hd_lep0N	FAIL plan x2.7 (57952 flops / 16 taps; needs >=39)	UNCHECKED(15% ref)	PASS	FAIL 40 bank pairs 8.35 um (new ADV-MACRO-CHANNEL)	PASS	PASS	FAIL 16 pairs >42ps (W6, kit)	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD,MACRO-CHANNEL,EDGE-STRIP 7 windows
-hd_ctl	FAIL 38549 flops / 16 taps (needs >=26)	UNCHECKED(11% ref)	PASS	PASS	PASS	PASS	PASS	PASS	WARN	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	TAP-LOAD
-hd_host(_w)	n/a	n/a	UNCHECKED: no static rule (GRT 139; obs_gcell_cap fix 0d7deda5143)	PASS	PASS	PASS	PASS	PASS	n/a	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	HD-HOSTW-GRT-1
-other types	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	PASS	FAIL (fable review 1: see FP-HEAD-ROWS.tsv)	no finding
+type	taps>1000(placed)	sinks_under_cores	gcell_sliver	macro_channel<14.88	legs>405	lane_latency(G0/fic)	tapstep	street_util_peak	drt_plateau_risk	visual_iter1	visual_iter2	status
+hd_serdes	FAIL clk_t13 5648 clk_t12 4668 clk_t29 2654	n/a(no bins)	WARN 32/37 taps	PASS	PASS	PASS	PASS	0.93	FAIL(taps proxy)	FAIL	PENDING	DEFERRED W8 re-floor lane (sink_bins+density, dmem/cmem y)
+hd_tile	WARN under-sized	n/a	WARN 4/5	PASS	PASS	PASS	UNPRICED	1.44 FAIL	WARN	FAIL	PENDING	DEFERRED W9 (added_taps grid, eB y shift need regen) ETA after W8
+hd_spn	WARN clk_t31 1697 est 576ps	n/a	WARN 36/42	PASS	PASS	PASS	PASS	3.11 FAIL	PASS	FAIL	PENDING	DEFERRED W9 (outline W 587.52->691.2 regen)
+hd_spn_end	WARN	n/a	WARN 55/68	PASS	PASS	PASS	PASS	1.87 FAIL	PASS	FAIL	PENDING	DEFERRED W9
+hd_mesh	n/a	7% (review)	WARN 1/1	FAIL 48 pairs min 1.85um	PASS	PASS	PASS	0.0	WARN	FAIL	PENDING	DEFERRED W9 (g_256 pair gaps)
+hd_mesh_e	PASS	n/a	WARN 4/4	PASS	FAIL m_rx_ft bit19 407um	PASS	PASS	0.0	PASS	FAIL	PENDING	ROW-READY ft_slots[m_rx_ft].stations +1 (G0-HOPS)
+hd_host_w	WARN bins x11.4	n/a	WARN 50/65 (exempt by 0d7deda5143)	FAIL 24 pairs min 1.85um	PASS	PASS	PASS	0.0	WARN	FAIL	PENDING	DEFERRED W9; GRT 139 cured by 0d7deda5143 (verify on W7 kit)
+hd_host_e	FAIL 8 taps>1500 (3745,3532)	n/a	WARN 8/12	PASS	PASS	PASS	PASS	0.0	WARN	FAIL	PENDING	DEFERRED (bins from kit + density)
+hd_lep0N	FAIL clk_t137 1947 clk_t25 1542 clk_t101 1508	14-15% (review)	WARN 156/185	FAIL 24 pairs min 2.42um	PASS	PASS	FAIL 16 pairs>42ps(W6)	1.33 FAIL	WARN	FAIL	PENDING	HEAD-ALLFIX C1/C3/C9 in flight
+hd_lep0N_w	FAIL clk_t53 2479 clk_t47 1962 clk_t63 1947	22% (review)	WARN 56/66	FAIL 10 pairs 12.97um	PASS	PASS	WARN	1.42 FAIL	WARN	FAIL	PENDING	HEAD-ALLFIX C1/C2/C4/C6 in flight
+hd_ctl	WARN bins x1.18	11% (review)	WARN 1/1	PASS	PASS	PASS	PASS	1.04 FAIL	WARN	FAIL	PENDING	DEFERRED W9 (cores y +86.4)
+others (15)	PASS	PASS	WARN(exposure)	PASS	PASS	PASS	PASS	<=0.93	PASS	n/a	n/a	no finding
+# iteration trend: iter0 plan=16-type source: PRE FAIL 13 (ISTPRICE 17 lanes, TOOLS 1), G0 n/a ; iter1 bound W7 q (27 types): PRE PASS 0 findings 140 advisories, G0 PASS 0 errors (needs --native-reset-receipt; without it 1 pending-release ERROR), visual FAIL 16/17 reviewed types; iter2: same plan + new rules ADV-MACRO-CHANNEL (106 channels, 4 types), ADV-GCELL-SLIVER (514/612 taps exposure), render_type_heat (6 types route util>1.0); 12 lane re-price rows tried and REJECTED by G0 (table says N, plan gives N-1): the 19 'latency failures' are the nofic variant of latcheck, the gating fic check passes 334/334
