@@ -72,3 +72,24 @@ def test_cellcap_reports_retained_and_estimated_counts_above_reference():
     assert "tile__cl987654: 420,000 standard cells (retained kit count)" in out[1]
     assert "plan_only: 400,001 standard cells (estimate from plan type.cells)" in out[2]
     assert out[3].endswith("3 above reference, 1 retained kit counts, 3 estimates, 1 unmeasured")
+
+
+def test_run_parallel_equals_serial(monkeypatch):
+    import types
+    import plan_advisory as PA
+    mods = {}
+    for i, n in enumerate(("AAA", "BBB", "CCC", "DDD")):
+        def findings(raw, plan_path, tree=None, _n=n, _i=i, **kw):
+            if _n == "CCC":
+                raise RuntimeError("boom")
+            return [f"WARN ADV-{_n} line {_i}", "# debug"]
+        mods["m_" + n] = types.SimpleNamespace(findings=findings)
+    monkeypatch.setattr(PA, "CHECKS", tuple((n, "m_" + n) for n in ("AAA", "BBB", "CCC", "DDD")))
+    monkeypatch.setattr(PA.importlib, "import_module", lambda m: mods[m])
+    t1, t2 = {}, {}
+    ser = PA.run({}, "p.json", jobs=1, timing=t1)
+    par = PA.run({}, "p.json", jobs=3, timing=t2)
+    assert ser == par and list(t1) == list(t2) == ["AAA", "BBB", "CCC", "DDD"]
+    assert [x.split()[1] for x in par] == ["ADV-AAA", "ADV-BBB", "ADV-CCC", "ADV-DDD"]
+    assert "not checked: RuntimeError: boom" in par[2]           # one check failing never stops the others
+    assert PA.run({}, "p.json", jobs=3, skip=("BBB",), checks=("AAA", "BBB", "DDD")) == [par[0], par[3]]

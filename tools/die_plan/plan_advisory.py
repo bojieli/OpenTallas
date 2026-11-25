@@ -136,41 +136,75 @@ def _norm(name, lines):
     return out
 
 
-def run(raw, plan_path, tree=None, checks=None, skip=(), timing=None, cap=True, **kw):
-    """WARN ADV-* lines of every check (never raises)."""
+def _run_one(name, mod, raw, plan_path, tree, kw, cap):
+    """-> (name, lines, seconds) of one check (never raises); the per-check alarm needs the main thread of the process"""
+    t0 = time.time()
+    try:
+        m = importlib.import_module(mod)
+    except ImportError:
+        return name, None, 0.0
+    main_thread = threading.current_thread() is threading.main_thread()
+    old = None
+    try:
+        if main_thread and CHECK_TIMEOUT_S > 0:
+            old = signal.signal(signal.SIGALRM, _alarm)
+            signal.alarm(CHECK_TIMEOUT_S)
+        lines = m.findings(raw, plan_path, tree=tree, **{k: v for k, v in kw.items() if v})
+    except _Timeout:
+        lines = [f"WARN ADV-{name} not checked: over {CHECK_TIMEOUT_S} s"]
+    except Exception as e:  # noqa: BLE001 an estimator never breaks the gate
+        lines = [f"WARN ADV-{name} not checked: {type(e).__name__}: {str(e)[:200]}"]
+    finally:
+        if old is not None:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old)
+    return name, (_norm(name, lines) if cap else [str(x) for x in lines or []]), round(time.time() - t0, 2)
+
+
+_JOB = {}
+
+
+def _job(i):
+    name, mod = _JOB["todo"][i]
+    return _run_one(name, mod, *_JOB["args"])
+
+
+def default_jobs():
+    try:
+        return max(1, int(os.environ.get("OT_PLAN_ADVISORY_JOBS", "8")))
+    except ValueError:
+        return 1
+
+
+def run(raw, plan_path, tree=None, checks=None, skip=(), timing=None, cap=True, jobs=None, **kw):
+    """WARN ADV-* lines of every check (never raises), in CHECKS order.  jobs > 1 (default 8, OT_PLAN_ADVISORY_JOBS) runs the
+    independent checks in a fork pool (a PRE took > 1 h serially: ~60 whole-plan checks); a pool that cannot start runs serial."""
     if os.environ.get("OT_PLAN_ADVISORY", "").lower() == "off":
         return []
     skip = {s.upper() for s in skip or ()}
     want = {c.upper() for c in checks} if checks else None
+    todo = [(n, m) for n, m in CHECKS if n not in skip and (want is None or n in want)]
+    jobs = default_jobs() if jobs is None else jobs
     out = []
     sys.path.insert(0, str(HERE))
     try:
-        for name, mod in CHECKS:
-            if name in skip or (want is not None and name not in want):
-                continue
-            t0 = time.time()
+        res = None
+        if jobs > 1 and len(todo) > 1:
             try:
-                m = importlib.import_module(mod)
-            except ImportError:
+                import multiprocessing
+                _JOB["todo"], _JOB["args"] = todo, (raw, plan_path, tree, kw, cap)
+                with multiprocessing.get_context("fork").Pool(min(jobs, len(todo))) as pool:
+                    res = list(pool.imap(_job, range(len(todo)), chunksize=1))
+            except Exception:  # noqa: BLE001 e.g. a daemonic parent cannot fork a pool
+                res = None
+        if res is None:
+            res = [_run_one(n, m, raw, plan_path, tree, kw, cap) for n, m in todo]
+        for name, lines, secs in res:
+            if lines is None:
                 continue
-            main_thread = threading.current_thread() is threading.main_thread()
-            old = None
-            try:
-                if main_thread and CHECK_TIMEOUT_S > 0:
-                    old = signal.signal(signal.SIGALRM, _alarm)
-                    signal.alarm(CHECK_TIMEOUT_S)
-                lines = m.findings(raw, plan_path, tree=tree, **{k: v for k, v in kw.items() if v})
-            except _Timeout:
-                lines = [f"WARN ADV-{name} not checked: over {CHECK_TIMEOUT_S} s"]
-            except Exception as e:  # noqa: BLE001 an estimator never breaks the gate
-                lines = [f"WARN ADV-{name} not checked: {type(e).__name__}: {str(e)[:200]}"]
-            finally:
-                if old is not None:
-                    signal.alarm(0)
-                    signal.signal(signal.SIGALRM, old)
-            out += _norm(name, lines) if cap else [str(x) for x in lines or []]
+            out += lines
             if timing is not None:
-                timing[name] = round(time.time() - t0, 2)
+                timing[name] = secs
     finally:
         try:
             sys.path.remove(str(HERE))
@@ -198,6 +232,7 @@ def main(argv=None):
     ap.add_argument("--bind-out")
     ap.add_argument("--baseline", help="base plan (changed-lane scope, e.g. PHANTOM-STATION)")
     ap.add_argument("--json")
+    ap.add_argument("--jobs", type=int, default=None, help="worker processes over checks (default 8, OT_PLAN_ADVISORY_JOBS; 1 = serial)")
     ap.add_argument("--all", action="store_true", help="no per-check line cap")
     a = ap.parse_args(argv)
     try:
@@ -206,7 +241,7 @@ def main(argv=None):
         print(f"plan_advisory: cannot read {a.plan}: {e}", file=sys.stderr)
         return 2
     tm = {}
-    lines = run(raw, a.plan, a.tree, [c for c in a.checks.split(",") if c] or None, timing=tm, cap=not a.all,
+    lines = run(raw, a.plan, a.tree, [c for c in a.checks.split(",") if c] or None, timing=tm, cap=not a.all, jobs=a.jobs,
                 asbuilt=a.asbuilt, bind_out=a.bind_out, baseline=a.baseline)
     for x in lines:
         print(x)
