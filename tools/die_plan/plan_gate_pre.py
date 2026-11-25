@@ -1350,19 +1350,34 @@ def start_settle_bound(sidecar_doc, max_release):
     return deadline(col["root"])
 
 
-def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_release=None):
-    """START-SETTLE-1124: the die START is ot_dp_landing_root #(SETTLE = count_aligned.root_settle_cycles) and every child
-    origin leaves reset at its wavefront release, so SETTLE must be >= the collector ready bound at the plan's actual max
-    release (raw release + 21 ring training + chain depths), and the sidecar boot_budget must carry that release.
-    Always START_SETTLE_LEVEL (WARN: report-only until COORD rules otherwise).  No sidecar / no collector: WARN, not run."""
-    lvl = START_SETTLE_LEVEL
+def startsettle_sidecar(tree, sidecar=None, asbuilt=None):
+    """the landing sidecar START-SETTLE reads (--sidecar, else the as-built clock_landing_table), None when there is none"""
     sc = sidecar
     if not sc and asbuilt:
         ab = _load(asbuilt) or {}
         t = ab.get("clock_landing_table")
         if t:
             sc = str(t if os.path.isabs(t) else Path(tree) / t)
-    if not sc or not Path(sc).is_file():
+    return sc if sc and Path(sc).is_file() else None
+
+
+def startsettle_types(raw):
+    """the types reset_tree.wf_plan solves for START-SETTLE (wavefront plans): the type of every partition of a non-hard type"""
+    if ((raw or {}).get("reset") or {}).get("release") != "wavefront":
+        return []
+    pt = raw.get("partition_types") or {}
+    parts = raw.get("partitions") or []
+    return sorted({p.get("type") for p in parts if isinstance(p, dict) and p.get("type") in pt
+                   and not (pt[p["type"]] or {}).get("hard")})
+
+def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_release=None):
+    """START-SETTLE-1124: the die START is ot_dp_landing_root #(SETTLE = count_aligned.root_settle_cycles) and every child
+    origin leaves reset at its wavefront release, so SETTLE must be >= the collector ready bound at the plan's actual max
+    release (raw release + 21 ring training + chain depths), and the sidecar boot_budget must carry that release.
+    Always START_SETTLE_LEVEL (WARN: report-only until COORD rules otherwise).  No sidecar / no collector: WARN, not run."""
+    lvl = START_SETTLE_LEVEL
+    sc = startsettle_sidecar(tree, sidecar, asbuilt)
+    if not sc:
         return ["WARN START-SETTLE check not run: no landing sidecar (--sidecar or as-built clock_landing_table)"]
     try:
         doc = json.loads(Path(sc).read_text())
@@ -1370,10 +1385,12 @@ def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_re
             sys.path.insert(0, str(Path(__file__).resolve().parent))
             import schema as _S
             import reset_tree as _RT
-            P = _S.Plan(_load(plan))
+            # RESET-TREE-CACHE-1124 (profile: 1929 s on its own Plan): the shared Plan the prewarm solved the die wavefront on, inputs read
+            # from --tree like the other reset classes; wf_plan's per-type trees come from the reset-tree cache
+            P = _shared_plan(plan, _load(plan))
             if not _RT.wavefront(P):
                 return []
-            max_release = int(_RT.wf_plan(P)["max_release"])
+            max_release = int(_in_tree(tree, lambda: _RT.wf_plan(P))["max_release"])
         need = start_settle_bound(doc, max_release)
         have = int(((doc.get("count_aligned") or {}).get("root_settle_cycles")) or 64)
         bud = ((doc.get("collector") or {}).get("boot_budget") or {})
@@ -2208,9 +2225,10 @@ class PreTimer:
 
 
 
-def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=None, env=None):
+def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=None, env=None, sidecar=None, asbuilt=None):
     """RESET-TREE-CACHE-1124 (COORD ruling): {"plan": {type: [classes]}, "base": {type: [classes]}} of the reset trees this check()
     solves, from each class's own selection: LANDREMAP (landremap_types, plan + base; its bind re-pick reads the same plan tree),
+    STARTSETTLE (startsettle_types: wf_plan solves every soft type of a wavefront plan; only with a landing sidecar),
     RESETPUB with OT_RESETPUB_SOLVE=1 (resetpub_todo), ANCHORDRY with OT_ANCHORDRY_SOLVE=1 (types with clock.reset_tree_anchor),
     RSTREACH / DERIVEDNAME (derived_drop.reset_tree_types).  TAPNAME solves density tap grids, not reset trees: nothing.
     derived_base is not prewarmed: its trees are read only after an rstnode finding."""
@@ -2227,6 +2245,8 @@ def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=N
             lt = landremap_types(raw, braw)
             add("plan", lt, "LANDREMAP")
             add("base", lt, "LANDREMAP")
+    if "STARTSETTLE" not in skip and startsettle_sidecar(tree, sidecar, asbuilt):
+        add("plan", startsettle_types(raw), "STARTSETTLE")
     if "RESETPUB" not in skip and env.get("OT_RESETPUB_SOLVE") == "1":
         add("plan", [tn for tn, _p, _n in resetpub_todo(raw, None, True)], "RESETPUB")
     if "ANCHORDRY" not in skip and env.get("OT_ANCHORDRY_SOLVE") == "1":
@@ -2261,8 +2281,8 @@ def reset_prewarm(tree, plan, sel, landremap_base=None):
         if not tns or not path:
             continue
         r = _load(path)
-        try:
-            P = schema.Plan(json.loads(json.dumps(r)), Path(path).parent / "die_plan.json")
+        try:                                             # the plan side is the shared Plan START-SETTLE / RESETPUB / TAPNAME use
+            P = _shared_plan(path, r) if side == "plan" else schema.Plan(json.loads(json.dumps(r)), Path(path).parent / "die_plan.json")
             res = _in_tree(tree, lambda: RT.prewarm(P, tns))
         except Exception as e:  # noqa: BLE001 - each class then solves (and reports) on demand
             info.append(f"{side} {len(tns)} type(s) not prewarmed ({type(e).__name__}: {str(e)[:120]})")
@@ -2313,7 +2333,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if _warm:                                            # RESET-TREE-CACHE-1124: every reset tree the classes below solve, once, in a pool
         _pt.mark("RESETWARM")
         try:
-            _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline)
+            _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline,
+                                     sidecar=sidecar, asbuilt=asbuilt)
             findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb))
         except Exception as e:  # noqa: BLE001 - the classes solve on demand
             findings.append(f"LIST RESET-PREWARM not run: {type(e).__name__}: {str(e)[:200]}")

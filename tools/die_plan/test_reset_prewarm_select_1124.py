@@ -72,3 +72,26 @@ def test_derived_reads_equal_selection():
     D.findings(raw, "/x/p.json", solver=S, classes=("RSTREACH", "DERIVEDNAME"))
     assert S.read == D.reset_tree_types(raw, ("RSTREACH", "DERIVEDNAME")), (S.read, D.reset_tree_types(raw))
     assert "branches" in S.read and "plain" not in S.read and "hard" not in S.read
+
+
+def test_startsettle_reads_equal_selection(tmp_path, monkeypatch):
+    import reset_tree as RT
+    raw = json.loads((Path(__file__).resolve().parent / "examples/tiny_plan.json").read_text())
+    raw.setdefault("reset", {})["release"] = "wavefront"
+    for ty in raw["partition_types"].values():
+        ty.pop("contents", None)
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps(raw))
+    sc = tmp_path / "sidecar.json"
+    sc.write_text("{}")
+    seen = set()
+    real = RT.for_type
+
+    def rec(P, tn, reach=None):
+        seen.add(tn)
+        return real(P, tn, reach)
+    monkeypatch.setattr(RT, "for_type", rec)
+    G._PLAN_OBJ.clear()
+    G.check_startsettle(str(tmp_path), str(p), sidecar=str(sc))
+    want = G.reset_solve_types(str(tmp_path), str(p), raw, {"RSTREACH", "DERIVEDNAME", "LANDREMAP"}, env={}, sidecar=str(sc))
+    assert seen and seen == set(want["plan"]) == set(G.startsettle_types(raw))
