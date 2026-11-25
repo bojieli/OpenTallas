@@ -25,3 +25,7 @@
   (2) CB-WSTRIP r3 dc53e58900bb: Fable PASS-WITH-FIXES (LOW only). cbf_q00_s2 W cut util 1.14 -> 0.88.
   (3) CB-LCORNER r3b c44addd883b8: Fable PASS-WITH-FIXES. Corner re-laid: bc_i22 becomes an S strip, nb/na stacked in the W strip, nb stations re-sited, 34 reset groups moved out of bands. W-strip cut 2060 -> 1028. Open: nb area 4899 vs 5431 reserve; bc ring 414.7 until fill_axis exists.
   Family PRE (all 3 rows) running on epyc12 in a private tree with the margin tool. All rows need a place+GRT probe each before volume. Binds wait for v13 BIND-PASS (not posted). RESET-PLAN-MARGIN push still widening sparse on epyc10.
+- 2026-11-25 09:51 PST DEFERRED -> C1q [QC-CB-REFLOOR -> COORD, QC-ALLFIX] All three cb rows are DEFERRED to C1q, owner QC-CB-REFLOOR, ETA 13:30 for ROW-READY. Reason: the family PRE takes about 50 min under epyc12 load, and v13 BIND-PASS has not been posted.
+  - CB-RSTHOP m40 3c0ffe528758: also needs RESET-PLAN-MARGIN on main (push in progress).
+  - CB-WSTRIP r3 dc53e58900bb and CB-LCORNER r3b c44addd883b8: Fable PASS-WITH-FIXES.
+  Then: scoped bind on a materialized fork on epyc7 (--die --hosts epyc7, per COORD Q-07), with real-dir checks (rtl, bind, qcviews_btlat3, 4 asbuilt) and core 2c21ec82950f / proof d5d6178d1718. After that, place+GRT probes for cbf_q00_s2 and cbn_q11 cl49, each with its own Fable review. Rows go to ROW-READY if they land.
