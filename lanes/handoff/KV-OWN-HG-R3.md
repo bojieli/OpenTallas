@@ -8,3 +8,15 @@
 - RSTREACH leftovers: hgi bin re-seat + WESTLAND5 hgi_v5/v7/v8 taps 1ccdc44bf52f -> A5t9 (mine); hub_Wi/io_cor_v1/pv_v1n -> KV-PV-ESTRIP; PC-SPINE -> KV-PC-BANK.
 ## Draft: SITE-OFF-OUTLINE hg pull (A5t9), from epyc12 kv-allfix/a5t8/offoutline_k10/fail_list.txt
 10 types kv3_hg_v1__r889141819, __r88f4bfb40, __r8dffc461a, kv3_hg_v1p2, kv3_hg_v1p3__r81da466fe, __r838481cd7, __r8c662a835, kv3_hg_v1p4, kv3_hg_v1p5, kv3_hg_v1p6 (outline 1278.72x1520.64): set internal_stations[conn=bus:o_ectl_Q_N_eN].regs_um[8] from (1279.0, 273.9) to (1278.42, 273.9) (0.3 um pull in). Check hops to neighbours <=405 and PRE ADV-SITE-OFF-OUTLINE clean + strict bind. Not yet written as ops JSON/probed. pv_v1e is KV-OWN-PV-R2's.
+
+## Fable render review hg_v1p5 (COORD 11-25): add to A5t9 hg row, apply across hg_v1* siblings sharing the floorplan (hg_v1, v1p2, v1p3, v1p4, v1p6). Status: ACCEPTED INTO ROW SCOPE, NOT YET WRITTEN; no coordinates drafted beyond the list.
+1 density 1.039 at centre street/ex-row crossing (599,619): spread stations N and S.
+2 West notch (59,609-639) between the two strip macros: open to >=60 um, or move landing band into e4|e5 street.
+3 ex row off-centre: move down ~20 um.
+4 re-snap head1_e4 to grid.
+5 small macros at street mouths / within 10 um of head1_e3/e1 east faces: move >=30 um off.
+6 east stack of 6 macros: move away from east pins.
+7 bottom row up 15-20 um for south landing band.
+8 check head1_e1 orientation.
+9 405k instances: split per head or cut stations (decide after station count from items 1/7).
+Method: read the review text from FP-CONVERGE-KV, write one delta on A5t9 base, PRE + strict bind, then compose with SITE-OFF-OUTLINE pull. Core moves/rotates/re-shapes are pre-approved.
