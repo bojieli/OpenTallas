@@ -81,3 +81,16 @@ def test_precheck_report_only(tmp_path):
     f.write_text(json.dumps(M.apply(_plan())[0] and (lambda q: (M.apply(q), q)[1])(_plan())))
     assert G.check_monleg(str(f)) == []
     assert "MONLEG" in G.CLASSES
+
+
+def test_src_form_ops_and_old_check():
+    p = _plan()
+    lc = p["partition_types"]["T"]["clock"]["landing_contract"]
+    lc["collector_local_sources"] = [dict(name="s0", node="rst_n_t3", tap=3, xy_um=[8.0, 640.0],
+                                          band=dict(rect_um=[17.0, 470.0, 26.0, 498.0]))]
+    import copy
+    base = copy.deepcopy(p)
+    assert M.src_census(p)["over_reach"] == 1
+    rep, ops = M.apply_src(p)
+    assert rep["changed"] == 1 and rep["after"] == 0 and M.check_ops(base, ops) == 0
+    assert [o["value"] for o in ops] == ["rst_n_t2", 2]

@@ -26,6 +26,7 @@ usage: rows_s81_monleg.py PLAN_IN PLAN_OUT [REPORT_JSON] [--sidecar-in SC --side
        rows_s81_monleg.py --census PLAN_IN          (before-count only, no output file)
 """
 import collections
+import copy
 import hashlib
 import json
 import os
@@ -176,6 +177,90 @@ def apply_sidecar(sc, changes):
     return n
 
 
+# ---- SRC form (S81-MONLEG 11-25, COORD KV/QC sweep): collector_local_sources whose status flops (band centre) or status pins
+# are over REACH_UM from their node.  The bind rule (landing_collector.build_local) judges xy_um / status_pins_xy_um; the ring's
+# ready/fault flops sit in the band (clock_landing_plan), so the band centre is judged as well.  Same-depth, same-kind relay
+# within reach of every point; 0 cycles; tap key kept consistent (a source with a tap key only moves to an rst_n_t<k> node).
+import re as _re
+
+
+def src_points(s, nxy):
+    pts = s.get("status_pins_xy_um") or [s.get("xy_um") or nxy]
+    b = s.get("band") if isinstance(s.get("band"), dict) else None
+    if b and b.get("rect_um"):
+        pts = list(pts) + [centre(b["rect_um"])]
+    return pts
+
+
+def src_hop(s, nxy):
+    return max(man(p, nxy) for p in src_points(s, nxy))
+
+
+def src_rows(raw, only=None):
+    for tn in sorted(raw.get("partition_types", {})):
+        t = raw["partition_types"][tn]
+        lc = (t.get("clock") or {}).get("landing_contract") if isinstance(t, dict) else None
+        if not lc or not lc.get("collector_local_sources") or not isinstance(lc.get("collector_tree"), dict) or (only and tn not in only):
+            continue
+        R = tree_index(lc["collector_tree"])
+        for i, s in enumerate(lc["collector_local_sources"]):
+            n = R.get(s.get("node", f"rst_n_t{s.get('tap', 0)}"))
+            if n is not None:
+                yield tn, lc, i, s, n, R
+
+
+def src_census(raw, only=None):
+    over = [(tn, i, s.get("node"), src_hop(s, n["xy"])) for tn, lc, i, s, n, R in src_rows(raw, only) if src_hop(s, n["xy"]) > REACH_UM]
+    return dict(over_reach=len(over), over_reach_types=len({o[0] for o in over}), over_fail=sum(1 for o in over if o[3] > FAIL_UM),
+                max_um=round(max([o[3] for o in over] or [0.0]), 1), over=over)
+
+
+def src_pick(s, n, R):
+    tapped = "tap" in s
+    ok = [r for r in R.values() if r["depth"] == n["depth"] and r["kind"] == n["kind"] and src_hop(s, r["xy"]) <= REACH_UM
+          and (not tapped or _re.fullmatch(r"rst_n_t\d+", r["q"]))]
+    if not ok:
+        return None
+    return min(ok, key=lambda r: (src_hop(s, r["xy"]), r["q"]))["q"]
+
+
+def apply_src(raw, only=None):
+    """In place; -> (report, ops).  ops = replace ops with old-value checks (node, and tap when the source carries one)."""
+    ops, rep, unfixed = [], {}, []
+    for tn, lc, i, s, n, R in list(src_rows(raw, only)):
+        h = src_hop(s, n["xy"])
+        if h <= REACH_UM:
+            continue
+        new = src_pick(s, n, R)
+        base = f"/partition_types/{tn}/clock/landing_contract/collector_local_sources/{i}"
+        if new is None:
+            unfixed.append(dict(type=tn, index=i, name=s.get("name"), node=s.get("node"), um=round(h, 1)))
+            continue
+        was = s.get("node")
+        ops.append(dict(op="replace", path=base + "/node", old=was, value=new))
+        s["node"] = new
+        if "tap" in s:
+            nt = int(new[7:])
+            ops.append(dict(op="replace", path=base + "/tap", old=s["tap"], value=nt))
+            s["tap"] = nt
+        rep.setdefault(tn, []).append(dict(index=i, name=s.get("name"), old=was, new=new,
+                                           old_um=round(h, 1), new_um=round(src_hop(s, R[new]["xy"]), 1),
+                                           depth=n["depth"], cycles_added=0))
+    return dict(types=rep, changed=sum(len(v) for v in rep.values()), changed_types=len(rep), unfixed=unfixed,
+                after=src_census(raw, only)["over_reach"]), ops
+
+
+def check_ops(base_raw, ops):
+    """Every op's old value equals the base plan's value at its path; -> number of failures."""
+    bad = 0
+    for o in ops:
+        x = base_raw
+        for k in o["path"].strip("/").split("/"):
+            x = x[int(k)] if isinstance(x, list) else x[k]
+        bad += x != o["old"]
+    return bad
+
+
 def _style(b, obj):
     for f in (lambda p: json.dumps(p, indent=1) + "\n", lambda p: json.dumps(p, separators=(",", ":")) + "\n",
               lambda p: json.dumps(p) + "\n", lambda p: json.dumps(p, indent=2) + "\n"):
@@ -195,7 +280,7 @@ def main(argv=None):
     i = 0
     while i < len(argv):
         a = argv[i]
-        if a in ("--sidecar-in", "--sidecar-out"):
+        if a in ("--sidecar-in", "--sidecar-out", "--ops", "--row"):
             opt[a] = argv[i + 1]
             i += 2
         elif a.startswith("--types="):
@@ -209,16 +294,37 @@ def main(argv=None):
             i += 1
     only = opt.get("types")
     if "--census" in opt:
-        c = census(json.load(open(pos[0])), only)
+        raw0 = json.load(open(pos[0]))
+        c = census(raw0, only)
         c.pop("over")
-        print("MONLEG census", json.dumps(c))
+        sc0 = src_census(raw0, only)
+        sc0.pop("over")
+        print("MONLEG census", json.dumps(c), "src", json.dumps(sc0))
         return 0
     pin, pout = pos[0], pos[1]
     rep_path = pos[2] if len(pos) > 2 else pout + ".monleg.json"
     pb = open(pin, "rb").read()
     raw = json.loads(pb)
     pf = _style(pb, raw)
+    pre = json.loads(pb)
     rep, changes = apply(raw, only)
+    ops = []
+    if "--src" in opt:
+        rep["src"], ops = apply_src(raw, only)
+        rep["src"]["before"] = src_census(pre, only)["over_reach"]
+    if "--ops" in opt:
+        cops = [dict(op="replace", path=f"/partition_types/{tn}/clock/landing_contract/collector_children/{i}/node",
+                     old=pre["partition_types"][tn]["clock"]["landing_contract"]["collector_children"][i]["node"], value=new)
+                for (tn, i), new in sorted(changes.items())]
+        ops_all = cops + ops
+        rep["ops_old_value_failures"] = check_ops(pre, ops_all)
+        rep["ops_count"] = len(ops_all)
+        json.dump(dict(row=opt.get("--row", "MONLEG"), lane="S81-MONLEG", base_sha12=_sha(pin),
+                       why="collector child / source node re-picked to the same-depth relay within 405 um of its monitor / status points "
+                           "(0 cycles)", ops=ops_all,
+                       check=dict(children={k: len(v) for k, v in rep["types"].items()},
+                                  sources={k: len(v) for k, v in rep.get("src", {}).get("types", {}).items()})),
+                  open(opt["--ops"], "w"), indent=1)
     rep.update(row="ROWS_S81-MONLEG", plan_in=pin, plan_in_sha=_sha(pin), reach_um=REACH_UM)
     if "--sidecar-in" in opt:
         sb = open(opt["--sidecar-in"], "rb").read()
