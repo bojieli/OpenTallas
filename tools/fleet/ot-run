@@ -1282,6 +1282,44 @@ def die_level_cmd(cmd):
     return bool(DIE_LEVEL_RE.search(t)) and not re.search(r"\bkit-rtl\b", t)
 
 
+# DIEDISK_KIND_1125 (COORD 11-25: a --die PRE on intel1 asked the default 60 GB and was held by the disk-ETA rail; a PRE writes ~1 GB): a die-class job with
+# no explicit --disk asks by job kind.  PRE / check / census / gate 2 GB, compose 5 GB, bind = 1.5 x the measured bind_phases output peak of
+# die_disk_peaks.json (next to this file), 30 GB when unmeasured.  --disk N always wins.  The hard disk floors (DIE_FREE_FLOOR_GB, root floors) are unchanged.
+DIE_KIND_DISK_GB = {"pre": 2, "compose": 5}
+BIND_UNMEASURED_GB = 30
+_KIND_RE = (("bind", re.compile(r"(?i)die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|bind_phases|(?:^|[/\s])[A-Za-z0-9_]*bind[A-Za-z0-9_]*\.sh\b")),
+            ("compose", re.compile(r"(?i)(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b")),
+            ("pre", re.compile(r"(?i)plan_gate_pre\.py|die_plan/check\.py|plan_census|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b")))
+
+
+def die_job_kind(cmd):
+    """DIEDISK_KIND_1125: 'bind' | 'compose' | 'pre' | None (a bind-only gate script counts as bind: it writes the bind)"""
+    t = cmd if isinstance(cmd, str) else " ".join(map(str, cmd or ()))
+    if re.search(r"\bkit-rtl\b", t):
+        return None
+    return next((k for k, rx in _KIND_RE if rx.search(t)), None)
+
+
+def bind_disk_gb(path=None):
+    """1.5 x the measured bind output peak (die_disk_peaks.json: {"bind": {"peak_gb": x, ...}}), at least 2; BIND_UNMEASURED_GB when there is none"""
+    try:
+        with open(path or os.path.join(os.path.dirname(os.path.realpath(__file__)), "die_disk_peaks.json")) as f:
+            pk = float(json.load(f)["bind"]["peak_gb"])
+        return max(2, int(-(-pk * 1.5 // 1))) if pk > 0 else BIND_UNMEASURED_GB
+    except (OSError, ValueError, KeyError, TypeError):
+        return BIND_UNMEASURED_GB
+
+
+def die_disk_ask(cmd, die_class, explicit_die, path=None):
+    """-> GB a job asks when it gave no --disk: kind ask for die class, else DIE_DISK_GB (--die of an unknown kind) or 20"""
+    kind = die_job_kind(cmd) if die_class else None
+    if kind == "bind":
+        return bind_disk_gb(path)
+    if kind:
+        return DIE_KIND_DISK_GB[kind]
+    return DIE_DISK_GB if explicit_die else 20
+
+
 def die_preferred(ok):
     """DIECLASS_1125: the first OT_RUN_DIE_PREFER host among the qualifying ones, or None"""
     return next((h for h in DIE_PREFER if h in ok), None)
@@ -3089,7 +3127,7 @@ def main():
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     PREFER_DIE[0] = die or plan_job() or die_level_cmd(cmd)      # DIECLASS_1125: placement preference only (disk floor unchanged)
     disk_explicit = disk is not None
-    disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
+    disk = disk if disk is not None else die_disk_ask(cmd, PREFER_DIE[0], die)     # DIEDISK_KIND_1125: kind ask; explicit --disk wins
     say = lambda m: print(m, file=sys.stderr, flush=True)
     _block = {"last": 0.0}
     eta_stage_tried = False
