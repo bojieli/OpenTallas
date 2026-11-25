@@ -100,6 +100,29 @@ module qfd_dv_stream_tile #(
     // rn_g[i]: 0 face roots + pass leaves, 1 configuration, 2 own-write face + trees, 3 P2 leaves, 4 relay valids,
     //          5 beat-fault enable root, 6 taps + fault.  STMDQ 0: all = rst_n (the landed reset, as before).
     wire [6:0] rn_g;
+`ifdef OT_QC_STMRC
+    // STM-RC (QC-STM-FAM 11-25, opt-in per plan type: verilog_defines OT_QC_STMRC, needs OT_QC_STMDQ; default OFF =
+    // netlist unchanged).  Routed slw_stm_v1__cle34a73c3 (R6V4 kit 1124082952): 27 RESETN recovery misses, worst
+    // -59.82 ps TT (hte_r 23, te_l 1, pe_l 3), all from the ONE group-0 landing copy g_rn.rs2_g[0], which resets about
+    // 470 face roots + pass leaves in two clusters (lo payload leaves 0..38, hi 39..78 + face roots, ~360 um apart):
+    // CLK -> RESETN 897 ps (2 HB4 root pads 142 ps, INV, 13-BUF serial tree 675 ps) against the 833 ps edge.  Group 0
+    // is cut by CLUSTER into 12 two-stage landing copies: rn0[0] = rs2_g[0] (E face roots), 11 new kept copies with the
+    // same D chain (W face roots; pe/pw/te/xe/xw leaves lo 0..38 and hi 39..), so every group-0 flop still releases
+    // on the same edge (2 landing stages) and no edge is added on any port.
+    localparam integer NR0 = 12;
+    localparam integer LOB = 38;                  // last leaf of the lo cluster (sw_lo/se_lo = 544 b = leaves 0..38)
+    wire [NR0-1:0] rn0;
+    generate if (STMDQ != 0) begin: g_rn0c
+        (* keep = "true" *) reg [NR0-1:1] rs1_0;          // group-0 landing stage 1, one kept copy per cluster
+        (* keep = "true" *) reg [NR0-1:1] rs2_0;          // group-0 landing stage 2
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin rs1_0 <= {(NR0-1){1'b0}}; rs2_0 <= {(NR0-1){1'b0}}; end
+            else begin rs1_0 <= {(NR0-1){1'b1}}; rs2_0 <= rs1_0; end
+        assign rn0 = {rs2_0, rn_g[0]};
+    end else begin: g_rn0c0
+        assign rn0 = {NR0{rst_n}};
+    end endgenerate
+`endif
     generate if (STMDQ != 0) begin: g_rn
         (* keep = "true" *) reg [6:0] rs1_g;               // landing stage 1, one kept copy per group
         (* keep = "true" *) reg [6:0] rs2_g;               // landing stage 2 (= the old u_rl.rst edge)
@@ -131,6 +154,26 @@ module qfd_dv_stream_tile #(
         for (integer gi = 0; gi < NRT; gi = gi + 1) begin ste_r[4*gi +: 4] <= sid; end
         stw_r <= sid;
     end
+`ifdef OT_QC_STMRC
+    always @(posedge ck or negedge rn0[0])                    // E face roots
+        if (!rn0[0]) begin vpe_r <= 0; hte_r <= 0; hxe_r <= 0; end
+        else begin
+            vpe_r <= {NRT{sw_i[1087]}};
+            for (integer gi = 0; gi < NRT; gi = gi + 1) begin
+                hte_r[8*gi +: 8] <= sw_i[1087:1080];
+                hxe_r[4*gi +: 4] <= sw_i[1087:1084];
+            end
+        end
+    always @(posedge ck or negedge rn0[1])                    // W face roots, undefined kind, config enables
+        if (!rn0[1]) begin vpw_r <= 0; htw_r <= 0; hxw_r <= 0; ub_r <= 1'b0; cv_r <= 3'd0; end
+        else begin
+            vpw_r <= {NRT{se_i[1087]}};
+            for (integer gi = 0; gi < NRT; gi = gi + 1) hxw_r[4*gi +: 4] <= se_i[1087:1084];
+            htw_r <= se_i[1087:1080];
+            ub_r <= (sw_i[1087] && sw_i[1086]) || (se_i[1087] && se_i[1086]);
+            cv_r <= {3{cfg_v}};
+        end
+`else
     always @(posedge ck or negedge rn_g[0])
         if (!rn_g[0]) begin
             vpe_r <= 0; vpw_r <= 0; hte_r <= 0; htw_r <= 0; hxe_r <= 0; hxw_r <= 0; ub_r <= 1'b0; cv_r <= 3'd0;
@@ -145,6 +188,7 @@ module qfd_dv_stream_tile #(
             ub_r <= (sw_i[1087] && sw_i[1086]) || (se_i[1087] && se_i[1086]);
             cv_r <= {3{cfg_v}};
         end
+`endif
     // ================================================================================================ pass leaves
     function automatic thit(input [7:0] h, input [3:0] s);   // valid, kind != 0, dst == sid or broadcast
         thit = h[7] && h[6:4] != 3'd0 && (h[3:0] == s || h[3:0] == 4'hF);
@@ -159,6 +203,33 @@ module qfd_dv_stream_tile #(
     (* keep = "true" *) reg [NGT:0] te_l, xe_l, xw_l;        // [NGT] = valid / fault leaf
     (* keep = "true" *) reg         tw_x;
     (* keep = "true" *) reg         ub_l;
+`ifdef OT_QC_STMRC
+    // STM-RC: the same leaf functions; leaf gi of each family on the lo (gi <= LOB) or hi landing copy of its cluster
+    genvar gr;
+    generate for (gr = 0; gr <= NGR; gr = gr + 1) begin: g_pl
+        always @(posedge ck or negedge rn0[(gr <= LOB) ? 2 : 3])
+            if (!rn0[(gr <= LOB) ? 2 : 3]) pe_l[gr] <= 1'b0;
+            else pe_l[gr] <= (MUT == 31 && gr == 17) ? vpw_r[gr * NRT / (NGR + 1)] : vpe_r[gr * NRT / (NGR + 1)];
+        always @(posedge ck or negedge rn0[(gr <= LOB) ? 4 : 5])
+            if (!rn0[(gr <= LOB) ? 4 : 5]) pw_l[gr] <= 1'b0;
+            else pw_l[gr] <= vpw_r[gr * NRT / (NGR + 1)];
+    end endgenerate
+    generate for (gr = 0; gr <= NGT; gr = gr + 1) begin: g_tl
+        always @(posedge ck or negedge rn0[(gr <= LOB) ? 6 : 7])
+            if (!rn0[(gr <= LOB) ? 6 : 7]) te_l[gr] <= 1'b0;
+            else te_l[gr] <= (MUT == 32 && gr == 5) ? thit_nosid(hte_r[8*(gr * NRT / (NGT + 1)) +: 8])
+                                                    : thit(hte_r[8*(gr * NRT / (NGT + 1)) +: 8], ste_r[4*(gr * NRT / (NGT + 1)) +: 4]);
+        always @(posedge ck or negedge rn0[(gr <= LOB) ? 8 : 9])
+            if (!rn0[(gr <= LOB) ? 8 : 9]) xe_l[gr] <= 1'b0;
+            else xe_l[gr] <= xhit(hxe_r[4*(gr * NRT / (NGT + 1)) +: 4]);
+        always @(posedge ck or negedge rn0[(gr <= LOB) ? 10 : 11])
+            if (!rn0[(gr <= LOB) ? 10 : 11]) xw_l[gr] <= 1'b0;
+            else xw_l[gr] <= xhit(hxw_r[4*(gr * NRT / (NGT + 1)) +: 4]);
+    end endgenerate
+    always @(posedge ck or negedge rn0[1])                    // with the W face roots they read
+        if (!rn0[1]) begin tw_x <= 1'b0; ub_l <= 1'b0; end
+        else begin tw_x <= thit(htw_r, stw_r); ub_l <= ub_r; end
+`else
     always @(posedge ck or negedge rn_g[0])
         if (!rn_g[0]) begin pe_l <= 0; pw_l <= 0; te_l <= 0; xe_l <= 0; xw_l <= 0; tw_x <= 1'b0; ub_l <= 1'b0; end
         else begin
@@ -175,6 +246,7 @@ module qfd_dv_stream_tile #(
             tw_x <= thit(htw_r, stw_r);
             ub_l <= ub_r;
         end
+`endif
     // ================================================================================================ configuration
     (* keep = "true" *) reg [NK-1:0] de_k, dw_k;              // direction copies, one per complete tree
     (* keep = "true" *) reg [1:0]    cv_l;                    // tag-enable leaves (14 bits each)
