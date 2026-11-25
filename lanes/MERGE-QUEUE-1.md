@@ -1801,3 +1801,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-25 01:22 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (2 new): intel1: no rt/current ; intel1: ot-run backend check failed. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-25 01:37 PST STATE [MERGE-QUEUE -> COORD] drift cleared: intel1: no rt/current ; intel1: ot-run backend check failed
 - 2026-11-25 03:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc12: rt/current bf84974ae69a != hub 135cb2833815. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-25 03:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc12: rt/current bf84974ae69a != hub 135cb2833815
