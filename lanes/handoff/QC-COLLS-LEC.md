@@ -36,3 +36,10 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
 - ot-push-main of clone commit cb2152fd55e launched 16:3x (result in hub post when it lands).
 - FIX on main e52216b703b (ot-push-main OK). H3 unit oth-ubuntu-3820122-1795566900 (E10, r/H3_esc) running.
 - H2 cp drop explained: gate_only_compare 32230 -> 162 (gate anon flops now paired); gold coverage identical (matched 40575, gold_only_compare 1001), gold_unmatched_live 4 -> 0.
+
+## 17:40 sim witness (COORD ask 16:55 / 17:3x)
+- Script epyc10 QC-COLLS-LEC/simwit3.py (per-face classes) / simwit4.py (+landing fstart/fclk). AIGs = r/H2_nearest/lec.
+- SW1 1.2M, SW2 4.47M, SW3 4.47M, SW4 x2 lane-cycles: 0 mismatches over 31435 matched regs (both faces' u_ctl).
+- Coverage gap: only fault_cause[3] (rv && !ev) and [4] (phy_fault) fire; ev / rx_v / crc / slot / unread / collision / cmd_ov
+  never: core tokens enter via ot_dp_clk_landing_cas CDCs that port-level stimulus does not open. Next: block-level witness.
+- H3 unit oth-ubuntu-3820122-1795566900 still running (r/H3_esc).
