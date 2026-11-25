@@ -207,3 +207,15 @@ def test_prepass_incremental_ends_allow_congestion():
         txt = (here / f).read_text()
         assert "global_route -end_incremental" in txt
         assert "[info exists ::ot_grt_inc_allow] ? $::ot_grt_inc_allow" in txt, f
+
+
+def test_gen_env_knob_tap_grt_pre_iters_reaches_config_and_effective_env(monkeypatch):
+    """C12: OT_TAP_GRT_PRE_ITERS (gen env) must be exported to config.mk (the tcl reads ::env inside the container)."""
+    monkeypatch.delenv("OT_TAP_GRT_PRE_ITERS", raising=False)
+    assert "OT_TAP_GRT_PRE_ITERS" not in _cfg(monkeypatch, env="1")
+    monkeypatch.setenv("OT_TAP_GRT_PRE_ITERS", "5")
+    assert "export OT_TAP_GRT_PRE_ITERS = 5" in _cfg(monkeypatch, env="1")
+    assert gen_phys.kit_effective_env()["OT_TAP_GRT_PRE_ITERS"] == "5"
+    monkeypatch.setenv("OT_TAP_GRT_PRE_ITERS", "5; rm -rf $HOME")
+    with pytest.raises(ValueError):
+        _cfg(monkeypatch, env="1")

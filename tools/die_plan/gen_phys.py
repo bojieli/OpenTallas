@@ -3194,11 +3194,55 @@ def tt_setup_repair_mode():
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
 
 
+GEN_KNOB_SKIP_PREFIX = ("OT_PG_", "OT_PGCAP", "OT_TT_SETUP_", "OT_POSTCTS_", "OT_KTP_", "OT_PS_")   # dedicated, validated emitters / checker plumbing
+GEN_KNOB_SKIP = frozenset({"OT_DB", "OT_ODB", "OT_OUT", "OT_SDC", "OT_SPEF", "OT_NETS", "OT_LAYERS", "OT_LIBS", "OT_MODE", "OT_TAG",
+                           "OT_RC_FILES", "OT_CORNER", "OT_GOLDEN_SDC", "OT_HOLD_MM", "OT_LEAF_AFFINITY"})   # per-invocation tool args, not kit knobs
+
+
+def gen_knobs():
+    """C12 (COORD 07:05): every optional tcl tuning knob (::env(OT_X) read in the kit tcl of this directory, not assigned by a tcl
+    `set ::env(OT_X)`).  The kit runner's docker run forwards only a fixed -e list, so a gen-env value that was recorded but not
+    exported to config.mk never reached the tcl (OT_TAP_GRT_PRE_ITERS=5 ran the tapbal GRT with -congestion_iterations 30).
+    One rule: set in the gen env -> config.mk export (make exports it to the flow) + kit_effective_env.json.  Unset = byte-equal kit."""
+    import re
+    rd, st = set(), set()
+    for f in sorted(Path(__file__).parent.glob("*.tcl")):
+        t = f.read_text(errors="ignore")
+        rd |= set(re.findall(r"::env\((OT_\w+)\)", t))
+        st |= set(re.findall(r"set\s+::env\((OT_\w+)\)", t))
+    # a name this generator already decides itself (quoted or `export NAME` anywhere in gen_phys.py) keeps its own decision
+    own = set(re.findall(r"""(?:export\s+|["'])(OT_\w+)""", Path(__file__).read_text()))
+    return sorted(k for k in rd - st - own if k not in GEN_KNOB_SKIP and not k.startswith(GEN_KNOB_SKIP_PREFIX))
+
+
+def gen_knob_values():
+    """{knob: value} of gen_knobs() set (non-empty, no shell/make-special characters) in the gen env."""
+    import re
+    out = {}
+    for k in gen_knobs():
+        v = os.environ.get(k, "").strip()
+        if v == "":
+            continue
+        if not re.fullmatch(r"[^\n#$\"'`\\]+", v):
+            raise ValueError(f"{k}={v!r}: value has characters unsafe for config.mk")
+        out[k] = v
+    return out
+
+
+def gen_knob_cfg(existing):
+    """config.mk lines for the set gen_knobs not already exported by the kit (plan-derived exports win)."""
+    import re
+    have = {m[1] for ln in existing for m in [re.match(r"^export\s+(\w+)\s*=", ln)] if m}
+    out = [f"export {k} = {v}" for k, v in gen_knob_values().items() if k not in have]
+    return (["# gen-env tuning knobs (gen_knobs) carried into the flow container"] + out) if out else []
+
+
 def kit_effective_env():
     """KIT-OPS-5 11-15 (COORD r228): the generation-time env a reviewer needs to audit a kit: OT_TT_SETUP_REPAIR (cts|grt|both|off) and
     every OT_PG_* / OT_PGCAP_* variable set in the gen env (they act at gen time, e.g. OT_PG_DIE_PHASE changes pdn.tcl, so they never
     appear in config.mk).  Sorted; only variables that are set are listed."""
     out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
+    out.update(gen_knob_values())
     for k in sorted(os.environ):
         if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
             out[k] = os.environ[k].strip()
@@ -8363,6 +8407,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
     cfg += grt_clock_first_cfg()   # FLOW-CLKGRT-1121 opt-in (gen env OT_GRT_CLOCK_FIRST=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
+    cfg += gen_knob_cfg(cfg)       # C12: gen-env tcl tuning knobs (OT_TAP_GRT_PRE_ITERS, ...) reach the flow container
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: hold_pad_hb4 / hold_sdc_guard (HOLD-SDC-1116) / ... (one list, core_flow reads it too)
     cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
