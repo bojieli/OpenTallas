@@ -20,6 +20,7 @@ DROP-DECLARED (ABSENT/LOST but matched by a --drop-list line = removal declared 
 Row verdict: PRESENT (LOST+ABSENT=0), ABSENT (CARRIED+REPLACED=0), else PARTIAL (n/m present).
 Checked TSV rows: status starts IN / STAGED / PENDING / READY / BOUND / KIT / COMPOSED (not DEFERRED/SUPERSEDED/RETIRED).
 DEFERRED rows with a manifest source are judged too and printed as DEFERRED/<verdict> (never fail).
+--posts adds the RC-QC-39 report-only C1p check (ALLFIX row + owner post < 3 h); it never changes rc.
 rc 1 when a checked row is ABSENT or PARTIAL or has no manifest source (NO-SOURCE); DEFERRED rows never fail."""
 import argparse, csv, gc, hashlib, json, re, sys
 from collections import Counter
@@ -29,6 +30,9 @@ ap.add_argument("--plan", required=True); ap.add_argument("--tsv", required=True
 ap.add_argument("--manifest", required=True); ap.add_argument("--json")
 ap.add_argument("--drop-list", action="append", default=[], help="guard-format drop lists ('[KIND ]fnmatch # reason'); "
                 "an ABSENT/LOST key matching one counts as DROP-DECLARED (an intended removal recorded at a gate)")
+ap.add_argument("--posts", help="hub lanes/posts dir: enables the RC-QC-39 report-only check (C1p rows need an ALLFIX row + owner post < 3 h)")
+ap.add_argument("--compose-list", help="optional C1p compose list (TSV: row<TAB>owner); without it the TSV's own C1p rows are used")
+ap.add_argument("--now", help="'YYYY-MM-DD HH:MM' PST for the post-age check (default: now, America/Los_Angeles)")
 ap.add_argument("--tree", help="launch tree root for kind files (RTL overlays, launch-tree files)")
 a = ap.parse_args()
 
@@ -228,5 +232,49 @@ for o in out:
     print("%-14s %-60s %s %s %s" % (o["verdict"], o["item"][:60], o.get("counts", o.get("detail", "")), {k: v for k, v in o.get("example", {}).items() if k in ("LOST", "ABSENT", "ERROR")}, ("superseded_by " + str(o["superseded_by"])) if o.get("superseded_by") else ""))
 print("LEDGER-VS-PLAN", Counter(o["verdict"].split()[0] for o in out), "plan", a.plan, hashlib.sha256(open(a.plan, "rb").read()).hexdigest()[:12])
 print("LEDGER-VS-PLAN", "PASS" if bad == 0 else "FAIL %d" % bad)
-if a.json: json.dump(dict(rows=out, bad_paths=BADP), open(a.json, "w"), indent=1)
+# RC-QC-39 (FABLE-RC-QC 11-25 07:5x) report-only: every C1p row needs an ALLFIX-QC row and an owner post < 3 h old
+c1p_report = []
+if a.posts:
+    import datetime as _dt, os as _os, pathlib as _pl
+    try:
+        from zoneinfo import ZoneInfo as _Z
+        now = _dt.datetime.strptime(a.now, "%Y-%m-%d %H:%M") if a.now else _dt.datetime.now(_Z("America/Los_Angeles")).replace(tzinfo=None)
+    except Exception:
+        now = _dt.datetime.strptime(a.now, "%Y-%m-%d %H:%M") if a.now else _dt.datetime.now()
+    PAT = re.compile(r"^- (\d{4}-\d\d-\d\d \d\d:\d\d) PST")
+    def last_post(lane):
+        best = None
+        for md in _pl.Path(a.posts).glob("*.md"):
+            for line in md.read_text(errors="replace").splitlines():
+                mm = PAT.match(line)
+                if mm and ("[%s " % lane in line or "[%s]" % lane in line or "[%s ->" % lane in line or (md.stem == lane)):
+                    t = mm.group(1); best = t if best is None or t > best else best
+        return best
+    tsv_rows = []
+    with open(a.tsv) as f:
+        rd = csv.reader(f, delimiter="\t"); h = next(rd); si2 = h.index("status")
+        tsv_rows = [(r[0], r[si2]) for r in rd if r]
+    want = []
+    if a.compose_list:
+        for l in open(a.compose_list):
+            p = l.rstrip("\n").split("\t")
+            if p and p[0] and not p[0].startswith("#"): want.append((p[0], p[1] if len(p) > 1 else ""))
+    else:
+        for it, st in tsv_rows:
+            if "C1p" in st:
+                mo = re.search(r"owner ([A-Z0-9][A-Za-z0-9-]+)", st); want.append((it, mo.group(1) if mo else ""))
+    for row, owner in want:
+        has = any(row[:30] in it or it.startswith(row[:30]) for it, _ in tsv_rows)
+        lp = last_post(owner) if owner else None
+        age = (now - _dt.datetime.strptime(lp, "%Y-%m-%d %H:%M")).total_seconds() / 3600 if lp else None
+        flag = [] if has else ["NO-ALLFIX-ROW"]
+        if not owner: flag.append("NO-OWNER")
+        elif age is None: flag.append("NO-OWNER-POST")
+        elif age >= 3: flag.append("STALE-OWNER %.1fh" % age)
+        c1p_report.append(dict(row=row, owner=owner, last_post=lp, age_h=None if age is None else round(age, 1), flags=flag))
+    nflag = sum(1 for x in c1p_report if x["flags"])
+    for x in c1p_report:
+        if x["flags"]: print("C1P-CHECK %-50s owner=%-22s last=%s %s" % (x["row"][:50], x["owner"], x["last_post"], ",".join(x["flags"])))
+    print("C1P-CHECK (report-only) rows %d flagged %d" % (len(c1p_report), nflag))
+if a.json: json.dump(dict(rows=out, bad_paths=BADP, c1p_report=c1p_report), open(a.json, "w"), indent=1)
 sys.exit(1 if bad else 0)
