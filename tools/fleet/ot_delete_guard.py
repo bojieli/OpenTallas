@@ -12,6 +12,10 @@ The protected list is built on the hub (build_protected) and pushed to every hos
 or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_guard.py build COORD_DIR OUT | check PATH [LIST]"""
 import re
 import glob, json, os, re, sys, time
+import importlib.util as _ilu
+_nr = _ilu.spec_from_file_location("not_record", os.path.join(os.path.dirname(os.path.realpath(__file__)), "not_record.py"))   # the shared canary / test predicate, loaded by path (the guard itself is loaded by path)
+_nrm = _ilu.module_from_spec(_nr); _nr.loader.exec_module(_nrm)
+NOT_RECORD = _nrm.NOT_RECORD
 
 DEFAULT_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/protected.txt")
 ALLOW_EXACT = os.path.expanduser("~/.local/state/ot-delete-guard/allow_exact.txt")   # COORD-ruled narrow exceptions: "<path>\t<expiry epoch>\t<reason>" per line
@@ -449,6 +453,14 @@ def own_signed_records(t, host=None):
     return out
 
 
+def _record_scope(t, rel):
+    """the part of a record's path the canary / test predicate looks at: below the scratch lane root (.../claude/), so a test or tmp ancestor of the
+    scratch disk (pytest-of-x/test_y) never turns a real kit into a 'test run'; without a /claude/ component only t's own name and below."""
+    full = os.path.join(os.path.abspath(t), rel)
+    i = full.rfind("/claude/")
+    return full[i:] if i >= 0 else "/" + os.path.join(os.path.basename(os.path.abspath(t)), rel)
+
+
 def signed_unexported_refusal(t, exported=None, host=None):
     """CLEAN-AGGR-R3 (COORD 11-22 class bug: sle_st_b_v2__cl14c98df5__pv41c959f3 attempt_2 went to ot-auto-retire 11-21 17:01 and its closed unit to ot-delete at
     19:24 while its SIGNED record 8f88a85b... was never exported): ANY target -- attempt, lane dir, kit, tree -- holding this host's signed record whose sha256 is
@@ -456,6 +468,8 @@ def signed_unexported_refusal(t, exported=None, host=None):
     if not os.path.isdir(t) or os.path.islink(t):
         return None
     recs = own_signed_records(t, host)
+    # DISK-RECLAIM 11-25 (COORD ruling): a canary / test run is never exported (auto_export sets it aside), so it is never "not exported": same predicate
+    recs = [(s_, r) for s_, r in recs if not NOT_RECORD.search(_record_scope(t, r))]
     if not recs:
         return None
     exported = load_exported() if exported is None else exported

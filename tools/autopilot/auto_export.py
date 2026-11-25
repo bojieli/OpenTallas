@@ -50,7 +50,8 @@ SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTim
 HOSTS = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10', 'epyc11', 'epyc12')
 SPOOL_RETRY_AGE_S = float(os.environ.get('OT_AUTO_EXPORT_SPOOL_RETRY_H', 2)) * 3600   # F9: older -> retried once, then set aside
 SPOOL_ASIDE_AFTER_S = 600                                                               # the retry gets at least one more drain
-NOT_RECORD = re.compile(r"/(flow-canary|test_[^/]*|[^/]*pyt-[^/]*|[^/]*pytest[^/]*|fixtures?)/")   # canary / test runs: never a sign-off of record
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet"))
+from not_record import NOT_RECORD   # canary / test runs: never a sign-off of record (one shared predicate with ot_delete_guard)
 DIES = ('s81_head', 's81', 'qwen_compute', 'qwen_kvsys', 'hbm')
 WINDOW_H = float(os.environ.get('OT_AUTO_EXPORT_WINDOW_H', 72))
 SCAN_H = float(os.environ.get('OT_AUTO_EXPORT_SCAN_H', 6))

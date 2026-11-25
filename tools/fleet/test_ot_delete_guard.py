@@ -262,3 +262,29 @@ def test_legacy_item_unit_released_from_kitwave_ancestor_when_unsigned_or_export
     a = items / "withattempt" / "attempt_1"; a.mkdir(parents=True)
     old = _t.time() - 48 * 3600; os.utime(items / "withattempt", (old, old))
     assert G.legacy_item_dir_of(str(items / "withattempt" / "gen")) is None             # attempt_N layout keeps its own rules
+
+
+def test_canary_runs_are_not_unexported_signed_records_but_real_kits_still_are_disk_reclaim_1125(tmp_path):
+    """COORD 11-25 ruling: signed_unexported_refusal uses the NOT_RECORD predicate auto_export uses (shared module, not a copy)"""
+    import hashlib as _h
+    import ot_delete_guard as G
+    import not_record
+    assert G.NOT_RECORD is not None and G.NOT_RECORD.pattern == not_record.NOT_RECORD.pattern
+    lane = tmp_path / "claude"
+
+    def mk(path):
+        so = path / "gen" / "t9" / "signoff"; so.mkdir(parents=True)
+        (so / "signoff.json").write_text(json.dumps({"verdict": "SIGNED"}))
+        return path
+
+    canary = mk(lane / "flow-canary" / "runs" / "s81_abc_1125_000000_1")
+    kit = mk(lane / "kw43-wave" / "items" / "k1" / "attempt_2")
+    lst = tmp_path / "exported_records.txt"; old = G.EXPORTED_LIST
+    try:
+        G.EXPORTED_LIST = str(lst); lst.write_text("# built %d\n" % int(time.time()))        # nothing exported
+        assert G.signed_unexported_refusal(str(canary)) is None                              # canary: never exported, no longer refused as such
+        assert "signed record not exported" in G.signed_unexported_refusal(str(kit))        # a real kit with a signed record and no INDEX row: still refused
+        (canary / ".keep").write_text("x")
+        assert ".keep" in G.refuse(str(canary), [], "", allow=set())                         # .keep behaviour unchanged
+    finally:
+        G.EXPORTED_LIST = old
