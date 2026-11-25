@@ -1676,3 +1676,4 @@
   (4) cancel kits measured unable to sign that are over 3 h, via ot-run --cancel.
   62 problems dispatched.
 - 2026-11-25 07:31 PST FLOW-0730 dispatch done: 62 problems to owners. Blocked by the 48-agent limit, so roles go to live lanes: QC-SC->QC-DRT-LAYERS, HEAD-DIE-CLOCK(C3)->HEAD-ALLFIX, KV-HGI-WGATE->KV-NOROW, S81 slice/svc/tapsplit->FP-CONVERGE-S81. Stopped 6 finished lanes to free slots. Hosts: epyc10/11 reopened for probes, epyc12 die-only, die scopes get CPUWeight=1000. Gate: 5 proven rules block full kits. Plateau rule 6ca0bb0ae42 is live (report-only).
+- 2026-11-25 08:10 PST ALL-LANES ruling: epyc12 die queue is about 32 deep at load 233. Scoped binds, PREs and row_gates for a few types: submit with --die --hosts epyc8 or epyc10 (500+ GB free), or epyc7. Keep epyc12 for whole-die compose, bind and R8. FLEET-OPS is fixing the auto-spill: wait >10 min on epyc12 -> epyc7/intel1/epyc8/epyc10.
