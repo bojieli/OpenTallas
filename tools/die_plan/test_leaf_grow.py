@@ -189,3 +189,16 @@ def test_widen_leaves_kit_internal_pair_reported():
 
 def test_lattice_up_is_epsilon_safe():
     assert LG._lattice_up(25.76) == 25.92 and LG._lattice_up(25.92) == 25.92 and LG._lattice_up(0.0) == 0.0
+
+
+def test_widen_steps_last_cut_off_a_raster_truncating_width():
+    # 1442.88 + 25.92 = 1468.80 and 1468.8 / 4.32 lands just under 340 in float: the last cut steps until the width rasters (1477.44)
+    assert LG.raster_bad(1468.8) and LG.raster_bad(1473.12) and not LG.raster_bad(1477.44)
+    t = widen_row_fixture()
+    one = [r for r in LG.blocked_plan_gaps(t)[0] if r[0] == "x"]
+    t["outline_um"] = [round(1468.8 - sum(LG._lattice_up(r[2] - r[1]) for r in one), 4), t["outline_um"][1]]
+    g, rep, ncut = LG.widen_row(t)
+    assert not LG.raster_bad(g["outline_um"][0]) and not LG.raster_bad(g["outline_um"][1])
+    assert abs(g["outline_um"][0] - 1477.44) < 1e-6 and rep[-1][-1] > rep[0][-1]
+    import adv_seatgap as SG
+    assert SG.macro_gap(g)[1] == [] and LG.check_rows(t, g, cuts=ncut) == []

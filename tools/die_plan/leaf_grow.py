@@ -224,7 +224,7 @@ def check_rows(a, b, name="", cuts=1):
         bad.append("outline shrank")
     for v, nm in ((Wb, "W"), (Hb, "H")):
         q = v / 4.32
-        if abs(q - round(q)) < 1e-6 and int(q) != round(q):
+        if raster_bad(v):
             # hub_repack.Raster sizes its lattice with int(W / G) + 1: a width whose float quotient lands just under the
             # integer drops the face column, so every E/N face point reads blocked (ft_failed on the face register)
             bad.append("RASTER %s %.4f / 4.32 = %.12f truncates; pick dx/dy one lattice step off" % (nm, v, q))
@@ -289,6 +289,13 @@ def blocked_plan_gaps(t):
     return plan, kit
 
 
+def raster_bad(v):
+    """hub_repack.Raster sizes its lattice with int(W / 4.32) + 1: a lattice-multiple width whose float quotient lands just
+    under the integer drops the face column"""
+    q = v / 4.32
+    return abs(q - round(q)) < 1e-6 and int(q) != round(q)
+
+
 def widen_row(t):
     """grow the outline so every plan-core gap that carries a bus lane becomes >= its ADV-CHANNEL-WIDTH width: one cut per
     gap (x gaps ascending, then y gaps), every point at or beyond the facing core's edge shifts by the added width
@@ -297,11 +304,13 @@ def widen_row(t):
     rep = [("kit-internal", g, a, b, bits) for g, a, b, bits in kit]
     t2, off = t, {"x": 0.0, "y": 0.0}
     for ax in ("x", "y"):
-        for _ax, g, need, lo, hi, bits in sorted((p for p in plan if p[0] == ax), key=lambda p: p[4][0 if ax == "x" else 1]):
-            add = _lattice_up(max(0.0, need - g))
-            if add <= 0:
-                continue
-            cut = hi[0 if ax == "x" else 1] + off[ax]
+        k = 0 if ax == "x" else 1
+        cuts = [[p, _lattice_up(max(0.0, p[2] - p[1]))] for p in sorted((p for p in plan if p[0] == ax), key=lambda p: p[4][k])]
+        cuts = [c for c in cuts if c[1] > 0]
+        while cuts and raster_bad(round(t["outline_um"][k] + sum(c[1] for c in cuts), 4)):
+            cuts[-1][1] = round(cuts[-1][1] + LATTICE, 4)  # RASTER guard: step the last cut one lattice pitch wider
+        for (_ax, g, need, lo, hi, bits), add in cuts:
+            cut = hi[k] + off[ax]
             t2 = grow_row(t2, add, 0.0, None, cut) if ax == "x" else grow_row(t2, 0.0, add, cut, None)
             off[ax] += add
             rep.append((ax, round(g, 2), lo[4], hi[4], bits, round(need, 1), add))
