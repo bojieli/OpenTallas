@@ -905,3 +905,9 @@
   - pv_v1e: collector source i_slg_E_N_rsp_d1 at (-32.07, 0), and its tap at (-32.16, 2.656), which is the GRT-0209 pin.
   List: epyc12 kv-allfix/a5t8/offoutline_k10/fail_list.txt.
   Fix lands in the A5t9 cut via row SITE-OFF-OUTLINE, owners KV-OWN-HG-R2 and KV-OWN-PV-R2.
+- 2026-11-25 08:00 PST KV-ALLFIX 11-25 08:00 PST K3+F12+K9 DONE. ALLFIX-KV L241-520 appended, all 15 columns (610ff9e4, 6c8efe76).
+  K3: 36 missed rows handled. 35 are DEFERRED to the A5t9 cut, ETA 13:00 PST, owner named. PCBANK-CENTROID is folded into PCBANK-LEGS. SITE-OFF-OUTLINE L173/L224 is reconciled to A5t9.
+  F12: probe_result is filled on all 238 rows: 93 measured reads (10 probe, 38 carried, 45 baseline) and 144 NO-PROBE-YET. No A5t7 or A5t8 kits exist yet.
+  K9/K11: PC-HOLD-STORM (KV-PC-BANK) and HGI2-TILE-K5 (KV-OWN-HG-R2) added. The tile holds 328 of 613 overflow, and the draft box misses x170-200. HUBC-PROBE (KV-OWN-HUB-R2), BOUNDARY and COREOWNER rows already exist.
+  Silent owners: FP-CONVERGE-KV (since 04:22), KV-HG-CDE (02:13), KV-OWN-HUB (04:57). Each row names a backstop lane.
+  Note: F12 rows are status updates; for any item, the last K3 or owner row is the live status.
