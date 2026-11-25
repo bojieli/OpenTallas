@@ -2,6 +2,7 @@
 Runs the tree's real schema / plan_gate_pre / check.py (tools/die_plan) on tools/die_plan/examples/tiny_plan.json."""
 import copy, hashlib, json, os, tempfile, types, unittest
 from pathlib import Path
+from unittest import mock
 import apply_reviewed_tree_marker as A
 import publish_gate as PG
 
@@ -9,6 +10,34 @@ REPO = Path(__file__).resolve().parents[2]
 PLAN = REPO / "tools/die_plan/examples/tiny_plan.json"
 MANIFEST = "ab" * 32
 
+
+
+class DryGenRuntimeTests(unittest.TestCase):
+    def test_dry_gen_follows_normal_wave_runtime_and_keeps_item_pin(self):
+        import kit_wave as KW
+
+        cfg = {"dies": {"kv": {"event": "old"}}}
+        runtime = {"tools_rt": "/rt/0123456789ab", "tools_sha": "0123456789ab"}
+        with tempfile.TemporaryDirectory() as work:
+            for pinned in (False, True):
+                with self.subTest(pinned=pinned):
+                    spec = {"src": "/source"}
+                    if pinned:
+                        spec["gen_tools_manifest_sha"] = "cohort-sha"
+                    with mock.patch.object(KW, "load_config", return_value=copy.deepcopy(cfg)), \
+                         mock.patch.object(KW, "spec_for", return_value=spec), \
+                         mock.patch.object(KW, "rt_tools_fields", return_value=runtime) as resolve:
+                        record = PG.dry_gen("{}", "kv", "hub", "type", work, "intel2",
+                                            "intel1", run_unit=False, want=MANIFEST)
+                    stored = json.loads((Path(record["dir"]) / "spec.json").read_text())
+                    if pinned:
+                        resolve.assert_not_called()
+                        self.assertEqual(stored["gen_tools_manifest_sha"], "cohort-sha")
+                        self.assertNotIn("tools_rt", stored)
+                    else:
+                        resolve.assert_called_once()
+                        self.assertEqual(stored["tools_rt"], runtime["tools_rt"])
+                        self.assertEqual(stored["tools_sha"], runtime["tools_sha"])
 
 class TC:
     @staticmethod
