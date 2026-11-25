@@ -732,3 +732,4 @@
 - 2026-11-25 10:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 10:22 PST: 223 running jobs, PROGRESSING 207, PLATEAU 3, SLOW 11, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.2 h job 1.2 h: last event 1.3 h ago, log write 1.3 h ago (35 lines), cpu idle (hung)
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.2 h job 1.2 h: last event 1.3 h ago, log write 1.3 h ago (35 lines), cpu idle (hung)
+- 2026-11-25 11:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 11:22 PST: 210 running jobs, PROGRESSING 195, PLATEAU 4, SLOW 11, NO-PROGRESS 0 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
