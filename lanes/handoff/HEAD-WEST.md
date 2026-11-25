@@ -65,3 +65,11 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - LEC: epyc2 head-west/lec_wpipe (run.sh -> lec.sh), LEC_RC 0: 4 PROOF + 3 NEG (mutants FAIL). nr bench epyc2 head-west/nrbench_root/out: MEM/RX/MU PASS.
 - Fork: E7 head-west/trees/s81_head_w6wpipe (ot-tree-fork of s81_head_r18w6_s2, slow ~1 GB/min). Next: delta generated nr into fork, run E7 head-west/chain_wpipe.sh <rt>, then place-only private spec hd_lep0N_w for post-place STA.
 - Then: after W8 bind, place probe hd_lep0N_w on W8 + own Fable review of post-place render (ALL problems).
+
+## 11-25 07:4x PST
+- LEC fixed: LEC_RC 0 (harness now constrains replicated group enables/addresses and holds reset released; mid-run reset drops one extra in-flight write, which is unobservable because the pointers reset).
+- Fork W6+WPIPE chain (E7 head-west/bind_w6wpipe): PRE, strict bind (7683 inst), cohort 27/27, LAT 334/334 all PASS.
+- Place probe: spec s81_head_hd_lep0N_w_1125070540, intel2 unit head-west-wpipe-place (west-w3/run_wpipe_place.sh, log kit_wpipe_place.log), place from 07:25 E7. When it lands, read the 3_place STA for wdata->wdata2->wd_in and the forwarded paths, then post ROW-READY (ETA 13:00).
+- ALLFIX-HEAD rows I own: C20 TXL-WPIPE-1, C21 LEP-W-RINGRP-READ-1 (coll_i1 reader_start stage1 xy 739.98->905; fork prep_r18w6_rp 46b586056f65 PRE/bind/cohort/LAT PASS in bind_w6wpipe_rp), C22 LEP-W-HOLD-TAIL-1.
+- W4b path reads: E7 head-west/w4b_paths/{tt,ff}/q.log, loc.log.
+- Still to do: after the W8 bind, a place probe of hd_lep0N_w on W8, then my own Fable review of its post-place render (ALL problems). Also ot-delete epyc11 s81_head_r18w6_s0.part.
