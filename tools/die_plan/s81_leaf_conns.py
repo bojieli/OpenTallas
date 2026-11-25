@@ -73,19 +73,19 @@ def parse_vp(txt):
     if off != 0:
         raise ValueError(f"vp: hi_s fields sum to {256 - off} b, not 256")
     # register D sources
-    lr_d = {}   # (k,i,m) -> D slice start of hqd_c
+    lr_d = {}   # (k,i,m) -> D slice start of hqd_c (hqd_l = hqd_c or its CFX-held copy, same bits; e828eac0888)
     ly_d = {}
     for k in range(4):
         for i in range(4):
             env = dict(k=k, i=i)
-            for e1, mm, e2 in re.findall(r"lr\[([^\]]+)\]\[(\d)\]\s*<=\s*\{hqd_c\[(.+?)\s*\+:\s*16\],\s*16'd0\}", txt):
+            for e1, mm, e2 in re.findall(r"lr\[([^\]]+)\]\[(\d)\]\s*<=\s*\{hqd_[cl]\[(.+?)\s*\+:\s*16\],\s*16'd0\}", txt):
                 lr_d[(_ev(e1, env), int(mm))] = _ev(e2, env)
-            for e1, e2 in re.findall(r"ly\[([^\]]+)\]\s*<=\s*yrow_d\[YA\]\[(.+?)\s*\+:\s*32\]", txt):
+            for e1, e2 in re.findall(r"ly\[([^\]]+)\]\s*<=\s*yrow_d\[Y[AL]\]\[(.+?)\s*\+:\s*32\]", txt):
                 ly_d[_ev(e1, env)] = _ev(e2, env)
     if len(lr_d) != 64 or len(ly_d) != 16:
         raise ValueError(f"vp: lr/ly register blocks not recognised ({len(lr_d)}, {len(ly_d)})")
     cf_d = {}
-    for e1, e2 in re.findall(r"cf\[([^\]]+)\]\s*<=\s*q1r\[(.+?)\s*\+:\s*32\]", txt):
+    for e1, e2 in re.findall(r"cf\[([^\]]+)\]\s*<=\s*(?:q1r|cfd)\[(.+?)\s*\+:\s*32\]", txt):
         for i in range(4):
             for j in range(1, 5):
                 for e1_ in (e1,):

@@ -10,6 +10,8 @@ from pathlib import Path
 SRC = Path(__file__).with_name("face_flops.tcl").read_text()
 
 MOCK = r'''
+# OT_FF_TIME profile globals (face_flops.tcl top level, not a proc; 712cd5e5b4a)
+set ot_ff_t0 [clock milliseconds]; set ot_ff_tl $ot_ff_t0
 proc object {name entries} {
  set ::props($name) $entries
  proc $name {method args} {return [dict get [set ::props([lindex [info level 0] 0])] $method]}

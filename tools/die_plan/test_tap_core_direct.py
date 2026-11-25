@@ -132,6 +132,10 @@ set tb_prev {}
 set tb_coreonly {clk_c1 1}
 set tb_cores {{coreA/clk clk_c1 0 238}}
 set tb_cdmax 60
+set tb_slowest 0
+set tb_slow_max 0.0
+set tb_last {}
+set tb_ncap {}
 """
     drv = tmp_path / "tap_pass.tcl"
     drv.write_text(

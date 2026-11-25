@@ -25,7 +25,8 @@ def test_tcl_slowest_target_and_bound():
     assert "set ::tb_bnd $tgt" in TCL
     assert "set tb_bnd $tb_target" in TCL                     # unset: the plan insertion bound, unchanged
     assert "$tb_target + $tb_win - [lindex $v 2]" not in TCL
-    assert len(re.findall(r"\$::tb_bnd \+ \$tb_win", TCL)) == 5
+    # 5 tap/check uses + 2 from the post-CTS tree-bound guard (c0b6e2d0340 QC-CBX-CLOCK: lim + OT_TAP_BOUND report)
+    assert len(re.findall(r"\$::tb_bnd \+ \$tb_win", TCL)) == 7
 
 
 def test_tcl_braces_balanced():

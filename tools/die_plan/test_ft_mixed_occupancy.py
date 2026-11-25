@@ -14,6 +14,8 @@ set ff_orient [dict create 0 R0 10 R0 20 R0]
 set ff_bit_sites [dict create %s]
 set ff_bit_site_cells [dict create slot {5 10}]
 set ff_full_targets {%s}
+proc ot_ff_tick {label} {}
+proc blk {cmd args} {return {}}; set ff_blk blk
 proc master {cmd} {if {$cmd eq "getWidth"} {return 5}; return 10}
 proc cell {cmd args} {if {$cmd eq "getMaster"} {return master}; if {$cmd eq "getPlacementStatus"} {return UNPLACED}; if {$cmd eq "getName"} {return cell}}
 '''%(explicit,full)+body
@@ -22,7 +24,8 @@ proc cell {cmd args} {if {$cmd eq "getMaster"} {return master}; if {$cmd eq "get
     if explicit and not before:script+='ff_put_stage cell slot 1 {slot_i[0]} {10 0}\n'
     result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,check=True)
     assert not result.stderr,result.stderr
-    return tuple(map(int,result.stdout.splitlines()[0].split()))
+    xy=[ln for ln in result.stdout.splitlines() if not ln.startswith("OT_")]  # skip hook report lines
+    return tuple(map(int,xy[0].split()))
 
 
 def test_default_without_explicit_targets_stays_exact():

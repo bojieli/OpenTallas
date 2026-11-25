@@ -27,6 +27,7 @@ def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,val
     env.pop("OT_LEC_HINTS_PRESEED",None)
     env.pop("OT_LEC_EARLY_COMPARE",None)
     env.pop("OT_LEC_SUPERSET_VEC",None)
+    env["OT_RT_TOOLS"]=str(tmp_path/"no-rt")  # hand-built test kit: no rt ENV-PROVENANCE refusal (FLOW-OPS-0900, exit 14)
     env["OT_LEC_ASYNC"]="0"   # KIT-OPS-1 11-13: this kit has no lec_async.sh; the inline LEC is asked for explicitly (else exit 13)
     if value is not None:env["OT_LEC_HINTS_PRESEED"]=value
     if early is not None:env["OT_LEC_EARLY_COMPARE"]=early
@@ -62,6 +63,7 @@ def test_explicit_method_rejects_old_driver_before_container_or_proof(tmp_path,o
     runner=kit/"run_kit.sh";runner.write_text(GP.RUN_KIT)
     env=dict(os.environ)
     for key in ("OT_LEC_HINTS_PRESEED","OT_LEC_SUPERSET_VEC","OT_LEC_EARLY_COMPARE"):env.pop(key,None)
+    env["OT_RT_TOOLS"]=str(tmp_path/"no-rt")  # hand-built test kit: no rt ENV-PROVENANCE refusal (FLOW-OPS-0900, exit 14)
     env[option]="1"
     run=subprocess.run(["bash",str(runner),str(kit),"place","1","1"],env=env,text=True,capture_output=True)
     assert run.returncode==10

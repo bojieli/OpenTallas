@@ -38,7 +38,7 @@ def test_vp_glue_is_1024_four_sink_nets():
 @needs_rtl
 def test_parser_fails_closed_when_the_glue_stops_sharing():
     txt = VP.read_text()
-    bad = txt.replace("ly[4 * k + i] <= yrow_d[YA][32 * i +: 32];", "ly[4 * k + i] <= yrow_d[YA][32 * (4 * k + i) +: 32];")
+    bad = txt.replace("ly[4 * k + i] <= yrow_d[YL][32 * i +: 32];", "ly[4 * k + i] <= yrow_d[YL][32 * (4 * k + i) +: 32];")
     assert bad != txt
     with pytest.raises(ValueError):
         LC.parse_vp(bad)
