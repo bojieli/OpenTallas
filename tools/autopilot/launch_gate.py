@@ -59,7 +59,9 @@ MIN_FLAGGED = 4
 # FLOW-0730 F9 (COORD ruling 11-25): five rules measured to separate failing from passing types (CORE-TAP-OWNER 87/87, MISAIM 25/25, SMELL:GRT 15/15,
 # STREET 7/7, REACH 95/102 vs 63/95) are PROVEN by hand: a type any of them flags gets PLACE PROBES ONLY (no pilot, no full route kit) until the flag
 # clears.  Applied in code so the hourly rule-table rewrite cannot demote them; the table rows are written PROVEN-HAND.  Everything else stays advisory.
-HAND_PLACE_ONLY = frozenset({"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:STREET", "FP:REACH"})
+# SITE-IN-MACRO (KV proposal, ruled 11-25 FP-CONVERGE-QC): a plan site FIRM on a hard core (FAIL cell; halo-only is WARN and never blocks) is refused by global
+# placement (KV A5t7: 176 bank sites on kvpc1_f in 8 pc_v1 types, GP failure), so only a place probe is useful until the row re-sites it.
+HAND_PLACE_ONLY = frozenset({"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:STREET", "FP:REACH", "FP:SITE-IN-MACRO"})
 IDLE_RATIO = 0.8
 IDLE_KIT_CORES = 32
 PP_SETUP_PS = -150.0

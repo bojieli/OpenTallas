@@ -193,3 +193,13 @@ def test_hand_proven_rules_place_only():
     txt = G.rules_tsv({"FP:REACH": [102, 95, 95, 63], "FP:TAP": [22, 20, 175, 138]})
     rows = {r["rule"]: r["status"] for r in G.parse_tsv(txt)}
     assert rows == {"FP:REACH": "PROVEN-HAND", "FP:TAP": "ADVISORY"}
+
+
+def test_site_in_macro_firm_blocks_halo_only_does_not():
+    fp = "type\tSITE-IN-MACRO\nt_firm\tFAIL:176 on core\nt_halo\tWARN:216 halo only\nt_ok\tPASS\n"
+    files = {"lanes/FP-KV.tsv": fp, G.RULES_REL: "rule\tstatus\n"}
+    G.reset_cache()
+    kv = G.tables("qwen_kvsys", reader=lambda rel: files.get(rel))
+    fl = G.flags("qwen_kvsys", "t_firm", kv)
+    assert proven(fl) == ["FP:SITE-IN-MACRO"] and G.decide("qwen_kvsys", "t_firm", fl, "f", {"t_firm"}, {}, _st({}))[0] == "PROBE"
+    assert proven(G.flags("qwen_kvsys", "t_halo", kv)) == [] and proven(G.flags("qwen_kvsys", "t_ok", kv)) == []
