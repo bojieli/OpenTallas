@@ -20,7 +20,7 @@ class ShortPool(Heavy):
 
     # Base load-cap assertions expect non-small requests; keep them in their original suite.
     def test_at_cap_non_crit_waits(self):
-        os.environ["OT_HEAVY_THREADS"] = "3"
+        os.environ["OT_HEAVY_THREADS"] = "8"
         super().test_at_cap_non_crit_waits()
 
     def test_short_bypasses_load_without_cpu_priority(self):

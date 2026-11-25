@@ -69,9 +69,9 @@ class TypeJob(_H):
 
     def test_slice_cores_lower_type_load_cap(self):
         self.conf("DIE_SLICE_CORES=4\n")
-        r, a = self.h.run_("9.0")                 # nproc 10 - slice 4 = 6, x 1.5 = 9: a type job waits
+        r, a = self.h.run_("9.0")                 # nproc 10 - slice 4 = 6, x 1.2 = 7: a type job waits (LOADCAP_FRESH_1125)
         self.assertIsNone(a)
-        self.assertIn("= 9", r.stderr)
+        self.assertIn("= 7", r.stderr)
 
 
 class DieShim(unittest.TestCase):

@@ -66,16 +66,16 @@ class Heavy(unittest.TestCase):
         return r, a
 
     def test_below_cap_runs_default_weight(self):
-        r, a = self.run_('14.9')
+        r, a = self.run_('3')   # LOADCAP_FRESH_1125: load1 + this job (8 declared) <= 1.2 x 10
         self.assertIsNotNone(a, r.stderr); self.assertNotIn('CPUWeight=1000', a)
 
     def test_at_cap_non_crit_waits(self):
         r, a = self.run_('15.0')
         self.assertIsNone(a); self.assertEqual(r.returncode, 75)
-        self.assertIn('waiting for load', r.stderr); self.assertIn('load1 15 >= 1.5 x 10 = 15', r.stderr)
+        self.assertIn('waiting for load', r.stderr); self.assertIn('load1 15 + fresh admits 0 threads + this job 8 = 23 > 1.2 x 10 = 12', r.stderr)
 
-    def test_crit_bypasses_cap_and_gets_weight(self):
-        r, a = self.run_('500', crit=True)
+    def test_crit_below_ceiling_gets_weight(self):   # LOADCAP_FRESH_1125: crit waits only above 2.0 x nproc
+        r, a = self.run_('5', crit=True)
         self.assertIsNotNone(a, r.stderr); self.assertIn('CPUWeight=1000', a)
 
     def test_die_job_is_protected(self):
