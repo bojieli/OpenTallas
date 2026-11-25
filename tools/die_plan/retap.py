@@ -30,6 +30,17 @@ estimate, ceil 0.1 ps), window form = the largest window of the 3 nearest old ta
 (core clk_c* rows are never touched).  Then tap_offset_cover.fill closes whatever is still missing, so PRE TAPOFF-MISSING reads 0.
 The rows are estimates until die_sta_related --kit-offset-out / tap_window_measure re-measure.  --no-tapoff keeps the old behaviour.
 
+RRDRV-FAR (COORD 11-25; QC-RRDRV-FIX b6140412608d, QC-STB-SPLIT stb_rrfar.py, KV-OWN-HG-R2 hgi_v6): the tap map above
+numbers START raw resets on the clock tap census (taps_fn), but the bind numbers rr_t<i> / rst_n_t<i> on the reset tree's
+consumer taps (reset_tree.consumer_taps: clock taps + reset.local_taps_um).  A shift by the tap count (or a landing_remap
+restore of the old names) then leaves a raw past the tree (no wavefront driver: PRE RSTREACH RRDRV) or 700-1167 um away.
+repick_start_raws() runs last in repoint() on every re-tapped type whose tree is its own, and callers that restore START
+sections after repoint (landing_remap anchor restore) call it again after the restore: every clock.landing_{reader,writer}_start
+stage raw_reset and clock.landing_local_resets raw named rr_t<N> / rst_n_t<N> with N past the consumer taps or more than
+far_um (300) from its stage site is re-picked to the consumer tap nearest the stage (Manhattan, ties lower index), prefix kept.
+landing_raw_branches role stages are skipped (the bind re-derives them); rst_rl_<k> relay names are reset_anchor's.  All consumer
+taps release at the same wavefront depth, so the re-pick adds 0 cycles.  --no-repick-far turns it off.
+
   retap.py OLD_PLAN NEW_PLAN OUT [--report R.json] [--types a,b] [--no-tapoff]
   sink_bins_from_place.py apply PLAN OUT --bins TYPE=FILE ... calls repoint in the same step.
 """
@@ -45,6 +56,7 @@ TAPQ = re.compile(r"^rst_n_t(\d+)$")
 RAWQ = re.compile(r"^rr_t(\d+)$")
 START_KEYS = ("landing_writer_start", "landing_reader_start", "landing_local_resets")
 FWD_KEYS = ("source_clock_port", "source_clock_tap")
+FAR_UM = 300.0
 
 
 class RetapError(ValueError):
@@ -247,8 +259,80 @@ def carry_tapoff(old_raw, new_raw, tn, old, new):
     return [[f"clock.tap_{form}.per_port_ps", "rows", kept, carried, removed]]
 
 
+def _plan_consumer_taps(raw, path):
+    sys.path.insert(0, str(HERE))
+    import schema
+    import reset_tree as RT
+    P = schema.Plan(json.loads(json.dumps(raw)), path)
+    return lambda tn: [(str(n), float(x), float(y)) for n, x, y in RT.consumer_taps(P, tn)]
+
+
+def _raw_branch_roles(ck):
+    return {str(x) for b in ck.get("landing_raw_branches") or [] if isinstance(b, dict) for x in b.get("consumers") or []}
+
+
+def repick_type(t, ctaps, far_um=FAR_UM):
+    """RRDRV-FAR on one type dict (in place).  ctaps: the reset tree's consumer taps [(n, x, y)] in index order.
+    -> [[where, key, was, now, hop_um]] (hop from the stage site to the new tap)."""
+    ck = t.get("clock") or {}
+    if not ctaps:
+        return []
+    D = lambda a, b: abs(float(a[0]) - b[0]) + abs(float(a[1]) - b[1])  # noqa: E731
+    roles = _raw_branch_roles(ck)
+    out = []
+
+    def pick(o, key, where, xy):
+        v = o.get(key)
+        g = TAPQ.match(str(v or "")) or RAWQ.match(str(v or ""))
+        if not g or xy is None:
+            return
+        n = int(g.group(1))
+        if n < len(ctaps) and D(xy, ctaps[n][1:]) <= far_um:
+            return
+        k = min(range(len(ctaps)), key=lambda j: (D(xy, ctaps[j][1:]), j))
+        now = ("rst_n_t" if str(v).startswith("rst_n_t") else "rr_t") + str(k)
+        if now != v:
+            o[key] = now
+            out.append([where, key, v, now, round(D(xy, ctaps[k][1:]), 3)])
+
+    for key, side in (("landing_reader_start", "reader"), ("landing_writer_start", "writer")):
+        for bus, br in sorted(((ck.get(key) or {}).get("branches") or {}).items()):
+            for i, st in enumerate((br.get("stages") or []) if isinstance(br, dict) else []):
+                if not isinstance(st, dict) or f"{side}:{bus}:{i}" in roles:
+                    continue
+                pick(st, "raw_reset", f"clock.{key}.branches.{bus}.stages[{i}]", st.get("xy_um"))
+    for j, lr in enumerate(ck.get("landing_local_resets") or []):
+        if isinstance(lr, dict):
+            pick(lr, "raw", f"clock.landing_local_resets[{j}]", lr.get("xy_um"))
+    return out
+
+
+def repick_start_raws(raw, path=None, types=None, far_um=FAR_UM, ctaps_fn=None):
+    """RRDRV-FAR on raw (in place) for types (default: all).  ctaps_fn(raw, path) -> (tn -> consumer taps); default
+    reset_tree.consumer_taps on the plan.  A type whose consumer taps cannot be solved is reported, never raised.
+    -> {type: [[where, key, was, now, hop_um]]}"""
+    fn = None      # the plan is built only when a selected type has START raws
+    rep = {}
+    for tn, t in raw["partition_types"].items():
+        if types is not None and tn not in types:
+            continue
+        ck = t.get("clock") or {}
+        if not (ck.get("landing_reader_start") or ck.get("landing_writer_start") or ck.get("landing_local_resets")):
+            continue
+        try:
+            fn = fn or (ctaps_fn or _plan_consumer_taps)(raw, path)
+            ct = fn(tn)
+        except Exception as e:  # noqa: BLE001
+            rep[tn] = [["clock", "repick_far", "SKIP", f"{type(e).__name__}: {e}"[:160], 0]]
+            continue
+        ch = repick_type(t, ct, far_um)
+        if ch:
+            rep[tn] = ch
+    return rep
+
+
 def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False,
-            tapoff=True):
+            tapoff=True, far_um=FAR_UM, ctaps_fn=None):
     """Re-point new_raw (in place) against old_raw, then re-solve and republish the collector_tree of every type whose
     tap set changed.  taps_fn(raw, path) -> (tn -> [(n, x, y)]) (default schema.tap_grid); tree_fn(raw, path) ->
     (tn -> tree) (default reset_tree.for_type on the re-pointed plan).
@@ -261,7 +345,7 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
     to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
     rep, moved = {}, []
     key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
-    todo = []
+    todo, own_todo = [], []
     for tn, t in new_raw["partition_types"].items():
         if types and tn not in types:
             continue
@@ -278,6 +362,8 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
         t = new_raw["partition_types"][tn]
         pub = _published(old_raw["partition_types"][tn])
         own = pub is None or _norm(pub) == _norm(tr_old(tn))
+        if own:
+            own_todo.append(tn)
         ch = repoint_type(t, a, b, reset=own)
         if tapoff:
             ch = (ch or []) + carry_tapoff(old_raw, new_raw, tn, a, b)
@@ -314,6 +400,12 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
                 rep.setdefault(tn, []).extend(ch)
     if tapoff and todo:
         rep.update(_tapoff_close(new_raw, new_path, [tn for tn, _, _ in todo]))
+    if far_um is not None and own_todo:
+        # RRDRV-FAR: number START raws on the reset tree's consumer taps (what the bind emits), not the clock tap census.
+        # Injected taps_fn (tests) doubles as the consumer census when no ctaps_fn is given (no reset.local_taps_um there).
+        cf = ctaps_fn or ((lambda raw, path: taps_fn(raw, path)) if taps_fn else None)
+        for tn, ch in repick_start_raws(new_raw, new_path, set(own_todo), far_um, cf).items():
+            rep.setdefault(tn, []).extend(ch)
     return rep
 
 
@@ -341,10 +433,18 @@ def main(argv=None):
     ap.add_argument("--republish-reset", action="store_true",
                     help="RESETPUB-1122: republish the collector_tree of every selected type with the tree the tools solve now (also a stale one)")
     ap.add_argument("--no-tapoff", action="store_true", help="TAPOFF-RETAP: leave clock.tap_offset / tap_window per_port_ps rows as they are")
+    ap.add_argument("--no-repick-far", action="store_true", help="RRDRV-FAR: leave START raw resets past the tree / over 300 um as mapped")
+    ap.add_argument("--repick-only", action="store_true",
+                    help="RRDRV-FAR only, on NEW (e.g. after a landing_remap restore of START sections): OLD is not read")
     a = ap.parse_args(argv)
-    old, new = json.loads(Path(a.old).read_text()), json.loads(Path(a.new).read_text())
-    rep = repoint(old, new, a.old, a.new, [x for x in a.types.split(",") if x] or None, republish_reset=a.republish_reset,
-                  tapoff=not a.no_tapoff)
+    new = json.loads(Path(a.new).read_text())
+    sel = [x for x in a.types.split(",") if x] or None
+    if a.repick_only:
+        rep = repick_start_raws(new, a.new, set(sel) if sel else None)
+    else:
+        old = json.loads(Path(a.old).read_text())
+        rep = repoint(old, new, a.old, a.new, sel, republish_reset=a.republish_reset, tapoff=not a.no_tapoff,
+                      far_um=None if a.no_repick_far else FAR_UM)
     Path(a.out).write_text(json.dumps(new, indent=1) + "\n")
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")

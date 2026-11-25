@@ -248,3 +248,67 @@ def test_repoint_rebuilds_tapoff_rows_and_closes_with_cover_fill(monkeypatch):
     new2 = copy.deepcopy(old)
     retap.repoint(old, new2, taps_fn=taps, tree_fn=lambda r, p: (lambda tn: None), tapoff=False)
     assert new2["clock"] == old["clock"] and seen == [["T"]]
+
+
+# ---------------------------------------------------------------- RRDRV-FAR (COORD 11-25: QC st_b x12, KV hgi_v6)
+CT = [("clk", 100.0, 100.0), ("clk_t1", 500.0, 100.0), ("clk_t2", 900.0, 100.0)]   # consumer taps the bind numbers on
+
+
+def _start_type():
+    return dict(clock=dict(
+        landing_reader_start={"branches": {"ft13_i": {"stages": [
+            {"xy_um": [880.0, 120.0], "raw_reset": "rst_n_t117"},     # past the tree (KV hgi_v6 PRE DERIVEDNAME)
+            {"xy_um": [480.0, 110.0], "raw_reset": "rr_t1"},          # 30 um: kept
+            {"xy_um": [120.0, 90.0], "raw_reset": "rr_t2"}]}}},       # 790 um: re-picked (QC st_b 700-1167 um)
+        landing_writer_start={"branches": {"x_o": {"stages": [
+            {"xy_um": [100.0, 100.0], "raw_reset": "rr_t9"},          # raw-branch role: the bind re-derives it
+            {"xy_um": [890.0, 100.0], "raw_reset": "rst_rl_7"}]}}},   # relay name: reset_anchor's, kept
+        landing_raw_branches=[{"name": "rb0", "base": "rst_rl_3", "stages": [{"original": "rr_t0", "xy_um": [0, 0]}],
+                               "consumers": ["writer:x_o:0"]}],
+        landing_local_resets=[{"name": "start_0", "raw": "rr_t5", "xy_um": [520.0, 300.0], "consumers": ["u_cland_a"]}]))
+
+
+def test_repick_far_renumbers_on_the_consumer_taps():
+    t = _start_type()
+    ch = retap.repick_type(t, CT)
+    rd = [s["raw_reset"] for s in t["clock"]["landing_reader_start"]["branches"]["ft13_i"]["stages"]]
+    wr = [s["raw_reset"] for s in t["clock"]["landing_writer_start"]["branches"]["x_o"]["stages"]]
+    assert rd == ["rst_n_t2", "rr_t1", "rr_t0"]                      # prefix kept, nearest consumer tap
+    assert wr == ["rr_t9", "rst_rl_7"]                               # role stage + relay name untouched
+    assert t["clock"]["landing_local_resets"][0]["raw"] == "rr_t1"   # local reset past the tree
+    assert ["clock.landing_reader_start.branches.ft13_i.stages[0]", "raw_reset", "rst_n_t117", "rst_n_t2", 40.0] in ch
+    assert len(ch) == 3 and max(c[4] for c in ch) <= retap.FAR_UM
+    assert retap.repick_type(t, CT) == []                            # idempotent
+
+
+def test_repick_far_ties_pick_the_lower_index():
+    t = dict(clock=dict(landing_reader_start={"branches": {"b": {"stages": [{"xy_um": [300.0, 100.0], "raw_reset": "rr_t7"}]}}}))
+    retap.repick_type(t, CT)
+    assert t["clock"]["landing_reader_start"]["branches"]["b"]["stages"][0]["raw_reset"] == "rr_t0"
+
+
+def test_repoint_repicks_after_the_tap_count_shift():
+    """retap.repoint numbered START raws on the clock tap census; with fewer taps a shifted index lands past the tree."""
+    raw_old = dict(partition_types=dict(T=_start_type()))
+    raw_old["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["ft13_i"]["stages"][0]["raw_reset"] = "rr_t3"
+    raw_new = copy.deepcopy(raw_old)
+    taps = lambda raw, path: (lambda tn: OLD if raw is raw_old else NEW)  # noqa: E731
+    rep = retap.repoint(raw_old, raw_new, taps_fn=taps, tree_fn=lambda r, p: (lambda tn: None), tapoff=False,
+                        ctaps_fn=lambda raw, path: (lambda tn: CT))
+    st = raw_new["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["ft13_i"]["stages"]
+    assert [s["raw_reset"] for s in st] == ["rr_t2", "rr_t1", "rr_t0"]
+    assert any(c[1] == "raw_reset" and c[3] == "rr_t0" for c in rep["T"])
+    raw_off = copy.deepcopy(raw_old)
+    retap.repoint(raw_old, raw_off, taps_fn=taps, tree_fn=lambda r, p: (lambda tn: None), tapoff=False, far_um=None,
+                  ctaps_fn=lambda raw, path: (lambda tn: CT))
+    assert raw_off["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["ft13_i"]["stages"][1]["raw_reset"] == "rr_t0"   # the shifted map alone: 390 um
+
+
+def test_repick_start_raws_reports_an_unsolvable_type():
+    raw = dict(partition_types=dict(T=_start_type(), U=dict(clock={})))
+    def bad(r, p):
+        def f(tn):
+            raise ValueError("no taps")
+        return f
+    rep = retap.repick_start_raws(raw, None, None, ctaps_fn=bad)
+    assert list(rep) == ["T"] and rep["T"][0][2] == "SKIP"
