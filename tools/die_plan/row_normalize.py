@@ -17,15 +17,18 @@ left behind, in a core or off the site grid (ADV-SITE-IN-MACRO / SITEGRID).  The
                from the density base count of the NEW plan (clk_t<nb>..), in order, and an added tap that the moved sinks / cores
                made illegal (outline / halo / tap spacing, the taps.density_taps predicate) moves to the nearest legal 0.054 um site
                (the kv-pv-estrip tapname_fix.py form, for every die and type).
-    4 RETAP    retap.repoint(BASE, plan): every type whose tap set (names, sites) changed vs BASE gets its tap-named references
+    4 LANDREMAP landing_remap.remap_plan(BASE, plan, resets="anchor") on the types whose tap set changed, while the references still
+               carry the OLD tap names (KV-SINKBINS 11-25); the sections it rewrote (landing raw branches / reader / writer starts / local
+               resets, landing pin source taps) are kept and restored after RETAP, so no name is mapped twice.
+    5 RETAP    retap.repoint(BASE, plan): every type whose tap set (names, sites) changed vs BASE gets its tap-named references
                (landing contract source taps, consumer new_reset, per-port tap offsets / windows) re-pointed to the nearest new tap
                and its own published collector tree re-solved.
-  tables phase (needs the elab's bus_groups.json; `row_normalize.py tables`):
-    5 R8       r8_refresh.py: the as-built land_r8 table and every land_r8_extra table re-derived from this plan's elab, ALWAYS
+  tables phase (needs bus_groups.json from `bind.py r8-prepass`, the bind head; `row_normalize.py tables`):
+    6 R8       r8_refresh.py: the as-built land_r8 table and every land_r8_extra table re-derived from this plan's bind head, ALWAYS
                before the bind (R8 drift is reported as fixed, never left for the strict bind to find as R8_STALE).
 
 Each step only touches what differs from BASE; a plan equal to BASE is returned byte-equal (no step fires).  Every step writes
-a report row; nothing is silently dropped.  --skip STEP leaves one out (reprice, legal, tapname, retap).
+a report row; nothing is silently dropped.  --skip STEP leaves one out (reprice, legal, tapname, landremap, retap).
 
   row_normalize.py plan --base BASE --in PLAN --out OUT --tree TREE [--report R.json] [--skip STEP ...]
   row_normalize.py tables --plan PLAN --tree TREE --asbuilt AB --bus-groups OUT/bus_groups.json [--report R.json]
@@ -45,7 +48,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-STEPS = ("reprice", "legal", "tapname", "retap")
+STEPS = ("reprice", "legal", "tapname", "landremap", "retap")
 TAP_STEP_UM = 0.054
 
 
@@ -208,10 +211,64 @@ def step_tapname(raw, types, plan_path=None, base_count=None, legal_for=None):
     return out
 
 
-# ------------------------------------------------------------------ 4 RETAP
-def step_retap(braw, raw, base_path, plan_path, types):
+# ------------------------------------------------------------------ 4 LANDREMAP + 5 RETAP
+LANDREMAP_KEYS = ("landing_raw_branches", "landing_reader_start", "landing_writer_start", "landing_local_resets")
+
+
+def tapset_changed(braw, raw, base_path, plan_path, types):
+    """the touched types whose tap set (names, sites) differs from BASE (the retap rule)"""
+    import retap as RT
+    to, tn_ = RT._plan_taps(braw, str(base_path)), RT._plan_taps(raw, str(plan_path))
+    key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
+    out = []
+    for tn in types:
+        if tn in _pt(braw) and key(to(tn)) != key(tn_(tn)):
+            out.append(tn)
+    return out
+
+
+def _protect(t):
+    ck = t.get("clock") or {}
+    lc = ck.get("landing_contract") or {}
+    keep = {"pins": [(q.get("source_clock_port"), q.get("source_clock_tap")) for q in lc.get("pins") or []]}
+    keep.update({k: copy.deepcopy(ck[k]) for k in LANDREMAP_KEYS if k in ck})
+    return keep
+
+
+def _restore(t, keep):
+    ck = t.setdefault("clock", {})
+    for q, (sp, st) in zip((ck.get("landing_contract") or {}).get("pins") or [], keep["pins"]):
+        if sp is not None:
+            q["source_clock_port"] = sp
+        if st is not None:
+            q["source_clock_tap"] = st
+    for k, v in keep.items():
+        if k != "pins":
+            ck[k] = v
+
+
+def step_landremap(braw, raw, tree, plan_path, types):
+    """landing_remap.remap_plan (anchor resets) on the types whose tap set changed, BEFORE retap, while every tap reference still
+    carries the OLD names (KV-SINKBINS 11-25: retap first left 23 DERIVEDNAME stale rst_rl_<k>; anchor mode refuses renamed refs)
+    -> ({type: n records} or {type: {failed}}, protected sections to restore after retap)"""
+    if not types:
+        return {}, {}
+    import landing_remap as LM
+    try:
+        rec = LM.remap_plan(braw, raw, str(tree or os.getcwd()), Path(plan_path).parent, set(types), resets="anchor", bound_old=True)
+    except Exception as e:  # noqa: BLE001 - named, fails the gate (fail closed)
+        return {tn: {"failed": f"landing_remap {type(e).__name__}: {str(e)[:300]}"} for tn in types}, {}
+    prot = {tn: _protect(_pt(raw)[tn]) for tn in types}
+    n = {tn: sum(1 for k in ("resets", "taps", "anchors") for x in rec.get(k) or [] if tn in json.dumps(x)) for tn in types}
+    return {tn: v for tn, v in n.items()}, prot
+
+
+def step_retap(braw, raw, base_path, plan_path, types, protect=None):
+    """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
     import retap as RT
     rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types))
+    for tn, keep in (protect or {}).items():
+        _restore(_pt(raw)[tn], keep)
     return {tn: len(ch) for tn, ch in rep.items()}
 
 
@@ -222,6 +279,7 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
     rep = dict(steps={}, seconds={})
     types = touched_types(raw, braw)
     rep["touched_types"] = types
+    prot = {}
     with in_tree(tree):
         for name in STEPS:
             t0 = time.time()
@@ -234,8 +292,19 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                 r = step_legal(raw, braw, types, resite=hooks.get("resite"))
             elif name == "tapname":
                 r = step_tapname(raw, types, plan_path, hooks.get("base_count"), hooks.get("legal_for"))
+            elif name == "landremap":
+                if "landremap" in hooks:
+                    r, prot = hooks["landremap"](braw, raw, types)
+                else:
+                    ch = tapset_changed(braw, raw, base_path, plan_path, types) if types else []
+                    r, prot = step_landremap(braw, raw, tree, plan_path, ch)
             else:
-                r = (hooks["retap"](braw, raw, types) if "retap" in hooks else step_retap(braw, raw, base_path, plan_path, types)) if types else {}
+                if "retap" in hooks:
+                    r = hooks["retap"](braw, raw, types)
+                    for tn, keep in prot.items():
+                        _restore(_pt(raw)[tn], keep)
+                else:
+                    r = step_retap(braw, raw, base_path, plan_path, types, prot) if types else {}
             rep["steps"][name] = r
             rep["seconds"][name] = round(time.time() - t0, 1)
     rep["changed"] = {k: len(v) for k, v in rep["steps"].items() if isinstance(v, dict) and v}

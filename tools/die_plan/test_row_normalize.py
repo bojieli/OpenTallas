@@ -18,7 +18,7 @@ def _plan(fixed=2, regs_a=1):
 
 
 NOHOOK = dict(resite=lambda b, t, r: None, base_count=lambda tn: 0, legal_for=lambda tn: (lambda x, y: True, []),
-              retap=lambda b, r, ty: {})
+              retap=lambda b, r, ty: {}, landremap=lambda b, r, ty: ({}, {}))
 
 
 def test_unchanged_plan_is_untouched(tmp_path):
@@ -101,3 +101,32 @@ def test_tables_reports_r8_drift_fixed(tmp_path, monkeypatch):
     assert rep["rc"] == 0 and list(rep["fixed"]) == ["r8.json"] and "R8 drift fixed in 1 of 2" in rep["r8"]
     (tmp_path / "ab.json").write_text(json.dumps({}))
     assert RN.normalize_tables(tmp_path / "p.json", tmp_path, "ab.json", tmp_path / "bg.json")["fixed"] == {}
+
+
+def test_landremap_runs_before_retap_and_its_names_survive_retap():
+    order = []
+    base = {"partition_types": {"pv": {"clock": {"tap_mode": "density", "added_taps": [{"name": "clk_t5", "xy": [1, 1]}],
+                                                  "landing_raw_branches": {"b": "rst_rl_1"},
+                                                  "landing_contract": {"pins": [{"source_clock_tap": "clk_t5"}]}}}}}
+    raw = copy.deepcopy(base)
+    raw["partition_types"]["pv"]["clock"]["added_taps"][0]["xy"] = [2, 2]
+
+    def landremap(b, r, ty):                                  # sees OLD reference names, renames them itself
+        ck = r["partition_types"]["pv"]["clock"]
+        order.append(("landremap", ck["landing_contract"]["pins"][0]["source_clock_tap"]))
+        ck["landing_raw_branches"] = {"b": "rst_rl_9"}
+        ck["landing_contract"]["pins"][0]["source_clock_tap"] = "clk_t4"
+        return {"pv": 2}, {"pv": RN._protect(r["partition_types"]["pv"])}
+
+    def retap(b, r, ty):                                      # would map clk_t4 a second time through the old table
+        order.append("retap")
+        ck = r["partition_types"]["pv"]["clock"]
+        ck["landing_contract"]["pins"][0]["source_clock_tap"] = "clk_t3"
+        ck["landing_raw_branches"] = {"b": "rst_rl_1"}
+        return {"pv": 1}
+    hooks = dict(NOHOOK, landremap=landremap, retap=retap, base_count=lambda tn: 4)
+    rep = RN.normalize_plan(base, raw, hooks=hooks)
+    ck = raw["partition_types"]["pv"]["clock"]
+    assert order == [("landremap", "clk_t5"), "retap"]
+    assert ck["landing_contract"]["pins"][0]["source_clock_tap"] == "clk_t4" and ck["landing_raw_branches"] == {"b": "rst_rl_9"}
+    assert ck["added_taps"][0]["name"] == "clk_t4" and rep["steps"]["landremap"] == {"pv": 2}
