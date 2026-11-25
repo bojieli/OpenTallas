@@ -1,0 +1,22 @@
+{
+ "lane": "QC-COLL-PINREG",
+ "status": "DEFERRED-C1p",
+ "stamp": "2026-11-25 01:24 PST",
+ "base_checked": {"c1o_v3": "4c5b5a9bb1f7", "probe_kit": "coll_core_1124144313 (spec 1124144343, epyc7, C1j 7fbc73d3f7cf, 3_place.odb)"},
+ "row_sha": null,
+ "pre_verdict": "NOT RUN (no row drafted for C1o)",
+ "render": "intel2:/srv/opentallas-scratch2/claude/QC-COLL-PINREG/coll_core_pinreg_review.png",
+ "evidence": {
+  "conn_dump": "epyc7:/srv/opentallas-scratch2/claude/QC-COLL-PINREG/c/conn.out (odb BFS <=4 comb levels, macro -> flops; 83,816 flops)",
+  "flops_by_x_bin_100um": {"0": 27034, "1": 9215, "2": 24418, "3": 9130, "4": 11894, "5": 1795, "6": 10, "7": 320},
+  "w_pile_x0_100_y0_600": "19,242 flops; top: cland ring sd_c of shr_p_rx_i 2396, shr_r_rx_i 2268, rec_rx_s1_i 2192, then u_bout_shr_p/r_tx, u_bin_shr_r_rx_i, face codec p_tx_flit/rf",
+  "east_macro_flops": "2,681 flops tied to g_pf0-2/sring0-4/g_xf2-3 already sit at the E column W edge x420-520 or in it (xs_q x752); their other ends are W-side (pring, g_xf0, gq_q). Moving them east lengthens the other leg."
+ },
+ "finding": "The 'logic serving the east column belongs in the east column' premise is refuted by connectivity. The pile is three landing-ring bands at about 100% of area_reserve, squeezed into the 40 um channel between the W pin bank (shr_* y6-506) and the face SRAM column (x60-232), plus the SW corner where the S window rec_rx_s1_i (x4-119) meets W shr_p_rx_i (y6-135).",
+ "c1p_row_spec": [
+  "A: spread the W seam bank shr_* from y6-506 to y6-800 (all of coll_ucie's abutment); a 2-type row with matching coll_ucie E windows; re-seat the shr bands at <=60% fill",
+  "B: move the S window rec_rx_s1_i off the SW corner; a 2-type row with the coll_f2 N windows",
+  "C: re-floor the face_0/face_1 SRAM columns (x60-472) about 40 um east to give the W landing channel about 80 um; needs a face seat regen and a move of the x440-490 FIRM stations"
+ ],
+ "why_not_c1o": "Every effective lever changes a neighbour type (coll_ucie/coll_f2) or needs about 10k relay_sites plus FIRM stations regenerated. A coll_core-only seat/logic_cluster row would move logic away from its connected macros and pins. That cannot be done, rendered, PRE-gated and reviewed before 02:45 without adding risk."
+}
