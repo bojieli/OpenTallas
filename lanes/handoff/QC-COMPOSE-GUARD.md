@@ -30,3 +30,5 @@ Not a drop (new in STSLW-R1): sle_stm bus:flt_o 2 stations + sl_E?_stm__flt lane
 
 ## GUARD
 tools/die_plan/compose_drop_guard.py (+ test_compose_drop_guard.py); plan_gate_pre class COMPOSEDROP (WARN with --baseline-plan; OT_COMPOSE_DROP=fail, OT_COMPOSE_DROP_LIST=FILE).
+Landed: main e827d53ab617 (f505601048 tool + PRE hook, e827d53ab6 test fix), ot-push-main attempt 1, touched tests passed. Announced to S81-ALLFIX-INT / KV-ALLFIX 16:09.
+## Status 16:10 PST: job done. Open for QC-CB-C1L: fold 3d81651854c4 into C1l, then run the guard C1k -> C1l with --row r10 and rows/c1l_r10_drops.txt (+ its own drop list).
