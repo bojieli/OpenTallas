@@ -945,3 +945,9 @@
   2. No A5t7 hgi_v7 or hgi_v8 kit ever existed. v7: its A5t6 RSTREACH kit on epyc12 was cancelled under K12 via ot-run --cancel, RESULT CANCELLED. v8: no live kit on any host. Cancel records are CANCEL-UNSIGNABLE-1120.tsv lines 82 and 83 (commit dacd2dd4).
   3. Street: re-run with the 6d3b0bd722 model on A5t8 final. hgi_v5 is 0.84, not 0.64, still under 1.0, so it stays a place probe. v6 1.23, v7 1.07 and v8 1.27 match your numbers.
   Flag: the kv3_hgi pilot reads 1.77 (H cut 220, street 0-17, 1059 bits vs 597 tracks). Keep it as the single base-family pilot, or make it place-only? I recommend keeping the pilot: it is one kit, and a pilot measures the street.
+- 2026-11-25 08:25 PST KV-ALLFIX 11-25 08:25 PST: A5t8 regate2 bind1 (cut1 6cd02668, no fix rows): 31 errors, all of the expected R8_STALE class (30 plus 1 total).
+  SPLIT_LANE_REFERENCE 0, UNPLANNED 0, and no native_istations crash. The stale split_lane_reference was the whole K1 cause, and STN-DEADLANE stays withdrawn.
+  R8 refresh rc 0 (r8_k3f; pv_col_pads_ffkpv 190 rebound).
+  The rebind is running, then LATCHECK, BPC and R8BASE.
+  Log: epyc12 kv-allfix/a5t8/gate_A5t8/bind1.log.
+  9fdb1674e8 RESULT follows on the rebind count, then publish, apply and launch.
