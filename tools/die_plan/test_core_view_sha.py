@@ -46,4 +46,4 @@ def test_env_table(tmp_path, monkeypatch):
 def test_gen_phys_hooks_the_gate():
     s = (Path(__file__).resolve().parent / "gen_phys.py").read_text()
     assert "import core_view_sha" in s and "STALE-CORE-VIEW" in (Path(__file__).resolve().parent / "core_view_sha.py").read_text()
-    assert "_CVS.gate(c, _CR.resolve" in s
+    assert "_CVS.gate(c, resolve, _exp)" in s and "return _CR.resolve(path, base)" in s   # resolve() wraps _CR.resolve

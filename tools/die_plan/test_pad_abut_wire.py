@@ -38,6 +38,6 @@ def test_an_existing_post_route_hook_is_chained_not_lost():
 
 def test_generator_wires_it_for_macro_pin_pad_kits_only():
     gp = (HERE / "gen_phys.py").read_text()
-    i = gp.index("bump_out = pad_bumps(P, tn)"); j = gp.index('if t.get("chain_even")', i)
+    i = gp.index("bump_out = pad_bumps(P, tn, root=root)"); j = gp.index('if t.get("chain_even")', i)
     block = gp[i:j]
     assert "if bump_out:" in block and 'with_name("pad_abut_wire.tcl")' in block and "pad_abut_wire_config(mk, kd)" in block

@@ -31,7 +31,7 @@ def test_hooks_bind_then_check():
 def test_generators_ship_helper():
     gp = (HERE / "gen_phys.py").read_text()
     # pg_connect.tcl is in the helper copy tuple (later helpers may follow it)
-    assert re.search(r'"pg_connect\.tcl"(, "[\w.]+")*\):', gp)
+    assert re.search(r'"pg_connect\.tcl"(, "[\w.]+")*\)+:', gp)
     assert '"grt_post.tcl", "pg_connect.tcl"' in (HERE / "core_flow.py").read_text()
     import sys
     sys.path.insert(0, str(HERE))

@@ -125,7 +125,7 @@ def test_pad_dont_touch_rows_carry_the_direction():
     assert rows == "{io_pma_tx ot_s81_pma_txm pma_tx 544 output} {io_pma_rx ot_s81_pma_rxm pma_rx 544 input}"
     assert '$pdt_dir eq "input" ? [[lindex $pdt_it 0] isInputSignal] : [[lindex $pdt_it 0] isOutputSignal]' in tcl
     gp = (HERE / "gen_phys.py").read_text()
-    assert 'bump_out = pad_bumps(P, tn)' in gp and '[b for b in pad_bumps(P, tn) if b["dir"] == "output"]' not in gp
+    assert 'bump_out = pad_bumps(P, tn, root=root)' in gp and '[b for b in pad_bumps(P, tn) if b["dir"] == "output"]' not in gp
 
 
 # ---------------------------------------------------------------- PG-PIN-CUT-DEFAULT

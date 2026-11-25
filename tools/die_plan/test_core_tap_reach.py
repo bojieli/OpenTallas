@@ -76,6 +76,8 @@ def test_kit_without_core_taps_is_untouched(tmp_path):
     assert KP.core_tap_reach_rows(tmp_path) == [] and KP.core_tap_reach(tmp_path) == []
 
 
-def test_check_runs_it_as_a_blocking_preflight_check():
+def test_check_runs_it_as_an_advisory_preflight_check():
+    """WF-1 11-14 (OWNER: delete the conservative limits): reported in checks['core_tap_reach']['advisory'], verdict PASS."""
     src = (Path(KP.__file__)).read_text()
-    assert "run('core_tap_reach', lambda: core_tap_reach(kit))" in src
+    assert "run('core_tap_reach', lambda: core_tap_reach(kit))" not in src
+    assert "checks['core_tap_reach'] = dict(verdict='PASS', errors=[], advisory=_ctr)" in src

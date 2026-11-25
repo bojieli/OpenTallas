@@ -159,6 +159,7 @@ def test_parameter_hook_does_not_shadow_the_bound_reset_generator(tmp_path, monk
     monkeypatch.setattr(sys, "path", sys.path[:])
     b = bind.Binder.__new__(bind.Binder)
     b.ab, b.errors = {"param_regen": {"file": str(hook)}}, []
+    b.types, b.parts = {}, {}  # plan_leaf_params (0e07c1a066d) reads types/parts: no plan leaf_params here
     b.regen_params()
     assert b.errors == []
     import reset_replicate

@@ -23,6 +23,7 @@ def test_rdx_view_entry_matches_signed_receipt():
 
 def test_rdx_entry_does_not_shadow_the_base_cfg7_views():
     reg = json.loads((HERE / "hard_core_built_params.json").read_text())["entries"]
-    others = [e for e in reg if e.get("module") == "ot_s81_cfg7_seq" and e.get("lib_contains") != "ot_s81_cfg7_seq_rdx_1121/"]
+    # rdx + rdxg (93ad08b4406, go guard) are the RD_EXTRA views; every other cfg7 entry is a base view
+    others = [e for e in reg if e.get("module") == "ot_s81_cfg7_seq" and "_rdx" not in e.get("lib_contains", "")]
     assert all("ot_s81_cfg7_seq_rdx_1121/" not in e.get("lib_contains", "") for e in others)
     assert all(e.get("params", {}).get("RD_EXTRA", 0) == 0 for e in others)

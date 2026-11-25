@@ -109,7 +109,8 @@ def test_real_r12ng_bind_fails_the_gate(tmp_path):
 
 def test_bind_py_calls_the_gate_when_the_manifest_asks():
     src = (HERE / "bind.py").read_text()
-    assert 'B.ab.get("leaf_cs_depth_gate")' in src and "LCD.bind_gate(raw, out, B.errors)" in src
+    assert 'B.ab.get("leaf_cs_depth_gate")' in src and "LCD.bind_gate(raw, out, _lcd_errs)" in src
+    assert 'B.errors.extend(probe_only_filter(_lcd_errs, getattr(B, "probe_only", None)))' in src
     assert src.index("LCD.bind_gate") < src.index('rep["errors"], rep["n_errors"] = B.errors[:2000]')
 
 

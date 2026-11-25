@@ -213,6 +213,7 @@ def test_absolute_hook_unchanged_target_is_explicitly_derived(tmp_path):
     b.F = SimpleNamespace(cells=[SimpleNamespace(path='su0.u_tap', module='ot_hbm_vm_lg_pair_tap',
         ytype='tap', params={'READ_RETURN': 15})])
     b.param_defaults = {}
+    b.types, b.parts = {}, {}  # plan_leaf_params (0e07c1a066d) reads types/parts: no plan leaf_params here
     b.regen_params()
     assert not b.errors and b.param_regen['changed'] == []
     assert b.param_regen['derived'] == [dict(inst='su0.u_tap',param='READ_RETURN',asbuilt='15',bound=15)]
@@ -234,7 +235,8 @@ def test_undeclared_hook_target_cannot_supply_derivation(tmp_path):
     b=bind.Binder.__new__(bind.Binder)
     b.ab=dict(param_regen=dict(file=str(hook)));b.base=str(tmp_path);b.errors=[]
     b.F=SimpleNamespace(cells=[SimpleNamespace(path='su0.u_tap',module='ot_hbm_vm_lg_pair_tap',ytype='tap',params={'READ_RETURN':15})])
-    b.param_defaults={};b.regen_params()
+    b.param_defaults={};b.types,b.parts={},{}  # plan_leaf_params (0e07c1a066d) reads types/parts: no plan leaf_params here
+    b.regen_params()
     assert b.errors and b.param_regen['derived']==[]
     leaves,bg=tap_die();report=LC.check(leaves,bg,b.param_regen,b.ab)
     assert any('READ_RETURN' in e for e in report['errors'])

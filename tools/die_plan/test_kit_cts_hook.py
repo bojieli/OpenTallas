@@ -63,6 +63,8 @@ def test_generator_calls_shared_hook_before_config_mk(gen):
     i_cfg = src.index('(kd / "config.mk").write_text("\\n".join(cfg) + "\\n")', i_call)
     assert i_apply < i_call < i_cfg
     between = src[i_call + len(call):i_cfg]
+    if gen == "kv":   # WAVE-ENV-CORE-1122: append-only GLOBAL_ROUTE_ARGS / OT_PGCAP lines, never PRE/POST_CTS_TCL
+        between = between.replace("cfg, wave_env = wave_env_cfg(cfg)", "")
     assert "cfg" not in between, f"{gen}: cfg edited after the CTS hook"
     if gen == "s81_legacy":   # legacy delegates (no second copy of the hook logic)
         body = src[src.index("def planned_tree_cts(kd, cfg):"):src.index("def main():")]

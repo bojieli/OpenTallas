@@ -89,9 +89,11 @@ def test_hold_gate_screen_unchanged():
     """OT_HOLD_GATE stays a stop exactly as before (rc 4, FAIL_POSTCTS) in both runners."""
     assert ("if [ \\$hgrc != 0 ] || ! grep -qE 'OT_HOLD_GATE (PASS|INFO)' /work/hold_gate.log; then grep OT_HOLD_GATE "
             "/work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi;") in HBM_RUN.read_text()
+    # probe-through kits (probe_through.on) log the stop to PROBE_STOPS.log and continue; every other kit: rc 4, FAIL_POSTCTS
     assert ("if [ \\$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE "
-            "verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; "
-            "rc=4; fi; fi; fi;") in gen_phys.RUN_KIT
+            "verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a \\$( [ -f "
+            "/work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] "
+            "|| rc=4; fi; fi; fi;") in gen_phys.RUN_KIT
 
 
 TCL_STUBS = r"""

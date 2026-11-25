@@ -52,5 +52,5 @@ def test_tcl_parses():
 
 def test_gen_wires_hook_into_face_flops():
     src = Path(G.__file__).read_text()
-    assert 'bump_out = pad_bumps(P, tn)' in src
+    assert 'bump_out = pad_bumps(P, tn, root=root)' in src
     assert 'hook.write_text("source /work/pad_bump_dt.tcl\\n" + hook.read_text())' in src
