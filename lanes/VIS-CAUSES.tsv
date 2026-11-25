@@ -28,6 +28,8 @@ qwen_kvsys	kv3_hgi_v5	1124042111	C6-KVHGI-LEG	noprog/design cancel at GRT, no fi
 qwen_compute	slw_fe_v1	clfe325744__cl08d14f0d_1124082558	C7-FE-NEARMISS	autopilot NEAR-MISS TT -166.4, FF -117	central blob of logic only (no plan feature visible)	AFTER-PLACE	-	MEASURED
 qwen_kvsys	kv3_sys_c	1124044024	C8-TIMING-NO-VISUAL	GRT wns -268.8, tns -28920	no review on file (no place render was reviewed)	AFTER-ROUTE	-	MEASURED
 qwen_compute	glue	1124160531	C8-TIMING-NO-VISUAL	route: GRT SETUP_TRIAGE + drv FAIL	no review on file	AFTER-ROUTE	-	MEASURED
+qwen_kvsys	kv3_pc_v1	cl4ea58a5c__r877307f5d_1124195502	C4-KVPC-PHY-SPINE	route: FAIL_POSTCTS final GRT TT/FF policy; census setup -1154.2 u_lpad_i_idpc -> u_kvpcN, -845.0 u_hslN.u_slice internal, -843.8 lpad -> bout	centre-channel spine + E pile (identical across 5 r8 variants, VIS 01:4x)	PLAN	leg length pad/phy pins -> kvpc regs across the spine vs hop budget (+regs/hop)	MEASURED
+qwen_kvsys	kv3_pv_v4n	1124043453	C9-KVPV-CLAND-LEG	route: FAIL_POSTCTS final GRT TT/FF policy; census setup -1116.7 u_cland_origin -> u_cland_reader_start_ftN (3 paths -1106..-1117)	pv class: E-edge tap column + centre pile	PLAN	leg length cland_origin -> reader_start feed-through vs 405-um hop (stations needed); FP-KV LEG405	MEASURED
 # FP section (VIS-REOWN agg.py from lanes/FP-<die>.tsv): plan checks that FAIL before build; kit '-', visible PLAN, basis FP-PLAN-CHECK <file>
 HEAD	hd_serdes	-	FP:taps>1000(placed)+drt_plateau_risk	plan check FAIL: taps>1000(placed), drt_plateau_risk	visual FAIL	PLAN	DEFERRED W8 re-floor lane (sink_bins+density, dmem/cmem y)	FP-PLAN-CHECK FP-HEAD.tsv
 HEAD	hd_mesh	-	FP:macro_channel<14.88	plan check FAIL: macro_channel<14.88	visual FAIL	PLAN	DEFERRED W9 (g_256 pair gaps)	FP-PLAN-CHECK FP-HEAD.tsv
