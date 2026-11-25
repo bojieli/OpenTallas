@@ -267,3 +267,64 @@ def test_all_gaps_from_separate_types_remain_parallel(tmp_path, capfd, monkeypat
     assert b.emit_gaps == ["unresolved input in first", "unresolved input in second"]
     assert "emit parallel fell back" not in capfd.readouterr().out
     assert (tmp_path / "bind_emit_par.json").is_file()
+
+
+# BIND-SPEED-1124: one parent snapshot + consecutive-type chunks per worker
+@pytest.mark.parametrize("n,j,per_job", [(12, 2, 3), (12, 3, 1), (12, 2, 0), (5, 4, 3)])
+def test_chunked_parallel_equals_serial(tmp_path, capfd, monkeypatch, n, j, per_job):
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("OT_BIND_EMIT_CHUNKS", str(per_job))
+    monkeypatch.setattr(EP, "hist_load", lambda out: {})
+    a, b = Fake(n=n), Fake(n=n)
+    (tmp_path / "s").mkdir()
+    (tmp_path / "p").mkdir()
+    fs = serial(a, tmp_path / "s")
+    out_s = capfd.readouterr().out
+    fp = []
+    rec = EP.run(b, tmp_path / "p", fp, j)
+    out_p = capfd.readouterr().out
+    assert state(a) == state(b)
+    assert [f.name for f in fs] == [f.name for f in fp]
+    assert [ln for ln in out_p.splitlines() if ln.startswith("emit ")] == out_s.splitlines()
+    assert rec["types"] == n and len(rec["per_type"]) == n
+    assert rec["chunks"] == (n if per_job == 0 or n <= j else min(n, j * per_job))
+
+
+def test_make_chunks_consecutive_and_isolates_big_types():
+    order = [(f"t{i:02d}", [f"p{i}"]) for i in range(20)]
+    cost = {tn: (100.0 if tn == "t05" else 1.0) for tn, _ in order}
+    ch = EP.make_chunks(order, 2, cost.get, per_job=3)
+    assert [kv for c in ch for kv in c] == order                   # consecutive, sorted, complete
+    assert [("t05", ["p5"])] in ch                                 # a type costing more than a chunk runs alone
+    assert EP.make_chunks(order, 2, cost.get, per_job=0) == [[kv] for kv in order]
+    assert EP.make_chunks(order[:2], 4, cost.get, per_job=3) == [[order[0]], [order[1]]]
+
+
+def test_failing_type_inside_a_chunk_stops_there(tmp_path, monkeypatch):
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setenv("OT_BIND_EMIT_CHUNKS", "1")
+    monkeypatch.setattr(EP, "hist_load", lambda out: {})
+    a, b = Fake(n=12), Fake(n=12)
+    a.fail = b.fail = "t3"
+    with pytest.raises(Err):
+        serial(a, tmp_path)
+    files = []
+    with pytest.raises(Err, match="gap in t3"):
+        EP.run(b, tmp_path, files, 2)                  # chunks t0 t1 t10 t11 t2 t3 / t4..t9 (sorted names): t3 ends chunk 1
+    assert state(a) == state(b) and [f.name for f in files] == ["t0.sv", "t1.sv", "t10.sv", "t11.sv", "t2.sv"]
+
+
+def test_chunk_sees_its_earlier_types_like_the_serial_loop(tmp_path, monkeypatch):
+    """a type that reads what an earlier type of ITS chunk wrote sees it, as in the serial loop (a per-type fork sees none)"""
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(EP, "hist_load", lambda out: {})
+    monkeypatch.setenv("OT_BIND_EMIT_CHUNKS", "1")
+
+    class Dep(Fake):
+        def _emit_one(self, tn, ps, out, files):
+            Fake._emit_one(self, tn, ps, out, files)
+            self.pnames[tn]["n_before"] = len(self.pnames)
+
+    b = Dep(n=4)
+    EP.run(b, tmp_path, [], 2)                         # chunks t0 t1 / t2 t3
+    assert [b.pnames[t]["n_before"] for t in ("t0", "t1", "t2", "t3")] == [1, 2, 1, 2]

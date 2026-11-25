@@ -481,7 +481,9 @@ def _private_mb():
     return None
 
 
-def _child(B, tn, ps, out, res_path, log_path):
+def _child(B, chunk, out, res_path, log_path, snap=None, kd=None):
+    """one forked worker: the types of `chunk` (consecutive in sorted type order) one after the other on one private copy of the
+    Binder, as the serial loop runs them, then ONE delta against the parent's snapshot (BIND-SPEED-1124)"""
     rc = 0
     try:
         fd = os.open(log_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o644)
@@ -492,38 +494,53 @@ def _child(B, tn, ps, out, res_path, log_path):
         sys.stdout = os.fdopen(1, "w", closefd=False)    # whatever the parent had installed (a capture, a tee): the worker logs to its file
         sys.stderr = os.fdopen(2, "w", closefd=False)
         t0 = time.time()
-        snap = snapshot(B.__dict__, seen={id(B)})
+        if snap is None:
+            snap = snapshot(B.__dict__, seen={id(B)})
         t_snap = time.time() - t0
-        files, exc = [], None
-        try:
-            B._emit_one(tn, ps, out, files)
-        except Exception as e:                   # a BindError stops the serial loop too: the parent re-raises it in type order
-            exc = e
-            tb = traceback.format_exc()
+        files, exc, recs, logs = [], None, [], []
+        for tn, ps in chunk:
+            t1 = time.time()
+            n0 = len(files)
+            try:
+                B._emit_one(tn, ps, out, files)
+            except Exception as e:               # a BindError stops the serial loop too: the parent re-raises it in type order
+                exc = e
+                tb = traceback.format_exc()
+            sys.stdout.flush()
+            sys.stderr.flush()
+            logs.append((tn, os.lseek(1, 0, os.SEEK_CUR), [str(f) for f in files[n0:]]))
+            recs.append(dict(type=tn, wall_s=round(time.time() - t1, 2)))
+            if exc is not None:
+                break                            # the serial loop stops at this type: so does the chunk
         t1 = time.time()
-        rec = dict(type=tn, wall_s=round(t1 - t0, 2), snap_s=round(t_snap, 2))
-        kd = kinds(snap)
+        if kd is None:
+            kd = kinds(snap)
         try:
             ops = delta(snap, B.__dict__)
-            res = dict(ops=ops, files=[str(f) for f in files])
+            res = dict(ops=ops, files=[str(f) for f in files], types=logs)
         except ParUnsafe as e:
             res = dict(unsafe=str(e))
         if exc is not None:
+            res["exc_type"] = logs[-1][0]
             try:
                 pickle.dumps(exc)
                 res["exc"] = exc
             except Exception:
                 res["exc_text"] = tb
-        rec["delta_s"] = round(time.time() - t1, 2)
-        rec["private_mb"] = _private_mb()
-        rec["shallow"] = sorted(k for k, v in kd.items() if v == "shallow")
-        res["rec"] = rec
+        priv = _private_mb()
+        crec = dict(types=[r["type"] for r in recs], wall_s=round(time.time() - t0, 2), snap_s=round(t_snap, 2),
+                    delta_s=round(time.time() - t1, 2), private_mb=priv)
+        for r in recs:
+            r["private_mb"] = priv
+        res["rec"] = recs
+        res["chunk"] = crec
+        res["shallow"] = sorted(k for k, v in kd.items() if v == "shallow")
         sys.stdout.flush()
         sys.stderr.flush()
         try:
             blob = pickle.dumps(res, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception as e:
-            blob = pickle.dumps(dict(unsafe=f"{tn}: the state delta does not pickle ({e!r})", rec=rec))
+            blob = pickle.dumps(dict(unsafe=f"{chunk[0][0]}..: the state delta does not pickle ({e!r})", rec=recs, chunk=crec))
         tmp = res_path + ".tmp"
         with open(tmp, "wb") as f:
             f.write(blob)
@@ -596,10 +613,50 @@ def run(B, out, files, j, rec_path=None, beat=None):
         raise ParUnsafe(f"{e} (parallel attempt cost {time.time() - t0:.0f} s)") from e
 
 
+CHUNKS_PER_JOB = 3       # BIND-SPEED-1124: consecutive-type chunks per worker (OT_BIND_EMIT_CHUNKS; 0 = one type per worker, the 11-21 form)
+
+
+def chunks_per_job():
+    try:
+        return max(0, int(os.environ.get("OT_BIND_EMIT_CHUNKS", str(CHUNKS_PER_JOB))))
+    except ValueError:
+        return CHUNKS_PER_JOB
+
+
+def make_chunks(order, j, est, per_job=None):
+    """BIND-SPEED-1124 (S81 c8 11-24: 403 types, J=8, emit 18018 s; the workers spent 63644 of 68906 type-seconds pickling the Binder
+    before (snapshot) and after (delta) each ~13 s type, at ~25 GB private memory each).  -> the sorted types cut into CONSECUTIVE runs
+    of about equal estimated cost (est: type -> seconds), about per_job runs per worker.  One worker runs one run in sorted order, as the
+    serial loop does, and pays one delta; runs stay consecutive so the parent still applies every change in sorted type order."""
+    per_job = chunks_per_job() if per_job is None else per_job
+    if per_job <= 0 or len(order) <= j:
+        return [[kv] for kv in order]
+    n = min(len(order), j * per_job)
+    cost = [max(0.0, float(est(tn))) for tn, _ in order]
+    if not sum(cost):
+        cost = [1.0] * len(order)
+    cap = sum(cost) / n
+    out, cur, acc = [], [], 0.0
+    for kv, c in zip(order, cost):
+        if cur and c >= cap:                     # a type as costly as a whole chunk runs on its own
+            out.append(cur)
+            cur, acc = [], 0.0
+        cur.append(kv)
+        acc += c
+        if acc >= cap - 1e-9:
+            out.append(cur)
+            cur, acc = [], 0.0
+    if cur:
+        out.append(cur)
+    return out
+
+
 def _run(B, out, files, j, rec_path=None, beat=None):
     """Emit every type of B.by_type with j forked workers; on return B and `files` are as after the serial loop.
     Raises ParUnsafe (B untouched, files untouched; type files on disk are rewritten by the serial rerun) or the first type's
-    own exception in sorted type order, like the serial loop."""
+    own exception in sorted type order, like the serial loop.
+    BIND-SPEED-1124: the snapshot of the Binder is taken ONCE here before the first fork (the children inherit it copy-on-write and
+    would each have computed the same bytes), and each worker runs a chunk of consecutive types (make_chunks) with one delta."""
     import gc
     from pathlib import Path
     order = sorted((getattr(B, "_emit_set", None) or B.by_type).items())     # PROBE-ONLY-1123: the emitted subset
@@ -613,27 +670,38 @@ def _run(B, out, files, j, rec_path=None, beat=None):
     # EMIT-SCHED-1123 (QC V4 l0x / l1b: coll_ftc alone is 3018-3575 s of a 4756-5070 s emit; the next type ~130 s): the types with the
     # longest measured emit go first (history by type name), then the member-count weight; only the order changes, never results
     _h = hist_load(out)
-    todo = sorted(order, key=lambda kv: (-_h.get(kv[0], 0.0), -weight(B, kv[0], kv[1])))
+    _known = sorted(v for k, v in _h.items() if k in dict(order))
+    _mid = _known[len(_known) // 2] if _known else 1.0
+    chunks = make_chunks(order, j, lambda tn: _h.get(tn, _mid))
+    ccost = [sum(_h.get(tn, _mid) for tn, _ in c) for c in chunks]
+    todo = sorted(range(len(chunks)), key=lambda i: (-ccost[i], -sum(weight(B, tn, ps) for tn, ps in chunks[i]), i))
     live, done = {}, {}
     sys.stdout.flush()
     sys.stderr.flush()
     gc.collect()
+    ts = time.time()
+    snap = snapshot(B.__dict__, seen={id(B)})
+    kd = kinds(snap)
+    snap_s = round(time.time() - ts, 2)
+    snap_mb = round(_snap_bytes(snap) / 2 ** 20)
     if hasattr(gc, "freeze"):
         gc.freeze()                              # keep the children's GC from dirtying (copying) the parent's pages
+    ndone = 0
     try:
         while todo or live:
             while todo and len(live) < j:
-                tn, ps = todo.pop(0)
-                i = [k for k, _ in order].index(tn)
+                i = todo.pop(0)
                 rp, lp = os.path.join(work, f"{i}.res"), os.path.join(work, f"{i}.log")
                 pid = os.fork()
                 if pid == 0:
-                    _child(B, tn, ps, out, rp, lp)
-                live[pid] = (tn, rp, lp)
+                    _child(B, chunks[i], out, rp, lp, snap, kd)
+                live[pid] = (i, rp, lp)
             # The bind also owns a concurrent plan-gate child. Collect only
             # workers so the gate's caller can still join its own status.
             if beat is not None:                 # EMIT-HEARTBEAT-1123: progress line from the poll loop (no thread across fork)
-                beat.done, beat.phase = len(done), f"types j={j}, running {','.join(sorted(v[0] for v in live.values()))[:160]}"
+                beat.done = ndone
+                beat.phase = f"types j={j}, running " + ",".join(sorted(f"{chunks[v[0]][0][0]}+{len(chunks[v[0]]) - 1}"
+                                                                         for v in live.values()))[:160]
                 beat.beat()
             for pid in live:
                 ready, st = os.waitpid(pid, os.WNOHANG)
@@ -642,8 +710,9 @@ def _run(B, out, files, j, rec_path=None, beat=None):
             else:
                 time.sleep(0.02)
                 continue
-            tn, rp, lp = live.pop(pid)
-            done[tn] = (st, rp, lp)
+            i, rp, lp = live.pop(pid)
+            done[i] = (st, rp, lp)
+            ndone += len(chunks[i])
     finally:
         if hasattr(gc, "unfreeze"):
             gc.unfreeze()
@@ -653,9 +722,11 @@ def _run(B, out, files, j, rec_path=None, beat=None):
                 os.waitpid(pid, 0)
             except OSError:
                 pass
-    results, recs = [], []
-    for tn, _ in order:
-        st, rp, lp = done[tn]
+    del snap
+    results, recs, crecs, shallow = [], [], [], set()
+    for i in range(len(chunks)):
+        st, rp, lp = done[i]
+        tn = chunks[i][0][0]
         try:
             log = open(lp, errors="replace").read()
         except OSError:
@@ -669,14 +740,16 @@ def _run(B, out, files, j, rec_path=None, beat=None):
             _cleanup(work)
             raise ParUnsafe(f"{tn}: {res['unsafe']}")
         results.append((tn, res, log))
-        recs.append(res["rec"])
+        recs.extend(res["rec"])
+        crecs.append(res["chunk"])
+        shallow.update(res.get("shallow", []))
     _cleanup(work)
     # everything read: apply in sorted type order up to (and including the state of) the first failing type, like the serial loop
     upto, err = [], None
     for tn, res, log in results:
         upto.append((tn, res["ops"]))
         if "exc" in res or "exc_text" in res:
-            err = (tn, res)
+            err = (res.get("exc_type", tn), res)
             break
     apply(B.__dict__, upto)
     for tn, res, log in results[:len(upto)]:
@@ -686,10 +759,12 @@ def _run(B, out, files, j, rec_path=None, beat=None):
     sys.stdout.flush()
     rec = dict(schema="opentallas.bind_emit_par.v1", jobs=j, types=len(order), wall_s=round(time.time() - t0, 1),
                serial_sum_s=round(sum(r["wall_s"] for r in recs), 1), max_private_mb=max([r.get("private_mb") or 0 for r in recs] or [0]),
-               shallow_attrs=sorted({k for r in recs for k in r.pop("shallow", [])}),
-               per_type=sorted(recs, key=lambda r: -r["wall_s"]))
+               shallow_attrs=sorted(shallow), chunks=len(chunks), snap_s=snap_s, snap_mb=snap_mb,
+               delta_sum_s=round(sum(c["delta_s"] for c in crecs), 1),
+               per_type=sorted(recs, key=lambda r: -r["wall_s"]), per_chunk=sorted(crecs, key=lambda r: -r["wall_s"]))
     hist_save(rec["per_type"])
-    print(f"bind: emit parallel j={j}: {len(order)} types in {rec['wall_s']} s (sum of type walls {rec['serial_sum_s']} s, "
+    print(f"bind: emit parallel j={j}: {len(order)} types in {len(chunks)} chunks in {rec['wall_s']} s (sum of type walls "
+          f"{rec['serial_sum_s']} s, snapshot {snap_s} s / {snap_mb} MB once, deltas {rec['delta_sum_s']} s, "
           f"max worker private {rec['max_private_mb']} MB)", flush=True)
     try:
         p = rec_path or os.environ.get("OT_BIND_EMIT_PAR_REC") or str(Path(out).parent / "bind_emit_par.json")
@@ -702,6 +777,16 @@ def _run(B, out, files, j, rec_path=None, beat=None):
             raise res["exc"]
         raise RuntimeError(f"emit of type {tn} failed in its worker:\n{res['exc_text']}")
     return rec
+
+
+def _snap_bytes(snap):
+    n = 0
+    for s in snap.values():
+        if s[0] == "deep":
+            n += len(s[1])
+        elif s[0] == "obj":
+            n += _snap_bytes(s[2])
+    return n
 
 
 def _cleanup(work):
