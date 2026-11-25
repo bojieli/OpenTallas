@@ -47,3 +47,9 @@ Work dir: intel1 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES (copy intel2 sam
 - Tree: epyc10 QC-GLUE-IMAGES/trees/c1j_ov = C1j fork + 3-file overlay; the row plan sits beside the C1j plan in plan_of_record as zz_s29_qc103_s4q9n46r4_final_preview_n59relay.json.
 - Stopped: runitem-glue-45011 and the old native59 probe (C1h form, epyc7). The C1h fork stays at epyc7 QC-GLUE-IMAGES/trees/c1h_ov; delete it with ot-delete once the epyc10 kits pass place.
 - Next: when native59 finishes geom, read <work>/geom/placed_scan.json. If any group is still NEED-STATION or over 405, regenerate with rows/n59_relay/row.py from that geom.tsv, re-bind scoped, and relaunch.
+
+## 2026-11-24 20:46 PST state
+- Row 658344fa9f04: full strict bind + LATCHECK PASS (intel1 n59st/fbind_row; copy at epyc10 binds/n59row_full_bind). Placed scan of kit native59_1124160935: NEED-STATION 0, bits over 405 um 22, over 580 um 0.
+- Live, all on epyc10: runitem-glue (glue C1j, GRT since 19:32); runitem-native59 (row 1, GRT since 20:35); runitem-native59-81854 (it2 e0ed1312a94f, spec qwen_compute_native59_1124204414, binds/n59it2_bind = scoped bind + bound top).
+- Generator for it2: epyc10 n59st/it2.py (GEOM ROW_PLAN OUT REPORT).
+- Next: watch GRT and sign-off of all three; post TT / DRC / hold / LEC on each. When glue and a native59 form both sign off, ask QC-ALLFIX to lift the glue and native59 holds. Cleanup: ot-delete the epyc7 c1h_ov fork.
