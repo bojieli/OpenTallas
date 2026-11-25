@@ -51,7 +51,7 @@ import re
 from pathlib import Path
 
 KEY = "land_intra_stations"
-NET_KEYS = {"src", "dst", "with", "stages"}
+NET_KEYS = {"src", "dst", "with", "stages", "types"}   # KV-HG-CDE 11-24: optional per-net type regex (one asbuilt option, nets of several dies)
 BUS = "bus:"
 
 
@@ -125,7 +125,8 @@ def config(ab, base=None):
         if len({is_bus(m[1]) for m in members}) != 1 or len({m[1] for m in members if is_bus(m[1])}) > 1:
             raise ValueError(f"asbuilt.{KEY}: net {n['src']} -> {n['dst']}: a bus net and its companions name ONE out bus")
         nets.append(dict(src=main[0], dst=main[1], members=members, stages=st, label=f"{n['src']}->{n['dst']}",
-                         bus=main[1][1] if is_bus(main[1]) else None))
+                         bus=main[1][1] if is_bus(main[1]) else None,
+                         types=re.compile(n["types"]) if n.get("types") else None))
     sinks = [m[1] if not is_bus(m[1]) else (m[1], m[0]) for n in nets for m in n["members"]]
     if len(set(sinks)) != len(sinks):
         raise ValueError(f"asbuilt.{KEY}: a load pin is named twice")
@@ -147,6 +148,8 @@ def type_sites(cfg, tn):
         raise ValueError(f"{KEY} {tn}: the sites file has no rows for this type")
     out = []
     for n in cfg["nets"]:
+        if n.get("types") is not None and not n["types"].fullmatch(tn):
+            continue
         hit = []
         for r in rows:
             if not isinstance(r, dict):
