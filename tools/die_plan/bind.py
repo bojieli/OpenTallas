@@ -4976,6 +4976,15 @@ class Binder:
                 if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
                     self._et_err(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
+                if t.get("reset", {}).get("epoch_station"):
+                    # QC-PHY-GEN 11-25 (form B, COORD/QC-ALLFIX): the epoch bit is registered by ONE station flop on clk instead of
+                    # a combinational arst_n port-to-port feedthrough (phy_ucie_kv: 3 such paths, -337 ps, 1057 um).  Opt-in per type
+                    # (reset.epoch_station); a plan without the key binds byte-identically.
+                    decl.append(f"    reg {n}_ep_q;  // epoch station: the delivered reset level, one clk flop (reset.epoch_station)")
+                    body.append(f"    always @(posedge clk) {n}_ep_q <= rst_n;")
+                    body.append(f"    assign {n} = {{{n}_ep_q, {d}}};  // registered hard pin: the macro's output register is "
+                                f"the boundary register; epoch [{W}] = the delivered reset level through one station flop")
+                    continue
                 body.append(f"    assign {n} = {{rst_n, {d}}};  // registered hard pin: the macro's output register is "
                             f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
                 continue

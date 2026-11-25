@@ -158,7 +158,11 @@ while :; do
   # on a running or admitted job.  --crit never waits (COORD 11-25); a --direct job waits only above the ceiling LOAD_CAP_CRIT_FACTOR (default 2.0; 0 = crit
   # bypass as before; the LOADGATE_1110 crit rule); short-pool stages (<= 2 threads, <= 10 GB, off fleet-wide) keep their bounded slot pool.  Die class (compose, PRE / gate, binds, bind-check, R8, census; OT_HEAVY_PRIO die / plan) skips the cap (DIECLASS_1125, below).
   _lcf="${LOAD_CAP_FACTOR:-1.2}"
-  if [ "$V" = OK ] && [ "$_dieclass" = 0 ] && [ "$_short" = 0 ] && [ "$_lcf" != 0 ]; then
+  # FLEET-OPS 11-25 (epyc9 06:50: LEC sub-jobs still 0 running / 6 waiting behind this cap, 143 min, after the CPU_CHARGE exemption): a LEC sub-job of a running kit
+  # (docker --name dpkit-<kit>-lec) finishes that kit and frees its place slot, so it never waits on the load cap (memory / disk gates stay;
+  # OT_HEAVY_LEC_CPU_EXEMPT=0 turns this off).
+  _lec=0; case " $* " in *" --name dpkit-"*"-lec "*) [ "${OT_HEAVY_LEC_CPU_EXEMPT:-1}" != 0 ] && _lec=1;; esac
+  if [ "$V" = OK ] && [ "$_dieclass" = 0 ] && [ "$_short" = 0 ] && [ "$_lec" = 0 ] && [ "$_lcf" != 0 ]; then
     # COORD 11-25: --crit (many lanes submit die-level work with --crit) is never load-held; only --direct keeps the ceiling.
     _lcrit=0; [ "${OT_HEAVY_DIRECT:-}" = 1 ] && _lcrit=1
     [ "$_lcrit" = 1 ] && _lcf="${LOAD_CAP_CRIT_FACTOR:-2.0}"
