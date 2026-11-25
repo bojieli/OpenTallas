@@ -256,9 +256,9 @@ def _sha(p):
 
 
 def explicit_taps(ck):
-    """the sink-carrying explicit taps of an explicit-mode type: clock.taps entries without a `kind` (core / pin taps carry one)."""
+    """the sink-carrying explicit taps of an explicit-mode type: clock.taps entries except kind core (the bind numbers every non-core entry)."""
     return [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in ck.get("taps") or []
-            if isinstance(t, dict) and "kind" not in t and t.get("xy")]
+            if isinstance(t, dict) and t.get("kind") != "core" and t.get("xy")]
 
 
 def type_taps(schema, P, ck, tn):
@@ -268,6 +268,33 @@ def type_taps(schema, P, ck, tn):
         return t, len(t)
     grid = schema._grid_taps(P, tn)
     return [(g[0], g[1], g[2]) for g in grid] + [(t["name"], float(t["xy"][0]), float(t["xy"][1])) for t in ck.get("added_taps") or []], len(grid)
+
+
+def explicit_legal(typ, x, y, taken, eps=1e-8):
+    """the bind's explicit-tap rule (taps.explicit_tap_sites): inside the outline by the tap clear, >= clear from every other tap
+    (Chebyshev), outside every placement obstacle grown by the clear (placement_obstacles.placement_boxes) and clock keepout."""
+    import schema
+    from placement_obstacles import placement_boxes
+    w, h = typ["outline_um"]
+    clear = schema.type_tap_clear(typ)
+    boxes = list(placement_boxes(typ, halo=clear).values())
+    boxes += [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in (typ.get("clock") or {}).get("keepouts_um", [])]
+    return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+            and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+            and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+
+
+def explicit_legalize(typ, x, y, taken, step=2.16, rings=400):
+    """nearest point (Manhattan rings of `step`) that passes explicit_legal; the input point when it already does."""
+    if explicit_legal(typ, x, y, taken):
+        return x, y
+    for r in range(1, rings + 1):
+        for i in range(-r, r + 1):
+            for j in sorted({r - abs(i), -(r - abs(i))}):
+                cx, cy = round(x + i * step, 3), round(y + j * step, 3)
+                if explicit_legal(typ, cx, cy, taken):
+                    return cx, cy
+    raise ValueError(f"no legal explicit tap site within {rings * step:.0f} um of ({x:.1f}, {y:.1f})")
 
 
 def explicit_type_ops(tn, ck, new_xy, cap):
@@ -329,8 +356,12 @@ def cmd_plan(a):
             extra += [[float(r["xy"][0]), float(r["xy"][1]), 1.0] for r in RT.for_type(P, tn).get("relays", [])]
         pts = np.array(bins["bins"] + extra, dtype=float)
 
-        def legalize(x, y, taken, typ=typ):
-            return schema.tap_clear(typ, x, y, taken, strict=True)[:2]
+        # explicit types: the bind (taps.explicit_tap_sites) also keeps every tap clear of the early core taps
+        core_xy = [(float(c[1]), float(c[2])) for c in schema.core_taps(P, tn)] if expl else []
+
+        def legalize(x, y, taken, typ=typ, core_xy=core_xy):
+            x, y = schema.tap_clear(typ, x, y, list(taken) + core_xy, strict=True)[:2]
+            return explicit_legalize(typ, x, y, list(taken) + core_xy) if expl else (x, y)
         _, load0, far0 = nearest(taps_all, pts)
         new_xy, info = split_type(taps_all, n_fixed, pts, legalize, a.cap, a.target, a.far_added, a.far_grid,
                                   split_above=a.split_above)

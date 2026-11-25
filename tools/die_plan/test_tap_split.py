@@ -117,7 +117,7 @@ def test_diff_ops_roundtrip_and_old_value_checks():
 def test_explicit_type_ops_append_to_taps_with_guards():
     ck = {"tap_mode": "explicit", "tap_max_sinks": 1500,
           "taps": [{"name": "clk", "xy": [1, 1]}, {"name": "clk_t7", "xy": [5, 5]},
-                   {"name": "clk_c0", "xy": [3, 3], "kind": "core", "insertion_ps": 400}]}
+                   {"name": "clk_c0", "xy": [3, 3], "kind": "core", "insertion_ps": 400}]}  # noqa: E501
     assert [t[0] for t in TS.explicit_taps(ck)] == ["clk", "clk_t7"]
     ops = TS.explicit_type_ops("x", ck, [(10.0, 20.0), (30.0, 40.0)], 1000)
     doc = {"partition_types": {"x": {"clock": copy.deepcopy(ck)}}}
@@ -128,3 +128,14 @@ def test_explicit_type_ops_append_to_taps_with_guards():
     bad["partition_types"]["x"]["clock"]["taps"].append({"name": "clk_t99", "xy": [0, 0]})
     with pytest.raises(ValueError):
         TS.apply_ops(bad, ops)
+
+
+def test_explicit_legalize_leaves_obstacle_and_spacing(monkeypatch):
+    import placement_obstacles
+    monkeypatch.setattr(placement_obstacles, "placement_boxes", lambda typ, halo=0: {"m": (40.0, 40.0, 60.0, 60.0)})
+    import schema
+    monkeypatch.setattr(schema, "type_tap_clear", lambda typ: 8.64)
+    typ = {"outline_um": [100.0, 100.0], "clock": {}}
+    x, y = TS.explicit_legalize(typ, 50.0, 50.0, [(20.0, 50.0)])
+    assert TS.explicit_legal(typ, x, y, [(20.0, 50.0)]) and not (40 < x < 60 and 40 < y < 60)
+    assert TS.explicit_legalize(typ, 80.0, 80.0, []) == (80.0, 80.0)
