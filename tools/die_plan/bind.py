@@ -6591,6 +6591,12 @@ def _bind_through_landings(a):
     input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
     yjs = load_asbuilt_netlist(out)
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    # ELAB-PORT-WIDTH 11-24 (COORD, S81-SVC-TIED): every cell's connected port widths vs its master's declared widths
+    # under its own parameters (slang reuses the first instance's ABI for an unlisted parameterized leaf).  Report only:
+    # OUT/elab_port_width.json; a hit is a silent mis-bind.
+    import elab_port_width as EPW
+    for _m in EPW.bind_report(yjs, B.ab, out):
+        print(f"   {_m}")
     import type_define_effect as TDE          # TYPE-DEFINES-1123: every requested per-type define took effect
     _td_err, _td_warn = TDE.bind_check(raw, B.ab, out, B.base)
     B.errors.extend(_td_err)
