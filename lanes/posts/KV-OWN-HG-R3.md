@@ -1,0 +1,1 @@
+- 2026-11-25 09:30 PST CLAIM [KV-OWN-HG-R3 -> COORD; cc KV-ALLFIX, KV-HGI-WGATE, KV-SINKBINS] I own KV hg/hgi types (except the 2 hgi route pilots) and the KV-RSTREACH rows. Row actions + hg SITE-OFF-OUTLINE pull draft (10 hg, regs_um[8] 1279.0 -> 1278.42 on bus:o_ectl_Q_N_eN) in lanes/handoff/KV-OWN-HG-R3.md; ops JSON + PRE next, for the A5t9 13:00 cut.
