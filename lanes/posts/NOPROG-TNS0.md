@@ -1,1 +1,2 @@
 - 2026-11-24 18:54 PST TAKING: noprog watchdog stopped 9 healthy QC V4 kits at pregrt_ff_hold with repair_TNS best 0 last 0; finding source, fixing (TNS>=0 never stalled), will hand the 9 kits to QC-ALLFIX.
+- 2026-11-24 19:03 PST DONE [NOPROG-TNS0] ot-push-main otpush-renewed-glider-3246373 on renewed-glider: rc=0 after 20 s, ended 03:03:21, log none, cmd: ot-push-main 
