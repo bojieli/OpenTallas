@@ -1,0 +1,30 @@
+# VIS-CAUSES.tsv  VIS-REOWN 2026-11-25. All 26 census FAILs (kits on the current plan sha), one per row. Verdicts come from each kit's own route/sign-off result (result.json), not from placement alone.
+# visible = PLAN (visible in the plan: floorplan/channels/taps/legs/density, checkable before build) | AFTER-PLACE | AFTER-ROUTE
+# basis = MEASURED (the kit reached the failing gate) | STOPPED (noprog watchdog / design cancel before a final DB; cause taken from the place/GRT render + census)
+die	type	kit	cause	failed (measured)	visual (place/GRT render)	visible	pre-build plan check	basis
+qwen_compute	sle_st_a_v1	cl67389ecd_1124052027	C1-STA-MACROFACE	sign-off: DRC 72 (56 M5 Short + 16 M5 spacing), TT/FF pair skew 356.6	taps and flops in a stair along macro faces; DRC = hc1 pin nets shorted to VSS/macro on M5 at the u_r1/r2/r3 macro faces (y 567.8/913.2/1250.2, 4.32-um x pitch)	PLAN	macro pin face vs M5 PG strap/obstruction overlap; tap legs landing on macro faces	MEASURED
+qwen_compute	sle_st_a_v1	cl989804f6__cled3c1d7b_1124052117	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 339.5	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	sle_st_a_v2	pv4242de79_1124052534	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 320.3	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	slw_st_a_v1	clfc5867a6__pvf82a6c28_1124052528	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 385.9	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	slw_st_a_v1	clfc5867a6__pvdf8e5ca4_1124052720	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 337.6, census setup -132.3 (u_rN->btab)	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	slw_st_a_v2	cl9f076a5c_1124052758	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 358.6	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	slw_st_a_v2	clf4365a62_1124052618	C1-STA-MACROFACE	sign-off: DRC 72, TT/FF 335.5	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	sle_st_a_v1	cl989804f6__cl18eece69_1124052422	C2-STA-GRT-SETUP	route: GRT SETUP_TRIAGE + drv FAIL	same macro-face stair (the st_a class that did not reach sign-off)	PLAN	tap/leg length from macro-face taps to sinks vs 405-um hop budget	MEASURED
+qwen_compute	sle_st_a_v2	pv30dda31f__pv88773f93_1124052459	C2-STA-GRT-SETUP	route: GRT SETUP_TRIAGE + drv FAIL	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	slw_st_a_v1	clb036e152_1124052437	C2-STA-GRT-SETUP	route: GRT SETUP_TRIAGE + drv FAIL	same macro-face stair	PLAN	as above	MEASURED
+qwen_compute	sle_stm_v1	clbe630b9c_1124052610	C2-STA-GRT-SETUP	route: GRT SETUP_TRIAGE + drv FAIL, TT insertion band dev 27.7 > tol	macro-face stair; no congestion report = GRT clean	PLAN	clock insertion band: tap-to-sink spread per region from the plan tap list	MEASURED
+qwen_compute	sle_fw_v1	clf58b4dfb_1124081025	C3-FW-PINREG	GRT FF hold_est -154.4, setup wns -222.6; pinreg mean 223 vs bound 202.5 (dev 20.6)	W-edge pin/flop column + centre tap spine	PLAN	pin-to-register distance vs bound from plan pin and reg-region positions; pin columns on one face	MEASURED
+qwen_compute	sle_fw_v1	cl9d029624_1124080933	C3-FW-PINREG	GRT FF hold_est -192.0, wns -208.4; pinreg mean 240.6 (dev 38.1)	W column + spine	PLAN	as above	MEASURED
+qwen_compute	slw_fw_v1	clf51c11d8__cl592e3d37_1124120908	C3-FW-PINREG	route: FF hold_est -170.2, wns -169.0; pinreg mean 239.9 (dev 37.4)	W column + spine	PLAN	as above	MEASURED
+qwen_kvsys	kv3_pc	cl254f2e73__r8b421e514_1124171137	C4-KVPC-PHY-SPINE	GRT setup -824.6 (census -773.8 u_bin_i_phy_Q -> u_kvpcN)	logic spine in the channel between macro columns, pile at the E face	PLAN	leg length bin_i_phy pins -> kvpc regs across the spine vs hop budget (+regs/hop)	MEASURED
+qwen_kvsys	kv3_pc	cl5a95b461__r85c02c25c_1124171202	C4-KVPC-PHY-SPINE	GRT setup -821.4 (census -757.2 phy -> kvpc)	same spine	PLAN	as above	MEASURED
+qwen_kvsys	kv3_pc	cl5a95b461__r882954158_1124171226	C4-KVPC-PHY-SPINE	census setup -771.4 phy -> kvpc; then noprog/design cancel in route	same spine	PLAN	as above	STOPPED
+qwen_kvsys	kv3_pc	cl254f2e73__r872e39b5a_1124171111	C4-KVPC-PHY-SPINE	noprog/design cancel in route, no final DB	same spine	PLAN	as above	STOPPED
+qwen_compute	cbn_q00	cl622f65d2_1124043431	C5-CB-CHANNEL-PILE	GRT overflow 3160; noprog/design cancel	tap and flop pile in the central channel (no CB tap grid)	PLAN	channel width vs sink/tap density per channel; tap grid present	STOPPED
+qwen_compute	cbn_q11	cl5cc92dfe_1124052121	C5-CB-CHANNEL-PILE	GRT overflow 1449; noprog/design cancel	same central-channel pile	PLAN	as above	STOPPED
+qwen_kvsys	kv3_hgi	1124041954	C6-KVHGI-LEG	census GRT setup -870.7 / -851.1 (front_q_data_in/front_row_in -> headN); route not run	smear along the front->head legs	PLAN	leg length front -> headN vs hop budget	MEASURED (census at GRT, pre-21:00 rule; route never ran)
+qwen_kvsys	kv3_hgi_v4	1124042053	C6-KVHGI-LEG	noprog/design cancel at GRT, no final DB	same smear	PLAN	as above	STOPPED
+qwen_kvsys	kv3_hgi_v5	1124042111	C6-KVHGI-LEG	noprog/design cancel at GRT, no final DB	same smear	PLAN	as above	STOPPED
+qwen_compute	slw_fe_v1	clfe325744__cl08d14f0d_1124082558	C7-FE-NEARMISS	autopilot NEAR-MISS TT -166.4, FF -117	central blob of logic only (no plan feature visible)	AFTER-PLACE	-	MEASURED
+qwen_kvsys	kv3_sys_c	1124044024	C8-TIMING-NO-VISUAL	GRT wns -268.8, tns -28920	no review on file (no place render was reviewed)	AFTER-ROUTE	-	MEASURED
+qwen_compute	glue	1124160531	C8-TIMING-NO-VISUAL	route: GRT SETUP_TRIAGE + drv FAIL	no review on file	AFTER-ROUTE	-	MEASURED
