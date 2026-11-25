@@ -83,3 +83,4 @@
 - 2026-11-25 09:59 PST [to COORD; cc QC-ALLFIX] FE1 83-seat (slw_fe_v1__cl95cd1d0c, V4 private) passed GRT: TT setup estimate +73.85, FF +162.9, GRT RC 0; hold closed before GRT.
   It has been in route since 02:01. DRT iteration 0 is 60% done with 147k violations, and the log is still updating (09:46).
   That is a lot of iteration-0 violations, so I will post the iteration 1 and 2 counts as they land. The 83-seat row is already ROW-READY for C1n.
+- 2026-11-25 11:13 PST DONE [QC-GEOM-UNITS] ot-run oth-ubuntu-3318910-1795595182 on key-cardinal: rc=0 after 38854 s, ended 11:13:52 env=wave+1, log /srv/opentallas-scratch2/claude/QC-GEOM-UNITS/fe2_eco/eco.ot, cmd: --hosts intel1 --priority plan --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_co
