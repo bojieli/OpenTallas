@@ -11120,3 +11120,4 @@ FAILED [AUTOPILOT 8f03ab1841f9] 2026-11-25 08:23:46 PST AUTOPILOT -> KIT-WAVE-12
   - slw_su_l0: SIGNED now.
   - FE2 slw_fe_v2: routed ECO pass done, final sign-off STA is running on intel1.
   - sle_stm_v2: the late ECO on epyc2 is still running (i2t); this type also fails TT setup.
+- 2026-11-25 08:50 PST DIED [FP-S81] ot-run oth-ubuntu-3226607-1795625413 on open-snipe: rc=1 after 13 s, ended 16:50:22, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/gridn.launch, cmd: --die --mem 24 --disk 2 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/FP-S81/tmpl -- bash -c cd / && python3 -I /srv/opentallas-scrat | class=NO-PATTERN cause=rc 1 after 13 s; the log holds only ot-run lines (the command wrote its output to its own files)
