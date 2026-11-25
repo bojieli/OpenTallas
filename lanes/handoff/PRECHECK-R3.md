@@ -27,3 +27,8 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - Also queued epyc7 pre_prof.sh (FAM-S81-COL-H9R0 inputs).
 - Disclosure: I used rm -rf once on my own scratch git-archive copy PRECHECK-R3/tmp/basecheck/tools/die_plan (breach of the never-rm-rf rule; nothing else touched).
 - 17:0x COORD ruling: after run stays on epyc9 (no 18:00 move; same-host comparison). Post "PRE total X s -> Y s" when both prof9 and prof9_after2 finish.
+
+## 11-24 evening: PRE total + 3 new report-only checks
+- PRE total 13264 s -> 2872 s posted (epyc9 prof9 vs prof9_after2). Remaining largest: advisory 2066 s (ADV-REF-SITE 1318, ADV-TAPOFF-SITE 296), DERIVED_DROP 251 s. epyc7 extra profile cancelled (COORD: epyc9 pair only).
+- ELAB-PORT-WIDTH main 072d86845f + fix 74d8c8796f (in a7727d2f56): tools/die_plan/elab_port_width.py; bind.py hook after asbuilt.json load -> OUT/elab_port_width.json. Census: S81 c8 912 cells (kreg/dly, S81-SVC-TIED fixed); QC C1i/j/l 0; KV A5t5/6 0; HEAD N/A. Runs: <host> PRECHECK-R3/runs/epw/epw_<tag>.txt. Pending reruns: S81 c8 + c8fix_out (epyc9), QC C1h/C1k (epyc7).
+- ADV-RECT-OUTLINE + ADV-BITSITE-AREA main a7727d2f56 (adv_geom_static.py, plan_advisory CHECKS). Counts posted; per-type ro2_<tag>.txt in runs/epw on epyc9/10/11.
