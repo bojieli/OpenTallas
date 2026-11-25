@@ -29,3 +29,9 @@ Next: validation post when that hub_Wo kit routes; answer KV-ALLFIX questions.
 ## 11-24 17:40 HUB-EPZO taken + VIS reply
 - HUB-EPZO (COORD 17:3x): ROW-REBASED IN-BASE, no row (hub cfd51c38). KV-HUB-HOLD keys (seam, max 1200, added_taps = H3) are in A5t6 a498941539fd on all 4 hubs. The dch -182 is KV-DIE-SEAMHOLD. Open: measure post-CTS cland->bin hold on private hub_Wo kit (epyc10 kv3_hub_Wo_1124141832, waiter bspujvmub) + hub_C epyc8; if < 0 -> build dch fclk-insertion cap row.
 - VIS pass1733 hub_Wo piles = A5t5 render without ECH (in A5t6) and PINS (A5t7). PINS-APPLY clean on A5t6 -> 4aa47564b80b (epyc10 kv-own-hub-r2/a5t7). hub 770166a3.
+
+## 11-24 21:57 DEAD-OWNER sweep answered (hub dcea1279)
+- hub_Wi: wave dry-run lists it as eligible on A5t6 and would launch it now; block 4151edd unchanged since A5t3. Watch to sign-off.
+- EPZO: IN-BASE via KV-HUB-HOLD row 55 (A5t6 keys = H3). KV-ALLFIX asked to fix ALLFIX-KV row 69.
+- hub_Wo probe: ot-build qwen_kvsys kv3_hub_Wo --plan epyc11 kv-own-hub-r2/ovl_a5t6pins/plan_a5t7pins.json (A5t6+PINS 4aa47564b80b) --goal finish --host epyc11, running on intel2, log ~/tmp/kvownhubr2/otbuild_hubWo_pins.log. Next: the same build for hub_Eo (east smear = ECH) after this bind is fresh.
+- Status posts every 2 h (COORD 21:50).
