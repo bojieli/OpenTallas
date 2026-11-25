@@ -1,0 +1,47 @@
+[INFO GRT-0102] Start extra iteration 6/10
+[INFO GRT-0102] Start extra iteration 7/10
+[INFO GRT-0102] Start extra iteration 8/10
+[INFO GRT-0102] Start extra iteration 9/10
+[INFO GRT-0102] Start extra iteration 10/10
+[INFO GRT-0197] Via related to pin nodes: 725581
+[INFO GRT-0198] Via related Steiner nodes: 4670
+
+[INFO GRT-0018] Total wirelength: 11815667 um
+[INFO GRT-0014] Routed nets: 152528
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 01:05:43
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 95
+OT_GRT_CLOCK_FIRST done in 4061 s: clock + signal routes merged (/work/run/results/asap7/dp_kv3_hgi/base/5_1_grt.clock_first_all.seg)
+Took 4061 seconds: global_route -congestion_report_file /work/run/reports/asap7/dp_kv3_hgi/base/congestion.rpt -congestion_report_iter_step 5 -verbose -allow_congestion -congestion_iterations 10
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Took 10 seconds: estimate_parasitics -global_routing
+OT_CLK_LEAF_REPEAT grt pass 1: 0 of 1094 branch nets over rule (routed > 120 um or over a macro, GRT slew gate 150 ps)
+Took 20 seconds: detailed_placement
+global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_kv3_hgi/base/congestion_post_repair_design.rpt
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+Took 793 seconds: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_kv3_hgi/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+Took 12 seconds: estimate_parasitics -global_routing
+OT_GRT_NONPORT begin native_ff input_ports=2765 excluded_output_ports=0
+OT_HOLD_REPAIR repair_timing -max_buffer_percent 100
+OT_FF_SETUP_ADVISORY: FF-only session, setup repair skipped (TT setup was repaired by the TT pass; FF setup is not a gate; OT_FF_SETUP_MODE=full restores it)
+OT_HOLD_GUARD_GRT start: hold ws 10.16 tns 0.0 viol 0, margin 40, 315414 instances, budget 100 %
+OT_HB4_PAD_NETS_DNT nets=0: dont_touch on nets feeding dont_touch u_hdly_ pad loads for repair_timing (RSZ-3006 class)
+repair_timing -setup_margin 0 -hold_margin 40 -repair_tns 100 -skip_last_gasp -max_iterations 50 -hold -max_buffer_percent 0.063409 -verbose
+OT_HB4PAD: hold repair may pad with HB4xp67 (1 lib cells)
+OT_HOLD_SDC repair_timing sha 0de4d6db242d61a1 io_golden 7698 session_missing 1140 reapplied_lines 26
+OT_RC_SIGNAL table: signal unit C M2-M7 swapped into the layer table, estimate_parasitics -global_routing re-run
+OT_VCLK_MEASURED_CLOCK clk samples 1288 mean 206.923
+OT_VCLK_MEASURED_BAND FF mean 206.923 bound 202.500000 tol 40.000000 dev 4.423 PASS
+OT_VCLK_MEASURED_BIND clock vclk measured 206.923177 bound 202.500000 tol 40.000000 samples 1288
+[INFO RSZ-0046] Found 428 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   7.978 |   0.000 | u_bound.u_ft_ft6_o_5/eq$_DFF_PN0_/RESETN
+       10 |       0 |       7 |            0 |    +0.0% |  10.222 |   0.000 | u_bound.u_bin_i_ectl_Q_N_tN/q[205]$_DFF_P_/D
+       20 |       0 |      17 |            0 |    +0.0% |  10.222 |   0.000 | u_bound.u_bin_i_ectl_Q_N_tN/q[205]$_DFF_P_/D
+       30 |       0 |      27 |            0 |    +0.0% |  10.222 |   0.000 | u_bound.u_bin_i_ectl_Q_N_tN/q[205]$_DFF_P_/D
+       40 |       0 |      37 |            0 |    +0.0% |  10.222 |   0.000 | u_bound.u_bin_i_ectl_Q_N_tN/q[205]$_DFF_P_/D

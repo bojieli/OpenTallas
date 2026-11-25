@@ -405,6 +405,27 @@ def judge_grt_rounds(rounds, log_text=""):
     return None
 
 
+GRT_ROUTE_END = re.compile(r"GRT-0115\]|^Repair setup and hold|^OT_HOLD_GUARD_GRT start|^repair_design |^repair_timing |^Iteration \|")
+
+
+def grt_repair_phase(text):
+    """NOPROG-GRTHOLD-1124 (COORD): True when the global route of this 5_1_grt log has FINISHED its extra iterations (a GRT-0115 / repair
+    marker after the last 'Start extra iteration') and the log is in the post-route repair (repair_design, hold/setup repair_timing).
+    The congestion-N.rpt overflow is then final: it can never fall again, so a flat overflow says nothing about the repair that runs
+    (KV kv3_hgi_1124155644 / kv3_hgi_v2_1124155702 were cancelled 'design' 11-24 22:29 in hold repair / repair_design).  Pure."""
+    lines = text.splitlines()
+    last = -1
+    for i, ln in enumerate(lines):
+        if "GRT-0102] Start extra iteration" in ln:
+            last = i
+    return any(GRT_ROUTE_END.search(ln) for ln in lines[last + 1:])
+
+
+def grt_repair_progress(r):
+    """True for a row whose GRT routing is done and whose repair step is not stalled (judge verdict PROGRESS / YOUNG)"""
+    return str(r.get("grt_repair") or "").startswith(("PROGRESS", "YOUNG"))
+
+
 def synth_mem_stall(text, log_age_s):
     """a yosys log whose last pass is SHARE / OPT_MEM_PRIORITY and silent for 60 min: a DESIGN failure (SYNTH-MEM-STALL)"""
     passes = EXEC_PASS.findall(text)
@@ -1171,11 +1192,14 @@ def scan(now=None, act=False, probe_s=4):
                 if s[0] > anchors[-1][0] and s[1] <= res["n"] and s[1] >= anchors[-1][1]:
                     anchors.append((s[0], s[1]))
             anchors.append((max(mt, anchors[-1][0] + 1), res["n"]))
+            log_text = read_text(log) if os.path.isfile(log) else ""
             sw, z0 = step_window(log)
             exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= sw
             v, why, detail = (judge_activity(mt, started, now, "LEC") if kind == "lec"
                               else judge(res, anchors, now, window=sw, exact=exact, zero_needs_growth=z0))
             special = None
+            if kind == "grt" and log and grt_repair_phase(log_text):
+                row["grt_repair"] = f"{v}: {why}"[:160]      # NOPROG-GRTHOLD-1124: the repair step's own verdict (judge), kept next to the round label
             if kind == "grt" and log:
                 rdir = os.path.dirname(log).replace("/logs/", "/reports/")
                 rounds_ = grt_rounds(rdir)
@@ -1184,7 +1208,7 @@ def scan(now=None, act=False, probe_s=4):
                     row["grt_ovf"] = rounds_[-1][1]       # GRT-LABEL-NOTICE-1122: latest total overflow (hub tracks it over time)
                 row["grt_falling"] = grt_falling(rounds_)      # NOPROG-GRTFALL-1124: a falling overflow is progress, never a design cancel
                 row["grt_round_s"] = round(grt_round_interval(rdir, rounds_))
-                special = judge_grt_rounds(rounds_, read_text(log) if os.path.isfile(log) else "")
+                special = judge_grt_rounds(rounds_, log_text)
                 if special:
                     # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
                     special = (GRT_LABEL, f"{special[0]}: {special[1]}", special[2], "GRT-CONGESTION")
@@ -1194,7 +1218,9 @@ def scan(now=None, act=False, probe_s=4):
                 v, why, detail, row["klass"] = special
             if kind == "grt" and log:
                 ev = grt_stuck(rounds_, (now - max(birth(log) or started, started)) / 3600)
-                if ev:
+                if ev and grt_repair_progress(row):
+                    row["grt_stuck_spared"] = "post-route repair is progressing: " + row["grt_repair"][:100]
+                elif ev:
                     spare = grt_stuck_spare(dict(row, ident=" ".join([name, kit or "", work or ""]), lane=lane), prot_paths, posts, now)
                     if spare:
                         row["grt_stuck_spared"] = spare[:160]
@@ -1715,6 +1741,8 @@ def grt_flat_candidate(r):
     """-> evidence string or ''"""
     if r.get("kind") != "grt" or r.get("age_h", 0) <= GRT_FLAT_MIN_AGE_H or grt_flat_exempt(r):
         return ""
+    if grt_repair_progress(r):
+        return ""                        # NOPROG-GRTHOLD-1124: routing is done, the repair step is progressing
     if r.get("grt_flat"):
         return r["grt_flat"]
     if r.get("verdict") == GRT_LABEL and not r.get("grt_falling"):     # NOPROG-GRTFALL-1124: a falling overflow is progress
@@ -1797,7 +1825,7 @@ def grt_label_notice_pass(rows, seen, now, post=True):
     for r in rows:
         if r.get("verdict") != GRT_LABEL or not str(r.get("why") or "").startswith("DESIGN-FAIL") or r.get("grt_ovf") is None:
             continue
-        if grt_flat_candidate(r):
+        if grt_flat_candidate(r) or grt_repair_progress(r):
             continue                     # a wave attempt: grt_flat_pass cancels it through the wave
         ov = float(r["grt_ovf"])
         k = f"{r['host']}|{r.get('unit') or r.get('container')}"
@@ -1856,6 +1884,9 @@ def design_fail_evidence(r, track, now):
     if ov is None:
         return ""
     ov = float(ov)
+    if grt_repair_progress(r):
+        track.update(first=now, ov0=ov, last=now, ov=ov)     # NOPROG-GRTHOLD-1124: GRT routing finished, post-route repair progressing: restart the flat clock
+        return ""
     if track.get("ov0") is None or ov < float(track["ov0"]) * (1 - MIN_IMPROVE):
         track.update(first=now, ov0=ov)
     track.update(last=now, ov=ov)
