@@ -2156,6 +2156,7 @@ try:
                     if attempt == 3:
                         raise RuntimeError("admission tool transfer failed after 3 attempts (sources "+",".join(sources)+"); physical runner not started")
                     print("ADMISSION_TOOLS transport retry "+str(attempt)+"/3 from "+host+"; physical runner not started",flush=True)
+                    __import__("time").sleep(5*3**(attempt-1))          # RT-PRUNE-REFS-1124c: backoff 5 s, 15 s before the next attempt (the staging host may still be copying to the hub)
                     continue
                 manifest=json.loads((target/"BUNDLE.json").read_text())
                 if manifest.get("sha256") != meta["sha256"]:
@@ -2228,8 +2229,31 @@ def stage_admission_tools(source_chain=None, source_tools=None, root=None):
             # have installed the same immutable content while we copied it.
             if not dest.exists():
                 temp.rename(dest)
+    if not DRY and dest.exists() and not os.environ.get("PYTEST_CURRENT_TEST") and os.environ.get("AP_ADMISSION_PUSH") != "0":
+        push_admission_to_hub(dest)
     return dict(dir=str(dest), chain=str(dest / "signoff_chain.py"),
                 preflight=str(dest / "die_plan/kit_preflight.py"), sha256=version)
+
+
+def push_admission_to_hub(dest, hub=None, run=None):
+    """RT-PRUNE-REFS-1124c (COORD): a bundle is staged where this driver runs; a preflight / chain stage on another host fetches it from the hub, which never had
+    it (silent rc 3).  Copy it to the hub at stage time: rsync into <dest>.part.<pid> there, then rename (a reader never sees half a bundle); a hub that
+    already has BUNDLE.json is left alone.  Best effort: -> True when the hub holds it afterwards, never raises."""
+    run = run or subprocess.run
+    hub = hub or os.environ.get("AP_ADMISSION_HUB", "hub")
+    dest = str(dest).rstrip("/")
+    ssh = ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20", hub]
+    try:
+        if run(ssh + ["test -f " + shlex.quote(dest + "/BUNDLE.json")], stdin=subprocess.DEVNULL, timeout=60).returncode == 0:
+            return True
+        part = f"{dest}.part.{os.getpid()}"
+        if run(["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none", dest + "/", f"{hub}:{part}/"], stdin=subprocess.DEVNULL, timeout=600).returncode:
+            return False
+        r = run(ssh + [f"test -f {shlex.quote(dest + '/BUNDLE.json')} && rm -rf {shlex.quote(part)} || mv -T {shlex.quote(part)} {shlex.quote(dest)}"],
+                stdin=subprocess.DEVNULL, timeout=60)
+        return r.returncode == 0
+    except Exception:
+        return False
 
 
 def late_eco_on():
