@@ -112,6 +112,7 @@ def _inside(p, roots):
 
 
 def check(files_f, as_built_lib, extra_lib, emitted, group_products, roots):
+    import rtl_scan
     """files_f: bind.f entries in order; as_built_lib: the subset captured by the as-built elaboration (exempt from
     the root check); extra_lib/emitted: tool-resolved entries.  Returns (errors, info)."""
     errs, info = [], {}
@@ -128,7 +129,7 @@ def check(files_f, as_built_lib, extra_lib, emitted, group_products, roots):
     defs = {}
     for f in files_f:
         try:
-            for m, ps in definitions(Path(f).read_text(errors="replace")).items():
+            for m, ps in rtl_scan.scan("bind_strict_src.definitions", f, definitions).items():   # BIND-SPEED-1124 #2
                 defs.setdefault(m, set()).update(ps)
         except OSError:
             continue
@@ -144,10 +145,10 @@ def check(files_f, as_built_lib, extra_lib, emitted, group_products, roots):
     seen = set()
     for f in emitted:
         try:
-            text = Path(f).read_text(errors="replace")
+            found = rtl_scan.scan("bind_strict_src.instances", f, instances)   # BIND-SPEED-1124 #2
         except OSError:
             continue
-        for mod, ov, line in instances(text):
+        for mod, ov, line in found:
             if mod not in defs or not ov:
                 continue
             for p in ov:

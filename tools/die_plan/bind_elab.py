@@ -67,18 +67,24 @@ def module_index(roots, files, base):
         # pruning tool outputs before even enumerating their generated files.
         paths += sorted(discovered)
     paths += [Path(f) if Path(f).is_absolute() else Path(base) / f for f in files]
+    import rtl_scan
     for p in paths:
         try:
-            t = p.read_text(errors="replace")
+            names = rtl_scan.scan("bind_elab.module_names", p, _module_names)   # BIND-SPEED-1124 #2: one scan per file
         except OSError:
             continue
-        if "module" not in t:
-            continue
-        for m in MOD_RE.finditer(_strip(t)):
-            idx.setdefault(m.group(1), [])
-            if str(p) not in idx[m.group(1)]:
-                idx[m.group(1)].append(str(p))
+        for n in names:
+            idx.setdefault(n, [])
+            if str(p) not in idx[n]:
+                idx[n].append(str(p))
     return idx
+
+
+def _module_names(t):
+    """the module names one file defines, in text order (module_index)"""
+    if "module" not in t:
+        return []
+    return [m.group(1) for m in MOD_RE.finditer(_strip(t))]
 
 
 def module_body(path, name):

@@ -43,23 +43,28 @@ def rtl_index(base):
     (a guard around whole module definitions)."""
     mod, info = {}, {}
     root = Path(base) / "rtl"
+    import rtl_scan
     for f in sorted(list(root.rglob("*.sv")) + list(root.rglob("*.v"))):
         if f.name.endswith("_bb.v") or f.name.endswith("_bb.sv"):
             continue
         try:
-            text = COMMENT.sub(" ", f.read_text(errors="replace"))
+            bodies = rtl_scan.scan("view_define_check.bodies", f, _file_bodies)   # BIND-SPEED-1124 #2: one scan per file
         except OSError:
             continue
-        outside = BODY.sub(" ", text)
-        top = set(COND.findall(outside))
-        for b in BODY.finditer(text):
-            m = b.group(1)
+        for m, conds, words in bodies:
             if m in mod:
                 continue
             key = "%s::%s" % (f, m)
             mod[m] = key
-            info[key] = (set(COND.findall(b.group(2))) | top, set(WORD.findall(b.group(2))))
+            info[key] = (conds, words)
     return mod, info
+
+
+def _file_bodies(text):
+    """[(module, macros its body + the file-level guards test, instance-like words)] of one file, in text order (rtl_index)"""
+    text = COMMENT.sub(" ", text)
+    top = set(COND.findall(BODY.sub(" ", text)))
+    return [(b.group(1), set(COND.findall(b.group(2))) | top, set(WORD.findall(b.group(2)))) for b in BODY.finditer(text)]
 
 
 IGNORE = re.compile(r"^(SYNTHESIS|VERILATOR|NEGK)$|MUTANT|_MUT($|_|\d)|_CHECK$|_TRACE$")
