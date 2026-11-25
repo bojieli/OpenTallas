@@ -1,55 +1,93 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2",
- "manifest_hash": "2ad30df65cabe19f6d2f58bd2d0ab9ac21d2b262d8b38fbf2f73c5fc45af3330",
- "src_manifest_sha": "2ad30df65cabe19f6d2f58bd2d0ab9ac21d2b262d8b38fbf2f73c5fc45af3330",
- "tools_sha": "dce92f0c92a9fed7552455d84b76a4d90dbf256e",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1",
+ "manifest_hash": "c3fd4681e86798297bbf29d7c7d78b5b5176cc882793c2117536f482125fa2af",
+ "src_manifest_sha": "c3fd4681e86798297bbf29d7c7d78b5b5176cc882793c2117536f482125fa2af",
+ "tools_sha": "89ca451775e0ddae1e889bcbb9a247c01824ed00",
  "hosts": [
-  "epyc7",
-  "epyc11"
+  "intel1",
+  "epyc8",
+  "epyc2",
+  "intel2"
  ],
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_plan.json",
- "plan_sha256": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
- "sidecar_sha256": "3aec87183d5c5d318e85177f6156f9062a9a458df3f47277adc7c4b4760688c8",
- "native_reset_receipt": "epyc9:/srv/opentallas-scratch2/claude/head-west/bind_r18w6/native_release/native_release_receipt.json",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+ "plan_sha256": "6b2c670d0ae4e95a09c9de8cecdc121f50baf29263e350001c468195cec7a7c2",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_sidecar.json",
+ "sidecar_sha256": "ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/results/head_native_release_nf15f_r18w8b/native_release_receipt.json",
  "frozen_kit_tree": "",
  "physical_qualified": false,
- "most_recent_fable_verdict": "2026-11-24 07:56 PST HEAD-W6-ACCEPT ACCEPT combined w6 b3507e628de6 (hub 82076cd68581); COORD ruling 08:0x adopt as live.",
+ "most_recent_fable_verdict": "",
  "smoke": "PASS",
- "smoke_detail": "W6 b3507e628de6 = w5 1e8ebd1417ab + r7 c9ead4cccd9a, gate on E9 head-west/bind_r18w6: strict bind PASS (27 masters, 359 inst), nested PASS, tie 2029/0, cohort 27/27, LATCHECK 334/334 --fixed-in-core (322/334 without; 12 lanes = declared in-core cycles, same as live 014661), native release QUALIFIED_CONDITIONAL 12, G0 0 err/0 pending. PRE: only ISTPRICE baseline as-built absent. Sidecar ba968452ea5a = W6 3aec87183d5c + collector lep0N_w part (5 dup W edges dropped); E9 bind_r18w6c: RTL byte-identical, same gates PASS.",
+ "smoke_detail": "W8b 6b2c670d0ae4 = W8a recipe + C9 PUSHDUP-3 RTL (ot_s81hd_lep0N_split_tx_io_stages.sv 5faf31874f18, generated/ot_s81hd_lep_nr.sv 80c2ed52821d) + rows_c9_w8. Gate on epyc12 /srv/opentallas-scratch2/claude/head-allfix/bind_w8_b (rt 89ca451775e0): PRE PASS 0 findings, strict bind PASS (HEAD_DIE_PORTBIND module_missing=0 tie_audit=PASS nested=PASS), cohort 27/27, LATCHECK 334/334 --fixed-in-core (322/334 without, 12 = declared in-core cycles as W6), native release receipt (in tree: results/head_native_release_nf15f_r18w8b), G0 0 errors/0 pending. Sidecar = W6 ba968452ea5a unchanged; wave_prepare prepared_plan_sha256/sidecar_sha256 match.",
  "config": {
-  "event": "head_rp21z20NF15f_r18w6p",
-  "tools_sha": "dce92f0c92a9fed7552455d84b76a4d90dbf256e",
-  "gen_host": "epyc7",
+  "event": "head_rp21z20NF15f_r18w8b",
+  "tools_sha": "89ca451775e0ddae1e889bcbb9a247c01824ed00",
+  "gen_host": "intel1",
   "gen_hosts": [
-   "epyc7",
-   "epyc11"
+   "intel1",
+   "epyc8",
+   "epyc2",
+   "intel2"
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ],
   "review_before_route": {
-   "event": "head_rp21z20NF15f_r18w6p",
+   "event": "head_rp21z20NF15f_r18w8b",
    "all_items": true,
    "required": true
   },
   "auto_visual_review_skip": [
    "*"
   ],
-  "tools_from_rt": true
+  "tools_from_rt": true,
+  "only_items": [
+   "hd_ctl",
+   "hd_ctl_e",
+   "hd_ctl_n",
+   "hd_host_e",
+   "hd_host_n",
+   "hd_mesh_e",
+   "hd_spn_eshim_rx",
+   "hd_spn_eshim_tx",
+   "hd_spn_wshim_rx",
+   "hd_spn_wshim_tx",
+   "hd_st_k5",
+   "hd_st_m",
+   "hd_st_n3_transit",
+   "hd_st_n3_turn",
+   "hd_st_n4",
+   "hd_st_str",
+   "hd_st_turn",
+   "hd_turn_a",
+   "hd_turn_b"
+  ],
+  "w8_probe_items": [
+   "hd_lep0N",
+   "hd_lep0N_w",
+   "hd_spn",
+   "hd_spn_end",
+   "hd_tile",
+   "hd_mesh",
+   "hd_host_w",
+   "hd_serdes"
+  ],
+  "note_w8_launch_split": "HEAD-ALLFIX W8 launch split (COORD): wave = the 19 route types to sign-off (only_items); the 8 known-problem types hd_lep0N,hd_lep0N_w,hd_spn,hd_spn_end,hd_tile,hd_mesh,hd_host_w,hd_serdes are NOT wave items on head_rp21z20NF15f_r18w8b: they run as private --goal place probes (kit_wave.py private-spec --goal place + run-item, FIRE.sh). Restore: only_items += w8_probe_items once a probe is viewed clean. Hosts NOE7 (lane 06:59: epyc7 replica still verifying, ~7 MB/s; epyc7 rejoins by die-level kit_wave_edit after e7_verify PASS; epyc2/intel2 tree/gen only, launch = intel1+epyc8). Hosts (COORD hub 6c8efbe0): launch on epyc7, intel1, epyc2, epyc8; epyc12 (load ~200/96) is not a launch host until its load < 110."
  },
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
  "records": {},
+ "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w7_s/source_plan.json",
+ "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w8b_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w7_s/source_plan.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }
