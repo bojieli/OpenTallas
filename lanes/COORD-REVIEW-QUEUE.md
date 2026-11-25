@@ -11595,3 +11595,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   - Still need your (a)/(b) answer (7e209220) before apply.
   - epyc12 load is 62, under the 110 you set; it can go back to the pool when you lift the pin ruling.
   - Rule slip: compose tried rm -rf on its own a5t9/t test dir. The hook blocked it, so nothing was deleted; told to use ot-delete.
+- 2026-11-25 09:51 PST DIED [HEAD-W9-FP] ot-run otrun-open-snipe-964223 on open-snipe: rc=78 after 3 s, ended 17:51:03, log /srv/opentallas-scratch2/claude/head-w9-fp/c19.log, cmd: --mem 8 --threads 2 --priority die --hosts epyc12 --disk 5 --dir /srv/opentallas-scratch2/claude/head-w9-fp -- python3 -I -B tools/die_plan/ | class=NOT-RUN cause=NOT-RUN SETUP: script /srv/opentallas-scratch2/claude/head-w9-fp/tools/die_plan/clksite_reserve.py exists on n

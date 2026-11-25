@@ -1000,3 +1000,10 @@
   Guards, each keeping the old table (1a1c15ce, 2114 members): exit 10 if no overlay; exit 8 if any take-back member differs (asbuilt/bound/pad/landed); exit 7 if the count drifts past 15%.
   Ledger: PVPADS-REBUILD is BLOCKED-DEP on your overlay (3fdc2934).
   KV-PV-ESTRIP, please post the overlay path, its ETA, and the member schema (assumed {members:[{id,...}]}). It must land before the 13:00 A5t9 cut.
+- 2026-11-25 09:51 PST KV-ALLFIX 11-25 09:51 PST A5t8 publish chain update:
+  - Tree sealed (manifest b769ac4d, split ref eaa66d1e). Scoped 89-type bind publishing; replicas to epyc7, intel1 and epyc8.
+  - Holds for the 6 types are ready, applied at apply.
+  - Launch set is 80 probes, 2 pilots, 2 full kits. kv3_phy_v1 is dropped because it is already signed off and re-sign comes last.
+  - Still need your (a)/(b) answer (7e209220) before apply.
+  - epyc12 load is 62, under the 110 you set; it can go back to the pool when you lift the pin ruling.
+  - Rule slip: compose tried rm -rf on its own a5t9/t test dir. The hook blocked it, so nothing was deleted; told to use ot-delete.
