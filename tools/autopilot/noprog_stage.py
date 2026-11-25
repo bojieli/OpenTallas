@@ -62,7 +62,7 @@ POST_LANE = os.environ.get("NOPROG_POST_LANE", "NOPROG-FIX-1115")
 WATCHDOG_NOTE = ("this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, "
                  "per-host log ~/.local/state/noprog/actions.jsonl")
 LIB = "~/.local/lib/noprog"
-CLASSES = ["NO-PROGRESS", "SLOW", "PROGRESSING"]
+CLASSES = ["NO-PROGRESS", "PLATEAU", "SLOW", "PROGRESSING"]
 
 # ---------------------------------------------------------------- stage kinds (pure)
 KIND_BY_NAME = [
@@ -216,6 +216,12 @@ def classify(kind, res, anchors, now, job_age_s, log_mtime, cores_now=None, exac
     if silent >= HUNG_S and idle:
         return "NO-PROGRESS", f"{base}, cpu idle (hung)"
     partial = res.get("partial_series", []) if kind == "route" else []
+    # PLATEAU-ACT 11-25 (FLOW-0930 F-10: 211 of 216 kits PROGRESSING while stagnant DRT kits ran): the completed DRT totals decide first.  < 5 % fall over the last 3 iterations, or a rise = PLATEAU,
+    # unless the iteration in flight already counts under 95 % of the last completed total (then it is beating the plateau)
+    if kind == "route" and res.get("series"):
+        p3 = W.drt_plateau3([v for _, v in res["series"]])
+        if p3 and not (partial and partial[-1][1] < 0.95 * res["series"][-1][1]):
+            return "PLATEAU", f"DRT {p3[1]} at {p3[0]:g} violations over the last 3 iterations (< 5 % fall or rising); {base}"
     if len(partial) >= 2:
         part = dict(res, name="drt_active_iteration_violations", series=partial)
         imp, stagnant, imp2, detail = quality_verdict(part, anchors, now, win, span)
@@ -370,7 +376,7 @@ def summary(rows, stamp, missing):
     n = {c: sum(1 for r in rows if r["cls"] == c) for c in CLASSES}
     bad = sorted((r for r in rows if r["cls"] == "NO-PROGRESS"), key=lambda r: -float(r.get("stage_h") or 0))
     head = (f"STATE [{POST_LANE} -> COORD] NOPROG hourly {stamp}: {len(rows)} running jobs, PROGRESSING {n['PROGRESSING']}, "
-            f"SLOW {n['SLOW']}, NO-PROGRESS {n['NO-PROGRESS']} ({WATCHDOG_NOTE}); table lanes/NOPROG.tsv")
+            f"PLATEAU {n['PLATEAU']}, SLOW {n['SLOW']}, NO-PROGRESS {n['NO-PROGRESS']} ({WATCHDOG_NOTE}); table lanes/NOPROG.tsv")
     if missing:
         head += f"; hosts without report {missing}"
     lines = [head]
