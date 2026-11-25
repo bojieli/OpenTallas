@@ -63,7 +63,10 @@ def test_dry_run_posts_the_would_fire_list_then_goes_live_without_cancelling(tmp
     mode, fired = nw.smell_pass([srow()], seen, NOW + 1900, render=lambda r, t: calls.append(r) or ("rendering", "/x/smell_review/a"))
     assert mode == "live" and len(fired) == 1 and len(calls) == 1
     tsv = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
+    assert tsv[0].split("\t") == list(nw.SMELL_COLS)
     assert len(tsv) == 2 and "slw_sc_v2" in tsv[1] and "QC" in tsv[1] and "epyc7:/x/smell_review/a (rendering)" in tsv[1]
+    c = tsv[1].split("\t")
+    assert c[1].endswith("slw_sc_v2_1/gen/slw_sc_v2") and c[2] == "QC" and c[3] == "slw_sc_v2" and c[5] == "DRT" and c[6].startswith("iteration-0") and c[8] == "QC-ALLFIX"
     p = posted(tmp_path)[-1]
     assert "-> FP-CONVERGE-QC, QC-ALLFIX; cc QC-ALLFIX]" in p and "NOT cancelled" in p
     nw.smell_pass([srow()], seen, NOW + 2800, render=lambda r, t: calls.append(r) or ("x", ""))
@@ -150,3 +153,15 @@ def test_vis_skips_eco_loops(tmp_path):
     os.makedirs(eco)
     rows = [{"work": eco, "kit": eco, "container": "eco_20261125_103149_2129512-i1", "verdict": "PROGRESS", "kind": "gpl", "image": "i", "ident": "x"}]
     assert nw.vis_pass(rows, {}, str(tmp_path / "st"), NOW, render=lambda *a, **k: ("rendering", "/x")) is None
+
+
+def test_one_row_per_trigger_and_vis_rows_backfill_into_smell_tsv(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    r = srow(smell=[("DRT", "iteration-0 violations 400194 (> 300000)"), ("DRT", "iteration-3 violations 2181 (> 1500)")])
+    nw.smell_pass([r], {"smell_t0": NOW - 4000}, NOW, post=False, render=lambda rr, t: ("rendering", "/rev"))
+    ls = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
+    assert len(ls) == 3 and ls[1].split("\t")[6].startswith("iteration-0") and ls[2].split("\t")[6].startswith("iteration-3")
+    q = ["1795608007\tfin\tQC\tGRT\tepyc10:/x/vis_review/grt\trendering\tQC-ALLFIX\t/srv/k\tLOG"]
+    assert nw.smell_tsv_append(nw.vis_as_smell_rows(q)) == 1 and nw.smell_tsv_append(nw.vis_as_smell_rows(q)) == 0
+    last = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()[-1].split("\t")
+    assert last[1] == "/srv/k" and last[5] == "CHECKPOINT" and last[7] == "epyc10:/x/vis_review/grt" and last[8] == "QC-ALLFIX"

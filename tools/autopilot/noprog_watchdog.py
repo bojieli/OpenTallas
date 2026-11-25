@@ -2293,6 +2293,30 @@ def smell_pending_write(rows, host, path=None):
     return path, len(ls)
 
 
+SMELL_COLS = ("t", "kit", "die", "type", "stage", "trigger", "value", "render", "owner")
+
+
+def smell_tsv_append(recs, path=None):
+    """lanes/SMELL.tsv, ONE ROW PER TRIGGER (COMPOSE-FAST and the cut lanes read it for the full/probe split): t, kit, die, type, stage, trigger, value, render path, owning lane.
+    -> rows written.  Exact duplicate rows are skipped."""
+    path = path or os.path.join(COORD, "lanes/SMELL.tsv")
+    known = set(read_lines(path))
+    out = []
+    for d in recs:
+        line = "\t".join(str(d.get(c, "")).replace("\t", " ").replace("\n", " ") for c in SMELL_COLS)
+        if line not in known:
+            out.append(line)
+            known.add(line)
+    if not out:
+        return 0
+    new_file = not os.path.exists(path)
+    with open(path, "a") as f:
+        if new_file:
+            f.write("\t".join(SMELL_COLS) + "\n")
+        f.write("\n".join(out) + "\n")
+    return len(out)
+
+
 def smell_pass(rows, seen, now, post=True, render=None, poster=None):
     """HUB: dedupe smelling rows per (host, container, class); dry run for the first SMELL_DRY_S after the first pass (post the would-fire list once), then live:
     render, lanes/SMELL.tsv, post to the die's FP-CONVERGE-<DIE> lane and the type owner.  Never cancels.  -> (mode, fired [dict])"""
@@ -2329,18 +2353,19 @@ def smell_pass(rows, seen, now, post=True, render=None, poster=None):
             status, rev = render(r, [t for c, t in r["smell"] if c == cls])
         die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
         rec = {"t": now, "type": r.get("type", ""), "die": die, "stage": r.get("stage", ""), "class": cls, "metric": txt(r, cls)[:300], "host": r.get("host"),
-               "render": f"{r.get('host')}:{rev} ({status})" if rev else status, "owner": owner_of([r]), "unit": r.get("unit") or r.get("container")}
+               "render": f"{r.get('host')}:{rev} ({status})" if rev else status, "owner": owner_of([r]), "unit": r.get("unit") or r.get("container"),
+               "kit": r.get("kit") or r.get("work") or "", "triggers": [t for c, t in r["smell"] if c == cls]}
         fired.append(rec)
         st[k]["fired"] = True
         st[k]["rec"] = rec["render"]
     if fired:
         try:
-            new_file = not os.path.exists(path)
-            with open(path, "a") as f:
-                if new_file:
-                    f.write("t\ttype\tdie\tstage\tclass\tmetric\trender\towner\tunit\n")
-                for d in fired:
-                    f.write("\t".join(str(d[x]).replace("\t", " ").replace("\n", " ") for x in ("t", "type", "die", "stage", "class", "metric", "render", "owner", "unit")) + "\n")
+            recs = []
+            for d in fired:
+                for tr in d["triggers"]:
+                    recs.append({"t": int(d["t"]), "kit": d["kit"], "die": d["die"], "type": d["type"], "stage": d["stage"], "trigger": d["class"], "value": tr,
+                                 "render": d["render"], "owner": d["owner"]})
+            smell_tsv_append(recs, path)
         except OSError as e:
             print(f"noprog smell: cannot write {path}: {e}", file=sys.stderr)
         if post:
@@ -2387,7 +2412,21 @@ def vis_queue_append(rows, now, post=False):
         if new_file:
             f.write("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n")
         f.write("\n".join(out) + "\n")
+    try:
+        smell_tsv_append(vis_as_smell_rows(out))
+    except OSError:
+        pass
     return len(out)
+
+
+def vis_as_smell_rows(lines):
+    """VIS-QUEUE.tsv lines (t, type, die, checkpoint, render, status, owner, kit, LOG) as SMELL.tsv rows with trigger CHECKPOINT"""
+    recs = []
+    for l in lines:
+        c = l.split("\t")
+        if len(c) >= 8:
+            recs.append({"t": c[0], "kit": c[7], "die": c[2], "type": c[1], "stage": c[3], "trigger": "CHECKPOINT", "value": c[3] + " render " + c[5], "render": c[4], "owner": c[6]})
+    return recs
 
 
 def _post_ok(lane_from, txt):
@@ -2514,7 +2553,7 @@ def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_canc
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["scan", "hub", "tick", "smell-render"])
+    ap.add_argument("cmd", choices=["scan", "hub", "tick", "smell-render", "smell-backfill"])
     ap.add_argument("args", nargs="*")
     ap.add_argument("--act", action="store_true")
     ap.add_argument("--no-post", action="store_true")
@@ -2522,6 +2561,13 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if not os.environ.get("XDG_RUNTIME_DIR"):
         os.environ["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
+    if a.cmd == "smell-backfill":
+        q = [l for l in read_lines(os.path.join(COORD, "lanes/VIS-QUEUE.tsv")) if l and not l.startswith("t\t")]
+        n = smell_tsv_append(vis_as_smell_rows(q))
+        print(f"smell-backfill: {n} rows from {len(q)} VIS-QUEUE rows")
+        if n and os.path.exists(os.path.join(COORD, "bin/coord-commit.sh")):
+            subprocess.run(["bash", os.path.join(COORD, "bin/coord-commit.sh"), "SMELL-WATCH: backfill lanes/SMELL.tsv from VIS-QUEUE", "lanes/SMELL.tsv"], timeout=900)
+        return 0
     if a.cmd == "smell-render":
         w, k, st_, im, rid, sm = (a.args + [""] * 6)[:6]
         status, rev = smell_render(w, k, st_, im, rid, json.loads(sm or "[]"))
