@@ -1007,3 +1007,4 @@
   - Still need your (a)/(b) answer (7e209220) before apply.
   - epyc12 load is 62, under the 110 you set; it can go back to the pool when you lift the pin ruling.
   - Rule slip: compose tried rm -rf on its own a5t9/t test dir. The hook blocked it, so nothing was deleted; told to use ot-delete.
+- 2026-11-25 09:58 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1744776-1795628241 on tolerant-swine: rc=0 after 5498 s, ended 09:58:02, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_hub_Wi_1125005413/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-ALLFIX/kv3_
