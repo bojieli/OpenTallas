@@ -109,3 +109,4 @@
   Outputs: epyc11/epyc10 PRECHECK-R3/runs/epw/rsc/*.v2.txt.
 - 2026-11-24 22:44 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-3072472-1795588638 on renewed-glider: rc=0 after 14883 s, ended 06:44:03, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/s81_c8.otrun2.log, cmd: --mem 72 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw -- bash /srv/opentallas-scratch2/clau
 - 2026-11-24 22:44 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-3062290-1795588632 on renewed-glider: rc=0 after 14885 s, ended 06:44:05, log /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/s81_c8fix.otrun2.log, cmd: --mem 72 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw -- bash /srv/opentallas-scratch2/clau
+- 2026-11-24 23:08 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-968166 on dear-crayfish: rc=0 after 56 s, ended 23:08:09, log none, cmd: ot-push-main 
