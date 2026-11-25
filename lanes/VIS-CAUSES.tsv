@@ -89,104 +89,101 @@ s81	slice_station__t24__cl64811a5d	slice_station__t24__cl64811a5d_1123210525	SIG
 s81	slice_station__t30__cl6a190133	slice_station__t30__cl6a190133_1123210625	SIGNED	6_final (chain PASS): CTS post-hook setup_ws 168.03 tns 0.0, hold_ws -61.32; GRT wns 0.00 (pre-repair screen); GRT overflow 0; DRT viol 0; setup_est 211.86; hold_est -73.88; TT insertion band dev 32.95 > 20 (advisory); TT/FF 107.6; DRC 0	geom FAIL fill,empty,pin_reg_p90,pin_reg_max,r2r,r2r_count	PLAN	FP-S81 flags BOUNDARY-REG; placed_scan need_station 0 over405 1	MEASURED-HARVEST c8 S81-PROBE-LAUNCH epyc10
 s81	slice_station__t7__cl362204c4	slice_station__t7__cl362204c4_1123210831	SIGNED	6_final (chain PASS): CTS post-hook setup_ws 37.16 tns 0.0, hold_ws -67.75; GRT wns 0.00 (pre-repair screen); GRT overflow 0; DRT viol 0; setup_est 80.8; hold_est -71.55; TT insertion band dev 24.54 > 20 (advisory); TT/FF 65.8; DRC 0	geom FAIL fill,empty,pin_reg_p90,pin_reg_max,partial_face	PLAN	FP-S81 flags BOUNDARY-REG; placed_scan need_station 0 over405 0	MEASURED-HARVEST c8 S81-PROBE-LAUNCH epyc10
 # FP section (VIS-REOWN agg.py from lanes/FP-<die>.tsv): plan checks that FAIL before build; kit '-', visible PLAN, basis FP-PLAN-CHECK <file>
-HEAD	hd_serdes	-	FP:taps>1000(placed)+drt_plateau_risk	plan check FAIL: taps>1000(placed), drt_plateau_risk	visual FAIL	PLAN	DEFERRED W8 re-floor lane (sink_bins+density, dmem/cmem y)	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_mesh	-	FP:macro_channel<14.88	plan check FAIL: macro_channel<14.88	visual FAIL	PLAN	DEFERRED W9 (g_256 pair gaps)	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_mesh_e	-	FP:legs>405	plan check FAIL: legs>405	visual FAIL	PLAN	ROW-READY ft_slots[m_rx_ft].stations +1 (G0-HOPS)	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_host_w	-	FP:macro_channel<14.88	plan check FAIL: macro_channel<14.88	visual FAIL	PLAN	DEFERRED W9; GRT 139 cured by 0d7deda5143 (verify on W7 kit)	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_host_e	-	FP:taps>1000(placed)	plan check FAIL: taps>1000(placed)	visual FAIL	PLAN	DEFERRED (bins from kit + density)	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_lep0N	-	FP:taps>1000(placed)+macro_channel<14.88+tapstep	plan check FAIL: taps>1000(placed), macro_channel<14.88, tapstep	visual FAIL	PLAN	HEAD-ALLFIX C1/C3/C9 in flight	FP-PLAN-CHECK FP-HEAD.tsv
-HEAD	hd_lep0N_w	-	FP:taps>1000(placed)+macro_channel<14.88	plan check FAIL: taps>1000(placed), macro_channel<14.88	visual FAIL	PLAN	HEAD-ALLFIX C1/C2/C4/C6 in flight	FP-PLAN-CHECK FP-HEAD.tsv
-KV	kv3_hg	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1__r889141819	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1__r88f4bfb40	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1__r8dffc461a	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p2	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p3__r81da466fe	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p3__r838481cd7	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p3__r8c662a835	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p4	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p5	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v1p6	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hg_v3	-	FP:STREET+TAP+BOUNDARY+COREOWNER	plan check FAIL: STREET, TAP, BOUNDARY, COREOWNER	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi	-	FP:LEG405+BOUNDARY	plan check FAIL: LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v1__cl141fc26e	-	FP:STREET+TAP+LEG405+BOUNDARY	plan check FAIL: STREET, TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v1__cl42bc8b12	-	FP:STREET+TAP+LEG405+BOUNDARY	plan check FAIL: STREET, TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v2__cl2862d491	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v2__cle0015330	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v3	-	FP:LEG405+BOUNDARY	plan check FAIL: LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v4	-	FP:LEG405+BOUNDARY	plan check FAIL: LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v5	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v6	-	FP:LEG405+BOUNDARY	plan check FAIL: LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v7	-	FP:LEG405+BOUNDARY	plan check FAIL: LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hgi_v8	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hroot	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hub_C	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hub_Ei	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hub_Eo	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hub_Wi	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_hub_Wo	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_io_cor	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_io_cor_v1	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_io_ft	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_io_ft_v1	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc__cl254f2e73__r872e39b5a	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc__cl254f2e73__r8b421e514	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc__cl5a95b461__r85c02c25c	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc__cl5a95b461__r882954158	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl23f6a148	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r828e1c2a5	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r84d0332e1	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r877307f5d	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r884969661	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r8afe1e027	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl4ea58a5c__r8ef700d7c	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r817e6c402	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r825eb3cd0	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8422a4b86	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r87bd89c1f	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8898d69cf	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8b2213035	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8c6505067	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8d9b5d53e	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8e08b358d	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8e7d31598	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v1__cl7f648944__r8f64f1de3	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pc_v3	-	FP:TAP+OVERSIZE	plan check FAIL: TAP, OVERSIZE	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv	-	FP:STREET+BOUNDARY	plan check FAIL: STREET, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v1	-	FP:STREET	plan check FAIL: STREET	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v12	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v12e	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v1n	-	FP:STREET+TAP	plan check FAIL: STREET, TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v2	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v2e	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v2n	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v2ne	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v3	-	FP:STREET+LEG405	plan check FAIL: STREET, LEG405	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v3e	-	FP:TAP+LEG405	plan check FAIL: TAP, LEG405	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v3n	-	FP:STREET	plan check FAIL: STREET	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v4	-	FP:TAP+LEG405+BOUNDARY	plan check FAIL: TAP, LEG405, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v4e	-	FP:STREET+BOUNDARY	plan check FAIL: STREET, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v4n	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v4ne	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v5	-	FP:STREET	plan check FAIL: STREET	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v5e	-	FP:LEG405	plan check FAIL: LEG405	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v5n	-	FP:STREET	plan check FAIL: STREET	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v5ne	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v6	-	FP:TAP+BOUNDARY	plan check FAIL: TAP, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v6e	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v6n	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v6ne	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v7	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v7e	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v8	-	FP:STREET+BOUNDARY	plan check FAIL: STREET, BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pv_v8e	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_pve	-	FP:BOUNDARY	plan check FAIL: BOUNDARY	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_sys_SD	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_sys_SD_v1	-	FP:TAP	plan check FAIL: TAP	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-KV	kv3_sys_c	-	FP:TAP+LEG405	plan check FAIL: TAP, LEG405	visual FAIL	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
-QC	cbn_q00__cl622f65d2	-	FP:blanket_obs	plan check FAIL: blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	coll_core	-	FP:macro_channel_min_um+blanket_obs	plan check FAIL: macro_channel_min_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+HEAD	hd_serdes	-	FP:TAP-CAP(>5000 blocks)	plan check FAIL: TAP-CAP(>5000 blocks)	visual FAIL	PLAN	FAIL tap-cap	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh	-	FP:OVERLAP+MACRO-CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO-CHANNEL<14.88	visual FAIL	PLAN	FAIL overlap+channel	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_mesh_e	-	FP:LEG405/REACH	plan check FAIL: LEG405/REACH	visual PASS	PLAN	FAIL leg405	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_w	-	FP:OVERLAP+MACRO-CHANNEL<14.88	plan check FAIL: OVERLAP, MACRO-CHANNEL<14.88	visual PENDING	PLAN	FAIL overlap+channel	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_host_e	-	FP:OVERLAP	plan check FAIL: OVERLAP	visual PENDING	PLAN	FAIL overlap+taps	FP-PLAN-CHECK FP-HEAD.tsv
+HEAD	hd_lep0N	-	FP:LEG405/REACH+MACRO-CHANNEL<14.88	plan check FAIL: LEG405/REACH, MACRO-CHANNEL<14.88	visual FAIL	PLAN	FAIL	FP-PLAN-CHECK FP-HEAD.tsv
+KV	kv3_hg	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1__r889141819	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1__r88f4bfb40	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1__r8dffc461a	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p2	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p3__r81da466fe	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p3__r838481cd7	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p3__r8c662a835	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p4	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p5	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v1p6	-	FP:STREET+REACH+BOUNDARY-REG+SITE-IN-MACRO+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, SITE-IN-MACRO, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hg_v3	-	FP:STREET+REACH+BOUNDARY-REG+FT-CROSSES-CORE+CORE-TAP-OWNER	plan check FAIL: STREET, REACH, BOUNDARY-REG, FT-CROSSES-CORE, CORE-TAP-OWNER	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi	-	FP:STREET+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v1__cl141fc26e	-	FP:STREET+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v1__cl42bc8b12	-	FP:STREET+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v2__cl2862d491	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v2__cle0015330	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v3	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v4	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v5	-	FP:LEG405+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v6	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v7	-	FP:STREET+LEG405+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hgi_v8	-	FP:STREET+LEG405+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hroot	-	FP:REACH+BOUNDARY-REG	plan check FAIL: REACH, BOUNDARY-REG	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hub_C	-	FP:BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hub_Ei	-	FP:BOUNDARY-REG	plan check FAIL: BOUNDARY-REG	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hub_Eo	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hub_Wi	-	FP:STREET+BOUNDARY-REG+RSTREACH+FT-CROSSES-CORE	plan check FAIL: STREET, BOUNDARY-REG, RSTREACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_hub_Wo	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_io_cor	-	FP:TAP-CAP+BOUNDARY-REG	plan check FAIL: TAP-CAP, BOUNDARY-REG	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_io_cor_v1	-	FP:TAP-CAP+BOUNDARY-REG+RSTREACH	plan check FAIL: TAP-CAP, BOUNDARY-REG, RSTREACH	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_io_ft	-	FP:BOUNDARY-REG	plan check FAIL: BOUNDARY-REG	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_io_ft_v1	-	FP:BOUNDARY-REG	plan check FAIL: BOUNDARY-REG	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl23f6a148	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r828e1c2a5	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r84d0332e1	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r877307f5d	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r884969661	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r8afe1e027	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl4ea58a5c__r8ef700d7c	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r817e6c402	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r825eb3cd0	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8422a4b86	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r87bd89c1f	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8898d69cf	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8b2213035	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8c6505067	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8d9b5d53e	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8e08b358d	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8e7d31598	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v1__cl7f648944__r8f64f1de3	-	FP:FT-CROSSES-CORE	plan check FAIL: FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pc_v3	-	FP:REACH+FT-CROSSES-CORE+OVERSIZE	plan check FAIL: REACH, FT-CROSSES-CORE, OVERSIZE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v1	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v12	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v12e	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v1e	-	FP:LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v1n	-	FP:STREET+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v2	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v2e	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v2n	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v2ne	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v3	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v3e	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v3n	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v3ne	-	FP:LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v4	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v4e	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v4n	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v4ne	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v5	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v5e	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v5n	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v5ne	-	FP:STREET+LEG405+REACH+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v6	-	FP:STREET+TAP-CAP+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, TAP-CAP, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v6e	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v6n	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v6ne	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v7	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v7e	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v8	-	FP:STREET+LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: STREET, LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pv_v8e	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_pve	-	FP:LEG405+REACH+BOUNDARY-REG+FT-CROSSES-CORE	plan check FAIL: LEG405, REACH, BOUNDARY-REG, FT-CROSSES-CORE	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+KV	kv3_sys_c	-	FP:REACH	plan check FAIL: REACH	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-KV.tsv
+QC	cbn_q00__cl622f65d2	-	FP:blanket_obs+SITE-IN-MACRO	plan check FAIL: blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	cbn_q00__cld7bf7197	-	FP:SITE-IN-MACRO	plan check FAIL: SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	cbn_q00__cldbcda913	-	FP:SITE-IN-MACRO	plan check FAIL: SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	coll_core	-	FP:macro_channel_min_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: macro_channel_min_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_n	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_s	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	coll_ucie	-	FP:tap_load_inventory_ratio	plan check FAIL: tap_load_inventory_ratio	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
@@ -217,9 +214,9 @@ QC	sle_st_a_v1__cl989804f6__cled3c1d7b	-	FP:clock_tap_max_sinks(insertion-band 2
 QC	sle_st_a_v2__pv30dda31f__pv88773f93	-	FP:clock_tap_max_sinks(insertion-band 20 types)+data_hop_max_um+macro_channel_min_um+clock_leg_um	plan check FAIL: clock_tap_max_sinks(insertion-band 20 types), data_hop_max_um, macro_channel_min_um, clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	-	FP:clock_tap_max_sinks(insertion-band 20 types)+data_hop_max_um+macro_channel_min_um+clock_leg_um	plan check FAIL: clock_tap_max_sinks(insertion-band 20 types), data_hop_max_um, macro_channel_min_um, clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_st_a_v2__pv4242de79	-	FP:clock_tap_max_sinks(insertion-band 20 types)+data_hop_max_um+macro_channel_min_um+clock_leg_um	plan check FAIL: clock_tap_max_sinks(insertion-band 20 types), data_hop_max_um, macro_channel_min_um, clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_st_b_v1__pv0e7b1dcc	-	FP:cells+macro_channel_min_um+clock_leg_um	plan check FAIL: cells, macro_channel_min_um, clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_st_b_v1__pvc5a85fd4__pv38472fb8	-	FP:cells+macro_channel_min_um	plan check FAIL: cells, macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	-	FP:cells+macro_channel_min_um	plan check FAIL: cells, macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_st_b_v1__pv0e7b1dcc	-	FP:cells+macro_channel_min_um+clock_leg_um+SITE-IN-MACRO	plan check FAIL: cells, macro_channel_min_um, clock_leg_um, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_st_b_v1__pvc5a85fd4__pv38472fb8	-	FP:cells+macro_channel_min_um+SITE-IN-MACRO	plan check FAIL: cells, macro_channel_min_um, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	-	FP:cells+macro_channel_min_um+SITE-IN-MACRO	plan check FAIL: cells, macro_channel_min_um, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_st_b_v2__cl14c98df5__pv41c959f3	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_st_b_v2__cl14c98df5__pvcd986c42	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_st_b_v2__clfde1249e	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
@@ -227,11 +224,11 @@ QC	sle_stm_v1__cl27746664	-	FP:clock_tap_max_sinks(insertion-band 20 types)	plan
 QC	sle_stm_v1__clbe630b9c	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_stm_v2__cl55be2264	-	FP:clock_tap_max_sinks(insertion-band 20 types)	plan check FAIL: clock_tap_max_sinks(insertion-band 20 types)	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	sle_stm_v2__cl7b3062fa	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_su_c	-	FP:street_demand+data_hop_max_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_su_l0__cl086d85ba	-	FP:street_demand+blanket_obs	plan check FAIL: street_demand, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_su_l0__cl7a55c676	-	FP:street_demand+blanket_obs	plan check FAIL: street_demand, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_su_l1__cl5ea486db	-	FP:street_demand+data_hop_max_um+clock_leg_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, clock_leg_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	sle_su_l1__clc6d66f5b	-	FP:street_demand+clock_leg_um+blanket_obs	plan check FAIL: street_demand, clock_leg_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_su_c	-	FP:STREET+data_hop_max_um+blanket_obs	plan check FAIL: STREET, data_hop_max_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_su_l0__cl086d85ba	-	FP:STREET+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_su_l0__cl7a55c676	-	FP:STREET+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_su_l1__cl5ea486db	-	FP:STREET+data_hop_max_um+clock_leg_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, data_hop_max_um, clock_leg_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	sle_su_l1__clc6d66f5b	-	FP:STREET+clock_leg_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, clock_leg_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	slw_fe_v1__clfe325744__cldb4efe33	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	slw_fw_v1__clf51c11d8__cl592e3d37	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	slw_fw_v2__cl8537f156	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
@@ -265,13 +262,13 @@ QC	slw_st_b_v2__pva66d0f22__pv3d7bec84	-	FP:macro_channel_min_um	plan check FAIL
 QC	slw_st_b_v2__pva66d0f22__pvb80e2003	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	slw_st_b_v2__pvc2ec5bfb	-	FP:macro_channel_min_um	plan check FAIL: macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	slw_stm_v2__cl9beb65e6	-	FP:clock_leg_um	plan check FAIL: clock_leg_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_c__cl19bb38ef	-	FP:street_demand+data_hop_max_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_c__cl92142dac	-	FP:street_demand+data_hop_max_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_l0__cl1a1c1f8f	-	FP:street_demand+blanket_obs	plan check FAIL: street_demand, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_l0__cl1e5219ea	-	FP:street_demand+clock_leg_um+blanket_obs	plan check FAIL: street_demand, clock_leg_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_l0__cl76fb247e	-	FP:street_demand+blanket_obs	plan check FAIL: street_demand, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_l1__cla2a78701	-	FP:street_demand+data_hop_max_um+macro_channel_min_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, macro_channel_min_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
-QC	slw_su_l1__clcc9d0155	-	FP:street_demand+data_hop_max_um+macro_channel_min_um+blanket_obs	plan check FAIL: street_demand, data_hop_max_um, macro_channel_min_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_c__cl19bb38ef	-	FP:STREET+data_hop_max_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, data_hop_max_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_c__cl92142dac	-	FP:STREET+data_hop_max_um+blanket_obs	plan check FAIL: STREET, data_hop_max_um, blanket_obs	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_l0__cl1a1c1f8f	-	FP:STREET+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_l0__cl1e5219ea	-	FP:STREET+clock_leg_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, clock_leg_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_l0__cl76fb247e	-	FP:STREET+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_l1__cla2a78701	-	FP:STREET+data_hop_max_um+macro_channel_min_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, data_hop_max_um, macro_channel_min_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
+QC	slw_su_l1__clcc9d0155	-	FP:STREET+data_hop_max_um+macro_channel_min_um+blanket_obs+SITE-IN-MACRO	plan check FAIL: STREET, data_hop_max_um, macro_channel_min_um, blanket_obs, SITE-IN-MACRO	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 QC	tt_ctlm	-	FP:density_cells_um2+macro_channel_min_um	plan check FAIL: density_cells_um2, macro_channel_min_um	visual PENDING	PLAN	-	FP-PLAN-CHECK FP-QC.tsv
 S81	bk_sel__t2	-	FP:REACH+CORE-TAP-OWNER	plan check FAIL: REACH, CORE-TAP-OWNER	visual PENDING	PLAN	REACH,CORE-TAP-OWNER	FP-PLAN-CHECK FP-S81.tsv
 S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	-	FP:REACH+BOUNDARY-REG+CORE-TAP-OWNER	plan check FAIL: REACH, BOUNDARY-REG, CORE-TAP-OWNER	visual FAIL	PLAN	REACH,BOUNDARY-REG,CORE-TAP-OWNER	FP-PLAN-CHECK FP-S81.tsv
