@@ -10,3 +10,4 @@
 - 2026-11-25 00:32 PST DIED [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-3006023 on tolerant-swine: rc=4 after 16 s, ended 00:32:51, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 4 after 16 s, no log
 - 2026-11-25 00:33 PST DONE [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-3026046 on tolerant-swine: rc=0 after 37 s, ended 00:33:39, log none, cmd: ot-push-main 
 - 2026-11-25 00:34 PST DIED [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-3071826 on tolerant-swine: rc=4 after 11 s, ended 00:34:33, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 11 s, no log
+- 2026-11-25 00:35 PST DONE [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-3083421 on tolerant-swine: rc=0 after 28 s, ended 00:35:10, log none, cmd: ot-push-main 
