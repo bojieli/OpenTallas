@@ -513,6 +513,8 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
     cfg["_hub"] = hub
     cfg["dies"][die]["event"] = "pg" + str(want)[:10]
     sp = KW.spec_for(dict(cfg, _otrun_status={}), die, item, hub, kind=kind)
+    if not sp.get("gen_tools_manifest_sha"):
+        sp.update(KW.rt_tools_fields(cfg, die))
     sp.update(dry_gen=True, gen_host=gen_host)
     jd = Path(work_root) / die / str(want)[:12] / item
     jd.mkdir(parents=True, exist_ok=True)
