@@ -1,4 +1,4 @@
-# VIS-CAUSES.tsv  VIS-REOWN 2026-11-25. All 26 census FAILs (kits on the current plan sha), one per row. Verdicts come from each kit's own route/sign-off result (result.json), not from placement alone.
+# VIS-CAUSES.tsv  VIS-REOWN 2026-11-25. 26 census FAILs as of 03:3x (kv3_hgi 1124041954 later moved to WAIT-ROUTE; its cause row is kept) (kits on the current plan sha), one per row. Verdicts come from each kit's own route/sign-off result (result.json), not from placement alone.
 # visible = PLAN (visible in the plan: floorplan/channels/taps/legs/density, checkable before build) | AFTER-PLACE | AFTER-ROUTE
 # basis = MEASURED (the kit reached the failing gate) | STOPPED (noprog watchdog / design cancel before a final DB; cause taken from the place/GRT render + census)
 die	type	kit	cause	failed (measured)	visual (place/GRT render)	visible	pre-build plan check	basis
@@ -22,7 +22,7 @@ qwen_kvsys	kv3_pc	cl5a95b461__r882954158_1124171226	C4-KVPC-PHY-SPINE	census set
 qwen_kvsys	kv3_pc	cl254f2e73__r872e39b5a_1124171111	C4-KVPC-PHY-SPINE	noprog/design cancel in route, no final DB	same spine	PLAN	as above	STOPPED
 qwen_compute	cbn_q00	cl622f65d2_1124043431	C5-CB-CHANNEL-PILE	GRT overflow 3160; noprog/design cancel	tap and flop pile in the central channel (no CB tap grid)	PLAN	channel width vs sink/tap density per channel; tap grid present	STOPPED
 qwen_compute	cbn_q11	cl5cc92dfe_1124052121	C5-CB-CHANNEL-PILE	GRT overflow 1449; noprog/design cancel	same central-channel pile	PLAN	as above	STOPPED
-qwen_kvsys	kv3_hgi	1124041954	C6-KVHGI-LEG	census GRT setup -870.7 / -851.1 (front_q_data_in/front_row_in -> headN); route not run	smear along the front->head legs	PLAN	leg length front -> headN vs hop budget	MEASURED (census at GRT, pre-21:00 rule; route never ran)
+qwen_kvsys	kv3_hgi	1124041954	C6-KVHGI-LEG	census GRT setup -870.7 / -851.1 (front_q_data_in/front_row_in -> headN); route not run	smear along the front->head legs	PLAN	leg length front -> headN vs hop budget	CENSUS-ONLY (verdict withdrawn 11-25 03:4x: kit back to WAIT-ROUTE per 21:00 rule; row kept, early-SMELL structural fix proceeds)
 qwen_kvsys	kv3_hgi_v4	1124042053	C6-KVHGI-LEG	noprog/design cancel at GRT, no final DB	same smear	PLAN	as above	STOPPED
 qwen_kvsys	kv3_hgi_v5	1124042111	C6-KVHGI-LEG	noprog/design cancel at GRT, no final DB	same smear	PLAN	as above	STOPPED
 qwen_compute	slw_fe_v1	clfe325744__cl08d14f0d_1124082558	C7-FE-NEARMISS	autopilot NEAR-MISS TT -166.4, FF -117	central blob of logic only (no plan feature visible)	AFTER-PLACE	-	MEASURED
