@@ -1,0 +1,1 @@
+- 2026-11-24 19:07 PST TAKING 19:07 PST: QC st_a pair-skew (slw_st_a_v1 clfc5867a6 / v2 clf4365a62 NOT SIGNED, -136/-125 TT). Plan: final-DB skew/setup cause + DRC72 breakdown -> st_a family structural row on newest QC base -> PRE + strict bind -> ROW-READY QC-ALLFIX -> private probe to sign-off.
