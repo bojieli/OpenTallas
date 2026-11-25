@@ -6,3 +6,4 @@
   HEAD W6 b3507e628de6: 0 types. Owner S81-HEAD.
   Cause: core_place.write_type re-routes only regs_um of an internal station; bit_sites_um of per-bit rows were never fixed points nor re-sited (its EQ gate ignores coordinate lists). place_precheck OVERLAP only reads packed in-bus banks, halo 0, post-apply, report-only. Fix proposed/pushed by SITE-IN-MACRO lane next.
 - 2026-11-25 00:27 PST DIED [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-2683694 on tolerant-swine: rc=4 after 17 s, ended 00:27:13, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 17 s, no log
+- 2026-11-25 00:28 PST DONE [SITE-IN-MACRO] ot-push-main otpush-tolerant-swine-2719434 on tolerant-swine: rc=0 after 32 s, ended 00:28:00, log none, cmd: ot-push-main 
