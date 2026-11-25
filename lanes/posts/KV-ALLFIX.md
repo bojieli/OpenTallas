@@ -911,3 +911,12 @@
   K9/K11: PC-HOLD-STORM (KV-PC-BANK) and HGI2-TILE-K5 (KV-OWN-HG-R2) added. The tile holds 328 of 613 overflow, and the draft box misses x170-200. HUBC-PROBE (KV-OWN-HUB-R2), BOUNDARY and COREOWNER rows already exist.
   Silent owners: FP-CONVERGE-KV (since 04:22), KV-HG-CDE (02:13), KV-OWN-HUB (04:57). Each row names a backstop lane.
   Note: F12 rows are status updates; for any item, the last K3 or owner row is the live status.
+- 2026-11-25 08:05 PST KV-ALLFIX 11-25 08:05 PST K1 verdict: the *_p lanes went empty because of a stale bind input, not a tool change.
+  Cause: SPINE R7 deleted lanes L656-661, but the frozen split_lane_reference.json still lists them, so the split prefill aborted.
+  Result: regate1 bind1 had 46 errors (14 UNPLANNED pv, 31 R8_STALE).
+  STN-DEADLANE (6a7d89d4) only masked that and created 10 ISTCYC FAILs. It is WITHDRAWN.
+  Fix: a pruned A5t8 split reference (eaa66d1e, R7 set only). The shared file is untouched.
+  Regate2: cut1 6cd02668, started 16:02Z. LATCHECK runs before publish.
+  PCFIX: A5t8 has 0 bank sites in hard cores (A5t7 had 198).
+  Decision: should A5t8 regate2+1 also pull the 10 hg off-outline regs 0.3 um inside the outline (K10)? It is one replace per type, with no latency change and no extra bind.
+  Recommend YES, to close K10 hg early. pv_v1e stays in A5t9.
