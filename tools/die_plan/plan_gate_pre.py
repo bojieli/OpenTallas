@@ -229,7 +229,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1728,6 +1728,34 @@ def check_tapoff(plan, max_list=6):
     return out + warn
 
 
+def check_monleg(plan, max_list=8):
+    """MONLEG-REACH (S81-MONLEG 11-25, FABLE-RC-S81 af8bee1e, report-only WARN, never a FAIL): the monitor band centre
+    (landing_contract.bands.monitor_i) of every collector child is farther than 405 um (METHODOLOGY 12.1e) from the relay of
+    collector_children[i].node, the leg that carries the monitor's ready/fault and its reset copy.  c9s: 118 of 259 pairs on
+    83 types, 85 pairs on 71 types over 900 um (c8s col_h9_r0_p1-p3 -1009 .. -1073 ps).  Row: rows_s81_monleg.py (0 added
+    cycles).  One WARN line per type (worst pair), plus WARN MONLEG-REACH-SUMMARY.  Seconds, reads only."""
+    try:
+        import rows_s81_monleg as ML
+        raw = json.loads(Path(plan).read_text())
+        c = ML.census(raw)
+    except Exception as e:
+        return [f"WARN MONLEG-REACH-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
+    by = {}
+    for tn, i, node, um in c["over"]:
+        by.setdefault(tn, []).append((um, i, node))
+    out = []
+    for tn in sorted(by)[:max_list]:
+        w = max(by[tn])
+        out.append(f"WARN MONLEG-REACH {tn}: {len(by[tn])} monitor/collector pair(s) over {ML.REACH_UM:.0f} um, worst monitor_{w[1]} -> "
+                   f"{w[2]} {w[0]:.0f} um (report only)")
+    if by:
+        out.append(f"WARN MONLEG-REACH-SUMMARY {c['over_reach']} of {c['pairs']} pairs on {c['over_reach_types']} types over "
+                   f"{ML.REACH_UM:.0f} um ({c['over_fail']} pairs on {c['over_fail_types']} types over {ML.FAIL_UM:.0f} um, max "
+                   f"{c['max_um']:.0f}); fix: python3 -I tools/die_plan/rows_s81_monleg.py PLAN_IN PLAN_OUT (0 added cycles)"
+                   + (f"; listed {max_list} types" if len(by) > max_list else ""))
+    return out
+
+
 def check_ftsite(plan, max_list=8):
     """FTSITE-1124 (S81-OWN-LEAF, report-only, never a FAIL): explicit FT bit sites (ft_slots[*].bit_sites_um) whose cell lies
     outside the kit CORE_AREA (kit_fit.kit_core_area: the no-row core margin, place refuses 'explicit FT site is not on a
@@ -2658,6 +2686,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark("FTSITE")
     if "FTSITE" not in skip:                             # FTSITE-1124: off-core / colliding explicit FT bit sites, WARN only
         findings += check_ftsite(plan)
+    _pt.mark("MONLEG")
+    if "MONLEG" not in skip:                             # MONLEG-REACH-1125: monitor band to its collector node over 405 um, WARN only
+        findings += check_monleg(plan)
     _pt.mark("STARTSETTLE")
     if "STARTSETTLE" not in skip:                        # START-SETTLE-1124: root settle >= collector ready bound
         findings += check_startsettle(tree, plan, sidecar, asbuilt)
