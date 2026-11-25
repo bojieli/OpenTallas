@@ -129,14 +129,15 @@ def test_bind_registered_hard_partition(tmp_path):
         "  lf_use use0 (.clk(ck), .d(po), .q(uq));\n  lf_sink snk")
     (src / "die.v").write_text(die)
 
-    def plan(tag, **core_kw):
+    def plan(tag, epoch_station=False, **core_kw):
         p = json.loads((EX / "die_plan.json").read_text())
         a = p["asbuilt"]
         a["base"] = str(src)
         a["files"] = a["files"] + ["phy.sv"]
         a["map"]["parts"]["phy"] = "H"
         a["map"]["parts"]["use0"] = "S"
-        p["partition_types"]["th"] = {"module": "bt_th", "hard": True, "reset": {"sync_stages": 2},
+        p["partition_types"]["th"] = {"module": "bt_th", "hard": True,
+                                      "reset": dict({"sync_stages": 2}, **({"epoch_station": True} if epoch_station else {})),
                                       "contents": [dict(inst="phy", module="lf_rphy", status="reuse", **core_kw)]}
         p["partitions"].append({"name": "H", "type": "th"})
         f = tmp_path / f"die_plan_{tag}.json"
@@ -174,6 +175,19 @@ def test_bind_registered_hard_partition(tmp_path):
     assert len(lat) == 2 and all(b["bound_stages"] == 2 and b["macro_pin_reg_ends"] for b in lat)
     s0, s1 = (json.loads((o / "bind_sinks.json").read_text()) for o in (o0, o1))
     assert s0["use0.d[0]"][2] == 2 and s1["use0.d[0]"][2] == 1 and s1["phy.i[3]"][2] == s0["phy.i[3]"][2] - 1
+    # QC-PHY-GEN form B: reset.epoch_station registers the out epoch bit with ONE clk flop (no arst_n port-to-port path); the data
+    # path, the neighbours and the verify verdict are unchanged
+    o3 = tmp_path / "o3"
+    assert run(plan("ep", epoch_station=True, registered_pins=True, lib="lf_rphy_tt.lib"), o3, "elab", "bind", "verify") == 0, \
+        rep(o3)["errors"][:5]
+    th3 = (o3 / "rtl" / "bt_th.sv").read_text()
+    assert re.search(r"always @\(posedge clk\) (\w+)_ep_q <= rst_n;", th3), th3
+    assert re.search(r"assign \w+ = \{(\w+)_ep_q, w_\w+\[7:0\]\};", th3), th3
+    assert "{rst_n, w_" not in th3
+    assert json.loads((o3 / "verify_report.json").read_text())["verdict"] == "PASS"
+    for f1 in sorted((o1 / "rtl").glob("*.sv")):
+        if f1.name != "bt_th.sv":
+            assert f1.read_text() == (o3 / "rtl" / f1.name).read_text(), f1.name
     # fail closed: a lib without hold arcs on the FDI inputs is refused
     o2 = tmp_path / "o2"
     run(plan("bad", registered_pins=True, lib="lf_bad_tt.lib"), o2, "elab", "bind")
