@@ -54,3 +54,11 @@
 - COORD: ETA accepted. 05:00 combined row (VODCH v1 class A street legs + PVLEGS rebased on A5t8 real cut), 07:00 follow-on gate epyc12 die prio, then probes v4e/v3n/v1n goal route.
 - PV-ESTRIP (class B face strips v1n/v3e/v5e/v5ne/v12e/v7e) -> lane KV-PV-ESTRIP (handover post 396398b3). Key split: me = internal_stations + lanes/latency + routing blockages; ESTRIP = outline/face pins/core origins. ESTRIP row due to me 05:30; compose ESTRIP first, mine on top.
 - Census: /srv/opentallas-scratch2/claude/kv-own-pv-r2/vodch/street_census_A5t8dry_A5t6.txt (intel2). VODCH v0 = scratch fam/ROWS_KV-OWN-PV-R2-VODCH.py (7 PVLEGS drops only).
+
+## 11-25 04:5x PST
+- PVLEGS7 GATE PASS (epyc7 gate_PVLEGS7, post c52f1166): plan c63e9fdda6ff + r2 abb016dc0b00 + r8check --strap-pads. Next: rebase PVLEGS rows onto real A5t8.
+- VODCH v1 row: kv-own-pv-r2/vodch/ROWS_KV-OWN-PV-R2-VODCH1.py 32b38bb56d7c (intel2+epyc12). CLAND re-seat; v4e 2.68->0.73 (b_d2 +8.64 N); v3n needs VODCH_TAPS=resolve + KV-SINKBINS tap re-solve after (vo_d2 +28 N, clk_t167). Run with cwd = launch tree. Plan event (reset tree changes), not overlay.
+- New scope: v12 IN leg vport_W out_v_hi -> pvg2_p3 ~1000 um, CTS setup -685 (post 6e32fe35) -> IN-leg station row.
+- Compose order 07:00: A5t8 -> ESTRIP (05:30) -> VODCH1 + PVLEGS rebase + IN-leg -> SINKBINS re-solve -> gate epyc12.
+- 02:50 ruling: on A5t8 bind publish launch v1e/v7/v8e/pve (demand <=1.0, recheck on real A5t8) goal route; v8/v3/v1n/v3n wait 07:00. Watch for KV-ALLFIX post.
+- Probes epyc12: v12 runitem-kv3_pv_v12-98977 (CTS done, GRT next), v1n control runitem-kv3_pv_v1n (in place since 01:42), v3n runitem-kv3_pv_v3n spec _1125025436 (A5t7+row, 2-type bind workaround for bind_stream bug a2d2894a).
