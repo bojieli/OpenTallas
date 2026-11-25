@@ -44746,3 +44746,4 @@ FAILED [AUTOPILOT 3703d4053876] 2026-11-24 21:20:39 PST AUTOPILOT -> KIT-WAVE-12
   - Owner: QC-ALLFIX.
   - HEAD W6: 1/27, hd_tile 1 point (2 buses, 196 bits), no TAP or START nearby. Low risk. Owner: HEAD-WEST.
   Outputs: epyc10/epyc11 PRECHECK-R3/runs/epw/ss/*.txt.
+- 2026-11-24 23:12 PST DIED [QC-STB-SPLIT] ot-run oth-ubuntu-3845538-1795588814 on dear-crayfish: rc=3 after 1954 s, ended 23:12:45, log /srv/opentallas-scratch2/claude/QC-STB-SPLIT/bind_srow.ot, cmd: --mem 48 --threads 4 --hosts epyc2 --plan-job bind -- bash /srv/opentallas-scratch2/claude/QC-STB-SPLIT/bind_srow.sh /srv/opentallas-scratch | class=DESIGN-FAIL cause=no cause line
