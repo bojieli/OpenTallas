@@ -42,6 +42,39 @@ def test_mutant_narrow_strip_fails_width():                      # W strip shrun
     assert any("W strip" in x and "WIDTH" in x for x in out) and all(x.startswith("WARN ADV-CHANNEL-PILE ") for x in out)
 
 
+def _one_bus_four_stations(p):
+    t = p["partition_types"]["cbn_q00__clgood"]
+    st = t["internal_stations"][0]
+    st["from_um"], st["to_um"] = [30.0, 2500.0], [30.0, 800.0]
+    st["regs_um"] = [[30.0, 2160.0], [30.0, 1820.0], [30.0, 1480.0], [30.0, 1140.0]]
+    for h in t["hard_cores"]:
+        h["origin_um"][0] -= 140.0 if h["origin_um"][0] < 600 else 0.0     # W strip 60 um
+    return t
+
+
+def test_multi_station_bus_counts_once():                    # one 515-bit bus, 4 stations, 60 um strip: util 0.27, no WIDTH
+    p = good()
+    t = _one_bus_four_stations(p)
+    assert C.through_wires(t, 0.0, 60.0) == 515
+    assert not any("W strip" in x and "WIDTH" in x for x in C.findings(p, "p.json"))
+
+
+def test_mutant_per_leg_sum_would_fire():                     # mutant: the old per-leg sum (5 x 515 = 2575, util 1.34) fires
+    p = good()
+    t = _one_bus_four_stations(p)
+    legs = sum(n for xa, ya, xb, yb, n, _ in C.R.legs(t) if xa <= 61 and xb <= 61 and abs(yb - ya) > abs(xb - xa))
+    sup = 60.0 * C.TRACKS_PER_UM
+    assert legs == 5 * 515 and legs / sup >= C.WARN_UTIL > C.through_wires(t, 0.0, 60.0) / sup
+
+
+def test_two_buses_on_one_cut_add():                          # two distinct buses over the same cut do add
+    p = good()
+    t = p["partition_types"]["cbn_q00__clgood"]
+    t["internal_stations"].append(dict(t["internal_stations"][0], conn="bus:y", from_um=[150.0, 2500.0],
+                                       to_um=[150.0, 800.0], regs_um=[[150.0, 1600.0]]))
+    assert C.through_wires(t, 0.0, 200.0) == 1030
+
+
 def test_mutant_no_tap_grid_fails():                            # the q11 shape: 5 glue taps for 2000 sinks, 500 um apart
     p = good()
     t = p["partition_types"]["cbn_q00__clgood"]
