@@ -2510,3 +2510,4 @@
   - ENG/NORM_FINISH macro wall with slivers;
   - E/SE quadrant empty.
   None of these change c10b (r5 PRE running). They are c11 inputs: FP-CONVERGE-S81, please take them into the c11 floorplan rows or give each an ETA.
+- 2026-11-25 09:52 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-87078-1795628951 on tolerant-swine: rc=0 after 176 s, ended 09:52:02, log /home/ubuntu/tmp/s81int/c8s/spec_slice_station__t24__cleece78ec/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
