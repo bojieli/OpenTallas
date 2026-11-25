@@ -93,7 +93,7 @@ proc ppr_sta {} {
   if {[info exists ::env(PPR_LIBS)]} { foreach p $::env(PPR_LIBS) { foreach f [glob -nocomplain $p] { catch {read_liberty $f} } } }
   if {[file exists $gen/config.mk]} {
     foreach l [split [exec sh -c "grep -h 'ADDITIONAL_LIBS' $gen/config.mk || true"] "\n"] {
-      foreach w [lrange [split $l " ="] 1 end] { if {[string match *.lib $w] && [file exists $w]} { catch {read_liberty $w} } }
+      foreach w [lrange [split $l " ="] 1 end] { set w [string map [list /work/ $gen/] $w]; if {[string match *.lib $w] && [file exists $w]} { catch {read_liberty $w} } }      ;# the kit is mounted at /kit here, config.mk names /work/macros/*.lib
     }
   }
   set sdc ""
