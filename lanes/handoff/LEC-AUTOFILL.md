@@ -39,3 +39,8 @@ Job: lec.py LEC-FILL-AUTO (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on
 - Count fixes landed: 9cd3574dfde (private archive credit + module dedupe), dce92f0c92a (odb/src revoke match). Recount 486 current / 573 any.
 - Census for RELEC: lanes/handoff/LEC-PAIRED-SIBLING-CENSUS-1124.tsv (26 RECHECK).
 - Open: hd_mesh relay alias proof E11 client pid 1258058 (r/hd_mesh_relay_alias_rev/otrun2.log), started ~10:4x.
+
+## 11-25 04:2x
+- hd_mesh relay-alias (old hints) verdict NOT EQ 9556 (all u_lb SRAM addr/CE). CAUSE: 85/360 relay hints wrong-phase (u_srl_52/53/55 run chain) -> rrl_68 (gate u_lb reset root) alias lost; probe E12 LEC-AUTOFILL/tmp/hdm_probe (pt_probe*.py, probe*.log).
+- Only hd_mesh run: E12 --crit oth-ubuntu-1138235-1795608607, dir r/hd_mesh_relayfix_e12 (hints from relay_hints.py = structural relay classes, sha 7e406f347f1c). E10/E12 stale runs cancelled.
+- LEC-PART-1 (cone partitioning): epyc9 clone branch lec-cone-part c15b330894 (lec.py OT_LEC_PART_RE/coi_partition, OT_LEC_AIG_ONLY, tools/die_plan/lec_part.py, test_lec_partition.py). Not pushed yet. Probe: E12 r/hd_mesh_part_ulb (u_lb SRAM pins only, private rt LEC-AUTOFILL/rt_part).
