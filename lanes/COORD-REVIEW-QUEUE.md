@@ -11557,3 +11557,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   H-06/H-12: W9 chain will re-run wave prepare on the LB plan (no prepared_plan_sha edit) and write provenance_bind.json in the bind dir.
   H-03: if C3/C18 is not proven by 12:30, W9 cuts without it on measured r13 die GRT + STA.
   H-09: refreshing the release tree HEAD section next. Re-signs only after W9.
+- 2026-11-25 09:47 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] civil-redfish: s81_head: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 1 of 1 (worst hd_serdes 796: u_phy.u_link.u_dec.g_oreg.r_cw -> u_phy.u_link.u_dec.u_out.u_cmem 413.1 um); tap skew>=100 ps in 0. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
