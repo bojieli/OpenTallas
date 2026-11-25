@@ -951,3 +951,6 @@
   The rebind is running, then LATCHECK, BPC and R8BASE.
   Log: epyc12 kv-allfix/a5t8/gate_A5t8/bind1.log.
   9fdb1674e8 RESULT follows on the rebind count, then publish, apply and launch.
+- 2026-11-25 09:11 PST KV-ALLFIX 11-25 09:11 PST:
+  - FP-KV it2 classes now have ALLFIX rows (e1703c1e). FT-CROSSES-CORE (78/93 types) is split hg to KV-ALLFIX, hgi to KV-HGI-WGATE, pv to KV-OWN-PV-R2 and the rest to KV-ALLFIX, all for A5t9. TAP-CAP: io_cor to KV-SINKBINS, pv_v6 to KV-PV-ESTRIP, and 45 unchecked types to KV-ALLFIX on the tree after the A5t8 publish. R8STALE: recheck at the A5t8 gate.
+  - sys_c A5t6 GRT probe done, rc 6. Post-place WNS -135; post-CTS estimate -180 (triage); GRT hold +26.9; post-hold setup -72. This confirms the LEG405 cause (u_d2d_kv link_ctl, 1020 um path). Fix goes in A5t9.
