@@ -1,0 +1,24 @@
+# QC-DUP-KITS census 2026-11-25 05:3x PST. Source: live ot-heavy units (process cwd + docker /work mounts) on intel1/2, epyc2/7/8/9/10/11/12; numbers from kit logs.
+# bind = kit_topology source_sha256[:10]/topology[:10]. plan = plandir tree (wave = kw45 snap qwen_compute_v4c4). PT = OT_PROBE_THROUGH=1 (probe, never sign-off).
+# class_key	unit	host	owner	plan	bind	age_h	stage	drt_iter	drt_viol_last3->now	tt_grt_ps	tt_cts_ps	ff_hold_gate_ps	verdict
+sle_sc_v1__cl115da35f	oth-ubuntu-3997324-1795524415	epyc2	wave	v4c4	052c1f9862/04dda797de	24.6	5_2_route	18	6298,6215,33693->21460	+1.46	+80.51	PASS -117.44	KEEP (only sign-off kit on v4c4)
+sle_sc_v1__cl115da35f	oth-ubuntu-2782498-1795505868	epyc7	QC-OPEN-SU	cC PT	052c1f9862/04dda797de	29.7	5_2_route	19	2761,13398,5839->5178	-0.02	+95.53	PASS -140.97	KEEP (probe; same bind as wave epyc2 but other plan; owner QC-OPEN-SU decides)
+sle_sc_v1__cl115da35f	oth-ubuntu-4029420-1795519597	epyc7	QC-OPEN-SU	cF PT	052c1f9862/2708e118b7	25.9	5_2_route	14	6764,6306,5691->5634	+3.73	+97.31	PASS -138.06	KEEP (other plan+topology; probe)
+sle_sc_v1__cl115da35f	oth-ubuntu-3470734-1795598980	epyc7	QC-ALLFIX	cK	5c7df11678/0929e8752a	3.8	5_1_grt	-	-	-	+72.81	PASS -123.44	KEEP (other plan+bind)
+sle_sc_v1__cl7479a5ec	oth-ubuntu-1934637-1795524432	epyc7	wave	v4c4	76ec98d778/06fa785623	24.6	5_2_route	11	19336,18111,15333->13970	+34.31	+86.30	PASS -104.75	KEEP
+sle_sc_v1__cl7479a5ec	oth-ubuntu-46526-1795536673	epyc8	QC-ALLFIX	cH8	76ec98d778/77ac837fb7	21.2	5_2_route	9	27006,26244,24770->24233	+32.04	+84.21	PASS -118.44	KEEP (other plan+topology)
+sle_sc_v1__cl7479a5ec	oth-ubuntu-3470100-1795598979	epyc7	QC-ALLFIX	cK	76ec98d778/1edd5bb2ff	3.8	5_1_grt	-	-	-	+80.04	PASS -113.69	KEEP (other plan+topology)
+sle_fe_v1__cl8210183c	oth-ubuntu-1318463-1795524322	intel1	wave	v4c4	ebe87b18ae/8f04f7e0ea	24.6	5_2_route	3	317907,76432,55124->31608	+63.37	+126.98	PASS -117.58	KEEP (same bind+config as epyc8 cH8 kit, but other plan; old-plan kit that can sign)
+sle_fe_v1__cl8210183c	oth-ubuntu-4099462-1795536522	epyc8	QC-ALLFIX	cH8	ebe87b18ae/8f04f7e0ea	21.2	5_2_route	9	10140,9295,8478->8478	+72.47	+137.77	PASS -122.83	KEEP (most advanced of the pair)
+sle_fe_v1__cl1cbb7497	oth-ubuntu-59304-1795541430	epyc11	QC-ALLFIX	?	92553e2185/83ef36b282	19.8	5_2_route	19 (guides)	120,124,90->85	+36.73	+115.64	PASS -122.94	KEEP (single)
+slw_fe_v1__cl95cd1d0c	oth-ubuntu-4037539-1795536466	epyc8	QC-ALLFIX	cH8	13508fe837/db8f2f6693	21.2	5_2_route	7	7647,6413,5291->5169	+73.37	+133.01	PASS -119.84	KEEP
+slw_fe_v1__cl95cd1d0c	oth-ubuntu-3421201-1795562425	intel1	QC-GEOM-UNITS	own die_plan	13508fe837/1cc284290b	14.0	5_1_grt	-	-	+73.85	+145.30	PASS -124.58	KEEP (other plan+topology)
+slw_fe_v1__clfe325744__cl08d14f0d	oth-ubuntu-626515-1795547086	epyc9	QC-ALLFIX	cI	c3e2a6dd52/44fff6b85e	18.3	5_2_route	48 stubborn	5,4,4->4	-113.89	+130.76	PASS -115.28	KEEP (single; -42..-300 band)
+slw_fe_v1__clfe325744__cldb4efe33	oth-ubuntu-3727046-1795546147	epyc10	QC-ALLFIX	?	1a7a6bce81/705e400c0c	18.5	5_2_route	14	3807,3031,1960->1877	+114.35	+143.97	PASS -112.45	KEEP (single)
+slw_sc_v1__cl64543eaf__cl4590432d	oth-ubuntu-2030663-1795524619	epyc7	wave	v4c4	0719e30255/72dfb87c06	24.5	5_2_route	13	8850,7754,7139->7139	+4.73	+86.29	PASS -116.03	KEEP
+slw_sc_v1__cl64543eaf__cl4590432d	oth-ubuntu-4162619-1795536591	epyc8	QC-ALLFIX	cH8	e8b8b64132/f44efd8a05	21.2	5_2_route	9	16758,15635,14524->14162	+4.82	+89.45	PASS -113.75	KEEP (other plan+bind)
+slw_sc_v1__cl64543eaf__cl4590432d	oth-ubuntu-2561152-1795597581	epyc7	QC-ALLFIX	cK	e8b8b64132/8b80815f74	4.2	5_1_grt	-	-	-	+84.06	PASS -119.34	KEEP (other plan+topology)
+slw_sc_v1__cl64543eaf__cl5e017c6f	oth-ubuntu-3775103-1795587898	epyc7	QC-ALLFIX	cK	f826a67576/08e2f28b04	6.9	5_2_route	0	->211464 (40%)	-149.86	-20.90	PASS -122.41	KEEP (single; -42..-300 band)
+slw_su_l1__cla2a78701	oth-ubuntu-3731323-1795587855	epyc7	QC-ALLFIX	cH	fff41808bf/3cc5584c9a	6.9	5_2_route	2	279991,101290->87019	-58.53	-32.15	PASS -92.10	KEEP
+slw_su_l1__cla2a78701	oth-ubuntu-504334-1795589349	epyc7	QC-ALLFIX	cK	fff41808bf/2decf753d9	6.6	5_1_grt (tt repair)	-	-	-84.34 (after_design)	-32.15	PASS -92.10	KEEP (other plan+topology)
+slw_su_l1__clcc9d0155	oth-ubuntu-3976397-1795536410	epyc8	QC-ALLFIX	cH8	739af10163/fc2a2cdbe9	21.2	5_2_route	18	8666,8519,40739->31563	-50.59	-26.16	PASS -119.53	KEEP (single)
