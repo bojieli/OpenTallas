@@ -492,3 +492,4 @@ time	die	class	state	posted	text
 2026-11-25 08:47:54	s81	STUCK-STATE	alert	yes	STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 2026-11-25 08:58:16	qwen_kvsys	NO-PROGRESS	alert	yes	NO-PROGRESS qwen_kvsys: 15 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 305 min (last 03:52) and 0 private-spec launches for 60 min (last 07:52 ot-run KV-SENDER-SKEW kv3_pv_v12e); 46 hold(s): 0 without eta, 17 overdue, next eta 11-25 09:00; NO-LAUNCH x1
 2026-11-25 09:28:33	s81_head	NO-ADVANCE	alert	yes	NO-ADVANCE s81_head: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (hd_lep0N_w x2@gen, hd_lep0N x2@place)
+2026-11-25 09:38:44	qwen_kvsys	STUCK-STATE	alert	yes	STUCK-STATE qwen_kvsys: 14 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_hg_v1p3__r8c662a835, 2026-11-24 20:06)
