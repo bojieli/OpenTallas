@@ -53,3 +53,4 @@
   The 3 new findings left (2 KITFIT-OVERLAP pvg1_p1 vs cland on v5e/v5ne, 1 LANDREMAP-UNCHECKED) are real row defects for KV-PV-ESTRIP.
 - 2026-11-25 05:03 PST DIED [COMPOSE-FAST] ot-run oth-ubuntu-513832-1795607684 on open-snipe: rc=1 after 4160 s, ended 13:03:31, log /srv/opentallas-scratch2/claude/compose-fast/runs/g4.out, cmd: --die --mem 96 --dir /srv/opentallas-scratch2/claude/kv-pv-estrip/tree_a5t7e -- /usr/bin/python3 -I /srv/opentallas-scratch2/claude/compose- | class=DESIGN-FAIL cause=ROW-GATE NOT-READY lane=COMPOSE-FAST-ESTRIP die=qwen_kvsys plan=7442623608ad seconds=3098.0 why=PRE-DIFF: 3 ne
 - 2026-11-25 05:24 PST DONE [compose-fast] ot-push-main otpush-open-snipe-3560094 on open-snipe: rc=0 after 961 s, ended 13:24:13, log none, cmd: ot-push-main 
+- 2026-11-25 05:35 PST DONE [compose-fast] ot-push-main otpush-open-snipe-534393 on open-snipe: rc=0 after 24 s, ended 13:35:23, log none, cmd: ot-push-main 
