@@ -52,6 +52,8 @@ import io
 import fnmatch
 import json
 import math
+import multiprocessing
+import os
 import re
 import sys
 import time
@@ -594,6 +596,34 @@ def shard_types(types, spec):
     return [t for i, t in enumerate(types) if i % n == k]
 
 
+_RUN = {}
+
+
+def _one_type(tn):
+    ctx, checks, opts = _RUN["a"]
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            return tn, type_findings(ctx, tn, checks, opts), None
+    except Exception as e:  # noqa: BLE001
+        return tn, [], f"{type(e).__name__}: {str(e)[:200]}"
+
+
+def run_types(ctx, types, checks, opts, jobs=1):
+    """-> (findings, errors) over types in order; jobs > 1 forks a pool (one type per task, ordered results)"""
+    _RUN["a"] = (ctx, checks, opts)
+    findings, errors = [], []
+    if jobs > 1 and len(types) > 1:
+        with multiprocessing.get_context("fork").Pool(min(jobs, len(types))) as pool:
+            res = list(pool.imap(_one_type, types, chunksize=1))
+    else:
+        res = [_one_type(tn) for tn in types]
+    for tn, f, err in res:
+        findings += f
+        if err:
+            errors.append((tn, err))
+    return findings, errors
+
+
 def type_findings(ctx, tn, checks, opts):
     P = ctx.P
     t = P.types[tn]
@@ -873,6 +903,8 @@ def main(argv=None):
     ap.add_argument("--plan", required=True)
     ap.add_argument("--types", default="*", help="glob over type names (comma-separated globs allowed)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--jobs", type=int, default=int(os.environ.get("OT_PRECHECK_JOBS", "8")),
+                    help="worker processes, one type per task (a type costs ~80 s alone on S81; default 8, 1 = serial)")
     ap.add_argument("--shard", default="", help="K/N: run only every N-th type (index mod N == K); merge the --out dirs afterwards")
     ap.add_argument("--tools", default=str(HERE.parent / "die_plan"), help="die_plan tools dir (schema, taps, gen_phys)")
     ap.add_argument("--checks", default=",".join(c for c in CHECKS if c not in OPT_IN))
@@ -920,17 +952,7 @@ def main(argv=None):
         types = shard_types(types, a.shard)
     placed = {p["type"] for p in raw.get("partitions") or []}
     checks = {c.strip().upper() for c in a.checks.split(",")} - DIE_SKIP.get(a.die, set())
-    findings, errors = [], []
-    for tn in types:
-        if tn not in placed:
-            continue
-        try:
-            with contextlib.redirect_stdout(io.StringIO()):
-                findings += type_findings(ctx, tn, checks, a)
-        except Exception as e:  # noqa: BLE001
-            errors.append((tn, f"{type(e).__name__}: {str(e)[:200]}"))
-            if len(errors) < 3:
-                traceback.print_exc()
+    findings, errors = run_types(ctx, [tn for tn in types if tn in placed], checks, a, a.jobs)
     write_outputs(Path(a.out), a.die, a.plan, findings, errors, len(types), time.time() - t0, raw)
     if not a.no_cbc_score:
         cbc_score_outputs(Path(a.out), a, ctx, raw, [tn for tn in types if tn in placed])

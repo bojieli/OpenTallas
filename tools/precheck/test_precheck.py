@@ -352,3 +352,16 @@ def test_lib_clocks_cache_parses_once_and_returns_copies(tmp_path):
     os.utime(lib, ns=(1, 2))                    # new mtime -> re-parse (mutant: a path-only key would serve stale data)
     C.lib_clocks(lib)
     assert len(calls) == 2
+
+
+def test_run_types_parallel_equals_serial(monkeypatch):
+    def fake(ctx, tn, checks, opts):
+        if tn == "bad":
+            raise RuntimeError("boom")
+        return [dict(type=tn, check="X", value=len(tn), threshold=0, family=tn, detail="")]
+    monkeypatch.setattr(PC, "type_findings", fake)
+    ts = ["a", "bb", "bad", "cccc", "d"]
+    ser = PC.run_types(None, ts, set(), None, 1)
+    par = PC.run_types(None, ts, set(), None, 3)
+    assert ser == par and [f["type"] for f in par[0]] == ["a", "bb", "cccc", "d"]
+    assert par[1] == [("bad", "RuntimeError: boom")]            # an error is reported per type, never stops the run
