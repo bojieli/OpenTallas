@@ -58,10 +58,9 @@ class LoadCap(T.unittest.TestCase):
         r, ran = self.go('500', threads='2', short=True); self.assertTrue(ran, r.stderr)
         r, ran = self.go('500', threads='8', short=True); self.assertFalse(ran)
 
-    def test_crit_kit_waits_only_above_the_crit_ceiling(self):    # ceiling 2.0 x 10 = 20
-        r, ran = self.go('500', crit=True); self.assertFalse(ran); self.assertIn('crit ceiling', r.stderr)
-        r, ran = self.go('5', crit=True); self.assertTrue(ran, r.stderr)
-        r, ran = self.go('500', crit=True, conf='LOAD_CAP_CRIT_FACTOR=0\n'); self.assertTrue(ran, r.stderr)
+    def test_crit_is_never_load_held(self):    # COORD 11-25: die-level lanes submit with --crit
+        r, ran = self.go('500', crit=True); self.assertTrue(ran, r.stderr)
+        self.fresh(3); r, ran = self.go('500', crit=True); self.assertTrue(ran, r.stderr)
 
     def test_die_slice_cores_are_not_for_kits(self):    # nproc 10 - 5 = 5 cores x 1.2 = 6
         r, ran = self.go('0.1', conf='DIE_SLICE_CORES=5\n'); self.assertFalse(ran)

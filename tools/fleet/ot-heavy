@@ -155,13 +155,14 @@ while :; do
   # (OT_HEAVY_THREADS, default 8) of every unit admitted here in the last LOAD_CAP_FRESH_S (default 180 s; thr.<unit>, die units included:
   # they burn the cores too) + this job's threads, against LOAD_CAP_FACTOR (default 1.2; 0 disables) x (nproc - DIE_SLICE_CORES): admit only
   # while projected <= cap, except an idle host (load1 + fresh = 0) always takes one job.  This is an admission hold, never a thread cap
-  # on a running or admitted job.  Crit / direct kit jobs wait only above the crit ceiling LOAD_CAP_CRIT_FACTOR (default 2.0; 0 = crit
+  # on a running or admitted job.  --crit never waits (COORD 11-25); a --direct job waits only above the ceiling LOAD_CAP_CRIT_FACTOR (default 2.0; 0 = crit
   # bypass as before; the LOADGATE_1110 crit rule); short-pool stages (<= 2 threads, <= 10 GB, off fleet-wide) keep their bounded slot pool.  Die class (compose, PRE / gate, binds, bind-check, R8, census; OT_HEAVY_PRIO die / plan) skips the cap (DIECLASS_1125, below).
   _lcf="${LOAD_CAP_FACTOR:-1.2}"
   if [ "$V" = OK ] && [ "$_dieclass" = 0 ] && [ "$_short" = 0 ] && [ "$_lcf" != 0 ]; then
-    _lcrit=0; { [ "${OT_HEAVY_CPU:-}" = crit ] || [ "${OT_HEAVY_DIRECT:-}" = 1 ]; } && _lcrit=1
+    # COORD 11-25: --crit (many lanes submit die-level work with --crit) is never load-held; only --direct keeps the ceiling.
+    _lcrit=0; [ "${OT_HEAVY_DIRECT:-}" = 1 ] && _lcrit=1
     [ "$_lcrit" = 1 ] && _lcf="${LOAD_CAP_CRIT_FACTOR:-2.0}"
-    if [ "$_lcf" != 0 ]; then
+    if [ "$_lcf" != 0 ] && [ "${OT_HEAVY_CPU:-}" != crit ]; then
       _lfr=0
       while IFS= read -r _f; do
         read -r _t < "$_f" 2>/dev/null || continue
