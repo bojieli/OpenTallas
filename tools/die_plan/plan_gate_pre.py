@@ -112,6 +112,10 @@ R8STALE-1122 (FLOW-OPS-R2, COORD; FAM-KV-IOPC-R4 pc_v3: +5 stations on 32 pi bun
   strict bind stops at R8_FAIL_FAST and writes OUT/r8_derived.json; install it, or r8_refresh.py, then bind).  Base copy not found:
   WARN with the same recipe.
 
+R8BOUND-1124 (COORD flow review #2, report-only WARN per r703): every DIRECT R8 table member (its lane runs from its src_part to its
+  sink_part) must carry bound == the plan's latency.lanes[<lane>].cycles (the bind's bound depth); a mismatch is a strict-bind
+  R8_STALE found in seconds instead of after a 1-3 h bind (C1m: 6 dvs_E*.so_w flt members, table 2, plan 4).  check_r8bound.
+
 TAPOFF-1123 (TAP-GRID-R5, COORD class ruling; KV x10): a type with a plan clock.tap_offset.per_port_ps row (R-CLOCK-7)
   times every tap port at its row; a port with no row silently takes the window [-W, 0].  Every tap of such a type
   (schema.tap_grid, core clk_c* ports aside) must have a row: FAIL TAPOFF-MISSING per type with the missing ports and the fix
@@ -217,7 +221,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1210,6 +1214,82 @@ def check_r8stale(tree, plan, baseline, asbuilt=None, max_list=6):
         else:
             out.append(f"WARN R8STALE {tp}: {nm} member(s) on {len(hit)} lane(s) whose station depth changed vs the base ({ex}); "
                        f"base copy {'not found' if bcopy is None or not bcopy.is_file() else 'differs (re-derived?)'}; if not re-derived: {recipe}")
+    return out
+
+
+def r8_tables(tree, plan, asbuilt=None):
+    """[resolved Path] of the as-built's R8 tables (land_r8 first, then land_r8_extra), resolved as bind.py does"""
+    ab, mdir = None, Path(plan).parent
+    if asbuilt:
+        ab, mdir = _load(asbuilt), Path(asbuilt).parent
+    if not isinstance(ab, dict):
+        raw = _load(plan)
+        ab = raw.get("asbuilt") if isinstance(raw, dict) and isinstance(raw.get("asbuilt"), dict) else None
+    if not ab:
+        return []
+    base, _ = manifest_paths(ab, mdir, tree)
+    rels = ([ab["land_r8"]] if ab.get("land_r8") else []) + list(ab.get("land_r8_extra") or [])
+    return [Path(os.path.normpath(Path(r) if Path(r).is_absolute() else Path(base) / r)) for r in rels]
+
+
+R8BOUND_LEVEL = "WARN"     # R8BOUND-1124 (COORD flow review #2, r703 new-check rule): report-only until COORD rules otherwise
+
+
+def check_r8bound(tree, plan, asbuilt=None, max_list=8, raw=None):
+    """R8BOUND-1124 (COORD flow review #2; QC C1m scoped bind died after 7,185 s on R8_STALE x6 dvs_E*.so_w, flt lane 2 -> 4):
+    the bind's bound depth of a DIRECT lane bit is the plan's latency.lanes[<lane>].cycles (bind.py plan_lanes / recv), so every
+    R8 table member whose lane runs straight from its src_part to its sink_part must carry bound == that cycles, else the strict
+    bind fails R8_STALE at its head.  Tables merge as the bind merges them (land_r8_extra authoritative per id; INNER:* skipped).
+    Forwarded members (lane ends != the member's partitions: bound = a sum over lanes) and lanes without a latency cycles row are
+    not judged (counted).  One R8BOUND_LEVEL line per table with stale members, with the refresh recipe."""
+    raw = raw if raw is not None else _load(plan)
+    if not isinstance(raw, dict):
+        return []
+    tabs = r8_tables(tree, plan, asbuilt)
+    if not tabs:
+        return []
+    lat = (raw.get("latency") or {}).get("lanes") or {}
+    ports = {x.get("id"): x for x in raw.get("ports", []) or []}
+    ends = {}
+    for ln in raw.get("lanes", []) or []:
+        try:
+            hp = [ports[q] for q in ln["ports"]]
+            ends[ln["id"]] = (hp[0]["src"]["part"], hp[-1]["dst"]["part"])
+        except (KeyError, IndexError, TypeError):
+            continue
+    merged, origin, out = {}, {}, []
+    for tp in tabs:
+        try:
+            members = (json.loads(tp.read_text()) or {}).get("members") or []
+        except (OSError, ValueError) as e:
+            out.append(f"{R8BOUND_LEVEL} R8BOUND {tp}: table not readable ({type(e).__name__}); not checked")
+            continue
+        for m in members:
+            if isinstance(m, dict) and m.get("id") and not str(m["id"]).startswith("INNER:"):
+                merged[m["id"]], origin[m["id"]] = m, tp
+    bad, skipped = {}, 0
+    for i, m in merged.items():
+        ln = m.get("lane")
+        L = lat.get(ln) if ln is not None else None
+        if ln not in ends or not isinstance(L, dict) or "cycles" not in L or ends[ln] != (m.get("src_part"), m.get("sink_part")):
+            skipped += 1
+            continue
+        try:
+            want = int(L["cycles"])
+        except (TypeError, ValueError):
+            skipped += 1
+            continue
+        if m.get("bound") != want:
+            bad.setdefault(origin[i], []).append((i, ln, m.get("bound"), want))
+    recipe = (f"refresh before the bind: python3 -I tools/die_plan/r8_refresh.py {plan} OUT/bus_groups.json TABLE --asbuilt AB "
+              f"(OUT/bus_groups.json from `bind.py r8-prepass` or a strict bind that stopped at R8_FAIL_FAST)")
+    for tp, rows in bad.items():
+        ex = "; ".join(f"{i} lane {ln} table {b} plan {w}" for i, ln, b, w in sorted(rows)[:max_list])
+        out.append(f"{R8BOUND_LEVEL} R8BOUND {tp}: {len(rows)} direct member(s) whose bound != the plan lane cycles (strict bind "
+                   f"will fail R8_STALE; report-only): {ex}{' ...' if len(rows) > max_list else ''}; {recipe}")
+    if bad or skipped:
+        out.append(f"LIST R8BOUND members {len(merged)} judged {len(merged) - skipped} stale {sum(map(len, bad.values()))} "
+                   f"not judged (forwarded / no cycles row) {skipped}")
     return out
 
 
@@ -2435,6 +2515,12 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark("R8STALE")
     if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
         findings += check_r8stale(tree, plan, rb, asbuilt)
+    _pt.mark("R8BOUND")
+    if "R8BOUND" not in skip:                            # R8BOUND-1124: table bound vs plan lane cycles, report-only
+        try:
+            findings += check_r8bound(tree, plan, asbuilt)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
+            findings.append(f"WARN R8BOUND not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("EMITNAME")
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
