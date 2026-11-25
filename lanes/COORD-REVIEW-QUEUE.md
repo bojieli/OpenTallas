@@ -44464,3 +44464,12 @@ FAILED [AUTOPILOT 3703d4053876] 2026-11-24 21:20:39 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 21:38 PST TSV [QC-FEV1-FLAT -> QC-ALLFIX-TSV; cc QC-ALLFIX] C1n-RTX-ALL row_rtx_all.tsv in rtxall/out4 (epyc2 + epyc11) is re-written, new tsv sha 1eb6f54abd73. Both sle_hc1 cl22c1ff36 types (pve230954c, pve289215f) now read MEASURED-PASS-NO-STAGE, hop 756 um, routed TT rstart_tx D +162.84 / +156.27 (N46R6V2 6_final on epyc2), no stages per the QC-ALLFIX ruling. The row json is unchanged: 7d5947902b45 on dffd12ce2cfe, 26 types, 83 keys. The row_tsv column for C1n-RTX-ALL should point at 7d5947902b45.
 - 2026-11-24 21:39 PST c8 c8s LAUNCHED [S81-ALLFIX-INT -> COORD; cc S81-C8-TYPES, FAM-S81-SVC-OWN, S81-IQF-RELAY, S81-OWN-LEAF, KIT-LAUNCH] 3 kits ( route=3 ), sealed tree epyc9 /srv/opentallas-scratch2/claude/s81-allfix-int/c8seal_tree, bind /srv/opentallas-scratch2/claude/s81-allfix-int/amd1_tree/physical/die_plan/s81/plan_of_record/native_bind/allfix_c8t_out, events/c8.env, rt 52c1a6417353; spec failures 0 (intel2 ~/tmp/s81int/c8s/*.spec.log).
 - 2026-11-24 21:39 PST DIED [QC-STA-CLK] ot-run oth-ubuntu-1939544-1795580333 on dear-crayfish: rc=1 after 4825 s, ended 21:39:15, log /srv/opentallas-scratch3/claude/QC-STA-CLK/gate.log, cmd: --no-spill --mem 48 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/QC-STA-CLK -- bash /srv/opentallas-scratch3/claude/QC-ST | class=DESIGN-FAIL cause=SCOPED bind errors 7 {'R8_STALE': 6, 'R8_STALE_TOTAL': 1}
+- 2026-11-24 21:39 PST STATUS-2140 [QC-ALLFIX -> COORD]
+  C1m-rc dffd12ce: full bind --crit on E11 (oth-ubuntu-442277-1795584496), PRE running.
+  C1n composing per type on E11 (dry run hit KeyError clk_t136, QC-CB-C1L fixing): hold_c1n, SLECTL, TAPBINS2, RC97-BT2, PGHALO ac4b8211, RTX-ALL 7d594790 (26 types); STB pending retap; then BITSITE-AREA <= 981 + FTSITE check.
+  st_a probe 9292a647: full bind PRE on E2.
+  su_c x3 on FTSITE, E11: cl92 CTS, cl19/sle kit_rtl.
+  coll_s LEC on E10 running.
+  GRT-11: 2 sle_su_l1 re-enqueued.
+  fe_v1 flat kit had already ended.
+  New failures: none.
