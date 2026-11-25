@@ -62,8 +62,14 @@ def test_clientless_cancel_by_exact_unit_runs_ot_heavy_stop_on_every_host(monkey
         return types.SimpleNamespace(stdout="ot-heavy-stop: labelled containers stopped: dpkit-a-1\n" if h == "epyc9" else "ot-heavy-stop: labelled containers stopped: none\n", stderr="")
     monkeypatch.setattr(RUN, "clients", lambda: {}); monkeypatch.setattr(RUN, "log_signal", lambda m: None); monkeypatch.setattr(RUN, "HOSTS", ["epyc9", "epyc2"])
     monkeypatch.setattr(RUN.subprocess, "run", run)
+    monkeypatch.setattr(RUN, "HEAD_STOP", "/nonexistent/ot-heavy-stop")     # HEADSTOP-1124: no head copy -> the host command as is
     assert RUN.cancel("oth-ubuntu-1-9", False) == 0
     assert calls == ["ot-heavy-stop --unit oth-ubuntu-1-9"] * 2
+    calls.clear()
+    monkeypatch.setattr(RUN, "HEAD_STOP", str(H / "ot-heavy-stop"))         # the head's own copy runs inline on every host
+    assert RUN.cancel("oth-ubuntu-1-9", False) == 0
+    assert len(calls) == 2 and all(c.startswith("ot_heavy_stop_head() {") and c.endswith("; ot_heavy_stop_head --unit oth-ubuntu-1-9")
+                                   for c in calls), [c[-80:] for c in calls]
 
 
 def test_clientless_cancel_refuses_a_non_exact_selector_and_reports_a_survivor(monkeypatch):
