@@ -665,15 +665,24 @@ class DeferResign(unittest.TestCase):
         self.assertFalse(KW.is_superseded_signed(idx, "t2", "NEWNEWNEWNEW00"))        # never signed
         self.assertFalse(KW.is_superseded_signed(idx, "t1", None))
 
-    def test_deferred_while_another_pick_exists_and_logged_once(self):
+    def test_resign_never_dropped_and_logged_once(self):
+        # LAUNCH-RATE-1125: a re-sign pick is submitted even while another pick exists (launch every eligible row)
         logs = []
         ap = type("AP", (), {"log": staticmethod(logs.append)})()
         st = {}
         per_die = [[("s81", {"item": "t1", "block_sha": "B1", "_resign": True}), ("s81", {"item": "t2", "block_sha": "B2"})]]
         out = KW.defer_resign(ap, st, per_die, {})
-        self.assertEqual([r["item"] for _, r in out[0]], ["t2"])
+        self.assertEqual(out, per_die)
         KW.defer_resign(ap, st, per_die, {})
-        self.assertEqual(sum("DEFER-RESIGN s81 t1" in m for m in logs), 1)
+        self.assertEqual(sum("RESIGN-LAST s81 t1" in m for m in logs), 1)
+
+    def test_resign_defer_option_restores_drop(self):
+        logs = []
+        ap = type("AP", (), {"log": staticmethod(logs.append)})()
+        per_die = [[("s81", {"item": "t1", "block_sha": "B1", "_resign": True}), ("s81", {"item": "t2", "block_sha": "B2"})]]
+        out = KW.defer_resign(ap, {}, per_die, {"resign_defer": True})
+        self.assertEqual([r["item"] for _, r in out[0]], ["t2"])
+        self.assertTrue(any("DEFER-RESIGN s81 t1" in m for m in logs))
 
     def test_launches_on_spare_capacity(self):
         per_die = [[("s81", {"item": "t1", "block_sha": "B1", "_resign": True})], [("hbm", {"item": "x", "_resign": True})]]

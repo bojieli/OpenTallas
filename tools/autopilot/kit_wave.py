@@ -3566,18 +3566,22 @@ def superseded_signed_items(cfg, st):
 
 
 def defer_resign(AP, st, per_die, cfg):
-    """OWNER r711 (global, after every die's picks are known): superseded-signed picks (tag _resign) launch only when NO other pick of any die is eligible this pass (spare capacity);
-    otherwise they are dropped from this pass and logged once per item and plan block (DEFER-RESIGN <die> <item>).  -> per_die"""
+    """OWNER r711 + LAUNCH-RATE-1125 (OWNER: no launch limits, launch every eligible row; only ot-run RAM admission queues): superseded-signed picks (tag _resign) are NO LONGER dropped while another
+    die has picks (S81 slice_station: 831 picks, 0 scheduled in 12 h, KIT-WAVE-LAUNCH-RATE 11-25).  They are submitted every pass, behind every other pick (plan_dies orders them in the last tier), and
+    ot-run admission queues them.  Logged once per item and plan block (RESIGN-LAST <die> <item>).  cfg resign_defer true restores the old drop.  -> per_die"""
     others = any(not r.get("_resign") for q in per_die for _, r in q)
-    if others:
-        logged = st.setdefault("defer_resign_logged", {})
-        for q in per_die:
-            for die, r in q:
-                if r.get("_resign"):
-                    k = f"{die}|{r['item']}|b{str(r.get('block_sha') or '')[:12]}"
-                    if k not in logged:
-                        logged[k] = time.time()
-                        (AP.log if AP else log)(f"KIT-WAVE DEFER-RESIGN {die} {r['item']}")
+    if not others:
+        return per_die
+    drop = bool((cfg or {}).get("resign_defer"))
+    logged = st.setdefault("defer_resign_logged", {})
+    for q in per_die:
+        for die, r in q:
+            if r.get("_resign"):
+                k = f"{die}|{r['item']}|b{str(r.get('block_sha') or '')[:12]}"
+                if k not in logged:
+                    logged[k] = time.time()
+                    (AP.log if AP else log)(f"KIT-WAVE {'DEFER-RESIGN' if drop else 'RESIGN-LAST'} {die} {r['item']}")
+    if drop:
         return [[(die, r) for die, r in q if not r.get("_resign")] for q in per_die]
     return per_die
 
@@ -13702,9 +13706,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     per_die = defer_resign(AP, st, per_die, cfg)
     room = max(0, int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st))   # LAUNCH-ALL-1116: no per-tick cap (OWNER 11-13); only in-flight and ot-run admission
     # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
-    lists = ([[x for x in q if not x[1].get("volume")] for q in per_die]
-             + [[x for x in q if x[1].get("volume")] for q in per_die])
-    for part in (lists[:len(per_die)], lists[len(per_die):]):
+    lists = ([[x for x in q if not x[1].get("volume") and not x[1].get("_resign")] for q in per_die]
+             + [[x for x in q if x[1].get("volume") and not x[1].get("_resign")] for q in per_die]
+             + [[x for x in q if x[1].get("_resign")] for q in per_die])     # LAUNCH-RATE-1125: re-sign rows go in the last tier, never dropped
+    n_d = len(per_die)
+    for part in (lists[:n_d], lists[n_d:2 * n_d], lists[2 * n_d:]):
         i = 0
         while len(launch) < room and any(i < len(q) for q in part):
             launch += [q[i] for q in part if i < len(q)][:room - len(launch)]
@@ -22248,6 +22254,8 @@ def main(argv=None):
     for line in bind_advisories(AP, cfg, res):
         print(line)
     print(f"would launch now ({len(todo)}): " + " ".join(f"{d}/{r['item']}" for d, r in todo))
+    if not a.probe:
+        print("NOTE: this plan ran WITHOUT --probe: the plan-of-record read, struct stops, bind / sidecar / flow-guard gates are not evaluated, so the list above can name rows the pass will hold; use `plan --probe` for the pass's own list")
     return 0
 
 
