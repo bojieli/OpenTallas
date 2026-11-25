@@ -10885,6 +10885,13 @@ def run_item(spec_path):
     if goal and not sp.get("private"):
         print(f"run-item: --goal applies to private specs only (a wave spec stops at AUTO-GEOM and the tick enqueues it); ignored", flush=True)
     chain_goal = chain_goal_of(sp, goal)
+    if sp.get("private") and chain_goal in ("route", "finish", "auto"):     # KNOWN-PROBLEM gate (launch_gate.py, OWNER 11-25 05:0x): known problems -> place probe
+        try:
+            import launch_gate as KPG
+            chain_goal = KPG.private_goal(sp.get("die"), sp.get("item"), chain_goal, hub=sp.get("hub"),
+                                          log=lambda m: print("KW_KPG " + m, flush=True))
+        except Exception as e:                           # noqa: BLE001  never stops the run
+            print(f"KW_KPG check error: {type(e).__name__}: {e} (goal kept)", flush=True)
     sp = repick_stage_hosts(sp)
     out = Path(spec_path).parent
     completed_stages = {}
@@ -19291,6 +19298,156 @@ def enqueue_skip_reason(cfg, rec, st=None):
     return None
 
 
+_KPG_FAM = {"k": None, "fam": {}}
+
+
+def kpg_family_members(st, die, item):
+    """(family, distinct items of the die in that family) from the wave records; cached per state size and minute"""
+    import launch_gate as KPG  # noqa: F401
+    items = st.get("items") or {}
+    k = (id(items), len(items), int(time.time() // 60))
+    if _KPG_FAM["k"] != k:
+        fam = {}
+        for r in items.values():
+            if r.get("die") and r.get("item"):
+                fam.setdefault((r["die"], family_of(r["die"], r["item"])), set()).add(r["item"])
+        _KPG_FAM.update(k=k, fam=fam)
+    f = family_of(die, item)
+    return f, _KPG_FAM["fam"].get((die, f), set())
+
+
+def kpg_pilot_state(st, die, item):
+    """'SIGNED' | 'LIVE' | 'FAILED' | '' for the latest wave record of (die, item)"""
+    rs = [r for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("item") == item]
+    if not rs:
+        return ""
+    r = max(rs, key=lambda x: float(x.get("updated") or 0))
+    q = str(r.get("q_status") or "").upper()
+    if q in ("SIGNED", "SIGNED-LINKED") or r.get("status") == "DEDUP-CREDITED":
+        return "SIGNED"
+    if q in ("FAIL", "CANCELLED") or r.get("status") == "FAIL":
+        return "FAILED"
+    if r.get("status") == "ENQUEUED":
+        return "LIVE"
+    return ""
+
+
+def kpg_route_hold(AP, cfg, st, rec):
+    """KNOWN-PROBLEM gate (OWNER 11-25 05:0x / 05:1x guardrails) + POST-PLACEMENT gate (04:4x) on a ROUTE submission; see launch_gate.py.
+    -> hold text or None.  Never raises; unreadable tables never hold."""
+    try:
+        import launch_gate as KPG
+        die, item = rec["die"], rec["item"]
+        km = KPG.mode(cfg, "kpg")
+        if km == "off" or not hasattr(AP, "read_coord"):
+            return None
+        T = KPG.tables(die, reader=AP.read_coord)
+        fl = KPG.flags(die, item, T)
+        fam, members = kpg_family_members(st, die, item)
+        pilots = st.setdefault("kpg_pilots", {})
+        mode_, why, key = KPG.decide(die, item, fl, fam, members, pilots, lambda it: kpg_pilot_state(st, die, it),
+                                     event=str((cfg.get("dies") or {}).get(die, {}).get("event") or ""))
+        nprov = sum(1 for f in fl if f["proven"])
+        if mode_ == "PROBE" and nprov == 0:              # guardrail 2: idle capacity routes borderline family-wait members, fewest flags first
+            cands = st.setdefault("kpg_idle_cands", {})
+            ck = f"{die}|{item}|{rec.get('attempt')}"
+            cands[ck] = [0, len(fl), time.time()]
+            for k_ in [k_ for k_, v in cands.items() if time.time() - v[2] > 3600]:
+                cands.pop(k_, None)
+            if "_kpg_idle" not in cfg:
+                cfg["_kpg_idle"] = KPG.idle_slots(cfg.get("_otrun_status") or {})
+            if cfg["_kpg_idle"] > 0 and ck in KPG.idle_pick([(k_, v[0], v[1]) for k_, v in cands.items()], cfg["_kpg_idle"]):
+                cfg["_kpg_idle"] -= 1
+                cands.pop(ck, None)
+                mode_, why = "FULL", why + "; IDLE-FILL (fleet under 0.8x cores)"
+        if mode_ == "PROBE":
+            txt = f"KPG-PROBE: {why} (place-only probe; routes when the flag clears, the pilot signs, or the fleet idles)"
+            if km == "enforce":
+                return txt
+            log_hourly(AP, st, f"KPG|{die}|{item}", f"KIT-WAVE KPG-REPORT {die}/{item}: would hold: {txt}")
+            return None
+        if key and km == "enforce":
+            pilots[key] = dict(item=item, attempt=rec.get("attempt"), t=time.time())
+        if mode_ == "PILOT" or nprov:
+            log_hourly(AP, st, f"KPG|{die}|{item}|{mode_}", f"KIT-WAVE KPG-{mode_} {die}/{item}: {why}")
+        return kpg_pp_hold(AP, cfg, st, rec, T)
+    except Exception as e:                               # the gate never stops the pass
+        log_hourly(AP, st, f"KPG|err|{rec.get('die')}", f"KIT-WAVE KPG check error {rec.get('die')}/{rec.get('item')}: {type(e).__name__}: {e} (not held)")
+        return None
+
+
+def kpg_pp_hold(AP, cfg, st, rec, T):
+    """POST-PLACEMENT gate: one read of the placed kit; a flag holds (enforce) and is listed in lanes/PP-FLAGS.tsv for the FP-CONVERGE lane"""
+    import launch_gate as KPG
+    pm = KPG.mode(cfg, "pp")
+    kit = review_kit_location(rec)
+    if pm == "off" or not kit:
+        return None
+    pr = st.setdefault("pp_review", {})
+    k = f"{rec['die']}|{rec['item']}|{rec.get('attempt')}|{kit}"
+    if k not in pr:
+        if int(cfg.get("_pp_n") or 0) >= 12:
+            return None                                  # over this tick's read budget: no wait (OWNER: continue with no wait)
+        cfg["_pp_n"] = int(cfg.get("_pp_n") or 0) + 1
+        info = KPG.pp_info(kit)
+        pr[k] = dict(flags=KPG.pp_decide(info), t=time.time(), nodata=info is None)
+        for k_ in [k_ for k_, v in pr.items() if time.time() - float(v.get("t") or 0) > 3 * 86400]:
+            pr.pop(k_, None)
+        if pr[k]["flags"]:
+            kpg_pp_publish(AP, rec, kit, pr[k]["flags"], pm)
+    e = pr[k]
+    if not e["flags"]:
+        return None
+    txt = (f"PP-REVIEW: {'; '.join(e['flags'])} (the die's FP-CONVERGE lane starts the next plan iteration; "
+           f"release: lanes/FP-<DIE>.tsv row class POSTPLACE status PASS)")
+    if pm == "enforce" and not KPG.pp_released(rec["die"], rec["item"], T, e["t"]):
+        return txt
+    log_hourly(AP, st, f"PP|{k}", f"KIT-WAVE PP-REPORT {rec['die']}/{rec['item']}: {txt} ({pm})")
+    return None
+
+
+def kpg_pp_publish(AP, rec, kit, flags, pm):
+    try:
+        coord = Path.home() / "coord"
+        p = coord / "lanes" / "PP-FLAGS.tsv"
+        if not (coord / "lanes").is_dir():
+            return
+        new = not p.exists()
+        with open(p, "a") as f:
+            if new:
+                f.write("ts\tdie\ttype\tattempt\tkit\tflags\tmode\n")
+            f.write("\t".join([time.strftime("%Y-%m-%d %H:%M"), rec["die"], rec["item"], str(rec.get("attempt")), kit, "; ".join(flags), pm]) + "\n")
+        subprocess.run([str(coord / "bin" / "coord-commit.sh"), "KIT-WAVE PP-FLAGS", "lanes/PP-FLAGS.tsv"], capture_output=True, timeout=180, cwd=str(coord))
+    except (OSError, subprocess.TimeoutExpired) as e:
+        AP.log(f"KIT-WAVE PP-FLAGS publish failed: {e}")
+
+
+def kpg_rules_pass(AP, cfg, st):
+    """hourly: LAUNCH-GATE-RULES.tsv = every gate rule's measured hit rate on the wave records (guardrail 1: promotion by prediction)"""
+    import launch_gate as KPG
+    if time.time() - float(st.get("kpg_rules_t") or 0) < 3600 or not hasattr(AP, "read_coord"):
+        return
+    st["kpg_rules_t"] = time.time()
+    latest = {}
+    for r in (st.get("items") or {}).values():
+        if r.get("die") and r.get("item"):
+            k = (r["die"], r["item"])
+            if k not in latest or float(r.get("updated") or 0) > float(latest[k].get("updated") or 0):
+                latest[k] = r
+    types = {}
+    for (die, item), r in latest.items():
+        T = KPG.tables(die, reader=AP.read_coord)
+        types[(die, item)] = (KPG.outcome(r), [f["rule"] for f in KPG.flags(die, item, T)])
+    keep = {}
+    for row in KPG.parse_tsv(AP.read_coord(KPG.RULES_REL) or ""):
+        keep[row.get("rule", "")] = row.get("status", "").upper()
+    coord = Path.home() / "coord"
+    if (coord / "lanes").is_dir():
+        (coord / KPG.RULES_REL).write_text(KPG.rules_tsv(KPG.rule_stats(types), keep))
+        subprocess.run([str(coord / "bin" / "coord-commit.sh"), "KIT-WAVE LAUNCH-GATE-RULES", KPG.RULES_REL], capture_output=True, timeout=180, cwd=str(coord))
+        KPG.reset_cache()
+
+
 def enqueue_pass(AP, cfg, st, rec, notices):
     # An already submitted row is immutable here, even if a hold is added later.
     if rec.get("status") == "ENQUEUED":
@@ -19310,6 +19467,13 @@ def enqueue_pass(AP, cfg, st, rec, notices):
             notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, ROUTE held: {why}")
             AP.log(f"KIT-WAVE ROUTE-HOLD {rec['die']}/{rec['item']}: {why}")
         rec.update(status="ROUTE-HELD", route_hold=why, reason=f"ROUTE hold: {why}", updated=time.time())
+        return
+    kp = kpg_route_hold(AP, cfg, st, rec)                 # KNOWN-PROBLEM + POST-PLACEMENT gates (launch_gate.py, OWNER 11-25)
+    if kp:
+        if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != kp:
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, ROUTE held: {kp}")
+            AP.log(f"KIT-WAVE ROUTE-HOLD {rec['die']}/{rec['item']}: {kp}")
+        rec.update(status="ROUTE-HELD", route_hold=kp, reason=f"ROUTE hold: {kp}", updated=time.time())
         return
     if rec.pop("route_hold", None):
         rec.update(status="PASS", reason="", updated=time.time())
@@ -19488,6 +19652,10 @@ def _retry_enqueue_body(AP, cfg, st, notices):
             AVR.auto_review_pass(cfg, st, review_before_route, review_kit_location, log=AP.log)
     except Exception as e:           # a review problem never stops the wave
         AP.log(f"KIT-WAVE AUTO-VISUAL-REVIEW failed: {e}")
+    try:
+        kpg_rules_pass(AP, cfg, st)
+    except Exception as e:           # a rule-table problem never stops the wave
+        AP.log(f"KIT-WAVE LAUNCH-GATE-RULES failed: {e}")
     try:
         visual_queue_publish(cfg, st)
     except Exception as e:           # a publish problem never stops the wave
