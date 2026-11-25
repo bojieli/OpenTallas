@@ -181,3 +181,4 @@
   c9t43: 0 types. S81 plans have no density sink_bins_file, so the check does not apply.
   
   Full lists: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/sbs_{A5t7,C1n,c9t43}.txt
+- 2026-11-25 01:48 PST DONE [PRECHECK-R3] ot-run oth-ubuntu-1119887-1795600039 on renewed-glider: rc=0 after 699 s, ended 09:48:52, log none, cmd: --crit --mem 2 --threads 1 --disk 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/PRECHECK-R3/tmp -- python3 -I -B /srv/opentallas-scr
