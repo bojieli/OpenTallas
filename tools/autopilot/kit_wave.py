@@ -398,6 +398,21 @@ def unit_probe(unit, timeouts=(60, 120, 240), pause_s=15):
     return None
 
 
+def journal_place_rc(unit, since=None):
+    """PLACE-LOST-1125: (rc or None, journal text) of a detached PLACE unit from `journalctl --user -u UNIT` since its start.  The unit
+    prints KW_PLACE_RC there when its log redirect failed, and systemd logs 'Stopping'/'Stopped' there when it was stopped from outside"""
+    argv = ["journalctl", "--user", "-u", unit, "-o", "cat", "--no-pager"] + (["--since", f"@{int(float(since))}"] if since else [])
+    try:
+        txt = subprocess.run(argv, capture_output=True, text=True, timeout=120).stdout or ""
+    except (OSError, subprocess.TimeoutExpired, ValueError):
+        return None, ""
+    rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", txt)
+    return (int(rcs[-1]) if rcs else None), txt
+
+
+PLACE_STOPPED_RE = re.compile(r"(?m)^(?:Stopping|Stopped) .*$")
+
+
 def tool_not_run(text):
     """True when the output shows ot-run / ot-heavy refusing to start the command and no 'ot-run: RAN on' line (it never ran)"""
     t = text or ""
@@ -4353,6 +4368,10 @@ RULES = [
     ("INFRA", r"^gen(?:_lint)?$", r"docker: Error response from daemon|Error response from daemon: failed to create|"
                                   r"\brc[ =]+125\b|\bexit(?: status| code)? 125\b|returned non-zero exit status 125\b",
      "infra (docker rc 125: container not created)"),
+    # PLACE-LOST-1125 (QC-PLACELOST): a PLACE client unit that ended without a terminal rc (RESTAGE / cancel stop, lost unit) has
+    # no design content; 26 such rows were UNCLASSIFIED and routed to design owners as place FAILs
+    ("INFRA", r"^place$", r"KW_PLACE_LOST|KW_PLACE_STOPPED",
+     "infra (PLACE client ended without a terminal rc: stopped by a wave move / cancel or lost; no design result)"),
     # WF-1 11-14 (OWNER "remove process frictions"; EXPERT-REVIEW-6 #2): a unit stopped from outside (systemd / operator signal
     # 15, "cancellation requested") and a host disk floor refusal have no design content: INFRA (own resubmit, never counted)
     ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|INFRA DRAIN-WAIT|"
@@ -10929,7 +10948,10 @@ def run_item(spec_path):
         except Exception as e:                           # noqa: BLE001  never stops the run
             print(f"KW_KPG check error: {type(e).__name__}: {e} (goal kept)", flush=True)
     sp = repick_stage_hosts(sp)
-    out = Path(spec_path).parent
+    # PLACE-LOST-1125 (QC-PLACELOST): an absolute attempt dir.  A relative spec path (private spec run from ~/coord/autopilot) gave the
+    # detached PLACE unit a relative `exec >> log`: systemd --user runs it in $HOME, the redirect failed, KW_PLACE_RC went to the journal
+    # and the worker booked KW_PLACE_LOST on a placed kit (QC sle_su_l1 V4 11-25: rc 0, 3_place.odb written)
+    out = Path(spec_path).absolute().parent
     completed_stages = {}
     res = {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
@@ -11253,6 +11275,25 @@ def run_item(spec_path):
                 print(f"KW_STAGE_RC place {rcs[-1]} (client ended)", flush=True)
                 return int(rcs[-1]), txt, None
             if act is not None and act not in ("active", "activating", "reloading"):
+                # PLACE-LOST-1125 (QC-PLACELOST census: 26 KW_PLACE_LOST rows, none a design result): before booking a lost client read
+                # (1) its rc from the journal (log redirect failed), (2) a fresh PLACE receipt (the kit placed), (3) a stop from outside
+                jrc, jtxt = journal_place_rc(svc["unit"], svc.get("started"))
+                if jrc is not None:
+                    txt += "\n" + jtxt
+                    (out / "place.log").write_text(txt)
+                    print(f"KW_STAGE_RC place {jrc} (client ended; rc read from the unit journal)", flush=True)
+                    return jrc, txt, None
+                r = place_receipt(svc["kit"], svc)
+                if r:
+                    svc["receipt"] = r
+                    save_svc(svc)
+                    (out / "place.log").write_text(txt + f"\nKW_PLACE_RECEIPT {json.dumps(r)}\n")
+                    print(f"KW_STAGE_RC place 0 (client ended without rc; physical receipt {r.get('path')})", flush=True)
+                    return 0, txt, r
+                stop = PLACE_STOPPED_RE.search(jtxt)
+                if stop:
+                    txt += (f"\nKW_PLACE_STOPPED: the PLACE service unit was stopped from outside ({stop.group(0)[:200]}): a wave "
+                            "move / cancel, no design result\n")
                 txt += ("\nKW_PLACE_LOST: the PLACE service unit ended without a terminal rc; its kit and any proof "
                         "owner are kept, no duplicate PLACE/proof is launched\n")
                 (out / "place.log").write_text(txt)

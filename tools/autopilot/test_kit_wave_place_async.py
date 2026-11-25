@@ -27,15 +27,18 @@ RECEIPT = {"path": "/w/gen/T/physical_completion/dpkit-T-1.json", "run_id": "dpk
 
 
 class Fake:
-    def __init__(self, d, async_ok=True, receipt=True, client_rc=None, active=True):
+    def __init__(self, d, async_ok=True, receipt=True, client_rc=None, active=True, journal=""):
         self.d, self.calls = Path(d), []
         self.async_ok, self.receipt, self.client_rc, self.active = async_ok, receipt, client_rc, active
+        self.journal = journal
 
     def __call__(self, argv, **kw):
         s = " ".join(argv)
         self.calls.append(s)
         out, rc = "", 0
-        if "KW_GEOM_TOOLS_OK" in s:
+        if argv[0] == "journalctl":
+            out = self.journal
+        elif "KW_GEOM_TOOLS_OK" in s:
             out = re.search(r"KW_GEOM_TOOLS_OK [0-9a-f]{16}", s).group(0) + "\n"
         elif "KW_ASYNC_OK" in s:
             out = "KW_ASYNC_OK\n" if self.async_ok else "KW_ASYNC_NO\n"
@@ -163,6 +166,58 @@ class PlaceAsync(unittest.TestCase):
             self.assertEqual(res["verdict"], "FAIL")
             self.assertIn("KW_PLACE_LOST", res["tail"])
             self.assertEqual(len([c for c in f.calls if c.startswith("systemd-run")]), 1)
+
+    def test_lost_client_is_infra_not_unclassified(self):
+        # PLACE-LOST-1125: 26 KW_PLACE_LOST rows were UNCLASSIFIED place FAILs routed to design owners
+        with tempfile.TemporaryDirectory() as d:
+            rc, res = self.go(d, Fake(d, receipt=False, active=False))
+            self.assertEqual(KW.classify(res["stage"], res["tail"])[0], "INFRA")
+
+    def test_client_rc_in_journal_wins_over_lost(self):
+        # PLACE-LOST-1125 (QC sle_su_l1 V4 11-25): the log redirect failed, KW_PLACE_RC=0 reached only the unit journal
+        with tempfile.TemporaryDirectory() as d:
+            f = Fake(d, receipt=False, active=False, journal="KW_PLACE_START 1 kwp-x\not-run: RAN on epyc10 (unit oth-1): exit 0\nKW_PLACE_RC=0\n")
+            rc, res = self.go(d, f)
+            self.assertEqual((rc, res["verdict"]), (0, "PASS"))
+            self.assertNotIn("KW_PLACE_LOST", (Path(d) / "place.log").read_text())
+            self.assertEqual(len([c for c in f.calls if c.startswith("systemd-run")]), 1)
+
+    def test_fresh_receipt_after_client_end_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            rc, res = self.go(d, Fake(d, receipt=True, active=False))
+            self.assertEqual((rc, res["verdict"]), (0, "PASS"))
+            self.assertEqual(res["place_receipt"]["proof_owner"], "dpkit-T-1")
+
+    def test_client_stopped_from_outside_is_named_and_infra(self):
+        # PLACE-LOST-1125: RESTAGE stopped waiting PLACE clients (S81 t36/t12/t6 11-22, SIGTERM 143); the live worker booked LOST
+        with tempfile.TemporaryDirectory() as d:
+            f = Fake(d, receipt=False, active=False, journal="Stopping kwp-x.service - /bin/bash -c ...\nStopped kwp-x.service.\n")
+            rc, res = self.go(d, f)
+            self.assertEqual((rc, res["verdict"]), (1, "FAIL"))
+            self.assertIn("KW_PLACE_STOPPED", res["tail"])
+            self.assertEqual(KW.classify(res["stage"], res["tail"])[0], "INFRA")
+
+    def test_relative_spec_path_gives_absolute_place_log(self):
+        # PLACE-LOST-1125: the PLACE unit runs in $HOME, so its `exec >> log` path must be absolute
+        import os
+        with tempfile.TemporaryDirectory() as d:
+            sub = Path(d) / "private_specs" / "L" / "x"
+            sub.mkdir(parents=True)
+            spec(sub)
+            cwd = os.getcwd()
+            real, poll = KW.subprocess.run, KW.PLACE_POLL_S
+            f = Fake(sub)
+            KW.subprocess.run, KW.PLACE_POLL_S = f, 0
+            try:
+                os.chdir(d)
+                KW.run_item(Path("private_specs/L/x/spec.json"))
+            finally:
+                os.chdir(cwd)
+                KW.subprocess.run, KW.PLACE_POLL_S = real, poll
+            svc = json.loads((sub / "place_service.json").read_text())
+            self.assertTrue(Path(svc["log"]).is_absolute())
+            run = [c for c in f.calls if c.startswith("systemd-run")][0]
+            self.assertIn(f"exec >> {sub.resolve() / 'place.live.log'}", run.replace(str(sub), str(sub.resolve())))
 
     def test_restarted_worker_resumes_without_destructive_prep(self):
         with tempfile.TemporaryDirectory() as d:
