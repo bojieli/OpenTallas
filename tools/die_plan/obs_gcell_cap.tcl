@@ -17,6 +17,9 @@
 # Gcell grid: origin 0, tile OT_OBS_GCELL_UM (default OT_PGCAP_GCELL_UM, else 0.57 um; GRT-0023 origin (0, 0));
 # regions are whole gcells grown by OT_OBS_GCELL_EPS_DBU (default 10), the pg_pair_cap.tcl convention.
 # OT_OBS_GCELL_CAP=0 switches the pass off.
+# HD-HOSTW-GRT-1 (HEAD-ALLFIX C15, hd_host_w GRT-0116 139 on W6p): a block pin inside a reserved-site obstruction (a die clock
+# tap, 63 of 65 on hd_host_w) is exempt on EVERY layer, not only its own: its net leaves the obstruction through the sliver gcell
+# row beside the rect, so that gcell and its 8 neighbours keep their capacity (ot_obsgc_tap_pins; OT_OBS_GCELL_TAP_EXEMPT=0 off).
 proc ot_obsgc_env {name def} {
   if {[info exists ::env($name)] && $::env($name) ne ""} { return $::env($name) }
   return $def
@@ -39,6 +42,22 @@ proc ot_obsgc_free {tracks lo hi a0 a1 obs clr} {
     if {!$blocked} { incr free }
   }
   return $free
+}
+# pure: x/y boxes {x0 y0 x1 y1} of block pins that lie inside (or touch the interior of) an x/y obstruction rect, each grown
+# by `grow` on every side (one gcell: the access gcell and its neighbours).  Returns the grown boxes.
+proc ot_obsgc_tap_pins {obsxy pinxy grow} {
+  set out {}
+  foreach p $pinxy {
+    lassign $p px0 py0 px1 py1
+    foreach o $obsxy {
+      lassign $o ox0 oy0 ox1 oy1
+      if {$px0 < $ox1 && $ox0 < $px1 && $py0 < $oy1 && $oy0 < $py1} {
+        lappend out [list [expr {$px0 - $grow}] [expr {$py0 - $grow}] [expr {$px1 + $grow}] [expr {$py1 + $grow}]]
+        break
+      }
+    }
+  }
+  return $out
 }
 # Merge inclusive, integer along-gcell spans.
 proc ot_obsgc_merge_spans {spans} {
@@ -182,20 +201,29 @@ proc ot_obsgc_add {} {
   proc ot_obsgc_aa {h a b c d} { if {$h} { return [list $a $b $c $d] } else { return [list $b $a $d $c] } }
   array set tmp {}
   if {[info exists ::ot_pgtt_obs]} { foreach o $::ot_pgtt_obs { set tmp($o) 1 } }
-  set nsrc 0; set nmac 0
+  set nsrc 0; set nmac 0; set obsxy {}; set pinxy {}
   foreach o [$blk getObstructions] {
     set bb [$o getBBox]; set L [$bb getTechLayer]
     if {$L eq "NULL" || $L eq ""} continue
     set ln [$L getName]
     if {![info exists hor($ln)]} continue
     set r [ot_obsgc_aa $hor($ln) [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
-    if {[info exists tmp($o)]} { dict lappend blkd $ln $r } else { dict lappend srcd $ln $r; incr nsrc }
+    if {[info exists tmp($o)]} { dict lappend blkd $ln $r } else { dict lappend srcd $ln $r; incr nsrc; lappend obsxy [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]] }
   }
   foreach bt [$blk getBTerms] { foreach bp [$bt getBPins] { foreach bx [$bp getBoxes] {
     set L [$bx getTechLayer]; if {$L eq "NULL" || $L eq ""} continue
     set ln [$L getName]; if {![info exists hor($ln)]} continue
     dict lappend pinsd $ln [ot_obsgc_aa $hor($ln) [$bx xMin] [$bx yMin] [$bx xMax] [$bx yMax]]
+    lappend pinxy [list [$bx xMin] [$bx yMin] [$bx xMax] [$bx yMax]]
   } } }
+  # tap pins inside a reserved rect: exempt on every layer, one gcell around (HD-HOSTW-GRT-1)
+  if {[ot_obsgc_env OT_OBS_GCELL_TAP_EXEMPT 1] ne "0"} {
+    set ntap 0
+    foreach g [ot_obsgc_tap_pins $obsxy $pinxy $gc] {
+      incr ntap
+      foreach ln [array names hor] { dict lappend pinsd $ln [ot_obsgc_aa $hor($ln) {*}$g] }
+    }
+  }
   # placed block masters: OBS shapes are sources, pin shapes exempt the gcells they touch
   foreach inst [$blk getInsts] {
     set m [$inst getMaster]
@@ -263,5 +291,5 @@ proc ot_obsgc_add {} {
     }
     if {![info exists n($ln)]} { set n($ln) 0 }; incr n($ln)
   }
-  puts "OT_OBS_GCELL sliver gcells cut [dict get $st cut] of [dict get $st candidates] partly covered (pin-exempt [dict get $st exempt]); sources $nsrc (block masters $nmac); regions by layer [array get n]; errors $nerr (gcell_um $gcum min_tracks $minfree eps_dbu $eps layers $layers)"
+  puts "OT_OBS_GCELL sliver gcells cut [dict get $st cut] of [dict get $st candidates] partly covered (pin-exempt [dict get $st exempt], tap pins in reserved rects [expr {[info exists ntap] ? $ntap : 0}]); sources $nsrc (block masters $nmac); regions by layer [array get n]; errors $nerr (gcell_um $gcum min_tracks $minfree eps_dbu $eps layers $layers)"
 }

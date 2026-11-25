@@ -130,3 +130,32 @@ def test_tap_chain_seed_leaves_the_reserved_strip_on_one_side():
     body = t[p:]
     assert body.index("lassign [tb_seed_side $bt $tree $x $y] x y") < body.index('dbInst_create $tb_blk $tb_master "${n}_tb${tb_tag}${it}_d$b"')
     assert "OT_TAP_SEED_SIDE" in t and "OT_CLK_OBS_HALO_ROWS" in t
+
+
+def _tap(obs, pins, grow=GC):
+    script = (f"source {{{TOOL}}}\n"
+              "set r [ot_obsgc_tap_pins [list " + " ".join("{" + " ".join(map(str, o)) + "}" for o in obs) + "] [list "
+              + " ".join("{" + " ".join(map(str, q)) + "}" for q in pins) + f"] {grow}]\n"
+              "foreach b $r {puts \"BOX $b\"}\n")
+    out = subprocess.run([TCLSH], input=script, capture_output=True, text=True, check=True).stdout.splitlines()
+    return [tuple(int(v) for v in l.split()[1:]) for l in out if l.startswith("BOX ")]
+
+
+@needs_tcl
+def test_tap_pin_in_reserved_rect_exempts_neighbour_gcell_rows_on_every_layer():
+    # HD-HOSTW-GRT-1 hd_host_w clk_t9: M7 pin (172.240,167.584)-(172.272,168.352) in the rect (171.828,167.4)-(174.312,168.75);
+    # the violating gcell row 293 (167.01-167.58) lies BELOW the pin's own rows 294-295 and holds the escape.
+    rect = (171828, 167400, 174312, 168750)
+    pin = (172240, 167584, 172272, 168352)
+    boxes = _tap([rect], [pin, (900000, 900000, 900032, 900768)])
+    assert boxes == [(172240 - GC, 167584 - GC, 172272 + GC, 168352 + GC)]     # the pin outside every rect is not exempt
+    # as an H-layer (along x / across y) pin exemption the planner now keeps the sliver row 293 uncut
+    src = {"M6": [rect + (260,)]}   # clearance leaving 2 free tracks in row 293
+    cuts, _ = plan(src, {"M6": M6_HW}, {"M6": 48})
+    assert any(c[2] == 293 and c[1] <= 302 < c[3] for c in cuts)   # gcell col 302 = x 172.14-172.71
+    b = boxes[0]
+    cuts, st = plan(src, {"M6": M6_HW}, {"M6": 48}, pins={"M6": [b]})
+    assert not any(c[2] == 293 and c[1] <= 302 < c[3] for c in cuts) and any(c[2] == 293 for c in cuts) and st["exempt"] > 0
+
+
+M6_HW = tracks(32, 64, 160000, 175000)
