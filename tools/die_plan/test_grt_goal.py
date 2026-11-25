@@ -11,8 +11,21 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def runner(text):
-    return next(ast.literal_eval(n.value) for n in ast.parse(text).body
-                if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'RUN_KIT' for t in n.targets))
+    return effective_run_kit(text)
+
+
+def effective_run_kit(text):
+    """GOAL-TABLE-1124: gen_phys sets RUN_KIT as a literal, then (149a58c42d0) RUN_KIT = _GT.shell_resume(RUN_KIT).  The kit
+    gets the second; a source without the call (older revisions) is the literal itself."""
+    import sys as _sys
+    vals = [n.value for n in ast.parse(text).body
+            if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets)]
+    run_kit = ast.literal_eval(vals[0])
+    if any(isinstance(v, ast.Call) and getattr(v.func, "attr", "") == "shell_resume" for v in vals[1:]):
+        _sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "autopilot"))
+        import goal_table
+        run_kit = goal_table.shell_resume(run_kit)
+    return run_kit
 
 
 class GrtGoalTests(unittest.TestCase):
