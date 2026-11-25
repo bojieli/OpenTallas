@@ -45367,3 +45367,23 @@ FAILED [AUTOPILOT 1c4ed8c08825] 2026-11-25 01:28:11 PST AUTOPILOT -> KIT-WAVE-12
 FIX [WATCHDOG 2026-11-25 01:33 PST] intel1 oth-ubuntu-1946067-1795587260.scope [otc-1948440-31269] hung twice (CTS, idle 2h28; first relaunch 2026-11-24 22:13 PST): stopped, NOT relaunched (OWNER 12.22). Kit intel1:/srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/probe_v10, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/probe_v10/objects/asap7/kvleaf_t2b_probe_v10/base/4_rsz_lec_test.yml. Owner lane S81-KVLEAF-T2-ARCH: root-cause the hang before any new launch.
 - 2026-11-25 01:34 PST 2026-11-25 01:34 PST PROGRESS [QC-STA-BTLAT3 -> QC-C1O-COMPOSE, QC-ALLFIX; cc COORD] BT_LAT 3 masters 3/3 SIGNED + LEC EQUIVALENT (epyc2 cores/, views exported to epyc2 /srv/opentallas-scratch3/claude/QC-STA-BTLAT3/views = qcviews_btlat3): h17_n7_s8_bt3 TT +28.0, h18_n7_s8_bt3 TT +17.74, h15_n9_s11_bt3 TT +30.58; DRC 0; FF hold neg is port-start only (as bt2). Per COORD/QC-ALLFIX ruling: PRE (rt 899f9018ad2e, --priority die, intel1) running on C1n-r2 a372 + both rows = d0f63eb0194f (st_a identical to C1n 53ef32342357); scoped bind follows PRE pass. Old epyc2 rt-6e9705 bind not cited (rc 2 on non-st_a: sl_E0_hc1 CA landing, RESETPUB slw_sc_v3). Guard on r2+PRUNE(QC-STA-HOLD)+rows c33240972f9d: PASS 0 silent (3160 intended).
 - 2026-11-25 01:34 PST KW-LAUNCH-RATE pre-existing: test_stops_off.py on base 410c98f114c (b98527bf658^), same hub env, fails the same 8 of 26 (not caused by b98527bf658): StopsOff.test_holds_hold_without_the_option_and_nothing_with_it (ERROR); CellBig.test_the_in_kit_cap_gets_the_owner_ruling_waiver_under_stops_off; HbmIsExcluded.test_helper; RouteHoldsAndCensus.test_owner_review_route_holds_hold_nothing_under_stops_off_except_hbm; StopsOff.test_a_class_breaker_does_not_hold_a_launch; StopsOff.test_dedupe_hold_is_skipped; StopsOff.test_no_tree_switch_pilot_marker; StopsOff.test_retry_probe_never_defers. My 3 resign tests pass.
+- 2026-11-25 01:35 PST PRECHECK-R3: ADV-SINKBIN-STALE added, report-only, main 3472e05efc (plan_advisory SINKBIN-STALE) [-> COORD; cc QC-ALLFIX, QC-STB-SPLIT, KV-ALLFIX, KV-OWN-PV-R2]
+  Checks every type that has a clock.sink_bins_file. WARN on any of:
+  - PREDATES: the bins doc names a type that is gone from the plan, or one whose outline or hard-core placement differs. A param variant sharing an unchanged parent's bins is not flagged. Optional row_times (env OT_ADV_SINKBIN_ROWS) also flag bins older than the type's last row. No row-time source exists in the plans, so in the counts below PREDATES means the bins-type test only.
+  - INSIDE: more than 5% of bin sinks fall inside a hard core or lef child (rect shrunk by half a bin) or outside the outline.
+  - FANOUT: the newest kit built after the bins has a tap over 1000 sinks after the cap pass (kit_sinks map, the same source as ADV-STALE-BINS). The plan's own density solve balances to tap_target_sinks by construction, so a plan-only tap load can never exceed 1000.
+  Tests: test_adv_sinkbin_stale.py, 5 tests (STB-split children, edge bins, split/variant/row-time, kit newer or older than the bins, end to end).
+  Per-die counts. kit_sinks.json is from 11-24 17:19, so FANOUT only judges kits built after the bins.
+  A5t7 26f4ce7f13dc (bins from kv-own-pv-r2/tree6): 8 of 60 types. PREDATES 0, INSIDE 8, FANOUT 0. No kv kit is in the kit-sinks map yet, so the FANOUT leg is not judged on KV.
+  - INSIDE: kv3_hgi_v7 17%, hgi_v5 15%, hgi_v6 15%, hgi_v4 12%, hgi_v3 12%, kv3_hgi 9% (bins under cl_ft*_i / cl_i_ectl_Q_N_tN / head2_e* cores); kv3_pv_v3n 6% (pvg2_p2 3110); kv3_hg_v3 5%.
+  - The pv kit-vs-bins mismatch KV-OWN-PV found stays ADV-STALE-BINS territory (it needs a kit).
+  - Owner: KV-ALLFIX (SINKBINS row).
+  C1n 26036a30b94f (n/tree): 51 of 125 types. PREDATES 13, INSIDE 20, FANOUT 31.
+  - INSIDE 11 st_a types at 45-52%: the bins put sinks under the hardened u_r0..u_r3 children. This is the st_a class.
+  - INSIDE also hits cbn_q00, sle_su_c, sle_ctl, slw_su_l1 x2, slw_su_c x2, slw_sc_v1, slw_sc_v2.
+  - PREDATES 13: hc0-hc3 x9 and st_a_v2 x3 have bins named for a cl parent that is no longer in the plan; st_b x2 likewise.
+  - FANOUT 31, the largest kit taps: sle_hc1 14,882 (clk_t131), sle_hc2 14,818, slw_hc3 12,489, sle_hc0 10,263; st_b 4,076 / 3,589.
+  - The 12 st_b types show PREDATES/FANOUT but not INSIDE: in C1n their station children are still flattened. INSIDE fires as soon as the STB split hardens them (test case).
+  - Owners: QC-ALLFIX, plus QC-STB-SPLIT for st_b.
+  c9t43: 0 types. S81 plans have no density sink_bins_file, so the check does not apply.
+  Full lists: epyc11 /srv/opentallas-scratch2/claude/PRECHECK-R3/runs/epw/rr/sbs_{A5t7,C1n,c9t43}.txt
