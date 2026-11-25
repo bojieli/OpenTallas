@@ -55,3 +55,8 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
 - Ran on epyc10 (moved from epyc8 queue; both epyc8 waiters cancelled, never started). Inputs copied to epyc10 QC-COLLS-LEC/r/H4_cH8eco/kit (sha re-checked).
 - EQUIVALENT 52573/52573, 0 differs/undecided, no hints, 16565 s; lec.py 62f61ffca2f3, ESCALATE_C=50000000 S=10800; lec.json sha b9841468c58f. Posted 7963354.
 - Open for others: coll_core = OPUS-FIX-QC-COLL-R3. Lane job complete.
+
+## 11-25 01:0x PST: ARCHIVED, LANE CLOSED
+- AUTO-EXPORT done 00:55 (RTX-FULL-AGI-META), unit coll_s__ax_d4ee7cbf4e: AGIdock /archive/opentallas-signed-1114/qwen_compute/coll_s__ax_d4ee7cbf4e + INDEX.tsv row; rtx-pro /home/ubuntu/signed-export-1114/qwen_compute/coll_s__ax_d4ee7cbf4e.
+- LEC evidence: lanes/RELEC-1122.tsv row (record 360891638e3c) + lanes/evidence/QC-COLLS-LEC/cH8_coll_s_eco_360891638e3c_lec.json.
+- coll_core owned by QC-COLL-CORE. Nothing open in this lane.
