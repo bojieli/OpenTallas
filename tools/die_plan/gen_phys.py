@@ -10048,7 +10048,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     """land_slots of a --kit-rtl type (DIE-KV-31): Landings.land_slots(tn), fail-closed against the bound RTL text.
     Every declared hold_mux ring <b> (cland_dn_ready_/fault_<b> ride ring <b>) must be an ot_dp_clk_landing_ca/_cas
     instance u_cland_<b> with DEPTH == D; every ring_start must name a declared ring; an origin_start origin must be
-    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
+    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance (or, without copies/stages, the rx_pin_plain ot_dp_rrelay pin flop); and every count-aligned u_cland_* ring in the bound RTL must be declared
     (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
     import copy
     import clock_landings
@@ -10096,7 +10096,10 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            module = r"ot_dp_landing_relay" if v.get("copies") or v.get("stages") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)"
+            # FACEDECL-GEN (HEAD-ALLFIX 11-25, W8b hd_lep0N_w gen): with landing_relay_rx_pin_plain the typed origin u_cland_rstart_rx_p0
+            # is a bare ot_dp_rrelay pin flop (clock_landings RX-PIN-PLAIN); face_guard already accepts it (FACEDECL 426bc4b641c),
+            # so the gen-side bound check accepts it too -- only without copies/stages, which still require typed relays.
+            module = r"ot_dp_landing_relay" if v.get("copies") or v.get("stages") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay|ot_dp_rrelay)"
             path = _kit_inst_path(txt, v["origin"], module)
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
