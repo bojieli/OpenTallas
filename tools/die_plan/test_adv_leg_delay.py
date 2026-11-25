@@ -47,3 +47,9 @@ def test_calibration_point_c4():
 
 def test_never_raises():
     assert L.findings(None, "p")[0].startswith("WARN ADV-LEG-DELAY not checked")
+
+
+def test_core_pair_with_a_station_chain_is_not_judged():
+    t = _t(gap=1300.0)
+    t["internal_stations"] = [{"conn": "core:u_head_e0.kp_o|core:u_head_e4.kp_in", "regs_um": [[300.0, 300.0]]}]
+    assert not L.legs(t, {}, {"head_e0": {"q": ["core:head_e4"]}})

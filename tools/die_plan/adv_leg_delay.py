@@ -50,16 +50,21 @@ def legs(t, bus_pts, conns):
             x, y = h["origin_um"]
             w, hh = h["outline_um"]
             boxes[h["inst"]] = (x, y, x + w, y + hh)
-    staged_bus, staged_core = set(), set()
+    staged_bus, staged_core, staged_pair = set(), set(), set()
     for e in t.get("internal_stations", []) or []:
         if not e.get("regs_um"):
             continue
         c = str(e.get("conn", ""))
         if c.startswith("bus:"):
             staged_bus.add(c[4:])
-        for end in (str(e.get("launch", "")), str(e.get("capture", ""))):
+        ends = []
+        for end in [x for x in c.split("|")] + [str(e.get("launch", "")), str(e.get("capture", ""))]:
             if end.startswith("core:"):
-                staged_core.add(end[5:].split(".")[0])
+                n = end[5:].split(".")[0]
+                ends.append(n[2:] if n.startswith("u_") else n)
+        if len(ends) >= 2 and ends[0] != ends[1]:
+            staged_pair.add(frozenset(ends[:2]))      # a station chain between these two cores
+        staged_core.update(ends[:0])
     out, seen = [], set()
     for ci, ports in (conns or {}).items():
         a = boxes.get(ci)
@@ -76,7 +81,7 @@ def legs(t, bus_pts, conns):
                 elif k == "core":
                     other = nm.split(".")[0]
                     b = boxes.get(other)
-                    if b and other != ci and ci not in staged_core and other not in staged_core:
+                    if b and other != ci and frozenset((ci, other)) not in staged_pair:
                         key = ("core",) + tuple(sorted((ci, other)))
                         if key not in seen:
                             seen.add(key)
