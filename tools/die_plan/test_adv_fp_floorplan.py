@@ -56,3 +56,26 @@ def test_malformed_never_raises():
     out = F.findings({"partition_types": {"bad": {"outline_um": [10, 10], "hard_cores": [{"origin_um": "x", "outline_um": [1, 1]}]}}})
     assert out and out[-1].startswith("WARN ADV-FP-FLOORPLAN summary")
     assert F.findings(None)[-1].startswith("WARN") if F.findings(None) else True
+
+
+def _cross_type(y1):
+    # one tall core leaving 20 um streets above and below; lane 1 at y1 (inside the core when 300), lane 2 on the upper street
+    core = {"name": "c", "origin_um": [0.0, 20.0], "outline_um": [300.0, 560.0]}
+    lane = lambda y, nm: {"launch": "bus " + nm, "from_um": [100.0, y], "regs_um": [[250.0, y]], "to_um": [500.0, y]}
+    return {"outline_um": [600.0, 600.0], "hard_cores": [core], "buses": [{"name": "a", "width": 400}, {"name": "b", "width": 400}],
+            "internal_stations": [lane(y1, "a"), lane(590.0, "b")], "ft_slots": [], "cells": 1000}
+
+
+def test_core_crossing_leg_loads_both_streets():
+    # lane a runs through the core interior: its 400 bits also load the 20 um street that lane b uses (800 bits > 578 tracks)
+    w = F.street_worst(_cross_type(300.0))
+    assert w and w[0] > 1.0
+    # lane a kept in the lower street: 400 bits per street, no crossing
+    ok = F.street_worst(_cross_type(10.0))
+    assert ok and ok[0] < 1.0
+
+
+def test_ft_crosses_core_is_report_only():
+    out = _lines(_cross_type(300.0))
+    assert any(x.startswith("WARN ADV-FT-CROSSES-CORE T:") and "a>c:800b" in x for x in out)
+    assert not any("ADV-FT-CROSSES-CORE" in x for x in _lines(_cross_type(10.0)))
