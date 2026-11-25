@@ -384,8 +384,15 @@ while :; do
     # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
     # DIECLASS_1125 (OWNER 11-25 00:0x): die class -1000 (no MemoryMax below, so no memcg livelock at a cap); type-level jobs KIT_OOM_ADJ (500), crit / proof 0.
     _MM=(-p "MemoryMax=${MEM}G" -p MemorySwapMax=0); _NI=()
+    # KITNICE_1125 (COORD 11-25 03:5x: epyc12 load 229/96 with every kit openroad at nice 0, incl. --crit / --die kit stages): only die-level
+    # work runs at nice 0 (the command is die-level by name, ot-heavy-reconcile --is-die without the env flag, or a plan job); every other
+    # stage, --crit and --die submissions too, runs at KIT_NICE (10).  Containers do not inherit the client's nice: ot-heavy-reconcile
+    # (--kit-nice, every 2 min) renices kit tool processes inside non-die containers.
+    _kitnice=1
+    if [ "${OT_HEAVY_PRIO:-}" = plan ] || env -u OT_HEAVY_PRIO /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" 2>/dev/null; then _kitnice=0; fi
     if [ "$_dieclass" = 1 ]; then
       _MM=(-p MemorySwapMax=0)
+      [ "$_kitnice" = 1 ] && [ "${KIT_NICE:-10}" != 0 ] && _NI=(nice -n "${KIT_NICE:-10}")
       sudo -n choom -n -1000 -p "$$" >/dev/null 2>&1 || echo "ot-heavy: WARN die class: sudo choom -1000 failed on $(hostname); running at $(cat /proc/self/oom_score_adj)" >&2
       export OT_HEAVY_OOM_ADJ=-1000
     else
@@ -393,7 +400,7 @@ while :; do
       { [ "${OT_HEAVY_CPU:-}" = crit ] || [ "${OT_HEAVY_PRIO:-}" = proof ]; } && _adj=0
       echo "$_adj" > /proc/self/oom_score_adj 2>/dev/null || true
       export OT_HEAVY_OOM_ADJ="$_adj"
-      [ "${OT_HEAVY_CPU:-}" != crit ] && [ "${KIT_NICE:-10}" != 0 ] && _NI=(nice -n "${KIT_NICE:-10}")
+      [ "${KIT_NICE:-10}" != 0 ] && _NI=(nice -n "${KIT_NICE:-10}")   # KITNICE_1125: --crit kit stages too (CPUWeight 1000 stays)
     fi
     if [ "${OT_HEAVY_PRIO:-}" = proof ] || /usr/local/bin/ot-heavy-reconcile --is-proof -- "$@"; then : > "$D/proof.job.$$"; fi   # PROOF-PRIO-1119: ot-oom-age guard spares this job while a wave job can be the victim
     if [ "${OT_HEAVY_PRIO:-}" = plan ]; then : > "$D/plan.job.$$"; fi   # PLANBYPASS_1114: ot-oom-age sets this job's openroad/yosys/python processes to -1000 (marker = launcher pid)

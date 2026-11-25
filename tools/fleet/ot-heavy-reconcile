@@ -662,6 +662,10 @@ def scope_cg(unit):
 
 def main():
     start_canary()
+    try:
+        kit_nice_sweep()
+    except Exception as e:                                  # KITNICE_1125: never stop the reconcile pass
+        log(f"kit-nice sweep failed: {e}")
     reap_completed_thread_charges()
     try:
         st = json.load(open(STATE))
@@ -1926,6 +1930,61 @@ def gate_locked(mem, argv):
           f"floor {floor:.0f} GB; {inv_text(inv)}" + (f"; {note}" if note else ""))
 
 
+# KITNICE_1125 (COORD 11-25 03:5x): a docker container does not inherit the nice of the ot-heavy client, so kit tool processes inside containers ran at
+# nice 0 (epyc12 load 229/96, 15 openroad reniced by hand).  Every pass renices openroad / yosys / sta / klayout threads of nice 0 that live in a docker
+# scope whose container is not die class (label opentallas.priority=die) to KIT_NICE (default 10; 0 disables).  Raising nice is always allowed; sudo
+# covers root-owned container processes.  Children inherit; threads are per-thread in Linux, so every tid is reniced.
+KIT_TOOLS = {"openroad", "yosys", "sta", "opensta", "klayout"}
+_CID = re.compile(r"docker[-/]([0-9a-f]{64})")
+
+
+def kit_nice_targets(procs, die_label):
+    """procs: iterable of (pid, ni, comm, cgroup_text) -> sorted pids to renice; die_label(container_id) -> True for a die-class container"""
+    out, seen = [], {}
+    for pid, ni, comm, cg in procs:
+        if ni != 0 or comm not in KIT_TOOLS:
+            continue
+        m = _CID.search(cg)
+        if not m:
+            continue
+        cid = m.group(1)
+        if cid not in seen:
+            seen[cid] = bool(die_label(cid))
+        if not seen[cid]:
+            out.append(pid)
+    return sorted(out)
+
+
+def kit_nice_sweep(apply=True, nice=None):
+    try:
+        nice = int(nice if nice is not None else (re.findall(r"^KIT_NICE=(\d+)", rd("/etc/ot-heavy.conf"), re.M) or [os.environ.get("KIT_NICE", "10")])[-1])
+    except ValueError:
+        nice = 10
+    if nice <= 0:
+        return []
+    procs = []
+    for p in os.listdir("/proc"):
+        if not p.isdigit():
+            continue
+        try:
+            st = rd(f"/proc/{p}/stat")
+            comm = st[st.index("(") + 1:st.rindex(")")]
+            ni = int(st[st.rindex(")") + 2:].split()[16])
+        except (OSError, ValueError):
+            continue
+        if ni == 0 and comm in KIT_TOOLS:
+            procs.append((int(p), ni, comm, rd(f"/proc/{p}/cgroup")))
+    def die_label(cid):
+        return sh("docker", "inspect", "-f", '{{index .Config.Labels "opentallas.priority"}}', cid).strip() == "die"
+    pids = kit_nice_targets(procs, die_label)
+    tids = [t for p in pids for t in (os.listdir(f"/proc/{p}/task") if os.path.isdir(f"/proc/{p}/task") else [])]
+    if apply and tids:
+        for i in range(0, len(tids), 200):
+            subprocess.run(["sudo", "-n", "renice", "-n", str(nice), "-p", *tids[i:i + 200]], capture_output=True, timeout=60)
+        log(f"kit-nice: reniced {len(pids)} kit tool processes ({len(tids)} threads) in non-die containers to {nice}")
+    return pids
+
+
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
 # DIECLASS_1125 (OWNER 11-24 00:05): die-level tools are die class automatically: plan PRE / gate checks, bind phases, die-plan bind / check (never the
 # per-kit `bind.py kit-rtl` of a wave kit: BYPASS-ENV-1119), plan compose scripts, gate chain scripts, bind*.sh launchers, plan census.
@@ -2812,6 +2871,9 @@ if __name__ == "__main__":
     if sys.argv[1:2] == ["--is-plan"]:     # PLANBYPASS_1114: classifier query for ot-heavy
         _e = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
         sys.exit(0 if bypass_like(sys.argv[3:], _e) else 1)
+    if sys.argv[1:2] == ["--kit-nice"]:        # KITNICE_1125: manual sweep; --dry lists the pids only
+        print(" ".join(map(str, kit_nice_sweep(apply="--dry" not in sys.argv))))
+        sys.exit(0)
     if sys.argv[1:2] == ["--exit-report"]:
         sys.exit(exit_report(*sys.argv[2:7]))
     if sys.argv[1:2] == ["--admit"]:

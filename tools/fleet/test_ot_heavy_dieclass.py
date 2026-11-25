@@ -62,16 +62,50 @@ class TypeJob(_H):
         self.assertEqual(a[i + 1:i + 4], ["nice", "-n", "10"])
         self.assertFalse((self.d / "args.sudo").exists())
 
-    def test_crit_job_not_niced(self):
-        r, a = self.h.run_("1", crit=True)
+    def test_crit_job_niced(self):
+        r, a = self.h.run_("1", crit=True)   # KITNICE_1125: crit kit stages are niced now (CPUWeight 1000 stays)
         self.assertIsNotNone(a, r.stderr)
-        self.assertNotIn("nice", a)
+        i = a.index("--"); self.assertEqual(a[i + 1:i + 4], ["nice", "-n", "10"])
 
     def test_slice_cores_lower_type_load_cap(self):
         self.conf("DIE_SLICE_CORES=4\n")
         r, a = self.h.run_("9.0")                 # nproc 10 - slice 4 = 6, x 1.2 = 7: a type job waits (LOADCAP_FRESH_1125)
         self.assertIsNone(a)
         self.assertIn("= 7", r.stderr)
+
+
+class KitNice(_H):
+    """KITNICE_1125: kit stages run at nice 10 even with --crit / --die; die-level commands stay at nice 0"""
+    def nice10(self, a):
+        i = a.index("--")
+        return a[i + 1:i + 4] == ["nice", "-n", "10"]
+
+    def test_crit_kit_is_niced(self):
+        r, a = self.h.run_("1", crit=True)
+        self.assertIsNotNone(a, r.stderr); self.assertTrue(self.nice10(a), a)
+        self.assertIn("CPUWeight=1000", a)
+
+    def test_die_level_command_nice_0(self):
+        os.environ["DIE_TEST"] = "1"
+        try:
+            self.h.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 0; [ "$1" = --is-plan ] && exit 1; echo "OK 4 cls | need 4, available 100 GB"\n')
+            r, a = self.h.run_("500")
+        finally:
+            os.environ.pop("DIE_TEST", None)
+        self.assertIsNotNone(a, r.stderr); self.assertNotIn("nice", a)
+
+    def test_container_sweep_targets(self):
+        cid = "a" * 64; did = "b" * 64
+        cg = lambda c: f"0::/system.slice/docker-{c}.scope\n"
+        procs = [(1, 0, "openroad", cg(cid)), (2, 0, "openroad", cg(did)), (3, 10, "openroad", cg(cid)), (4, 0, "bash", cg(cid)),
+                 (5, 0, "openroad", "0::/user.slice/x\n"), (6, 0, "yosys", cg(cid))]
+        self.assertEqual(R.kit_nice_targets(procs, lambda c: c == did), [1, 6])
+
+    def test_crit_kit_counts_against_the_die_slice(self):    # the load cap is die-slice aware for every non-die class, crit included
+        (self.d / "conf").write_text("LOAD_GATE_FACTOR=0\nLOAD_CAP_FACTOR=1.2\nDIE_SLICE_CORES=5\n")
+        r, a = self.h.run_("0.1", crit=True)    # crit is never load-held (COORD 11-25): admitted; its threads are counted for the next kit
+        self.assertIsNotNone(a, r.stderr)
+        self.assertEqual(len(list((self.d / "state").glob("thr.oth-*"))), 1)
 
 
 class DieShim(unittest.TestCase):

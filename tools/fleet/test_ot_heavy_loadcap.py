@@ -49,6 +49,11 @@ class LoadCap(T.unittest.TestCase):
     def test_idle_host_always_takes_one_job(self):
         r, ran = self.go('0', threads='64'); self.assertTrue(ran, r.stderr)
 
+    def test_die_flag_kit_stays_die_class_but_is_niced(self):    # KITNICE_1125: the fake reconcile says the command is not die-level
+        r, ran = self.go('500', prio='die'); self.assertTrue(ran, r.stderr)
+        a = (self.d / 'args').read_text().split('\n'); i = a.index('--')
+        self.assertEqual(a[i + 1:i + 4], ['nice', '-n', '10'])
+
     def test_die_class_never_waits(self):
         self.fresh(3)
         r, ran = self.go('500', prio='die'); self.assertTrue(ran, r.stderr)
