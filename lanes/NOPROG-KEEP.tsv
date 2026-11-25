@@ -18,8 +18,3 @@ otc-829738-11844	FLOW-OPS-R2	qwen_compute slw_su_l0__cl76fb247e (epyc2): not HBM
 otc-3175921-5303	FLOW-OPS-R2	qwen_compute slw_hc2__cla3497502__cldc737267 (epyc8): not HBM, is_hbm path false positive (COORD 11-22 22:5x)
 qwen_compute.t.slw_su_l0__cl76fb247e	FLOW-OPS-R2	same job (type ident)
 qwen_compute.t.slw_hc2__cla3497502__cldc737267	FLOW-OPS-R2	same job (type ident)
-QC-ALLFIX/slw_hc1__cl3449ea95_1124053803	QC-NOPROG-REQ	C1h covering kit; NOPROG TNS-0 false stop at pregrt_ff_hold (COORD 18:54 flow review); covering kit, keep until NOPROG-TNS0 fix lands
-QC-ALLFIX/slw_hc1__cl68f9248e__cl144ee7b3_1124054224	QC-NOPROG-REQ	C1h covering kit; NOPROG TNS-0 false stop at pregrt_ff_hold (COORD 18:54 flow review); covering kit, keep until NOPROG-TNS0 fix lands
-QC-ALLFIX/sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304_1124081928	QC-NOPROG-REQ	C1h covering kit; NOPROG TNS-0 false stop at pregrt_ff_hold (COORD 18:54 flow review); covering kit, keep until NOPROG-TNS0 fix lands
-items/sle_st_b_v1__pvc5a85fd4__pv38472fb8/attempt_3	QC-NOPROG-REQ	V4 wave relaunch; NOPROG TNS-0 false stop at pregrt_ff_hold (COORD 18:54 flow review); covering kit, keep until NOPROG-TNS0 fix lands
-items/slw_st_b_v1__cl6357f1cc__pv6ace3e48/attempt_3	QC-NOPROG-REQ	V4 wave relaunch; NOPROG TNS-0 false stop at pregrt_ff_hold (COORD 18:54 flow review); covering kit, keep until NOPROG-TNS0 fix lands
