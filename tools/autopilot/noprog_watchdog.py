@@ -1489,7 +1489,7 @@ def hub(now=None, post=True):
     if vis_queue_append(rows, now, post):
         files.append("lanes/VIS-QUEUE.tsv")
     try:
-        if vis_status_sync() and "lanes/VIS-QUEUE.tsv" not in files:
+        if (vis_status_sync() + vis_type_backfill()) and "lanes/VIS-QUEUE.tsv" not in files:
             files.append("lanes/VIS-QUEUE.tsv")
     except Exception as e:
         print(f"noprog vis status sync failed: {e!r}", file=sys.stderr)
@@ -2172,6 +2172,8 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
         return "no-render-tools", ""
     stamp = time.strftime("%m%d-%H%M", time.localtime(now))
     cands = [os.path.join(work, tag, f"{stage}-{stamp}"), os.path.expanduser(f"~/.local/state/noprog/{tag}/{rid}-{stage}-{stamp}")]
+    if "/ot-jobs/" in (work or ""):
+        cands.reverse()      # 5 of 30 failed renders sat in an ot-jobs work dir that was cleaned with the job: keep those in the persistent state dir
     rev = ""
     for c in cands:
         try:
@@ -2475,7 +2477,7 @@ def smell_pass(rows, seen, now, post=True, render=None, poster=None):
         if render:
             status, rev = render(r, [t for c, t in r["smell"] if c == cls])
         die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
-        rec = {"t": now, "type": r.get("type", ""), "die": die, "stage": r.get("stage", ""), "class": cls, "metric": txt(r, cls)[:300], "host": r.get("host"),
+        rec = {"t": now, "type": canonical_type(r.get("kit") or r.get("work"), r.get("type", "")), "die": die, "stage": r.get("stage", ""), "class": cls, "metric": txt(r, cls)[:300], "host": r.get("host"),
                "render": f"{r.get('host')}:{rev} ({status})" if rev else status, "owner": owner_of([r]), "unit": r.get("unit") or r.get("container"),
                "kit": r.get("kit") or r.get("work") or "", "triggers": [t for c, t in r["smell"] if c == cls]}
         fired.append(rec)
@@ -2523,7 +2525,7 @@ def vis_queue_append(rows, now, post=False):
     for r in new:
         v = r["vis"]
         die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
-        line = "\t".join(str(x).replace("\t", " ") for x in (int(now), r.get("type", ""), die, v["checkpoint"], f"{r.get('host')}:{v['dir']}", v["status"], owner_of([r]), r.get("kit", ""), "LOG"))
+        line = "\t".join(str(x).replace("\t", " ") for x in (int(now), canonical_type(r.get("kit") or r.get("work"), r.get("type", "")), die, v["checkpoint"], f"{r.get('host')}:{v['dir']}", v["status"], owner_of([r]), r.get("kit", ""), "LOG"))
         if line not in known:
             out.append(line)
             if post:
@@ -2586,6 +2588,74 @@ def vis_status_sync(path=None, runner=None):
             h, _, d = c[4].partition(":")
             if (h, d) in state:
                 c[5] = state[(h, d)]
+                n += 1
+                ln = "\t".join(c)
+        out.append(ln)
+    if n:
+        tmp = path + f".tmp{os.getpid()}"
+        with open(tmp, "w") as f:
+            f.write("\n".join(out) + "\n")
+        os.replace(tmp, path)
+    return n
+
+
+_COV_CACHE = {}
+
+
+def coverage_types(path=None):
+    """{canonical type} of lanes/VIS-COVERAGE.tsv (col 2), cached per file mtime.  -> (set, {type: die})"""
+    path = path or os.path.join(COORD, "lanes/VIS-COVERAGE.tsv")
+    try:
+        mt = os.stat(path).st_mtime
+    except OSError:
+        return set(), {}
+    if _COV_CACHE.get(path, (None,))[0] != mt:
+        types, die = set(), {}
+        for ln in read_lines(path):
+            c = ln.split("\t")
+            if len(c) > 2 and not ln.startswith("#") and c[0] != "die":
+                types.add(c[1])
+                die[c[1]] = c[0]
+        _COV_CACHE[path] = (mt, types, die)
+    return _COV_CACHE[path][1], _COV_CACHE[path][2]
+
+
+def canonical_type(kit, fallback="", cov=None):
+    """COORD 06:3x: the VIS-QUEUE type column carries the VIS-COVERAGE type name, not a kit id or a container fragment.  The kit path names it (gen/<type>, or <type>_<timestamp>);
+    the longest candidate present in VIS-COVERAGE wins, else the kit's own name without its timestamp.  Pure given cov."""
+    types = coverage_types()[0] if cov is None else cov
+    parts = [x for x in str(kit or "").rstrip("/").split("/") if x]
+    cands = []
+    for x in reversed(parts[-4:]):
+        for y in (x, re.sub(r"_\d{10,}$", "", x)):
+            cands.append(y)
+            z = y
+            while "__" in z:                      # peel __pv.. / __r.. suffixes
+                z = z.rsplit("__", 1)[0]
+                cands.append(z)
+    for c in cands:
+        if c in types:
+            return c
+    base = re.sub(r"_\d{10,}$", "", parts[-1]) if parts else ""
+    if base in ("gen", "i1", "run") and len(parts) > 1:
+        base = re.sub(r"_\d{10,}$", "", parts[-2])
+    return base or fallback
+
+
+def vis_type_backfill(path=None, cov=None):
+    """HUB: rewrite the type column (col 2) of lanes/VIS-QUEUE.tsv from the kit column (col 8).  -> rows changed"""
+    path = path or os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
+    try:
+        lines = open(path).read().splitlines()
+    except OSError:
+        return 0
+    out, n = [], 0
+    for ln in lines:
+        c = ln.split("\t")
+        if len(c) >= 8 and c[0] != "t" and c[7]:
+            t = canonical_type(c[7], c[1], cov)
+            if t and t != c[1]:
+                c[1] = t
                 n += 1
                 ln = "\t".join(c)
         out.append(ln)

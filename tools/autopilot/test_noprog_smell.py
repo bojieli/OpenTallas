@@ -272,3 +272,23 @@ def test_a_smelling_kit_also_queues_the_post_place_review_once_a_day(tmp_path):
     st["pp_todo"].clear(); st["pp_done"] = {"smell|" + work: {"t": NOW}}
     assert nw.pp_queue_smells([r], st, NOW + 3600) == 0 and nw.pp_queue_smells([r], st, NOW + 90000) == 1
     assert nw.pp_queue_smells([dict(r, smell=[])], {}, NOW) == 0
+
+
+def test_canonical_type_is_the_vis_coverage_name(tmp_path):
+    cov = {"sle_sc_v1", "kv3_pc_v1__cl7f648944", "slice_station__t42", "col_h9_r2__t1", "slw_st_b_v1", "hd_serdes"}
+    ct = lambda k: nw.canonical_type(k, "junk", cov)
+    assert ct("/srv/x/private/QC-ALLFIX/sle_sc_v1__cl115da35f_1124144612/gen/sle_sc_v1__cl115da35f") == "sle_sc_v1"
+    assert ct("/srv/x/KV-A5t6/private/KV-ALLFIX/kv3_pc_v1__cl7f648944__r828e1c2a5_1125004944/gen/kv3_pc_v1__cl7f648944__r828e1c2a5") == "kv3_pc_v1__cl7f648944"
+    assert ct("/srv/x/s81/items/slice_station__t42__cl9/attempt_2/gen/slice_station__t42__cl9") == "slice_station__t42"
+    assert ct("/srv/x/s81/private/S81-ALLFIX-INT/col_h9_r2__t1__clce45cab5__pv6827937d_1125001523/gen/col_h9_r2__t1__clce45cab5__pv6827937d") == "col_h9_r2__t1"
+    assert ct("/srv/x/ot-jobs/slw_st_b_v1__cle6023ec2-route-tolerant-swine-2371688/work") == "slw_st_b_v1"      # ot-jobs dir: the __cl suffix peels to the coverage type
+    assert ct("/srv/x/unknown_type_1124144612/gen/unknown_type") == "unknown_type"
+    assert nw.canonical_type("", "fallback", cov) == "fallback"
+
+
+def test_vis_queue_type_column_is_backfilled(tmp_path):
+    q = tmp_path / "VIS-QUEUE.tsv"
+    row = lambda t, kit: "\t".join(["1", t, "QC", "GRT", "epyc7:/d", "RENDERED", "QC-ALLFIX", kit, "LOG"])
+    q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + row("so_260353_ff_83997", "/srv/x/sle_sc_v1__cl115da35f_1124144612/gen/sle_sc_v1__cl115da35f") + "\n" + row("sle_sc_v1", "/srv/x/sle_sc_v1__cl1/gen/sle_sc_v1__cl1") + "\n")
+    assert nw.vis_type_backfill(str(q), {"sle_sc_v1"}) == 1
+    assert [ln.split("\t")[1] for ln in q.read_text().splitlines()[1:]] == ["sle_sc_v1", "sle_sc_v1"]
