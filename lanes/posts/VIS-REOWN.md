@@ -140,3 +140,4 @@
 - 2026-11-25 06:33 PST DONE [VIS-REOWN] ot-run oth-ubuntu-3369134-1795617052 on tolerant-swine: rc=0 after 143 s, ended 06:33:07, log /srv/opentallas-scratch2/claude/vis-reown/census/qwen_kvsys__kv3_pv_v4n__qwen_kvsys_kv3_pv_v4n_1124043453.log, cmd: --mem 24 --threads 4 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/
 - 2026-11-25 06:40 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_pc_v1__cl4ea58a5c=FAIL
 - 2026-11-25 06:43 PST DONE [VIS-REOWN] ot-run oth-ubuntu-511584-1795617644 on tolerant-swine: rc=0 after 147 s, ended 06:43:06, log /srv/opentallas-scratch2/claude/vis-reown/census/qwen_kvsys__kv3_hgi_v2__cl2862d491__qwen_kvsys_kv3_hgi_v2__cl2862d491_1124155716.log, cmd: --mem 24 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t5/private
+- 2026-11-25 06:50 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_pv_v4n=FAIL
