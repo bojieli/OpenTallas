@@ -1,5 +1,8 @@
-"""plan_lean_render: a tiny fixture plan renders die + type PNGs; a hop over reach is counted (mutant: reach 1e9 counts none)."""
+"""plan_lean_render: a tiny fixture plan renders die + type PNGs; a hop over reach is counted (mutant: reach 1e9 counts none).
+V2: added_taps counted, ft chains in the > reach count, out-of-outline stations, slot/overlap geometry (mutants: abut and wide gaps not flagged)."""
 import sys
+
+import pytest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -20,3 +23,30 @@ def test_render_counts_and_writes(tmp_path):
     assert over == 1 and nlong == 1                   # tap clk holds 1,500 planned sinks; hop 0 -> 500 um > 405
     over2, nlong2 = R.type_png(PLAN, "ty__t1", tmp_path / "t2.png", {}, 1e9)
     assert nlong2 == 0
+
+
+def test_v2_added_taps_ft_out_of_outline_and_slots(tmp_path):
+    import copy
+    P = copy.deepcopy(PLAN)
+    ty = P["partition_types"]["ty__t1"]
+    ty["clock"]["added_taps"] = [{"name": "clk_t9", "xy": [100, 100]}, {"name": "clk", "xy": [1, 1]}]   # 2nd duplicates a plan tap name
+    ty["ft_slots"] = [{"name": "ft0", "in_face": "N", "in_window_um": [10, 20], "out_face": "S", "out_window_um": [10, 20],
+                       "regs_um": [[15, 300], [15, 100], [15, 460]]}]      # N face y 300 -> reg 300,100 hop 200 ok; 100 -> 460 hop 360 ok; reg y 460 > h 300 out of outline
+    ty["hard_cores"] += [{"origin_um": [70, 10], "outline_um": [50, 50]}, {"origin_um": [150, 10], "outline_um": [50, 50]},
+                         {"origin_um": [190, 30], "outline_um": [50, 50]}]
+    over, nlong = R.type_png(P, "ty__t1", tmp_path / "v2.png", {}, 405.0)
+    assert R.LAST["added_taps"] == 1                  # a duplicate name is not counted twice
+    assert R.LAST["out_of_outline"] == 1
+    assert R.LAST["ft_long"] == 1                     # last ft hop (15,100) -> (15,460) is 360; (15,460) -> out face (15,0) is 460 > 405
+    assert nlong == R.LAST["chain_long"] + R.LAST["ft_long"] == 2
+    assert R.LAST["slots"] == 1 and R.LAST["overlaps"] == 1   # 60 -> 70 gap 10 um (flag); 120 -> 150 gap 30 (ok); 190 overlaps 150..200 (flag)
+
+
+def test_core_slots_abut_wide_and_vertical():
+    a = (0, 0, 50, 50)
+    assert R.core_slots([a, (50, 0, 100, 50)]) == []                      # abut (gap 0) is fine
+    assert R.core_slots([a, (78, 0, 100, 50)]) == []                      # exactly 28 um: not a slot
+    assert [s[4] for s in R.core_slots([a, (60, 10, 100, 40)])] == [10]   # x-facing gap 10
+    assert [s[4] for s in R.core_slots([a, (10, 56.17, 40, 90)])][0] == pytest.approx(6.17) and len(R.core_slots([a, (10, 56.17, 40, 90)])) == 1
+    assert R.core_slots([a, (200, 200, 250, 250)]) == []                  # no facing extent
+    assert R.core_slots([a, (40, 40, 100, 100)])[0][4] == -10             # overlap
