@@ -49,3 +49,9 @@ Job: coll_s attempt_8 LEC NOT EQ 20+1 (g_face_4 u_ctl) -> root cause, fix, re-si
 - record E10 QC-COLLS-LEC/r/H3_esc/lec/lec.json sha 9f168fc9686a. Asked COORD/RELEC-R2 to lift coll_s COUNT-REVOKED/RECHECK.
 - Remaining (optional, other owners): fixed-lec on QC-ALLFIX cH8 coll_s netlist after its sign-off (needs ESCALATE 50M/10800);
   rerun coll_core UNPROVEN records (opus-fix-qc-coll-r3) with same settings.
+
+## 11-25 00:37 PST: cH8 signed coll_s ECO LEC (QC-ALLFIX request) - DONE EQUIVALENT
+- Netlist eco_20261124_211939_3874698/i1/run/results/asap7/dp_coll_s/base/6_final.v sha256 f34adcfc49853040dd579c76518de42421738f230de6775c97025183ad6d7873 (signoff.json final_netlist path; record stores no sha).
+- Ran on epyc10 (moved from epyc8 queue; both epyc8 waiters cancelled, never started). Inputs copied to epyc10 QC-COLLS-LEC/r/H4_cH8eco/kit (sha re-checked).
+- EQUIVALENT 52573/52573, 0 differs/undecided, no hints, 16565 s; lec.py 62f61ffca2f3, ESCALATE_C=50000000 S=10800; lec.json sha b9841468c58f. Posted 7963354.
+- Open for others: coll_core = OPUS-FIX-QC-COLL-R3. Lane job complete.
