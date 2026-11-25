@@ -2264,8 +2264,8 @@ def vis_pass(rows, state, state_dir, now, render=smell_render):
     if os.environ.get("NOPROG_VIS_MODE") == "off" or vis_running(state_dir, now):
         return None
     for r in rows:
-        if smell_exempt(r) or not r.get("work"):
-            continue
+        if smell_exempt(r) or not r.get("work") or ECO_RE.search(str(r.get("work"))) or ECO_RE.search(str(r.get("container"))) or re.search(r"/eco_\d", str(r.get("work"))):
+            continue            # an ECO loop re-runs a kit that was already rendered at its checkpoints (dry run 04:09: eco_2026... containers filled the first queue)
         for cp, odb, key in vis_candidates(r["work"], done):
             box = {}
             def popen(argv, **kw):

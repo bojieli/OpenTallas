@@ -145,3 +145,11 @@ def test_vis_queue_rows_reach_the_hub_file_once(tmp_path, monkeypatch):
     assert nw.vis_queue_append([r], NOW) == 1 and nw.vis_queue_append([r], NOW) == 0
     ls = (tmp_path / "lanes/VIS-QUEUE.tsv").read_text().splitlines()
     assert len(ls) == 2 and "GRT" in ls[1] and "epyc7:/rev/a" in ls[1] and ls[1].endswith("LOG")
+
+
+def test_vis_skips_eco_loops(tmp_path):
+    work = mkkit(tmp_path)
+    eco = os.path.join(work, "eco_20261125_103149_2129512", "i1")
+    os.makedirs(eco)
+    rows = [{"work": eco, "kit": eco, "container": "eco_20261125_103149_2129512-i1", "verdict": "PROGRESS", "kind": "gpl", "image": "i", "ident": "x"}]
+    assert nw.vis_pass(rows, {}, str(tmp_path / "st"), NOW, render=lambda *a, **k: ("rendering", "/x")) is None
