@@ -60,3 +60,11 @@ Worktree epyc7 `/srv/opentallas-scratch2/claude/romw-1119/wt`, branch `claude/ro
 - E10 QC regen: no released 4096x266 seam base/grid exists. The array_center_qc266 generator went with the 11-23 delete, so the "exact" path (run_qc_rank_exact.sh) cannot run yet. The prototype regen of the uncredited E10 qcbatch goes to E11 romw-1119/qc_regen_e11_1124/rank{0..7}. It uses C4 maps, an estimated origin and a .gds.gz writer. The 8 units launch after 2015636, log scratchpad qc_regen_r*.otrun.log. E10 qc/batch keeps 455 GB of failed partials; .keep blocks ot-delete.
 - Stage37 C1h -349: cause is the TT daisy chain round trip from W5 to E4 and back. With the measured SC primitives the overrun is 374. R8 pads account for 147 of it. RULING: T stretch +1024 (-0.35% tok/s), 650 slack. E7 tok-verify-2/recovery1116/head37_root6_c4_1124/stage37_budget_romw.json. Open: 8-rank stretched CALR + C1h root/return replay.
 - Leases: E10, E9 band (old crons). New 12-h crons on E11 romw-1119, E2 scratch3 romw-1119-s81, E9 romw-1119-s81, E7 romw-1119.
+
+## 2026-11-25 09:05 PST update (supersedes the QC regen and stage37 "Open" notes above)
+- QC 266 base rebuilt: tools/mem_compiler/rom_base_narrow.py + tests/test_rom_base_narrow.py; released seam-fixed ot_rom_4096x266_m8 base_qc_driver.gds.gz + via_grid.json on main ad643c7bb815 (DRC G/T 0, seam 0, rank0 readback PASS). Workdir E9 romw-1119-band/qc266_1124.
+- QC exact C4 overlays: E11 romw-1119/qc_exact_e11_1124/rank{0..7}, verify-map PASS 7680/7680 each, ~41.8 GB gz each. The prototype qc_regen path is superseded and was never launched.
+- HEAD R18gw 4/4 PASS (E11 codex_streamed_overlay_1124). S81 R000-R011 4/4 PASS.
+- Stage37 +1024 T CLOSED: 8-rank media 0 collisions and both native benches pass (E7 romw-1119/stage37_t1024_1124/media); C1h root/return replay passes with 640 slack, mutants fail.
+- E10: 455 GB QC + 208 GB HEAD failed partials deleted with ot-delete (710 GB freed). Lane-root .keep moved to tmp/.keep.lane-root-1124. The 40 live subdirs each have a .keep + lease (tmp/keep_dirs_1124.txt), renewed by bin/renew_leases.sh from cron 41 */12. Inventory: logs/e10_failed_batch_inventory_1124.txt.
+- Open: final composed die GDS + post-overlay DRC, ROM readout periphery, S81 R012+.
