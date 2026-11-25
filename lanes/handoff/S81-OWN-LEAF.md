@@ -20,3 +20,11 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 14:0x PST:
 - INT folded both leaf fixes into c9s (plan 99f7d3042489: 0 ATTCUT requests; netlist 26efcbda541d in c9seal_tree bind/inputs); c9s gate relaunched ~12:5x. c8s refuses all 75 leaf (expected) -> leaf goes on c9s only.
 - NEXT on resume: when c9s per-type receipts stream, check leaf types clean in its type_receipt; INT's stream launcher carries the leaf list -> adopt the kits (no duplicates), read GRT/timing, group failures by class, rows to INT/S81-C9-ROWS. kv_leaf__t3 belongs to S81-C9-ROWS (i027d/i027f); none of my rows touch it.
+
+## 11-24 18:58 update
+- FT-SITE-SNAP/OFFCORE tool on main 6ae8ed3f1857 (ft_bit_sites.snap_slots core_box+blocks, gen_phys, PRE FTSITE report).
+- c8 plan legalized: epyc9 /srv/opentallas-scratch2/claude/s81-own-leaf/ftsite2/plan_c8_ftleg2.json (+ .ledger.json); 47 types fixed; row FT-SITE-LEG-C8 to INT for c9.
+- 9 overlays: intel2 ~/tmp/s81-own-leaf/ftov/ov_<type>.json; launcher intel2 ~/tmp/s81-own-leaf/launch_leaf_ov.sh (DRV 61dc, rt 52c1, c8t bind, --overlay).
+- Waiter: epyc9 user unit s81ownleaf-ftov-stream (log ftsite2/ftov_stream.log, sent.txt) launches each one when its c8t record passes bind_stream check. Kit logs: intel2 ~/tmp/s81-own-leaf/c8t_ftov/.
+- INT c8s kits t24/t28/t74/t75 are still live in place on the old sites, and t40 failed place not on a row. Not cancelled; expect FAIL place.
+- t26 J7 cancelled 18:58 (DRT flat around 1700-1900 at iteration 19). Cause: route-flat leaf congestion; needs a form fix (row to INT next).
