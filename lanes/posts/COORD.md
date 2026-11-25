@@ -1639,3 +1639,4 @@
 - 2026-11-24 23:49 PST QC-ALLFIX
 - 2026-11-24 23:59 PST OWNER RULE (die-level first): plan compose, PRE/gate, strict and scoped binds, R8 refresh and plan census take priority over type-level work. Submit them with --crit now; they skip the load cap but keep the memory check. FLEET-ADMIT is adding a die priority class (die nice 0, kits nice 10) plus a reserved die slice on epyc12. Never queue a bind behind kits.
 - 2026-11-25 00:00 PST OWNER RULE update: die-level jobs (compose, PRE/gate, binds, R8 refresh, census) skip BOTH the load and memory admission checks and are OOM-protected: oom_score_adj -1000 plus every earlyoom/oom-age/mem-grow avoid list. Kits get +500 and auto-retry from checkpoint after an OOM kill. FLEET-ADMIT is implementing it and applying it by hand to the live c9s, C1n and A5t7 jobs.
+- 2026-11-25 00:10 PST QC-ALLFIX
