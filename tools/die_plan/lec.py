@@ -69,6 +69,9 @@ from pathlib import Path
 
 SCHEMA = "opentallas.lec.v1"
 PROVE_JOBS = 1
+BUILD_STATS = {"hit": 0, "miss": 0}
+BUILD_MEMO = os.environ.get("OT_LEC_BUILD_MEMO", "1") != "0"    # LEC-SPEED: Lec.build_memo reuses an unchanged AIG (False = rebuild every time)
+FAST_BUILD = os.environ.get("OT_LEC_FAST_BUILD", "1") != "0"   # LEC-SPEED: inlined node translation in Lec.build (False = the original Aig.AND call per node)
 # LEC-CONE-TIMEOUT (FLOW-22 11-02, COORD: HBM LECs hung 45-151 h inside one per-cone &cec batch): every per-cone
 # ABC batch gets a wall limit; a batch that overruns is bisected down to the single cone, which then stays
 # 'undecided' (UNRESOLVED, never EQ).  OT_LEC_CONE_S = seconds per hung cone (0 = no limit, the old behaviour).
@@ -2560,15 +2563,54 @@ class Lec:
             base = 2 * (d["I"] + d["L"])
             a = d["ands"]
             ternary = d is self.gold
+            strash, mands, mni = m.strash, m.ands, m.ni
+            full_and = m.AND
+
+            def fand(x, y):
+                # Aig.AND with the _and call inlined (same node, same order); a complemented pair keeps the XOR check
+                if not FAST_BUILD or (x & y & 1 and x > 1 and y > 1):
+                    return full_and(x, y)
+                if x < y:
+                    x, y = y, x
+                if y == 0 or x == (y ^ 1):
+                    return 0
+                if y == 1 or x == y:
+                    return x
+                r = strash.get((x, y))
+                if r is None:
+                    mands.append(x)
+                    mands.append(y)
+                    r = 2 * (mni + len(mands) // 2)
+                    strash[(x, y)] = r
+                return r
+
             for k in range(d["A"]):
                 r0, r1 = a[2 * k], a[2 * k + 1]
                 va, vb = lmap[r0 & ~1] ^ (r0 & 1), lmap[r1 & ~1] ^ (r1 & 1)
-                lmap[base + 2 * (k + 1)] = m.AND(va, vb)
+                if not FAST_BUILD or (va & vb & 1 and va > 1 and vb > 1):
+                    # a complemented pair may be an AIG XOR: the full Aig.AND recognises it
+                    lmap[base + 2 * (k + 1)] = m.AND(va, vb)
+                else:
+                    # LEC-SPEED: Aig._and inlined (this loop is ~2.2M nodes per build and the build runs
+                    # hundreds of times per LEC; the AIG it produces is bit-identical to the Aig.AND path)
+                    x, y = (va, vb) if va >= vb else (vb, va)
+                    if y == 0 or x == (y ^ 1):
+                        r = 0
+                    elif y == 1 or x == y:
+                        r = x
+                    else:
+                        r = strash.get((x, y))
+                        if r is None:
+                            mands.append(x)
+                            mands.append(y)
+                            r = 2 * (mni + len(mands) // 2)
+                            strash[(x, y)] = r
+                    lmap[base + 2 * (k + 1)] = r
                 if ternary:
                     xa, xb = lgx.get(r0 & ~1, 0), lgx.get(r1 & ~1, 0)
                     if xa or xb:
-                        zero = m.AND(m.AND(va ^ 1, xa ^ 1) ^ 1, m.AND(vb ^ 1, xb ^ 1) ^ 1)   # no definite 0
-                        lgx[base + 2 * (k + 1)] = m.AND(zero, m.AND(xa ^ 1, xb ^ 1) ^ 1)
+                        zero = fand(fand(va ^ 1, xa ^ 1) ^ 1, fand(vb ^ 1, xb ^ 1) ^ 1)   # no definite 0
+                        lgx[base + 2 * (k + 1)] = fand(zero, fand(xa ^ 1, xb ^ 1) ^ 1)
         G = lambda lit: lg[lit & ~1] ^ (lit & 1)
         T = lambda lit: lt[lit & ~1] ^ (lit & 1)
         self.dlit = {}
@@ -2687,6 +2729,73 @@ class Lec:
         if duplicates:
             raise LecError("duplicate miter output names: " + ", ".join(duplicates[:8]))
         return m, kind
+
+    def _build_state_key(self):
+        """fingerprint of every input of build() that can change while correspond() iterates: the hypotheses
+        and the key-point sets (a missed equality only costs a rebuild; a changed input always changes the key)."""
+        h = hashlib.sha256()
+        h.update(repr(sorted(self.hyp.items(), key=repr)).encode())
+        for name in ("matched", "gonly", "tonly", "cons"):
+            h.update(name.encode())
+            v = getattr(self, name, None)
+            h.update(repr(sorted(v, key=repr) if isinstance(v, (set, frozenset)) else v).encode())
+        for name in ("gold", "gate"):
+            d = getattr(self, name)
+            h.update(f"{name}:{id(d)}:{d['A']}:{len(d['ands'])}:{id(d['ands'])}".encode())
+        for name in ("gp", "tp", "gc", "tc", "gx", "tx", "ganon", "tanon"):
+            v = getattr(self, name, None)
+            h.update(f"{name}:{id(v)}:{len(v) if v is not None else -1}".encode())
+        return h.digest()
+
+    @staticmethod
+    def _aig_shape(m):
+        return (m.ni, len(m.ands), len(m.outs), len(m.onames), len(m.inames), len(m.strash), len(m.parity_expr))
+
+    def build_memo(self, free_const=None, hold_matched=()):
+        """build(with_compare=False, with_hyp=False, ...) for callers that only READ the AIG (simulate / cone
+        queries): the same state gives the same AIG, so correspond() rebuilds only when a hypothesis (or other
+        input) changed since the last build instead of once per simulation iteration (LEC-SPEED: ~35% of the
+        builds of a routed LEC are such repeats, 4 s each).  Returns exactly what build() returns and restores the
+        attributes build() sets.  OT_LEC_BUILD_MEMO_CHECK=1 rebuilds on every hit and fails on any difference."""
+        if not BUILD_MEMO:
+            return self.build(with_compare=False, with_hyp=False, free_const=free_const, hold_matched=hold_matched)
+        memo = self.__dict__.setdefault("_build_memo", collections.OrderedDict())
+        key = (free_const, tuple(sorted(hold_matched)), self._build_state_key())
+        hit = memo.get(key)
+        if hit is not None and hit[3] != self._aig_shape(hit[0]):
+            memo.pop(key)                      # a caller extended the cached AIG: rebuild
+            hit = None
+        if hit is not None:
+            m, kind, attrs, shape = hit
+            BUILD_STATS["hit"] += 1
+            memo.move_to_end(key)
+            if os.environ.get("OT_LEC_BUILD_MEMO_CHECK") == "1":
+                saved = {k: getattr(self, k) for k in attrs}
+                m2, kind2 = self.build(with_compare=False, with_hyp=False, free_const=free_const,
+                                       hold_matched=hold_matched)
+                if list(m2.ands) != list(m.ands) or m2.outs != m.outs or m2.onames != m.onames or \
+                        m2.inames != m.inames or kind2 != kind or any(getattr(self, k) != attrs[k] for k in attrs):
+                    raise LecError("build memo returned a stale AIG")
+                for k, v in saved.items():
+                    setattr(self, k, v)
+            for k, v in attrs.items():
+                setattr(self, k, v)
+            return m, kind
+        BUILD_STATS["miss"] += 1
+        m, kind = self.build(with_compare=False, with_hyp=False, free_const=free_const, hold_matched=hold_matched)
+        if self._build_state_key() == key[2]:       # build() itself left the inputs unchanged (no cycle drop)
+            memo[key] = (m, kind, {k: getattr(self, k) for k in ("dlit", "dxlit", "xpoints", "fill_live", "fill_in")},
+                         self._aig_shape(m))
+            while len(memo) > 3:
+                memo.popitem(last=False)
+        return m, kind
+
+
+def plain_build(L):
+    """L.build(with_compare=False, with_hyp=False) through the unchanged-state memo (Lec.build_memo); a model
+    object without one (tests' stand-ins) builds directly."""
+    memo = getattr(L, "build_memo", None)
+    return memo() if memo else L.build(with_compare=False, with_hyp=False)
 
 
 def guard_lit(m, guard, lit):
@@ -3061,7 +3170,7 @@ def relayout(L, log, words=4, trials=64, packed=frozenset()):
     on a 529 -> 508 simulation gain from its lmax_i cone before sc_addr[11] was proved constant; own 1 -> 1, then 4
     false NOT EQUIVALENT points lmax_any[0..1] / lmax_any_i[0..1])."""
     def mismatches():
-        m, kind = L.build(with_compare=False, with_hyp=False)
+        m, kind = plain_build(L)
         val, mask = m.simulate(words, seed=4242)
         bad = collections.Counter()
         for k in L.matched:
@@ -3120,7 +3229,7 @@ def renamed(L, log, words=4, packed=frozenset()):
     at bit 0, so the gate's r[1][10] is the RTL's r[1][18]: when the matched bits of a vector disagree in simulation
     and most of the disagreeing gold bits simulate like a different gate bit of the same vector, the vector's gate
     names are not trusted (re-keyed base#t, paired by function like a re-laid array)."""
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     val, mask = m.simulate(words, seed=5151)
     sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
     bases = collections.defaultdict(list)
@@ -3434,7 +3543,7 @@ def fsm_proposals(L, log, words=2, max_bits=4):
       gold B in dom(pi)                   (a state constraint: the codes the recoded FSM implements)
     Both are proved inductively with every other hypothesis (assumed on the current state, proved on the next); a
     wrong map can only fail and be dropped, never hide a difference."""
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     var = {}
     for v, (kd, k) in kind.items():
         if kd in ("gold_only", "gate_only"):
@@ -3691,7 +3800,7 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
     hyp, cons = L.hyp, L.cons
     L.hyp, L.cons = {}, []
     try:
-        m, kind = L.build(with_compare=False, with_hyp=False)
+        m, kind = plain_build(L)
         dl, xl = dict(L.dlit), dict(L.dxlit)
     finally:
         L.hyp, L.cons = hyp, cons
@@ -4172,7 +4281,7 @@ def care_pairs(L, words, seed, tried, keys, cap=256):
     (a merge: k == partner) and unpaired gate-only registers (a rename).  Candidate discovery only: every pair is
     proved by the same simultaneous induction as the others (a wrong one fails and is dropped)."""
     pop = lambda x: bin(x).count("1")
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     flip = {v for v, kd in kind.items() if kd[0] == "gold_only"}
     words = max(words, 32)                  # rare enables (a 5-bit address tap: 1/32) still leave >= 24 cared
     v0, mask = m.simulate(words, seed=seed)
@@ -4231,7 +4340,7 @@ def structural_constant_closure(L, log):
     """
     total = 0
     while True:
-        L.build(with_compare=False, with_hyp=False)
+        plain_build(L)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
             for k in keys:
@@ -4260,7 +4369,7 @@ def structural_twin_closure(L, log):
     """
     total = 0
     while True:
-        L.build(with_compare=False, with_hyp=False)
+        plain_build(L)
         new = []
         for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
             paired_roots = {h[2] for (sd,k),h in L.hyp.items()
@@ -4339,7 +4448,7 @@ def self_hold_twin_closure(L, log, tried, words=8, seed=7171):
         val, mask = m.simulate(words, seed=seed + fc)
         for hk, lit in L.dlit.items():
             sig.setdefault(hk, []).append(lit_val(val, mask, lit))
-    L.build(with_compare=False, with_hyp=False)
+    plain_build(L)
     roots = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] == "gold" and sd == "gate"}
     free = lambda side, k: k.startswith("ff:") and (side, k) not in L.hyp and (side, k) in sig
     live = lambda hk: not all(v in (0, mask) for v in sig[hk])
@@ -4350,7 +4459,7 @@ def self_hold_twin_closure(L, log, tried, words=8, seed=7171):
     # lane-0 bits, ... for rounds on end).  What tells two fields apart is what the D reads next to its hold mux: the same
     # (paired or matched) data input.  The class narrows, the near inputs rank, the name breaks ties; a register gets at
     # most SELFTWIN_TRIES candidates so a register with no partner cannot keep the fixpoint open.
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     near_memo = {}
 
     def near(hk):
@@ -4431,7 +4540,7 @@ def cone_diff_closure(L, log, tried, words=4, seed=9191):
     Candidates are the assignments of the gold cone's unshared registers to the gate cone's (either polarity) or a
     constant under which the two cones simulate equal; candidates only, each enters the same induction proof and is
     dropped when refuted, at most CONEDIFF_TRIES per register.  -> number of relations proposed."""
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     free = {v: k for v, (t, k) in kind.items() if t == "gold_only" and k.startswith("ff:") and ("gold", k) not in L.hyp}
     free = {v: k for v, k in free.items() if tried[("conediff", k)] < CONEDIFF_TRIES}
     if not free:
@@ -4542,7 +4651,7 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
             break
         for k, h in pending.items():
             L.hyp[("both", k)] = h
-        m, _ = L.build(with_compare=False, with_hyp=False)
+        m, _ = plain_build(L)
         val, mask = m.simulate(words, seed=seed + it)
         bad = []
         for k, (_, _, rk, inv) in pending.items():
@@ -4734,7 +4843,7 @@ def replica_cohort_closure(L, log, tried):
     bases = getattr(L, "renamed_bases", ())
     if not bases:
         return 0
-    L.build(with_compare=False, with_hyp=False)
+    plain_build(L)
     cross = {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and sd != "gold"}   # partners of gate/both relations
     gonly, tonly = set(L.gonly), set(L.tonly)
     n, groups_used = 0, 0
@@ -4800,7 +4909,7 @@ def trace_constant_closure(L, log, tried):
     tc = getattr(L, "trace_const", None)
     if not tc:
         return 0
-    m, kind = L.build(with_compare=False, with_hyp=False)
+    m, kind = plain_build(L)
     var_of = {(t.split("_")[0] if t != "matched" else "both", kk): v for v, (t, kk) in kind.items()
               if t in ("matched", "gold_only", "gate_only")}
     # only self-holding registers (own Q within 8 AND levels of the next state: hold mux + async2sync reset mux);
@@ -6284,7 +6393,7 @@ def alias_arrays(L, log, words=4, work=None):
         return r if len(r) == len(d) else None
 
     def mismatches(keys=None):
-        m, kind = L.build(with_compare=False, with_hyp=False)
+        m, kind = plain_build(L)
         val, mask = m.simulate(words, seed=4343)
         return sum(1 for k in (L.matched if keys is None else keys) if k.startswith("ff:") and
                    lit_val(val, mask, L.dlit[("gold", k)]) != lit_val(val, mask, L.dlit[("gate", k)]))
@@ -6771,7 +6880,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         before = dict(L.hyp)
         if adding:
             for it in range(sim_iters):
-                m, kind = L.build(with_compare=False, with_hyp=False)
+                m, kind = plain_build(L)
                 val, mask = m.simulate(words, seed=7 * rnd + it + 1)
                 sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
                 bound = bound_keys(L)
@@ -6886,7 +6995,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     for k in L.tonly:
                         if k.startswith("ff:") and ("gate", k) not in L.hyp:
                             ut.setdefault((cof[0]("gate", k), cof[1]("gate", k)), []).append(k)
-                    m, kind = L.build(with_compare=False, with_hyp=False)   # restore dlit of the normal build
+                    m, kind = plain_build(L)   # restore dlit of the normal build
                     ga = {}
                     for k in ug:
                         ga.setdefault((cof[0]("gold", k), cof[1]("gold", k)), []).append(k)
@@ -6920,7 +7029,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                             if ("both", k) not in L.hyp:
                                 hm.setdefault((hof[0]("gold", k), hof[1]("gold", k)), []).append(k)
                         hg = {k: (hof[0]("gold", k), hof[1]("gold", k)) for k in ug}
-                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        m, kind = plain_build(L)
                         v2, _ = m.simulate(words, seed=41 * rnd + it + 7)
                         looks_const = {k for k in ug if lit_val(v2, mask, L.dlit[("gold", k)]) in (0, mask)}
                         for k, a in hg.items():
@@ -6944,7 +7053,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     # proposed here is proved by induction like any other
                     ug2 = [k for k in ug if ("gold", k) not in L.hyp and tried[("gold", k, "sib")] < 3]
                     if ug2:
-                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        m, kind = plain_build(L)
                         var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
                         hall = {k for k in L.matched if k.startswith("ff:") and k in var_of and
                                 var_of[k] in m.near_inputs(L.dlit[("gold", k)], 8)}
@@ -6959,7 +7068,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                                 a = (hof[0]("gold", k), hof[1]("gold", k))
                                 if a[0] not in (0, mask) or a[1] not in (0, mask):
                                     hm.setdefault(a, []).append(k)
-                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        m, kind = plain_build(L)
                         v2, _ = m.simulate(words, seed=47 * rnd + it + 13)
                         for k in ug2:
                             a = (hof[0]("gold", k), hof[1]("gold", k))
@@ -7011,7 +7120,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # resets to 0 or ever loads a non-1 value is refuted.
             m, kind = L.build(with_compare=False, with_hyp=False, free_const=1)
             odl = dict(L.dlit)
-            m, kind = L.build(with_compare=False, with_hyp=False)
+            m, kind = plain_build(L)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
                     one = odl.get((side, k)) == 1 and zdl.get((side, k)) != 0
@@ -7022,7 +7131,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                         L.hyp[(side, k)] = ("const", d if d in (0, 1) else 1 if one else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
-            m, kind = L.build(with_compare=False, with_hyp=False)
+            m, kind = plain_build(L)
             val, mask = m.simulate(words, seed=999)
             reps = {h[2] for (sd, k), h in L.hyp.items() if sd == "both" and h[0] == "eq"}
             for k in L.matched:
@@ -7048,12 +7157,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     if lit_val(vc, mask, L.dlit[("gold", k)]) == want and lit_val(vc, mask, L.dlit[("gate", k)]) == want \
                             and k in var_of and len(selfc) < 4096 and (var_of[k] in m.cone_inputs(gdl[("gold", k)])):
                         selfc.append((k, c))
-            m, kind = L.build(with_compare=False, with_hyp=False)
+            m, kind = plain_build(L)
             for k, c in selfc:
                 if ("both", k) not in L.hyp:
                     L.hyp[("both", k)] = ("const", c)
             for it in range(sim_iters):
-                m, kind = L.build(with_compare=False, with_hyp=False)
+                m, kind = plain_build(L)
                 val, mask = m.simulate(words, seed=1000 + it)
                 changed = 0
                 for (sd, k), h in list(L.hyp.items()):
@@ -7208,7 +7317,7 @@ def raw_support(L, keys):
     saved = L.hyp
     L.hyp = {}
     try:
-        m, kind = L.build(with_compare=False, with_hyp=False)
+        m, kind = plain_build(L)
         out = {}
         for hk in keys:
             side, k = hk
@@ -7696,7 +7805,7 @@ def native_anonymous_aliases(L, anon, log):
     saved = L.hyp
     L.hyp = {}
     try:
-        L.build(with_compare=False, with_hyp=False)
+        plain_build(L)
         raw = dict(L.dlit)
     finally:
         L.hyp = saved
@@ -7922,7 +8031,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     if anon:
         rec["native_anon_aliases"] = native_anonymous_aliases(L, anon, log)
         rec["anon"] += rec["native_anon_aliases"]
-        m, _ = L.build(with_compare=False, with_hyp=False)
+        m, _ = plain_build(L)
         val, mask = m.simulate(32, seed=20261025)
         sv = lambda sd, k: lit_val(val, mask, L.dlit[(sd, k)])
         sigs = collections.defaultdict(set)
@@ -8990,6 +9099,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                                for b, k in ex],
                                    basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
+    rec["t_cpu_s"] = round(time.process_time(), 1)          # LEC-SPEED: CPU seconds of this process (wall depends on host load)
+    rec["build_memo"] = dict(hits=BUILD_STATS["hit"], builds=BUILD_STATS["miss"])
     rec["provenance"] = _provenance(kit)
     # LEC-DETERMINISM-1: the str hash seed the discovery order ran under ("0" = pinned, reproducible)
     rec["hash_seed"] = os.environ.get("PYTHONHASHSEED") if not sys.flags.hash_randomization else "random"
