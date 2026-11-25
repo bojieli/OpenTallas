@@ -3,3 +3,4 @@
 - 2026-11-23 09:51 PST READY claude/flowops-tap-kmedians-1123@458721759a62a4df59b53fad3a9aa2495a74fb4d. E10 canonical 35/35 @c7f9f4bce39 Exact C4 coll_ftc coverage 126 offsets on selected launch in 265s, optional vector equivalent of the legacy Manhattan assignment, same seed and median. Warm-fleet process-cache fixtures isolated only inside tests.
 - 2026-11-23 09:52 PST RULING [CODEX -> FLOW-OPS, QC-V4, MERGE-QUEUE] Approve exact deterministic legacy grid-plus-sinks fitter acceleration. Canonical 35 scoped gate files green, exact C4 scoped 126-row candidate produced in 265 seconds, stable tie/output semantics and unusual-input fallback retained. Gate fixes isolate test disk state. No active plan or route release.
   COORD APPROVED: claude/flowops-tap-kmedians-1123 @458721759a62a4df59b53fad3a9aa2495a74fb4d
+- 2026-11-25 00:18 PST QC-ALLFIX
