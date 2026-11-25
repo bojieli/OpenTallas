@@ -306,7 +306,14 @@
     "kv3_pc__cl254f2e73__r872e39b5a": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
     "kv3_pc__cl254f2e73__r8b421e514": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
     "kv3_pc__cl5a95b461__r85c02c25c": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
-    "kv3_pc__cl5a95b461__r882954158": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs"
+    "kv3_pc__cl5a95b461__r882954158": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 18:0x anti-churn: live A5t5 private kit (epyc10 *_11241711xx) can still sign off; A5t6 same spine form (PC-SPINE A5t7 row); relaunch only if that kit FAILs",
+    "kv3_pc_v1__cl7f648944__r817e6c402": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pc_v1__cl7f648944__r825eb3cd0": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pc_v1__cl7f648944__r87bd89c1f": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pc_v1__cl7f648944__r8898d69cf": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pc_v1__cl7f648944__r8b2213035": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pc_v1__cl7f648944__r8c6505067": "owner=KV-OWN-RSTREACH eta=2026-11-25 06:00 | COORD 22:4x rebind ruling: all 19 pc_v1 types fail placement (u_kvpc1_f overlap); no A5t6 relaunch; wait A5t7 pc row (PC-SPINE+OVERLAP). Running A5t6 pc_v1 kits are not cancelled",
+    "kv3_pv_v3": "owner=KV-ALLFIX eta=2026-11-25 12:00 | COORD anti-churn: live private A5t5 kit kv3_pv_v3_1124133023 at goal route (runitem-kv3_pv_v3, CTS); A5t6 relaunch only if it FAILs"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -653,7 +660,8 @@
     "epyc10",
     "epyc9",
     "intel2",
-    "epyc11"
+    "epyc11",
+    "epyc2"
    ],
    "gen_hosts": [
     "epyc10",
