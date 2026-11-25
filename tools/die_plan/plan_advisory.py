@@ -34,6 +34,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    (S81 R9 svc_ytrade_row.py moved only points; svc_lo t7 attn_i0 band + tap windows left outside)
   BITSITE-AREA     ft / internal-station / landing CS bank bit sites off CORE_AREA or the outline, and colliding footprints
                    (S81 c8: 47 types, 42 leaf + 5 svc)
+  PG-EDGE-PIN      hard-core edge pins on a parent PG stripe column (M5/M7) or row (M6) of a core without pg_halo_um
+                   (QC st_a DRC 72, all M5; fix hard_cores[].pg_halo_um)
   LANE-STATIONS    lanes whose planned kit stations (both end buses, kit_depth) exceed fixed_cycles + pad, so the strict bind
                    would deliver late (LANE_ASBUILT UNPRICED_KIT_STATIONS; QC V4 l1a sl_W4_fw arm/arv 12 vs 8)
   ROUTE-DEMAND     static RUDY of planned station / ft legs vs M2-M8 track supply above hard-core obstructions: gcells at est.
@@ -90,7 +92,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
           ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"),
           ("ROUTE-DEMAND", "adv_route_demand"), ("EDGE-STRIP", "adv_edge_strip"), ("RESET-NAME", "adv_reset_names"),
-          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"))
+          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"), ("PG-EDGE-PIN", "adv_pg_edge_pin"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 

@@ -29,6 +29,12 @@ module adv_<name>.py -> one function here):
                        bit_sites_um) -- whose cell footprint (bit_site_cell_um) is not inside CORE_AREA (off-core) or not
                        inside the outline (off-outline), and footprints that overlap on the core site/row grid (collide).
                        Known positive: S81 c8, 47 types (42 leaf, 5 svc) with bit sites off the core or colliding.
+  ADV-PG-EDGE-PIN      (COORD 11-24) per hard core without hard_cores[].pg_halo_um > 0: its edge pins on a partition PG
+                       stripe layer (M5 / M7 vertical columns: N/S edge pins; M6 horizontal rows: E/W edge pins) whose
+                       centre lies within half the VDD+VSS pair span + one stripe spacing of a parent stripe centre
+                       (schema.PART_PG_BANDS phase, type frame).  The tile stripe ends ~0.1 um short of the core edge under
+                       the next-layer strap, so the pin has no clean escape.  Known positive: QC st_a DRC 72 (all M5
+                       Short/Spacing; class found 11-20).  Fix: hard_cores[].pg_halo_um (gen_phys PG-EDGE-HALO-1).
 
 findings(raw, plan_path, tree=None, **kw) -> ["WARN ADV-<NAME> ..."]; an exception is one "not checked" line.
 """
@@ -510,6 +516,94 @@ def _bitsite_area(raw, plan_path, tree=None, **_kw):
     return out
 
 
+# ---------------------------------------------------------------- ADV-PG-EDGE-PIN
+# partition PG stripes (gen_phys.PDN): layer -> (vertical, pitch, band centre (schema.PART_PG_BANDS), half pair span, spacing)
+PG_STRIPES = {"M5": (True, 4.32, 2.16, (2 * 0.12 + 0.072) / 2, 0.072),
+              "M6": (False, 4.32, 2.16, (2 * 0.288 + 0.096) / 2, 0.096),
+              "M7": (True, 8.64, 4.32, (2 * 0.288 + 0.096) / 2, 0.096)}
+PG_EDGE_UM = 1.0         # a pin centre within this of the core edge the stripe runs into is an edge pin
+_PINF = {}
+
+
+def core_pin_list(hc, plan_dir):
+    """[(name, layer, x, y)] of a hard core in its own frame (check.core_pins: pins[] + pins_file)"""
+    pins = [(q["name"], q["layer"], *q["xy"][:2]) for q in hc.get("pins") or [] if _pt(q.get("xy"))]
+    f = hc.get("pins_file")
+    if f:
+        dirs = plan_dir if isinstance(plan_dir, (list, tuple)) else [plan_dir or "."]
+        key = next((str(Path(d) / f) for d in dirs if (Path(d) / f).is_file()), str(Path(dirs[0]) / f))
+        if key not in _PINF:
+            import json
+            js = json.loads(Path(key).read_text())
+            js = js.get("pins", js) if isinstance(js, dict) else js
+            _PINF[key] = [(q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]", q["layer"], float(q["x"]), float(q["y"]))
+                          for q in js]
+        pins += _PINF[key]
+    return pins
+
+
+def _opt(o, w, h, x, y):
+    return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}.get(o)
+
+
+def pg_edge_pins(hc, plan_dir, edge_um=PG_EDGE_UM):
+    """-> (edge pins on PG stripe layers, [(pin, layer, x, y, distance to the stripe centre)] hits) in the type frame"""
+    cw, ch = (float(v) for v in hc["outline_um"][:2])
+    o = hc.get("orient", "R0")
+    ox, oy = hc["origin_um"]
+    dx, dy = hc.get("track_offset_um") or (0.0, 0.0)
+    X0, Y0 = float(ox) + float(dx), float(oy) + float(dy)
+    n, hits = 0, []
+    for nm, ln, x, y in core_pin_list(hc, plan_dir):
+        st = PG_STRIPES.get(ln)
+        p = _opt(o, cw, ch, float(x), float(y))
+        if not st or p is None:
+            continue
+        vert, pitch, cen, half, sp = st
+        px, py = p
+        on_edge = min(py, ch - py) <= edge_um if vert else min(px, cw - px) <= edge_um
+        if not on_edge:
+            continue
+        n += 1
+        c = X0 + px if vert else Y0 + py
+        d = (c - cen) % pitch
+        d = min(d, pitch - d)
+        if d < half + sp - 1e-9:
+            hits.append((nm, ln, round(X0 + px, 4), round(Y0 + py, 4), round(d, 4)))
+    return n, hits
+
+
+def _pg_edge_pin(raw, plan_path, tree=None, **_kw):
+    out, tot, cores, nopins = [], 0, 0, 0
+    pdir = [Path(plan_path).parent if plan_path else Path(".")]
+    for d in (_kw.get("pins_roots") or []) + ([tree] if tree else []):   # a plan outside its tree: pins_file under the tree
+        pdir.append(Path(d))
+    for tn, t in _types(raw):
+        for hc in t.get("hard_cores") or []:
+            if not isinstance(hc, dict) or float(hc.get("pg_halo_um") or 0.0) > 0:
+                continue
+            try:
+                n, hits = pg_edge_pins(hc, pdir)
+            except (OSError, ValueError, KeyError, TypeError) as e:
+                nopins += 1
+                out.append(_w("ADV-PG-EDGE-PIN", f"{tn}: core {hc.get('inst')} not checked ({type(e).__name__}: {str(e)[:120]})"))
+                continue
+            if hits:
+                cores += 1
+                tot += len(hits)
+                by = {}
+                for h in hits:
+                    by[h[1]] = by.get(h[1], 0) + 1
+                ex = "; ".join(f"{h[0]} {h[1]} ({h[2]:g}, {h[3]:g}) {h[4]:g} um off the stripe centre" for h in hits[:MAX_EX])
+                out.append(_w("ADV-PG-EDGE-PIN", f"{tn}: core {hc.get('inst')} ({hc.get('module', '?')}): {len(hits)} of {n} "
+                              f"edge pins on parent PG stripe columns ({', '.join(f'{k} {v}' for k, v in sorted(by.items()))}; "
+                              f"no pg_halo_um): {ex}{' ...' if len(hits) > MAX_EX else ''}"))
+    if out:
+        out.append(f"LIST ADV-PG-EDGE-PIN {tot} edge pin(s) on {cores} hard core(s) without pg_halo_um sit on a parent PG stripe "
+                   f"column" + (f"; {nopins} core(s) not checked" if nopins else "") + " (fix: hard_cores[].pg_halo_um)")
+    return out
+
+
 density = _safe("ADV-STATION-DENSITY", _density)
 on_row = _safe("ADV-SITE-ON-ROW", _on_row)
 region = _safe("ADV-PLACE-REGION", _region)
@@ -517,8 +611,10 @@ band_blockage = _safe("ADV-BAND-BLOCKAGE", _band_block)
 band_gap = _safe("ADV-BAND-GAP", _band_gap)
 rect_outline = _safe("ADV-RECT-OUTLINE", _rect_outline)
 bitsite_area = _safe("ADV-BITSITE-AREA", _bitsite_area)
+pg_edge_pin = _safe("ADV-PG-EDGE-PIN", _pg_edge_pin)
 ALL = (("STATION-DENSITY", density), ("SITE-ON-ROW", on_row), ("PLACE-REGION", region), ("BAND-BLOCKAGE", band_blockage), ("BAND-GAP", band_gap),
-       ("RECT-OUTLINE", rect_outline), ("BITSITE-AREA", bitsite_area))
+       ("RECT-OUTLINE", rect_outline), ("BITSITE-AREA", bitsite_area),
+       ("PG-EDGE-PIN", pg_edge_pin))
 
 if __name__ == "__main__":
     import json
