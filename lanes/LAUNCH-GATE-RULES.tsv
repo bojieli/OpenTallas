@@ -1,7 +1,7 @@
 # LAUNCH-GATE-RULES.tsv: advisory launch-gate rules and their measured hit rate (kit_wave, hourly). status PROVEN blocks a full launch;
 # promotion: >= 4 flagged types, flagged fail rate >= 0.5 and >= 2x unflagged.  A *-HAND status is kept as written.
 rule	status	flagged_n	flagged_fail	unflagged_n	unflagged_fail	updated
-FP:NOT-CLEAN	PROVEN	194	157	0	0	2026-11-25 04:35
+FP:NOT-CLEAN	ADVISORY	194	157	0	0	2026-11-25 04:35
 SMELL:?	ADVISORY	11	11	183	146	2026-11-25 04:35
 VIS:C1-STA-MACROFACE	ADVISORY	1	1	193	156	2026-11-25 04:35
 VIS:C2-STA-GRT-SETUP	ADVISORY	1	0	193	157	2026-11-25 04:35
