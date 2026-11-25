@@ -129,14 +129,21 @@ def _try_pickle(v, cap):
 def _shallow(v):
     """one-level fingerprint of a big / unpicklable value"""
     if isinstance(v, dict):
-        return ("dict", {k: id(x) for k, x in v.items()})
+        # BIND-SPEED-1124: keys and value identities as two C-built lists (one compare per chunk delta, no per-item bytecode);
+        # _fp_dict gives the {key: id} form the change analysis reads when they differ
+        return ("dictl", list(v), list(map(id, v.values())))
     if isinstance(v, list):
-        return ("list", len(v), [id(x) for x in v])
+        return ("list", len(v), list(map(id, v)))
     if isinstance(v, (set, frozenset)):
         return ("set", set(v))
     if hasattr(v, "__dict__") and not isinstance(v, type):
         return ("obj", id(v), {k: id(x) for k, x in vars(v).items()})
     return ("id", id(v))
+
+
+def _fp_dict(fp):
+    """("dictl", keys, ids) -> ("dict", {key: id}); any other fingerprint as it is"""
+    return ("dict", dict(zip(fp[1], fp[2]))) if fp[0] == "dictl" else fp
 
 
 def snapshot(state, deep_max=None, depth=0, seen=None):
@@ -319,12 +326,18 @@ def _p(path):
     return out
 
 
-def delta(snap, state, pre=()):
-    """child, after its type: ops that turn the snapshot state into the state now"""
+def delta(snap, state, pre=(), prof=None):
+    """child, after its type: ops that turn the snapshot state into the state now.  prof: {key: seconds} per entry of this level"""
     ops = []
     for k in snap:
         if k not in state:
             raise ParUnsafe(f"{_p(pre + (('k', k),))}: attribute deleted")
+    if prof is not None:
+        for k in list(state):
+            t = time.perf_counter()
+            ops.extend(delta({k: snap[k]} if k in snap else {}, {k: state[k]}, pre))
+            prof[str(k)] = prof.get(str(k), 0.0) + time.perf_counter() - t
+        return ops
     for k, v in state.items():
         path = pre + (("k", k),)
         if k not in snap:
@@ -358,6 +371,10 @@ def delta(snap, state, pre=()):
         now = _shallow(v)
         if now == fp:
             continue
+        if "dictl" in (fp[0], now[0]):
+            fp, now = _fp_dict(fp), _fp_dict(now)
+            if now == fp:
+                continue                         # same keys and values, other insertion order
         if fp[0] == "dict":
             if any(q not in now[1] for q in fp[1]):
                 raise ParUnsafe(f"{_p(path)}: key(s) removed from a large dict")
@@ -524,8 +541,17 @@ def _child(B, chunk, out, res_path, log_path, snap=None, kd=None):
         t1 = time.time()
         if kd is None:
             kd = kinds(snap)
+        priv0 = _private_mb()
+        prof = {}
+        pdir = os.environ.get("OT_BIND_EMIT_DELTA_PROF")    # diagnosis: a cProfile of each chunk's delta in this directory
         try:
-            ops = delta(snap, B.__dict__)
+            if pdir:
+                import cProfile
+                pr = cProfile.Profile()
+                ops = pr.runcall(delta, snap, B.__dict__, (), prof)
+                pr.dump_stats(os.path.join(pdir, os.path.basename(res_path) + ".prof"))
+            else:
+                ops = delta(snap, B.__dict__, (), prof)
             res = dict(ops=ops, files=[str(f) for f in files], types=logs)
         except ParUnsafe as e:
             res = dict(unsafe=str(e))
@@ -538,7 +564,8 @@ def _child(B, chunk, out, res_path, log_path, snap=None, kd=None):
                 res["exc_text"] = tb
         priv = _private_mb()
         crec = dict(types=[r["type"] for r in recs], wall_s=round(time.time() - t0, 2), snap_s=round(t_snap, 2),
-                    delta_s=round(time.time() - t1, 2), private_mb=priv)
+                    delta_s=round(time.time() - t1, 2), private_mb=priv, private_mb_pre_delta=priv0,
+                    delta_top=sorted(([k, round(v, 2)] for k, v in prof.items() if v >= 0.05), key=lambda x: -x[1])[:12])
         for r in recs:
             r["private_mb"] = priv
         res["rec"] = recs
@@ -732,6 +759,7 @@ def _run(B, out, files, j, rec_path=None, beat=None):
             except OSError:
                 pass
     del snap
+    t_join = time.time()
     results, recs, crecs, shallow = [], [], [], set()
     for i in range(len(chunks)):
         st, rp, lp = done[i]
@@ -753,6 +781,7 @@ def _run(B, out, files, j, rec_path=None, beat=None):
         crecs.append(res["chunk"])
         shallow.update(res.get("shallow", []))
     _cleanup(work)
+    t_read = time.time()
     # everything read: apply in sorted type order up to (and including the state of) the first failing type, like the serial loop
     upto, err = [], None
     for tn, res, log in results:
@@ -761,6 +790,7 @@ def _run(B, out, files, j, rec_path=None, beat=None):
             err = (res.get("exc_type", tn), res)
             break
     apply(B.__dict__, upto)
+    t_apply = time.time()
     for tn, res, log in results[:len(upto)]:
         if log:
             sys.stdout.write(log if log.endswith("\n") else log + "\n")
@@ -769,12 +799,14 @@ def _run(B, out, files, j, rec_path=None, beat=None):
     rec = dict(schema="opentallas.bind_emit_par.v1", jobs=j, types=len(order), wall_s=round(time.time() - t0, 1),
                serial_sum_s=round(sum(r["wall_s"] for r in recs), 1), max_private_mb=max([r.get("private_mb") or 0 for r in recs] or [0]),
                shallow_attrs=sorted(shallow), chunks=len(chunks), snap_s=snap_s, snap_mb=snap_mb,
-               delta_sum_s=round(sum(c["delta_s"] for c in crecs), 1),
+               delta_sum_s=round(sum(c["delta_s"] for c in crecs), 1), head_s=round(ts - t0, 1),
+               read_s=round(t_read - t_join, 1), apply_s=round(t_apply - t_read, 1), replay_s=round(time.time() - t_apply, 1),
                per_type=sorted(recs, key=lambda r: -r["wall_s"]), per_chunk=sorted(crecs, key=lambda r: -r["wall_s"]))
     hist_save(rec["per_type"])
     print(f"bind: emit parallel j={j}: {len(order)} types in {len(chunks)} chunks in {rec['wall_s']} s (sum of type walls "
           f"{rec['serial_sum_s']} s, snapshot {snap_s} s / {snap_mb} MB once, deltas {rec['delta_sum_s']} s, "
-          f"max worker private {rec['max_private_mb']} MB)", flush=True)
+          f"max worker private {rec['max_private_mb']} MB; head {rec['head_s']} s, read {rec['read_s']} s, apply {rec['apply_s']} s, "
+          f"replay {rec['replay_s']} s)", flush=True)
     try:
         p = rec_path or os.environ.get("OT_BIND_EMIT_PAR_REC") or str(Path(out).parent / "bind_emit_par.json")
         Path(p).write_text(json.dumps(rec, indent=1) + "\n")

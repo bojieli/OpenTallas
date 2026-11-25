@@ -4212,6 +4212,8 @@ class Binder:
             beat.beat(force=True)
 
     def _emit_body(self, out, beat):
+        import time as _time
+        _t0 = _time.time()
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
             shutil.rmtree(out)
@@ -4226,7 +4228,10 @@ class Binder:
             cells += "\n" + wavefront_cells_text(driver=RT.relay_driver_any(P),
                                                  lockup=(P.reset.get("relay_lockup") or {}).get("form") or False,
                                                  root_nl=any((t.get("reset") or {}).get("root_entry_negedge") for t in P.types.values()))
+            _wf_prewarm(P)
+            _tw = _time.time()
             W = RT.wf_plan(P)
+            print(f"bind: EMIT-HEAD wavefront reset plan {_time.time() - _tw:.1f} s", flush=True)
             missing = set(W["parts"]) - set(self.members)
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
@@ -4284,6 +4289,7 @@ class Binder:
         self._emit_set = emit_set
         if getattr(self, "collect_gaps", False):
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
+        print(f"bind: EMIT-HEAD {_time.time() - _t0:.1f} s before the types", flush=True)
         if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
             try:
                 bind_emit_par.run(self, out, files, bind_emit_par.jobs(), beat=beat)
@@ -4299,6 +4305,7 @@ class Binder:
                 self._emit_one(tn, ps, out, files)
                 beat.done += 1
         beat.done, beat.phase = len(emit_set), "bound top"
+        print(f"bind: EMIT-TYPES done at {_time.time() - _t0:.1f} s", flush=True)
         beat.start()
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
@@ -6692,6 +6699,26 @@ def load_asbuilt_netlist(out):
 
 
 _LRP_INDEX = {}      # id(Binder) -> {type: (type dict, {local reset pin: [module or None]})}  (Binder._local_reset_pin)
+
+
+def _wf_prewarm(P):
+    """BIND-SPEED-1124 (S81 C10: the emit spent ~25 min before its first type worker): RT.wf_plan(P) solves the reset tree of every
+    soft type of the die one by one; solve them first in reset_tree.prewarm's fork pool, into the process-wide RESET-TREE-CACHE that
+    wf_plan's for_type then reads (same Plan object, same keys).  Results are the cached trees a serial for_type stores.
+    OT_BIND_RESET_PREWARM=0: off."""
+    if os.environ.get("OT_BIND_RESET_PREWARM", "1") == "0":
+        return
+    import reset_tree as RT
+    try:
+        sol = RT.wf_solve(P)
+        need = sorted({P.parts[n]["type"] for n in P.parts if n not in sol["hard"]})
+        if len(need) < 2:
+            return
+        st = RT.prewarm(P, need)
+        print(f"bind: EMIT-HEAD reset prewarm {st['todo']} of {len(need)} type tree(s) in {st['jobs']} worker(s), {st['seconds']} s",
+              flush=True)
+    except Exception as exc:  # noqa: BLE001 - a prewarm failure only costs time: wf_plan solves on demand (and raises its own error)
+        print(f"bind: EMIT-HEAD reset prewarm skipped: {type(exc).__name__}: {exc}", flush=True)
 
 
 def _reset_anchor_prewarm(B, raw):

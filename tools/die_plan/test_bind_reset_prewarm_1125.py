@@ -83,3 +83,33 @@ def test_off_switch(monkeypatch):
     B = _B(_raw())
     bind._reset_anchor_prewarm(B, B.plan)
     assert not RT.XP_PREWARMED
+
+
+def test_emit_head_prewarm_wf_plan_equals_uncached(monkeypatch):
+    """bind._wf_prewarm (the emit head): wf_plan over the prewarmed cache == wf_plan with the cache off, and wf_plan solves nothing itself"""
+    raw = _raw()
+    monkeypatch.setenv("OT_RESET_TREE_CACHE", "0")
+    try:
+        ref = ("ok", json.dumps(RT.wf_plan(schema.Plan(copy.deepcopy(raw), HERE / "examples/die_plan.json")), indent=1))
+    except Exception as e:  # noqa: BLE001
+        ref = ("err", type(e).__name__, str(e))
+    monkeypatch.delenv("OT_RESET_TREE_CACHE")
+    monkeypatch.setenv("OT_RESET_POOL_J", "2")
+    RT.cache_clear()
+    P = schema.Plan(copy.deepcopy(raw), HERE / "examples/die_plan.json")
+    bind._wf_prewarm(P)
+    miss0 = RT.XP_STATS["miss"]
+    try:
+        got = ("ok", json.dumps(RT.wf_plan(P), indent=1))
+    except Exception as e:  # noqa: BLE001
+        got = ("err", type(e).__name__, str(e))
+    assert got == ref
+    if ref[0] == "ok":
+        assert RT.XP_PREWARMED and RT.XP_STATS["miss"] == miss0
+
+
+def test_emit_head_prewarm_off_switch(monkeypatch):
+    monkeypatch.setenv("OT_BIND_RESET_PREWARM", "0")
+    RT.cache_clear()
+    bind._wf_prewarm(schema.Plan(_raw(), HERE / "examples/die_plan.json"))
+    assert not RT.XP_PREWARMED

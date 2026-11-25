@@ -346,3 +346,49 @@ def test_chunk_sees_its_earlier_types_like_the_serial_loop(tmp_path, monkeypatch
     b = Dep(n=4)
     EP.run(b, tmp_path, [], 2)                         # chunks t0 t1 / t2 t3
     assert [b.pnames[t]["n_before"] for t in ("t0", "t1", "t2", "t3")] == [1, 2, 1, 2]
+
+
+class _Obj:
+    pass
+
+
+def _shallow_ref(v):
+    """the pre-BIND-SPEED-1124 dict fingerprint ({key: id}): the reference the list form must agree with"""
+    return ("dict", {k: id(x) for k, x in v.items()})
+
+
+@pytest.mark.parametrize("change", ["none", "reorder", "new_key", "replace", "remove"])
+def test_shallow_dict_list_form_gives_the_dict_form_delta(change):
+    vals = [_Obj() for _ in range(6)]
+    big = {f"k{i}": v for i, v in enumerate(vals)}
+    snap_new = {"big": ("shallow", EP._shallow(big), big)}
+    snap_ref = {"big": ("shallow", _shallow_ref(big), big)}
+    if change == "reorder":
+        x = big.pop("k0")
+        big["k0"] = x
+    elif change == "new_key":
+        big["k9"] = _Obj()
+    elif change == "replace":
+        big["k3"] = _Obj()
+    elif change == "remove":
+        del big["k2"]
+    state = {"big": big}
+    if change == "remove":
+        for s in (snap_new, snap_ref):
+            with pytest.raises(EP.ParUnsafe):
+                EP.delta(s, state)
+        return
+    got, ref = EP.delta(snap_new, state), EP.delta(snap_ref, state)
+    assert got == ref
+    assert (got == []) == (change in ("none", "reorder"))
+
+
+def test_delta_per_key_profile_is_the_same_ops():
+    st = {"a": [1, 2], "b": {"x": 1}, "c": _Obj()}
+    snap = EP.snapshot(st)
+    st["a"].append(3)
+    st["b"]["y"] = 2
+    st["d"] = 5
+    prof = {}
+    assert EP.delta(snap, st, (), prof) == EP.delta(snap, st)
+    assert set(prof) == {"a", "b", "c", "d"}
