@@ -1125,7 +1125,7 @@ def face_clear_legalise(M, log):
             first = None       # nearest legal spot; best = nearest one that adds no link over its timing limit
             K = sorted(set(q for i in M.CL[k] for q in M.inc[i]))
             tv0 = M.tviol(K)
-            for st in range(0, int(L / G) + 1):
+            for st in range(0, int(L / G + 1e-9) + 1):
                 if first is not None and st > first[0] + 24:
                     break
                 for dx in (0, 1, -1, 2, -2, 3, -3, 4, -4, 6, -6, 8, -8):

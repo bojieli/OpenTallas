@@ -17,7 +17,7 @@ lane pads and the compiler table see the cycle) and by the RTL emitters (bind.py
 This tool PREDICTS the hops from the plan geometry, the way the kit assigns clock sinks (clock_taps.tcl nearest pass,
 Manhattan distance to the type's grid taps S.tap_grid): station j >= 1 bit b at its bit site (bit_sites_um[j-1][b])
 or its regs_um site, station 0 (the in-face register) at its in-port pin (gen_phys.type_pins) or the projection of
-station 1 onto the in face.  A hop is cross-tap when ANY bit's two stations have different nearest taps.  The cap /
+station 1 onto the in face; on a LANDED slot station i sits at plan stage i+1 and the last one at the out face (_landed_sites).  A hop is cross-tap when ANY bit's two stations have different nearest taps.  The cap /
 merge passes of the kit can still move sinks; a hop predicted same-tap keeps its latch (the 11-06 form) and a hop
 predicted cross-tap pays one cycle even if the kit later lands it on one tap (safe direction).
 
@@ -50,15 +50,44 @@ def _nearest(taps, x, y):
     return best
 
 
-def _in_pins(P, tn, slot):
-    """{bit: (x, y)} of the slot's in port pins in the type frame ({} when the plan has no instance / ports)."""
+def _in_pins(P, tn, slot, suffix="_i"):
+    """{bit: (x, y)} of the slot's in (suffix _i) / out (_o) port pins in the type frame ({} when the plan has no instance /
+    ports)."""
     try:
         import gen_phys
         pins = gen_phys.type_pins(P, tn)
     except Exception:
         return {}
-    want = gen_rtl.sv_id(slot + "_i")
+    want = gen_rtl.sv_id(slot + suffix)
     return {int(b): (float(x), float(y)) for bn, b, _l, x, y, _f in pins if gen_rtl.sv_id(bn) == want}
+
+
+def _landed(t, slot):
+    """the slot lands on a clock landing ring (plan band clock.landing_contract.bands[<slot>_i], face_flops.tcl ff_lands_ring)"""
+    return f"{slot}_i" in ((((t.get("clock") or {}).get("landing_contract") or {}).get("bands")) or {})
+
+
+def _landed_sites(P, tn, s, n, bs, regs, w, h):
+    """QC-BANKRST-OFF1 11-25 (same off-by-one as bank_reset_delta.bank_xy): on a LANDED slot the ring takes the in-face role and
+    face_flops.tcl (FLOW-KITFAIL-3 landed path) seats station i at plan stage i + 1 (bit_sites_um[i] / regs_um[i + 1]); the
+    last station is the out-face register.  The unlanded form below (station j at stage j, station 0 at the in pins) put
+    every landed station one stage early."""
+    st = [None] * n
+    for i in range(n - 1):
+        if len(bs) == n - 1 and bs[i]:
+            st[i] = [tuple(map(float, p)) for p in bs[i]]
+        elif len(regs) == n:
+            st[i] = [tuple(map(float, regs[i + 1]))]
+    pins = _in_pins(P, tn, s["name"], "_o")
+    if pins:
+        st[n - 1] = [pins[b] for b in sorted(pins)]
+    elif n > 1 and st[n - 2]:
+        ax, side = FACE_AXIS.get(s.get("out_face", "E"), ("x", 1))
+        lim = (h if ax == "y" else w) * side
+        st[n - 1] = [(x, lim) if ax == "y" else (lim, y) for x, y in st[n - 2]]
+    elif len(regs) == n:
+        st[n - 1] = [tuple(map(float, regs[n - 1]))]
+    return st
 
 
 def station_sites(P, tn, s):
@@ -70,6 +99,8 @@ def station_sites(P, tn, s):
     regs = s.get("regs_um") or []
     nb = int(s.get("width", 1))
     st = [None] * n
+    if _landed(t, s.get("name")):
+        return _landed_sites(P, tn, s, n, bs, regs, w, h), nb
     for j in range(1, n):
         if len(bs) == n - 1 and bs[j - 1]:
             st[j] = [tuple(map(float, p)) for p in bs[j - 1]]

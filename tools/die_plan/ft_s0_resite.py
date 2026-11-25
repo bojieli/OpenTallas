@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parents[1]))
 import schema as S  # noqa: E402
 import ft_corridor as FC  # noqa: E402
-from die_hop_scan import pin_table, normal_slot, station_site, input_site, md  # noqa: E402
+from die_hop_scan import pin_table, normal_slot, station_site, input_site, md, explicit_full  # noqa: E402
 from placement_obstacles import placement_boxes  # noqa: E402
 from tools.die_trial.legal_sites import RowAllocator  # noqa: E402
 
@@ -39,6 +39,8 @@ def chain_hops(slot, pi, po):
     for bit in sorted(set(pi) | set(po)):
         ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
         pts = [station_site(slot, j, bit, ap, bp, normal=True) for j in range(k)] + [bp[:2]]
+        if slot.get('explicit_stage0') is True:   # QC-STA-HOP: explicit S0 is placed, so in pin -> S0 counts
+            pts = [input_site(ap)] + pts
         worst = max(worst, max(md(p, q) for p, q in zip(pts, pts[1:])))
     return worst
 
@@ -64,6 +66,8 @@ def resite_type(P, raw, tn, limit, max_add, only=None, jog_sweep=0):
         if int(s.get('stations', 1)) < 2 or (only and s['name'] not in only):
             continue
         if not normal_slot(P, tn, s['name']):
+            continue
+        if explicit_full(s):   # QC-STA-HOP: owner-placed explicit S0 table; a resite would write a stations-1 table under the flag
             continue
         pi, po = pins[s['name'] + '_i'], pins[s['name'] + '_o']
         if not pi and not po:

@@ -15,7 +15,7 @@ def validate_slot(slot):
     cell = slot.get('bit_site_cell_um')
     if not cell or len(cell) != 2 or any(not math.isfinite(v) or v <= 0 for v in cell):
         raise ValueError('bit_sites_um requires positive bit_site_cell_um footprint')
-    count = slot.get('stations', 1)
+    count = int(slot.get('stations', 1))
     if len(sites) != count - 1 and not (slot.get('explicit_stage0') is True and len(sites) == count):
         raise ValueError('bit_sites_um must contain stations-1 internal stages, or stations with explicit_stage0')
     for stage in sites:
@@ -143,7 +143,7 @@ def table(slots):
         w, h = slot['bit_site_cell_um']
         lines.append(f'dict set ff_bit_site_cells {{{name}}} {{{w:.9g} {h:.9g}}}')
         # A complete stage0 table is accepted only through the existing opt-in.
-        first = 0 if len(slot['bit_sites_um']) == slot.get('stations', 1) else 1
+        first = 0 if len(slot['bit_sites_um']) == int(slot.get('stations', 1)) else 1
         for j, stage in enumerate(slot['bit_sites_um'], first):
             for bit, (x, y) in enumerate(stage):
                 lines.append(f'dict set ff_bit_sites {{{name},{j},{bit}}} {{{x:.9g} {y:.9g}}}')

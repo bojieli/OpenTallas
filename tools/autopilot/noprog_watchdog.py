@@ -1499,7 +1499,7 @@ def hub(now=None, post=True):
     if vis_queue_append(rows, now, post):
         files.append("lanes/VIS-QUEUE.tsv")
     try:
-        if (vis_status_sync() + vis_type_backfill()) and "lanes/VIS-QUEUE.tsv" not in files:
+        if (vis_status_sync() + vis_type_backfill() + vis_sta_sync(post=post)) and "lanes/VIS-QUEUE.tsv" not in files:
             files.append("lanes/VIS-QUEUE.tsv")
     except Exception as e:
         print(f"noprog vis status sync failed: {e!r}", file=sys.stderr)
@@ -2233,6 +2233,9 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     odb = odb or find_current_odb(work or "")
     if not odb:
         return "no-odb-yet", ""
+    bad = host_unfit()
+    if bad:
+        return f"host-unfit: {bad}", ""      # COORD: no render is parked on a draining / root>95 % host (4 sat NOT RUN on epyc2)
     roots = tools_roots or [os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "/srv/opentallas-scratch2/claude/rt/current/tools",
                             os.path.expanduser("~/.local/lib/noprog/tools")]
     root = next((r for r in roots if all(os.path.isfile(os.path.join(r, t)) for t in RENDER_TOOLS)), None)
@@ -2376,9 +2379,32 @@ def vis_running(state_dir, now):
 PP_DRIVER_ROOTS = (os.path.dirname(os.path.abspath(__file__)), "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot")
 
 
+ROOT_FULL_PCT = 95
+SCRATCH_FLOOR_GB = 150          # ot-run's own scratch floor: a host below it is 'DRAINING' and refuses jobs
+
+
+def host_unfit(paths=("/", "/srv/opentallas-scratch2"), statvfs=os.statvfs, drain_file=None):
+    """COORD: never park a render on a draining host or one whose root is above 95 %.  -> reason or ''.  A host is draining when its scratch free space is under the ot-run floor
+    (150 GB) or an ot-run drain marker exists.  Pure given statvfs."""
+    for i, p in enumerate(paths):
+        try:
+            v = statvfs(p)
+        except OSError:
+            continue
+        total, free = v.f_blocks * v.f_frsize, v.f_bavail * v.f_frsize
+        if i == 0 and total and 100.0 * (1 - free / total) > ROOT_FULL_PCT:
+            return f"root {100.0 * (1 - free / total):.0f} % full (> {ROOT_FULL_PCT} %)"
+        if i > 0 and free / 2**30 < SCRATCH_FLOOR_GB:
+            return f"{p} has {free / 2**30:.0f} GB free (< {SCRATCH_FLOOR_GB} GB scratch floor: draining)"
+    return ""
+
+
 def pp_launch(item, state_dir, now, popen=subprocess.Popen, roots=None):
     """HOST: run the post-placement review kit (post_place_review.py: ideal-clock top-50 paths, density, RUDY, flight lines, macro/PG overlay -> <kit>/review/) for one queued item,
     nice 10, only while no other render of this host runs.  -> 'launched' | 'no-driver' | 'failed: ...'"""
+    bad = host_unfit()
+    if bad:
+        return f"host-unfit: {bad}"      # stays 'pp_done' with this result; the render is retried by relocating (the hub or a lane copies the DB to a fit host), never parked here
     drv = next((os.path.join(r, "post_place_review.py") for r in (roots or PP_DRIVER_ROOTS) if os.path.isfile(os.path.join(r, "post_place_review.py"))), None)
     if not drv:
         return "no-driver"
@@ -2434,6 +2460,9 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
     if todo:
         item = todo.pop(0)
         res = (pp or pp_launch)(item, state_dir, now)
+        if res.startswith("host-unfit"):
+            todo.insert(0, item)
+            return None
         state.setdefault("pp_done", {})[item["key"]] = {"t": now, "res": res}
         if res == "launched":
             return None
@@ -2448,6 +2477,8 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
                 return pr
             status, rev = render(r["work"], r.get("kit") or r["work"], cp.lower(), r.get("image", ""), (r.get("container") or "x")[:40], [f"checkpoint {cp}"], now=now,
                                  popen=popen, odb=odb, tag="vis_review", nice=True)
+            if str(status).startswith("host-unfit"):
+                return None            # try again on a later tick; never parked and never marked done
             done[key] = now
             if status == "rendering":
                 os.makedirs(state_dir, exist_ok=True)
@@ -2732,6 +2763,69 @@ def vis_type_backfill(path=None, cov=None):
         with open(tmp, "w") as f:
             f.write("\n".join(out) + "\n")
         os.replace(tmp, path)
+    return n
+
+
+def vis_sta_sync(path=None, runner=None, post=True, now=None):
+    """HUB: the quick setup STA of the post-place kit (<kit>/review/summary.json: WNS, TNS, endpoints below -150 ps at the SDC period) goes into column 10 of every VIS-QUEUE row of that
+    kit + checkpoint, verdict rows included (COORD 08:xx).  A WNS below -150 ps is a SMELL (trigger STA-WNS in lanes/SMELL.tsv) and the owner + die FP lane are told at once, once per kit.
+    -> number of rows changed"""
+    path = path or os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
+    now = now or time.time()
+    runner = runner or (lambda h, cmd: run_host(h, cmd, timeout=120).stdout)
+    try:
+        lines = open(path).read().splitlines()
+    except OSError:
+        return 0
+    want = {}
+    for ln in lines:
+        c = ln.split("\t")
+        if len(c) >= 8 and c[0] != "t" and c[7] and (len(c) < 10 or not c[9]):
+            want.setdefault(c[4].partition(":")[0], set()).add(c[7])
+    got = {}
+    for h, kits in want.items():
+        cmd = "; ".join(f"echo ==={shlex.quote(k)}; cat {shlex.quote(k)}/review/summary.json 2>/dev/null | head -c 20000" for k in sorted(kits))
+        try:
+            out = runner(h, cmd)
+        except (subprocess.SubprocessError, OSError):
+            continue
+        for blk in out.split("==="):
+            k, _, js = blk.partition("\n")
+            try:
+                d = json.loads(js)
+            except ValueError:
+                continue
+            if d.get("sta_cell"):
+                got[(h, k.strip())] = (d["sta_cell"], d.get("sta") or {})
+    if not got:
+        return 0
+    out, n, smelly = [], 0, {}
+    for ln in lines:
+        c = ln.split("\t")
+        if len(c) >= 8 and c[0] != "t" and (c[4].partition(":")[0], c[7]) in got and (len(c) < 10 or not c[9]):
+            cell, sta = got[(c[4].partition(":")[0], c[7])]
+            c = (c + [""] * 10)[:10] if len(c) < 10 else c
+            c[9] = cell
+            n += 1
+            ln = "\t".join(c)
+            if sta.get("wns_ps") is not None and sta["wns_ps"] < -150.0:
+                smelly[(c[4].partition(":")[0], c[7])] = (c[1], c[2], c[3], c[6], c[4], sta)
+        out.append(ln)
+    if n:
+        tmp = path + f".tmp{os.getpid()}"
+        with open(tmp, "w") as f:
+            f.write("\n".join(out) + "\n")
+        os.replace(tmp, path)
+    if smelly:
+        recs, msgs = [], {}
+        for (h, k), (typ, die, cp, owner, render, sta) in smelly.items():
+            recs.append({"t": int(now), "kit": k, "die": die, "type": typ, "stage": cp, "trigger": "STA-WNS", "value": f"quick setup STA WNS {sta['wns_ps']:.1f} ps (< -150), TNS {sta.get('tns_ps', 0):.0f}, {sta.get('n_below_150', 0)} endpoints below -150, T {sta.get('period_ps', 0):g} ps",
+                         "render": render, "owner": owner})
+            msgs.setdefault((die, owner), []).append(f"{typ} {cp}: WNS {sta['wns_ps']:.1f} ps, TNS {sta.get('tns_ps', 0):.0f}, {sta.get('n_below_150', 0)} endpoints < -150; {render}")
+        smell_tsv_append(recs)
+        if post:
+            for (die, owner), items in sorted(msgs.items()):
+                _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"), f"SMELL [SMELL-WATCH -> {smell_recipients(die, owner)}; cc {DIE_INT.get(die, 'COORD')}] STA-WNS: quick setup STA (TT, placement parasitics, ideal clock) WNS below -150 ps: " + " | ".join(items[:20]) + ". Early trigger: start the structural fix now; the kit keeps running.")
     return n
 
 

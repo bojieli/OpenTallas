@@ -240,3 +240,23 @@ def test_private_spec_fork_calls_tool_on_gen_host(tmp_path):
     rc, msg = KW.fork_private_tree("/s/src", "/d/dst", "epyc8", run=run)
     assert rc == 0 and msg == "TREE-FORK OK"
     assert seen["argv"][2].endswith("tools/fleet/ot-tree-fork") and seen["argv"][3:] == ["/s/src", "/d/dst", "--host", "epyc8"]
+
+
+def test_outside_symlinks_are_listed_as_a_warning_and_still_kept(tmp_path):
+    """FLEET-OPS 11-25 Q2 (report only): the default stays 'kept verbatim', the fork says how many leave the tree and where they go"""
+    src = tmp_path / "lane/src"
+    mk(src / "a.txt")
+    for i in range(3):
+        os.symlink(f"/usr/lib/x{i}", src / f"l{i}")
+    msgs = []
+    TF.fork(str(src), str(tmp_path / "lane/fork"), jobs=2, out=msgs.append)
+    w = [m for m in msgs if "TREE-FORK WARN 3 symlink(s)" in m]
+    assert w and "/usr/lib x3" in w[0]
+    assert os.readlink(tmp_path / "lane/fork/l1") == "/usr/lib/x1"
+    msgs.clear()
+    os.environ["OT_TREE_FORK_LINK_WARN"] = "0"
+    try:
+        TF.fork(str(src), str(tmp_path / "lane/fork2"), jobs=2, out=msgs.append)
+    finally:
+        del os.environ["OT_TREE_FORK_LINK_WARN"]
+    assert not any("WARN" in m for m in msgs)

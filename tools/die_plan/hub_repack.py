@@ -317,7 +317,7 @@ class Raster:
     def __init__(self, W, H, rects, halo=HALO):
         import numpy as np
         self.W, self.H = W, H
-        self.nx, self.ny = int(W / G) + 1, int(H / G) + 1
+        self.nx, self.ny = int(W / G + 1e-9) + 1, int(H / G + 1e-9) + 1   # epsilon-safe: 1563.84 / 4.32 = 361.99999999999994
         f = np.ones((self.nx, self.ny), dtype=bool)
         for (x0, y0, x1, y1) in rects:
             i0, i1 = max(0, int(math.ceil((x0 - halo) / G - 1e-9))), min(self.nx - 1, int((x1 + halo) / G + 1e-9))
@@ -530,8 +530,8 @@ def place_regs_bbox(R, a, b, n_old, reach):
     the free point within reach of the previous point (and able to finish: Manhattan to b <= (left + 1) x reach)
     that minimises max(hop, rest / (left + 1)), so the hops come out balanced.  Returns [(x, y)] or None."""
     x0, x1 = sorted((a[0], b[0])); y0, y1 = sorted((a[1], b[1]))
-    xs = [sn(x0) + k * G for k in range(int((x1 - x0) / G) + 2)]
-    ys = [sn(y0) + k * G for k in range(int((y1 - y0) / G) + 2)]
+    xs = [sn(x0) + k * G for k in range(int((x1 - x0) / G + 1e-9) + 2)]
+    ys = [sn(y0) + k * G for k in range(int((y1 - y0) / G + 1e-9) + 2)]
     free = [(x, y) for x in xs if x0 - G <= x <= x1 + G for y in ys if y0 - G <= y <= y1 + G and R.free(x, y)]
     if not free:
         return None
