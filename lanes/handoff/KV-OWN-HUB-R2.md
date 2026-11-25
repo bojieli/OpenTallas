@@ -19,3 +19,9 @@ Draft row 0a4d6c3ed07c: DY=+1036.8 (seam gap free on both faces y1037-1184). Ove
 
 ## 11-24 14:12 (hub post above)
 E9 kit FAILED CTS (missing tap_landing_seam.tcl in kit) -> no routed verdict. PINS row 9f5237a75a63 + reach_rules fix -> plan 538cfce625a2; PRE 2 new RSTREACH (landing_raw_branches hub_Wo/hub_Wi), fix = kv_start_corridor_event.py raw after a strict bind. job_pins3.sh. Awaiting COORD on bind.
+
+## 11-24 16:30 PINS ROW-REBASED (hub ed17d2a7)
+DONE: PINS plan 8349284a6981 on 7926cbd1af90 = row 9f5237a75a63 + reach_rules fix 1 + raw (Wo) + reach_rules fix 4. Composable row ROWS_KV-OWN-HUB-R2-PINS-APPLY.py 4faf4a654357 + PINS_delta.json 3648bd72dcf3 (epyc11 kv-own-hub-r2/). PRE 23 vs 25 base, 0 new; G0 0 err; scoped strict bind error set = base (R8_STALE kvs_attn/pvw tables, pre-existing); 0 cycles.
+raw step: raw_run.py patches kv_start_corridor_event 5fe8e200 in memory (<tn>_part.reset_tree.json; raw-branch copy -> origin original). hub_Wi raw not derivable (W-face pins 2164 um from chain, base finding too).
+Watching (owner, watch only): kv3_hub_Wi A5t5 prelint (no kit); KV-ALLFIX private kv3_hub_Wi_1124080753 (A5t3, no seam, pipeline FAIL systemctl timeout, idle after place); hub_Wo kit KV-A5t5 kv3_hub_Wo_1124141832 epyc10 (seam tcl present) -> read its routed seam box as PINS validation.
+Next: validation post when that hub_Wo kit routes; answer KV-ALLFIX questions.
