@@ -45,8 +45,13 @@ SMELL_REL = "lanes/SMELL.tsv"
 RULES_REL = "lanes/LAUNCH-GATE-RULES.tsv"
 PP_REL = "lanes/PP-FLAGS.tsv"
 DIE_TAG = {"s81": "S81", "s81_head": "HEAD", "head": "HEAD", "qwen_kvsys": "KV", "qwen_compute": "QC", "hbm": "HBM"}
-PRE_CLASSES = ("RSTREACH", "LANDREMAP", "DERIVEDNAME", "KITFIT-OVERLAP", "SITEGRID", "R8STALE", "TAPREACH", "CLOCKREACH", "PINREACH",
-               "HOPREACH", "OVERLAP", "OUTLINE")
+# established plan_gate_pre classes (its CLASSES minus ADVISORY and the tool / input classes): PRE findings from established rules
+PRE_CLASSES = ("GEOM", "KITFIT", "KITFIT-OVERLAP", "FIXEDCYC", "ROWSINK", "MODULES", "LANDREMAP", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK",
+               "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "SITEGRID", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN",
+               "RSTNAMES", "STNXREF", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND")
+SMELL_NOT = ("CHECKPOINT", "RENDER", "")                  # SMELL.tsv rows that only record a render checkpoint are not smells
+FP_META = ("type", "family", "die", "note", "notes", "iter", "kit", "fails", "scope", "owner", "ts", "time", "updated", "detail", "proven",
+           "kit_max_tap_sinks", "measured_le_1000", "lane_latency(g0/fic)")
 CLEARED = re.compile(r"\b(FIXED|RESOLVED|CLOSED)\b", re.I)
 TRUE = ("yes", "y", "1", "true", "proven")
 MIN_FLAGGED = 4
@@ -125,7 +130,7 @@ def reset_cache():
 # ---------------------------------------------------------------- flags
 def _names(item):
     n = [item] + ([item[3:]] if item.startswith("ot_") else [])
-    return n + [re.split(r"__(?:cl|pv|r8|t)[0-9a-f]*", x, maxsplit=1)[0] for x in n]
+    return n + [re.split(r"__(?:cl|pv|r8)[0-9a-f]{6,}", x, maxsplit=1)[0] for x in n]
 
 
 def _die_ok(row, die):
@@ -133,9 +138,18 @@ def _die_ok(row, die):
     return not d or d.lower() == die.lower() or d.upper() == DIE_TAG.get(die, "")
 
 
+def _base(n):
+    n = str(n or "").strip().rstrip("/").rsplit("/", 1)[-1]
+    n = n[3:] if n.startswith("ot_") else n
+    return re.split(r"__(?:cl|pv|r8)[0-9a-f]{6,}", n, maxsplit=1)[0]
+
+
 def _type_ok(row, item):
+    """the row's type (or its kit dir name) names ITEM: exact, without ot_, or the same variant base"""
     t = _col(row, "type", "item")
-    return bool(t) and t in _names(item)
+    cands = [x for x in (t, _col(row, "kit")) if x]
+    names = _names(item)
+    return any(c in names or _base(c) == _base(item) for c in cands)
 
 
 def _cleared(row):
@@ -151,33 +165,48 @@ def flags(die, item, T):
             fl.append(dict(rule="VIS:" + (_col(r, "cause") or "?"), source="VIS-CAUSES", proven=basis.startswith("MEASURED"),
                            detail=f"{_col(r, 'kit')} {basis[:20]}"))
     for r in T.get("smell") or []:
-        if _die_ok(r, die) and _type_ok(r, item) and not _cleared(r):
-            fl.append(dict(rule="SMELL:" + (_col(r, "smell", "class", "rule", "cause") or "?"), source="SMELL", proven=True,
-                           detail=_col(r, "detail", "note", "evidence")[:80]))
-    last, clean = {}, False
-    for r in T.get("fp") or []:
-        if _die_ok(r, die) and _type_ok(r, item):
-            cls = (_col(r, "class", "rule", "check") or "?").upper()
-            last[cls] = r
-    for cls, r in last.items():
-        st = _col(r, "status", "verdict").upper()
-        if (cls in ("VISUAL", "FLOORPLAN-CLEAN") and st in ("PASS", "CLEAN", "FLOORPLAN-CLEAN")) or st == "FLOORPLAN-CLEAN":
+        trig = (_col(r, "smell", "trigger", "class", "rule", "cause") or "").upper()
+        if trig in SMELL_NOT or not _die_ok(r, die) or not _type_ok(r, item) or _cleared(r):
+            continue
+        fl.append(dict(rule="SMELL:" + trig, source="SMELL", proven=True, detail=(_col(r, "value", "detail", "note") or "")[:80]))
+    clean = False
+    for cls, st, proven_cell, r, long_ in fp_rows(die, item, T):
+        if (cls in ("VISUAL", "FLOORPLAN-CLEAN") and st.startswith(("PASS", "CLEAN", "FLOORPLAN-CLEAN"))) or st == "FLOORPLAN-CLEAN" \
+                or (cls in ("CLEAN", "STATUS") and st in ("YES", "CLEAN", "FLOORPLAN-CLEAN")):
             clean = True
-        if not st.startswith("FAIL") or _cleared(r):
+        if not st.startswith("FAIL") or CLEARED.search(st) or (long_ and _cleared(r)):
             continue
         pre = cls.startswith("PRE:") or cls in PRE_CLASSES
         fl.append(dict(rule=cls if cls.startswith("PRE:") else ("PRE:" + cls if pre else "FP:" + cls), source="FP",
-                       proven=pre or _col(r, "proven").lower() in TRUE, detail=_col(r, "detail", "note")[:80]))
+                       proven=pre or proven_cell in TRUE, detail=st[:80]))
     if not clean:
-        fl.append(dict(rule="FP:NOT-CLEAN", source="FP", proven=False, detail="no VISUAL PASS / FLOORPLAN-CLEAN row"))
+        fl.append(dict(rule="FP:NOT-CLEAN", source="FP", proven=False, detail="no VISUAL PASS / CLEAN row"))
     status = {_col(r, "rule"): _col(r, "status").upper() for r in T.get("rules") or []}
     for f in fl:
-        s = status.get(f["rule"])
-        if s == "PROVEN":
+        s = status.get(f["rule"]) or ""
+        if s.startswith("PROVEN"):
             f["proven"] = True
-        elif s == "ADVISORY" and f["source"] == "FP" and not f["rule"].startswith("PRE:"):
+        elif s.startswith("ADVISORY") and f["source"] == "FP" and not f["rule"].startswith("PRE:"):
             f["proven"] = False                       # an FP class marked proven by hand but measured as not predictive
     return fl
+
+
+def fp_rows(die, item, T):
+    """FP-<DIE>.tsv rows of ITEM as (CLASS, STATUS, proven cell, row), latest per class.  Two layouts: long (type, class, status[, proven]) and
+    wide (type + one column per class, a cell 'FAIL ...' / 'pass' / 'WARN ...'; the FP-CONVERGE tables of 11-25).  A visual* column is VISUAL."""
+    last = {}
+    for r in T.get("fp") or []:
+        if not _die_ok(r, die) or not _type_ok(r, item):
+            continue
+        if _col(r, "class", "rule", "check") and _col(r, "status", "verdict"):
+            last[_col(r, "class", "rule", "check").upper()] = (_col(r, "status", "verdict").upper(), _col(r, "proven").lower(), r, True)
+            continue
+        for h, v in r.items():
+            if h.startswith("_") or h in FP_META or not v:
+                continue
+            cls = "VISUAL" if h.startswith("visual") else h.upper()
+            last[cls] = (v.strip().upper(), "", r, False)
+    return [(c,) + v for c, v in last.items()]
 
 
 # ---------------------------------------------------------------- decision
@@ -336,8 +365,10 @@ def pp_decide(info, setup_ps=PP_SETUP_PS):
 def pp_released(die, item, T, since):
     """an FP row class POSTPLACE status PASS / RELEASE for the type written after the flag (ts column epoch or 'YYYY-MM-DD HH:MM')"""
     for r in T.get("fp") or []:
-        if _die_ok(r, die) and _type_ok(r, item) and _col(r, "class", "rule", "check").upper() == "POSTPLACE" \
-                and _col(r, "status", "verdict").upper() in ("PASS", "RELEASE"):
+        if not (_die_ok(r, die) and _type_ok(r, item)):
+            continue
+        long_ = _col(r, "class", "rule", "check").upper() == "POSTPLACE" and _col(r, "status", "verdict").upper() in ("PASS", "RELEASE")
+        if long_ or str(r.get("postplace") or "").upper().startswith(("PASS", "RELEASE")):
             ts = _col(r, "ts", "time", "updated")
             try:
                 t = float(ts) if re.fullmatch(r"\d+(\.\d+)?", ts) else time.mktime(time.strptime(ts[:16], "%Y-%m-%d %H:%M"))

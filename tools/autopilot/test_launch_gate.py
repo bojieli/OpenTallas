@@ -145,3 +145,26 @@ def test_kit_wave_route_hold(monkeypatch):
     cfg["launch_gate"] = {"kpg": "report"}
     assert KW.kpg_route_hold(AP, cfg, st, rec) is None and any("KPG-REPORT" in m for m in AP.logs)
     assert KW.kpg_route_hold(AP, {"dies": {}}, st, dict(die="qwen_kvsys", item="kv3_pv_v5", attempt=1)) is None
+
+
+def test_real_table_layouts():
+    """11-25 tables: SMELL.tsv render checkpoints are not smells; FP-<DIE>.tsv wide (one column per class) layouts"""
+    smell = ("t\tkit\tdie\ttype\tstage\ttrigger\tvalue\trender\towner\n"
+             "1\t/x/items/kv3_pc_v1__cl4ea58a5c/gen/kv3_pc_v1__cl4ea58a5c\tKV\tfin\tPLACE-GP\tCHECKPOINT\tPLACE-GP render rendering\th:/r\tCOORD\n"
+             "1\t/x/gen/kv3_pv_v8\tKV\tkv3-pv-v8-grt\tGRT\tDENSITY-PILE\tov 1449\th:/r\tFP-CONVERGE-KV\n")
+    fp = ("type\tSTREET\tTAPNAME\tR8\tVISUAL\tCLEAN\n"
+          "kv3_hg\tFAIL:1\tFAIL:2\tpass\tFAIL-A5t7-render\tNO\n"
+          "kv3_hg_v2\tpass\tpass\tpass\tPASS\tYES\n"
+          "kv3_hg_v3\tFAIL:1 FIXED in A5t8\tpass\tpass\t\tNO\n")
+    files = {G.SMELL_REL: smell, "lanes/FP-KV.tsv": fp}
+    G.reset_cache()
+    kv = G.tables("qwen_kvsys", reader=lambda rel: files.get(rel))
+    assert proven(G.flags("qwen_kvsys", "kv3_pc_v1__cl4ea58a5c", kv)) == []
+    assert proven(G.flags("qwen_kvsys", "kv3_pv_v8", kv)) == ["SMELL:DENSITY-PILE"]
+    fl = G.flags("qwen_kvsys", "kv3_hg__r889141819", kv)
+    assert proven(fl) == ["PRE:TAPNAME"] and {"FP:STREET", "FP:VISUAL", "FP:NOT-CLEAN"} <= {f["rule"] for f in fl}
+    assert G.flags("qwen_kvsys", "kv3_hg_v2", kv) == []
+    assert [f["rule"] for f in G.flags("qwen_kvsys", "kv3_hg_v3", kv)] == ["FP:NOT-CLEAN"]
+    s81 = {"fp": G.parse_tsv("type\tfamily\tREACH\tfails\tvisual\titer\ncol_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97\tcol_h10_r0_p1\tFAIL 11\tREACH\tFAIL die:x\tc9s-1\n")}
+    assert {f["rule"] for f in G.flags("s81", "col_h10_r0_p1__t1__cl574cc59d", s81)} == {"FP:REACH", "FP:VISUAL", "FP:NOT-CLEAN"}
+    assert G.flags("s81", "col_h10_r0_p1__t2", s81) == [dict(rule="FP:NOT-CLEAN", source="FP", proven=False, detail="no VISUAL PASS / CLEAN row")]
