@@ -58,3 +58,5 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 
 ## 11-25 PST RSTREACH QC local-reset fix, main b42643500c (hub f17da6158a)
 - derived_drop RSTREACH b. reads landing_local_resets (u_cland_fstart_<bus> consumers). C1n 26036a30b94f: WARN 236 -> 120; all 116 FSTART-spread WARNs were false; 0 real. Old/new tools copies are in epyc11 runs/epw/rr/{old,new} (~400 MB each; clear via ot-delete when no longer needed).
+
+- 2026-11-25 overlay G0 fix main df947261c2 (type_overlay g0_new: (check,key) + metric tolerance; v1n 0 new / 5 drift), post 952ac64c39. ADV-SINKBIN-STALE main 3472e05efc; A5t7 8/60, C1n 51/125, c9t43 N/A; outputs epyc11 runs/epw/rr/sbs_*.txt. Open: rr/{old,new} + plan copies on epyc11 to ot-delete when done; kit_sinks.json refresh would let FANOUT judge KV.
