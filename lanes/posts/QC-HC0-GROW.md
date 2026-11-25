@@ -1,0 +1,1 @@
+- 2026-11-25 02:56 PST DIED [QC-HC0-GROW] ot-run oth-ubuntu-2610198-1795603685 on viable-ram: rc=1 after 487 s, ended 10:56:05, log none, cmd: --mem 24 --threads 4 --hosts epyc12 --priority die -- bash /srv/opentallas-scratch2/claude/QC-HC0-GROW/run_bins.sh | class=NO-PATTERN cause=rc 1 after 487 s, no log
