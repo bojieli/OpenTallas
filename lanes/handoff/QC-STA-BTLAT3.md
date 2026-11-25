@@ -11,3 +11,11 @@ rows/ = plans+deltas+guards, cores/ = 3 _bt3 child kits, bin/ = mk_bt3.py, scope
 - Scoped --crit strict bind of 11 st_a: sb/ (plan 53ef, unit oth-ubuntu-739299-1795595982, log scopedB.log); sb2/ (plan c332, tree2) after fork2.
 - Core kits _bt3 (h17_n7_s8, h18_n7_s8, h15_n9_s11) on epyc2 via ot-run, logs run_<m>.otrun.log; views go to physical/die_plan/qwen_compute/qcviews_btlat3/<m>/.
 - Latency: 0 lane / core_latency change; compiler table = stn_transport_params from the bind (hook bt_lat 3 -> result/busy +2).
+
+## 2026-11-25 02:09 PST update
+- Superseded: 53ef / d0f63 (rq seats at stack face: 584+117 um). Generator main ec0881df03b seats rq flops at midpoint (347+355 um, asserted <=405).
+- Current rows: C1n + both = 3c5b379130e0 (guard PASS 0 silent, 0 new collisions); C1n-r2 + both = 4557d9ec3716 (C1o row).
+- PRE on 4557 running on intel1 (rt 899f launch view, --priority die), log intel1 /srv/opentallas-scratch2/claude/QC-STA-BTLAT3/pre.log; d0f6 PRE cancelled at 2962 s with 0 FAIL lines.
+- _bt3 masters SIGNED + LEC EQUIVALENT (TT +28.0/+17.74/+30.58, DRC 0); views epyc2 /srv/opentallas-scratch3/claude/QC-STA-BTLAT3/views, copied into intel1 tree qcviews_btlat3.
+- epyc2 tree deleted (ot-delete). intel1 tree: ot-delete same hour PRE/scoped bind finish (QC-ALLFIX disk ask).
+- v1 (6 types): C1p row note posted (RC97-V1 by QC-STA-CLK first, then STA-BTLAT3 unchanged).
