@@ -130,3 +130,62 @@ def test_rename_overlapping_ranges_single_pass():
 def test_mutant_no_rename_keeps_stale_names():
     g = LG.grow_row(_gx(), 185.76)                                               # grow_row alone (the old behaviour)
     assert [a["name"] for a in g["clock"]["added_taps"]] != ["clk_t20", "clk_t21"]
+
+
+def widen_row_fixture(gap=8.64, with_contents=False):
+    r = {"outline_um": [1000.0, 800.0],
+         "hard_cores": [{"inst": "a", "origin_um": [100.0, 100.0], "outline_um": [100.0, 50.0]},
+                        {"inst": "b", "origin_um": [100.0 + 100.0 + gap, 100.0], "outline_um": [100.0, 50.0]},
+                        {"inst": "c", "origin_um": [100.0 + 200.0 + 2 * gap, 100.0], "outline_um": [100.0, 50.0]},
+                        {"inst": "far", "origin_um": [700.0, 300.0], "outline_um": [50.0, 50.0]}],
+         "ft_slots": [], "buses": [{"name": "x", "face": "N", "window_um": [200.0, 300.0]}],
+         "internal_stations": [{"from_um": [150.0, 125.0], "to_um": [420.0, 125.0], "regs_um": [[300.0, 125.0]], "bits": 1104}],
+         "clock": {"taps": [{"name": "t", "xy": [600.0, 300.0]}]}}
+    if with_contents:
+        r["contents"] = [{"inst": "m0", "lef": "x.lef", "origin_um": [500.0, 500.0], "outline_um": [30.0, 20.0]},
+                         {"inst": "m1", "lef": "x.lef", "origin_um": [500.0, 520.0 + gap], "outline_um": [30.0, 20.0]}]
+        r["internal_stations"].append({"from_um": [510.0, 480.0], "to_um": [510.0, 600.0], "regs_um": [[510.0, 530.0]], "bits": 1104})
+    return r
+
+
+def test_widen_row_widens_every_busy_gap_to_channel_width():
+    import adv_seatgap as SG
+    r = widen_row_fixture()
+    assert len(SG.macro_gap(r)[1]) == 2
+    g, rep, ncut = LG.widen_row(r)
+    assert ncut == 2 and g["outline_um"][0] == 1000.0 + 2 * 25.92
+    assert [h["origin_um"][0] for h in g["hard_cores"]] == [100.0, 208.64 + 25.92, 317.28 + 51.84, 700.0 + 51.84]
+    assert SG.macro_gap(g)[1] == []                                  # no sub-9 um busy gap left
+    assert g["buses"][0]["window_um"] == [200.0, 300.0]              # pin windows stay
+    assert g["internal_stations"][0]["regs_um"] == [[300.0 + 25.92, 125.0]] or g["internal_stations"][0]["regs_um"] == [[300.0 + 51.84, 125.0]] or g["internal_stations"][0]["regs_um"][0][0] > 300.0
+    assert LG.check_rows(r, g, cuts=ncut) == []
+
+
+def test_widen_mutant_unwidened_gap_is_still_flagged_and_cut_count_checked():
+    import adv_seatgap as SG
+    r = widen_row_fixture()
+    g, rep, ncut = LG.widen_row(r)
+    assert any("cores moved" in b for b in LG.check_rows(r, g, cuts=1))       # 3 shift groups need cuts >= 2
+    assert len(SG.macro_gap(r)[1]) == 2                                          # mutant: the source row is flagged
+
+
+def test_widen_contents_macros_y_axis():
+    import adv_seatgap as SG
+    r = widen_row_fixture(6.98, with_contents=True)
+    n0 = len(SG.macro_gap(r)[1])
+    g, rep, ncut = LG.widen_row(r)
+    assert n0 >= 3 and SG.macro_gap(g)[1] == []
+    m = {c["inst"]: c["origin_um"] for c in g["contents"]}
+    assert m["m1"][1] - (m["m0"][1] + 20.0) >= 28.0 and g["outline_um"][1] > 800.0
+
+
+def test_widen_leaves_kit_internal_pair_reported():
+    r = widen_row_fixture(6.98, with_contents=True)
+    for c in r["contents"]:
+        c.pop("origin_um")                                              # a macro with no plan origin cannot be moved
+    plan, kit = LG.blocked_plan_gaps(r)
+    assert all(p[0] == "x" for p in plan)
+
+
+def test_lattice_up_is_epsilon_safe():
+    assert LG._lattice_up(25.76) == 25.92 and LG._lattice_up(25.92) == 25.92 and LG._lattice_up(0.0) == 0.0

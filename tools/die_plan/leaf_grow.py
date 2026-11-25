@@ -5,6 +5,8 @@
   leaf_grow.py check PLAN0 PLAN1 --types REGEX     # structural invariants old -> new (exit 1 on a break)
   leaf_grow.py retap PLAN --types REGEX --out PLAN2 # rename grid+explicit added taps for the re-derived grid count
   leaf_grow.py retap-check PLAN --types REGEX       # taps.grid_explicit_sites per type (exit 1 on a refusal)
+  leaf_grow.py widen PLAN --types REGEX --out PLAN2 # ANY type: widen each plan-core gap <9 um carrying a bus lane (ADV-MACRO-GAP) to bits/(tracks x 0.5)
+  (--any-type on grow/retap/retap-check/check lifts the leaf-name filter)
 
 Grid clock taps are derived from the outline (schema._grid_taps), so growth can change their count; grid+explicit added
 taps must then be clk_t<n_grid+i>.  grow re-derives n_grid with schema._grid_taps on the grown plan and renames added taps
@@ -30,6 +32,12 @@ from pathlib import Path
 FT_XCUT = [0.0]           # --ft-xcut: in-band ft points with x < this never shift (default 0 = all follow)
 FT_MODE = [True]          # True: ft slots pin-anchored; "ft": in-band ft points shift with the cores (--ft-interior)
 LEAF_RE = re.compile(r"^ot_s81sl_(kv_)?leaf__")
+ANY_TYPE = [False]        # --any-type: the growth / retap / check commands accept any partition type (non-leaf: dsdv_slice_*_C ...)
+LATTICE = 4.32            # placement lattice (hub_repack.G); widened gaps are rounded UP to a multiple
+
+
+def type_ok(tn):
+    return ANY_TYPE[0] or bool(LEAF_RE.match(tn))
 EPS = 0.01
 # subtrees that are pin-anchored (never x-shifted; E / N face points follow the face)
 PIN_KEYS = {"ft_slots", "buses"}
@@ -207,7 +215,7 @@ def pts(t):
     return out
 
 
-def check_rows(a, b, name=""):
+def check_rows(a, b, name="", cuts=1):
     """-> [problem]: invariants of a grown row b against its source a"""
     bad = []
     Wa, Ha = a["outline_um"]
@@ -242,16 +250,97 @@ def check_rows(a, b, name=""):
         bad.append("core count changed")
     # relative geometry of the cores that moved together is untouched: every core either kept or moved by exactly dx
     dxs = {round(hb["origin_um"][0] - ha["origin_um"][0], 3) for ha, hb in zip(a["hard_cores"], b["hard_cores"])}
-    if len(dxs) > 2:
-        bad.append("cores moved by %s (expected {0, dx})" % sorted(dxs))
+    if len(dxs) > cuts + 1:
+        bad.append("cores moved by %s (expected {0, dx} per cut, %d cut(s))" % (sorted(dxs), cuts))
     return bad
+
+
+def _lattice_up(v):
+    """smallest multiple of the 4.32 lattice >= v (epsilon-safe)"""
+    return round(-(-round(v / LATTICE, 6) // 1) * LATTICE, 4)
+
+
+def blocked_plan_gaps(t):
+    """-> ([(axis, gap, need_gap, lo_rect, hi_rect, bits)], [kit_internal (gap, a, b, bits)]).  A gap is the one
+    ADV-MACRO-GAP flags (a sub-9 um facing pair that carries a bus lane); need_gap = bits / (tracks/um x SUPPLY_FRAC), the
+    ADV-CHANNEL-WIDTH width.  Only pairs whose BOTH macros are plan hard_cores can be moved by the outline; a pair of macros
+    with no plan origin_um is returned as kit_internal (contents macros with an origin_um move like cores)."""
+    import adv_seatgap as SG
+    import adv_slot_gap as SL
+    inst = {h["inst"] for h in t.get("hard_cores") or []}
+    # `contents` macros (lef + absolute origin_um: the C-band memory / eg macro sites) are plan-positioned too: grow_row shifts them
+    inst |= {c["inst"] for c in t.get("contents") or [] if isinstance(c, dict) and c.get("origin_um") and c.get("outline_um") and c.get("inst")}
+    rects = {r[4]: r for r in SG.G.hard_rects(t)}
+    _n, blk = SG.macro_gap(t)
+    plan, kit = [], []
+    for g, a, b, _run, bits in blk:
+        ra, rb = rects.get(a), rects.get(b)
+        if a not in inst or b not in inst or ra is None or rb is None:
+            kit.append((g, a, b, bits))
+            continue
+        lo, hi = (ra, rb) if rb[0] >= ra[2] - 1e-6 and rb[0] > ra[0] else (rb, ra)
+        gx = hi[0] - lo[2]
+        ax = "x" if 0 < gx < SG.GAP_UM + 1e-6 else "y"
+        if ax == "y":
+            lo, hi = (ra, rb) if rb[1] > ra[1] else (rb, ra)
+        need = bits / (SL.tracks_per_um(ax) * SL.RD.SUPPLY_FRAC)
+        plan.append((ax, g, need, lo, hi, bits))
+    return plan, kit
+
+
+def widen_row(t):
+    """grow the outline so every plan-core gap that carries a bus lane becomes >= its ADV-CHANNEL-WIDTH width: one cut per
+    gap (x gaps ascending, then y gaps), every point at or beyond the facing core's edge shifts by the added width
+    (grow_row semantics: pin-anchored items stay, E / N face points follow).  -> (row2, [report])"""
+    plan, kit = blocked_plan_gaps(t)
+    rep = [("kit-internal", g, a, b, bits) for g, a, b, bits in kit]
+    t2, off = t, {"x": 0.0, "y": 0.0}
+    for ax in ("x", "y"):
+        for _ax, g, need, lo, hi, bits in sorted((p for p in plan if p[0] == ax), key=lambda p: p[4][0 if ax == "x" else 1]):
+            add = _lattice_up(max(0.0, need - g))
+            if add <= 0:
+                continue
+            cut = hi[0 if ax == "x" else 1] + off[ax]
+            t2 = grow_row(t2, add, 0.0, None, cut) if ax == "x" else grow_row(t2, 0.0, add, cut, None)
+            off[ax] += add
+            rep.append((ax, round(g, 2), lo[4], hi[4], bits, round(need, 1), add))
+    return t2, rep, sum(1 for p in plan if p[0] and _lattice_up(max(0.0, p[2] - p[1])) > 0)
+
+
+def cmd_widen(a):
+    ANY_TYPE[0] = True
+    P = json.loads(Path(a.plan).read_text())
+    rc, n = 0, 0
+    for tn, t in P["partition_types"].items():
+        if not re.search(a.types, tn) or not t.get("hard_cores"):
+            continue
+        g, rep, ncut = widen_row(t)
+        if not ncut:
+            print("%s nothing to widen%s" % (tn, "".join("; kit-internal %s | %s %.2f um %d bits (not plan-movable)" % (r[2][-34:], r[3][-34:], r[1], r[4]) for r in rep if r[0] == "kit-internal")))
+            continue
+        bad = check_rows(t, g, tn, cuts=ncut)
+        print("%s outline %s -> %s %s" % (tn, t["outline_um"], g["outline_um"], "BAD " + "; ".join(bad) if bad else "ok"))
+        for r in rep:
+            print("   ", r)
+        if bad:
+            rc = 1
+            continue
+        P["partition_types"][tn] = g
+        n += 1
+    if rc or not n:
+        return rc or 2
+    if not a.no_retap:
+        for tn, (ng, mp) in retap_plan(P, a.plan, [tn for tn in P["partition_types"] if re.search(a.types, tn)]).items():
+            print("%s grid taps %d: %d added taps renamed" % (tn, ng, len(mp)))
+    Path(a.out).write_text(json.dumps(P, separators=(",", ":")))
+    return 0
 
 
 def cmd_grow(a):
     P = json.loads(Path(a.plan).read_text())
     n = []
     for tn, t in P["partition_types"].items():
-        if LEAF_RE.match(tn) and re.search(a.types, tn) and t.get("hard_cores"):
+        if type_ok(tn) and re.search(a.types, tn) and t.get("hard_cores"):
             FT_MODE[0] = "ft" if a.ft_interior else True
             FT_XCUT[0] = a.ft_xcut
             g = grow_row(t, a.dx, a.dy, a.ycut, a.xcut)
@@ -276,7 +365,7 @@ def cmd_check(a):
     B = json.loads(Path(a.plan1).read_text())["partition_types"]
     rc = 0
     for tn in sorted(B):
-        if LEAF_RE.match(tn) and re.search(a.types, tn) and tn in A:
+        if type_ok(tn) and re.search(a.types, tn) and tn in A:
             bad = check_rows(A[tn], B[tn], tn)
             print(tn, "BAD " + "; ".join(bad) if bad else "ok")
             rc |= bool(bad)
@@ -286,7 +375,7 @@ def cmd_check(a):
 def cmd_retap(a):
     """already-grown plan: rename added taps of the matched grid+explicit leaf types to the re-derived grid count"""
     P = json.loads(Path(a.plan).read_text())
-    tns = [tn for tn in P["partition_types"] if LEAF_RE.match(tn) and re.search(a.types, tn)]
+    tns = [tn for tn in P["partition_types"] if type_ok(tn) and re.search(a.types, tn)]
     for tn, (ng, mp) in retap_plan(P, a.plan, tns).items():
         print("%s grid taps %d: %d added taps renamed" % (tn, ng, len(mp)))
     Path(a.out).write_text(json.dumps(P, separators=(",", ":")))
@@ -302,7 +391,7 @@ def cmd_retap_check(a):
     rc = 0
     for tn in sorted(raw["partition_types"]):
         t = raw["partition_types"][tn]
-        if LEAF_RE.match(tn) and re.search(a.types, tn) and (t.get("clock") or {}).get("tap_mode") == "grid+explicit":
+        if type_ok(tn) and re.search(a.types, tn) and (t.get("clock") or {}).get("tap_mode") == "grid+explicit":
             try:
                 TP.grid_explicit_sites(P, tn)
                 print(tn, "ok")
@@ -327,20 +416,30 @@ def main(argv=None):
     g.add_argument("--ft-xcut", type=float, default=0.0,
                    help="with --ft-interior: in-band ft points with x < this stay (e.g. the street a slot keeps)")
     g.add_argument("--no-retap", action="store_true", help="do not rename grid+explicit added taps after the grow")
+    g.add_argument("--any-type", action="store_true", help="any partition type, not only ot_s81sl_(kv_)leaf__*")
     g.add_argument("--out", required=True)
+    w = sp.add_parser("widen", help="widen every plan-core gap < 9 um that carries a bus lane to the ADV-CHANNEL-WIDTH width (any type)")
+    w.add_argument("plan")
+    w.add_argument("--types", required=True)
+    w.add_argument("--no-retap", action="store_true")
+    w.add_argument("--out", required=True)
     r = sp.add_parser("retap")
     r.add_argument("plan")
     r.add_argument("--types", required=True)
     r.add_argument("--out", required=True)
+    r.add_argument("--any-type", action="store_true")
     rk = sp.add_parser("retap-check")
     rk.add_argument("plan")
     rk.add_argument("--types", default=".")
+    rk.add_argument("--any-type", action="store_true")
     c = sp.add_parser("check")
     c.add_argument("plan0")
     c.add_argument("plan1")
     c.add_argument("--types", default=".")
+    c.add_argument("--any-type", action="store_true")
     a = ap.parse_args(argv)
-    return {"grow": cmd_grow, "check": cmd_check, "retap": cmd_retap, "retap-check": cmd_retap_check}[a.cmd](a)
+    ANY_TYPE[0] = bool(getattr(a, "any_type", False))
+    return {"grow": cmd_grow, "check": cmd_check, "retap": cmd_retap, "retap-check": cmd_retap_check, "widen": cmd_widen}[a.cmd](a)
 
 
 if __name__ == "__main__":
