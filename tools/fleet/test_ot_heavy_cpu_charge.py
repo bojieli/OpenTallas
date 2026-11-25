@@ -103,3 +103,18 @@ def test_a_container_matched_by_several_processes_is_counted_once(tmp_path):
     assert R.cpu_usec(str(d1)) == 5000000
     cdirs = [str(d1)] * 3                       # three docker-run processes of one unit name the same container
     assert sum(R.cpu_usec(d) for d in dict.fromkeys(cdirs)) == 5000000
+
+
+def test_cpu_charge_admits_on_measured_load_when_books_overstate():
+    """FLEET-ADMIT-1124: epyc9 122 committed cores vs 96 at load 81 refused every non-crit admit for hours."""
+    units = [("u%d" % i, 48, "route", 0) for i in range(20)]
+    hist = {"route": [8.0, 8.0, 8.0]}
+    th = lambda u: 16
+    ok, why = R.cpu_charge_check("route", 16, units, hist, th, 96, 70.0, load_admit=0)        # books only: 160 + 8 > 96 at load 70 -> refused
+    assert not ok and "> 96" in why
+    ok, why = R.cpu_charge_check("route", 16, units, hist, th, 96, 70.0)                      # default 1.0: 70 + 0 + 8 < 96 -> admitted on measured CPU
+    assert ok and "measured CPU" in why
+    ok, why = R.cpu_charge_check("route", 16, units, hist, th, 96, 70.0, young=[("route", 16)] * 3)   # 70 + 24 + 8 = 102 >= 96: a burst not yet in load1 is held
+    assert not ok
+    ok, why = R.cpu_charge_check("route", 16, units, hist, th, 96, 146.0)                     # epyc11 load 146 > 96: still refused
+    assert not ok and "> 96" in why
