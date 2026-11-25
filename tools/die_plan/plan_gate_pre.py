@@ -1860,6 +1860,27 @@ def check_tapoff(plan, max_list=6):
     return out + warn
 
 
+def _monleg_src(raw, max_list, ML):
+    """MONLEG-REACH-SRC (S81-MONLEG 11-25, COORD ruling 4, report-only WARN): collector_local_sources whose status points
+    (status_pins_xy_um / xy_um, plus the ring-flop band centre) are over 405 um from the relay of their node.  KV A5t7: 79
+    sources on 22 types, QC C1n: 4 on 3.  Fix: rows_s81_monleg.py --src (same-depth re-pick), then rows_s81_monleg_src.py
+    (relay insertion, status-path latency same or longer) for the rest."""
+    s = ML.src_census(raw)
+    by = {}
+    for tn, i, node, um in s["over"]:
+        by.setdefault(tn, []).append((um, i, node))
+    out = []
+    for tn in sorted(by)[:max_list]:
+        w = max(by[tn])
+        out.append(f"WARN MONLEG-REACH-SRC {tn}: {len(by[tn])} source(s) over {ML.REACH_UM:.0f} um from their node, worst source #{w[1]} -> "
+                   f"{w[2]} {w[0]:.0f} um (report only)")
+    if by:
+        out.append(f"WARN MONLEG-REACH-SRC-SUMMARY {s['over_reach']} sources on {s['over_reach_types']} types over {ML.REACH_UM:.0f} um "
+                   f"({s['over_fail']} over {ML.FAIL_UM:.0f}, max {s['max_um']:.0f}); fix: rows_s81_monleg.py PLAN_IN PLAN_OUT --src, then "
+                   f"rows_s81_monleg_src.py for the rest" + (f"; listed {max_list} types" if len(by) > max_list else ""))
+    return out
+
+
 def check_monleg(plan, max_list=8):
     """MONLEG-REACH (S81-MONLEG 11-25, FABLE-RC-S81 af8bee1e, report-only WARN, never a FAIL): the monitor band centre
     (landing_contract.bands.monitor_i) of every collector child is farther than 405 um (METHODOLOGY 12.1e) from the relay of
@@ -1875,7 +1896,7 @@ def check_monleg(plan, max_list=8):
     by = {}
     for tn, i, node, um in c["over"]:
         by.setdefault(tn, []).append((um, i, node))
-    out = []
+    out = _monleg_src(raw, max_list, ML)
     for tn in sorted(by)[:max_list]:
         w = max(by[tn])
         out.append(f"WARN MONLEG-REACH {tn}: {len(by[tn])} monitor/collector pair(s) over {ML.REACH_UM:.0f} um, worst monitor_{w[1]} -> "
