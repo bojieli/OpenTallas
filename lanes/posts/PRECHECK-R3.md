@@ -90,3 +90,4 @@
   - ELAB-PORT-WIDTH: needs a bind, and C1n has none yet. The C1n bind will run it itself through the bind.py hook. Its base, the C1m bind (QC-CB-C1L/m/bind), shows 0 mismatches (375 masters, 20403 cells), and TAPBINS2 changes no cells or ports.
   Outputs: epyc11 PRECHECK-R3/runs/epw/{ro2,pg}_qc_C1n.txt.
 - 2026-11-24 22:07 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2329642 on dear-crayfish: rc=0 after 63 s, ended 22:07:03, log none, cmd: ot-push-main 
+- 2026-11-24 22:14 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2698775 on dear-crayfish: rc=0 after 21 s, ended 22:14:20, log none, cmd: ot-push-main 
