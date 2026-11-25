@@ -11463,3 +11463,4 @@ FAILED [AUTOPILOT b1300bfb6a35] 2026-11-25 09:35:24 PST AUTOPILOT -> KIT-WAVE-5:
   - 62 rows that have a kit now carry probe_unit (spec dir + kit work dir), a fresh probe_result and a KIT 09:4x status tag.
   - Every kit family is still RUNNING or FAIL; the only signed-off kits are 4 slice_station.
   Still open on my side: COORD ruling on the 17-unit stop request (post 280b07499bc), the c10b r5 PRE (~10:11), and the S-18 render reviews (running).
+- 2026-11-25 09:41 PST DIED [QC-C1O-BINDPATH] ot-run oth-ubuntu-2793307-1795628463 on outgoing-giraffe: rc=4 after 47 s, ended 17:41:48, log none, cmd: --mem 8 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/QC-C1O-BINDPATH/clone -- python3 -m pytest -q -x test_kit_wave_bind_ | class=NO-PATTERN cause=rc 4 after 47 s, no log

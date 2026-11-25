@@ -1,0 +1,1 @@
+- 2026-11-25 09:41 PST DIED [QC-C1O-BINDPATH] ot-run oth-ubuntu-2793307-1795628463 on outgoing-giraffe: rc=4 after 47 s, ended 17:41:48, log none, cmd: --mem 8 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/QC-C1O-BINDPATH/clone -- python3 -m pytest -q -x test_kit_wave_bind_ | class=NO-PATTERN cause=rc 4 after 47 s, no log
