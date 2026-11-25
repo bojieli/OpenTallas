@@ -39,8 +39,8 @@ def test_absent_or_tap_is_unchanged():
 
 
 def test_leaf_rows_all_exports_and_prefix_key():
-    want = ["fclk_out_ft0_o clk_t1 cland_fwd_fclk_out_ft0_o ft0_o cland_fstart_out_ft0_o",
-            "fclk_out_o_ctl clk_t2 cland_fwd_fclk_out_o_ctl o_ctl cland_fstart_out_o_ctl"]
+    want = ["fclk_out_ft0_o clk_t1 cland_fwd_fclk_out_ft0_o 0 ft0_o cland_fstart_out_ft0_o",
+            "fclk_out_o_ctl clk_t2 cland_fwd_fclk_out_o_ctl 0 o_ctl cland_fstart_out_o_ctl"]
     assert LC.export_leaf_rows(_P({TN: LEAF}), TN) == want
     assert LC.export_leaf_rows(_P({"kv3_pv*": LEAF, "kv3*": {"from": "tap"}}), TN) == want
     assert LC.export_leaf_rows(_P({TN: {"from": "leaf"}}), TN) == want      # match_insertion defaults to true
@@ -48,13 +48,14 @@ def test_leaf_rows_all_exports_and_prefix_key():
 
 def test_leaf_rows_ports_and_vector_bterms():
     rows = LC.export_leaf_rows(_P({TN: dict(LEAF, ports=["fclk_out_o_ctl"])}), TN, frozenset({"fclk_out_o_ctl"}))
-    assert rows == ["fclk_out_o_ctl[0] clk_t2 cland_fwd_fclk_out_o_ctl o_ctl cland_fstart_out_o_ctl"]
+    assert rows == ["fclk_out_o_ctl[0] clk_t2 cland_fwd_fclk_out_o_ctl 0 o_ctl cland_fstart_out_o_ctl"]
 
 
 @pytest.mark.parametrize("fwd,form,msg", [
     ({TN: dict(LEAF, ports=["fclk_out_nope"])}, None, "not forwarded outputs"),
     ({TN: {"from": "leaf", "match_insertion": False}}, None, "match_insertion"),
     ({TN: {"from": "root"}}, None, "fwd_export.from"),
+    ({TN: dict(LEAF, pad_ps=-1)}, None, "pad_ps"),
     ({TN: LEAF}, "tie", "fwd_buffer")])
 def test_leaf_rows_fail_closed(fwd, form, msg):
     with pytest.raises(ValueError, match=msg):
@@ -64,9 +65,10 @@ def test_leaf_rows_fail_closed(fwd, form, msg):
 def test_schema_accepts_key_and_rejects_typos():
     ex = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
     ok = copy.deepcopy(ex)
-    ok.setdefault("clock", {})["fwd_export"] = {"kv3_pv*": dict(LEAF, ports=["fclk_out_ft0_o"], note="x")}
+    ok.setdefault("clock", {})["fwd_export"] = {"kv3_pv*": dict(LEAF, ports=["fclk_out_ft0_o"], note="x", pad_ps=180)}
     assert schema.validate(ok) == []
-    for bad in ({"from": "leaf", "match_insertion": False}, {"from": "root"}, {"from": "leaf", "insertion": True}):
+    for bad in ({"from": "leaf", "match_insertion": False}, {"from": "root"}, {"from": "leaf", "insertion": True},
+                {"from": "leaf", "pad_ps": -5}):
         p = copy.deepcopy(ex)
         p.setdefault("clock", {})["fwd_export"] = {TN: bad}
         assert schema.validate(p) != []
@@ -96,7 +98,7 @@ mk tech {return 1000}
 mk ca {switch $m {xMin {return 0} yMin {return 0} xMax {return 100000} yMax {return 100000}}}
 mk blk {switch $m {
   getBTerms {return {bt_d0 bt_d1 bt_d2 bt_fclk bt_t1 bt_t9}}
-  findInst {if {[lindex $args 0] eq "cland_fwd_fclk_out_r_o"} {return xb}; return NULL}
+  findInst {set n [lindex $args 0]; if {$n eq "cland_fwd_fclk_out_r_o"} {return xb}; if {$n in $::INSTS} {return $n}; return NULL}
   getCoreArea {return ca}}}
 foreach {b n io net} {bt_d0 r_o[0] OUTPUT n_d0 bt_d1 r_o[1] OUTPUT n_d1 bt_d2 r_o[2] OUTPUT n_d2 bt_fclk fclk_out_r_o OUTPUT n_f
                       bt_t1 clk_t1 INPUT root1 bt_t9 clk_t9 INPUT root9} {
@@ -130,6 +132,18 @@ mk xb {switch $m {
   setLocation {set ::LOC(xb) $args} getPlacementStatus {return PLACED} setPlacementStatus {}}}
 mk xm {switch $m {getWidth {return 1000} getHeight {return 270}}}
 mk xb_a {switch $m {getNet {return $::NET(xb_a)} disconnect {set ::NET(xb_a) NULL} connect {set ::NET(xb_a) [lindex $args 0]}}}
+proc ord::get_db {} {return db}
+mk db {switch $m {findMaster {return pm}}}
+namespace eval odb {}
+proc odb::dbInst_create {blk m name} {
+  lappend ::INSTS $name; set ::NET(${name}_a) NULL; set ::LOC($name) {0 0}
+  mk $name "switch \$m {findITerm {return ${name}_\[string tolower \[lindex \$args 0\]\]} setLocation {set ::LOC($name) \$args} setPlacementStatus {}}"
+  mk ${name}_a "switch \$m {getNet {return \$::NET(${name}_a)} disconnect {set ::NET(${name}_a) NULL} connect {set ::NET(${name}_a) \[lindex \$args 0\]}}"
+  mk ${name}_y "switch \$m {connect {set ::DRV(${name}) \[lindex \$args 0\]}}"
+  return $name
+}
+proc odb::dbNet_create {blk name} { mk $name {switch $m {setSigType {}}}; return $name }
+set ::INSTS {}
 """
 
 
@@ -143,7 +157,7 @@ def _run(tmp_path, rows, tail="fwd_export_leaf cts\nputs \"NET $::NET(xb_a) LOC 
     return subprocess.run(["tclsh", str(tmp_path / "t.tcl")], capture_output=True, text=True)
 
 
-ROW = "fclk_out_r_o clk_t1 cland_fwd_fclk_out_r_o r_o cland_fstart_out_r_o"
+ROW = "fclk_out_r_o clk_t1 cland_fwd_fclk_out_r_o 0 r_o cland_fstart_out_r_o"
 
 
 def test_tcl_hangs_buffer_on_majority_source_leaf(tmp_path):
@@ -176,3 +190,21 @@ def test_gen_hook_text_inserts_both_passes():
     k = t.replace(a1, LC.FWD_LEAF_HOOK + a1).replace(a2, a2 + LC.FWD_LEAF_AGAIN)
     assert k.index("fwd_export_leaf cts") < k.index("subtree_balance.tcl]]") < k.index("fwd_export_leaf after_leaf_affinity")
     assert k.index("leaf_affinity.tcl]] }") < k.index("fwd_export_leaf after_leaf_affinity") < k.index("landing_export_check.tcl")
+
+
+def test_leaf_rows_pad_cells():
+    r = LC.export_leaf_rows(_P({TN: dict(LEAF, pad_ps=180)}), TN)
+    assert r[0].split()[3] == str(-(-180 // int(LC.FWD_PAD_STAGE_PS)))     # ceil(180 / 22) = 9
+    assert LC.export_leaf_rows(_P({TN: dict(LEAF, pad_ps=0)}), TN)[0].split()[3] == "0"
+
+
+def test_tcl_pad_chain_between_leaf_and_export(tmp_path):
+    row = ROW.replace(" 0 r_o", " 3 r_o")
+    r = _run(tmp_path, [row], tail="fwd_export_leaf cts\nfwd_export_leaf after_leaf_affinity\n"
+             "puts \"PAD0 $::NET(cland_fwd_fclk_out_r_o_pad0_a) PAD1 $::NET(cland_fwd_fclk_out_r_o_pad1_a) "
+             "XB $::NET(xb_a) DRV2 $::DRV(cland_fwd_fclk_out_r_o_pad2) N [llength $::INSTS] LOC $::LOC(cland_fwd_fclk_out_r_o_pad2)\"\n")
+    assert r.returncode == 0, r.stderr
+    # leaf -> pad0 -> pad1 -> pad2 -> export buffer; built once (second pass finds pad0 already on the leaf)
+    assert ("PAD0 leafA PAD1 cland_fwd_fclk_out_r_o_padnet0 XB cland_fwd_fclk_out_r_o_padnet2 "
+            "DRV2 cland_fwd_fclk_out_r_o_padnet2 N 3 LOC 51000 40000") in r.stdout
+    assert "after_leaf_affinity: 0 export(s) hung on their launch leaf, 1 already there" in r.stdout

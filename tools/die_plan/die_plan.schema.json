@@ -9100,6 +9100,11 @@
        "note": {
         "type": "string"
        },
+       "pad_ps": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 400
+       },
        "ports": {
         "type": "array",
         "items": {

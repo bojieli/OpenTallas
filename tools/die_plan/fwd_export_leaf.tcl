@@ -8,7 +8,10 @@
 # of them, among the flops whose clock comes from the export's source tap port, so the SDC generated clock keeps its
 # -source), and the buffer moves next to those flops.  fclk then shares the launch flops' whole tree: same insertion by
 # construction, d = clk->q + data wire - export buffer and port wire.  No launch flop on the source tap = error (fail
-# closed: the plan must re-site the ring onto the export tap).  Row: `port src buffer base...` (base = data port names).
+# closed: the plan must re-site the ring onto the export tap).  Row: `port src buffer npad base...` (base = data port
+# names).  npad > 0 (clock.fwd_export.<T>.pad_ps): a chain of npad BUFx4 cells between the leaf and the export buffer
+# delays fclk into the data eye (A5t5 what-if: leaf alone leaves d_max 253 ps TT from the output stage, d_min -26;
+# the receiver contract is d >= -385 and d <= ~147, so a uniform delay centres every ring).
 proc fel_clk {inst} {
   foreach it [$inst getITerms] { if {[[$it getMTerm] getName] in {CLK CK}} { return $it } }
   return ""
@@ -59,13 +62,39 @@ proc fwd_export_leaf {tag} {
   set n 0; set same 0; set moved 0; set bad {}
   set h [open $f]
   while {[gets $h l] >= 0} {
-    if {[string match "#*" $l] || [llength $l] < 4} continue
-    set port [lindex $l 0]; set src [lindex $l 1]; set bn [lindex $l 2]
+    if {[string match "#*" $l] || [llength $l] < 5} continue
+    set port [lindex $l 0]; set src [lindex $l 1]; set bn [lindex $l 2]; set npad [lindex $l 3]
     set bi [$blk findInst $bn]
     if {$bi eq "NULL"} { lappend bad "$port: export buffer $bn missing"; continue }
     set a [$bi findITerm A]
+    # pad_ps: npad BUFx4 cells leaf -> ${bn}_pad0 .. -> export buffer (built once; later passes re-hang pad0)
+    set chain {}
+    if {$npad > 0} {
+      if {[$blk findInst ${bn}_pad0] eq "NULL"} {
+        set pm [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
+        if {$pm eq "NULL"} { error "OT_FWD_LEAF pad master BUFx4_ASAP7_75t_R missing" }
+        lassign [$bi getLocation] bx by
+        if {[$a getNet] ne "NULL"} { $a disconnect }
+        set prev ""
+        for {set k 0} {$k < $npad} {incr k} {
+          set pi [odb::dbInst_create $blk $pm ${bn}_pad$k]
+          $pi setLocation $bx $by; $pi setPlacementStatus PLACED
+          if {$prev ne ""} { [$pi findITerm A] connect $prev }
+          set prev [odb::dbNet_create $blk ${bn}_padnet$k]
+          $prev setSigType CLOCK
+          [$pi findITerm Y] connect $prev
+        }
+        $a connect $prev
+      }
+      for {set k 0} {$k < $npad} {incr k} {
+        set pi [$blk findInst ${bn}_pad$k]
+        if {$pi eq "NULL"} { error "OT_FWD_LEAF $bn pad chain broken at $k" }
+        lappend chain $pi
+      }
+      set a [[lindex $chain 0] findITerm A]
+    }
     set nets [dict create]; set tot 0; set xtap 0
-    foreach base [lrange $l 3 end] {
+    foreach base [lrange $l 4 end] {
       if {![dict exists $byb $base]} continue
       foreach bt [dict get $byb $base] {
         set li [fel_launch $bt]
@@ -102,10 +131,11 @@ proc fwd_export_leaf {tag} {
     set d [expr {abs($bx - $cx) + abs($by - $cy)}]
     if {$d > $lim && [$bi getPlacementStatus] ni {FIRM LOCKED COVER}} {
       $bi setLocation $cx $cy; $bi setPlacementStatus PLACED
+      foreach pi $chain { $pi setLocation $cx $cy; $pi setPlacementStatus PLACED }
       incr moved
     }
-    puts [format "OT_FWD_LEAF %s %s <- %s (src %s): %d of %d launch flop(s) on it, %d on other leaves of the tap, %d off the tap, buffer %.1f um from them" \
-      $tag $port [$best getName] $src $bc $tot [expr {$tot - $xtap - $bc}] $xtap [expr {double($d) / $dbu}]]
+    puts [format "OT_FWD_LEAF %s %s <- %s (src %s): %d of %d launch flop(s) on it, %d on other leaves of the tap, %d off the tap, buffer %.1f um from them, %d pad cell(s)" \
+      $tag $port [$best getName] $src $bc $tot [expr {$tot - $xtap - $bc}] $xtap [expr {double($d) / $dbu}] $npad]
   }
   close $h
   puts "OT_FWD_LEAF $tag: $n export(s) hung on their launch leaf, $same already there, $moved moved next to their flops, [llength $bad] failed"

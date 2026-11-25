@@ -1641,6 +1641,7 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
 SCHEMA["properties"]["clock"]["properties"]["fwd_export"] = {"type": "object", "additionalProperties": {
     "type": "object", "additionalProperties": False, "properties": {
         "from": {"enum": ["tap", "leaf"]}, "match_insertion": {"const": True}, "note": {"type": "string"},
+        "pad_ps": {"type": "number", "minimum": 0, "maximum": 400},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
     "type": "object", "additionalProperties": False, "required": ["modules"],

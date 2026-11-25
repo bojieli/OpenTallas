@@ -812,6 +812,9 @@ def export_check_tcl(P,tn,bit0=frozenset()):
 # that drives the CLK pins of its ring's launch flops (majority, of the flops on the export's source tap), next to them,
 # so CTS's leaf balance gives fclk the same insertion as the data launch.  Absent key / "from": "tap" = unchanged kits.
 FWD_EXPORT_FROM = ("tap", "leaf")
+# pad_ps -> BUFx4 cells in front of the leaf export buffer (BUFx4 TT stage on a one-load clock net: 19-22 ps, the
+# kv3_pv_v12 clk_t* tb chains); the cell count is what the kit builds, the probe measures the delay it gives.
+FWD_PAD_STAGE_PS = 22.0
 
 
 def fwd_export_spec(P, tn):
@@ -832,8 +835,8 @@ def fwd_export_spec(P, tn):
 
 
 def export_leaf_rows(P, tn, bit0=frozenset()):
-    """rows of /work/fwd_export_leaf.txt for a type with clock.fwd_export.from = leaf: `port src buffer base...` (port and
-    src as BTerm names, buffer = the export_tcl_fwd instance, base = the ring's data port names: `<b>` and
+    """rows of /work/fwd_export_leaf.txt for a type with clock.fwd_export.from = leaf: `port src buffer npad base...` (port
+    and src as BTerm names, buffer = the export_tcl_fwd instance, npad = BUFx4 pad cells for pad_ps, base = the ring's data port names: `<b>` and
     `cland_fstart_out_<b>` for fclk_out_<b>, as bits or scalars).  [] = no leaf export (kit unchanged)."""
     s = fwd_export_spec(P, tn)
     if not s or s.get("from", "tap") != "leaf":
@@ -846,6 +849,10 @@ def export_leaf_rows(P, tn, bit0=frozenset()):
     names = {p["name"] for p in pins}
     if want is not None and set(want) - names:
         raise ValueError(f"{tn}: clock.fwd_export.ports not forwarded outputs: {sorted(set(want) - names)}")
+    pad = float(s.get("pad_ps", 0) or 0)
+    if pad < 0:
+        raise ValueError(f"{tn}: clock.fwd_export.pad_ps {pad} < 0")
+    npad = int(math.ceil(pad / FWD_PAD_STAGE_PS - 1e-9)) if pad else 0
     rows = []
     for p in pins:
         n = p["name"]
@@ -854,7 +861,7 @@ def export_leaf_rows(P, tn, bit0=frozenset()):
         if not n.startswith("fclk_out_"):
             raise ValueError(f"{tn}: leaf export {n}: ring data ports are named after fclk_out_<bus>")
         b = n[len("fclk_out_"):]
-        rows.append(" ".join([_bterm(n, bit0), _bterm(p["source_clock_port"], bit0), "cland_fwd_" + n,
+        rows.append(" ".join([_bterm(n, bit0), _bterm(p["source_clock_port"], bit0), "cland_fwd_" + n, str(npad),
                               b, "cland_fstart_out_" + b]))
     return rows
 
