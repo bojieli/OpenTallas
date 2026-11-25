@@ -157,3 +157,9 @@ def test_signoff_merged_gds_guard_blocks_under_every_profile():
     assert signoff.merged_gds_guard(ok)["verdict"] == "SIGNED"
     none = {"verdict": "SIGNED", "reasons": [], "checks": {}}
     assert signoff.merged_gds_guard(none)["verdict"] == "SIGNED"
+
+
+def test_macro_name_skips_propertydefinitions(tmp_path):
+    p = tmp_path / "m.lef"
+    p.write_text("VERSION 5.8 ;\nPROPERTYDEFINITIONS\n  MACRO width INTEGER ;\nEND PROPERTYDEFINITIONS\nMACRO real_core\n  CLASS BLOCK ;\nEND real_core\n")
+    assert MG.macro_name(p) == "real_core"

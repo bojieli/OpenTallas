@@ -187,7 +187,7 @@ def kit_plan(kit):
 def macro_name(lef):
     with open(lef) as fh:
         for ln in fh:
-            mm = re.match(r"\s*MACRO\s+(\S+)", ln)
+            mm = re.match(r"MACRO\s+(\S+)", ln)
             if mm:
                 return mm.group(1)
     return Path(lef).stem
