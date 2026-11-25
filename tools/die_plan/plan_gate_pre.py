@@ -3367,6 +3367,51 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None):
     return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
 
 
+
+_LANE_SLOT = []
+
+
+def lane_slot(tree, env=None, out=None):
+    """FLEET-OPS 11-25 (epyc12 load 293 on 96 cores: 35 concurrent PRE checks, 153 processes, 18 from one lane): while the HOST is overloaded
+    (load1 > $OT_PRE_LOAD_X (1.5) x cores) at most $OT_PRE_LANE_CAP (3, 0 = off) PRE checks of one lane (the claude/<lane> dir of the tree) run on this host at once;
+    the others wait for a flock slot in $OT_PRE_SLOT_DIR (/tmp/ot-pre-slots) for at most $OT_PRE_LANE_WAIT_S (900 s), then run anyway (never starved).
+    The flock dies with the process, so a killed check frees its slot.  An idle host is never gated.  -> slot index, or None when not gated / not waited"""
+    import fcntl
+    import time as _t
+    env = os.environ if env is None else env
+    out = out if out is not None else sys.stderr
+    try:
+        cap = int(env.get("OT_PRE_LANE_CAP", "3"))
+        if cap <= 0:
+            return None
+        if os.getloadavg()[0] <= float(env.get("OT_PRE_LOAD_X", "1.5")) * (os.cpu_count() or 1):
+            return None
+        m = re.search(r"/claude/([^/]+)", os.path.realpath(tree))
+        lane = m.group(1) if m else "other"
+        d = env.get("OT_PRE_SLOT_DIR", "/tmp/ot-pre-slots")
+        os.makedirs(d, mode=0o1777, exist_ok=True)
+        t_end = _t.time() + float(env.get("OT_PRE_LANE_WAIT_S", "900"))
+        told = False
+        while True:
+            for i in range(cap):
+                fd = os.open(os.path.join(d, f"{re.sub(r'[^A-Za-z0-9_.-]', '_', lane)}.{i}"), os.O_RDWR | os.O_CREAT, 0o666)
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    _LANE_SLOT.append(fd)
+                    return i
+                except OSError:
+                    os.close(fd)
+            if _t.time() >= t_end:
+                print(f"PRE-LANE-SLOT lane {lane}: no slot in {env.get('OT_PRE_LANE_WAIT_S', '900')} s, running anyway", file=out)
+                return None
+            if not told:
+                print(f"PRE-LANE-SLOT lane {lane}: host load {os.getloadavg()[0]:.0f} over {os.cpu_count()} cores, {cap} PRE checks of this lane already running; waiting", file=out)
+                told = True
+            _t.sleep(5)
+    except OSError:
+        return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="plan_gate_pre", description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -3423,6 +3468,7 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(pr, indent=1) + "\n")
         print(f"{a.out}: {len(pr['types'])} types, result {a.result}")
         return 0
+    lane_slot(a.tree)
     brun = None
     if a.base:                                           # PRE-DIFF: the base check runs beside the row check (or comes from the cache)
         sys.path.insert(0, str(Path(__file__).resolve().parent))
