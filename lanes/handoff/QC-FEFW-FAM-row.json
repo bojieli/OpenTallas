@@ -1,0 +1,7225 @@
+{
+ "row": "FWV2-CHANNEL-FAM",
+ "apply": "per type, internal_stations entry matched by conn: overwrite the listed keys (regs_um, channel_um, leg_order, note; channel_um/leg_order are added where absent; 0 adds, 0 drops of entries, other keys byte-identical). Types and entries not listed are untouched; existing channels on partial types are not moved.",
+ "credit": "VIS-QC VISQC-FEFW-1 form (hub lanes/handoff/VIS-QC-form_fefw.md); layout method = QC-FWV2-BAY de-stack on sle_fw_v2__cl69f5e854 (channel width max(4, 0.1*bits) um); packer fefw_pack.py (QC-FEFW-FAM, hub lanes/handoff/QC-FEFW-FAM-fefw_pack.py)",
+ "base": "C1n-r2 a372ae84fa2a",
+ "excludes": "sle_fw_v2__cl6740750e (QC-FWV2-BAY row FWV2-CHANNEL)",
+ "unfit": {
+  "sle_fe_v2": [
+   "bus:x_fw_p2_i",
+   "bus:ard_wi",
+   "bus:rd_wo",
+   "bus:hr_wo"
+  ],
+  "slw_fe_v2__cle312294d": [
+   "bus:hr_eo"
+  ]
+ },
+ "types": {
+  "sle_fe_v1__cl8210183c": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       158.066,
+       915.84
+      ],
+      [
+       155.65,
+       765.282
+      ],
+      [
+       152.974,
+       614.984
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       879.706
+      ],
+      [
+       155.928,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       37.95,
+       931.902
+      ],
+      [
+       166.464,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       144.938,
+       1184.552
+      ],
+      [
+       272.9,
+       1167.576
+      ],
+      [
+       272.9,
+       1022.638
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      299.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-299.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1354.633
+      ],
+      [
+       96.2,
+       1223.907
+      ],
+      [
+       96.2,
+       1093.18
+      ],
+      [
+       96.2,
+       962.453
+      ],
+      [
+       180.313,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 523.87->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       133.577,
+       1673.416
+      ],
+      [
+       155.2,
+       1561.462
+      ],
+      [
+       155.2,
+       1427.885
+      ],
+      [
+       155.2,
+       1294.308
+      ],
+      [
+       155.2,
+       1160.731
+      ],
+      [
+       155.2,
+       1027.154
+      ],
+      [
+       177.463,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 404.5->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       168.066,
+       386.552
+      ],
+      [
+       249.4,
+       473.283
+      ],
+      [
+       249.4,
+       641.349
+      ],
+      [
+       249.4,
+       809.414
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       760.894
+      ],
+      [
+       258.35,
+       553.258
+      ],
+      [
+       207.636,
+       396.336
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       809.466
+      ],
+      [
+       215.2,
+       607.251
+      ],
+      [
+       215.2,
+       405.037
+      ],
+      [
+       202.214,
+       215.808
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1005.075
+      ],
+      [
+       214.2,
+       1191.15
+      ],
+      [
+       214.2,
+       1377.226
+      ],
+      [
+       186.075,
+       1535.176
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_wo",
+    "set": {
+     "regs_um": [
+      [
+       322.8,
+       714.469
+      ],
+      [
+       322.8,
+       501.338
+      ],
+      [
+       322.8,
+       288.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      317.0,
+      328.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 317.0-328.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_wo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:hr_wo",
+    "set": {
+     "regs_um": [
+      [
+       355.65,
+       775.254
+      ],
+      [
+       355.65,
+       590.058
+      ],
+      [
+       436.884,
+       486.096
+      ]
+     ],
+     "channel_um": [
+      333.0,
+      378.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 468.84->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 333.0-378.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_wo",
+    "set": {
+     "regs_um": [
+      [
+       476.712,
+       915.84
+      ],
+      [
+       579.6,
+       853.056
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "regs_um": [
+      [
+       449.395,
+       915.84
+      ],
+      [
+       587.749,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      615.0,
+      619.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 615.0-619.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wo",
+    "set": {
+     "regs_um": [
+      [
+       462.884,
+       915.84
+      ],
+      [
+       466.4,
+       1064.168
+      ],
+      [
+       470.236,
+       1212.176
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_wi",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       316.67,
+       5.24
+      ],
+      [
+       314.0,
+       155.275
+      ],
+      [
+       314.0,
+       307.98
+      ],
+      [
+       314.0,
+       460.685
+      ],
+      [
+       314.0,
+       613.39
+      ],
+      [
+       314.0,
+       766.095
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_wi",
+    "set": {
+     "regs_um": [
+      [
+       493.399,
+       68.752
+      ],
+      [
+       408.6,
+       112.634
+      ],
+      [
+       408.6,
+       241.315
+      ],
+      [
+       408.6,
+       369.996
+      ],
+      [
+       408.6,
+       498.676
+      ],
+      [
+       408.6,
+       627.357
+      ],
+      [
+       408.6,
+       756.038
+      ],
+      [
+       408.6,
+       884.719
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_wi",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       166.939
+      ],
+      [
+       496.0,
+       322.583
+      ],
+      [
+       496.0,
+       478.226
+      ],
+      [
+       496.0,
+       633.87
+      ],
+      [
+       496.0,
+       789.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_wi",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wi",
+    "set": {
+     "regs_um": [
+      [
+       593.84,
+       915.84
+      ],
+      [
+       452.44,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      610.0,
+      614.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 610.0-614.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_wo",
+    "set": {
+     "regs_um": [
+      [
+       495.474,
+       915.84
+      ],
+      [
+       527.0,
+       1068.748
+      ],
+      [
+       527.0,
+       1253.182
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 427.37->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       202.115,
+       915.84
+      ],
+      [
+       95.65,
+       913.379
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_wi",
+    "set": {
+     "regs_um": [
+      [
+       556.0,
+       276.38
+      ],
+      [
+       556.0,
+       439.86
+      ],
+      [
+       556.0,
+       603.34
+      ],
+      [
+       517.78,
+       728.6
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      558.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 817 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-558.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_wi",
+    "set": {
+     "regs_um": [
+      [
+       437.0,
+       206.325
+      ],
+      [
+       437.0,
+       391.35
+      ],
+      [
+       437.0,
+       576.375
+      ]
+     ],
+     "channel_um": [
+      435.0,
+      439.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 740 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 435.0-439.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "sle_fe_v1__cl1cbb7497": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       158.066,
+       915.84
+      ],
+      [
+       155.65,
+       765.282
+      ],
+      [
+       152.974,
+       614.984
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       879.706
+      ],
+      [
+       155.928,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       37.95,
+       931.902
+      ],
+      [
+       166.464,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       144.938,
+       1184.552
+      ],
+      [
+       272.9,
+       1167.576
+      ],
+      [
+       272.9,
+       1022.638
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      299.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-299.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1354.633
+      ],
+      [
+       96.2,
+       1223.907
+      ],
+      [
+       96.2,
+       1093.18
+      ],
+      [
+       96.2,
+       962.453
+      ],
+      [
+       180.313,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 523.87->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       133.577,
+       1673.416
+      ],
+      [
+       155.2,
+       1561.462
+      ],
+      [
+       155.2,
+       1427.885
+      ],
+      [
+       155.2,
+       1294.308
+      ],
+      [
+       155.2,
+       1160.731
+      ],
+      [
+       155.2,
+       1027.154
+      ],
+      [
+       177.463,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 404.5->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       168.066,
+       386.552
+      ],
+      [
+       249.4,
+       473.283
+      ],
+      [
+       249.4,
+       641.349
+      ],
+      [
+       249.4,
+       809.414
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       760.894
+      ],
+      [
+       258.35,
+       553.258
+      ],
+      [
+       207.636,
+       396.336
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       809.466
+      ],
+      [
+       215.2,
+       607.251
+      ],
+      [
+       215.2,
+       405.037
+      ],
+      [
+       202.214,
+       215.808
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1005.075
+      ],
+      [
+       214.2,
+       1191.15
+      ],
+      [
+       214.2,
+       1377.226
+      ],
+      [
+       186.075,
+       1535.176
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_wo",
+    "set": {
+     "regs_um": [
+      [
+       322.8,
+       714.469
+      ],
+      [
+       322.8,
+       501.338
+      ],
+      [
+       322.8,
+       288.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      317.0,
+      328.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 317.0-328.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_wo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:hr_wo",
+    "set": {
+     "regs_um": [
+      [
+       355.65,
+       775.254
+      ],
+      [
+       355.65,
+       590.058
+      ],
+      [
+       436.884,
+       486.096
+      ]
+     ],
+     "channel_um": [
+      333.0,
+      378.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 468.84->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 333.0-378.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_wo",
+    "set": {
+     "regs_um": [
+      [
+       476.712,
+       915.84
+      ],
+      [
+       579.6,
+       853.056
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "regs_um": [
+      [
+       449.395,
+       915.84
+      ],
+      [
+       587.749,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      615.0,
+      619.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 615.0-619.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wo",
+    "set": {
+     "regs_um": [
+      [
+       462.884,
+       915.84
+      ],
+      [
+       466.4,
+       1064.168
+      ],
+      [
+       470.236,
+       1212.176
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_wi",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       316.67,
+       5.24
+      ],
+      [
+       314.0,
+       155.275
+      ],
+      [
+       314.0,
+       307.98
+      ],
+      [
+       314.0,
+       460.685
+      ],
+      [
+       314.0,
+       613.39
+      ],
+      [
+       314.0,
+       766.095
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_wi",
+    "set": {
+     "regs_um": [
+      [
+       493.399,
+       68.752
+      ],
+      [
+       408.6,
+       112.634
+      ],
+      [
+       408.6,
+       241.315
+      ],
+      [
+       408.6,
+       369.996
+      ],
+      [
+       408.6,
+       498.676
+      ],
+      [
+       408.6,
+       627.357
+      ],
+      [
+       408.6,
+       756.038
+      ],
+      [
+       408.6,
+       884.719
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_wi",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       166.939
+      ],
+      [
+       496.0,
+       322.583
+      ],
+      [
+       496.0,
+       478.226
+      ],
+      [
+       496.0,
+       633.87
+      ],
+      [
+       496.0,
+       789.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_wi",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wi",
+    "set": {
+     "regs_um": [
+      [
+       593.84,
+       915.84
+      ],
+      [
+       452.44,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      610.0,
+      614.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 610.0-614.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_wo",
+    "set": {
+     "regs_um": [
+      [
+       495.474,
+       915.84
+      ],
+      [
+       527.0,
+       1068.748
+      ],
+      [
+       527.0,
+       1253.182
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 427.37->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       202.115,
+       915.84
+      ],
+      [
+       95.65,
+       913.379
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_wi",
+    "set": {
+     "regs_um": [
+      [
+       437.0,
+       158.6
+      ],
+      [
+       437.0,
+       323.3
+      ],
+      [
+       437.0,
+       488.0
+      ],
+      [
+       437.0,
+       652.7
+      ]
+     ],
+     "channel_um": [
+      435.0,
+      439.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 824 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 435.0-439.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_wi",
+    "set": {
+     "regs_um": [
+      [
+       381.0,
+       150.525
+      ],
+      [
+       381.0,
+       335.75
+      ],
+      [
+       381.0,
+       520.975
+      ]
+     ],
+     "channel_um": [
+      379.0,
+      383.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 741 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 379.0-383.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "sle_fe_v2": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       163.534,
+       915.84
+      ],
+      [
+       155.65,
+       776.218
+      ],
+      [
+       147.506,
+       636.856
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       143.931,
+       795.088
+      ],
+      [
+       214.95,
+       867.999
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      241.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-241.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       124.494,
+       1102.776
+      ],
+      [
+       248.988,
+       1102.776
+      ],
+      [
+       273.95,
+       1003.244
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      300.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-300.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       37.2,
+       1318.36
+      ],
+      [
+       37.2,
+       1183.088
+      ],
+      [
+       37.2,
+       1047.816
+      ],
+      [
+       40.496,
+       915.84
+      ],
+      [
+       175.768,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      64.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-64.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1702.899
+      ],
+      [
+       96.2,
+       1577.661
+      ],
+      [
+       96.2,
+       1452.424
+      ],
+      [
+       96.2,
+       1327.187
+      ],
+      [
+       96.2,
+       1201.949
+      ],
+      [
+       96.2,
+       1076.712
+      ],
+      [
+       96.2,
+       951.475
+      ],
+      [
+       185.803,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 436.37->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       169.229,
+       380.736
+      ],
+      [
+       248.4,
+       470.794
+      ],
+      [
+       248.4,
+       640.022
+      ],
+      [
+       248.4,
+       809.251
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      250.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-250.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       257.35,
+       760.66
+      ],
+      [
+       257.35,
+       551.79
+      ],
+      [
+       208.87,
+       391.4
+      ]
+     ],
+     "channel_um": [
+      255.0,
+      259.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 255.0-259.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       111.662,
+       915.84
+      ],
+      [
+       96.2,
+       731.925
+      ],
+      [
+       96.2,
+       532.547
+      ],
+      [
+       96.2,
+       333.17
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       1013.872
+      ],
+      [
+       215.2,
+       1207.744
+      ],
+      [
+       215.2,
+       1401.616
+      ],
+      [
+       193.872,
+       1574.16
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_wo",
+    "set": {
+     "regs_um": [
+      [
+       345.8,
+       737.469
+      ],
+      [
+       345.8,
+       524.338
+      ],
+      [
+       345.8,
+       311.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      340.0,
+      351.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 340.0-351.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_wo",
+    "set": {
+     "regs_um": [
+      [
+       382.0,
+       771.332
+      ],
+      [
+       382.0,
+       555.864
+      ],
+      [
+       406.612,
+       365.008
+      ]
+     ],
+     "channel_um": [
+      356.0,
+      408.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 356.0-408.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:l9_eo",
+    "set": {
+     "regs_um": [
+      [
+       80.723,
+       915.84
+      ],
+      [
+       38.7,
+       727.546
+      ],
+      [
+       38.7,
+       497.23
+      ],
+      [
+       38.7,
+       266.913
+      ]
+     ],
+     "channel_um": [
+      13.0,
+      64.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 447.12->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 13.0-64.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "regs_um": [
+      [
+       488.205,
+       915.84
+      ],
+      [
+       595.4,
+       845.869
+      ]
+     ],
+     "channel_um": [
+      593.0,
+      597.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 593.0-597.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wo",
+    "set": {
+     "regs_um": [
+      [
+       466.4,
+       921.235
+      ],
+      [
+       466.4,
+       1081.989
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_wi",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       334.0,
+       22.57
+      ],
+      [
+       334.0,
+       175.275
+      ],
+      [
+       334.0,
+       327.98
+      ],
+      [
+       334.0,
+       480.685
+      ],
+      [
+       334.0,
+       633.39
+      ],
+      [
+       334.0,
+       786.095
+      ]
+     ],
+     "channel_um": [
+      332.0,
+      336.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 332.0-336.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_wi",
+    "set": {
+     "regs_um": [
+      [
+       604.0,
+       274.939
+      ],
+      [
+       604.0,
+       430.583
+      ],
+      [
+       604.0,
+       586.226
+      ],
+      [
+       604.0,
+       741.87
+      ],
+      [
+       604.0,
+       897.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      602.0,
+      606.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 602.0-606.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_wi",
+    "set": {
+     "regs_um": [
+      [
+       552.4,
+       316.199
+      ],
+      [
+       552.4,
+       456.366
+      ],
+      [
+       552.4,
+       596.533
+      ],
+      [
+       552.4,
+       736.699
+      ],
+      [
+       552.4,
+       876.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      579.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-579.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wi",
+    "set": {
+     "regs_um": [
+      [
+       586.4,
+       825.019
+      ],
+      [
+       494.131,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      584.0,
+      588.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 584.0-588.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_wo",
+    "set": {
+     "regs_um": [
+      [
+       464.198,
+       915.84
+      ],
+      [
+       527.0,
+       1006.196
+      ],
+      [
+       527.0,
+       1159.354
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       194.891,
+       915.84
+      ],
+      [
+       116.149,
+       953.248
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wi",
+    "set": {
+     "regs_um": [
+      [
+       489.448,
+       828.984
+      ],
+      [
+       443.672,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 702 um (v2 dump), 1 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "sle_fe_v3": [
+   {
+    "conn": "bus:x_fw_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       153.035,
+       1063.904
+      ],
+      [
+       213.95,
+       971.785
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      240.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-240.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       96.9,
+       1194.346
+      ],
+      [
+       96.9,
+       1071.185
+      ],
+      [
+       96.9,
+       948.023
+      ],
+      [
+       187.878,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      70.0,
+      123.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 70.0-123.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       129.192,
+       193.344
+      ],
+      [
+       155.2,
+       296.528
+      ],
+      [
+       155.2,
+       425.72
+      ],
+      [
+       155.2,
+       554.912
+      ],
+      [
+       155.2,
+       684.104
+      ],
+      [
+       155.2,
+       813.296
+      ],
+      [
+       181.848,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       133.783,
+       1407.496
+      ],
+      [
+       155.2,
+       1295.131
+      ],
+      [
+       155.2,
+       1161.348
+      ],
+      [
+       155.2,
+       1027.565
+      ],
+      [
+       177.257,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       121.4,
+       143.656
+      ],
+      [
+       121.4,
+       303.96
+      ],
+      [
+       121.4,
+       464.264
+      ],
+      [
+       121.4,
+       624.568
+      ],
+      [
+       121.4,
+       784.872
+      ],
+      [
+       150.736,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      119.0,
+      123.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 407.89->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 119.0-123.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:l9_eo",
+    "set": {
+     "regs_um": [
+      [
+       212.7,
+       858.78
+      ],
+      [
+       212.7,
+       703.38
+      ],
+      [
+       155.4,
+       605.28
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      238.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-238.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "sle_fw_v3": [
+   {
+    "conn": "bus:ag_eo",
+    "set": {
+     "regs_um": [
+      [
+       60.0,
+       775.373
+      ],
+      [
+       60.0,
+       499.303
+      ],
+      [
+       60.0,
+       223.233
+      ]
+     ],
+     "channel_um": [
+      58.0,
+      62.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> ag_eo pins p99 888 um | FWV3-KNEE-1 11-13 (QC-PROOF-1): 2->3 stations, kit knee worst 416.02->277.34 um (leaf_um = measured launch logic, not moved) | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 58.0-62.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_eo",
+    "set": {
+     "regs_um": [
+      [
+       223.65,
+       761.865
+      ],
+      [
+       223.65,
+       533.087
+      ],
+      [
+       223.65,
+       304.31
+      ],
+      [
+       223.65,
+       75.532
+      ]
+     ],
+     "channel_um": [
+      198.0,
+      249.3
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> ard_eo pins p99 980 um | FWV3-KNEE-1 11-13 (QC-PROOF-1): 2->3 stations, kit knee worst 446.9->297.93 um (leaf_um = measured launch logic, not moved) | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 198.0-249.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arl_eo",
+    "set": {
+     "regs_um": [
+      [
+       256.0,
+       755.523
+      ],
+      [
+       256.0,
+       535.976
+      ],
+      [
+       256.0,
+       316.428
+      ],
+      [
+       219.548,
+       133.333
+      ]
+     ],
+     "channel_um": [
+      254.0,
+      258.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> arl_eo pins p99 887 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 254.0-258.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_eo",
+    "set": {
+     "regs_um": [
+      [
+       272.0,
+       741.789
+      ],
+      [
+       272.0,
+       522.162
+      ],
+      [
+       272.0,
+       302.535
+      ],
+      [
+       219.627,
+       135.281
+      ]
+     ],
+     "channel_um": [
+      270.0,
+      274.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> arm_eo pins p99 895 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 270.0-274.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_eo",
+    "set": {
+     "regs_um": [
+      [
+       95.824,
+       919.002
+      ],
+      [
+       52.0,
+       744.282
+      ],
+      [
+       52.0,
+       525.737
+      ],
+      [
+       52.0,
+       307.192
+      ]
+     ],
+     "channel_um": [
+      50.0,
+      54.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> art_eo pins p99 911 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 50.0-54.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_eo",
+    "set": {
+     "regs_um": [
+      [
+       264.0,
+       765.645
+      ],
+      [
+       264.0,
+       544.726
+      ],
+      [
+       264.0,
+       323.808
+      ],
+      [
+       220.918,
+       145.971
+      ]
+     ],
+     "channel_um": [
+      262.0,
+      266.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> arv_eo pins p99 895 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 262.0-266.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_eo",
+    "set": {
+     "regs_um": [
+      [
+       166.45,
+       894.449
+      ],
+      [
+       166.45,
+       689.608
+      ],
+      [
+       166.45,
+       484.766
+      ],
+      [
+       166.45,
+       279.925
+      ]
+     ],
+     "channel_um": [
+      139.0,
+      193.9
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> dd_eo pins p99 893 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 139.0-193.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:flt_wo",
+    "set": {
+     "regs_um": [
+      [
+       390.305,
+       1200.856
+      ],
+      [
+       334.0,
+       1025.387
+      ],
+      [
+       334.0,
+       793.612
+      ],
+      [
+       334.0,
+       561.838
+      ],
+      [
+       231.775,
+       432.289
+      ]
+     ],
+     "channel_um": [
+      332.0,
+      336.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +3 pin cycles, launch -> flt_wo pins p99 1184 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 332.0-336.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       385.69,
+       6.171
+      ],
+      [
+       288.45,
+       145.321
+      ],
+      [
+       288.45,
+       381.71
+      ],
+      [
+       288.45,
+       618.1
+      ],
+      [
+       236.39,
+       802.43
+      ]
+     ],
+     "channel_um": [
+      286.0,
+      290.9
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +4 pin cycles, launch -> sc_eo pins p99 1208 um | KNEE-1 11-10: 3->4 stations, kit knee worst 400.23->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 286.0-290.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       438.809,
+       1427.953
+      ],
+      [
+       255.539,
+       1427.953
+      ],
+      [
+       236.4,
+       1263.82
+      ],
+      [
+       236.4,
+       1080.55
+      ],
+      [
+       183.271,
+       950.408
+      ]
+     ],
+     "channel_um": [
+      182.0,
+      290.8
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +3 pin cycles, launch -> st_eo pins p99 1025 um | KNEE-1 11-10: 2->3 stations, kit knee worst 442.99->311.0 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 182.0-290.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       450.318,
+       470.123
+      ],
+      [
+       524.85,
+       398.575
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      551.7
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_ctl_p1_o pins p99 444 um | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-551.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       476.984,
+       538.856
+      ],
+      [
+       582.85,
+       602.831
+      ]
+     ],
+     "channel_um": [
+      556.0,
+      609.7
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_ctl_p2_o pins p99 418 um | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 556.0-609.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_o",
+    "set": {
+     "regs_um": [
+      [
+       409.0,
+       511.089
+      ],
+      [
+       409.0,
+       700.603
+      ],
+      [
+       432.566,
+       866.551
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      436.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_fe_o pins p99 367 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-436.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       467.0,
+       514.733
+      ],
+      [
+       467.0,
+       728.212
+      ],
+      [
+       467.0,
+       941.691
+      ]
+     ],
+     "channel_um": [
+      440.0,
+      494.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_fe_p1_o pins p99 759 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 440.0-494.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       499.249,
+       646.782
+      ],
+      [
+       524.95,
+       824.229
+      ],
+      [
+       524.95,
+       1027.378
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      551.9
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_fe_p2_o pins p99 708 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-551.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       433.45,
+       1030.301
+      ],
+      [
+       433.45,
+       1219.102
+      ]
+     ],
+     "channel_um": [
+      431.0,
+      435.9
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +1 pin cycles, launch -> x_sc_o pins p99 568 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 431.0-435.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       468.5,
+       1220.512
+      ],
+      [
+       468.5,
+       1401.145
+      ]
+     ],
+     "channel_um": [
+      441.0,
+      496.0
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_stm_o pins p99 507 um | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 441.0-496.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       404.892,
+       1300.546
+      ],
+      [
+       409.45,
+       1500.994
+      ],
+      [
+       417.075,
+       1698.374
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      436.9
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, launch -> x_stm_p1_o pins p99 792 um | FWV3-KNEE-1 11-13 (QC-PROOF-1): 2->3 stations, kit knee worst 422.19->224.08 um (leaf_um = measured launch logic, not moved) | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-436.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_ei",
+    "set": {
+     "regs_um": [
+      [
+       71.85,
+       241.688
+      ],
+      [
+       71.85,
+       393.803
+      ],
+      [
+       71.85,
+       545.918
+      ],
+      [
+       71.85,
+       698.033
+      ],
+      [
+       165.286,
+       756.711
+      ]
+     ],
+     "channel_um": [
+      66.0,
+      77.7
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, cmd_ei ring -> consumers p99 750 um | KNEE-1 11-10: 1->2 stations, kit knee worst 445.23->317.4 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 66.0-77.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_ei",
+    "set": {
+     "regs_um": [
+      [
+       108.05,
+       407.916
+      ],
+      [
+       108.05,
+       554.626
+      ],
+      [
+       108.05,
+       701.336
+      ],
+      [
+       174.935,
+       781.161
+      ]
+     ],
+     "channel_um": [
+      82.0,
+      134.1
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +2 pin cycles, dr_ei ring -> consumers p99 715 um | KNEE-1 11-10: 1->2 stations, kit knee worst 461.07->321.64 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 82.0-134.1 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       503.682,
+       205.366
+      ],
+      [
+       436.601,
+       256.684
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      502.2
+     ],
+     "leg_order": "channel",
+     "note": "STRUCT-FWV3-1 DIE-QC-97 11-09: +1 pin cycles, x_ctl_p1_i ring -> consumers p99 368 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-502.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fe_v1__cl95cd1d0c": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       155.65,
+       891.202
+      ],
+      [
+       155.65,
+       711.174
+      ],
+      [
+       155.65,
+       531.146
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 461.5->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       753.85
+      ],
+      [
+       36.95,
+       899.21
+      ],
+      [
+       165.68,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       37.9,
+       951.559
+      ],
+      [
+       156.611,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1346.18
+      ],
+      [
+       96.2,
+       1217.144
+      ],
+      [
+       96.2,
+       1088.108
+      ],
+      [
+       96.2,
+       959.072
+      ],
+      [
+       182.004,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 514.68->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       132.497,
+       1664.776
+      ],
+      [
+       155.2,
+       1554.982
+      ],
+      [
+       155.2,
+       1422.485
+      ],
+      [
+       155.2,
+       1289.988
+      ],
+      [
+       155.2,
+       1157.491
+      ],
+      [
+       155.2,
+       1024.994
+      ],
+      [
+       178.543,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       160.767,
+       262.28
+      ],
+      [
+       249.4,
+       334.413
+      ],
+      [
+       249.4,
+       495.18
+      ],
+      [
+       249.4,
+       655.947
+      ],
+      [
+       249.4,
+       816.713
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_st_a_i",
+    "set": {
+     "regs_um": [
+      [
+       85.039,
+       1200.072
+      ],
+      [
+       170.078,
+       1200.072
+      ],
+      [
+       255.117,
+       1200.072
+      ],
+      [
+       258.9,
+       1118.817
+      ],
+      [
+       258.9,
+       1033.778
+      ],
+      [
+       258.9,
+       948.739
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      271.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | S4q9k FABLE-FIX-QC-KNEE-HC (a): 1->6 stations = the former st_a R8 pad pin (+5) as lane cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-271.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       779.295
+      ],
+      [
+       258.35,
+       590.06
+      ],
+      [
+       258.35,
+       400.824
+      ],
+      [
+       189.235,
+       280.704
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       781.326
+      ],
+      [
+       215.2,
+       550.973
+      ],
+      [
+       215.2,
+       320.619
+      ],
+      [
+       215.2,
+       90.266
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.62->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1001.619
+      ],
+      [
+       214.2,
+       1184.238
+      ],
+      [
+       214.2,
+       1366.858
+      ],
+      [
+       182.619,
+       1517.896
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_ei",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       316.67,
+       5.24
+      ],
+      [
+       314.0,
+       155.275
+      ],
+      [
+       314.0,
+       307.98
+      ],
+      [
+       314.0,
+       460.685
+      ],
+      [
+       314.0,
+       613.39
+      ],
+      [
+       314.0,
+       766.095
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_ei",
+    "set": {
+     "regs_um": [
+      [
+       493.399,
+       68.752
+      ],
+      [
+       408.6,
+       112.634
+      ],
+      [
+       408.6,
+       241.315
+      ],
+      [
+       408.6,
+       369.996
+      ],
+      [
+       408.6,
+       498.676
+      ],
+      [
+       408.6,
+       627.357
+      ],
+      [
+       408.6,
+       756.038
+      ],
+      [
+       408.6,
+       884.719
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_ei",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       166.939
+      ],
+      [
+       496.0,
+       322.583
+      ],
+      [
+       496.0,
+       478.226
+      ],
+      [
+       496.0,
+       633.87
+      ],
+      [
+       496.0,
+       789.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_ei",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_ei",
+    "set": {
+     "regs_um": [
+      [
+       612.4,
+       851.019
+      ],
+      [
+       494.131,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      610.0,
+      614.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 610.0-614.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_eo",
+    "set": {
+     "regs_um": [
+      [
+       322.8,
+       714.469
+      ],
+      [
+       322.8,
+       501.338
+      ],
+      [
+       322.8,
+       288.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      317.0,
+      328.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 317.0-328.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_eo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:hr_eo",
+    "set": {
+     "regs_um": [
+      [
+       355.65,
+       775.254
+      ],
+      [
+       355.65,
+       590.058
+      ],
+      [
+       436.884,
+       486.096
+      ]
+     ],
+     "channel_um": [
+      333.0,
+      378.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 468.84->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 333.0-378.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.448,
+       915.84
+      ],
+      [
+       579.6,
+       873.584
+      ],
+      [
+       579.6,
+       718.176
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       488.205,
+       915.84
+      ],
+      [
+       617.4,
+       867.869
+      ]
+     ],
+     "channel_um": [
+      615.0,
+      619.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 615.0-619.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.4,
+       921.235
+      ],
+      [
+       466.4,
+       1081.989
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_eo",
+    "set": {
+     "regs_um": [
+      [
+       464.198,
+       915.84
+      ],
+      [
+       527.0,
+       1006.196
+      ],
+      [
+       527.0,
+       1159.354
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       166.125,
+       915.84
+      ],
+      [
+       95.65,
+       841.401
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fe_v1__clfe325744__cldb4efe33": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       155.65,
+       891.202
+      ],
+      [
+       155.65,
+       711.174
+      ],
+      [
+       155.65,
+       531.146
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 461.5->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       753.85
+      ],
+      [
+       36.95,
+       899.21
+      ],
+      [
+       165.68,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       37.9,
+       951.559
+      ],
+      [
+       156.611,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1346.18
+      ],
+      [
+       96.2,
+       1217.144
+      ],
+      [
+       96.2,
+       1088.108
+      ],
+      [
+       96.2,
+       959.072
+      ],
+      [
+       182.004,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 514.68->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       132.497,
+       1664.776
+      ],
+      [
+       155.2,
+       1554.982
+      ],
+      [
+       155.2,
+       1422.485
+      ],
+      [
+       155.2,
+       1289.988
+      ],
+      [
+       155.2,
+       1157.491
+      ],
+      [
+       155.2,
+       1024.994
+      ],
+      [
+       178.543,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       160.767,
+       262.28
+      ],
+      [
+       249.4,
+       334.413
+      ],
+      [
+       249.4,
+       495.18
+      ],
+      [
+       249.4,
+       655.947
+      ],
+      [
+       249.4,
+       816.713
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_st_a_i",
+    "set": {
+     "regs_um": [
+      [
+       85.039,
+       1200.072
+      ],
+      [
+       170.078,
+       1200.072
+      ],
+      [
+       255.117,
+       1200.072
+      ],
+      [
+       258.9,
+       1118.817
+      ],
+      [
+       258.9,
+       1033.778
+      ],
+      [
+       258.9,
+       948.739
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      271.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | S4q9k FABLE-FIX-QC-KNEE-HC (a): 1->6 stations = the former st_a R8 pad pin (+5) as lane cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-271.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       779.295
+      ],
+      [
+       258.35,
+       590.06
+      ],
+      [
+       258.35,
+       400.824
+      ],
+      [
+       189.235,
+       280.704
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       781.326
+      ],
+      [
+       215.2,
+       550.973
+      ],
+      [
+       215.2,
+       320.619
+      ],
+      [
+       215.2,
+       90.266
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.62->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1001.619
+      ],
+      [
+       214.2,
+       1184.238
+      ],
+      [
+       214.2,
+       1366.858
+      ],
+      [
+       182.619,
+       1517.896
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_ei",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       316.67,
+       5.24
+      ],
+      [
+       314.0,
+       155.275
+      ],
+      [
+       314.0,
+       307.98
+      ],
+      [
+       314.0,
+       460.685
+      ],
+      [
+       314.0,
+       613.39
+      ],
+      [
+       314.0,
+       766.095
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_ei",
+    "set": {
+     "regs_um": [
+      [
+       493.399,
+       68.752
+      ],
+      [
+       408.6,
+       112.634
+      ],
+      [
+       408.6,
+       241.315
+      ],
+      [
+       408.6,
+       369.996
+      ],
+      [
+       408.6,
+       498.676
+      ],
+      [
+       408.6,
+       627.357
+      ],
+      [
+       408.6,
+       756.038
+      ],
+      [
+       408.6,
+       884.719
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_ei",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       166.939
+      ],
+      [
+       496.0,
+       322.583
+      ],
+      [
+       496.0,
+       478.226
+      ],
+      [
+       496.0,
+       633.87
+      ],
+      [
+       496.0,
+       789.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_ei",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_ei",
+    "set": {
+     "regs_um": [
+      [
+       612.4,
+       851.019
+      ],
+      [
+       494.131,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      610.0,
+      614.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 610.0-614.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_eo",
+    "set": {
+     "regs_um": [
+      [
+       322.8,
+       714.469
+      ],
+      [
+       322.8,
+       501.338
+      ],
+      [
+       322.8,
+       288.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      317.0,
+      328.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 317.0-328.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_eo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:hr_eo",
+    "set": {
+     "regs_um": [
+      [
+       355.65,
+       775.254
+      ],
+      [
+       355.65,
+       590.058
+      ],
+      [
+       436.884,
+       486.096
+      ]
+     ],
+     "channel_um": [
+      333.0,
+      378.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 468.84->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 333.0-378.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.448,
+       915.84
+      ],
+      [
+       579.6,
+       873.584
+      ],
+      [
+       579.6,
+       718.176
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       488.205,
+       915.84
+      ],
+      [
+       617.4,
+       867.869
+      ]
+     ],
+     "channel_um": [
+      615.0,
+      619.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 615.0-619.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.4,
+       921.235
+      ],
+      [
+       466.4,
+       1081.989
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_eo",
+    "set": {
+     "regs_um": [
+      [
+       464.198,
+       915.84
+      ],
+      [
+       527.0,
+       1006.196
+      ],
+      [
+       527.0,
+       1159.354
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       166.125,
+       915.84
+      ],
+      [
+       95.65,
+       841.401
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fe_v1__clfe325744__cl08d14f0d": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       155.65,
+       891.202
+      ],
+      [
+       155.65,
+       711.174
+      ],
+      [
+       155.65,
+       531.146
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 461.5->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       753.85
+      ],
+      [
+       36.95,
+       899.21
+      ],
+      [
+       165.68,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       37.9,
+       951.559
+      ],
+      [
+       156.611,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1346.18
+      ],
+      [
+       96.2,
+       1217.144
+      ],
+      [
+       96.2,
+       1088.108
+      ],
+      [
+       96.2,
+       959.072
+      ],
+      [
+       182.004,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 514.68->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       132.497,
+       1664.776
+      ],
+      [
+       155.2,
+       1554.982
+      ],
+      [
+       155.2,
+       1422.485
+      ],
+      [
+       155.2,
+       1289.988
+      ],
+      [
+       155.2,
+       1157.491
+      ],
+      [
+       155.2,
+       1024.994
+      ],
+      [
+       178.543,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       160.767,
+       262.28
+      ],
+      [
+       249.4,
+       334.413
+      ],
+      [
+       249.4,
+       495.18
+      ],
+      [
+       249.4,
+       655.947
+      ],
+      [
+       249.4,
+       816.713
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_st_a_i",
+    "set": {
+     "regs_um": [
+      [
+       85.039,
+       1200.072
+      ],
+      [
+       170.078,
+       1200.072
+      ],
+      [
+       255.117,
+       1200.072
+      ],
+      [
+       258.9,
+       1118.817
+      ],
+      [
+       258.9,
+       1033.778
+      ],
+      [
+       258.9,
+       948.739
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      271.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | S4q9k FABLE-FIX-QC-KNEE-HC (a): 1->6 stations = the former st_a R8 pad pin (+5) as lane cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-271.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       779.295
+      ],
+      [
+       258.35,
+       590.06
+      ],
+      [
+       258.35,
+       400.824
+      ],
+      [
+       189.235,
+       280.704
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       781.326
+      ],
+      [
+       215.2,
+       550.973
+      ],
+      [
+       215.2,
+       320.619
+      ],
+      [
+       215.2,
+       90.266
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.62->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1001.619
+      ],
+      [
+       214.2,
+       1184.238
+      ],
+      [
+       214.2,
+       1366.858
+      ],
+      [
+       182.619,
+       1517.896
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_ei",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       316.67,
+       5.24
+      ],
+      [
+       314.0,
+       155.275
+      ],
+      [
+       314.0,
+       307.98
+      ],
+      [
+       314.0,
+       460.685
+      ],
+      [
+       314.0,
+       613.39
+      ],
+      [
+       314.0,
+       766.095
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_ei",
+    "set": {
+     "regs_um": [
+      [
+       493.399,
+       68.752
+      ],
+      [
+       408.6,
+       112.634
+      ],
+      [
+       408.6,
+       241.315
+      ],
+      [
+       408.6,
+       369.996
+      ],
+      [
+       408.6,
+       498.676
+      ],
+      [
+       408.6,
+       627.357
+      ],
+      [
+       408.6,
+       756.038
+      ],
+      [
+       408.6,
+       884.719
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_ei",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       166.939
+      ],
+      [
+       496.0,
+       322.583
+      ],
+      [
+       496.0,
+       478.226
+      ],
+      [
+       496.0,
+       633.87
+      ],
+      [
+       496.0,
+       789.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_ei",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_ei",
+    "set": {
+     "regs_um": [
+      [
+       612.4,
+       851.019
+      ],
+      [
+       494.131,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      610.0,
+      614.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 610.0-614.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_eo",
+    "set": {
+     "regs_um": [
+      [
+       322.8,
+       714.469
+      ],
+      [
+       322.8,
+       501.338
+      ],
+      [
+       322.8,
+       288.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      317.0,
+      328.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 317.0-328.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_eo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:hr_eo",
+    "set": {
+     "regs_um": [
+      [
+       355.65,
+       775.254
+      ],
+      [
+       355.65,
+       590.058
+      ],
+      [
+       436.884,
+       486.096
+      ]
+     ],
+     "channel_um": [
+      333.0,
+      378.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 468.84->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 333.0-378.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.448,
+       915.84
+      ],
+      [
+       579.6,
+       873.584
+      ],
+      [
+       579.6,
+       718.176
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       488.205,
+       915.84
+      ],
+      [
+       617.4,
+       867.869
+      ]
+     ],
+     "channel_um": [
+      615.0,
+      619.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 615.0-619.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       466.4,
+       921.235
+      ],
+      [
+       466.4,
+       1081.989
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_eo",
+    "set": {
+     "regs_um": [
+      [
+       464.198,
+       915.84
+      ],
+      [
+       527.0,
+       1006.196
+      ],
+      [
+       527.0,
+       1159.354
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       166.125,
+       915.84
+      ],
+      [
+       95.65,
+       841.401
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fe_v2__cle312294d": [
+   {
+    "conn": "bus:x_fw_o",
+    "set": {
+     "regs_um": [
+      [
+       155.65,
+       893.84
+      ],
+      [
+       155.65,
+       716.45
+      ],
+      [
+       155.65,
+       539.06
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 456.29->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_i",
+    "set": {
+     "regs_um": [
+      [
+       36.95,
+       776.578
+      ],
+      [
+       36.95,
+       914.362
+      ],
+      [
+       173.256,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      10.0,
+      63.9
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 10.0-63.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       37.9,
+       1050.718
+      ],
+      [
+       39.028,
+       915.84
+      ],
+      [
+       175.034,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1345.427
+      ],
+      [
+       96.2,
+       1216.541
+      ],
+      [
+       96.2,
+       1087.656
+      ],
+      [
+       96.2,
+       958.771
+      ],
+      [
+       182.155,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 518.9->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       136.1,
+       1693.6
+      ],
+      [
+       155.2,
+       1576.6
+      ],
+      [
+       155.2,
+       1440.5
+      ],
+      [
+       155.2,
+       1304.4
+      ],
+      [
+       155.2,
+       1168.3
+      ],
+      [
+       155.2,
+       1032.2
+      ],
+      [
+       174.94,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 417.17->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       160.981,
+       260.992
+      ],
+      [
+       249.4,
+       333.555
+      ],
+      [
+       249.4,
+       494.536
+      ],
+      [
+       249.4,
+       655.517
+      ],
+      [
+       249.4,
+       816.499
+      ]
+     ],
+     "channel_um": [
+      247.0,
+      251.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 247.0-251.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_st_a_i",
+    "set": {
+     "regs_um": [
+      [
+       81.754,
+       1258.832
+      ],
+      [
+       163.508,
+       1258.832
+      ],
+      [
+       245.262,
+       1258.832
+      ],
+      [
+       258.9,
+       1190.716
+      ],
+      [
+       258.9,
+       1108.962
+      ],
+      [
+       258.9,
+       1027.208
+      ],
+      [
+       258.9,
+       945.454
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      271.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | S4q9k FABLE-FIX-QC-KNEE-HC (a): 1->7 stations = the former st_a R8 pad pin (+6) as lane cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-271.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       258.35,
+       779.213
+      ],
+      [
+       258.35,
+       589.896
+      ],
+      [
+       258.35,
+       400.58
+      ],
+      [
+       189.317,
+       280.296
+      ]
+     ],
+     "channel_um": [
+      256.0,
+      260.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 256.0-260.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       215.2,
+       783.714
+      ],
+      [
+       215.2,
+       555.747
+      ],
+      [
+       215.2,
+       327.781
+      ],
+      [
+       215.2,
+       99.814
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      242.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 442.7->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-242.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1005.216
+      ],
+      [
+       214.2,
+       1191.432
+      ],
+      [
+       214.2,
+       1377.648
+      ],
+      [
+       186.216,
+       1535.88
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_ei",
+    "set": {
+     "regs_um": [
+      [
+       496.0,
+       31.865
+      ],
+      [
+       496.0,
+       184.57
+      ],
+      [
+       496.0,
+       337.275
+      ],
+      [
+       496.0,
+       489.98
+      ],
+      [
+       496.0,
+       642.685
+      ],
+      [
+       496.0,
+       795.39
+      ],
+      [
+       463.745,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      494.0,
+      498.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 494.0-498.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_ei",
+    "set": {
+     "regs_um": [
+      [
+       579.6,
+       154.953
+      ],
+      [
+       579.6,
+       283.634
+      ],
+      [
+       579.6,
+       412.315
+      ],
+      [
+       579.6,
+       540.996
+      ],
+      [
+       579.6,
+       669.676
+      ],
+      [
+       579.6,
+       798.357
+      ],
+      [
+       568.402,
+       915.84
+      ],
+      [
+       439.721,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      554.0,
+      605.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 554.0-605.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_ei",
+    "set": {
+     "regs_um": [
+      [
+       466.437,
+       137.376
+      ],
+      [
+       437.0,
+       263.583
+      ],
+      [
+       437.0,
+       419.226
+      ],
+      [
+       437.0,
+       574.87
+      ],
+      [
+       437.0,
+       730.513
+      ],
+      [
+       437.0,
+       886.157
+      ]
+     ],
+     "channel_um": [
+      435.0,
+      439.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 435.0-439.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_ei",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       466.4,
+       370.366
+      ],
+      [
+       466.4,
+       510.533
+      ],
+      [
+       466.4,
+       650.699
+      ],
+      [
+       466.4,
+       790.866
+      ],
+      [
+       451.207,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      493.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-493.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_ei",
+    "set": {
+     "regs_um": [
+      [
+       480.68,
+       802.68
+      ],
+      [
+       339.28,
+       802.68
+      ]
+     ],
+     "channel_um": [
+      318.0,
+      322.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 318.0-322.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_eo",
+    "set": {
+     "regs_um": [
+      [
+       524.171,
+       915.84
+      ],
+      [
+       612.8,
+       791.338
+      ],
+      [
+       612.8,
+       578.206
+      ],
+      [
+       612.8,
+       365.075
+      ]
+     ],
+     "channel_um": [
+      607.0,
+      618.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 607.0-618.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_eo",
+    "set": {
+     "regs_um": [
+      [
+       524.0,
+       913.332
+      ],
+      [
+       524.0,
+       697.864
+      ],
+      [
+       524.0,
+       482.396
+      ]
+     ],
+     "channel_um": [
+      498.0,
+      550.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 498.0-550.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:l9_eo",
+    "set": {
+     "regs_um": [
+      [
+       408.7,
+       858.136
+      ],
+      [
+       408.7,
+       702.772
+      ],
+      [
+       466.716,
+       605.424
+      ]
+     ],
+     "channel_um": [
+      383.0,
+      434.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 383.0-434.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:rd_eo",
+    "set": {
+     "regs_um": [
+      [
+       352.6,
+       791.728
+      ],
+      [
+       456.408,
+       729.864
+      ]
+     ],
+     "channel_um": [
+      327.0,
+      378.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 327.0-378.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       345.371,
+       811.816
+      ],
+      [
+       483.725,
+       811.816
+      ]
+     ],
+     "channel_um": [
+      312.0,
+      316.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 312.0-316.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       462.884,
+       915.84
+      ],
+      [
+       466.4,
+       1064.168
+      ],
+      [
+       470.236,
+       1212.176
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_eo",
+    "set": {
+     "regs_um": [
+      [
+       495.474,
+       915.84
+      ],
+      [
+       527.0,
+       1068.748
+      ],
+      [
+       527.0,
+       1253.182
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 427.37->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       180.053,
+       915.84
+      ],
+      [
+       95.65,
+       869.257
+      ]
+     ],
+     "channel_um": [
+      68.0,
+      123.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 68.0-123.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_ei",
+    "set": {
+     "regs_um": [
+      [
+       428.26,
+       150.0
+      ],
+      [
+       377.0,
+       263.58
+      ],
+      [
+       377.0,
+       428.42
+      ],
+      [
+       377.0,
+       593.26
+      ]
+     ],
+     "channel_um": [
+      375.0,
+      379.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 824 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 375.0-379.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_ei",
+    "set": {
+     "regs_um": [
+      [
+       397.44,
+       135.1
+      ],
+      [
+       369.0,
+       260.02
+      ],
+      [
+       369.0,
+       413.38
+      ],
+      [
+       369.0,
+       566.74
+      ]
+     ],
+     "channel_um": [
+      367.0,
+      371.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 cland ring -> consumers 767 um: bin at 1/3 (relay_sites row) + 1 station at 2/3 | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 367.0-371.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fw_v2__cl8537f156": [
+   {
+    "conn": "bus:ard_wo",
+    "set": {
+     "regs_um": [
+      [
+       92.6,
+       892.915
+      ],
+      [
+       92.6,
+       664.137
+      ],
+      [
+       92.6,
+       435.36
+      ],
+      [
+       92.6,
+       206.582
+      ]
+     ],
+     "channel_um": [
+      67.0,
+      118.2
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 67.0-118.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_wo",
+    "set": {
+     "regs_um": [
+      [
+       61.0,
+       774.373
+      ],
+      [
+       61.0,
+       498.303
+      ],
+      [
+       61.0,
+       222.233
+      ]
+     ],
+     "channel_um": [
+      59.0,
+      63.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 59.0-63.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arl_wo",
+    "set": {
+     "regs_um": [
+      [
+       93.652,
+       917.871
+      ],
+      [
+       53.0,
+       738.976
+      ],
+      [
+       53.0,
+       519.428
+      ],
+      [
+       53.0,
+       299.881
+      ]
+     ],
+     "channel_um": [
+      51.0,
+      55.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 51.0-55.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_wo",
+    "set": {
+     "regs_um": [
+      [
+       124.353,
+       889.436
+      ],
+      [
+       29.0,
+       765.162
+      ],
+      [
+       29.0,
+       545.535
+      ],
+      [
+       29.0,
+       325.908
+      ]
+     ],
+     "channel_um": [
+      27.0,
+      31.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 27.0-31.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_wo",
+    "set": {
+     "regs_um": [
+      [
+       95.824,
+       919.002
+      ],
+      [
+       37.0,
+       759.282
+      ],
+      [
+       37.0,
+       540.737
+      ],
+      [
+       37.0,
+       322.193
+      ]
+     ],
+     "channel_um": [
+      35.0,
+      39.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 35.0-39.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_wo",
+    "set": {
+     "regs_um": [
+      [
+       102.542,
+       927.103
+      ],
+      [
+       45.0,
+       763.726
+      ],
+      [
+       45.0,
+       542.808
+      ],
+      [
+       45.0,
+       321.889
+      ]
+     ],
+     "channel_um": [
+      43.0,
+      47.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 43.0-47.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_wo",
+    "set": {
+     "regs_um": [
+      [
+       150.4,
+       910.499
+      ],
+      [
+       150.4,
+       705.658
+      ],
+      [
+       150.4,
+       500.816
+      ],
+      [
+       150.4,
+       295.975
+      ]
+     ],
+     "channel_um": [
+      123.0,
+      177.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 123.0-177.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "regs_um": [
+      [
+       406.536,
+       6.171
+      ],
+      [
+       288.4,
+       103.58
+      ],
+      [
+       288.4,
+       319.125
+      ],
+      [
+       288.4,
+       534.669
+      ],
+      [
+       215.544,
+       677.358
+      ]
+     ],
+     "channel_um": [
+      286.0,
+      290.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 286.0-290.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wo",
+    "set": {
+     "regs_um": [
+      [
+       417.96,
+       1427.953
+      ],
+      [
+       236.35,
+       1405.442
+      ],
+      [
+       236.35,
+       1201.322
+      ],
+      [
+       236.35,
+       997.202
+      ],
+      [
+       204.12,
+       825.312
+      ]
+     ],
+     "channel_um": [
+      182.0,
+      290.7
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 182.0-290.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       445.808,
+       470.123
+      ],
+      [
+       533.8,
+       416.545
+      ],
+      [
+       533.8,
+       274.975
+      ]
+     ],
+     "channel_um": [
+      507.0,
+      560.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 507.0-560.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       475.263,
+       538.856
+      ],
+      [
+       591.8,
+       487.274
+      ]
+     ],
+     "channel_um": [
+      565.0,
+      618.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 565.0-618.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_o",
+    "set": {
+     "regs_um": [
+      [
+       408.95,
+       488.975
+      ],
+      [
+       454.731,
+       610.543
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      435.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-435.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       466.95,
+       482.653
+      ],
+      [
+       466.95,
+       664.002
+      ],
+      [
+       466.95,
+       845.351
+      ]
+     ],
+     "channel_um": [
+      440.0,
+      493.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 440.0-493.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       408.9,
+       704.163
+      ],
+      [
+       408.9,
+       874.343
+      ],
+      [
+       451.9,
+       1001.524
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      435.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-435.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       462.368,
+       956.775
+      ],
+      [
+       477.887,
+       1085.448
+      ]
+     ],
+     "channel_um": [
+      468.0,
+      472.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 468.0-472.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       468.45,
+       1195.343
+      ],
+      [
+       468.45,
+       1350.757
+      ]
+     ],
+     "channel_um": [
+      441.0,
+      495.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 441.0-495.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       382.138,
+       1300.546
+      ],
+      [
+       409.4,
+       1455.536
+      ],
+      [
+       439.829,
+       1607.358
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      436.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-436.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_wi",
+    "set": {
+     "regs_um": [
+      [
+       152.115,
+       161.424
+      ],
+      [
+       243.8,
+       221.853
+      ],
+      [
+       243.8,
+       373.968
+      ],
+      [
+       243.8,
+       526.083
+      ],
+      [
+       243.8,
+       678.198
+      ]
+     ],
+     "channel_um": [
+      238.0,
+      249.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 238.0-249.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_wi",
+    "set": {
+     "regs_um": [
+      [
+       146.71,
+       369.256
+      ],
+      [
+       208.0,
+       454.676
+      ],
+      [
+       208.0,
+       601.386
+      ],
+      [
+       208.0,
+       748.096
+      ]
+     ],
+     "channel_um": [
+      182.0,
+      234.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | KNEE-1 11-10: 1->2 stations, kit knee worst 461.07->321.64 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 182.0-234.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       504.343,
+       89.614
+      ],
+      [
+       470.55,
+       173.558
+      ],
+      [
+       435.94,
+       256.684
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      502.1
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-502.1 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:flt_wo",
+    "set": {
+     "regs_um": [
+      [
+       408.2,
+       1063.7
+      ],
+      [
+       334.0,
+       930.4
+      ],
+      [
+       334.0,
+       722.9
+      ],
+      [
+       334.0,
+       515.4
+      ],
+      [
+       213.8,
+       428.1
+      ]
+     ],
+     "channel_um": [
+      332.0,
+      336.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 pass-through bus x_sc_i -> flt_wo had no station: 1 legs, 1245 um direct | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 332.0-336.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fw_v2__cl8f84514c": [
+   {
+    "conn": "bus:ard_wo",
+    "set": {
+     "regs_um": [
+      [
+       92.6,
+       892.915
+      ],
+      [
+       92.6,
+       664.137
+      ],
+      [
+       92.6,
+       435.36
+      ],
+      [
+       92.6,
+       206.582
+      ]
+     ],
+     "channel_um": [
+      67.0,
+      118.2
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 67.0-118.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_wo",
+    "set": {
+     "regs_um": [
+      [
+       61.0,
+       774.373
+      ],
+      [
+       61.0,
+       498.303
+      ],
+      [
+       61.0,
+       222.233
+      ]
+     ],
+     "channel_um": [
+      59.0,
+      63.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 59.0-63.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arl_wo",
+    "set": {
+     "regs_um": [
+      [
+       93.652,
+       917.871
+      ],
+      [
+       53.0,
+       738.976
+      ],
+      [
+       53.0,
+       519.428
+      ],
+      [
+       53.0,
+       299.881
+      ]
+     ],
+     "channel_um": [
+      51.0,
+      55.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 51.0-55.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arm_wo",
+    "set": {
+     "regs_um": [
+      [
+       124.353,
+       889.436
+      ],
+      [
+       29.0,
+       765.162
+      ],
+      [
+       29.0,
+       545.535
+      ],
+      [
+       29.0,
+       325.908
+      ]
+     ],
+     "channel_um": [
+      27.0,
+      31.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 27.0-31.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_wo",
+    "set": {
+     "regs_um": [
+      [
+       95.824,
+       919.002
+      ],
+      [
+       37.0,
+       759.282
+      ],
+      [
+       37.0,
+       540.737
+      ],
+      [
+       37.0,
+       322.193
+      ]
+     ],
+     "channel_um": [
+      35.0,
+      39.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 35.0-39.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:arv_wo",
+    "set": {
+     "regs_um": [
+      [
+       102.542,
+       927.103
+      ],
+      [
+       45.0,
+       763.726
+      ],
+      [
+       45.0,
+       542.808
+      ],
+      [
+       45.0,
+       321.889
+      ]
+     ],
+     "channel_um": [
+      43.0,
+      47.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 43.0-47.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_wo",
+    "set": {
+     "regs_um": [
+      [
+       150.4,
+       910.499
+      ],
+      [
+       150.4,
+       705.658
+      ],
+      [
+       150.4,
+       500.816
+      ],
+      [
+       150.4,
+       295.975
+      ]
+     ],
+     "channel_um": [
+      123.0,
+      177.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 123.0-177.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "regs_um": [
+      [
+       406.536,
+       6.171
+      ],
+      [
+       288.4,
+       103.58
+      ],
+      [
+       288.4,
+       319.125
+      ],
+      [
+       288.4,
+       534.669
+      ],
+      [
+       215.544,
+       677.358
+      ]
+     ],
+     "channel_um": [
+      286.0,
+      290.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 286.0-290.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_wo",
+    "set": {
+     "regs_um": [
+      [
+       417.96,
+       1427.953
+      ],
+      [
+       236.35,
+       1405.442
+      ],
+      [
+       236.35,
+       1201.322
+      ],
+      [
+       236.35,
+       997.202
+      ],
+      [
+       204.12,
+       825.312
+      ]
+     ],
+     "channel_um": [
+      182.0,
+      290.7
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 182.0-290.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       492.998,
+       470.123
+      ],
+      [
+       533.8,
+       322.165
+      ]
+     ],
+     "channel_um": [
+      507.0,
+      560.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 507.0-560.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       475.263,
+       538.856
+      ],
+      [
+       591.8,
+       487.274
+      ]
+     ],
+     "channel_um": [
+      565.0,
+      618.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 565.0-618.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_o",
+    "set": {
+     "regs_um": [
+      [
+       408.95,
+       488.975
+      ],
+      [
+       454.731,
+       610.543
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      435.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-435.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       466.95,
+       482.653
+      ],
+      [
+       466.95,
+       664.002
+      ],
+      [
+       466.95,
+       845.351
+      ]
+     ],
+     "channel_um": [
+      440.0,
+      493.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 440.0-493.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fe_p2_o",
+    "set": {
+     "regs_um": [
+      [
+       408.9,
+       704.163
+      ],
+      [
+       408.9,
+       874.343
+      ],
+      [
+       451.9,
+       1001.524
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      435.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-435.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       462.368,
+       956.775
+      ],
+      [
+       477.887,
+       1085.448
+      ]
+     ],
+     "channel_um": [
+      468.0,
+      472.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 468.0-472.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_o",
+    "set": {
+     "regs_um": [
+      [
+       468.45,
+       1195.343
+      ],
+      [
+       468.45,
+       1350.757
+      ]
+     ],
+     "channel_um": [
+      441.0,
+      495.9
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 441.0-495.9 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       382.138,
+       1300.546
+      ],
+      [
+       409.4,
+       1455.536
+      ],
+      [
+       439.829,
+       1607.358
+      ]
+     ],
+     "channel_um": [
+      382.0,
+      436.8
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 382.0-436.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_wi",
+    "set": {
+     "regs_um": [
+      [
+       152.115,
+       161.424
+      ],
+      [
+       243.8,
+       221.853
+      ],
+      [
+       243.8,
+       373.968
+      ],
+      [
+       243.8,
+       526.083
+      ],
+      [
+       243.8,
+       678.198
+      ]
+     ],
+     "channel_um": [
+      238.0,
+      249.6
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 2 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 238.0-249.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dr_wi",
+    "set": {
+     "regs_um": [
+      [
+       146.71,
+       369.256
+      ],
+      [
+       208.0,
+       454.676
+      ],
+      [
+       208.0,
+       601.386
+      ],
+      [
+       208.0,
+       748.096
+      ]
+     ],
+     "channel_um": [
+      182.0,
+      234.0
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | KNEE-1 11-10: 1->2 stations, kit knee worst 461.07->321.64 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 182.0-234.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_ctl_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       470.55,
+       95.066
+      ],
+      [
+       470.55,
+       252.049
+      ]
+     ],
+     "channel_um": [
+      439.0,
+      502.1
+     ],
+     "leg_order": "channel",
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 1 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 439.0-502.1 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fe_v2__clf110fab2": [
+   {
+    "conn": "bus:x_fw_p2_i",
+    "set": {
+     "regs_um": [
+      [
+       37.9,
+       1050.718
+      ],
+      [
+       39.028,
+       915.84
+      ],
+      [
+       175.034,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      11.0,
+      64.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 11.0-64.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_i",
+    "set": {
+     "regs_um": [
+      [
+       96.2,
+       1345.427
+      ],
+      [
+       96.2,
+       1216.541
+      ],
+      [
+       96.2,
+       1087.656
+      ],
+      [
+       96.2,
+       958.771
+      ],
+      [
+       182.155,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      69.0,
+      123.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 518.9->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 69.0-123.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_i",
+    "set": {
+     "regs_um": [
+      [
+       136.1,
+       1693.6
+      ],
+      [
+       155.2,
+       1576.6
+      ],
+      [
+       155.2,
+       1440.5
+      ],
+      [
+       155.2,
+       1304.4
+      ],
+      [
+       155.2,
+       1168.3
+      ],
+      [
+       155.2,
+       1032.2
+      ],
+      [
+       174.94,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      182.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 417.17->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-182.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_i",
+    "set": {
+     "regs_um": [
+      [
+       121.4,
+       300.573
+      ],
+      [
+       121.4,
+       461.555
+      ],
+      [
+       121.4,
+       622.536
+      ],
+      [
+       121.4,
+       783.517
+      ],
+      [
+       150.059,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      119.0,
+      123.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 119.0-123.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_st_a_i",
+    "set": {
+     "regs_um": [
+      [
+       81.754,
+       1258.832
+      ],
+      [
+       163.508,
+       1258.832
+      ],
+      [
+       245.262,
+       1258.832
+      ],
+      [
+       258.9,
+       1190.716
+      ],
+      [
+       258.9,
+       1108.962
+      ],
+      [
+       258.9,
+       1027.208
+      ],
+      [
+       258.9,
+       945.454
+      ]
+     ],
+     "channel_um": [
+      246.0,
+      271.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | S4q9k FABLE-FIX-QC-KNEE-HC (a): 1->7 stations = the former st_a R8 pad pin (+6) as lane cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 246.0-271.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_sc_o",
+    "set": {
+     "regs_um": [
+      [
+       190.35,
+       847.213
+      ],
+      [
+       190.35,
+       657.896
+      ],
+      [
+       190.35,
+       468.58
+      ],
+      [
+       189.317,
+       280.296
+      ]
+     ],
+     "channel_um": [
+      188.0,
+      192.7
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 188.0-192.7 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_stm_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       214.2,
+       1005.216
+      ],
+      [
+       214.2,
+       1191.432
+      ],
+      [
+       214.2,
+       1377.648
+      ],
+      [
+       186.216,
+       1535.88
+      ]
+     ],
+     "channel_um": [
+      187.0,
+      241.4
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 187.0-241.4 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ag_ei",
+    "set": {
+     "regs_um": [
+      [
+       469.375,
+       5.24
+      ],
+      [
+       386.0,
+       74.57
+      ],
+      [
+       386.0,
+       227.275
+      ],
+      [
+       386.0,
+       379.98
+      ],
+      [
+       386.0,
+       532.685
+      ],
+      [
+       386.0,
+       685.39
+      ],
+      [
+       386.0,
+       838.095
+      ]
+     ],
+     "channel_um": [
+      384.0,
+      388.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 3 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 384.0-388.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:ard_ei",
+    "set": {
+     "regs_um": [
+      [
+       509.6,
+       84.953
+      ],
+      [
+       509.6,
+       213.634
+      ],
+      [
+       509.6,
+       342.315
+      ],
+      [
+       509.6,
+       470.996
+      ],
+      [
+       509.6,
+       599.676
+      ],
+      [
+       509.6,
+       728.357
+      ],
+      [
+       509.6,
+       857.038
+      ],
+      [
+       439.721,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      484.0,
+      535.2
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | KNEE-1 11-10: 2->3 stations, kit knee worst 445.65->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->4 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 6->7 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 7->8 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 484.0-535.2 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:art_ei",
+    "set": {
+     "regs_um": [
+      [
+       551.0,
+       221.939
+      ],
+      [
+       551.0,
+       377.583
+      ],
+      [
+       551.0,
+       533.226
+      ],
+      [
+       551.0,
+       688.87
+      ],
+      [
+       551.0,
+       844.513
+      ],
+      [
+       466.683,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      549.0,
+      553.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 549.0-553.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:dd_ei",
+    "set": {
+     "regs_um": [
+      [
+       481.913,
+       245.712
+      ],
+      [
+       435.4,
+       339.366
+      ],
+      [
+       435.4,
+       479.533
+      ],
+      [
+       435.4,
+       619.699
+      ],
+      [
+       435.4,
+       759.866
+      ],
+      [
+       435.4,
+       900.033
+      ]
+     ],
+     "channel_um": [
+      408.0,
+      462.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (census WINDOW-HOP 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 408.0-462.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_ei",
+    "set": {
+     "regs_um": [
+      [
+       480.68,
+       802.68
+      ],
+      [
+       452.44,
+       915.84
+      ]
+     ],
+     "channel_um": [
+      467.0,
+      471.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 467.0-471.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:cmd_eo",
+    "set": {
+     "regs_um": [
+      [
+       397.8,
+       789.469
+      ],
+      [
+       397.8,
+       576.338
+      ],
+      [
+       397.8,
+       363.206
+      ],
+      [
+       408.949,
+       161.224
+      ]
+     ],
+     "channel_um": [
+      392.0,
+      403.6
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 2 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->4 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 392.0-403.6 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "regs_um": [
+      [
+       449.395,
+       915.84
+      ],
+      [
+       542.4,
+       870.491
+      ]
+     ],
+     "channel_um": [
+      540.0,
+      544.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->2 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 540.0-544.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "regs_um": [
+      [
+       462.884,
+       915.84
+      ],
+      [
+       466.4,
+       1064.168
+      ],
+      [
+       470.236,
+       1212.176
+      ]
+     ],
+     "channel_um": [
+      412.0,
+      520.8
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 1->3 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 412.0-520.8 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:treq_eo",
+    "set": {
+     "regs_um": [
+      [
+       495.474,
+       915.84
+      ],
+      [
+       527.0,
+       1068.748
+      ],
+      [
+       527.0,
+       1253.182
+      ]
+     ],
+     "channel_um": [
+      525.0,
+      529.0
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-FWST FABLE-PD-QC-0945 item 3: fe pass-through, 1 stations on the face -> core-centre line | KNEE-1 11-10: 1->2 stations, kit knee worst 427.37->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 2->3 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 525.0-529.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   },
+   {
+    "conn": "bus:x_fw_p1_o",
+    "set": {
+     "regs_um": [
+      [
+       180.053,
+       915.84
+      ],
+      [
+       130.987,
+       833.92
+      ]
+     ],
+     "channel_um": [
+      128.0,
+      183.3
+     ],
+     "leg_order": "channel",
+     "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations | QC-PLAN-G 11-16 S4q9m: fe_rows_s4q4c row (QC-SC-ROWS), not in Kf/l2d | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 128.0-183.3 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ],
+  "slw_fw_v1__clf51c11d8__cl592e3d37": [
+   {
+    "conn": "bus:flt_wo",
+    "set": {
+     "regs_um": [
+      [
+       408.867,
+       1064.2
+      ],
+      [
+       259.0,
+       1006.233
+      ],
+      [
+       259.0,
+       798.4
+      ],
+      [
+       259.0,
+       590.567
+      ],
+      [
+       213.333,
+       428.4
+      ]
+     ],
+     "channel_um": [
+      257.0,
+      261.0
+     ],
+     "leg_order": "channel",
+     "note": "QC-PADLEG-1119 pass-through bus x_sc_i -> flt_wo had no station: 1 legs, 1247 um direct | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-25 FEFW-FAM: spine de-stack, leg_order channel 257.0-261.0 (was normal_first, regs re-sited on the channel centre)"
+    }
+   }
+  ]
+ }
+}
