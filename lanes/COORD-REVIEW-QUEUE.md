@@ -46271,3 +46271,4 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   Gate g2: 695 s to R8.
   Gate g4: full 3098 s on epyc12 at load 178/96 (bind 1098 s). Normalize cleared tapname/retap/landremap/R8 drift by itself.
   The 3 new findings left (2 KITFIT-OVERLAP pvg1_p1 vs cland on v5e/v5ne, 1 LANDREMAP-UNCHECKED) are real row defects for KV-PV-ESTRIP.
+- 2026-11-25 04:52 PST SMELL [SMELL-WATCH -> FP-CONVERGE-QC, COORD; cc QC-ALLFIX] 1191841 signoff [SILENT] on epyc10: log silent 1.6 h (> 1 h). Render: epyc10:/srv/opentallas-scratch2/claude/ot-jobs/slw_st_b_v1__cl6357f1cc__pvffd43fdc-route-civil-redfish-2436648-1795553794/work/smell_review/signoff-1125-1249 (rendering). Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kit keeps running and is NOT cancelled unless it also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.
