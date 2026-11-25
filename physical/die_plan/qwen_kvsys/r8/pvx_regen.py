@@ -10,6 +10,14 @@ the compose file; was hard-wired to plan_of_record/asbuilt_vN.json), the law cod
 from --tree), and EMPTY-GUARD-1125: exit 3 and write nothing when the R8 view holds no pvw bank members, or a table would have 0 members
 (--allow-empty to accept an empty table).  kv_pv_v_pads.py regen delegates here.
 
+R8_MAIN CONTRACT (PVX-PORT-1125, proven 11-25): R8_MAIN must be the main land_r8 table RE-DERIVED from a bind head of the SAME plan, never the
+carried table of the tree.  A5t7's carried main table is stale in stripes s12 / s28 (bound 29 where the bind and the live V table say 31), and on it
+the V table differs in 80 members (same landed, bound/pad split off by 1-2).  Recipe (the A5t9 PVPADS-REBUILD step):
+    bind.py elab PLAN --out D --asbuilt AB ; bind.py r8-prepass PLAN --out D --asbuilt AB --r8-out D/main_derived.json
+    kv_pv_v_pads.py regen TREE D/main_derived.json OUT_COL OUT_V --asbuilt AB --min-pad 10 --e-min-pad 10 --extra-first <vport table>
+On the A5t7 base this reproduces pv_col_pads_ffkpv.json 1214/1214 and pv_v_pads_ffkpv.json 2114/2114 exactly (0 V-D-H bad, 512 banks).  No overlay:
+the KV-SENDER-SKEW take-backs are 10 pv_col members on hub_C and are already in the derived bounds.
+
 Why this file exists: the tree generators r8/kv_pv_col_pads.py and r8/kv_pv_v_pads.py read the PV members by their AS-BUILT
 leaf names (pvw_<k>__u_s<c>_b<b>.bc / bcx / pv2 / pe2).  Since the pair cores are composed (asbuilt.compose), a bind lists
 those members under the composite leaf (native_composite_pv_<S>_<i>_pvg<g>_p<p>.s<k>__bc ...), and the tables of record
