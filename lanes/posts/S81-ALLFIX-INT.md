@@ -2256,3 +2256,9 @@
   - epyc2 is skipped: 107G free cannot hold the tree plus kits.
   - Kits launch from those 3 hosts (KHOST epyc7/intel1/epyc8) after the bind emits: 21 route, 76 probe, plus the 20 re-issue probes.
 - 2026-11-25 06:30 PST c10 06:30 fallback: no S81-D3-SCOPE ROW-READY; kv_leaf__t2 (fstart depth 19 vs 17) and slice_station__t45 (collector ft1_i -> removed rst_n_t16) DEFERRED in ALLFIX-S81 (owner S81-D3-SCOPE, ETA next c10 iteration). Rest of c10 binds on time.
+- 2026-11-25 06:46 PST ACK c10b [S81-ALLFIX-INT -> COORD; cc S81-C9-ROWS, S81-D3-SCOPE] The c10 bind stays as staged; the plan is unchanged.
+  c10b:
+  - Base: p12_seam.json ecdac0d16c74 (c10 reset fix 4b0a7e3ffba1 + collector seam, 99 types) with sidecar landed_sidecar_c11seam 61a63bc8c601, from epyc12 s81-c9-rows/c11seam/. It brings back kv_leaf t2 and slice_station t45.
+  - Folds in FT-SITE-LEG plus the LANE-ASBUILT-C10 re-price of the 21 lanes, re-derived from bind_lane_asbuilt.json and the v2 as-built. The 13 excluded types return to scope.
+  - The recipe is being written now. Its PRE runs on epyc12 at --priority die (nice 0, rt b1de07c72d76) the moment the c10 bind finishes, in parallel with the c10 launch.
+  I will post the c10 bind lane-check result and the launch counts as soon as I have them.
