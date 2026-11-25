@@ -30,3 +30,9 @@
 - 11-24 22:36 WAITER-HIT: epyc9 KV-A5t6/private/KV-OWN-PV-R2/kv3_pv_1124201428 (plan 60e6c3ac4eca, pre-RELSITE):
   RELAY-HOPS regs 1034 over405 4 over672 0 worst 545 -> +1-cycle alt row not needed. Re-armed fanout/a5t6_waiter2.sh
   (skips KV-OWN-PV-R2 private kits, requires relay_sites in kit plandir) for the first composed A5t6 pv kit.
+## Round 4 (COORD 11-24 22:4x): A5t6 bound as is -> RELSITE 21a2b5686a4f + +1-cycle row PARKED
+- Draft only if an A5t6 kv3_pv kit fails setup at CTS/GRT on relay paths; target A5t7+.
+- Waiter fanout/a5t6_waiter3.sh (localhost scratchpad): any KV-A5t6* kv3_pv* kit with gen/*/tt_setup_measure{,_grt}.log ->
+  launches relsta.sh (epyc hosts: /srv/opentallas-scratch2/claude/kv-pv-fanout/relsta/) via nohup ot-run: kit tt_setup_repair.tcl frame,
+  RELSTA in/out worst slack + viol count for paths into / out of u_pv_u_T*Q*_*_r* regs. Results in relsta/<kit>.<stage>/log.
+- Test run on epyc11 D29 kv3_pv_1124043038 cts queued (fleet load-capped).
