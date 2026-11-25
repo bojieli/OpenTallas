@@ -32,3 +32,5 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 - Open: LATCHECK on the A5t5 full bind (L1961/L2009/L2015 first); 5 pv_v12 exports outside census still stale (probe two-sided); SEAMHOLD -335.1 re-derive; after A5t5 binds: pv_v12 kit rebuild + TT/FF d_min/d_max via sender_margin_probe.sh.
 
 - 2026-11-24 04:51 PST FABLE-RC-KV CONFIRMED (04:49) the A5t5 split: ENTRYFOOT row excludes my 53 pv_v12 exports (ss_exports.txt), keeps its 4 measured moves; cland_up stays. Waiting for A5t5 compose/full bind -> LATCHECK, then pv_v12 kit + TT/FF margins.
+
+- 2026-11-24 16:10 PST pv_v12 probe kit A5t5 CTS: FAIL setup (d_max 186-370 vs 147), hold OK (d_min >= +98). Common fclk delay window 224-483 ps. Proposal: export from an insertion-matched leaf. Table epyc10 /srv/opentallas-scratch2/claude/kv-sender-skew-e10/rings_after.tsv; probes smp_min/ smp_max/ there.
