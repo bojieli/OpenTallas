@@ -203,7 +203,7 @@ def classify(kind, res, anchors, now, job_age_s, log_mtime, cores_now=None, exac
         ev = f"LEC last file/log write {silent / 3600:.1f} h ago"
         # COORD 11-25 item 41: a LEC job is never NO-PROGRESS (a signed slw_hc3 LEC running at 93 % of a core was flagged by this table; an equivalence check writes nothing
         # for hours).  Silence only downgrades it to SLOW; the 24 h advisory LEC cap in noprog_watchdog stays the only LEC stop.
-        cpu = f, cpu {cores_now:g} cores if cores_now is not None else ""
+        cpu = f", cpu {cores_now:g} cores" if cores_now is not None else ""
         return ("SLOW" if silent >= SLOW_S else "PROGRESSING"), ev + cpu + (" (LEC exempt from no-progress)" if silent >= window else "")
     ev_idx = res["events"][-1] if res["events"] else -1
     last_ev_age = now - (W.interp_time(ev_idx, anchors) if ev_idx >= 0 else start)

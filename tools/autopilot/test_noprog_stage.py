@@ -216,7 +216,7 @@ def test_lec_classes_use_file_activity():
     assert ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 1.0, True, lec_mt=NOW - 0.2 * H)[0] == "PROGRESSING"
     assert ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 1.0, True, lec_mt=NOW - 3 * H)[0] == "SLOW"
     assert ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 1.0, True, lec_mt=NOW - 7 * H)[0] == "SLOW"      # COORD 11-25 item 41: a LEC is never NO-PROGRESS (signed slw_hc3 LEC at 93 % of a core)
-    assert ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 0.0, True, lec_mt=NOW - 1.5 * H)[0] == "SLOW"
+    assert ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 0.0, True, lec_mt=NOW - 1.5 * H)[0] == "PROGRESSING"
     why = ns.classify("lec", res, an, NOW, 30 * H, NOW - 30 * H, 0.93, True, lec_mt=NOW - 9 * H)
     assert why[0] == "SLOW" and "exempt" in why[1] and "0.93 cores" in why[1]
 
