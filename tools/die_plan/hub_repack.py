@@ -480,6 +480,29 @@ def astar(R, a, b, step=2):
     return None
 
 
+OBSTACLE_AWARE = False   # FP-CONVERGE-S81 (Fable leaf template review): core_place --obstacle-aware sets it; default OFF = unchanged results
+
+
+def poly_crosses_core(R, poly, tol=0.5):
+    """True when any Manhattan segment of poly passes through a core rect (shrunk by tol): a leg over a core is blocked on
+    M5/M7 (cores obstruct up to M7), so its straight length is not routable."""
+    for p, q in zip(poly, poly[1:]):
+        x0, x1 = sorted((p[0], q[0]))
+        y0, y1 = sorted((p[1], q[1]))
+        for (rx0, ry0, rx1, ry1) in R.rects:
+            if x1 > rx0 + tol and x0 < rx1 - tol and y1 > ry0 + tol and y0 < ry1 - tol:
+                return True
+    return False
+
+
+def _hops_clear(R, pts):
+    """every hop has an L (HV or VH) that crosses no core"""
+    for p, q in zip(pts, pts[1:]):
+        if poly_crosses_core(R, [p, (q[0], p[1]), q]) and poly_crosses_core(R, [p, (p[0], q[1]), q]):
+            return False
+    return True
+
+
 def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
     """(poly incl. pins, regs, n_min, kind) for pins a -> b."""
     ea, eb = escape(R, a), escape(R, b)
@@ -495,6 +518,8 @@ def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
     best = None
     for kind, poly in cands:
         poly = [p for i, p in enumerate(poly) if i == 0 or p != poly[i - 1]]
+        if OBSTACLE_AWARE and poly_crosses_core(R, poly):
+            continue
         L = sum(abs(q[0] - p[0]) + abs(q[1] - p[1]) for p, q in zip(poly, poly[1:]))
         if best is not None and L >= best[0]:
             continue
@@ -511,6 +536,8 @@ def route_station(R, a, b, n_old, reach, streets_y=(), streets_x=()):
                 best = (L, "astar", poly, regs, n_min)
     if (best is None or len(best[3]) > n_old) and n_old:
         bb = place_regs_bbox(R, a, b, n_old, reach)
+        if bb is not None and OBSTACLE_AWARE and not _hops_clear(R, [tuple(a)] + list(bb) + [tuple(b)]):
+            bb = None            # --obstacle-aware: a staircase hop that must cross a core either way is not routable
         if bb is not None:
             regs = bb
             pts = [tuple(a)] + list(regs) + [tuple(b)]

@@ -2426,6 +2426,9 @@ def main(argv=None):
                          "one gets its own bus row with that depth (0 cycles)")
     ap.add_argument("--taps-movable", action="store_true",
                     help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
+    ap.add_argument("--obstacle-aware", action="store_true",
+                    help="FP-CONVERGE-S81: station / ft re-site legs may not cross any core (M5/M7 obstructed): hub_repack.route_station "
+                    "skips straight HV/VH/Z candidates that cross a core and falls back to the street-only A* (default OFF)")
     ap.add_argument("--ft-resite", action="store_true",
                     help="B4L4: ft-station registers + bit sites no longer pin cores; covered ones are re-sited with the same count")
     ap.add_argument("--take-regs", action="store_true",
@@ -2471,6 +2474,10 @@ def main(argv=None):
                slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs, slot_ft=a.slot_ft, block_shift=a.block_shift,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
+    if a.obstacle_aware:
+        import hub_repack as _HR
+        _HR.OBSTACLE_AWARE = True
+        cfg["obstacle_aware"] = True
     Q = copy.deepcopy(P)
     rows = []
     log = lambda s: print(s, flush=True)   # noqa: E731
