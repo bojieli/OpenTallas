@@ -564,8 +564,18 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         if ck.get("tap_mode") != "density":
             rec["skipped"].append(f"{tn}: tap_mode {ck.get('tap_mode')!r} (names are plan-defined)")
             continue
-        m = match_taps(groups_fn(old_raw, tn), groups_fn(new_raw, tn), float(ck.get("tap_radius_um", 200.0)),
-                       need={c[k] for c, k in tap_refs(t_new)})
+        g_old, g_new = groups_fn(old_raw, tn), groups_fn(new_raw, tn)
+        need = {c[k] for c, k in tap_refs(t_new)}
+        # LANDREMAP-FRESHTAP-1125 (KV A5t8 normalize rc 3, kv3_sys_SD clk_t11): a reference to a tap that the NEW plan adds
+        # itself (clock.added_taps, a name absent from the OLD tap table, present in the NEW one) was written by the row
+        # against the new tap: keep it as is.  Any other unknown name still fails closed (remap_type_taps).
+        added = {a.get("name") for a in ck.get("added_taps") or [] if isinstance(a, dict)}
+        fresh = sorted(n for n in need if n not in g_old and n in g_new and n in added)
+        m = match_taps(g_old, g_new, float(ck.get("tap_radius_um", 200.0)), need=need - set(fresh))
+        for n in fresh:
+            m.setdefault(n, (n, 0.0, 0))
+        if fresh:
+            rec.setdefault("fresh_taps", []).append(dict(type=tn, names=fresh))
         rows = remap_type_taps(tn, t_new, m)
         if rows:
             rec["taps"].append(dict(type=tn, remaps=rows))

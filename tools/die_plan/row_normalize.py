@@ -254,13 +254,27 @@ def step_landremap(braw, raw, tree, plan_path, types):
     if not types:
         return {}, {}
     import landing_remap as LM
-    try:
-        rec = LM.remap_plan(braw, raw, str(tree or os.getcwd()), Path(plan_path).parent, set(types), resets="anchor", bound_old=True)
-    except Exception as e:  # noqa: BLE001 - named, fails the gate (fail closed)
-        return {tn: {"failed": f"landing_remap {type(e).__name__}: {str(e)[:300]}"} for tn in types}, {}
-    prot = {tn: _protect(_pt(raw)[tn]) for tn in types}
-    n = {tn: sum(1 for k in ("resets", "taps", "anchors") for x in rec.get(k) or [] if tn in json.dumps(x)) for tn in types}
-    return {tn: v for tn, v in n.items()}, prot
+    # LANDREMAP-ISOLATE-1125: remap_plan raises on the first bad type and may have rewritten earlier types already.  Restore
+    # the plan, drop the type the error names ("<type>: ..."), re-run the rest; an error naming no type fails them all.
+    failed, todo = {}, list(types)
+    snap = copy.deepcopy(raw)
+    while todo:
+        try:
+            rec = LM.remap_plan(braw, raw, str(tree or os.getcwd()), Path(plan_path).parent, set(todo), resets="anchor", bound_old=True)
+            break
+        except Exception as e:  # noqa: BLE001 - named, fails the gate (fail closed)
+            raw.clear()
+            raw.update(copy.deepcopy(snap))
+            msg = f"landing_remap {type(e).__name__}: {str(e)[:300]}"
+            bad = [tn for tn in todo if str(e).startswith(f"{tn}:")]
+            for tn in bad or todo:
+                failed[tn] = {"failed": msg}
+            todo = [tn for tn in todo if tn not in failed]
+    if not todo:
+        return failed, {}
+    prot = {tn: _protect(_pt(raw)[tn]) for tn in todo}
+    n = {tn: sum(1 for k in ("resets", "taps", "anchors") for x in rec.get(k) or [] if tn in json.dumps(x)) for tn in todo}
+    return {**n, **failed}, prot
 
 
 def step_retap(braw, raw, base_path, plan_path, types, protect=None):

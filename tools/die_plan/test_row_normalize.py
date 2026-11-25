@@ -130,3 +130,36 @@ def test_landremap_runs_before_retap_and_its_names_survive_retap():
     assert order == [("landremap", "clk_t5"), "retap"]
     assert ck["landing_contract"]["pins"][0]["source_clock_tap"] == "clk_t4" and ck["landing_raw_branches"] == {"b": "rst_rl_9"}
     assert ck["added_taps"][0]["name"] == "clk_t4" and rep["steps"]["landremap"] == {"pv": 2}
+
+
+def test_landremap_error_on_one_type_does_not_fail_the_others(monkeypatch):
+    """LANDREMAP-ISOLATE-1125 (KV A5t8): one RemapError on kv3_sys_SD marked all 5 landremap types failed (rc 3).  Now the
+    named type fails alone, the plan is restored from its partial rewrite and the others are re-run."""
+    import landing_remap as LM
+    calls = []
+
+    def fake(braw, raw, root, plan_dir, types, **kw):
+        calls.append(sorted(types))
+        for tn in sorted(types):
+            raw["partition_types"][tn]["touched"] = True                      # partial rewrite before the raise
+        if "sd" in types:
+            raise LM.RemapError("sd: tap reference(s) ['clk_t11'] are not in the old plan's tap table")
+        return dict(taps=[dict(type=tn, remaps=[1]) for tn in sorted(types)])
+    monkeypatch.setattr(LM, "remap_plan", fake)
+    raw = {"partition_types": {"sd": {"clock": {}}, "pv": {"clock": {}}, "pw": {"clock": {}}}}
+    rep, prot = RN.step_landremap({}, raw, "/", "/x/plan.json", ["sd", "pv", "pw"])
+    assert calls == [["pv", "pw", "sd"], ["pv", "pw"]]
+    assert rep["sd"]["failed"].startswith("landing_remap RemapError: sd:") and rep["pv"] == 1 and rep["pw"] == 1
+    assert "touched" not in raw["partition_types"]["sd"] and raw["partition_types"]["pv"]["touched"]
+    assert set(prot) == {"pv", "pw"}
+
+
+def test_landremap_error_naming_no_type_fails_all(monkeypatch):
+    import landing_remap as LM
+
+    def fake(braw, raw, root, plan_dir, types, **kw):
+        raise LM.RemapError("bad tree")
+    monkeypatch.setattr(LM, "remap_plan", fake)
+    raw = {"partition_types": {"sd": {"clock": {}}, "pv": {"clock": {}}}}
+    rep, prot = RN.step_landremap({}, raw, "/", "/x/plan.json", ["sd", "pv"])
+    assert set(rep) == {"sd", "pv"} and all("bad tree" in v["failed"] for v in rep.values()) and prot == {}

@@ -346,3 +346,28 @@ def test_cli_prints_an_anchor_mode_receipt(monkeypatch, tmp_path, capsys):
     out = capsys.readouterr().out
     assert rc == 0 and "1 relay name(s)" in out and '"anchor": 1' in out
     assert _raw(json.loads((tmp_path / "out.json").read_text())) == "rst_rl_70"
+
+
+def test_row_added_tap_reference_is_kept():
+    """LANDREMAP-FRESHTAP-1125 (KV A5t8 kv3_sys_SD clk_t11): a row adds a density tap and points a landing pin at it; the
+    OLD tap table never had that name.  Before: RemapError 'not in the old plan's tap table' (and normalize rc 3 on 5 types)."""
+    old, new = _plan("rst_rl_60", "clk_t218"), _plan("rst_rl_60", "clk_t218")
+    ck = new["partition_types"]["T"]["clock"]
+    ck["added_taps"] = [{"name": "clk_t300", "xy": [400, 400]}]
+    ck["landing_contract"]["pins"].append(dict(name="fclk_out_d", kind="clock", source_clock_port="clk_t300",
+                                               source_clock_tap="clk_t300"))
+    new_g = dict(NEW_G, clk_t300=((400, 400), frozenset({(5, 5)})))
+    rec = _run(old, new, groups_fn=lambda raw, tn: OLD_G if raw is old else new_g)
+    pins = ck["landing_contract"]["pins"]
+    assert pins[0]["source_clock_port"] == "clk_t219"
+    assert pins[2]["source_clock_port"] == "clk_t300" and pins[2]["source_clock_tap"] == "clk_t300"
+    assert rec["fresh_taps"] == [dict(type="T", names=["clk_t300"])]
+
+
+def test_unknown_tap_reference_not_added_still_fails():
+    old, new = _plan("rst_rl_60", "clk_t218"), _plan("rst_rl_60", "clk_t218")
+    ck = new["partition_types"]["T"]["clock"]
+    ck["landing_contract"]["pins"].append(dict(name="fclk_out_d", kind="clock", source_clock_port="clk_t300"))
+    new_g = dict(NEW_G, clk_t300=((400, 400), frozenset({(5, 5)})))        # in the new table but no row added it
+    with pytest.raises(LR.RemapError, match="clk_t300"):
+        _run(old, new, groups_fn=lambda raw, tn: OLD_G if raw is old else new_g)
