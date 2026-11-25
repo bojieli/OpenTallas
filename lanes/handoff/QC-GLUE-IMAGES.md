@@ -53,3 +53,5 @@ Work dir: intel1 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES (copy intel2 sam
 - Live, all on epyc10: runitem-glue (glue C1j, GRT since 19:32); runitem-native59 (row 1, GRT since 20:35); runitem-native59-81854 (it2 e0ed1312a94f, spec qwen_compute_native59_1124204414, binds/n59it2_bind = scoped bind + bound top).
 - Generator for it2: epyc10 n59st/it2.py (GEOM ROW_PLAN OUT REPORT).
 - Next: watch GRT and sign-off of all three; post TT / DRC / hold / LEC on each. When glue and a native59 form both sign off, ask QC-ALLFIX to lift the glue and native59 holds. Cleanup: ot-delete the epyc7 c1h_ov fork.
+
+- 01:14 11-25: glue_1124160531 FAIL at GRT gate (TT WNS -90.5/TNS -1016, 12 ep u_sys_face u_record t105->t111 reach; hold +8.5; cap 1; LEC 0). Next: u_record relay_sites row. Waiter brmwbfaru re-armed on native59 + native59-81854 (5.5 h).
