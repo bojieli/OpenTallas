@@ -270,7 +270,7 @@ class Builder:
         rects = {p: P.rect(p) for p in mids}
         X0 = min(r[0] for r in rects.values()); Y0 = min(r[1] for r in rects.values())
         X1 = max(r[2] for r in rects.values()); Y1 = max(r[3] for r in rects.values())
-        nx, ny = int((X1 - X0) / G) + 2, int((Y1 - Y0) / G) + 2
+        nx, ny = int((X1 - X0) / G + 1e-9) + 2, int((Y1 - Y0) / G + 1e-9) + 2
         xs = X0 + np.arange(nx) * G
         ys = Y0 + np.arange(ny) * G
         free = np.zeros((nx, ny), bool)

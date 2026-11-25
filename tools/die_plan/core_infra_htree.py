@@ -83,7 +83,7 @@ MACRO_VPASS = False
 class Maze:
     def __init__(self, core, macros, G=0.54, halo=2.2, keepout=()):
         self.core, self.G = core, G
-        self.NX = int((core[2] - core[0]) / G); self.NY = int((core[3] - core[1]) / G)
+        self.NX = int((core[2] - core[0]) / G + 1e-9); self.NY = int((core[3] - core[1]) / G + 1e-9)
         M = [[any(r[0] - halo < core[0] + i * G < r[2] + halo and r[1] - halo < core[1] + j * G < r[3] + halo for _, r, _ in macros)
               for j in range(self.NY + 1)] for i in range(self.NX + 1)]
         # MACRO_VPASS (HBM-CORE-LAT-R3, --macro-vertical-pass): a macro whose OBS stops below the vertical clock layer
