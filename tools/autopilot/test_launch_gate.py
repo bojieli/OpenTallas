@@ -85,6 +85,7 @@ def test_rule_promotion():
     types.update({("d", f"u{i}"): ("PASS" if i else "FAIL", []) for i in range(6)})
     st = G.rule_stats(types)
     assert st["R"] == [4, 4, 6, 1] and G.promote(st["R"]) == "PROVEN"
+    assert G.promote([194, 157, 0, 0]) == "ADVISORY"                    # flags every type: no contrast (FP:NOT-CLEAN 11-25 04:35)
     assert G.promote([3, 3, 6, 0]) == "ADVISORY" and G.promote([10, 3, 10, 2]) == "ADVISORY"
     txt = G.rules_tsv({"R": [4, 4, 6, 1], "Q": [9, 9, 1, 0]}, keep={"Q": "ADVISORY-HAND"})
     rows = {r["rule"]: r["status"] for r in G.parse_tsv(txt)}

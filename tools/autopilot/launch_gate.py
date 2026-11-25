@@ -14,7 +14,7 @@ Decision per (die, type) -> FULL | PILOT | PROBE (+ reason)
                       (PRE:<CLASS> or a plan_gate_pre class name: PRE findings from established rules), else advisory.  A type with no
                       PASS row of class VISUAL / status FLOORPLAN-CLEAN gets the advisory flag FP:NOT-CLEAN (never blocks).
               RULES   lanes/LAUNCH-GATE-RULES.tsv: a rule whose status is PROVEN blocks whatever its source; the wave rewrites the
-                      advisory rows' measured hit rates hourly (rule_stats / promote: PROVEN when >= MIN_FLAGGED flagged types,
+                      advisory rows' measured hit rates hourly (rule_stats / promote: PROVEN when >= MIN_FLAGGED flagged and unflagged types,
                       flagged fail rate >= 0.5 and >= 2x the unflagged rate).  New / unproven rules never block (guardrail 1).
             A row whose cells say FIXED / RESOLVED / CLOSED is not a flag.
   FULL      no proven flag, and the family is a single type or its pilot SIGNED (family release, guardrail 4)
@@ -293,9 +293,9 @@ def rule_stats(types):
 
 def promote(s):
     fn, ff, un, uf = s
-    if fn < MIN_FLAGGED:
+    if fn < MIN_FLAGGED or un < MIN_FLAGGED:              # no contrast: a rule that flags (nearly) every type predicts nothing
         return "ADVISORY"
-    fr, ur = ff / fn, (uf / un if un else 0.0)
+    fr, ur = ff / fn, uf / un
     return "PROVEN" if fr >= 0.5 and fr >= 2 * ur else "ADVISORY"
 
 
@@ -303,7 +303,7 @@ def rules_tsv(stats, keep=None, now=None):
     """the LAUNCH-GATE-RULES.tsv text; KEEP: {rule: status} set by hand (a 'PROVEN-HAND' / 'ADVISORY-HAND' status is never rewritten)"""
     ts = time.strftime("%Y-%m-%d %H:%M", time.localtime(now))
     lines = ["# LAUNCH-GATE-RULES.tsv: advisory launch-gate rules and their measured hit rate (kit_wave, hourly). status PROVEN blocks a full launch;",
-             "# promotion: >= %d flagged types, flagged fail rate >= 0.5 and >= 2x unflagged.  A *-HAND status is kept as written." % MIN_FLAGGED,
+             "# promotion: >= %d flagged and unflagged types, flagged fail rate >= 0.5 and >= 2x unflagged.  A *-HAND status is kept as written." % MIN_FLAGGED,
              "rule\tstatus\tflagged_n\tflagged_fail\tunflagged_n\tunflagged_fail\tupdated"]
     for r, s in sorted(stats.items()):
         k = (keep or {}).get(r, "")
