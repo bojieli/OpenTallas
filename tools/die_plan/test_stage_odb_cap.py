@@ -83,6 +83,13 @@ class StageGuard(unittest.TestCase):
     def test_no_cap_deletions_no_finding(self):
         self.assertEqual(C.guard(self.kit(["3_place.odb", "4_cts.odb"], []), log=lambda m: None), 0)
 
+    def test_post_global_placement_odb_is_kept_while_the_run_lives(self):
+        # STAGE-PLATEAU 11-25: 3_3_place_gp.odb is the owner's earliest review point; it was emptied to 0 bytes on every live kit
+        d = mk(dict(FULL, **{"3_3_place_gp.odb": 10}))
+        nm = lambda **kw: sorted(os.path.basename(p) for p, _ in C.plan(d, NOW, **kw))
+        self.assertNotIn("3_3_place_gp.odb", nm())
+        self.assertIn("3_3_place_gp.odb", nm(ended=True))
+
     def test_cts_done_and_early_odb_missing_is_loud(self):
         msgs = []
         k = self.kit(["2_floorplan.odb", "3_place.odb", "4_cts.odb"], ["3_5_place_dp.odb", "4_1_cts.odb"])

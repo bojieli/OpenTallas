@@ -28,6 +28,9 @@ RULES = (  # (regex of the victim, successor file that must exist)
     (re.compile(r"^5_route\.odb$"), "6_final.odb"),
     (re.compile(r"^6_1_fill\.odb$"), "6_final.odb"),
 )
+# STAGE-PLATEAU 11-25 (COORD: every kit's 3_3_place_gp.odb was 0 bytes): the early-stage rule emptied 3_[1-5]_*.odb to zero-byte make placeholders as soon as 3_place.odb was
+# written, so the owner's chosen earliest review point (the post-global-placement DB) never existed on a live kit.  It is kept while the run lives and goes with the other early stages when the run has ended.
+KEEP_WHILE_LIVE = ("3_3_place_gp.odb",)
 BOUNDARIES = ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb")
 EXTRA_SUCCESSOR = {"5_route.odb": "6_final.v", "6_1_fill.odb": "6_final.v"}
 FINISH = ("5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb", "6_final.odb")      # the finish stages write byte-identical ODBs (KIT-SLIM-1118)
@@ -96,6 +99,8 @@ def plan(base, now=None, open_files=(), min_age=MIN_AGE_S, ended=False):
             return False
         return st.st_size > 0 and now - st.st_mtime >= min_age
     for n in sorted(names):
+        if n in KEEP_WHILE_LIVE and not ended:
+            continue
         for rx, succ in rules:
             if not rx.match(n):
                 continue
