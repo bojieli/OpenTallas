@@ -66,3 +66,9 @@
 ## 04:47 update
 - v1n SMELL: render epyc12 /srv/opentallas-scratch2/claude/kv-own-pv-r2/v1nrender/{floorplan,density}.png (+layout.json.gz, blocks.txt). Kit in 3_5 DP, not cancelled. A Fable review is running (all problems plus structural fixes). Its fixes go into the 07:00 follow-on rows.
 - A5t8 classes: v7/v8e/pve -> --goal place probes (VIS-CAUSES BOUNDARY). v1e -> route only if A5t8 PRE is clean and the visual clears; otherwise place. Launch at the A5t8 bind (watch b1quwstyt).
+
+## 05:35 update (COORD 06:2x ownership)
+- I own core kv3_pv_pair plus 13 cancelled pv rows (overrides a677db86, post 7f1f6fd4).
+- PVFOLD row: epyc12 /srv/opentallas-scratch2/claude/kv-own-pv-r2/pvfold/ROWS_KV-OWN-PV-R2-PVFOLD.py (sha 83ea83009089). It moves 28 r26c pairs to the fMX view (R0->MX, MY->R180). A5t8dry out 371b0f27ef4a. PRE run vs A5t7 in pvfold/pre.otrun.log.
+- PVSTN: a Fable agent is drafting into epyc12 kv-own-pv-r2/pvstn/ (ETA 06:30). It was told the PVFOLD orient is truth.
+- A5t8 bind: place probes for v2, v4, v4n, v5, v5n, v6, v6ne, v7, v8e, pve. v1e goes to route if clean.
