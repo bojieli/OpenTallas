@@ -34,3 +34,13 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 - 2026-11-24 04:51 PST FABLE-RC-KV CONFIRMED (04:49) the A5t5 split: ENTRYFOOT row excludes my 53 pv_v12 exports (ss_exports.txt), keeps its 4 measured moves; cland_up stays. Waiting for A5t5 compose/full bind -> LATCHECK, then pv_v12 kit + TT/FF margins.
 
 - 2026-11-24 16:10 PST pv_v12 probe kit A5t5 CTS: FAIL setup (d_max 186-370 vs 147), hold OK (d_min >= +98). Common fclk delay window 224-483 ps. Proposal: export from an insertion-matched leaf. Table epyc10 /srv/opentallas-scratch2/claude/kv-sender-skew-e10/rings_after.tsv; probes smp_min/ smp_max/ there.
+
+## STATUS 2026-11-24 18:1x PST (leaf export; read first)
+- Main: 30f6dba9d50 clock.fwd_export.<type> = {from: leaf, match_insertion: true, ports?}; 2e749cdc059 pad_ps (ceil(pad/22) BUFx4 between leaf and export buffer). Tool tools/die_plan/fwd_export_leaf.tcl, test test_fwd_export_leaf.py. Absent key = kits unchanged.
+- What-ifs on the A5t5 CTS odb (epyc10 /srv/opentallas-scratch2/claude/kv-sender-skew-e10/wi, wi2, wi3; census cen/):
+  leaf only: TT d_max 370->253, d_min -25 (34/58 over 147). The rest is the data output stage (x1 flop, INVx1, ORFS BUFx2, 240-270 ps CLK->port).
+  port_buf_at_pin + sizing: no help (wi2). Leaf + 8 BUFx4 pad (wi3), 56 rings: TT -205..+73, FF -165..+53, all PASS.
+- Not covered: ctl_cmd and vport_W_vqN launch 100% on clk_t1 but export on clk_t12 (ENTRYFOOT); they need a repoint to clk_t1 (row pending). cland_up has no ring data ports. vport_E_vo_d4 has 752 of 910 flops on clk_t2/t3 but passes.
+- Probe: plan tree_leaf/.../plan_leaf_A5t5.json (3bd02eb872c3 = A5t5 + key only, guarded). Scoped strict bind lb/bind rc 0, 0 errors, rt 2e749cdc0593. Spec intel2 private_specs/KV-SENDER-SKEW/qwen_kvsys_kv3_pv_v12_1124175206, unit runitem-kv3_pv_v12-leaf, goal cts. Gen OK: 56 rows plus 2 cts_post hooks.
+- Next: at 4_cts, run sender_margin_probe two-run TT/BC (smp4.sh with smp_min.tcl/smp3.tcl) and post to COORD in under 100 words. If PASS: ROW-REBASED to KV-ALLFIX (key + ctl_cmd/vport_W_vqN repoint) for A5t6/A5t7. Other pv types with exports: v1 32, v1n 44, v12e 37, v2e/v2ne 32, v3e/v3ne 51, v4e/v4ne 55, v5/v5n 62, v6e/v6ne 69, v7 58, v7e 37, plus 12-19 on the rest.
+- f5fa4d600f handed off to KV-OWN-RSTREACH (COORD 16:55).
