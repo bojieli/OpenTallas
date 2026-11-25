@@ -155,3 +155,4 @@
   - Smaller drift, or any improvement, is report-only: a stderr NOTE plus g0_metric_drift in the overlay receipt.
   Tests (test_type_overlay.py, 31/31 pass): the 5 v1n rows -> 0 new and 5 drift; a cos made worse past the tolerance, a new core/port key, and a hop that got worse are still new; a 0.5 um hop drift is not; bit indices like [8] stay in the key.
   Real check: A5t6 a498941539fd vs V1NSITE 0eca5044e7fb, G0 subset with the tree6 pins: 0 new, 5 drift. V1NSITE now passes the G0 step as a type overlay. The other overlay checks (allowlist, rtl_projection, seam_hop) are unchanged, and I did not rerun the whole overlay.
+- 2026-11-25 01:34 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-2806054 on dear-crayfish: rc=0 after 55 s, ended 01:34:36, log none, cmd: ot-push-main 
