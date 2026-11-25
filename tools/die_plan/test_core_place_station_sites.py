@@ -1,32 +1,73 @@
-"""SITE-IN-MACRO 11-25: core_place keeps the explicit bit sites of an internal station (write_type re-sites only regs_um) as fixed
-points no core may cover, also with --ft-resite (KV A5t6: 22 i_ectl_Q_N_kf bit sites of 8 kv3_pc_v1 types on u_kvpc1_f)."""
+"""SITE-IN-MACRO 11-25: core_place.write_type re-sites the explicit bank sites of an internal station with its regs_um
+(KV A5t3-A5t6: 22 i_ectl_Q_N_kf bit sites of 8 kv3_pc_v1 types stayed behind and ended on u_kvpc1_f)."""
+import copy
 import sys
 from pathlib import Path
 from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import adv_site_in_macro as AS  # noqa: E402
 import core_place as CP  # noqa: E402
 
 
-def fixed_points(ft_resite):
+def pc_type(core_origin):
+    """kv3_pc_v1 shape: kvpc1_f 90.72 x 267.84, station i_ectl_Q_N_kf with 3 registers and a 2-bit bank per stage"""
+    return dict(outline_um=[1200.0, 1600.0],
+                hard_cores=[dict(inst="kvpc1_f", origin_um=list(core_origin), outline_um=[90.72, 267.84], orient="MX")],
+                internal_stations=[dict(conn="bus:i_ectl_Q_N_kf", from_um=[1061.748, 317.79], to_um=[913.99, 777.292],
+                                        regs_um=[[967.68, 319.68], [915.84, 522.72], [915.84, 669.6]], bits=1,
+                                        bit_site_cell_um=[1.404, 0.27],
+                                        bit_sites_um=[[[1060.02, 493.02], [965.304, 539.19]], [[1046.412, 606.15], [868.536, 677.16]],
+                                                      [[914.004, 625.59], [833.544, 918.54]]])])
+
+
+def moved(core_new, regs_new):
+    base = pc_type((665.28, 246.24))                      # A5t5: the core elsewhere, sites legal
+    assert AS.counts({"partition_types": {"b": base}}) == {}
+    t_new = copy.deepcopy(base)
+    t_new["hard_cores"][0]["origin_um"] = list(core_new)
+    t_new["internal_stations"][0]["regs_um"] = regs_new
+    rep = {}
+    CP.resite_station_banks(base, t_new, rep)
+    return base, t_new, rep
+
+
+def test_kvpc1_f_banks_follow_the_regs_and_clear_the_macro():
+    # A5t6: kvpc1_f at (993.6, 246.24) covers the old bank at (1060.02, 493.02); reg 0 moved 60 um up
+    base, t_new, rep = moved((993.6, 246.24), [[967.68, 379.68], [915.84, 522.72], [915.84, 669.6]])
+    stale = copy.deepcopy(t_new)
+    stale["internal_stations"][0]["bit_sites_um"] = base["internal_stations"][0]["bit_sites_um"]
+    assert AS.counts({"partition_types": {"stale": stale}})["stale"]["in_core"] >= 1      # what the stale plan carried
+    assert AS.counts({"partition_types": {"t": t_new}}) == {}                            # 0 sites in the macro now
+    g = t_new["internal_stations"][0]["bit_sites_um"]
+    assert [len(x) for x in g] == [2, 2, 2] and rep["bank_sites_moved"] >= 1 and rep["bank_rows"] == 1
+    # the bank of the moved register 0 moved with it by the 60 um shift (x kept, +60 y) unless it had to clear the core
+    assert abs(g[0][1][1] - (539.19 + 60.0)) < 17.0
+    assert g[2] == base["internal_stations"][0]["bit_sites_um"][2]                       # register 2 did not move: bank untouched
+
+
+def test_unmoved_station_is_byte_identical():
+    base, t_new, rep = moved((665.28, 246.24), copy.deepcopy(pc_type((0, 0)))["internal_stations"][0]["regs_um"])
+    assert t_new["internal_stations"][0]["bit_sites_um"] == base["internal_stations"][0]["bit_sites_um"]
+    assert rep["bank_sites_moved"] == 0
+
+
+def test_move_off_blocks_is_opt_in():
+    import ft_bit_sites as FB
+    slot = dict(name="s", bit_sites_um=[[[9.99, 9.99]]], bit_site_cell_um=[1.404, 0.27])
+    box = (0.0, 0.0, 40.0, 40.0)
+    blocks = [(5.0, 5.0, 15.0, 15.0)]
+    same, n0 = FB.snap_slots([slot], (0.0, 0.0), core_box=box, blocks=blocks)
+    assert n0 == 0 and same[0]["bit_sites_um"] == [[[9.99, 9.99]]]                      # legacy: a free grid point on a block stays
+    out, n1 = FB.snap_slots([slot], (0.0, 0.0), core_box=box, blocks=blocks, radius_um=43.2, move_off_blocks=True)
+    x, y = out[0]["bit_sites_um"][0][0]
+    assert n1 == 1 and not (x < 15.0 and 5.0 < x + 1.404 and y < 15.0 and 5.0 < y + 0.27)
+
+
+def test_fixed_points_only_when_bank_resite_is_off():
     t = dict(outline_um=[500.0, 500.0], hard_cores=[],
-             ft_slots=[dict(regs_um=[[10.0, 10.0]], bit_sites_um=[[[11.0, 11.0]]])],
-             internal_stations=[dict(conn="bus:i_ectl", regs_um=[[100.0, 100.0]],
-                                     bit_sites_um=[[[300.0, 300.0], [310.0, 300.0]]], face_bit_sites_um=[[320.0, 300.0]])])
-    me = SimpleNamespace(t=t, cfg=dict(ft_resite=ft_resite), W=500.0, H=500.0, owner=lambda p, tol=0.0: None)
-    CP.TypeModel._fixed_geometry(me)
-    return [tuple(p) for p in me.FP], list(me.FPH)
-
-
-def test_station_bit_sites_are_fixed_points():
-    fp, fph = fixed_points(False)
-    for p in ((300.0, 300.0), (310.0, 300.0), (320.0, 300.0), (11.0, 11.0)):
-        assert p in fp
-        assert fph[fp.index(p)] == CP.G
-
-
-def test_station_bit_sites_stay_fixed_with_ft_resite():
-    fp, fph = fixed_points(True)
-    assert (11.0, 11.0) not in fp                 # ft sites are re-sited after the search
-    for p in ((300.0, 300.0), (310.0, 300.0), (320.0, 300.0)):
-        assert p in fp and fph[fp.index(p)] == CP.G
+             internal_stations=[dict(conn="bus:i_ectl", regs_um=[[100.0, 100.0]], bit_sites_um=[[[300.0, 300.0]]])])
+    for on, n in ((True, 0), (False, 1)):
+        me = SimpleNamespace(t=t, cfg=dict(bank_resite=on), W=500.0, H=500.0, owner=lambda p, tol=0.0: None)
+        CP.TypeModel._fixed_geometry(me)
+        assert len(me.FP) == n

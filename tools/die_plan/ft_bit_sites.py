@@ -25,7 +25,7 @@ def validate_slot(slot):
             raise ValueError('bit_sites_um coordinates must be finite x/y pairs')
 
 
-def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=(), radius_um=16.2):
+def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=(), radius_um=16.2, move_off_blocks=False):
     """FIX-S81-VPW 11-17 (FABLE-CLOSURE-STRATEGY lever 6.2): snap every explicit bit site (cell lower-left) to the
     nearest site column / row of the core grid starting at origin (kit core xMin/yMin, um).  A re-sited plan stage
     (S81 leaf t7 ft3 82.9376 176.8544, t53 ft0 9.3393 1032.3389) was off the grid, which face_flops.tcl refuses
@@ -37,7 +37,8 @@ def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=()
     with core_box (x0, y0, x1, y1, kit CORE_AREA um) every site is also CLAMPED into the core rows / site columns (the
     cell footprint bit_site_cell_um stays inside the box), and a site whose grid point is already taken goes to the
     nearest free grid point (x weighted 2:1 against y, as legalize_slots), inside the box and off every blocks box,
-    within radius_um.  Sites that were free and inside the core are untouched, so a kit that generated before gets the
+    within radius_um.  move_off_blocks=True (SITE-IN-MACRO 11-25, core_place bank re-site; default False = byte-identical): a site whose
+    own grid point is free but lies on a blocks box moves to the nearest free site too.  Sites that were free and inside the core are untouched, so a kit that generated before gets the
     identical table.  Positions only, 0 cycles; raises when no free site exists within radius_um (then the station's
     bit block does not fit: move the station inward in the plan).
     -> (slots, moved count); slots without bit_sites_um unchanged."""
@@ -58,8 +59,8 @@ def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=()
             cmin, rmin = math.ceil((bx0 - x0) / site_w - 1e-6), math.ceil((by0 - y0) / row_h - 1e-6)
             cmax, rmax = math.floor((bx1 - w - x0) / site_w + 1e-6), math.floor((by1 - h - y0) / row_h + 1e-6)
 
-            def free(c, r):
-                if not (cmin <= c <= cmax and rmin <= r <= rmax) or (c, r) in seen:
+            def free(c, r, ignore_seen=False):
+                if not (cmin <= c <= cmax and rmin <= r <= rmax) or ((c, r) in seen and not ignore_seen):
                     return False
                 x, y = x0 + c * site_w, y0 + r * row_h
                 return not any(x < b2 and a < x + w and y < d and b < y + h for a, b, b2, d in blocks)
@@ -71,7 +72,7 @@ def snap_slots(slots, origin, site_w=0.054, row_h=0.27, core_box=None, blocks=()
                 lab = f"{slot['name']},{j},{bit}"
                 if core_box is not None:
                     c, r = min(max(c, cmin), cmax), min(max(r, rmin), rmax)          # off-core margin -> nearest core row/site
-                    if (c, r) in seen:
+                    if (c, r) in seen or (move_off_blocks and not free(c, r, True)):
                         for _d, _ac, _ar, dc, dr in offs:
                             if free(c + dc, r + dr):
                                 c, r = c + dc, r + dr

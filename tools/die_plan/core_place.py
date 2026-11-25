@@ -299,11 +299,11 @@ class TypeModel:
         if isinstance(rs.get("tap_um"), list):
             fp.append(rs["tap_um"][:2])
         # SITE-IN-MACRO 11-25 (KV A5t3-A5t6: 22 i_ectl_Q_N_kf / i_hsl_Q_N_ao bit sites of 8 kv3_pc_v1 types ended on u_kvpc1_f):
-        # write_type re-routes only the regs_um of an internal station; its explicit bit_sites_um / face_bit_sites_um (per-bit
-        # routes) are never re-sited, so they are FIXED points like the ft sites (kept, never under a core + halo), also with
-        # --ft-resite (that one re-sites ft sites only).
+        # write_type re-routes the regs_um of an internal station and (default, cfg bank_resite) re-sites its explicit bit_sites_um /
+        # face_bit_sites_um with them (resite_station_banks).  With bank_resite off they stay behind, so they are FIXED points
+        # like the ft sites (never under a core + halo), also with --ft-resite (that one re-sites ft sites only).
         ist0 = len(fp)
-        for e in t.get("internal_stations", []) or []:
+        for e in (t.get("internal_stations", []) or []) if not self.cfg.get("bank_resite", True) else []:
             for g in e.get("bit_sites_um") or []:
                 fp.extend(q[:2] for q in g if isinstance(q, (list, tuple)) and len(q) >= 2)
             fp.extend(q[:2] for q in e.get("face_bit_sites_um") or [] if isinstance(q, (list, tuple)) and len(q) >= 2)
@@ -1571,7 +1571,77 @@ def write_type(M, t_new, cfg, log):
         link_reg_write(M, t_new, R, cfg, rep)
     if M.breg:
         bus_reg_write(M, t_new, R, cfg, rep)
+    if cfg.get("bank_resite", True):
+        resite_station_banks(M.t, t_new, rep)
     return rep
+
+
+BANK_CLEAR_UM = 2.16          # a bank site stays this far off every hard core (the kit HALO) or the core's own halo_um if larger
+BANK_RADIUS_UM = 43.2
+
+
+def resite_station_banks(base, t_new, rep):
+    """SITE-IN-MACRO 11-25 (COORD ruling): write_type re-sites regs_um of an internal station; the explicit bank sites that depend on
+    them (bit_sites_um stage j <- regs_um[j], face_bit_sites_um <- to_um) used to stay behind (KV A5t3-A5t6: 22 sites of 8 kv3_pc_v1
+    types on kvpc1_f).  Each bank is shifted by the move of its register / capture end (the same bank geometry offset), then every
+    site is legalised: inside the kit CORE_AREA, on the site grid, off every hard core + halo and off every other bank site
+    (ft_bit_sites.snap_slots, move_off_blocks).  Rows whose stage count differs from regs_um (take-regs rows) are legalised only.
+    rep: bank_rows, bank_shifted, bank_sites_moved, bank_failed."""
+    import ft_bit_sites as FB
+    import kit_fit
+    rows = [(i, s) for i, s in enumerate(t_new.get("internal_stations") or []) if s.get("bit_sites_um") or s.get("face_bit_sites_um")]
+    if not rows:
+        return
+    bst = base.get("internal_stations") or []
+    pseudo = []
+    for i, s in rows:
+        b = bst[i] if i < len(bst) and bst[i].get("conn") == s.get("conn") else None
+        groups = [[list(q[:2]) for q in g] for g in s.get("bit_sites_um") or []]
+        o, n = (b or {}).get("regs_um") or [], s.get("regs_um") or []
+        shifted = False
+        if b is not None and len(groups) == len(o) == len(n):
+            for j, (po, pn) in enumerate(zip(o, n)):
+                dx, dy = pn[0] - po[0], pn[1] - po[1]
+                if abs(dx) > 1e-6 or abs(dy) > 1e-6:
+                    groups[j] = [[q[0] + dx, q[1] + dy] for q in groups[j]]
+                    shifted = True
+        face = [list(q[:2]) for q in s.get("face_bit_sites_um") or []]
+        if b is not None and face and b.get("to_um") and s.get("to_um"):
+            dx, dy = s["to_um"][0] - b["to_um"][0], s["to_um"][1] - b["to_um"][1]
+            if abs(dx) > 1e-6 or abs(dy) > 1e-6:
+                face = [[q[0] + dx, q[1] + dy] for q in face]
+                shifted = True
+        rep["bank_shifted"] = rep.get("bank_shifted", 0) + int(shifted)
+        cell = s.get("bit_site_cell_um") or (1.404, 0.27)
+        if groups:
+            pseudo.append((i, "bit_sites_um", dict(name=f"is{i}", bit_sites_um=groups, bit_site_cell_um=cell)))
+        if face:
+            pseudo.append((i, "face_bit_sites_um", dict(name=f"is{i}.face", bit_sites_um=[face], bit_site_cell_um=cell)))
+    blocks = []
+    for h in t_new.get("hard_cores") or []:
+        try:
+            (x, y), (w, hh) = h["origin_um"], h["outline_um"]
+        except (KeyError, TypeError, ValueError):
+            continue
+        if h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+            w, hh = hh, w
+        m = max(BANK_CLEAR_UM, float(h.get("halo_um") or 0.0))
+        blocks.append((x - m, y - m, x + w + m, y + hh + m))
+    try:
+        fca = kit_fit.kit_core_area(t_new)
+        slots, moved = FB.snap_slots([p[2] for p in pseudo], fca[:2], core_box=fca, blocks=blocks, radius_um=BANK_RADIUS_UM,
+                                     move_off_blocks=True)
+    except Exception as e:  # noqa: BLE001 -- no free site near: keep the shifted banks, report (ADV-SITE-IN-MACRO flags them)
+        rep["bank_failed"] = str(e)[:200]
+        slots, moved = [p[2] for p in pseudo], 0
+    rep["bank_sites_moved"] = moved
+    rep["bank_rows"] = len(rows)
+    for (i, key, _), sl in zip(pseudo, slots):
+        s = t_new["internal_stations"][i]
+        if key == "bit_sites_um":
+            s["bit_sites_um"] = sl["bit_sites_um"]
+        else:
+            s["face_bit_sites_um"] = sl["bit_sites_um"][0]
 
 
 def slot_mask(R, rects, W, H, um):

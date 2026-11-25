@@ -53,12 +53,30 @@ def core_rects(t):
     return out
 
 
+def gen_snapped_ft(t):
+    """ft_slots as the kit gets them: gen_phys runs ft_bit_sites.snap_slots(core_box=CORE_AREA, blocks=type_blocks) which clamps every
+    explicit ft bit site into the core and moves it off every block (positions only), so the plan's raw ft bit sites (S81 c9t43: 26,411
+    off the outline) are judged AFTER that snap.  -> (slots, None) or (planned slots, refusal text) when gen would refuse."""
+    slots = t.get("ft_slots") or []
+    if not any(isinstance(e, dict) and e.get("bit_sites_um") for e in slots):
+        return slots, None
+    try:
+        import copy
+        import ft_bit_sites as FB
+        import kit_fit
+        fca = kit_fit.kit_core_area(t)
+        return FB.snap_slots(copy.deepcopy(slots), fca[:2], core_box=fca, blocks=FB.type_blocks(t))[0], None
+    except Exception as e:  # noqa: BLE001 -- gen refuses (no free site in 16.2 um) or an older tree: judge the planned sites
+        return slots, f"{type(e).__name__}: {str(e)[:120]}"
+
+
 def sites(t):
     """-> [(key, label, x, y, w, h)] every site of one type; points have w = h = 0"""
     import adv_site_collide as SC
     out = []
+    ft_snapped, _ft_err = gen_snapped_ft(t)
     for key_, key in (("ft_slots", "ft_slots"), ("internal_stations", "internal_stations")):
-        for k, e in enumerate(t.get(key) or []):
+        for k, e in enumerate(ft_snapped if key == "ft_slots" else t.get(key) or []):
             if not isinstance(e, dict):
                 continue
             nm = e.get("name") or e.get("conn") or k
