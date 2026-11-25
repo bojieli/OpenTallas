@@ -120,3 +120,10 @@ def test_die_slice_held_back_from_type_jobs(monkeypatch):
     assert R.die_slice_gb("") == 300.0 and R.die_slice_cores("") == 32.0
     for p in ("die", "plan"):
         assert R.die_slice_gb(p) == 0.0 and R.die_slice_cores(p) == 0.0
+
+
+def test_crit_jobs_use_the_die_slice(monkeypatch):
+    monkeypatch.setattr(R, "conf", lambda k: {"DIE_SLICE_GB": 300.0, "DIE_SLICE_CORES": 32.0}.get(k, 0.0))
+    monkeypatch.setenv("OT_HEAVY_CPU", "crit")
+    monkeypatch.delenv("OT_HEAVY_PRIO", raising=False)
+    assert R.die_slice_gb() == 0.0 and R.die_slice_cores() == 0.0

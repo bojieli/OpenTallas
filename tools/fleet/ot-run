@@ -1267,9 +1267,34 @@ def plan_job():
     return "OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", "")
 
 
+# DIECLASS_1125 (COORD 11-25 00:3x): die-class jobs (--die / --priority die|plan / --plan-job, or a die-level command: the ot-heavy-reconcile DIE_LEVEL_RE
+# set) go to the first of OT_RUN_DIE_PREFER (default epyc12 = the host with the die slice, then epyc7, intel1) that qualifies (has --dir / inputs / disk);
+# ot-heavy admits die class at once there.  None qualifies -> the normal choice.  OT_RUN_DIE_PREFER= (empty) turns it off.
+DIE_PREFER = [h.strip() for h in os.environ.get("OT_RUN_DIE_PREFER", "epyc12,epyc7,intel1").split(",") if h.strip()]
+DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py\s+(?!kit-rtl\b)[a-z]|die_plan/check\.py|plan_census|"
+                          r"(?:^|[/\s])[A-Za-z0-9_]*compose[A-Za-z0-9_]*\.(?:py|sh)\b|(?:^|[/\s])(?:run_)?gate_[A-Za-z0-9_]*\.sh\b|(?:^|[/\s])run_[A-Za-z0-9_]*_gate\.sh\b|"
+                          r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
+PREFER_DIE = [False]
+
+
+def die_level_cmd(cmd):
+    t = cmd if isinstance(cmd, str) else " ".join(map(str, cmd or ()))
+    return bool(DIE_LEVEL_RE.search(t)) and not re.search(r"\bkit-rtl\b", t)
+
+
+def die_preferred(ok):
+    """DIECLASS_1125: the first OT_RUN_DIE_PREFER host among the qualifying ones, or None"""
+    return next((h for h in DIE_PREFER if h in ok), None)
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """SMALLJOB-1119 (COORD: a small read-only STA read sat queued on epyc7 at load 202/96 admitting 4 GB): the normal choice stands unless it would QUEUE the job or put it on a CPU-saturated host
     (load ratio > 1) while a job of <= SMALL_JOB_GB could start now elsewhere: then the host admitting it now with the most admission memory wins; if none admits it, it queues where it admits soonest."""
+    if PREFER_DIE[0] or die:
+        _ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
+        _h = die_preferred(_ok)
+        if _h:
+            return _h, False
     host, queue = _choose(res, mem, threads, die)
     if die or not (0 < mem <= SMALL_JOB_GB) or host is None or plan_job() or direct_job():
         return host, queue
@@ -3062,6 +3087,7 @@ def main():
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
+    PREFER_DIE[0] = die or plan_job() or die_level_cmd(cmd)      # DIECLASS_1125: placement preference only (disk floor unchanged)
     disk_explicit = disk is not None
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
     say = lambda m: print(m, file=sys.stderr, flush=True)

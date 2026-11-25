@@ -1677,11 +1677,15 @@ def die_slice_gb(prio=None):
     """DIECLASS_1125 (OWNER 11-24 00:05: e.g. epyc12 32 cores + 300 GB for die-level work): DIE_SLICE_GB / DIE_SLICE_CORES in /etc/ot-heavy.conf are held
     back from every type-level admission; die-class jobs (OT_HEAVY_PRIO die / plan) never pass the gate and may use them."""
     prio = os.environ.get("OT_HEAVY_PRIO") if prio is None else prio
+    if prio is None or os.environ.get("OT_HEAVY_CPU") == "crit":   # COORD 11-25: the slice is for die class AND --crit jobs
+        prio = "die" if os.environ.get("OT_HEAVY_CPU") == "crit" else prio
     return 0.0 if prio in ("die", "plan") else max(0.0, conf("DIE_SLICE_GB"))
 
 
 def die_slice_cores(prio=None):
     prio = os.environ.get("OT_HEAVY_PRIO") if prio is None else prio
+    if os.environ.get("OT_HEAVY_CPU") == "crit":
+        prio = "die"
     return 0.0 if prio in ("die", "plan") else max(0.0, conf("DIE_SLICE_CORES"))
 
 
