@@ -355,3 +355,29 @@ def test_scoped_bind_writes_scoped_top_and_strap_files(tmp_path, monkeypatch):
         s = sc / "rtl" / f.name
         if s.exists():
             assert s.read_bytes() == f.read_bytes(), f.name
+
+
+def test_ended_bind_snapshot_reads_report_not_mtimes(tmp_path, monkeypatch):
+    """KV-A5t6 r8f64f1de3: a whole-OUT kit snapshot of an ended bind (blob mtimes: _context.json newer than bind_report.json)
+    passes on its bind_report; a stream snapshot (own records only) still needs a live bind"""
+    raw, plan, ab, out0, ctx = fixture(tmp_path)
+    emit(out0, ctx, 'ta')
+    emit(out0, ctx, 'tb')
+    monkeypatch.setattr(BS, "alive", lambda out, why=None: (why.append("bind heartbeat absent") if why is not None else None) and False)
+    snap = tmp_path / 'snaps' / 'x' / 'root'
+    out = snap / 'b'
+    shutil.copytree(out0, out)
+    (snap.parent / 'MANIFEST.json').write_text('{}')
+    (out / 'bind_report.json').write_text(json.dumps(dict(errors=[])))
+    old = time.time() - 900
+    os.utime(out / 'bind_report.json', (old, old))
+    rc, line = BS.launch_check(out, 'ta', plan, ab)
+    assert rc == 0 and line == 'BIND errors 0'
+    (out / BS.DIR / 'tb.json').unlink()           # stream snapshot: own type only -> liveness still decides
+    rc, line = BS.launch_check(out, 'ta', plan, ab)
+    assert rc == 3 and 'heartbeat absent' in line
+    shutil.rmtree(snap.parent)
+    (out0 / 'bind_report.json').write_text(json.dumps(dict(errors=[])))
+    os.utime(out0 / 'bind_report.json', (old, old))  # not a snapshot: mtimes still decide
+    rc, line = BS.launch_check(out0, 'ta', plan, ab)
+    assert rc == 3 and 'heartbeat absent' in line

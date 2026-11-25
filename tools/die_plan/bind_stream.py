@@ -284,12 +284,29 @@ def newer_than_context(out):
     return c.stat().st_mtime if _live(out) is not None else None
 
 
+def _ended_snapshot(out, tn):
+    """KV-A5t6 kv3_pc_v1__cl7f648944__r8f64f1de3 11-24: in a kit-store snapshot every file is a link to a content blob, so mtimes
+    are the blobs' and say nothing about bind order (_context.json came out 64 ms newer than bind_report.json, the ended bind read as
+    live, its heartbeat absent -> 'void').  kit_store takes an ended bind's OUT whole (every type's record); a stream snapshot
+    (kit_store.stream_files) carries only type tn's own records.  -> True for a snapshot that holds another type's record."""
+    out = Path(out)
+    if not (out / "bind_report.json").is_file():
+        return False
+    if not any(p.name == "root" and (p.parent / "MANIFEST.json").is_file() for p in out.parents):
+        return False
+    try:
+        names = [e.name for e in os.scandir(out / DIR) if e.name.endswith(".json") and e.name != CTX]
+    except OSError:
+        return False
+    return any(n != f"{tn}.json" and not n.startswith(tn + "__") for n in names)
+
+
 def launch_check(bind_out, tn, plan, asbuilt=None):
     """BIND-STREAM-LAUNCH wave gate (kit_wave option bind_stream_launch) -> (rc, line).  A finished bind: its bind_report.json must
     report 0 errors (unchanged).  A running bind: type tn needs its own final, intact record of this run AND
     kit_topology.bind_matches on the item plan / as-built (the exact check the kit_topology stage makes later)."""
     out = Path(bind_out)
-    if _live(out) is None:
+    if _live(out) is None or _ended_snapshot(out, tn):
         try:
             e = json.loads((out / "bind_report.json").read_text()).get("errors")
         except (OSError, ValueError) as exc:
