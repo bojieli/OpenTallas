@@ -73,3 +73,27 @@ class LoadCap(T.unittest.TestCase):
 
     def test_factor_zero_disables(self):
         r, ran = self.go('500', conf='LOAD_CAP_FACTOR=0\n'); self.assertTrue(ran, r.stderr)
+
+
+class LoadCapLec(LoadCap):
+    def test_lec_subjob_skips_the_load_cap(self):    # FLEET-OPS 11-25: epyc9 LEC sub-jobs waited 143 min on this cap while 20 kits held their place slots
+        env_conf = None
+        (self.d / 'conf').write_text('LOAD_GATE_FACTOR=0\nLOAD_CAP_FACTOR=1.2\nOT_HEAVY_SHORT_POOL=0\n')
+        self.load.write_text('500 1.0 1.0 1/1 1\n')
+        env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0', OT_HEAVY_SYSTEM_TOOLS='1', OT_HEAVY_THREADS='8')
+        for k in ('OT_HEAVY_CPU', 'OT_HEAVY_PRIO', 'OT_HEAVY_CONF', 'OT_HEAVY_DIRECT'):
+            env.pop(k, None)
+        for f in ('args', 'args.sudo'):
+            try: (self.d / f).unlink()
+            except FileNotFoundError: pass
+        lec = [str(self.h), '--mem', '4', '--max-wait', '1', '--', 'docker', 'run', '--name', 'dpkit-col_x__t1-123-lec', '--cpus=8', 'img']
+        r = subprocess.run(lec, capture_output=True, text=True, env=env, timeout=60)
+        self.assertTrue((self.d / 'args').exists(), r.stderr)
+        for f in ('args', 'args.sudo'):
+            try: (self.d / f).unlink()
+            except FileNotFoundError: pass
+        r = subprocess.run(lec[:5] + ['docker', 'run', '--name', 'dpkit-col_x__t1-123', 'img'], capture_output=True, text=True, env=env, timeout=60)
+        self.assertEqual(r.returncode, 75)
+        env['OT_HEAVY_LEC_CPU_EXEMPT'] = '0'
+        r = subprocess.run(lec, capture_output=True, text=True, env=env, timeout=60)
+        self.assertEqual(r.returncode, 75)
