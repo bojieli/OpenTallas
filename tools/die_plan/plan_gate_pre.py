@@ -35,9 +35,10 @@ overlay.  Five classes, each finding line starts `FAIL <CLASS> ...`:
            the --baseline-plan (the adopted plan) need none.  QC-SC-ROWS' reset rows had never been dry-run: 9/9 types
            rejected at bind, after 1-2 h.
 
-INOUTLINE (FP-CONVERGE-S81 11-25, COORD 06:2x, BLOCKING): FAIL INOUTLINE <type> when a planned coordinate (station regs / bit-site footprints, ft slots, relay sites,
+INOUTLINE (FP-CONVERGE-S81 11-25, COORD): WARN INOUTLINE by default, FAIL INOUTLINE when $OT_PRE_INOUTLINE_BLOCK=1 (set for the c11 cut only; a live cut's PRE
+  never blocks on it) <type> when a planned coordinate (station regs / bit-site footprints, ft slots, relay sites,
   reach/sink sites, added taps, landing bands, landing-contract collector root / outs / relays / local sources / pins) lies > 1 um outside outline_um.
-  With --base only NEW or CHANGED lines block (PRE-DIFF).  No escape switch.  Replaces the WARN ADV-IN-OUTLINE / ADV-FT-OUTSIDE lines in this gate.
+  With --base only NEW or CHANGED lines block (PRE-DIFF).  Replaces the WARN ADV-IN-OUTLINE / ADV-FT-OUTSIDE lines in this gate.
 
 PRE-DIFF (COMPOSE-FAST 11-25): `check ... --base BASE [--base-tree T]` fails only on FAIL lines that are NEW (or CHANGED) against the
   same check on BASE; base lines the row repeats are LIST PRE-INHERITED.  The base check runs beside the row check, cached by
@@ -3299,12 +3300,14 @@ def _lc_points(lc):
     return out
 
 
-def inoutline_findings(plan):
+def inoutline_findings(plan, block=None):
     """FP-CONVERGE-S81 11-25 (COORD 06:2x, Fable flow review): BLOCKING.  One FAIL INOUTLINE line per type whose planned coordinates
     lie outside its outline_um by more than 1 um: station regs / bit-site footprints, relay sites, reach/sink sites, added taps, landing
     bands (adv_fpconv.in_outline), ft_slots regs and bit sites (adv_ft_outside.type_hits), and the landing contract's collector root,
     outs, relays, core resets, local sources and pins.  Violations that a --base plan already has are inherited by PRE-DIFF
     (LIST PRE-INHERITED), so only NEW or CHANGED lines block a row; a plan gated without --base blocks on all of them.  Seconds."""
+    if block is None:
+        block = os.environ.get("OT_PRE_INOUTLINE_BLOCK") == "1"          # COORD 05:4x: opt-in, set only for the c11 cut's PRE
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     try:
         import adv_fpconv as AF
@@ -3342,10 +3345,11 @@ def inoutline_findings(plan):
         bits += [f"{c} {cat} point(s) worst +{round(m, 2):g} um" for cat, (c, m) in sorted(by.items())]
         if bits:
             n += 1
-            out.append(f"FAIL INOUTLINE {tn}: outside the {W:g}x{H:g} outline: " + "; ".join(bits)
+            out.append(f"{'FAIL' if block else 'WARN'} INOUTLINE {tn}: outside the {W:g}x{H:g} outline: " + "; ".join(bits)
                        + " (fix: clamp inside, 0 cycles; ADV-IN-OUTLINE / ADV-FT-OUTSIDE detail)")
     if n:
-        out.append(f"LIST INOUTLINE-SUMMARY {n} type(s) with coordinates outside the outline")
+        out.append(f"LIST INOUTLINE-SUMMARY {n} type(s) with coordinates outside the outline"
+                   + ("" if block else " (report only; $OT_PRE_INOUTLINE_BLOCK=1 makes them FAIL, set for the c11 cut)"))
     return out
 
 

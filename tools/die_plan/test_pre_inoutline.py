@@ -19,10 +19,10 @@ def good_type():
                                            "pins": [{"xy_um": [0, 30]}]}}}
 
 
-def run(tmp_path, types, name="p.json"):
+def run(tmp_path, types, name="p.json", block=True):
     f = tmp_path / name
     f.write_text(json.dumps({"die": "x", "partition_types": types}))
-    return G.inoutline_findings(str(f))
+    return G.inoutline_findings(str(f), block=block)
 
 
 def test_clean_plan_has_no_finding(tmp_path):
@@ -86,3 +86,15 @@ def test_baseline_delta_blocks_only_new_or_changed(tmp_path):
     newb = copy.deepcopy(bad)
     d = PD.diff([x for x in run(tmp_path, {"a": bad, "b": newb}, "row3.json") if x.startswith("FAIL")], base)
     assert len(d["new"]) == 1                                                       # a new type blocks
+
+
+def test_default_is_report_only_and_env_opts_in(tmp_path, monkeypatch):
+    t = good_type()
+    t["internal_stations"][0]["regs_um"][1] = [160, 60]
+    monkeypatch.delenv("OT_PRE_INOUTLINE_BLOCK", raising=False)
+    out = run(tmp_path, {"ty": t}, block=None)
+    assert out[0].startswith("WARN INOUTLINE ty:") and not any(x.startswith("FAIL") for x in out)     # a live cut never blocks
+    monkeypatch.setenv("OT_PRE_INOUTLINE_BLOCK", "1")
+    assert run(tmp_path, {"ty": t}, block=None)[0].startswith("FAIL INOUTLINE ty:")                    # the c11 cut opts in
+    monkeypatch.setenv("OT_PRE_INOUTLINE_BLOCK", "0")
+    assert run(tmp_path, {"ty": t}, block=None)[0].startswith("WARN INOUTLINE")
