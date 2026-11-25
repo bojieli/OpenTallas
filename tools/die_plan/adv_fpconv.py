@@ -1,0 +1,414 @@
+#!/usr/bin/env python3
+"""adv_fpconv.py -- FP-CONVERGE-S81 11-25 (COORD ruling 05:5x item 2): ten report-only plan checks from the Fable reviews of 13 S81 types.
+
+All WARN ADV-<NAME> lines, one per type, never a gate, every die; cheap geometry over the plan only (no netlist, no liberty).
+
+IN-OUTLINE      any planned xy outside the type outline: station regs and bit-site footprints, relay sites, landing bands, reach-fix /
+                sink sites, added taps, edge-clock taps, the reset root (reset.in_sites).  S81 t70 root (1611.8, 12.9) on a 1494.7 um
+                outline, t35 ft3 station y -4.3.  (ADV-FT-OUTSIDE keeps the ft slots; this one covers everything else.)
+LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S81 vn_a.c_s -> vn_b 406 / 436 um, rxsf 417 um).
+RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point (S81 t15 32 seats in lane cores).
+SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
+PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
+HUB-BOX         a core with > 200 station bits needs >= 2 faces with >= 60 um clear (vn_a / vn_b / vs boxed in at 8.6-17 um).
+FT-CLEAR        an ft register hop (straight segment) that crosses a hard core by > 10 um (t57: four chains over vsw, 225 um each).
+TAP-STEP-DUP    two added (explicit) taps < 40 um apart (t54 five taps within 11-13 um); core-pin taps are excluded (macro_follow).
+BAND-AT-PIN     a landing band farther than 180 um from its pins (max_pin_to_band_hop_um) or overlapping a hard core.
+SEAT-UNIQUE     >= 4 station registers of different stations on one point (reader-start duplicate seats)."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import adv_geom_static as G  # noqa: E402
+
+TOL = 0.01
+LEG_UM = 405.0
+RELAY_STACK = 4
+CELL_UM2 = 0.38
+BIN_UM = 100.0
+DENS_MAX = 0.5
+CLEAR_PIN_UM = 43.0
+HUB_BITS = 200
+CLEAR_HUB_UM = 60.0
+FT_OVER_UM = 10.0
+TAP_STEP_UM = 40.0
+BAND_HOP_UM = 180.0
+SEAT_STACK = 4
+MAX_EX = 3
+
+
+def _w(check, *parts):
+    return f"WARN ADV-{check} " + " ".join(str(p) for p in parts)
+
+
+def _num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def pts(o):
+    """yield (x, y) of every [x, y] / [x, y, w] number list nested in o"""
+    if isinstance(o, (list, tuple)):
+        if 2 <= len(o) <= 3 and all(_num(v) for v in o):
+            yield float(o[0]), float(o[1])
+        else:
+            for v in o:
+                yield from pts(v)
+
+
+def _over(x, y, W, H, cw=0.0, ch=0.0):
+    return max(-x, -y, x + cw - W, y + ch - H)
+
+
+def outline_points(t, tn, raw):
+    """{category: [(x, y, cw, ch)]} the planned positions that must lie inside the outline"""
+    cat = {}
+    ck = t.get("clock") or {}
+    cat["station reg"] = [(x, y, 0, 0) for s in t.get("internal_stations") or [] if isinstance(s, dict) for x, y in pts(s.get("regs_um"))]
+    sc = []
+    for s in t.get("internal_stations") or []:
+        if isinstance(s, dict):
+            cw, ch = (s.get("bit_site_cell_um") or t.get("bit_site_cell_um") or [0.0, 0.0])[:2]
+            sc += [(x, y, cw, ch) for x, y in pts(s.get("bit_sites_um"))]
+    cat["station bit site"] = sc
+    cat["relay site"] = [(x, y, 0, 0) for x, y in pts(list((t.get("relay_sites") or {}).values()))]
+    cat["reach/sink site"] = [(x, y, 0, 0) for k in ("reach_fix_sinks", "sink_sites_um") for x, y in pts(ck.get(k))]
+    cat["added tap"] = [(float(a["xy"][0]), float(a["xy"][1]), 0, 0) for a in ck.get("added_taps") or [] if isinstance(a, dict) and a.get("xy")]
+    cat["edge clock tap"] = [(x, y, 0, 0) for e in ck.get("edge_clocks") or [] if isinstance(e, dict) for x, y in pts(e.get("tap_um"))]
+    br = []
+    for b in ((ck.get("landing_contract") or {}).get("bands") or {}).values():
+        r = b.get("rect_um") if isinstance(b, dict) else None
+        if r and len(r) == 4:
+            br += [(r[0], r[1], 0, 0), (r[2], r[3], 0, 0)]
+    cat["landing band"] = br
+    root = ((raw.get("reset") or {}).get("in_sites") or {}).get(tn)
+    cat["reset root"] = [(float(root[0]), float(root[1]), 0, 0)] if root and len(root) >= 2 else []
+    return cat
+
+
+def in_outline(t, tn, raw):
+    o = t.get("outline_um")
+    if not o:
+        return []
+    W, H = o
+    hits = []
+    for name, ps in outline_points(t, tn, raw).items():
+        bad = [_over(x, y, W, H, cw, ch) for x, y, cw, ch in ps]
+        bad = [b for b in bad if b > TOL]
+        if bad:
+            hits.append((name, len(bad), round(max(bad), 2)))
+    return hits
+
+
+def leg405_zero(t):
+    return [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D")) for r in t.get("relay_depth") or []
+            if isinstance(r, dict) and _num(r.get("path_um")) and r["path_um"] > LEG_UM and not (r.get("stages_existing") or 0)]
+
+
+def relay_seats(t):
+    rects = G.hard_rects(t)
+    sites = (t.get("relay_sites") or {})
+    inside, stack = [], {}
+    for n, p in sites.items():
+        try:
+            x, y = float(p[0]), float(p[1])
+        except (TypeError, ValueError, IndexError):
+            continue
+        for x0, y0, x1, y1, nm in rects:
+            if x0 + 0.5 < x < x1 - 0.5 and y0 + 0.5 < y < y1 - 0.5:
+                inside.append((n, nm))
+                break
+        stack.setdefault((round(x, 1), round(y, 1)), []).append(n)
+    stacked = [(k, len(v)) for k, v in stack.items() if len(v) > RELAY_STACK]
+    return inside, stacked
+
+
+def _free_area(bx0, by0, bx1, by1, W, H, rects):
+    x1, y1 = min(bx1, W), min(by1, H)
+    a = max(0.0, x1 - bx0) * max(0.0, y1 - by0)
+    for r in rects:
+        ox = min(x1, r[2]) - max(bx0, r[0])
+        oy = min(y1, r[3]) - max(by0, r[1])
+        if ox > 0 and oy > 0:
+            a -= ox * oy
+    return max(a, 0.0)
+
+
+def seat_density(t):
+    o = t.get("outline_um")
+    if not o:
+        return []
+    W, H = o
+    rects = G.hard_rects(t)
+    fl = {}
+
+    def add(x, y, bits):
+        k = (int(x // BIN_UM), int(y // BIN_UM))
+        fl[k] = fl.get(k, 0) + bits
+    for s in t.get("internal_stations") or []:
+        if isinstance(s, dict):
+            b = int(s.get("bits") or 0)
+            for x, y in pts(s.get("regs_um")):
+                add(x, y, b)
+    for s in t.get("ft_slots") or []:
+        if isinstance(s, dict):
+            b = int(s.get("width") or 0)
+            for x, y in pts(s.get("regs_um")):
+                add(x, y, b)
+    out = []
+    for (i, j), n in fl.items():
+        fa = _free_area(i * BIN_UM, j * BIN_UM, (i + 1) * BIN_UM, (j + 1) * BIN_UM, W, H, rects)
+        if fa < 100.0:
+            fa = 100.0
+        u = n * CELL_UM2 / fa
+        if u > DENS_MAX:
+            out.append((round(u, 2), n, (i * BIN_UM, j * BIN_UM)))
+    return sorted(out, reverse=True)
+
+
+def _core_pin_points(t):
+    """[(inst, pin, bits, x, y)] of station endpoints at a core pin: launch at from_um, capture at to_um"""
+    out = []
+    for s in t.get("internal_stations") or []:
+        if not isinstance(s, dict):
+            continue
+        b = int(s.get("bits") or 0)
+        for key, xy in (("launch", s.get("from_um")), ("capture", s.get("to_um"))):
+            v = str(s.get(key) or "")
+            if v.startswith("core:") and xy and len(xy) >= 2:
+                inst = v[5:].rsplit(".", 1)[0]
+                out.append((inst, v[5:], b, float(xy[0]), float(xy[1])))
+    return out
+
+
+def _face_clear(rect, face, rects, W, H, lo=None, hi=None):
+    """clearance in front of a face of rect: nearest other rect overlapping the lateral span [lo, hi] (default the whole face), else the outline"""
+    x0, y0, x1, y1 = rect[:4]
+    best = {"W": x0, "E": W - x1, "S": y0, "N": H - y1}[face]
+    for r in rects:
+        if r is rect:
+            continue
+        if face in "WE":
+            a, b = (lo, hi) if lo is not None else (y0, y1)
+            if min(b, r[3]) - max(a, r[1]) <= 0:
+                continue
+            g = (x0 - r[2]) if face == "W" else (r[0] - x1)
+        else:
+            a, b = (lo, hi) if lo is not None else (x0, x1)
+            if min(b, r[2]) - max(a, r[0]) <= 0:
+                continue
+            g = (y0 - r[3]) if face == "S" else (r[1] - y1)
+        if g >= -TOL:
+            best = min(best, max(g, 0.0))
+    return best
+
+
+def _face_of(rect, x, y, tol=1.0):
+    x0, y0, x1, y1 = rect[:4]
+    if not (x0 - tol <= x <= x1 + tol and y0 - tol <= y <= y1 + tol):
+        return None
+    d = {"W": abs(x - x0), "E": abs(x - x1), "S": abs(y - y0), "N": abs(y - y1)}
+    f = min(d, key=d.get)
+    return f if d[f] <= tol else None
+
+
+def pin_face_clear(t):
+    o = t.get("outline_um")
+    if not o:
+        return []
+    W, H = o
+    rects = G.hard_rects(t)
+    byname = {r[4]: r for r in rects}
+    agg = {}
+    for inst, pin, bits, x, y in _core_pin_points(t):
+        r = byname.get(inst)
+        if not r:
+            continue
+        f = _face_of(r, x, y)
+        if not f:
+            continue
+        lo, hi = (y - 0.5, y + 0.5) if f in "WE" else (x - 0.5, x + 0.5)
+        c = _face_clear(r, f, rects, W, H, lo, hi)
+        if c < CLEAR_PIN_UM:
+            k = (inst, f)
+            a = agg.setdefault(k, [0, c])
+            a[0] += bits
+            a[1] = min(a[1], c)
+    return sorted(((round(c, 2), bits, inst, f) for (inst, f), (bits, c) in agg.items()), key=lambda r: (r[0], -r[1]))
+
+
+def hub_box(t):
+    o = t.get("outline_um")
+    if not o:
+        return []
+    W, H = o
+    rects = G.hard_rects(t)
+    byname = {r[4]: r for r in rects}
+    bits = {}
+    for inst, pin, b, x, y in _core_pin_points(t):
+        bits[inst] = bits.get(inst, 0) + b
+    out = []
+    for inst, n in bits.items():
+        r = byname.get(inst)
+        if not r or n <= HUB_BITS:
+            continue
+        cl = {f: _face_clear(r, f, rects, W, H) for f in "WESN"}
+        ok = sum(1 for v in cl.values() if v >= CLEAR_HUB_UM)
+        if ok < 2:
+            out.append((n, inst, {f: round(v, 1) for f, v in cl.items()}))
+    return sorted(out, reverse=True)
+
+
+def _seg_inside_len(p, q, r):
+    """length of segment p-q inside the open rect r (Liang-Barsky)"""
+    (x0, y0), (x1, y1) = p, q
+    dx, dy = x1 - x0, y1 - y0
+    t0, t1 = 0.0, 1.0
+    for pp, qq in ((-dx, x0 - r[0]), (dx, r[2] - x0), (-dy, y0 - r[1]), (dy, r[3] - y0)):
+        if pp == 0:
+            if qq <= 0:
+                return 0.0
+        else:
+            tt = qq / pp
+            if pp < 0:
+                t0 = max(t0, tt)
+            else:
+                t1 = min(t1, tt)
+            if t0 >= t1:
+                return 0.0
+    return (t1 - t0) * (dx * dx + dy * dy) ** 0.5
+
+
+def ft_clear(t):
+    rects = G.hard_rects(t)
+    out = []
+    for s in t.get("ft_slots") or []:
+        if not isinstance(s, dict):
+            continue
+        regs = list(pts(s.get("regs_um")))
+        tot, worst, n = 0.0, None, 0
+        for a, b in zip(regs, regs[1:]):
+            for r in rects:
+                L = _seg_inside_len(a, b, r)
+                if L > FT_OVER_UM:
+                    tot += L
+                    n += 1
+                    if worst is None or L > worst[0]:
+                        worst = (L, r[4])
+        if n:
+            out.append((s.get("name"), int(s.get("width") or 0), n, round(tot), worst[1]))
+    return out
+
+
+def tap_step_dup(t):
+    taps = [(float(a["xy"][0]), float(a["xy"][1]), a.get("name")) for a in (t.get("clock") or {}).get("added_taps") or []
+            if isinstance(a, dict) and a.get("xy")]
+    g = {}
+    for x, y, n in taps:
+        g.setdefault((int(x // TAP_STEP_UM), int(y // TAP_STEP_UM)), []).append((x, y, n))
+    out = []
+    for (i, j), v in g.items():
+        for a in v:
+            for di in (0, 1):
+                for dj in (-1, 0, 1):
+                    if di == 0 and dj < 0:
+                        continue
+                    for b in g.get((i + di, j + dj), []):
+                        if a is b or (di == 0 and dj == 0 and a[2] >= b[2]):
+                            continue
+                        d = ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+                        if d < TAP_STEP_UM:
+                            out.append((round(d, 1), a[2], b[2]))
+    return sorted(out)
+
+
+def band_at_pin(t):
+    rects = G.hard_rects(t)
+    out = []
+    for n, b in (((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}).items():
+        if not isinstance(b, dict):
+            continue
+        hop = b.get("max_pin_to_band_hop_um")
+        r = b.get("rect_um")
+        ov = None
+        if r and len(r) == 4:
+            for c in rects:
+                if min(r[2], c[2]) - max(r[0], c[0]) > 1.0 and min(r[3], c[3]) - max(r[1], c[1]) > 1.0:
+                    ov = c[4]
+                    break
+        if (_num(hop) and hop > BAND_HOP_UM) or ov:
+            out.append((n, hop, ov))
+    return out
+
+
+def seat_unique(t):
+    g = {}
+    for i, s in enumerate(t.get("internal_stations") or []):
+        if isinstance(s, dict):
+            for x, y in set(pts(s.get("regs_um"))):
+                g.setdefault((round(x, 1), round(y, 1)), set()).add(i)
+    return sorted(((len(v), k) for k, v in g.items() if len(v) >= SEAT_STACK), reverse=True)
+
+
+def _types(raw):
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        if isinstance(t, dict):
+            yield tn, t
+
+
+def _run(check, fn, fmt, raw):
+    out, n = [], 0
+    for tn, t in _types(raw):
+        v = fn(t, tn, raw)
+        if v:
+            n += 1
+            out.append(_w(check, tn, f"{len(v)} finding(s):", "; ".join(fmt(x) for x in v[:MAX_EX]) + (" ..." if len(v) > MAX_EX else "")))
+    return out + [_w(check, f"summary {n} types flagged (report only)")]
+
+
+def _f_in_outline(raw, plan_path, tree=None, **_k):
+    return _run("IN-OUTLINE", lambda t, tn, r: in_outline(t, tn, r),
+                lambda h: f"{h[1]} {h[0]}(s) outside, worst +{h[2]} um", raw)
+
+
+def _f_leg(raw, plan_path, tree=None, **_k):
+    return _run("LEG405-ZERO", lambda t, tn, r: leg405_zero(t), lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} 0 stages", raw)
+
+
+def _f_relay(raw, plan_path, tree=None, **_k):
+    def fn(t, tn, r):
+        ins, st = relay_seats(t)
+        return [("inside core " + c, n) for n, c in ins] + [(f"{k} x{m} on one point", "") for k, m in st]
+    return _run("RELAY-SEAT", fn, lambda h: f"{h[0]} {h[1]}".strip(), raw)
+
+
+def _f_dens(raw, plan_path, tree=None, **_k):
+    return _run("SEAT-DENSITY", lambda t, tn, r: seat_density(t), lambda h: f"bin {h[2]} util {h[0]} ({h[1]} flops)", raw)
+
+
+def _f_pin(raw, plan_path, tree=None, **_k):
+    return _run("PIN-FACE-CLEAR", lambda t, tn, r: pin_face_clear(t), lambda h: f"{h[2]} {h[3]} face {h[0]} um clear ({h[1]} bits)", raw)
+
+
+def _f_hub(raw, plan_path, tree=None, **_k):
+    return _run("HUB-BOX", lambda t, tn, r: hub_box(t), lambda h: f"{h[1]} {h[0]} bits clear {h[2]}", raw)
+
+
+def _f_ft(raw, plan_path, tree=None, **_k):
+    return _run("FT-CLEAR", lambda t, tn, r: ft_clear(t), lambda h: f"{h[0]} ({h[1]} b) {h[2]} hop(s) over cores {h[3]} um, worst {h[4]}", raw)
+
+
+def _f_tap(raw, plan_path, tree=None, **_k):
+    return _run("TAP-STEP-DUP", lambda t, tn, r: tap_step_dup(t), lambda h: f"{h[1]}/{h[2]} {h[0]} um apart", raw)
+
+
+def _f_band(raw, plan_path, tree=None, **_k):
+    return _run("BAND-AT-PIN", lambda t, tn, r: band_at_pin(t), lambda h: f"{h[0]} pin hop {h[1]} um" + (f", overlaps {h[2]}" if h[2] else ""), raw)
+
+
+def _f_seat(raw, plan_path, tree=None, **_k):
+    return _run("SEAT-UNIQUE", lambda t, tn, r: seat_unique(t), lambda h: f"{h[0]} stations at {h[1]}", raw)
+
+
+F = {"IN-OUTLINE": _f_in_outline, "LEG405-ZERO": _f_leg, "RELAY-SEAT": _f_relay, "SEAT-DENSITY": _f_dens,
+     "PIN-FACE-CLEAR": _f_pin, "HUB-BOX": _f_hub, "FT-CLEAR": _f_ft, "TAP-STEP-DUP": _f_tap, "BAND-AT-PIN": _f_band, "SEAT-UNIQUE": _f_seat}
+findings_by_check = {k: G._safe(k, v) for k, v in F.items()}
