@@ -733,3 +733,5 @@
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.2 h job 1.2 h: last event 1.3 h ago, log write 1.3 h ago (35 lines), cpu idle (hung)
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.2 h job 1.2 h: last event 1.3 h ago, log write 1.3 h ago (35 lines), cpu idle (hung)
 - 2026-11-25 11:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 11:22 PST: 210 running jobs, PROGRESSING 195, PLATEAU 4, SLOW 11, NO-PROGRESS 0 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+- 2026-11-25 12:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 12:22 PST: 172 running jobs, PROGRESSING 151, PLATEAU 3, SLOW 17, NO-PROGRESS 1 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc12 gdsdrc hcpg_run stage 6.8 h job 6.8 h: no new meaningful log line for 6.5 h; last: ot-run: RAN on epyc12 (unit oth-ubuntu-1322230-1795614800): exit 0
