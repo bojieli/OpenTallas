@@ -52,3 +52,11 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
   run-item inside a systemd unit does NOT re-exec, dies with the parent unit -> never launch run-item from qcstaprobe-autolaunch again).
 - W5: private-spec with --bind-out $W/s6/bind (W5 is in s6 TYPES) + run-item from a plain ssh shell, after E5 GRT.
 - qcstaprobe-watch active (posts cts/grt/route/signoff + RESULT). Lane waiter: wake.sh <lines>.
+
+## 01:00 PST 11-25 state (COORD: W5 now, with DEMACRO)
+- W5 slw_st_a_v2__clf4365a62 = C1o DRC-confirm probe: plan 03524e522d25 = 9292 + DEMACRO-QC-C1o f143e6d8eac3 (32 ops, 0 old mismatch),
+  in tree as plan_of_record/..._final_preview_dm.json; scoped-top bind epyc2 bin/dm.sh, dir s7, log dm.log.
+- Hub unit qcstaprobe-w5launch (w5launch.sh): on dm.log PASS -> private-spec (--bind-out s7/bind) + systemd-run unit runitem-slw_st_a_v2__clf4365a62.
+- qcstaprobe-watch re-deployed (reads stages from runitem_<type>.log; earlier copy was an empty upload). Always check wc -c after uploads.
+- My local files now under scratchpad/staprobe/ (shared scratchpad: other lanes overwrite handoff.md/watch.sh at top level).
+- If SITE-IN-MACRO posts a collision-free DEMACRO rerun: second W5 on it.
