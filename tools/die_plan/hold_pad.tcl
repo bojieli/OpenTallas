@@ -19,6 +19,45 @@
 # Writes <dir>/hold_pad_<tag>.tsv (endpoint, hold slack, TT setup slack, cells) and one summary line; returns the cell count.
 # Standalone use (route-keeping ECOs): source hold_pad.tcl; ot_hold_pad eco 20 ; then legalize + incremental route.
 proc ot_hp_env {k d} { expr {[info exists ::env($k)] && [string is double -strict $::env($k)] ? $::env($k) : $d} }
+# KV-HOLD-STRUCT 11-25: OPT-IN scope of the family-margin pad (OT_HOLD_PAD_SCOPE=zlxt; default off = every end below the margin).
+# Keeps an end only when its worst hold path is (a) ZERO-LOGIC: the D net is driven by a register through buffers / inverters only
+# (<= 6 hops), or (b) CROSS-TAP: launch and capture register clock-pin early arrivals differ by more than OT_HOLD_PAD_XT_PS (15).
+# A same-tap pair with real logic between the registers is dropped (counted scope_dropped): it keeps the base margin of the other
+# passes.  Any lookup that fails keeps the end (counted scope_unk): the scope never pads less than it can prove.
+proc ot_hp_zero_logic {it} {
+  set net [$it getNet]
+  for {set hop 0} {$hop < 6} {incr hop} {
+    set drv ""
+    foreach t [$net getITerms] { if {[$t isOutputSignal]} { set drv $t; break } }
+    if {$drv eq ""} { return unk }
+    set di [$drv getInst]; set m [$di getMaster]
+    if {[$m isSequential]} { return zl }
+    if {[$m isBlock]} { return unk }
+    set nin 0; set inet ""
+    foreach t [$di getITerms] { if {[$t isInputSignal]} { incr nin; set inet [$t getNet] } }
+    if {$nin != 1 || $inet eq "" || $inet eq "NULL"} { return logic }
+    set net $inet
+  }
+  return logic
+}
+proc ot_hp_clk_arr {pin} {
+  set n [get_full_name $pin]
+  set c [regsub {/[A-Za-z0-9_]+$} $n {/CLK}]
+  set cp [get_pins -quiet $c]
+  if {![llength $cp]} { return "" }
+  if {[catch {set a [get_property $cp arrival_min_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
+  return $a
+}
+proc ot_hp_scope_keep {it pe pin} {
+  set z [ot_hp_zero_logic $it]
+  if {$z eq "zl"} { return keep }
+  if {$z eq "unk"} { return unk }
+  if {[catch {
+    set a [ot_hp_clk_arr [get_property $pe startpoint]]; set b [ot_hp_clk_arr $pin]
+  }]} { return unk }
+  if {$a eq "" || $b eq ""} { return unk }
+  return [expr {abs($a - $b) > [ot_hp_env OT_HOLD_PAD_XT_PS 15.0] ? "keep" : "drop"}]
+}
 proc ot_hold_pad {tag margin {budget 0} {dir ""}} {
   set cell [expr {[info exists ::env(OT_HOLD_PAD_CELL)] && $::env(OT_HOLD_PAD_CELL) ne "" ? $::env(OT_HOLD_PAD_CELL) : "HB4xp67_ASAP7_75t_R"}]
   set ff_ps [ot_hp_env OT_HOLD_PAD_FF_PS 37.0]
@@ -37,7 +76,7 @@ proc ot_hold_pad {tag margin {budget 0} {dir ""}} {
   set async [dict create]
   foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
   # 1. hold ends below the margin, worst first
-  set ends {}; set skip 0
+  set ends {}; set skip 0; set scope [expr {[info exists ::env(OT_HOLD_PAD_SCOPE)] && $::env(OT_HOLD_PAD_SCOPE) eq "zlxt"}]; set sdrop 0; set sunk 0
   foreach pe [find_timing_paths -path_delay min -group_path_count 3000000 -endpoint_path_count 1 -slack_max [expr {$margin - 1e-3}]] {
     set s [get_property $pe slack]
     set pin [get_property $pe endpoint]
@@ -48,6 +87,11 @@ proc ot_hold_pad {tag margin {budget 0} {dir ""}} {
     if {[$m isBlock] || ![$m isSequential] || [$it getNet] eq "NULL" || [[$it getNet] getSigType] eq "CLOCK"} { incr skip; continue }
     set mt [$it getMTerm]
     if {[$mt getSigType] in {RESET SCAN CLOCK} || [regexp {^(SETN|RESETN|SN|RN|SET|RESET|CLR|PRE)$} [$mt getName]]} { incr skip; continue }
+    if {$scope} {
+      set sk [expr {[catch {ot_hp_scope_keep $it $pe $pin} sv] ? "unk" : $sv}]
+      if {$sk eq "drop"} { incr sdrop; continue }
+      if {$sk eq "unk"} { incr sunk }
+    }
     lappend ends [list $s $pin $it [get_full_name $pin]]
   }
   set ends [lsort -real -index 0 $ends]
@@ -97,5 +141,6 @@ proc ot_hold_pad {tag margin {budget 0} {dir ""}} {
   close $fp
   puts [format "OT_HOLD_PAD %s margin %.1f ends %d padded %d cells %d (%s %.0f ps FF / %.0f ps TT, floor %.1f) setup_blocked %d setup_cut %d clamped %d over_budget %d (budget %d) skipped_nonreg %d secs %d" \
     $tag $margin [llength $ends] $k $tot $cell $ff_ps $tt_ps $floor $blocked $cut $clamped $over $budget $skip [expr {[clock seconds] - $t0}]]
+  if {$scope} { puts "OT_HOLD_PAD $tag scope zlxt: scope_dropped $sdrop scope_unk $sunk kept [llength $ends]" }
   return $tot
 }

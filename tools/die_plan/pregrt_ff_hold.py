@@ -297,7 +297,7 @@ set pg_rr_guard [expr {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is
 #   0   repair_timing -hold only (the form before this rule).
 # A pad tool error falls back to repair_timing for that pass.  The TT setup headroom check is per endpoint (ot_hold_pad), the
 # whole-build accept test (pg_verdict) and the rr setup guard stay as they are.
-@PG_HOLD_PAD_PROCS@
+@PG_HOLD_SCOPE@@PG_HOLD_PAD_PROCS@
 set pg_pad_mode [expr {[info exists ::env(OT_PREGRT_HOLD_PAD)] && $::env(OT_PREGRT_HOLD_PAD) in {0 rr all} ? $::env(OT_PREGRT_HOLD_PAD) : "@PG_HOLD_PAD@"}]
 proc pg_pad_on {tag} { expr {$::pg_pad_mode eq "all" || ($::pg_pad_mode eq "rr" && $tag eq "rr")} }
 set pg_pad_last -1
@@ -516,6 +516,18 @@ def pad_mode(env=None):
     return v
 
 
+PAD_SCOPE_ENV = "OT_HOLD_PAD_SCOPE"
+
+
+def pad_scope(env=None):
+    """KV-HOLD-STRUCT 11-25: gen env OT_HOLD_PAD_SCOPE=zlxt scopes the family-margin pad (hold_pad.tcl) to zero-logic and cross-tap
+    pairs; same-tap pairs with real logic stay at the base margin.  Unset / empty = off (the pad covers every end below the margin)."""
+    v = str((os.environ if env is None else env).get(PAD_SCOPE_ENV, "")).strip()
+    if v not in ("", "zlxt"):
+        raise ValueError(f"{PAD_SCOPE_ENV}: '{v}' is not zlxt")
+    return v
+
+
 SAME_LEAF_ENV = "OT_HOLD_SAME_LEAF"
 SAME_LEAF_TCL = "hold_same_leaf.tcl"
 
@@ -629,7 +641,7 @@ def config_lines(t):
 def tail_text(amin=-1):
     """TAIL with the AUTO threshold and the planned hold pad (hold_pad.tcl + the gen-time mode) filled in."""
     pad = (Path(__file__).resolve().parent / PAD_TCL).read_text().rstrip("\n")
-    return TAIL.replace("@PG_AUTO_MIN@", str(int(amin))).replace("@PG_HOLD_PAD_PROCS@", pad).replace("@PG_HOLD_PAD@", pad_mode())
+    return TAIL.replace("@PG_AUTO_MIN@", str(int(amin))).replace("@PG_HOLD_SCOPE@", ('if {![info exists ::env(OT_HOLD_PAD_SCOPE)]} { set ::env(OT_HOLD_PAD_SCOPE) "zlxt" }\n' if pad_scope() else "")).replace("@PG_HOLD_PAD_PROCS@", pad).replace("@PG_HOLD_PAD@", pad_mode())
 
 
 def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):
