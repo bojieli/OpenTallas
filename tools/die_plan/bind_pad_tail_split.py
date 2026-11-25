@@ -143,6 +143,18 @@ def site_rows(inst, k, xy):
     return rows
 
 
+def trunk_site_rows(inst, d, src, end):
+    """TRUNK-SEATS (QC-FEV1FLAT-RE 11-25): plan relay_sites rows for the d-stage shared trunk `inst` (bind.py trunk chain,
+    u_pd<T>_<bus>_<j>_t_<pad>), stage i (r[0..d-2], then q) at src + (i + 1) / d * (end - src), i.e. one even hop of
+    |end - src|_1 / d um from the in-boundary flop to the trunk end.  Before, only the tail copies had rows, so the trunk
+    stages were left to the placer, which put them at the far end (W5: 4 bits, 583-608 um).  -> (rows, max hop um)"""
+    sx, sy, ex, ey = float(src[0]), float(src[1]), float(end[0]), float(end[1])
+    pts = [[round(sx + (ex - sx) * (i + 1) / d, 3), round(sy + (ey - sy) * (i + 1) / d, 3)] for i in range(d)]
+    rows = {f"{inst}.r[{i}]": pts[i] for i in range(d - 1)}
+    rows[f"{inst}.q"] = pts[d - 1]
+    return rows, round((abs(ex - sx) + abs(ey - sy)) / d, 3)
+
+
 def centroids(by_core):
     """{core inst: [(x, y)..]} -> {core inst: centroid}"""
     return {c: (sum(p[0] for p in v) / len(v), sum(p[1] for p in v) / len(v)) for c, v in by_core.items()}
@@ -154,8 +166,8 @@ def config(ab):
     if c is None:
         return None
     if not isinstance(c, dict) or not isinstance(c.get("types"), list) or not c["types"] or \
-            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes", "route", "require_reach", "r8_keep"} or \
-            not all(isinstance(c.get(k, False), bool) for k in ("pipes", "route", "require_reach", "r8_keep")):
+            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes", "route", "require_reach", "r8_keep", "trunk_seats"} or \
+            not all(isinstance(c.get(k, False), bool) for k in ("pipes", "route", "require_reach", "r8_keep", "trunk_seats")):
         raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves][, pipes: bool]}}")
     wl = c.get("wire_leaves", [])
     if not isinstance(wl, list) or not all(isinstance(x, str) and x for x in wl) or ("wire_leaves" in c and not wl):
@@ -163,7 +175,7 @@ def config(ab):
     out = dict(types=[re.compile(x) for x in c["types"]], min_spread_um=float(c.get("min_spread_um", 400.0)),
                hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl), pipes=bool(c.get("pipes", False)),
                route=bool(c.get("route", False)), require_reach=bool(c.get("require_reach", False)),
-               r8_keep=bool(c.get("r8_keep", False)))
+               r8_keep=bool(c.get("r8_keep", False)), trunk_seats=bool(c.get("trunk_seats", False)))
     if out["hop_um"] <= 0 or out["min_spread_um"] < 0:
         raise ValueError(f"asbuilt.{KEY}: hop_um must be > 0 and min_spread_um >= 0")
     return out

@@ -561,3 +561,19 @@ def test_require_pin_tables_fails_closed_when_no_pins_resolve(tmp_path):
     assert TS.require_pin_tables([dict(inst="u_c")], tmp_path / "nowhere", "t0", environ={}) == []
     assert TS.require_pin_tables([dict(inst="u_d", pins=[{"name": "x"}], pins_file="pins/zz.json")], tmp_path / "nowhere",
                                  "t0", environ={}) == []
+
+
+# ---- TRUNK-SEATS (QC-FEV1FLAT-RE 11-25): opt-in sub-key trunk_seats -----------------------------------------------------
+def test_trunk_seats_rule_and_key():
+    off = TS.config({"land_pad_tail_split": {"types": ["t"]}})
+    assert off["trunk_seats"] is False
+    assert TS.config({"land_pad_tail_split": {"types": ["t"], "trunk_seats": True}})["trunk_seats"] is True
+    with pytest.raises(ValueError):
+        TS.config({"land_pad_tail_split": {"types": ["t"], "trunk_seats": 1}})
+    # 7-stage trunk from the bin flop (370, 1330) to the trunk end (400, 240): even hops, r[0..5] then q
+    rows, hop = TS.trunk_site_rows("u_pd7_x_hc1_i_0_t_9", 7, (370.0, 1330.0), (400.0, 240.0))
+    assert sorted(rows) == sorted([f"u_pd7_x_hc1_i_0_t_9.r[{i}]" for i in range(6)] + ["u_pd7_x_hc1_i_0_t_9.q"])
+    assert rows["u_pd7_x_hc1_i_0_t_9.q"] == [400.0, 240.0] and rows["u_pd7_x_hc1_i_0_t_9.r[0]"] == [374.286, 1174.286]
+    assert hop == round((30 + 1090) / 7, 3) and hop <= 405
+    one, h1 = TS.trunk_site_rows("u_p", 1, (0, 0), (10, 20))
+    assert one == {"u_p.q": [10.0, 20.0]} and h1 == 30.0

@@ -5505,7 +5505,7 @@ class Binder:
             # merged 32, TT setup -1223 ps on u_pd3_..pvg1_p2_12 -> ..pvg0_p2_13, 43 um apart).  Now trunk depth T of a bit starts
             # at the end of the next shallower trunk of that bit (kept stages, D = T - T_prev), equal depths share one trunk, and
             # no stage can merge into a copy.  Same depths, same flop count or fewer, same names (u_pd<T>_<bus>_<j>_t_<pad>).
-            ts_depths, ts_trunks = defaultdict(set), {}
+            ts_depths, ts_trunks, ts_trunk_end = defaultdict(set), {}, {}
             for (tb, tj, tpad), (tk, _per) in tsplit.items():
                 if tpad > tk:
                     ts_depths[(tb, tj)].add((tpad - tk, tpad))
@@ -5524,6 +5524,20 @@ class Binder:
                 nm = short_id(f"pd{T}_{bus}_{j}_t_{pad_n}", 100)
                 pads[(bus, j, pad_n, None)] = nm
                 ts_trunks[k] = nm
+                if ts_cfg["trunk_seats"]:
+                    # TRUNK-SEATS (opt-in sub-key "trunk_seats"; QC-FEV1FLAT-RE 11-25): plan rows for the trunk stages, from the
+                    # in-boundary flop (or the end of the shallower trunk) to the L1 centre of the pad's consumer pins
+                    cp = [xy for v in ts_cores(ts_cons[(bus, j, pad_n)])[0].values() for xy in v]
+                    ts_end = TS.l1_centre(cp)
+                    ts_src = ts_trunk_end.get((bus, j, prev[-1])) if prev else TS.src_xy(t, bus)
+                    ts_rec2 = self.__dict__.setdefault("_pad_tail_split", {}).get(tn)
+                    if ts_src is not None and ts_rec2 is not None:
+                        tr, th = TS.trunk_site_rows(f"u_{nm}", D, ts_src, ts_end)
+                        ts_rec2.setdefault("sites", {}).update(tr)
+                        tt = ts_rec2.setdefault("trunk_seats", dict(trunks=0, max_hop_um=0.0))
+                        tt["trunks"] += 1
+                        tt["max_hop_um"] = max(tt["max_hop_um"], th)
+                    ts_trunk_end[(bus, j, T)] = ts_end
                 decl.append(f"    wire [0:0] {nm};")
                 body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({D})) u_{nm} (.clk(clk), .d({src}), "
                             f".q({nm}));  // landing pad trunk: shared stages of pad {pad_n} (tail split)")
