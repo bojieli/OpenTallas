@@ -99,10 +99,25 @@ proc ct_clock_guard_snapshot {} {
 proc ct_clock_guard_verify {} {
  global ct_clock_guard_before
  set after [ct_clock_guard_snapshot]
- if {[dict size $after]!=[dict size $ct_clock_guard_before]} {error "clock ancestry clock-pin inventory changed"}
+ # ANCESTRY-RTAP 11-25 (S81-SERDES-TAPSKEW, serdes__t2 c9s kit): tap_reset_split.tcl (OT_TAP_RESET_SPLIT) adds per-tap copies
+ # <inst>_rtap_<tap> of a last reset stage and its chain.  Every guarded pin must keep its ancestry (below); a NEW FF clock pin is
+ # accepted only as such a copy whose original is guarded with the same master, pin and clock signature.
  dict for {pin signature} $ct_clock_guard_before {
   if {![dict exists $after $pin] || [dict get $after $pin] ne $signature} {error "clock ancestry changed for $pin: before=$signature after=[expr {[dict exists $after $pin] ? [dict get $after $pin] : {MISSING}}]"}
  }
+ set ct_cg_new 0
+ dict for {pin signature} $after {
+  if {[dict exists $ct_clock_guard_before $pin]} continue
+  lassign $pin in pn
+  set k [string first _rtap_ $in]
+  set orig [expr {$k > 0 ? [list [string range $in 0 [expr {$k - 1}]] $pn] : ""}]
+  if {$orig eq "" || ![dict exists $ct_clock_guard_before $orig] || [dict get $ct_clock_guard_before $orig] ne $signature} {
+   error "clock ancestry clock-pin inventory changed: new $pin ($signature) is not a reset-split copy of a pin with the same ancestry[expr {$orig ne "" && [dict exists $ct_clock_guard_before $orig] ? " (original: [dict get $ct_clock_guard_before $orig])" : ""}]"
+  }
+  incr ct_cg_new
+ }
+ if {[dict size $after] != [dict size $ct_clock_guard_before] + $ct_cg_new} {error "clock ancestry clock-pin inventory changed"}
+ if {$ct_cg_new} {puts "OT_CLOCK_ANCESTRY reset-split copies accepted: $ct_cg_new (same master and ancestry as their originals)"}
  puts "OT_CLOCK_ANCESTRY PASS [dict size $after] FF clock pins; functional gates, INV edges and noncore roots preserved"
 }
 if {$ct_clock_guard_on} {set ct_clock_guard_before [ct_clock_guard_snapshot]}
