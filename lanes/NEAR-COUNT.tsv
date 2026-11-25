@@ -20,5 +20,3 @@ s81	dsdv_slice_kv512_C__t1	PILOT	epyc4:s81-wave-1105f2 kv512_C a4 (wave)	?	?	?	?
 s81	dsdv_slice_lepw_mus_LP__t2	REVERSAL	epyc2 kept 4_cts DB					FLEET-WATCH-1015	resume at GRT; reversal of CANCEL-UNSIGNABLE-1120 11-20	
 qwen_compute	slw_st_b_v1__cle6023ec2	REVERSAL	intel1 kept 4_cts DB					FLEET-WATCH-1015	resume at GRT; reversal of CANCEL-UNSIGNABLE-1120 11-20	
 qwen_kvsys	kv3_hgi_v1__cl42bc8b12	REVERSAL	intel1 kept 4_cts DB					FLEET-WATCH-1015	resume at GRT; reversal of CANCEL-UNSIGNABLE-1120 11-20	
-qwen_kvsys	kv3_pc_v1__cl7f648944__r8e7d31598	PCFIX-PROBE	epyc12 private geom probe (KV-ALLFIX PCFIX-ALL overlay, COORD 11-25 --crit ruling)					KV-ALLFIX	geom probe only, DO_NOT_COUNT; delete row after verdict	11-25
-qwen_kvsys	kv3_pc_v1__cl4ea58a5c__r828e1c2a5	PCFIX-PROBE	epyc12 private geom probe (KV-ALLFIX PCFIX-ALL overlay, COORD 11-25 --crit ruling)					KV-ALLFIX	geom probe only, DO_NOT_COUNT; delete row after verdict	11-25
