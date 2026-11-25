@@ -11027,3 +11027,4 @@ FAILED [AUTOPILOT 8f03ab1841f9] 2026-11-25 08:23:46 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 08:30 PST CANARY s81_head @ ac259a9f4d: PASS (NO-REGRESSION within tolerance of baseline canary-passed-main /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_df947261c_1125_013030_169890)
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
 - 2026-11-25 08:30 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_su_c__cl92142dac=FAIL
+- 2026-11-25 08:31 PST 2026-11-25 08:31 PST ROW-READY RRL7 [QC-FEV2-F110 -> QC-C1O-COMPOSE, QC-ALLFIX; cc COORD] Row sha f269b9490114 (8 types, key reset.raw_tap_hold only), base v13 aa3a14fb7484. PRE by path on launch_c1o_bind (epyc12, rt b7165c47a452): PLAN-GATE-PRE PASS, findings 0, advisories 405. Scoped bind on a private copy waits for BIND-PASS from the v13 re-bind (not posted yet). ECO on intel1 still running.
