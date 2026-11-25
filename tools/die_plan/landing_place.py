@@ -922,6 +922,20 @@ def _moved_type(t, macro_moves):
                                for h in t.get('hard_cores') or []])
 
 
+def _dsel_cone_tcl(c):
+    """HEAD-TOOLS-RINGDSEL (ALLFIX-HEAD C5): opt-in band key dsel_cone=true (needs ring_place='ff') -> 'set cland_dsel_cone
+    {prefix ..}' so landing_placement.tcl keys and places each chunked-ring u_dsel AND-OR cone cell FIRM right behind its y
+    flop; '' (output unchanged) when no band carries the key."""
+    names=[]
+    for name,band in sorted((c or {}).get('bands',{}).items()):
+        v=band.get('dsel_cone')
+        if v is None:continue
+        if v is not True:raise ValueError(f"landing band {name}: dsel_cone must be true or absent")
+        if band.get('ring_place')!='ff':raise ValueError(f"landing band {name}: dsel_cone requires ring_place='ff'")
+        names.append(band.get('instance','u_cland_'+name))
+    return ('set cland_dsel_cone {'+' '.join(names)+'}\n') if names else ''
+
+
 def tcl(P,tn,macro_moves=None):
     """macro_moves (gen_phys.macro_move_table, kit macro sites when OT_MACRO_MOVES is set): the hard cores collector
     windows are cleared of (_collector_window); None / {} = plan origins."""
@@ -984,7 +998,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -1006,4 +1020,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))

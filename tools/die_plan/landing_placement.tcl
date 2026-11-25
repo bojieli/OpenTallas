@@ -576,6 +576,7 @@ foreach spec $cland_optional_groups {
 # (write enables, read muxes, count compare) is left to global placement next to the flops it connects. Measured why
 # (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
 set cland_ff_fill 0.90
+if {![info exists cland_dsel_cone]} { set cland_dsel_cone {} }
 set cland_cursor {}
 # WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class B): cland_ring_place / cland_column_select read $cland_col_cursor through `global`;
 # it was set only inside other procs, so a ring band that came first after the reader-start grow died with 'no such variable'
@@ -1022,15 +1023,75 @@ proc cland_start_bterm_name {names bus} {
  }
  return [lindex $found 0]
 }
+# HEAD-TOOLS-RINGDSEL 11-25 (ALLFIX-HEAD C5, opt-in plan key landing band dsel_cone=true): the registered read select of a
+# chunked ring (ot_meso_dsel REG=1: slot AND-OR cone -> dch[c].u_dsel/y[i] flop) has its y flops FIRM next to their word bit, but
+# the free AND-OR cone cells were left to global placement, which spread them 138 um up a 40 um channel (416 ps max_delay, x1 y
+# flop driving 21 fF, -78 ps).  With dsel_cone every combinational cell of that u_dsel whose forward cone (<= 6 comb levels,
+# same u_dsel scope) ends in a y flop D is keyed right behind that y flop (slot 999999999) and placed FIRM with it, area counted
+# in the band fill.  Pure on name -> fanout-name dicts so tclsh tests it; absent key = no cone cell is touched.
+proc cland_dsel_cone_assign {combs fanout ykeys} {
+ set scopere {^(.*[/.]dch\\?\[[0-9]+\\?\]\.u_dsel/)}
+ set combset [dict create]
+ foreach c $combs { dict set combset $c 1 }
+ set out {}
+ foreach c $combs {
+  if {![regexp $scopere $c -> sc]} continue
+  set best {}; set seen [dict create $c 1]; set front [list $c]
+  for {set d 0} {$d < 6 && [llength $front]} {incr d} {
+   set nf {}
+   foreach u $front {
+    if {![dict exists $fanout $u]} continue
+    foreach v [dict get $fanout $u] {
+     if {[dict exists $seen $v]} continue
+     dict set seen $v 1
+     if {[string first $sc $v] != 0} continue
+     if {[dict exists $ykeys $v]} {
+      set k [dict get $ykeys $v]
+      if {$best eq {} || [string compare $k $best] < 0} { set best $k }
+     } elseif {[dict exists $combset $v]} { lappend nf $v }
+    }
+   }
+   set front $nf
+  }
+  if {$best eq {}} continue
+  set f [split $best |]
+  lappend out [list $c [format {%s|%s|%09d|%s} [lindex $f 0] [lindex $f 1] 999999999 $c]]
+ }
+ return $out
+}
+proc cland_dsel_cone_cells {combinsts ffs} {
+ set ykeys [dict create]
+ foreach pr $ffs {
+  set k [lindex $pr 0]
+  if {[regexp {[/.]dch\\?\[[0-9]+\\?\]\.u_dsel/y\\?\[[0-9]+\\?\]} [[lindex $pr 1] getName]] && [llength [split $k |]] >= 4} {
+   dict set ykeys [[lindex $pr 1] getName] $k
+  }
+ }
+ set byname [dict create]; set names {}
+ foreach i $combinsts { set nm [$i getName]; dict set byname $nm $i; lappend names $nm }
+ foreach pr $ffs { dict set byname [[lindex $pr 1] getName] [lindex $pr 1] }
+ set fanout [dict create]
+ foreach nm $names {
+  set fo {}
+  foreach it [[dict get $byname $nm] getITerms] {
+   if {![$it isOutputSignal]} continue
+   set n [$it getNet]
+   if {$n eq "NULL"} continue
+   foreach t [$n getITerms] { if {[$t isInputSignal]} { lappend fo [[$t getInst] getName] } }
+  }
+  dict set fanout $nm $fo
+ }
+ return [lmap e [cland_dsel_cone_assign $names $fanout $ykeys] { list [lindex $e 1] [dict get $byname [lindex $e 0]] }]
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
- set ffs {};set comb 0;set need 0.0
+ set ffs {};set comb 0;set need 0.0;set combinsts {}
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
-  if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
+  if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb; lappend combinsts $i; continue }
   lappend ffs [list $nm $i]
   set needw [$m getWidth]
   if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
@@ -1099,6 +1160,17 @@ proc cland_place_ff {prefix rect tag} {
    lassign [cland_ctl_rekey $ffs $base $kb $nbb $rev] nc ffs
    puts "OT_CLAND ctlkey $prefix: $nc control registers keyed at bit $best (START pin nearest, [format %.1f [expr {$bd/double($ff_dbu)}]] um)"
   }
+ }
+ if {[lsearch -exact $::cland_dsel_cone $prefix] >= 0} {
+  set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs] : {}}]
+  if {![llength $cone]} { error "OT_CLAND dsel_cone requested for $prefix but no u_dsel AND-OR cone cell reaches a keyed y flop (chunk width $wch)" }
+  foreach pr $cone {
+   set m [[lindex $pr 1] getMaster]
+   set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
+  }
+  set ffs [concat $ffs $cone]
+  set comb [expr {$comb-[llength $cone]}]
+  puts "OT_CLAND dsel_cone $prefix: [llength $cone] u_dsel AND-OR cone cells FIRM right behind their y flop"
  }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
  # multi-rect band: the fill spread uses the summed area of its rects
