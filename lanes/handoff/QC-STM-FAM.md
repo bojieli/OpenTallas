@@ -1,8 +1,6 @@
 # QC-STM-FAM handoff (parent QC-ALLFIX; scope FABLE-RC-QC rows 25/26 = stm family)
-Updated 2026-11-25 07:5x PST.
-- Census posted 07:33 (lanes/posts/QC-STM-FAM.md). Tables: epyc10 /srv/opentallas-scratch2/claude/QC-STM-FAM/census/cen_*.txt
-- Causes: (A) slw_stm_v1__cle34a73c3 RESETN recovery -59.82 / 27 ep: one group-0 STM-DQ landing copy u_stream.g_rn.rs2_g[0] feeds ~470 flops (16-buf tree + 2 HB4 on root). (B) sle_stm_v2 cl55be2264 flt_o -78.42 and (C) sle_stm_v3 so_w -50.94: R6V4 kits had no flt_o stations; v13 has 2 flt_o stations on all 9 stm types -> COVERED.
-- Row STM-RC: row json epyc10 QC-STM-FAM/row/STM-RC.json sha 2272284f3785; plan 58d5630bb451 = v13 aa3a14fb7484 + slw_stm_v1__cle34a73c3 verilog_defines += OT_QC_STMRC; sidecar a142fe516f24 unchanged.
-- RTL: lane clone epyc10 /srv/opentallas-scratch2/claude/QC-STM-FAM/wt branch qc-stm-fam/stmrc-1125 (rtl/qwen_dv/qfd_dv_stream_tile.sv); equiv proven (eq/). Not pushed yet.
-- Running: guard+PRE epyc10 (ot-run client pid 3399659, out QC-STM-FAM/pre.out); Fable review.
-- Next: after BIND-PASS (QC-C1O-COMPOSE), private copy of launch_c1o_bind with v13+row and patched RTL, scoped bind slw_stm_v1__cle34a73c3, place probe, ROW-READY.
+Updated 2026-11-25 08:5x PST.
+- Census posted 07:33. Tables: epyc10 /srv/opentallas-scratch2/claude/QC-STM-FAM/census/cen_*.txt
+- Causes: (A) slw_stm_v1__cle34a73c3 RESETN recovery -59.82 / 27 ep: one STM-DQ group-0 landing copy u_stream.g_rn.rs2_g[0] resets ~470 flops in 2 clusters (2 HB4 root pads + 13-BUF serial tree). (B) sle_stm_v2 cl55be2264 flt_o -78.42 and (C) sle_stm_v3 so_w -50.94: the R6V4 kits had no flt_o stations; v13 has 2 flt_o stations on all 9 stm types -> COVERED. Hold-only misses -> QC-HOLD-STRUCT (incl. cle34a73c3 5 ep -11.28).
+- Row STM-RC 4b426ee7902e (op: slw_stm_v1__cle34a73c3 verilog_defines += OT_QC_STMRC; tree file rtl/qwen_dv/qfd_dv_stream_tile.sv e6795a7ff199 = main 049e23a6008). Plan 58d5630bb451 on v13 aa3a14fb7484, sidecar a142fe516f24. Guard PASS 0 silent; PRE PASS findings 0 (unit oth-ubuntu-3404319-1795622090 epyc10; provenance accepted by QC-ALLFIX). Fable PASS-WITH-FIXES -> fixes applied (cluster cut, reuse rs2_g[0]); equiv 45962/45962 + mutant fails.
+- Next: at BIND-PASS run epyc12 bash /srv/opentallas-scratch2/claude/QC-STM-FAM/bindS.sh via ot-run --die (fresh ot-tree-fork -> QC-STM-FAM/tree; checks real dirs, xtype 0, proof d5d6). Then place probe: v13 kit of slw_stm_v1__cle34a73c3 with the STMRC RTL + define (copy+mv), --goal place, read RESETN recovery at place/GRT.
