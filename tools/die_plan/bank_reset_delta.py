@@ -22,8 +22,8 @@ centroid, D = max over groups of ceil(L / reach) so every group releases on the 
 (u_prl_<g>_<j>.q, FIRM, evenly along the x-then-y path).  The hard type's reset.depth (wavefront: clocks from its arst_n pin
 to release, default 1) rises by D, so the die wavefront schedules the later release; boot holds rst_n >= 64 clk, so the
 +D cycles of reset release are legal (owner 10-29).  No data cycle changes.
-Bank positions: plan estimate (bus: face-window centre; ft station k of n: regs_um[k] when the plan has n sites, else
-k+1 / n+1 along in -> out; internal station u_ist_<bus>_<k>: regs_um[k]); --positions {type: {inst: [x, y]}} overrides
+Bank positions: plan estimate (bus: face-window centre; ft station k of n: ft_station_xy -- unlanded: plan stage k (epoch
+bit site of bit_sites_um, else regs_um[k]), else k+1 / n+1 along in -> out; LANDED slot: plan stage k+1, last = out face; internal station u_ist_<bus>_<k>: regs_um[k]); --positions {type: {inst: [x, y]}} overrides
 (e.g. from a placed kit).  A bank with no position stays on rst_n and is listed (unplaced).
 A type with no bank on rst_n is byte-as-PLAN.  Every other key of the plan stays byte-identical.
 """
@@ -69,6 +69,60 @@ def lerp_l(a, b, f):
     return (b[0], a[1] + math.copysign(s - abs(dx), dy))
 
 
+def ft_landed(t, slot):
+    """True when ft slot `slot` lands on a clock landing ring (plan band clock.landing_contract.bands[<slot>_i]; the kit's
+    face_flops.tcl ff_lands_ring path)"""
+    return f"{slot}_i" in ((((t.get("clock") or {}).get("landing_contract") or {}).get("bands")) or {})
+
+
+def _stage_xy(s, j, n):
+    """plan site of ft stage j (1 <= j < n): the epoch-bit site of bit_sites_um (the bank's reset pin is its eq flop;
+    face_flops.tcl ff_put_stage seats stage j there), else regs_um[j]; None when the plan has neither"""
+    bs = s.get("bit_sites_um") or []
+    i = j - 1 if len(bs) == n - 1 else (j if len(bs) == n else None)
+    if i is not None and 0 <= i < len(bs) and bs[i]:
+        return tuple(float(v) for v in bs[i][-1])
+    regs = s.get("regs_um") or []
+    if len(regs) == n:
+        return tuple(regs[j])
+    return None
+
+
+def ft_station_xy(t, s, k):
+    """plan site of station k (bank u_ft_<slot>_o_<k>) of ft slot s, as face_flops.tcl places it, None when unknown.
+    UNLANDED slot: station 0 is the in-face register, station k >= 1 sits at plan stage k.
+    LANDED slot (QC-BANKRST-OFF1 11-25, QC-SUL1-PLACE finding): the ring takes the in-face role, so station i sits at plan
+    stage i + 1 (FLOW-KITFAIL-3 path of face_flops.tcl: bit_sites_um[i] / regs_um[i + 1]) and the last station is the
+    out-face register.  The old estimate regs_um[k] put every landed bank one stage early (sle_su_l1 C1o v13: 19 banks
+    287-678 um from their tap, 4 on lane core reset taps); placed proof: V4 sle_su_l1__cl5ea486db cws0 lst<i> means equal
+    bit_sites_um[i] centroids for all 517 bits."""
+    w, h = t["outline_um"]
+    n = max(1, int(s.get("stations", 1) or 1))
+    regs = s.get("regs_um") or []
+    win = s.get("in_window_um") and s.get("out_window_um")
+    if ft_landed(t, s.get("name")):
+        if k >= n - 1:
+            if s.get("out_window_um") and s.get("out_face"):
+                return face_point(s["out_face"], s["out_window_um"], w, h)
+            return tuple(regs[n - 1]) if len(regs) == n else None
+        xy = _stage_xy(s, k + 1, n)
+        if xy is not None:
+            return xy
+        if not win:
+            return None
+        a = face_point(s["in_face"], s["in_window_um"], w, h)
+        b = face_point(s["out_face"], s["out_window_um"], w, h)
+        return lerp_l(a, b, (k + 1) / n)
+    xy = _stage_xy(s, k, n)
+    if xy is not None:
+        return xy
+    if not win:
+        return None
+    a = face_point(s["in_face"], s["in_window_um"], w, h)
+    b = face_point(s["out_face"], s["out_window_um"], w, h)
+    return lerp_l(a, b, (k + 1) / (n + 1))
+
+
 def bank_xy(t, inst):
     """plan estimate of a bank's reset pin site (type frame), None when unknown"""
     w, h = t["outline_um"]
@@ -83,15 +137,7 @@ def bank_xy(t, inst):
     if m:
         s = next((x for x in t.get("ft_slots") or [] if x.get("name") == m.group(1)), None)
         if s:
-            k, n = int(m.group(2)), max(1, int(s.get("stations", 1) or 1))
-            regs = s.get("regs_um") or []
-            if len(regs) == n:
-                return tuple(regs[k])
-            if not (s.get("in_window_um") and s.get("out_window_um")):
-                return None
-            a = face_point(s["in_face"], s["in_window_um"], w, h)
-            b = face_point(s["out_face"], s["out_window_um"], w, h)
-            return lerp_l(a, b, (k + 1) / (n + 1))
+            return ft_station_xy(t, s, int(m.group(2)))
     m = re.fullmatch(r"u_ist_(\w+?)_(\d+)", inst)
     if m:
         k = int(m.group(2))

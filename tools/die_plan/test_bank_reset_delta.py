@@ -253,3 +253,35 @@ def test_local_tap_site_is_snapped_inside_the_legal_interior():
     q = B.snap_local_tap(t, (1050.0, 0.0))
     assert q == (1000.0 - RT.CLEAR_UM, RT.CLEAR_UM)
     assert B.snap_local_tap(t, (500.0, 500.0)) == (500.0, 500.0)
+
+
+def _ft_t(landed, bits=False):
+    regs = [[0.0, 100.0], [100.0, 100.0], [200.0, 100.0], [300.0, 100.0]]
+    s = dict(name="f", stations=4, width=1, in_face="W", in_window_um=[90.0, 110.0], out_face="E",
+             out_window_um=[90.0, 110.0], regs_um=regs)
+    if bits:   # stages 1..3, width+1 sites each; the last site is the epoch (eq) bit
+        s["bit_sites_um"] = [[[x - 1.0, 99.0], [x + 1.0, 101.0]] for x, _ in regs[1:]]
+        s["bit_site_cell_um"] = [1.0, 0.27]
+    t = dict(outline_um=[400.0, 200.0], ft_slots=[s])
+    if landed:
+        t["clock"] = dict(landing_contract=dict(bands={"f_i": dict(rect_um=[0.0, 80.0, 20.0, 120.0])}))
+    return t
+
+
+def test_unlanded_ft_station_k_is_plan_stage_k():
+    t = _ft_t(False)
+    assert [B.bank_xy(t, f"u_ft_f_o_{k}") for k in range(4)] == [(0.0, 100.0), (100.0, 100.0), (200.0, 100.0), (300.0, 100.0)]
+    tb = _ft_t(False, bits=True)
+    assert B.bank_xy(tb, "u_ft_f_o_0") == (0.0, 100.0) and B.bank_xy(tb, "u_ft_f_o_2") == (201.0, 101.0)
+
+
+def test_landed_ft_station_k_is_plan_stage_k_plus_1_last_at_out_face():
+    """QC-BANKRST-OFF1 11-25: face_flops.tcl landed path seats station i at plan stage i+1; the last station is the
+    out-face register (was regs_um[k]: one stage early on every landed bank)."""
+    t = _ft_t(True)
+    assert [B.bank_xy(t, f"u_ft_f_o_{k}") for k in range(4)] == [(100.0, 100.0), (200.0, 100.0), (300.0, 100.0), (400.0, 100.0)]
+    tb = _ft_t(True, bits=True)
+    assert [B.bank_xy(tb, f"u_ft_f_o_{k}") for k in range(3)] == [(101.0, 101.0), (201.0, 101.0), (301.0, 101.0)]
+    tn = _ft_t(True)
+    del tn["ft_slots"][0]["regs_um"]
+    assert B.bank_xy(tn, "u_ft_f_o_1") == (200.0, 100.0)     # fallback: L * (k+1) / n along in -> out
