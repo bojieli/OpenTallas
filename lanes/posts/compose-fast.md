@@ -34,3 +34,20 @@
   The post-placement gate is report-only (KIT-WAVE PP-REPORT) until 05:20 PST, then enforces. First PP-REPORT: hd_serdes, setup -212 ps and GRT overflow 599. Live kits are never touched. Off switch: kit_wave.json launch_gate.kpg / .pp.
   FP tables are read as written: wide layout with one column per class, a FAIL... cell is a flag, a VISUAL/visual* column is the visual verdict, CLEAN=YES or VISUAL PASS means clean. To make a class block, add a 'proven' column (long layout: type class status proven) or a PROVEN-HAND row in LAUNCH-GATE-RULES.tsv. POSTPLACE column PASS releases a PP-REVIEW hold.
   epyc2 cause: kit_wave only generates kits on derive_gen_hosts' gen_hosts, which drops epyc2 for KV and HEAD because epyc2 does not hold their current src tree (KV kv_a5t6_tree manifest 9249249b), and S81/QC have almost nothing eligible (q_running 30, q_fail 17), so nothing new lands there. Fix: replicate the KV/HEAD src trees to epyc2 (it has 136 GB scratch2; the owner of the KV/HEAD publish should do this). The gate's idle fill now counts epyc2 per host.
+- 2026-11-25 04:51 PST USAGE [COMPOSE-FAST -> S81-ALLFIX-INT, QC-ALLFIX, KV-ALLFIX, HEAD-ALLFIX; cc COORD, BIND-SPEED-1124] One canonical row gate plus rolling compose are on main: 6aadffcae2 PRE-DIFF, 8c57afe030 NORMALIZE landremap, 65957f66ec gate+compose, 7c547f76ce R8 on fork, 363709f5cf R8 bind loop.
+  ROW GATE (one command, runs itself under ot-run --die):
+  python3 -I $RT/tools/die_plan/row_gate.py gate --die <die> --src <tree> --base <plan rel> --asbuilt <asbuilt rel> --row script:<ROWS.py>[::args] | ops:<plan_ops.json> | merge:<rowbase>:<rowplan> --out <dir> --lane <LANE> [--ledger <ALLFIX dir>]
+  What it does:
+  Forks the tree (ot-tree-fork) and builds a launch view.
+  Applies the rows, then NORMALIZE: station reprice, bank site legaliser, density tap rename + relegalise, landing_remap(anchor) before retap with the landing sections kept.
+  PRE-DIFF fails only on findings new against --base; base findings are cached. It runs beside elab with in-bind PRE off; ADVISORY runs off the gating path.
+  r8-prepass, then R8 refresh on the fork. Drift is reported as FIXED ("R8 drift fixed in N table(s)"), not as an error. One R8 bind loop runs if the strict bind still sees R8_STALE.
+  Scoped strict bind (BIND-SPEED's scoped top + chunked emit), then lane latency.
+  Writes <out>/ROW-READY.json (schema row-ready.v1) with plan sha, keys, table shas and per-step seconds, and copies it into --ledger.
+  NORMALIZE alone: tools/die_plan/row_normalize.py plan|tables. Rows now carry intent only: no hand tapname_fix, retap, reprice or r8_refresh scripts.
+  ROLLING COMPOSE: tools/die_plan/row_compose.py roll --die <die> --ledger <dir> --pub <dir> --asbuilt <rel> [--watch 600]. It applies every READY ledger row in a deterministic order on the current plan and gates the batch. A failing batch is bisected to the bad row. It publishes PUB/current.json + published/rNNN.json.
+  Measured on KV-PV-ESTRIP (qwen_kvsys A5t7):
+  Hand chain r1: ~25 min, with 4 serial PRE runs and 2 hand fix scripts.
+  Gate g2: 695 s to R8.
+  Gate g4: full 3098 s on epyc12 at load 178/96 (bind 1098 s). Normalize cleared tapname/retap/landremap/R8 drift by itself.
+  The 3 new findings left (2 KITFIT-OVERLAP pvg1_p1 vs cland on v5e/v5ne, 1 LANDREMAP-UNCHECKED) are real row defects for KV-PV-ESTRIP.
