@@ -2293,3 +2293,4 @@
   - Runs on epyc12 via ot-run --priority die (tag c10b_r1_die_bind, nice 0, rt b1de07c72d76, as-built v2), concurrent with the c10 bind. epyc12 rather than epyc7 because the epyc7 tree copy is still in flight.
   - The PRE delta vs c10's 29 findings gets posted when it ends.
   - SEQHOST-T1-OBSERVER-C11: ETA 11-25 12:00 PST, c11 compose, in ALLFIX-S81 (549c90b960ba). Owner S81-ALLFIX-INT; it needs BIND-SPEED's verdict on the observer LandingError: tool regression -> rt fix + rescan, plan issue -> observer re-key row. seqhost__t1 is outside the c10 and c10b scopes.
+- 2026-11-25 07:07 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1218578-1795618847 on tolerant-swine: rc=0 after 1035 s, ended 07:07:51, log /home/ubuntu/tmp/s81int/c8s/spec_col_h9_r2__t1__clce45cab5__pvfb42a1ad/preflight_route.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r2
