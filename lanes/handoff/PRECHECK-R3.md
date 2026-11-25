@@ -50,3 +50,8 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - main 86eeb1e640, 5369903db1, 6e9705f7fe: tools/die_plan/adv_rst_sidecar.py (+ test, plan_advisory RST-SIDECAR). It reproduces the QC-SLECTL-RRL builder on C1m (104/20).
 - Sweep: S81 c9s = c9t43: 95 types, RAW 20, far 127 (all REATTACH), handed to S81-ALLFIX-INT. KV A5t6 (A5t3 sidecar): 45 types, RAW 218, far 14, handed to KV-ALLFIX. HEAD W6 N/A (no plan collector_tree). QC C1m/C1n owned by QC-SLECTL-RRL.
 - Runner: runs/epw/rsc/rsc_run.py TAG PLAN SIDECAR|ASB:TREE:ASBUILT on epyc10/11. Copies of the c9t43 plan and HEAD W6 plan + sidecar are on epyc11 rsc/, because epyc9 jobs sat on its admission lock and I killed those 2 clients by exact PID.
+
+## 11-25 07:xx PST ADV-STATION-STACK landed and swept (hub 9ca01443c3)
+- main eae7aedd02 + a938987b28: tools/die_plan/adv_station_stack.py (+ test, plan_advisory STATION-STACK). Calibration: A5t6 kv3_pv_v1n 191 internal stacks -> 0 after V1NSITE 0eca5044e7fb.
+- Sweep: KV A5t6 442 pts (TAP 13, START 22) -> KV-ALLFIX. S81 c9s 9806 pts (ot_s81sl_leaf 1-bit core nets, START 13) -> S81-ALLFIX-INT. QC C1m/C1n 37 pts (cbf_q00_s2 serdes ft) -> QC-ALLFIX. HEAD W6 1 pt -> HEAD-WEST.
+- Runner: runs/epw/ss/adv_station_stack.py PLAN TAG and ss_fam.py (family table) on epyc10/11.
