@@ -31,7 +31,10 @@ import argparse, json, os, re, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor
 
 LOCAL_NAME = os.environ.get('OT_HUB_NAME', 'epyc1')            # EPYC1-RETIRE 2026-10-26: hub host name (epyc1 -> intel2)
-DEFAULT_HOSTS = ['localhost'] + [h for h in ['epyc2', 'intel1', 'intel2'] if h != LOCAL_NAME]   # epyc3 retired 2026-10-25
+# COORD 11-25 item 42: the probe list is the live fleet (STALLS.txt probed terminated epyc4 and left out epyc7-12); never ssh epyc3/4/5/6.  OT_LIVE_HOSTS is the
+# same override tools/autopilot/live_tree.py reads.  The hub itself is probed as 'localhost'.
+LIVE_HOSTS = os.environ.get('OT_LIVE_HOSTS', 'intel1 intel2 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11 epyc12').split()
+DEFAULT_HOSTS = ['localhost'] + [h for h in LIVE_HOSTS if h != LOCAL_NAME]
 
 PROBE = r'''
 import os, re, json, time, subprocess

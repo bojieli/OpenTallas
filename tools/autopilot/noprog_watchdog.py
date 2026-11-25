@@ -1197,6 +1197,7 @@ def scan(now=None, act=False, probe_s=4):
             exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= sw
             v, why, detail = (judge_activity(mt, started, now, "LEC") if kind == "lec"
                               else judge(res, anchors, now, window=sw, exact=exact, zero_needs_growth=z0))
+            v, why = lec_exempt(kind, v, why)
             special = None
             if kind == "grt" and log and grt_repair_phase(log_text):
                 row["grt_repair"] = f"{v}: {why}"[:160]      # NOPROG-GRTHOLD-1124: the repair step's own verdict (judge), kept next to the round label
@@ -1891,7 +1892,7 @@ def drt_totals(text):
     return [int(m.group(1)) for m in DRT_ITER.finditer(text)]
 
 
-def drt_plateau_evidence(vals):
+def drt_plateau_at(vals):
     """-> evidence text when the detailed-route violation totals VALS (iteration 0 first) match DRT-PLATEAU, else ''.  Pure.
     (a) FLAT: after iteration 6, still > 1k and the total fell < 5 % over the last 3 iterations (v[n] > 0.95 v[n-3]);
     (b) HIGH: after iteration 6, > 10k, unless it fell >= 10 % over the last 3 iterations (the dry run showed 10k+ counts that went on to fall 60-90 %) or just rose / just fell > 5 % in the last step (a spike or its recovery is rule (c)'s);
@@ -1913,6 +1914,24 @@ def drt_plateau_evidence(vals):
             return (f"DRT-PLATEAU flat: {last} violations at iteration {n}, fell {100 * (1 - last / ref):.1f} % (< {DRT_FLAT_FALL * 100:g} %) over the last {k} iterations "
                     f"({'->'.join(str(v) for v in vals[-k - 1:])}), still > {DRT_FLAT_OVER}")
     return ""
+
+
+def drt_plateau_evidence(vals):
+    """-> evidence of the FIRST iteration at which drt_plateau_at() matched (STICKY, COORD 11-25: sle_fw_v2 matched 'high' at iteration 8, fell 38 % in 8 more
+    iterations to 14,980, then jumped to 63,558; the jump made the last-step guards skip it and a 30 h kit looked PROGRESS).  A kit that is on the list stays on it.
+    The guards above only keep a falling or recovering count OFF the list; they never take a listed kit off.  Pure."""
+    for n in range(2, len(vals) + 1):
+        ev = drt_plateau_at(vals[:n])
+        if ev:
+            return ev
+    return ""
+
+
+def lec_exempt(kind, verdict, why):
+    """COORD 11-25 item 41: a LEC job is never NO-PROGRESS (a signed slw_hc3 LEC at 93 % of a core was flagged).  The 24 h advisory LEC cap is separate.  -> (verdict, why)"""
+    if kind == "lec" and verdict == "NO-PROGRESS":
+        return "PROGRESS", f"LEC exempt from no-progress (COORD 11-25): {why}"
+    return verdict, why
 
 
 def hold_stall_evidence(stage, res, verdict, why, detail="", anchors=None, now=None, window=None):

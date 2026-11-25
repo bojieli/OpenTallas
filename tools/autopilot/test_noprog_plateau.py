@@ -10,7 +10,7 @@ from test_noprog_design_fail import coord, posted, NOW
 def test_drt_flat_hd_serdes_fires_but_a_slow_converger_does_not():
     hd = [84487, 11326, 7501, 2181, 1984, 1917, 1864, 1846, 1817, 1803]
     assert nw.drt_plateau_evidence(hd[:8]) == ""                                    # it 7: 1984 -> 1846 = 7 %
-    assert nw.drt_plateau_evidence(hd).startswith("DRT-PLATEAU flat: 1803")         # it 9: 1864 -> 1803 = 3.3 %
+    assert nw.drt_plateau_evidence(hd).startswith("DRT-PLATEAU flat: 1803")         # it 9: 1917 -> 1803 = 5.9 %?  see below
     sc3 = [233440, 40033, 28081, 2682, 1789, 1718, 1664, 1597, 1463, 1247, 894]      # sle_sc_v3 11-25: fell 4 %/iter, then reached 0 (route done)
     assert all(nw.drt_plateau_evidence(sc3[:n]) == "" for n in range(1, len(sc3) + 1))
 
@@ -120,3 +120,16 @@ def test_plateau_never_touches_young_exempt_keep_or_switched_off(tmp_path, monke
     (tmp_path / "lanes/PLATEAU-WATCHDOG.off").unlink()
     (tmp_path / "lanes/posts/L.md").write_text("- 2026-11-25 01:00 PST KEEP oth-ubuntu-9-1 probe\n")
     assert nw.design_fail_pass([prow()], {}, NOW, cancel=c) == [] and calls == []
+
+
+def test_drt_plateau_is_sticky_the_sle_fw_v2_jump_does_not_clear_it():
+    fw = [186583, 63684, 52270, 29786, 27162, 25898, 25079, 24397, 23959, 22940, 21399, 19250, 18158, 16673, 15812, 15279, 14980, 63558]
+    assert nw.drt_plateau_evidence(fw).startswith("DRT-PLATEAU high: 23959")           # first match at iteration 8, kept after the jump
+    assert nw.drt_plateau_at(fw) == ""                                                  # the per-prefix rule alone is guarded off by the spike
+    assert nw.drt_plateau_evidence([9091, 7726, 31531, 11676, 8463]) == ""
+
+
+def test_lec_is_never_no_progress():
+    assert nw.lec_exempt("lec", "NO-PROGRESS", "no new LEC file/log write for 7.0 h")[0] == "PROGRESS"
+    assert nw.lec_exempt("lec", "PROGRESS", "x") == ("PROGRESS", "x")
+    assert nw.lec_exempt("yosys", "NO-PROGRESS", "x") == ("NO-PROGRESS", "x")
