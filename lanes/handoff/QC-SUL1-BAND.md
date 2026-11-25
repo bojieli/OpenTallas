@@ -10,3 +10,8 @@ Row scope = part 3 (re-bin from the placed kit): bins = ALL clk-net sinks of the
 Pipeline: tune.sh -> apply.sh (retap.repoint on C1n) -> scripts/final.py (carry only clock-side changes onto base; reset side stays at base,
   because reset.consumer_sites_um is frozen, so the retap rr_t renames are the RRDRV class) -> proofs.sh -> bind.sh (tree = fork of epyc11 n/tree, rt 6e9705).
 Parts 1 (relay_sites band) and 2 (per-lane landing split) are NOT in this row: proposed for C1p after the cla2a probe.
+## 02:26 PST state
+- ROW-READY posted 02:26 (coord 04b7de6e). Outputs: C1n-r2 a372ae84fa2a -> 7ae1f6fdd22f, C1n-r c26a5b81029d -> 66e4a7cdf610 (scripts/apply2.py = clock side only; the first retap attempt, apply.py, failed and is unused).
+- Proofs: proofs.ot (P1, P2), guard.ot (P3 PASS with out/drops_*.txt), epyc2 /srv/opentallas-scratch3/claude/QC-SUL1-BAND/ev_*.json (rreval 0).
+- Scoped strict bind: tree = intel1 QC-SUL1-BAND/tree (fork of epyc11 n/tree, plan installed 7ae1f6fdd22f), launch/ = rt 6e9705. bindS.sh (no standalone PRE) -> bindS.ot/bindS.log/bindS/bind_report.json; follow.sh auto-posts the verdict. bind.sh (standalone PRE, then elab/bind into bind/) also runs and is information only.
+- Delete when done (ot-delete): tree/, launch/, bind*/ (about 57 GB).
