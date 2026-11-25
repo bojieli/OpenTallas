@@ -1404,3 +1404,4 @@
 - 2026-11-25 08:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: s81-allfix-int on intel1 wrote 33 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 08:34 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 567 GB, falling 171 GB/h, floor 50 GB in 3.0 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 TOP-WRITERS on epyc8: none found (cron disk_rate.py; read-only)
 - 2026-11-25 08:48 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays fb8e5b22f038: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-25 09:01 PST STATE tools sync recovered after 13 min (rt/current 14d6b76ef2e5)
