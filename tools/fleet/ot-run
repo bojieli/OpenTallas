@@ -2198,7 +2198,8 @@ def cancel(sub, all_dirs, reason="manual"):
     for p, (rest, d) in sorted(hit.items()):
         print(f"ot-run --cancel: pid {p} dir {d}: {' '.join(rest)[:200]}")
     if not hit:
-        print(f"ot-run --cancel: no local ot-run client matches {sub!r}")
+        print(f"ot-run --cancel: no local ot-run client matches {sub!r}"
+              + ("" if os.environ.get("OT_RUN_CANCEL_NO_REMOTE") else " (the selector must equal a client's pid, its exact --dir path, or one whole argument; a substring or a flag never matches)"))
         return 1
     if len(hit) > 1 and not all_dirs:
         print(f"ot-run --cancel: REFUSED: {sub!r} matches {len(hit)} clients (listed above): a prefix is not one job.  Use a substring unique to ONE job, or pass --all-dirs (= all) to stop every one listed.  Nothing killed.")
