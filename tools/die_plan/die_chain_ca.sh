@@ -22,7 +22,13 @@ WFP=; WFB=; [ -n "$WF" ] && { WFP="--write-fall-plan $PLAN"; WFB="--plan-die $PL
 # KV-CROSSING-1119 11-20 (COORD): the fall chain plans at --max-depth 16 unless CA_PLAN_ARGS names a depth: a fall write
 # needs a window the depth-8 ring does not hold on long start-tree paths (KV pcsink: 26 crossings with no K/DEPTH at 8).
 MD=; [ -n "$WF" ] && case " ${CA_PLAN_ARGS:-} " in *" --max-depth "*) ;; *) MD="--max-depth 16";; esac
-python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} $WFP $MD --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
+# Use the same die count frame for planning and binding unless the caller
+# supplied the frame (directly or through the count-align STA plan).
+FRAME=(--frame-plan "$PLAN")
+case " ${CA_PLAN_ARGS:-} " in
+  *" --frame-plan "*|*" --frame-plan="*|*" --sta-plan "*|*" --sta-plan="*) FRAME=() ;;
+esac
+python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" "${FRAME[@]}" ${CA_PLAN_ARGS:-} $WFP $MD --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
 python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} $WFB --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 log "CA_WRITE_EDGE ${WF:-rise}"
 # REAL-VIEWS-1119 (COORD 11-19): every signed core view (--core-view) and signed type view (--kit) whose pins match this

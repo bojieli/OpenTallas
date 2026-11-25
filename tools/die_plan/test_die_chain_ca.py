@@ -99,3 +99,12 @@ def test_fall_chain_plans_at_depth_16_by_default(tmp_path):
 def test_fall_chain_keeps_an_explicit_depth_and_rise_chain_is_unchanged(tmp_path):
     assert "--max-depth 8" in _fall_plan_args(tmp_path / "a", "--max-depth 8") and "--max-depth 16" not in _fall_plan_args(tmp_path / "b", "--max-depth 8")
     assert "--max-depth" not in _fall_plan_args(tmp_path / "c", None, fall=False)
+
+
+def test_chain_uses_the_die_frame_unless_caller_supplies_a_plan(tmp_path):
+    default = _fall_plan_args(tmp_path / "default", None)
+    assert f"--frame-plan {tmp_path / 'default' / 'plan.json'}" in default
+    explicit = _fall_plan_args(tmp_path / "explicit", "--frame-plan other.json")
+    assert explicit.count("--frame-plan") == 1 and "--frame-plan other.json" in explicit
+    implicit = _fall_plan_args(tmp_path / "implicit", "--sta-plan character.json")
+    assert "--frame-plan" not in implicit and "--sta-plan character.json" in implicit
