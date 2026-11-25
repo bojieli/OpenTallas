@@ -452,6 +452,17 @@ class T(unittest.TestCase):
         self.assertEqual(d["hold_items"], {"loose_key": "prose with no record"})        # released key not kept alive by its file copy
         self.assertEqual([(x["code"], x["n"]) for x in HR.audit(c)], [("LEGACY-HOLD", 1)])
 
+    def test_legacy_hold_counts_untyped_keys_only_on_stops_off_die(self):
+        # COMPOSE-FAST 11-25 (COORD 06:2x): records never block on a stops_off die, so owner=/eta= in the hold text is the typed release
+        c = base()
+        c["stops_off"] = True
+        c["dies"]["s81"]["hold_items"] = {"a": "owner=S81-ALLFIX-INT eta=2026-11-25 12:00 | why", "b": "prose, no term", "c": "owner=X only"}
+        self.assertEqual([(x["code"], x["n"]) for x in HR.audit(copy.deepcopy(c))], [("LEGACY-HOLD", 2)])
+        c["stops_off"] = False                                                       # records block again: every loose key counts
+        self.assertEqual([(x["code"], x["n"]) for x in HR.audit(c)], [("LEGACY-HOLD", 3)])
+        self.assertTrue(HR.hold_text_typed("Owner: KV-ALLFIX ETA=2026-11-25"))
+        self.assertFalse(HR.hold_text_typed("eta=2026-11-25 only"))
+
     def test_kit_wave_lint_clean_item(self):
         c = {"_lint_fail": {"s81": {"col_a__t1"}}}
         self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__t1"))

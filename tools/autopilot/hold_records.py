@@ -41,6 +41,17 @@ PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 CENSUS = re.compile(r"^(\d+)(k?)$", re.I)
 
 
+HOLD_OWNER_TERM = re.compile(r"\bowner\s*[=:]\s*[A-Za-z0-9_.-]+", re.I)        # kit_wave F5 hold term (HOLD_OWNER_RE / HOLD_ETA_RE)
+HOLD_ETA_TERM = re.compile(r"\beta\s*[=:]\s*\d{4}-\d\d-\d\d", re.I)
+
+
+def hold_text_typed(why):
+    """a hold_items text carrying the F5 term owner=<lane> eta=<YYYY-mm-dd[ HH:MM]>: the typed release on a stops_off die (the wave
+    reports it HOLD-OVERDUE past its ETA), so the LEGACY-HOLD audit does not count it"""
+    s = str(why or "")
+    return bool(HOLD_OWNER_TERM.search(s) and HOLD_ETA_TERM.search(s))
+
+
 def split_result(val):
     """'FABLE-FIX-S81-SVC:svc-ready' -> ('FABLE-FIX-S81-SVC', 'svc-ready')"""
     lane, _, tag = str(val).partition(":")
@@ -790,6 +801,8 @@ def audit(cfg, launched=()):
         owned = {k for r in d.get("hold_records") or [] for k in (r.get("keys") or []) + (r.get("items") or [])}
         loose = [k for k in (d.get("hold_items") or {}) if k not in owned and k not in (cfg.get("_hold_added") or {}).get(die, [])]
         loose = [k for k in loose if k not in {x for n, x in (cfg.get("_hold_added") or {}).get(die, []) if n == "hold_items"}]
+        if stops_off_die(cfg, die):         # COMPOSE-FAST 11-25 (COORD 06:2x): records are a no-op here (r703, kit_wave_edit NO-OP-HOLD); the typed form is F5 owner=/eta=
+            loose = [k for k in loose if not hold_text_typed((d.get("hold_items") or {}).get(k))]
         if loose and die != "hbm":
             add("LEGACY-HOLD", die, "-", f"{len(loose)} hold_items key(s) with no record / typed release: {','.join(loose[:4])}", n=len(loose))
     for die, rid, why, its in cfg.get("_pilot_deadlock") or []:                      # released by compile_holds the same pass; WAVE-PILOT-FIX 11-18: names the freed items

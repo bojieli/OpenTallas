@@ -59,6 +59,12 @@ class Log(unittest.TestCase):
 
 
 class Requires(unittest.TestCase):
+    def test_excluded_and_banned_hosts_are_never_gen_hosts(self):
+        c = cfg(["a", "b"]); c["derive_exclude_hosts"] = ["b"]
+        res = G.derive(c, hosts=("a", "b"), prober=lambda h, t: ("h1", False, 200.0), checker=lambda h, p: [])
+        self.assertEqual(res["kv"][0], ["a"]); self.assertTrue(any("b: in derive_exclude_hosts" in w for w in res["kv"][1]))
+        self.assertFalse({"epyc9", "epyc10", "epyc11"} & set(G.HOSTS))
+
     def test_a_host_without_the_required_tool_path_is_not_a_gen_host(self):
         probes = {"a": ("h1", False, 200.0), "b": ("h1", False, 200.0)}
         seen = []
