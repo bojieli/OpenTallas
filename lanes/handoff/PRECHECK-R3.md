@@ -55,3 +55,6 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - main eae7aedd02 + a938987b28: tools/die_plan/adv_station_stack.py (+ test, plan_advisory STATION-STACK). Calibration: A5t6 kv3_pv_v1n 191 internal stacks -> 0 after V1NSITE 0eca5044e7fb.
 - Sweep: KV A5t6 442 pts (TAP 13, START 22) -> KV-ALLFIX. S81 c9s 9806 pts (ot_s81sl_leaf 1-bit core nets, START 13) -> S81-ALLFIX-INT. QC C1m/C1n 37 pts (cbf_q00_s2 serdes ft) -> QC-ALLFIX. HEAD W6 1 pt -> HEAD-WEST.
 - Runner: runs/epw/ss/adv_station_stack.py PLAN TAG and ss_fam.py (family table) on epyc10/11.
+
+## 11-25 PST RSTREACH QC local-reset fix, main b42643500c (hub f17da6158a)
+- derived_drop RSTREACH b. reads landing_local_resets (u_cland_fstart_<bus> consumers). C1n 26036a30b94f: WARN 236 -> 120; all 116 FSTART-spread WARNs were false; 0 real. Old/new tools copies are in epyc11 runs/epw/rr/{old,new} (~400 MB each; clear via ot-delete when no longer needed).
