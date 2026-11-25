@@ -33,6 +33,18 @@ class Live(unittest.TestCase):
             B.build(tempfile.mkdtemp(), [])
 
 
+class Admission(unittest.TestCase):
+    def test_young_bundles_protected_old_and_staging_not(self):
+        import time
+        root = tempfile.mkdtemp()
+        for n, age_h in (("aaaa", 1), ("bbbb", 400), (".staging-x", 1)):
+            os.makedirs(root + "/" + n)
+            os.utime(root + "/" + n, (time.time() - age_h * 3600,) * 2)
+        out = set()
+        B.admission_bundle_paths(out, os.path.normpath, pattern=root + "/*")
+        self.assertEqual(out, {root + "/aaaa"})
+
+
 class Cutover(unittest.TestCase):
     def test_a_prov_view_sources_current_kept_prev_dropped(self):
         cfg = {"dies": {"s81": {"prov_view_sources": {"v": R + "views/cur/a/b"}, "prov_view_sources_prev_kw43": {"v": R + "views/old/a/b"}}}}

@@ -522,6 +522,23 @@ def hub_lease_paths(out, canon, d=None):
     return n
 
 
+ADMISSION_KEEP_H = float(os.environ.get("OT_ADMISSION_KEEP_H", "168"))
+
+
+def admission_bundle_paths(out, canon, now=None, hours=None, pattern="/srv/opentallas-scratch*/claude/autopilot/admission_tools/*"):
+    """RT-PRUNE-REFS-1124c: admission_tools bundles (<scratch>/claude/autopilot/admission_tools/<sha20>) younger than OT_ADMISSION_KEEP_H (168 h) are protected.
+    A bundle is immutable and 100 MB at most; a live kit's route preflight / chain stage fetches it by sha from the staging host or the hub (tar rc 3 when
+    absent), and no list named it, so a cleanup could take it while a kit at rest still pointed at it."""
+    now = time.time() if now is None else now
+    hours = ADMISSION_KEEP_H if hours is None else hours
+    for d in glob.glob(pattern):
+        try:
+            if os.path.isdir(d) and not os.path.basename(d).startswith(".") and now - os.stat(d).st_mtime <= hours * 3600:
+                out.add(canon(d))
+        except OSError:
+            pass
+
+
 def main(argv):
     coord, outp, markers = argv[1], argv[2], argv[3:] or [os.path.join(argv[1], "lanes/handoff"), os.path.join(argv[1], "state")]
     here = os.path.dirname(os.path.realpath(__file__))
@@ -541,6 +558,7 @@ def main(argv):
     live_cmd_paths(s, g.canon)
     plan_ref_paths(cfg, s, g.canon, coord=coord)
     hub_lease_paths(s, g.canon)
+    admission_bundle_paths(s, g.canon)
     s |= live                                          # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)
