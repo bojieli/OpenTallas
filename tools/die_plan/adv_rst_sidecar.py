@@ -13,6 +13,9 @@ QC-RST-SRCTAP builder (hub lanes/handoff/QC-SLECTL-RRL-srctap2.py):
   STATUS  local source: max |status pin - seat| > REACH_UM (405)           -> collector too far
   CHILD   collector child (by order): max |status pin - sidecar node relay| > REACH_UM (405)
   MISSING the sidecar node is not a relay of the plan tree (nor rst_root_n)
+Each STATUS / CHILD hit is split: REATTACH = a relay of the same depth lies within REACH_UM of the status pins (the tap
+index points at the wrong relay: the QC-SLECTL-RRL class, fixed by re-node), NO-NEAR = no same-depth relay is in reach
+(plan geometry, e.g. S81 seam children; re-node cannot fix it, see ADV-COLSYNC FAR).  RAW hits re-node to the ring tap.
 Fix: python3 QC-SLECTL-RRL-srctap2.py (re-node to the RTL ring tap) or collector_reattach --sidecar.
 Sidecar: kw sidecar= / env OT_ADV_RST_SIDECAR, else the as-built manifest's clock_landing_table (kw asbuilt=, the file bind
 reads), else adv_colsync's search under the tree (OT_ADV_COLSYNC_SIDECAR / newest runtime *sidecar*.json).
@@ -50,13 +53,18 @@ def judge_type(lc, st):
     """lc = plan landing_contract, st = sidecar collector.types[t] -> dict(raw, status, child, missing, rows, worst, sample)"""
     tr = lc.get("collector_tree") or {}
     rel = {r.get("q"): r for r in tr.get("relays") or []}
-    res = dict(raw=0, status=0, child=0, missing=0, rows=0, worst=0.0, sample=None)
+    res = dict(raw=0, status=0, child=0, missing=0, rows=0, worst=0.0, sample=None, reattach=0, nonear=0)
     if not rel:
         return res
     xy = {q: r.get("xy") for q, r in rel.items()}
     if tr.get("root"):
         xy["rst_root_n"] = tr["root"]
     taps = {q: r for q, r in rel.items() if _TAP.fullmatch(str(q)) and r.get("xy")}
+
+    def split(node, pts):
+        dep = (rel.get(node) or {}).get("depth")
+        best = min((max(man(p, r["xy"]) for p in pts) for r in rel.values() if r.get("xy") and r.get("depth") == dep), default=1e9)
+        res["reattach" if best <= REACH_UM else "nonear"] += 1
 
     def bad(msg, um):
         res["worst"] = max(res["worst"], um)
@@ -89,6 +97,7 @@ def judge_type(lc, st):
             b = max(man(p, seat) for p in pts)
             if b > REACH_UM:
                 res["status"] += 1
+                split(node, pts)
                 bad(f"source {s.get('name')} collector {node} {b:.0f} um from its status pins", b)
     for c, cs in zip(lc.get("collector_children") or [], st.get("children") or []):
         res["rows"] += 1
@@ -103,6 +112,7 @@ def judge_type(lc, st):
             h = max(man(p, seat) for p in pts)
             if h > REACH_UM:
                 res["child"] += 1
+                split(node, pts)
                 bad(f"child {c.get('index', '?')} collector {node} {h:.0f} um from its status pins", h)
     return res
 
@@ -139,7 +149,7 @@ def _findings(raw, plan_path, tree=None, **kw):
         sc = json.loads(Path(path).read_text())
     S = ((sc.get("collector") or {}).get("types")) or {}
     out, nt, nbad = [], 0, 0
-    tot = dict(raw=0, status=0, child=0, missing=0, rows=0)
+    tot = dict(raw=0, status=0, child=0, missing=0, rows=0, reattach=0, nonear=0)
     worst = 0.0
     for tn, t in sorted((raw.get("partition_types") or {}).items()):
         lc = ((t or {}).get("clock") or {}).get("landing_contract") if isinstance(t, dict) else None
@@ -154,13 +164,13 @@ def _findings(raw, plan_path, tree=None, **kw):
             nbad += 1
             worst = max(worst, r["worst"])
             out.append((n, _w(f"{tn}: {r['raw']} reset copy hop(s) > {RAW_UM:g} um, {r['status']} source collector(s) and {r['child']} child collector(s) "
-                              f"> {REACH_UM:g} um, {r['missing']} sidecar node(s) not in the plan tree, of {r['rows']} rows (worst {r['worst']:.0f} um); "
+                              f"> {REACH_UM:g} um ({r['reattach']} REATTACH, {r['nonear']} NO-NEAR), {r['missing']} sidecar node(s) not in the plan tree, of {r['rows']} rows (worst {r['worst']:.0f} um); "
                               f"first: {r['sample']}; bind/gen read the sidecar tap, the tree is the plan's: re-run collector_reattach --sidecar "
                               f"(or QC-SLECTL-RRL srctap2)")))
     out.sort(key=lambda x: -x[0])
     lines = [m for _, m in out[:MAX_LINES]]
     lines.append(_w("summary", f"{nbad} of {nt} types with a collector sidecar row: {tot['raw']} RAW > {RAW_UM:g} um, {tot['status']} STATUS + "
-                               f"{tot['child']} CHILD > {REACH_UM:g} um, {tot['missing']} MISSING of {tot['rows']} rows (worst {worst:.0f} um); "
+                               f"{tot['child']} CHILD > {REACH_UM:g} um ({tot['reattach']} REATTACH, {tot['nonear']} NO-NEAR), {tot['missing']} MISSING of {tot['rows']} rows (worst {worst:.0f} um); "
                                f"sidecar {path or '<given>'}"))
     return lines
 

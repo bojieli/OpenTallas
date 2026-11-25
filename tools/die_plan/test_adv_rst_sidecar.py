@@ -22,7 +22,7 @@ def plan(l):
 
 def test_renumbered_tap_flags_raw_and_status():
     r = A.judge_type(lc(), {"local_sources": [{"name": "busx", "tap": 1}], "children": [{"node": "rst_n_t1"}]})
-    assert (r["raw"], r["status"], r["child"], r["missing"]) == (1, 1, 0, 0) and r["worst"] > 1300
+    assert (r["raw"], r["status"], r["child"], r["missing"]) == (1, 1, 0, 0) and r["worst"] > 1300 and r["reattach"] == 1
 
 
 def test_synced_sidecar_passes():
@@ -32,7 +32,13 @@ def test_synced_sidecar_passes():
 
 def test_child_far_and_missing_node():
     r = A.judge_type(lc(), {"local_sources": [{"name": "busx", "tap": 9}], "children": [{"node": "rst_n_t0"}]})
-    assert r["missing"] == 1 and r["child"] == 1
+    assert r["missing"] == 1 and r["child"] == 1 and r["reattach"] == 1    # rst_n_t1 (same depth) is in reach
+
+
+def test_no_near_relay_is_split_out():
+    l = lc(); l["collector_children"] = [{"index": 0, "xy_um": [800.0, 900.0]}]
+    r = A.judge_type(l, {"local_sources": [{"name": "busx", "tap": 0}], "children": [{"node": "rst_n_t0"}]})
+    assert r["child"] == 1 and (r["reattach"], r["nonear"]) == (0, 1)
 
 
 def test_findings_summary_and_never_raises():
