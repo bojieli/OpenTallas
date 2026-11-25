@@ -76,7 +76,7 @@ FF_RETENTION_UM = 27.0   # ff_put_near: |dx| + |dy| <= 27 um around the request
 FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face-bank search
 FF_DEPTH_ROWS = 120
 CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT", "LOW-UTIL",
-          "MONITOR-PIN", "CORE-TAP-OWNER")
+          "MONITOR-PIN", "CORE-TAP-OWNER", "TAP-CAP-CAL")
 CELL_AREA_UM2 = 0.14    # mean ASAP7 std-cell area: QC tt_ctlm 204k cells = 27.4k um2 (0.134); glue 164,563 cells at 2.2 % (0.149)
 LOW_UTIL = 0.15         # COORD 11-19: glue (2.2 %) and tt_ctlm (~10 %) fail by one cone scattering over an empty partition
 # NOT PREDICTIVE on the 11-19 plans: at < 15 % it flags 572 of 610 types incl. every signed S81 / QC type and 22 of 26
@@ -657,6 +657,80 @@ def run_types(ctx, types, checks, opts, jobs=1):
     return findings, errors
 
 
+# TAP-CAP-CAL (FP-CONVERGE-S81 11-25, COORD 06:2x ruling): the plan's tap estimate counts only the planned boundary registers
+# (TAP-CAP flagged 24 types where kits measured 70 of 77 over 1000).  Calibrated on the 73 kitted S81 types of
+# SINKBIN-S81HEAD kit_sinks.json (max_sinks, CTS) with the synthesised flop count of precheck-cache/flops_cache.json:
+#   ln(max tap sinks) = 2.388 + 0.607 ln(flops) + 0.152 ln(largest Voronoi share of the free area)   (leave-one-out rmse 0.63 in ln,
+# i.e. x1.9; >1000: recall 67/68, 4 false; >5000: 12 types, recall 4, 5 false; >=3000: recall 12/12, 22 false)
+# Harm starts above ~5000 sinks per tap (COORD: S81HEAD-TAPSPLIT 84-kit correlation), 1000-5000 only advises.  Report-only.
+TAP_CAL_COEF = (2.388, 0.607, 0.152)
+TAP_CAL_BLOCK = 5000
+TAP_CAL_WATCH = 3000     # prediction >= this: recall 12/12 of the measured > 5000 types on the 73-type fit
+TAP_CAL_WARN = 1000
+
+
+def predict_tap_max(flops, share_max):
+    """predicted sinks on the busiest tap = exp(a + b ln flops + c ln share_max); 0 without flops"""
+    if not flops or flops <= 0:
+        return 0.0
+    a, b, c = TAP_CAL_COEF
+    return math.exp(a + b * math.log(flops) + c * math.log(max(share_max, 1e-4)))
+
+
+def voronoi_share_max(t, grid, max_pts=40000):
+    """largest fraction of the free area (outline minus hard cores) nearest to one tap"""
+    w, h = t.get("outline_um") or (0, 0)
+    if not grid or not w or not h:
+        return 1.0
+    rects = core_rects(t)
+    step = max(10.0, math.sqrt(w * h / max_pts))
+    cnt = collections.Counter()
+    free = 0
+    y = step / 2
+    while y < h:
+        x = step / 2
+        while x < w:
+            if not in_rects(x, y, rects):
+                free += 1
+                cnt[min(((a - x) ** 2 + (b - y) ** 2, n) for n, a, b in grid)[1]] += 1
+            x += step
+        y += step
+    return max(cnt.values()) / free if free else 1.0
+
+
+def tap_cal_level(pred):
+    """None | WARN (>= 1000) | WATCH (>= 3000, recall-safe for > 5000) | BLOCK-CANDIDATE (>= 5000)"""
+    if pred >= TAP_CAL_BLOCK:
+        return "BLOCK-CANDIDATE"
+    if pred >= TAP_CAL_WATCH:
+        return "WATCH"
+    if pred >= TAP_CAL_WARN:
+        return "WARN"
+    return None
+
+
+def tap_cal_findings(t, grid, flops):
+    """[(predicted max tap sinks, level, detail)] -- empty below 1000 or without a flop count"""
+    pred = predict_tap_max(flops, voronoi_share_max(t, grid) if grid else 1.0)
+    lv = tap_cal_level(pred)
+    if lv is None:
+        return []
+    return [(round(pred), lv, f"predicted busiest tap {pred:,.0f} sinks from {flops:,} synth flops over {len(grid)} taps "
+                              f"(Voronoi share {voronoi_share_max(t, grid):.3f}); >={TAP_CAL_BLOCK} blocks once COORD flips it, "
+                              f"{TAP_CAL_WARN}-{TAP_CAL_BLOCK} advises; fit rmse x1.9")]
+
+
+def load_flops_cache(path=""):
+    """{type: synth flops} from precheck-cache/flops_cache.json (adv_harvest_flops); {} when absent"""
+    for p in ([path] if path else []) + ["adv_cache/flops_cache.json", "/srv/opentallas-scratch2/claude/precheck-cache/flops_cache.json"]:
+        try:
+            d = json.loads(Path(p).read_text())
+            return {k: v.get("flops") for k, v in (d.get("flops") or {}).items() if isinstance(v, dict) and v.get("flops")}
+        except (OSError, ValueError):
+            continue
+    return {}
+
+
 def type_findings(ctx, tn, checks, opts):
     P = ctx.P
     t = P.types[tn]
@@ -675,7 +749,7 @@ def type_findings(ctx, tn, checks, opts):
         for v, d in reset_findings(t, opts.reset_flops):
             add("RESET-FANOUT", v, opts.reset_flops, d)
     ck = t.get("clock") or {}
-    if {"TAP-CAP", "TAP-COVER", "TAP-EDGE"} & set(checks) and not t.get("hard"):
+    if {"TAP-CAP", "TAP-COVER", "TAP-EDGE", "TAP-CAP-CAL"} & set(checks) and not t.get("hard"):
         try:
             grid, sinks = taps_and_sinks(ctx, tn)
         except Exception as e:  # noqa: BLE001 -- an estimator reports, never stops
@@ -698,6 +772,12 @@ def type_findings(ctx, tn, checks, opts):
                 add("TAP-CAP", round(top[0][1] + cap), cap, f"{len(top)} taps over cap {cap} after the {opts.tap_radius:.0f}-um rebalance ("
                     f"{', '.join(f'{n} {round(v + cap)}' for n, v in top[:6])}); ~{need} added taps; {len(grid)} taps, "
                     f"{round(sum(cnt.values()))} planned sinks")
+        if "TAP-CAP-CAL" in checks and grid:
+            fl = getattr(opts, "flops_map", None)
+            if fl is None:
+                fl = opts.flops_map = load_flops_cache(getattr(opts, "flops_cache", ""))
+            for v, lv, d in tap_cal_findings(t, grid, fl.get(tn)):
+                add("TAP-CAP-CAL", v, TAP_CAL_BLOCK, f"{lv}: {d}")
         # TAP-COVER only where the taps follow a sink inventory (tap_mode density): an explicit/grid type's taps are placed by
         # hand and 28 of 43 signed S81 types would flag (CALIBRATED 11-19); the KV pv root-tap class is density + stale bins
         if "TAP-COVER" in checks and grid and ck.get("tap_mode") == "density":
@@ -945,6 +1025,7 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--jobs", type=int, default=int(os.environ.get("OT_PRECHECK_JOBS", "8")),
                     help="worker processes, one type per task (a type costs ~80 s alone on S81; default 8, 1 = serial)")
+    ap.add_argument("--flops-cache", default="", help="flops_cache.json (precheck-cache) for TAP-CAP-CAL")
     ap.add_argument("--shard", default="", help="K/N: run only every N-th type (index mod N == K); merge the --out dirs afterwards")
     ap.add_argument("--tools", default=str(HERE.parent / "die_plan"), help="die_plan tools dir (schema, taps, gen_phys)")
     ap.add_argument("--checks", default=",".join(c for c in CHECKS if c not in OPT_IN))

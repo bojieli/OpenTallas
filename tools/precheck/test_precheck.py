@@ -404,3 +404,27 @@ def test_tap_census_by_position_mutant_stays_error(monkeypatch):
 def test_reach_severity_gate_vs_aim():
     assert PC.reach_severity(405.0) == "AIM" and PC.reach_severity(405.1) == "GATE"      # mutant: a >= would flip the 405.0 case
     assert PC.reach_severity(330.0) == "AIM"
+
+def test_tap_cal_level_thresholds():
+    assert PC.tap_cal_level(5200) == "BLOCK-CANDIDATE"       # blocks once flipped
+    assert PC.tap_cal_level(4800) == "WATCH"                 # advises only
+    assert PC.tap_cal_level(2000) == "WARN" and PC.tap_cal_level(900) is None
+
+
+def test_tap_cal_prediction_uses_flops_and_tap_share():
+    t = {"outline_um": [1000, 1000]}
+    one = [("clk", 500.0, 500.0)]
+    four = [("a", 250.0, 250.0), ("b", 750.0, 250.0), ("c", 250.0, 750.0), ("d", 750.0, 750.0)]
+    assert PC.voronoi_share_max(t, one) == 1.0
+    assert abs(PC.voronoi_share_max(t, four) - 0.25) < 0.02
+    assert PC.predict_tap_max(0, 1.0) == 0 and PC.predict_tap_max(60000, 1.0) > PC.predict_tap_max(60000, 0.25)
+    big = PC.tap_cal_findings(t, one, 64000)                 # 64k flops on one tap: > 5000 (iq_C: measured 27,453)
+    assert big and big[0][1] == "BLOCK-CANDIDATE"
+    assert PC.tap_cal_findings(t, four, 20000)[0][1] in ("WARN", "WATCH")
+    assert PC.tap_cal_findings(t, four, 300) == []           # mutant: a tiny type must not flag
+    assert PC.tap_cal_findings(t, one, None) == []           # no flop count: silent
+
+
+def test_tap_cal_calibration_on_measured_types():
+    # two measured S81 kits: dsdv_slice_iq_C__t1 (64,564 flops, 187 taps) max tap 27,453; col_h9_r1 (24,421 flops) 4,161
+    assert PC.predict_tap_max(64564, 0.02) > 1000 and PC.predict_tap_max(24421, 0.05) > 1000
