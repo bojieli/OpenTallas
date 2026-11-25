@@ -34,3 +34,7 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - VPW WREG: ROW-DROP for c9 (define is file-global). RTL fix owned by lane S81-WREG-PARAM (per-instance parameter + LEC, c10). Do NOT draft it here; when S81-WREG-PARAM posts ROW-READY, stack its row onto the C10 row and re-run G0/PRE/scoped bind.
 - Re-seal b197b38a932b: HOLD until INT's c9s v2 bind passes (ETA ~01:00-02:00); then re-seal if INT asks, and only then release the 216 rom_elem_hw + bk_sel__t2 kits.
 - i027e: PROVISIONAL; PRE OK (36 = base); scoped bind E11 sbind_c9s_i027e pending -> CONFIRMED or ROW-DROP.
+
+## 2026-11-24 20:3x PST update
+- i027e scoped bind #1 OOM-killed at 240G in EMIT j=8 (unit 2018811, 04:34Z). Relaunched sbind_c9s_i027e2 at --mem 360, EMIT_J=6 (d3w_scope_bind.sh now reads EMIT_J, default 8). Keep it running (COORD).
+- C10 scoped bind: WAIT for BIND-SPEED fix #1 (c71533d1c7a, per-worker snapshot pickle removed) on main + in rt (COORD posts sha). Then run it on the new emit at default J8 (no EMIT_J), with d3w_scope_bind.sh `tools=` pointed at an rt that contains the fix, and record peak memory (journalctl "memory peak" for the unit / ot-run --status).
