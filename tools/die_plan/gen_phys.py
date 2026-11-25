@@ -307,6 +307,23 @@ def _relay_mid_re(budgets, tn, die=None):
     return budgets.get("relay_mid_re", RELAY_MID_RE_DIE.get(die, RELAY_MID_RE))
 
 
+def _stage_seat_on(P, tn):
+    """S81-STAGE-SEAT 11-25: OT_STAGE_SEAT knob (stage_seat.enabled): the bind's own stage chains (u_bin_*, u_lpad_*, u_d<D>_*) are
+    seated by relay_mid.tcl like the u_y_* relays.  Off = byte-identical kits."""
+    import stage_seat as SS
+    die = P.die.get("name") if isinstance(getattr(P, "die", None), dict) else None
+    return SS.enabled(P.budgets, tn, die)
+
+
+def _stage_seat_re(P, tn, rtl_files, base_re):
+    """the relay regex widened by one alternative per stage-module instance of the bound RTL (stage_seat.widen); base_re unchanged when off"""
+    if not _stage_seat_on(P, tn):
+        return base_re
+    import stage_seat as SS
+    texts = [Path(f).read_text(errors="replace") for f in rtl_files if Path(f).suffix in (".sv", ".v") and Path(f).is_file()]
+    return SS.widen(base_re, texts, os.environ.get("OT_STAGE_SEAT_RE_EXTRA") or None)
+
+
 def _relay_mid_tail(budgets, tn):
     """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_TAIL), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_tail, per type budgets.relay_mid_tail_types (types or unsplit base names), or GEN env
@@ -8307,7 +8324,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export CORNERS = tc bc",
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
-           *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn, P.die.get('name') if isinstance(getattr(P, 'die', None), dict) else None)}"]
+           *([f"export OT_RELAY_MID_RE = {_stage_seat_re(P, tn, rtl_files, _relay_mid_re(P.budgets, tn, P.die.get('name') if isinstance(getattr(P, 'die', None), dict) else None))}"]
              if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
            *(_relay_mid_half_exports(P.budgets, tn) if macros else []),
@@ -8317,14 +8334,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if macros and _relay_mid_soft_frac(P.budgets, tn) is not None else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
-           *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn)) else []),
-           *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and _relay_mid_fit_chain(P.budgets, tn) else []),
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
+           *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and (_relay_mid_fit_chain(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_MID_STAGGER = 1"] if macros and _relay_mid_stagger(P.budgets, tn) else []),
            *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
-           *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
+           *(["export OT_RELAY_POLY = 1"] if macros and (_relay_poly_on(P, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_POLY_FAIL = 1"] if macros and _relay_hop_fail(P.budgets, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
