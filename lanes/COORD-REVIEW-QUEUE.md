@@ -46733,3 +46733,15 @@ FAILED [AUTOPILOT 0797777f7bee] 2026-11-25 03:38:18 PST AUTOPILOT -> KIT-WAVE-1:
   P6 SEE: 72 clock taps scattered irregularly (rows hugging the top/bottom pin edges, a column at the right edge) on the same outline where t12 has 16. CAUSE: taps created per bus/cluster with no merging. FIX: one shared sink-driven tap grid (~20 taps).
   P7 SEE: GRT checkpoint but paths.png "0 DRAWN" and no review/ dir (no rudy/congestion, flight_lines, paths_ideal). CAUSE: checkpoint render without GRT congestion/timing data. FIX: emit GRT congestion map + worst paths at this checkpoint.
   NOT DETERMINED: GRT overflow, timing, whether the ~60-um-pitch station rows are separate flop stages (would be over-pipelined vs 405-um hops) or flop/inverter sub-rows of staggered buses.
+- 2026-11-25 05:35 PST COL LEC 52aebeb23d CHECK [S81-ALLFIX-INT -> COORD; cc S81-OWN-COLH10, KIT-FWDCLK, FP-CONVERGE-S81, OPUS-FIX-S81-COL-RANKSEAT-R2]
+  Marker: ot_v41_bf_col3_hw.sv has "ot_v41_bf_col3_c #(.MTP(1)) u_c" and "ot_v41_bf16_half #(.TRW(7)) u_ha/u_hb" (3 hits = fixed, 0 = pre-fix). I grepped the kit's own RTL copy under each work dir on every host that holds it.
+  (3) Trees: all carry the fix (3/3): c8seal_tree on epyc9/epyc11/epyc12, c9seal_tree on epyc11/epyc12 (the c10 compose base), s81-colh10-setup/c10_tree on epyc11.
+  (1) Running S81-ALLFIX-INT col kits: 98 active s81c8/s81rp col units.
+  - 96 have their kit RTL generated, and all 96 have the fix (3/3). Work dirs: 85 on epyc9 (wrapper sha 12a1de89d38f), 11 chain_a1 kits on the key-cardinal and outgoing-giraffe hosts.
+  - Pilot col_h10_r1__t1__cl95b37463__pva3a8bfd1 and the col_h9_r2 pv37074264 place probe (epyc12) are still at kit_rtl (memory admission), so no RTL is generated yet. Their source is epyc12 c8seal_tree, which has the fix (3/3), so they will elaborate with it. I will re-grep the generated wrapper when kit_rtl lands and post if it differs. The pilot does not need a relaunch.
+  (2) UNFIXED: col_h9_r1__t1__cl49d7a23e__pv0a45e191, lane OPUS-FIX-S81-COL-RANKSEAT-R2, block 18a2688b741, epyc7. 0/3 markers, wrapper sha 2d3fe3e39142; it was generated 11-23 06:09, before 52aebeb23d (11-23 11:23). It can never pass LEC; this is also Fable item 3 (45 h, DRT 55825->43810).
+  CANNOT CANCEL BY THE ALLOWED METHODS: its ot-run client is dead.
+  - `ot-run --cancel` finds no matching client on intel1/2, epyc2/7/8/9/10/11/12 (it reports "no local ot-run client matches").
+  - `kit_wave cancel-rows --event 18a2688b741` dry-run finds 0 rows; it is a private kit.
+  - It still runs as system scope oth-ubuntu-3285831-1795450892.scope on epyc7 (openroad detail_route, 1d12h).
+  Proposal: `ot-run --cancel-dir <kit dir>` to classify it CANCELLED, plus `systemctl stop oth-ubuntu-3285831-1795450892.scope` on epyc7 (exact unit, not a pid). I will not do the scope stop without your OK; reply yes/no.
