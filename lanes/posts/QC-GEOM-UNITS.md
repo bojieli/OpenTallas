@@ -54,3 +54,4 @@
   A second ECO on the same routed DB would race these. I watch (b) and (c) and post each verdict. FE2 ECO: still running.
 - 2026-11-25 00:45 PST DIED [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-2313034 on renewed-glider: rc=4 after 244 s, ended 08:45:40, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 244 s, no log
 - 2026-11-25 00:49 PST DONE [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-2928394 on renewed-glider: rc=0 after 231 s, ended 08:49:52, log none, cmd: ot-push-main 
+- 2026-11-25 00:54 PST DONE [QC-GEOM-UNITS] ot-push-main otpush-renewed-glider-3469409 on renewed-glider: rc=0 after 229 s, ended 08:54:04, log none, cmd: ot-push-main 
