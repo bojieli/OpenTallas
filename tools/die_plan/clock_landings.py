@@ -2742,7 +2742,18 @@ class Landings:
 
         def local_raw(what):
             nonlocal raw_fallback
-            raw = next(iter(ca_raw.values()), None)
+            # KV-SINKBINS 11-25: the origin's raw reset is the plan's clock.landing_origin_raw when recorded, else (legacy plans,
+            # unchanged binds) the first visited ring node; origin_raw.pick_origin_raw documents the order-free rule and the check
+            from origin_raw import KEY as _ORIGIN_RAW_KEY, pick_origin_raw as _pick_origin_raw
+            _t = (getattr(self, "types", None) or {}).get(type_key or tn) or {}
+            _ck = _t.get('clock') or {}
+            _pr = _ck.get(_ORIGIN_RAW_KEY)
+            _rp = self.reset_placements.get(tn, {})
+            raw, _how = _pick_origin_raw([(n, (_rp.get(b) or {}).get('xy_um')) for b, n in ca_raw.items()],
+                                         plan_origin_xy(_t) if _t.get('outline_um') else None, _pr, legacy_first=True)
+            if _how == 'plan-unknown':
+                import sys
+                print(f'WARN clock_landings {tn}: {_ORIGIN_RAW_KEY} {_pr} is not an input ring reset node; using {raw}', file=sys.stderr)
             if raw is None:
                 if raw_fallback is not None:return raw_fallback
                 m = re.search(r"ot_dp_(?:r(gate|relay)|head_raw_export_pair)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)"
