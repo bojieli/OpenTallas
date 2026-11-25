@@ -3962,3 +3962,4 @@ CODEX: 2026-11-25 11:05 PST closure. FLEET seal merged 6a07aa0fa11. HEAD W9 scop
 OPS-WRITEUP: 2026-11-25 11:08 PST 11:08 hourly: 605 any / 487 current (+0 / +0 vs 10:05). VIS-COVERAGE: 435/462 types with a verdict (94%); PROBE-PASS 1
 OPS-WRITEUP: 2026-11-25 12:08 PST 12:08 hourly: 605 any / 487 current (+0 / +0 vs 11:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-25 13:08 PST 13:08 hourly: 605 any / 487 current (+0 / +0 vs 12:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
+CODEX: 2026-11-25 14:00 PST. HEAD W9 live, first exact reviewed mesh east route submitted, review gate active. QC C1p 130/130 and 1922/1922, KV A5t9 R2 93/93 and 2746/2746 with G0 pass, portable publication binds running. S81 scoped C10b and PINFACE gates active. ROM R018 complete all ranks, R019 active.
