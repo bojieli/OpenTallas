@@ -26,3 +26,5 @@
 - A5t6 a498941539fd frozen -> PVLEGS/VODCH/RSTRELAY-v3 target A5t7. A5t6 delta vs A5t5 in qwen plan dir = plan + pv_v 1a1c15ce11ef only (delta56.sh). A5t6 gate rt efc09e5e6036.
 - jobQ6.sh (chained intel2 chainQ6.sh after jobG5): tree5 -> A5t6 inputs, PVLEGS row, PRE vs A5t6 base, regen6+shift, gate PVLEGS6 (out $M/Q6, $M/gate_PVLEGS6). Then VODCH on top.
 - RSTRELAY-v3 (orphan of KV-PV-RSTRELAY, = RING-RSTFAN pv+v8 follow-on): row on A5t6 + ALLFIX gate_A5t6 bind rtl (epyc10 $M/rst6): plan bb1f6c65e9e8, 17 br, 58 copies, max hop 295.6, 0 cycles; row copy 973ab46de554 (summary fix for efc0 report). Gate jobR6.sh on tree6 (epyc11 fork of pub A5t5 + A5t6 files), chained chainR6.sh; out $M/R6.
+
+- 11-24 19:14 jobQ6 moved to intel1 (epyc11 over cap). intel1 $M=/srv/opentallas-scratch2/claude/kv-own-pv-r2 tree5 forked from pub/kv_a5t6_tree (fork unit oth-ubuntu-241734-1795576396); chain intel2 ~/tmp/kvownpvr2/chainQ6i1.sh -> jobQ6i1.otrun.log; outputs intel1 $M/Q6. epyc11 jobQ6 client killed (pid 3395865), never ran.
