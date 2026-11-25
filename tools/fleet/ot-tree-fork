@@ -45,6 +45,7 @@ import errno
 import fcntl
 import json
 import os
+import re
 import shlex
 import shutil
 import socket
@@ -56,6 +57,39 @@ import time
 
 FICLONE = 0x40049409
 FORK_JSON = ".fork.json"
+SCRATCH_TREE_RE = re.compile(r"^/srv/opentallas-scratch\d*/claude/")
+
+
+def write_fork_json(path, rec):
+    """FLEET-OPS 11-25 (FLOW-0930 F-06, third recurrence: 4 forks rewrote the paused C1L tree through a .fork.json that was a kept external link): the provenance file is never written through a
+    symlink: an existing link at that name is removed first and the file is created with O_NOFOLLOW | O_EXCL."""
+    if os.path.islink(path):
+        os.unlink(path)
+    elif os.path.lexists(path):
+        os.unlink(path)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o644)
+    with os.fdopen(fd, "w") as f:
+        json.dump(rec, f, indent=1, sort_keys=True)
+        f.write("\n")
+
+
+def seal_check(tree):
+    """-> [str] symlinks under TREE whose target resolves outside it into another scratch tree (a write through one lands in that tree), plus any symlink named .fork.json"""
+    tree = os.path.realpath(tree)
+    bad = []
+    for dp, dn, fn in os.walk(tree):
+        for n in list(dn) + list(fn):
+            q = os.path.join(dp, n)
+            if not os.path.islink(q):
+                continue
+            rel = os.path.relpath(q, tree)
+            res = os.path.realpath(q)
+            if n == FORK_JSON:
+                bad.append(f"{rel} is a symlink (-> {os.readlink(q)}): the provenance file must be a regular file")
+            elif SCRATCH_TREE_RE.match(res) and not inside(res, tree):
+                bad.append(f"{rel} -> {os.readlink(q)} (resolves to {res}, outside the tree)")
+        dn[:] = [d for d in dn if not os.path.islink(os.path.join(dp, d))]
+    return bad
 MANIFEST = ".src-manifest.json"
 HASHFILE = ".src-manifest.sha256"
 LOG = os.path.expanduser("~/.local/state/ot-tree-fork/forks.jsonl")
@@ -634,9 +668,7 @@ def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=pr
     rec = {"version": VERSION, "src": f"{src_host}:{src}", "src_real": src_real, "src_host": src_host, "dst": dst, "lane": os.environ.get("OT_LANE", ""),
            "time_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "time_epoch": int(time.time()), "method": "fetch", "bytes": n,
            "check": {"shared_inodes": 0, "event_links": 0}, "seconds": round(time.time() - t0, 1), "src_manifest_hash": "", "reuse": "fetched (no manifest)"}
-    with open(os.path.join(tmp, FORK_JSON), "w") as f:
-        json.dump(rec, f, indent=1, sort_keys=True)
-        f.write("\n")
+    write_fork_json(os.path.join(tmp, FORK_JSON), rec)
     os.rename(tmp, dst)
     out(f"TREE-FORK OK {src_host}:{src} -> {dst}: fetched {n / 2**30:.2f} GB in {rec['seconds']} s (no manifest), nlink-1 checked")
     return rec
@@ -683,6 +715,14 @@ def plan(src, dst, materialize=False):
                         else:
                             P["refused"].append(f"{rel} -> {text} (resolves into event tree {ev})")
                         continue
+                    if os.path.basename(rel) == FORK_JSON:
+                        continue                          # a provenance link is never copied: the fork writes its own regular .fork.json
+                    _res = os.path.realpath(p)
+                    if SCRATCH_TREE_RE.match(_res) and not os.environ.get("OT_TREE_FORK_ALLOW_EXTERNAL"):
+                        # FLEET-OPS 11-25 (F-06): a kept link into another scratch tree lets a write in the fork land there (C1L tree rewritten by 4 forks); refused unless --materialize or OT_TREE_FORK_ALLOW_EXTERNAL=1
+                        if not materialize:
+                            P["refused"].append(f"{rel} -> {text} (resolves into another scratch tree {_res})")
+                            continue
                     P["links"].append((rel, text))
                     P["external"].append(f"{rel} -> {text}")
                     continue
@@ -881,9 +921,7 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
     rec.update(src_identity(src))
     if remote_src:
         rec.update(src_remote=remote_src, reuse=reuse)
-    with open(os.path.join(tmp, FORK_JSON), "w") as f:
-        json.dump(rec, f, indent=1, sort_keys=True)
-        f.write("\n")
+    write_fork_json(os.path.join(tmp, FORK_JSON), rec)
     os.rename(tmp, dst)
     try:
         os.makedirs(os.path.dirname(LOG), exist_ok=True)
@@ -930,12 +968,19 @@ def main(argv=None):
                     help="fork a bind directory, rebasing only its path sidecars to the existing destination tree")
     ap.add_argument("--bind-refsha", help="source path SHA receipt from relocate_bind.py refsha (required with --src-host)")
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--seal-check", metavar="TREE", help="exit 4 when a symlink under TREE resolves into another scratch tree (or .fork.json is a link); for bind and kit launch")
     ap.add_argument("--verify", metavar="DST", help="only check an existing tree: no nlink>1 file, no symlink into an event tree")
     ap.add_argument("--src-of-verify", dest="vsrc", default="", help=argparse.SUPPRESS)
     a = ap.parse_args(argv)
     if a.host:
         i = argv.index("--host")
         return remote(a.host, argv[:i] + argv[i + 2:])
+    if a.seal_check:
+        bad = seal_check(a.seal_check)
+        for e in bad[:40]:
+            print("TREE-SEAL " + e)
+        print(f"TREE-SEAL {'OK' if not bad else 'FAIL'} {a.seal_check}: {len(bad)} outside link(s)")
+        return 0 if not bad else 4
     if a.verify:
         errs = verify(a.verify, a.vsrc)
         for e in errs[:40]:
