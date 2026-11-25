@@ -369,12 +369,14 @@ def always_pass(kit, rtr, rec, dry=False, roots=None):
     return out
 
 
-def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None):
+def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None, gen_tools=None):
     """all or nothing (FLOW-PROC-A): the passes stage their writes, commit() applies all of them or none (PartialRefresh)"""
     global _TXN
     outer, _TXN = _TXN, []
     try:
         rec = _plan(kit, stage, rt, dry, index, src, sha, die_src)
+        if gen_tools:
+            edited_copies(kit, os.path.realpath(rt), gen_tools, rec, dry, dict(src or {}))
         txn = list(_TXN)
     finally:
         _TXN = outer
@@ -447,6 +449,43 @@ def _plan(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=
     return rec
 
 
+def edited_copies(kit, rtr, gen_tools, rec, dry=False, roots=None):
+    """FLOW-REFRESH-ALL-1124 (COORD 17:2x, GUTTER-LAND-CARVE f44a5a05c846 hand-patched into kits): every flow script of the tools tree gen ran
+    from (gen_tools: the composed launch tree / die tree) reaches the kit from the newest rt, also when gen EDITED its copy by appending or
+    prefixing text (clock_taps.tcl + 'source /work/landing_exports.tcl', reset_taps.tcl after 'set rt_leaf_tap ...').  A kit file equal to the
+    gen-time file G plus a suffix S becomes rt + S; prefix P + G becomes P + rt.  A verbatim copy is the index pass's; a file edited inside, or one
+    gen wrote itself (no G), is never touched.  BIND-PIN generator files are not kit files (they stay in the pinned launch tree).  -> [names]"""
+    out = []
+    gt = os.path.realpath(gen_tools)
+    if gt == os.path.realpath(rtr):
+        return out
+    for name in sorted(os.listdir(kit)):
+        p = os.path.join(kit, name)
+        if name in NEVER or not name.endswith(EXT) or os.path.islink(p) or not os.path.isfile(p):
+            continue
+        for d in DIRS:
+            gp, rp = os.path.join(gt, d, name), src_file(rtr, f"{d}/{name}", roots)
+            if not (os.path.isfile(gp) and os.path.isfile(rp)):
+                continue
+            g, new, data = open(gp, "rb").read(), open(rp, "rb").read(), _cur(p)
+            if not g or g == new or data == g or data == new:
+                break
+            if data.startswith(g):
+                out_b, how = new + data[len(g):], "suffix"
+            elif data.endswith(g):
+                out_b, how = data[:len(data) - len(g)] + new, "prefix"
+            else:
+                break
+            if out_b == data:
+                break
+            rec["replaced"].append({"file": name, "src": f"{d}/{name}", "old": blob_id(data)[:12], "new": blob_id(out_b)[:12], "from": f"edited-copy ({how} kept)"})
+            out.append(name)
+            if not dry:
+                _put(p, out_b)
+            break
+    return out
+
+
 def _die_pass(kit, rec, rtr, die_src, dry):
     rep, rt_files, die_only = die_tree_copies(kit, rtr, os.path.realpath(die_src), dry)
     rec["replaced"].extend(rep)
@@ -465,13 +504,15 @@ def main(argv=None):
     ap.add_argument("--src", action="append", default=[], help="REL_DIR=DIR: current files of REL_DIR are in DIR (a staged copy)")
     ap.add_argument("--sha", default="")
     ap.add_argument("--die-src", default="", help="the die source tree: kit scripts that are its copies are replaced by rt's; writes K/tools_rev.json")
+    ap.add_argument("--gen-tools", default="", help="FLOW-REFRESH-ALL-1124: the tools tree gen ran from (launch tree); appended / prefixed gen edits of its flow scripts are carried onto rt's file")
     a = ap.parse_args(argv)
     kit = os.path.abspath(a.kit)
     if os.environ.get("OT_FLOW_REFRESH", "1") == "0" or os.path.exists(os.path.join(kit, ".no_flow_refresh")):
         print("KIT_FLOW_REFRESH SKIPPED: off (OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh)", flush=True)
         return 0
     try:
-        rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None, die_src=a.die_src or None)
+        rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None, die_src=a.die_src or None,
+                      gen_tools=a.gen_tools or None)
     except Exception as e:                               # noqa: BLE001 - all or nothing: the kit is unchanged, the caller defers the stage
         rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": a.stage, "error": f"{type(e).__name__}: {e}", "partial": True,
                "host": socket.gethostname().split(".")[0]}

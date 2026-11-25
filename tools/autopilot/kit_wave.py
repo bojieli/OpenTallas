@@ -10942,8 +10942,10 @@ def run_item(spec_path):
         _rtc = RT_CURRENT
         _kfr = f"{_rtc}/tools/autopilot/kit_flow_refresh.py"
         _kfp = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
+        # FLOW-REFRESH-ALL-1124: the gen-time tools tree (launch tree) lets the refresher carry gen's appended / prefixed edits onto rt's flow scripts
+        _gt = f"$(grep -q -- --gen-tools {q(_kfr)} && [ -d {q(tsrc)} ] && echo --gen-tools {q(tsrc)})"
         run("flow_refresh" if stage == "place" else f"flow_refresh_{stage}",
-            remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(_rtc)} --die-src {q(src)}; "
+            remote(f"if [ -f {q(_kfr)} ]; then python3 -I {q(_kfr)} --kit {q(K)} --stage {q(stage)} --rt {q(_rtc)} --die-src {q(src)} {_gt}; "
                    f"elif [ -f {q(_kfp)} ]; then python3 -I {q(_kfp)} --kit {q(K)} --stage {q(stage)} --rt {q(tsrc)} "
                    f"--sha {q(sp.get('tools_sha') or '')} --die-src {q(src)}; else echo 'KIT_FLOW_REFRESH SKIPPED: stage {stage}: '{q(_kfr)}' missing on this host'; fi"),
             idempotent=True)
