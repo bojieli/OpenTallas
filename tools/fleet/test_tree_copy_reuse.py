@@ -133,8 +133,28 @@ def test_src_host_fetch_refuses_content_not_matching_manifest(env):
     src = t / "remote/T2"
     h = manifest_tree(src, {"tools/a.py": "A=1\n"})
     (src / "tools/a.py").write_text("A=2\n")                           # drifted source
-    with pytest.raises(SystemExit, match="FETCH CHECK FAILED"):
-        TF.fork_remote("hostS", str(src), str(t / "lane/claude/L3/tree"), out=lambda *_: None)
+    # FORK-IDENTITY-1122: a WRITABLE source is hashed on src_host first, so a drifted one never takes the manifest route; the
+    # post-fetch FETCH CHECK guards a READ-ONLY source (trusted without a hash) whose content still differs from its manifest
+    for d in (src / "tools", src):
+        d.chmod(0o555)
+    try:
+        with pytest.raises(SystemExit, match="FETCH CHECK FAILED"):
+            TF.fork_remote("hostS", str(src), str(t / "lane/claude/L3/tree"), out=lambda *_: None)
+    finally:
+        for d in (src, src / "tools"):
+            d.chmod(0o755)
+    assert not (t / "cache" / h[:16]).exists()
+
+
+def test_src_host_writable_drifted_source_is_plain_fetched_not_cached(env):
+    t, _ = env
+    src = t / "remote/T2w"
+    h = manifest_tree(src, {"tools/a.py": "A=1\n"})
+    (src / "tools/a.py").write_text("A=2\n")                           # edited after its manifest, still writable
+    lines = []
+    TF.fork_remote("hostS", str(src), str(t / "lane/claude/L3w/tree"), out=lines.append)
+    assert any("TREE-FORK EDITED" in x for x in lines), lines
+    assert (t / "lane/claude/L3w/tree/tools/a.py").read_text() == "A=2\n"   # the edited content, never the manifest tree
     assert not (t / "cache" / h[:16]).exists()
 
 
