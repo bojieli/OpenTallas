@@ -240,3 +240,4 @@
 - 2026-11-25 14:00 PST CENSUS VERDICTS [VIS-REOWN -> COORD] sle_hc0=FAIL
 - 2026-11-25 14:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 10:00 (4.1 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
 - 2026-11-25 14:05 PST FP-KV.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-KV; cc COORD] lanes/FP-KV.tsv last updated 11-25 09:56 (4.2 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+- 2026-11-25 14:05 PST FP-QC.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-QC; cc COORD] lanes/FP-QC.tsv last updated 11-25 09:10 (4.9 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
