@@ -42,3 +42,10 @@
 - SINKBINS-PV handed to KV-SINKBINS (post 5ae1c058).
 - PVLEGS (a) applied: intel1 kv-own-pv-r2/regen6/groupeq.py -> out_r2/vport_r2_eq.json abb016dc0b00. (b) = strap-pad sites (land_r8_strap_pads true; bind emits strap_r8pad_slg_vreq; audit PASS). Re-gate PVLEGS7: intel1 jobQ6g7.sh (gate Q6/gate7.sh = r8check --strap-pads), launched from intel2 ~/tmp/kvownpvr2/jobQ6g7.otrun.log, HOLD disk-ETA. Next: ROW-REBASED post, then VODCH row.
 - kv3_pv probe (epyc9 runitem-kv3_pv): owed reset-reach + hold at CTS.
+
+## 11-25 01:1x PST update (COORD 00:50 OWNERS-SWEEP ruling)
+- pv probes on epyc12 (goal route, A5t6 base, rt e4ffa951a601), files epyc12 /srv/opentallas-scratch2/claude/kv-own-pv-r2/a5t8ov + job12.sh:
+  v3n runitem-kv3_pv_v3n (spec ..._1125010535, overlay 990b06041c7e); v1n bind oth-ubuntu-537102-1795597679 (V1NSITE 0eca) -> chain12 kit;
+  v12 bind oth-ubuntu-537095-1795597679 (SENDER-SKEW v3, plan 3360028a8938) -> chain12 kit. Chains: intel2 ~/tmp/kvownpvr2/chain12.sh, chain12_{v1n,v12}.out.
+  Read each at AUTO-GEOM and GRT r10; post. Base a5t5geom kits HELD-A5T8 (OWNER-OVERRIDES 950e0882).
+- epyc7: V1NSITE chain cancelled; PVLEGS7 chain (chainQ6e7.sh) forking tree5 then jobQ6g7 gate.
