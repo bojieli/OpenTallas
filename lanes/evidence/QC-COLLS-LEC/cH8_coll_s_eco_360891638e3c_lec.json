@@ -1,0 +1,1746 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-25T04:00:26+0000",
+ "verdict": "EQUIVALENT",
+ "yosys": {
+  "version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "bin": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+  "min": "0.68",
+  "ok": true
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "qwen_compute",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "top": "qfd_qc_coll_s_part",
+ "netlist": "/work/run/results/asap7/dp_coll_s/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "macro_bodies_blackboxed": [
+  "ot_sram_1r1w2c_64x546_m1",
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w2c_64x546_m1": 9,
+  "ot_sram_1r1w_64x512_m1_r2c2": 12
+ },
+ "synchronous_sram_input_samples": {
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+   "wd_in": "clk"
+  }
+ },
+ "ports": {
+  "inputs": 2390,
+  "outputs": 2339
+ },
+ "clock_tap_ties": {
+  "root": "clk",
+  "clock": "clk",
+  "ports": [
+   "clk_t1",
+   "clk_t2",
+   "clk_t3",
+   "clk_t4",
+   "clk_t5",
+   "clk_t6",
+   "clk_t7",
+   "clk_t8",
+   "clk_t9",
+   "clk_t10",
+   "clk_t11",
+   "clk_t12",
+   "clk_t13",
+   "clk_t14",
+   "clk_t15",
+   "clk_t16",
+   "clk_t17",
+   "clk_t18",
+   "clk_t19",
+   "clk_t20",
+   "clk_t21",
+   "clk_t22",
+   "clk_t23",
+   "clk_t24",
+   "clk_t25",
+   "clk_t26",
+   "clk_t27",
+   "clk_t28",
+   "clk_t29",
+   "clk_t30",
+   "clk_t31",
+   "clk_t32",
+   "clk_t33",
+   "clk_t34",
+   "clk_t35",
+   "clk_t36",
+   "clk_t37",
+   "clk_t38",
+   "clk_t39",
+   "clk_t40",
+   "clk_t41"
+  ],
+  "untied": [],
+  "basis": "budget.json clock.taps + constraint.sdc create_clock: every tap port is the same clock as the root (parent drives all taps from it)",
+  "n": 41
+ },
+ "clock_gates": {
+  "gold": {
+   "gates": 0,
+   "gated_flops": 0,
+   "gated_bb_clock_pins": 0,
+   "per_gate": {},
+   "flop_types": {}
+  },
+  "gate": {
+   "gates": 0,
+   "gated_flops": 0,
+   "gated_bb_clock_pins": 0,
+   "per_gate": {},
+   "flop_types": {}
+  }
+ },
+ "lockup_latches": {
+  "gold": {
+   "latches": 0,
+   "to_wire": 0,
+   "per_latch": {},
+   "phase_mux": 0,
+   "phases": {},
+   "port_phase": {},
+   "port_phase_counts": {
+    "edge": 2339
+   }
+  },
+  "gate": {
+   "latches": 0,
+   "to_wire": 0,
+   "per_latch": {},
+   "phase_mux": 0,
+   "phases": {},
+   "port_phase": {},
+   "port_phase_counts": {
+    "edge": 2339
+   }
+  }
+ },
+ "t_aig_s": 179.8,
+ "latch_phase": {
+  "n_differ": 0,
+  "differ": []
+ },
+ "async_reset_regs": {
+  "gold": 3540,
+  "gate": 3486
+ },
+ "kit_reset_ports": null,
+ "auto_twins": {
+  "proposed": 0,
+  "kept": 0,
+  "passes": 0,
+  "first": []
+ },
+ "auto_loaded": {
+  "proposed": 0
+ },
+ "auto_fill": {
+  "proposed": 0,
+  "kept": 0,
+  "dropped": 0,
+  "refused": 0,
+  "passes": 0,
+  "first": []
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:arst_n[0]"
+   ],
+   "gate": [
+    "pi:arst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:arst_n[0]": 0
+   },
+   "gate": {
+    "pi:arst_n[0]": 0
+   }
+  },
+  "reset_cycles": 64,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 64,
+  "raw_prefix_wall_s": 900.0,
+  "raw_prefix_ands_cap": 500000,
+  "n_raw_prefix_sim_refuted": 44,
+  "n_raw_prefix_bounded": 0,
+  "raw_prefix_bounded": [],
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_self_hold": 0,
+  "self_hold": [],
+  "n_kept": 108,
+  "n_reloaded": 94,
+  "n_dropped": 52,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[552]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[553]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[554]",
+    "side": "both",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[555]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[557]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[558]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[559]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[560]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[561]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[562]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[563]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[564]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[552]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[553]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[554]",
+    "side": "both",
+    "value": 1,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[555]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[557]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[558]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[559]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[560]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[561]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[562]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[563]",
+    "side": "both",
+    "value": 0,
+    "edge": 8,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[564]",
+    "side": "both",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e3[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[557]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[558]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[559]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[560]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[561]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[562]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.p_tx_flit[563]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.re[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e1[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e2[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.e3[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[557]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[558]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[559]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[560]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[561]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[562]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.p_tx_flit[563]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[1]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[2]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[3]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[4]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[5]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[6]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.re[7]",
+    "side": "gold",
+    "value": 0,
+    "edge": 7,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[2][0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[3][0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[0][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[0][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[1][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[1][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[2][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[2][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[3][1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.g_tag.s_tag[3][2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.tc[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.tc[5]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants, or (self_hold, COORD 11-04) the register has no load path and one net forces the constant, listed per register with that net, which must be asserted before use; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/eco/lec/noreset_constants.tsv",
+   "sha256": "95d531272fb07060ac91b6eb52e74e76ea96a90151e488126a74860c434a4456",
+   "n_kept": 108,
+   "n_dropped": 52
+  }
+ },
+ "constraint_bases": {
+  "checks": [],
+  "refused": []
+ },
+ "t_corr_s": 7998.8,
+ "keypoints": {
+  "gold": {
+   "inputs": 31075,
+   "flops": 54617,
+   "outputs": 0,
+   "ands": 532471
+  },
+  "gate": {
+   "inputs": 12853,
+   "flops": 87543,
+   "outputs": 0,
+   "ands": 195761
+  },
+  "matched": 41429,
+  "gold_constant_flops": {
+   "n": 108,
+   "first": [
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[552]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[553]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[554]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[555]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[557]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[558]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[559]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[560]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[561]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[562]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[563]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[564]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[552]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[553]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[554]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[555]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[557]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[558]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[559]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[560]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[561]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[562]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[563]",
+    "ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[564]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.dq[135]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.dq[136]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[1]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[2]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[3]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[4]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[5]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[6]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e1[7]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[1]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[2]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[3]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[4]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[5]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[6]",
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.e2[7]"
+   ]
+  },
+  "paired_flops": {
+   "n": 2302,
+   "first": [
+    "both:ff:u_dut.u_bound.u_bout_fltv_o.eq=ff:u_dut.u_bound.u_bout_flt_o.eq",
+    "both:ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.eq=ff:u_dut.u_bound.u_bout_flt_o.eq",
+    "both:ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.eq=ff:u_dut.u_bound.u_bout_flt_o.eq",
+    "both:ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q[556]=ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.q[556]",
+    "both:ff:u_dut.u_bound.u_bout_io_collective__serdes_tx_valid__to_io_serdes_1__tx_v.eq=ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_1__tx_flit.eq",
+    "both:ff:u_dut.u_bound.u_bout_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v.eq=ff:u_dut.u_bound.u_bout_io_collective__serdes_tx__to_io_serdes_2__tx_flit.eq",
+    "both:ff:u_dut.u_bound.u_bout_rec_rx_s1.eq=ff:u_dut.u_bound.u_bout_flt_o.eq",
+    "both:ff:u_dut.u_bound.u_bout_rec_rx_s2.eq=ff:u_dut.u_bound.u_bout_flt_o.eq",
+    "both:ff:u_dut.u_bound.u_cland_fstart_fltv_o.q=ff:u_dut.u_bound.u_cland_fstart_flt_o.q",
+    "both:ff:u_dut.u_bound.u_cland_fstart_io_collective__serdes_tx_valid__to_io_serdes_2__tx_v.q=ff:u_dut.u_bound.u_cland_fstart_io_collective__serdes_tx__to_io_serdes_2__tx_flit.q",
+    "both:ff:u_dut.u_bound.u_cland_fstart_rec_rx_s2.q=ff:u_dut.u_bound.u_cland_fstart_rec_rx_s1.q",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_fault_port.q=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.fault_state",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[2].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[2].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[2].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[2].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[3].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[3].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[3].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[3].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[4].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[4].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[4].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[4].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[5].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[5].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[5].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[5].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[6].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[6].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[6].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[6].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[7].u_sel.di[0]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[0]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[7].u_sel.di[1]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[1]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[7].u_sel.di[2]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[2]",
+    "both:ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[7].u_sel.di[3]=ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[0].u_sel.di[3]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 46,
+   "first": [
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx_valid__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx_valid__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_up__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_up__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_rec_tx_s1_i.eq",
+    "ff:u_dut.u_bound.u_bin_rec_tx_s2_i.eq",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[149]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[213]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[21]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[85]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.y#t[21]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[0][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[1][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[2][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[3][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[0][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[1][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[2][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[3][1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[101]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[165]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[229]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[37]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.y#t[37]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[100]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[164]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[228]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[36]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].u_dsel.y#t[36]",
+    "ff:u_dut.u_bound.u_srl_115.q",
+    "ff:u_dut.u_bound.u_srl_12.q",
+    "ff:u_dut.u_bound.u_srl_120.q",
+    "ff:u_dut.u_bound.u_srl_15.q",
+    "ff:u_dut.u_bound.u_srl_22.q",
+    "ff:u_dut.u_bound.u_srl_4.q",
+    "ff:u_dut.u_bound.u_srl_43.q"
+   ]
+  },
+  "gold_x_sources": 28685,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 10463,
+  "gold_only_compare": {
+   "n": 223,
+   "first": [
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d[0][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d[1][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d[2][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d[3][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d[0][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d[1][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d[2][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d[3][0]",
+    "ff:u_dut.u_bound.u_cland_reader_start_io_collective__serdes_rx__from_io_serdes_2_4.g_x[20].u_r.q",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[2]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 195,
+   "first": [
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx_valid__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_rx_valid__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_up__from_io_serdes_1.eq",
+    "ff:u_dut.u_bound.u_bin_io_collective__serdes_up__from_io_serdes_2.eq",
+    "ff:u_dut.u_bound.u_bin_rec_tx_s1_i.eq",
+    "ff:u_dut.u_bound.u_bin_rec_tx_s2_i.eq",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[149]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[213]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[21]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[85]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.y#t[21]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[0][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[0][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[1][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[1][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[2][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[2][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[3][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.s_d#t[3][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[0][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[0][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[1][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[1][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[2][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[2][1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[3][0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.s_d#t[3][1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[101]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[165]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[229]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[37]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.y#t[37]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[100]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[164]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[228]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[36]"
+   ]
+  }
+ },
+ "t_prove_s": 8369.6,
+ "escalated_cones": {
+  "conflicts": 50000000,
+  "wall_s": 10800.0,
+  "max": 64,
+  "tried": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.fault_cause[0]",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.epoch_abort",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.fault_cause[0]",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.rx_v"
+   ]
+  },
+  "proved": {
+   "n": 4,
+   "first": [
+    "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.fault_cause[0]",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.epoch_abort",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.fault_cause[0]",
+    "ff:u_dut.u_bound.u_g_face_4_u_face.g_codec.u_codec.u_ctl.rx_v"
+   ]
+  },
+  "differs": {
+   "n": 0,
+   "first": []
+  },
+  "undecided": {
+   "n": 0,
+   "first": []
+  },
+  "skipped": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "x_dont_care_points": {
+  "n": 128,
+  "first": [
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[0]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[10]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[11]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[12]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[13]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[14]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[15]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[16]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[17]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[18]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[19]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[1]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[20]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[21]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[22]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[23]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[24]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[25]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[26]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[27]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[28]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[29]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[2]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[30]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[31]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[32]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[33]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[34]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[35]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[36]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[37]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[38]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[39]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[3]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[40]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[41]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[42]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[43]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[44]",
+   "ff:u_dut.u_bound.u_g_face_3_u_face.g_codec.u_codec.u_ctl.g_original_control.written_q[45]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 7731,
+  "in_netlist": 7678,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "alias_unassigned": {
+   "n": 53,
+   "first": [
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_reader_start_io_collective__serdes_rx__from_io_serdes_2_4.g_x[20].u_r.q",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[2]"
+   ]
+  },
+  "unobservable_removed": {
+   "n": 53,
+   "first": [
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[3].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[4].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[5].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[6].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.g_srep.sr[7].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.g_srep.sr[1].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_reader_start_io_collective__serdes_rx__from_io_serdes_2_4.g_x[20].u_r.q",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[5].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[2]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[6].u_sel.di[3]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[0]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[1]",
+    "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.g_srep.sr[7].u_sel.di[2]"
+   ]
+  },
+  "unobservable_reason": "no compare point (output / black-box input) observes it in the gold AIG: dead logic, removal is not a merge",
+  "functionally_unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "functionally_unobservable_reason": null,
+  "dead_twin_classes_removed": {
+   "n": 0,
+   "first": []
+  },
+  "dead_twin_classes_reason": null,
+  "merged_twins_proved": {
+   "n": 0,
+   "first": []
+  },
+  "merged_twins_reason": null
+ },
+ "counts": {
+  "compare_points": 52573,
+  "proved": 52573,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "52573 compare points proved; 41429 key points matched by name, 2302 register pairs / merges and 108 constant registers proved inductively; 0 RTL and 46 gate registers unmatched and unobservable (proved as free inputs); 128 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "superset_vec": {
+  "enabled": true,
+  "n_extra": 17,
+  "all_shown": true,
+  "extra_bits": [
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c[21]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[21]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c[85]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[85]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c[213]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[213]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c[149]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].sd_c#t[149]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.y[21]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx__from_io_serdes_2.u_ring.dch[9].u_dsel.y#t[21]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.y[1]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_rx_valid__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.y[1]",
+    "key": "ff:u_dut.u_bound.u_cland_io_collective__serdes_up__from_io_serdes_2.u_ring.dch[0].u_dsel.y#t[1]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c[165]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[165]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c[101]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[101]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c[37]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[37]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c[229]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].sd_c#t[229]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.y[37]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s1_i.u_ring.dch[8].u_dsel.y#t[37]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c[164]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[164]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c[36]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[36]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c[228]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[228]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c[100]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].sd_c#t[100]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   },
+   {
+    "bit": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].u_dsel.y[36]",
+    "key": "ff:u_dut.u_bound.u_cland_rec_tx_s2_i.u_ring.dch[8].u_dsel.y#t[36]",
+    "binding": "free",
+    "observers": 0,
+    "first_observers": [],
+    "shown": true
+   }
+  ],
+  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
+ },
+ "t_total_s": 16564.9,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'",
+  "tool_update": null
+ },
+ "hash_seed": "0"
+}
