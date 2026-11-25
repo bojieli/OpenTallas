@@ -1,0 +1,5 @@
+# QC-SUL1-PLACE handoff (parent QC-ALLFIX), updated 2026-11-25 05:2x PST
+- Cause of the 03:04 waiter: the QC-NOPROG-REQ V4 kit sle_su_l1__cl5ea486db_r1124202525 (epyc8) reported KW_PLACE_LOST. This is INFRA: the ot-job record says rc 0 and 3_place.odb was written with DPL 0 failures. Posted 05:22.
+- Fable visual review: STRUCTURAL. Render copies are on localhost scratch sul1rev/. Items: (1) east-channel sinks on the lane reset taps u_rrl_158/205/166; (2) rsn_i pins at x13-93 vs band at x185-350; (3) lane4 wdata/waddr fanout needs a relay column at x445-460. Posted 05:25.
+- TODO: C1p row SUL1-SLE-LAND on C1o v13 aa3a14fb7484 (epyc12 /srv/opentallas-scratch2/claude/QC-C1O-COMPOSE/c1o_v13/plan_c1o.json), both classes cl5ea486db and clc6d66f5b. Then scoped bind, ROW-READY (ETA 09:30), and a place probe after "BIND-PASS C1o v13 aa3a14fb7484" in QC-C1O-COMPOSE.
+- Live kits: C1i_r2 cl5ea486db queued on epyc9 admission since 22:56 (QC-NOPROG-REQ); clc6d66f5b cK at route since 03:22 on epyc7 (QC-ALLFIX).
