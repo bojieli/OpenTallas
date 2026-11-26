@@ -203,3 +203,16 @@ def test_pin_eol_own_wire_merged_and_keepout_clear(tmp_path):
     assert rec["real_metal_exposed_um2"] == {}
     _, _, _, pins = AE.layer_rects(o)
     assert (16, 20000, 131, 20024) in pins["M4"]
+
+
+def test_pin_eol_fix_moves_only_the_short_stub(tmp_path):
+    """pin-eol-fix on a foreign view: the 0.016-0.131 stub on pin a's track and width moves into pin a; the separate wire at
+    0.181 and everything else stays"""
+    src, out = tmp_path / "v.lef", tmp_path / "o.lef"
+    hd = HEAD.replace("RECT  0 20 0.5 20.024", "RECT  0 20 0.084 20.024")
+    body = "    LAYER M4 ;\n     RECT  0.016 20 0.131 20.024 ;\n     RECT  0.181 20 3 20.024 ;\n"
+    src.write_text(hd + "  OBS\n" + body + "  END\nEND core\n")
+    rep = AE.pin_eol_fix(src, out)
+    assert rep["moved"] == 1 and rep["before"]["M4"]["pins"] == 1 and rep["after"] == {}
+    _, _, obs, pins = AE.layer_rects(out)
+    assert obs["M4"] == [(181, 20000, 3000, 20024)] and (16, 20000, 131, 20024) in pins["M4"]
