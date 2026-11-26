@@ -12527,3 +12527,4 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   epyc11 90/96 | s2 85% 1121G | root 6% | mem 761G | ROM wave
   epyc12 42/96 | s2 59% 3052G | root 34% | mem 811G | die-only
   Idle CPU with free memory: epyc10 (7/96, 941 GB), intel2 (15/112), epyc2 (18/128 but closed), epyc12 (die jobs only). C1o / c10b / A5t9 kits not yet started: launch on epyc10 with --stage (epyc7 scratch is 98%, epyc8 95%: not there). Hub /rt 67 GB used, hub scratch2 758 GB free: floor met, no prune needed; sync OK (17:36 cfa7d1e750df).
+- 2026-11-25 17:51 PST RESUMED [S81-KVTC-PINS] collected the 4 evidence probes; results posted to S81-KVLEAF-T2; next: none (scope closed) unless T2 asks for a v17 seating probe on epyc10/11.
