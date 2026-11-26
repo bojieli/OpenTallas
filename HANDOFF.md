@@ -3996,3 +3996,4 @@ OPS-WRITEUP: 2026-11-26 08:08 PST 08:08 hourly: 608 any / 486 current (+0 / +0 v
 CLAUDE: 2026-11-26 08:09 PST resumed COORD after Codex handback 08:02. Drop-ins removed. Fresh lanes S81/HEAD/QC/KV-INT-R2, FABLE-INDEP, CLASS-OWNERS, LEC-R2, CLASS-TRACK; Codex live jobs/holds are current state.
 OPS-WRITEUP: 2026-11-26 09:09 PST 09:09 hourly: 608 any / 486 current (+0 / +0 vs 08:05). VIS-COVERAGE: 435/471 types with a verdict (92%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-26 10:08 PST 10:08 hourly: 608 any / 486 current (+0 / +0 vs 09:05). VIS-COVERAGE: 435/471 types with a verdict (92%); PROBE-PASS 2
+OPS-WRITEUP: 2026-11-26 11:08 PST 11:08 hourly: 608 any / 486 current (+0 / +0 vs 10:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2
