@@ -79,3 +79,26 @@ def test_ft_crosses_core_is_report_only():
     out = _lines(_cross_type(300.0))
     assert any(x.startswith("WARN ADV-FT-CROSSES-CORE T:") and "a>c:800b" in x for x in out)
     assert not any("ADV-FT-CROSSES-CORE" in x for x in _lines(_cross_type(10.0)))
+
+
+
+def test_exact_internal_bit_width_takes_precedence_over_shared_bus_width():
+    t = _cross_type(300.0)
+    t["internal_stations"][0]["bits"] = 150
+    assert F.street_worst(t)[4] == 550
+    assert F.street_worst(t)[0] < 1
+
+
+def test_face_only_ft_loads_full_width_wall_without_explicit_centres():
+    t = {"outline_um": [600, 500],
+         "hard_cores": [_core("wall", 140, 0, 300, 500)],
+         "ft_slots": [{"name": "bring", "width": 256, "in_face": "W", "out_face": "E",
+                       "in_window_um": [20, 30], "out_window_um": [20, 30]}]}
+    worst = F.street_worst(t)
+    assert worst[:6] == (float("inf"), "H", 290, [0, 0], 256, 0)
+
+
+def test_street_assignment_uses_the_cut_intersection_not_segment_center():
+    t = {"outline_um": [1000, 900], "hard_cores": [_core("divider", 80, 150, 40, 550)],
+         "internal_stations": [{"conn": "core:g", "bits": 64, "from_um": [0, 50], "to_um": [1000, 830]}]}
+    assert F.street_worst(t)[:5] == (64 / (150 * F.TH * F.USABLE), "H", 100, [0, 150], 64)
