@@ -15963,3 +15963,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 15.4 h job 15.4 h: no new meaningful log line for 15.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 15.2 h job 18.6 h: no new meaningful log line for 14.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
   NO-PROGRESS epyc11 svc_lo_dsdv_svc_rs_w__t1 1_2_yosys stage 12.1 h job 12.2 h: no new meaningful log line for 11.7 h; last: 15.65. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs_w__t1' to `<abc-temp-dir>/input.b
+- 2026-11-26 13:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc7: rt/current 34118ce1fdb5 != hub c59be1a278fa
