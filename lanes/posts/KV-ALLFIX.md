@@ -1146,3 +1146,4 @@
   Fix: the 21:00 cut refreshes reg_leaf_split, bound_r8_straps, r8, schema and bind_position_bank from main, and the cut is gated on GEN-PARSE = 0.
   L779/L780 are re-classed as tool skew; the owners have no plan delta to do.
 - 2026-11-25 19:53 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1171838-1795664551 on tolerant-swine: rc=0 after 648 s, ended 19:53:16, log /home/ubuntu/tmp/kvallfix/r7_promote_1125/p2r7/pc_wn6/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/private
+- 2026-11-25 19:54 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3874251-1795665105 on open-snipe: rc=0 after 148 s, ended 03:54:10, log none, cmd: --mem 8 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I -W ignore verify.py hg /srv/opent
