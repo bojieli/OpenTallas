@@ -73,3 +73,16 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - ALLFIX-HEAD rows I own: C20 TXL-WPIPE-1, C21 LEP-W-RINGRP-READ-1 (coll_i1 reader_start stage1 xy 739.98->905; fork prep_r18w6_rp 46b586056f65 PRE/bind/cohort/LAT PASS in bind_w6wpipe_rp), C22 LEP-W-HOLD-TAIL-1.
 - W4b path reads: E7 head-west/w4b_paths/{tt,ff}/q.log, loc.log.
 - Still to do: after the W8 bind, a place probe of hd_lep0N_w on W8, then my own Fable review of its post-place render (ALL problems). Also ot-delete epyc11 s81_head_r18w6_s0.part.
+
+## 11-25 evening (after the Codex handback at 17:43)
+- West stagger R4 0babf3efc2d9 is BAD. The geom probe failed global place: OT_CLAND dry pass, 8 bands do not fit. The 10 staggered banks sit on 17 native_stage_groups rects and on 13 die_clock_tree reserved rects. A stagger needs both moved; the scan scripts are E12 head-west/tmp/band_fix.py and stagger_search.py.
+- lep_w_local_fstart_1125 (E12 hd_lep0N_w_1125163450) placed. Fable review: FIX-FIRST, 16 items, all posted to COORD with owners. Ideal place WNS -254.7.
+  - Worst path root cause (located on the ODB, epyc10 head-west/fstart_loc): slice 7 is at the W edge x25-75. The fwd mux sits beside wdata2 at x450. hit1 goes 400 um east, and the mux output comes 400 um back.
+- TXL-FSPLIT-1 RTL fix, 0 cycles:
+  - Each slice captures wdata and wdata2 on every read and registers newest_r <= hit1, so q is cycle-identical.
+  - LEC epyc10 head-west/lec_fsplit is LEC_RC 0 (6 proofs plus 2 mutants caught). The nr bench epyc10 head-west/nrbench_fs passes MEM/RX/MU.
+  - Branch head-west/txl-wpipe-fsplit-main in the epyc7 clone_wpipe: main + WPIPE + FSPLIT. Not pushed.
+- Fork E12 head-west/trees/w9_fsplit is the W9 tree with the FSPLIT mem module.
+  - Plan prep_r18w9_west_fsplit_r2_1125 adds the forwarded2 tap pair and the k3 split (k3e rst_rl_301 for the E rstart_rx).
+  - Runner: head-west/fsplit_r2/run.sh (PRE); the place probe comes next.
+- East coll_i3 ring 931bf117 review: FIX-FIRST. Findings went to HEAD-EAST: fclk/fstart pins sit 181 um north of the data on six E buses, and the unit/lepf bands were not moved.
