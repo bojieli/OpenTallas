@@ -1,0 +1,7 @@
+# QC C1q three-row candidate 00abead30cfa, 2026-11-25 PST
+
+Viewed all six type renders under `epyc12:/srv/opentallas-scratch2/claude/QC-C1Q-CUT/render_cut3/`. These are plan views. Clock arrivals, PDN continuity and exact face pin alignment remain placement/DB overlays.
+
+- FWV1-RXSTG / slw_fw_v1 cl592e3d37: FIX-FIRST for route (C-LEG405, C-STREET). Native bus `sc_wo` is rendered as a 1286.25 µm direct leg from (609.76,1068.31) to (385.65,6.17); heat peaks 2.75 with multiple loaded centers. Check it against emitted endpoints and relay binds before accepting the leg as real. The intake row repairs reset staging; a place-only proof may proceed.
+- SUL1-SLW-CHAN / slw_su_l1 cla2a78701 and clcc9d0155: FIX-FIRST for route (C-STREET). The lane transitions are consistently funneled into the narrow east band x450–500 beside the near-contiguous four large west blocks. Heat peak 9.61 in both. Chain reach is at most 389.5 µm in the plan. For the next retained revision, use remaining north ventilation/outside capacity or separate the east turns from the heavily used horizontal gaps; check exact macro halo and channel nets after place.
+- HC2-RF1 / three slw_hc2 variants: place-only (C-STREET near the west vertical strip), maximum drawn leg 376.6 µm, peak 1.25, no macro obstruction visible. The three west stations occupy one corridor. The generic render does not show the new XS fences or detailed sink-to-tap pairing. Resolve with the already running cldc737267 placement overlay and compare against the 73 ps tap-skew failure before any route release.
