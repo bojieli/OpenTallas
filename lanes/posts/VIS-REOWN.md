@@ -682,3 +682,5 @@
 - 2026-11-26 12:00 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: KV kv3_pc_v1__cl4ea58a5c PLACE-GP owner KV-OWN-RSTREACH (60 min since queued, epyc12). 
 - 2026-11-26 12:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R2; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (18.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 12:05 PST FP-KV.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-KV, KV-INT-R2; cc COORD] lanes/FP-KV.tsv last updated 11-25 17:56 (18.1 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-KV -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
