@@ -108,6 +108,10 @@ for path in paths:
     try:
         req=json.loads(path.read_text())
         if req.get('schema') == 'placement-visual-request.v1':
+            rid=str(req.get('request_id',''))
+            central=root/'autopilot/private_visual_requests'/rid/'visual_request.json'
+            if re.fullmatch(r'[0-9a-f]{64}',rid) and path != central and central.is_file():
+                continue
             review=path.with_name('visual_review.json')
             if review.is_file():
                 try:
@@ -154,9 +158,7 @@ if sys.argv[4] == 'stat':
 images={}
 names = ('floorplan.png', 'density.png') if sys.argv[5] == 'canary' else ('layout.png', 'density.png')
 for n in names:
-    p=rd/'place'/n
-    if not p.is_file():
-        p=rd/n
+    p=rd/n if sys.argv[5] == 'canary' or rd.name == 'place' else rd/'place'/n
     images[n]=p
 if geom.is_file():
     images['auto_geom.png']=geom
