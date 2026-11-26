@@ -1215,3 +1215,4 @@
 - 2026-11-25 21:58 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-41696-1795670334 on tolerant-swine: rc=0 after 2408 s, ended 21:58:59, log /home/ubuntu/tmp/kvallfix/r8_g3_ship/epyc8.log, cmd: --mem 12 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t9/r8_g3_ship_1125 -- bash -c 
   set -euo pipefail
   if [ !
+- 2026-11-25 22:03 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3155901-1795661633 on tolerant-swine: rc=0 after 11390 s, ended 22:03:38, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_phy_1125182636/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/privat
