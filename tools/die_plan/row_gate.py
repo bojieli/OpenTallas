@@ -6,7 +6,7 @@ elab, missed a repair step, ran PRE four times (base, row, inside elab, inside b
 the one script; lanes and integrators call it with the row and get ROW-READY json.
 
   row_gate.py gate --die DIE --src TREE --base PLAN --asbuilt AB --row SPEC [--row SPEC ...] --out DIR
-                   [--types auto|all|T1,T2] [--rt RT] [--lane NAME] [--ledger DIR] [--env K=V ...] [--mem GB] [--keep-tree] [--local]
+                   [--types auto|all|T1,T2] [--cow] [--rt RT] [--lane NAME] [--ledger DIR] [--env K=V ...] [--mem GB] [--keep-tree] [--local]
 
   TREE      the die tree the base plan lives in (a published / sealed tree; never written: the gate forks it)
   PLAN, AB  base plan and as-built, repository-relative in TREE (e.g. physical/die_plan/qwen_kvsys/plan_of_record/plan_X.json)
@@ -35,6 +35,12 @@ Steps (each timed in ROW-READY.seconds):
   The fork and launch tree are deleted with ot-delete afterwards (--keep-tree keeps them); DIR keeps the plan, the changed
   R8 tables, the bind output and the logs.
 
+--cow runs a terminal scoped gate against an immutable sealed source in a
+private kernel overlay. The normal plan, changed tables, binding reports and
+ROW-READY receipt remain. A materialized tree for publishing requires the
+ordinary fork. The existing OT_BIND_YOSYS setting must name an approved
+namespace-local executable on the host.
+
 The bind env is the die's (coord autopilot/kit_wave.json dies[DIE] die_gen_env + bind_env, read on the hub), overridden by --env.
 Outside an ot-run job the command re-runs itself under `ot-run --die --mem GB --dir TREE` (the die slice); --local runs here.
 Exit 0 READY, 1 NOT READY, 2 usage / input error."""
@@ -56,6 +62,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import row_normalize as RN  # noqa: E402
+import row_gate_cow as COW  # noqa: E402
 
 SCHEMA = "row-ready.v1"
 MISSING = object()
@@ -356,9 +363,10 @@ def gate(a):
         p = out / "ROW-READY.json"
         p.write_text(json.dumps(R, indent=1, default=str) + "\n")
         if a.ledger:
-            Path(a.ledger).mkdir(parents=True, exist_ok=True)
+            ledger = os.environ[COW.LEDGER] if getattr(a, "cow", False) and COW.mounted(out) else a.ledger
+            Path(ledger).mkdir(parents=True, exist_ok=True)
             key = hashlib.sha256("".join(r.get("sha256") or "" for r in R.get("rows", [])).encode()).hexdigest()[:12]
-            q = Path(a.ledger) / f"{lane}__{key}.json"
+            q = Path(ledger) / f"{lane}__{key}.json"
             q.write_text(p.read_text())
             R["ledger_file"] = str(q)
         print(f"ROW-GATE {verdict} lane={lane} die={a.die} plan={R.get('plan', {}).get('sha256', '-')[:12]} "
@@ -388,6 +396,20 @@ def gate(a):
     # 1 FORK
     t0 = time.time()
     tree, L = out / "tree", out / "launch"
+    if getattr(a, "cow", False):
+        yosys = base_env.get("OT_BIND_YOSYS")
+        if not yosys or not shutil.which(yosys, path=base_env.get("PATH")):
+            done("NOT", "copy-on-write needs an explicit executable OT_BIND_YOSYS pin; "
+                        "the Docker daemon cannot see this private tree")
+            return finish()
+        try:
+            if not COW.mounted(out):
+                raise ValueError("copy-on-write requires the private overlay")
+            R["fork"] = COW.prepare(src, tree, rt, a.base, a.asbuilt, lane, RN.r8_tables)
+            R["src_tree"].update(manifest=R["fork"]["src_manifest_hash"])
+        except (OSError, ValueError) as e:
+            done("NOT", str(e))
+            return finish()
     if not tree.is_dir():
         with open(log, "a") as lf:
             rc = subprocess.run([sys.executable, "-I", str(Path(rt) / "tools/fleet/ot-tree-fork"), str(src), str(tree), "--jobs", "32"],
@@ -468,6 +490,9 @@ def gate(a):
         done("NOT", "the rows changed no bound partition type (nothing to bind; use --types)")
         return finish()
     bind_types = row_bind_scope(types, braw, raw)
+    if getattr(a, "cow", False) and not bind_types:
+        done("NOT", "copy-on-write is scoped; repriced lane transport requires a normal whole-die gate")
+        return finish()
     prel = os.path.relpath(plan, tree)
     benv = dict(base_env, OT_PLAN_GATE_PRE="off")              # PRE-DIFF below is this gate's PRE
 
@@ -590,7 +615,7 @@ def gate(a):
     R["plan"]["copy"] = str(out / "plan.json")
     R["tree_deleted"] = not a.keep_tree
     rc = finish()                                         # ROW-READY first: the 50 GB fork delete is not on the reader's path
-    if not a.keep_tree:
+    if not a.keep_tree and not getattr(a, "cow", False):
         for p in (L, tree) if not a.keep_fork else (L,):
             ot_delete(p, log)
     return rc
@@ -633,6 +658,8 @@ def main(argv=None):
     g.add_argument("--drop-failed-rows", action="store_true", help="a row that fails to apply is dropped (recorded), the rest go on")
     g.add_argument("--plan-name", help="file name of the gated plan in the fork's plan dir (default plan_row_<lane>.json)")
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
+    g.add_argument("--cow", action="store_true",
+                   help="isolate a terminal scoped gate in a local copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
     if not a.local and not under_ot_run():
         cmd = [_tool(OT_RUN), "--die", "--mem", str(a.mem)]
@@ -642,6 +669,16 @@ def main(argv=None):
                 sys.executable, "-I", str(Path(__file__).resolve()), *argv, "--local"]
         print("row_gate: under ot-run --die:", " ".join(map(shlex.quote, cmd)), flush=True)
         return subprocess.run(cmd).returncode
+    if a.cow:
+        if a.keep_tree or a.keep_fork or a.types == "all":
+            g.error("--cow is for terminal scoped gates; use the normal fork for materialized or whole-die output")
+        out, src = Path(a.out).resolve(), Path(a.src).resolve()
+        try:
+            if not COW.mounted(out):
+                local = [] if a.local else ["--local"]
+                return COW.run([str(Path(__file__).resolve()), *argv, *local], src, out, a.ledger)
+        except (OSError, ValueError) as e:
+            g.error(str(e))
     return gate(a)
 
 
