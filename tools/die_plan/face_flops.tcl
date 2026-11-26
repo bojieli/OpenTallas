@@ -1192,8 +1192,13 @@ proc ot_gpl_guarded {args} {
 # The placement-time reserve (landing_placement.tcl cland_family_w, OT_CLAND_FIT_RESERVE) only covers the cells that hook seats.  This is the
 # class-wide form, judged at the global_placement call after every seat hook: a FIRM std cell is AT RISK when its widest drive variant (same name
 # stem / suffix / height, the cland_family_w rule) reaches the left edge of the next FIRM / LOCKED / FIXED / COVER std cell of its row.
-# Always: report line OT_FIRM_RESIZE_RISK.  Opt-in OT_FIRM_RESIZE_FREEZE=1: every at-risk cell gets dont_touch (the resizer keeps its master, the
-# seat stays put; the cell is also left alone by repair_design).  Unset / 0 = report only.
+# Always: report line OT_FIRM_RESIZE_RISK.  Opt-in OT_FIRM_RESIZE_FREEZE=1 is a SIZING-ONLY lock (HEAD-INT-R2 11-26 rework): the at-risk
+# cell is NOT dont_touch (dont_touch makes repair_design refuse to buffer every net that has a pin on it: RSZ-3006 on HEAD West u_srl_36 /
+# rn_rst_rl_33, the stage died).  The guard records each at-risk cell's master in $RESULTS_DIR/ot_firm_size_lock.txt (first master seen
+# wins) and face_flops_release.tcl (PRE_DETAIL_PLACE, ot_firm_size_restore) swaps every cell that is still FIRM back to that master
+# before DPL, so the seat is never grown into a fixed / FIRM neighbour while its nets stay bufferable.  The OpenROAD build of the kits has
+# no set_dont_size / size_only property (strings of the binary: only rsz::set_dont_touch_instance / _net), so the lock is a restore.
+# Unset / 0 = report only.
 proc ot_firm_resize_risk {} {
  set blk [ord::get_db_block]
  set famw [dict create]
@@ -1234,6 +1239,7 @@ proc ot_firm_resize_risk {} {
  }
  return [list $nf $risk]
 }
+if {![info exists ::ot_firm_size_lock]} { set ::ot_firm_size_lock [dict create] }
 proc ot_firm_resize_guard {} {
  if {[info exists ::env(OT_FIRM_RESIZE_RISK)] && $::env(OT_FIRM_RESIZE_RISK) eq "0"} return
  lassign [ot_firm_resize_risk] nf risk
@@ -1242,9 +1248,14 @@ proc ot_firm_resize_guard {} {
  set shown 0
  foreach i $risk {
   if {$shown < 40} { puts "OT_FIRM_RESIZE_RISK_CELL [$i getName] [[$i getMaster] getName]"; incr shown }
-  if {$frz} { $i setDoNotTouch 1 }
+  if {$frz && ![dict exists $::ot_firm_size_lock [$i getName]]} { dict set ::ot_firm_size_lock [$i getName] [[$i getMaster] getName] }
  }
- if {$frz && [llength $risk]} { puts "OT_FIRM_RESIZE_FREEZE dont_touch on [llength $risk] FIRM cells whose widest drive variant reaches a fixed / FIRM neighbour" }
+ if {$frz && [info exists ::env(RESULTS_DIR)]} {
+  set fh [open $::env(RESULTS_DIR)/ot_firm_size_lock.txt w]
+  dict for {fn fm} $::ot_firm_size_lock { puts $fh "$fn\t$fm" }
+  close $fh
+ }
+ if {$frz && [llength $risk]} { puts "OT_FIRM_RESIZE_FREEZE size lock on [llength $risk] FIRM cells whose widest drive variant reaches a fixed / FIRM neighbour (no dont_touch; masters restored before DPL)" }
 }
 # GPL-GROWTH-1126 (HEAD-INT-R2, C-GPL-TD-INFLATION): report line after every guarded global_placement call: std-cell count and area before ->
 # after.  The timing-driven passes run repair_design inside the call, so this is the post-repair_design growth: HEAD hd_lep0N fed00 +56,515

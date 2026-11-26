@@ -361,11 +361,29 @@ def test_firm_resize_risk_reports_growers_and_default_does_not_freeze():
 
 
 @needs_tcl
-def test_firm_resize_freeze_is_opt_in_and_only_touches_at_risk_cells():
-    out = _fr(FR_ROW, "set ::env(OT_FIRM_RESIZE_FREEZE) 1")
-    assert out.count("DONT_TOUCH") == 2 and "DONT_TOUCH a" in out and "DONT_TOUCH c" in out and "freeze=1" in out, out
-    assert "dont_touch on 2 FIRM cells" in out, out
+def test_firm_resize_freeze_is_a_sizing_lock_not_dont_touch(tmp_path):
+    # HEAD-INT-R2 11-26: dont_touch on a FIRM cell made repair_design refuse to buffer its nets (RSZ-3006); the lock records masters instead
+    out = _fr(FR_ROW, f"set ::env(OT_FIRM_RESIZE_FREEZE) 1; set ::env(RESULTS_DIR) {tmp_path}")
+    assert "DONT_TOUCH" not in out and "freeze=1" in out, out
+    assert "size lock on 2 FIRM cells" in out and "no dont_touch" in out, out
+    rows = sorted((tmp_path / "ot_firm_size_lock.txt").read_text().splitlines())
+    assert rows == ["a\tDFFHQNx1_ASAP7_75t_R", "c\tDFFHQNx1_ASAP7_75t_R"], rows
     assert "OT_FIRM_RESIZE_RISK" not in _fr(FR_ROW, "set ::env(OT_FIRM_RESIZE_RISK) 0")
+
+
+@needs_tcl
+def test_firm_resize_default_writes_no_lock_file(tmp_path):
+    out = _fr(FR_ROW, f"set ::env(RESULTS_DIR) {tmp_path}")
+    assert "freeze=0" in out and not (tmp_path / "ot_firm_size_lock.txt").exists(), out
+
+
+@needs_tcl
+def test_firm_size_lock_keeps_first_master_seen(tmp_path):
+    # a second global_placement call in the same process must not overwrite the recorded master with a grown one
+    env = f"set ::env(OT_FIRM_RESIZE_FREEZE) 1; set ::env(RESULTS_DIR) {tmp_path}; set ::ot_firm_size_lock [dict create a DFFHQNx1_ASAP7_75t_R]"
+    rows = [("a", "DFFHQNx2_ASAP7_75t_R", "FIRM", 0, 0), ("t", "TAPCELL_ASAP7_75t_R", "LOCKED", 10, 0)]
+    _fr(rows, env)
+    assert (tmp_path / "ot_firm_size_lock.txt").read_text().splitlines() == ["a\tDFFHQNx1_ASAP7_75t_R"]
 
 
 def test_firm_resize_guard_runs_before_the_call_and_report_errors_do_not_stop_a_kit():
