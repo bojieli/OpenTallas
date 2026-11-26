@@ -1,5 +1,4 @@
 """Mount a sealed die source as the read-only lower of a terminal row gate."""
-import json
 import os
 from pathlib import Path
 import runpy
@@ -11,6 +10,8 @@ import sys
 
 INNER = "OT_ROW_GATE_COW_TREE"
 LEDGER = "OT_ROW_GATE_COW_LEDGER"
+SHARED_PRE_CACHE = Path("/srv/opentallas-scratch2/claude/.cache/pre-base")
+SHARED_PRE_SLOTS = Path("/tmp/ot-pre-slots")
 
 
 def run(argv, src, out, ledger=None):
@@ -20,20 +21,36 @@ def run(argv, src, out, ledger=None):
         raise ValueError("bwrap with kernel overlay support is required")
     if out == src or out.is_relative_to(src) or src.is_relative_to(out):
         raise ValueError("source and output trees overlap")
+    if ledger:
+        ledger = Path(ledger).resolve()
+        if ledger == src or ledger.is_relative_to(src):
+            raise ValueError("ledger must not write into the sealed source")
     out.mkdir(parents=True, exist_ok=True)
-    for p in ("tree", "launch", "ROW-READY.json", ".cow-upper", ".cow-work"):
+    for p in ("tree", "launch", "ROW-READY.json", ".cow-upper", ".cow-work", ".pre-base"):
         if os.path.lexists(out / p):
             raise ValueError(f"copy-on-write requires a new attempt directory ({out / p} exists)")
-    upper, work, view = (out / p for p in (".cow-upper", ".cow-work", "tree"))
-    for d in (upper, work, view):
+    upper, work = out / ".cow-upper", out / ".cow-work"
+    view, cache = out / "tree", out / ".pre-base"
+    for d in (upper, work, view, cache):
         d.mkdir()
+    # Keep host-wide PRE admission even though this process gets a private
+    # /tmp. The rest of the host remains read-only inside the namespace.
+    if SHARED_PRE_SLOTS.is_symlink():
+        raise ValueError(f"shared PRE slot directory is a symlink: {SHARED_PRE_SLOTS}")
+    SHARED_PRE_SLOTS.mkdir(mode=0o1777, parents=True, exist_ok=True)
+    mounts = ["--bind", str(SHARED_PRE_SLOTS), str(SHARED_PRE_SLOTS),
+              "--bind", str(out), str(out)]
+    if SHARED_PRE_CACHE.is_dir():
+        # Read existing base findings and launch trees without permitting a
+        # scoped row script to mutate the common cache.
+        mounts += ["--overlay-src", str(SHARED_PRE_CACHE), "--tmp-overlay", str(cache)]
     try:
         rc = subprocess.run([
             bwrap, "--unshare-user", "--die-with-parent", "--ro-bind", "/", "/",
-            "--dev-bind", "/dev", "/dev", "--tmpfs", "/tmp",
-            "--bind", str(out), str(out),
+            "--dev-bind", "/dev", "/dev", "--tmpfs", "/tmp", *mounts,
             "--overlay-src", str(src), "--overlay", str(upper), str(work), str(view),
-            "--setenv", INNER, str(view), "--setenv", "OT_PRE_BASE_CACHE", str(out / ".pre-base"),
+            "--setenv", INNER, str(view), "--setenv", "OT_PRE_BASE_CACHE", str(cache),
+            "--setenv", "OT_PRE_SLOT_DIR", str(SHARED_PRE_SLOTS),
             "--setenv", LEDGER, str(out / ".cow-ledger"),
             sys.executable, "-I", *argv,
         ]).returncode
@@ -42,9 +59,6 @@ def run(argv, src, out, ledger=None):
         # ordinary gate cannot mistake it for an already materialized fork.
         view.rmdir()
     if ledger:
-        ledger = Path(ledger).resolve()
-        if ledger == src or ledger.is_relative_to(src):
-            raise ValueError("ledger must not write into the sealed source")
         for record in (out / ".cow-ledger").glob("*.json"):
             ledger.mkdir(parents=True, exist_ok=True)
             tmp = ledger / f".{record.name}.{os.getpid()}"
