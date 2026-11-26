@@ -75,3 +75,25 @@ def test_stale_core_tap_and_relay_block():
     assert any("core_tap" in g for g in got) and any("relay_site" in g for g in got)
     near = row([150.0, 150.0], [340.0, 120.0], 300.0)           # tap 150 um from its core rect (x 300-400): still stale
     assert any("core_tap" in g for g in LR.stale_findings(base, near))
+
+
+def test_refloor_reseats_added_grid_tap_without_renaming():
+    import schema
+    import taps
+
+    b, n = plans()
+    for raw in (b, n):
+        raw.update(die={"name": "demo", "outline_um": [400, 300], "reach_um": 405},
+                   partitions=[], ports=[], lanes=[])
+        raw["partition_types"]["T"]["clock"].update(
+            tap_mode="grid+explicit",
+            added_taps=[{"name": "clk_t1", "xy": [160.0, 130.0]},
+                        {"name": "clk_t2", "xy": [350.0, 250.0]}],
+        )
+    taps.grid_explicit_sites(schema.Plan(b), "T")
+    out, rep = LR.run(b, n, ["T"])
+    sites = taps.grid_explicit_sites(schema.Plan(out), "T")
+    assert [name for name, *_ in sites] == ["clk", "clk_t1", "clk_t2"]
+    assert sites[1][1:] != (160.0, 130.0)
+    assert sites[2][1:] == (350.0, 250.0)
+    assert rep["T"]["added_taps_reseated"] == 1
