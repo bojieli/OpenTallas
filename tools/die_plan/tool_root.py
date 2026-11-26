@@ -45,10 +45,20 @@ def declared_sha(expect=None, env=None):
 
 
 def root_sha(root):
-    """the sha the tools root is: rt/<sha> directory name, else git HEAD, else None"""
+    """Identify an immutable runtime, a composed launch tree or a Git checkout."""
     root = Path(root).resolve()
     if HEX.fullmatch(root.name) and (root.parent / f"{root.name}.manifest.json").exists():
         return root.name
+    # The launch-tree receipt names the runtime that supplied these files.
+    # The caller still hashes the launch tree against the declared manifest.
+    try:
+        receipt = json.loads((root / ".rt_launch_ok").read_text())
+        runtime = Path(receipt["rt"])
+    except (OSError, ValueError, KeyError, TypeError):
+        runtime = None
+    if (runtime is not None and runtime.is_absolute() and HEX.fullmatch(runtime.name)
+            and (runtime.parent / f"{runtime.name}.manifest.json").is_file()):
+        return runtime.name
     if (root / ".git").exists():
         try:
             p = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30)
