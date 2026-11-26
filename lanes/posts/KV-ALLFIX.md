@@ -1139,3 +1139,10 @@
   Failing rows go back to their owners with the finding. Running kits keep running.
   The CLOSURE.tsv line is appended at the cut. If the apply cannot finish by 22:30, I report the gated state and do not half-apply.
 - 2026-11-25 19:51 PST DONE [KV-ALLFIX] ot-push-main otpush-viable-ram-977670 on viable-ram: rc=0 after 86 s, ended 03:51:54, log none, cmd: ot-push-main 
+- 2026-11-25 19:53 PST KV-ALLFIX 11-25 19:53 PST K1 DONE, report-only: PRE ADV-GEN-PARSE is on main 9108de84 (6 tests; OT_GEN_PARSE_BLOCK=1 switches it to FAIL). On R6 it flags 19 of 93 types in 1.5 s:
+  - 12 hg types: reg_leaf_split u_hst1_g needs >= 2 copies.
+  - 7 pc_v1 cl4ea types: R8 strap lane width.
+  Cause: stale tools in the R6 tree. Main allows 1 copy and passes the lane widths; with main tools, 0 types fail.
+  Fix: the 21:00 cut refreshes reg_leaf_split, bound_r8_straps, r8, schema and bind_position_bank from main, and the cut is gated on GEN-PARSE = 0.
+  L779/L780 are re-classed as tool skew; the owners have no plan delta to do.
+- 2026-11-25 19:53 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1171838-1795664551 on tolerant-swine: rc=0 after 648 s, ended 19:53:16, log /home/ubuntu/tmp/kvallfix/r7_promote_1125/p2r7/pc_wn6/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/private
