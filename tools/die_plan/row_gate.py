@@ -384,7 +384,6 @@ def gate(a):
     env, how = die_env(a.die, a.env)
     R["bind_env"] = dict(env, _source=how)
     base_env = dict(os.environ, **env, PYTHONDONTWRITEBYTECODE="1", OT_LANE=lane, TMPDIR=str(work))
-    base_env.setdefault("OT_BIND_EMIT_J", "8")
 
     # 1 FORK
     t0 = time.time()
@@ -636,8 +635,11 @@ def main(argv=None):
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
     a = ap.parse_args(argv)
     if not a.local and not under_ot_run():
-        cmd = [_tool(OT_RUN), "--die", "--mem", str(a.mem), "--dir", str(Path(a.src).resolve()), "--",
-               sys.executable, "-I", str(Path(__file__).resolve()), *argv, "--local"]
+        cmd = [_tool(OT_RUN), "--die", "--mem", str(a.mem)]
+        if a.types == "all":
+            cmd += ["--threads", "48"]
+        cmd += ["--dir", str(Path(a.src).resolve()), "--",
+                sys.executable, "-I", str(Path(__file__).resolve()), *argv, "--local"]
         print("row_gate: under ot-run --die:", " ".join(map(shlex.quote, cmd)), flush=True)
         return subprocess.run(cmd).returncode
     return gate(a)

@@ -203,8 +203,8 @@ def bind_job(r, host, rt_dir, out_root, lane, emit_j, mem, types, run=sh):
                         timeout=60, run=run)
     if rc != 0:
         raise G.BuildError(f"cannot write {script} on {host}: {err.strip()[-200:]}")
-    j = 8 if str(emit_j) == "auto" else int(emit_j)
-    return ["python3", "-I", f"{rt_dir}/tools/fleet/ot-run", "--hosts", host, "--mem", str(mem), "--threads", str(j + 2),
+    threads = 48 if str(emit_j) == "auto" else int(emit_j) + 2
+    return ["python3", "-I", f"{rt_dir}/tools/fleet/ot-run", "--hosts", host, "--mem", str(mem), "--threads", str(threads),
             "--priority", "plan", "--plan-job", "bind", "--dir", out_root, "--", "bash", script]
 
 

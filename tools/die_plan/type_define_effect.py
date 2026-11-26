@@ -357,11 +357,11 @@ def unit_mem_gb(proc_cgroup="/proc/self/cgroup", root="/sys/fs/cgroup"):
 
 def elab_jobs(n, mem_gb):
     """BIND-ELAB-PAR: how many define-variant elabs run in the pool BESIDE the base elab (0 = the serial pass).
-    $OT_BIND_ELAB_JOBS = N Yosys elabs at once, the base included (1 = serial); else min(n, max(4, idle cores),
-    (min(MemAvailable, the unit's cgroup cap) - 64 GB) / per-job GB - 1).  The Yosys containers run outside the ot-run
+    $OT_BIND_ELAB_JOBS = N Yosys elabs at once, the base included (1 = serial); else min(n, allocated cores - 1,
+    (min(MemAvailable, the fleet reservation, the cgroup cap) - 64 GB) / per-job GB - 1).  The Yosys containers run outside the ot-run
     unit's cgroup, so the unit's own cap is applied here; the 64 GB is the bind process itself (S81 c7a: 52 GB peak), the
     -1 the base elab's own Yosys.  Each variant is one Yosys thread and the fleet admits on memory, never on load
-    (OWNER 10-18), so a busy host still gets 4.  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14) (S81 c7a Yosys
+    (OWNER 10-18).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14) (S81 c7a Yosys
     peak 11.4 GB).  One variant still runs beside the base (S81 c8: only ATTCUT left, 1 variant, was serial)."""
     env = os.environ.get("OT_BIND_ELAB_JOBS", "").strip()
     if env:
@@ -369,10 +369,7 @@ def elab_jobs(n, mem_gb):
             return max(0, min(n, int(env) - 1))
         except ValueError:
             pass
-    try:
-        idle = int((os.cpu_count() or 1) - os.getloadavg()[0])
-    except OSError:
-        idle = 0
+    from bind_emit_par import allocated_cpus, positive_int
     avail = None
     try:
         for ln in Path("/proc/meminfo").read_text().splitlines():
@@ -382,13 +379,14 @@ def elab_jobs(n, mem_gb):
         pass
     if avail is None:
         return 0
-    cap = unit_mem_gb()
+    limits = [avail]
+    limits.extend(v for v in (unit_mem_gb(), positive_int(os.environ.get("OT_HEAVY_MEM_GB"))) if v is not None)
     per = min(float(mem_gb), 14.0)
     try:
         per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or per)
     except ValueError:
         pass
-    return max(0, min(n, max(4, idle), int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0)) - 1))
+    return max(0, min(n, allocated_cpus() - 1, int((min(limits) - 64) // max(per, 1.0)) - 1))
 
 
 class Prestart:
