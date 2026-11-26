@@ -744,9 +744,32 @@ module qfd_dv_stream_tile_se0 #(
     (* keep = "true" *) reg [NL2-1:0] p2l;
     localparam integer L2E0 = 2 * (NGR + 1);           // first cm_e leaf
     localparam integer L2X  = NL2 - 1;                 // cm_x (x-tap emit valid, reset)
+    // QC-INT-R2-HCSETUP 11-26 (C-LEG405 intra-core): leaf -> complete-tree partition.  Index order (i / LPT) put the four
+    // far leaves (ie_e / ie_w groups 73 and 74: their loads sit at the east pin column, 340 um from the tree cloud) into
+    // trees 2 and 5 beside 23 near leaves each; the tree stays at the near leaves, so the complete -> p2l leg was 540..700 um
+    // (sle_stm_v2 cl7b3062fa / cl55be2264, sle_stm_v3: TT -54 .. -78 ps).  OT_QC_STM_P2SEAT: the far leaves (P2FAR, from each
+    // type's own placed p2l seats: tools/die_plan/qc_stm_p2seat.py) take the last tree alone, the other 231 leaves share
+    // trees 0 .. 7 in index order.  Same trees, same terms, same edge: only which p2l flop hangs on which complete_k changes.
+`ifdef OT_QC_STM_P2SEAT
+    localparam [NL2-1:0] P2FAR = ({{(NL2-1){1'b0}}, 1'b1} << 73) | ({{(NL2-1){1'b0}}, 1'b1} << 74) |
+                                 ({{(NL2-1){1'b0}}, 1'b1} << 152) | ({{(NL2-1){1'b0}}, 1'b1} << 153);
+    localparam integer LPN = (NL2 - 4 + NK - 2) / (NK - 1);   // 29 near leaves per tree
+    function automatic integer p2t(input integer i);
+        integer n, j;
+        begin
+            n = 0;
+            for (j = 0; j < i; j = j + 1) if (!P2FAR[j]) n = n + 1;
+            p2t = P2FAR[i] ? NK - 1 : n / LPN;
+        end
+    endfunction
+`else
+    function automatic integer p2t(input integer i);
+        p2t = i / LPT;
+    endfunction
+`endif
     function automatic p2d(input integer i, input [NK-1:0] c, input [NK-1:0] de, input [NK-1:0] dw);
         p2d = (MUT == 33 && i == 9) ? 1'b0 : (MUT == 37 && i == L2E0 + 7) ? 1'b0 :
-              c[i / LPT] && (i <= NGR ? de[i / LPT] : i < L2E0 ? dw[i / LPT] : 1'b1);
+              c[p2t(i)] && (i <= NGR ? de[p2t(i)] : i < L2E0 ? dw[p2t(i)] : 1'b1);
     endfunction
     always @(posedge ck or negedge rn_g[3])
         if (!rn_g[3]) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end

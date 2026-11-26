@@ -24,7 +24,7 @@ module tb_xhead3;
     wire [7:0] o_lrv, o_lrt, o_lrep, n_lrv, n_lrt, n_lrep;
     wire [223:0] o_lrp, n_lrp;
     wire o_lrst, n_lrst, o_flt, n_flt;
-    qfd_dv_s5_xhead3 u_old (.ck(ck), .rst_n(rst_n), .cid(cid), .fault_i(fault_i), .a_d(a_d), .n_d(o_n), .s_d(o_s),
+    qfd_dv_s5_xhead3 #(.SPLIT_STICKY_FAULT(0)) u_old (.ck(ck), .rst_n(rst_n), .cid(cid), .fault_i(fault_i), .a_d(a_d), .n_d(o_n), .s_d(o_s),
         .lw_v(o_lwv), .lw_ep(o_lwep), .lc_v(o_lcv), .lc_ep(o_lcep), .lw_off(o_lwoff), .lw_m(o_lwm), .lw_d(o_lwd),
         .lw_ctl(o_lwctl), .lr_v(o_lrv), .lr_t(o_lrt), .lr_ep(o_lrep), .lr_p(o_lrp), .lq(lq), .lq_v(lq_v),
         .lq_bad(lq_bad), .l_rst_n(o_lrst), .fault(o_flt));

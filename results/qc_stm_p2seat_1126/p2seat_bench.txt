@@ -1,0 +1,2 @@
+STMDQ_EQ PASS edges100000 MUT0 resets 465 cfg_at_release 234 fault_edges 17366 dup_edges 1091 beatbad_edges 7640 full_beats 3310 own_emits 714 xt 13794 tw 24368 pass 27197
+[2446000] %Fatal: tb_stream_tile_p2seat.sv:113: Assertion failed in tb_stream_tile_p2seat: STMDQ_MISMATCH xt edge 244 MUT35

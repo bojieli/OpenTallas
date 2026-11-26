@@ -30,7 +30,13 @@
 // forwarding of a same-edge descriptor write dropped).
 // =====================================================================================================================
 // QC-TRANSPORT-FIX-3 11-08: N_PAD / S_PAD = extra edges on this column's N / S corridor word (bind hook qc_fabric_transport.py; 0 = as-built, no flop).
-module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PAD = 0, parameter integer S_PAD = 0, parameter integer SPLIT_STICKY_FAULT = 0) (
+module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PAD = 0, parameter integer S_PAD = 0, parameter integer SPLIT_STICKY_FAULT =
+`ifdef OT_QC_XH_SPLIT_FAULT
+ 1
+`else
+ 0
+`endif
+) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [5:0]     cid,

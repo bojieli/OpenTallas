@@ -1,3 +1,4 @@
+// HCSETUP 11-26: split sticky fault is the default (SPLIT_STICKY_FAULT = 1); u_old in tb_xhead3 pins the legacy single flop (0).
 module fault_split_miter(input ck,rst_n,input [8:0] causes, output eq);
 reg old;
 wire candidate;
