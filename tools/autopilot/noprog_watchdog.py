@@ -1179,6 +1179,8 @@ def scan(now=None, act=False, probe_s=4):
             row.update(verdict="KEEP", why=k.strip()[:120])
         elif is_plan(prio, text):
             row.update(verdict="EXCLUDED", why="plan priority job (bind/LATCHECK/G0/die-proto)")
+        elif is_experiment(name, log, work):
+            row.update(verdict="EXCLUDED", why="experiment container (qcdrt-* / exp.log): no stage log by design, never judged (PLATEAU-ACT R5, QC-DRT-ECO 11-25)")
         elif is_hbm(ident):
             row.update(verdict="CANCEL-NOW", why="HBM is parked")
         elif not log:
@@ -1242,6 +1244,8 @@ def scan(now=None, act=False, probe_s=4):
                 rounds_s = grt_rounds(os.path.dirname(log).replace("/logs/", "/reports/")) if kind == "grt" else None
                 row["smell"] = smell_triggers(kind, stage, (now - mt) / 3600, (now - lbirth) / 3600, rounds_s, drt_vals, drc_t, log_text if kind == "gpl" else "", cts_)
                 if drt_vals:
+                    row["drt_vals"] = [float(x) for x in drt_vals[-300:]]
+                    row["grt_odb"] = find_grt_odb(kit, work)
                     p3 = drt_plateau3(drt_vals)         # PLATEAU-ACT 11-25: the progress measure (within 5 % over 3 iterations, or rising)
                     if p3:
                         row["plateau3"], row["plateau3_kind"] = p3
@@ -1299,6 +1303,8 @@ def scan(now=None, act=False, probe_s=4):
                 r["cores_now"] = round((c1 - c0) / 1e6 / max(t1 - t_probe, 1e-3), 2)
         if r["verdict"] == "NO-PROGRESS" and r.get("cores_now") is not None and r["cores_now"] < 0.05:
             r["why"] += " (cpu idle: hung)"
+        if r.get("drt_vals"):
+            apply_plateau_v2(r)
     for r in rows:
         if r.get("smell") and smell_exempt(r):
             r["smell"] = []
@@ -2093,6 +2099,106 @@ def plateau_route_pass(rows, seen, now, post=True):
     return [(k, c, t) for k, c, t, _ in out]
 
 
+# ---------------------------------------------------------------- PLATEAU-ACT rule v2 (QC-DRT-ECO 11-25 19:50, COORD adopted 8 points)
+PLATEAU2_MIN_ITERS = 10            # R1: window = max(10 iterations, 3 h of wall time)
+PLATEAU2_WALL_S = 3 * 3600
+PLATEAU2_FALL = 0.05               # best violations fell >= 5 % in the window = TRENDING
+PLATEAU2_LOW = 50                  # R2: flat and <= 50 = LOW (ECO-route at DRT end), flat and > 50 = DEAD
+PLATEAU2_SILENT_H = 3.0            # R3: log silent this long while openroad burns CPU = no trend = DEAD
+PLATEAU2_CPU = 1.0
+PLATEAU2_LIVE_FILE = "lanes/PLATEAU-V2.live"     # absent: the v2 rule posts rows and notices only (first pass is report-only); the hub writes it via coord-commit when COORD says go
+CLASS_OWNERS_FILE = "autopilot/PLATEAU-CLASS-OWNERS.tsv"      # R6: `<die tag>\t<type regex>\t<lane>` per line (first match wins); the lane that gets a notice when the owner is dead
+EXPERIMENT_NAME_RE = re.compile(r"^(?:oth-)?qcdrt-")
+
+
+def is_experiment(name, log, work=""):
+    """R5: experiment containers (name qcdrt-*, or whose log is an exp.log) have no stage log by design: never judged by NOPROG or PLATEAU-ACT"""
+    return bool(EXPERIMENT_NAME_RE.match(str(name or "")) or os.path.basename(str(log or "")) == "exp.log")
+
+
+def find_grt_odb(kit, work):
+    """R8: path of the newest 5_1_grt.odb under the kit / work dir ('' when none); host side"""
+    best = ("", 0.0)
+    for base in dict.fromkeys(x for x in (kit, work) if x):
+        for g in ("run/results/*/*/*/5_1_grt.odb", "gen/*/run/results/*/*/*/5_1_grt.odb", "results/*/*/*/5_1_grt.odb"):
+            for q in glob.glob(os.path.join(base, g)):
+                try:
+                    mt = os.stat(q).st_mtime
+                except OSError:
+                    continue
+                if mt > best[1]:
+                    best = (q, mt)
+    return best[0]
+
+
+def plateau_v2(vals, iter_s, log_age_h, cores):
+    """R1-R3.  -> (class, last total, evidence) or None (not enough evidence).  class TRENDING | LOW | DEAD.  Pure.
+    vals: DRT totals per iteration (iteration 0 first); iter_s: mean seconds per iteration of this DRT stage (0 = unknown); log_age_h: hours since the log was written;
+    cores: cores openroad burns now (None unknown)."""
+    if not vals:
+        return None
+    last = vals[-1]
+    if log_age_h is not None and log_age_h > PLATEAU2_SILENT_H and cores is not None and cores > PLATEAU2_CPU:
+        return "DEAD", last, f"log silent {log_age_h:.1f} h while openroad runs at {cores:.1f} cores: no trend (R3)"
+    if last <= 0:
+        return None
+    win = PLATEAU2_MIN_ITERS
+    if iter_s and iter_s > 0:
+        win = max(win, int(-(-PLATEAU2_WALL_S // iter_s)))
+    if len(vals) <= win:
+        return None
+    t = vals[-(win + 1):]
+    if t[0] <= 0:
+        return None
+    fall = (t[0] - min(t[1:])) / t[0]
+    if fall >= PLATEAU2_FALL:
+        return "TRENDING", last, f"best violations fell {fall * 100:.0f} % over the last {win} iterations"
+    cls = "LOW" if last <= PLATEAU2_LOW else "DEAD"
+    return cls, last, f"{last:g} violations, best fell {fall * 100:.1f} % (< 5 %) over the last {win} iterations ({win * (iter_s or 0) / 3600:.1f} h)"
+
+
+def apply_plateau_v2(r):
+    """host scan: the v2 verdict replaces the old last-3-iterations plateau3 fields of a DRT row (v2 is the one measure; TRENDING / too little evidence = no plateau)"""
+    n = len(r.get("drt_vals") or [])
+    st_s = float(r.get("stage_age_h") or 0) * 3600
+    pv = plateau_v2(r["drt_vals"], st_s / n if n else 0, r.get("log_age_h"), r.get("cores_now"))
+    r["plateau_v2"] = list(pv) if pv else None
+    r.pop("plateau3", None)
+    r.pop("plateau3_kind", None)
+    if pv and pv[0] != "TRENDING":
+        r["plateau3"], r["plateau3_kind"] = pv[1], pv[0].lower()
+
+
+def class_owner(tag, typ, coord=None):
+    """R6: the lane that owns the failure class of (die tag, type) from autopilot/PLATEAU-CLASS-OWNERS.tsv, else ''"""
+    try:
+        for ln in open(os.path.join(coord or COORD, CLASS_OWNERS_FILE), errors="replace"):
+            f = ln.rstrip("\n").split("\t")
+            if len(f) >= 3 and not ln.startswith("#") and f[0] == tag and re.search(f[1], typ):
+                return f[2].strip()
+    except OSError:
+        pass
+    return ""
+
+
+def twin_keepers(rows, classes):
+    """R7: among plateau rows of one die + type on different units, the one with the fewest violations is kept.  -> {unit: keeper description} for every OTHER one.  Pure."""
+    groups = {}
+    for r in rows:
+        if classes.get(id(r)):
+            groups.setdefault((DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?"), str(r.get("type") or "")), []).append(r)
+    out = {}
+    for g in groups.values():
+        units = {(x.get("host"), x.get("unit") or x.get("container")) for x in g}
+        if len(units) < 2:
+            continue
+        keep = min(g, key=lambda x: float(x.get("plateau3") if x.get("plateau3") is not None else 1e18))
+        for x in g:
+            if x is not keep and (x.get("host"), x.get("unit") or x.get("container")) != (keep.get("host"), keep.get("unit") or keep.get("container")):
+                out[x.get("unit") or x.get("container")] = f"{keep.get('host')} {keep.get('unit') or keep.get('container')} at {keep.get('plateau3'):g}"
+    return out
+
+
 # ---------------------------------------------------------------- PLATEAU-ACT (COORD FLOW-0930 F-10, 11-25): the plateau rule acts
 PLATEAU3_ITERS = 3
 PLATEAU3_FALL = 0.05               # a DRT run that fell < 5 % over its last 3 iterations, or rose, is on a plateau
@@ -2181,6 +2287,17 @@ def plateau_act_class(r):
     n, kind = r.get("plateau3"), r.get("plateau3_kind") or "flat"
     if n is None:
         return None
+    pv = r.get("plateau_v2")
+    if pv:                                        # rule v2 (R1-R3): LOW -> ECO-route at DRT end, DEAD -> cancel eligible, TRENDING never gets here
+        if pv[0] == "LOW":
+            return "REPAIR-NOTICE", f"DRT flat but low ({pv[2]}): ECO-route AT DRT END on the final 5_2_route.odb (none exists before), not now"
+        if pv[0] == "DEAD":
+            if float(r.get("age_h") or 0) <= DF_MIN_AGE_H:
+                return None
+            if r.get("setup_ps") is not None and float(r["setup_ps"]) >= GATE_SETUP_PS:
+                return "SPARED-TNS0", f"DRT DEAD ({pv[2]}), but TT setup {r['setup_ps']} ps passes the {GATE_SETUP_PS:g} ps gate: never cancelled"
+            return "CANCEL-ELIGIBLE", f"DRT DEAD ({pv[2]}), job {r.get('age_h')} h > 3 h; a structural cause must be named in the post"
+        return None
     if n < PLATEAU_REPAIR_MAX:
         return "REPAIR-NOTICE", f"DRT {kind} at {n:g} violations over the last 3 iterations: hand to DRC repair / ECO-route"
     if n > PLATEAU_CANCEL_MIN and float(r.get("age_h") or 0) > DF_MIN_AGE_H:
@@ -2199,16 +2316,24 @@ def plateau_act_pass(rows, seen, now, post=True, cancel=None, sweep=None):
     act_off = os.environ.get("NOPROG_PLATEAU_ACT") == "report" or os.path.exists(os.path.join(COORD, "lanes/PLATEAU-ACT.off"))
     st = seen.setdefault("plateau_act", {})
     keeps = keep_posts()
+    v2_live = os.path.exists(os.path.join(COORD, PLATEAU2_LIVE_FILE))
     out, notes = [], []
+    pcs = {id(r): plateau_act_class(r) for r in rows}
+    twins = twin_keepers([r for r in rows if not smell_exempt(r) and not plateau_exempt(r)], pcs)
     for r in rows:
-        pc = plateau_act_class(r)
+        pc = pcs[id(r)]
         if not pc or smell_exempt(r) or plateau_exempt(r):
             continue
         cls, text = pc
+        twin_of = twins.get(r.get("unit") or r.get("container"))
+        if twin_of and cls == "REPAIR-NOTICE":         # R7: only the lower-violation twin is kept; the higher one is a cancel candidate
+            cls, text = "CANCEL-ELIGIBLE", f"twin of a lower-violation run ({twin_of}): keep that one; {text}"
         ident = " ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))
         tag = DIE_TAG.get(die_of(ident), "?")
         typ = str(r.get("type") or "")
         owner, ostate = route_owner(tag, typ, sweep, owner_of([r]))
+        if ostate != "alive":                           # R6: a dead owner lane -> the class owner, not the die's ALLFIX lane
+            owner = class_owner(tag, typ) or owner
         silent = owner_silent_s(sweep, tag, typ, now)
         k = f"{r.get('host')}|{r.get('unit') or r.get('container')}|{cls}"
         first = k not in st
@@ -2219,25 +2344,35 @@ def plateau_act_pass(rows, seen, now, post=True, cancel=None, sweep=None):
             can = r.get("unit") and r["unit"] not in keeps and not decide_only(ident + " " + str(r.get("kit") or ""))
             gone = ostate != "alive" or (silent is not None and silent > PLATEAU_OWNER_SILENT_S)
             dkey = k + "|done"
+            odb = r.get("grt_odb") or ""
             if act_off:
                 how = "report-only (switch off)"
+            elif r.get("plateau_v2") and not v2_live:
+                how = f"report-only first pass of plateau rule v2 (no {PLATEAU2_LIVE_FILE}); 5_1_grt.odb {odb or 'NOT FOUND'}"
             elif not can:
                 how = "not cancelled: KEEP / decide-only / no unit"
             elif not gone:
                 how = f"owner {owner} alive (last post {int(silent // 60) if silent is not None else '?'} min ago): notice only, cancel when it is dead or silent > 1 h"
             elif dkey in st:
                 continue
+            elif not odb and not twin_of:
+                how = "not cancelled: last copy of the kit and no 5_1_grt.odb path to record (R8)"
             else:
                 write_cancel_marks([r.get("kit")], "PLATEAU-ACT", f"CANCEL-PLATEAU: {text}", now)
                 rc, line = cancel(r["unit"])
                 st[dkey] = now
-                cls, how = "CANCELLED", f"ot-run --cancel {r['unit']} --reason design rc={rc}: {line}"
+                if rc != 0 and "nothing found" in line:      # R8: a unit that is already gone is not a cancel
+                    cls, how = "ALREADY-GONE", f"ot-run --cancel {r['unit']}: {line} (not counted as a cancel)"
+                else:
+                    cls, how = "CANCELLED", f"ot-run --cancel {r['unit']} --reason design rc={rc}: {line}; 5_1_grt.odb kept at {odb or 'twin ' + str(twin_of)}"
         elif not first:
             continue
         if not first and cls == "CANCEL-ELIGIBLE":
             continue                                     # eligible and still waiting for its owner: one row + notice per 24 h
         out.append(dict(t=int(now), **{"class": cls}, die=tag, type=typ, host=r.get("host"), unit=r.get("unit") or r.get("container"), marks=f"{r.get('plateau3'):g}", trend=r.get("plateau3_kind"),
                         age_h=r.get("age_h"), owner=owner, owner_state=ostate + (f", silent {int(silent // 60)} min" if silent is not None else ""), action=how or text, evidence=text))
+        if cls == "ALREADY-GONE":
+            continue
         notes.append((owner, cls, f"{typ} {r.get('host')} {r.get('unit') or r.get('container')}: {text}" + (f"; {how}" if how else "")))
     for k in [k for k, t in st.items() if now - float(t) > 86400]:
         del st[k]
@@ -2329,6 +2464,8 @@ def latest_drc_summary(log):
 def plateau_exempt(r):
     """exemption for the plateau rules.  design_fail_exempt() reads the log path too, and a pregrt_ff_hold.log path matches HOLD_ONLY_RE: judge the NAME / kit only."""
     ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work"))
+    if is_experiment(r.get("container"), r.get("log"), r.get("work")):
+        return "experiment"
     ex = unsignable_exempt(ident, r.get("prio", ""), r.get("kind", ""))
     if ex:
         return ex

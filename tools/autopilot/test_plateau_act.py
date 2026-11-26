@@ -49,7 +49,7 @@ def test_owner_routing_fresh_owner_else_allfix(tmp_path, monkeypatch):
 
 
 def prow(**k):
-    d = dict(plateau3=2000, plateau3_kind="flat", age_h=5.0, type="slw_fe_v1", unit="oth-u-9", host="epyc9", kit="/srv/x/kit-wave/qwen_compute/E/items/slw_fe_v1/gen/slw_fe_v1", lane="", smell=[])
+    d = dict(plateau3=2000, plateau3_kind="flat", age_h=5.0, type="slw_fe_v1", unit="oth-u-9", host="epyc9", kit="/srv/x/kit-wave/qwen_compute/E/items/slw_fe_v1/gen/slw_fe_v1", lane="", smell=[], grt_odb="/k/5_1_grt.odb")
     d.update(k)
     return srow(**d)
 
@@ -129,3 +129,53 @@ def test_one_routing_path_owner_of_uses_fresh_owner_then_own_lane_then_allfix(tm
     assert nw.owner_of([prow(type="slw_hc1", lane="QC-GONE")]) == "QC-ALLFIX"                  # ... stood down: the die ALLFIX lane
     assert nw.owner_of([prow(type="slw_hc1", lane="")]) == "QC-ALLFIX"
     assert nw.smell_recipients("QC", "QC-ALLFIX") == "FP-CONVERGE-QC, QC-ALLFIX"
+
+
+# ---------------------------------------------------------------- rule v2 (QC-DRT-ECO 11-25 19:50, COORD adopted)
+def test_v2_window_classes_low_trending_dead_and_hang():
+    flat1 = [500] + [1] * 30
+    assert nw.plateau_v2(flat1, 480, 0.1, 4)[0] == "LOW"                      # 1 violation, 8 min/iter: needs 3 h = 23 iterations, has 30
+    assert nw.plateau_v2([500] + [1] * 15, 480, 0.1, 4) is None               # 15 iterations < 22.5 needed: no verdict yet
+    trend = [300, 251] + [251 - i * 3 for i in range(1, 14)]
+    assert nw.plateau_v2(trend, 1000, 0.1, 4)[0] == "TRENDING"                 # cldb4efe33: 251 > 208 = 17 %
+    assert nw.plateau_v2([9000] + [800] * 25, 600, 0.1, 4)[0] == "DEAD"       # flat over 50
+    h = nw.plateau_v2([9000, 4, 4, 4], 300, 7.4, 4.0)                          # cl08d14f0d: log silent 7.4 h, openroad at 400 %
+    assert h[0] == "DEAD" and "no trend" in h[2]
+    assert nw.plateau_v2([9000, 4, 4, 4], 300, 7.4, 0.01) is None             # silent and idle is the old hung rule, not this one
+
+
+def test_v2_experiment_containers_are_exempt():
+    assert nw.is_experiment("qcdrt-fw-A", "/x/stage.log")
+    assert nw.is_experiment("oth-ubuntu-1", "/w/exp.log")
+    assert not nw.is_experiment("oth-ubuntu-1", "/w/5_2_route.tmp.log")
+    assert nw.plateau_exempt(dict(container="qcdrt-fw-B", log="/w/x.log")) == "experiment"
+
+
+def test_v2_report_only_first_pass_then_twin_and_already_gone(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    (tmp_path / "autopilot").mkdir(exist_ok=True)
+    (tmp_path / "autopilot/PLATEAU-CLASS-OWNERS.tsv").write_text("QC\tslw_fe_v1\tQC-FEV1-CL08\n")
+    sweep_file(tmp_path, [("QC", "slw_fe_v1", "no", at(NOW, 900), "QC-GONE")])
+    assert nw.class_owner("QC", "slw_fe_v1__cl9", str(tmp_path)) == "QC-FEV1-CL08"
+    dead = dict(plateau3=800, plateau3_kind="dead", plateau_v2=["DEAD", 800, "800 violations flat"], age_h=9.0, grt_odb="/k/5_1_grt.odb")
+    a = prow(unit="oth-u-1", host="epyc8", **dead)
+    b = prow(unit="oth-u-2", host="intel1", **dict(dead, plateau3=956, plateau_v2=["DEAD", 956, "956 flat"]))
+    calls = []
+    out = nw.plateau_act_pass([a, b], {}, NOW, post=False, cancel=lambda u: calls.append(u) or (0, "ok"), sweep=nw.owners_sweep(str(tmp_path)))
+    assert calls == []                                                         # no PLATEAU-V2.live: report-only
+    assert all("report-only first pass" in o["action"] for o in out)
+    assert {o["owner"] for o in out} == {"QC-FEV1-CL08"}                       # R6 class owner
+    (tmp_path / "lanes/PLATEAU-V2.live").write_text("")
+    out = nw.plateau_act_pass([a, b], {}, NOW + 5, post=False, cancel=lambda u: calls.append(u) or (1, "ot-run --cancel: nothing found for 'x' on any fleet host"), sweep=nw.owners_sweep(str(tmp_path)))
+    assert {o["class"] for o in out} == {"ALREADY-GONE"}                       # R8: a gone unit is not a cancel
+    assert len(calls) == 2
+
+
+def test_v2_last_copy_without_5_1_grt_is_not_cancelled(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    (tmp_path / "lanes/PLATEAU-V2.live").write_text("")
+    sweep_file(tmp_path, [("QC", "slw_fe_v1", "no", at(NOW, 900), "QC-GONE")])
+    r = prow(plateau3=800, plateau3_kind="dead", plateau_v2=["DEAD", 800, "800 flat"], age_h=9.0, grt_odb="")
+    calls = []
+    out = nw.plateau_act_pass([r], {}, NOW, post=False, cancel=lambda u: calls.append(u) or (0, "ok"), sweep=nw.owners_sweep(str(tmp_path)))
+    assert calls == [] and "5_1_grt.odb" in out[0]["action"]
