@@ -48,12 +48,12 @@ proc ot_hp_clk_arr {pin} {
   if {[catch {set a [get_property $cp arrival_min_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
   return $a
 }
-proc ot_hp_scope_keep {it pe pin} {
+proc ot_hp_scope_keep {it launch pin} {
   set z [ot_hp_zero_logic $it]
   if {$z eq "zl"} { return keep }
   if {$z eq "unk"} { return unk }
   if {[catch {
-    set a [ot_hp_clk_arr [get_property $pe startpoint]]; set b [ot_hp_clk_arr $pin]
+    set a [ot_hp_clk_arr $launch]; set b [ot_hp_clk_arr $pin]
   }]} { return unk }
   if {$a eq "" || $b eq ""} { return unk }
   return [expr {abs($a - $b) > [ot_hp_env OT_HOLD_PAD_XT_PS 15.0] ? "keep" : "drop"}]
@@ -87,12 +87,26 @@ proc ot_hold_pad {tag margin {budget 0} {dir ""}} {
     if {[$m isBlock] || ![$m isSequential] || [$it getNet] eq "NULL" || [[$it getNet] getSigType] eq "CLOCK"} { incr skip; continue }
     set mt [$it getMTerm]
     if {[$mt getSigType] in {RESET SCAN CLOCK} || [regexp {^(SETN|RESETN|SN|RN|SET|RESET|CLR|PRE)$} [$mt getName]]} { incr skip; continue }
+    set end [list $s $pin $it [get_full_name $pin]]
     if {$scope} {
-      set sk [expr {[catch {ot_hp_scope_keep $it $pe $pin} sv] ? "unk" : $sv}]
+      set launch ""
+      catch {set launch [get_property $pe startpoint]}
+      lappend end $launch
+    }
+    lappend ends $end
+  }
+  if {$scope} {
+    # Pin arrival queries can invalidate the timing search's PathEnd objects.
+    # Finish copying slack and pins before doing any of the scope queries.
+    set scoped {}
+    foreach end $ends {
+      lassign $end s pin it name launch
+      set sk [expr {[catch {ot_hp_scope_keep $it $launch $pin} sv] ? "unk" : $sv}]
       if {$sk eq "drop"} { incr sdrop; continue }
       if {$sk eq "unk"} { incr sunk }
+      lappend scoped $end
     }
-    lappend ends [list $s $pin $it [get_full_name $pin]]
+    set ends $scoped
   }
   set ends [lsort -real -index 0 $ends]
   # 3. TT setup slack of the same endpoints (one query; unconstrained setup = unlimited headroom)
