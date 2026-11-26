@@ -1,0 +1,1 @@
+- 2026-11-26 13:37 PST DIED [C-LEG405-R3] ot-run oth-ubuntu-1195147-1795729029 on tolerant-swine: rc=4 after 4 s, ended 13:37:11, log none, cmd: --mem 8 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/C-LEG405-R3 -- python3 -m pytest -q -x test_leg405_perbit.py test_l | class=NO-PATTERN cause=rc 4 after 4 s, no log
