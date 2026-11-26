@@ -459,7 +459,7 @@ def eco_tree_path(kit_out):
     return Path(kit_out).parent / "eco" / "tree_eco.json"
 
 
-ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root", "calib", "balance_types",
+ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root", "calib", "balance_types", "max_attach_leg_um",
             "balance_ps"}
 
 
@@ -476,6 +476,9 @@ def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     a = [str(HERE / "tree_eco.py"), str(e["base_tree"]), str(plan), "--plan-root", str(root), "--out",
          str(eco_tree_path(kit_out)), "--tools", str(Path(die_trial).resolve().parent),
          "--rep-um", _fmt(cfg["top"].get("rep_um", 150))]
+    xk = kit_argv(cfg, kit_out)
+    if "--region-dme-actual-max" in xk or "--clock-body-sites" in xk:
+        a += ["--body-sites"]                  # the kit's site map (die_trial clock_site) is the body-site one
     if cal:
         a += ["--stage-cal", str(cal)]
     if region_map:
@@ -487,7 +490,7 @@ def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     if er:                                     # same model-ps ratio die_trial's DME early sinks use (--region-dme-early)
         a += ["--early-ratio", _fmt(er)]
     for k, f in (("max_leaf_leg_um", "--max-leaf-leg-um"), ("lift_tol_ps", "--lift-tol-ps"), ("match_um", "--match-um"),
-                 ("balance_ps", "--balance-ps")):
+                 ("balance_ps", "--balance-ps"), ("max_attach_leg_um", "--max-attach-leg-um")):
         if e.get(k) is not None:
             a += [f, _fmt(e[k])]
     if e.get("calib"):                         # closed loop: a previous routed eco run dir (tree_eco --calib)

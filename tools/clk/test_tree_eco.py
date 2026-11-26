@@ -175,3 +175,16 @@ def test_balance_detaches_routed_outlier_only():
     assert r["attached"][0]["port"] == "clk_t3" and r["attached"][0]["kind"] == "balance"
     _, r0 = E.eco(b, cur, Site(), M, {"a": "r"}, {"a": "T"}, calib=cal)
     assert r0["counts"]["balanced"] == 0 and r0["counts"]["matched"] == 5
+
+
+def test_max_attach_leg_caps_reuse_and_hang():
+    b = base_tree()
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 400.0, 0.0), ("a", "clk_t3", 100.0, -50.0)]
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"})
+    assert r["attached"][0]["how"] == "reuse"              # 300 um re-laid leg from node 1
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, max_attach_leg_um=100.0)
+    assert r["counts"]["unplaced"] == 0                     # nothing within 100 um: soft cap falls back to the long leg
+    cur2 = cur + [("a", "clk_t9", 160.0, 20.0)]
+    _, r2 = E.eco(b, cur2, Site(), M, {"a": "r"}, max_attach_leg_um=100.0)
+    a9 = [x for x in r2["attached"] if x["port"] == "clk_t9"][0]
+    assert a9["parent"] == 1 or a9["how"] == "hang"          # a short option exists: the 300 um reuse is not taken for it

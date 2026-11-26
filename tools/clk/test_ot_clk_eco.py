@@ -43,3 +43,12 @@ def test_eco_calib_and_balance_argv(tmp_path):
     assert a[a.index("--balance-ps") + 1] == "20"
     with pytest.raises(O.ConfigError):            # balancing needs a routed run to measure on
         O.eco_argv(cfg(base_tree="/b", balance_types=["hd_x"]), tmp_path / "kit", None, None, "/p", "/t/die_trial.py")
+
+
+def test_eco_uses_the_kit_body_site_map(tmp_path):
+    a0 = O.eco_argv(cfg(base_tree="/b"), tmp_path / "kit", None, None, "/p", "/t/die_trial.py")
+    assert "--body-sites" not in a0
+    c = cfg(base_tree="/b")
+    c["extra_argv"] += ["--clock-body-sites"]
+    a1 = O.eco_argv(c, tmp_path / "kit", None, None, "/p", "/t/die_trial.py")
+    assert "--body-sites" in a1

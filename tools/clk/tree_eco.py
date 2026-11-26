@@ -260,7 +260,7 @@ def keep_interval(v0, p, ks):
 
 def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None, match_um=0.05, max_leaf_leg_um=2.0,
         resite_types=(), lift_tol_ps=1.0, nrep_fn=None, target="local", k_local=4, early=None, calib=None,
-        balance_types=(), balance_ps=None):
+        balance_types=(), balance_ps=None, max_attach_leg_um=None):
     """base: tree.json dict; cur_taps [(part, port, x, y)]; site: object with legal(q) / nearest(q); part_region {part: region}.
     calib: None or dict(node={id: routed ps}, tap={(part, port): routed ps}, leg=(c0, c1)) (load_calib).
     -> (tree.json dict, report dict).  Pure: base is not modified."""
@@ -375,11 +375,12 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
         for w in pending:
             q = site.nearest(w["xy"]) if not site.legal(w["xy"]) else w["xy"]
             dtap = man(q, w["xy"])
-            opts = []
+            opts, long_ = [], []
             for lf in free.get(w["part"], ()):
                 if lf in used_free:
                     continue
                 pa = nodes[lf]["parent"]
+                long_.append(max_attach_leg_um is not None and man((nodes[pa]["x"], nodes[pa]["y"]), q) > max_attach_leg_um)
                 a = arr0[pa] + newleg(model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap))
                 opts.append((abs(a - w["target"]) if w["target"] is not None else 0.0, "reuse", lf, pa, a))
             for c in internal.get(w["region"], ()):
@@ -387,9 +388,12 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                 L = man((cv["x"], cv["y"]), q)
                 if L > 4 * model.rep:
                     continue
+                long_.append(max_attach_leg_um is not None and L > max_attach_leg_um)
                 a = arr0[c] + newleg(model.leg(L) + model.kf + model.tap(dtap))
                 pen = model.kf + 0.05 * model.kf * ntap_under.get(c, 0)
                 opts.append(((abs(a - w["target"]) if w["target"] is not None else 0.0) + pen, "hang", None, c, a))
+            if any(not x for x in long_):  # soft cap: a long re-laid leg routes far slower than the stage model (HEAD W9
+                opts = [o for o, x in zip(opts, long_) if not x]   # eco7: 240-280 um legs +70 ps); only when nothing shorter
             if not opts:
                 continue
             o = min(opts, key=lambda z: (z[0], z[3]))
@@ -574,6 +578,10 @@ def main(argv=None):
                     "proof/tap_arrivals_TT.json): attach on routed arrivals (closed loop)")
     ap.add_argument("--balance-types", default="", help="types whose routed neighbour-step outliers are re-attached (needs --calib)")
     ap.add_argument("--balance-ps", type=float, default=20.0)
+    ap.add_argument("--max-attach-leg-um", type=float, default=None,
+                    help="soft cap: an attach lays a new leg longer than this only when no shorter option exists (hang always <= 4 x rep)")
+    ap.add_argument("--body-sites", action="store_true", help="site map on native cell bodies (the kit runs with "
+                    "--region-dme-actual-max or --clock-body-sites)")
     ap.add_argument("--tools", default=str(DIE_PLAN), help="die_plan tool dir whose die_trial/schema read the plan (a launch "
                     "tree's tools/die_plan when the plan's inputs live in that tree); default the sibling tools/die_plan")
     a = ap.parse_args(argv)
@@ -584,8 +592,16 @@ def main(argv=None):
     import schema as S
     P = S.Plan(S.load(a.plan), a.plan)
     cur = D.clock_taps(P)
+    if a.body_sites:              # the kit's own site map: --region-dme-actual-max / --clock-body-sites switch die_trial
+        D.CLOCK_BODY_SITES = True  # clock_site to native body sites; a different map here = nodes the kit moves after us
     site = D.clock_site(P)
     base = json.loads(Path(a.base_tree).read_text())
+    # legalise the base on that map exactly as die_trial kit --tree-json will (legalize_stamped_nodes): moved nodes and
+    # chains through now-illegal points are re-laid HERE, so attach, lift and parity see the kit's geometry (HEAD W9 eco6:
+    # 237 base nodes moved by the kit after the eco -> one parity leg unsolvable)
+    bn = {int(k): v for k, v in base["nodes"].items()}
+    legal_st = D.legalize_stamped_nodes(bn, site)
+    base["nodes"] = {str(k): v for k, v in bn.items()}
     cal = json.loads(Path(a.stage_cal).read_text()) if a.stage_cal else None
     model = Model(cal, a.rep_um)
     pr = json.loads(Path(a.regions).read_text())["part_region"] if a.regions else {}
@@ -611,10 +627,12 @@ def main(argv=None):
     tree, rep = eco(base, cur, site, model, pr, ptype, pbox, a.match_um, a.max_leaf_leg_um,
                     [t for t in a.resite_types.split(",") if t], a.lift_tol_ps, nrep_fn, a.target, early=early,
                     calib=load_calib(a.calib, model) if a.calib else None,
-                    balance_types=[t for t in a.balance_types.split(",") if t], balance_ps=a.balance_ps)
+                    balance_types=[t for t in a.balance_types.split(",") if t], balance_ps=a.balance_ps,
+                    max_attach_leg_um=a.max_attach_leg_um)
     sha = lambda f: hashlib.sha256(Path(f).read_bytes()).hexdigest()
     tree["meta"]["eco"].update(base_tree=str(a.base_tree), base_tree_sha256=sha(a.base_tree), plan=str(a.plan),
                                plan_sha256=sha(a.plan))
+    rep["base_legalised"] = legal_st
     rep["inputs"] = tree["meta"]["eco"]
     Path(a.out).write_text(json.dumps(tree) + "\n")
     Path(a.out + ".report.json").write_text(json.dumps(rep, indent=1) + "\n")
