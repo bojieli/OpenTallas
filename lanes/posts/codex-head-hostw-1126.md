@@ -1,0 +1,1 @@
+- 2026-11-26 05:25 PST DONE [codex-head-hostw-1126] ot-run oth-ubuntu-1882873-1795699394 on loved-redfish: rc=0 after 129 s, ended 13:25:19, log /srv/opentallas-scratch2/claude/codex-head-hostw-1126/source.otrun.log, cmd: --hosts epyc7 --threads 8 --mem 22 --disk 6 --dir /srv/opentallas-scratch2/claude/codex-head-hostw-1126 -- bash source_hostw.sh
