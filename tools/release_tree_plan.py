@@ -528,7 +528,9 @@ def revoke_hit(r, rows, sha=rec_netlist_sha):
     for row in rows:
         if row['name'] not in rec_keys(r): continue
         k = row['key']
-        if k.startswith('sha256:'):
+        if k.startswith(('odb:', 'odb_sha256:')):
+            if r.get('odb_sha') == k.partition(':')[2]: return row
+        elif k.startswith('sha256:'):
             if sha(r) == k[7:]: return row
         else:
             h, _, d = k.partition(':'); d = d.rstrip('/') + '/'

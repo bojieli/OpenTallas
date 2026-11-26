@@ -19,6 +19,9 @@ import sys
 import time
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from signed_store import revoked_odb_shas
+
 HOME = Path.home()
 COORD = Path(os.environ.get("COUNT_COORD", str(HOME / "coord")))
 CACHE = Path(os.environ.get("COUNT_CACHE", str(HOME / ".local/state/fleet-viz/release_tree_plan_cache.json")))
@@ -42,9 +45,10 @@ def index_rows(index_json):
     except (OSError, ValueError):
         return []
     rows = []
+    revoked = revoked_odb_shas(COORD)
     for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
         f = ln.split("\t")
-        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
+        if len(f) > 10 and f[0] in INDEX_DIES and f[7] not in revoked and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
             rows.append((f[0], f[1], f[2]))
     return rows
 
