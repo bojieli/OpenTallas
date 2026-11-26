@@ -35,6 +35,11 @@ def kit_facts(kit, plan_sha=None, environ=None):
     return d
 
 
+def bits_blocking(environ=None):
+    """True only with OT_BITS_OVER_CYCLE_BLOCK=1: a BITS-OVER-CYCLE line then fails the kit (FP-CONVERGE-S81, FABLE-RC-S81 19:19)"""
+    return (os.environ if environ is None else environ).get("OT_BITS_OVER_CYCLE_BLOCK") == "1"
+
+
 def lines(kit, plan=None, environ=None):
     env = os.environ if environ is None else environ
     sys.path.insert(0, str(HERE))
@@ -51,7 +56,19 @@ def lines(kit, plan=None, environ=None):
     sha = hashlib.sha256(Path(plan).read_bytes()).hexdigest() if plan and Path(plan).is_file() else None
     facts = kit_facts(kit, sha, env)
     out = list(F2.launch_scope(facts))
-    if sha:
-        raw = json.loads(Path(plan).read_text())
+    raw = json.loads(Path(plan).read_text()) if sha else None
+    if raw:
         out += F2.legal_gate(raw, {facts["type"]})
+    # dsdv_slice route goals stay behind bits_over_cycle = 0 (placed scan of the kit / $OT_PLACED_SCAN_DIRS, else the plan); guarded import
+    sys.path.insert(0, str(HERE))
+    try:
+        import adv_bitscycle as BC
+        out += BC.gate_lines(facts["type"], facts.get("goal"), raw, kit=kit, environ=env)
+    except ImportError:
+        pass
+    finally:
+        try:
+            sys.path.remove(str(HERE))
+        except ValueError:
+            pass
     return out

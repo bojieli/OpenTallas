@@ -67,8 +67,45 @@ def _cur(p):
         return f.read()
 
 
+SRC_LINE = re.compile(rb"^[ \t]*source[ \t]+/work/([A-Za-z0-9_.\-]+\.tcl)[ \t]*$", re.M)
+
+
+def keep_kit_sources(p, data):
+    """CLOCK-TAPS-COPY-TRAP (COORD 11-25, S81-SERDES: every serdes kit whose clock_taps.tcl was replaced by main's file died CTS-0114): gen writes
+    `source /work/<f>.tcl` lines into a kit's own copy of a flow script (vpw_bank_clock.tcl at the top, landing_exports.tcl at the end).  A refresh that
+    puts the main / rt file over the kit file must not drop them: every `source /work/F` line of the file on disk that the new bytes lack, where F
+    exists in the kit dir, is put back (a line in the first half of the old file goes on top, with an immediately preceding `if {![file exists /work/F]}`
+    guard line; any other goes at the end).  Only .tcl kit files; unchanged data comes back identical.  Pure apart from reading p and the kit dir."""
+    if not p.endswith(".tcl") or not os.path.isfile(p):
+        return data
+    try:
+        with open(p, "rb") as f:
+            old = f.read()
+    except OSError:
+        return data
+    have = {m.group(1) for m in SRC_LINE.finditer(data)}
+    lines = old.split(b"\n")
+    top, tail = [], []
+    for i, ln in enumerate(lines):
+        m = SRC_LINE.match(ln)
+        if not m or m.group(1) in have or not os.path.isfile(os.path.join(os.path.dirname(p), m.group(1).decode())):
+            continue
+        have.add(m.group(1))
+        if i < len(lines) / 2:
+            guard = lines[i - 1] if i and b"file exists /work/" + m.group(1) in lines[i - 1] else None
+            top += ([guard] if guard else []) + [ln]
+        else:
+            tail.append(ln)
+    if not top and not tail:
+        return data
+    body = data if data.endswith(b"\n") or not data else data + b"\n"
+    return (b"\n".join(top) + b"\n" if top else b"") + body + (b"\n" + b"\n".join(tail) + b"\n" if tail else b"")
+
+
 def _put(p, data, mode=None, kind="kit"):
     """stage one write; outside a transaction (direct helper calls) it is applied at once with the same commit rules"""
+    if kind == "kit":
+        data = keep_kit_sources(p, data)
     if mode is None:
         mode = (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644
     if _TXN is None:

@@ -4718,6 +4718,20 @@ def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
             # constant trace from the zero state (xfin: a leaf valid the 48 random cycles never set): the trace does
             # not separate the copies; the next-state check below and the induction do (kept split by value)
             groups[("const", getattr(L, "trace_const", {}).get(("gold", k)))].append((k, 0))
+    # QC sle_hc0 (COORD 11-25, both kits: a_pr[1][58..60] -> b_emin[1][85..87] differ): a gold-only register whose
+    # constant hypothesis noreset_filter dropped (X power-up, trace constant 0 in the random cycles) stays free for
+    # good, and it is no partner, so it never joined a class above.  Its copy (gold a_pr row 14 == row 11 in the
+    # bits the per-row tid constants share) is the partner the gate merged both rows into, so the gold logic that
+    # reads the dropped copy compared a free input against the proved partner.  Such a register joins an EXISTING
+    # partner class of equal trace / constant as a non-representative member; the witness split and the induction
+    # decide, a non-copy is refuted and dropped (never assumed).
+    for k in sorted({k for (sd, k) in getattr(L, "noreset_dropped", {}) if sd == "gold"} - roots, key=nat):
+        if not k.startswith("ff:") or k not in gonly or ("gold", k) in L.hyp or k not in L.gc or ("gold", k) not in T:
+            continue
+        tg = T[("gold", k)]
+        key = min(tg) if tg else ("const", getattr(L, "trace_const", {}).get(("gold", k)))
+        if key in groups:
+            groups[key].append((k, int(tg[0] > tg[1]) if tg else 0))
     todo = [ks for ks in groups.values() if len(ks) > 1]
     # Split by witness (S81 xfin x4c): the constant-trace class holds ~12k unrelated registers.  Bound to one
     # representative, a copy and a non-copy compute the same next state in almost every random lane (a leaf valid sets

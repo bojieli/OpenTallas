@@ -158,8 +158,12 @@ class CoreClockKitTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "more than one planned bit"):
                 K.wire(SOURCE.replace(".ck(clk)", conn), "top", two)
         src = SOURCE.replace(".ck(clk)", ".clk_pair({clk, clk})")
-        with self.assertRaisesRegex(ValueError, "more than one planned bit"):        # bits on different ports
-            K.wire(src, "top", [two[0], ("clk_c1", "u_bound.u_leaf", "clk_pair[1]", 0, 250)])
+        # bits on different ports: PER_BIT_PORT_1125 wires each bit to its own port (was refused; kv3_hub_C ahub ck7)
+        text, receipt = K.wire(src, "top", [two[0], ("clk_c1", "u_bound.u_leaf", "clk_pair[1]", 0, 250)])
+        self.assertIn(".clk_pair({clk_c1, clk_c0})", text)
+        self.assertTrue(all(r["rule"] == "per_bit_port" for r in receipt))
+        with self.assertRaisesRegex(ValueError, "more than one planned bit"):        # different ports, not n clock copies
+            K.wire(SOURCE.replace(".ck(clk)", ".clk_pair({clk, d})"), "top", [two[0], ("clk_c1", "u_bound.u_leaf", "clk_pair[1]", 0, 250)])
         with self.assertRaisesRegex(ValueError, "more than one planned bit"):        # a gap
             K.wire(src, "top", [two[0], ("clk_c0", "u_bound.u_leaf", "clk_pair[2]", 0, 250)])
 

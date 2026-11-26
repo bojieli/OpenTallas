@@ -259,8 +259,11 @@ def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
             # u_hb_idx__s_Q_r0c0_k0h1 takes clk_pair[0] AND clk_pair[1] of ot_hbm_idx_score_hcol_h1, bound as
             # `.clk_pair({clk, clk})`).  When every planned bit of the base is on this SAME port, the bits are exactly
             # 0..n-1 and the bound connection is n copies of the clock net only ({clk, clk} / {n{clk}}), each copy moves to
-            # the port: every bit keeps its own consumer pin on one net, nothing else changes.  Any other shape (bits on
-            # different ports, a gap, a non-clock term) still refuses.
+            # the port: every bit keeps its own consumer pin on one net, nothing else changes.  PER_BIT_PORT_1125 (KV-OWN-HUB-R2,
+            # kv3_hub_C R6 kit_rtl "clk_c0: u_ahub.ck has more than one planned bit"): the qkd_ahub ck7 view has seven ck pins
+            # tapped on seven ports clk_c0, clk_c2..clk_c7 (core_tap_rows), bound `.ck({7{clk}})` by swap_ahub_boundary; then
+            # bit b takes its own port, `.ck({clk_c7, .., clk_c0})` (msb first): one consumer pin per tap port, same clock
+            # domain, no cycles.  Any other shape (a gap, a bit tapped twice, a non-clock term) still refuses.
             if other:
                 bits = sorted([int(bit0.group(2))] + [int(re.fullmatch(re.escape(base) + r"\[(\d+)\]", r[2]).group(1)) for r in other])
                 bm = list(re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))").finditer(original_body))
@@ -269,22 +272,30 @@ def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
                 rep_n = re.fullmatch(r"\{\s*(\d+)\s*\{\s*" + cn + r"\s*\}\s*\}", expr)
                 n = (int(rep_n.group(1)) if rep_n else
                      len(expr[1:-1].split(",")) if re.fullmatch(r"\{\s*" + cn + r"(?:\s*,\s*" + cn + r")*\s*\}", expr) else 0)
-                if not (all(r[0] == port for r in other) and bits == list(range(len(bits))) and n == len(bits)):
+                bitport = {int(bit0.group(2)): port}
+                bitport.update({int(re.fullmatch(re.escape(base) + r"\[(\d+)\]", r[2]).group(1)): r[0] for r in other})
+                if not (bits == list(range(len(bits))) and n == len(bits)):
                     raise ValueError(f"core clock {port}: {local}.{base} has more than one planned bit, base-name wiring refused")
                 if any((local, f"{base}[{b}]") in consumers for b in bits):
                     raise ValueError(f"core clock {port}: duplicate consumer {local}.{base}")
-                if port in ports and ports[port] != "input":
+                if any(p in ports and ports[p] != "input" for p in bitport.values()):
                     raise ValueError(f"core clock {port}: conflicting port")
-                ports[port] = "input"
+                for p in bitport.values():
+                    ports[p] = "input"
                 m = bm[0]
-                body = (original_body[:m.start(2)] + re.sub(r"\b" + cn + r"\b", port, m.group(2)) +
-                        original_body[m.end(2):])
+                if len(set(bitport.values())) == 1:
+                    new = re.sub(r"\b" + cn + r"\b", port, m.group(2))
+                    rule = "merged_bus_base"
+                else:
+                    new = "{" + ", ".join(bitport[b] for b in reversed(bits)) + "}"
+                    rule = "per_bit_port"
+                body = original_body[:m.start(2)] + new + original_body[m.end(2):]
                 bound = bound[:body_start] + body + bound[body_end:]
                 for b in bits:
                     consumers.add((local, f"{base}[{b}]"))
                     merged_done.add((physical_inst, f"{base}[{b}]"))
-                    receipt.append(dict(port=port, instance=local, pin=f"{base}[{b}]", previous_net=expr, mode="rtl",
-                                        rule="merged_bus_base"))
+                    receipt.append(dict(port=bitport[b], instance=local, pin=f"{base}[{b}]", previous_net=expr, mode="rtl",
+                                        rule=rule))
                 continue
             conn = re.compile(r"(\." + re.escape(base) + r"\s*\()([^()]+)(\))")
             matches = list(conn.finditer(original_body))

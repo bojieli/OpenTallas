@@ -40,7 +40,7 @@ def test_pass_stamps_and_second_call_skips(fake, capsys):
     p.write_text('{"a":1}')
     bind._plan_gate_pre(NS(p, out))
     assert len(calls) == 2
-    assert calls[0]["skip"] == ("ROWS", "GEOM")
+    assert calls[0]["skip"] == ("ROWS", "GEOM", "ADVISORY")
 
 
 def test_fail_refuses_and_names_reason(fake, capsys):
@@ -63,7 +63,7 @@ def test_modes_and_baseline(fake, monkeypatch):
     monkeypatch.setenv("OT_PLAN_GATE_PRE", "refuse")
     monkeypatch.setenv("OT_PLAN_GATE_BASELINE", "/x/base.json")
     assert bind._plan_gate_pre(NS(p, out)) == 2
-    assert calls[-1]["baseline"] == "/x/base.json" and calls[-1]["skip"] == ()
+    assert calls[-1]["baseline"] == "/x/base.json" and calls[-1]["skip"] == ("ADVISORY",)
 
 
 def test_relay_sink_skip_is_forwarded_without_reusing_its_receipt(fake, monkeypatch):
@@ -71,12 +71,12 @@ def test_relay_sink_skip_is_forwarded_without_reusing_its_receipt(fake, monkeypa
     monkeypatch.setenv("OT_PLAN_GATE_BASELINE", "/x/adopted.json")
     monkeypatch.setenv("OT_PLAN_GATE_SKIP", "RELAYSINK")
     assert bind._plan_gate_pre(NS(plan, out)) == 0
-    assert calls[-1]["skip"] == ("RELAYSINK",)
+    assert calls[-1]["skip"] == ("RELAYSINK", "ADVISORY")
 
     mod.findings = ["FAIL RELAYSINK instance no leaf"]
     monkeypatch.delenv("OT_PLAN_GATE_SKIP")
     assert bind._plan_gate_pre(NS(plan, out)) == 2
-    assert calls[-1]["skip"] == () and len(calls) == 2
+    assert calls[-1]["skip"] == ("ADVISORY",) and len(calls) == 2
 
 
 def test_missing_module_does_not_block(monkeypatch, tmp_path):

@@ -1410,7 +1410,18 @@ def _with_export_seats(P, tn, T):
     flop (export_q of ot_dp_head_raw_export_pair) samples the SAME D as its relay (zero added cycles) but is otherwise placed at the relay
     site, so its pin leg is the whole distance from the tree site to the port.  A seat re-places only export_q near the port; the relay q
     flop, its net, xy and depth are untouched.  The D leg (relay D source -> seat) must stay within the type relay reach."""
-    seats = (P.types[tn].get("reset") or {}).get("export_seats_um")
+    rst = P.types[tn].get("reset") or {}
+    if rst.get("relay_sites_win"):
+        # RELAY-SITES-WIN-1125 (HEAD-SERDES-REFLOOR, R6 review): plan relay_sites '<u_rrl_N|u_srl_N>/q' win over the tree site in reset_tree.tcl.
+        # Without it the post-hook relay_sites seat is overwritten by rtr_place (last write wins) and the 2 ring relays collapse at the tree site.
+        rs = {}
+        for k, v in (P.types[tn].get("relay_sites") or {}).items():
+            m = re.fullmatch(r"(u_[rs]rl_\d+)/q", str(k))
+            if m and len(v) >= 2:
+                rs[m.group(1)] = [float(v[0]), float(v[1])]
+        if rs:
+            T["relay_seats"] = rs
+    seats = rst.get("export_seats_um")
     if not seats:
         return T
     rows = {r.get("port"): r for r in P.types[tn].get("reset_start_raw_exports") or []}
@@ -3592,6 +3603,8 @@ proc rtr_place {key pat x y tag} {
     # *u_rrl_N[./]* also matched it: the reset placer moved the clone back onto the source seat and took its Q net as the
     # relay's. Clones are seated by kit_istations rs_place_all (relay_sites); skip them unless the pattern names one.
     if {[string match {*__rs[0-9]*} $nm] && ![string match {*__rs[0-9]*} $pat]} continue
+    # EXPORT-Q-GLOB-1125: the raw-pair export_q flop belongs to its face/pin seat; a relay glob *u_rrl_N[./]* must not drag it to the relay site
+    if {[string match "*export_q*" $nm] && ![string match "exp:*" $key]} continue
     if {[info exists ::ot_reset_pair_locs] && [dict exists $::ot_reset_pair_locs $nm]} {
       set got [dict get $::ot_reset_pair_locs $nm]
     } else {
@@ -3798,7 +3811,8 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
     oq = out_relays(T)
     for r in (native_nodes if native_nodes is not None else rel):
         place = "rtr_place_opt" if r.get("optional") else "rtr_place"
-        t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        rxy = (T.get("relay_seats") or {}).get(r["name"], r["xy"])
+        t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {rxy[0]:.3f} {rxy[1]:.3f} rrl:{r['kind']}{r['depth']}")
         seat = (T.get("export_seats") or {}).get(r["name"])
         if seat and native_nodes is None:
             # EXPORT-SEAT-1125: only the export_q flop of the raw pair moves to its seat near the port (same D, same cycle)

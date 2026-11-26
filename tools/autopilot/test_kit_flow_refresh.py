@@ -134,3 +134,29 @@ def test_without_die_src_nothing_new_is_written():
     rt, die, kit = die_setup(tempfile.mkdtemp())
     K.main(["--kit", str(kit), "--stage", "gen", "--rt", str(rt)])
     assert not (kit / "tools_rev.json").exists() and (kit / "gp_noconverge.py").read_bytes() == b"old gate\n"
+
+
+def test_main_copy_keeps_kit_original_source_lines(tmp_path):
+    """CLOCK-TAPS-COPY-TRAP 11-25: main's clock_taps.tcl over a kit file must keep gen's `source /work/...` lines (CTS-0114 on every serdes kit)"""
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "vpw_bank_clock.tcl").write_text("# bank\n")
+    (kit / "landing_exports.tcl").write_text("# land\n")
+    p = kit / "clock_taps.tcl"
+    p.write_bytes(b'if {![file exists /work/vpw_bank_clock.tcl]} {error "x"}\nsource /work/vpw_bank_clock.tcl\nputs main_old\nputs more\nputs more2\nsource /work/landing_exports.tcl\n')
+    K._put(str(p), b"puts main_new\nputs more\n")
+    t = p.read_text()
+    assert t.startswith('if {![file exists /work/vpw_bank_clock.tcl]} {error "x"}\nsource /work/vpw_bank_clock.tcl\nputs main_new')
+    assert t.rstrip().endswith("source /work/landing_exports.tcl")
+    assert "main_old" not in t
+    K._put(str(p), t.encode())                      # idempotent: nothing duplicated
+    assert p.read_text() == t
+
+
+def test_source_line_kept_only_when_the_file_is_in_the_kit(tmp_path):
+    kit = tmp_path / "k"
+    kit.mkdir()
+    p = kit / "a.tcl"
+    p.write_bytes(b"source /work/gone.tcl\nputs a\n")
+    K._put(str(p), b"puts b\n")
+    assert p.read_bytes() == b"puts b\n"

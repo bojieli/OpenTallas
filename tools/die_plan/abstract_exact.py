@@ -176,7 +176,8 @@ def _grow(rs, g, Wn, Hn):
 
 
 def pin_eol_findings(path, layers=STALE_LAYERS):
-    """signal pin shapes with same-layer OBS touching them or inside EOL_CLEAR beyond a short (line-end) edge
+    """signal pin shapes whose own-wire OBS stub ends less than EOL_CLEAR past the pin line end, or with a separate OBS rect
+    inside EOL_CLEAR beyond a line end (the DRT Lef58EolKeepOut class; a long own wire past the pin is fine)
     -> {layer: {"pins": n pin names, "shapes": n, "example": [pin, rect nm, obs rect nm]}}"""
     lines, _, obs, _, (W, H) = K._parse(Path(path).read_text())
     big = W * H * 1e6 / 2           # a blanket rect (> half the macro) is the blanket form, not a stub
@@ -210,20 +211,29 @@ def pin_eol_findings(path, layers=STALE_LAYERS):
             zones += [(r[0], r[1] - e, r[2], r[1]), (r[0], r[3], r[2], r[3] + e)]
         ix, cell = idx[L]
         rs = obs.get(L, [])
-        hit = None
-        for k, z in enumerate(zones):
-            cand = set()
+        cand = set()
+        for z in zones:
             for bx in range(z[0] // cell, z[2] // cell + 1):
                 for by in range(z[1] // cell, z[3] // cell + 1):
                     cand.update(ix.get((bx, by), ()))
-            for i in cand:
-                q = rs[i]
-                if (q[0] <= z[2] and q[2] >= z[0] and q[1] <= z[3] and q[3] >= z[1]) if k == 0 else \
-                        (q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1]):   # touching the pin / inside the keep-out
+        a0, a1 = (0, 2) if horiz else (1, 3)          # long axis
+        n0, n1 = (1, 3) if horiz else (0, 2)          # narrow axis
+        hit, ext = None, {0: 0, 1: 0}
+        for i in cand:
+            q = rs[i]
+            touch = q[0] <= r[2] and q[2] >= r[0] and q[1] <= r[3] and q[3] >= r[1]
+            if touch:
+                if q[n0] < r[n1] and q[n1] > r[n0]:   # own wire continuing along the pin's track
+                    ext[0] = max(ext[0], r[a0] - q[a0])
+                    ext[1] = max(ext[1], q[a1] - r[a1])
+                continue
+            for z in zones[1:]:                       # foreign / separate OBS inside the line-end keep-out
+                if q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1]:
                     hit = q
-                    break
-            if hit:
-                break
+        # an own-wire OBS stub that ends less than the keep-out past the pin end (col_h9_r2: pin to 0.084, OBS to 0.131)
+        for end in (0, 1):
+            if 0 < ext[end] < e and hit is None:
+                hit = ["stub", end, ext[end]]
         if hit:
             d = out.setdefault(L, {"pins": set(), "shapes": 0, "example": [pin, list(r), list(hit)]})
             d["pins"].add(pin)
@@ -231,7 +241,61 @@ def pin_eol_findings(path, layers=STALE_LAYERS):
     return {L: dict(pins=len(d["pins"]), shapes=d["shapes"], example=d["example"]) for L, d in out.items()}
 
 
-def regrow(lef_in, lef_out, layers):
+def pin_eol_fix(lef_in, lef_out, layers=STALE_LAYERS):
+    """PIN-EOL repair of an existing view (any generator): each own-wire OBS stub that touches a signal pin on its track, has
+    the pin's exact width and ends < EOL_CLEAR past the pin end (pin_eol_findings 'stub') is moved from OBS into that pin
+    (it IS that pin's metal: same layer, same track, same width, touching).  Nothing else changes; separate-OBS findings are
+    reported, not touched.  -> report"""
+    lines = Path(lef_in).read_text().split("\n")
+    _, obs_start, obs, _, (W, H) = K._parse("\n".join(lines))
+    big = W * H * 1e6 / 2
+    pins, cur, sig, lay, last = [], None, False, None, {}
+    for i, ln in enumerate(lines[:obs_start]):
+        s = ln.strip()
+        m = re.match(r"PIN\s+(\S+)", s)
+        if m:
+            cur, sig = m.group(1), False
+        elif s.startswith("USE "):
+            sig = s.rstrip(" ;").split()[1] == "SIGNAL"
+        m = re.match(r"LAYER\s+(\w+)", s)
+        if m:
+            lay = m.group(1)
+        m = _RECT.match(ln)
+        if m and cur and sig and lay in layers:
+            pins.append((cur, lay, tuple(_nm(v) for v in m.groups()), i))
+    move, ins = set(), {}
+    for pin, L, r, i in pins:
+        e = _nm(EOL_CLEAR[L])
+        horiz = (r[2] - r[0]) >= (r[3] - r[1])
+        a0, a1, n0, n1 = (0, 2, 1, 3) if horiz else (1, 3, 0, 2)
+        for q in obs.get(L, []):
+            if (q[2] - q[0]) * (q[3] - q[1]) > big or (L, q) in move:
+                continue
+            if not (q[0] <= r[2] and q[2] >= r[0] and q[1] <= r[3] and q[3] >= r[1]):
+                continue
+            if (q[n0], q[n1]) != (r[n0], r[n1]):
+                continue
+            ext = max(r[a0] - q[a0], q[a1] - r[a1])
+            if 0 < ext < e:
+                move.add((L, q))
+                ins.setdefault(i, []).append(q)
+    out, lay = [], None
+    for j, ln in enumerate(lines):
+        if j > obs_start:
+            m = re.match(r"\s*LAYER\s+(\w+)", ln)
+            if m:
+                lay = m.group(1)
+            m = _RECT.match(ln)
+            if m and (lay, tuple(_nm(v) for v in m.groups())) in move:
+                continue
+        out.append(ln)
+        for q in ins.get(j, []):
+            out.append("        RECT  %.3f %.3f %.3f %.3f ;" % tuple(v / 1000 for v in q))
+    Path(lef_out).write_text("\n".join(out))
+    return dict(moved=len(move), pins=len(ins), before=pin_eol_findings(lef_in), after=pin_eol_findings(lef_out))
+
+
+def regrow(lef_in, lef_out, layers, extra=None):
     """v3 (Fable 11-25, = KV-PC-ABSTRACT v3): grow each OBS rect of `layers` by max(min spacing, pitch) (= merge gap 2 x pitch / 2),
     clip to the outline, merge, cut ONLY each signal pin's own shape (foreign metal and its spacing stay OBS), regrow slivers
     below the layer min width in place (never over a pin, never outside the macro) -> lef_out; -> per-layer stats"""
@@ -253,12 +317,18 @@ def regrow(lef_in, lef_out, layers):
     blocks, stats = [], {}
     for L in layers:
         g = _nm(max(MIN_SPACE.get(L, 0.024), PITCH.get(L, 0.048)))
-        old = obs.get(L, [])
+        old = obs.get(L, []) + list((extra or {}).get(L, []))
         grown = [(max(0, r[0] - g), max(0, r[1] - g), min(Wn, r[2] + g), min(Hn, r[3] + g)) for r in old]
         clear = list(sig_pins.get(L, []))
         # PIN-EOL: grown OBS stops EOL_CLEAR short of every signal pin shape; real foreign metal inside that band stays OBS
         # at its exact (signed, DRC-clean) geometry: never exposed, never grown into the pin's line-end keep-out
         zone = _grow(clear, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
+        # PIN-VIA 11-25 (hd_host_e re-route DRT-0073 in_data[127]): the grown halo of two real M6 wires 98 nm apart merged over
+        # an M5 pin and left it no via landing; the halo is also cut over the signal pins of the layers below/above
+        # (real metal there stays exact), so a pin keeps every access the real metal allows
+        n = int(L[1:]) if L[1:].isdigit() else 0
+        adj = [r for M in ("M%d" % (n - 1), "M%d" % (n + 1)) for r in sig_pins.get(M, [])]
+        zone += _grow(adj, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
         real = list(old)
         # slivers regrow only outside the keep-out band; one that cannot grow is dropped, and the exact foreign metal is put
         # back afterwards so a dropped piece never exposes real metal (overlapping OBS rects are fine in a LEF)
@@ -315,7 +385,13 @@ def form(base, detail, out, receipt=None, layers="auto"):
         lns = fh.readlines()
     lns, rec["pin_wire_merge"] = A.merge_pin_wires(lns, set(sel))
     tmp.write_text("".join(lns))
-    rec["regrow"] = regrow(tmp, out, sel)
+    # PIN-METAL 11-25: exact BTerm metal the bound pins do not cover (a bound view whose pin shapes differ from the signed DB,
+    # e.g. LL*/hcpost/elemA/B) is real metal of that net: it becomes OBS so no foreign wire is routed onto it
+    _, _, _, xp0 = layer_rects(detail)
+    _, _, _, bp0 = layer_rects(tmp)
+    extra = {L: K.union_minus(xp0.get(L, []), bp0.get(L, [])) for L in sel}
+    rec["pin_metal_to_obs"] = {L: len(v) for L, v in extra.items() if v}
+    rec["regrow"] = regrow(tmp, out, sel, extra)
     tmp.unlink()
     # the check compares against the base with the same merged pin rects (only RECT lines added inside PIN sections)
     bh, bb, bt = A._split(base.read_text().splitlines(keepends=True))
@@ -421,12 +497,18 @@ def main(argv=None):
     c.add_argument("--detail")
     e = sub.add_parser("pin-eol", help="census: signal pins with OBS inside the line-end keep-out (Lef58EolKeepOut class)")
     e.add_argument("lefs", nargs="+")
+    x = sub.add_parser("pin-eol-fix", help="move own-wire OBS stubs ending inside the pin line-end keep-out into the pin")
+    x.add_argument("--lef", required=True)
+    x.add_argument("--out", required=True)
     t = sub.add_parser("tcl")
     t.add_argument("--odb", required=True)
     t.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "form":
         return form(a.base, a.detail, a.out, a.receipt, a.layers)
+    if a.cmd == "pin-eol-fix":
+        print(json.dumps(pin_eol_fix(a.lef, a.out)))
+        return 0
     if a.cmd == "pin-eol":
         for f in a.lefs:
             try:

@@ -61,7 +61,11 @@ MIN_FLAGGED = 4
 # clears.  Applied in code so the hourly rule-table rewrite cannot demote them; the table rows are written PROVEN-HAND.  Everything else stays advisory.
 # SITE-IN-MACRO (KV proposal, ruled 11-25 FP-CONVERGE-QC): a plan site FIRM on a hard core (FAIL cell; halo-only is WARN and never blocks) is refused by global
 # placement (KV A5t7: 176 bank sites on kvpc1_f in 8 pc_v1 types, GP failure), so only a place probe is useful until the row re-sites it.
-HAND_PLACE_ONLY = frozenset({"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:STREET", "FP:REACH", "FP:SITE-IN-MACRO"})
+# FLOW-1920 F6 (COORD 11-25, owner guardrail 1: only PROVEN classes block): the hand list is held to a measured test on the 11-25 18:34 LAUNCH-GATE-RULES.tsv
+# (one-sided Fisher exact, flagged fail vs unflagged fail, p < 0.05 and lift > 1; the table's own 2x test cannot be met when the base fail rate is 76 %).
+# Demoted to ADVISORY: FP:SITE-IN-MACRO (4/9 flagged fail vs 145/188 unflagged: lift 0.58, p 0.99) and FP:STREET (11/13 vs 138/184: lift 1.13, p 0.34).
+# Kept: CORE-TAP-OWNER 89/89 vs 60/108 (p 6e-16), REACH 111/119 vs 38/78 (p 1e-12), MISAIM 25/25 vs 124/172 (p 5e-4), SMELL:GRT 13/13 vs 136/184 (p 0.023).
+HAND_PLACE_ONLY = frozenset({"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:REACH"})
 IDLE_RATIO = 0.8
 IDLE_KIT_CORES = 32
 PP_SETUP_PS = -150.0

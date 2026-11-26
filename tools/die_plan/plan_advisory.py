@@ -49,6 +49,10 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
 
   LEG-DELAY        station-free bus->core / core->core legs: estimated setup slack from Manhattan length x 1.2 ps/um (C4 kv3_pc phy->kvpc -773 ps, C6 kv3_hgi -870 ps; HOP-GAP / G0-HOPS were silent)
   FP-FLOORPLAN     street lane demand > 1.0, plan cells > 400k, hard-core overlap / outside the outline (FP-CONVERGE-KV 11-25; OT_FP_BLOCK=1 -> FAIL lines)
+  GEN-PARSE        gen-step parse of every type in scope: reg_leaf_split.config and the bound R8 count declarations (bound_r8_straps.project)
+                   with the TREE tools, no synthesis (KV R6: kv3_hg_v1p4/v1p6 ">= 2 copies needed", kv3_pc_v1 r8ef700d7c strap_r8pad_lane_*, all
+                   found only at gen); report only, OT_GEN_PARSE_BLOCK=1 -> FAIL lines (adv_gen_parse.py)
+  BOUNDARY-REG-50  ft out pins with no planned register within 50 um (precheck BOUNDARY-REG reading, exact bit sites); boundary_reg.py plan seats an out-face station (COORD 19:25 FABLE-RC-KV item 3; OT_BREG_BLOCK=1 -> FAIL lines)
   EDGE-STRIP       >= 256-bit die windows with a hard core < 69.12 um behind the window span (VIS-DIE-S81 EDGESTRIP-1; S81 J8:
                    241 types, 0/47 signed, 40/51 failing); fix = edgestrip_row.py interior shift or re-shape (adv_edge_strip.py)
 
@@ -123,10 +127,11 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
           ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"),
           ("ROUTE-DEMAND", "adv_route_demand"), ("EDGE-STRIP", "adv_edge_strip"), ("RESET-NAME", "adv_reset_names"),
-          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("STN-DEADLANE", "adv_stn_deadlane"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"), ("PG-EDGE-PIN", "adv_pg_edge_pin"), ("RST-SIDECAR", "adv_rst_sidecar"), ("STATION-STACK", "adv_station_stack"), ("SINKBIN-STALE", "adv_sinkbin_stale"), ("BANK-SPAN", "adv_bank_span"), ("TAP-STEP", "adv_tap_step"), ("SITE-IN-MACRO", "adv_site_in_macro"), ("PHY-FACE-ROWS", "adv_phy_face_rows"), ("TREE-LINKS", "adv_tree_links"), ("ISTA-LEAF", "adv_ista_leaf"), ("C2-REACH", "adv_c2_reach"), ("INSERTION-BAND", "adv_insertion_band"), ("CHANNEL-PILE", "adv_channel_pile"), ("PG-HALO-APPLIED", "adv_pg_halo_applied"), ("MACRO-CHANNEL", "adv_macro_channel"), ("GCELL-SLIVER", "adv_gcell_sliver"), ("FP-FLOORPLAN", "adv_fp_floorplan"), ("LEG-DELAY", "adv_leg_delay"), ("SLOT-GAP", "adv_slot_gap"), ("CHANNEL-WIDTH", "adv_channel_width"), ("FT-OUTSIDE", "adv_ft_outside"), ("BUS-CHANNEL-FIT", "adv_bus_channel"), ("DRT-M2M3", "adv_drt_m2m3"), ("IN-OUTLINE", "adv_fpconv:IN-OUTLINE"), ("LEG405-ZERO", "adv_fpconv:LEG405-ZERO"), ("RELAY-SEAT", "adv_fpconv:RELAY-SEAT"), ("SEAT-DENSITY", "adv_fpconv:SEAT-DENSITY"), ("PIN-FACE-CLEAR", "adv_fpconv:PIN-FACE-CLEAR"), ("HUB-BOX", "adv_fpconv:HUB-BOX"), ("FT-CLEAR", "adv_fpconv:FT-CLEAR"), ("TAP-STEP-DUP", "adv_fpconv:TAP-STEP-DUP"), ("BAND-AT-PIN", "adv_fpconv:BAND-AT-PIN"), ("SEAT-UNIQUE", "adv_fpconv:SEAT-UNIQUE"), ("RANK-PILE-PINFACE", "adv_fpconv2:RANK-PILE-PINFACE"), ("FT-SITE-LEGAL", "adv_fpconv2:FT-SITE-LEGAL"),
+          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("STN-DEADLANE", "adv_stn_deadlane"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"), ("PG-EDGE-PIN", "adv_pg_edge_pin"), ("RST-SIDECAR", "adv_rst_sidecar"), ("STATION-STACK", "adv_station_stack"), ("SINKBIN-STALE", "adv_sinkbin_stale"), ("BANK-SPAN", "adv_bank_span"), ("TAP-STEP", "adv_tap_step"), ("SITE-IN-MACRO", "adv_site_in_macro"), ("PHY-FACE-ROWS", "adv_phy_face_rows"), ("TREE-LINKS", "adv_tree_links"), ("ISTA-LEAF", "adv_ista_leaf"), ("C2-REACH", "adv_c2_reach"), ("INSERTION-BAND", "adv_insertion_band"), ("CHANNEL-PILE", "adv_channel_pile"), ("PG-HALO-APPLIED", "adv_pg_halo_applied"), ("MACRO-CHANNEL", "adv_macro_channel"), ("GCELL-SLIVER", "adv_gcell_sliver"), ("FP-FLOORPLAN", "adv_fp_floorplan"), ("LEG-DELAY", "adv_leg_delay"), ("SLOT-GAP", "adv_slot_gap"), ("CHANNEL-WIDTH", "adv_channel_width"), ("FT-OUTSIDE", "adv_ft_outside"), ("BUS-CHANNEL-FIT", "adv_bus_channel"), ("DRT-M2M3", "adv_drt_m2m3"), ("BOUNDARY-REG-50", "boundary_reg"), ("IN-OUTLINE", "adv_fpconv:IN-OUTLINE"), ("LEG405-ZERO", "adv_fpconv:LEG405-ZERO"), ("RELAY-SEAT", "adv_fpconv:RELAY-SEAT"), ("SEAT-DENSITY", "adv_fpconv:SEAT-DENSITY"), ("PIN-FACE-CLEAR", "adv_fpconv:PIN-FACE-CLEAR"), ("HUB-BOX", "adv_fpconv:HUB-BOX"), ("FT-CLEAR", "adv_fpconv:FT-CLEAR"), ("TAP-STEP-DUP", "adv_fpconv:TAP-STEP-DUP"), ("BAND-AT-PIN", "adv_fpconv:BAND-AT-PIN"), ("SEAT-UNIQUE", "adv_fpconv:SEAT-UNIQUE"), ("RANK-PILE-PINFACE", "adv_fpconv2:RANK-PILE-PINFACE"), ("FT-SITE-LEGAL", "adv_fpconv2:FT-SITE-LEGAL"),
           ("STATUS-UP-REACH", "adv_rcs81:STATUS-UP-REACH"), ("CORE-LEG-OVERMACRO", "adv_rcs81:CORE-LEG-OVERMACRO"), ("RELAY-COHORT-SPAN", "adv_rcs81:RELAY-COHORT-SPAN"),
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
-          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"))
+          ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
+          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
@@ -153,7 +158,10 @@ def _norm(name, lines):
     return out
 
 
-def _run_one(name, mod, raw, plan_path, tree, kw, cap):
+PARENT_CHECKS = ("REF-SITE",)   # REF-SITE-SPEED-1125: they fork their own per-type pool, which a daemonic pool worker cannot
+
+
+def _run_one(name, mod, raw, plan_path, tree, kw, cap, alarm=True):
     """-> (name, lines, seconds) of one check (never raises); the per-check alarm needs the main thread of the process"""
     t0 = time.time()
     try:
@@ -167,7 +175,7 @@ def _run_one(name, mod, raw, plan_path, tree, kw, cap):
     main_thread = threading.current_thread() is threading.main_thread()
     old = None
     try:
-        if main_thread and CHECK_TIMEOUT_S > 0:
+        if alarm and main_thread and CHECK_TIMEOUT_S > 0:
             old = signal.signal(signal.SIGALRM, _alarm)
             signal.alarm(CHECK_TIMEOUT_S)
         lines = m.findings(raw, plan_path, tree=tree, **{k: v for k, v in kw.items() if v})
@@ -213,9 +221,15 @@ def run(raw, plan_path, tree=None, checks=None, skip=(), timing=None, cap=True, 
         if jobs > 1 and len(todo) > 1:
             try:
                 import multiprocessing
-                _JOB["todo"], _JOB["args"] = todo, (raw, plan_path, tree, kw, cap)
-                with multiprocessing.get_context("fork").Pool(min(jobs, len(todo))) as pool:
-                    res = list(pool.imap(_job, range(len(todo)), chunksize=1))
+                par = [(n, m) for n, m in todo if n in PARENT_CHECKS]
+                rest = [(n, m) for n, m in todo if n not in PARENT_CHECKS]
+                _JOB["todo"], _JOB["args"] = rest, (raw, plan_path, tree, kw, cap)
+                with multiprocessing.get_context("fork").Pool(max(1, min(jobs, len(rest)))) as pool:
+                    it = pool.imap(_job, range(len(rest)), chunksize=1)
+                    mine = {n: _run_one(n, m, raw, plan_path, tree, kw, cap, alarm=False) for n, m in par}
+                    got = {r[0]: r for r in it}
+                got.update(mine)
+                res = [got[n] for n, _m in todo]
             except Exception:  # noqa: BLE001 e.g. a daemonic parent cannot fork a pool
                 res = None
         if res is None:

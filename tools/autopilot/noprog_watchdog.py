@@ -2468,7 +2468,31 @@ def kit_smells(work, odb):
     return out
 
 
-def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False):
+def odb_snapshot(odb, rev, run=subprocess.run):
+    """F5: a private copy of the checkpoint DB in the review dir (cp --reflink=auto), so no stage-cap / resume / rewrite of the kit's file can change it under the render.
+    The source must keep its inode, size and mtime across the copy and the copy must have the same size.  -> (snapshot path, '') or ('', why).  render_review.sh deletes it."""
+    snap = os.path.join(rev, "snap_" + os.path.basename(odb))
+    try:
+        a = os.stat(odb)
+        if a.st_size == 0:
+            return "", "empty DB"
+        run(["cp", "--reflink=auto", odb, snap], check=True, timeout=1800, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        b, c = os.stat(odb), os.stat(snap)
+    except (OSError, subprocess.SubprocessError) as e:
+        b = c = None
+        why = f"copy failed: {e}"[:200]
+    else:
+        if (a.st_ino, a.st_size, a.st_mtime_ns) == (b.st_ino, b.st_size, b.st_mtime_ns) and c.st_size == a.st_size:
+            return snap, ""
+        why = "DB changed during the copy"
+    try:
+        os.unlink(snap)          # this function's own partial copy
+    except OSError:
+        pass
+    return "", why
+
+
+def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False, snapshot=False):
     """HOST half of (a): render the kit's CURRENT DB through the existing render_review.sh (an ot-run --direct job, 2 threads, read-only on the kit).
     Review dir = <work>/smell_review/<stage>-<time> (next to the kit; else ~/.local/state/noprog/smell_review/<id>).  -> (status, review_dir).
     The existing tool draws floorplan + density and, when the kit has a sign-off STA log, the failing-path overlay; it has no congestion heatmap, so the GRT
@@ -2485,7 +2509,7 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     root = next((r for r in roots if all(os.path.isfile(os.path.join(r, t)) for t in RENDER_TOOLS)), None)
     if not root:
         return "no-render-tools", ""
-    stamp = time.strftime("%m%d-%H%M", time.localtime(now))
+    stamp = pst_stamp(now) + "PST"          # H6: the hosts' clock is UTC; the dir name says PST
     cands = [os.path.join(work, tag, f"{stage}-{stamp}"), os.path.expanduser(f"~/.local/state/noprog/{tag}/{rid}-{stage}-{stamp}")]
     if "/ot-jobs/" in (work or ""):
         cands.reverse()      # 5 of 30 failed renders sat in an ot-jobs work dir that was cleaned with the job: keep those in the persistent state dir
@@ -2507,13 +2531,23 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
         sz = os.path.getsize(odb)
     except OSError:
         sz = 0
+    read_odb = odb
+    if snapshot:
+        snap, why = odb_snapshot(odb, rev)
+        if not snap:
+            with open(os.path.join(rev, "SMELL.txt"), "w") as f:
+                f.write(f"kit {work}\nstage {stage}\nodb {odb}\n")
+            with open(os.path.join(rev, "render.log"), "w") as f:
+                f.write(f"AP_REVIEW_ERROR snapshot: odb file {odb} is invalid ({why})\n")      # re-armed by vis_odb_refail
+            return f"snapshot-failed: {why}", rev
+        read_odb = snap
     mem = min(256, int(-(-max(8, 10 * sz / 2**30 + 4) // 1)))
     sig = os.path.join(rev, "signoff.json")
     with open(sig, "w") as f:
         json.dump({"verdict": "SMELL-MIDSTAGE", "reasons": summary}, f)
     with open(os.path.join(rev, "review.json"), "w") as f:
-        json.dump({"id": rid, "kit": work, "odb": odb, "signoff": sig, "image": image, "mem_gb": mem, "title": f"SMELL {stage}: " + "; ".join(summary)[:160],
-                   "stage_paths": True, "npath": 50}, f)
+        json.dump({"id": rid, "kit": work, "odb": read_odb, "src_odb": odb, "signoff": sig, "image": image, "mem_gb": mem, "title": f"SMELL {stage}: " + "; ".join(summary)[:160],
+                   "stage_paths": True, "npath": 50, "stamp_tz": "PST"}, f)
     cong = sorted(glob.glob(os.path.join(os.path.dirname(odb).replace("/results/", "/reports/"), "congestion-*.rpt")))
     with open(os.path.join(rev, "SMELL.txt"), "w") as f:
         f.write(f"kit {work}\nstage {stage}\nodb {odb}\n" + "".join(f"smell {x}\n" for x in summary) + "".join(f"congestion report {c}\n" for c in cong[-3:]))
@@ -2550,6 +2584,88 @@ VIS_CHECKPOINTS = (("PLACE-GP", ("3_3_place_gp.odb", "3_place.odb")), ("GRT", ("
 
 VIS_SETTLE_S = 180        # the checkpoint DB must be untouched for 3 min: 6 of 28 first renders read a DB still being written (ORD-0054 odb invalid: basic_ios::clear)
 VIS_MAX_TRIES = 3
+# FABLE-FLOW-1920 F5 (COORD 11-25): 26 checkpoint renders FAILED with ORD-0054 'odb file ... is invalid: basic_ios::clear'.  The 3-min settle was not enough: the DB was read
+# while its stage was still running, or a kit's (older, pinned) STAGE-CAP watcher / a resume emptied it under the render (it keeps the mtime, and it cannot see the render's open file
+# inside docker).  So a checkpoint DB is rendered only after its stage is done (stage_done), from a private snapshot copy in the review dir (smell_render snapshot=True), and an
+# ODB-invalid failure is re-armed (vis_odb_refail) up to VIS_ODB_RETRIES times per DB.
+VIS_ODB_INVALID = re.compile(r"ORD-0054|odb file \S+ is invalid|basic_ios::clear")
+VIS_ODB_RETRIES = 3
+STAGE_NUM_RE = re.compile(r"^(\d)_(?:(\d+)_)?")
+
+
+def pst_stamp(now, fmt="%m%d-%H%M"):
+    """FABLE-FLOW-1920 H6: hosts run in UTC; render dir names carry the PST time (and say so)"""
+    try:
+        import datetime as _dt
+        from zoneinfo import ZoneInfo
+        return _dt.datetime.fromtimestamp(now, ZoneInfo("America/Los_Angeles")).strftime(fmt)
+    except Exception:
+        return time.strftime(fmt, time.localtime(now))
+
+
+def _stage_key(name):
+    m = STAGE_NUM_RE.match(name)
+    return (int(m.group(1)), int(m.group(2) or 99)) if m else None
+
+
+def stage_done(odb):
+    """the ORFS stage that wrote odb has ended: its log (results -> logs, <stem>.log) ends with the 'Elapsed time:' line ORFS prints when a stage exits, or a LATER stage's DB or
+    log exists that is not older than this DB (a resumed kit re-writes from an earlier stage, so older later-stage files prove nothing).  Pure apart from the filesystem."""
+    d, n = os.path.dirname(odb), os.path.basename(odb)
+    stem = n[:-4] if n.endswith(".odb") else n
+    logd = d.replace("/results/", "/logs/")
+    try:
+        with open(os.path.join(logd, stem + ".log"), "rb") as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - 8192))
+            if b"Elapsed time:" in f.read():
+                return True
+    except OSError:
+        pass
+    me = _stage_key(stem)
+    try:
+        mt = os.stat(odb).st_mtime
+    except OSError:
+        return False
+    if me is None:
+        return False
+    for dd, ext in ((d, ".odb"), (logd, ".log")):
+        try:
+            names = os.listdir(dd)
+        except OSError:
+            continue
+        for x in names:
+            if not x.endswith(ext) or x.startswith(stem + "."):
+                continue
+            k = _stage_key(x)
+            if k and k > me:
+                try:
+                    if os.stat(os.path.join(dd, x)).st_mtime >= mt:
+                        return True
+                except OSError:
+                    pass
+    return False
+
+
+def vis_odb_refail(work, cp, odb, state_root=None):
+    """-> True when every earlier checkpoint render of this exact DB failed reading it (ORD-0054 / invalid odb, render.log) and fewer than VIS_ODB_RETRIES did: the render is
+    re-armed.  Render dirs: <work>/vis_review/<cp>-* and (ot-jobs kits) ~/.local/state/noprog/vis_review/*-<cp>-*; SMELL.txt names the DB each one read."""
+    pats = [os.path.join(work or "", "vis_review", f"{cp.lower()}-*")]
+    if "/ot-jobs/" in (work or ""):
+        pats.append(os.path.join(state_root or os.path.expanduser("~/.local/state/noprog/vis_review"), f"*-{cp.lower()}-*"))
+    bad = 0
+    for pat in pats:
+        for rd in glob.glob(pat):
+            try:
+                if f"odb {odb}\n" not in read_text(os.path.join(rd, "SMELL.txt")):
+                    continue
+                txt = read_text(os.path.join(rd, "render.log"))
+            except OSError:
+                continue
+            if "AP_REVIEW_PNG" in txt or not VIS_ODB_INVALID.search(txt):
+                return False            # rendered, still running, or failed for another reason (vis_retry owns those)
+            bad += 1
+    return 0 < bad < VIS_ODB_RETRIES
 
 
 def vis_retry(state, now, read=read_text):
@@ -2599,9 +2715,9 @@ def vis_candidates(work, done):
                         continue          # a zero-byte placeholder is no DB
                     found = True
                     k = f"{p_}|{int(stt.st_mtime)}"
-                    if time.time() - stt.st_mtime < VIS_SETTLE_S:
-                        continue
-                    if k not in done:
+                    if time.time() - stt.st_mtime < VIS_SETTLE_S or not stage_done(p_):
+                        continue          # F5: only a DB whose stage has ended
+                    if k not in done or vis_odb_refail(work, cp, p_):
                         out.append((cp, p_, k))
     return out
 
@@ -2722,7 +2838,7 @@ def vis_pass(rows, state, state_dir, now, render=smell_render, pp=None):
                 box["pid"] = pr.pid
                 return pr
             status, rev = render(r["work"], r.get("kit") or r["work"], cp.lower(), r.get("image", ""), (r.get("container") or "x")[:40], [f"checkpoint {cp}"], now=now,
-                                 popen=popen, odb=odb, tag="vis_review", nice=True)
+                                 popen=popen, odb=odb, tag="vis_review", nice=True, snapshot=True)
             if str(status).startswith("host-unfit"):
                 return None            # try again on a later tick; never parked and never marked done
             done[key] = now
