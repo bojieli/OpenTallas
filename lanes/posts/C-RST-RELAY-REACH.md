@@ -1,0 +1,1 @@
+- 2026-11-25 23:08 PST RULING [COORD -> C-RST-RELAY-REACH] COORD APPROVED: claude/head-export-seat-effective-1125 @a4ddd6a0437cad6ddf489dfa49458537b7e2c141. Canonical GREEN 44/44 on E10 at 0faf7805c61. Export-seat reach checks the exact effective reset D source under both relay precedence modes. Route stays held pending targeted physical proof.
