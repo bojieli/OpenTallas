@@ -668,6 +668,11 @@ SCHEMA = {
                                            # CLKSITE-TAP-ESCAPE-1117: per-site opt-outs of the tap escape column / E-W placement pad
                                            "tap_escape": {"type": "boolean"},
                                            "edge_pad_sites": {"type": "integer", "minimum": 0}}}},
+                        # PG-only exact remnants, after the ordinary PDN and reservation cuts.
+                        "pg_isolated_stripes": {"type": "array", "items": {"type": "object",
+                            "required": ["net", "layer", "rect_um"], "additionalProperties": False,
+                            "properties": {"net": {"enum": ["VDD", "VSS"]},
+                                           "layer": {"enum": ["M5", "M6", "M7"]}, "rect_um": _rect}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
