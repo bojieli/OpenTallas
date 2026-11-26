@@ -70,8 +70,73 @@ def _man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def _cand_points(p, bx, outline):
-    W, H = outline
+CELL = (1.404, 0.27)     # one bit-site footprint (ft_corridor.CELL)
+SITE_CELL_UM = 12.0      # one station per 12-um cell (ADV-STATION-STACK / V1NSITE bank pitch)
+EDGE = 4.32              # CORE_AREA margin used by ADV-BITSITE-AREA
+KEEPOFF = 2.0            # placed-macro keep-off for stations / sites (ft_corridor.KEEPOFF)
+
+
+class Ctx:
+    """per-type legality: macro boxes (keep-off), core area, one-station-per-cell occupancy, foreign bit-site hash."""
+
+    def __init__(self, ty):
+        import schema as S
+        self.W, self.H = ty["outline_um"]
+        self.bx = _boxes(ty)
+        try:
+            self.mbx = list(S.placed_macro_boxes(ty, halo=KEEPOFF).values())
+        except Exception:
+            self.mbx = [(b[0] - KEEPOFF, b[1] - KEEPOFF, b[2] + KEEPOFF, b[3] + KEEPOFF) for b in self.bx]
+        self.occ = {}
+        self.sites = {}
+        for kind in ("internal_stations", "ft_slots"):
+            for n, s in enumerate(ty.get(kind) or []):
+                for q in s.get("regs_um") or []:
+                    self._occ(q, +1)
+                for k, st in enumerate(s.get("bit_sites_um") or []):
+                    for p in st:
+                        if p and isinstance(p[0], (int, float)):
+                            self.sites.setdefault(self._sk(p), []).append((kind, n, k))
+
+    @staticmethod
+    def _ck(q):
+        return (int(q[0] // SITE_CELL_UM), int(q[1] // SITE_CELL_UM))
+
+    @staticmethod
+    def _sk(p):
+        return (int(p[0] // CELL[0]), int(p[1] // CELL[1]))
+
+    def _occ(self, q, d):
+        k = self._ck(q)
+        self.occ[k] = self.occ.get(k, 0) + d
+
+    def point_ok(self, q, own=None):
+        if not (EDGE <= q[0] <= self.W - EDGE and EDGE <= q[1] <= self.H - EDGE):
+            return False
+        if any(b[0] < q[0] < b[2] and b[1] < q[1] < b[3] for b in self.mbx):
+            return False
+        n = self.occ.get(self._ck(q), 0) - (1 if own is not None and self._ck(own) == self._ck(q) else 0)
+        return n <= 0
+
+    def sites_ok(self, sites, dx, dy, me):
+        for p in sites:
+            x, y = p[0] + dx, p[1] + dy
+            if not (EDGE <= x <= self.W - EDGE and EDGE <= y <= self.H - EDGE):
+                return False
+            if any(b[0] < x < b[2] and b[1] < y < b[3] for b in self.mbx):
+                return False
+            kx, ky = self._sk((x, y))
+            for i in (-1, 0, 1):
+                for j in (-1, 0, 1):
+                    for o in self.sites.get((kx + i, ky + j), ()):
+                        if o != me:
+                            return False
+        return True
+
+
+def _cand_points(p, bx, ctx, fixed):
+    if fixed:
+        return [tuple(p)]
     pts = [tuple(p)]
     step = 2 * GRID_R / (GRID_N - 1)
     for i in range(GRID_N):
@@ -84,8 +149,8 @@ def _cand_points(p, bx, outline):
                     pts.append((cx, cy))
     out, seen = [], set()
     for q in pts:
-        q = (round(min(max(q[0], 0.0), W), 3), round(min(max(q[1], 0.0), H), 3))
-        if q in seen or any(b[0] < q[0] < b[2] and b[1] < q[1] < b[3] for b in bx):
+        q = (round(q[0], 3), round(q[1], 3))
+        if q in seen or (q != tuple(p) and not ctx.point_ok(q, own=p)):
             continue
         seen.add(q)
         out.append(q)
@@ -93,32 +158,29 @@ def _cand_points(p, bx, outline):
     return out[:MAX_CAND_PTS]
 
 
-def resite_chain(fixed, stations, bx, outline, end=None, sites_ok=None):
-    """zero-cycle re-site of one hop chain.  fixed = the fixed start point, stations = [(x, y)] in order.  DP over candidate
-    points per station: every hop Manhattan-clear and <= max(REACH_BUDGET, its current length); cost = non-clear hops first,
-    then total displacement.  Returns (new stations, non-clear hops before, after)."""
+def resite_chain(fixed, stations, bx, ctx, end=None, pinned=(), sites_ok=None):
+    """zero-cycle re-site of one hop chain.  fixed = the fixed start point, stations = [(x, y)] in order (indexes in `pinned`
+    never move), end = fixed end point.  DP over candidate points per station: every hop Manhattan-clear and <= max(REACH_BUDGET,
+    its current length); cost = non-clear hops first, then total displacement.  Returns (new stations, bad hops before, after)."""
     pts0 = [tuple(fixed)] + [tuple(s) for s in stations] + ([tuple(end)] if end else [])
     bad0 = sum(0 if clear_manhattan(a, b, bx) else 1 for a, b in zip(pts0, pts0[1:]))
     if bad0 == 0:
         return list(stations), 0, 0
     cap = [max(REACH_BUDGET, _man(a, b)) for a, b in zip(pts0, pts0[1:])]
-    cands = [_cand_points(s, bx, outline) for s in stations]
+    cands = [_cand_points(s, bx, ctx, k in pinned) for k, s in enumerate(stations)]
     if sites_ok is not None:
         cands = [[q for q in c if sites_ok(k, q)] or [tuple(stations[k])] for k, c in enumerate(cands)]
     ns = len(cands)
     if end:
         cands.append([tuple(end)])
     INF = float("inf")
-    prev = [(0.0, None)]
-    prevpts = [tuple(fixed)]
-    back = []
+    prev, prevpts, back = [(0.0, None)], [tuple(fixed)], []
     for k, cs in enumerate(cands):
         cur = []
         for q in cs:
             best = (INF, None)
             for pi, pp in enumerate(prevpts):
-                h = _man(pp, q)
-                if h > cap[k]:
+                if _man(pp, q) > cap[k]:
                     continue
                 c = prev[pi][0] + (_man(q, stations[k]) * 0.01 if k < ns else 0.0) + (0 if clear_manhattan(pp, q, bx) else 1e4)
                 if c < best[0]:
@@ -142,51 +204,43 @@ def resite_chain(fixed, stations, bx, outline, end=None, sites_ok=None):
     return [list(q) for q in path], bad0, bad1
 
 
-def _sites_ok_factory(bx, sites_per_station, stations):
-    """a station may move only where its translated bit sites stay outside every core box (1-um keep-off)."""
-    def ok(k, q):
-        if k >= len(sites_per_station) or not sites_per_station[k]:
-            return True
-        dx, dy = q[0] - stations[k][0], q[1] - stations[k][1]
-        for st in sites_per_station[k]:
-            for s in st:
-                x, y = s[0] + dx, s[1] + dy
-                for b in bx:
-                    if b[0] - 1 < x < b[2] + 1 and b[1] - 1 < y < b[3] + 1:
-                        return False
-        return True
-    return ok
-
-
-def _flat_sites(slot, k):
-    bs = slot.get("bit_sites_um")
-    if not bs or k >= len(bs):
-        return []
-    return [bs[k]] if bs[k] and isinstance(bs[k][0][0], (int, float)) else [x for x in bs[k]]
-
-
 def detour_type(raw, tn, ledger):
-    """re-site, in place, the crossing hop chains of type tn: ft_slots stations (+ their bit sites, translated rigidly) and
-    internal_stations regs_um.  Station COUNT never changes (no new cycle).  True when anything changed."""
+    """re-site, in place, the crossing hop chains of type tn: ft_slots INTERIOR stations (first and last stay: the neighbouring
+    partition's hop into this slot, ADV-G0-HOPS, depends on them; bit sites translate rigidly with the station and must stay
+    inside the core area, off every macro keep-off and clear of all other bit sites) and internal_stations regs_um.  Station
+    COUNT never changes (no new cycle); one station per 12-um cell (no ADV-STATION-STACK).  True when anything changed."""
     ty = raw["partition_types"][tn]
-    bx = _boxes(ty)
-    outline = ty["outline_um"]
+    ctx = Ctx(ty)
+    bx = ctx.bx
     changed = 0
-    for s in ty.get("ft_slots") or []:
+    for n, s in enumerate(ty.get("ft_slots") or []):
         regs = s.get("regs_um") or []
-        if len(regs) < 2:
+        if len(regs) < 4:
             continue
         st = [tuple(q) for q in regs[1:]]
-        sites = [s["bit_sites_um"][k] if k < len(s.get("bit_sites_um") or []) else [] for k in range(len(st))]
-        ok = _sites_ok_factory(bx, [[x] if x else [] for x in sites], st)
-        end = (A._face_center(s.get("out_face"), s["out_window_um"], *outline) if s.get("out_face") and s.get("out_window_um") else None)
-        new, b0, b1 = resite_chain(regs[0], st, bx, outline, end=end, sites_ok=ok)
+        bs = s.get("bit_sites_um") or []
+
+        def ok(k, q, st=st, bs=bs, n=n):
+            if k >= len(bs) or not bs[k]:
+                return True
+            return ctx.sites_ok(bs[k], q[0] - st[k][0], q[1] - st[k][1], ("ft_slots", n, k))
+        end = (A._face_center(s.get("out_face"), s["out_window_um"], ctx.W, ctx.H)
+               if s.get("out_face") and s.get("out_window_um") else None)
+        new, b0, b1 = resite_chain(regs[0], st, bx, ctx, end=end, pinned={0, len(st) - 1}, sites_ok=ok)
         if b1 < b0:
             for k, q in enumerate(new):
+                if tuple(q) == st[k]:
+                    continue
                 dx, dy = q[0] - st[k][0], q[1] - st[k][1]
+                ctx._occ(regs[k + 1], -1)
+                ctx._occ(q, +1)
+                if k < len(bs):
+                    for p in bs[k]:
+                        ctx.sites.get(ctx._sk(p), []).remove(("ft_slots", n, k))
+                    bs[k] = [[round(p[0] + dx, 6), round(p[1] + dy, 6)] for p in bs[k]]
+                    for p in bs[k]:
+                        ctx.sites.setdefault(ctx._sk(p), []).append(("ft_slots", n, k))
                 regs[k + 1] = [round(q[0], 4), round(q[1], 4)]
-                if k < len(s.get("bit_sites_um") or []):
-                    s["bit_sites_um"][k] = [[round(p[0] + dx, 6), round(p[1] + dy, 6)] for p in s["bit_sites_um"][k]]
             changed += 1
         ledger.append(dict(type=tn, kind="ft_slot", slot=s.get("name"), bad_hops_before=b0, bad_hops_after=b1))
     for s in ty.get("internal_stations") or []:
@@ -194,8 +248,11 @@ def detour_type(raw, tn, ledger):
         if not regs or not fr or s.get("bit_sites_um"):
             continue
         st = [tuple(q) for q in regs]
-        new, b0, b1 = resite_chain(fr, st, bx, outline, end=s.get("to_um"))
+        new, b0, b1 = resite_chain(fr, st, bx, ctx, end=s.get("to_um"))
         if b1 < b0:
+            for k, q in enumerate(new):
+                ctx._occ(st[k], -1)
+                ctx._occ(q, +1)
             s["regs_um"] = [[round(q[0], 4), round(q[1], 4)] for q in new]
             changed += 1
         if b0:
@@ -236,8 +293,8 @@ def main():
     Path(a.out or a.plan).write_text(json.dumps(raw, indent=0) + "\n")
     if a.ledger:
         Path(a.ledger).write_text(json.dumps(ledger, indent=1) + "\n")
-    n = sum(1 for x in ledger if x.get("status") == "TYPE-DONE")
-    print(f"{FLAG}: {n} type(s) re-sited, {sum(1 for x in ledger if x.get('status') == 'NEEDS-STAGE')} NEEDS-STAGE trial(s)")
+    n = sum(1 for x in ledger if x["bad_hops_after"] < x["bad_hops_before"])
+    print(f"{FLAG}: {n} chain(s) re-sited, {sum(1 for x in ledger if x['bad_hops_after'])} chain(s) still with a non-clear hop")
     return 0
 
 
