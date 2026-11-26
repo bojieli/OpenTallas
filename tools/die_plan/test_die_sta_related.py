@@ -611,6 +611,35 @@ def test_count_align_landed_ambiguous_tree_keeps_plan_window_and_no_taps_fails()
     assert r["no_taps"] == 1 and r["verdict"] == "FAIL"
 
 
+def test_count_align_landed_ambiguous_fall_tree_charges_measured_duty_or_fails_closed():
+    """CA-FALL-DUTY-1 (COORD 14:08): an ambiguous fall-edge tree crossing keeps the plan sync window widened by the
+    port's MEASURED |fall - rise| (capture taps' fall arrivals); without fall arrivals it fails closed (HEAD W11:
+    chE5_o0 / chE5_t / chW5_t / coll_ES1_d / host_rx margins 612-751 ps were failed on the assumption alone)."""
+    T = 833.0
+    taps = {"a0": dict(_ca_tap("A", 300.0, 280.0), fall_late_ps=312.0, fall_early_ps=291.0),
+            "b0": _ca_tap("B", 520.0, 500.0)}
+    landed = [("a0", "b0", "A->B"), ("b0", "a0", "B->A")]
+    bind = _ca_bind(T)
+    bind["regions"]["A"].update(sync_values=2, edge_fall=True, start_skew_limit_ps=60.0)
+    r = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    t = {o["port"]: o for o in r["rows"]}["t"]
+    # rise d B->A [280 - 520, 300 - 500] = [-240, -200]; fall d [291 - 520, 312 - 500] = [-229, -188] -> duty 12
+    assert t["source"] == "plan-sync+fall" and t["duty_distortion_ps"] == 12.0
+    assert t["L_lo_ps"] == round(2 * T - 260 - 12, 1) and t["L_hi_ps"] == round(2 * T - 240 + 12, 1)
+    assert t["margin_lo_ps"] == round(2 * T - 272 - 0.5 * T, 1) and t["lag_ok"] and "reason" not in t
+    assert t["slot_read_ok"] and t["guard_ok"]
+    # no measured fall arrival on the capture tap: fail closed, reason kept
+    taps["a0"] = _ca_tap("A", 300.0, 280.0)
+    r = R.count_align_landed(landed, taps, bind, T, CA_REG)
+    t = {o["port"]: o for o in r["rows"]}["t"]
+    assert not t["lag_ok"] and "without a measured fall arrival" in t["reason"] and t["source"] == "plan-sync"
+    assert r["verdict"] == "FAIL"
+    # a large measured distortion still fails, on margin rather than on the assumption
+    taps["a0"] = dict(_ca_tap("A", 300.0, 280.0), fall_late_ps=1200.0, fall_early_ps=1180.0)
+    t = {o["port"]: o for o in R.count_align_landed(landed, taps, bind, T, CA_REG)["rows"]}["t"]
+    assert t["duty_distortion_ps"] == 900.0 and not t["lag_ok"] and "reason" not in t
+
+
 def test_count_align_ss_info_scales_tt_taps_and_never_gates():
     """MESO-RECONCILE: SS row = TT taps x SS/TT scale against the fixed plan; info only (SS never gates)."""
     T = 833.0
