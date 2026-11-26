@@ -9,6 +9,7 @@ explorer2.env): FLEET_VIZ_STATE, FLEET_VIZ_REPO, LV_STORE, DESIGN_INDEX, TOKEN_D
 cache dir for composition manifests), DATAFLOW_DATA, TOKEN_DATA.  No pollers, no ssh, standard library + brotli.
 """
 import argparse, gzip, hashlib, json, os, pathlib, re, subprocess, sys, threading, time
+from collections import Counter, defaultdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs, unquote
 
@@ -318,7 +319,18 @@ def meta():
 # ---------------------------------------------------------------------------------------------- design
 def dies():
     s = DS.summary(); idx = index(); census = signoff_census()
-    s['signoff_census'] = census and census['summary']
+    by_die, totals = defaultdict(Counter), Counter()
+    if census:
+        # Use the same records as /api/v1/records, including historical entries
+        # whose level was resolved against the current index.
+        for record in records().values():
+            by_die[record['die']][record['level']] += 1
+            totals[record['level']] += 1
+
+    def with_levels(summary, counts):
+        return dict(summary, by_level=dict(type=counts['type'], core=counts['core'])) if summary else None
+
+    s['signoff_census'] = with_levels(census['summary'], totals) if census else None
     for d in s['dies']:
         p = idx['nodes'][d['id']]['plan']
         d['plan'] = plan_ref(p); d['period_ps'] = p.get('period_ps'); d['reach_um'] = p.get('reach_um')
@@ -329,7 +341,8 @@ def dies():
         d['packs_unsigned'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')),
                                    core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')))
         d['cores'] = sum(1 for n in ns if n['level'] == 'core')
-        d['any_plan'] = ((census or {}).get('dies', {}).get(d['id']) or {}).get('summary')
+        summary = ((census or {}).get('dies', {}).get(d['id']) or {}).get('summary')
+        d['any_plan'] = with_levels(summary, by_die[d['id']])
         d['instances'] = dict(total=len(p['partitions']))
         st = {}
         for q in p['partitions']:

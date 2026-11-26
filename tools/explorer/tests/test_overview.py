@@ -1,5 +1,6 @@
 """Overview view on three dies."""
 import re, pytest
+from collections import Counter
 from playwright.sync_api import expect
 from helpers import *
 
@@ -28,9 +29,23 @@ def test_overview_five_cards_and_totals(page):
     census = r.get('signoff_census')
     if census:
         assert census['any'] == census['current'] + census['deferred'] + census['retired']
-        assert census['any'] == sum(d['any_plan']['any'] for d in r['dies'])
-        expect(page.get_by_test_id('ov-signoff-any')).to_contain_text(format(census['any'], ','))
-        expect(page.get_by_test_id('ov-signoff-any')).to_contain_text('Signed off on any plan')
+        rows = api('records')['records']
+        levels = ('type', 'core')
+        by_level = Counter(row['level'] for row in rows)
+        assert census['any'] == len(rows) == sum(d['any_plan']['any'] for d in r['dies'])
+        assert census['by_level'] == {level: by_level[level] for level in levels}
+        chip = page.get_by_test_id('ov-signoff-any')
+        expect(chip).to_contain_text(format(census['any'], ','))
+        expect(chip).to_contain_text('Signed off on any plan')
+        expect(chip).to_contain_text(f"{by_level['type']:,} partition types · {by_level['core']:,} hard cores")
+        by_die = Counter((row['die'], row['level']) for row in rows)
+        for d in r['dies']:
+            expected = {level: by_die[d['id'], level] for level in levels}
+            assert d['any_plan']['by_level'] == expected
+            assert d['any_plan']['any'] == sum(expected.values())
+            expect(page.get_by_test_id('ov-signoff-any-' + d['id'])).to_contain_text(
+                f"{expected['type']:,} partition types · {expected['core']:,} hard cores")
+            expect(page.get_by_test_id('card-' + d['id'])).to_contain_text('current-plan layouts')
 
 
 @pytest.mark.parametrize('die', DIES)
