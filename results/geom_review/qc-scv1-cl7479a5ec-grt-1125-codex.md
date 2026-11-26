@@ -1,0 +1,7 @@
+# QC sle_sc_v1 cl7479a5ec exact GRT checkpoint, 2026-11-25 PST
+
+Viewed floorplan, density and timing overlays from `epyc8:/srv/opentallas-scratch2/claude/QC-ALLFIX/smell_scv1_1125`, rendered from the retained 5_1_grt.odb of route unit 381246. The trigger was 9,504 DRT iteration-3 violations. Verdict FIX-FIRST for any new route dispatch. C-STREET / pin-entry concentration.
+
+The 613 × 1832 µm outline has 17.7% total fill, yet the west ingress strip and upper boundary contain the hottest bins. The only large core has a visible global-placement halo. There is substantial low-density core-free area away from the west pin entry and the lower-center landing bands. The upper-left and lower-center timing markers correspond to the first landing rings of `x_stm_fe_p1_i` and `x_su_l1_ctl_i`. The leading GRT setup path is -3.666 ps, so the timing overlay helps identify the physical groups without explaining a final sign-off failure. East-side hold markers are `x_fe_fw_p1_i` → `u_ft_x_fe_fw_p1_o_0` port-to-first capture. The floorplan PG pattern spans the outline. Continuity still needs the normal database check on a revised build.
+
+Keep the existing route as diagnostic evidence. For the next form, spread the two first-capture groups along their abutting faces with bit order preserved, open the west turns into the free width and keep the east contract explicit. Keep it place-only until its exact placed density and reach are reviewed.
