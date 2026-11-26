@@ -260,9 +260,11 @@ def regrow(lef_in, lef_out, layers):
         # at its exact (signed, DRC-clean) geometry: never exposed, never grown into the pin's line-end keep-out
         zone = _grow(clear, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
         real = list(old)
-        # slivers regrow only outside the keep-out band (a sliver of halo that cannot grow is dropped; real metal is >= min width)
+        # slivers regrow only outside the keep-out band; one that cannot grow is dropped, and the exact foreign metal is put
+        # back afterwards so a dropped piece never exposes real metal (overlapping OBS rects are fine in a LEF)
         res, sl = K.fix_slivers(K.union_minus(K.union_minus(grown, zone) + real, clear), zone, _nm(MIN_WIDTH.get(L, 0.024)), (0, 0, Wn, Hn))
-        res = sorted(res)
+        res = sorted(set(res) | {r for r in real if not any(c[0] <= r[0] and c[1] <= r[1] and c[2] >= r[2] and c[3] >= r[3]
+                                                            for c in clear)})
         if res:
             blocks.append(f"    LAYER {L} ;")
             blocks += [f"     RECT  {a / 1000:.3f} {b / 1000:.3f} {c / 1000:.3f} {d / 1000:.3f} ;" for a, b, c, d in res]
