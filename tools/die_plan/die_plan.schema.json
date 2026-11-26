@@ -2235,6 +2235,48 @@
          }
         }
        },
+       "hard_clock_sources": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "name",
+          "source_port",
+          "instance",
+          "pin",
+          "multiply_by",
+          "basis"
+         ],
+         "properties": {
+          "name": {
+           "type": "string",
+           "minLength": 1
+          },
+          "source_port": {
+           "type": "string",
+           "minLength": 1
+          },
+          "instance": {
+           "type": "string",
+           "minLength": 1
+          },
+          "pin": {
+           "type": "string",
+           "minLength": 1
+          },
+          "multiply_by": {
+           "type": "integer",
+           "minimum": 1,
+           "maximum": 64
+          },
+          "basis": {
+           "type": "string",
+           "minLength": 1
+          }
+         }
+        }
+       },
        "tap_chain_affinity": {
         "type": "object",
         "additionalProperties": false,
@@ -2425,6 +2467,23 @@
          "ring_pair_um": {
           "type": "number",
           "exclusiveMinimum": 0
+         },
+         "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "re",
+           "pair_um"
+          ],
+          "properties": {
+           "re": {
+            "type": "string"
+           },
+           "pair_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           }
+          }
          },
          "macro_follow": {
           "type": "boolean"

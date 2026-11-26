@@ -3278,8 +3278,8 @@ def vis_type_backfill(path=None, cov=None):
 
 
 def vis_sta_sync(path=None, runner=None, post=True, now=None):
-    """HUB: the quick setup STA of the post-place kit (<kit>/review/summary.json: WNS, TNS, endpoints below -150 ps at the SDC period) goes into column 10 of every VIS-QUEUE row of that
-    kit + checkpoint, verdict rows included (COORD 08:xx).  A WNS below -150 ps is a SMELL (trigger STA-WNS in lanes/SMELL.tsv) and the owner + die FP lane are told at once, once per kit.
+    """HUB: the quick setup STA of the post-place kit (<kit>/review/summary.json: WNS, TNS, endpoints below -150 ps at the SDC period) goes into column 10 of that kit’s PLACE-GP rows,
+    verdict rows included (COORD 08:xx).  A WNS below -150 ps is a SMELL (trigger STA-WNS in lanes/SMELL.tsv) and the owner + die FP lane are told at once, once per kit.
     -> number of rows changed"""
     path = path or os.path.join(COORD, "lanes/VIS-QUEUE.tsv")
     now = now or time.time()
@@ -3291,7 +3291,7 @@ def vis_sta_sync(path=None, runner=None, post=True, now=None):
     want = {}
     for ln in lines:
         c = ln.split("\t")
-        if len(c) >= 8 and c[0] != "t" and c[7] and (len(c) < 10 or not c[9]):
+        if len(c) >= 8 and c[3] == "PLACE-GP" and c[7] and (len(c) < 10 or not c[9]):
             want.setdefault(c[4].partition(":")[0], set()).add(c[7])
     got = {}
     for h, kits in want.items():
@@ -3313,7 +3313,7 @@ def vis_sta_sync(path=None, runner=None, post=True, now=None):
     out, n, smelly = [], 0, {}
     for ln in lines:
         c = ln.split("\t")
-        if len(c) >= 8 and c[0] != "t" and (c[4].partition(":")[0], c[7]) in got and (len(c) < 10 or not c[9]):
+        if len(c) >= 8 and c[3] == "PLACE-GP" and (c[4].partition(":")[0], c[7]) in got and (len(c) < 10 or not c[9]):
             cell, sta = got[(c[4].partition(":")[0], c[7])]
             c = (c + [""] * 10)[:10] if len(c) < 10 else c
             c[9] = cell

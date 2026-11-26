@@ -716,6 +716,13 @@ SCHEMA = {
                                                "additionalProperties": False, "properties": {
                                                    "tt": _early_late, "ff": _early_late,
                                                    "basis": {"type": "string", "minLength": 1}}}}}},
+                        # A hard macro output with a named common-PLL ratio to a synchronous edge clock.
+                        "hard_clock_sources": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["name", "source_port", "instance", "pin", "multiply_by", "basis"],
+                            "properties": {"name": _name, "source_port": _name, "instance": _name, "pin": _name,
+                                           "multiply_by": {"type": "integer", "minimum": 1, "maximum": 64},
+                                           "basis": {"type": "string", "minLength": 1}}}},
                         # Default-off: bounded same-bit delay-chain clock affinity before CTS.
                         "tap_chain_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
@@ -770,6 +777,9 @@ SCHEMA = {
                                            "chains": {"type": "boolean"},
                                            "ring_depth": {"type": "integer", "minimum": 0, "maximum": 4},
                                            "ring_pair_um": _pos,
+                                           "scope": {"type": "object", "additionalProperties": False,
+                                                     "required": ["re", "pair_um"],
+                                                     "properties": {"re": {"type": "string"}, "pair_um": _pos}},
                                            "macro_follow": {"type": "boolean"},
                                            "pair_cap": {"type": "integer", "minimum": 2}}},
                         # Default-off (QC-EVENT-S26 11-11): a tap left with fewer sinks after the affinity passes

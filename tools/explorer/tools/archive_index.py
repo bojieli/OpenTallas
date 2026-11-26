@@ -7,7 +7,52 @@ Lists, without reading any design data: signed-export-1114/<die>/<name>/ (files,
 closed_archive/INDEX.json (element, job, final DB).  The explorer service (another host) loads the JSON and shows, for
 every design, where its signed database lives now; it never opens the databases themselves.
 """
-import argparse, json, os, socket, sys, time
+import argparse, json, os, shlex, socket, sys, time
+
+
+AGIDOCK_COUNT_PY = r"""
+import csv
+import json
+from pathlib import Path
+import re
+import sys
+
+root = Path(sys.argv[1]).resolve()
+out = {}
+with (root / 'INDEX.tsv').open() as f:
+    for row in csv.DictReader(f, delimiter='\t'):
+        meta = row.get('meta')
+        if not meta or meta in out or not re.search(r'\bR-MINIMAL\b', row.get('src') or ''):
+            continue
+        path = Path(meta).resolve()
+        if root not in path.parents or path.name != 'signoff.json':
+            continue
+        try:
+            d = json.loads(path.read_text())
+            fields = ('verdict', 'profile', 'local_verdict', 'signed_period_ps',
+                      'internal_hold', 'checks', 'route', 'reasons', 'release_qualified',
+                      'clock_period_evidence')
+            compact = {k: d[k] for k in fields if k in d}
+            corners = d.get('corners') or {}
+            compact['corners'] = {}
+            for name, c in corners.items():
+                if not isinstance(c, dict):
+                    continue
+                relevant = ('periods', 'generated_clocks', 'vclks', 'done', 'errors', 'rc', 'std_min_start',
+                            'std_wns_min', 'std_nviol_min') if name == 'ff' else ('periods', 'generated_clocks', 'vclks')
+                compact['corners'][name] = {k: c[k] for k in relevant if k in c}
+            out[meta] = compact
+        except (OSError, TypeError, ValueError, AttributeError):
+            pass
+print(json.dumps(out, separators=(',', ':')))
+"""
+
+
+def archive_count_signoffs(ssh, root):
+    cmd = shlex.join(['python3', '-I', '-c', AGIDOCK_COUNT_PY, root])
+    import subprocess
+    result = subprocess.run(ssh + [cmd], capture_output=True, text=True, timeout=120, check=True)
+    return json.loads(result.stdout)
 
 
 def main():
@@ -68,6 +113,11 @@ def main():
                 if len(parts) >= 3: ent.setdefault((parts[0], parts[1]), {})['/'.join(parts[2:])] = int(sz or 0)
             out['agidock'] = [dict(die=d, name=n, path='%s/%s/%s' % (a.agiroot, d, n), files=fs) for (d, n), fs in sorted(ent.items())]
             out['agidock_index_tsv'] = index if index.strip() else None; out['agidock_root'] = a.agiroot; out['agidock_listed'] = time.time()
+            if index.strip():
+                try:
+                    out['agidock_count_signoffs'] = archive_count_signoffs(ssh, a.agiroot)
+                except (OSError, ValueError, subprocess.SubprocessError) as e:
+                    out['agidock_count_signoffs_error'] = '%s: %s' % (type(e).__name__, e)
         except Exception as e:
             out['agidock_error'] = '%s: %s' % (type(e).__name__, e)
     json.dump(out, sys.stdout, separators=(',', ':'))

@@ -29,6 +29,9 @@ Run alone: python3 tools/release_tree_plan.py [--force] [--print]
 """
 import argparse, hashlib, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time, concurrent.futures as cf
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from count_signoff import REMOTE_PY
+
 REPO = pathlib.Path(os.environ.get('OT_COUNT_REPO') or '/home/ubuntu/OpenTallas')
 NO_FETCH = bool(os.environ.get('OT_COUNT_NO_FETCH'))   # private proof runs: never fetch in the repo (tags come from OT_COUNT_TAGS)
 TAGS_FILE = os.environ.get('OT_COUNT_TAGS')            # json {first_ts, tags {tag: commit}}, private proof runs
@@ -528,7 +531,9 @@ def revoke_hit(r, rows, sha=rec_netlist_sha):
     for row in rows:
         if row['name'] not in rec_keys(r): continue
         k = row['key']
-        if k.startswith('sha256:'):
+        if k.startswith(('odb:', 'odb_sha256:')):
+            if r.get('odb_sha') == k.partition(':')[2]: return row
+        elif k.startswith('sha256:'):
             if sha(r) == k[7:]: return row
         else:
             h, _, d = k.partition(':'); d = d.rstrip('/') + '/'
@@ -685,7 +690,7 @@ def apply_credit(recs, rows, tag_commit=None):
             r_.pop('resign_error', None)
             done.append((row, r_['path']))
     return done
-PROV_PY = r'''
+PROV_PY = REMOTE_PY + r'''
 RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
 def reloc(x, f):
     # DIE-KV-64 11-03 (PRUNE-1103D): a moved run tree keeps PROVENANCE absolute paths of its old home; when that path is
@@ -698,58 +703,6 @@ def reloc(x, f):
         if i >= 0 and os.path.exists(q + x[i + len(n) - 1:]): return q + x[i + len(n) - 1:]
         q = os.path.dirname(q)
     return x
-def counts_signed(d):
-    # COORD 11-03 18:48 + OWNER 18:49 (standing, every die): LOCAL_PASS_NEEDS_PARENT counts SIGNED when the local
-    # sign-off is SIGNED and the only open reason is io_hold_parent (that receipt moves to the die STA FF row).
-    v = d.get('verdict')
-    if v == 'SIGNED': return True
-    if v == 'LOCAL_PASS_NEEDS_PARENT' and d.get('local_verdict') == 'SIGNED' and all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or [])): return True
-    # EXPLORER-FABLE-1 11-14 (COORD): a HARD-IP view (opentallas.hard_ip_view.v1: a full-area PHY macro in a thin wrapper, nothing to place
-    # or route) counts on a clean bind, port bind and face guard.  It credits a type only where the counted plan lists that type as a
-    # countable type, so a plan that is not adopted yet (or that keeps the type structurally hard-IP, out of both totals) gives no credit.
-    if v == 'HARD-IP':
-        ch = d.get('checks') or {}
-        return (d.get('schema') == 'opentallas.hard_ip_view.v1' and (ch.get('bind') or {}).get('errors') == 0
-                and ch.get('port_bind') == 'PASS' and not ch.get('face_guard_fails'))
-    return rminimal(d)
-def _fin(x):
-    try: x = float(x)
-    except (TypeError, ValueError): return None
-    return x if abs(x) < 1e6 else None
-def record_clock_period(d):
-    # largest create_clock period the record's STA ran at (corners.<c>.periods; generated clocks print 0); None when not recorded
-    best = None
-    for c in (d.get('corners') or {}).values():
-        if not isinstance(c, dict) or not isinstance(c.get('periods'), dict): continue
-        for v in c['periods'].values():
-            v = _fin(v)
-            if v is not None and v > 0 and (best is None or v > best): best = v
-    return best
-def period_problem(d):
-    # OWNER 11-20 (superseding the 1000 ps part of (1)): nothing signs above 833 ps (tools/die_plan/signoff_profile.period_problem):
-    # a record timed at a relaxed clock never counts, with or without signed_period_ps
-    sp, cp = _fin(d.get('signed_period_ps')), record_clock_period(d)
-    if sp is None: return cp is not None and cp > 833.5
-    return sp < 832.5 or sp > 833.5 or cp is None or abs(cp - sp) > 0.5
-def rminimal(d):
-    # COUNT-FRICTION-1 11-14 (R-MINIMAL, OWNER 11-13 17:5x; same metrics as tools/die_plan/signoff_profile.py): a record counts when detailed-route
-    # DRC is 0, TT setup WNS >= -42 ps (833 ps) and the INTERNAL FF hold >= 0 (a hold miss only at input ports is allowed); every other
-    # check is advisory.  This lets a record whose legacy verdict is NOT SIGNED for an advisory reason count.
-    try:
-        ch = d.get('checks') or {}
-        drc = (ch.get('drc') or {}).get('count') if isinstance(ch.get('drc'), dict) else None
-        if drc is None: drc = (d.get('route') or {}).get('drc')
-        st = ch.get('setup_tt') if isinstance(ch.get('setup_tt'), dict) else {}
-        tt = _fin(st.get('wns_ps'))
-        if tt is None: tt = _fin(st.get('sdc_wns_ps'))
-        hf = ch.get('hold_ff') if isinstance(ch.get('hold_ff'), dict) else {}
-        ff = _fin(hf.get('wns_ps'))
-        if ff is None: ff = _fin(hf.get('sdc_wns_ps'))
-        if drc is None or int(drc) != 0 or tt is None or tt < -42.0 or ff is None: return False
-        if period_problem(d): return False
-        return ff >= 0.0 or (bool(hf.get('port_only_needs_parent')) and hf.get('verdict') == 'PASS')
-    except Exception:
-        return False
 def resign(f, x, load):
     # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
     # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
@@ -2061,7 +2014,7 @@ def refresh(log=lambda *a: None, old=None):
             if SIGNED_SOURCE == 'store':
                 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
                 import signed_store
-                srecs, pins = signed_store.load_records()
+                srecs, pins = signed_store.load_records(eligible=_PROV_NS['counts_signed'])
                 if not srecs: raise RuntimeError('signed-store empty or unreadable: %s' % signed_store.STORE)   # keeps the last good cache
                 for k, v in pins.items():
                     STORE_PINS[k] = dict(v, shapes={a: [tuple(x) for x in b] for a, b in v['shapes'].items()}) if v.get('shapes') else v

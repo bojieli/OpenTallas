@@ -28,6 +28,28 @@ def test_seat_over_reach_refused(monkeypatch):
         RT._with_export_seats(FakeP({"rst_start_raw_0": [1000.0, 10.8]}), "t", tree())
 
 
+@pytest.mark.parametrize("wins", [True, False])
+def test_export_reach_follows_effective_source_seat(monkeypatch, wins):
+    monkeypatch.setattr(RT, "relay_um", lambda P, tn: 405.0)
+    P = FakeP({"rst_start_raw_0": [1100.0, 10.8]})
+    P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1480.0, 10.8]}
+    P.types["t"]["reset"]["relay_sites_win"] = wins
+    if not wins:
+        with pytest.raises(RT.ResetError, match="over the relay reach"):
+            RT._with_export_seats(P, "t", tree())
+    else:
+        T = RT._with_export_seats(P, "t", tree())
+        assert T["export_seats"] == {"u_rrl_31": [1100.0, 10.8, "rst_start_raw_0"]}
+
+
+def test_export_reach_rejects_distant_winning_source_seat(monkeypatch):
+    monkeypatch.setattr(RT, "relay_um", lambda P, tn: 405.0)
+    P = FakeP({"rst_start_raw_0": [1480.0, 10.8]})
+    P.types["t"]["relay_sites"] = {"u_rrl_30/q": [2090.0, 10.8]}
+    with pytest.raises(RT.ResetError, match="over the relay reach"):
+        RT._with_export_seats(P, "t", tree())
+
+
 def test_unknown_port_refused(monkeypatch):
     monkeypatch.setattr(RT, "relay_um", lambda P, tn: 405.0)
     with pytest.raises(RT.ResetError, match="not a declared private raw start export"):
@@ -39,10 +61,10 @@ def test_no_key_no_change():
     T = tree(); assert RT._with_export_seats(P, "t", T) is T and "export_seats" not in T
 
 
-def test_relay_sites_win(monkeypatch):
-    monkeypatch.setattr(RT, "relay_um", lambda P, tn: 405.0)
+@pytest.mark.parametrize("reset", [{}, {"relay_sites_win": True}])
+def test_relay_sites_win(reset):
     P = FakeP({})
-    P.types["t"]["reset"] = {"relay_sites_win": True}
+    P.types["t"]["reset"] = reset
     P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1500.0, 9.0], "u_srl_30/q": [1502.0, 9.0], "u_phy.x/q": [1.0, 2.0]}
     T = RT._with_export_seats(P, "t", tree())
     assert T["relay_seats"] == {"u_rrl_30": [1500.0, 9.0], "u_srl_30": [1502.0, 9.0]}
@@ -50,7 +72,7 @@ def test_relay_sites_win(monkeypatch):
 
 def test_relay_sites_win_off():
     P = FakeP({})
-    P.types["t"]["reset"] = {}
+    P.types["t"]["reset"] = {"relay_sites_win": False}
     P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1500.0, 9.0]}
     assert "relay_seats" not in RT._with_export_seats(P, "t", tree())
 

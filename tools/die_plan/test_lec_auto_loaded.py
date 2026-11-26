@@ -10,6 +10,9 @@ the LEC-TOOL-4 'hold' register, a data (non-constant) load, auto proposals disab
 import collections
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -180,6 +183,38 @@ def test_delayed_guard_read_through_async_reset_mux_is_proposed():
 def test_live_term_keeps_two_live_or_terms():
     d, _, _, dv, _ = _async_reset_aig(reset_val=1)     # rn ? ld : 1 has two live terms: no single load condition
     assert lec._live_term(d, dv) == dv
+
+
+@pytest.mark.parametrize("regression", ["none", "relation", "replacement", "constraint", "no_new_relation"])
+def test_auto_loaded_preserves_proved_state(monkeypatch, tmp_path, regression):
+    anchor = ("gate", "ff:u_dut.encoded_event")
+    new = ("gold", "ff:u_dut.load_data")
+    guard = [[("ff:u_dut.valid", 1)]]
+    proved_relation = ("eq", "gold", "ff:u_dut.event", 0)
+    new_relation = ("loaded", 1, guard)
+    domain = ("gold", ["ff:u_dut.event", "ff:u_dut.valid"], [[0, 0], [1, 1]])
+    design = SimpleNamespace(hyp={anchor: proved_relation}, cons=[domain])
+
+    monkeypatch.setattr(lec, "loaded_proposals", lambda *_: [["gold", new[1], list(new_relation)]])
+
+    def refine(design, *_args):
+        if regression != "no_new_relation":
+            design.hyp[new] = new_relation
+        if regression == "relation":
+            del design.hyp[anchor]
+        if regression == "replacement":
+            design.hyp[anchor] = ("const", 1)
+        if regression == "constraint":
+            design.cons.clear()
+        return {"kept": len(design.hyp)}
+
+    monkeypatch.setattr(lec, "apply_hints", refine)
+    rec = {}
+    lec.auto_loaded(design, rec, tmp_path, 1, [])
+    assert design.cons == [domain]
+    assert design.hyp[anchor] == proved_relation
+    assert (new in design.hyp) == (regression == "none")
+    assert rec["auto_loaded"]["kept"] == int(regression == "none")
 
 
 def test_run_calls_auto_loaded_with_opt_out():

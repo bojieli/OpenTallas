@@ -250,11 +250,13 @@ def signature(res):
     return hashlib.sha256(json.dumps(sorted(res["refused"].items())).encode()).hexdigest()[:12]
 
 
-def needs_lane_text(die, tree, res, owner=""):
+def needs_lane_text(die, tree, res, owner="", blocking=True):
     r = res["refused"]
     kinds = {k: sum(1 for v in r.values() if v == k) for k in ("differ", "only_die", "missing")}
     sample = ", ".join(sorted(r)[:8])
-    return (f"NEEDS-LANE [KIT-WAVE -> COORD; owner {owner or die}] TOOL-SKEW refused launches on {die}: tree {tree} has "
+    tag = "NEEDS-LANE" if blocking else "STATE"
+    action = "refused launches" if blocking else "warning (skew does not block launches)"
+    return (f"{tag} [KIT-WAVE -> COORD; owner {owner or die}] TOOL-SKEW {action} on {die}: tree {tree} has "
             f"{len(r)} gen/bind module(s) that differ from main ({kinds['differ']} differ, {kinds['only_die']} private, "
             f"{kinds['missing']} missing; {len(res['expired'])} allowlist entries expired). First: {sample}. Fix: land the "
             f"die feature on main (TOOLS-CONVERGE-1115 branch), rebuild the tree as main tools + plan at the next plan event, "

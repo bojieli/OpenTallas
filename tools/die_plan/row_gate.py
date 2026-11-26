@@ -27,7 +27,8 @@ Steps (each timed in ROW-READY.seconds):
       ELAB -> R8 -> BIND -> LAT
                 bind.py elab (always; its in-bind PRE off, PRE-DIFF is the PRE) -> bind.py r8-prepass (the bind head: bus_groups.json)
                 -> row_normalize.py tables (r8_refresh from it, ALWAYS before the bind; drift reported as fixed) -> bind.py bind --strict --all-gaps
-                --types T (scoped; auto = the types the rows + normalize changed) -> lane_asbuilt_latency.py on the bind
+                --types T (auto = types the rows + normalize changed) -> LAT against probe_top for scoped geometry
+                or the full die top when a row changes planned lane prices
   5 ROW-READY DIR/ROW-READY.json (and DIR copy into --ledger): verdict READY only when apply, normalize, PRE-DIFF (0 new),
             elab, R8 refresh, strict bind (0 errors) and latency (0 FAIL) all pass; row / base / plan / as-built / changed tables
             sha256, rt sha, src tree manifest, types, findings, per-step seconds.
@@ -417,8 +418,30 @@ def gate(a):
     t0 = time.time()
     braw = json.loads((tree / a.base).read_text())
     raw = json.loads(plan.read_text())
+    tap_manifest = getattr(a, "tap_manifest", None)
+    tap_types = []
     try:
+        if tap_manifest:
+            import tap_derive
+
+            tap_types, report = tap_derive.derive(raw, plan, tree, tap_manifest)
+            (out / "tap_derive.json").write_text(json.dumps(report, indent=1) + "\n")
+            R["tap_derive"] = {"types": tap_types, "report": str(out / "tap_derive.json")}
         nrep = RN.normalize_plan(braw, raw, str(L), (tree / a.base).resolve(), plan.resolve(), a.skip_normalize)
+        if tap_types:
+            import tap_offset_cover
+
+            density = tap_derive.density_results(raw, plan, tree, tap_types)
+            for tn, result in density.items():
+                report[tn].update(result)
+            (out / "tap_derive.json").write_text(json.dumps(report, indent=1) + "\n")
+            excess = [tn for tn, result in density.items() if not result["within_limits"]]
+            if excess:
+                raise ValueError(f"density tap load/span still exceeds the limit: {', '.join(excess)}")
+            tap_pattern = "^(?:" + "|".join(re.escape(tn) for tn in tap_types) + ")$"
+            with RN.in_tree(L):
+                covered = tap_offset_cover.fill(raw, plan.resolve(), types=tap_pattern)
+            R["tap_derive"]["tap_offset_cover"] = covered
     except Exception as e:  # noqa: BLE001 - a normalize crash is a named NOT-READY, never a silent pass
         nrep = dict(error=f"{type(e).__name__}: {str(e)[:400]}")
     (out / "normalize_plan.json").write_text(json.dumps(nrep, indent=1, default=str) + "\n")
@@ -426,7 +449,7 @@ def gate(a):
     if nrep.get("error"):
         done("NOT", f"normalize crashed: {nrep['error']}")
         return finish()
-    if nrep["changed"]:
+    if nrep["changed"] or tap_types:
         RN.dump(raw, plan)
     nfail = {k: [tn for tn, x in v.items() if isinstance(x, dict) and (x.get("failed") or x.get("bank_failed"))]
              for k, v in nrep["steps"].items() if isinstance(v, dict)}
@@ -440,11 +463,12 @@ def gate(a):
     elif a.types == "all":
         types = []
     else:
-        types = [t for t in a.types.split(",") if t]
+        types = sorted({t for t in a.types.split(",") if t} | set(tap_types))
     R["types"] = types or "all"
     if a.types == "auto" and not types:
         done("NOT", "the rows changed no bound partition type (nothing to bind; use --types)")
         return finish()
+    bind_types = row_bind_scope(types, braw, raw)
     prel = os.path.relpath(plan, tree)
     benv = dict(base_env, OT_PLAN_GATE_PRE="off")              # PRE-DIFF below is this gate's PRE
 
@@ -491,7 +515,7 @@ def gate(a):
         if tr["rc"]:
             return r, s
         cmd = [sys.executable, "-I", "-B", "tools/die_plan/bind.py", "bind", prel, "--out", str(B), "--asbuilt", a.asbuilt,
-               "--mem", str(a.bind_mem), "--strict", "--all-gaps"] + (["--types", ",".join(types)] if types else [])
+               "--mem", str(a.bind_mem), "--strict", "--all-gaps"] + (["--types", ",".join(bind_types)] if bind_types else [])
         r["bind"], s["bind"] = run_logged(cmd, str(L), benv, str(out / "logs/bind.log"))
         r["bind_report"] = bind_summary(B)
         if r["bind"] and r8_only(r["bind_report"]) and not a.no_r8 and (B / "bus_groups.json").is_file():
@@ -504,10 +528,12 @@ def gate(a):
             if not tr2["rc"]:
                 r["bind"], s["bind2"] = run_logged(cmd, str(L), benv, str(out / "logs/bind2.log"))
                 r["bind_report"] = bind_summary(B)
-        if (B / "bind_report.json").is_file():
-            r["lat"], s["lat"] = run_logged([sys.executable, "-I", "-B", "tools/die_plan/lane_asbuilt_latency.py", str(B), prel,
-                                             "--asbuilt", a.asbuilt, "--json", str(out / "latency.json")], str(L), dict(base_env),
-                                            str(out / "logs/latency.log"))
+        if r["bind"] == 0 and (B / "bind_report.json").is_file():
+            lat_cmd = [sys.executable, "-I", "-B", "tools/die_plan/lane_asbuilt_latency.py", str(B), prel,
+                       "--asbuilt", a.asbuilt, "--json", str(out / "latency.json")]
+            if bind_types:
+                lat_cmd.append("--probe-top")
+            r["lat"], s["lat"] = run_logged(lat_cmd, str(L), dict(base_env), str(out / "logs/latency.log"))
         return r, s
 
     with CF.ThreadPoolExecutor(3) as ex:
@@ -558,7 +584,7 @@ def gate(a):
         sm = lj.get("summary") or {}
         nf = sm.get("failed")
         R["latency"] = dict(rc=cr["lat"], fail=nf, passed=sm.get("passed"), unobserved=sm.get("unobserved"), verdict=sm.get("verdict"),
-                            json=str(out / "latency.json"))
+                            scope=sm.get("scope"), json=str(out / "latency.json"))
         if cr["lat"] not in (0, 5) or nf:                       # 5 = lanes of unbound types unobserved (a scoped bind)
             done("NOT", f"latency check rc {cr['lat']} (fail {nf})")
     shutil.copy2(plan, out / "plan.json")
@@ -569,6 +595,13 @@ def gate(a):
         for p in (L, tree) if not a.keep_fork else (L,):
             ot_delete(p, log)
     return rc
+
+
+def row_bind_scope(types, base, candidate):
+    """A partial top can omit the other endpoint of a repriced lane."""
+    base_prices = (base.get("latency") or {}).get("lanes")
+    candidate_prices = (candidate.get("latency") or {}).get("lanes")
+    return types if candidate_prices == base_prices else []
 
 
 def under_ot_run():
@@ -593,6 +626,7 @@ def main(argv=None):
     g.add_argument("--env", action="append", default=[], help="K=V over the die bind env")
     g.add_argument("--mem", type=int, default=96, help="ot-run --mem for the whole gate (GB)")
     g.add_argument("--bind-mem", type=int, default=48)
+    g.add_argument("--tap-manifest", type=Path, help="native placed sink bins manifest for per-cut tap derivation")
     g.add_argument("--skip-normalize", action="append", default=[], choices=RN.STEPS)
     g.add_argument("--no-r8", action="store_true", help="do not refresh R8 tables (the strict bind still checks them)")
     g.add_argument("--keep-tree", action="store_true", help="keep the fork and the launch tree")

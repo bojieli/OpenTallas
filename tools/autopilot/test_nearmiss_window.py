@@ -38,6 +38,21 @@ def test_internal_hold_window_uses_census_not_port_hold(ap):
     assert ap.classify(job(ff=-120.0), {})[0] == "STRUCTURAL"          # no census: whole FF is the bound
 
 
+def test_signed_stamp_cannot_bypass_minimal_evidence(ap):
+    result = job(tt=-10.48, ff=-129.99, fails=("drv", "setup_tt"), ff_census=census(0, 0))
+    so = result["signoff"]
+    so.update(profile="minimal", verdict="SIGNED", local_verdict="NOT SIGNED", release_qualified=False,
+              parent_qualification={"status": "NEEDS_PARENT"})
+    assert ap.classify(result, {})[0] == "SIGNED"
+
+    so["corners"] = {"tt": {"periods": {"clk": 900.0}}}
+    assert ap.classify(result, {})[:2] == ("STRUCTURAL", "rminimal-evidence")
+
+    so["corners"]["tt"]["periods"]["clk"] = 833.0
+    so["ff_census"]["std_min_start"]["trunc"] = 1
+    assert ap.classify(result, {})[:2] == ("STRUCTURAL", "rminimal-evidence")
+
+
 def test_setup_window(ap):
     assert ap.classify(job(tt=-70.0, ff=2.0, fails=("setup_tt",), tt_n=300), {})[0] == "NEAR-MISS"
     assert ap.classify(job(tt=-90.0, ff=2.0, fails=("setup_tt",), tt_n=12), {})[0] == "NEAR-MISS"

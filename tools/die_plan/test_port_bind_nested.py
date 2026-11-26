@@ -1,7 +1,13 @@
 """HEAD-BIND-4 2026-10-27 (COORD ruling on HEAD-CORE-R13 ASK4): nested leaf-pin port-bind + per-instance ID straps.
     python3 -m pytest -q tools/die_plan/test_port_bind_nested.py
 The OLD hd_serdes wrapper (committed evidence results/arch/head_rtl5_1026/cand/gen/ot_s81hd_serdes.sv: ot_pdie_serdes u_phy
-with only .rx/.tx bound, 514-b coll_o0_d into the 512-b rx) passed the die-top port-bind; the nested check must FAIL it."""
+with only .rx/.tx bound, 514-b coll_o0_d into the 512-b rx) passed the die-top port-bind; the nested check must FAIL it.
+
+The plan supplies leaf sources dynamically. The sparse gate prefetches the
+tracked directories "rtl/hdc", "rtl/v41rom",
+"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1", and
+"physical/asap7_memory_macros_v2/ot_rom_4096x274_m8" for that closure."""
 import copy
 import json
 import sys

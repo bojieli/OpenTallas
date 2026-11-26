@@ -10,6 +10,7 @@ from collections import Counter
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -54,8 +55,14 @@ def placement_load(plan, tn, placed):
         round(x, 2) for x in plan.types[tn]["outline_um"]
     ):
         return {"placement": "different outline"}
-    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-        sites = schema.tap_grid(plan, tn)
+    mode = (plan.types[tn].get("clock") or {}).get("tap_mode")
+    if mode == "explicit":
+        sites = taps.explicit_tap_sites(plan, tn)
+    elif mode == "grid+explicit":
+        sites = taps.grid_explicit_sites(plan, tn)
+    else:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            sites = schema.tap_grid(plan, tn)
     if not sites:
         return {"placement": "missing planned tap sites"}
     counts, spans = loads(sites, placed["bins"])
@@ -101,7 +108,7 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=5000):
         if observed.get("max_sinks") is not None:
             row.update(
                 measured_max_sinks=observed["max_sinks"],
-                measured_kit=observed.get("kit") or observed.get("path"),
+                measured_kit=observed.get("kit") or observed.get("path") or observed.get("log"),
             )
         group = clock.get("tap_group") or {}
         try:
@@ -133,6 +140,8 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     raw = json.loads(args.plan.read_text())
+    if args.tree is not None:
+        os.environ["OT_REPO_ROOT"] = str(args.tree.resolve())
     plan = schema.Plan(raw, str(args.plan.resolve()))
     cache, _ = adv_tap_load.load_cache(args.flops_cache)
     measured, _ = adv_stale_bins.load_kit_sinks(args.kit_sinks)

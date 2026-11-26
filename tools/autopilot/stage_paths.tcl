@@ -1,7 +1,7 @@
 # stage_paths.tcl (VIS-REOWN 11-25, COORD: Fable reviewers saw "paths.png 0 DRAWN" on SMELL renders): worst-N setup AND hold paths of the
 # DB being rendered, at any stage, for render_review.py to draw.  Sourced by render_review.sh after `read_db` + layout_dump.tcl, inside the
 # pinned ORFS image, kit mounted read-only at /kit.  Never writes the DB.  Everything is caught: a failed STA leaves a note, the PNGs still render.
-# env: SP_ODB  the ODB path as read (/kit/...)        SP_OUT  output dir (default /rev)        SP_NPATH paths per check (default 50)
+# env: SP_ODB  original checkpoint path for stage context (/kit/...)    SP_OUT  output dir (default /rev)    SP_NPATH paths per check (default 50)
 #      SP_SDC  sdc override                           SP_LIBS extra liberty globs (space list)
 # Writes: paths_stage_setup.txt, paths_stage_hold.txt (report_checks -format full), stage_paths.txt (mode, sdc, libs, wns lines) or
 #         stage_paths_error.txt.

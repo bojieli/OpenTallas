@@ -58,11 +58,21 @@ def test_path_rows_join_and_tsv():
     r = rows[0]
     assert (r["sx"], r["sy"], r["ex"], r["ey"]) == (0, 0, 10, 5)
     assert r["manhattan_um"] == 15 and r["n_cells"] == 3
-    assert r["path_wl_um"] == 100 + 10 + 4 and r["nets"] == 3  # n2 counted once
+    assert r["path_wl_um"] == 10 + 4 and r["nets"] == 2  # data nets only; n2 counted once
     assert rows[1]["path_wl_um"] == 30
     assert len(P.path_rows(P.parse_paths(REPORT), P.read_pin_table(PINS), top=1)) == 1
     t = P.paths_tsv(rows).splitlines()
     assert t[0].split("\t") == P.PATH_COLS and len(t) == 3
+
+
+
+def test_missing_capture_does_not_label_an_intermediate_pin():
+    pins = P.read_pin_table(PINS)
+    del pins["b/r2/D"]
+    row = P.path_rows(P.parse_paths(REPORT), pins)[0]
+    assert row["slack"] == -9.5 and row["pts"]
+    assert not row["all_pins_located"]
+    assert P.math.isnan(row["ex"]) and P.math.isnan(row["manhattan_um"])
 
 
 def test_rudy_conserves_demand_and_localises():
@@ -180,7 +190,7 @@ def test_flight_lines_carry_slack_labels_and_drt_markers(tmp_path):
 
 
 def test_parse_sta_and_cell():
-    below = "Endpoint                 Required   Actual   Slack\n--------\na/D  800.0  1000.0  -200.5\nb/D  800.0  1010.0  -210.0\nc/D  800.0  945.0  -145.0\n"
+    below = "Endpoint                 Required   Actual   Slack\n--------\na/D  800.0  1000.0  -200.5\nb/D (DFFHQNx1_ASAP7_75t_R)  800.0  1010.0  -210.0 (VIOLATED)\nc/D (DFFHQNx1_ASAP7_75t_R)  800.0  945.0  -145.0 (VIOLATED)\n"
     s = P.parse_sta("wns max -210.000\n", "tns max -4321.500\n", below, "clk 833.0\n")
     assert s == {"wns_ps": -210.0, "tns_ps": -4321.5, "n_below_150": 2, "period_ps": 833.0}
     assert P.sta_cell(s) == "WNS -210.0 TNS -4321.5 n<-150 2 T 833" and P.sta_cell({}) == "STA n/a"

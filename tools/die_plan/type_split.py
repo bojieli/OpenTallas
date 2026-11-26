@@ -119,7 +119,7 @@ PIN_STEP = 0.96      # landing pin nudge step (two 0.48 tracks)
 # clock keys copied to every piece unchanged (HEAD gen-mode types, FABLE-FIX-HEAD-LEP0N-R6 11-21): budget / form scalars
 # and the tap_group instance regexes (a pattern that names no instance of a piece groups nothing there)
 CLOCK_COPY_KEYS = {"insertion_basis", "insertion_ff_ps", "landing_export_form", "tap_grt_pre", "tap_model",
-                   "tap_passthrough", "tap_group",
+                   "tap_passthrough", "tap_group", "tap_pair_affinity", "tap_reset_split",
                    "landing_ring_lite", "landing_ring_narrow"}   # RING-LITE-1 type flags: copied to both pieces
 
 
@@ -218,6 +218,15 @@ class Cut:
         o[self.ax] = rnd(r[self.ax] - self.lo(i))
         o[self.ax + 2] = rnd(r[self.ax + 2] - self.lo(i))
         return o
+
+    def clip_rect(self, rect, piece):
+        a = max(rect[self.ax], self.lo(piece))
+        b = min(rect[self.ax + 2], self.hi(piece))
+        if b - a <= EPS:
+            return None
+        clipped = list(rect)
+        clipped[self.ax], clipped[self.ax + 2] = a, b
+        return clipped
 
     def rect_piece(self, r, what=""):
         return self.piece(r[self.ax], r[self.ax + 2], what)
@@ -599,7 +608,7 @@ class TypeSplit:
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
                    "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources",
                    "id_straps", "private_reset_start_exports", "reset_start_raw_exports", "relay_split",
-                   "place_regions"}
+                   "dly_alt_pol", "pad_ram", "place_regions"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -610,9 +619,19 @@ class TypeSplit:
             T[i]["outline_um"] = o
             T[i]["hard"] = False
             for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type",
-                      "verilog_defines", "port_buf_at_pin", "face_layers", "ft_track_frac", "sources"):
+                      "verilog_defines", "port_buf_at_pin", "face_layers", "ft_track_frac", "sources",
+                      "dly_alt_pol"):
                 if k in t:
                     T[i][k] = copy.deepcopy(t[k])
+            if "pad_ram" in t:
+                pad_ram = T[i]["pad_ram"] = copy.deepcopy(t["pad_ram"])
+                if "keepout_um" in pad_ram:
+                    keepouts = []
+                    for rect in pad_ram["keepout_um"]:
+                        clipped = cut.clip_rect(rect, i)
+                        if clipped is not None:
+                            keepouts.append(cut.shr(clipped, i))
+                    pad_ram["keepout_um"] = keepouts
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
                             f"type frame, shifted by -{cut.lo(i)}) | " + t.get("note", ""))
         proof_pieces = self.ev.spec.get("dead_input_pieces", {}).get(self.tn, {})
@@ -1512,15 +1531,12 @@ class TypeSplit:
             for k in ("die_islands_um", "keepouts_um"):
                 if k in ck:
                     # a reservation / keep-out rect is kept on every piece it touches (clipped: the part inside)
-                    lo, hi = cut.lo(i), cut.hi(i)
                     rr = []
                     for r in ck[k]:
-                        a, b = max(r[cut.ax], lo), min(r[cut.ax + 2], hi)
-                        if b - a > EPS:
-                            q = list(r)
-                            q[cut.ax], q[cut.ax + 2] = a, b
+                        q = cut.clip_rect(r, i)
+                        if q is not None:
                             rr.append(cut.shr(q, i))
-                            if a > r[cut.ax] + EPS or b < r[cut.ax + 2] - EPS:
+                            if q[cut.ax] > r[cut.ax] + EPS or q[cut.ax + 2] < r[cut.ax + 2] - EPS:
                                 self.rep.setdefault("clock_rects_clipped", []).append(dict(key=k, rect=r, piece=i))
                     c[k] = rr
             if "sink_bins_file" in ck:

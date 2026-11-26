@@ -7501,23 +7501,27 @@ def loaded_proposals(L, log, cands=None, cap=20000):
 
 
 def auto_loaded(L, rec, work, conflicts, log):
-    """Default-on (OT_LEC_AUTO_LOADED=0 disables): loaded_proposals -> apply_hints.  The hypothesis set before is
-    restored when the refinement does not converge (never fewer proved registers than without the proposals).
-    -> rec['auto_loaded'] = dict(proposed, kept, dropped, refused, first)."""
+    """Prove automatic loaded-valid hints without losing previous proof relations or constraints."""
     auto = loaded_proposals(L, log)
     if not auto:
         rec["auto_loaded"] = dict(proposed=0)
         return
     keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
-    r = apply_hints(L, auto, work, conflicts, log) or {}
+    result = apply_hints(L, auto, work, conflicts, log) or {}
     kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "loaded")
-    if not r.get("kept"):
-        L.hyp.clear(); L.hyp.update(keep_hyp)
+    new_loaded = any(k not in keep_hyp and h[0] == "loaded" for k, h in L.hyp.items())
+    lost = sum(L.hyp.get(k) != h for k, h in keep_hyp.items())
+    lost_constraints = sum(c not in L.cons for c in keep_cons)
+    if not result.get("kept") or not new_loaded or lost or lost_constraints:
+        L.hyp.clear()
+        L.hyp.update(keep_hyp)
         L.cons[:] = keep_cons
         kept = []
-        log.append("auto loaded-valid: refinement did not converge; hypotheses restored")
-    rec["auto_loaded"] = dict(proposed=len(auto), kept=len(kept), dropped=len(r.get("dropped") or []),
-                              refused=len(r.get("loaded_refused") or []), first=kept[:20])
+        log.append(f"auto loaded-valid: undone (converged={bool(result.get('kept'))}, "
+                   f"new loaded relation={new_loaded}, hypotheses lost={lost}, "
+                   f"constraints lost={lost_constraints}); hypotheses restored")
+    rec["auto_loaded"] = dict(proposed=len(auto), kept=len(kept), dropped=len(result.get("dropped") or []),
+                              refused=len(result.get("loaded_refused") or []), first=kept[:20])
 
 
 def fill_proposals(L, log, cands=None, cap=20000):

@@ -54,6 +54,81 @@ proc ot_pgtt_gcell_dbu {dbu} {
 proc ot_pgtt_region_mode {} {
   return [expr {[info exists ::env(OT_PG_TRACK_TRUTH_MODE)] && $::env(OT_PG_TRACK_TRUTH_MODE) eq "region"}]
 }
+
+# DRT-TAIL-3 (QC-DRT-TAIL 11-25): the M2..M5 via stacks of the followpin rails land an M3 pad (ASAP7: ~0.090 x 0.034 um) on every M5 strap, a
+# shape that is a SWire VIA, not a wire, so the loop below (M4+ stripes) never sees it.  FastRoute counts the 8 M3 tracks around each pad
+# column as free, DRT cannot use them (3 nm slivers: sle_fe_v1 cl1cbb7497 / slw_fe_v1 cl95cd1d0c, cldb4efe33; every violation at the strap
+# residues 313.05/313.24/317.5 um, 56 of 71, 58 of 136, 161 of 398 DRT violations flat for 20+ iterations).  ot_pgtt_add_m3 reads the tech
+# via boxes of each PG via, takes its M3 pad geometry, and adds one conservative temporary GRT
+# obstruction per distinct pad column over the tracks whose wire is within the layer's min spacing of the pad, over the pad rows' extent.
+# Opt in with OT_PG_TRACK_TRUTH_M3=1 alongside OT_PG_TRACK_TRUTH=1.  Removed by ot_pgtt_remove with the others.
+proc ot_pgtt_add_m3 {blk tech} {
+  if {![info exists ::env(OT_PG_TRACK_TRUTH_M3)] || $::env(OT_PG_TRACK_TRUTH_M3) ne "1"} { return }
+  set L ""
+  foreach l [$tech getLayers] { if {[$l getType] eq "ROUTING" && [$l getRoutingLevel] == 3} { set L $l; break } }
+  if {$L eq ""} { return }
+  set dir [$L getDirection]
+  set tg [$blk findTrackGrid $L]
+  if {$tg eq "NULL"} { return }
+  if {$dir eq "HORIZONTAL"} { set g [lsort -integer -unique [$tg getGridY]] } else { set g [lsort -integer -unique [$tg getGridX]] }
+  if {[llength $g] == 0} { return }
+  set hw [expr {[$L getWidth] / 2}]; set sp [$L getSpacing]
+  array unset pads
+  array set vinfo {}
+  foreach net [$blk getNets] {
+    if {![$net isSpecial]} { continue }
+    set st [$net getSigType]
+    if {$st ne "POWER" && $st ne "GROUND"} { continue }
+    foreach sw [$net getSWires] {
+      foreach w [$sw getWires] {
+        if {![$w isVia]} { continue }
+        set v [$w getTechVia]
+        if {$v eq "NULL" || $v eq ""} { set v [$w getBlockVia] }
+        if {$v eq "NULL" || $v eq ""} { continue }
+        set vn $v
+        if {![info exists vinfo($vn)]} {
+          # relative boxes of the via: union origin and the pad box on layer L (empty if the via has no L shape)
+          set ux 1000000000; set uy 1000000000; set pb {}
+          foreach b [$v getBoxes] {
+            set ux [expr {min($ux, [$b xMin])}]; set uy [expr {min($uy, [$b yMin])}]
+            set bl [$b getTechLayer]
+            if {$bl ne "NULL" && [$bl getName] eq [$L getName]} { lappend pb [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]] }
+          }
+          set vinfo($vn) [list $ux $uy $pb]
+        }
+        lassign $vinfo($vn) ux uy pb
+        if {![llength $pb]} { continue }
+        # the SBox bbox is the via union placed at the via origin
+        set dx [expr {[$w xMin] - $ux}]; set dy [expr {[$w yMin] - $uy}]
+        foreach rect $pb {
+          lassign $rect px0 py0 px1 py1
+          set x0 [expr {$px0 + $dx}]; set y0 [expr {$py0 + $dy}]
+          set x1 [expr {$px1 + $dx}]; set y1 [expr {$py1 + $dy}]
+          if {$dir eq "HORIZONTAL"} { set key "$y0,$y1"; set a0 $x0; set a1 $x1 } else { set key "$x0,$x1"; set a0 $y0; set a1 $y1 }
+          if {![info exists pads($key)]} { set pads($key) [list $a0 $a1] } else {
+            lassign $pads($key) m0 m1
+            set pads($key) [list [expr {min($m0, $a0)}] [expr {max($m1, $a1)}]]
+          }
+        }
+      }
+    }
+  }
+  set n 0; set nt 0
+  foreach key [array names pads] {
+    lassign [split $key ,] lo hi
+    lassign $pads($key) a0 a1
+    set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
+    set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
+    if {$kmax < $kmin || $kmax < 0} { continue }
+    set t0 [expr {[lindex $g $kmin] - $hw}]; set t1 [expr {[lindex $g $kmax] + $hw}]
+    if {$dir eq "HORIZONTAL"} { set o [odb::dbObstruction_create $blk $L $a0 $t0 $a1 $t1] } else { set o [odb::dbObstruction_create $blk $L $t0 $a0 $t1 $a1] }
+    lappend ::ot_pgtt_obs $o
+    incr n; incr nt [expr {$kmax - $kmin + 1}]
+  }
+  puts "OT_PG_TRACK_TRUTH M3 pads: [llength [array names pads]] pad columns on [$L getName], $n temporary GRT obstructions over $nt tracks"
+
+}
+
 proc ot_pgtt_add {} {
   if {![info exists ::env(OT_PG_TRACK_TRUTH)] || $::env(OT_PG_TRACK_TRUTH) ne "1"} { return }
   if {[info exists ::ot_pgtt_obs] && [llength $::ot_pgtt_obs]} { return }
@@ -137,6 +212,7 @@ proc ot_pgtt_add {} {
       }
     }
   }
+  ot_pgtt_add_m3 $blk $tech
   if {[ot_pgtt_region_mode]} {
     set dbu [$blk getDbUnitsPerMicron]
     foreach r $::ot_pgtt_regions {

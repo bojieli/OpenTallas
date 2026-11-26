@@ -14593,8 +14593,7 @@ def tool_skew_closure(cfg, main_root):
 
 
 def tool_skew_measure(AP, cfg, st, die):
-    """measure one die's tree against main (or its tools_sha pin) once per tick; -> result dict, or None when off.  Posts one
-    NEEDS-LANE per die per changed set.  Called for every enabled die each tick (not only on launch)."""
+    """Measure one die's tree against main or its pin and report a changed skew or admission verdict."""
     d = (cfg.get("dies") or {}).get(die) or {}
     mode = opt(cfg, die, "tool_skew")
     if mode is False or not d.get("src"):
@@ -14619,16 +14618,19 @@ def tool_skew_measure(AP, cfg, st, die):
     if not res["measured"]:
         log_hourly(AP, st, f"TS|{die}|unmeasured", f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
     elif not res["ok"]:
-        if mode == "warn":
-            log_hourly(AP, st, f"TS|{die}|warn", f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
-        else:
-            log_hourly(AP, st, f"TS|{die}|refuse", f"KIT-WAVE TOOL-SKEW REFUSE {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (launches refused)")
+        runtime_tools = mode != "warn" and bool(rt_tools_fields(cfg, die))
+        blocking = mode != "warn" and not runtime_tools
+        level = "REFUSE" if blocking else "WARN"
+        why = "launches refused" if blocking else ("launch uses pinned runtime" if runtime_tools else "warn, launching")
+        baseline = f"pin {res['pin']}" if res.get("pin") else "main"
+        log_hourly(AP, st, f"TS|{die}|{level.lower()}",
+                   f"KIT-WAVE TOOL-SKEW {level} {die}: {n} of {tot} import-closure module(s) differ from {baseline} ({why})")
         posted = st.setdefault("tool_skew_posted", {})
-        sig = TS.signature(res)
+        sig = f"{level}:{TS.signature(res)}"
         if posted.get(die) != sig and not AP.DRY:
             posted[die] = sig
-            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                            f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} " +
+                            TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", ""), blocking=blocking))
     else:
         log_hourly(AP, st, f"TS|{die}|ok", f"KIT-WAVE TOOL-SKEW OK {die}: 0 of {tot} import-closure module(s) differ")
         st.get("tool_skew_posted", {}).pop(die, None)
@@ -15879,7 +15881,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: {live} still owns {spec_path}")
             return None
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
-    if strict_wave_route_review(die):
+    if required_route_review(cfg, sp):
         sp["geom_grt_deferred"] = True
     if r.get("_resign"):
         sp["resign"] = True          # FLOW-NOADV-R3: a superseded-signed re-sign pick (PLACE-SETUP-STOP exempt); not an input of any hash
@@ -19096,10 +19098,10 @@ def visual_advisory(rec):
 
 
 def auto_geom_passed(rec):
-    """VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, COORD; owner rule "visual review never blocks"): the row's own AUTO-GEOM PASSED, so its
-    place renders exist.  Such a row routes at once: a pending or ISSUES visual verdict is advisory (visual_pending, GEOM
-    queue); only an explicit BAD verdict holds it (WAIT-FORM).  PASS-COND (AUTO-GEOM FAIL granted) or no geom record keeps the
-    review holds (no render because geom failed)."""
+    """Whether the row's own AUTO-GEOM verdict has a placement render.
+
+    Advisory visual policy can use the render without a human verdict. An
+    exact required review uses the viewed placement verdict separately."""
     # PASS-COND (AUTO-GEOM FAIL granted by a die exception) ran geom and has its render too: it routes like PASS (FABLE-FLOW-2200:
     # 51 qwen_compute/s81 rows held WAIT-VISUAL 24-39 h were all PASS-COND)
     return str(rec.get("geom_verdict") or "").strip().upper() in ("PASS", "PASS-COND") and bool(rec.get("geom_dir"))
@@ -19302,7 +19304,7 @@ def exact_kit_visual_verdict(rec, viewed_only=False):
     visual_verdicts()
     key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
     index = "viewed" if viewed_only else "exact"
-    if viewed_only and strict_wave_route_review(rec["die"]) and rec.get("started"):
+    if viewed_only and rec.get("started"):
         # The coord log records minute precision. A previous launch can reuse a kit path.
         build_minute = int(float(rec["started"])) // 60 * 60
         reviewed = (_VISUAL_CACHE.get("viewed_ts") or {}).get(key)
@@ -19316,15 +19318,9 @@ def required_route_hold(cfg, rec):
         return None
     kit = review_kit_location(rec)
     verdict = exact_kit_visual_verdict(rec, viewed_only=True)
-    strict = strict_wave_route_review(rec.get("die"))
-    if verdict in VISUAL_REJECT and (strict or visual_reject_holds(rec, verdict)):
+    if verdict in VISUAL_REJECT:
         return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
     if verdict not in VISUAL_ACCEPT:
-        if not strict and auto_geom_passed(rec):
-            # VISUAL-NOBLOCK: a required review is queued, never a route hold, once AUTO-GEOM passed (16 hand-posted verdicts 11-21)
-            rec["visual_pending"] = (f"WAIT-VISUAL (advisory): AUTO-GEOM PASS, routed; GEOM VERDICT pending for kit="
-                                     f"{kit or '<host:/kit/path>'}" + (f" (now {verdict})" if verdict else ""))
-            return None
         return f"WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit={kit or '<host:/kit/path>'}"
     return None
 
@@ -19964,8 +19960,17 @@ def follow_queue(st, ap_dir, notices, stops=None):
         if (status, cls) != old and status in ("FAIL", "SIGNED"):
             QUEUE_OUTCOMES.append((rec, status, str(stage or "route"), cls, why))          # processed by repeat_queue_outcomes() (it has cfg / AP)
         if (status, cls) != old and (status in ("SIGNED", "FAIL")):
-            msg = (f"{rec['item']} SIGNED OFF -> count ({why[:120]})" if status == "SIGNED" else
-                   f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}")
+            if status == "SIGNED":
+                parent = so.get("parent_qualification")
+                parent_status = parent.get("status") if isinstance(parent, dict) else parent
+                qualification = ""
+                if parent_status == "NEEDS_PARENT":
+                    qualification = "; parent qualification pending"
+                elif so.get("release_qualified") is False:
+                    qualification = "; full release qualification withheld"
+                msg = f"{rec['item']} SIGNED OFF -> count eligible{qualification} ({why[:120]})"
+            else:
+                msg = f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}"
             notices.setdefault(rec["die"], []).append(msg)
     return n
 

@@ -5,18 +5,30 @@
 #   render_review.sh REVIEW_DIR      (REVIEW_DIR/review.json from autopilot.py, mem_gb = its ot-run --mem)
 set -uo pipefail
 REV=$(cd "$1" && pwd)
-read -r KIT ODB IMG ID MEM SP < <(python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["kit"],d["odb"],d["image"],d["id"],d.get("mem_gb",8),int(bool(d.get("stage_paths"))))' "$REV/review.json")
+read -r KIT ODB IMG ID MEM SP SRC_ODB < <(python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["kit"],d["odb"],d["image"],d["id"],d.get("mem_gb",8),int(bool(d.get("stage_paths"))),d.get("src_odb") or "")' "$REV/review.json")
 # FABLE-FLOW-1920 F5: a checkpoint render reads its private snapshot copy in the review dir (noprog_watchdog odb_snapshot), deleted when the render ends
 case "$ODB" in "$REV"/snap_*.odb) DBP=/rev/${ODB#"$REV"/}; trap 'rm -f "$ODB"' EXIT ;; "$KIT"/*) DBP=/kit/${ODB#"$KIT"/} ;; *) echo "AP_REVIEW_ERROR odb $ODB not inside kit $KIT"; exit 2 ;; esac
 test -f "$ODB" || { echo "AP_REVIEW_ERROR routed ODB missing: $ODB"; exit 2; }
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 printf 'read_db %s\nsource /rev/tools/layout_dump.tcl\n' "$DBP" > "$REV/dump.tcl"
 # stage_paths (SMELL / checkpoint renders, no sign-off STA yet): worst-50 setup + hold paths of this DB for the paths.png overlay
+STA_ODB=$DBP
 if [ "${SP:-0}" = 1 ] && [ -f "$REV/tools/stage_paths.tcl" ]; then
-  printf 'set ::env(SP_ODB) %s\nset ::env(SP_OUT) /rev\nsource /rev/tools/stage_paths.tcl\n' "$DBP" >> "$REV/dump.tcl"
+  # OpenROAD reads the stable snapshot above. Only the stage context (name, SDC and libs)
+  # comes from the original checkpoint, and only when it is inside the mounted kit.
+  case "$DBP" in
+    /rev/snap_*.odb)
+      if [ -n "$SRC_ODB" ]; then
+        kit_root=$(realpath -m -- "$KIT")
+        origin=$(realpath -m -- "$SRC_ODB")
+        case "$origin" in "$kit_root"/*) STA_ODB=/kit/${origin#"$kit_root"/} ;; esac
+      fi
+      ;;
+  esac
+  printf 'set ::env(SP_OUT) /rev\nsource /rev/tools/stage_paths.tcl\n' >> "$REV/dump.tcl"
 fi
 $DK run --rm --name "ap-render-$ID-$$" --cpus 2 --memory "${MEM}g" --memory-swap "${MEM}g" -v "$KIT":/kit:ro -v "$REV":/rev \
-  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_LAYOUT_OUT=/rev/layout.json -w /rev "$IMG" bash -lc \
+  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_LAYOUT_OUT=/rev/layout.json -e "SP_ODB=$STA_ODB" -w /rev "$IMG" bash -lc \
   "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /rev/dump.tcl > /rev/dump.log 2>&1; rc=\$?; chown -R \$HUID:\$HGID /rev; exit \$rc"
 rc=$?
 tail -2 "$REV/dump.log"

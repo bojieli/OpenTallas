@@ -1,6 +1,4 @@
-"""VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, COORD; owner rule "visual review never blocks"): a type row whose own AUTO-GEOM PASSED
-routes at once even under a required review_before_route policy or the route visual gate; the verdict is advisory
-(visual_pending).  Hard holds stay for an explicit BAD verdict, or when there is no AUTO-GEOM PASS (no render)."""
+"""Placement render and exact required review policy at the route boundary."""
 import pytest
 
 import kit_wave as K
@@ -19,14 +17,24 @@ def verdict(monkeypatch):
     return box
 
 
-@pytest.mark.parametrize("v", [None, "ISSUES", "PENDING"])
 @pytest.mark.parametrize("gv", ["PASS", "PASS-COND"])
-def test_required_review_is_advisory_after_auto_geom_pass(verdict, v, gv):
-    verdict["v"] = v
+def test_required_review_blocks_after_auto_geom_pass(verdict, gv):
     row = dict(ROW, geom_verdict=gv)
-    assert K.required_route_hold(CFG, row) is None
-    assert K.route_hold_reason(CFG, dict(ROW)) is None
-    assert row["visual_pending"].startswith("WAIT-VISUAL (advisory): AUTO-GEOM PASS")
+    for pending in (None, "PENDING"):
+        verdict["v"] = pending
+        assert K.route_hold_reason(CFG, row).startswith("WAIT-VISUAL")
+    verdict["v"] = "ISSUES"
+    assert K.route_hold_reason(CFG, row).startswith("WAIT-FORM")
+    verdict["v"] = "OK"
+    assert K.route_hold_reason(CFG, row) is None
+
+
+def test_event_advisory_review_keeps_routing_after_auto_geom_pass(verdict):
+    verdict["v"] = "ISSUES"
+    cfg = {"dies": {"s81": {"event": "J", "review_before_route": dict(POLICY, required=False)}}}
+    row = dict(ROW)
+    assert K.route_hold_reason(cfg, row) is None
+    assert row["visual_pending"].startswith("WAIT-VISUAL (advisory)")
 
 
 def test_bad_verdict_still_holds(verdict):
@@ -75,8 +83,12 @@ def test_placed_geometry_defers_routing_only_in_captured_takeover_spec():
     assert placed["grt_wall_s"] == inherited["grt_wall_s"]
 
 
-def test_takeover_requires_viewed_exact_attempt_after_auto_geom(monkeypatch, tmp_path):
-    monkeypatch.setenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", "1")
+@pytest.mark.parametrize("takeover", [False, True])
+def test_required_viewed_is_for_the_current_attempt_and_kit(monkeypatch, tmp_path, takeover):
+    if takeover:
+        monkeypatch.setenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", "1")
+    else:
+        monkeypatch.delenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", raising=False)
     monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
     review = tmp_path / "coord/lanes/GEOM-REVIEW.md"
     review.parent.mkdir(parents=True)
@@ -88,8 +100,11 @@ def test_takeover_requires_viewed_exact_attempt_after_auto_geom(monkeypatch, tmp
     )
     build_start = K.verdict_line_ts("- 2026-11-23 07:11 PST ") + 17
     row = dict(ROW, started=build_start)
-    cfg = {"dies": {"s81": {"event": "J"}}}
+    cfg = {"dies": {"s81": {"event": "J"}}} if takeover else CFG
     assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
+    if not takeover:
+        assert K.route_hold_reason(cfg, dict(row, event="older")) is None
+        assert K.route_hold_reason(cfg, dict(row, item="unscoped")) is None
 
     with review.open("a") as out:
         out.write("- 2026-11-23 07:12 PST GEOM VERDICT [LANE viewed] s81/t1 a1: ISSUES kit=epyc9:/k\n")

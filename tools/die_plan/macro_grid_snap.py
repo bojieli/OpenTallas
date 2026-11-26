@@ -44,7 +44,8 @@ def lef_master(path, master):
         if not sz:
             return None
         rows = []
-        for pm in re.finditer(r"^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", m.group(2), re.M | re.S):
+        # A LEF pin token may end in punctuation, including a closing bus bracket.
+        for pm in re.finditer(r"^\s*PIN\s+(\S+)(?!\S)(.*?)^\s*END\s+\1(?!\S)", m.group(2), re.M | re.S):
             if re.search(r"\bUSE\s+(POWER|GROUND)\b", pm.group(2)):
                 continue
             layer = None
