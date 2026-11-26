@@ -71,6 +71,7 @@ class StampFlowTag(unittest.TestCase):
         import signoff
         self.S = signoff
         self.old = os.environ.get(signoff.FLOW_TAG_ENV)
+        os.environ.pop(signoff.UNRESOLVED_ENV, None)
 
     def tearDown(self):
         if self.old is None:
@@ -98,7 +99,7 @@ class DeriveFlowTag(unittest.TestCase):
     def setUp(self):
         import signoff
         self.S = signoff
-        self.saved = {k: os.environ.pop(k, None) for k in (signoff.FLOW_TAG_ENV, signoff.SRC_COMMIT_ENV)}
+        self.saved = {k: os.environ.pop(k, None) for k in (signoff.FLOW_TAG_ENV, signoff.SRC_COMMIT_ENV, signoff.UNRESOLVED_ENV)}
 
     def tearDown(self):
         for k, v in self.saved.items():
