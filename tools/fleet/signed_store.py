@@ -23,11 +23,13 @@ import gzip
 import hashlib
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
 import tempfile
 import time
+from pathlib import Path
 
 HOME = os.path.expanduser("~")
 STORE = os.environ.get("OT_SIGNED_STORE", os.path.join(HOME, "coord", "signed-store"))
@@ -46,6 +48,19 @@ DIE_CI_NAMES = ("6_final.v", "6_final.spef", "6_final.sdc")
 
 def records_dir(store=None):
     return os.path.join(store or STORE, RECORDS)
+
+
+def revoked_odb_shas(coord):
+    """Exact routed DB identities excluded from the archive headline."""
+    path = Path(coord) / "lanes/COUNT-REVOKED.tsv"
+    try:
+        lines = path.read_text().splitlines()
+    except OSError:
+        return set()
+    keys = [line.split("\t", 3)[2].strip() for line in lines
+            if not line.startswith("#") and line.count("\t") >= 3]
+    return {key.partition(":")[2] for key in keys
+            if re.fullmatch(r"(?:odb|odb_sha256):[0-9a-f]{64}", key)}
 
 
 def entry_path(eid, store=None):
@@ -103,18 +118,29 @@ def _alias_split(a):
     return h, p
 
 
-def load_records(store=None):
+def load_records(store=None, eligible=None):
     """-> (records, pins): one scan-format record per alias (the same dicts scan_host returned, so RETIRED / COUNT-REVOKED /
     COUNT-CREDIT keep working on their host:path keys) and pins {(scan_host, pins_path): stored pin table}.  No host is read."""
     recs, pins = [], {}
     for e in read_manifest(store):
         if str(e.get("origin", "")).startswith("origin/main:"):
             continue                                # counted from the git tree (main_records); the entry holds its archive copy
+        if eligible is not None and e.get("signoff_json"):
+            try:
+                record = unblob(e["signoff_json"])
+            except (OSError, EOFError, ValueError):
+                continue
+            if not isinstance(record, dict) or not eligible(record):
+                continue
         s = {k: e["scan"][k] for k in SCAN_FIELDS if k in (e.get("scan") or {})}
         p = e.get("pins")
+        odb_shas = {f[2] for f in (e.get("files") or []) if len(f) >= 3 and os.path.basename(f[0]) == "6_final.odb"}
+        odb_sha = next(iter(odb_shas)) if len(odb_shas) == 1 else None
         for a in e.get("aliases") or [e["origin"]]:
             h, ap = _alias_split(a)
             r = dict(s, path=ap, scan_host=h, store_id=e["id"], archive=e.get("archive"), netlist_sha=e.get("netlist_sha"))
+            if odb_sha:
+                r["odb_sha"] = odb_sha
             r.setdefault("versioned", bool(r.get("src_commit") and r.get("flow_tag")))
             recs.append(r)
             if p is not None and r.get("pins_path"):
