@@ -2092,6 +2092,12 @@ SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "bool
 SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties": False, "properties": {
     "enable": {"type": ["integer", "boolean"]}, "stack_min": {"type": "integer", "minimum": 2}, "max_um": {"type": "number", "exclusiveMinimum": 0},
     "halo_um": {"type": "number", "minimum": 0}, "margin_um": {"type": "number", "minimum": 0}, "tap_frac": {"type": "number", "exclusiveMinimum": 0}}}
+# CLK-LAND-CLEAR (CLASS-OWNERS-B C-CLK-LAND-OBS 11-26, clk_land_clear.py): opt-in, default absent = byte-identical; clock taps, reserved die clock
+# sites and relay seats inside a hard macro body / halo / OBS stack are re-sited in P.types
+SCHEMA["properties"]["clk_land_clear"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "types": {"type": "array", "items": {"type": "string"}},
+    "classes": {"type": "array", "items": {"enum": ["tap", "reserved", "relay"]}},
+    "clear_um": {"type": "number", "minimum": 0}, "max_move_um": {"type": "number", "exclusiveMinimum": 0}}}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
 # TAP-REACH (CLASS-OWNERS-B C-TAP-REACH 11-26, tap_reach_fix.py): opt-in, default absent = byte-identical; the per-cut generator appends sink
 # taps (explicit clock.taps / added_taps) for FIRM seats beyond the type's tap radius, optionally splits taps over span_um
