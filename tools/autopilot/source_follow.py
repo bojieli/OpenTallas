@@ -568,9 +568,9 @@ def worker(spec_path):
         # No new release gate: the existing strict bind and the requested kit's real inputs still decide.
         print("SOURCE-FOLLOW historical input preparation unavailable: " + str(error), flush=True)
     payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(copy_untracked_inputs) + "\n" + inspect.getsource(link_previous_snapshot) + "\n" + inspect.getsource(finish_linked_checkout) + "\n" + inspect.getsource(prune_snapshots) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
-    cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),
-           "--threads", "2", "--dir", str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12]),
-           "--", "bash", "-lc", payload]
+    cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host,
+           "--mem", str(spec["die_config"].get("bind_mem_gb", 96)), "--threads", "48",
+           "--priority", "plan", "--plan-job", "bind", "--dir", remote_dir, "--", "bash", "-lc", payload]
     if spec["die_config"].get("src_follow", {}).get("critical"):
         cmd.insert(1, "--crit")
     p = subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)

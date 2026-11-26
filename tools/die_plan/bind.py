@@ -4274,8 +4274,8 @@ class Binder:
         self.io_used = {}
         self.parent_id_ports = {}
         self.parent_id_values = {}
-        # FABLE-PIPELINE-R1: OT_BIND_EMIT_J=N (default auto, OPUS-PIPELINE-R2 11-21; 1 = serial) emits the types in N forked workers and merges their state changes in
-        # sorted type order (bind_emit_par.py); a state change it cannot merge falls back to this serial loop.
+        # Fork independent types, then replay their state changes in sorted type order.
+        # Scoped probes and explicit local serial diagnostics can still use the serial loop.
         import bind_emit_par
         _par = False
         emit_set = self.by_type
@@ -4290,10 +4290,12 @@ class Binder:
         if getattr(self, "collect_gaps", False):
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
         print(f"bind: EMIT-HEAD {_time.time() - _t0:.1f} s before the types", flush=True)
-        emit_jobs = min(len(emit_set), bind_emit_par.jobs(scoped=only is not None))
-        managed_full = (only is None and len(emit_set) > 1
-                        and os.environ.get("OT_HEAVY_PRIO") in ("die", "plan"))
-        if managed_full and emit_jobs < 2:
+        full_die = only is None and len(emit_set) > 1
+        managed_full = full_die and os.environ.get("OT_HEAVY_PRIO") in ("die", "plan")
+        require_parallel = full_die and (managed_full or (getattr(self, "strict_types", False)
+                                                          and not bind_emit_par.serial_override()))
+        emit_jobs = min(len(emit_set), bind_emit_par.jobs(scoped=only is not None, bounded=managed_full))
+        if require_parallel and emit_jobs < 2:
             raise BindError("BIND_PARALLEL_REQUIRED: whole-die emit has fewer than two workers; "
                             "increase the fleet CPU/memory lease or remove the one-worker override")
         if emit_jobs > 1:
@@ -4301,7 +4303,7 @@ class Binder:
                 bind_emit_par.run(self, out, files, emit_jobs, beat=beat)
                 _par = True
             except bind_emit_par.ParUnsafe as exc:
-                if managed_full:
+                if require_parallel:
                     raise BindError(f"BIND_PARALLEL_REQUIRED: unsafe parallel merge; {exc}") from exc
                 print(f"bind: emit parallel fell back to serial: {exc}", flush=True)
         if not _par:

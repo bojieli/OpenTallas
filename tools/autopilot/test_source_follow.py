@@ -109,6 +109,9 @@ def test_nominated_source_preparation_uses_crit_without_changing_memory(tmp_path
         cmd=calls[-1]
         assert ('--crit' in cmd)==critical
         assert cmd[cmd.index('--mem')+1]=='12'
+        assert cmd[cmd.index('--threads')+1]=='48'
+        assert cmd[cmd.index('--priority')+1]=='plan'
+        assert cmd[cmd.index('--plan-job')+1]=='bind'
 
 
 

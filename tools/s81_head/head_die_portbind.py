@@ -53,7 +53,7 @@ from bind_emit_par import _mem_limit_bytes, allocated_cpus, positive_int  # noqa
 workers = allocated_cpus()
 if a.jobs is not None:
     workers = min(workers, a.jobs)
-if workers < 2 and os.environ.get("OT_HEAVY_PRIO") in ("plan", "die"):
+if workers < 2 and (a.jobs != 1 or os.environ.get("OT_HEAVY_PRIO") in ("plan", "die")):
     raise SystemExit("HEAD_BIND_PARALLEL_REQUIRED: request at least two CPUs for a whole-die HEAD bind")
 
 
