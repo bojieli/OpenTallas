@@ -3491,6 +3491,14 @@ def wave_review_snapshot():
                or (d.get("review_before_route") or {}).get("required") is True
                for die, d in (cfg.get("dies") or {}).items()):
         return cfg, {}
+    import hold_records as HR
+    if any(KW.current_wave_type(cfg, {"die": die, "event": d.get("event")})
+           and any(HR.explicit_current_route_record(r, d) for r in d.get("hold_records") or ())
+           for die, d in (cfg.get("dies") or {}).items()):
+        try:
+            cfg["_lane_activity"] = HR.lane_activity((read_coord("lanes/COORD-REVIEW-QUEUE.md") or "").splitlines())
+        except (OSError, ValueError):
+            pass  # a blind read cannot expire an outstanding structural hold
     kits = {}
     for rec in (KW.load_state(AP_DIR).get("items") or {}).values():
         # Keep exact core identities too: a core does not acquire the current-type review default.

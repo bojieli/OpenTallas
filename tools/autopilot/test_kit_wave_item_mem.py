@@ -2,8 +2,16 @@
 autopilot enqueue --mem; absent = the die's place_mem_gb.  QC hc tap-pair kits need >= 96 GB for their kit LEC."""
 import json,tempfile,unittest
 from pathlib import Path
+import pytest
+
 from test_kit_wave import KW,cfg
 from test_kit_wave_enqueue_retry import AP
+
+@pytest.fixture(autouse=True)
+def exact_placement_already_viewed(monkeypatch):
+    # These fixtures exercise downstream enqueue behavior with a reviewed placed kit.
+    monkeypatch.setattr(KW, "exact_kit_visual_verdict", lambda *args, **kwargs: "GOOD")
+
 
 
 class ItemMem(unittest.TestCase):

@@ -90,7 +90,7 @@ def test_incomplete_snapshot_is_replaced_and_kept_aside(repo, tmp_path):
 
 def test_launcher_and_run_item_use_the_helpers():
     src = (HERE / "kit_wave.py").read_text()
-    body = src[src.index("def run_item(spec_path):"):]
+    body = src[src.index("def _run_item(spec_path, resume_reviewed=False):"):]
     check = body.index("ensure_future_lec(out, sp[\"future_lec\"])")
     assert check < body.index('run("mkdir"') < body.index('run("lec_tools_copy"')
     # KW-FIX-43 11-10: the launcher snapshots through future_lec_for (option future_lec_commit pin), which still

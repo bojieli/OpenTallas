@@ -1,6 +1,8 @@
 import json,tempfile,unittest
 from pathlib import Path
 from unittest import mock
+import pytest
+
 from test_kit_wave import KW,cfg,FakeAP
 class AP:
     DRY=True
@@ -24,6 +26,12 @@ class PinnedSource(unittest.TestCase):
         for p in (None,dict(src_sha="")):
             r,a=self.run_case(p);self.assertEqual(r["class"],"FLOW");self.assertEqual(a.logs,[])
 if __name__=="__main__":unittest.main()
+
+@pytest.fixture(autouse=True)
+def exact_placement_already_viewed(monkeypatch):
+    # These fixtures exercise downstream enqueue behavior with a reviewed placed kit.
+    monkeypatch.setattr(KW, "exact_kit_visual_verdict", lambda *args, **kwargs: "GOOD")
+
 
 class RetryOutput(unittest.TestCase):
     def test_second_attempt_keeps_first_output_and_identity(self):

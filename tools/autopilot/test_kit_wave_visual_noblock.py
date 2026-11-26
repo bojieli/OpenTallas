@@ -144,3 +144,36 @@ def test_current_active_wave_type_requires_view_without_event_flag(verdict, die)
 def test_private_active_type_defers_all_geometry_grt_until_review(goal):
     spec = dict(die="s81", kind="type", private={"lane": "TEST"}, item="top", event="current", geom_mem_gb=8)
     assert not K.placed_geom_check(spec, "/exact/3_place.odb", "10x20", goal)["grt"]
+
+
+def test_current_explicit_route_hold_survives_visual_good_and_stops_off(verdict):
+    hold = {"id": "known-pg", "route": True, "plan_sha": "p", "items": ["t1"],
+            "release": [], "reason": "repair exact PG continuity", "owner": "QC"}
+    die = {"event": "J", "plan_sha256": "p", "hold_records": [hold],
+           "route_hold_items": {"*": "old advisory"}}
+    cfg = {"stops_off": True, "dies": {"s81": die}}
+    row = dict(ROW)
+    assert K.required_route_hold(cfg, row).startswith("WAIT-VISUAL")
+    verdict["v"] = "GOOD"
+    assert K.required_route_hold(cfg, row).startswith("WAIT-STRUCTURE: route hold known-pg:")
+    assert K.route_hold_reason(cfg, row) == K.required_route_hold(cfg, row)
+    assert K.route_hold_reason(cfg, dict(row, item="unrelated")) is None
+    assert K.route_hold_reason(cfg, dict(row, event="old")) is None
+    assert K.route_hold_reason(cfg, dict(row, kind="core")) is None
+    for change in ({"plan_sha": "retired"}, {"release": ["proof:PG"]}, {"migrated": True}):
+        die["hold_records"] = [dict(hold, **change)]
+        assert K.route_hold_reason(cfg, row) is None
+    die["hold_records"] = [hold]
+    cfg["_lane_activity"] = {"QC": 1}
+    cfg["_now"] = 7 * 3600
+    assert K.route_hold_reason(cfg, row) is None
+
+
+def test_scoped_route_record_is_authorable_under_stops_off():
+    import kit_wave_edit as KWE
+    orig = {"stops_off": True, "dies": {"s81": {"event": "J", "plan_sha256": "p"}}}
+    hold = {"id": "pg", "route": True, "plan_sha": "p", "items": ["t1"], "release": []}
+    with_hold = {"stops_off": True, "dies": {"s81": dict(orig["dies"]["s81"], hold_records=[hold])}}
+    assert KWE.noop_hold_record_problems(orig, with_hold) == []
+    hold["plan_sha"] = "retired"
+    assert len(KWE.noop_hold_record_problems(orig, with_hold)) == 1

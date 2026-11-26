@@ -101,7 +101,7 @@ class SchedulerRt(unittest.TestCase):
 
     def test_run_item_runs_tools_from_tsrc(self):
         """every tool command of run_item changes into tsrc; the design roots stay on the die tree"""
-        body = re.search(r"\ndef run_item\(spec_path\):\n(.*?)\n(?=def )", (HERE / "kit_wave.py").read_text(), re.S).group(1)
+        body = re.search(r"\ndef _run_item\(spec_path, resume_reviewed=False\):\n(.*?)\n(?=def )", (HERE / "kit_wave.py").read_text(), re.S).group(1)
         cds = re.findall(r"cd \{q\(src\)\} && (\S+)", body)
         self.assertEqual(cds, ["for"], cds)            # only the legacy KITRTL farm (tree-own tools, never reached with rt tools)
         self.assertIn("--rtl-root {q(src)}", body)
@@ -263,7 +263,7 @@ class DecoupleTwo(unittest.TestCase):
     """TOOLS-DECOUPLE-2 (COORD 11-19)"""
 
     def body(self):
-        return re.search(r"\ndef run_item\(spec_path\):\n(.*?)\n(?=def )", (HERE / "kit_wave.py").read_text(), re.S).group(1)
+        return re.search(r"\ndef _run_item\(spec_path, resume_reviewed=False\):\n(.*?)\n(?=def )", (HERE / "kit_wave.py").read_text(), re.S).group(1)
 
     def test_flow_refresh_gets_the_die_tree_and_the_farm_starts_from_rt(self):
         b = self.body()

@@ -19368,15 +19368,35 @@ def strict_wave_route_review(die):
             and die in ("s81", "s81_head", "qwen_compute", "qwen_kvsys"))
 
 
+def current_wave_type(cfg, rec):
+    die = rec.get("die")
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return (die in PPV.ACTIVE_DIES and (rec.get("kind") or "type") == "type"
+            and bool(d.get("event")) and d["event"] == rec.get("event"))
+
+
 def required_route_review(cfg, rec):
     """Require independent actual placement review for current Wave types on the active dies."""
     die = rec.get("die")
     d = (cfg.get("dies") or {}).get(die) or {}
-    current_type = (die in PPV.ACTIVE_DIES and (rec.get("kind") or "type") == "type"
-                    and bool(d.get("event")) and d["event"] == rec.get("event"))
-    return (current_type or strict_wave_route_review(die)
+    return (current_wave_type(cfg, rec) or strict_wave_route_review(die)
             or ((d.get("review_before_route") or {}).get("required") is True
                 and review_before_route(cfg, rec)))
+
+
+def explicit_route_hold(cfg, rec):
+    """A viewed placement cannot release a current typed structural route hold."""
+    if not current_wave_type(cfg, rec):
+        return None
+    import hold_records as HR
+    d = cfg["dies"][rec["die"]]
+    items = (d.get("hold_event_items") or {}).get(HR.plan_id(d), ())
+    for record in d.get("hold_records") or ():
+        if (HR.explicit_current_route_record(record, d)
+                and rec.get("item") in HR.rec_keys(record, items)
+                and not HR.record_expired(record, cfg)):
+            return f"WAIT-STRUCTURE: route hold {record['id']}: {record['reason']}"
+    return None
 
 
 def exact_kit_visual_verdict(rec, viewed_only=False):
@@ -19404,7 +19424,7 @@ def required_route_hold(cfg, rec):
         return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
     if verdict not in VISUAL_ACCEPT:
         return f"WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit={kit or '<host:/kit/path>'}"
-    return None
+    return explicit_route_hold(cfg, rec)
 
 
 def route_hold_reason(cfg, rec):
