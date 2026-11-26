@@ -549,3 +549,4 @@
 - 2026-11-26 04:39 PST ALERT NO-PROGRESS s81_head: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 409 min (last 21:49) and 0 private-spec launches for 60 min (last 03:29 ot-run HEAD-EAST-R2 hd_lep0N); no current launch blocker logged
 - 2026-11-26 04:59 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
 - 2026-11-26 05:09 PST ALERT NO-PROGRESS qwen_compute: 6 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 429 min (last 22:00) and 0 private-spec launches for 60 min (last 20:51 ot-run QC-SLECTL-PILE sle_ctl__cla4f6f12f); 55 hold(s): 0 without eta, 6 overdue, next eta 11-26 09:00; NO-LAUNCH x15
+- 2026-11-26 05:09 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
