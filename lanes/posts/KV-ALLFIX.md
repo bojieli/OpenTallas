@@ -1116,3 +1116,10 @@
   - hub_Eo finding only: 1479 r2r over 405 um, 406 collapses, clock on 2 astk macros.
   DECISION: sys_SD placed ISSUES-ACCEPT (empty slivers, density 0.53). run-item capped it at place from stale A5t6 SMELL rows (CTS setup -298, hold -114). Resume it as an OT_KPG_FULL=1 route pilot from the R6 placement, or hold? Recommend pilot: one kit, and the smell is not R6 evidence.
 - 2026-11-25 19:33 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3276007-1795663779 on open-snipe: rc=0 after 235 s, ended 03:33:30, log none, cmd: --mem 24 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I probe1.py
+- 2026-11-25 19:33 PST KV-ALLFIX 11-25 19:33 PST FABLE-RC-KV 19:25 DONE. All 17 causes are rows L782-798 in ALLFIX-KV (b7fd9e37), each with owner and ETA (21:00-23:30 PST, or R7 promote). All DEFERRED, except krsp re-seat 1813eccc WONT-CLOSE->REDO.
+  - hg L782-784 KV-OWN-HG-R3; pv L785-787 KV-PV-ESTRIP; hgi L788-789 KV-HGI-WGATE; hub L790-792 KV-OWN-HUB-R2.
+  - pc L793-795 KV-PC-BANK: LEGS >= 4 stations into R7; o_dn ring added to PCV1-KRSP-WINDOW.
+  - FP L796-797 FP-CONVERGE-KV: margin rule, core-gap rule, r2r column.
+  - HOLD L798 KV-HOLD-STRUCT: write the ops.
+  Forwards posted: aec0bb34, 0b60fab1, 5ace3850, 83dd2996.
+  L799 PHY-STATION-R7 DRAFTED (epyc12 kv-allfix/phy_station/phy_station_delta_R7.json): 2 stations per input bus (i_kvpc_Q_N_pc__po, d1-d3; 1312 bits had none), r2r cap 405 um. The FF hold island goes to HOLD-STRUCT.
