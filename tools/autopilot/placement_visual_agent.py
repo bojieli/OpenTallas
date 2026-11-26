@@ -372,6 +372,63 @@ print(pub)
 """
 
 
+RESUME = r"""
+import fcntl, hashlib, json, re, socket, subprocess, sys
+from pathlib import Path
+root=Path.home()/'coord/autopilot/private_visual_requests'
+controller=Path('/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave.py')
+if not controller.with_name('private_place_review.py').is_file():
+    sys.exit(0)
+hostname = socket.gethostname()
+for marker in sorted(root.glob('*/visual_review.json'), key=lambda p:p.stat().st_mtime):
+    directory=marker.parent
+    request_id=directory.name
+    if not re.fullmatch(r'[0-9a-f]{64}',request_id):
+        continue
+    with (directory/'resume.lock').open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX)
+        scheduled=directory/'resume-scheduled.json'
+        if scheduled.exists():
+            continue
+        try:
+            request=json.loads((directory/'visual_request.json').read_text())
+            review=json.loads(marker.read_text())
+            spec=Path(request['spec_path'])
+            out=Path(request['request_dir'])
+            if request.get('controller') != hostname or request.get('request_id') != request_id:
+                continue
+            if not spec.is_absolute() or not out.is_absolute():
+                continue
+            if review.get('schema')!='placement-visual-review.v1' or review.get('verdict')!='GOOD':
+                continue
+            identity=('die','item','attempt','kit','stage_fingerprint','odb_sha256')
+            if any(review[k]!=request[k] for k in identity):
+                continue
+            result=json.loads((out/'result.json').read_text())
+            if (result.get('stage'),result.get('verdict'))!=('visual_review','WAIT-VISUAL'):
+                continue
+            if result.get('goal') not in ('auto','grt','route','finish'):
+                continue
+            if (result.get('visual_request') or {}).get('request_id') != request_id:
+                continue
+            if hashlib.sha256(spec.read_bytes()).hexdigest()!=request.get('spec_sha256'):
+                continue
+        except (KeyError, OSError, ValueError):
+            continue
+        unit='private-visual-resume-'+request_id[:24]
+        run=subprocess.run(['systemd-run','--user','--collect','--unit',unit,
+                            'python3','-I',str(controller),'run-item',str(spec),'--resume-reviewed'],
+                           text=True,capture_output=True,timeout=15)
+        if run.returncode:
+            print('HELD private reviewed resume',request_id,run.stderr.strip()[:180])
+            continue
+        tmp=scheduled.with_suffix('.new')
+        tmp.write_text(json.dumps({'unit':unit,'request_id':request_id})+'\n')
+        tmp.replace(scheduled)
+        print('Queued exact private reviewed resume',unit)
+"""
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--hub", default="intel2", choices=sorted(HOSTS))
@@ -381,6 +438,8 @@ def main():
     parser.add_argument("--limit", type=int, default=12)
     parser.add_argument("--preview", action="store_true")
     parser.add_argument("--publish", action="store_true")
+    parser.add_argument("--commit-review-log", action="store_true")
+    parser.add_argument("--resume-private", action="store_true")
     args = parser.parse_args()
     args.state.mkdir(mode=0o700, parents=True, exist_ok=True)
     requests, viewed = candidates(json.loads(hub_python(args.hub, MANIFEST)))
@@ -405,9 +464,14 @@ def main():
     if args.publish and results:
         posted = int(hub_python(args.hub, PUBLISH, json.dumps(results)))
         if posted:
+            print(f"Published {posted} exact image reviews on the hub.", flush=True)
+        if posted and args.commit_review_log:
             print(ssh(args.hub, ["bash", str(Path.home()/"coord/bin/coord-commit.sh"),
                                   "Automatic exact placement image reviews", "lanes/GEOM-REVIEW.md"],
                       timeout=240), end="")
+
+    if args.publish and args.resume_private:
+        print(hub_python(args.hub, RESUME), end="")
 
 
 if __name__ == "__main__":
