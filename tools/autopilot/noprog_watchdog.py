@@ -2683,6 +2683,19 @@ def spill_review_root(work, tag):
     return os.path.join(root, "noprog-review", tag) if marker else None
 
 
+REVIEW_SCRATCH_ROOTS = ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch/claude", "/srv/opentallas-scratch3/claude")
+
+
+def fallback_review_root(tag, roots=None):
+    """P-NOPROG-ROOTFS (FLEET-OPS-R4 11-26): the review dir used when neither the kit dir nor its spill volume takes one.  It is a scratch dir
+    (<scratch>/noprog-review/<tag>/hub), never ~/.local/state: ot-run refuses a --dir on the ROOT filesystem and 4 review clients sat BLOCKED 16-30 h.
+    Falls back to STATE_DIR only when no scratch root exists on this host."""
+    for r in (roots or REVIEW_SCRATCH_ROOTS):
+        if os.path.isdir(r):
+            return os.path.join(r, "noprog-review", tag, "hub")
+    return os.path.join(STATE_DIR, tag)
+
+
 def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False, snapshot=False):
     """HOST half of (a): render the kit's CURRENT DB through the existing render_review.sh (an ot-run --direct job, 2 threads, read-only on the kit).
     Review output lives next to the kit, or on the same scratch volume outside an ephemeral spill job.  -> (status, review_dir).
@@ -2706,7 +2719,7 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     if persistent:
         cands = [os.path.join(persistent, f"{rid}-{stage}-{stamp}")]
     else:
-        cands = [work_review, os.path.join(STATE_DIR, tag, f"{rid}-{stage}-{stamp}")]
+        cands = [work_review, os.path.join(fallback_review_root(tag), f"{rid}-{stage}-{stamp}")]
     rev = ""
     for c in cands:
         try:
@@ -2849,7 +2862,8 @@ def vis_odb_refail(work, cp, odb, state_root=None):
     if persistent:
         prefix = f"*-{cp.lower()}-*"
         pats.append(os.path.join(persistent, prefix))
-        pats.append(os.path.join(state_root or os.path.join(STATE_DIR, "vis_review"), prefix))
+        pats.append(os.path.join(state_root or fallback_review_root("vis_review"), prefix))
+        pats.append(os.path.join(os.path.join(STATE_DIR, "vis_review"), prefix))     # reviews rendered before the move
     bad = 0
     for pat in pats:
         for rd in glob.glob(pat):

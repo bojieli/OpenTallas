@@ -527,3 +527,14 @@ def test_spill_checkpoint_render_stays_on_scratch_and_is_retried(tmp_path, monke
     with open(os.path.join(review, "render.log"), "w") as log:
         log.write("ORD-0054 odb file is invalid")
     assert nw.vis_odb_refail(str(work), "PLACE-GP", str(odb))
+
+
+def test_fallback_review_dir_is_scratch_not_root_state(tmp_path):
+    """P-NOPROG-ROOTFS: the hub-side review dir must be on a scratch volume (ot-run refuses a --dir on the root filesystem)"""
+    import noprog_watchdog as W
+    scratch = tmp_path / "scratch" / "claude"
+    scratch.mkdir(parents=True)
+    got = W.fallback_review_root("smell_review", roots=(str(tmp_path / "none"), str(scratch)))
+    assert got == str(scratch / "noprog-review" / "smell_review" / "hub")
+    assert ".local/state" not in got
+    assert W.fallback_review_root("vis_review", roots=(str(tmp_path / "none"),)) == __import__("os").path.join(W.STATE_DIR, "vis_review")
