@@ -2,7 +2,7 @@
 
 **BAD. Keep CTS and route held.** I opened the stock layout and density images for the final E7 placement. The large north and south hard blocks retain side corridors, but the SRAM bank rows in the central band concentrate routing demand and standard cells in the same area.
 
-The final `3_place.odb` and its stock-rendered `3_5_place_dp.odb` are byte-identical, SHA-256 `f2437d9675c1b9a7c2f4e0862e7cf42a56e0a8bee1297536cea61495935a9d92`. Placement and LEC exited successfully. Stock DPL reported zero wrong-region, row, site, overlap, edge-spacing and padding violations.
+The final `3_place.odb` and its stock-rendered `3_5_place_dp.odb` are byte-identical, SHA-256 `f2437d9675c1b9a7c2f4e0862e7cf42a56e0a8bee1297536cea61495935a9d92`. Native detailed placement passed. The producer skipped pre-placement equivalence checking in R-MINIMAL mode (`LEC_PREPLACE_DROPPED R-MINIMAL`). Stock DPL reported zero wrong-region, row, site, overlap, edge-spacing and padding violations.
 
 The exact pre-DPL region census found zero initial overhangs in all 14 RX fences and the additional local write-select fence. The placement hook seated all 6,437 LEPK ring flops FIRM next to their bit pins on the east edge, with zero fallback to the band cursor, and applied all five writer guards. The East owner separately checked the final START and guard sites. All 281 START segments came in below 150 µm, worst 149.687 µm, and all five guards remained FIRM. The prior 12 opposite-facing CA pins are now zero among 6,712 inspected pins. Peak face pin demand is 0.262.
 
