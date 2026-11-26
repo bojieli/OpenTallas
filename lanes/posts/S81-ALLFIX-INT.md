@@ -2651,3 +2651,7 @@
   - svc_hi pvso_entry goes to place: RSV09 (+pvso) is an open functional row.
   - No col_h9_r2 or kv_leaf pilot: guardrail 3 / PINFACE, and the KVTC re-floor is pending.
   Hosts: 177 on epyc10 and 177 on epyc11 (+1 test kit on epyc10), units s81r10-*. Next wave goes to epyc7/intel1/epyc8 when 10/11 fill. Counts follow when the launchers finish.
+- 2026-11-25 18:32 PST S81-ALLFIX-INT 18:32 PST, R10 rt check:
+  - 8bbe6aad888f does NOT contain 0ba45f78287 (git merge-base --is-ancestor: no). 0ba45f78287 changes tools/die_plan/bind.py + bind_rowcheck.py, and kit stages do need it: kit_rtl runs bind.py kit-rtl per type. The R10 bind itself ran 8bbe + Codex bind-lane-pad.patch overlay (bind_r3.sh).
+  - SWITCHED: all not-yet-started R10 kits now pin --rt afdd397cad26, which contains 0ba45f78287 and both serdes fixes (2be21fa8aba4, c2b2891fc034; 96a1c513ee1a also has all 3). The first afdd spec (col_h10_r0_p4 pvcc166a6d) is rc 0 and its spec rt is confirmed. The epyc10 launcher restarted on afdd; the epyc11 half starts on afdd at its staging VERIFY.
+  - 6 kits had already launched on 8bbe and are NOT cancelled: bk_sel t2, col_h10_r0_p1 pv67036687/pvd7af8531/cl911743eb, col_h10_r0_p4 pv5b623e07, svc_lo rs t4. I will read their kit_rtl result; any one that is measured to differ on the lane-pad relay stages (kit_topology or bound-count mismatch) is cancelled and relaunched on afdd.
