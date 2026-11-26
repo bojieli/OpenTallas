@@ -29,8 +29,10 @@ sys.path.insert(0, str(HERE.parent / "precheck"))
 import adv_ft_outside as FO  # noqa: E402  ADV-FT-OUTSIDE: the same hit test as the PRE check
 import adv_slot_gap as SG  # noqa: E402  ADV-SLOT-GAP: the same slot test as the PRE check
 import precheck as PC  # noqa: E402  REACH (WINDOW-HOP, GATE/AIM) and tap_assign: the same functions as the census
+from schema import placed_macro_boxes  # noqa: E402
 
 SLOT_UM = 28.0
+GEOM_EPS = 1e-6
 ROT = ("R90", "R270", "MXR90", "MYR90")
 LAST = {}     # extra counts of the last type_png call
 
@@ -45,11 +47,9 @@ def manhattan(ax, a, b, **kw):
 
 
 def core_rect(c):
-    o, sz = c.get("origin_um"), c.get("outline_um")
-    if not (o and sz):
+    if not (c.get("origin_um") and c.get("outline_um")):
         return None
-    rw, rh = (sz[1], sz[0]) if c.get("orient", "R0") in ROT else sz
-    return (o[0], o[1], o[0] + rw, o[1] + rh)
+    return placed_macro_boxes({"hard_cores": [dict(c, inst="core")]})["core"]
 
 
 def core_slots(rects, slot=SLOT_UM):
@@ -60,12 +60,12 @@ def core_slots(rects, slot=SLOT_UM):
         for b in rects[i + 1:]:
             ox = min(a[2], b[2]) - max(a[0], b[0])
             oy = min(a[3], b[3]) - max(a[1], b[1])
-            if ox > 0 and oy > 0:
+            if ox > GEOM_EPS and oy > GEOM_EPS:
                 out.append((max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3]), -min(ox, oy)))
-            elif oy > 0 and 0 < -ox < slot:
+            elif oy > GEOM_EPS and GEOM_EPS < -ox < slot:
                 lo, hi = (a, b) if a[2] <= b[0] else (b, a)
                 out.append((lo[2], max(a[1], b[1]), hi[0], min(a[3], b[3]), -ox))
-            elif ox > 0 and 0 < -oy < slot:
+            elif ox > GEOM_EPS and GEOM_EPS < -oy < slot:
                 lo, hi = (a, b) if a[3] <= b[1] else (b, a)
                 out.append((max(a[0], b[0]), lo[3], min(a[2], b[2]), hi[1], -oy))
     return out

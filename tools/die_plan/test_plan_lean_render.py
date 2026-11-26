@@ -50,6 +50,11 @@ def test_core_slots_abut_wide_and_vertical():
     assert [s[4] for s in R.core_slots([a, (10, 56.17, 40, 90)])][0] == pytest.approx(6.17) and len(R.core_slots([a, (10, 56.17, 40, 90)])) == 1
     assert R.core_slots([a, (200, 200, 250, 250)]) == []                  # no facing extent
     assert R.core_slots([a, (40, 40, 100, 100)])[0][4] == -10             # overlap
+    signed = {"origin_um": [49.46, 0], "outline_um": [50, 30],
+              "orient": "R90", "track_offset_um": [0.54, 0]}
+    assert R.core_rect(signed) == (50, 0, 80, 50)
+    assert R.core_slots([a, R.core_rect(signed)]) == []
+    assert R.core_slots([a, (50 - 1e-9, 0, 100, 50)]) == []
 
 
 def test_header_numbers_come_from_the_checkers(tmp_path):
