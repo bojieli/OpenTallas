@@ -260,7 +260,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2927,6 +2927,15 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _pt.mark("FTSITE")
     if "FTSITE" not in skip:                             # FTSITE-1124: off-core / colliding explicit FT bit sites, WARN only
         findings += check_ftsite(plan)
+    _pt.mark("STRAPREACH")
+    if "STRAPREACH" not in skip:                         # STRAP-REACH (C-STRAP-REACH 1126): CA / count strap group seat vs its load cluster; OT_STRAP_REACH=fail blocks
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "s81_head"))
+            import head_count_strap_reach as _SRC
+            if (Path(plan).resolve().parent / "published").is_dir():
+                findings += _SRC.findings_for_pre(_load(plan) or {}, plan, level="FAIL" if os.environ.get("OT_STRAP_REACH") == "fail" else "WARN")
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
+            findings.append(f"WARN STRAP-REACH not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("MONLEG")
     if "MONLEG" in skip:                                 # FP-CONVERGE-S81 11-25 (FABLE-RC-S81): MONLEG-REACH runs in EVERY PRE, not skippable (WARN only)
         findings.append("WARN MONLEG --skip ignored: MONLEG-REACH is not skippable (report only, seconds)")
