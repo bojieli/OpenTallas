@@ -266,7 +266,7 @@ def main(argv=None):
         flagless = {k: v for k, v in raw.items() if k != "clk_land_clear"}
         flagless["partition_types"] = raw["partition_types"]
         P = schema.Plan(flagless, Path(a.plan).parent / "die_plan.json")
-        types = P.types
+        types = dict(raw["partition_types"])       # rows are written to the plan's own types; P.types (landing pins separated at load) only prices pins
     else:
         types = raw["partition_types"]
     led = apply(types, raw, a.plan, P=P, only=only)
