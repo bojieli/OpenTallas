@@ -1,0 +1,1 @@
+- 2026-11-26 08:20 PST DONE [head-int-r2] ot-run oth-ubuntu-1832216-1795709899 on open-snipe: rc=0 after 153 s, ended 16:20:50, log /srv/opentallas-scratch2/claude/head-int-r2/w11cut_1126/w11_gate.otrun.log, cmd: --priority die --hosts epyc12 --disk 40 --mem 96 --threads 48 --dir /srv/opentallas-scratch2/claude/head-int-r2/w11cut_1126 -- bash w11_gate
