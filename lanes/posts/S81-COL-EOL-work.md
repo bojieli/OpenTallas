@@ -1,0 +1,1 @@
+- 2026-11-26 11:13 PST DONE [S81-COL-EOL-work] ot-run oth-ubuntu-1705330-1795719108 on open-snipe: rc=0 after 1279 s, ended 19:13:03, log /srv/opentallas-scratch2/claude/S81-COL-EOL-work/gate_b.otrun.log, cmd: --priority die --hosts epyc12 --mem 90 --threads 4 --disk 10 --dir /srv/opentallas-scratch2/claude/S81-COL-EOL-work -- bash /srv/opentallas-
