@@ -267,6 +267,33 @@ def _load(p):
     return json.loads(Path(p).read_text())
 
 
+# RESETPUB-SOLVE-DEFAULT-1125 (COORD / FABLE-RC-QC 19:45): the QC C1p R6 gate passed only because the caller exported OT_RESETPUB_SOLVE=1,
+# so a rebind or a re-run without it was not reproducible.  The solve is now the default for the dies listed here (PRE, the bind's PRE and
+# the publish gate all decide through this rule); OT_RESETPUB_SOLVE=1 / =0 still forces it on / off for any die.
+RESETPUB_SOLVE_DIES = ("qwen_compute",)
+
+
+def plan_die(plan):
+    """-> the die a plan belongs to: <...>/die_plan/<die>/... in its path, else its top-level "die" key, else ''"""
+    parts = Path(str(plan)).parts
+    for i, x in enumerate(parts[:-1]):
+        if x == "die_plan" and i + 2 < len(parts):
+            return parts[i + 1]
+    try:
+        return str(_load(plan).get("die") or "")
+    except (OSError, ValueError, AttributeError):
+        return ""
+
+
+def resetpub_solve(plan, env=None):
+    """True when RESETPUB solves every localized type: OT_RESETPUB_SOLVE=1 / =0 decides; unset = on for RESETPUB_SOLVE_DIES"""
+    env = os.environ if env is None else env
+    v = str(env.get("OT_RESETPUB_SOLVE", "")).strip()
+    if v in ("0", "1"):
+        return v == "1"
+    return plan_die(plan) in RESETPUB_SOLVE_DIES
+
+
 def _canon_sha(obj):
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:16]
 
@@ -2727,7 +2754,7 @@ def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=N
             add("base", lt, "LANDREMAP")
     if "STARTSETTLE" not in skip and startsettle_sidecar(tree, sidecar, asbuilt):
         add("plan", startsettle_types(raw), "STARTSETTLE")
-    if "RESETPUB" not in skip and env.get("OT_RESETPUB_SOLVE") == "1":
+    if "RESETPUB" not in skip and resetpub_solve(plan, env):
         add("plan", [tn for tn, _p, _n in resetpub_todo(raw, None, True)], "RESETPUB")
     if "ANCHORDRY" not in skip and env.get("OT_ANCHORDRY_SOLVE") == "1":
         import reset_anchor as RA
@@ -2921,7 +2948,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _pt.mark("RESETPUB")
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
         findings += check_resetpub(tree, plan, base=_base,
-                                   solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")
+                                   solve=resetpub_solve(plan))
     _pt.mark("ANCHORDRY")
     if "ANCHORDRY" not in skip:                          # ANCHORDRY-1123: anchored reset depths vs the remap base, seconds
         _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
