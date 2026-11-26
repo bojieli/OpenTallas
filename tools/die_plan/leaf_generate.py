@@ -2,7 +2,7 @@
 """leaf_generate.py -- ONE generator for the S81 leaf / kv_leaf re-floor chain (FP-CONVERGE-S81, COORD FLOW-0930 S-06).
 
   leaf_generate.py BASE_PLAN --types t1,t2 --out OUT.json [--grow DX] [--ft-xcut X] [--tree TREE] [--seed SEED.json]
-                   [--extra-reg] [--work DIR] [--dry] [--no-core-place] [--fstart-reseat] [--rst-reach]
+                   [--extra-reg] [--work DIR] [--dry] [--no-core-place] [--fstart-reseat] [--rst-reach] [--rst-spread]
 
 Chain (every step on the SAME type list, each step's input is the previous step's output; BASE_PLAN is never written):
   1 grow        leaf_grow.py grow --dx DX --ft-interior --ft-xcut X          (only with --grow)
@@ -13,6 +13,7 @@ Chain (every step on the SAME type list, each step's input is the previous step'
   6 anchor      reset_anchor.py record --repick
   7 fstart      landing_reset_reseat.py (opt-in; keep the anchored local FSTART raw sources)
   7b rstreach   rst_reach_construct.py fix (opt-in --rst-reach, C-RST-RELAY-REACH; reset raw / seat reach by construction)
+  7c rstspread  rst_reach_construct.py spread (opt-in --rst-spread, C-RST-RELAY-REACH r3; one relay stage per sink region of a wide reset net)
   8 schema      schema_test(): exit 1 on any finding of
       FLOAT      an int in BASE that is a float in OUT with an integer value (12 -> 12.0), or any float in a `bits` list
                  (the SCHEMA-INVALID x6 finding: relay_depth[].bits turned into floats)
@@ -189,6 +190,10 @@ def steps(a, work):
         add("rstreach", py + [str(HERE / "rst_reach_construct.py"), "fix", cur, str(w / "s7b_rstreach.json"), "--tree", a.tree,
                               "--types", types, "--report", str(w / "rstreach.json"), "--require"],
             w / "s7b_rstreach.json")
+    if getattr(a, "rst_spread", False):
+        add("rstspread", py + [str(HERE / "rst_reach_construct.py"), "spread", cur, str(w / "s7c_rstspread.json"), "--tree", a.tree,
+                               "--types", types, "--report", str(w / "rstspread.json")],
+            w / "s7c_rstspread.json")
     return st
 
 
@@ -239,6 +244,7 @@ def main(argv=None):
     ap.add_argument("--extra-reg", action="store_true")
     ap.add_argument("--no-core-place", action="store_true", help="skip core_place (refresh/re-site/retap/anchor on an already placed plan)")
     ap.add_argument("--fstart-reseat", action="store_true", help="re-seat anchored local FSTART reset copies after retap")
+    ap.add_argument("--rst-spread", action="store_true", help="RSTSPREAD construct: one reset relay stage per sink region of a wide reset net (0 cycles, opt-in)")
     ap.add_argument("--rst-reach", action="store_true", help="RST-REACH-CONSTRUCT: re-derive reset raw pointers / drop stale reset-relay seats so PRE RSTREACH reads 0 (opt-in)")
     ap.add_argument("--work")
     ap.add_argument("--dry", action="store_true")

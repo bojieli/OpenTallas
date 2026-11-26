@@ -53,6 +53,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    with the TREE tools, no synthesis (KV R6: kv3_hg_v1p4/v1p6 ">= 2 copies needed", kv3_pc_v1 r8ef700d7c strap_r8pad_lane_*, all
                    found only at gen); report only, OT_GEN_PARSE_BLOCK=1 -> FAIL lines (adv_gen_parse.py)
   BOUNDARY-REG-50  ft out pins with no planned register within 50 um (precheck BOUNDARY-REG reading, exact bit sites); boundary_reg.py plan seats an out-face station (COORD 19:25 FABLE-RC-KV item 3; OT_BREG_BLOCK=1 -> FAIL lines)
+  RSTSPREAD        reset nets (FIRM seats on their nearest consumer tap) over 3,000 loads, 405 um of seat-to-tap, or 900 um HPWL; report only,
+                   adv_rst_spread.py, fix = rst_reach_construct.py spread (one relay stage per sink region, opt-in) (C-RST-RELAY-REACH r3)
   EDGE-STRIP       >= 256-bit die windows with a hard core < 69.12 um behind the window span (VIS-DIE-S81 EDGESTRIP-1; S81 J8:
                    241 types, 0/47 signed, 40/51 failing); fix = edgestrip_row.py interior shift or re-shape (adv_edge_strip.py)
 
@@ -134,7 +136,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
           ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
-          ("XTAP-SEAM", "kit_xtap_seam"))
+          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
