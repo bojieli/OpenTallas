@@ -958,7 +958,10 @@ def _pinslot_profile_tcl(tn, c, t):
             continue
         cfg = band['pinslot_profile']
         hint = f'{tn}.{name}: pinslot_profile'
-        if (not isinstance(cfg, dict) or set(cfg) != {'inset_um', 'guard_east_um', 'guard_seats_um'}
+        required = {'inset_um', 'guard_east_um', 'guard_seats_um'}
+        if (not isinstance(cfg, dict) or not required <= set(cfg)
+                or set(cfg) - required - {'reserve_guard_resize'}
+                or type(cfg.get('reserve_guard_resize', False)) is not bool
                 or band.get('ring_place') != 'ff'
                 or any(k in band for k in ('rects_um', 'ff_rect_um', 'fill_axis', 'native_role_banks', 'hard_core', 'dsel_cone'))):
             raise ValueError(f'{hint} requires one existing soft FF y-slot band')
@@ -988,8 +991,9 @@ def _pinslot_profile_tcl(tn, c, t):
         if not re.fullmatch(r'u_cland_[A-Za-z0-9_]+', prefix):
             raise ValueError(f'{hint} has unsupported native ring prefix')
         lo, hi, xmax = profile
+        resize = ' 1' if cfg.get('reserve_guard_resize') else ''
         out.append(f'dict set ::cland_pinslot_profiles {{{prefix}}} '
-                   f'{{{{{lo:.5f} {hi:.5f} {xmax:.5f}}} {edge:.5f} {{{" ".join(rows)}}}}}')
+                   f'{{{{{lo:.5f} {hi:.5f} {xmax:.5f}}} {edge:.5f} {{{" ".join(rows)}}}{resize}}}')
     return '\n'.join(out) + '\n' if out else ''
 
 

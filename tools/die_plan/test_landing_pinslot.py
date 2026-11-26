@@ -311,3 +311,45 @@ puts $n; foreach pr $out { puts [lindex $pr 0] }
     assert out[0] == "1" and out[1] == want
     assert "q\\[9\\]" in out[2]                             # q[9]: beyond the 8-bit bus, stays a control key
     assert out[3] == "u/s_d|000000001|000000000|x" and out[4] == "u/ctl"
+
+
+@pytest.mark.parametrize("flag,next_x,expected_end,expected_error", [
+    ("", 216, 378, ""),
+    ("1", 216, 432, ""),
+    ("1", 162, 216, "no legal nonoverlapping"),
+])
+def test_explicit_guard_drive_reserve(flag, next_x, expected_end, expected_error):
+    # The east-facing placer makes room for the growing cell, then the guard
+    # adds that width to the occupied union used by subsequent placements.
+    script = COMMON + "\n" + "".join(_proc(n) for n in NAMES + ["cland_pinslot_guard"])
+    script += r"""
+proc cland_family_w {master} {return 216}
+set ::cland_pinslot_fit 1
+set ::cland_xdesc 1
+set cland_occ {}
+foreach {inst index} {first 0 second 1} {
+    proc $inst {method args} [string map [list @INDEX@ $index @INST@ $inst] {
+        switch -- $method {
+            getName {return {u_cland_lepk_i0/u_ring.g_wreg.sl[1].ch[@INDEX@].u_wen/q$_DFF_P_}}
+            getMaster {return DFFHQNx1_ASAP7_75t_R}
+            getPlacementStatus {return PLACED}
+            setPlacementStatus - setOrient {}
+            setLocation {set ::position(@INST@) $args}
+            getLocation {return $::position(@INST@)}
+        }
+    }]
+}
+"""
+    script += f"""
+set guards [list [list {{u_ring.g_wreg.sl[1].ch[0].u_wen/q$_DFF_P_}} 0.0 0.27] \
+                 [list {{u_ring.g_wreg.sl[1].ch[1].u_wen/q$_DFF_P_}} {next_x / 1000} 0.27]]
+set rc [catch {{cland_pinslot_guard {{{{x first}} {{x second}}}} $guards 1.0 {{0 0 0.8 1.08}} ring:lepk_i0 {flag}}} why]
+puts "STATUS $rc $why"
+puts "END [lindex [lindex [dict get $cland_occ 1] end] end]"
+"""
+    proc = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert not proc.stderr, proc.stderr
+    assert f"STATUS {int(bool(expected_error))} " in proc.stdout, proc.stdout
+    if expected_error:
+        assert expected_error in proc.stdout
+    assert f"END {expected_end}" in proc.stdout
