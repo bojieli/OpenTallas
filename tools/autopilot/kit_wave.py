@@ -8469,11 +8469,14 @@ def crit_args(sp):
     return ["--priority", "die", "--crit"] if sp.get("crit") else []
 
 
-def heavy_args(sp):
-    """KW-FIX-45 11-12: ot-run flags of every heavy kit-wave stage: never the hub (--exclude-hosts) + crit_args"""
+def heavy_args(sp, *, stage_disk_gb=None):
+    """Shared host, priority, and disk flags for a heavy Kit Wave stage."""
     # 11-12: opt-in.  ot-run-lane-declare and ot-run-sealed (in front of ot-run on the hub) reject --exclude-hosts: usage text, NOT RUN
     # (28 QC kit_rtl attempts 11-11 23:25-23:46).  Default off; the host lists and otrun()/place_async refusals keep the hub out.
-    disk = ["--disk", str(int(sp["item_disk_gb"]))] if sp.get("item_disk_gb") else []             # WAVE-DISK-CAP 11-17: the item's own disk budget, not ot-run's default
+    disk_gb = int(sp["item_disk_gb"]) if sp.get("item_disk_gb") else None
+    if stage_disk_gb is not None:
+        disk_gb = max(disk_gb or 0, stage_disk_gb)
+    disk = ["--disk", str(disk_gb)] if disk_gb is not None else []
     return (["--exclude-hosts", ",".join(hub_names(sp))] if sp.get("ot_run_exclude_hosts") else []) + crit_args(sp) + disk
 
 
@@ -11284,7 +11287,8 @@ def _run_item(spec_path, resume_reviewed=False):
             _drc["t"] = time.time()
         return _drc["v"]
 
-    def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True, extra_inputs=()):  # ot-run names the hub itself 'localhost'
+    def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True, extra_inputs=(),
+              stage_disk_gb=None):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         _all = list(hosts)
         _dr = stage_drain()
@@ -11308,7 +11312,7 @@ def _run_item(spec_path, resume_reviewed=False):
             if stages:
                 # Stage declarations identify existing holders. Roaming still uses verified snapshots.
                 argv += stages + ["--no-spill"]
-        argv += heavy_args(sp) + ["--", "bash", "-c", command]
+        argv += heavy_args(sp, stage_disk_gb=stage_disk_gb) + ["--", "bash", "-c", command]
         if roam and d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
             return ROAM.RoamArgv(argv)
         return argv
@@ -12146,7 +12150,8 @@ def _run_item(spec_path, resume_reviewed=False):
     pstage = ""                                           # the plan dir of links is staged once (above)
     pf = (f"{pstage}cd {q(tsrc)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
-    rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
+    # This check reads the generated kit and writes JSON receipts. Allow for a launch-tools rebuild.
+    rc, txt = run("preflight", otrun(8, 2, W, pf, gh, stage_disk_gb=2))
     if rc and minimal_profile():
         # R-MINIMAL: kit preflight (R-CAP / reach / core-tap / street) is ADVISORY: recorded, the kit goes on to place
         res["preflight_fail_advisory"] = error_lines(txt)[:20] or [txt[-500:]]
