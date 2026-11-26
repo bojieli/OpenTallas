@@ -113,3 +113,15 @@ def test_shift_step_replaces_grow_and_keeps_base_for_refresh(tmp_path):
     assert "shift" in st[0][1] and "--dx" in st[0][1]
     refresh = [s for s in st if s[0] == "refresh"][0]
     assert refresh[1][refresh[1].index("run") + 1] == "b.json"           # deltas measured against the BASE plan
+
+
+def test_fstart_reseat_uses_anchor_output_and_stays_opt_in(tmp_path):
+    a = argparse.Namespace(base="b.json", types="T", out="o.json", grow=0, ft_xcut=0,
+                           tree="/t", seed=None, extra_reg=False, no_core_place=True,
+                           work=None, dry=True, fstart_reseat=True)
+    steps = LG.steps(a, tmp_path)
+    assert [s[0] for s in steps][-2:] == ["anchor", "fstart"]
+    assert steps[-1][2] == steps[-2][3]
+    assert "--report" in steps[-1][1]
+    a.fstart_reseat = False
+    assert LG.steps(a, tmp_path)[-1][0] == "anchor"
