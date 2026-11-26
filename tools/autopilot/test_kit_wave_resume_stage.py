@@ -7,11 +7,11 @@ import kit_wave as KW
 
 
 def _run_item_tree():
-    return ast.parse(inspect.getsource(KW.run_item))
+    return ast.parse(inspect.getsource(KW._run_item))
 
 
 def test_resume_release_only_through_the_stage_keeping_helper():
-    src = inspect.getsource(KW.run_item)
+    src = inspect.getsource(KW._run_item)
     # the only direct run("resume_release", ...) call is inside the helper
     assert src.count('run("resume_release"') == 1
     helper = next(n for n in ast.walk(_run_item_tree()) if isinstance(n, ast.FunctionDef) and n.name == "resume_release")
@@ -20,7 +20,7 @@ def test_resume_release_only_through_the_stage_keeping_helper():
 
 
 def test_both_resume_paths_call_the_helper_before_the_chain():
-    src = inspect.getsource(KW.run_item)
+    src = inspect.getsource(KW._run_item)
     assert src.count("resume_release(svc['kit'])") == 1
     assert src.count("resume_release(K)") == 1
     for call in ("resume_release(svc['kit'])", "resume_release(K)"):

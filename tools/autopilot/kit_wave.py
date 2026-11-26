@@ -59,6 +59,7 @@ import base64
 import collections
 import hashlib
 import fnmatch
+import fcntl
 import math
 import copy
 import json
@@ -85,6 +86,7 @@ import kit_wave_roam as ROAM
 import flow_guard as FG
 import repeat_stop as RS
 import lbl_gate as LBL
+import private_place_review as PPV
 import plan_visual_review as PVR
 import env_effect as EE
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
@@ -93,7 +95,7 @@ OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: fre
 # older in-memory launch logic; the next ordinary tick imports the new package.
 def scheduler_code_id():
     h = hashlib.sha256()
-    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "plan_visual_review.py"):
+    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "plan_visual_review.py", "private_place_review.py"):
         p = Path(__file__).with_name(name)
         h.update(name.encode())
         h.update(p.read_bytes())
@@ -10414,20 +10416,24 @@ def route_preflight_on(env=None):
     return v == "1" if (v is not None or env.get("PYTEST_CURRENT_TEST")) else True
 
 
-def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None, avoid=()):
+def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None, avoid=(), review=None):
     """the autopilot.submit argv for this kit (ot-run on the hub; the kit host first, spill alternatives after it: chain_hosts)"""
     argv = [sp.get("ot_run") or OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit,
             "--hosts", ",".join(chain_hosts(sp, host, hub, avoid))] + list(AP.stage_disk_args())
     if not runner.startswith(kit.rstrip("/") + "/"):
         argv += ["--stage", runner]
-    if goal in ("cts", "grt"):
+    if goal in ("cts", "grt") and not review:
         return argv + ["--", "bash", runner, kit, goal, str(mem), str(thr)]
     bundle = dict(bundle if bundle is not None else AP.stage_admission_tools())
     bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
     # ADMISSION-SPILL-1122: this driver staged the bundle where it runs (a private chain: the kit's gen host); a spilled job fetches it from there first
     bundle["source_hosts"] = admission_sources(host, sp.get("gen_host"), hub)
     enc = base64.b64encode(json.dumps(bundle).encode()).decode()
-    return argv + ["--", "python3", "-c", AP.ADMISSION_BOOTSTRAP, enc] + ([] if AP.late_eco_on() else ["--no-late-eco"]) + [runner, kit, goal, str(mem), str(thr)]
+    checkpoint = {k: review[k] for k in ("odb", "odb_sha256")} if review else {}
+    if checkpoint and review.get("review_hub"):
+        checkpoint.update(review_hub=review["review_hub"], request_id=review["request_id"])
+    gate = ["--reviewed-place", json.dumps(checkpoint)] if checkpoint else []
+    return argv + ["--", "python3", "-c", AP.ADMISSION_BOOTSTRAP, enc] + ([] if AP.late_eco_on() else ["--no-late-eco"]) + gate + [runner, kit, goal, str(mem), str(thr)]
 
 
 def chain_env(lane=""):
@@ -10501,6 +10507,9 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
     if why:
         return fail("chain_admit", "KW_CHAIN refused (autopilot admission rules): " + why, f"{kh}:{K}")
     runner = p["runner"]
+    review = res.get("visual_request") if PPV.applies(sp) and g in PPV.ROUTING_GOALS else None
+    if PPV.applies(sp) and g in PPV.ROUTING_GOALS and not review:
+        return PPV.wait(out, res, goal, "no exact placement review request")
     mem, thr = int(sp.get("route_mem_gb") or sp.get("place_mem_gb") or 32), int(sp.get("route_threads") or 8)
     lane = (sp.get("private") or {}).get("lane") or ""
     res.update(goal=g, chain="RUNNING", chain_host=kh)
@@ -10514,7 +10523,9 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
             _avoid = draining_hosts(sp.get("host_caps") or {}, parse_otrun_status(_ps.stdout if _ps.returncode == 0 else ""), hub)
         except Exception:
             _avoid = set()
-        argv = chain_argv(sp, AP, K, runner, g, mem, thr, kh, hub, avoid=_avoid)
+        if review and (decision := PPV.verdict(out, review)) != "GOOD":
+            return PPV.wait(out, res, goal, f"exact placement review is {decision or 'pending'}", decision)
+        argv = chain_argv(sp, AP, K, runner, g, mem, thr, kh, hub, avoid=_avoid, **({"review": review} if review else {}))
         live = out / f"chain_a{attempt}.live.log"
         res["stage"] = "chain"
         print(f"KW_STAGE chain {now_s()} :: goal {g} attempt {attempt} on {kh} :: {' '.join(shlex.quote(a) for a in argv[:14])} ...", flush=True)
@@ -11015,9 +11026,9 @@ def env_effect_refusal(sp, run, remote, K):
 
 
 def placed_geom_check(sp, odb, outline, goal=None):
-    """Prepare an exact placed ODB render. Geometry-only private jobs omit the routing probe."""
+    """Prepare an exact placement render and defer the GRT probe where review is required."""
     item = sp["item"]
-    deferred = sp.get("geom_grt_deferred") is True or (
+    deferred = sp.get("geom_grt_deferred") is True or PPV.applies(sp) or (
         bool(sp.get("private")) and (goal or sp.get("goal")) == "geom")
     rules = ["--all-kits"]
     if re.fullmatch(r"[\d.]+x[\d.]+", outline):
@@ -11046,13 +11057,41 @@ def event_wave_stages(sp, directory, command, extra_inputs=()):
     return [arg for path in declared for arg in ("--stage", path)]
 
 
-def run_item(spec_path):
+def run_item(spec_path, resume_reviewed=False):
+    """Keep one standard private controller per exact spec directory."""
+    out = Path(spec_path).absolute().parent
+    if not PPV.applies(PPV.load(Path(spec_path))):
+        if resume_reviewed:
+            print("KW_PRIVATE_VISUAL refused: not a standard private type", flush=True)
+            return 2
+        return _run_item(spec_path)
+    with (out / ".private_run.lock").open("a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            print("KW_PRIVATE_VISUAL refused: this private controller is already active", flush=True)
+            return 75
+        return _run_item(spec_path, resume_reviewed)
+
+
+def _run_item(spec_path, resume_reviewed=False):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
     spec_bytes = Path(spec_path).read_bytes()
     sp = json.loads(spec_bytes)
+    out = Path(spec_path).absolute().parent
+    prior = PPV.load(out / "result.json") if resume_reviewed else {}
+    if resume_reviewed:
+        req = prior.get("visual_request") or {}
+        if (prior.get("stage") != "visual_review" or prior.get("verdict") not in ("WAIT-VISUAL", "WAIT-FORM")
+                or req != PPV.load(out / PPV.REQUEST)
+                or req.get("spec_sha256") != hashlib.sha256(spec_bytes).hexdigest()
+                or req.get("kit") != prior.get("kit")
+                or prior.get("goal") not in PPV.ROUTING_GOALS):
+            print("KW_PRIVATE_VISUAL refused: no unchanged private spec with an exact held placement", flush=True)
+            return 2
     try:
-        _blr = runitem_bind_landing(sp)
+        _blr = None if resume_reviewed else runitem_bind_landing(sp)
     except BindLandingMissing as e:
         print(f"KW_STAGE bind_landing {now_s()} :: REFUSED {e}", flush=True)
         (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_landing", "verdict": "FAIL", "cls": "FLOW", "die": sp.get("die"),
@@ -11068,7 +11107,7 @@ def run_item(spec_path):
     goal = RUN_ITEM_GOAL
     if goal and not sp.get("private"):
         print(f"run-item: --goal applies to private specs only (a wave spec stops at AUTO-GEOM and the tick enqueues it); ignored", flush=True)
-    chain_goal = chain_goal_of(sp, goal)
+    chain_goal = prior["goal"] if resume_reviewed else chain_goal_of(sp, goal)
     if sp.get("private") and chain_goal in ("route", "finish", "auto"):     # KNOWN-PROBLEM gate (launch_gate.py, OWNER 11-25 05:0x): known problems -> place probe
         try:
             import launch_gate as KPG
@@ -11080,13 +11119,15 @@ def run_item(spec_path):
     # PLACE-LOST-1125 (QC-PLACELOST): an absolute attempt dir.  A relative spec path (private spec run from ~/coord/autopilot) gave the
     # detached PLACE unit a relative `exec >> log`: systemd --user runs it in $HOME, the redirect failed, KW_PLACE_RC went to the journal
     # and the worker booked KW_PLACE_LOST on a placed kit (QC sle_su_l1 V4 11-25: rc 0, 3_place.odb written)
-    out = Path(spec_path).absolute().parent
     completed_stages = {}
-    res = {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
+    res = prior if resume_reviewed else {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
+    if resume_reviewed and chain_goal not in PPV.ROUTING_GOALS:
+        return PPV.wait(out, res, prior["goal"], "independent launch gate still requires a place probe", blocked=True)
+
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
-    plan_review = plan_visual_refusal(sp, out, hub)
+    plan_review = "" if resume_reviewed else plan_visual_refusal(sp, out, hub)
     if plan_review:
         print(f"KW_STAGE plan_visual {now_s()} :: {plan_review}", flush=True)
         res.update(stage="plan_visual", verdict="FAIL", cls="PLAN-VISUAL", tail=plan_review)
@@ -11265,12 +11306,46 @@ def run_item(spec_path):
         run("resume_release", remote(kr_cmd(f"release {shlex.quote(kit)}")), idempotent=True)
         res["stage"] = st
 
+    def reviewed_chain():
+        if PPV.applies(sp) and chain_goal in PPV.ROUTING_GOALS:
+            decision = PPV.verdict(out, res.get("visual_request") or {})
+            if decision != "GOOD":
+                return PPV.wait(out, res, chain_goal, f"exact placement review is {decision or 'pending'}", decision)
+        return private_chain(sp, res, out, chain_goal, run, fail, completed_stages)
+
+    if resume_reviewed:
+        return reviewed_chain()
+
+    def request_private_view(kh, K, odb):
+        if not PPV.applies(sp):
+            return
+        if not PPV.sha256((res.get("stage_fp") or {}).get("place")):
+            # A recovered async controller can reach the existing 3_place without running resume_prepare.
+            runner = str(Path(K).parent / "run_kit.sh")
+            identity = kr_cmd(f"manifest {shlex.quote(K)} --runner {shlex.quote(runner)} --no-checkpoint")
+            _, text = run("visual_fingerprint", remote_argv(kh, hub, identity), idempotent=True)
+            manifest = _kr_json(text, "KW_RESUME_MANIFEST") or {}
+            if manifest.get("fingerprints"):
+                res["stage_fp"] = manifest["fingerprints"]
+        cmd = " ".join(shlex.quote(a) for a in ["python3", "-I", "-c", PPV.CHECKPOINT, K, odb])
+        _, receipt = run("visual_checkpoint", remote_argv(kh, hub, cmd), idempotent=True)
+        doc = next((ln.split(" ", 1)[1] for ln in receipt.splitlines() if ln.startswith("KW_VISUAL_CHECKPOINT ")), None)
+        try:
+            req = PPV.request(out, res, spec_sha256, json.loads(doc), hub=hub, spec_path=spec_path) if doc else {}
+        except (OSError, ValueError) as exc:
+            print(f"KW_PRIVATE_VISUAL request unavailable for {kh}:{odb}: {exc}", flush=True)
+            req = {}
+        if req:
+            res["visual_request"] = req
+        else:
+            print(f"KW_PRIVATE_VISUAL checkpoint identity unavailable for {kh}:{odb}", flush=True)
+
     def chain_after_geom(rc):
         """FLOW-PRIVSPEC-R1 (item 7c): a private spec whose goal is past geom continues through the wave stage chain after AUTO-GEOM PASS"""
         if rc != 0 or chain_goal == "geom" or res.get("stage") != "geom" or res.get("verdict") != "PASS":
             return rc
         try:
-            return private_chain(sp, res, out, chain_goal, run, fail, completed_stages)
+            return reviewed_chain()
         except Exception as e:                           # noqa: BLE001 - recorded, never a silent stop
             return fail("chain", f"KW_CHAIN pipeline error {type(e).__name__}: {e}", res.get("kit") or f"{G}:{W}")
 
@@ -11347,8 +11422,10 @@ def run_item(spec_path):
         if res["cells"] and res["cells"] > SPLIT_CELLS:      # WAVE-FLOW-R2: reported, never a stop (the plan-time SPLIT-NEEDED check owns the limit)
             print(f"KW_CELLS_INFO {T}: {res['cells']} cells above {SPLIT_CELLS} (advisory; plan-time SPLIT-NEEDED is the only cell check)", flush=True)
         if chain_goal == "place":
-            res.update(stage="place", verdict="PASS", evidence=f"{kh}:{odb}", odb=odb, kit=f"{kh}:{K}")
-            (out / "result.json").write_text(json.dumps(res, indent=1))
+            res.update(evidence=f"{kh}:{odb}", odb=odb, kit=f"{kh}:{K}")
+            request_private_view(kh, K, odb)
+            res.update(stage="place", verdict="PASS")
+            PPV.write(out / "result.json", res)
             return 0
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
@@ -11367,6 +11444,7 @@ def run_item(spec_path):
         rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False, extra_inputs=(geom_tools,)))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
+        request_private_view(kh, K, odb)
         ps_line = placed_scan_line(txt)      # PLACED-SCAN-1115: advisory early-fail diagnostic, names the matched group
         if ps_line:
             res["placed_scan"] = ps_line[:900]
@@ -19095,7 +19173,8 @@ def visual_verdicts():
         _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, viewed={}, viewed_ts={}, unparsed=[])
         return {}
     try:
-        mt = (str(p), p.stat().st_mtime)
+        st = p.stat()
+        mt = (str(p), st.st_ino, st.st_mtime_ns, st.st_size)
         if _VISUAL_CACHE["mtime"] != mt:
             v, ts, exact, viewed, viewed_ts, bad = {}, {}, {}, {}, {}, []
             for ln in p.read_text(errors="replace").splitlines():
@@ -19409,12 +19488,35 @@ def strict_wave_route_review(die):
             and die in ("s81", "s81_head", "qwen_compute", "qwen_kvsys"))
 
 
+def current_wave_type(cfg, rec):
+    die = rec.get("die")
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return (die in PPV.ACTIVE_DIES and (rec.get("kind") or "type") == "type"
+            and bool(d.get("event")) and d["event"] == rec.get("event"))
+
+
 def required_route_review(cfg, rec):
-    """The die explicitly requires an exact placement verdict before dispatch."""
-    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
-    return (strict_wave_route_review(rec.get("die"))
+    """Require independent actual placement review for current Wave types on the active dies."""
+    die = rec.get("die")
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return (current_wave_type(cfg, rec) or strict_wave_route_review(die)
             or ((d.get("review_before_route") or {}).get("required") is True
                 and review_before_route(cfg, rec)))
+
+
+def explicit_route_hold(cfg, rec):
+    """A viewed placement cannot release a current typed structural route hold."""
+    if not current_wave_type(cfg, rec):
+        return None
+    import hold_records as HR
+    d = cfg["dies"][rec["die"]]
+    items = (d.get("hold_event_items") or {}).get(HR.plan_id(d), ())
+    for record in d.get("hold_records") or ():
+        if (HR.explicit_current_route_record(record, d)
+                and rec.get("item") in HR.rec_keys(record, items)
+                and not HR.record_expired(record, cfg)):
+            return f"WAIT-STRUCTURE: route hold {record['id']}: {record['reason']}"
+    return None
 
 
 def exact_kit_visual_verdict(rec, viewed_only=False):
@@ -19442,7 +19544,7 @@ def required_route_hold(cfg, rec):
         return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
     if verdict not in VISUAL_ACCEPT:
         return f"WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit={kit or '<host:/kit/path>'}"
-    return None
+    return explicit_route_hold(cfg, rec)
 
 
 def route_hold_reason(cfg, rec):
@@ -22492,6 +22594,7 @@ def main(argv=None):
     cc_.add_argument("name"); cc_.add_argument("args_json")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
+    r.add_argument("--resume-reviewed", action="store_true", help="continue an exact held private placement without rebuilding it")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
@@ -22598,15 +22701,20 @@ def main(argv=None):
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
+            if a.resume_reviewed and a.goal:
+                print("KW_PRIVATE_VISUAL refused: the held goal cannot be overridden", flush=True)
+                return 2
             RUN_ITEM_GOAL = a.goal
             drv = runitem_driver(a.spec)
             argv = ["python3", str(drv), "run-item", a.spec] + (["--goal", a.goal] if a.goal else [])
+            if a.resume_reviewed:
+                argv.append("--resume-reviewed")
             runitem_reexec(a.spec, argv)
             if drv != Path(__file__).resolve():
                 print(f"KW_DRIVER_REEXEC {Path(__file__).resolve()} -> {drv} (private run-item drives from rt/current; result tools stay pinned)", flush=True)
                 os.environ["KW_DRIVER_FROM"] = str(Path(__file__).resolve())
                 os.execvp(argv[0], argv)
-            return run_item(a.spec)
+            return run_item(a.spec, resume_reviewed=True) if a.resume_reviewed else run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
             out = Path(a.spec).parent / "result.json"
             out.write_text(json.dumps({"verdict": "FAIL", "stage": "pipeline", "tail": f"Traceback (most recent call "

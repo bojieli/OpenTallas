@@ -3559,15 +3559,24 @@ def wave_review_snapshot():
         cfg = json.loads(KW.read_config_text(sys.modules[__name__]) or "{}")
     except (OSError, ValueError):
         return {}, {}
-    if not any(KW.strict_wave_route_review(die) or (d.get("review_before_route") or {}).get("required") is True
+    if not any(KW.required_route_review(cfg, {"die": die, "event": d.get("event")})
+               or (d.get("review_before_route") or {}).get("required") is True
                for die, d in (cfg.get("dies") or {}).items()):
         return cfg, {}
+    import hold_records as HR
+    if any(KW.current_wave_type(cfg, {"die": die, "event": d.get("event")})
+           and any(HR.explicit_current_route_record(r, d) for r in d.get("hold_records") or ())
+           for die, d in (cfg.get("dies") or {}).items()):
+        try:
+            cfg["_lane_activity"] = HR.lane_activity((read_coord("lanes/COORD-REVIEW-QUEUE.md") or "").splitlines())
+        except (OSError, ValueError):
+            pass  # a blind read cannot expire an outstanding structural hold
     kits = {}
     for rec in (KW.load_state(AP_DIR).get("items") or {}).values():
-        if KW.required_route_review(cfg, rec):
-            key = (rec["die"], rec["item"], rec.get("event"), KW.review_kit_location(rec))
-            if key not in kits or rec.get("updated", 0) >= kits[key].get("updated", 0):
-                kits[key] = rec
+        # Keep exact core identities too: a core does not acquire the current-type review default.
+        key = (rec["die"], rec["item"], rec.get("event"), KW.review_kit_location(rec))
+        if key not in kits or rec.get("updated", 0) >= kits[key].get("updated", 0):
+            kits[key] = rec
     return cfg, kits
 
 
@@ -3602,10 +3611,10 @@ def queued_wave_event(row):
 def queued_wave_review_hold(snapshot, row, event):
     cfg, kits = snapshot
     die, item, kit = canonical_die(row["die"]), row["type"], row["kit"]
-    identity = {"die": die, "item": item, "event": event}
+    rec = kits.get((die, item, event, kit))
+    identity = rec or {"die": die, "item": item, "event": event, "kind": row.get("kind")}
     if not KW.required_route_review(cfg, identity):
         return None
-    rec = kits.get((die, item, event, kit))
     if rec is None:
         return f"WAIT-VISUAL: current wave attempt has no exact kit identity for {kit}"
     return KW.required_route_hold(cfg, rec)

@@ -155,10 +155,12 @@ LAUNCH_PROBE = None            # tests inject probe(coord, old_doc, new_doc, die
 def noop_hold_record_problems(old_doc, new_doc):
     """H1 (WAVE-OPS-R1 11-22, FABLE-FLOW-0600 class H1): hold_records compile to nothing on a die where stops_off applies (every die but hbm, r703): only the
     hold_items list blocks there.  S81-J6-ASSEMBLY-R5 moved 342 holds into records on S81; 194 rows launched against them.  An edit that ADDS or CHANGES a hold
-    record on such a die is refused (a no-op hold).  Records already in the file and untouched are not judged.  -> [problem text]"""
+    record on such a die is refused except a current explicit route hold. Unchanged records are not judged. -> [problem text]"""
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from flow_guard import stops_off_die
+        from hold_records import explicit_current_route_record
+        from private_place_review import ACTIVE_DIES
     except Exception:
         return []
     od = (old_doc or {}).get("dies") or {}
@@ -169,6 +171,8 @@ def noop_hold_record_problems(old_doc, new_doc):
         old = {r.get("id"): r for r in ((od.get(die) or {}).get("hold_records") or []) if isinstance(r, dict)} if isinstance(od.get(die), dict) else {}
         for r in d["hold_records"]:
             if isinstance(r, dict) and old.get(r.get("id")) != r:
+                if die in ACTIVE_DIES and d.get("event") and explicit_current_route_record(r, d):
+                    continue
                 out.append(f"NO-OP-HOLD refused for {die}/{r.get('id')}: hold records do not block on {die} (stops_off, r703: only hbm keeps them); "
                            f"use the hold list instead: add the keys to dies.{die}.hold_items with 'owner=<lane> eta=<YYYY-mm-dd HH:MM>'")
     return out

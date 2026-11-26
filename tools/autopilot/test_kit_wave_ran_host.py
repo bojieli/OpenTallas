@@ -5,7 +5,7 @@ class WorkerReceipt(unittest.TestCase):
     def pattern(self):
         # Exercise the production pattern embedded in run_item, not a mirrored parser.
         import inspect,ast
-        fn=ast.parse(inspect.getsource(KW.run_item))
+        fn=ast.parse(inspect.getsource(KW._run_item))
         assign=next(n for n in ast.walk(fn) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=="ran" for t in n.targets))
         return ast.literal_eval(assign.value.args[0])
     def test_actual_unit_receipt_identifies_pull_host(self):

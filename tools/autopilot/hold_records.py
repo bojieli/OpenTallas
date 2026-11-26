@@ -79,6 +79,13 @@ def plan_id(d):
     return str((d or {}).get("plan_sha256") or (d or {}).get("_plan_sha") or (d or {}).get("plan_sha") or (d or {}).get("event") or "")
 
 
+def explicit_current_route_record(rec, die_config):
+    """Identify an exact-plan route hold whose release is an explicit decision."""
+    return (isinstance(rec, dict) and rec.get("route") is True and not rec.get("release")
+            and not any(rec.get(k) for k in ("migrated", "switch_only", "auto_pilot"))
+            and bool(rec.get("plan_sha")) and rec["plan_sha"] == plan_id(die_config))
+
+
 def split_pilot(val):
     """'qwen_kvsys:13f758a4fe34' -> ('qwen_kvsys', '13f758a4fe34')  (die : first 12 hex of the tree manifest sha)"""
     die, _, sha = str(val).partition(":")

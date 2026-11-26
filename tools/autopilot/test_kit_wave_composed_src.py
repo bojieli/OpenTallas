@@ -5,7 +5,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import pytest
+
 from test_kit_wave import KW, cfg
+
+@pytest.fixture(autouse=True)
+def exact_placement_already_viewed(monkeypatch):
+    # These fixtures exercise downstream enqueue behavior with a reviewed placed kit.
+    monkeypatch.setattr(KW, "exact_kit_visual_verdict", lambda *args, **kwargs: "GOOD")
+
 
 
 def g(repo, *a):

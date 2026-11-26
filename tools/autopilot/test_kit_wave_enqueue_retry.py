@@ -1,7 +1,15 @@
 """KW6-CODE 11-04: a coord transport failure on enqueue keeps a PASS kit; later ticks send it, once."""
 import json,tempfile,unittest
 from pathlib import Path
+import pytest
+
 from test_kit_wave import KW,cfg
+
+@pytest.fixture(autouse=True)
+def exact_placement_already_viewed(monkeypatch):
+    # These fixtures exercise downstream enqueue behavior with a reviewed placed kit.
+    monkeypatch.setattr(KW, "exact_kit_visual_verdict", lambda *args, **kwargs: "GOOD")
+
 
 
 class AP:

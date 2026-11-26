@@ -11,10 +11,10 @@ def row(die):
 
 
 def test_pending_verdict_is_advisory_except_hbm(monkeypatch):
-    monkeypatch.setattr(K, "exact_kit_visual_verdict", lambda rec: None)
+    monkeypatch.setattr(K, "exact_kit_visual_verdict", lambda rec, **_kw: None)
     monkeypatch.setattr(K, "visual_verdicts", lambda: {})
-    r = row("s81")
-    assert K.route_hold_reason(cfg("s81"), r) is None and r["visual_pending"].startswith("WAIT-VISUAL (advisory)")
+    r = row("legacy")
+    assert K.route_hold_reason(cfg("legacy"), r) is None and r["visual_pending"].startswith("WAIT-VISUAL (advisory)")
     h = row("hbm")
     assert K.route_hold_reason(cfg("hbm"), h).startswith("WAIT-VISUAL") and "visual_pending" not in h
 

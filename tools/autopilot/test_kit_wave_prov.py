@@ -403,7 +403,7 @@ if __name__ == "__main__":
 def test_prov_first_builds_overlay_before_kit_rtl():
     """DIE-KV-69 11-04: a prov_first_re type runs prov_stage before kit-rtl, on the overlay; other types keep the order"""
     src = Path(KW.__file__).read_text()
-    body = src[src.index("def run_item(spec_path):"):]
+    body = src[src.index("def _run_item(spec_path, resume_reviewed=False):"):]
     first = body.index('plan, prc = prov_stage(sp, run, remote, fail, res, jobdir=out)')
     kitrtl = body.index('run("kit_rtl", otrun(int(sp.get("kit_rtl_mem_gb") or 8), 2, W, krb_cmd(kbind,')
     later = body.index('if sp.get("prov_views") and not core and not prov_first:')
