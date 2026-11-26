@@ -182,3 +182,24 @@ def test_stale_non_blanket_layer_is_replaced(tmp_path):
     assert AE.uncovered(m6, [(30000, 2128, 80000, 2160)]) == []          # the real wire is OBS now
     assert not AE.uncovered([(50000, 40000, 60000, 40032)], m6) == []    # the stale rect is gone
     assert _obs(o)["M7"] == [(0, 0, 100000, 50000)]                      # M7 covered all real metal: untouched
+
+
+def test_pin_eol_own_wire_merged_and_keepout_clear(tmp_path):
+    """PIN-EOL 11-25 (col_h9_r2 Lef58EolKeepOut): exact export puts the pin's own wire beyond the 0.084 pin sliver in OBS;
+    v4 merges it into the pin, keeps grown OBS out of the 0.048 line-end band, keeps real foreign metal 50 nm past the end"""
+    b, d, o, r = tmp_path / "b.lef", tmp_path / "d.lef", tmp_path / "o.lef", tmp_path / "r.json"
+    b.write_text(blanket())
+    hd = HEAD.replace("RECT  0 20 0.5 20.024", "RECT  0 20 0.084 20.024")
+    body = "".join(f"    LAYER M{i} ;\n     RECT  0 0 100 50 ;\n" for i in range(1, 4))
+    body += "    LAYER M4 ;\n     RECT  0.016 20 0.131 20.024 ;\n     RECT  0.181 20 3 20.024 ;\n"
+    body += "    LAYER M5 ;\n     RECT  20 1 20.024 49 ;\n"
+    d.write_text(hd + "  OBS\n" + body + "  END\nEND core\n")
+    b.write_text(hd + blanket()[len(HEAD):])
+    assert AE.pin_eol_findings(d)["M4"]["pins"] == 1               # the raw export has the defect
+    assert AE.form(b, d, o, r) == 0
+    rec = json.loads(r.read_text())
+    assert rec["pin_wire_merge"]["merged_rects"] == 1 and rec["pin_rects_added"] == 1
+    assert rec["pin_eol"] == {} and AE.pin_eol_findings(o) == {}
+    assert rec["real_metal_exposed_um2"] == {}
+    _, _, _, pins = AE.layer_rects(o)
+    assert (16, 20000, 131, 20024) in pins["M4"]

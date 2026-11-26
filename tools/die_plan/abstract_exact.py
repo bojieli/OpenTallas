@@ -162,6 +162,75 @@ def stale_layers(base, detail, layers=STALE_LAYERS, pct=STALE_UNCOVERED_PCT):
     return out
 
 
+# PIN-EOL 11-25 (COORD, S81 col_h9_r2: 358 constant M5 Lef58EolKeepOut DRT marks = 179 pins of dsfd_qbank_S/N, dsfd_node_NNfd,
+# n25): a signal pin sliver whose own wire continues as OBS (or OBS grown up to it) puts an OBS line end inside the EOL
+# keep-out of the pin end, which DRT can never clear.  v4: the pin's own same-layer wire is merged into the pin shape
+# (abstract_detail.merge_pin_wires, exact metal only), and the grown OBS is cut back EOL_CLEAR from every signal pin shape;
+# real foreign metal inside that band stays OBS at min spacing (never exposed).  ASAP7 LEF58_EOLKEEPOUT forward extension
+# M4/M5 0.048 (tech LEF), M6/M7 one pitch.
+EOL_CLEAR = {"M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064}
+
+
+def _grow(rs, g, Wn, Hn):
+    return [(max(0, r[0] - g), max(0, r[1] - g), min(Wn, r[2] + g), min(Hn, r[3] + g)) for r in rs]
+
+
+def pin_eol_findings(path, layers=STALE_LAYERS):
+    """signal pin shapes with same-layer OBS touching them or inside EOL_CLEAR beyond a short (line-end) edge
+    -> {layer: {"pins": n pin names, "shapes": n, "example": [pin, rect nm, obs rect nm]}}"""
+    lines, _, obs, _, (W, H) = K._parse(Path(path).read_text())
+    big = W * H * 1e6 / 2           # a blanket rect (> half the macro) is the blanket form, not a stub
+    obs = {L: [q for q in rs if (q[2] - q[0]) * (q[3] - q[1]) <= big] for L, rs in obs.items()}
+    names, cur, sig, lay, shapes = {}, None, False, None, []
+    for ln in lines:
+        s = ln.strip()
+        if s == "OBS":
+            break
+        m = re.match(r"PIN\s+(\S+)", s)
+        if m:
+            cur, sig = m.group(1), False
+        elif s.startswith("USE "):
+            sig = s.rstrip(" ;").split()[1] == "SIGNAL"
+        m = re.match(r"LAYER\s+(\w+)", s)
+        if m:
+            lay = m.group(1)
+        m = _RECT.match(ln)
+        if m and cur and sig and lay in layers:
+            shapes.append((cur, lay, tuple(_nm(v) for v in m.groups())))
+    out = {}
+    idx = {L: _binned(obs.get(L, [])) for L in layers}
+    for pin, L, r in shapes:
+        e = _nm(EOL_CLEAR[L])
+        horiz = (r[2] - r[0]) >= (r[3] - r[1])
+        # touching box, plus the two line-end extension boxes
+        zones = [r]
+        if horiz:
+            zones += [(r[0] - e, r[1], r[0], r[3]), (r[2], r[1], r[2] + e, r[3])]
+        else:
+            zones += [(r[0], r[1] - e, r[2], r[1]), (r[0], r[3], r[2], r[3] + e)]
+        ix, cell = idx[L]
+        rs = obs.get(L, [])
+        hit = None
+        for k, z in enumerate(zones):
+            cand = set()
+            for bx in range(z[0] // cell, z[2] // cell + 1):
+                for by in range(z[1] // cell, z[3] // cell + 1):
+                    cand.update(ix.get((bx, by), ()))
+            for i in cand:
+                q = rs[i]
+                if (q[0] <= z[2] and q[2] >= z[0] and q[1] <= z[3] and q[3] >= z[1]) if k == 0 else \
+                        (q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1]):   # touching the pin / inside the keep-out
+                    hit = q
+                    break
+            if hit:
+                break
+        if hit:
+            d = out.setdefault(L, {"pins": set(), "shapes": 0, "example": [pin, list(r), list(hit)]})
+            d["pins"].add(pin)
+            d["shapes"] += 1
+    return {L: dict(pins=len(d["pins"]), shapes=d["shapes"], example=d["example"]) for L, d in out.items()}
+
+
 def regrow(lef_in, lef_out, layers):
     """v3 (Fable 11-25, = KV-PC-ABSTRACT v3): grow each OBS rect of `layers` by max(min spacing, pitch) (= merge gap 2 x pitch / 2),
     clip to the outline, merge, cut ONLY each signal pin's own shape (foreign metal and its spacing stay OBS), regrow slivers
@@ -187,7 +256,12 @@ def regrow(lef_in, lef_out, layers):
         old = obs.get(L, [])
         grown = [(max(0, r[0] - g), max(0, r[1] - g), min(Wn, r[2] + g), min(Hn, r[3] + g)) for r in old]
         clear = list(sig_pins.get(L, []))
-        res, sl = K.fix_slivers(K.union_minus(grown, clear), clear, _nm(MIN_WIDTH.get(L, 0.024)), (0, 0, Wn, Hn))
+        # PIN-EOL: grown OBS stops EOL_CLEAR short of every signal pin shape; real foreign metal inside that band stays OBS
+        # at its exact (signed, DRC-clean) geometry: never exposed, never grown into the pin's line-end keep-out
+        zone = _grow(clear, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
+        real = list(old)
+        # slivers regrow only outside the keep-out band (a sliver of halo that cannot grow is dropped; real metal is >= min width)
+        res, sl = K.fix_slivers(K.union_minus(K.union_minus(grown, zone) + real, clear), zone, _nm(MIN_WIDTH.get(L, 0.024)), (0, 0, Wn, Hn))
         res = sorted(res)
         if res:
             blocks.append(f"    LAYER {L} ;")
@@ -233,15 +307,44 @@ def form(base, detail, out, receipt=None, layers="auto"):
         if receipt:
             Path(receipt).write_text(json.dumps(rec, indent=1))
         return 2
+    # PIN-EOL: the pin's own same-layer wire (exact metal, touching the pin) becomes pin shape before the OBS is grown
+    with open(tmp) as fh:
+        lns = fh.readlines()
+    lns, rec["pin_wire_merge"] = A.merge_pin_wires(lns, set(sel))
+    tmp.write_text("".join(lns))
     rec["regrow"] = regrow(tmp, out, sel)
     tmp.unlink()
+    # the check compares against the base with the same merged pin rects (only RECT lines added inside PIN sections)
+    bh, bb, bt = A._split(base.read_text().splitlines(keepends=True))
+    nh, _, _ = A._split(Path(out).read_text().splitlines(keepends=True))
+    added = list(nh)
+    for ln in bh:
+        if ln in added:
+            added.remove(ln)
+    pins_ok = all(_RECT.match(ln) for ln in added) and [ln for ln in nh if not _RECT.match(ln)] == \
+        [ln for ln in bh if not _RECT.match(ln)]
+    base_pm = out.with_name(out.name + ".basepm.tmp")
+    base_pm.write_text("".join(nh + (bb or []) + bt))
     with contextlib.redirect_stdout(io.StringIO()):
-        crc = A.main(["check", "--base", str(base), "--new", str(out), "--layers", ",".join(sel)])
+        crc = A.main(["check", "--base", str(base_pm), "--new", str(out), "--layers", ",".join(sel)])
+    base_pm.unlink()
+    if not pins_ok:
+        crc = 2
+    # every exact metal rect of a replaced layer is still OBS or PIN (the keep-out cut and sliver drops never expose metal)
+    _, _, xo, xp = layer_rects(detail)
+    _, _, no, np_ = layer_rects(out)
+    exposed = {L: round(K._area(K.union_minus(xo.get(L, []) + xp.get(L, []), no.get(L, []) + np_.get(L, []))), 6)
+               for L in sel}
+    rec["real_metal_exposed_um2"] = {L: v for L, v in exposed.items() if v}
+    if rec["real_metal_exposed_um2"]:
+        crc = 2
+    rec["pin_rects_added"] = len(added)
     acc = A.access_report(Path(out).read_text().split("\n"))
     rec.update(check_ok=crc == 0, obs_after=coverage(out, STALE_LAYERS), lef_bytes_before=base.stat().st_size,
                lef_bytes_after=out.stat().st_size, obs_rects_before=sum(1 for ln in open(base) if _RECT.match(ln)),
                obs_rects_after=sum(1 for ln in open(out) if _RECT.match(ln)),
                pins_without_access=sorted(p for p, e in acc["pins"].items() if not e["ok"]),
+               pin_eol=pin_eol_findings(out),
                out_sha256=A._sha(str(out)), verdict="OK" if crc == 0 else "CHECK-FAIL")
     if receipt:
         Path(receipt).write_text(json.dumps(rec, indent=1))
@@ -313,12 +416,21 @@ def main(argv=None):
     c = sub.add_parser("census")
     c.add_argument("--lef", required=True)
     c.add_argument("--detail")
+    e = sub.add_parser("pin-eol", help="census: signal pins with OBS inside the line-end keep-out (Lef58EolKeepOut class)")
+    e.add_argument("lefs", nargs="+")
     t = sub.add_parser("tcl")
     t.add_argument("--odb", required=True)
     t.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "form":
         return form(a.base, a.detail, a.out, a.receipt, a.layers)
+    if a.cmd == "pin-eol":
+        for f in a.lefs:
+            try:
+                print(json.dumps(dict(lef=f, sha256=A._sha(f), pin_eol=pin_eol_findings(f))))
+            except Exception as ex:          # a census row per file, never a crash
+                print(json.dumps(dict(lef=f, error=repr(ex))))
+        return 0
     if a.cmd == "census":
         res = dict(obs=coverage(a.lef, ("M1", "M2", "M3") + ROUTING + ("M7",)))
         if a.detail:
