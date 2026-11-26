@@ -224,11 +224,30 @@ def refresh_type(base_t, new_t):
     return rep
 
 
-def run(base_raw, new_raw, types):
+def run(base_raw, new_raw, types, plan_path=None):
     out = copy.deepcopy(new_raw)
     rep = {}
+    tap_types = []
     for tn in types:
-        rep[tn] = refresh_type(base_raw["partition_types"][tn], out["partition_types"][tn])
+        base = base_raw["partition_types"][tn]
+        new = out["partition_types"][tn]
+        rep[tn] = refresh_type(base, new)
+        clock = new.get("clock", {})
+        if clock.get("tap_mode") == "grid+explicit" and clock.get("added_taps") and (
+            base["outline_um"] != new["outline_um"] or core_rects(base) != core_rects(new)
+        ):
+            tap_types.append(tn)
+    if tap_types:
+        import schema
+        import taps
+
+        plan = schema.Plan(out, plan_path)
+        for tn in tap_types:
+            new_taps = out["partition_types"][tn]["clock"]["added_taps"]
+            seats = taps.reseat_added_grid_taps(plan, tn)
+            rep[tn]["added_taps_reseated"] = sum(tap["xy"] != xy for tap, xy in zip(new_taps, seats))
+            for tap, xy in zip(new_taps, seats):
+                tap["xy"] = xy
     return out, rep
 
 
@@ -249,7 +268,7 @@ def main(argv=None):
     base = json.loads(Path(a.base).read_text())
     new = json.loads(Path(a.new).read_text())
     types = [t for t in a.types.split(",") if t]
-    out, rep = run(base, new, types)
+    out, rep = run(base, new, types, a.new)
     Path(a.out).write_text(json.dumps(out, separators=(",", ":")) + "\n")
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")

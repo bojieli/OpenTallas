@@ -1124,6 +1124,20 @@ def explicit_taps(P, tn):
     return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
 
 
+def reseat_added_grid_taps(P, tn):
+    """Return legal added tap sites after a refloor, preserving the clock port order."""
+    import schema
+
+    tile = P.types[tn]
+    used = [(x, y) for _, x, y in schema._grid_taps(P, tn)]
+    sites = []
+    for tap in tile["clock"]["added_taps"]:
+        site = schema.tap_clear(tile, *tap["xy"], taken=used, strict=True)
+        used.append(site)
+        sites.append(list(site))
+    return sites
+
+
 def grid_explicit_sites(P, tn):
     """clock.tap_mode "grid+explicit" (DIE-S81-39 10-31, COORD 23:5x plan_geom fold-in): the R4 grid EXACTLY as grid
     mode gives it (schema._grid_taps: same names, xy, order; a grid tap may carry no PLANNED sink, as in grid mode,
