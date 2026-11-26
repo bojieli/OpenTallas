@@ -303,7 +303,17 @@ def resolve(die, slice_inst, source_root=None):
                  '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808',
                  '0e49aefdedcc41a1cb571c21cad73f247c2d97a7904799027af1373b16a920e1',
                  '2710712dd9d163b93f222e09db23ae89fb675e25454d2fc45981d149d97aa75c'}
-        if sources[resolved_paths[streamer]] not in known:
+        source_sha = sources[resolved_paths[streamer]]
+        # Vectorized write mux, default mode only. Exact source passed all 21
+        # xs4_equiv.sh cases with the one-edge reference (E8 oth-ubuntu-3043416-1795697631).
+        if source_sha == '560fdc504a2fc14a69fb41523157cabd861a558c5d11e3a6d9d5dfd1c32fd080':
+            defines = bind_defines() if selected_defines is None else selected_defines
+            # An ifdef is active whenever defined, including NAME=0 or a nonnumeric value.
+            unsupported = sorted({mode for d in defines for mode in re.findall(
+                r'(?:\b|(?<=-D))OT_S81SL_(?:XS4_WREG|XS(?:4)?_MUT_\w+)\b', d)})
+            if unsupported:
+                raise ValueError('default-only XS4 capture-stage receipt excludes ' + ', '.join(unsupported))
+        elif source_sha not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
     result = dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
