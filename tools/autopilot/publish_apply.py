@@ -391,15 +391,25 @@ def postbind_spec(obj, stamp, host="", live=None):
             "tools_rt_root": str(cfg.get("tools_rt_root") or "/srv/opentallas-scratch2/claude/rt")}
 
 
-def postbind_runtime_sh(s):
+def postbind_parallel_check_sh(binder, identity):
+    """Read the whole-die no-serial guard from the exact binder before building."""
+    return (f"if ! grep -Fq -- 'BIND_PARALLEL_REQUIRED: whole-die emit' {binder} 2>/dev/null; then\n"
+            f"    printf 'POSTBIND_PARALLEL_REQUIRED %s lacks the whole-die parallel bind guard. "
+            f"Select and qualify a parallel-compatible tools pin or sealed checkout before retrying.\\n' {identity} >&2\n"
+            "    exit 6\nfi\n")
+
+
+def postbind_runtime_sh(s, *, require_parallel=False):
     """Select the exact published tools on the bind host. The checkout copy remains the design root."""
+    q = shlex.quote
     pin = s.get("tools_sha")
     if not pin:
-        return ""
-    q = shlex.quote
+        if not require_parallel:
+            return ""
+        return postbind_parallel_check_sh(q(s["tree"] + "/tools/die_plan/bind.py"), q("checkout " + s["tree"]))
     root = q(s["tools_rt_root"])
     manifest_sha = q("import json,sys; print(json.load(open(sys.argv[1]))['sha'])")
-    return (f"tool_root={root}\n"
+    select = (f"tool_root={root}\n"
             "resolved=$(readlink -f -- \"$tool_root/current\") || resolved=\"$tool_root/current\"\n"
             "resolved_root=$(dirname -- \"$resolved\")\n"
             f"pin={q(pin)}\n"
@@ -410,8 +420,11 @@ def postbind_runtime_sh(s):
             f"    actual=$(python3 -I -c {manifest_sha} \"$candidate.manifest.json\") || continue\n"
             "    case \"$actual\" in \"$pin\"*) runtime=$candidate; break;; esac\n"
             "done\n"
-            "[ -n \"$runtime\" ] || { echo \"POSTBIND_RUNTIME unavailable pin $pin in $tool_root or $resolved_root\" >&2; exit 6; }\n"
-            f"export OT_REPO_ROOT={q(s['copy'])} OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
+            "[ -n \"$runtime\" ] || { echo \"POSTBIND_RUNTIME unavailable pin $pin in $tool_root or $resolved_root\" >&2; exit 6; }\n")
+    if require_parallel:
+        return select + postbind_parallel_check_sh('"$runtime/tools/die_plan/bind.py"', '"pin $pin ($runtime)"')
+    return (select
+            + f"export OT_REPO_ROOT={q(s['copy'])} OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
             "echo \"POSTBIND_RUNTIME $pin $runtime\"\n")
 
 
@@ -446,7 +459,8 @@ def postbind_prep_sh(s):
     q = shlex.quote
     T, Cp = q(s["tree"]), q(s["copy"])
     return (f"set -euo pipefail\ncd /\ntest -f {T}/.src-manifest.json\ntest ! -e {Cp}\ntest ! -e {Cp}.part\n"
-            f"cp -al {T} {Cp}.part\nfind {Cp}.part -type d -exec chmod u+w {{}} +\n"
+            + postbind_runtime_sh(s, require_parallel=True)
+            + f"cp -al {T} {Cp}.part\nfind {Cp}.part -type d -exec chmod u+w {{}} +\n"
             f"realpath {T} > {Cp}.part/.link-base.tmp\nchmod 444 {Cp}.part/.link-base.tmp\nmv -f {Cp}.part/.link-base.tmp {Cp}.part/.link-base\n"
             f"mkdir {Cp}.part/{POSTBIND_DIR}\n"
             f"cat > {Cp}.part/{POSTBIND_DIR}/run.sh <<'OT_POSTBIND_EOF'\n{postbind_run_sh(s)}OT_POSTBIND_EOF\n"
@@ -472,8 +486,8 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
     # counts as made only when the script's last line POSTBIND_COPY arrived
     body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && "
             f"grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || "
-            f"{{ bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die}: the bind copy could not be made on {s['host']} "
-            f"(log {log}); run publish_apply.py post-bind again\"; exit 3; }}\n"
+            f"{{ reason=$(grep -m1 '^POSTBIND_PARALLEL_REQUIRED ' {q(str(log))}) || reason='the bind copy could not be made'; "
+            f"bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die} on {s['host']}: $reason (log {log})\"; exit 3; }}\n"
             f"{q(str(otrun))} --mem {POSTBIND_MEM} --threads 48 --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
             f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1; rc=$?\n"
             f"r=$(grep -E '^(ELAB|BIND|LATCHECK)_RC=' {q(str(log))} | tr '\\n' ' ')\n"
@@ -680,6 +694,8 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
         txt = Path(log).read_text(errors="replace")
     except OSError:
         pass
+    if r.returncode and (refusal := re.search(r"^POSTBIND_PARALLEL_REQUIRED .+$", txt, re.M)):
+        return "", "bind-first: " + refusal[0], []
     fails = types_from_log(txt, set(item_names((json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {})))
     plan_ = dict(out=f"{s['copy']}/{POSTBIND_DIR}/out", dest=f"{s['tree'].rstrip('/')}{BIND_DEST_SUFFIX}{stamp}", hosts=list(((obj.get("marker") or obj).get("config") or {}).get("gen_hosts") or [])[:])
     plan_["hosts"] = [h for h in plan_["hosts"] if h != s["host"]]
