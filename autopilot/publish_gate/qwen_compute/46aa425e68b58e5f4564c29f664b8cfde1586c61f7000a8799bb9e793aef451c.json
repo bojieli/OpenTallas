@@ -1,23 +1,141 @@
 {
  "advisory": [
-  "gate"
+  "bound_params",
+  "foreign_tree"
  ],
+ "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1p_r6_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1p_colla_sitemacro_1125.json",
  "checks": {
-  "gate": {
-   "verdict": "FAIL",
-   "why": "AssertionError: exact current normal source guard is not ready"
+  "bound_params": {
+   "advisory": true,
+   "findings": [
+    "BOUND-PARAM qfd_qc_tt_ctlm_part.S_core_init_u0: passed by qwen_compute_bound_top.sv:tt_ctlm; no definition in the tree declares it (physical/die_plan/qwen_compute/bind/bound_r8/rtl/qfd_qc_tt_ctlm_part.sv, physical/die_plan/qwen_compute/bind/bound/rtl/qfd_qc_tt_ctlm_part.sv, results/geom_review/codex_tt_locality_1102/regional_source/qfd_qc_tt_ctlm_part_DISABLED.sv)"
+   ],
+   "n": 1,
+   "verdict": "ADVISORY"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/qc-c1q-cut3-publish-1125/work_release/qwen_compute/46aa425e68b5/slw_su_l1__clcc9d0155",
+   "gen_host": "epyc8",
+   "item": "slw_su_l1__clcc9d0155",
+   "kind": "type",
+   "origin": "/home/ubuntu/qc-c1q-cut3-publish-1125/work_release/qwen_compute/46aa425e68b5/slw_su_l1__clcc9d0155/published_gen_origin.json",
+   "origin_sha256": "3f2ff162a4f65e2e8a9f741e6fbc40ddbd7d8ea9f10bb6e66d7b4cbc716a94ba",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "c29ad537170540aefaff753457738f252f8be1f66d79686107e465d6f67a1fdc",
+   "spec_sha256": "1c38f4623bd165d62fbacdc691e8bcd1be9a0c619fb14facaac7c4e013136a92",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125",
+   "stage": "preflight",
+   "unit_log_sha256": "6aa49fb8c1039ceaaecd09b2b5061d6abf32a5a55d7e8fca5ee9cb7ece32ff41",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/bind_cells.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbf_q00__cl1b5a6458.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbf_q00__cl870de686.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q00__cl622f65d2.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q00__cld7bf7197.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q00__cldbcda913.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q01__clab6e67f2.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q01__cld9ff4c40.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q01__cldd6ea846.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q11__cl49ae4555.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbn_q11__cl5cc92dfe.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbx_q10__cl89936551.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbx_q10__cl89936551_h.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/cbx_q10__cl94a12200_h.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/coll_ft__cl78c7b300.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/coll_ft__cla4a25d77.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/ot_qfd_serdes_112g_x12_phy_s597__phy_serdes_b.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/ot_qkvd_ucie_x64_phy_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_cb_f_q00.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_cb_f_q01__cbf_q01.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_cb_f_q01__cbf_q01_s2.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_cb_f_q11.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_core_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_ftc_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_ftm_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_ftn_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_n_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_s_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_coll_ucie_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_glue_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_native59_part.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_fe__sle_fe_v2.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_fe__sle_fe_v3.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_fw.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_sc__sle_sc_v2.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_sc__sle_sc_v3.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_stm.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_sle_su_c.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f names /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3/_postbind/out/rtl/qfd_qc_slw_fw.sv (published tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_postbind_1125c1qcut3, not the candidate tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125)"
+   ],
+   "n": 190,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 43
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-r3ud7tvf/g0_report.json",
+   "pre_rc": 0,
+   "reset_solved": true,
+   "tail": "PRE: , radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t197 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t19 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nPRE-TIME ADVISORY 1199 s (PRE at 2030 s)\n\nG0: 2f65d2: explicit tap clk_t193 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t197 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t19 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/90de27e1c645/tools/die_plan",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1q_cut3_1125.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "qwen_compute",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125_bind_1125c1qcut3/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 3519.6,
  "hosts": [
   "epyc8",
-  "epyc7"
+  "epyc7",
+  "intel1"
  ],
+ "item": "slw_su_l1__clcc9d0155",
  "manifest_hash": "46aa425e68b58e5f4564c29f664b8cfde1586c61f7000a8799bb9e793aef451c",
  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1q_cut3_1125.json",
  "plan_sha256": "00abead30cfab3c8f8552386236787f9134bd9aec1199097a36509ab4260b625",
+ "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1p_r6_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1p_colla_sitemacro_1125.json",
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/rows_proofs/qc_c1p_sc_rows_proof_1125.json"
+ ],
  "schema": "opentallas.publish_gate.v1",
- "t": 1795687658.8780458,
+ "static_s": 3519.6,
+ "t": 1795688348.7189527,
  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
