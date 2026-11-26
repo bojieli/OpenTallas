@@ -230,6 +230,24 @@ def test_reticle_fit_reverts_growth():
     assert rev == ["A"] and not rows[0]["applied"] and Q["partition_types"]["A"]["outline_um"] == [400.0, 1000.0]
 
 
+
+def test_reticle_fit_preserves_same_outline_reseat_on_overwidth_base():
+    from copy import deepcopy
+    before = [1442.88, 1235.5200000000002]
+    rounded = [1442.88, 1235.52]
+    plan = {"die": {"outline_um": [33030.72, 25980.48]},
+            "partition_types": {"A": {"outline_um": before}},
+            "partitions": [{"name": "a", "type": "A", "origin_um": [0, 0]}]}
+    candidate = deepcopy(plan)
+    candidate["partition_types"]["A"]["outline_um"] = rounded
+    rows = [{"type": "A", "applied": True, "outline_before": before, "outline_after": rounded,
+             "violations_before": {"street": 5}, "violations_after": {}}]
+    die, reverted = SR.reticle_fit(plan, candidate, rows, log=lambda s: None)
+    assert not reverted and rows[0]["applied"]
+    assert candidate["partition_types"]["A"]["outline_um"] == rounded
+    assert die["reticle_fits"] is False
+
+
 class _FakeM:
     def __init__(self, W, H, rects):
         import numpy as np

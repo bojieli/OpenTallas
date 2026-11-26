@@ -2854,16 +2854,18 @@ def reticle_fit(P, Q, rows, log=print):
     inst = collections.Counter(p["type"] for p in P.get("partitions") or [])
     app = {r["type"]: r for r in rows if r.get("applied")}
     grown = {n: tuple(r["outline_after"]) for n, r in app.items()}
-    d = die_growth(P, grown) if grown else dict(area_pct=0.0, die_after=list(P["die"]["outline_um"]))
+    d = die_growth(P, grown)
     reverted = []
     while grown and reticle_overflow(d) > 1e-6:
         ov = reticle_overflow(d)
         best = None
         for n, wh in grown.items():
-            if tuple(wh) == tuple(app[n]["outline_before"]):
+            if all(math.isclose(a, b, rel_tol=0.0, abs_tol=1e-6)
+                   for a, b in zip(wh, app[n]["outline_before"])):
+                # Grid rounding in legalize may change the float spelling of an unchanged outline.
                 continue
             g2 = {k: v for k, v in grown.items() if k != n}
-            d2 = die_growth(P, g2) if g2 else dict(die_after=list(P["die"]["outline_um"]))
+            d2 = die_growth(P, g2)
             r = app[n]
             fixed = sum(v for k, v in (r.get("violations_before") or {}).items() if k in HARD) - \
                 sum(v for k, v in (r.get("violations_after") or {}).items() if k in HARD)
@@ -2878,7 +2880,7 @@ def reticle_fit(P, Q, rows, log=print):
         Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
         app[n].update(applied=False, reason="reticle: reverted to fit the die estimate in 26x33 mm")
         reverted.append(n)
-        d = d2 if grown else dict(area_pct=0.0, die_after=list(P["die"]["outline_um"]), reticle_fits=True)
+        d = d2
         log("  reticle fit: reverted %s -> overflow %.1f um" % (n, reticle_overflow(d)))
     return d, reverted
 
