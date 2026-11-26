@@ -197,10 +197,10 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0, parameter integer RPC = 
 `endif
     always @(posedge rclk or negedge rrn_c) if (!rrn_c) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
     // S81-SERDES-RSTCOHORT 11-25 (serdes__t4 CTS setup -210: rp_g2 -> g2b -> wp-rp -> push -> 4096 mem enables, 1000 ps): full / hi are
-    // REGISTERED one cycle ahead from the values the next cycle will see (wp or wp+1, rp_g2_next = rp_g1), so push is an AND of flops
-    // and the register values equal the old combinational fill_w == 8 / >= 6 every cycle (no behaviour or latency change).
-    wire [3:0] fill_n0 = wp - g2b(rp_g1);
-    wire [3:0] fill_n1 = wp + 4'd1 - g2b(rp_g1);
+    // REGISTERED (as ucie/ot_ucie_rate_match_pf.sv), computed from wp / wp+1 and the synchronised rp_g2 (second flop only, never the
+    // metastable rp_g1), so push is an AND of flops.  rp_g2 is one edge older than before, so fill is never underestimated.
+    wire [3:0] fill_n0 = wp - g2b(rp_g2);
+    wire [3:0] fill_n1 = wp + 4'd1 - g2b(rp_g2);
     reg  full_r, hi_r;
     wire idle = w_d[1] && !w_d[0];
     wire full = full_r;
