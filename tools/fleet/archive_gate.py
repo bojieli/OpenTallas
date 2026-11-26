@@ -17,6 +17,10 @@ never counted.  Input: the archive listing written by tools/explorer/tools/archi
 """
 import argparse, gzip, json, os, pathlib, re, sys, time
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from count_signoff import counts_signed, index_record_counts
+from signed_store import unblob
+
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
 LISTING = pathlib.Path(os.environ.get('AGIDOCK_ARCHIVE_INDEX', STATE / 'agidock_archive_index.json'))
 SIGNED_STORE = pathlib.Path(os.environ.get('OT_SIGNED_STORE', os.path.expanduser('~/coord/signed-store')))
@@ -38,6 +42,13 @@ def store_archived(root=None):
                 with gzip.open(os.path.join(dp, fn), 'rt') as fh: e = json.load(fh)
             except Exception: continue
             if not e.get('archive') or not any(f[0].endswith('6_final.odb') and (len(f) < 2 or f[1]) for f in e.get('files') or []): continue
+            if e.get('signoff_json'):
+                try:
+                    record = unblob(e['signoff_json'])
+                except (OSError, EOFError, ValueError):
+                    continue
+                if not isinstance(record, dict) or not counts_signed(record):
+                    continue
             for r in e.get('rows') or []: out.add((r.get('die'), r.get('key')))
     return out
 
@@ -67,7 +78,11 @@ class Gate:
         if 'agidock' not in A: self.error = 'ARCHIVE GATE NOT APPLIED: listing has no AGIdock part (%s)' % A.get('agidock_error'); return
         self.listed = A.get('agidock_listed') or 0
         if (now or time.time()) - self.listed > MAX_AGE_S: self.error = 'ARCHIVE GATE NOT APPLIED: archive listing is %.1f h old' % (((now or time.time()) - self.listed) / 3600); return
-        for e in A['agidock']: self.ent[(e['die'], e['name'])] = e
+        signoffs = A.get('agidock_signoffs') or {}
+        for e in A['agidock']:
+            record = signoffs.get(e['path'] + '/signoff.json')
+            if record is None or counts_signed(record):
+                self.ent[(e['die'], e['name'])] = e
         # INDEX.tsv (SIGNED-RECOVER): die element kind record db rtx_db size sha256 pack meta status src
         lines = [l for l in (A.get('agidock_index_tsv') or '').splitlines() if l.strip() and not l.startswith('#')]
         self.index = {}
@@ -75,6 +90,8 @@ class Gate:
             head = lines[0].split('\t')
             for ln in lines[1:]:
                 r = dict(zip(head, ln.split('\t')))
+                if not index_record_counts(A, r, store):
+                    continue
                 self.index[(r.get('die'), r.get('element'))] = r
                 self.by_die.setdefault(r.get('die'), []).append(r)
         else:

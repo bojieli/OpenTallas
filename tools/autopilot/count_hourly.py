@@ -19,6 +19,11 @@ import sys
 import time
 from pathlib import Path
 
+tools = Path(__file__).resolve().parent
+fleet_tools = tools.parent / "fleet"
+sys.path.insert(0, str(fleet_tools if fleet_tools.is_dir() else tools))
+from count_signoff import index_record_counts
+
 HOME = Path.home()
 COORD = Path(os.environ.get("COUNT_COORD", str(HOME / "coord")))
 CACHE = Path(os.environ.get("COUNT_CACHE", str(HOME / ".local/state/fleet-viz/release_tree_plan_cache.json")))
@@ -54,32 +59,35 @@ def load_element_alias(path=None):
 
 
 
-def index_rows(index_json):
-    """-> [(die, element, kind)] of the ARCHIVED rows of the AGIdock INDEX.tsv the counter mirrored in agidock_archive_index.json"""
+def archived_index_rows(index_json):
     try:
         a = json.loads(Path(index_json).read_text())
     except (OSError, ValueError):
-        return []
-    rows = []
-    for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
-        f = ln.split("\t")
-        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
-            rows.append((f[0], f[1], f[2]))
-    return rows
+        return
+    lines = (a.get("agidock_index_tsv") or "").splitlines()
+    if not lines:
+        return
+    head = lines[0].split("\t")
+    for ln in lines[1:]:
+        row = dict(zip(head, ln.split("\t")))
+        if row.get("die") not in INDEX_DIES:
+            continue
+        if not row.get("status", "").startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
+            continue
+        if index_record_counts(a, row):
+            yield row
+
+
+def index_rows(index_json):
+    """-> [(die, element, kind)] of the eligible archived AGIdock rows."""
+    return [(r["die"], r["element"], r["kind"]) for r in archived_index_rows(index_json)]
 
 
 def index_units(index_json):
-    """-> [dict(die, element, kind, odb_sha, src)] of the ARCHIVED / RTX-FULL rows of the mirrored AGIdock INDEX.tsv (same filter as index_rows)"""
-    try:
-        a = json.loads(Path(index_json).read_text())
-    except (OSError, ValueError):
-        return []
-    out = []
-    for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
-        f = ln.split("\t")
-        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
-            out.append(dict(die=f[0], element=f[1], kind=f[2], odb_sha=f[7], src=f[11] if len(f) > 11 else ""))
-    return out
+    """-> exact archive evidence for the eligible archived AGIdock rows."""
+    return [dict(die=r["die"], element=r["element"], kind=r["kind"],
+                 odb_sha=r["sha256"], src=r.get("src", ""))
+            for r in archived_index_rows(index_json)]
 
 
 def ledger_by_odb(path):

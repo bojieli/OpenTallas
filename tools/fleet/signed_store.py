@@ -103,13 +103,20 @@ def _alias_split(a):
     return h, p
 
 
-def load_records(store=None):
+def load_records(store=None, eligible=None):
     """-> (records, pins): one scan-format record per alias (the same dicts scan_host returned, so RETIRED / COUNT-REVOKED /
     COUNT-CREDIT keep working on their host:path keys) and pins {(scan_host, pins_path): stored pin table}.  No host is read."""
     recs, pins = [], {}
     for e in read_manifest(store):
         if str(e.get("origin", "")).startswith("origin/main:"):
             continue                                # counted from the git tree (main_records); the entry holds its archive copy
+        if eligible is not None and e.get("signoff_json"):
+            try:
+                record = unblob(e["signoff_json"])
+            except (OSError, EOFError, ValueError):
+                continue
+            if not isinstance(record, dict) or not eligible(record):
+                continue
         s = {k: e["scan"][k] for k in SCAN_FIELDS if k in (e.get("scan") or {})}
         p = e.get("pins")
         for a in e.get("aliases") or [e["origin"]]:
