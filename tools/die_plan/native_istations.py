@@ -77,8 +77,11 @@ def annotate(b):
             incoming={len(row['regs_um']) for row in rows}
             # per-core rows of one bus merge to the deepest chain (kit_istations.bus_entries, KW-FIX-27); exact-site rows do not
             if len(incoming)>1 and any(row.get('bit_route') or 'bit_sites_um' in row or 'face_bit_sites_um' in row for row in rows):raise ValueError(f'native stations {L.get("lane")}: conflicting destination station counts')
-            receiver=max(incoming,default=0)
-            if int(raw.get('fixed_cycles',0))!=count+receiver:raise ValueError(f'native stations {L.get("lane")}: fixed_cycles must equal source {count} + destination {receiver}')
+            receiver = max(incoming, default=0)
+            receiver_soft = CL.soft_in_cycles(target, L.get("iname", ""))
+            if int(raw.get("fixed_cycles", 0)) != count + receiver + receiver_soft:
+                raise ValueError(f'native stations {L.get("lane")}: fixed_cycles must equal '
+                                 f'source {count} + destination {receiver} + receiver soft {receiver_soft}')
             base=2+sum(h['stations'] for h in L.get('ft',[]))+int(L.get('clock_landing_cycles',0))
             if L['cycles']<base+count:raise ValueError('native stations exceed priced lane depth')
             L['internal_source_cycles']=count

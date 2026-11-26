@@ -2776,12 +2776,13 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
-def check_registered_pins(P, R, plan_dir=None):
+def check_registered_pins(P, R, plan_dir=None, repo_root=None):
     """REGISTERED-PIN hard partitions (COORD 10-25 11:31; hard_pinreg.py): declaration (hard type, single hard core,
     lib, no ft slots) and the lib claim (setup+hold on every input, clk->q on every output, every corner view).  Fails
     closed: an ERROR, the binder then refuses the type too."""
     import hard_pinreg as HP
-    errs, summ = HP.check_plan(P.raw, (plan_dir,) if plan_dir else ())
+    bases = tuple(path for path in (plan_dir, repo_root) if path is not None)
+    errs, summ = HP.check_plan(P.raw, bases)
     for e in errs:
         m = re.match(r"type (\S+):", e)
         R.err("hard_pinreg", e, **({"type": m.group(1)} if m else {}))
@@ -3057,7 +3058,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["cuts"] = check_cuts(P, R, geo, full_cut)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing, strap_pads=r8_strap_pads)
-    rp = check_registered_pins(P, R, plan_dir)
+    rp = check_registered_pins(P, R, plan_dir, repo_root)
     if rp:
         summ["registered_pins"] = rp
     import landing_contract as LC
@@ -3199,7 +3200,7 @@ def main(argv=None):
                          "routed_reach), error = ERROR, off = skipped")
     ap.add_argument("--band-base", help="landing_band_core: base plan of record of this event; its overlaps are inherited (WARN), new / "
                     "larger ones ERROR; without it every overlap is a WARN (publish_gate passes the die's live plan)")
-    ap.add_argument("--repo-root", help="checkout holding the core views for --timing-audit (default: this checkout)")
+    ap.add_argument("--repo-root", help="checkout holding the core views (default: this checkout)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
