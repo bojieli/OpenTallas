@@ -49,6 +49,9 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
 
   LEG-DELAY        station-free bus->core / core->core legs: estimated setup slack from Manhattan length x 1.2 ps/um (C4 kv3_pc phy->kvpc -773 ps, C6 kv3_hgi -870 ps; HOP-GAP / G0-HOPS were silent)
   FP-FLOORPLAN     street lane demand > 1.0, plan cells > 400k, hard-core overlap / outside the outline (FP-CONVERGE-KV 11-25; OT_FP_BLOCK=1 -> FAIL lines)
+  GEN-PARSE        gen-step parse of every type in scope: reg_leaf_split.config and the bound R8 count declarations (bound_r8_straps.project)
+                   with the TREE tools, no synthesis (KV R6: kv3_hg_v1p4/v1p6 ">= 2 copies needed", kv3_pc_v1 r8ef700d7c strap_r8pad_lane_*, all
+                   found only at gen); report only, OT_GEN_PARSE_BLOCK=1 -> FAIL lines (adv_gen_parse.py)
   EDGE-STRIP       >= 256-bit die windows with a hard core < 69.12 um behind the window span (VIS-DIE-S81 EDGESTRIP-1; S81 J8:
                    241 types, 0/47 signed, 40/51 failing); fix = edgestrip_row.py interior shift or re-shape (adv_edge_strip.py)
 
@@ -127,7 +130,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("STATUS-UP-REACH", "adv_rcs81:STATUS-UP-REACH"), ("CORE-LEG-OVERMACRO", "adv_rcs81:CORE-LEG-OVERMACRO"), ("RELAY-COHORT-SPAN", "adv_rcs81:RELAY-COHORT-SPAN"),
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
-          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"))
+          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
