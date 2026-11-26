@@ -3599,7 +3599,11 @@ def site_off_outline_findings(plan):
 # (ADV_DIE_CONTEXT: their per-type lines read the far end of each lane) still run on the whole plan.  OT_PRE_ADV_SCOPE=full: old behaviour.
 # P-FALSE-GREEN-1126: RESET-NAME solves the die reset wavefront (reset.root_part e.g. sp5 is a partition of ANOTHER type), so on a scoped
 # view it died with KeyError 'sp5' and the crash ended in PASS; it runs on the whole plan, limited to the scope's types (OT_ADV_RESETNAME_TYPES).
-ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME")
+# P-SCOPE-VIEW-KEYOUT (S81-PRE-KEYERR 11-26): REF-SITE solves the same die reset wavefront (reset.keep_outs names types outside the scope:
+# S81 col_h10_r1/r2 died with KeyError col_h10_r0_p1, NOT-EVALUABLE); it too runs on the whole plan, limited by OT_ADV_REFSITE_TYPES.
+# Never filter keep_outs / partitions instead: a wavefront solved on part of the die is another die (wrong relay names, false clean).
+ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME", "REF-SITE")
+ADV_SCOPE_ENV = ("OT_ADV_RESETNAME_TYPES", "OT_ADV_REFSITE_TYPES")     # the die-context checks that judge only the scope's types
 
 
 def scope_view(raw, scope):
@@ -3621,16 +3625,17 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None):
     try:
         raw = _load(plan)
         if scope is not None and raw and os.environ.get("OT_PRE_ADV_SCOPE", "view") != "full":
-            lines = PA.run(scope_view(raw, scope), plan, tree, checks=[c for c in checks if c not in ADV_DIE_CONTEXT], asbuilt=asbuilt,
-                           baseline=baseline)
-            _env0 = os.environ.get("OT_ADV_RESETNAME_TYPES")
-            if _env0 is None:
-                os.environ["OT_ADV_RESETNAME_TYPES"] = ",".join(sorted(scope))
+            _vchecks = [c for c in checks if c not in ADV_DIE_CONTEXT]
+            lines = PA.run(scope_view(raw, scope), plan, tree, checks=_vchecks, asbuilt=asbuilt,
+                           baseline=baseline) if _vchecks else []          # an empty list would mean ALL checks to PA.run
+            _set = [k for k in ADV_SCOPE_ENV if os.environ.get(k) is None]
+            for k in _set:
+                os.environ[k] = ",".join(sorted(scope))
             try:
                 lines += PA.run(raw, plan, tree, checks=[c for c in checks if c in ADV_DIE_CONTEXT], asbuilt=asbuilt, baseline=baseline)
             finally:
-                if _env0 is None:
-                    os.environ.pop("OT_ADV_RESETNAME_TYPES", None)
+                for k in _set:
+                    os.environ.pop(k, None)
         else:
             lines = PA.run(raw, plan, tree, checks=checks, asbuilt=asbuilt, baseline=baseline)
     except Exception as e:  # noqa: BLE001
