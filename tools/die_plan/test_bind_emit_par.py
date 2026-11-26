@@ -233,6 +233,9 @@ def test_jobs_env(monkeypatch):
     assert EP.jobs() == 1
     monkeypatch.setenv("OT_BIND_EMIT_J", "6")
     assert EP.jobs() == 6
+    assert EP.jobs(bounded=True) == 3
+    monkeypatch.setattr(EP, "allocated_cpus", lambda: 2)
+    assert EP.jobs(bounded=True) == 2
     monkeypatch.setenv("OT_BIND_EMIT_J", "auto")
     assert 1 <= EP.jobs() <= 8
     monkeypatch.setenv("OT_BIND_EMIT_J", "x")
@@ -290,11 +293,16 @@ def test_all_gaps_from_separate_types_remain_parallel(tmp_path, capfd, monkeypat
     assert (tmp_path / "bind_emit_par.json").is_file()
 
 
-@pytest.mark.parametrize("workers", ["1", "2"])
-def test_managed_whole_bind_cannot_drop_into_serial(tmp_path, monkeypatch, workers):
+@pytest.mark.parametrize("priority,workers", [("plan", "1"), ("plan", "2"), (None, "auto")])
+def test_production_whole_bind_cannot_drop_into_serial(tmp_path, monkeypatch, priority, workers):
     import bind
 
-    monkeypatch.setenv("OT_HEAVY_PRIO", "plan")
+    if priority:
+        monkeypatch.setenv("OT_HEAVY_PRIO", priority)
+    else:
+        monkeypatch.delenv("OT_HEAVY_PRIO", raising=False)
+    monkeypatch.setattr(EP, "allocated_cpus", lambda: 2)
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 2)
     monkeypatch.setenv("OT_BIND_EMIT_J", workers)
     monkeypatch.delenv("OT_BIND_ONLY_TYPES", raising=False)
     monkeypatch.setattr(bind.Binder, "wavefront_plan", lambda self: None)
@@ -308,6 +316,7 @@ def test_managed_whole_bind_cannot_drop_into_serial(tmp_path, monkeypatch, worke
     b.ab = {}
     b.by_type = {"first": ["p0"], "second": ["p1"]}
     b.types = {"first": {}, "second": {}}
+    b.strict_types = True
     with pytest.raises(bind.BindError, match="BIND_PARALLEL_REQUIRED"):
         b.emit(tmp_path)
 

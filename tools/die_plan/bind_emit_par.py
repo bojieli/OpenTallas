@@ -132,14 +132,21 @@ def allocated_cpus(env=None):
     return max(1, cores)
 
 
-def jobs(scoped=False):
-    """Auto uses the CPU/memory lease; an explicit worker count keeps its existing meaning."""
+def serial_override():
+    return os.environ.get("OT_BIND_EMIT_J", "").strip() == "1"
+
+
+def jobs(scoped=False, bounded=False):
+    """Choose emit workers, treating an explicit count as a cap inside a production lease."""
     setting = os.environ.get("OT_BIND_EMIT_J", DEFAULT_J).strip() or DEFAULT_J
     if setting == "auto":
         cpu = allocated_cpus()
         cap = positive_int(os.environ.get("OT_BIND_EMIT_JMAX")) or (8 if scoped else cpu)
         return max(1, min(cap, cpu, mem_jobs()))
-    return positive_int(setting) or 1
+    requested = positive_int(setting) or 1
+    if bounded and requested > 1:
+        return min(requested, allocated_cpus(), mem_jobs())
+    return requested
 
 
 # ---- snapshots ------------------------------------------------------------------------------------------------------------------
