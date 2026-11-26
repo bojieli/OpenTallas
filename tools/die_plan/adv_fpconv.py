@@ -13,7 +13,7 @@ LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S
                 route setup -1117 ps on u_cland_origin -> u_cland_reader_start_ft42).  Fix: kv_start_corridor_event.py start.
 LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stages_existing + D < ceil(path_um / 405) - 1 (the stations
                 that make every hop <= 405 um), plus the cland legs above.  LEG405-ZERO stays as the legacy scan.
-RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point (S81 t15 32 seats in lane cores).
+RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point that relay_spread.py cannot seat within the hop margin (S81 t15 32 seats in lane cores; OT_ADV_RELAY_STACK_ALL=1 lists every stack).
 SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
 PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
 HUB-BOX         a core with > 200 station bits needs >= 2 faces with >= 60 um clear (vn_a / vn_b / vs boxed in at 8.6-17 um).
@@ -21,6 +21,7 @@ FT-CLEAR        an ft register hop (straight segment) that crosses a hard core b
 TAP-STEP-DUP    two added (explicit) taps < 40 um apart (t54 five taps within 11-13 um); core-pin taps are excluded (macro_follow).
 BAND-AT-PIN     a landing band farther than 180 um from its pins (max_pin_to_band_hop_um) or overlapping a hard core.
 SEAT-UNIQUE     >= 4 station registers of different stations on one point (reader-start duplicate seats)."""
+import os
 import sys
 from pathlib import Path
 
@@ -433,10 +434,27 @@ def _f_leg_staged(raw, plan_path, tree=None, **_k):
                 lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)", raw)
 
 
+def relay_stack_hurt(t):
+    """RELAY-SEAT (b) calibrated (CLASS-OWNERS-B 11-26): of the stacks relay_seats() lists, those relay_spread.py cannot seat within the hop /
+    tap margin.  A stack the planner can spread (kit ff_put_near spirals it the same way) is not reported: 0 placement failures and no
+    DPL displacement difference (median 111.5 um stacked vs 107.6 unstacked, 90 kit logs) for stacks of 5..1034.  OT_ADV_RELAY_STACK_ALL=1 lists all."""
+    ins, st = relay_seats(t)
+    if not st or os.environ.get("OT_ADV_RELAY_STACK_ALL") == "1":
+        return st, None
+    import relay_spread as RS
+    cfg = dict(RS.DEFAULTS)
+    cfg["stack_min"] = RELAY_STACK + 1
+    _c, rep = RS.spread_type(t, cfg)
+    stuck = {(round(p[0], 1), round(p[1], 1)) for p in rep["kept_groups"]}
+    return [(k, m) for k, m in st if k in stuck], rep.get("max_um_used")
+
+
 def _f_relay(raw, plan_path, tree=None, **_k):
     def fn(t, tn, r):
-        ins, st = relay_seats(t)
-        return [("inside core " + c, n) for n, c in ins] + [(f"{k} x{m} on one point", "") for k, m in st]
+        ins, _st = relay_seats(t)
+        st, dmax = relay_stack_hurt(t)
+        why = "" if dmax is None else f" (no seat room within {dmax} um)"
+        return [("inside core " + c, n) for n, c in ins] + [(f"{k} x{m} on one point{why}", "") for k, m in st]
     return _run("RELAY-SEAT", fn, lambda h: f"{h[0]} {h[1]}".strip(), raw)
 
 

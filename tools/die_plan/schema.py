@@ -2087,6 +2087,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
         "note": {"type": "string"}}}
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
+# RELAY-SPREAD (CLASS-OWNERS-B C-RELAY-SEAT 11-26, relay_spread.py): opt-in, default absent = byte-identical; the tool spreads relay_sites
+# stacks (> stack_min - 1 keys on one point) over the kit's station grid within max_um / the hop margin / 0.3 x clock.tap_radius_um
+SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "stack_min": {"type": "integer", "minimum": 2}, "max_um": {"type": "number", "exclusiveMinimum": 0},
+    "halo_um": {"type": "number", "minimum": 0}, "margin_um": {"type": "number", "minimum": 0}, "tap_frac": {"type": "number", "exclusiveMinimum": 0}}}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
 
 # Exact native launch group for a slot-local polarity inverter placement hook.
