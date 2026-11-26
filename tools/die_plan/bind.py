@@ -9029,6 +9029,8 @@ def _plan_gate_pre(a):
     base = os.environ.get("OT_PLAN_GATE_BASELINE") or None
     requested = set(re.split(r"[,\s]+", os.environ.get("OT_PLAN_GATE_SKIP", "").upper()))
     skip = () if base else ("ROWS", "GEOM")
+    # P-POSTBIND-PROOF-DROP: the candidate's rows proofs (tree-relative, os.pathsep-separated; publish_apply post-bind exports them) reach PRE's ROWS check
+    proofs = [x if os.path.isabs(x) else str(Path(E.REPO) / x) for x in os.environ.get("OT_PRE_ROWS_PROOFS", "").split(os.pathsep) if x]
     if "RELAYSINK" in requested:
         skip += ("RELAYSINK",)
         print("bind: plan_gate_pre explicit skip RELAYSINK")
@@ -9038,6 +9040,8 @@ def _plan_gate_pre(a):
         blob = Path(a.plan).read_bytes() + (Path(a.asbuilt).read_bytes() if a.asbuilt else b"") + str(base).encode()
         if "RELAYSINK" in requested:
             blob += b"\0skip=RELAYSINK"
+        for pf in proofs:
+            blob += b"\0proof=" + (Path(pf).read_bytes() if Path(pf).is_file() else pf.encode())
         key = hashlib.sha256(blob).hexdigest()[:16]
     except OSError:
         key = None
@@ -9076,7 +9080,7 @@ def _plan_gate_pre(a):
         import inspect as _insp
         _new = "remap" in _insp.signature(G.check).parameters      # REMAP-BASE-1122: the checker resolves the LANDREMAP / ISTCYC base itself
         _kw = dict(remap=_prev_bind_plan(a)) if _new else {}
-        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=skip,
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=skip, proofs=proofs,
                      elab_dir=_pg_elab_dir(a), ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
                      toolstale_level="WARN", abspath_level="warn", **_kw)      # ABSPATH-1122: a bind warns, G0 / compose refuse
     except (OSError, ValueError) as e:

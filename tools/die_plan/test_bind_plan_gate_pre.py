@@ -139,3 +139,17 @@ def test_warn_fail_stamp_replays_same_inputs_only(fake, monkeypatch, capsys):
     assert len(calls) == 3
     monkeypatch.setenv("OT_PLAN_GATE_PRE", "refuse")                            # a warn stamp never passes a refusing gate
     assert bind._plan_gate_pre(NS(p, out)) == 2 and len(calls) == 4
+
+
+def test_rows_proofs_env_reaches_pre(fake, monkeypatch, tmp_path):
+    """P-POSTBIND-PROOF-DROP: OT_PRE_ROWS_PROOFS (tree-relative, os.pathsep list) is passed as proofs= and is part of the stamp key"""
+    mod, calls, p, out = fake
+    seen = []
+    mod.check = lambda tree, plan, asbuilt=None, baseline=None, skip=(), proofs=(), **kw: (seen.append(list(proofs)) or [])
+    pf = Path(bind.E.REPO) / "x_rows_proof_test.json"
+    monkeypatch.setenv("OT_PRE_ROWS_PROOFS", "x_rows_proof_test.json" + __import__("os").pathsep + "/abs/p2.json")
+    monkeypatch.setenv("OT_PLAN_GATE_BASELINE", str(p))
+    assert bind._plan_gate_pre(NS(p, out)) == 0
+    assert seen == [[str(pf), "/abs/p2.json"]]
+    monkeypatch.delenv("OT_PRE_ROWS_PROOFS")
+    assert bind._plan_gate_pre(NS(p, out)) == 0 and seen[-1] == [] and len(seen) == 2       # other key: re-run, no proofs

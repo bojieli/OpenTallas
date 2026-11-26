@@ -379,6 +379,11 @@ def postbind_spec(obj, stamp, host="", live=None):
     remap_base = marker.get("remap_base") or obj.get("remap_base")
     if remap_base:
         env["OT_PLAN_GATE_BASELINE"] = str(remap_base)
+    # P-POSTBIND-PROOF-DROP (QC C9 11-26): the candidate's rows proofs (tree-relative) reach the bind's PRE (bind.py reads OT_PRE_ROWS_PROOFS);
+    # without them the strict bind refused ROWS-NO-PROOF on rows the candidate carries a proof for
+    proofs = [str(x) for x in (marker.get("rows_proofs") or obj.get("rows_proofs") or [])]
+    if proofs:
+        env["OT_PRE_ROWS_PROOFS"] = os.pathsep.join(_rel(x, tree) if os.path.isabs(x) else x for x in proofs)
     cfg = {**(live or {}), **(marker.get("config") or {})}
     pin = ""
     if cfg.get("tools_from_rt") is not False:
@@ -391,11 +396,22 @@ def postbind_spec(obj, stamp, host="", live=None):
             "tools_rt_root": str(cfg.get("tools_rt_root") or "/srv/opentallas-scratch2/claude/rt")}
 
 
-def postbind_parallel_check_sh(binder, identity):
-    """Read the whole-die no-serial guard from the exact binder before building."""
+def postbind_parallel_check_sh(binder, identity, rt_root=""):
+    """Read the whole-die no-serial guard from the exact binder before building.  The refusal names the CURRENT parallel-capable runtime pin of
+    <rt_root>/current when it has the guard (QC C9 post-bind, 11-26: the inherited pin 45bb7d41e172 refused with no way forward); it is a
+    hint only, never selected automatically."""
+    q = shlex.quote
+    hint = ""
+    if rt_root:
+        cur = f"$(readlink -f -- {q(rt_root)}/current 2>/dev/null)"
+        hint = (f"hint=\ncur={cur}\n"
+                "if [ -n \"$cur\" ] && grep -Fq -- 'BIND_PARALLEL_REQUIRED: whole-die emit' \"$cur/tools/die_plan/bind.py\" 2>/dev/null; then\n"
+                "    hint=\" Current parallel-capable pin: $(basename \"$cur\") (set the candidate's config.gen_tools_pin / marker.tools_sha to it; "
+                "it is not selected automatically).\"\nfi\n")
     return (f"if ! grep -Fq -- 'BIND_PARALLEL_REQUIRED: whole-die emit' {binder} 2>/dev/null; then\n"
-            f"    printf 'POSTBIND_PARALLEL_REQUIRED %s lacks the whole-die parallel bind guard. "
-            f"Select and qualify a parallel-compatible tools pin or sealed checkout before retrying.\\n' {identity} >&2\n"
+            + hint
+            + f"    printf 'POSTBIND_PARALLEL_REQUIRED %s lacks the whole-die parallel bind guard. "
+            f"Select and qualify a parallel-compatible tools pin or sealed checkout before retrying.%s\\n' {identity} \"${{hint:-}}\" >&2\n"
             "    exit 6\nfi\n")
 
 
@@ -406,7 +422,7 @@ def postbind_runtime_sh(s, *, require_parallel=False):
     if not pin:
         if not require_parallel:
             return ""
-        return postbind_parallel_check_sh(q(s["tree"] + "/tools/die_plan/bind.py"), q("checkout " + s["tree"]))
+        return postbind_parallel_check_sh(q(s["tree"] + "/tools/die_plan/bind.py"), q("checkout " + s["tree"]), s.get("tools_rt_root", ""))
     root = q(s["tools_rt_root"])
     manifest_sha = q("import json,sys; print(json.load(open(sys.argv[1]))['sha'])")
     select = (f"tool_root={root}\n"
@@ -422,7 +438,7 @@ def postbind_runtime_sh(s, *, require_parallel=False):
             "done\n"
             "[ -n \"$runtime\" ] || { echo \"POSTBIND_RUNTIME unavailable pin $pin in $tool_root or $resolved_root\" >&2; exit 6; }\n")
     if require_parallel:
-        return select + postbind_parallel_check_sh('"$runtime/tools/die_plan/bind.py"', '"pin $pin ($runtime)"')
+        return select + postbind_parallel_check_sh('"$runtime/tools/die_plan/bind.py"', '"pin $pin ($runtime)"', s.get("tools_rt_root", ""))
     return (select
             + f"export OT_REPO_ROOT={q(s['copy'])} OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
             "echo \"POSTBIND_RUNTIME $pin $runtime\"\n")

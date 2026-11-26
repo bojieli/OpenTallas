@@ -774,3 +774,36 @@ def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
 
     cand["marker"]["config"]["tools_from_rt"] = False
     assert "POSTBIND_RUNTIME" not in PA.postbind_run_sh(PA.postbind_spec(cand, "1118"))
+
+
+def test_postbind_spec_forwards_rows_proofs(tmp_path):
+    t = tmp_path / "T"
+    cand = bind_candidate(t)
+    cand["marker"]["rows_proofs"] = [f"{t}/physical/die_plan/qwen_compute/plan_of_record/rows_proofs/p.json", "rel/q.json"]
+    s = PA.postbind_spec(cand, "1")
+    assert s["env"]["OT_PRE_ROWS_PROOFS"] == os.pathsep.join(["physical/die_plan/qwen_compute/plan_of_record/rows_proofs/p.json", "rel/q.json"])
+    assert "export OT_PRE_ROWS_PROOFS=" in PA.postbind_run_sh(s)
+    assert "OT_PRE_ROWS_PROOFS" not in PA.postbind_spec(bind_candidate(t), "1")["env"]
+
+
+def test_postbind_parallel_refusal_names_current_parallel_pin(tmp_path):
+    old = "print('unqualified historical binder')\n"
+    t = published_tree(tmp_path, binder=old)
+    root = tmp_path / "rt"
+    cur = root / "aaaaaaaaaaaa" / "tools/die_plan"
+    cur.mkdir(parents=True)
+    (cur / "bind.py").write_text(PARALLEL_BINDER)
+    (root / "current").symlink_to("aaaaaaaaaaaa")
+    cand = bind_candidate(t)
+    cand["marker"]["config"]["tools_rt_root"] = str(root)
+    s = PA.postbind_spec(cand, "1")
+    try:
+        p = subprocess.run(["bash", "-c", PA.postbind_prep_sh(s)], capture_output=True, text=True)
+        assert p.returncode == 6 and "POSTBIND_PARALLEL_REQUIRED" in p.stderr
+        assert "Current parallel-capable pin: aaaaaaaaaaaa" in p.stderr and "not selected automatically" in p.stderr
+        assert not Path(s["copy"]).exists()
+        (cur / "bind.py").write_text(old)                      # current is not parallel-capable either: no hint
+        p = subprocess.run(["bash", "-c", PA.postbind_prep_sh(s)], capture_output=True, text=True)
+        assert p.returncode == 6 and "Current parallel-capable pin" not in p.stderr
+    finally:
+        _chmod_back(tmp_path)
