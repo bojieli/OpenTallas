@@ -1,0 +1,178 @@
+die	item	class_id	evidence	basis
+FLEET	epyc11-rt-manifest	P-RUNTIME-MANIFEST	lanes/COORD-REVIEW-QUEUE.md	20:42 manifest check failed
+FLEET	epyc2-20261125	P-POSTPUBLISH-DISK	handoff/claude_to_codex_20261125_2049.md	root 95%; scratch 74 GiB
+HEAD	W10-f6d1bf51c90d	P-RESET-RECEIPT	epyc12:head-allfix/w10cut	G0 1; SerDes reset graph changed
+HEAD	W9-epyc10-epyc11	P-POSTPUBLISH-DISK	lanes/posts/HEAD-ALLFIX.md	missing live source replica
+HEAD	hd_serdes	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	R8-ESTRIP-5-types	C-STREET	lanes/posts/KV-ALLFIX.md	G0: 14 station/macro hits plus 9 landing overlaps
+KV	kv3_hg	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1__r889141819	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1__r88f4bfb40	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1__r8dffc461a	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p2	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p3__r81da466fe	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p3__r838481cd7	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p3__r8c662a835	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p4	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p5	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v1p6	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v3	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hg_v3	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_hgi	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v1__cl141fc26e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v1__cl42bc8b12	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v1__cl42bc8b12	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_hgi_v2__cl2862d491	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v2__cle0015330	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v3	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v4	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v4	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v5	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v6	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v6	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v7	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v7	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hgi_v8	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hgi_v8	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hub_C	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_hub_Eo	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_hub_Wi	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_hub_Wo	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_io_cor	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_io_cor_v1	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r817e6c402	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r825eb3cd0	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8422a4b86	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r87bd89c1f	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8898d69cf	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8b2213035	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8c6505067	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8d9b5d53e	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8e08b358d	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8e7d31598	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pc_v1__cl7f648944__r8f64f1de3	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pv	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v1	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v1	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v12	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v12e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v12e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v1e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v1n	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v2	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v2	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v2e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v2n	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v2n	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v2ne	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v2ne	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v3	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v3	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v3e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v3e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v3n	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v3n	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v3ne	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v4	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v4	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v4e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v4e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v4n	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v4ne	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v5	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v5	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v5e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v5e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v5n	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v5n	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v5ne	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v5ne	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v6	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v6	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v6	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+KV	kv3_pv_v6e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v6n	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v6n	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v6ne	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v7	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v7e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v7e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v8	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pv_v8	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+KV	kv3_pv_v8e	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+KV	kv3_pve	C-LEG405	lanes/VIS-CAUSES.tsv	screening lead: LEG405
+QC	C1q-fde16a2e5e3c	P-FALSE-GREEN	epyc11:QC-C1Q-CUT/work2	outer rc0; GUARD_RC 1, 782 silently lost fields
+QC	LEC-AUTOFILL-q9-inputs	P-INPUT-RECEIPT	lanes/posts/LEC-AUTOFILL.md	three canonical-input refusals
+QC	coll_ucie	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc1__cl22c1ff36__pve230954c	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc1__cl22c1ff36__pve289215f	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc1__cl7d360508__pv77c16c8a	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc1__cl7d360508__pv97423966	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc2__cl9c4c4509__cl3edce1b8	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_hc2__clcc5e3e61	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	sle_st_a_v1__cl67389ecd	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_st_a_v1__cl989804f6__cl18eece69	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_st_a_v1__cl989804f6__cled3c1d7b	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_st_a_v2__pv30dda31f__pv88773f93	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_st_a_v2__pv4242de79	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_stm_v1__cl27746664	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_stm_v2__cl55be2264	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	sle_su_c	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	sle_su_l0__cl086d85ba	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	sle_su_l0__cl7a55c676	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	sle_su_l1__cl5ea486db	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	sle_su_l1__clc6d66f5b	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_hc0__cl4f54b7a3__pvde134a90	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc1__cl3449ea95	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc1__cl68f9248e__cl144ee7b3	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc1__cl68f9248e__cle683a076	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc2__cl6bcaba89	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc2__cla3497502__cl16607c7a	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc2__cla3497502__cldc737267	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc3__clccfc3e6b__pv39aac7a1	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc3__clccfc3e6b__pvcca9ff41	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc3__cld86a7ad4__pv6c2c33ed	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_hc3__cld86a7ad4__pvfd488b8f	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: tap_load_inventory_ratio
+QC	slw_st_a_v1__clb036e152	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	slw_st_a_v2__clf4365a62	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: clock_tap_max_sinks(insertion-band 20 types)
+QC	slw_su_c__cl19bb38ef	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_c__cl92142dac	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_l0__cl1a1c1f8f	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_l0__cl1e5219ea	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_l0__cl76fb247e	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_l1__cla2a78701	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+QC	slw_su_l1__clcc9d0155	C-STREET	lanes/VIS-CAUSES.tsv	screening lead: STREET
+S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	C-STREET	results/geom_review/20261125-col_h10_r2-place-gp-codex.md	viewed PLACE-GP
+S81	eng__t1	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	iqf__t1	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	ot_s81sl_kv_leaf__t1	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	ot_s81sl_leaf__t28	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	ot_s81sl_leaf__t33	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	ot_s81sl_leaf__t57	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	ot_s81sl_leaf__t6	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	phy__t1	C-RST-RELAY-REACH	lanes/VIS-CAUSES.tsv	screening lead: RESET-FANOUT
+S81	serdes-t4-CTS0114	P-CLOCK-TAPS-COPY	handoff/claude_to_codex_1125_2005.md	c8 measured FF -391 to -21
+S81	serdes__t12	C-RST-RELAY-REACH	lanes/VIS-CAUSES.tsv	screening lead: RESET-FANOUT
+S81	serdes__t12	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t13	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t14	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t15__cla2127225	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t15__cla3d02796	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t16	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t3	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	serdes__t4	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t24__cl64811a5d	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t24__cl66b71008	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t27	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t29__cl2e5c855a	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t29__clc7772371	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t45	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t6__cl0755c26e	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	slice_station__t6__cl54a9ceeb	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP
+S81	svc_hi_dsdv_svc_rs__t4_att	C-TAP-LOAD	lanes/VIS-CAUSES.tsv	screening lead: TAP-CAP

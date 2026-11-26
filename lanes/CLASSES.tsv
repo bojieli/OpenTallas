@@ -1,0 +1,28 @@
+class_id	die	kind	static_check	owner	cut_local	mapped_count	status
+C-STREET	S81	DESIGN	ADV-FP-STREET	FP-CONVERGE-S81	2026-11-25 21:00 PST	1	generator in progress; baseline, screening + measured
+C-STREET	HEAD	DESIGN	ADV-FP-STREET	FP-CONVERGE-S81	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-STREET	QC	DESIGN	ADV-FP-STREET	FP-CONVERGE-S81	2026-11-25 21:00 PST	12	generator in progress; baseline, screening + measured
+C-STREET	KV	DESIGN	ADV-FP-STREET	FP-CONVERGE-S81	2026-11-25 21:00 PST	41	generator in progress; baseline, screening + measured
+C-LEG405	S81	DESIGN	Exact placed paths over 405 um; legacy FP:LEG405 scan	REF-SITE	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-LEG405	HEAD	DESIGN	Exact placed paths over 405 um; legacy FP:LEG405 scan	REF-SITE	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-LEG405	QC	DESIGN	Exact placed paths over 405 um; legacy FP:LEG405 scan	REF-SITE	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-LEG405	KV	DESIGN	Exact placed paths over 405 um; legacy FP:LEG405 scan	REF-SITE	2026-11-25 21:00 PST	40	generator in progress; baseline, screening + measured
+C-TAP-LOAD	S81	DESIGN	Exact/predicted tap >5000 sinks; older TAP-CAP and ratio rows are leads	S81HEAD-TAPSPLIT	2026-11-25 21:00 PST	24	generator in progress; baseline, screening + measured
+C-TAP-LOAD	HEAD	DESIGN	Exact/predicted tap >5000 sinks; older TAP-CAP and ratio rows are leads	S81HEAD-TAPSPLIT	2026-11-25 21:00 PST	1	generator in progress; baseline, screening + measured
+C-TAP-LOAD	QC	DESIGN	Exact/predicted tap >5000 sinks; older TAP-CAP and ratio rows are leads	S81HEAD-TAPSPLIT	2026-11-25 21:00 PST	32	generator in progress; baseline, screening + measured
+C-TAP-LOAD	KV	DESIGN	Exact/predicted tap >5000 sinks; older TAP-CAP and ratio rows are leads	S81HEAD-TAPSPLIT	2026-11-25 21:00 PST	17	generator in progress; baseline, screening + measured
+C-RST-RELAY-REACH	S81	DESIGN	Exact reset relay/raw reach and stale site census	shift-in-place	2026-11-25 21:00 PST	2	generator in progress; baseline, screening + measured
+C-RST-RELAY-REACH	HEAD	DESIGN	Exact reset relay/raw reach and stale site census	shift-in-place	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-RST-RELAY-REACH	QC	DESIGN	Exact reset relay/raw reach and stale site census	shift-in-place	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-RST-RELAY-REACH	KV	DESIGN	Exact reset relay/raw reach and stale site census	shift-in-place	2026-11-25 21:00 PST	0	generator in progress; no mapped observation; census pending
+C-XTAP-HOLD	S81	DESIGN	Related cross-tap FF hold with named endpoints	QC-DRT-ECO	2026-11-25 21:00 PST	0	census pending; no mapped observation; census pending
+C-XTAP-HOLD	HEAD	DESIGN	Related cross-tap FF hold with named endpoints	QC-DRT-ECO	2026-11-25 21:00 PST	0	census pending; no mapped observation; census pending
+C-XTAP-HOLD	QC	DESIGN	Related cross-tap FF hold with named endpoints	QC-DRT-ECO	2026-11-25 21:00 PST	0	census pending; no mapped observation; census pending
+C-XTAP-HOLD	KV	DESIGN	Related cross-tap FF hold with named endpoints	QC-DRT-ECO	2026-11-25 21:00 PST	0	census pending; no mapped observation; census pending
+P-CLOCK-TAPS-COPY	S81	PROCESS	Compare runtime patch with kit init sources; CTS-0114	FLEET-OPS-R2	2026-11-25 21:00 PST	1	fix 418ea00b4298 landed; retained-kit census open; baseline, screening + measured
+P-FALSE-GREEN	QC	PROCESS	Failed gate must return nonzero from wrapper	QC-C1Q-CUT	2026-11-25 21:00 PST	1	C1q driver failed inner guard; repair in flight; baseline, screening + measured
+P-RESET-RECEIPT	HEAD	PROCESS	Changed reset type cannot inherit release receipt	HEAD-ALLFIX	2026-11-25 21:00 PST	1	scoped non-SerDes rebuild and source-specific proof; baseline, screening + measured
+P-INPUT-RECEIPT	QC	PROCESS	Private LEC reruns require canonical 64-edge receipt	LEC-AUTOFILL	2026-11-25 21:00 PST	1	repair staged inputs; baseline, screening + measured
+P-RUNTIME-MANIFEST	FLEET	PROCESS	Live tool tree manifest agrees with current SHA	FLEET-OPS-R2	2026-11-25 21:00 PST	1	epyc11 investigation; baseline, screening + measured
+P-POSTPUBLISH-DISK	FLEET	PROCESS	Host job-dir floor and current-tree replica availability	FLEET-OPS-R2	2026-11-25 21:00 PST	1	epyc2 drain; W9 epyc11 replica started; baseline, screening + measured
+P-POSTPUBLISH-DISK	HEAD	PROCESS	Host job-dir floor and current-tree replica availability	FLEET-OPS-R2	2026-11-25 21:00 PST	1	epyc2 drain; W9 epyc11 replica started; baseline, screening + measured
