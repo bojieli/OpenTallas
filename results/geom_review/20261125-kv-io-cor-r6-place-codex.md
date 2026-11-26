@@ -1,0 +1,9 @@
+# KV IO_COR R6 exact base placement, 21:39 PST
+
+**Fix first. Route held.** Exact R6 1cca73462c27, kv3_io_cor 3_3_place_gp from E10 oth-ubuntu-361775-1795669649. Viewed three checkpoint geometry plots and the separate density, RUDY and ideal timing plots. The placed 1278.72 × 1036.80 µm outline has no macros, 1.4% cell fill and 7,540 boundary pins in 213 buses. Demand reaches 60.72 (p99.5 45.01), with the south rim dominating and distinct lower east, west-mid and east-middle-turn hotspots. Density leaves clear interior capacity. Existing PG plots show vertical stripes. Electrical PG connectivity remains open. No DRT checkpoint exists.
+
+Exact placement-RC, ideal 833 ps: asynchronous recovery -712.162 ps, WNS -712.162 ps, TNS -285283.938 ps. u_rrl_164 Q to u_bin_i_host_link_rst_n RESETN has only 1.359 µm launch/capture separation but a 3,425.277 µm summed net-box witness and a 1,398.959 ps placed-RC step on reset delivery. A site displacement alone does not target the load on that shared branch. The independent ft4_i reader-start bit 17 to ring decoder cone is -662.700 ps, with a 1,053.354 ps step at the shared _09699_ inverter and repeated endpoints. Eleven of the top twelve plotted endpoint pairs were unresolved by the flattened-name overlay. Their exact timing path text is available. The report's zero n<-150 counter disagrees with the explicit paths and is excluded.
+
+Next diagnose reset branch sink bins and ft4_i reader-start fanout from the placed connectivity before selecting a same-cycle split or co-seating. Preserve FT beats and boundary ABI. Return for a place-only comparison once PRE, exact bind and geometry clear.
+
+E10 evidence: /srv/opentallas-scratch2/claude/noprog-review/vis_review/kv3-io-cor-r6-codex-place-gp-1125-2129PST and /srv/opentallas-scratch2/claude/noprog-review/vis_review/kv3-io-cor-r6-codex-postplace.
