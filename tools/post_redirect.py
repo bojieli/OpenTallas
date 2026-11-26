@@ -120,8 +120,22 @@ def addressees(text):
     return m, NAME.findall(head)
 
 
-def rewrite(text, status):
-    """Add live successors of stood-down addressees to the first-line header."""
+def load_live_map(coord):
+    """P-DEAD-LANE-ROUTING (FABLE-FLOW-0847 A16, 11-26): lanes/LIVE-LANES.tsv rows {lane: (status, integrator)}; empty when absent."""
+    out = {}
+    try:
+        for ln in (Path(coord) / "lanes" / "LIVE-LANES.tsv").read_text().splitlines()[1:]:
+            f = ln.split("\t") + [""] * 7
+            if f[0]:
+                out[f[0].casefold()] = (f[5], f[6])
+    except OSError:
+        pass
+    return out
+
+
+def rewrite(text, status, live_map=None):
+    """Add live successors of stood-down addressees to the first-line header; an addressee that LIVE-LANES.tsv marks dead falls through
+    to its die integrator (every watchdog notice goes through post.sh, so one place fixes them all)."""
     first, _, rest = text.partition("\n")
     m, to = addressees(first)
     notes, add = [], []
@@ -130,6 +144,10 @@ def rewrite(text, status):
     for y in to:
         chain = resolve(y, status)
         if not chain:
+            ent = (live_map or {}).get(y.casefold())
+            if ent and ent[0] == "dead" and ent[1] and ent[1] not in to and ent[1] not in add:
+                add.append(ent[1])
+                notes.append("REDIRECTED %s -> %s (dead lane per LIVE-LANES.tsv; die integrator)" % (y, ent[1]))
             continue
         final = chain[-1]
         if final not in to and final not in add:
@@ -160,7 +178,7 @@ if __name__ == "__main__":
     nl = t.endswith("\n")
     t = t.rstrip("\n")
     try:
-        new, notes = rewrite(t, load_status(coord))
+        new, notes = rewrite(t, load_status(coord), load_live_map(coord))
     except Exception as e:  # never block a post
         new, notes = t, []
         print("post_redirect: skipped (%s)" % e, file=sys.stderr)

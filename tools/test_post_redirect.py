@@ -99,3 +99,12 @@ def test_reclaim_by_earlier_lane():
     assert pr.resolve("X-R5", st) == []
     assert pr.resolve("X-R4", st) == ["X-R5"]
     assert pr.resolve("X-R6", st) == ["X-R5"]
+
+
+def test_dead_lane_falls_through_to_integrator():
+    import post_redirect as pr
+    live = {"qc-allfix": ("dead", "QC-INT-R2"), "qc-int-r2": ("live", "QC-INT-R2")}
+    new, notes = pr.rewrite("NOPROG [WATCH -> QC-ALLFIX; cc COORD] x", {}, live)
+    assert "QC-INT-R2" in new.split("\n")[0] and notes
+    new2, notes2 = pr.rewrite("NOPROG [WATCH -> QC-INT-R2] x", {}, live)
+    assert not notes2 and new2 == "NOPROG [WATCH -> QC-INT-R2] x"
