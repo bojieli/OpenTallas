@@ -60,3 +60,5 @@
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
 - 2026-11-25 20:00 PST CANARY qwen_kvsys @ 356868c8c7: PASS (NO-REGRESSION within tolerance of baseline canary-passed-main /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_09e8068e9_1125_011532_049042)
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
+- 2026-11-25 20:15 PST CANARY s81_head @ 5d4d6629a6: PASS (NO-REGRESSION within tolerance of baseline canary-passed-main /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_df947261c_1125_013030_169890)
+  [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
