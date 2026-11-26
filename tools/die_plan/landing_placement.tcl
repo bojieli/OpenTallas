@@ -851,7 +851,7 @@ proc cland_bus_pins {bus} {
 # The five optional writer guards consume explicit legal sites before filling
 # the unchanged bit-major sequence. Keep their keys in the sequence so the
 # per-bit y targets and clock/data age are independent of these guard seats.
-proc cland_pinslot_guard {ordered guards edge rect tag} {
+proc cland_pinslot_guard {ordered guards edge rect tag {reserve_resize 0}} {
  global ff_dbu ff_x0 ff_y0 ff_sw ff_rh cland_done
  lassign $rect ax ay bx by
  set mapped {}
@@ -872,15 +872,22 @@ proc cland_pinslot_guard {ordered guards edge rect tag} {
   set nm [$i getName]
   set x [expr {round($gx*$ff_dbu)}]; set y [expr {round($gy*$ff_dbu)}]
   set width [$m getWidth];set height [$m getHeight]
+  set fit_width $width
+  if {$reserve_resize eq "1"} {set fit_width [cland_family_w $m]}
   if {![regexp {^DFF} [$m getName]] || [dict exists $cland_done $nm] ||
       ($x-$ff_x0)%$ff_sw || ($y-$ff_y0)%$ff_rh ||
-      $x+$width > round($edge*$ff_dbu) || $y+$height > round($by*$ff_dbu)} {
+      $x+$fit_width > round($edge*$ff_dbu) || $y+$height > round($by*$ff_dbu)} {
    error "OT_CLAND pinslot_profile incompatible writer FF or site $n at ($gx,$gy)"
   }
   # Quantization of this window admits exactly the declared native body.
   set box [list [expr {($x-0.25)/$ff_dbu}] [expr {($y-0.25)/$ff_dbu}] \
                 [expr {($x+$width+0.25)/$ff_dbu}] [expr {($y+$height+0.25)/$ff_dbu}]]
   cland_put $i $box $tag 0.4
+  # East-facing cland_put checks family clearance, but reserves its body
+  # and padding towards the west. Reserve any growth to the east as well.
+  if {$fit_width > $width} {
+   cland_occupy [expr {$x+$width}] $y [expr {$fit_width-$width}] $height
+  }
   if {![info exists ::cland_fill_dry]} {
    lassign [$i getLocation] observed_x observed_y
    if {$x != $observed_x || $y != $observed_y} {error "OT_CLAND pinslot_profile guard moved off exact site $n"}
@@ -925,8 +932,8 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
  set skip {}
  if {[llength $profile]} {
   if {!$xdesc} {error "OT_CLAND pinslot_profile must face east ($tag)"}
-  lassign $profile inset edge guards
-  set skip [cland_pinslot_guard $ordered $guards $edge $rect $tag]
+  lassign $profile inset edge guards reserve_resize
+  set skip [cland_pinslot_guard $ordered $guards $edge $rect $tag $reserve_resize]
   set ::cland_pinslot_row_cap [lmap q $inset {expr {round($q*$ff_dbu)}}]
  }
  set j 0

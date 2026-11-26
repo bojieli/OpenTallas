@@ -3251,6 +3251,9 @@
               "guard_east_um": {
                "type": "number"
               },
+              "reserve_guard_resize": {
+               "type": "boolean"
+              },
               "guard_seats_um": {
                "type": "object",
                "minProperties": 1,

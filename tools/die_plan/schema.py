@@ -1633,6 +1633,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {
                     "inset_um": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
                     "guard_east_um": {"type": "number"},
+                    "reserve_guard_resize": {"type": "boolean"},
                     "guard_seats_um": {"type": "object", "minProperties": 1,
                         "additionalProperties": {"type": "array", "minItems": 2, "maxItems": 2,
                                                  "items": {"type": "number"}}}
