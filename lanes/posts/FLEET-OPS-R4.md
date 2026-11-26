@@ -1,0 +1,1 @@
+- 2026-11-26 12:53 PST START 12:53 PST: read brief; order rtx-pro disk -> row_gate light fork -> ot-run preflight -> hub-sync dirty -> remaining. FABLE-FLOW-1247.md not found at ~/coord/lanes/, locating.
