@@ -1468,7 +1468,7 @@ def ca_named_pairs(ports):
     return out
 
 
-def build_pairs(plan, taps, ca_pairs=None, related=None):
+def build_pairs(plan, taps, ca_pairs=None, related=None, forwarded_ports=None):
     """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent).
     ca_pairs (KIT-OPS-6 11-15, FABLE-TRIAGE-HEADKV 21: KV 320 'no taps' crossings): partition pairs {(src, dst)} that count-aligned ports name.  Their tap pairs
     of the SAME clock region were classed 'seam' (single-cycle) and never reached count_align_port_intervals, so every CA port inside one region got no
@@ -1476,7 +1476,10 @@ def build_pairs(plan, taps, ca_pairs=None, related=None):
     related (DIE-LEVEL-CHECK-1119, FABLE-PD-KV-2300 C): {type: {frozenset({kit port, kit port})}} from the kit-exported tap-pair
     lists (kit_tap_related_pairs.tcl): intra / intra_cross_region pairs of a LISTED type are kept only when their two kit ports
     carry data (a register on one reaches a register or hard-core pin on the other); a type with no list keeps every pair
-    (all-pair, counted under related.unlisted_types).  None = every pair (unchanged)."""
+    (all-pair, counted under related.unlisted_types).  None = every pair (unchanged).
+    forwarded_ports: when the plan's physical transport is authoritative, only these
+    port IDs form landed pairs. Plain ports remain single-cycle seams, including when
+    the same partition pair also carries a distinct forwarded port."""
     by_part = defaultdict(list)
     # DIE-HEAD-13 10-28: a tap with part None is a die-level start stage (start_stage_emit '__st__<path>' / virtual_tap):
     # it belongs to no partition, so it never forms intra/seam pairs (HEAD: 193 stage taps were grouped as ONE
@@ -1521,14 +1524,19 @@ def build_pairs(plan, taps, ca_pairs=None, related=None):
         if s not in by_part or t not in by_part:
             uncovered["die_io" if DIE_PART in (s, t) else "no_taps"] += int(pr.get("width", 1))
             continue
-        conn[(s, t)] += int(pr.get("width", 1))
-    for (s, t), bits in conn.items():
+        is_forwarded = None if forwarded_ports is None else pr.get("id") in forwarded_ports
+        conn[(s, t, is_forwarded)] += int(pr.get("width", 1))
+    for s, t, is_forwarded in conn:
         for a in by_part[s]:
             for b in by_part[t]:
-                same = taps[a]["cppr_node"] == taps[b]["cppr_node"]
-                (seam if same and (ca_pairs is None or (s, t) not in ca_pairs) else landed).append((a, b, f"{s}->{t}"))
+                if is_forwarded is None:
+                    same = taps[a]["cppr_node"] == taps[b]["cppr_node"]
+                    is_landed = not same or (ca_pairs is not None and (s, t) in ca_pairs)
+                else:
+                    is_landed = is_forwarded
+                (landed if is_landed else seam).append((a, b, f"{s}->{t}"))
     return dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed), dict(
-        partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered),
+        partitions_with_taps=len(by_part), connected_part_pairs=len({(s, t) for s, t, _ in conn}), uncovered_bits=dict(uncovered),
         **({"start_stage_taps_no_pairs": unpart} if unpart else {}),
         **({"related_pairs": dict(mode="kit-exported related tap pairs (unlisted types: all pairs)", kept=rel["kept"],
                                   dropped=rel["dropped"], unlisted=rel["unlisted"], listed_types=len(rel["listed_types"]),
@@ -3108,6 +3116,8 @@ def main(argv=None):
                     help="DIE-HEAD-18 opt-in (--count-align): time each count-aligned ring on its BUILT clocks (writer = "
                          "fwd_out + fwd_wire + fclk_in, reader = reader, per partition type, routed) instead of the "
                          "declared common latency on both sides (ca_ring_fn docstring); default = unchanged")
+    ap.add_argument("--physical-landings", action="store_true",
+                    help="classify forwarded and plain seams from the plan's declared landing network")
     ap.add_argument("--count-align-key", choices=("part", "region"), default="part",
                     help="DIE-QC-5 opt-in: how landed pairs meet the bind crossings. part (default, unchanged) = bind "
                          "src/dst are partitions; region = map partitions through bind parts[p].region (bind crossings "
@@ -3229,6 +3239,14 @@ def main(argv=None):
         d = cp
     plan_bytes = Path(a.plan).read_bytes()
     plan = json.loads(plan_bytes)
+
+    forwarded_ports = None
+    if a.physical_landings:
+        import clock_landings
+        try:
+            forwarded_ports = clock_landings.declared_landing_ports(plan)
+        except ValueError as exc:
+            ap.error(str(exc))
     kits = {}
     for k in a.kit:
         n, f = k.split("=", 1)
@@ -3301,7 +3319,7 @@ def main(argv=None):
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None,
-                                 related=related)
+                                 related=related, forwarded_ports=forwarded_ports)
         views = None
         if ecm is None:
             ecm = early_core_map(plan, taps, plan_path=a.plan)
