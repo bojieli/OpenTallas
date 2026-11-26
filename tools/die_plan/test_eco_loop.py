@@ -1540,3 +1540,44 @@ def test_partial_ff_census_does_not_score_as_clean(tmp_path, monkeypatch, scope,
     (ff / "corner.json").write_text(json.dumps({"std_min_start": census, "done": True, "rc": 0}))
     clean = E.metrics(record, report)
     assert clean["ff_np"] == 0.0 and clean["ff_np_n"] == 0
+
+
+# --- P-ECO-NO-GAIN (QC-INT-R2-TOOLS 11-26): stop after the first attempt recovering < 5 % of the base violation
+def _m(tt, ff, drv=0, drc=0):
+    return dict(tt=tt, ff=ff, drv=drv, drc=drc)
+
+
+def test_no_gain_evidence_sle_hc0():
+    # sle_hc0 cl38badc56 attempt_3: TT -86.96 vs base -85.61 (worse), FF -130.6 both
+    assert E.no_gain(_m(-85.61, -130.6), _m(-86.96, -130.6))
+    assert not E.no_gain(_m(-85.61, -130.6), _m(-80.0, -130.6))              # TT recovered 6.6 %
+    assert E.no_gain(_m(-85.61, -130.6), _m(-83.0, -130.6))                  # 3.0 % TT, 0 FF
+    assert not E.no_gain(_m(-85.61, -130.6), _m(-86.0, -120.0))              # FF recovered 8 %
+    assert not E.no_gain(_m(10, 5), _m(10, 5))                               # no base violation: not a no-gain verdict
+    assert not E.no_gain(_m(-50, -50, drv=9), _m(-50, -50, drv=3), _m(-50, -50, drv=9))   # DRV fell against the previous result
+    assert not E.no_gain(_m(-50, -50), _m(-50, -50), pct=0)                  # disabled
+
+
+def test_no_gain_env(monkeypatch):
+    monkeypatch.setenv("OT_ECO_NOGAIN_PCT", "0")
+    assert not E.no_gain(_m(-50, -50), _m(-51, -50))
+    monkeypatch.setenv("OT_ECO_NOGAIN_PCT", "x")
+    assert E.no_gain_pct() == E.NO_GAIN_PCT
+
+
+def test_loop_stops_after_one_no_gain_attempt(tmp_path, three_iter):
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-8.561, -13.06), )
+    f = Fake([rec(-8.696, -13.06), rec(-6, -10), rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
+    assert r["verdict"] == "EXHAUSTED" and r["eco_verdict"] == "ECO-NO-GAIN"
+    assert len(r["iterations"]) == 1 and "ECO-NO-GAIN" in r["reason"] and "structural fix" in r["reason"]
+    assert E.summary(r).startswith("late-ECO ECO-NO-GAIN")
+
+
+def test_loop_continues_when_gain_is_real(tmp_path, three_iter):
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(-8.5, -13.0))
+    f = Fake([rec(-7.0, -13.0), rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, **three_iter)
+    assert r["verdict"] == "PASS" and len(r["iterations"]) == 2 and "eco_verdict" not in r

@@ -132,6 +132,12 @@ R8BOUND-1124 (COORD flow review #2, report-only WARN per r703): every DIRECT R8 
 ABSTRACT-BLANKET-OBS (ABSTRACT-EXACT 11-25, COORD; report-only WARN per r703): every bound hard-core view (partition_types.*.hard_cores
 [].lef, generated memory macros skipped) whose M4/M5/M6 OBS is one blanket rect over >= 80 % of the macro (write_abstract_lef
 -bloat_occupied_layers) gets a WARN line naming the layers; LIST line with the count.  Fix: tools/die_plan/abstract_exact.py form.
+TAPREACH (C-TAP-REACH, QC-INT-R2-TOOLS 11-26; report-only WARN, FAIL with $OT_PRE_TAPREACH_BLOCK=1): every FIRM relay / station / landing / clock-sink
+  seat of a type lies within clock.tap_radius_um (Manhattan, as taps.assign) of some tap of its type.  QC cA4 coll_ft east relay column
+  x=655.  tap_reach.py (doc there; `tap_reach.py census PLAN`).  --skip TAPREACH.
+STALETABLE (P-STALE-TABLE, QC-INT-R2-TOOLS 11-26; ADVISORY WARN, FAIL with $OT_PRE_STALETABLE_BLOCK=1): tables derived from a row are re-derived
+  and compared: tap_window / tap_offset per_port_ps keys vs the type's tap ports, or_groups[0].regs_um vs the row's regs_um, explicit /
+  added taps legal against macros, relay_sites vs station bit_sites_um.  stale_tables.py (fix-orgroups re-derives the or_groups form).  --skip STALETABLE.
 HALOCORNER-1125 (COORD, QC-ALLFIX; FLOW-OPS-R3 DIEPLAN-GREEN 11-24 23:33; report-only WARN per r703): reset_tree._free bounds its
   row-high / cell-wide free runs only by halos the point is strictly inside in x or y, so a point on a SHARED corner of 2+ grown
   halos (reset_tree.blockages) has unbounded runs and is called a legal relay site (q_su31: four halos meet at (825.12, 816.48)).
@@ -254,7 +260,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1475,6 +1481,39 @@ def halocorner_rows(raw, eps=HALOCORNER_EPS):
             if memo[(x, y)]:
                 rows.append((die, tn, src, nm, x, y, memo[(x, y)]))
     return rows, {"die": die, "types": n_types, "points": n_pts, "errors": errs}
+
+
+_TAPSITES_CACHE = {}
+
+
+def tap_sites_cached(plan, raw, tns):
+    """{type: (sites, core, why)} for TAPREACH / STALETABLE (tap_offset_cover.type_ports in the fork pool), solved once per plan path"""
+    key = (str(plan), tuple(sorted(tns)))
+    if key not in _TAPSITES_CACHE:
+        import tap_reach as TR
+        _TAPSITES_CACHE.clear()
+        _TAPSITES_CACHE[key] = TR.solve_tap_sites(raw, plan, tns, mapper=fork_map)
+    return _TAPSITES_CACHE[key]
+
+
+def check_tapreach(plan, raw=None):
+    """TAPREACH-1126: tap_reach.census findings (WARN; FAIL with $OT_PRE_TAPREACH_BLOCK=1)"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import tap_reach as TR
+    raw = raw or _load(plan)
+    tns = [tn for tn in (raw.get("partition_types") or {}) if _in_scope(tn)]
+    return TR.findings(raw, TR.census(raw, tap_sites_cached(plan, raw, tns), set(tns)))
+
+
+def check_staletable(plan, raw=None):
+    """STALETABLE-1126: stale_tables.findings (ADVISORY WARN; FAIL with $OT_PRE_STALETABLE_BLOCK=1)"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import stale_tables as ST
+    raw = raw or _load(plan)
+    tns = [tn for tn in (raw.get("partition_types") or {}) if _in_scope(tn)]
+    if _SCOPE is not None:
+        raw = scope_view(raw, set(tns))
+    return ST.findings(raw, tap_sites_cached(plan, raw, tns), ST.make_legal(raw, plan))
 
 
 def check_halocorner(plan, max_list=6, raw=None):
@@ -2925,6 +2964,18 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
             findings += check_halocorner(plan)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
             findings.append(f"WARN HALOCORNER not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("TAPREACH")
+    if "TAPREACH" not in skip:                           # TAPREACH-1126: every FIRM seat within tap_radius of a tap, report-only
+        try:
+            findings += check_tapreach(plan)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, never fails PRE
+            findings.append(f"WARN TAPREACH not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("STALETABLE")
+    if "STALETABLE" not in skip:                         # STALETABLE-1126: derived tables == re-derived, advisory
+        try:
+            findings += check_staletable(plan)
+        except Exception as e:  # noqa: BLE001
+            findings.append(f"WARN STALETABLE not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("ABSTRACT-BLANKET-OBS")
     if "ABSTRACT-BLANKET-OBS" not in skip:               # ABSTRACT-EXACT-1125: blanket routing-layer OBS on bound hard-core views, report-only
         try:

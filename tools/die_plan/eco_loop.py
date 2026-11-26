@@ -71,6 +71,7 @@ RESIDUAL_MAX_ENDS = 8
 RESIDUAL_FLOOR_PS = -10.0
 RESIDUAL_SELECT_PS = 0.0
 HOLD_MARGIN_PS = 10           # HOLD-FLOW-R 11-16 (lever 1): hold REPAIR TARGET 10 ps on internal (reg2reg) endpoints, was 5 (COORD 11-09 KW-FIX-42): a repair to +0..+5 lands negative after re-extraction (9-17 ps) for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
+NO_GAIN_PCT = 5.0             # P-ECO-NO-GAIN (QC-INT-R2-TOOLS 11-26): an attempt gaining < 5 % of the base violation (TT and FF) ends the loop as ECO-NO-GAIN
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
@@ -531,6 +532,36 @@ def improved(prev, cur):
     gain = neg_sum(cur, np_) - neg_sum(prev, np_)
     fewer = np_ and cur["ff_np_n"] < prev["ff_np_n"]
     return gain >= MIN_WNS_GAIN_PS or fewer or cur["drv"] < prev["drv"] or cur["drc"] < prev["drc"]
+
+
+def no_gain_pct(env=None):
+    """% of the base violation an attempt must recover; $OT_ECO_NOGAIN_PCT overrides, 0 disables the stop"""
+    try:
+        return float((env if env is not None else os.environ).get("OT_ECO_NOGAIN_PCT", NO_GAIN_PCT))
+    except ValueError:
+        return NO_GAIN_PCT
+
+
+def no_gain(base, cur, prev=None, pct=None):
+    """P-ECO-NO-GAIN: True when no violating corner (TT setup, FF hold; the non-port hold when both sides are scored) recovered pct % of its
+    base violation, and the attempt did not lower the DRV / DRC count against the previous result.  sle_hc0 cl38badc56 attempt_3:
+    TT -86.96 vs base -85.61 (worse), FF -130.6 vs -130.6.  A base without a violation, or pct <= 0, is never no-gain."""
+    pct = no_gain_pct() if pct is None else pct
+    if pct <= 0 or not base or not cur:
+        return False
+    prev = prev or base
+    if cur.get("drv", 0) < prev.get("drv", 0) or cur.get("drc", 0) < prev.get("drc", 0):
+        return False
+    np_ = _np(base, cur)
+    seen = False
+    for k in ("tt", "ff_np" if np_ else "ff"):
+        b, c = base.get(k), cur.get(k)
+        if b is None or float(b) >= 0:
+            continue
+        seen = True
+        if c is not None and float(c) - float(b) >= pct / 100.0 * abs(float(b)):
+            return False
+    return seen
 
 
 def better(a, b):
@@ -1361,6 +1392,11 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=None, hold_mar
         if m["signed"]:
             best, verdict, stop = it, "PASS", f"signed off after {n} ECO iteration(s)"
             break
+        if no_gain(res.get("base_metrics"), m, prev):
+            res["eco_verdict"] = "ECO-NO-GAIN"
+            stop = (f"ECO-NO-GAIN at attempt {n}: TT {res['base_metrics'].get('tt')}->{m.get('tt')} FF {res['base_metrics'].get('ff')}->{m.get('ff')} "
+                    f"recovered under {no_gain_pct():g} % of the base violation; no further attempt, return the type to structural fix")
+            break
         if not improved(prev, m):
             stop = f"no improvement at iteration {n} (WNS gain < {MIN_WNS_GAIN_PS} ps, DRV/DRC not falling)"
             break
@@ -1508,6 +1544,8 @@ def summary(res):
     if res.get("verdict") == "NOT_NEAR_MISS":
         return f"late-ECO not a near miss: {res.get('reason')}"
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
+    if res.get("eco_verdict") == "ECO-NO-GAIN":
+        tag = "late-ECO ECO-NO-GAIN (structural fix)"
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             + (f"({b.get('hold_score_scope', 'non-port')} {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
             + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
