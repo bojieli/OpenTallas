@@ -119,3 +119,59 @@ def test_split_part_inherits_leaves_at_its_sites():
     t, r = E.eco(b, cur, Site(), M, {"a": "r", "a_w": "r"})
     assert r["counts"]["matched"] == 3 and r["counts"]["gone"] == 0
     assert {x["port"]: x["node"] for x in t["taps"]}["t_a_w__clk_t1"] == 3
+
+
+def test_local_target_follows_neighbourhood():
+    b = base_tree()
+    b["nodes"]["2"]["physical_leg"]["delay_ps"] = 60.0      # tap 1 late, taps 2/3 on time
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_t3", 100.0, -50.0),
+           ("a", "clk_t9", 101.0, 52.0)]
+    _, rl = E.eco(b, cur, Site(), M, {"a": "r"}, k_local=1)
+    _, rp = E.eco(b, cur, Site(), M, {"a": "r"}, target="part")
+    assert rl["attached"][0]["target_ps"] == 90.0 and rp["attached"][0]["target_ps"] == 50.0
+
+
+def test_new_core_tap_targets_planned_early():
+    b = base_tree()
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_t3", 100.0, -50.0),
+           ("a", "clk_c0", 90.0, 0.0)]
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, early={("a", "clk_c0"): 20.0})
+    assert r["attached"][0]["target_ps"] == 30.0          # glue 50 - early 20
+
+
+def test_calib_attaches_on_routed_parent_arrivals():
+    b = base_tree()
+    # a 2nd internal node 5 hangs off the root; the model prices it equal to node 1 (and cheaper: fewer taps under it),
+    # routed says node 1 is 40 ps later
+    b["nodes"]["5"] = dict(id=5, x=100.0, y=10.0, parent=0, level=1, kids=[6], inv_parity=1, dme="r", physical_leg=leg(5, 30.0))
+    b["nodes"]["6"] = dict(id=6, x=100.0, y=20.0, parent=5, level=2, kids=[], inv_parity=0, dme="r", physical_leg=leg(6, 20.0))
+    b["nodes"]["0"]["kids"] = [1, 5]
+    b["taps"].append(dict(port="t_a__clk_t4", part="a", tap="clk_t4", xy=[100.0, 20.0], node=6))
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_t3", 100.0, -50.0),
+           ("a", "clk_t4", 100.0, 20.0), ("a", "clk_t9", 105.0, 5.0)]
+    cal = dict(node={0: 0.0, 1: 70.0, 5: 30.0}, leg=(0.0, 1.0),
+               tap={("a", "clk_t1"): 90.0, ("a", "clk_t2"): 90.0, ("a", "clk_t3"): 90.0, ("a", "clk_t4"): 50.0})
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, calib=cal, k_local=4)
+    a = r["attached"][0]
+    assert a["target_ps"] == 90.0 and a["parent"] == 1          # node 1 (routed 70) reaches 90, node 5 (routed 30) falls short
+    assert r["calib"]["nodes"] == 3
+    _, r0 = E.eco(b, cur, Site(), M, {"a": "r"}, k_local=4)
+    assert r0["attached"][0]["parent"] == 5                    # model-only: the cheaper fanout wins
+
+
+def test_balance_detaches_routed_outlier_only():
+    b = base_tree()
+    for i, (x, y) in ((5, (60.0, 0.0)), (6, (100.0, 0.0))):
+        b["nodes"][str(i)] = dict(id=i, x=x, y=y, parent=1, level=2, kids=[], inv_parity=0, dme="r", physical_leg=leg(i, 20.0))
+        b["nodes"]["1"]["kids"].append(i)
+        b["taps"].append(dict(port=f"t_a__clk_t{i - 1}", part="a", tap=f"clk_t{i - 1}", xy=[x, y], node=i))
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_t3", 100.0, -50.0),
+           ("a", "clk_t4", 60.0, 0.0), ("a", "clk_t5", 100.0, 0.0)]
+    cal = dict(node={0: 0.0, 1: 30.0}, leg=(0.0, 1.0),
+               tap={("a", "clk_t1"): 50.0, ("a", "clk_t2"): 50.0, ("a", "clk_t3"): 100.0, ("a", "clk_t4"): 50.0,
+                    ("a", "clk_t5"): 52.0})
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, {"a": "T"}, calib=cal, balance_types=["T"], balance_ps=20.0)
+    assert [x["port"] for x in r["balanced"]] == ["clk_t3"] and r["counts"]["balanced"] == 1
+    assert r["attached"][0]["port"] == "clk_t3" and r["attached"][0]["kind"] == "balance"
+    _, r0 = E.eco(b, cur, Site(), M, {"a": "r"}, {"a": "T"}, calib=cal)
+    assert r0["counts"]["balanced"] == 0 and r0["counts"]["matched"] == 5

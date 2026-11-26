@@ -34,3 +34,12 @@ def test_eco_rejects_unknown_keys_and_double_tree(tmp_path):
     c["extra_argv"] += ["--tree-json", "/x.json"]
     with pytest.raises(O.ConfigError):
         O.kit_argv(c, tmp_path / "kit")
+
+
+def test_eco_calib_and_balance_argv(tmp_path):
+    c = cfg(base_tree="/b/tree.json", calib="/run/eco3", balance_types=["hd_x", "hd_y"], balance_ps=20)
+    a = O.eco_argv(c, tmp_path / "kit", None, None, "/p/plan.json", "/t/die_plan/die_trial.py")
+    assert a[a.index("--calib") + 1] == "/run/eco3" and a[a.index("--balance-types") + 1] == "hd_x,hd_y"
+    assert a[a.index("--balance-ps") + 1] == "20"
+    with pytest.raises(O.ConfigError):            # balancing needs a routed run to measure on
+        O.eco_argv(cfg(base_tree="/b", balance_types=["hd_x"]), tmp_path / "kit", None, None, "/p", "/t/die_trial.py")

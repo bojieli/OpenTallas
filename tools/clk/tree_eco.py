@@ -14,8 +14,9 @@ Steps (all on the kit's own geometry: die_trial.clock_taps(P) and die_trial.cloc
   2 GONE    a base tap with no current tap at its site frees its leaf node (the leaf is reused by step 3 or pruned; empty
             internal nodes are pruned upward).
   3 ATTACH  every unmatched current tap (moved or new) gets a leaf, cheapest first by the arrival error against its target
-            (model arrival of the same-name base tap when it was a core tap, else the median model arrival of the part's
-            matched glue taps): (a) a freed leaf of the same part moves to the new site under its old parent (no load
+            (model arrival of the same-name base tap when it was a core tap, else the median model arrival of the k=4
+            nearest site-matched glue taps of the part: the neighbour-step criterion; --target part = part-wide median;
+            a core tap new to the tree: that glue target minus the plan's early delivery S.core_tap_early_ps / --early-ratio): (a) a freed leaf of the same part moves to the new site under its old parent (no load
             change for any other tap), or (b) a new leaf hangs on an internal node of the tap's region (that node's subtree
             pays one fanout term, charged in the cost).  Model = the config's stage calibration (leg [d0,k1,k2,kf], tap
             [k1,k2]), the same model die_trial's DME prices with; base legs keep their recorded physical_leg delay.
@@ -27,6 +28,15 @@ Steps (all on the kit's own geometry: die_trial.clock_taps(P) and die_trial.cloc
             not taken.
   Moved nodes lose their physical_leg chain; die_trial kit --tree-json re-lays those legs on its own legal-site map and
   fixes inverter parity exactly (load_stamped_tree -> legalize_stamped_nodes + clksite_stamp_native.fix_parity).
+
+  CALIB (closed loop, --calib RUN_DIR of a previous routed run of the same eco on the same plan): the stage model alone
+            misses routed parent arrivals by sd 26-39 ps (HEAD W9 eco3), so with --calib every arrival the attach step
+            compares is ROUTED: a base node's routed mid arrival (late+early)/2 at its output, a matched tap's routed arrival
+            (targets), and only the new leg is modelled, as c0 + c1 * model (fit on that run's own attached legs).  Nodes
+            the routed run does not carry fall back to model + the run's median routed-minus-model offset.
+  BALANCE   (--balance-types T,T --balance-ps X, needs --calib): a site-matched glue tap of those types whose routed
+            arrival is more than X off the median of its k nearest matched glue neighbours is detached and re-attached as
+            in step 3 (the neighbour-step / TAPSTEP criterion on the routed tree, not only on moved taps).
 
 usage: tree_eco.py BASE_TREE.json PLAN.json --plan-root DIR --out TREE.json [--stage-cal CAL.json] [--regions REG.json]
                    [--match-um 0.05] [--max-leaf-leg-um 2.0] [--resite-types T,T] [--lift-tol-ps 1.0]
@@ -249,8 +259,10 @@ def keep_interval(v0, p, ks):
 
 
 def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None, match_um=0.05, max_leaf_leg_um=2.0,
-        resite_types=(), lift_tol_ps=1.0, nrep_fn=None):
+        resite_types=(), lift_tol_ps=1.0, nrep_fn=None, target="local", k_local=4, early=None, calib=None,
+        balance_types=(), balance_ps=None):
     """base: tree.json dict; cur_taps [(part, port, x, y)]; site: object with legal(q) / nearest(q); part_region {part: region}.
+    calib: None or dict(node={id: routed ps}, tap={(part, port): routed ps}, leg=(c0, c1)) (load_calib).
     -> (tree.json dict, report dict).  Pure: base is not modified."""
     nodes = {int(k): json.loads(json.dumps(v)) for k, v in base["nodes"].items()}
     btaps = base["taps"]
@@ -260,6 +272,43 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     matched, unm, gone = match_taps(btaps, cur_taps, match_um)
     base_arr = {k: arr0[t["node"]] + model.tap(man(t["xy"], (nodes[t["node"]]["x"], nodes[t["node"]]["y"])))
                 for k, t in enumerate(btaps)}
+    c0, c1 = 0.0, 1.0
+    if calib:
+        cn = {i: a for i, a in calib["node"].items() if i in nodes}
+        off = statistics.median([a - arr0[i] for i, a in cn.items()]) if cn else 0.0
+        arr0 = {i: cn.get(i, a + off) for i, a in arr0.items()}
+        c0, c1 = calib.get("leg", (0.0, 1.0))
+        ct = calib.get("tap", {})
+        for ci, k in matched.items():        # targets on the routed tree: the matched tap's routed arrival
+            r = ct.get(tuple(cur_taps[ci][:2]))
+            base_arr[k] = r if r is not None else base_arr[k] + off
+        mk = set(matched.values())
+        for k in base_arr:
+            if k not in mk:
+                base_arr[k] += off
+    newleg = lambda m: c0 + c1 * m            # one new leg (model ps -> the arrival basis in use)
+    balanced = []
+    if calib and balance_types and balance_ps is not None:
+        gl = [(ci, k) for ci, k in matched.items() if not cur_taps[ci][1].startswith("clk_c")]
+        byp = defaultdict(list)
+        for ci, k in gl:
+            byp[cur_taps[ci][0]].append((ci, k))
+        for p, lst in byp.items():
+            if (part_type or {}).get(p) not in balance_types:
+                continue
+            for ci, k in lst:
+                xy = cur_taps[ci][2:4]
+                nb = sorted((q for q in lst if q[0] != ci), key=lambda q: man(cur_taps[q[0]][2:4], xy))[:k_local]
+                if not nb:
+                    continue
+                m = statistics.median(base_arr[q[1]] for q in nb)
+                if abs(base_arr[k] - m) > balance_ps:
+                    balanced.append((ci, k, round(base_arr[k] - m, 1)))
+        for ci, k, _ in balanced:
+            del matched[ci]
+            unm.append(ci)
+            gone.append(k)
+    bal_ci = {ci for ci, _, _ in balanced}
     # targets: part median of matched glue taps
     glue = defaultdict(list)
     for ci, k in matched.items():
@@ -271,6 +320,19 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
         region_med[part_region.get(p)].append(v)
     rmed = {r: statistics.median(v) for r, v in region_med.items()}
     base_by_name = {(t["part"], t["tap"]): k for k, t in enumerate(btaps)}
+    glue_xy = defaultdict(list)          # part -> [(x, y, model arrival)] of matched glue taps
+    for ci, k in matched.items():
+        if not cur_taps[ci][1].startswith("clk_c"):
+            glue_xy[cur_taps[ci][0]].append((cur_taps[ci][2], cur_taps[ci][3], base_arr[k]))
+
+    def local_target(p, xy):
+        """median model arrival of the k nearest matched glue taps of the part: a moved tap lands on the arrival of its
+        new neighbourhood (the neighbour-step / TAPSTEP criterion), not on the part-wide median"""
+        g = glue_xy.get(p)
+        if not g:
+            return None
+        near = sorted(g, key=lambda q: man(q[:2], xy))[:k_local]
+        return statistics.median(q[2] for q in near)
     new_taps = []                 # [(part, port, x, y, node)]
     for ci, k in matched.items():
         p, port, x, y = cur_taps[ci]
@@ -292,9 +354,17 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
         kb = base_by_name.get((p, port))
         if port.startswith("clk_c") and kb is not None:
             tgt = base_arr[kb]
+        elif port.startswith("clk_c"):   # a core tap new to the tree: its glue neighbourhood minus the plan's early delivery
+            tgt = (local_target(p, (x, y)) if target == "local" else None)
+            if tgt is None:
+                tgt = med.get(p, rmed.get(part_region.get(p)))
+            if tgt is not None:
+                tgt -= (early or {}).get((p, port), 0.0)
         else:
-            tgt = med.get(p, rmed.get(part_region.get(p)))
-        kind = "moved" if kb is not None else "new"
+            tgt = (local_target(p, (x, y)) if target == "local" else None)
+            if tgt is None:
+                tgt = med.get(p, rmed.get(part_region.get(p)))
+        kind = "balance" if ci in bal_ci else "moved" if kb is not None else "new"
         work.append(dict(ci=ci, part=p, port=port, xy=(x, y), target=tgt, kind=kind,
                          region=part_region.get(p)))
     att = []
@@ -310,14 +380,14 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                 if lf in used_free:
                     continue
                 pa = nodes[lf]["parent"]
-                a = arr0[pa] + model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap)
+                a = arr0[pa] + newleg(model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap))
                 opts.append((abs(a - w["target"]) if w["target"] is not None else 0.0, "reuse", lf, pa, a))
             for c in internal.get(w["region"], ()):
                 cv = nodes[c]
                 L = man((cv["x"], cv["y"]), q)
                 if L > 4 * model.rep:
                     continue
-                a = arr0[c] + model.leg(L) + model.kf + model.tap(dtap)
+                a = arr0[c] + newleg(model.leg(L) + model.kf + model.tap(dtap))
                 pen = model.kf + 0.05 * model.kf * ntap_under.get(c, 0)
                 opts.append(((abs(a - w["target"]) if w["target"] is not None else 0.0) + pen, "hang", None, c, a))
             if not opts:
@@ -429,11 +499,57 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     errs = [abs(a["err_ps"]) for a in att if a["err_ps"] is not None]
     rep = dict(counts=dict(current=len(cur_taps), base=len(btaps), matched=len(matched), unmatched=len(unm), gone=len(gone),
                            attached={k: dict(v) for k, v in kinds.items()}, unplaced=len(unplaced), pruned=len(removed),
-                           resited_leaves=len(resite), lifted=len(lifted), relaid_legs=relaid, parity_set=flipped),
+                           resited_leaves=len(resite), lifted=len(lifted), relaid_legs=relaid, parity_set=flipped,
+                           balanced=len(balanced)),
                attach_err_ps=dict(n=len(errs), max=round(max(errs), 1) if errs else None,
                                   p95=round(sorted(errs)[int(0.95 * (len(errs) - 1))], 1) if errs else None),
-               attached=att, unplaced=unplaced, resite=resite, lifted=lifted)
+               attached=att, unplaced=unplaced, resite=resite, lifted=lifted,
+               calib=None if not calib else dict(leg=[round(c0, 3), round(c1, 3)], nodes=len(calib["node"]), taps=len(calib.get("tap", {}))),
+               balanced=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], dev_ps=d) for ci, _, d in balanced])
     return tree, rep
+
+
+def load_calib(run_dir, model):
+    """routed calibration from a previous eco run directory (RUN/clk/kit/clock/tree.json, RUN/clk/eco/tree_eco.json.report.json,
+    RUN/proof/tap_arrivals_TT.json): node id -> routed mid arrival at the node's output (node_xy_um matched to the kit tree,
+    the latest stage at that point), (part, kit port) -> routed tap mid arrival, and the new-leg fit routed = c0 + c1 * model
+    on that run's attached legs (least squares)."""
+    run = Path(run_dir)
+    K = json.loads((run / "clk/kit/clock/tree.json").read_text())
+    A = json.loads((run / "proof/tap_arrivals_TT.json").read_text())
+    R = json.loads((run / "clk/eco/tree_eco.json.report.json").read_text())
+    mid = lambda n: (A["node_late_ps"][n] + A["node_early_ps"][n]) / 2.0
+    at = defaultdict(list)
+    for n, q in A["node_xy_um"].items():
+        at[(round(q[0], 3), round(q[1], 3))].append(n)
+    node = {}
+    for i, v in K["nodes"].items():
+        c = at.get((round(v["x"], 3), round(v["y"], 3)))
+        if c:
+            node[int(i)] = max(mid(n) for n in c)
+    tap = {}
+    for r in A["taps"]:
+        if r.get("part") is not None and "__" in r["port"]:
+            tap[(r["part"], r["port"].split("__", 1)[1])] = (r["late_ps"] + r["early_ps"]) / 2.0
+    xs, ys = [], []
+    for a in R.get("attached", []):
+        rt = tap.get((a["part"], a["port"]))
+        nd = K["nodes"].get(str(a["node"]))
+        if rt is None or nd is None or nd.get("parent") not in node:
+            continue
+        pv = K["nodes"][str(nd["parent"])]
+        txy = next((t["xy"] for t in K.get("taps", []) if t.get("node") == a["node"]), (nd["x"], nd["y"]))
+        m = model.leg(man((pv["x"], pv["y"]), (nd["x"], nd["y"]))) + (model.kf if a["how"] == "hang" else 0.0) + \
+            model.tap(man((nd["x"], nd["y"]), txy))
+        xs.append(m); ys.append(rt - node[nd["parent"]])
+    c0, c1 = 0.0, 1.0
+    if len(xs) >= 8:
+        mx, my = statistics.fmean(xs), statistics.fmean(ys)
+        sxx = sum((x - mx) ** 2 for x in xs)
+        if sxx > 0:
+            c1 = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
+            c0 = my - c1 * mx
+    return dict(node=node, tap=tap, leg=(c0, c1), fit_n=len(xs))
 
 
 def main(argv=None):
@@ -449,6 +565,15 @@ def main(argv=None):
     ap.add_argument("--max-leaf-leg-um", type=float, default=2.0)
     ap.add_argument("--resite-types", default="")
     ap.add_argument("--lift-tol-ps", type=float, default=1.0)
+    ap.add_argument("--early-ratio", type=float, default=1.0,
+                    help="core-tap early in model ps = plan early ps / RATIO (die_trial --region-dme-early)")
+    ap.add_argument("--target", choices=("local", "part"), default="local",
+                    help="arrival target of a moved/new glue tap: local = median of its k nearest site-matched glue taps "
+                         "(default), part = the part-wide median")
+    ap.add_argument("--calib", help="previous routed eco RUN dir (clk/kit/clock/tree.json, clk/eco/*.report.json, "
+                    "proof/tap_arrivals_TT.json): attach on routed arrivals (closed loop)")
+    ap.add_argument("--balance-types", default="", help="types whose routed neighbour-step outliers are re-attached (needs --calib)")
+    ap.add_argument("--balance-ps", type=float, default=20.0)
     ap.add_argument("--tools", default=str(DIE_PLAN), help="die_plan tool dir whose die_trial/schema read the plan (a launch "
                     "tree's tools/die_plan when the plan's inputs live in that tree); default the sibling tools/die_plan")
     a = ap.parse_args(argv)
@@ -474,10 +599,19 @@ def main(argv=None):
         w, h = P.types[p["type"]]["outline_um"]
         c0, c1 = P.to_die(n, (0, 0)), P.to_die(n, (w, h))
         pbox[n] = (min(c0[0], c1[0]), min(c0[1], c1[1]), max(c0[0], c1[0]), max(c0[1], c1[1]))
+    early = {}                    # (part, core port) -> plan early delivery (TT model ps), as die_trial's DME early sinks
+    for n, p in P.parts.items():
+        for port, _, _, tp in S.core_taps(P, p["type"]):
+            e = S.core_tap_early_ps(P, tp, "TT", P.types[p["type"]])
+            if e > 0:                 # --calib attaches on routed ps: the plan's early as is
+                early[(n, port)] = e / (1.0 if a.calib else float(a.early_ratio))
+
     def nrep_fn(p, v):            # the kit's own leg layout (die_trial._leg_layout), as clksite_stamp_native.fix_parity
         return D._leg_layout(0, dict(v, physical_leg=None), p, site, a.rep_um, False)[1]
     tree, rep = eco(base, cur, site, model, pr, ptype, pbox, a.match_um, a.max_leaf_leg_um,
-                    [t for t in a.resite_types.split(",") if t], a.lift_tol_ps, nrep_fn)
+                    [t for t in a.resite_types.split(",") if t], a.lift_tol_ps, nrep_fn, a.target, early=early,
+                    calib=load_calib(a.calib, model) if a.calib else None,
+                    balance_types=[t for t in a.balance_types.split(",") if t], balance_ps=a.balance_ps)
     sha = lambda f: hashlib.sha256(Path(f).read_bytes()).hexdigest()
     tree["meta"]["eco"].update(base_tree=str(a.base_tree), base_tree_sha256=sha(a.base_tree), plan=str(a.plan),
                                plan_sha256=sha(a.plan))

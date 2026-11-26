@@ -33,7 +33,7 @@ Usage:
   ot_clk.py rec     CONFIG --trial DIR --stage grt|drt   region.form mesh: routed trial -> explicit_mesh_signoff rec
 
 eco (CLK-ECO-1): a config with an `eco` section {base_tree, resite_types: [T..], max_leaf_leg_um, lift_tol_ps, match_um,
-plan_root} makes `kit` (and `argv`) INCREMENTAL: before die_trial runs, tools/clk/tree_eco.py re-sites the tree of record
+plan_root, calib: RUN_DIR, balance_types: [T..], balance_ps} makes `kit` (and `argv`) INCREMENTAL: before die_trial runs, tools/clk/tree_eco.py re-sites the tree of record
 base_tree on the config's plan (site-matched taps keep their leaf; moved/new taps reuse freed leaves or hang on the best
 region node; stranded leaves and pile-ups at stale keep-outs re-site) into OUT/eco/tree_eco.json, and die_trial kit gets
 --tree-json on it (the kit re-lays the touched legs on its own legal-site map and fixes parity).
@@ -459,7 +459,8 @@ def eco_tree_path(kit_out):
     return Path(kit_out).parent / "eco" / "tree_eco.json"
 
 
-ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root"}
+ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root", "calib", "balance_types",
+            "balance_ps"}
 
 
 def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
@@ -482,9 +483,20 @@ def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     rt = e.get("resite_types") or []
     if rt:
         a += ["--resite-types", ",".join(rt if isinstance(rt, list) else [rt])]
-    for k, f in (("max_leaf_leg_um", "--max-leaf-leg-um"), ("lift_tol_ps", "--lift-tol-ps"), ("match_um", "--match-um")):
+    er = ((cfg.get("region") or {}).get("early") or {}).get("tt")
+    if er:                                     # same model-ps ratio die_trial's DME early sinks use (--region-dme-early)
+        a += ["--early-ratio", _fmt(er)]
+    for k, f in (("max_leaf_leg_um", "--max-leaf-leg-um"), ("lift_tol_ps", "--lift-tol-ps"), ("match_um", "--match-um"),
+                 ("balance_ps", "--balance-ps")):
         if e.get(k) is not None:
             a += [f, _fmt(e[k])]
+    if e.get("calib"):                         # closed loop: a previous routed eco run dir (tree_eco --calib)
+        a += ["--calib", str(e["calib"])]
+    bt = e.get("balance_types") or []
+    if bt:
+        if not e.get("calib"):
+            raise ConfigError("eco: balance_types needs calib (a routed run to measure the neighbour steps on)")
+        a += ["--balance-types", ",".join(bt if isinstance(bt, list) else [bt])]
     return a
 
 

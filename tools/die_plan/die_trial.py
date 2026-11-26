@@ -673,10 +673,23 @@ class SiteMap:
                 for x0, y0, x1, y1 in fixed[tn]:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), "plan_point"))
+        # HEAD-DIECLOCK-PHYFLOOR 11-25: a type's phy_pg_floor_um raises its PHY region floor to that type y (gen_phys
+        # pg_domain regions: blocks below it are CORE supply), so the part of a die PHY domain rect below the floor of the
+        # partition it covers is core placement space here too.  Without it, a die domain rect drawn at the old floor
+        # strands the die clock leaves of that type's taps at the stale edge (S81 HEAD W8 hd_serdes: rect at type y 150,
+        # floor 400, taps up to y 236 -> the y145 wall).  Types without the key: unchanged.
+        floors = []
+        for n, p in P.parts.items():
+            t = P.types[p["type"]]
+            fl = t.get("phy_pg_floor_um")
+            if fl is not None:
+                w, h = t["outline_um"]
+                a, b = P.to_die(n, (0.0, 0.0)), P.to_die(n, (w, min(float(fl), h)))
+                floors.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
-                x0, y0, x1, y1 = d["rect_um"]
-                self.forb.append((x0 - halo, y0 - halo, x1 + halo, y1 + halo, "phy"))
+                for x0, y0, x1, y1 in _rect_minus(tuple(d["rect_um"]), floors):
+                    self.forb.append((x0 - halo, y0 - halo, x1 + halo, y1 + halo, "phy"))
         self.idx = {}
         for k, r in enumerate(self.forb):
             for i in range(int(r[0] // bucket), int(r[2] // bucket) + 1):
