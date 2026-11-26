@@ -115,6 +115,7 @@ def check(P,sidecar=None):
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):
         errors.append("real local controller observer is required (no new external status ports)")
+    errors+=check_export_relays(P)["errors"]   # KV-HUB-LEG405: declared export relays only
     return dict(errors=errors,pins=count,edges=len(net.get("edges",[])),max_hop_um=maxhop,
                 physical_qualified=False,observer=obs,**({"start_tree":st_sum} if st_sum is not None else {}))
 
@@ -652,6 +653,12 @@ def export_tcl(P,tn,bit0=frozenset()):
 
 
 FWD_BUFFER_MASTER="BUFx24_ASAP7_75t_R"
+# KV-HUB-LEG405 11-26: optional per-pin export relays.  A forwarded-clock output pin whose source tap is farther than the
+# 405 um reach from its face pin declares pin["export_relay_xy_um"] = [[x,y],...] (local um, source -> pin order); the fwd
+# export then is  tap -> BUFx24 (at the tap) -> BUFx6f relay -> ... -> port, every leg <= 405 um (check_export_relays), the
+# same one-input buffer chain repair_timing would otherwise insert on the long wire (prior native: BUFx6f wire buffers).
+# Absent key = unchanged kits.  The relays never leave the source clock (no register, no second clock root).
+FWD_RELAY_MASTER="BUFx6f_ASAP7_75t_R"
 
 
 def export_form(P,tn):
@@ -666,6 +673,56 @@ def export_form(P,tn):
     form=P.types[tn].get("clock",{}).get("landing_export_form","fwd_buffer")
     if form not in ("tie","fwd_buffer"):raise ValueError(f"{tn}: clock.landing_export_form {form!r}")
     return form
+
+
+def _relay_chain_tcl(n,rel):
+    """Tcl lines that hang BUFx6f relays (sites in um, clamped into the core like the export buffer) between the export
+    buffer net $cland_fn and the port, one net per segment; leaves $cland_dst connected to the last segment."""
+    out=["set cland_prev $cland_fn"]
+    for j,(x,y) in enumerate(rel):
+        rn,rnet=f"cland_rly_{n}_{j}",f"cland_rly_net_{n}_{j}"
+        out+=[f"set cland_ri [odb::dbInst_create $cland_block $cland_rm {{{rn}}}]",
+              f"set cland_rx [expr {{min(max(int(round({x!r} * $cland_dbu)) - [$cland_rm getWidth] / 2, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_rm getWidth])}}]",
+              f"set cland_ry [expr {{min(max(int(round({y!r} * $cland_dbu)) - [$cland_rm getHeight] / 2, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_rm getHeight])}}]",
+              "$cland_ri setLocation $cland_rx $cland_ry; $cland_ri setPlacementStatus PLACED",
+              "[$cland_ri findITerm A] connect $cland_prev",
+              f"set cland_rnet [odb::dbNet_create $cland_block {{{rnet}}}]",
+              "[$cland_ri findITerm Y] connect $cland_rnet", "$cland_rnet setSigType CLOCK",
+              "set cland_prev $cland_rnet"]
+    out.append("$cland_dst connect $cland_prev")
+    return out
+
+
+def check_export_relays(P):
+    """KV-HUB-LEG405: every pin that declares export_relay_xy_um: kind clock/out, finite sites inside the type outline, and
+    the Manhattan legs tap -> relay0 -> ... -> pin all <= 405 um (limit pin.max_hop_um, never above 405).  Pins without
+    the key are not checked (default plans unchanged)."""
+    errors=[];legs=[]
+    for tn,t in P.types.items():
+        ck=t.get("clock",{});c=ck.get("landing_contract",{});w,h=t["outline_um"]
+        taps=None
+        for p in c.get("pins",[]):
+            rel=p.get("export_relay_xy_um")
+            if rel is None:continue
+            nm=f"{tn}.{p.get('name')}"
+            if p.get("kind")!="clock" or p.get("dir")!="out":errors.append(f"{nm}: export_relay_xy_um on a non forwarded-clock output");continue
+            if not isinstance(rel,list) or not rel or any(not isinstance(r,list) or len(r)!=2 or not all(
+                    isinstance(v,(int,float)) and math.isfinite(v) for v in r) for r in rel):
+                errors.append(f"{nm}: export_relay_xy_um needs a non-empty list of finite [x,y]");continue
+            if any(not(0<=r[0]<=w and 0<=r[1]<=h) for r in rel):
+                errors.append(f"{nm}: export relay outside the type outline");continue
+            if taps is None:
+                import schema as _S
+                taps={a:(b_,c_) for a,b_,c_ in _S.tap_grid(P,tn)}
+                for a,b_,c_,*_ in _S.core_taps(P,tn):taps.setdefault(a,(b_,c_))
+            src=taps.get(p.get("source_clock_tap") or p.get("source_clock_port"))
+            if src is None:errors.append(f"{nm}: source tap has no planned site");continue
+            pts=[tuple(src)]+[tuple(float(v) for v in r) for r in rel]+[tuple(p["xy_um"])]
+            lim=min(405.0,float(p.get("max_hop_um",405)))
+            for a,b in zip(pts,pts[1:]):
+                d=abs(a[0]-b[0])+abs(a[1]-b[1]);legs.append((nm,round(d,3)))
+                if d>lim+1e-6:errors.append(f"{nm}: export relay leg {d:.3f}um exceeds {lim:g}")
+    return dict(errors=errors,legs=legs)
 
 
 def export_tcl_fwd(P,tn,bit0=frozenset()):
@@ -723,11 +780,48 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     if {[$yn getName] ne $net_name} {error "OT_CLAND_EXPORT $n unable to rename the existing net"}
   }
 }""".splitlines()
+    relay_pins=[p for p in pins if p["kind"]=="clock" and p["dir"]=="out" and p.get("export_relay_xy_um")]
+    if relay_pins:
+        out+=["set cland_rm [[ord::get_db] findMaster {%s}]"%FWD_RELAY_MASTER,
+              'if {$cland_rm eq "NULL"} { error "OT_CLAND_EXPORT relay buffer master missing" }',
+              "set cland_dbu [$cland_block getDbUnitsPerMicron]",
+              # existing exact one-buffer-per-site relay chain: buffer fw -> rly0 -> ... -> rlyN -> port, nothing else
+              r"""proc ot_cland_existing_head {inst master src net_name} {
+  set n [$inst getName]
+  if {[[$inst getMaster] getName] ne [$master getName]} {error "OT_CLAND_EXPORT $n existing master mismatch"}
+  set a [$inst findITerm A]; set y [$inst findITerm Y]
+  if {$a eq "NULL" || $y eq "NULL" || ![$a isInputSignal] || ![$y isOutputSignal]} {error "OT_CLAND_EXPORT $n existing pin shape mismatch"}
+  set yn [$y getNet]
+  if {[$a getNet] ne $src || $yn eq "NULL"} {error "OT_CLAND_EXPORT $n existing connectivity mismatch"}
+  if {[$yn getName] ni [list $n $net_name] || [$src getSigType] ne "CLOCK" || [$yn getSigType] ne "CLOCK"} {error "OT_CLAND_EXPORT $n existing net shape mismatch"}
+  if {[$yn getName] eq $n} {
+    $yn rename $net_name
+    if {[$yn getName] ne $net_name} {error "OT_CLAND_EXPORT $n unable to rename the existing net"}
+  }
+}
+proc ot_cland_existing_relay {inst master src dst net_name rnames rmaster} {
+  ot_cland_existing_head $inst $master $src $net_name
+  set prev $inst
+  foreach rn $rnames {
+    set r [[ord::get_db_block] findInst $rn]
+    if {$r eq "NULL"} {error "OT_CLAND_EXPORT $rn relay missing on a reused export"}
+    if {[[$r getMaster] getName] ne [$rmaster getName]} {error "OT_CLAND_EXPORT $rn existing relay master mismatch"}
+    set a [$r findITerm A]; set y [$r findITerm Y]
+    set py [[$prev findITerm Y] getNet]
+    if {$a eq "NULL" || $y eq "NULL" || [$a getNet] ne $py} {error "OT_CLAND_EXPORT $rn existing relay input mismatch"}
+    if {[llength [$py getITerms]] != 2 || [llength [$py getBTerms]]} {error "OT_CLAND_EXPORT $rn existing relay upstream sharing mismatch"}
+    set prev $r
+  }
+  set yn [[$prev findITerm Y] getNet]
+  set ports [$yn getBTerms]
+  if {[$dst getNet] ne $yn || [llength $ports] != 1 || [llength [$yn getITerms]] != 1} {error "OT_CLAND_EXPORT [$prev getName] existing relay output mismatch"}
+}"""]
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
         fw_net = "cland_fwd_net_" + n
         k=on_tap.get(s,0);on_tap[s]=k+1
+        rel=[tuple(float(v) for v in r) for r in p.get("export_relay_xy_um") or []]
         out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(n,bit0)}}}]",
                 f"set cland_src [$cland_block findBTerm {{{_bterm(s,bit0)}}}]",
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
@@ -735,7 +829,8 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
                 f"set cland_i [$cland_block findInst {{{fw}}}]",
                 'if {$cland_i ne "NULL"} {',
-                f'  ot_cland_existing $cland_i $cland_m $cland_net $cland_dst {{{fw_net}}}',
+                *([f'  ot_cland_existing_relay $cland_i $cland_m $cland_net $cland_dst {{{fw_net}}} {{{" ".join(f"cland_rly_{n}_{j}" for j in range(len(rel)))}}} $cland_rm'] if rel else
+                  [f'  ot_cland_existing $cland_i $cland_m $cland_net $cland_dst {{{fw_net}}}']),
                 f"  puts {{OT_CLAND_EXPORT_REUSE {n} <- {s} via {fw}}}",
                 '} else {',
                 "set cland_old [$cland_dst getNet]",
@@ -750,9 +845,9 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 "[$cland_i findITerm A] connect $cland_net",
                 f"set cland_fn [odb::dbNet_create $cland_block {{{fw_net}}}]",
                 "[$cland_i findITerm Y] connect $cland_fn",
-                "$cland_dst connect $cland_fn",
+                *(_relay_chain_tcl(n,rel) if rel else ["$cland_dst connect $cland_fn"]),
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
-                f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)}}", "}"]
+                f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)"+(f" + {len(rel)} {FWD_RELAY_MASTER} relay(s)" if rel else "")+"}", "}"]
     return "\n".join(out)+"\n"
 
 

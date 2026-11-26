@@ -145,3 +145,84 @@ def test_gen_phys_exports_passthru_only_when_planned():
     s = (HERE / "gen_phys.py").read_text()
     assert 'if t.get("clock", {}).get("tap_passthrough"):' in s
     assert 'cfg.append("export OT_TAP_PASSTHRU = 1")' in s
+
+
+# ---- KV-HUB-LEG405 11-26: optional forwarded-export relays (pin.export_relay_xy_um) ---------------------------------------
+def _relay_pins(rel):
+    return [{"name": "fclk_out_o", "kind": "clock", "dir": "out", "source_clock_port": "clk", "export_relay_xy_um": rel}]
+
+
+def test_relay_export_chains_bufx6f_between_buffer_and_port():
+    s = LC.export_tcl(_P({"landing_contract": {"pins": _relay_pins([[10.5, 3.25], [20.0, 4.0]])}}), "T")
+    assert s.count("dbInst_create") == 3 and s.count(LC.FWD_RELAY_MASTER) == 1 + 0 or LC.FWD_RELAY_MASTER in s
+    assert "{cland_rly_fclk_out_o_0}" in s and "{cland_rly_fclk_out_o_1}" in s
+    assert "$cland_dst connect $cland_fn" not in s and "$cland_dst connect $cland_prev" in s
+    assert s.index("cland_rly_net_fclk_out_o_0") < s.index("cland_rly_net_fclk_out_o_1") < s.index("$cland_dst connect $cland_prev")
+    assert "ot_cland_existing_relay $cland_i $cland_m $cland_net $cland_dst {cland_fwd_net_fclk_out_o} {cland_rly_fclk_out_o_0 cland_rly_fclk_out_o_1} $cland_rm" in s
+    assert "2 BUFx6f_ASAP7_75t_R relay(s)" in s
+    # every generated braces/brackets balance as complete Tcl
+    if shutil.which("tclsh"):
+        r = subprocess.run(["tclsh"], input="puts [info complete {" + s.replace("{", "\\{").replace("}", "\\}") + "}]\n", text=True, capture_output=True)
+        assert r.returncode == 0, r.stderr
+
+
+def test_unrelayed_export_text_unchanged_by_relay_support():
+    s = LC.export_tcl(_P({"landing_contract": {"pins": PINS}}), "T")
+    assert "relay" not in s and "cland_rm" not in s and "cland_dbu" not in s
+
+
+class _Q:
+    def __init__(self, pins, w=100.0, h=100.0):
+        self.types = {"T": {"outline_um": [w, h], "clock": {"landing_contract": {"pins": pins}}}}
+
+
+def test_check_export_relays_rejects_bad_declarations():
+    ok = LC.check_export_relays(_P({}) if False else _Q([{"name": "x", "kind": "clock", "dir": "in", "export_relay_xy_um": [[1, 1]]}]))
+    assert any("non forwarded-clock output" in e for e in ok["errors"])
+    bad = LC.check_export_relays(_Q([{"name": "x", "kind": "clock", "dir": "out", "export_relay_xy_um": [[1]]}]))
+    assert any("finite [x,y]" in e for e in bad["errors"])
+    out = LC.check_export_relays(_Q([{"name": "x", "kind": "clock", "dir": "out", "export_relay_xy_um": [[500, 1]]}]))
+    assert any("outside the type outline" in e for e in out["errors"])
+    assert LC.check_export_relays(_Q([{"name": "x", "kind": "clock", "dir": "out"}])) == {"errors": [], "legs": []}
+
+
+_RELAY_MOCK = r'''
+set ::log {}
+proc L {m} {lappend ::log $m}
+proc mkobj {name body} {proc $name {m args} $body}
+namespace eval ord {}
+namespace eval odb {}
+proc ord::get_db_block {} {return blk}
+proc ord::get_db {} {return db}
+mkobj db {switch $m {findMaster {set n [lindex $args 0]; return m_$n}}}
+foreach mn {BUFx24_ASAP7_75t_R BUFx6f_ASAP7_75t_R} {mkobj m_$mn "switch \$m {getWidth {return 1000} getHeight {return 270} getName {return $mn}}"}
+mkobj ca {switch $m {xMin {return 0} xMax {return 3000000} yMin {return 0} yMax {return 2000000}}}
+mkobj bb {switch $m {xMin {return 1000000} xMax {return 1001000} yMin {return 20000} yMax {return 20270}}}
+mkobj net_src {switch $m {setSigType {L "sig src $args"} getName {return clk}}}
+mkobj bt_src {switch $m {getNet {return net_src} getBBox {return bb}}}
+mkobj bt_dst {switch $m {getNet {return NULL} disconnect {L "dst disconnect"} connect {L "dst connect $args"}}}
+mkobj blk {switch $m {findBTerm {if {[lindex $args 0] eq "fclk_out_o"} {return bt_dst}; return bt_src} findInst {return NULL} getCoreArea {return ca} getDbUnitsPerMicron {return 1000}}}
+set ::n 0
+proc odb::dbInst_create {blk master name} {set o inst_$name; mkobj $o "switch \$m {setLocation {L \"$name loc \$args\"} setPlacementStatus {} findITerm {return it_${name}_\[lindex \$args 0\]}}"
+ foreach p {A Y} {mkobj it_${name}_$p "switch \$m {connect {L \"$name.$p connect \$args\"}}"}
+ L "create $name [$master getName]"; return $o}
+proc odb::dbNet_create {blk name} {set o net_$name; mkobj $o "switch \$m {setSigType {} getName {return $name}}"; L "net $name"; return $o}
+'''
+
+
+def test_relay_export_executes_against_a_mock_odb_chain():
+    if not shutil.which("tclsh"):
+        pytest.skip("tclsh unavailable")
+    pins = _relay_pins([[1762.911, 17.145], [1800.0, 20.0]])
+    tcl = LC.export_tcl(_P({"landing_contract": {"pins": pins}}), "T")
+    r = subprocess.run(["tclsh"], input=_RELAY_MOCK + tcl + "\nforeach l $::log {puts $l}\n", text=True, capture_output=True)
+    assert r.returncode == 0, r.stderr
+    out = r.stdout.splitlines()
+    want = ["create cland_fwd_fclk_out_o BUFx24_ASAP7_75t_R", "create cland_rly_fclk_out_o_0 BUFx6f_ASAP7_75t_R",
+            "cland_rly_fclk_out_o_0.A connect net_cland_fwd_net_fclk_out_o",
+            "create cland_rly_fclk_out_o_1 BUFx6f_ASAP7_75t_R",
+            "cland_rly_fclk_out_o_1.A connect net_cland_rly_net_fclk_out_o_0",
+            "dst connect net_cland_rly_net_fclk_out_o_1"]
+    assert [l for l in out if l in want] == want
+    # relay sites are centred (um * 1000 dbu minus half the 1000x270 master)
+    assert "cland_rly_fclk_out_o_0 loc 1762411 17010" in out
