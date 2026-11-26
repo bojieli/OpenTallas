@@ -174,6 +174,29 @@ def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True, *, a
     return None
 
 
+def place_shorter_chain(t, entry, pts, stages, cap, gate):
+    """Reseat a centroid-only chain when an inherited detour cannot keep its stage count."""
+    import hub_repack as HR
+
+    w, h = t.get("outline_um") or (0, 0)
+    if min(w, h) <= 2 * INSET:
+        return None
+    grid = HR.Raster(w, h, list(placement_boxes(t).values()), halo=HALO)
+    obstacles = list(placement_boxes(t, halo=HALO).values())
+    start, finish = HR.escape(grid, pts[0]), HR.escape(grid, pts[-1])
+    elbows = ((finish[0], start[1]), (start[0], finish[1]))
+    paths = [[start, elbow, finish] for elbow in elbows]
+    for path in paths:
+        if HR.poly_crosses_core(grid, path):
+            continue
+        seats = place_chain([pts[0], *path, pts[-1]], stages, [None] * stages, obstacles, w, h, cap)
+        if seats is not None:
+            actual = chain_points(t, dict(entry, regs_um=seats))
+            if max(hops(actual)) <= gate and HR._hops_clear(grid, actual):
+                return seats
+    return None
+
+
 def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, whole_bus=True):
     """-> (ops, latency, skipped) for type t (t is NOT modified).  routed: a chain whose obstacle-avoiding hop is over the
     gate is re-sited too and a placement is accepted only when its routed hop is <= gate; whole_bus: with extra_reg, a bus that
@@ -204,6 +227,8 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         offs = [group_box(g, r, cell) for g, r in zip(groups, regs)] if groups else [None] * k
         new = place_routed(t, pts, k, offs, exact_rects if groups else rects, w, h, cap, gate, routed,
                            anchors=regs if groups else None)
+        if new is None and routed and groups is None:
+            new = place_shorter_chain(t, e, pts, k, cap, gate)
         path = f"/partition_types/{name}/internal_stations/{i}"
         if new is None and extra_reg and groups is None and (not whole_bus or e.get("conn") not in exact_conns):
             new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)

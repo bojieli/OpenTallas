@@ -134,3 +134,15 @@ def test_exact_ft_keeps_adjacent_register_when_out_window_is_implicit():
     assert slot["bit_sites_um"][-1] == out_bank
     assert not CR.sites_collide(slot["bit_sites_um"], slot["bit_site_cell_um"],
                                 [(430, 400, 520, 500)], 800, 850)
+
+
+def test_same_stage_count_when_inherited_detour_has_no_legal_seats():
+    t = _type([[980.0, 50.0], [980.0, 950.0]])
+    row = t["internal_stations"][0]
+    old = CR.chain_points(t, row)
+    assert CR.place_routed(t, old, 2, [None, None], [], 1000, 1000, 404, 405) is None
+    ops, latency, skipped = CR.resite_type("T", t)
+    assert len(ops) == 1 and not latency and not skipped
+    CR.apply_ops({"partition_types": {"T": t}}, ops)
+    assert len(row["regs_um"]) == 2
+    assert max(CR.hops(CR.chain_points(t, row))) <= 405
