@@ -631,3 +631,26 @@ S81	EXPOSURE s81c8 units routing without review	P-ROUTE-NO-VIEW-GATE	/srv/openta
 KV	FABLE-INDEP: C-RELAY-SEAT-EMPTY (ESTRIP)	C-RELAY-SEAT	lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57	folded
 S81	FABLE-INDEP: C-RESIZE-CELLCAP	C-GPL-TD-INFLATION	lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57	folded
 KV	FABLE-INDEP: C-RESIZE-CELLCAP (hub_Wi)	C-GPL-TD-INFLATION	lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57	folded
+KV	C-LEG405-HUBEXP (A12)	C-LEG405	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+QC	C-PIN-PG-ADJ (QC slw_fe_v1)	C-PIN-TRACK-PG	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+QC	C-DRT-METAL-SPACING (slw_fe_v1, 204 DRT)	C-PIN-TRACK-PG	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+KV	ca-strap-lateral-far (kv3_phy 1560 um, 5 tags)	C-STRAP-REACH	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+S81	REPAIR-BUF-INFLATION	C-GPL-TD-INFLATION	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+S81	TAP-SPAN-SKEW	C-TAP-REACH	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+S81	KIT-VIEW-NOT-POROUS	C-LEGACY-VIEW-EOL	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	folded
+S81	dsdv_gunit_l5f 0033e091829a	C-SYNTH-REG-DROP	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A1 + COORD 10:14
+S81	dsfd_node_LLd/LLfd/LLfu	C-RST-PINREG-DROPPED	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	COORD 09:23
+KV	strap_ca_k host_rst_n x=1109.92 (4 pc types)	C-STRAP-ISLAND	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A2
+KV	io_cor io_ft io_ft_v1 io_cor_v1 entry hold -82 ps	C-PIN-ENTRY-HOLD	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A3
+KV	pv v4 v4n v6n added roots	C-NEWROOT-TAPOFFSET	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A4
+KV	4 plain-PC types ingress	C-PC-PHY-INGRESS	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A5
+KV	20 of 29 pv types relay near core	C-RELAY-NEARCORE	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A6
+QC	sle_hc0 cl38badc56 cone	C-CONE-DEPTH	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A7
+QC	sle_hc0 clk_t119	C-XTAP-SETUP	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A8
+QC	Coll_s clk_t41	C-MACRO-TAP-LEGAL	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A9
+QC	sle_hc0 GRT estimate	C-GRT-EST-OPTIMISTIC	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A10
+S81	slice_station t51 ring lump	C-RING-LUMP	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A11
+QC	West SC ROWS-NO-PROOF	P-POSTBIND-PROOF-DROP	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A13
+QC	PLATEAU R3 CANCEL-ELIGIBLE at 1 and 9 violations	P-WATCHDOG-FALSE-POSITIVE	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A14 CLOSED 16c46e77be9
+S81	col_h9_r1 GRT restarts	P-GRT-RESTART-LOOP	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A15
+S81	4 revocations	P-REVOKE-NOT-LEDGERED	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1047-ff6cbf4a2057.md sha12 ff6cbf4a2057	A16 ledgered in COUNT-REVOKED d85b64a6afb

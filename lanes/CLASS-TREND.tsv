@@ -66,7 +66,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	P-PRIVATE-BASE-DIVERGENCE	3	seen-in-review	FABLE-FLOW-0847 A14 STR Wshim TX East f797			NEW
 2026-11-26 09:00 PST	HEAD	P-RESET-RECEIPT	2	adjudicated	FABLE-FLOW-0847 B18	1	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
-2026-11-26 09:00 PST	HEAD	P-SIGNED-UNVERSIONED	4	seen-in-review	FABLE-FLOW-0847 A20			NEW
+2026-11-26 09:00 PST	HEAD	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
 2026-11-26 09:00 PST	HEAD	P-STALE-TABLE	2	seen-in-review	FABLE-FLOW-0847 A11 exports lep0N_w			NEW
 2026-11-26 09:00 PST	KV	C-FSTART-HALFCYCLE	4	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) hub Eo 00a749e64092, Wo 173edb522637, Wi e2bf0d30ef2e, sys_c R3 820d27894005			NEW
 2026-11-26 09:00 PST	KV	C-FT-CROSSES-CORE	78	exact	PRE ADV-FT-CROSSES-CORE types on live plan 87d01254579e			NEW
@@ -74,18 +74,26 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	KV	C-GPL-TD-INFLATION	1	seen-in-review	FABLE-INDEP full review (COORD 09:3x) folded C-RESIZE-CELLCAP: hub_Wi			NEW
 2026-11-26 09:00 PST	KV	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-LEG405	2	exact-staged	KV-INT-R2 measurement dafa157 (real under-staged 2; legacy 40 superseded; COORD ruling 09:22)	40	exact	BASIS-CHANGE
+2026-11-26 09:00 PST	KV	C-NEWROOT-TAPOFFSET	3	seen-in-review	FABLE-FLOW-1047 A4 v4 24, v4n 29, v6n 46 roots without rows; PRE TAPOFF-MISSING			NEW
 2026-11-26 09:00 PST	KV	C-OVERSIZE	1	exact	PRE ADV-FP-OVERSIZE types on live plan 87d01254579e			NEW
+2026-11-26 09:00 PST	KV	C-PC-PHY-INGRESS	4	seen-in-review	FABLE-FLOW-1047 A5 4 plain-PC types ingress -1.06..-1.09 ns; 19 pc_v1 geometry-equal, no STA			NEW
+2026-11-26 09:00 PST	KV	C-PIN-ENTRY-HOLD	4	seen-in-review	FABLE-FLOW-1047 A3 raw reset/START pad entry FF hold -82 ps on io_cor, io_ft and both _v1; delta cfec3dac9da0 not adopted			NEW
+2026-11-26 09:00 PST	KV	C-RELAY-NEARCORE	20	seen-in-review	FABLE-FLOW-1047 A6 relay targets within 2.54 um of cores in 20 of 29 pv types on live 4c5a163e9a21			NEW
 2026-11-26 09:00 PST	KV	C-RELAY-SEAT	45	exact	PRE ADV-RELAY-SEAT types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan 87d01254579e (0 advisory WARN types)	0	exact	FLAT
+2026-11-26 09:00 PST	KV	C-STRAP-ISLAND	4	seen-in-review	FABLE-FLOW-1047 A2 strap_ca_k host_rst_n M7 x=1109.92 on 4 pc types; fixed in live 4c5a163e9a21			NEW
 2026-11-26 09:00 PST	KV	C-STREET	32	exact	PRE ADV-FP-STREET types on live plan 87d01254579e	41	exact	DOWN
 2026-11-26 09:00 PST	KV	C-TAP-LOAD	12	exact	PRE ADV-TAP-LOAD types on live plan 87d01254579e	17	lead	FIRST-EXACT
 2026-11-26 09:00 PST	KV	C-XTAP-HOLD	1	exact-kits	carried 21:00 QC-DRT-ECO 1/62; no KV figure in the 08:20 census	1	exact-kits	FLAT
 2026-11-26 09:00 PST	KV	P-CHECKER-AXIS-GAP	1	seen-in-review	FABLE-INDEP full review (COORD 09:3x) CA strap check tests only across-face axis; 331 legs up to 1564 um invisible			NEW
 2026-11-26 09:00 PST	KV	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
-2026-11-26 09:00 PST	KV	P-SIGNED-UNVERSIONED	52	seen-in-review	FABLE-FLOW-0847 A20			NEW
+2026-11-26 09:00 PST	KV	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
+2026-11-26 09:00 PST	QC	C-CONE-DEPTH	1	seen-in-review	FABLE-FLOW-1047 A7 sle_hc0 cl38badc56 cone depth 12, 443 cells, TT -86.96; split main 366319e2e3b			NEW
 2026-11-26 09:00 PST	QC	C-FT-CROSSES-CORE	50	exact	PRE ADV-FT-CROSSES-CORE types on live plan c9eb8883ad40			NEW
+2026-11-26 09:00 PST	QC	C-GRT-EST-OPTIMISTIC	1	seen-in-review	FABLE-FLOW-1047 A10 sle_hc0 GRT +44.6 ps vs routed SPEF -85.61			NEW
 2026-11-26 09:00 PST	QC	C-LAND-REACH	3	exact	PRE ADV-LAND-REACH types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-LEG405	0	exact-staged	LEG405-STAGED 0 CLASS-OWNERS-R2 09:19 @5632156a860	0	exact	BASIS-CHANGE
+2026-11-26 09:00 PST	QC	C-MACRO-TAP-LEGAL	1	seen-in-review	FABLE-FLOW-1047 A9 Coll_s clk_t41 illegal after two macro moves			NEW
 2026-11-26 09:00 PST	QC	C-OVERSIZE	0	exact	PRE ADV-FP-OVERSIZE types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-RELAY-SEAT	29	exact	PRE ADV-RELAY-SEAT types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan c9eb8883ad40 (32 advisory WARN types)	0	exact	FLAT
@@ -93,6 +101,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	QC	C-TAP-LOAD	9	exact	PRE ADV-TAP-LOAD types on live plan c9eb8883ad40	32	lead	FIRST-EXACT
 2026-11-26 09:00 PST	QC	C-TAP-REACH	1	seen-in-review	FABLE-FLOW-0847 A2 coll_ft cA4			NEW
 2026-11-26 09:00 PST	QC	C-XTAP-HOLD	3	exact-kits	CLASS-OWNERS-R2 08:20 xtap_hold_census residual kits 3/344	3	exact-kits	FLAT
+2026-11-26 09:00 PST	QC	C-XTAP-SETUP	1	seen-in-review	FABLE-FLOW-1047 A8 sle_hc0 clk_t119 9,172 sinks 76.8 ps cross-tap skew; BLOCKED 10:26 (CTS-generated taps)			NEW
 2026-11-26 09:00 PST	QC	P-COMPOSE-DROP	0	adjudicated	NEW since 21:00 (20:53 C1q 782 silent losses); guard caught it, rebuild guard PASS 21:00			NEW
 2026-11-26 09:00 PST	QC	P-ECO-NO-GAIN	1	seen-in-review	FABLE-FLOW-0847 A23 sle_hc0 cl38badc56			NEW
 2026-11-26 09:00 PST	QC	P-ELAB-REUSE-DRIFT	1	seen-in-review	FABLE-FLOW-0847 A22 C1q ELAB_REUSE_REFUSED			NEW
@@ -101,11 +110,13 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	QC	P-INPUT-RECEIPT	2	adjudicated	FABLE-FLOW-0847 B20	1	adjudicated	UP
 2026-11-26 09:00 PST	QC	P-LEC-PROOF-GAP/EMPTY-NETLIST	46	seen-in-review	FABLE-FLOW-0847 A12 46 staged dirs, 0-byte 6_final.v (118 RELEC-Q9 records, 68 EQUIVALENT, 43 NEED-KIT)			NEW
 2026-11-26 09:00 PST	QC	P-LEC-PROOF-GAP/GOLD-ONLY-TWIN	1	seen-in-review	FABLE-FLOW-0847 A12 hc3 auto_twins proposes 0; merges P-LEC-WIDTH (xhead3 proof-setup artifact, EQUIVALENT 133012/133012)			NEW
+2026-11-26 09:00 PST	QC	P-POSTBIND-PROOF-DROP	1	seen-in-review	FABLE-FLOW-1047 A13 West SC ROWS-NO-PROOF 09:30; fixed main 7a5c7eb130, open until a row closes it			NEW
 2026-11-26 09:00 PST	QC	P-POSTPUBLISH-DISK	1	adjudicated	FABLE-FLOW-0847 B23 C9 post-bind host	0	adjudicated	UP
 2026-11-26 09:00 PST	QC	P-PRIVATE-BASE-DIVERGENCE	1	seen-in-review	FABLE-FLOW-0847 A14 scope 338904			NEW
 2026-11-26 09:00 PST	QC	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
-2026-11-26 09:00 PST	QC	P-SIGNED-UNVERSIONED	13	seen-in-review	FABLE-FLOW-0847 A20			NEW
+2026-11-26 09:00 PST	QC	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
 2026-11-26 09:00 PST	QC	P-STALE-TABLE	4	seen-in-review	FABLE-FLOW-0847 A11 cA4 coll_core coll_s D2			NEW
+2026-11-26 09:00 PST	QC	P-WATCHDOG-FALSE-POSITIVE	0	seen-in-review	FABLE-FLOW-1047 A14 CLOSED: fixed 16c46e77be9 (QC-DRT-ECO-R2); QC and S81 kits at 1 and 9 violations were marked CANCEL-ELIGIBLE			NEW
 2026-11-26 09:00 PST	S81	C-CLK-LAND-OBS	8	seen-in-review	FABLE-FLOW-0847 A1 lepw_mus_C mu_C + dsdv_slice_c1x_C t1 t3 t5 t7 t8 t9			NEW
 2026-11-26 09:00 PST	S81	C-ENC-CONE-DETOUR	2	seen-in-review	FABLE-INDEP full review (COORD 09:3x) blocking items, 2 placements			NEW
 2026-11-26 09:00 PST	S81	C-FT-CROSSES-CORE	272	exact	PRE ADV-FT-CROSSES-CORE types on live plan 1f8fcdd9c4d7			NEW
@@ -120,10 +131,12 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 t23 mus_C			NEW
 2026-11-26 09:00 PST	S81	C-RCK-HALFCYCLE-MACRO	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-RELAY-SEAT	110	exact	PRE ADV-RELAY-SEAT types on live plan 1f8fcdd9c4d7			NEW
-2026-11-26 09:00 PST	S81	C-RST-PINREG-DROPPED	3	adjudicated	dsfd_node LL* signed netlists dropped reset pin register rn; 3 records REVOKED-PENDING-FIX (COORD 09:22)			NEW
+2026-11-26 09:00 PST	S81	C-RING-LUMP	1	seen-in-review	FABLE-FLOW-1047 A11 slice_station t51 97,525 instances, 129 bins over 0.7			NEW
+2026-11-26 09:00 PST	S81	C-RST-PINREG-DROPPED	3	seen-in-review	FABLE-FLOW-1047 COORD ruling 09:23; dsfd_node_LLd/LLfd/LLfu now in COUNT-REVOKED.tsv			NEW
 2026-11-26 09:00 PST	S81	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan 1f8fcdd9c4d7 (91 advisory WARN types)	26	exact	DOWN
 2026-11-26 09:00 PST	S81	C-SITE-IN-MACRO	4	seen-in-review	FABLE-FLOW-0847 A6 H10 P4 types			NEW
 2026-11-26 09:00 PST	S81	C-STREET	244	exact	PRE ADV-FP-STREET types on live plan 1f8fcdd9c4d7	245	exact	DOWN
+2026-11-26 09:00 PST	S81	C-SYNTH-REG-DROP	1	seen-in-review	FABLE-FLOW-1047 A1 dsdv_gunit_l5f 0033e091829a NOT-EQ, 91 of 10,293 points differ after folding; 8 of 989 netlists share the f12 tail registers (LEC-R2 10:16/10:43); COORD ruling 10:14			NEW
 2026-11-26 09:00 PST	S81	C-TAP-LOAD	10	exact	PRE ADV-TAP-LOAD types on live plan 1f8fcdd9c4d7	24	lead	FIRST-EXACT
 2026-11-26 09:00 PST	S81	C-TAP-REACH	1	seen-in-review	FABLE-FLOW-0847 A2 t23			NEW
 2026-11-26 09:00 PST	S81	C-VIEW-NO-OBS	1	seen-in-review	FABLE-FLOW-0847 A8 ot_s81dv_norm_finish			NEW
@@ -132,14 +145,16 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	P-ELAB-REUSE-DRIFT	11	seen-in-review	FABLE-FLOW-0847 A22 SVC lanes			NEW
 2026-11-26 09:00 PST	S81	P-EVIDENCE-VOLATILE	2	seen-in-review	FABLE-FLOW-0847 A15 t23 GOOD, hold5			NEW
 2026-11-26 09:00 PST	S81	P-FALSE-GREEN	3	adjudicated	FABLE-FLOW-0847 B17	0	adjudicated	UP
+2026-11-26 09:00 PST	S81	P-GRT-RESTART-LOOP	1	seen-in-review	FABLE-FLOW-1047 A15 col_h9_r1 5 kits restarted GRT from 4_cts after rc 143; kits cancelled 10:44			NEW
 2026-11-26 09:00 PST	S81	P-INPUT-RECEIPT	3	adjudicated	FABLE-FLOW-0847 B19	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-KIT-BIND-PLAN-MISMATCH	7	seen-in-review	FABLE-FLOW-0847 A13 COL P2 7 types			NEW
 2026-11-26 09:00 PST	S81	P-POSTPUBLISH-DISK	1	adjudicated	FABLE-FLOW-0847 B23 COL P2 waiter	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-PREGRT-HOLD-CRASH	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	P-PRIVATE-BASE-DIVERGENCE	3	seen-in-review	FABLE-FLOW-0847 A14 LEPW WREG6 + 1			NEW
+2026-11-26 09:00 PST	S81	P-REVOKE-NOT-LEDGERED	0	seen-in-review	FABLE-FLOW-1047 A16 4 revocations ledgered 11:0x (COUNT-REVOKED d85b64a6afb); rule: ledger with the ruling from now on			NEW
 2026-11-26 09:00 PST	S81	P-ROUTE-NO-VIEW-GATE	87	seen-in-review	FABLE-INDEP full review (COORD 09:3x) 87 old-plan S81 units routing without review (AP_REQUIRE_VIEWED_WAVE_ROUTE absent)			NEW
 2026-11-26 09:00 PST	S81	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
-2026-11-26 09:00 PST	S81	P-SIGNED-UNVERSIONED	1	seen-in-review	FABLE-FLOW-0847 A20 dsdv_bksel_q			NEW
+2026-11-26 09:00 PST	S81	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
 2026-11-26 09:00 PST	S81	P-STALE-TABLE	1	seen-in-review	FABLE-FLOW-0847 A11 seal_derived latpkg			NEW
 2026-11-26 09:00 PST	S81	*STREAK*	0	meta	no-fall streak on comparable classes			STREAK
 2026-11-26 09:00 PST	HEAD	*STREAK*	1	meta	no-fall streak on comparable classes			STREAK
