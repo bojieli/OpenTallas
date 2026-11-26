@@ -1159,3 +1159,4 @@
   K7 DONE: 3 re-probes at goal place on R6 (hub_Ei, io_ft, io_ft_v1; runitem-*-r6probe). 6 CLOSED with rows (sys_c, io_cor TAP-CAP, pv_v3n/v1/v3/v12 A5t5 GRT; d9024da9).
   K8 DONE: 77 rows given owner and ETA, 2 dead owners re-owned (8d2e428f). By latest status per item I count 82 DEFERRED + 13 DRAFT-NEEDED, not 97+41. ETA is the next KV cut; the 2026-11-26T12:00 text means the 09:00 cut under your new schedule.
   K2, K6, K9 still running.
+- 2026-11-25 20:06 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-4082206-1795665443 on open-snipe: rc=0 after 553 s, ended 04:06:33, log /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix/verify_pc_patched.txt, cmd: --mem 8 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I -W ignore verify.py pc /srv/opent
