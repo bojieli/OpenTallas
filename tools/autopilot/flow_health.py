@@ -275,9 +275,10 @@ def installed_backend(wrapper=WRAPPER):
     """the ot-run backend the installed wrapper execs (its last `exec ... <path>/ot-run` line), or ''"""
     try:
         for ln in reversed(open(wrapper).read().splitlines()):
-            m = re.search(r"exec\s+\S*python3?\s+(\S+/ot-run)\b", ln)
+            m = re.search(r'\bexec\s+\S*python3?(?:\s+-I)?\s+'
+                          r'(?:"\$\(readlink\s+-f\s+([^()\s]+/ot-run)\)"|(\S+/ot-run)\b)', ln)
             if m:
-                return m.group(1)
+                return os.path.realpath(m.group(1)) if m.group(1) else m.group(2)
     except OSError:
         pass
     return ""

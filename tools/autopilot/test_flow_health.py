@@ -130,6 +130,21 @@ class OtRunDrift(unittest.TestCase):
         self.assertEqual(FH.installed_backend(str(d / "nope")), "")
 
 
+    def test_resolves_current_runtime_backend_in_wrapper(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            version = root / "abcdefabcdef"
+            version.mkdir()
+            backend = version / "ot-run"
+            backend.write_text("x = 1\n")
+            current = root / "current"
+            current.symlink_to(version, target_is_directory=True)
+            wrapper = root / "wrapper"
+            wrapper.write_text(f'#!/bin/sh\nexec /usr/bin/python3 "$(readlink -f {current}/ot-run)" "$@"\n')
+            rows = FH.ot_run_drift_section(blob=lambda rel: b"x = 1\n", wrapper=str(wrapper), host="h")
+            self.assertEqual(rows[-1].split("\t"), ["h", str(backend), "SAME", "0"])
+
+
 class NoprogDrift(unittest.TestCase):
     def test_states(self):
         import hashlib
