@@ -1,0 +1,1 @@
+- 2026-11-26 10:54 PST DIED [S81-GATE-LINT] ot-push-main otpush-civil-redfish-494303 on civil-redfish: rc=3 after 6 s, ended 18:54:39, log /srv/opentallas-scratch2/claude/S81-GATE-LINT/push2.log, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 6 s, no log
