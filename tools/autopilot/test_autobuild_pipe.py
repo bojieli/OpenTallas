@@ -161,6 +161,10 @@ class SshRetry(unittest.TestCase):
                 if calls.count("mkdir") == 1:
                     return P(255, "kex_exchange_identification: read: Connection reset by peer")
                 return P(0, "")
+            if "tools/die_plan/seal_derived.py" in argv[-1]:
+                self.assertEqual(argv[0], "ssh")
+                calls.append("seal_derived")
+                return P(0, "")
             self.assertEqual(argv[0], "/bin/ot-run")
             self.assertIn("tools/die_plan/gen.py phys", argv[-1])
             calls.append("gen")
@@ -178,7 +182,7 @@ class SshRetry(unittest.TestCase):
                  mock.patch.object(KW, "repick_stage_hosts", side_effect=lambda spec: spec):
                 self.assertEqual(KW.run_item(str(Path(d) / "spec.json")), 1)
             res = json.loads((Path(d) / "result.json").read_text())
-            self.assertEqual(calls, ["abs_inputs", "mkdir", "mkdir", "gen", "gen"])
+            self.assertEqual(calls, ["abs_inputs", "mkdir", "mkdir", "seal_derived", "gen", "gen"])
             self.assertEqual(res["stage"], "gen")
             self.assertIn("KW_SSH_RETRY", (Path(d) / "mkdir.log").read_text())
             self.assertEqual(KW.classify(res["stage"], res["errors"] + "\n" + res["tail"])[0], "PLAN")

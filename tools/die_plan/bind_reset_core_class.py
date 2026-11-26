@@ -11,7 +11,7 @@ REPORT ONLY: classify each listed core reset by what actually drives the pin in 
 itself is not changed.  -> OUT/bind_reset_core_class.json  {types: {tn: [{inst, pin, tap, rtl_net, rtl_class,
 agrees}]}, mismatches: n, by_class: {...}}.  rtl_class: wavefront (the listed tap rst_n_t<tap>, or a relay copy of it),
 spine (a reset-spine port ri_* / its synchroniser or tail copy rs_ri_*), other (anything else), missing (instance or
-pin not found in the type RTL).
+pin not found in the type RTL), ambiguous (matched leaves disagree on the pin driver).
 """
 import json
 import re
@@ -62,15 +62,31 @@ def classify(net, tap):
     return "other"
 
 
-def check(W, type_text):
-    """W = bind_reset.json dict; type_text = {type name: emitted module text}.  -> report dict."""
+def check(W, type_text, core_leaves=None):
+    """Classify emitted reset drivers, using bind_core_resets leaf identities when available."""
+    core_leaves = core_leaves or {}
     types, by, bad = {}, {}, 0
     for tn, T in sorted(W.get("types", {}).items()):
         rows = []
+        txt = type_text.get(tn)
+        leaves = {}
+        for mapped in core_leaves.get(tn, ()):
+            key = mapped["inst"], mapped["pin"]
+            leaves.setdefault(key, set()).add(mapped["leaf"])
         for c in T.get("core_resets", []):
-            txt = type_text.get(tn)
-            ri, net = (_leaf(c), None) if txt is None else _resolve(txt, c)
-            cl = classify(net, c.get("tap")) if txt is not None else "missing"
+            pin = c.get("pin", "rst_n")
+            mapped = sorted(leaves.get((c.get("inst"), pin), ()))
+            ambiguous = False
+            if txt is None:
+                ri, net = _leaf(c), None
+            elif mapped:
+                ri = mapped[0]
+                nets = {_pin_net(txt, leaf, pin) for leaf in mapped}
+                ambiguous = len(nets) > 1
+                net = None if ambiguous else next(iter(nets))
+            else:
+                ri, net = _resolve(txt, c)
+            cl = "ambiguous" if ambiguous else classify(net, c.get("tap"))
             ok = cl == "wavefront"
             bad += not ok
             by[cl] = by.get(cl, 0) + 1
@@ -148,10 +164,18 @@ def main(argv):
         t = f.read_text(errors="replace")
         for mm in re.finditer(r"(?m)^module\s+(\w+)", t):
             texts[mm.group(1)] = t
-    tmap = json.loads(Path(argv[2]).read_text()) if len(argv) > 2 else {}
+    tmap = {}
+    report = out / "bind_report.json"
+    if report.is_file():
+        tmap = {tn: row["module"] for tn, row in json.loads(report.read_text()).get("types", {}).items()
+                if row.get("module")}
+    if len(argv) > 2:
+        tmap.update(json.loads(Path(argv[2]).read_text()))
     type_text = {tn: texts.get(tmap.get(tn, tn)) or texts.get(tn + "_part") for tn in W.get("types", {})}
     type_text = {k: v for k, v in type_text.items() if v is not None}
-    R = check(W, type_text)
+    mapped = out / "bind_core_resets.json"
+    core_leaves = json.loads(mapped.read_text()).get("types", {}) if mapped.is_file() else {}
+    R = check(W, type_text, core_leaves)
     (out / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")
     print(f"BIND-RESET-CORE-CLASS report-only mismatches={R['mismatches']} by_class={R['by_class']}")
     for tn, rows in R["types"].items():

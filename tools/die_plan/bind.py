@@ -4326,8 +4326,9 @@ class Binder:
                         texts[tn] = tf.read_text(errors="replace")
                 W0 = json.loads((out.parent / "bind_reset.json").read_text())
                 # scoped / probe-only binds emit a subset: judge only the emitted types, name the rest
-                R = bind_reset_core_class.check(dict(W0, types={k: v for k, v in W0.get("types", {}).items()
-                                                                if k in texts}), texts)
+                R = bind_reset_core_class.check(
+                    dict(W0, types={k: v for k, v in W0.get("types", {}).items() if k in texts}),
+                    texts, getattr(self, "_bound_core_resets", {}))
                 R["not_emitted"] = sorted(k for k, v in W0.get("types", {}).items()
                                           if v.get("core_resets") and k not in texts)
                 (out.parent / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")

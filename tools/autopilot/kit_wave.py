@@ -10927,10 +10927,11 @@ def env_effect_refusal(sp, run, remote, K):
     return EE.describe(EE.mismatches(env, str(txt).split(ENV_EFFECT_MARK, 1)[1], plan_fields=sp.get("plan_fields")))
 
 
-def placed_geom_check(sp, odb, outline):
-    """Prepare an exact placed ODB render. Strict new wave specs defer the routing probe."""
+def placed_geom_check(sp, odb, outline, goal=None):
+    """Prepare an exact placed ODB render. Geometry-only private jobs omit the routing probe."""
     item = sp["item"]
-    deferred = sp.get("geom_grt_deferred") is True
+    deferred = sp.get("geom_grt_deferred") is True or (
+        bool(sp.get("private")) and (goal or sp.get("goal")) == "geom")
     rules = ["--all-kits"]
     if re.fullmatch(r"[\d.]+x[\d.]+", outline):
         rules.extend(("--outline", outline))
@@ -11259,7 +11260,7 @@ def run_item(spec_path):
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
-        chk = placed_geom_check(sp, odb, ol)
+        chk = placed_geom_check(sp, odb, ol, chain_goal)
         gd = f"{W}/geom"
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
