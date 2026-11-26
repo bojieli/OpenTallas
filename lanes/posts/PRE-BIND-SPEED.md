@@ -1,0 +1,1 @@
+- 2026-11-25 17:56 PST RESUMED 17:56: S-04 cause found (scoped PRE prewarms 2 trees, then 461 reset trees solved serially on demand by STARTSETTLE/LANDREMAP/DERIVED; ADVISORY whole-die, REF-SITE 1022 s). Fix + bind PRE-record reuse + advisories off bind path coded in FP-S81/wtL pre-bind-speed, 28 tests green; after-timing PRE on v3 running E12, then ot-push-main.
