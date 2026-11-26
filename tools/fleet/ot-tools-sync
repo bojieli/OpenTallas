@@ -210,6 +210,79 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
         return _prune_snapshots_locked(root, max(keep, MIN_KEEP), protect, text, rm)
 
 
+def dedupe_snapshots(root=RT, apply=False):
+    """P-RT-COPIES (FLEET-OPS-R4 11-26): the snapshots are immutable and almost identical (a push changes a few files), but the hub builds each one from a
+    git worktree and some host copies miss --link-dest, so ~120 snapshots x ~410 MB = 45-65 GB per host, and every one of them stays because live
+    jobs / launches / pins name some of them.  Pruning keeps those (correctly); this makes the kept ones cheap: a regular file whose bytes equal the same
+    relative path in a NEWER-or-equal snapshot is re-pointed at that inode (link to a temp name in the same dir, then rename over it; the parent dir is
+    made writable for that instant and restored).  Open handles keep the old inode, content never changes, so no job can notice.  Same mode, uid and size
+    required, sha256 equal.  Dry run unless apply.  -> (files_linked, bytes_saved)"""
+    import stat as _st
+    root = Path(root)
+    snaps = sorted((d for d in root.iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
+                   key=lambda d: d.stat().st_mtime, reverse=True)
+    canon = {}                        # rel -> (path, ino, size, mode, uid, sha or None)
+    linked = saved = 0
+
+    def sha(path):
+        h = hashlib.sha256()
+        with open(path, "rb") as f:
+            for blk in iter(lambda: f.read(1 << 20), b""):
+                h.update(blk)
+        return h.hexdigest()
+
+    for d in snaps:
+        for dp, dns, fns in os.walk(d):
+            dns[:] = [x for x in dns if x != "__pycache__"]
+            for fn in fns:
+                path = os.path.join(dp, fn)
+                try:
+                    st = os.lstat(path)
+                except OSError:
+                    continue
+                if not _st.S_ISREG(st.st_mode):
+                    continue
+                rel = os.path.relpath(path, d)
+                c = canon.get(rel)
+                if c is None:
+                    canon[rel] = [path, st.st_ino, st.st_size, st.st_mode, st.st_uid, None]
+                    continue
+                if c[1] == st.st_ino:
+                    continue
+                if (c[2], c[3], c[4]) != (st.st_size, st.st_mode, st.st_uid) or st.st_size == 0:
+                    continue
+                try:
+                    if c[5] is None:
+                        c[5] = sha(c[0])
+                    if sha(path) != c[5]:
+                        continue
+                except OSError:
+                    continue
+                if apply:
+                    par = os.path.dirname(path)
+                    pst = os.lstat(par)
+                    tmp = os.path.join(par, f".dedupe-{os.getpid()}")
+                    try:
+                        os.chmod(par, pst.st_mode | _st.S_IWUSR)
+                        os.link(c[0], tmp)
+                        os.replace(tmp, path)
+                    except OSError as e:
+                        log(f"dedupe {path}: {e}")
+                        try:
+                            os.unlink(tmp)
+                        except OSError:
+                            pass
+                        continue
+                    finally:
+                        try:
+                            os.chmod(par, pst.st_mode)
+                        except OSError:
+                            pass
+                linked += 1
+                saved += st.st_size
+    return linked, saved
+
+
 def _data_target(d):
     """RT-HOST-DATA-1124: the data dir of a symlinked version RT/<sha12> -> <data>/<sha12> (same name, a real dir), else None"""
     try:
@@ -765,6 +838,17 @@ def prune_build_hosts(pins, hosts=None):
         list(pool.map(one, hs))
 
 
+def dedupe_build_hosts(hosts=None):
+    """P-RT-COPIES: start `ot-tools-sync dedupe --post` detached on every build host (flock: one at a time), so the sync never waits for it"""
+    for host in dict.fromkeys(HOSTS if hosts is None else hosts):
+        try:
+            r = run(SSH + [host, f"mkdir -p ~/.local/state && (flock -n ~/.local/state/rt-dedupe.lock nohup python3 -I {RT}/current/tools/fleet/ot-tools-sync dedupe --post "
+                                 f">> ~/.local/state/rt-dedupe.log 2>&1 < /dev/null &)"], input="", timeout=60)
+            log(f"{host} dedupe started in the background (rc {r.returncode}; ~/.local/state/rt-dedupe.log)")
+        except Exception as exc:
+            log(f"{host} dedupe skipped: {type(exc).__name__}: {exc}")
+
+
 def sync(sha, hosts=True, tests=True):
     if not sha:
         git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
@@ -830,11 +914,17 @@ def sync(sha, hosts=True, tests=True):
         notes.append("ALERT installed != rt")
     if all(":ok" in n for n in notes) and KEEP > 0:
         prune_build_hosts(names_in_use_text())
+        dedupe_build_hosts()
     if all(":ok" in n for n in notes):
         try:
             prune_snapshots(RT, protect=(prev or "", name))
         except Exception as e:
             log(f"prune skipped: {type(e).__name__}: {e}")
+        try:                                                        # P-RT-COPIES: share inodes between the kept snapshots (detached, never delays or fails the sync)
+            S.Popen([sys.executable, "-I", os.path.realpath(__file__), "dedupe", "--post"], stdin=S.DEVNULL, stdout=open(os.path.expanduser("~/.local/state/rt-dedupe.log"), "a"),
+                    stderr=S.STDOUT, start_new_session=True)
+        except Exception as e:
+            log(f"dedupe skipped: {type(e).__name__}: {e}")
     log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     # FLOW-0800 (COORD 11-18): a host skipped for low disk is a WARNING (the follower retries it on the next change), not exit 4 for the whole sync
@@ -1228,7 +1318,7 @@ def auto_revert(cur_full, full, hosts=True):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow", "catchup"])
+    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow", "catchup", "dedupe"])
     ap.add_argument("--sha", default="")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
@@ -1245,6 +1335,10 @@ def main():
     if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
         gone = prune_snapshots(RT, protect=(current() or "",), text=sys.stdin.read())
         print(f"pruned {len(gone)}")
+        return 0
+    if a.cmd == "dedupe":                      # run ON a host (hub or build host): hard-link identical files across its rt/ snapshots; --post = apply
+        n, b = dedupe_snapshots(RT, apply=a.post)
+        print(f"dedupe {'APPLIED' if a.post else 'DRY'}: {n} files, {b / 2**30:.1f} GB {'freed' if a.post else 'would be freed'}")
         return 0
     if a.cmd == "status":
         return status()

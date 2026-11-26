@@ -127,6 +127,28 @@ class Guard(unittest.TestCase):
         os.symlink(names[-1], d / "current")
         return d
 
+    def test_dedupe_links_identical_files_across_snapshots_and_keeps_differing_ones(self):
+        """P-RT-COPIES: identical files of older snapshots become one inode; a changed file, a different mode and a read-only dir are respected"""
+        m = self.load(); names = ["%012x" % i for i in range(1, 4)]
+        d = self.mk(names)
+        for i, n in enumerate(names):
+            (d / n / "tools").mkdir(); (d / n / "tools/same.py").write_text("print(1)\n" * 50)
+            (d / n / "tools/chg.py").write_text("v%d\n" % i)
+            os.chmod(d / n / "tools", 0o555)             # snapshots are read-only dirs
+        dry = m.dedupe_snapshots(d, apply=False)
+        self.assertEqual(dry[0], 2)                      # same.py x2 (older two); chg.py differs
+        self.assertNotEqual(os.stat(d / names[0] / "tools/same.py").st_ino, os.stat(d / names[2] / "tools/same.py").st_ino)
+        n, b = m.dedupe_snapshots(d, apply=True)
+        self.assertEqual(n, 2)
+        inos = {os.stat(d / x / "tools/same.py").st_ino for x in names}
+        self.assertEqual(len(inos), 1)
+        self.assertEqual(len({os.stat(d / x / "tools/chg.py").st_ino for x in names}), 3)
+        self.assertEqual((d / names[0] / "tools/same.py").read_text(), "print(1)\n" * 50)
+        self.assertEqual(oct(os.stat(d / names[0] / "tools").st_mode & 0o777), "0o555")   # dir mode restored
+        self.assertEqual(m.dedupe_snapshots(d, apply=True)[0], 0)                          # idempotent
+        for x in names:
+            os.chmod(d / x / "tools", 0o755)
+
     def test_prune_keeps_newest_current_protected_and_named(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 9)]
         m.live_reference_text = lambda *a, **k: ""      # RT-HOST-DATA-1124: isolate from the test host's live refs (6.800000000000001 in a job json names "%012x" % 1)
