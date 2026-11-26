@@ -1062,3 +1062,7 @@
   - DECISION: the R7 event name is KV-A5t9-r7-p2-publish-1125, so review_before_route and the hub reviews move to it (hub types are byte-identical). Recommend keeping it.
   - PVPADS: rerun landed (v 24a9ed32 2114/2114, col 7b042ee0, take-back diff 0); L729 released (3c543f6c). The rebuild script needs rev3 without the overlay refusal, per L751.
   - No superseded-plan job is live.
+- 2026-11-25 18:30 PST KV-ALLFIX 11-25 18:30 PST R6 clean set (rows 63fb6bdf, renders epyc12 kv-allfix/r6_renders/png_1cca7346):
+  - ROUTE launched after render (e042f69) and review PASS: kv3_phy, phy_v1 and sys_SD_v1 on intel1; sys_SD on epyc8. Only intel1 and epyc8 carry the R6 mirror.
+  - pc cl254f x2 and cl5a95 x2 are NOT routed. Their renders look clean (8 cores, 180 um channel), but the VIS-COVERAGE family rows are FAIL, run-item refuses route, and R6 PRE has 68 legs below -400 ps (worst o_slg_Q_N_af to kvpc0 at 1663 um, -1292 ps). They are going out as place probes now. Route needs the VIS-KV family re-review to reach PROBE-PASS plus leg staging.
+  - Renderer marks heat NOT MODELLED for pc and sys_SD (no station legs).
