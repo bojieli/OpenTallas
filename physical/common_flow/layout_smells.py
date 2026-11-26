@@ -22,6 +22,7 @@ import math
 import os
 import re
 import sys
+from bisect import bisect_left, bisect_right
 from collections import defaultdict
 
 SCHEMA = "opentallas.layout_smells.v1"
@@ -31,7 +32,6 @@ TH = {"opposite_face_ratio": 0.6, "pin_track_use": 0.5, "pin_window_um": 20.0, "
       "lump_density": 0.3, "lump_min_um2": 10000.0}
 TOP = 20
 MAX_CHANNELS = 200
-MAX_FLIGHT_CHANNELS = 40       # place stage: no guides, nets x channels in pure Python
 RELATED_FANIN_CAP = 32         # cells walked per launch flop when looking for related capture flops
 REPEATER_RE = re.compile(r"^(BUF|INV|HB\d|CKINV)", re.I)
 SEQ_RE = re.compile(r"^(DFF|DHL|DLL|SDF|ASYNC_DFF|ICG)", re.I)
@@ -349,7 +349,7 @@ def check_pin_tracks(d):
                   **({"unknown_layers": sorted(unknown)} if unknown else {}))
 
 
-def find_channels(d):
+def find_channels(d, limit=MAX_CHANNELS):
     """gaps between facing macros, and between a macro and the die edge, with no other macro in between.
     One channel = rectangle (x0,y0,x1,y1), 'along' = 'V' when wires run vertically through it (gap measured in x)."""
     if not d.macros:
@@ -409,7 +409,7 @@ def find_channels(d):
             if 0 < g <= mg:
                 add(a, None, ax0, d.die[1], ax1, ay0, "H")
     out.sort(key=lambda c: (c["x1"] - c["x0"]) if c["along"] == "V" else (c["y1"] - c["y0"]))
-    return out[:MAX_CHANNELS]
+    return out if limit is None else out[:limit]
 
 
 def channel_capacity(d, c):
@@ -440,18 +440,40 @@ def net_bboxes(d, skip):
     return out
 
 
+def flight_channel_demands(bbs, chans):
+    """Apply the bbox estimate only to intersected mid-lines, in original net order."""
+    demand = [0.0] * len(chans)
+    for along, mid_axis, cross_axis in (("V", 1, 0), ("H", 0, 1)):
+        m0, m1 = ("y0", "y1") if mid_axis == 1 else ("x0", "x1")
+        c0, c1 = ("x0", "x1") if cross_axis == 0 else ("y0", "y1")
+        channels = sorted(((c[m0] + c[m1]) / 2, i, c[c0], c[c1], c[c1] - c[c0])
+                          for i, c in enumerate(chans) if c["along"] == along)
+        if not channels:
+            continue
+        mids = [r[0] for r in channels]
+        for b in bbs:
+            start = bisect_right(mids, b[mid_axis])
+            stop = bisect_left(mids, b[mid_axis + 2], start)
+            lo, hi = b[cross_axis], b[cross_axis + 2]
+            for j in range(start, stop):
+                _, i, c_lo, c_hi, gap = channels[j]
+                if hi > c_lo and lo < c_hi:
+                    demand[i] += (min(hi, c_hi) - max(lo, c_lo)) / max(hi - lo, gap)
+    return demand
+
+
 def check_channels(d, clk_nets):
     th = TH["channel_use"]
     if not d.macros:
         return result(None, th, False, "no macros, no channels", unit="nets per track")
     if not d.has_conn:
         return not_computable("no connectivity in the dump (big DB)", th)
-    chans = find_channels(d)
+    use_guides = any(d.guides.values())
+    chans = find_channels(d, limit=MAX_CHANNELS if use_guides else None)
     if not chans:
         return result(None, th, False, "no macro gap of 0 < gap <= %g um" % TH["channel_max_gap_um"], unit="nets per track")
     if max(c["top"] for c in chans) < 2:
         return not_computable("macro LEF has no routing-layer obstructions: wires may pass over it, channel capacity undefined", th)
-    use_guides = any(d.guides.values())
     rows = []
     if use_guides:
         method = "GRT guides crossing the channel mid-line, distinct nets on the blocked layers running along the channel"
@@ -484,21 +506,9 @@ def check_channels(d, clk_nets):
             rows.append((c, cap, gap, float(len(nets))))
     else:
         method = ("no guides at this stage: ESTIMATE, each net's pin bounding box crossing the channel mid-line counts by the share of "
-                  "its box the channel covers; the %d narrowest channels only" % MAX_FLIGHT_CHANNELS)
-        bbs = net_bboxes(d, clk_nets)
-        for c in chans[:MAX_FLIGHT_CHANNELS]:
-            cap, lv, gap = channel_capacity(d, c)
-            dem = 0.0
-            if c["along"] == "V":
-                ym = (c["y0"] + c["y1"]) / 2
-                for b in bbs:
-                    if b[1] < ym < b[3] and b[2] > c["x0"] and b[0] < c["x1"]:
-                        dem += (min(b[2], c["x1"]) - max(b[0], c["x0"])) / max(b[2] - b[0], gap)
-            else:
-                xm = (c["x0"] + c["x1"]) / 2
-                for b in bbs:
-                    if b[0] < xm < b[2] and b[3] > c["y0"] and b[1] < c["y1"]:
-                        dem += (min(b[3], c["y1"]) - max(b[1], c["y0"])) / max(b[3] - b[1], gap)
+                  "its box the channel covers; scored all %d eligible channels" % len(chans))
+        for c, dem in zip(chans, flight_channel_demands(net_bboxes(d, clk_nets), chans)):
+            cap, _, gap = channel_capacity(d, c)
             rows.append((c, cap, gap, dem))
     off = []
     for c, cap, gap, dem in rows:
