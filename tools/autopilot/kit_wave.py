@@ -11226,6 +11226,14 @@ def _run_item(spec_path, resume_reviewed=False):
     def request_private_view(kh, K, odb):
         if not PPV.applies(sp):
             return
+        if not PPV.sha256((res.get("stage_fp") or {}).get("place")):
+            # A recovered async controller can reach the existing 3_place without running resume_prepare.
+            runner = str(Path(K).parent / "run_kit.sh")
+            identity = kr_cmd(f"manifest {shlex.quote(K)} --runner {shlex.quote(runner)} --no-checkpoint")
+            _, text = run("visual_fingerprint", remote_argv(kh, hub, identity), idempotent=True)
+            manifest = _kr_json(text, "KW_RESUME_MANIFEST") or {}
+            if manifest.get("fingerprints"):
+                res["stage_fp"] = manifest["fingerprints"]
         cmd = " ".join(shlex.quote(a) for a in ["python3", "-I", "-c", PPV.CHECKPOINT, K, odb])
         _, receipt = run("visual_checkpoint", remote_argv(kh, hub, cmd), idempotent=True)
         doc = next((ln.split(" ", 1)[1] for ln in receipt.splitlines() if ln.startswith("KW_VISUAL_CHECKPOINT ")), None)
