@@ -341,8 +341,8 @@ def r8_tables(tree, asbuilt):
     return rel(ab["land_r8"]), [rel(x) for x in ab.get("land_r8_extra") or []]
 
 
-def normalize_tables(plan, tree, asbuilt, bus_groups):
-    """r8_refresh of the land_r8 table + extras from this plan's elab -> report (R8 drift fixed: tables whose bytes moved)"""
+def normalize_tables(plan, tree, asbuilt, bus_groups, *, pin_pre=None, pin_extra=0):
+    """Refresh the as-built R8 tables, preserving an explicitly supplied pin policy."""
     import r8_refresh as RR
     table, extras = r8_tables(tree, asbuilt)
     if table is None:
@@ -350,8 +350,11 @@ def normalize_tables(plan, tree, asbuilt, bus_groups):
     before = {str(p): _sha(p) for p in [table] + extras}
     abp = Path(asbuilt) if Path(asbuilt).is_absolute() else Path(tree) / asbuilt
     buf = io.StringIO()
+    argv = [str(plan), str(bus_groups), str(table), "--asbuilt", str(abp), "--root", str(tree)]
+    if pin_pre is not None:
+        argv += ["--pin-pre", str(pin_pre), "--pin-extra", str(pin_extra)]
     with contextlib.redirect_stdout(buf):
-        rc = RR.main([str(plan), str(bus_groups), str(table), "--asbuilt", str(abp), "--root", str(tree)])
+        rc = RR.main(argv)
     after = {p: _sha(p) for p in before}
     fixed = {os.path.relpath(p, tree): [before[p], after[p]] for p in before if before[p] != after[p]}
     return dict(rc=rc, fixed=fixed, tables=len(before), log=buf.getvalue()[-1500:],
