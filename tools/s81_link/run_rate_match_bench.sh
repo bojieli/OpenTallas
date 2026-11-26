@@ -19,7 +19,7 @@ PY
 }
 case $mode in
   base) ;;
-  mut_drop)   mut '!(idle && fill_w >= 4'"'"'d6)' '!(fill_w >= 4'"'"'d6)';;
+  mut_drop)   mut '!(idle && hi_r)' '!(hi_r)';;
   mut_noidle) mut "else r_d <= 512'd2;" "else r_d <= r_d;";;
   *) echo "RATE_MATCH_BENCH BAD_MODE $mode"; exit 2;;
 esac

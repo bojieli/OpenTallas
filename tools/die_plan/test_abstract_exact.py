@@ -163,3 +163,22 @@ def test_macro_name_skips_propertydefinitions(tmp_path):
     p = tmp_path / "m.lef"
     p.write_text("VERSION 5.8 ;\nPROPERTYDEFINITIONS\n  MACRO width INTEGER ;\nEND PROPERTYDEFINITIONS\nMACRO real_core\n  CLASS BLOCK ;\nEND real_core\n")
     assert MG.macro_name(p) == "real_core"
+
+
+def test_stale_non_blanket_layer_is_replaced(tmp_path):
+    """STALE-OBS 11-25 (hd_host_e): a non-blanket M6 OBS from another build that misses real metal of the signed DB is
+    replaced by the exact one; a non-blanket layer that covers all real metal is left alone"""
+    b, d, o, r = tmp_path / "b.lef", tmp_path / "d.lef", tmp_path / "o.lef", tmp_path / "r.json"
+    stale6 = "    LAYER M6 ;\n     RECT  50 40 60 40.032 ;\n    LAYER M7 ;\n     RECT  0 0 100 50 ;\n  END\nEND core\n"
+    b.write_text(blanket().replace("  END\nEND core\n", stale6))
+    real6 = "    LAYER M6 ;\n     RECT  30 2.128 80 2.16 ;\n    LAYER M7 ;\n     RECT  5 5 5.032 20 ;\n  END\nEND core\n"
+    d.write_text(exact().replace("  END\nEND core\n", real6))
+    assert AE.stale_layers(b, d) == {"M6": dict(uncovered=1, metal_rects=1, uncovered_pct=100.0,
+                                                example_nm=[30000, 2128, 80000, 2160])}
+    assert AE.form(b, d, o, r) == 0
+    rec = json.loads(r.read_text())
+    assert rec["layers"] == ["M4", "M5", "M6"] and rec["schema"].endswith("v4")
+    m6 = _obs(o)["M6"]
+    assert AE.uncovered(m6, [(30000, 2128, 80000, 2160)]) == []          # the real wire is OBS now
+    assert not AE.uncovered([(50000, 40000, 60000, 40032)], m6) == []    # the stale rect is gone
+    assert _obs(o)["M7"] == [(0, 0, 100000, 50000)]                      # M7 covered all real metal: untouched

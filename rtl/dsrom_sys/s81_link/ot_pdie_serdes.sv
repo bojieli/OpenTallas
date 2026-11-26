@@ -196,10 +196,21 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0, parameter integer RPC = 
     wire [3:0] wp_to_read = wp_g;
 `endif
     always @(posedge rclk or negedge rrn_c) if (!rrn_c) begin wp_g1 <= 0; wp_g2 <= 0; end else begin wp_g1 <= wp_to_read; wp_g2 <= wp_g1; end
-    wire [3:0] fill_w = wp - g2b(rp_g2);
+    // S81-SERDES-RSTCOHORT 11-25 (serdes__t4 CTS setup -210: rp_g2 -> g2b -> wp-rp -> push -> 4096 mem enables, 1000 ps): full / hi are
+    // REGISTERED one cycle ahead from the values the next cycle will see (wp or wp+1, rp_g2_next = rp_g1), so push is an AND of flops
+    // and the register values equal the old combinational fill_w == 8 / >= 6 every cycle (no behaviour or latency change).
+    wire [3:0] fill_n0 = wp - g2b(rp_g1);
+    wire [3:0] fill_n1 = wp + 4'd1 - g2b(rp_g1);
+    reg  full_r, hi_r;
     wire idle = w_d[1] && !w_d[0];
-    wire full = fill_w == 4'd8;
-    wire push = w_v && !full && !(idle && fill_w >= 4'd6);
+    wire full = full_r;
+    wire push = w_v && !full && !(idle && hi_r);
+    always @(posedge wclk or negedge wrst_n)
+        if (!wrst_n) begin full_r <= 1'b0; hi_r <= 1'b0; end
+        else begin
+            full_r <= push ? (fill_n1 == 4'd8)  : (fill_n0 == 4'd8);
+            hi_r   <= push ? (fill_n1 >= 4'd6)  : (fill_n0 >= 4'd6);
+        end
     reg flt;
 `ifdef OT_S81_RM_STAGED
 `ifdef OT_S81_RM_LOCAL4
