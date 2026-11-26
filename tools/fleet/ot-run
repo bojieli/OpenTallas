@@ -4176,19 +4176,29 @@ def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None)
             if fits is not True:                 # unknown is not room: another host, or the next re-place
                 del ok[h]
                 noroom.append(why)
-    dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
-    if not dst or queue:
-        return None, ("no spill host has room: " + "; ".join(noroom)[:300]) if noroom and not ok else "no spill host admits it now", False
-    if refs:                     # STAGE-REFS-1124: never run a staged job against a tree that is missing or empty on the spill host
+    ok = drop_low_disk(ok, die, disk + size_gb)
+    ref_failures = []
+    while ok:
+        dst, queue = choose(ok, mem, threads, die)
+        if not dst or queue:
+            break
+        if not refs:
+            return (dst, sorted(roots), size_gb), "", False
+        # Check in admission order so an ineligible host cannot hide a ready peer.
         try:
             there = ref_state(dst, sorted(refs))
         except Exception as e:
-            return None, f"cannot check the paths outside --stage on {dst}: {str(e)[:80]}", False
-        lack = [p for p, n in sorted(refs.items()) if there.get(p, -1) < 0 or (n > 0 and there.get(p) == 0)]
-        if lack:
+            ref_failures.append(f"cannot check the paths outside --stage on {dst}: {str(e)[:80]}")
+        else:
+            lack = [p for p, n in sorted(refs.items()) if there.get(p, -1) < 0 or (n > 0 and there.get(p) == 0)]
+            if not lack:
+                return (dst, sorted(roots), size_gb), "", False
             log_signal(f"ot-run STAGE-REFS refused spill {src} -> {dst}: lacks {', '.join(lack[:3])[:200]}")
-            return None, f"{dst} lacks {len(lack)} path(s) the staged job names outside --stage ({', '.join(lack[:2])[:160]})", False
-    return (dst, sorted(roots), size_gb), "", False
+            ref_failures.append(f"{dst} lacks {len(lack)} path(s) the staged job names outside --stage ({', '.join(lack[:2])[:160]})")
+        del ok[dst]
+    if ref_failures:
+        return None, "; ".join(ref_failures)[:400], False
+    return None, ("no spill host has room: " + "; ".join(noroom)[:300]) if noroom and not ok else "no spill host admits it now", False
 
 
 SPILL_PENDING = os.path.expanduser("~/.local/state/ot-run/spill_pending")
