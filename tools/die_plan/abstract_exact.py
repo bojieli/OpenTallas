@@ -282,6 +282,7 @@ def form(base, detail, out, receipt=None, layers="auto"):
     if layers == "auto":
         bl = blanket_layers(base, detail)
         st = stale_layers(base, detail)
+        st.update({L: dict(pin_eol=v) for L, v in pin_eol_findings(base).items() if L not in st})   # PIN-EOL in the bound view
         sel = [L for L in STALE_LAYERS if L in bl or L in st]
     else:
         bl = {}
