@@ -1206,3 +1206,4 @@
 - 2026-11-25 21:32 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1886354-1795670335 on tolerant-swine: rc=0 after 789 s, ended 21:32:00, log /home/ubuntu/tmp/kvallfix/r8_g3_ship/intel1.log, cmd: --mem 12 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t9/r8_g3_ship_1125 -- bash -c 
   set -euo pipefail
   if [ 
+- 2026-11-25 21:34 PST DIED [KV-ALLFIX] ot-run oth-ubuntu-2089295-1795669688 on open-snipe: rc=1 after 1580 s, ended 05:34:23, log /srv/opentallas-scratch2/claude/kv-allfix/phy_station/phy_v1_fclk_gate.otrun.log, cmd: --hosts epyc12 --die --mem 72 --threads 8 --dir /srv/opentallas-scratch2/claude/kv-allfix/phy_station -- python3 -I /srv/opentallas-scratch2 | class=DESIGN-FAIL cause=no cause line
