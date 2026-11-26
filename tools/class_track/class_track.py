@@ -39,6 +39,8 @@ PRE_ONLY = {
 }
 TREND_COLS = ["cut_local", "die", "class_id", "count", "basis", "source", "prev_count", "prev_basis", "move"]
 EXACT = "exact"
+OWNER_OVERRIDE = {}  # (die, class) -> owner named by a carry row (lane-measured rows may name the right owner)
+LANE_SHA = re.compile(r"\b[0-9a-f]{7,64}\b")
 
 
 def _line_type(line, tag):
@@ -102,6 +104,8 @@ def measure(pre_dir, carry_rows, plans):
             res[(die, "C-RST-RELAY-REACH")] = (len(fails), EXACT, f"derived_drop RSTREACH FAIL types on live plan {sha} ({len(warns)} advisory WARN types)")
     for r in carry_rows:
         res[(r["die"], r["class_id"])] = (int(r["count"]), r["basis"], r["source"])
+        if r.get("owner"):
+            OWNER_OVERRIDE[(r["die"], r["class_id"])] = r["owner"]
     return res
 
 
@@ -221,9 +225,18 @@ def update_classes(path, rows, label, meta=None):
         k = (r["die"], r["class_id"])
         note = f"{label} CLASS-TRACK {r['source']}: {r['count']} (last {r['prev_count'] if r['prev_count'] != '' else 'none'}, {r['move']})"
         if k in idx:
-            idx[k]["cut_local"] = label
-            idx[k]["mapped_count"] = str(r["count"])
-            idx[k]["owner_measurement"] = note
+            old = idx[k].get("owner_measurement", "")
+            lane_sha = bool(LANE_SHA.search(old)) and "CLASS-TRACK" not in old
+            carry_sha = bool(LANE_SHA.search(r["source"])) and "CLASS-TRACK" not in r["source"]
+            # COORD 11-26 09:22: a lane-measured count with an evidence sha wins over the cut tool's own count: a row whose
+            # owner_measurement carries a sha (and is not a CLASS-TRACK note) keeps its count and text unless this cut brings its own lane sha.
+            if carry_sha:
+                idx[k]["cut_local"], idx[k]["mapped_count"] = label, str(r["count"])
+                idx[k]["owner_measurement"] = r["source"]
+            elif not lane_sha:
+                idx[k]["cut_local"], idx[k]["mapped_count"], idx[k]["owner_measurement"] = label, str(r["count"]), note
+            if (k) in OWNER_OVERRIDE:
+                idx[k]["owner"] = OWNER_OVERRIDE[k]
         else:
             m = (meta or {}).get(r["class_id"], {})
             idx[k] = {"class_id": r["class_id"], "die": r["die"], "kind": m.get("kind") or ("DESIGN" if r["class_id"].startswith("C-") else "PROCESS"),
