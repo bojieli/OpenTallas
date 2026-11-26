@@ -37,6 +37,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
+sys.path.insert(0, str(HERE))
+import per_bit_reach  # noqa: E402
 SCHEMA = "opentallas.routed_reach.v1"
 REACH_UM = 405.0
 EPS = 1e-6
@@ -271,6 +273,12 @@ def type_hops(t, ceiling="M7", root=None):
         if "from_um" not in e or "to_um" not in e:
             continue
         pts = [tuple(e["from_um"])] + [tuple(r) for r in e.get("regs_um", [])] + [tuple(e["to_um"])]
+        buses = {b.get("name"): b for b in t.get("buses") or []}
+        pbh = per_bit_reach.per_bit_hops(e, buses.get(str(e.get("conn", ""))[4:]), W, H)
+        if pbh:   # kit per_bit chain (HEAD-INT-R2): sites follow the pin -> leaf_um L, not regs_um
+            for i, m in enumerate(pbh):
+                rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[0]), b=list(pts[-1]), man=round(m, 3), routed=round(m, 3), bits=e.get("bits")))
+            continue
         for i, m, L in hops(pts, boxes, (W, H)):
             rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[i]), b=list(pts[i + 1]), man=round(m, 3),
                              routed=round(L, 3) if L != float("inf") else -1.0, bits=e.get("bits")))
