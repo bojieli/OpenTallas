@@ -1185,8 +1185,106 @@ proc ot_gpl_guarded {args} {
  set ::env(GPL_TIMING_DRIVEN) 0
  return [uplevel 1 [list ::ot_gpl_native {*}$plain]]
 }
+# FIRM-RESIZE-1126 (HEAD-INT-R2, C-FIRM-RESIZE-OVERLAP): timing-driven GPL / repair_design resize a FIRM std cell IN PLACE (the origin stays,
+# the cell grows to the right) and DPL cannot move a FIRM cell, so every grown cell that reaches a neighbour FIRM / LOCKED / FIXED cell is
+# released to PLACED by the DPL scan and legalised away from its seat (HEAD hd_lep0N fed00: 9 FIRM cland cells released, max displacement
+# 93.3 um: 5 lepk_i0 writer-guard u_wen flops DFFHQNx1 -> x2 abutting each other and 4 coll_i3 dch[4] u_dsel flops abutting u_io station flops).
+# The placement-time reserve (landing_placement.tcl cland_family_w, OT_CLAND_FIT_RESERVE) only covers the cells that hook seats.  This is the
+# class-wide form, judged at the global_placement call after every seat hook: a FIRM std cell is AT RISK when its widest drive variant (same name
+# stem / suffix / height, the cland_family_w rule) reaches the left edge of the next FIRM / LOCKED / FIXED / COVER std cell of its row.
+# Always: report line OT_FIRM_RESIZE_RISK.  Opt-in OT_FIRM_RESIZE_FREEZE=1: every at-risk cell gets dont_touch (the resizer keeps its master, the
+# seat stays put; the cell is also left alone by repair_design).  Unset / 0 = report only.
+proc ot_firm_resize_risk {} {
+ set blk [ord::get_db_block]
+ set famw [dict create]
+ set rows [dict create]
+ foreach i [$blk getInsts] {
+  if {[$i getPlacementStatus] ni {FIRM LOCKED FIXED COVER}} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} continue
+  set b [$i getBBox]
+  dict lappend rows [$b yMin] [list [$b xMin] [$b xMax] $i]
+ }
+ set nf 0; set risk {}
+ dict for {y l} $rows {
+  set l [lsort -integer -index 0 $l]
+  set n [llength $l]
+  for {set k 0} {$k < $n} {incr k} {
+   lassign [lindex $l $k] x0 x1 i
+   if {[$i getPlacementStatus] ne "FIRM"} continue
+   incr nf
+   if {$k == $n-1} continue
+   set m [$i getMaster]; set nm [$m getName]
+   if {![dict exists $famw $nm]} {
+    set fw [$m getWidth]
+    if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} $nm -> pre suf]} {
+     foreach lib [[ord::get_db] getLibs] {
+      foreach mm [$lib getMasters] {
+       if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} [$mm getName] -> p2 s2] && $p2 eq $pre && $s2 eq $suf
+           && [$mm getHeight] == [$m getHeight] && [$mm getWidth] > $fw} { set fw [$mm getWidth] }
+      }
+     }
+    }
+    dict set famw $nm $fw
+   }
+   set reach [expr {$x0 + [dict get $famw $nm]}]
+   set nx0 [lindex [lindex $l [expr {$k+1}]] 0]
+   if {$reach > $nx0 && $x1 <= $nx0} { lappend risk $i }
+  }
+ }
+ return [list $nf $risk]
+}
+proc ot_firm_resize_guard {} {
+ if {[info exists ::env(OT_FIRM_RESIZE_RISK)] && $::env(OT_FIRM_RESIZE_RISK) eq "0"} return
+ lassign [ot_firm_resize_risk] nf risk
+ set frz [expr {[info exists ::env(OT_FIRM_RESIZE_FREEZE)] && $::env(OT_FIRM_RESIZE_FREEZE) eq "1"}]
+ puts [format "OT_FIRM_RESIZE_RISK firm_std_cells=%d at_risk=%d freeze=%d" $nf [llength $risk] $frz]
+ set shown 0
+ foreach i $risk {
+  if {$shown < 40} { puts "OT_FIRM_RESIZE_RISK_CELL [$i getName] [[$i getMaster] getName]"; incr shown }
+  if {$frz} { $i setDoNotTouch 1 }
+ }
+ if {$frz && [llength $risk]} { puts "OT_FIRM_RESIZE_FREEZE dont_touch on [llength $risk] FIRM cells whose widest drive variant reaches a fixed / FIRM neighbour" }
+}
+# GPL-GROWTH-1126 (HEAD-INT-R2, C-GPL-TD-INFLATION): report line after every guarded global_placement call: std-cell count and area before ->
+# after.  The timing-driven passes run repair_design inside the call, so this is the post-repair_design growth: HEAD hd_lep0N fed00 +56,515
+# buffers (+25.5 % area, HPWL 1.30e7 -> 1.90e7), S81 lepw_mus_C +151,289 (+71 %).  Report only by default; opt-in OT_GPL_GROWTH_MAX=F (a
+# fraction of the cell count, e.g. 0.30) turns it into an error after the call (the kit stops before 3_4 / DPL spend time on it).
+proc ot_gpl_census {} {
+ set n 0; set a 0.0
+ foreach i [[ord::get_db_block] getInsts] {
+  set m [$i getMaster]
+  if {[$m isBlock]} continue
+  incr n; set a [expr {$a+double([$m getWidth])*[$m getHeight]}]
+ }
+ return [list $n $a]
+}
+proc ot_gpl_reported {args} {
+ lassign [ot_gpl_census] n0 a0
+ if {[catch {ot_firm_resize_guard} fr_err]} {
+  if {[info exists ::env(OT_FIRM_RESIZE_FREEZE)] && $::env(OT_FIRM_RESIZE_FREEZE) eq "1"} { error $fr_err }
+  puts "OT_FIRM_RESIZE_RISK ERROR (report skipped): $fr_err"
+ }
+ set rc [catch {uplevel 1 [list ::ot_gpl_guarded {*}$args]} res opts]
+ if {$rc} { return -options $opts $res }
+ lassign [ot_gpl_census] n1 a1
+ set u 1.0; catch {set u [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]}
+ set gn [expr {$n0 > 0 ? double($n1-$n0)/$n0 : 0.0}]
+ set ga [expr {$a0 > 0 ? double($a1-$a0)/$a0 : 0.0}]
+ set lim "none"
+ if {[info exists ::env(OT_GPL_GROWTH_MAX)] && $::env(OT_GPL_GROWTH_MAX) ne ""} {
+  set lim $::env(OT_GPL_GROWTH_MAX)
+  if {![string is double -strict $lim] || $lim <= 0} { error "OT_GPL_GROWTH_MAX must be a number > 0 (fraction of the cell count), got '$lim'" }
+ }
+ puts [format "OT_GPL_GROWTH cells %d -> %d (%+.1f %%) std_cell_area %.1f -> %.1f um2 (%+.1f %%) limit %s" $n0 $n1 [expr {100.0*$gn}] \
+   [expr {$a0/($u*$u)}] [expr {$a1/($u*$u)}] [expr {100.0*$ga}] $lim]
+ if {$lim ne "none" && $gn > $lim} {
+  error [format "OT_GPL_GROWTH FAIL: global_placement grew the std-cell count by %.1f %% (%d -> %d), limit %.1f %% (OT_GPL_GROWTH_MAX)" [expr {100.0*$gn}] $n0 $n1 [expr {100.0*$lim}]]
+ }
+ return $res
+}
 if {[info commands ::ot_gpl_native] eq "" && [info commands ::global_placement] ne ""} {
  rename ::global_placement ::ot_gpl_native
- interp alias {} ::global_placement {} ::ot_gpl_guarded
+ interp alias {} ::global_placement {} ::ot_gpl_reported
 }
 # OT_GPL_GUARD end

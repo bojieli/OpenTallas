@@ -179,6 +179,12 @@ dict for {cg_y cg_l} $cg_rows {
 }
 dict for {cg_n cg_c} $cg_bad { $cg_c setPlacementStatus PLACED }
 puts "OT_CLAND released [dict size $cg_bad] FIRM cland cells grown into an occupied site (in-place resize) for DPL"
+# HEAD-INT-R2 11-26 (C-FIRM-RESIZE-OVERLAP, opt-in OT_FIRM_RELEASE_FAIL=1): "FIRM released = 0" as a stage error, before DPL moves any seat.
+# The names go to the log first (HEAD fed00: 9 released, max DPL displacement 93.3 um).
+if {[dict size $cg_bad]} { dict for {cg_n cg_c} $cg_bad { puts "OT_CLAND_RELEASED_CELL $cg_n [[$cg_c getMaster] getName]" } }
+if {[dict size $cg_bad] && [info exists ::env(OT_FIRM_RELEASE_FAIL)] && $::env(OT_FIRM_RELEASE_FAIL) eq "1"} {
+ error "OT_CLAND FIRM released = [dict size $cg_bad] cland cells (OT_FIRM_RELEASE_FAIL=1 requires 0): resized FIRM seats overlap a fixed / FIRM neighbour"
+}
 dict for {cg_n cg_c} $cg_ft { $cg_c setPlacementStatus PLACED }
 if {[dict size $cg_ft]} { puts "OT_FT_KEEP_FIRM released [dict size $cg_ft] keep_firm ft station cells placed on an occupied site (tap / edge cell) for DPL" }
 """
@@ -8261,6 +8267,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
            *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
+           # HEAD-INT-R2 11-26 (C-GPL-TD-INFLATION, opt-in gen env OT_LOGIC_CLUSTER_POST_GPL=1): logic_cluster regions are created after
+           # global_placement (logic_cluster.py), so the timing-driven trigger reads the top-level overflow, not the mean over the tiny regions.
+           *(["export OT_LOGIC_CLUSTER_POST_GPL = 1"] if os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1" and t.get("logic_cluster_rects_um") else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)

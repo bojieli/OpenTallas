@@ -251,7 +251,12 @@ module ot_dp_clk_landing_cas #(
     // WEN-LOCAL-1 (needs WREG, see ot_meso_ring_ca WEN_LOCAL): per-chunk write-enable rotation; 0 added cycles.
     parameter bit WEN_LOCAL = 0,
     // Legacy rising/falling writer with physically local combinational slot decodes.
-    parameter bit WRITE_SELECT_LOCAL = 0
+    parameter bit WRITE_SELECT_LOCAL = 0,
+    // HIFANOUT-1 (HEAD-INT-R2 11-26, C-HIFANOUT-SELECT; needs WRITE_SELECT_LOCAL): one slot decode per WRITE_SELECT_BANK data bits
+    // instead of one per slot, so a decode drives at most WRITE_SELECT_BANK slot flops (hd_lep0N u_cland_unit_i0: tc[1] -> s_d[2][10],
+    // one decode net of 64 sinks, 2132 ps slew).  The enable of each flop is the same function of (start, count), so the ring is
+    // cycle-identical (0 added cycles, 0 added registers; bench rtl/test/meso/write_select_bank).  0 = one decode per slot, names unchanged.
+    parameter int WRITE_SELECT_BANK = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -341,7 +346,7 @@ module ot_dp_clk_landing_cas #(
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .SELLK(SELLK), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE), .WEN_LOCAL(WEN_LOCAL),
-                      .WRITE_SELECT_LOCAL(WRITE_SELECT_LOCAL)) u_ring (
+                      .WRITE_SELECT_LOCAL(WRITE_SELECT_LOCAL), .WRITE_SELECT_BANK(WRITE_SELECT_BANK)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -354,6 +359,8 @@ module ot_dp_clk_landing_cas #(
         if (WEN_LOCAL && !WREG) $fatal(1, "WEN_LOCAL needs WREG");
         if (WRITE_SELECT_LOCAL && (WREG || CONTROL_STATUS_COPY || LITE))
             $fatal(1, "WRITE_SELECT_LOCAL needs a full legacy writer and original status");
+        if (WRITE_SELECT_BANK < 0 || (WRITE_SELECT_BANK > 0 && !WRITE_SELECT_LOCAL))
+            $fatal(1, "WRITE_SELECT_BANK needs WRITE_SELECT_LOCAL and a non-negative width");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
         if (LITE && CONTROL_STATUS_COPY) $fatal(1, "LITE ring has no status flags: CONTROL_STATUS_COPY must be 0");
@@ -422,7 +429,8 @@ module ot_meso_ring_ca #(
     // at-most-one-hot for every state (face_guard _registered_atmost_one); an upset state returns to the start slot and stays
     // until the next START (the WREG ring self-corrects in one edge; both are outside the fault-free academic claim).
     parameter bit WEN_LOCAL = 0,
-    parameter bit WRITE_SELECT_LOCAL = 0
+    parameter bit WRITE_SELECT_LOCAL = 0,
+    parameter int WRITE_SELECT_BANK = 0     // HIFANOUT-1: slot-decode copies per WRITE_SELECT_BANK data bits (see ot_dp_clk_landing_cas)
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -511,7 +519,7 @@ module ot_meso_ring_ca #(
         else begin tc <= tc + 1'b1; if (!CONTROL_STATUS_COPY && !LITE) s_w[tc[AW-1:0]] <= 1'b1; end
 `endif
     end
-    if (WRITE_SELECT_LOCAL) begin : g_local_slot_write
+    if (WRITE_SELECT_LOCAL && (WRITE_SELECT_BANK == 0 || WRITE_SELECT_BANK >= W)) begin : g_local_slot_write
         // The original START and count select the same data and lap on this edge.
         // Keep only the combinational slot decoder as a physical placement unit.
         for (genvar i = 0; i < DEPTH; i++) begin : slot
@@ -521,6 +529,26 @@ module ot_meso_ring_ca #(
             always_ff @(posedge tclk) if (selected) begin
                 s_d[i] <= t_d;
                 s_lap[i] <= tc[AW];
+            end
+        end
+    end else if (WRITE_SELECT_LOCAL) begin : g_bank_slot_write
+        // HIFANOUT-1: the same decode, one copy per WRITE_SELECT_BANK data bits (keep_hierarchy keeps the copies apart); the lap flop
+        // stays with bank 0.  Enables are identical to g_local_slot_write, so no added cycle or register.
+        for (genvar i = 0; i < DEPTH; i++) begin : slot
+            for (genvar b = 0; b < (W + WRITE_SELECT_BANK - 1) / WRITE_SELECT_BANK; b++) begin : bank
+                localparam int LO = b * WRITE_SELECT_BANK;
+                localparam int HI = (LO + WRITE_SELECT_BANK > W) ? W : LO + WRITE_SELECT_BANK;
+                wire selected;
+`ifdef OT_MESO_CA_MUTANT_WSBANK
+                ot_meso_write_slot_select #(.AW(AW), .SLOT(AW'(i) ^ (b == 1 ? AW'(1) : AW'(0)))) u_enable (   // MUTANT: bank 1 decodes the wrong slot
+`else
+                ot_meso_write_slot_select #(.AW(AW), .SLOT(AW'(i))) u_enable (
+`endif
+                    .start(t_go), .count_slot(tc[AW-1:0]), .selected(selected));
+                always_ff @(posedge tclk) if (selected) begin
+                    s_d[i][HI-1:LO] <= t_d[HI-1:LO];
+                    if (b == 0) s_lap[i] <= tc[AW];
+                end
             end
         end
     end else begin : g_legacy_slot_write

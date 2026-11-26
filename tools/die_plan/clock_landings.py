@@ -2332,6 +2332,9 @@ class Landings:
                 if not isinstance(local_write, bool):
                     self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_local must be a boolean"))
                     continue
+                if band.get("write_select_bank") and not local_write:
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_bank needs write_select_local"))
+                    continue
                 if local_write:
                     ring_width = w + 2 if self.dataflow else w
                     if (not cat.get("straps") or hard is not None or wreg or status_copy
@@ -2341,6 +2344,16 @@ class Landings:
                         continue
                     ring_mod = ring_mod[:-1] + ", .WRITE_SELECT_LOCAL(1))"
                     self.reset_placements[tn][b].update(write_select_local=True, write_select_local_added_cycles=0)
+                    # HIFANOUT-1 (HEAD-INT-R2 11-26, C-HIFANOUT-SELECT): band write_select_bank = N -> one slot decode per N data bits
+                    # (hd_lep0N u_cland_unit_i0: one decode net of 64 sinks, 2132 ps slew).  Same enables, 0 added cycles, 0 added
+                    # registers: LATCHECK sees the ring unchanged (latency / producer / consumer carry no new cycle).
+                    bank = band.get("write_select_bank", 0)
+                    if type(bank) is not int or bank < 0 or (bank and not 4 <= bank <= 32):
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_bank must be 0 or an integer 4..32"))
+                        continue
+                    if bank:
+                        ring_mod = ring_mod[:-1] + f", .WRITE_SELECT_BANK({bank}))"
+                        self.reset_placements[tn][b].update(write_select_bank=bank, write_select_bank_added_cycles=0)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
