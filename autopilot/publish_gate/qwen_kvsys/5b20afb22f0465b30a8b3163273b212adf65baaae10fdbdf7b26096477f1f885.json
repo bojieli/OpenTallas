@@ -1,0 +1,112 @@
+{
+ "advisory": [
+  "dry_gen",
+  "foreign_tree",
+  "pre_g0"
+ ],
+ "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/coord/autopilot/publish_probe_kv_a5t9_r3_1125/work/qwen_kvsys/5b20afb22f04/kv3_hub_Eo",
+   "gen_host": "intel1",
+   "item": "kv3_hub_Eo",
+   "kind": "type",
+   "origin": "/home/ubuntu/coord/autopilot/publish_probe_kv_a5t9_r3_1125/work/qwen_kvsys/5b20afb22f04/kv3_hub_Eo/published_gen_origin.json",
+   "origin_sha256": "84413181ba8085daecfe88a450a878da621bd45abf7d36b0a24bbd9cf3b1ca7f",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "51f8f4ff3b9f94262009a8028c88413c1b8c676e48d18b5e4d7385ff1b047df1",
+   "spec_src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125",
+   "stage": "gen",
+   "verdict": "FAIL",
+   "why": "stage gen: Traceback (most recent call last):\nValueError: pad_ram: unknown keys ['wide_min_d']"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kv_pvfin_views_1119/qkd_pv_fin_s8_pin/signoff.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w259_ns_a43af/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w292_ew_81b3f/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w294_ew_a7ae4/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w300_ew_ba263/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w523_ew_05742/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w549_ew_bf94f/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w129_ew_7738e/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w144_ew_5f45d/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w145_ew_8341d/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w175_ew_50ae4/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w32_ns_58467/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w33_ew_95a44/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w44_ew_aca8a/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w65_ew_43b80/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w83_ew_4b021/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125)",
+    "FOREIGN-TREE kit_rtl.bind_out /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125 is outside the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125"
+   ],
+   "n": 17,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 83
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-k0bfoygy/g0_report.json",
+   "pre_rc": 1,
+   "tail": "PRE: xplicit tap clk_t30 radius=234.315/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nPRE-TIME ADVISORY 97 s (PRE at 635 s)\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/4f9239571308/tools/die_plan",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_hub_banks_1125.json",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125/bind.f",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_bind_1125/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 3010.8,
+ "hosts": [
+  "intel1",
+  "epyc8",
+  "intel2"
+ ],
+ "item": "kv3_hub_Eo",
+ "manifest_hash": "5b20afb22f0465b30a8b3163273b212adf65baaae10fdbdf7b26096477f1f885",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r3_hub_raw_1125.json",
+ "plan_sha256": "a661a611e626808b076cd060a28f621308da909694468139532a5bea3484e4ef",
+ "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t8.json",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 3010.8,
+ "t": 1795648341.3467288,
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125",
+ "verdict": "FAIL"
+}
