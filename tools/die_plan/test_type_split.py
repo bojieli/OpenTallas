@@ -512,6 +512,26 @@ def test_split_inline_memory_and_typed_proof_follow_pieces():
         TS.TypeSplit(_Ev(raw, {**spec, "dead_input_pieces": {}}), "T").split()
 
 
+def test_x_split_preserves_local_place_regions_and_edge_tap_y():
+    original = dict(outline_um=[120.0, 120.0],
+                    place_regions=[dict(name="west", box_um=[4.32, 8.64, 38.88, 34.56]),
+                                   dict(name="east", box_um=[69.12, 43.2, 95.04, 86.4])],
+                    clock=dict(tap_edge_y_um=[8.64, 95.04], tap_landing_seam=True))
+    raw = dict(die=dict(name="fixture", outline_um=[120.0, 120.0], reach_um=405.0),
+               partitions=[dict(name="p", type="T", origin_um=[0.0, 0.0])],
+               partition_types={"T": original}, ports=[], lanes=[])
+    spec = dict(axis="x", cuts_um=[60.48], parts=[{"suffix": ""}, {"suffix": "_e"}])
+    west, east = TS.TypeSplit(_Ev(raw, spec), "T").split()
+    assert west["place_regions"] == [original["place_regions"][0]]
+    assert east["place_regions"] == [dict(name="east", box_um=[8.64, 43.2, 34.56, 86.4])]
+    for part in (west, east):
+        assert part["clock"]["tap_edge_y_um"] == original["clock"]["tap_edge_y_um"]
+        assert part["clock"]["tap_landing_seam"] is True
+    original["place_regions"].append(dict(name="cross", box_um=[50.0, 20.0, 70.0, 30.0]))
+    with pytest.raises(TS.SplitError, match="place region cross"):
+        TS.TypeSplit(_Ev(raw, spec), "T").split()
+
+
 def test_split_census_keeps_generated_instance_indices(tmp_path):
     """PC page-cache leaves keep their full path while finding the owner."""
     raw = {
