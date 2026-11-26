@@ -15863,3 +15863,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   - PRE: only GENDRY kv3_hub_C (no SIGNED mean clock contract on qkd_ahub_tt.lib), which also reproduces on the live tree.
   - phy_v1 place probe PASS, with an independent GOOD.
   - Candidate for the 21:00 cut.
+- 2026-11-26 12:59 PST EVENT-CENSUS [PRECHECK-1119 -> S81-INT-R2; cc COORD, ADOPT-CENSUS-1800] s81 da07bac383: 403 types vs the previous event (0 new), kits prev 0 / new 0; REGRESS 0 types (none). Rows /srv/opentallas-scratch2/claude/precheck-runs/s81_da07bac383_11262046/event_census/EVENT-CENSUS.tsv (previous event 1f8fcdd9c4)
