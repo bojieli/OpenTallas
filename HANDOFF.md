@@ -3980,3 +3980,4 @@ OPS-WRITEUP: 2026-11-25 19:08 PST 19:08 hourly: 605 any / 487 current (+0 / +0 v
 OPS-WRITEUP: 2026-11-25 20:08 PST 20:08 hourly: 605 any / 487 current (+0 / +0 vs 19:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
 
 CODEX: 2026-11-25 20:52 PST takeover on intel2. S81 R11, HEAD W10, QC C1q and KV R8 gate recovery in progress. Existing token, geometry, proof/export and fleet lanes covered.
+OPS-WRITEUP: 2026-11-25 21:09 PST 21:09 hourly: 609 any / 487 current (+4 / +0 vs 20:05). VIS-COVERAGE: 435/470 types with a verdict (93%); PROBE-PASS 2
