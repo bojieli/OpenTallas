@@ -42058,19 +42058,6 @@
     "hd_tile"
    ],
    "only_items_regen": false,
-   "w10_probe_items": [
-    "hd_ctl",
-    "hd_host_e",
-    "hd_host_w",
-    "hd_lep0N",
-    "hd_lep0N_w",
-    "hd_mesh",
-    "hd_serdes",
-    "hd_spn",
-    "hd_spn_end",
-    "hd_spn_wshim_rx",
-    "hd_tile"
-   ],
    "note_gen_hosts_w10_epyc2": "W10 exact epyc2 source replica retained. No new HEAD kits while epyc2 root above 90%; measured 93% at 21:39 PST. Existing builds remain."
   },
   "qwen_compute": {
