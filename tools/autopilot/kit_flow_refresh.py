@@ -73,9 +73,9 @@ SRC_LINE = re.compile(rb"^[ \t]*source[ \t]+/work/([A-Za-z0-9_.\-]+\.tcl)[ \t]*$
 def keep_kit_sources(p, data):
     """CLOCK-TAPS-COPY-TRAP (COORD 11-25, S81-SERDES: every serdes kit whose clock_taps.tcl was replaced by main's file died CTS-0114): gen writes
     `source /work/<f>.tcl` lines into a kit's own copy of a flow script (vpw_bank_clock.tcl at the top, landing_exports.tcl at the end).  A refresh that
-    puts the main / rt file over the kit file must not drop them: every `source /work/F` line of the file on disk that the new bytes lack, where F
-    exists in the kit dir, is put back (a line in the first half of the old file goes on top, with an immediately preceding `if {![file exists /work/F]}`
-    guard line; any other goes at the end).  Only .tcl kit files; unchanged data comes back identical.  Pure apart from reading p and the kit dir."""
+    puts the main / rt file over the kit file must not drop them. Existing targets and explicitly required targets are kept. A required target
+    may be generated after refresh, as VPW writes its clock record during placement. Preserve its guard and source together. Only .tcl kit files;
+    unchanged data comes back identical. Pure apart from reading p and the kit dir."""
     if not p.endswith(".tcl") or not os.path.isfile(p):
         return data
     try:
@@ -88,14 +88,18 @@ def keep_kit_sources(p, data):
     top, tail = [], []
     for i, ln in enumerate(lines):
         m = SRC_LINE.match(ln)
-        if not m or m.group(1) in have or not os.path.isfile(os.path.join(os.path.dirname(p), m.group(1).decode())):
+        if not m or m.group(1) in have:
             continue
-        have.add(m.group(1))
-        if i < len(lines) / 2:
-            guard = lines[i - 1] if i and b"file exists /work/" + m.group(1) in lines[i - 1] else None
-            top += ([guard] if guard else []) + [ln]
-        else:
-            tail.append(ln)
+        name = m.group(1)
+        guard = lines[i - 1] if i and lines[i - 1].lstrip().startswith(
+            b"if {![file exists /work/" + name + b"]}") else None
+        if guard is None and not os.path.isfile(os.path.join(os.path.dirname(p), name.decode())):
+            continue
+        have.add(name)
+        target = top if i < len(lines) / 2 else tail
+        if guard is not None:
+            target.append(guard)
+        target.append(ln)
     if not top and not tail:
         return data
     body = data if data.endswith(b"\n") or not data else data + b"\n"
