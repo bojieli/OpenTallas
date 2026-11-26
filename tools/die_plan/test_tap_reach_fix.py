@@ -144,3 +144,15 @@ def test_flag_is_in_the_schema_and_the_dump(tmp_path):
     assert S.validate(raw)
     on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
     assert "tap_reach" in on_disk["properties"]
+
+
+def test_type_whose_reset_relays_move_is_reverted(tmp_path, monkeypatch):
+    raw = copy.deepcopy(EX)
+    raw[TR.FLAG] = {"enable": 1}
+    path = _plan(tmp_path, raw)
+    before = json.dumps(raw["partition_types"]["mid"], sort_keys=True)
+    calls = []
+    monkeypatch.setattr(TR, "_reset_sig", lambda P, tn: calls.append(1) or ([("rst_rl_0", float(len(calls)), 0.0)], None))
+    selected, report = TR.derive(raw, path, tmp_path)
+    assert selected == [] and report["mid"]["status"].startswith("reverted: the new taps move")
+    assert json.dumps(raw["partition_types"]["mid"], sort_keys=True) == before

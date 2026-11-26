@@ -215,6 +215,22 @@ def span_sites(PQ, tn, A, span, radius, RF):
     return new
 
 
+def _reset_sig(P, tn):
+    """the type's generated reset tree as (relay name, x, y) rows + root: a tap change that moves a relay renumbers the
+    raw reset pointers (landing / START rst_rl_<k> refs: DERIVEDNAME / RSTREACH on HEAD hd_host_n when density taps changed).
+    None = no generated tree to compare."""
+    try:
+        import reset_tree as RT
+        if not (RT.pipelined(P) or RT.wavefront(P)):
+            return None            # interim kit_rsync plans carry no raw relay pointers
+        T = RT.for_type(P, tn)
+    except Exception:  # noqa: BLE001
+        return None
+    rows = sorted((str(r.get("name")), round(float(r["xy"][0]), 3), round(float(r["xy"][1]), 3)) for r in T.get("relays", []))
+    root = T.get("root")
+    return rows, (tuple(round(float(v), 3) for v in root) if root else None)
+
+
 def _table(ck, mode):
     return ck.get("taps") if mode == "explicit" else ck.get("added_taps")
 
@@ -311,6 +327,7 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
     if A is None or not (base["over"] or (span and base["span_taps_over_300"])):
         rec["status"] = "within reach"
         return rec
+    sig0 = _reset_sig(P0, tn)
     mode = ck.get("tap_mode", "grid")
     if mode == "density":
         if not base["over"]:
@@ -386,6 +403,12 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
     except Exception as e:  # noqa: BLE001
         raw["partition_types"][tn] = before_raw
         rec.update(status="reverted: export fails %s: %s" % (type(e).__name__, str(e)[:160]), added=[])
+        return rec
+    sig1 = _reset_sig(PA, tn)
+    if sig0 is not None and sig1 != sig0:
+        raw["partition_types"][tn] = before_raw
+        rec.update(status="reverted: the new taps move the type's reset relays (raw reset pointers would go stale; "
+                          "needs the START re-derive of the row that moves taps)", added=[])
         return rec
     better = A2 is not None and (after["over"] < base["over"] or (
         span and after["over"] <= base["over"] and after["span_taps_over_300"] < base["span_taps_over_300"]))
