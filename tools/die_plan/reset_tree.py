@@ -1859,12 +1859,14 @@ def corner_sites(P, tn):
     return cache[key]
 
 
-def _est_depth(P, tn, xy):
-    """planning estimate of a type's relay depth from an entry at xy (reach-limited hops to the farthest tap / site)."""
+def _est_depths(P, tn, candidates):
+    """Estimate relay depth for each candidate using this wavefront pass's type tap and face sites."""
+    if not candidates:
+        return {}
     pr = relay_um(P) - MARGIN_UM
     pts = [(x, y) for _, x, y in _plan_taps(P, tn)] + [s["xy"] for s in face_sites(P, tn)]
     pts += [tuple(p) for p in P.types[tn].get("reset", {}).get("local_taps_um", [])]
-    return max(1, max(math.ceil(_man(xy, p) / pr) for p in pts))
+    return {(tn, xy): max(1, max(math.ceil(_man(xy, p) / pr) for p in pts)) for xy in candidates}
 
 
 def _root_part(P, soft):
@@ -2011,7 +2013,9 @@ def _wf_solve_once(P):
             fs = face_sites(P, tn)
             cands[tn] = [s["xy"] for s in fs if s["mid"]] + corner_sites(P, tn) + \
                 [s["xy"] for s in fs if not s["mid"]]
-    est = {(tn, c): _est_depth(P, tn, c) for tn in stypes for c in cands[tn]}
+    est = {}
+    for tn in stypes:
+        est.update(_est_depths(P, tn, cands[tn]))
     hdep = {n: int((P.types[P.parts[n]["type"]].get("reset") or {}).get("depth", HARD_DEPTH)) for n in hard}
     # every soft partition's out sites in the die frame, bucketed
     cell = max(hp, 1.0)
