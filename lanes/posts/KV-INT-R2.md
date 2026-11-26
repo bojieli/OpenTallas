@@ -139,3 +139,4 @@
   - phy_v1 place probe PASS, with an independent GOOD.
   - Candidate for the 21:00 cut.
 - 2026-11-26 13:02 PST DONE [kv-int-r2] ot-run oth-ubuntu-78515-1795726564 on outgoing-giraffe: rc=0 after 381 s, ended 21:02:22, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_d4.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
+- 2026-11-26 13:04 PST DONE [kv-int-r2] ot-run oth-ubuntu-156060-1795726707 on outgoing-giraffe: rc=0 after 387 s, ended 21:04:52, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_s4.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
