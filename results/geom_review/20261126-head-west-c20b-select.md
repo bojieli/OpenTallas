@@ -1,0 +1,9 @@
+# HEAD West LEP C20b local forwarding selector
+
+**Pass for the scoped plan geometry. Combined placement remains pending.** Viewed plan 74f2106ed900's macro and path overlay using exact West rows2 CTS. At slice 23, the read pointer and compare gates sit west of the SRAM array. The selected-data mux was east of the array and the forwarded register sits west. The measured path is −286.31 ps.
+
+The candidate preserves the two in-flight write banks and the existing registered selection and hold behavior. The existing eight-bit kept mux moves into x114.48–136.08 and y596.16–613.44, where the retained ODB shows 372.286 µm² of movable placement rows after fixed-cell exclusions and no macro overlap. The measured compare-to-select-to-capture center distances total 941.436 µm. The corresponding distance through any corner of the proposed rectangle is at most 276.156 µm. The two one-way write-bank inputs are at most 401.193 and 383.211 µm to the mux seat, with the mux output at most 58.023 µm from a forwarded register. The fix adds no flops or cycles. The earlier broad FSPLIT placement had a separate −1,182.80 ps forwarded2 self-feedback path, so the retained C20b candidate uses a single capture bank.
+
+Verilator 5.050 checked 2,560 complete 553-bit output words across 512 addresses and 3,074 cycles. The candidate matched both the exact original RTL and a logical old-read memory model, including waits and overlapping writes. The deliberately swapped-bank mutant changed 1,534 words within slice 23. The cluster schema passed. The improved distances are a geometry model. Actual combined placement, CTS and fresh visual review remain required.
+
+Candidate plan, image, row and source patch on E12 at /srv/opentallas-scratch2/claude/head-west/west_c20b_local_1126. Native geometry and lockstep on E8 at /srv/opentallas-scratch2/claude/head-w9-fp/west_c20b_1126, units oth-ubuntu-3024110-1795686499 and oth-ubuntu-3073710-1795686556.
