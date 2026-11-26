@@ -216,3 +216,23 @@ def test_pin_eol_fix_moves_only_the_short_stub(tmp_path):
     assert rep["moved"] == 1 and rep["before"]["M4"]["pins"] == 1 and rep["after"] == {}
     _, _, obs, pins = AE.layer_rects(out)
     assert obs["M4"] == [(181, 20000, 3000, 20024)] and (16, 20000, 131, 20024) in pins["M4"]
+
+
+def test_pin_stack_becomes_pin_shape(tmp_path):
+    """PIN-STACK 11-25 (hd_host_e in_data[127]): the core's own M6 via pad over an M5 pin, from the signed DEF, is PIN geometry
+    of that pin, not OBS over it"""
+    b, d, o, r, s = (tmp_path / n for n in ("b.lef", "d.lef", "o.lef", "r.json", "s.json"))
+    b.write_text(blanket())
+    hd = HEAD.replace("LAYER M4 ;\n        RECT  0 20 0.5 20.024", "LAYER M5 ;\n        RECT  50 0 50.024 0.192")
+    body = "".join(f"    LAYER M{i} ;\n     RECT  0 0 100 50 ;\n" for i in range(1, 5))
+    body += "    LAYER M5 ;\n     RECT  50 0.16 50.024 0.251 ;\n     RECT  20 1 20.024 49 ;\n"
+    body += "    LAYER M6 ;\n     RECT  49.977 0.208 50.05 0.24 ;\n"
+    d.write_text(hd + "  OBS\n" + body + "  END\nEND core\n")
+    b.write_text(hd + "  OBS\n" + "".join(f"    LAYER M{i} ;\n     RECT  0 0 100 50 ;\n" for i in range(1, 7)) + "  END\nEND core\n")
+    s.write_text(json.dumps({"a": {"pin": [["M5", 50000, 0, 50024, 192]], "stack": [["M6", 49988, 208, 50028, 240]]}}))
+    assert AE.form(b, d, o, r, "M5,M6", str(s)) == 0
+    rec = json.loads(r.read_text())
+    assert rec["pin_stack_rects"] == 1 and rec["real_metal_exposed_um2"] == {}
+    _, _, obs, pins = AE.layer_rects(o)
+    assert AE.uncovered(pins["M6"], [(49977, 208, 50050, 240)]) == []          # whole real pad is pin (enclosure merged)
+    assert not any(q[0] < 50024 and q[2] > 50000 and q[1] < 240 and q[3] > 208 for q in obs.get("M6", []))
