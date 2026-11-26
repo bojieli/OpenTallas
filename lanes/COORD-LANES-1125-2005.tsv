@@ -1,0 +1,43 @@
+lane	claude_agent	die	owns	state_2005	next
+S81-ALLFIX-INT	af9b10d5178060043	S81	R10/R11 integrator, cuts 09/21	R11 PRE clean; push 48f09f449abe + strict bind; ledger	21:00 cut R11 (+col_h9 views, svc, xo, colh10 p4, serdes station groups)
+FP-CONVERGE-S81	a66e75f3dc9c8f564	S81	FP-S81.tsv, PRE rules	demote unproven rules; bits_over_cycle gate; leaf template t70	post new route/place split
+S81-GUNIT-RRL	ad34b720c54a58bf4	S81	gunit reset relay leaves + hold	new 19:3x	row + place probe
+S81-BKSEL-RTL	ad14e932d504578f9	S81	bk_sel counter per slice RTL+LEC	new 19:3x	RTL, LEC, row
+S81-OWN-COLH10	aef97b8b868b7038b	S81	col_h10 p4 xo / p1	ROW-READY e15d8654, PRE+bind rerun ~21:15	place probe
+S81-SERDES-RSTCOHORT	a096dd9ca12261372	S81	serdes t4, CTS-0114, LA, u_dec	station groups ROW-READY 1c6ae0527537; hold -21	key-check R10/R11; LA probe; enc -314
+S81-KVLEAF-T2	a4facacfc72905366	S81	kv_leaf pin-face	row KVLEAF-PINFACE-ALL draft	v19/v20 verdict 06:00
+FAM-S81-SVC-OWN	ab6020ddf3d494dde	S81	svc_lo band follow	ABSENT in R10; 3 place probes epyc11	post-GP review
+shift-in-place	a40ee3e661fb1394c	S81	t10/t50 c11shift2r	PRE pass; strict bind epyc12	render + ROW-READY
+leaf_grow	a5c79705c2411ba94	S81	leaf grid taps R6	visual PASS; t68 +1 reg	PRE+bind -> ROW-READY
+REF-SITE speed	a6235aed7e541ba95	FLEET	PRE REF-SITE pool	tests pass; real-plan diff	push
+ABSTRACT-EXACT	ae64cebd360043cf2	ALL	exact abstracts, pin-EOL views	3 waiters	send col_h9 view shas to INT
+KV-ALLFIX	aaf1db39d67e360cb	KV	KV integrator, cuts 09/21	17 RC causes + FLOW K items	21:00 cut; gen dry check
+KV-OWN-HG-R3	a1ac602ad73929384	KV	hg street 14.23, W landing, gaps, cap	new 19:2x	rows
+KV-PV-ESTRIP	af7ae4bec07ba6fe0	KV	pv strips, rsp ring, v1n split	5 ROW-READY; v7e/v4/v3e rework	fork + probes v6 v5ne v2
+KV-HGI-WGATE	a7da679812977d248	KV	hgi V2d, pv_v_pads	gate8 + gate9 control	verdicts then probes
+KV-OWN-HUB	a42a511ffba6bd6c1	KV	hub_Eo cut, hub_C taps, boundary regs	running	row shas
+KV-SINKBINS	af1919f3ad420091f	KV	stale sink bins row	job F epyc7; 8 RSTREACH -> corridor step	rerun without hgi_v6; ROW-READY
+KV R7 promote	a7ccbf989a08e2da3	KV	R7 P2 pilots	relaunch 3 P2 place; abs gates	promote or not
+QC-ALLFIX	ac92f9270c873c44d	QC	QC integrator, C1q cut 21:00	RC + FLOW Q items	C1q sha
+QC-C1P-PUBLISH	abaabedc7e7360f9c	QC	C1p R6 publish	gate passed; RESETPUB default	push default
+QC-XHEAD3-LEC	a7594047aed64fd1d	QC	xhead3 RTL (HELD)	branch 56fb2ac979b3	merge only on NOT-EQ
+LEC-AUTOFILL	ae5f6b068f6cf934e	ALL	LEC reruns, hc3, coll_s, batch re-LEC	sle_hc0 epyc11, hd_mesh epyc10	verdicts
+QC-DRT-ECO	ae50cb7de3567ae22	QC	stuck DRT kits	3 waiters armed; fe_v1 family row	ECO-route at DRT end
+QC-HC0-GROW	a8e1dd828ea86f20e	QC	hc0 sites/bins	chain epyc10	draft row 23:00
+QC-COLLFTN-REFLOOR	a26680da2dc8651e2	QC	coll ft	PRE v3	ROW-READY
+QC-HC2-REFLOOR	ad53e5c6281f9d155	QC	hc2	running	-
+QC-HC0-CMASTER	a6904dd3e7827cffb	QC	hc0 cmaster	running	-
+HEAD-ALLFIX	a675e75249ef5bfdb	HEAD	HEAD integrator, W10 cut 21:00	C18 variant A; follow_re hold; ledger	21:00 cut
+HEAD-CLK-RESITE	a9b868750531495ae	HEAD	die clock C18	variant A + B; 2nd review	adopt A ~20:15+
+HEAD-EAST-R2	a9e5b308b65ab126b	HEAD	hd_lep0N East -561.7	new 19:3x	row + probe
+HEAD-W9-FP	a3c96a6ef961f8e37	HEAD	lep0N_w rows, host_w G0 receipt	2 probes epyc11	post-GP review; u_rrl_271, local_r
+HEAD-MESH-REFLOOR	ad91975fd2b706d77	HEAD	host_w r14, mesh/host_e r18	G0 fixed; r14 probe; r18 bind	ROW-READY
+HEAD-SERDES-REFLOOR	a43eadd602b15ef6b	HEAD	hd_serdes R7b, relay_sites_win	R7b PRE	probe; default-on + census
+HEAD-SPN-STREET	acc08c4c5463f494a	HEAD	spn street (ROW-READY a26fbca09de0), tap groups	place probes + part b plan	verdicts
+HEAD-SMALL-TAPS	a27edf6bdbb05a60c	HEAD	11 small types rebase e5deaae4	v3 chain epyc12	ROW-READY
+HEAD-IOHOLD-PARENT	a595511f756d699a8	HEAD	parent io hold n4/mesh_e	blocked on W9 views; build driver	advisory run
+C1+C2 lep bank	ad98866c80c468c9c	HEAD	lep bank seat/tap group	CTS probe epyc8	C2 measure
+FLEET-OPS-R2	ad2d76f087a78c03e	FLEET	flow F items, clock_taps copy trap, PLATEAU rules	new 19:3x	safety fixes + census
+VIS-REOWN	a8d3b2a5bc9130a3e	ALL	render census, VIS-CAUSES	FLOW F5/S6/H6	-
+AUTO-EXPORT	a89c6782f26cfd184	ALL	signed export	eco_*/i<n> ingest; rtx-pro reserve	-
+Fable hw_r13 reviewer	ad8e143a56cb1d898	HEAD	review r18 mesh/host_e	running	verdict to MESH-REFLOOR
