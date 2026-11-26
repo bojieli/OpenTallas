@@ -805,3 +805,8 @@
   NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 14.4 h job 14.4 h: no new meaningful log line for 14.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 14.2 h job 17.6 h: no new meaningful log line for 13.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
   NO-PROGRESS epyc11 svc_lo_dsdv_svc_rs_w__t1 1_2_yosys stage 11.1 h job 11.2 h: no new meaningful log line for 10.7 h; last: 15.65. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs_w__t1' to `<abc-temp-dir>/input.b
+- 2026-11-26 13:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-26 13:22 PST: 18 running jobs, PROGRESSING 11, PLATEAU 3, SLOW 0, NO-PROGRESS 4 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 probe_v19 grt_it0 stage 16.9 h job 18.7 h: no new meaningful log line for 10.5 h; last: [INFO GRT-0102] Start extra iteration 3/5
+  NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 15.4 h job 15.4 h: no new meaningful log line for 15.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 15.2 h job 18.6 h: no new meaningful log line for 14.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
+  NO-PROGRESS epyc11 svc_lo_dsdv_svc_rs_w__t1 1_2_yosys stage 12.1 h job 12.2 h: no new meaningful log line for 11.7 h; last: 15.65. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs_w__t1' to `<abc-temp-dir>/input.b
