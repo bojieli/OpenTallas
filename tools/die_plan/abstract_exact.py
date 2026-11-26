@@ -113,6 +113,54 @@ def blanket_layers(base, detail=None, layers=ROUTING):
 
 MIN_WIDTH = {"M4": 0.024, "M5": 0.024, "M6": 0.032, "M7": 0.032}
 
+# STALE-OBS 11-25 (hd_host_e merged-GDS DRC): a bound view whose OBS on a NON-blanket layer came from another build of the
+# core hides real metal of the signed DB (he_epc: bound M6 OBS 20397 rects from another layout; a 78 um M6 signal wire of
+# the signed DB 16 nm from the parent VSS strap was in no OBS -> 232 M6/M7 PG + 61 signal NEW markers).  A layer is STALE
+# when real metal of the exact export of the signed ODB lies outside the base OBS+PIN; it is replaced like a blanket layer.
+# M7 is included: the parent routes and grids M7 over cores (COORD 05:4x named M5-M7); M1-M3 stay blanket (guardrail 1).
+STALE_LAYERS = ROUTING + ("M7",)
+STALE_UNCOVERED_PCT = 0.5     # % of exact metal rects that touch no base OBS/PIN rect
+
+
+def _binned(rects, cell=2000):
+    idx = {}
+    for i, r in enumerate(rects):
+        for bx in range(r[0] // cell, r[2] // cell + 1):
+            for by in range(r[1] // cell, r[3] // cell + 1):
+                idx.setdefault((bx, by), []).append(i)
+    return idx, cell
+
+
+def uncovered(have, metal):
+    """rects of `metal` that touch no rect of `have` (nm tuples)"""
+    idx, cell = _binned(have)
+    miss = []
+    for r in metal:
+        cand = set()
+        for bx in range(r[0] // cell, r[2] // cell + 1):
+            for by in range(r[1] // cell, r[3] // cell + 1):
+                cand.update(idx.get((bx, by), ()))
+        if not any(have[i][0] < r[2] and have[i][2] > r[0] and have[i][1] < r[3] and have[i][3] > r[1] for i in cand):
+            miss.append(r)
+    return miss
+
+
+def stale_layers(base, detail, layers=STALE_LAYERS, pct=STALE_UNCOVERED_PCT):
+    """layers where > pct % of the exact metal rects (detail OBS+PIN) touch no base OBS/PIN rect
+    -> {layer: {uncovered, metal_rects, uncovered_pct, example_nm}}"""
+    _, _, bo, bp = layer_rects(base)
+    _, _, do, dp = layer_rects(detail)
+    out = {}
+    for L in layers:
+        metal = do.get(L, []) + dp.get(L, [])
+        if not metal:
+            continue
+        miss = uncovered(bo.get(L, []) + bp.get(L, []), metal)
+        up = 100.0 * len(miss) / len(metal)
+        if up > pct:
+            out[L] = dict(uncovered=len(miss), metal_rects=len(metal), uncovered_pct=round(up, 2), example_nm=list(miss[0]))
+    return out
+
 
 def regrow(lef_in, lef_out, layers):
     """v3 (Fable 11-25, = KV-PC-ABSTRACT v3): grow each OBS rect of `layers` by max(min spacing, pitch) (= merge gap 2 x pitch / 2),
@@ -152,16 +200,18 @@ def regrow(lef_in, lef_out, layers):
 
 
 def form(base, detail, out, receipt=None, layers="auto"):
-    """splice exact OBS of the blanket routing layers, regrow, check -> rc (0 ok, 1 nothing to do, 2 refused)"""
+    """splice exact OBS of the blanket or stale routing layers (M4-M7), regrow, check -> rc (0 ok, 1 nothing to do, 2 refused)"""
     base, detail, out = Path(base), Path(detail), Path(out)
+    st = {}
     if layers == "auto":
         bl = blanket_layers(base, detail)
-        sel = [L for L in ROUTING if L in bl]
+        st = stale_layers(base, detail)
+        sel = [L for L in STALE_LAYERS if L in bl or L in st]
     else:
         bl = {}
         sel = [L for L in layers.split(",") if L]
-    rec = dict(schema="opentallas.abstract_exact.v3", base=str(base), base_sha256=A._sha(str(base)), detail=str(detail),
-               detail_sha256=A._sha(str(detail)), layers=sel, blanket=bl, obs_before=coverage(base, ROUTING))
+    rec = dict(schema="opentallas.abstract_exact.v4", base=str(base), base_sha256=A._sha(str(base)), detail=str(detail),
+               detail_sha256=A._sha(str(detail)), layers=sel, blanket=bl, stale=st, obs_before=coverage(base, STALE_LAYERS))
     if not sel:
         rec["verdict"] = "NOTHING-TO-DO"
         if receipt:
@@ -188,7 +238,7 @@ def form(base, detail, out, receipt=None, layers="auto"):
     with contextlib.redirect_stdout(io.StringIO()):
         crc = A.main(["check", "--base", str(base), "--new", str(out), "--layers", ",".join(sel)])
     acc = A.access_report(Path(out).read_text().split("\n"))
-    rec.update(check_ok=crc == 0, obs_after=coverage(out, ROUTING), lef_bytes_before=base.stat().st_size,
+    rec.update(check_ok=crc == 0, obs_after=coverage(out, STALE_LAYERS), lef_bytes_before=base.stat().st_size,
                lef_bytes_after=out.stat().st_size, obs_rects_before=sum(1 for ln in open(base) if _RECT.match(ln)),
                obs_rects_after=sum(1 for ln in open(out) if _RECT.match(ln)),
                pins_without_access=sorted(p for p, e in acc["pins"].items() if not e["ok"]),
