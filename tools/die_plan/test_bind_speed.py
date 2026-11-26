@@ -162,7 +162,7 @@ def test_bind_fast_kits_runs_in_parallel(tmp_path):
 
 
 # ------------------------------------------------------------------ r8-prepass on the bind_tiny example (needs yosys like test_bind)
-def test_r8_prepass_derives_the_table_the_full_bind_needs(tmp_path):
+def test_r8_prepass_derives_the_table_the_full_bind_needs(tmp_path, monkeypatch):
     import test_bind as TB
     if not TB.HAVE_YOSYS:
         pytest.skip("no Yosys")
@@ -184,14 +184,24 @@ def test_r8_prepass_derives_the_table_the_full_bind_needs(tmp_path):
     out = tmp_path / "o"
     assert bind.main(["elab", str(plan), "--out", str(out), "--mem", "4"]) == 0
     new = tmp_path / "r8_new.json"
+    report_calls = []
+    original_report = bind.Binder.open_input_report
+
+    def record_report(B):
+        report_calls.append(B)
+        original_report(B)
+
+    monkeypatch.setattr(bind.Binder, "open_input_report", record_report)
     assert bind.main(["r8-prepass", str(plan), "--out", str(out), "--r8-out", str(new)]) == 0
     assert (out / "bus_groups.json").is_file() and not (out / "bind_report.json").exists()     # head only: no emit
+    assert not report_calls
     t = json.loads(new.read_text())
     assert len(t["members"]) == len(stale["members"])
     assert [m["bound"] for m in t["members"]] != [m["bound"] for m in stale["members"]]      # the +1 of the stale table is gone
     good.write_text(new.read_text())                                                  # the ONE full bind on the derived table passes
     out2 = tmp_path / "o2"
     assert TB.run(plan, out2, "elab", "bind") == 0, TB.report(out2)["errors"][:5]
+    assert len(report_calls) == 1
     assert not [e for e in TB.report(out2)["errors"] if e.startswith("R8_STALE")]
 
 

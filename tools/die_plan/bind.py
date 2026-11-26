@@ -1817,7 +1817,7 @@ class Binder:
         return rel(self.F.cells[ci].path, self.root[p])
 
     # -- per load bit: what drives it in the bound design
-    def analyse(self):
+    def analyse(self, *, report_open_inputs=True):
         G, F = self.G, self.F
         self.cross = defaultdict(lambda: defaultdict(set))   # (src part, dst part) -> {(src ci, port): {bits}}
         self.cross_sinks = defaultdict(set)                  # (sp, dp, src ci, port) -> {(dst rel, dst port)}
@@ -1844,7 +1844,8 @@ class Binder:
                         continue
                     s = self.rewire.get((ci, pn, i)) or G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
-        self.open_input_report()
+        if report_open_inputs:
+            self.open_input_report()
         self.counts = dict(cnt)
         if self.pc:
             self.pc.apply_sinks()
@@ -6790,7 +6791,7 @@ def _reset_anchor_prewarm(B, raw):
         print(f"bind: RESET-ANCHOR prewarm skipped: {type(exc).__name__}: {exc}", flush=True)
 
 
-def _bind_through_landings(a):
+def _bind_through_landings(a, *, report_open_inputs=True):
     """cmd_bind up to and including align_landings (R8 table read): -> (raw, out dir, Binder, yjs, input_topology).  Shared by `bind` and
     `r8-prepass` (BIND-SPEED-1118).  Also returns the elab netlist and the input topology the rest of `bind` still reads."""
     from time import monotonic
@@ -6865,7 +6866,7 @@ def _bind_through_landings(a):
     phase("checked interfaces and reset anchors")
     B.map_cells()
     phase("mapped die cells")
-    B.analyse()
+    B.analyse(report_open_inputs=report_open_inputs)
     phase("classified net sources")
     if getattr(B, "clock_landings", None):
         import clock_landings as CL
@@ -7402,7 +7403,9 @@ def cmd_r8_prepass(a):
     POSITION_BANK ...) are printed too: the full bind would fail on them as well.  Exit 0 = derived, 3 = head errors that no
     table can fix."""
     import land_r8_derive as DR
-    raw, out, B, _yjs, _topology = _bind_through_landings(a)
+    # The following strict bind writes the presence-only leaf-body report.
+    # Keep the driver and input audits that determine the bus table and exit status.
+    raw, out, B, _yjs, _topology = _bind_through_landings(a, report_open_inputs=False)
     st = getattr(B, "pad_stats", {}) or {}
     bg = B.bus_groups()
     _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
