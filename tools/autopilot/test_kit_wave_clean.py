@@ -63,6 +63,31 @@ class Clean(unittest.TestCase):
         calls = self.go(fail_stage="/w/gen/ intel1:")
         self.assertFalse([c for c in calls if "rm -rf /w/gen" in c and "mkdir" not in c])
 
+    def test_shared_bind_reserves_threads_only_on_cache_miss(self):
+        from unittest.mock import patch
+
+        for ready in (False, True):
+            calls = []
+            with tempfile.TemporaryDirectory() as d:
+                p = spec(d)
+                sp = json.loads(p.read_text())
+                sp["kit_rtl"] = {"mode": "bind", "asbuilt": "/p/asbuilt.json"}
+                p.write_text(json.dumps(sp))
+                miss = None if ready else "test -f /w0/bind/.kw_bind_ok"
+                run = fake_run_factory(calls, miss)
+
+                def run_until_gen(cmd, *args, **kwargs):
+                    if "kit-rtl -h" in " ".join(cmd):
+                        raise RuntimeError("after shared bind")
+                    return run(cmd, *args, **kwargs)
+
+                with patch.object(KW, "HOME", Path(d)), patch.object(KW.subprocess, "run", run_until_gen):
+                    with self.assertRaisesRegex(RuntimeError, "after shared bind"):
+                        KW.run_item(p)
+            requests = [c for c in calls if "--threads 48" in c and ".bind.lock" in c]
+            self.assertEqual(len(requests), int(not ready))
+
+
     def test_gen_on_hub_is_refused_by_the_hub_guard(self):
         # FLEET-WATCH-R8 11-21 (COORD URGENT, owner 11-12 capped build host): the hub is a capped build host again, ot-run HOST_RESERVE bounds it
         self.go(gen_host="intel2")      # no hub-guard RuntimeError any more
