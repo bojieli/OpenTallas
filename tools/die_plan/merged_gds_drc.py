@@ -51,27 +51,31 @@ BEOL_AWK = ('{sub(/\\r$/, "")}\n'            # the deck has CRLF line ends
 GATING_ZONE = "HARDCORE"
 
 
-# P-DRC-DECK-BASELINE (S81-COL-EOL 11-26): the ASAP7 *.AUX.* rules are layout-style auxiliary rules (via width = metal width, no M4 bends), not
-# spacing/width/short rules, and the ORFS router does not honour them: macros_only already carries V4.M5.AUX.2 on signed DRC-0 cores, and their count depends on how the
-# layout is structured, not on the geometry (clipped window of the H10 R2 ECO merged.gds: 2 markers hierarchical, 39072 after flatten, same shapes; the full run gave
-# 1,687,643 on merged vs 2 on parent_only).  They stay in the verdict as ignored_aux but never gate.
-AUX_RE = re.compile(r"\.AUX\.")
+# P-DRC-DECK-BASELINE (S81-COL-EOL 11-26, FABLE-INDEP 15:12 review of 4390177b0284).  Every NEW marker in the HARDCORE zone gates, whatever its category (M4.AUX.3,
+# M5.AUX.3, Vn.AUX.1, V3.M4.AUX.2 are 0 in the baselines and appear only where parent and core geometry merge: they can be the only trace of a parent-to-core short).
+# The one explicit exclusion is V4.M5.AUX.2 OUTSIDE the hard-core zone (PARENT markers: 1,669,570 on the H10 R2 ECO merged run, 2 on parent_only; the count follows the
+# layout structure, hierarchical window 2 vs flattened 39072 on identical shapes, so it is not trusted either way until the run mode is settled).  The gate never counted
+# PARENT markers; the exclusion is reported, and while a category is excluded a passing run is PASS-PROVISIONAL, which signoff.gate_check reads as NOT RUN: no kit passes
+# on this deck until it reads 0 on a signed clean core (FLEET-OPS-R4 staged core, calib/) and the zone behaviour is proven.
+EXCLUDED_OUTSIDE_HARDCORE = ("V4.M5.AUX.2",)
 
 
 def gating_counts(cmp):
-    """-> (gating hard-core markers, ignored AUX hard-core markers, {category: n} of the gating ones); per_category absent: the raw new_hardcore"""
+    """-> (gating HARDCORE markers (all categories), {category: n} gating, {excluded category: n outside the hard-core zone})"""
     per = cmp.get("per_category")
     if not isinstance(per, dict):
-        return cmp.get("new_hardcore", 0), 0, {}
-    gate, aux, cats = 0, 0, {}
+        return cmp.get("new_hardcore", 0), {}, {}
+    cats, excl = {}, {}
     for cat, z in per.items():
+        name = cat.strip("'")
         n = (z or {}).get(GATING_ZONE, 0)
-        if AUX_RE.search(cat):
-            aux += n
-        elif n:
-            gate += n
-            cats[cat.strip("'")] = n
-    return gate, aux, cats
+        if n:
+            cats[name] = n
+        if name in EXCLUDED_OUTSIDE_HARDCORE:
+            out = sum(v for k, v in (z or {}).items() if k != GATING_ZONE)
+            if out:
+                excl[name] = out
+    return sum(cats.values()), cats, excl
 
 
 def judge(cmp, cells):
@@ -79,12 +83,12 @@ def judge(cmp, cells):
     problems = []
     if cells.get("missing"):
         problems.append("cells without GDS (not --allow-empty): %s" % cells["missing"][:10])
-    gate, aux, cats = gating_counts(cmp)
+    gate, cats, excl = gating_counts(cmp)
     if gate:
-        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract), AUX rules excluded" % gate)
-    return dict(verdict="PASS" if not problems else "FAIL", problems=problems,
-                new_hardcore=gate, ignored_aux_hardcore=aux, gating_categories=cats, new_hardcore_raw=cmp.get("new_hardcore", 0),
-                new_parent=cmp.get("new_parent", 0),
+        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract)" % gate)
+    verdict = "FAIL" if problems else ("PASS-PROVISIONAL" if excl else "PASS")
+    return dict(verdict=verdict, problems=problems, provisional=bool(excl), excluded_outside_hardcore=excl,
+                new_hardcore=gate, gating_categories=cats, new_parent=cmp.get("new_parent", 0),
                 new_unchecked=cmp.get("new_unchecked", 0), merged_markers=cmp.get("merged_markers"),
                 hard_cores=sorted(cells.get("filled", {})), empty_allowed=sorted({r["master"] for r in
                                                                                   cells.get("empty_allowed", [])}))
