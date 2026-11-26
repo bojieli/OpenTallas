@@ -10,7 +10,12 @@ Plan-only floorplan classes that no static check named, so 10-29 h type kits fou
                so a leg whose straight pin-to-pin path crosses a hard-core box cannot run there: it detours through the streets that
                border that core, and its bits are also counted on those streets (KV-NOROW 11-25, COORD ruling 2).
   FT-CROSSES-CORE (report only, always WARN) the lanes/bits whose planned legs cross hard-core interiors, per type.
-  FP-OVERSIZE  plan `cells` over the 400k single-run cap (kv3_pc_v3 998k).
+  FP-OVERSIZE  plan `cells` over the 400k single-run cap (kv3_pc_v3 998k).  Default: the plan number as written.  With
+               OT_FP_OVERSIZE_FLAT=1 (C-OVERSIZE 11-26): a type with hard_cores has type.cells = its hard-core content too, so
+               the run only sees the FLAT std cells; the count becomes the flat projection (adv_cell_budget.project, floored by the
+               newest retained kit synth count, at most 5 days old) and OT_FP_OVERSIZE_REPAIR_GROWTH=<f> (default 1.0; 1.2 matches
+               lepw_mus_C 333k synth -> >400k after TD repair) scales it before the cap test.  Live 11-26: S81 kv_leaf t1/t3/t4/t5
+               1.9M, HEAD hd_tile 1.07M and KV kv3_pc_v3 998k plan cells are 41-313k flat in kits that placed (false positives).
   FP-OVERLAP   two hard cores of one type that overlap, or a core outside the type outline (KITFIT / site-grid errors start here).
 
 Report only; plan_advisory forces WARN.  With OT_FP_BLOCK=1 the lines start FAIL (for plan_gate_pre once the live counts are stable).
@@ -26,6 +31,7 @@ TV, TH = 48.18, 57.55          # tracks per um M2-M8 (auto_geom), vertical / hor
 USABLE = 0.6
 STREET_MAX = 1.0
 CELL_CAP = 400000
+FLAT_KIT_MAX_AGE_S = 5 * 86400   # OT_FP_OVERSIZE_FLAT: oldest retained kit synth count taken as the flat count
 MIN_CORE_UM2 = 20000.0         # only cores that split the die into streets define a cut
 GEOM_EPS = 1e-6
 CROSS_MIN_UM = 2.0             # a leg segment must run >= this far inside a core box (shrunk by 1 um) to count as crossing it
@@ -179,8 +185,32 @@ def overlaps(t):
     return pairs, outside
 
 
+def flat_cells(name, t, cache=None, modules=None):
+    """(flat std cells one run sees, basis).  Hard cores are separate runs: their content is not in this run."""
+    import adv_cell_budget as B
+    r = B.project(name, t, B.load_modules() if modules is None else modules, cache or {})
+    est, basis = r["est"], r["basis"]
+    # a kit up to 5 days old (t1/t3/t4 kv_leaf 3-4 d); older ones predate the hard-core structure (svc 3.4-5.1M flat kits of 11-20)
+    import time
+    kit, kname = B.kit_cells(name, cache or {}, now=time.time() - (FLAT_KIT_MAX_AGE_S - B.KIT_MAX_AGE_S))
+    if kit and kit > est:
+        est, basis = kit, f"retained kit synth {kit:,} ({kname})"
+    return est, basis
+
+
 def findings(raw, plan_path=None, tree=None, **kw):
     import os
+    flat = os.environ.get("OT_FP_OVERSIZE_FLAT") == "1"
+    if flat:
+        try:
+            growth = float(os.environ.get("OT_FP_OVERSIZE_REPAIR_GROWTH") or 1.0)
+        except ValueError:
+            growth = 1.0
+        try:
+            import adv_cell_budget as B
+            cache = B._cache(kw.get("cells_cache"), ((raw or {}).get("die") or {}).get("name"))
+        except Exception:
+            cache = {}
     lvl = "FAIL" if os.environ.get("OT_FP_BLOCK") == "1" else "WARN"
     out = []
     try:
@@ -199,7 +229,15 @@ def findings(raw, plan_path=None, tree=None, **kw):
                            f"({w[4]} bits vs {w[5]} usable tracks); load {', '.join(f'{a}:{b}' for a, b in w[6])}; "
                            f"fix: reserve at least {required:.2f} um or re-seat lanes onto another cut")
             cells = t.get("cells") or 0
-            if isinstance(cells, (int, float)) and cells > CELL_CAP:
+            if flat:
+                est, basis = flat_cells(name, t, cache)
+                proj = est * growth
+                if proj > CELL_CAP:
+                    n_big += 1
+                    out.append(f"{lvl} ADV-FP-OVERSIZE {name}: flat {est:,} cells x repair growth {growth:g} = {int(proj):,} > {CELL_CAP} "
+                               f"single-run cap (plan type.cells {int(cells):,}, {len(t.get('hard_cores') or [])} hard core(s) run separately; {basis}); "
+                               "fix: split the type")
+            elif isinstance(cells, (int, float)) and cells > CELL_CAP:
                 n_big += 1
                 out.append(f"{lvl} ADV-FP-OVERSIZE {name}: {int(cells)} cells > {CELL_CAP} single-run cap; fix: split the type")
             cr = core_crossings(t)

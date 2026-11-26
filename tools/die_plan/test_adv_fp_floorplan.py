@@ -2,6 +2,7 @@
 import copy
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import adv_fp_floorplan as F  # noqa: E402
@@ -120,3 +121,57 @@ def test_roundoff_seam_is_closed_and_outside_boxes_add_no_capacity():
     assert F._free([(-60, 200.0), (200.0 + 1e-12, 500.0 - 1e-12)], 500.0) == []
     assert F._free([(-60, -2), (550, 580)], 500.0) == [(0.0, 500.0)]
     assert F._free([(-60, 200), (200.005, 510)], 500.0) == [(200, 200.005)]
+
+
+def _flat_lines(t, cache=None, growth=None, flat=True):
+    old = {k: os.environ.get(k) for k in ("OT_FP_OVERSIZE_FLAT", "OT_FP_OVERSIZE_REPAIR_GROWTH")}
+    try:
+        for k in old:
+            os.environ.pop(k, None)
+        if flat:
+            os.environ["OT_FP_OVERSIZE_FLAT"] = "1"
+        if growth:
+            os.environ["OT_FP_OVERSIZE_REPAIR_GROWTH"] = str(growth)
+        raw = {"die": {"name": "d"}, "partition_types": {"T": t}}
+        return F.findings(raw, cells_cache={"cells": {"d": cache or {}}})
+    finally:
+        for k, v in old.items():
+            os.environ.pop(k, None)
+            if v is not None:
+                os.environ[k] = v
+
+
+def test_flag_off_is_byte_identical():
+    t = _type(cells=998239)
+    exp = "WARN ADV-FP-OVERSIZE T: 998239 cells > 400000 single-run cap; fix: split the type"
+    assert exp in _lines(t)
+    # cells_cache / growth knobs without the flag change nothing
+    assert _flat_lines(t, cache={"T": {"last": {"cells": 1, "t0": 1}}}, growth=9, flat=False) == _lines(t)
+
+
+def test_flat_hierarchical_type_is_not_oversize():
+    t = _type(cells=998239)                       # two hard cores: plan cells include their content
+    kit = {"T": {"last": {"cells": 294275, "t0": time.time() - 86400, "stage": "place"}}}
+    out = _flat_lines(t, cache=kit)
+    assert not any("ADV-FP-OVERSIZE" in x for x in out)
+    assert out[-1].startswith("WARN ADV-FP-FLOORPLAN summary 0 type(s)") and " 0 over 400000" in out[-1]
+
+
+def test_flat_repair_growth_projects_over_cap():
+    t = _type(cells=998239)
+    kit = {"T": {"last": {"cells": 333341, "t0": time.time() - 86400, "stage": "geom"}}}      # lepw_mus_C: 333k synth, >400k after TD repair
+    assert not any("ADV-FP-OVERSIZE" in x for x in _flat_lines(t, cache=kit, growth=1.15))
+    hit = [x for x in _flat_lines(t, cache=kit, growth=1.25) if "ADV-FP-OVERSIZE" in x]
+    assert hit and "flat 333,341" in hit[0] and "2 hard core(s)" in hit[0]
+
+
+def test_flat_soft_type_over_cap_still_flagged():
+    t = _type(cells=500000)
+    t["hard_cores"] = []
+    assert any("ADV-FP-OVERSIZE T:" in x for x in _flat_lines(t))
+
+
+def test_flat_stale_kit_is_ignored():
+    t = _type(cells=998239)
+    stale = {"T": {"last": {"cells": 5000000, "t0": time.time() - 6 * 86400, "stage": "place"}}}   # svc 11-20 flat kits predate the cores
+    assert not any("ADV-FP-OVERSIZE" in x for x in _flat_lines(t, cache=stale))
