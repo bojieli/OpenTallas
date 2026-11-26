@@ -241,7 +241,7 @@ def pin_eol_findings(path, layers=STALE_LAYERS):
     return {L: dict(pins=len(d["pins"]), shapes=d["shapes"], example=d["example"]) for L, d in out.items()}
 
 
-def regrow(lef_in, lef_out, layers):
+def regrow(lef_in, lef_out, layers, extra=None):
     """v3 (Fable 11-25, = KV-PC-ABSTRACT v3): grow each OBS rect of `layers` by max(min spacing, pitch) (= merge gap 2 x pitch / 2),
     clip to the outline, merge, cut ONLY each signal pin's own shape (foreign metal and its spacing stay OBS), regrow slivers
     below the layer min width in place (never over a pin, never outside the macro) -> lef_out; -> per-layer stats"""
@@ -263,7 +263,7 @@ def regrow(lef_in, lef_out, layers):
     blocks, stats = [], {}
     for L in layers:
         g = _nm(max(MIN_SPACE.get(L, 0.024), PITCH.get(L, 0.048)))
-        old = obs.get(L, [])
+        old = obs.get(L, []) + list((extra or {}).get(L, []))
         grown = [(max(0, r[0] - g), max(0, r[1] - g), min(Wn, r[2] + g), min(Hn, r[3] + g)) for r in old]
         clear = list(sig_pins.get(L, []))
         # PIN-EOL: grown OBS stops EOL_CLEAR short of every signal pin shape; real foreign metal inside that band stays OBS
@@ -325,7 +325,13 @@ def form(base, detail, out, receipt=None, layers="auto"):
         lns = fh.readlines()
     lns, rec["pin_wire_merge"] = A.merge_pin_wires(lns, set(sel))
     tmp.write_text("".join(lns))
-    rec["regrow"] = regrow(tmp, out, sel)
+    # PIN-METAL 11-25: exact BTerm metal the bound pins do not cover (a bound view whose pin shapes differ from the signed DB,
+    # e.g. LL*/hcpost/elemA/B) is real metal of that net: it becomes OBS so no foreign wire is routed onto it
+    _, _, _, xp0 = layer_rects(detail)
+    _, _, _, bp0 = layer_rects(tmp)
+    extra = {L: K.union_minus(xp0.get(L, []), bp0.get(L, [])) for L in sel}
+    rec["pin_metal_to_obs"] = {L: len(v) for L, v in extra.items() if v}
+    rec["regrow"] = regrow(tmp, out, sel, extra)
     tmp.unlink()
     # the check compares against the base with the same merged pin rects (only RECT lines added inside PIN sections)
     bh, bb, bt = A._split(base.read_text().splitlines(keepends=True))
