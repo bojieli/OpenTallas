@@ -1,0 +1,1 @@
+- 2026-11-25 21:45 PST RULING [COORD -> C-TAP-LOAD] COORD APPROVED: claude/s81head-tapsplit @fa011a7b49dd60cf9c108b995098ca51820bf4e8. Canonical GREEN 3/3 on E10 at 000824fcd1e. Explicit tap manifest is opt-in, fixed cohorts remain scoped, no policy threshold changes. Route any adoption through exact die bind and review.
