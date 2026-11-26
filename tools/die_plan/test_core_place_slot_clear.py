@@ -114,3 +114,19 @@ if __name__ == "__main__":
         if k.startswith("test_"):
             v()
     print("ok")
+
+
+
+def test_overlap_guard_uses_the_core_track_offset():
+    from types import SimpleNamespace
+
+    cores = [
+        {"inst": "west", "origin_um": [17.28, 190.08], "outline_um": [268.38, 221.4]},
+        {"inst": "east", "origin_um": [285.12, 190.08], "outline_um": [268.38, 221.4],
+         "track_offset_um": [0.54, 0.0]},
+    ]
+    model = SimpleNamespace(C=cores, core_origin=lambda i: cores[i]["origin_um"],
+                            core_orient=lambda i: "R0")
+    assert CP.overlaps(model) == 0
+    cores[1]["track_offset_um"] = [0.27, 0.0]
+    assert CP.overlaps(model) == 1

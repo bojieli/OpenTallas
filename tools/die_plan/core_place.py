@@ -2216,13 +2216,18 @@ def eq_gate(t0, t1):
 
 
 def overlaps(M):
+    """Count intersecting hard cores at the placements that GEN consumes."""
+    from schema import placed_macro_boxes
+
+    cores = [dict(c, origin_um=M.core_origin(i), orient=M.core_orient(i))
+             for i, c in enumerate(M.C)]
+    boxes = list(placed_macro_boxes({"hard_cores": cores}).values())
     out = 0
-    for i in range(M.n):
-        xi, yi = M.core_origin(i)
-        for j in range(i + 1, M.n):
-            xj, yj = M.core_origin(j)
-            if xi < xj + M.dim[j, 0] - EPS and xj < xi + M.dim[i, 0] - EPS and \
-                    yi < yj + M.dim[j, 1] - EPS and yj < yi + M.dim[i, 1] - EPS:
+    for i, first in enumerate(boxes):
+        for other in boxes[i + 1:]:
+            width = min(first[2], other[2]) - max(first[0], other[0])
+            height = min(first[3], other[3]) - max(first[1], other[1])
+            if width > EPS and height > EPS:
                 out += 1
     return out
 
