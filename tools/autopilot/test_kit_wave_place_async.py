@@ -207,6 +207,46 @@ class PlaceAsync(unittest.TestCase):
             self.assertIn("--hosts intel1 ", run[0])
             self.assertNotIn("--stage", run[0])
 
+    def test_private_empty_spill_pool_keeps_the_frozen_producer(self):
+        for async_ok in (True, False):
+            with self.subTest(async_ok=async_ok), tempfile.TemporaryDirectory() as d:
+                f = Fake(d, async_ok=async_ok)
+                p = spec(d, gen_host="epyc7")
+                sp = json.loads(p.read_text())
+                sp.update(private={"wave_env": {}}, goal="place",
+                          hosts=["epyc7", "intel1", "epyc8", "intel2"], roam_hosts=["epyc7"],
+                          place_spill=False, place_spill_hosts=[])
+                p.write_text(json.dumps(sp))
+                with (
+                    patch.object(KW, "private_config_text", return_value='{"dies":{"s81":{}}}'),
+                    patch.object(KW, "private_spec_stale", return_value=""),
+                    patch.object(KW, "PLACE_POLL_S", 0),
+                    patch.object(KW.subprocess, "run", f),
+                ):
+                    rc = KW.run_item(p)
+                self.assertEqual(rc, 0, (Path(d) / "result.json").read_text())
+                runs = [c for c in f.calls if "--threads 8 --dir /w/gen/T " in c and " place 48 8" in c]
+                self.assertEqual(len(runs), 1, f.calls)
+                self.assertIn("--hosts epyc7 ", runs[0])
+                self.assertIn("--strict-host --no-spill ", runs[0])
+                self.assertNotIn("--stage", runs[0])
+                self.assertFalse(any("rsync" in c and ":/w/gen/" in c and "epyc8" in c for c in f.calls))
+                self.assertEqual(json.loads(p.read_text()), sp)
+
+    def test_invalid_explicit_place_pool_fails_before_generation(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = spec(d, gen_host="epyc7")
+            sp = json.loads(p.read_text())
+            sp.update(private={"wave_env": {}}, goal="place",
+                      hosts=["epyc7", "epyc8"], roam_hosts=["epyc7"],
+                      place_spill=True, place_spill_hosts=[])
+            p.write_text(json.dumps(sp))
+            with patch.object(KW.subprocess, "run", side_effect=AssertionError("started an external action")):
+                self.assertEqual(KW.run_item(p), 1)
+            res = json.loads((Path(d) / "result.json").read_text())
+            self.assertEqual((res["verdict"], res["stage"]), ("FAIL", "place_hosts"))
+            self.assertIn("invalid or empty approved PLACE host pool", res["tail"])
+
     def test_terminal_client_rc_is_the_place_result(self):
         with tempfile.TemporaryDirectory() as d:
             rc, res = self.go(d, Fake(d, receipt=False, client_rc=5))

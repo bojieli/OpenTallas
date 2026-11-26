@@ -8156,9 +8156,18 @@ def write_redesign(cfg, st, ap_dir):
     return rows
 
 
+def pinned_place_producer(sp, gen_host):
+    """Identify a private no-spill spec that froze one approved producer."""
+    hosts = sp.get("hosts")
+    return (bool(sp.get("private")) and sp.get("place_spill") is False
+            and sp.get("roam_hosts") == [gen_host] and isinstance(hosts, (list, tuple)) and gen_host in hosts)
+
+
 def place_dispatch_limits(sp, gen_host, hub, spill):
     """Honor an explicit pool on every detached PLACE admission and spill."""
     pool = sp.get("place_spill_hosts")
+    if pool == [] and not spill and pinned_place_producer(sp, gen_host):
+        pool = [gen_host]
     if pool is None:
         if not sp.get("private"):
             return []
@@ -9823,6 +9832,13 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         cfg = dict(cfg, ot_run=None)
         sp = spec_for(cfg, die, item, hub, kind=kind)
         sp["ot_run_note"] = f"hub ot_run override not on this host ({e}); {OT_RUN}"
+    if sp.get("place_spill_hosts") is not None:
+        # Validate before resolving private tree inputs. An explicit --host must
+        # belong to a configured pool or be an already approved no-spill producer.
+        if host:
+            place_dispatch_limits(dict(sp, private=True, roam_hosts=[host]), host, hub, False)
+        else:
+            place_dispatch_limits(dict(sp, private=True), sp["gen_host"], hub, sp.get("place_spill", True))
     other_tree = bool(tree) and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/")
     if other_tree and sp.get("gen_tools_manifest_sha"):  # FLOW-PRIVSPEC-R1: the wave's gen_tools_pin belongs to the wave tree, never to --tree
         sp.pop("gen_tools_manifest_sha", None)
@@ -9897,9 +9913,6 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["roam_hosts"] = [host]
         # The private-spec CLI documents --host as its actual place host.
         # Do not re-expand the physical pool after generating its exact kit.
-        permitted = sp.get("place_spill_hosts")
-        if permitted is not None and host not in permitted:
-            raise ValueError(f"private --host {host} is outside the configured PLACE pool")
         sp["place_spill_hosts"] = [host]
     if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
         sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
@@ -11150,6 +11163,14 @@ def _run_item(spec_path, resume_reviewed=False):
 
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
+    if not resume_reviewed and sp.get("place_spill_hosts") is not None and not (out / "place_service.json").exists():
+        try:
+            place_dispatch_limits(sp, G, hub, sp.get("place_spill", True))
+        except ValueError as e:
+            print(f"KW_STAGE place_hosts {now_s()} :: REFUSED {e}", flush=True)
+            res.update(stage="place_hosts", verdict="FAIL", cls="FLOW", tail=str(e))
+            (out / "result.json").write_text(json.dumps(res, indent=1))
+            return 1
     logs = []
     plan_review = "" if (resume_reviewed or sp.get("private")) else plan_visual_refusal(sp, out, hub)
     if plan_review:
@@ -12282,18 +12303,19 @@ def _run_item(spec_path, resume_reviewed=False):
                 res["place_receipt"] = rcpt
             return after_place(K, *resume_verify(rs, rc, txt))
         # a resumed kit's run/ holds hardlinks into the previous attempt on G: it PLACEs on G only (a relay would copy GBs)
-        for h in ([] if rs else [h for h in sp["hosts"] if h not in (G, hub, "localhost") and h not in stage_drain()]):     # FLOW-OPS-0900 fix 4: no relay copy onto a draining host
+        pinned = sp.get("place_spill_hosts") in ([], [G]) and pinned_place_producer(sp, G)
+        for h in ([] if rs or pinned else [h for h in sp["hosts"] if h not in (G, hub, "localhost") and h not in stage_drain()]):     # FLOW-OPS-0900 fix 4: no relay copy onto a draining host
             cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
                   f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
             rc, txt = run(f"sync_{h}", ["bash", "-c", cp], idempotent=True)
             if rc:
                 return fail(f"sync_{h}", txt)
         m, t = sp["place_mem_gb"], sp["place_threads"]
-        phosts = [G] if rs else sp["hosts"]
-        if not rs:      # FLEET-WATCH-R5 / FLOW-OPS-0900 fix 4: the spec's frozen host list (die `hosts`, e.g. intel1 on KV-D26) is re-checked against the drain state, no fall-back to
+        phosts = [G] if rs or pinned else sp["hosts"]
+        if not rs and not pinned:      # FLEET-WATCH-R5 / FLOW-OPS-0900 fix 4: the spec's frozen host list (die `hosts`, e.g. intel1 on KV-D26) is re-checked against the drain state, no fall-back to
             phosts = [h for h in phosts if h not in stage_drain()] or [G]      # the capped list: only the gen host, where the kit already is
         pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
-        if pref and not rs:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
+        if pref and not rs and not pinned:                              # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
             p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
             stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
             ok = place_prefer_live(pref, stt, m, hub, fall=sp.get("host_fall_gb_h"))
@@ -12303,7 +12325,10 @@ def _run_item(spec_path, resume_reviewed=False):
                 # RETRY-INFRA at 02:51-03:01).  The preferred hosts go first, every other host stays allowed.
                 phosts = ok + [h for h in phosts if h not in ok]
         prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-        rc, txt = run("place", otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True))
+        argv = otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True)
+        if pinned:
+            argv[1:1] = place_dispatch_limits(sp, G, hub, False)
+        rc, txt = run("place", argv)
         ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
         res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
         if h and h != G and not (on_hub and h == hub):

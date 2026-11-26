@@ -17,7 +17,7 @@ def test_place_async_and_otrun_have_the_guard():
     # new rule (COORD 11-12): gen / bind / kit_rtl / lint / preflight / geom refuse the hub; only the place stage may use it
     # (as ot-run 'localhost', capped by ot-run HOST_RESERVE + scratch floor)
     assert 'hosts = target_hosts(hosts, hub, allow_hub)' in src
-    assert 'phosts, allow_hub=True))' in src
+    assert 'phosts, allow_hub=True)' in src
     # Keep the existing host and roam defaults when a stage declares its own disk budget.
     assert 'def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True, extra_inputs=(),' in src
 
