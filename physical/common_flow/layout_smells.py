@@ -50,6 +50,7 @@ class Design:
 
     def __init__(self, path):
         self.stage, self.top, self.ninst, self.big = "", "", 0, False
+        self.sample = None          # (k, kept nets, all nets) when a big DB dumped sampled connectivity (S line)
         self.die = self.core = None
         self.layers, self.level_layer = {}, {}
         self.insts, self.pins, self.nets, self.blockages = {}, [], {}, []
@@ -87,6 +88,8 @@ class Design:
                     self.die = tuple(float(v) for v in p[1:5])
                 elif k == "C":
                     self.core = tuple(float(v) for v in p[1:5])
+                elif k == "S":
+                    self.sample = (int(p[1]), int(p[2]), int(p[3]))
                 elif k == "H":
                     self.stage, self.ninst, self.big, self.top = p[1], int(p[2]), p[3] == "1", p[4] if len(p) > 4 else ""
         self.w = self.die[2] - self.die[0]
@@ -772,13 +775,26 @@ def compute(dump_path, congestion=None, odb=None, congestion_source="routing"):
             checks[name] = fn()
         except Exception as e:     # advisory: one bad check never loses the others
             checks[name] = not_computable("check raised %s: %s" % (type(e).__name__, e))
+    if d.sample and d.sample[0] > 1:
+        k, kept, total = d.sample
+        for name in CONN_CHECKS:
+            c = checks.get(name) or {}
+            if c.get("computable", True):
+                c["sampled"] = dict(k=k, nets_kept=kept, nets_total=total)
+                c["method"] = (c.get("method") or "") + (" [SAMPLED big DB: %d of %d nets; ports, macro pins, clocks and repeater trees complete, "
+                                                         "other nets 1 in %d, so counts are lower bounds]" % (kept, total, k))
     doc = dict(schema=SCHEMA, stage=d.stage, block=d.top, odb=odb, instances=d.ninst, macros=len(d.macros), pins=len(d.pins),
                die_um=[rnd(v) for v in d.die], big_db=d.big, advisory=True, thresholds=TH, checks=checks)
+    if d.sample:
+        doc["sampled_connectivity"] = dict(k=d.sample[0], nets_kept=d.sample[1], nets_total=d.sample[2])
     c = congestion_summary(congestion, d.macros, congestion_source) if congestion_source != "none" else None
     if c:
         doc["grt_congestion"] = c
     doc["summary"] = one_line(doc)
     return doc
+
+
+CONN_CHECKS = ("opposite_face_pins", "channel_tracks", "clock", "fanout_spread")
 
 
 def one_line(doc):
@@ -795,6 +811,9 @@ def one_line(doc):
     s = "%s %d/6 flagged%s" % (doc["stage"], len(fl), ": " + " ".join(fl) if fl else "")
     if un:
         s += " | not computable: " + ",".join(un)
+    sc = doc.get("sampled_connectivity")
+    if sc and sc["k"] > 1:
+        s += " | sampled connectivity 1/%d (%d of %d nets)" % (sc["k"], sc["nets_kept"], sc["nets_total"])
     if doc.get("grt_congestion"):
         g = doc["grt_congestion"]
         s += " | %s max %.0f%%, %d gcells >90%%" % ("GRT" if g["source"] == "routing" else "RUDY", g["max_pct"], g["over_90pct"])

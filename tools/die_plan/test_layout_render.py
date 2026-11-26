@@ -206,6 +206,61 @@ def test_big_db_says_not_computable(tmp_path):
     assert r["pin_track_use"]["computable"] and r["local_density"]["computable"]
 
 
+def test_big_db_sampled_connectivity_is_computable_and_labelled(tmp_path):
+    """VIS-REOWN 11-25 (COORD: connectivity smells 'not computable' on big KV/QC DBs): layout_render.tcl now dumps sampled nets on a big DB
+    with an S line; the four connectivity checks compute and say they are sampled lower bounds"""
+    lines = [inst(1, "DFFHQNx1_ASAP7_75t_R", 10, 10), inst(2, "BUFx2_ASAP7_75t_R", 11, 10), inst(3, "AND2x2_ASAP7_75t_R", 150, 10),
+             inst(4, "AND2x2_ASAP7_75t_R", 12, 12), net("n1", O(1, "QN"), L(2)), net("n2", O(2), L(3), L(4)), "S\t7\t2\t14"]
+    p = dump(tmp_path, lines)
+    doc = LS.compute(p)
+    for k in ("opposite_face_pins", "channel_tracks", "fanout_spread"):
+        assert doc["checks"][k]["computable"], k
+    for k in LS.CONN_CHECKS:                       # (clock: this fixture has no clock net, so it stays 'no clock' and unlabelled)
+        if doc["checks"][k]["computable"]:
+            assert doc["checks"][k]["sampled"] == {"k": 7, "nets_kept": 2, "nets_total": 14} and "SAMPLED big DB" in doc["checks"][k]["method"], k
+    assert doc["checks"]["fanout_spread"]["flag"] and doc["sampled_connectivity"]["k"] == 7
+    assert "sampled connectivity 1/7 (2 of 14 nets)" in doc["summary"]
+    assert "sampled" not in LS.compute(dump(tmp_path, lines[:-1]))["summary"]          # small DB: unchanged
+
+
+def test_layout_render_samples_instead_of_skipping_big_db_connectivity():
+    t = (CF / "layout_render.tcl").read_text()
+    assert "no connectivity dump" not in t and "proc lr_keep_full" in t and 'puts $f "S\\t$lr_k\\t$lr_kept\\t$lr_total"' in t
+
+
+TCL_MOCK = r"""
+proc mkobj {name body} { proc $name {m args} $body }
+# masters
+mkobj mBUF {switch $m { getName {return BUFx2_ASAP7_75t_R} isBlock {return 0} }}
+mkobj mAND {switch $m { getName {return AND2x2_ASAP7_75t_R} isBlock {return 0} }}
+mkobj mDFF {switch $m { getName {return DFFHQNx1_ASAP7_75t_R} isBlock {return 0} }}
+mkobj mRAM {switch $m { getName {return ram} isBlock {return 1} }}
+foreach {i m} {iBUF mBUF iAND mAND iDFF mDFF iRAM mRAM} { mkobj $i "return $m" }
+foreach {t n} {tA A tCLK CLK tY Y} { mkobj $t "return $n" }
+proc it {inst mt} { set nm it_${inst}_$mt; mkobj $nm "switch \$m { getInst {return $inst} getMTerm {return $mt} }"; return $nm }
+proc mknet {name sig bterms its} { mkobj $name "switch \$m { getSigType {return $sig} getBTerms {return {$bterms}} getITerms {return {$its}} getName {return $name} }" }
+mknet nPlain SIGNAL {} [list [it iAND tA] [it iDFF tY]]
+mknet nRep SIGNAL {} [list [it iBUF tA] [it iAND tY]]
+mknet nPort SIGNAL {bt1} [list [it iAND tA]]
+mknet nMacro SIGNAL {} [list [it iRAM tA] [it iAND tY]]
+mknet nClkPin SIGNAL {} [list [it iDFF tCLK]]
+mknet nClk CLOCK {} {}
+mknet nPwr POWER {} {}
+"""
+
+
+@pytest.mark.skipif(not __import__("shutil").which("tclsh"), reason="no tclsh")
+def test_lr_keep_full_keeps_ports_macros_clocks_and_repeater_nets(tmp_path):
+    t = (CF / "layout_render.tcl").read_text()
+    i = t.index("proc lr_keep_full")
+    j = t.index("\n}\n", i) + 3
+    (tmp_path / "k.tcl").write_text(TCL_MOCK + t[i:j] + "foreach n {nPlain nRep nPort nMacro nClkPin nClk nPwr} { puts \"$n [lr_keep_full $n]\" }\n")
+    out = subprocess.run(["tclsh", str(tmp_path / "k.tcl")], capture_output=True, text=True, timeout=30)
+    assert out.returncode == 0, out.stderr
+    got = dict(l.split() for l in out.stdout.split("\n") if l.strip())
+    assert got == {"nPlain": "0", "nRep": "1", "nPort": "1", "nMacro": "1", "nClkPin": "1", "nClk": "1", "nPwr": "1"}
+
+
 def test_main_writes_outputs_and_congestion_skips_macros(tmp_path):
     p = dump(tmp_path, clock_tree_lines() + [inst(9, "ram", 120, 10, 50, 20, block=1, top=4)])
     csv = tmp_path / "c.csv"

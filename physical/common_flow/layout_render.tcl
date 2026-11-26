@@ -1,7 +1,7 @@
 # KW-FIX-25/AUTORENDER 11-06: read one stage ODB (read only, no write_db), dump what layout_smells.py needs, compute smells.json,
 # and save PNGs marked with the worst offenders.  Run by layout_render_hook.sh: openroad -gui (offscreen Qt), timeout-bounded.
-# env: OT_LR_ODB, OT_LR_OUT, OT_LR_LABEL (place|grt|route), OT_LR_TOOLS, OT_LR_MAX_INST (default 400000: above it no connectivity
-# dump, low resolution), OT_LR_KEEP_DUMP=1 keeps dump.tsv.
+# env: OT_LR_ODB, OT_LR_OUT, OT_LR_LABEL (place|grt|route), OT_LR_TOOLS, OT_LR_MAX_INST (default 400000: above it sampled connectivity
+# (OT_LR_SAMPLE_ROOTS plain nets, default 100000; repeater trees, ports, macros, clocks complete), low resolution), OT_LR_KEEP_DUMP=1 keeps dump.tsv.
 # Everything inside one catch: under -gui an uncaught Tcl error would leave OpenROAD in its event loop until the timeout.
 set lr_top_rc [catch {
 proc lr_env {n d} { return [expr {[info exists ::env($n)] ? $::env($n) : $d}] }
@@ -52,10 +52,24 @@ proc lr_dump {path} {
     foreach bp [$bt getBPins] { foreach box [$bp getBoxes] { set l0 [$box getTechLayer]; if {$l0 ne "NULL"} { set ly [$l0 getName] }; break }; if {$ly ne ""} { break } }
     puts $f "P\t[$bt getName]\t[$n getName]\t$st\t[$bt getIoType]\t$ly\t[lr_box [$bt getBBox]]"
   }
-  if {$lr_big} { lr_note "big DB ($lr_ninst insts): no connectivity dump"; close $f; return }
+  # big DB (COORD 11-25: smells were 'not computable' on most KV/QC types): sampled connectivity instead of none.  Kept complete:
+  # nets with a port, a macro pin or a clock pin, and every net driven by or feeding a repeater (buf/inv/hold buffer), so each kept
+  # root's buffer tree is whole; other nets (non-repeater driver and loads) are kept 1 in k, k = ceil(those / OT_LR_SAMPLE_ROOTS).
+  # Header S line: S <k> <kept> <total> (layout_smells marks every connectivity check 'sampled').
+  set lr_k 1
+  if {$lr_big} {
+    set lr_rootn 0
+    foreach n [$lr_b getNets] { if {![lr_keep_full $n]} { incr lr_rootn } }
+    set lr_k [expr {max(1, int(ceil(double($lr_rootn) / [lr_env OT_LR_SAMPLE_ROOTS 100000])))}]
+    lr_note "big DB ($lr_ninst insts): sampled connectivity, 1 in $lr_k of $lr_rootn plain nets, repeater trees/ports/macros/clocks complete"
+  }
+  set lr_seen 0; set lr_kept 0; set lr_total 0
   foreach n [$lr_b getNets] {
     set st [$n getSigType]
     if {$st eq "POWER" || $st eq "GROUND"} { continue }
+    incr lr_total
+    if {$lr_k > 1 && ![lr_keep_full $n]} { incr lr_seen; if {$lr_seen % $lr_k} { continue } }
+    incr lr_kept
     set ts {}
     foreach it [$n getITerms] {
       set mt [$it getMTerm]
@@ -73,7 +87,23 @@ proc lr_dump {path} {
       puts $f "G\t[$n getName]\t[$ly getRoutingLevel]\t[lr_box [$g getBox]]"
     }
   }
+  if {$lr_big} { puts $f "S\t$lr_k\t$lr_kept\t$lr_total" }
   close $f
+}
+
+# a net kept whole when connectivity is sampled: power excluded by the caller; ports, macro pins, clock pins, repeaters
+proc lr_keep_full {n} {
+  set st [$n getSigType]
+  if {$st eq "POWER" || $st eq "GROUND"} { return 1 }
+  if {$st eq "CLOCK" || [llength [$n getBTerms]]} { return 1 }
+  foreach it [$n getITerms] {
+    set inst [$it getInst]; set m [$inst getMaster]
+    if {![info exists ::lr_rep($m)]} { set ::lr_rep($m) [list [$m isBlock] [regexp -nocase {^(BUF|INV|HB[0-9]|CKINV|CKBUF|DLY)} [$m getName]]] }
+    lassign $::lr_rep($m) isb rep
+    if {$isb || $rep} { return 1 }
+    if {[regexp {^(CLK|CK|GCLK|clk)$} [[$it getMTerm] getName]]} { return 1 }
+  }
+  return 0
 }
 
 # Heatmap CSVs are also the base of the GRT congestion summary in smells.json

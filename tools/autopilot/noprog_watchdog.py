@@ -2441,6 +2441,31 @@ def find_current_odb(work):
 
 
 RENDER_TOOLS = ("autopilot/render_review.sh", "autopilot/render_review.py", "ref_tile/layout_dump.tcl", "ref_tile/layout_png.py", "ref_tile/layout_review.tcl")
+RENDER_TOOLS_OPT = ("autopilot/stage_paths.tcl",)      # VIS-REOWN 11-25: worst-50 setup + hold paths of the rendered DB (copied when the tool root has it)
+LR_STAGE = (("5_2", "route"), ("5_3", "route"), ("6_", "route"), ("5_1", "grt"), ("4_", "place"), ("3_", "place"))
+
+
+def kit_smells(work, odb):
+    """the kit's own layout_smells result for the rendered DB's stage (<kit>/run/layout_review/{place,grt,route}/smells.one|json, written by
+    the KW-FIX-25 autorender hook) -> [one-line strings] for SMELL.txt / the summary.  Falls back to the latest stage that has one, labelled.
+    Pure of the hub."""
+    base = os.path.basename(odb or "")
+    want = next((st for pre, st in LR_STAGE if base.startswith(pre)), "")
+    out = []
+    for st in [want] + [x for x in ("route", "grt", "place") if x != want]:
+        if not st:
+            continue
+        d = os.path.join(work or "", "run", "layout_review", st)
+        one = read_text(os.path.join(d, "smells.one")).strip()
+        if not one:
+            try:
+                one = str(json.load(open(os.path.join(d, "smells.json"))).get("summary") or "")
+            except (OSError, ValueError):
+                one = ""
+        if one:
+            out.append(("smells " if st == want else f"smells (kit {st} DB, not this stage) ") + one[:300])
+            break
+    return out
 
 
 def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False):
@@ -2474,9 +2499,10 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
             continue
     if not rev:
         return "no-writable-dir", ""
-    for t in RENDER_TOOLS:
+    for t in RENDER_TOOLS + tuple(x for x in RENDER_TOOLS_OPT if os.path.isfile(os.path.join(root, x))):
         with open(os.path.join(root, t), "rb") as f, open(os.path.join(rev, "tools", os.path.basename(t)), "wb") as g:
             g.write(f.read())
+    summary = list(summary) + kit_smells(work, odb)          # COORD 11-25: reviewers saw only 'checkpoint' -> the kit's computed smells ride along
     try:
         sz = os.path.getsize(odb)
     except OSError:
@@ -2486,7 +2512,8 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     with open(sig, "w") as f:
         json.dump({"verdict": "SMELL-MIDSTAGE", "reasons": summary}, f)
     with open(os.path.join(rev, "review.json"), "w") as f:
-        json.dump({"id": rid, "kit": work, "odb": odb, "signoff": sig, "image": image, "mem_gb": mem, "title": f"SMELL {stage}: " + "; ".join(summary)[:160]}, f)
+        json.dump({"id": rid, "kit": work, "odb": odb, "signoff": sig, "image": image, "mem_gb": mem, "title": f"SMELL {stage}: " + "; ".join(summary)[:160],
+                   "stage_paths": True, "npath": 50}, f)
     cong = sorted(glob.glob(os.path.join(os.path.dirname(odb).replace("/results/", "/reports/"), "congestion-*.rpt")))
     with open(os.path.join(rev, "SMELL.txt"), "w") as f:
         f.write(f"kit {work}\nstage {stage}\nodb {odb}\n" + "".join(f"smell {x}\n" for x in summary) + "".join(f"congestion report {c}\n" for c in cong[-3:]))

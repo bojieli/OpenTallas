@@ -307,6 +307,35 @@ def test_renders_are_never_parked_on_a_draining_or_full_host(tmp_path):
     assert nw.pp_launch({"kit": "/k", "odb": "/k/x.odb", "key": "k"}, str(tmp_path), NOW, roots=[str(tmp_path)]) in ("no-driver",) or True
 
 
+def test_render_carries_stage_paths_and_the_kits_own_smells(tmp_path):
+    """VIS-REOWN 11-25 (COORD: reviewers saw 'paths.png 0 drawn' and only 'checkpoint'): the SMELL render asks render_review.sh for the
+    DB's own worst-50 setup + hold paths (stage_paths.tcl, copied when the tool root has it) and carries the kit's layout_smells line"""
+    work = tmp_path / "kit"
+    (work / "run/results/asap7/d/base").mkdir(parents=True)
+    (work / "run/results/asap7/d/base/3_3_place_gp.odb").write_text("odb")
+    (work / "run/layout_review/place").mkdir(parents=True)
+    (work / "run/layout_review/place/smells.one").write_text("place 1/6 flagged: fanout_spread=535.1\n")
+    (work / "run/layout_review/grt").mkdir(parents=True)
+    (work / "run/layout_review/grt/smells.json").write_text(json.dumps({"summary": "grt 2/6 flagged"}))
+    root = tmp_path / "tools"
+    for t in nw.RENDER_TOOLS + nw.RENDER_TOOLS_OPT:
+        (root / os.path.dirname(t)).mkdir(parents=True, exist_ok=True)
+        (root / t).write_text("x")
+    st, rev = nw.smell_render(str(work), str(work), "place-gp", "img:1", "c1", ["checkpoint PLACE-GP"], now=NOW, popen=lambda argv, **k: None, tools_roots=[str(root)])
+    assert st == "rendering" and os.path.isfile(os.path.join(rev, "tools/stage_paths.tcl"))
+    meta = json.load(open(os.path.join(rev, "review.json")))
+    assert meta["stage_paths"] is True and meta["npath"] == 50
+    reasons = json.load(open(os.path.join(rev, "signoff.json")))["reasons"]
+    assert reasons == ["checkpoint PLACE-GP", "smells place 1/6 flagged: fanout_spread=535.1"]
+    assert "smells place 1/6 flagged" in open(os.path.join(rev, "SMELL.txt")).read()
+    odb = str(work / "run/results/asap7/d/base/5_1_grt.odb")
+    assert nw.kit_smells(str(work), odb) == ["smells grt 2/6 flagged"]
+    assert nw.kit_smells(str(work), str(work / "run/results/asap7/d/base/6_final.odb")) == ["smells (kit grt DB, not this stage) grt 2/6 flagged"]
+    assert nw.kit_smells(str(tmp_path / "none"), odb) == []
+    os.remove(root / nw.RENDER_TOOLS_OPT[0])              # an older tool root without stage_paths.tcl still renders (optional tool)
+    assert nw.smell_render(str(work), str(work), "place-gp", "img:1", "c2", [], now=NOW + 60, popen=lambda argv, **k: None, tools_roots=[str(root)])[0] == "rendering"
+
+
 def test_smell_render_refuses_an_unfit_host(tmp_path, monkeypatch):
     monkeypatch.setattr(nw, "host_unfit", lambda *a, **k: "root 97 % full (> 95 %)")
     work = mkkit(tmp_path)
