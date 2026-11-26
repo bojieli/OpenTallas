@@ -124,9 +124,12 @@ def prev_map(trend_rows):
 
 def compare(meas, trend_rows, label):
     latest, seen = prev_map(trend_rows)
+    known_ids = {c for (_, c) in seen}
     rows = []
     for (die, cid), (cnt, basis, src) in sorted(meas.items()):
         p = latest.get((die, cid))
+        if p is None and cid in known_ids:  # a known class first counted on this die: it was 0 there at the last cut
+            p = {"count": "0", "basis": basis}
         if p is None:
             move = "NEW"
             pc, pb = "", ""
@@ -208,7 +211,7 @@ def write_trend(path, rows, summary, label):
                         "source": "no-fall streak on comparable classes", "prev_count": "", "prev_basis": "", "move": "STREAK"})
 
 
-def update_classes(path, rows, label):
+def update_classes(path, rows, label, meta=None):
     """refresh mapped_count / cut_local / owner_measurement of existing CLASSES.tsv rows; append NEW classes."""
     cur = read_tsv(path)
     cols = list(cur[0].keys()) if cur else ["class_id", "die", "kind", "static_check", "owner", "cut_local", "mapped_count",
@@ -222,8 +225,10 @@ def update_classes(path, rows, label):
             idx[k]["mapped_count"] = str(r["count"])
             idx[k]["owner_measurement"] = note
         else:
-            idx[k] = {"class_id": r["class_id"], "die": r["die"], "kind": "DESIGN" if r["class_id"].startswith("C-") else "PROCESS",
-                      "static_check": r["source"], "owner": "UNOWNED (CLASS-TRACK first seen)", "cut_local": label,
+            m = (meta or {}).get(r["class_id"], {})
+            idx[k] = {"class_id": r["class_id"], "die": r["die"], "kind": m.get("kind") or ("DESIGN" if r["class_id"].startswith("C-") else "PROCESS"),
+                      "static_check": m.get("static_check") or r["source"], "owner": m.get("owner") or "UNOWNED (CLASS-TRACK first seen)",
+                      "cut_local": label,
                       "mapped_count": str(r["count"]), "status": "NEW at first cut; needs an owner",
                       "owner_measurement": note}
     with open(path, "w", newline="") as fh:
@@ -263,6 +268,7 @@ def main(argv=None):
     c.add_argument("--carry", default="")
     c.add_argument("--trend", required=True)
     c.add_argument("--classes", default="")
+    c.add_argument("--meta", default="", help="TSV class_id, owner, static_check, kind for classes first seen this cut")
     c.add_argument("--plans", default="", help="TSV die<TAB>plan_sha12 (for the source column)")
     c.add_argument("--write", action="store_true", help="append CLASS-TREND.tsv and refresh CLASSES.tsv (default: report only)")
     n = sub.add_parser("scan", help="class ids tagged in lane posts since a cut that CLASSES.tsv / the trend do not know")
@@ -313,7 +319,7 @@ def main(argv=None):
     if a.write:
         write_trend(a.trend, rows, summary, a.label)
         if a.classes:
-            update_classes(a.classes, rows, a.label)
+            update_classes(a.classes, rows, a.label, {r['class_id']: r for r in read_tsv(a.meta)} if a.meta else None)
     return 0
 
 

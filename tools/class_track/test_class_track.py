@@ -70,3 +70,14 @@ def test_scan_finds_unknown_tags(tmp_path):
                                 "continuation P-NOT-A-POST-LINE\n")
     got = ct.scan_posts(str(posts), "2026-11-25 21:00", {"C-STREET"})
     assert got == [("A", "2026-11-26 08:10", "P-LEC-WIDTH")]
+
+
+def test_known_class_on_new_die_starts_from_zero(tmp_path, capsys):
+    trend = _setup(tmp_path)
+    carry = tmp_path / "carry.tsv"
+    _w(carry, [["HEAD", "C-STREET", 2, "exact", "x"]], ["die", "class_id", "count", "basis", "source"])
+    pre = tmp_path / "pre"
+    pre.mkdir()
+    assert ct.main(["cut", "--label", "c1", "--pre-dir", str(pre), "--carry", str(carry), "--trend", str(trend)]) == 0
+    head = [ln for ln in capsys.readouterr().out.splitlines() if ln.startswith("HEAD")][0]
+    assert "NEW=0" in head and "comparable classes 0->2 (+2)" in head
