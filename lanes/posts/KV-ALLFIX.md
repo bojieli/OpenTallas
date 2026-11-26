@@ -1202,3 +1202,4 @@
 - 2026-11-25 21:29 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1417400-1795670334 on tolerant-swine: rc=0 after 646 s, ended 21:29:37, log /home/ubuntu/tmp/kvallfix/r8_g3_ship/intel2.log, cmd: --mem 12 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t9/r8_g3_ship_1125 -- bash -c 
   set -euo pipefail
   if [ 
+- 2026-11-25 21:30 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-2884051-1795670869 on key-cardinal: rc=0 after 179 s, ended 21:30:45 env=wave+0, log /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/private/KV-ALLFIX/kv3_hg_v1p6__ret4_wn_6_1125192757/gen/kv3_hg_v1p6__ret4_wn_6/review/ppr.log, cmd: --direct --threads 2 --mem 17 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-11
