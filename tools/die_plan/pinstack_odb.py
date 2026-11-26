@@ -79,18 +79,24 @@ def near_pin(rect, pin_boxes, pad):
                for _, px0, py0, px1, py1 in pin_boxes)
 
 
-def extract(odb, block, def_lines, window):
+def extract(odb, block, def_lines, window, selected_pins=()):
     if block.getDbUnitsPerMicron() != 1000:
         raise ValueError("pin stack export requires 1,000 database units per micron")
     pins = []
     for bterm in block.getBTerms():
+        name = bterm.getName()
+        if selected_pins and name not in selected_pins:
+            continue
         net = bterm.getNet()
         if net is None or net.getWire() is None or net.getSigType() in ("POWER", "GROUND"):
             continue
         boxes = [layer_rect(box.getTechLayer().getName(), box)
                  for bpin in bterm.getBPins() for box in bpin.getBoxes()]
         if boxes:
-            pins.append((bterm.getName(), net, boxes))
+            pins.append((name, net, boxes))
+    missing = set(selected_pins) - {name for name, _, _ in pins}
+    if missing:
+        raise ValueError("requested pins have no routed signal geometry: " + ", ".join(sorted(missing)))
     patches = def_patches(def_lines, {net.getName() for _, net, _ in pins})
     nets = {}
     out = {}
@@ -109,6 +115,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("odb", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--pin", action="append", default=[], help="expose the stack only for this pin; repeat as needed")
     window = parser.add_mutually_exclusive_group()
     window.add_argument("--window-nm", type=int, default=300)
     window.add_argument("--full", action="store_true", help="export the entire pin net for ownership diagnostics")
@@ -127,7 +134,7 @@ def main():
         path = Path(scratch) / "signed.def"
         odb.write_def(block, str(path))
         with path.open() as def_file:
-            result = extract(odb, block, def_file, None if args.full else args.window_nm)
+            result = extract(odb, block, def_file, None if args.full else args.window_nm, set(args.pin))
     args.output.write_text(json.dumps(result, sort_keys=True) + "\n")
     print(f"OT_PINSTACK bterms {len(result)} shapes {sum(len(v['stack']) for v in result.values())}")
 
