@@ -1,0 +1,1022 @@
+{
+ "schema": "opentallas.plan_rows.v1",
+ "class_id": "C-DIECLOCK-PHASE-BIND",
+ "lane": "HEAD-SERDES-R2",
+ "base_plan_sha256_12": "4bd6164aeb1e",
+ "source": "phase_bind {'plan_sha12': '4bd6164aeb1e', 'sta_spine_dir': '/srv/opentallas-scratch2/claude/head-serdes-r2/spine_w10_routed_nr', 'ctree_spef_sha12': '0d8e51bafd96', 'arr_sha12': {'TT': '08e97f29be14', 'FF': '2c0a8dad130f'}, 'sidecar_sha12': 'ba968452ea5a', 'sta_sha12': '509011a7376c', 'run_entry_rows_sha12': '39afdb1b083c'}",
+ "rows": [
+  {
+   "id": "PHASE-BIND-host_w-H",
+   "path": [
+    "partitions",
+    {
+     "name": "host_w"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_host_w",
+   "measured": "plan h=1 score 2.802 ps < guard; h=0 score 209.127 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-host_w-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "host_w"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_host_w",
+   "measured": "plan h=1 score 2.802 ps < guard; h=0 score 209.127 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_EN0-H",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_EN0"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 4,
+   "value": 3,
+   "type": "hd_serdes",
+   "measured": "plan h=4 score -6.372 ps < guard; h=3 score 310.954 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_EN0-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_EN0"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_serdes",
+   "measured": "plan h=4 score -6.372 ps < guard; h=3 score 310.954 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_ES0-H",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_ES0"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 5,
+   "value": 4,
+   "type": "hd_serdes",
+   "measured": "plan h=5 score 5.606 ps < guard; h=4 score 249.764 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_ES0-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_ES0"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_serdes",
+   "measured": "plan h=5 score 5.606 ps < guard; h=4 score 249.764 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_WN1-H",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_WN1"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_serdes",
+   "measured": "plan h=3 score -204.716 ps < guard; h=2 score 211.784 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-lk_WN1-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "lk_WN1"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_serdes",
+   "measured": "plan h=3 score -204.716 ps < guard; h=2 score 211.784 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-nst4-H",
+   "path": [
+    "partitions",
+    {
+     "name": "nst4"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 2,
+   "type": "hd_st_n4",
+   "measured": "plan h=1 score -3.045 ps < guard; h=2 score 337.308 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-nst4-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "nst4"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_st_n4",
+   "measured": "plan h=1 score -3.045 ps < guard; h=2 score 337.308 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp0_bw_i_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp0_bw_i_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 2.571 ps < guard; h=1 score 327.304 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp0_bw_i_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp0_bw_i_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 2.571 ps < guard; h=1 score 327.304 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp1_bw_i_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp1_bw_i_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 35.377 ps < guard; h=1 score 289.558 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp1_bw_i_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp1_bw_i_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 35.377 ps < guard; h=1 score 289.558 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp1_xw_o_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp1_xw_o_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 59.221 ps < guard; h=0 score 164.419 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp1_xw_o_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp1_xw_o_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 59.221 ps < guard; h=0 score 164.419 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": -2,
+   "value": -1,
+   "type": "hd_spn",
+   "measured": "plan h=-2 score 55.684 ps < guard; h=-1 score 156.132 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn",
+   "measured": "plan h=-2 score 55.684 ps < guard; h=-1 score 156.132 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3_bw_i_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3_bw_i_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 31.182 ps < guard; h=1 score 293.617 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3_bw_i_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3_bw_i_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 31.182 ps < guard; h=1 score 293.617 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3_xw_o_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3_xw_o_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 23.816 ps < guard; h=0 score 200.544 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp3_xw_o_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp3_xw_o_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 23.816 ps < guard; h=0 score 200.544 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp4_bw_i_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp4_bw_i_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 32.5 ps < guard; h=1 score 292.163 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp4_bw_i_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp4_bw_i_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 32.5 ps < guard; h=1 score 292.163 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp4_xw_o_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp4_xw_o_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 36.639 ps < guard; h=0 score 188.486 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp4_xw_o_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp4_xw_o_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_spn_wshim_tx",
+   "measured": "plan h=1 score 36.639 ps < guard; h=0 score 188.486 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp5_bw_i_shim-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sp5_bw_i_shim"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 54.662 ps < guard; h=1 score 271.575 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sp5_bw_i_shim-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sp5_bw_i_shim"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_spn_wshim_rx",
+   "measured": "plan h=0 score 54.662 ps < guard; h=1 score 271.575 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sst2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "sst2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 2,
+   "type": "hd_st_str",
+   "measured": "plan h=1 score 4.485 ps < guard; h=2 score 307.982 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-sst2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "sst2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_st_str",
+   "measured": "plan h=1 score 4.485 ps < guard; h=2 score 307.982 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0b0-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0b0"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -33.068 ps < guard; h=2 score 377.835 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0b0-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0b0"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -33.068 ps < guard; h=2 score 377.835 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0b2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0b2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 2,
+   "value": 3,
+   "type": "hd_tile",
+   "measured": "plan h=2 score 36.102 ps < guard; h=3 score 312.269 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0b2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0b2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score 36.102 ps < guard; h=3 score 312.269 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0o2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0o2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 22.694 ps < guard; h=2 score 318.762 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0o2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0o2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 22.694 ps < guard; h=2 score 318.762 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0o5-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0o5"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 41.642 ps < guard; h=2 score 300.138 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE0o5-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE0o5"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 41.642 ps < guard; h=2 score 300.138 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE1o2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE1o2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 2,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -130.014 ps < guard; h=1 score 286.486 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE1o2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE1o2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -130.014 ps < guard; h=1 score 286.486 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE2b8-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE2b8"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -76.081 ps < guard; h=2 score 340.419 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE2b8-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE2b8"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -76.081 ps < guard; h=2 score 340.419 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE2b9-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE2b9"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -99.835 ps < guard; h=1 score 316.665 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE2b9-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE2b9"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -99.835 ps < guard; h=1 score 316.665 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b1-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b1"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": -1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score 59.875 ps < guard; h=-1 score 161.285 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b1-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b1"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score 59.875 ps < guard; h=-1 score 161.285 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b3-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b3"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 2,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -213.268 ps < guard; h=1 score 203.232 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b3-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b3"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -213.268 ps < guard; h=1 score 203.232 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b4-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b4"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -136.535 ps < guard; h=1 score 279.965 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE3b4-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE3b4"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -136.535 ps < guard; h=1 score 279.965 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE4o2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tE4o2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 2,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -151.548 ps < guard; h=1 score 264.952 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tE4o2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tE4o2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=2 score -151.548 ps < guard; h=1 score 264.952 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW0b0-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW0b0"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=3 score 32.524 ps < guard; h=2 score 325.409 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW0b0-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW0b0"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=3 score 32.524 ps < guard; h=2 score 325.409 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW0b4-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW0b4"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -112.745 ps < guard; h=2 score 303.755 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW0b4-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW0b4"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=3 score -112.745 ps < guard; h=2 score 303.755 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW1o3-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW1o3"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 27.535 ps < guard; h=2 score 299.489 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW1o3-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW1o3"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=1 score 27.535 ps < guard; h=2 score 299.489 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW2b2-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW2b2"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": 3,
+   "value": 2,
+   "type": "hd_tile",
+   "measured": "plan h=3 score 4.933 ps < guard; h=2 score 331.392 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW2b2-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW2b2"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=3 score 4.933 ps < guard; h=2 score 331.392 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW3b9-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW3b9"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "replace",
+   "old": -1,
+   "value": -2,
+   "type": "hd_tile",
+   "measured": "plan h=-1 score 54.141 ps < guard; h=-2 score 102.662 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW3b9-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW3b9"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 1,
+   "value": 0,
+   "type": "hd_tile",
+   "measured": "plan h=-1 score 54.141 ps < guard; h=-2 score 102.662 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW3o0-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW3o0"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -49.9 ps < guard; h=1 score 341.391 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW3o0-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW3o0"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -49.9 ps < guard; h=1 score 341.391 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW5b7-H",
+   "path": [
+    "partitions",
+    {
+     "name": "tW5b7"
+    },
+    "reset_entry_phase"
+   ],
+   "op": "set",
+   "value": -1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -28.266 ps < guard; h=-1 score 244.298 ps (routed die clock, phase_bind)"
+  },
+  {
+   "id": "PHASE-BIND-tW5b7-STRAP",
+   "path": [
+    "partitions",
+    {
+     "name": "tW5b7"
+    },
+    "id_straps",
+    "strap_rst_ph"
+   ],
+   "op": "replace",
+   "old": 0,
+   "value": 1,
+   "type": "hd_tile",
+   "measured": "plan h=0 score -28.266 ps < guard; h=-1 score 244.298 ps (routed die clock, phase_bind)"
+  }
+ ]
+}
