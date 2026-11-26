@@ -433,30 +433,49 @@ def _f_leg(raw, plan_path, tree=None, **_k):
     return _run("LEG405-ZERO", lambda t, tn, r: leg405_zero(t), lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} 0 stages", raw)
 
 
+def _geoms_env():
+    """OT_ADV_LEG405_GEOM = JSON {type: geom.tsv of its 3_place} (tools/autopilot/geom_dump.tcl output): placed register geometry for SRC-NOT-AT-LEAF"""
+    p = os.environ.get("OT_ADV_LEG405_GEOM")
+    if not p or not os.path.isfile(p):
+        return {}
+    import json
+    with open(p) as f:
+        return json.load(f)
+
+
 def leg405_perbit_types(raw, plan_path, budget_s=None):
     """C-LEG405-R3: per-bit station-chain census from the true source (leg405_perbit.py) -> ({type: (over, near, worst um, slot list)}, n unmeasured,
     note).  over = hop + DRIFT_UM > 405, near = hop + NEAR_UM > 405.  Needs the plan on disk (schema.Plan); a type that cannot be built
-    is counted as unmeasured, a plan that cannot load measures nothing and says so.  Bounded by OT_ADV_LEG405_S seconds (default 150)."""
+    is counted as unmeasured, a plan that cannot load measures nothing and says so.  Bounded by OT_ADV_LEG405_S seconds (default 150).
+    SRC-NOT-AT-LEAF: with OT_ADV_LEG405_GEOM (placed geom.tsv per type) every internal_stations bus whose registers the placed netlist shows starts
+    (out bus) / ends (in bus) at the real register centroid instead of leaf_um / from_um / to_um; without it nothing changes."""
     import time
     from pathlib import Path as _P
     import schema as S
+    import src_centroid as SC
     budget = float(os.environ.get("OT_ADV_LEG405_S", "150")) if budget_s is None else budget_s
+    geoms = _geoms_env()
     t0, out, skipped, left = time.time(), {}, 0, 0
     P = S.Plan(raw, _P(plan_path))
-    names = [tn for tn, t in _types(raw) if t.get("ft_slots")]
+    names = [tn for tn, t in _types(raw) if t.get("ft_slots") or (tn in geoms and t.get("internal_stations"))]
     for i, tn in enumerate(names):
         if time.time() - t0 > budget:
             left = len(names) - i
             break
         try:
-            cen = LB.type_census(P, tn)
+            t = raw["partition_types"][tn]
+            cen = LB.type_census(P, tn) if t.get("ft_slots") else {}
+            ic = {}
+            if tn in geoms:
+                ic = {c: v for c, v in LB.internal_census(t, SC.overrides(SC.load(geoms[tn]), t)).items() if v["moved"]}
         except Exception:  # noqa: BLE001 - one unbuildable type never stops the scan
             skipped += 1
             continue
         over = [(sn, v["full_max"], v["first_max"], v["full_over"]) for sn, v in cen.items() if v["full_max"] + LB.DRIFT_UM > LB.LIMIT_UM]
-        near = [sn for sn, v in cen.items() if v["full_max"] + LB.NEAR_UM > LB.LIMIT_UM]
+        over += [(c + " (placed source)", v["max_um"], v["first_um"], v["n_over"]) for c, v in ic.items() if v["max_um"] + LB.DRIFT_UM > LB.LIMIT_UM]
+        near = [sn for sn, v in cen.items() if v["full_max"] + LB.NEAR_UM > LB.LIMIT_UM] + [c for c, v in ic.items() if v["max_um"] + LB.NEAR_UM > LB.LIMIT_UM]
         if near:
-            out[tn] = (len(over), len(near), max(v["full_max"] for v in cen.values()), sorted(over, key=lambda x: -x[1]))
+            out[tn] = (len(over), len(near), max([v["full_max"] for v in cen.values()] + [v["max_um"] for v in ic.values()]), sorted(over, key=lambda x: -x[1]))
     note = f"{skipped} type(s) not buildable" if skipped else ""
     if left:
         note = (note + "; " if note else "") + f"scan stopped at {budget:g} s, {left} type(s) not read"
