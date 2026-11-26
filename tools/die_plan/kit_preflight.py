@@ -537,6 +537,88 @@ def retired_grt_stop(kit):
     return errors
 
 
+# C-LEGACY-VIEW-EOL (S81-COL-EOL 11-26, FABLE-INDEP 10:05/10:11): 33 of 34 col_h9_r1 / col_h9_r2 kits were built with OT_POROUS_VIEWS=all and carry porous
+# M4/M5 views (dsfd_qbank_N 6e387979 ...) whose OBS ends inside the line-end keep-out of signal pins; DRT stalls on 358-388 M5 Lef58EolKeepOut.  The plain legacy
+# view routed clean (H9 P4, H10 R2).  A COL kit (DESIGN_NAME col_*) is refused when a staged macro LEF has a known stalling porous sha, or when its staged macro LEFs
+# carry more than EOL_M5_MAX signal pins with an M5 OBS stub / OBS inside the keep-out (static count, same predicate as abstract_exact.pin_eol_findings; self
+# contained because kit staging does not copy abstract_exact).  Legacy kits count 0-3; the porous set counts 59+.  OT_KIT_EOL_M5_MAX overrides the limit.
+EOL_STALL_SHA8 = {'6e387979': 'dsfd_qbank_N', '3d4bea94': 'dsfd_qbank_S', '37a8c80c': 'dsfd_node_NNfd', '9df7a432': 'dsfd_node_NNfu',
+                  'b5ff37d0': 'ot_s81_sstn_base566', '63b8a7f6': 'dsfd_bf_front_roots'}
+EOL_M5_MAX = 16
+_EOL_RECT = re.compile(r'^\s*RECT\s+(?:MASK\s+\d+\s+)?(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;')
+_EOL_CLEAR_UM = 0.048
+
+
+def lef_m5_eol_pins(text):
+    """number of signal pins of a LEF with an M5 shape whose own-wire OBS stub ends < 0.048 um past the pin line end, or with a separate M5 OBS inside the line-end zone"""
+    pins, obs, cur, sig, lay, in_obs = [], [], None, False, None, False
+    size = re.findall(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', text)
+    big = float(size[-1][0]) * float(size[-1][1]) / 2 if size else float('inf')
+    for ln in text.splitlines():
+        s = ln.strip()
+        if s == 'OBS':
+            in_obs = True
+            continue
+        m = re.match(r'PIN\s+(\S+)', s)
+        if m:
+            cur, sig, in_obs = m.group(1), False, False
+        elif s.startswith('USE '):
+            sig = s.rstrip(' ;').split()[1] == 'SIGNAL'
+        m = re.match(r'LAYER\s+(\w+)', s)
+        if m:
+            lay = m.group(1)
+        m = _EOL_RECT.match(ln)
+        if m and lay == 'M5':
+            r = tuple(round(float(v) * 1000) for v in m.groups())
+            if in_obs:
+                if (r[2] - r[0]) * (r[3] - r[1]) <= big * 1e6:
+                    obs.append(r)
+            elif cur and sig:
+                pins.append((cur, r))
+    e = round(_EOL_CLEAR_UM * 1000)
+    hit = set()
+    for pin, r in pins:
+        horiz = (r[2] - r[0]) >= (r[3] - r[1])
+        zones = [(r[0] - e, r[1], r[0], r[3]), (r[2], r[1], r[2] + e, r[3])] if horiz else [(r[0], r[1] - e, r[2], r[1]), (r[0], r[3], r[2], r[3] + e)]
+        a0, a1, n0, n1 = (0, 2, 1, 3) if horiz else (1, 3, 0, 2)
+        ext = [0, 0]
+        bad = False
+        for q in obs:
+            if q[0] <= r[2] and q[2] >= r[0] and q[1] <= r[3] and q[3] >= r[1]:      # touches the pin
+                if q[n0] < r[n1] and q[n1] > r[n0]:
+                    ext[0] = max(ext[0], r[a0] - q[a0])
+                    ext[1] = max(ext[1], q[a1] - r[a1])
+                continue
+            if any(q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1] for z in zones):
+                bad = True
+        if bad or any(0 < x < e for x in ext):
+            hit.add(pin)
+    return len(hit)
+
+
+def col_view_eol(kit):
+    """C-LEGACY-VIEW-EOL: refuse a COL kit that stages a known stalling porous view or too many M5 pin line-end OBS stubs (see EOL_M5_MAX)"""
+    import hashlib
+    cfg = rtl_lint.config(kit)
+    if not (cfg.get('DESIGN_NAME') or [''])[0].startswith('col_'):
+        return []
+    errors, total, detail = [], 0, []
+    for lef in sorted((kit / 'macros').glob('*.lef')) if (kit / 'macros').is_dir() else []:
+        sha8 = hashlib.sha256(lef.read_bytes()).hexdigest()[:8]
+        if sha8 in EOL_STALL_SHA8:
+            errors.append(f'macros/{lef.name}: porous view {sha8} ({EOL_STALL_SHA8[sha8]}) is the known Lef58EolKeepOut DRT staller (C-LEGACY-VIEW-EOL); '
+                          f'regenerate the kit without OT_POROUS_VIEWS (or with the pin_eol-fixed view)')
+        n = lef_m5_eol_pins(lef.read_text(errors='replace'))
+        if n:
+            total += n
+            detail.append(f'{lef.name}={n}')
+    limit = int(os.environ.get('OT_KIT_EOL_M5_MAX', EOL_M5_MAX))
+    if total > limit:
+        errors.append(f'staged macro LEFs carry {total} M5 signal pins with OBS inside the line-end keep-out (limit {limit}; {", ".join(detail)}): '
+                      f'DRT stalls on Lef58EolKeepOut (C-LEGACY-VIEW-EOL); bind the plain legacy or pin_eol-fixed views')
+    return errors
+
+
 # HOOK-SIBLINGS-1124 (COORD: kv3_hub_Wo_1124080816 died at CTS, clock_taps.tcl could not read /work/tap_landing_seam.tcl after hours of synth
 # and place): every staged tcl hook's `source <sibling>.tcl` ([file dirname [info script]]) and literal `source /work/<name>.tcl` must name a
 # file staged in the kit.  A source guarded by file exists / catch is skipped; one under an env flag (::env(X)) that config.mk does not set
@@ -605,6 +687,7 @@ def check(kit, plan_dir=None, contract=False, *, plan=None):
     run('staged_inputs', staged_inputs)
     run('sdc_and_ff_binding', lambda: sdc_lint.lint_kit_files(kit))
     run('retired_grt_stop', lambda: retired_grt_stop(kit))
+    run('col_view_eol', lambda: col_view_eol(kit))
     _hook_adv = []
     run('hook_sources', lambda: hook_sources(kit, _hook_adv))
     if _hook_adv:
