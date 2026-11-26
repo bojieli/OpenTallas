@@ -784,3 +784,5 @@
   [redirect] S81-C9-ROWS -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 14:20 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 slice_station__t38 GRT owner S81-ALLFIX-INT (64 min since queued, epyc9). 
 - 2026-11-26 14:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 bk_sel__t2 GRT owner S81-C9-ROWS (65 min since queued, epyc9). 
+- 2026-11-26 15:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R2; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (21.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
