@@ -8996,6 +8996,8 @@ def _plan_gate_pre(a):
     if "RELAYSINK" in requested:
         skip += ("RELAYSINK",)
         print("bind: plan_gate_pre explicit skip RELAYSINK")
+    if os.environ.get("OT_PLAN_GATE_ADVISORY", "off") != "on":
+        skip += ("ADVISORY",)            # PRE-REUSE-1125 (F-18): estimator lines (WARN ADV-*, never a FAIL) belong to the standalone PRE
     try:
         blob = Path(a.plan).read_bytes() + (Path(a.asbuilt).read_bytes() if a.asbuilt else b"") + str(base).encode()
         if "RELAYSINK" in requested:
@@ -9018,6 +9020,20 @@ def _plan_gate_pre(a):
     except (OSError, ValueError, AttributeError):
         pass
     printed = []
+    rec_fails = []
+    reuse = _pre_record_find(a, base, G, skip)
+    if reuse:
+        # PRE-REUSE-1125 (FLOW-0930 F-18): a standalone PRE of this exact plan / as-built / baseline ran: take its findings and run
+        # only the classes that read this bind's own elab (ELAB_CLASSES), instead of the whole PRE again
+        rpath, rec = reuse
+        elab = set(getattr(G, "ELAB_CLASSES", ("FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "RELAYSINK")))
+        skip = tuple(sorted(set(skip) | {c for c in getattr(G, "CLASSES", ()) if c not in elab}))
+        rec_fails = [x for x in rec.get("fails") or [] if not (len(x.split()) > 1 and x.split()[1].split("-")[0] in elab)]
+        x = (f"PRE-REUSE record {rpath} (plan_sha256 {rec['plan_sha256'][:12]}, {rec.get('result')}, {len(rec.get('fails') or [])} FAIL, "
+             f"scope {'all' if rec.get('types') is None else len(rec['types'])} types, tools {rec.get('tools')}); in-bind PRE runs only "
+             f"{','.join(sorted(elab))} (OT_PLAN_GATE_PRE_REUSE=0: full PRE)")
+        print(f"bind: plan_gate_pre {x}")
+        printed.append(f"bind: plan_gate_pre {x}")
     try:
         # BIND-SPEED-1118: the elab output of this run (OUT/asbuilt.json) lets the row checks (ROWSINK, MODULES) run here too;
         # a tool older than the live tree is a warning in a bind (an event may pin its tools), a FAIL in bind_fast.py precheck
@@ -9030,6 +9046,7 @@ def _plan_gate_pre(a):
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
         return 0 if mode == "warn" else 2
+    fs = rec_fails + list(fs)
     fails = [x for x in fs if x.startswith("FAIL")]
     for x in fs:
         print(f"bind: plan_gate_pre {x}")
@@ -9062,6 +9079,55 @@ def _plan_gate_pre(a):
         except OSError:
             pass
     return 0
+
+
+def _pre_record_find(a, base, G, skip=(), env=None):
+    """PRE-REUSE-1125 (FLOW-0930 F-18): -> (path, record) of a plan_gate_pre PRE record this bind may reuse, or None.  Candidates:
+    $OT_PLAN_GATE_PRE_RECORD (comma list of record / --json files), then the record store (G.record_store()/<plan sha 16>, newest
+    first).  Reused only when its plan, as-built and baseline sha256 equal this bind's, it skipped no class the bind would run
+    (ADVISORY aside), it is not UNCHECKED, and its scope (if any) covers every OT_BIND_ONLY_TYPES / --types name of this bind
+    (a full bind needs an unscoped record).  $OT_PLAN_GATE_PRE_REUSE=0 turns it off."""
+    env = os.environ if env is None else env
+    if env.get("OT_PLAN_GATE_PRE_REUSE", "1") == "0":
+        return None
+
+    def sha(p):
+        if not p:
+            return None
+        try:
+            return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        except OSError:
+            return "unreadable"
+    psha = sha(a.plan)
+    if not psha or psha == "unreadable":
+        return None
+    want = {"plan_sha256": psha, "asbuilt_sha256": sha(getattr(a, "asbuilt", None)), "baseline_sha256": sha(base)}
+    cands = [Path(x) for x in env.get("OT_PLAN_GATE_PRE_RECORD", "").split(",") if x.strip()]
+    store = getattr(G, "record_store", None)
+    if store:
+        try:
+            d = Path(store()) / psha[:16]
+            cands += sorted(d.glob("*.json"), key=lambda q: q.stat().st_mtime, reverse=True) if d.is_dir() else []
+        except OSError:
+            pass
+    req = only_types_requested()
+    mine = {s.upper() for s in skip} | {"ADVISORY"}
+    for c in cands:
+        try:
+            rec = json.loads(Path(c).read_text())
+        except (OSError, ValueError):
+            continue
+        rec = rec.get("pre_record", rec) if isinstance(rec, dict) else None
+        if not isinstance(rec, dict) or rec.get("record") != "PRE-RECORD-1125":
+            continue
+        if any(rec.get(k) != v for k, v in want.items()):
+            continue
+        if not set(rec.get("skip") or ()) <= mine or any(x.split()[1].endswith("-UNCHECKED") for x in rec.get("fails") or [] if len(x.split()) > 1):
+            continue
+        if rec.get("types") is not None and (req is None or not req <= set(rec["types"])):
+            continue
+        return Path(c), rec
+    return None
 
 
 def _pg_warn_key(a, key, G, mode):

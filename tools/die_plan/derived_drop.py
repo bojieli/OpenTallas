@@ -846,13 +846,16 @@ def reset_tree_types(raw, classes=CLASSES, broadcast=lambda: False):
 
 
 def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=None, budget_s=None, base=None,
-             base_solver=None):
-    """FAIL / WARN lines of the three classes (a type the solver cannot build is WARN ... not checked: the bind names it)"""
+             base_solver=None, scope=None):
+    """FAIL / WARN lines of the three classes (a type the solver cannot build is WARN ... not checked: the bind names it).
+    scope (PRE-SPEED-1125, a plan_gate_pre --types set): the per-type checks judge only these types; the die-wide relay check stays"""
     want = {c.upper() for c in classes}
     if not want & set(CLASSES):
         return []
     todo = derived_todo(raw)
     only = set(filter(None, os.environ.get("OT_DERIVED_TYPES", "").split(",")))
+    if scope is not None:
+        todo = [(tn, t) for tn, t in todo if tn in scope]
     S = solver or Solver(raw, plan_path, tree)
     base_raw = None
     if base:
@@ -871,9 +874,10 @@ def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=N
     if "DERIVEDNAME" in want and not only:
         out += die_relay_findings(raw, S)
     if "ENTRYFOOT" in want:
-        ef = entryfoot_findings(raw, S, base_raw, only)
+        _only = only or (set(scope) if scope is not None else None)
+        ef = entryfoot_findings(raw, S, base_raw, _only)
         if hasattr(S, "grid"):
-            ef += exporttap_findings(raw, S, only, budget=budget)
+            ef += exporttap_findings(raw, S, _only, budget=budget)
         out += [ENTRYFOOT_LEVEL + l[4:] if l.startswith("FAIL ENTRYFOOT") else l for l in ef]
     for tn, t in todo:
         if time.time() - t0 > budget:

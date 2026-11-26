@@ -923,7 +923,7 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None, tr
     raw, braw = _load(plan), _load(baseline)
     if not raw or not braw:
         return []
-    mv = moved_types(raw, braw)
+    mv = {tn: v for tn, v in moved_types(raw, braw).items() if _in_scope(tn)}     # PRE-SPEED-1125: a scoped PRE judges its scope
     if not mv:
         return []
     if tree_fn is None:
@@ -2814,8 +2814,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         try:
             _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline,
                                      sidecar=sidecar, asbuilt=asbuilt)
-            if _SCOPE is not None:
-                _sel = {side: {tn: v for tn, v in d.items() if tn in _SCOPE} for side, d in _sel.items()}
+            _sel = scope_selection(_sel, _SCOPE)
             findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb))
         except Exception as e:  # noqa: BLE001 - the classes solve on demand
             findings.append(f"LIST RESET-PREWARM not run: {type(e).__name__}: {str(e)[:200]}")
@@ -2955,8 +2954,9 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import derived_drop as DD
         try:
+            _ddkw = {"scope": _SCOPE} if _SCOPE is not None and "scope" in __import__("inspect").signature(DD.findings).parameters else {}
             findings += DD.findings(_load(plan) or {}, plan, tree, [c for c in DD.CLASSES if c not in skip],
-                                    bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
+                                    bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline, **_ddkw)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("STNXREF")
@@ -2990,7 +2990,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         findings += site_off_outline_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
-        findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
+        findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline, scope=_SCOPE)
     _pt.mark(None)
     findings.append(pre_mode(elab_dir, skip))                       # PRE-MODE-1124
     findings.append(_pt.line())                         # PRE-TIME-1124: where the PRE time went
@@ -3013,6 +3013,21 @@ _SCOPE = None            # FP-CONVERGE-S81 11-25: --types: the set of type names
 
 def _in_scope(tn):
     return _SCOPE is None or tn in _SCOPE
+
+
+# PRE-SPEED-1125 (FLOW-0930 S-04: scoped ROW-PRE 6942-9308 s vs ~1035 s unscoped; pre_S 47 types: STARTSETTLE 3649 s, LANDREMAP 2412 s,
+# RESET-TREE-CACHE "416 solved on demand"): --types cut the reset-tree prewarm to the scope while STARTSETTLE (wf_plan solves every soft
+# type: a die-wide bound) and LANDREMAP / DERIVED_DROP (every moved / derived type) still read every tree, so ~460 trees were solved
+# serially on demand instead of in the pool.  Now a die-wide class keeps all its types in the prewarm, and the per-type classes
+# (LANDREMAP, DERIVED_DROP) only judge the scope (their out-of-scope lines were dropped by scope_lines anyway).
+DIE_WIDE_RESET = ("STARTSETTLE",)
+
+
+def scope_selection(sel, scope):
+    """the reset_solve_types selection a scoped PRE prewarms: scope types, plus every type a die-wide class (DIE_WIDE_RESET) reads"""
+    if scope is None:
+        return sel
+    return {side: {tn: v for tn, v in d.items() if tn in scope or any(c in DIE_WIDE_RESET for c in v)} for side, d in sel.items()}
 
 
 def parse_types(spec, names):
@@ -3438,15 +3453,37 @@ def site_off_outline_findings(plan):
         return [f"FAIL ADV-SITE-OFF-OUTLINE not checked: {type(e).__name__}: {str(e)[:160]}"]
 
 
-def advisory_lines(tree, plan, asbuilt=None, baseline=None):
+# PRE-SPEED-1125 (S-04): a scoped PRE ran every advisory on the whole die (S81 v3 2 types: 1038 s, REF-SITE alone 1022 s) and then dropped
+# the out-of-scope lines.  Scoped, the per-type advisories run on a scope view of the plan (partition_types and partitions of the scope
+# types; 58 s, same or more in-scope lines since the per-check caps no longer fill with other types); the lane-context checks
+# (ADV_DIE_CONTEXT: their per-type lines read the far end of each lane) still run on the whole plan.  OT_PRE_ADV_SCOPE=full: old behaviour.
+ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE")
+
+
+def scope_view(raw, scope):
+    """a copy of raw holding only the scope's partition_types and partitions (everything else shared, unchanged)"""
+    v = dict(raw)
+    v["partition_types"] = {k: t for k, t in (raw.get("partition_types") or {}).items() if k in scope}
+    v["partitions"] = [x for x in raw.get("partitions") or [] if not isinstance(x, dict) or x.get("type") in scope]
+    return v
+
+
+def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None):
     """PRECHECK-R2: plan_advisory.run() lines, each forced to a WARN (an estimator never refuses); [] when the tree has no module."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
     try:
         import plan_advisory as PA
     except ImportError:
         return []
+    checks = [c for c, _ in PA.CHECKS if c not in ("IST-PRICE", "IN-OUTLINE", "FT-OUTSIDE")]     # IST-PRICE is a FAIL class now
     try:
-        lines = PA.run(_load(plan), plan, tree, checks=[c for c, _ in PA.CHECKS if c not in ("IST-PRICE", "IN-OUTLINE", "FT-OUTSIDE")], asbuilt=asbuilt, baseline=baseline)   # IST-PRICE is a FAIL class now
+        raw = _load(plan)
+        if scope is not None and raw and os.environ.get("OT_PRE_ADV_SCOPE", "view") != "full":
+            lines = PA.run(scope_view(raw, scope), plan, tree, checks=[c for c in checks if c not in ADV_DIE_CONTEXT], asbuilt=asbuilt,
+                           baseline=baseline)
+            lines += PA.run(raw, plan, tree, checks=[c for c in checks if c in ADV_DIE_CONTEXT], asbuilt=asbuilt, baseline=baseline)
+        else:
+            lines = PA.run(raw, plan, tree, checks=checks, asbuilt=asbuilt, baseline=baseline)
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
     return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
@@ -3493,6 +3530,66 @@ def lane_slot(tree, env=None, out=None):
                 print(f"PRE-LANE-SLOT lane {lane}: host load {os.getloadavg()[0]:.0f} over {os.cpu_count()} cores, {cap} PRE checks of this lane already running; waiting", file=out)
                 told = True
             _t.sleep(5)
+    except OSError:
+        return None
+
+
+# PRE-REUSE-1125 (FLOW-0930 F-18: the bind re-ran the full PRE inside itself: c10 79 min standalone + 84 min in-bind; KV in-bind PRE 874 s,
+# 493 s ADVISORY): every `check` writes a PRE record (plan / as-built / baseline sha256, scope, skipped classes, FAIL lines, result) to
+# --json and to the record store ($OT_PRE_RECORD_DIR, else <scratch>/claude/.cache/pre-record, else ~/.cache/ot-pre-record;
+# $OT_PRE_RECORD=off: not stored).  bind.py reuses a record whose plan, as-built and baseline sha match (bind._pre_record_find) and then
+# runs only the classes that read its own elab (ELAB_CLASSES).
+PRE_RECORD = "PRE-RECORD-1125"
+RECORD_STORE = "/srv/opentallas-scratch2/claude/.cache/pre-record"
+ELAB_CLASSES = ("FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "RELAYSINK")
+
+
+def file_sha(p):
+    if not p:
+        return None
+    try:
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def record_store(env=None):
+    env = os.environ if env is None else env
+    if env.get("OT_PRE_RECORD_DIR"):
+        return Path(env["OT_PRE_RECORD_DIR"])
+    if os.path.isdir(os.path.dirname(os.path.dirname(RECORD_STORE))):
+        return Path(RECORD_STORE)
+    return Path.home() / ".cache" / "ot-pre-record"
+
+
+def pre_record(plan, asbuilt, baseline, scope, skip, lines, seconds=None, tree=None):
+    """the PRE-RECORD-1125 dict of one check's final lines (after PRE-DIFF)"""
+    fails = [x for x in lines if x.startswith("FAIL ")]
+    warns = [x for x in lines if x.startswith("WARN ") and not x.startswith("WARN ADV")]
+    return {"record": PRE_RECORD, "tree": str(tree) if tree else None, "plan": str(plan), "plan_sha256": file_sha(plan),
+            "asbuilt": str(asbuilt) if asbuilt else None, "asbuilt_sha256": file_sha(asbuilt),
+            "baseline": str(baseline) if baseline else None, "baseline_sha256": file_sha(baseline),
+            "types": sorted(scope) if scope is not None else None, "skip": sorted({s.upper() for s in skip or ()}),
+            "tools": str(Path(__file__).resolve().parent), "result": "FAIL" if fails else "PASS", "fails": fails, "warns": warns,
+            "advisories": sum(1 for x in lines if x.startswith("WARN ADV")), "seconds": seconds, "time": round(time.time())}
+
+
+def store_record(rec, env=None):
+    """write rec into the record store (<store>/<plan sha 16>/<record sha 16>.json, atomic) -> path, or None"""
+    env = os.environ if env is None else env
+    if env.get("OT_PRE_RECORD", "on") == "off" or not rec.get("plan_sha256"):
+        return None
+    if "PYTEST_CURRENT_TEST" in env and not env.get("OT_PRE_RECORD_DIR"):     # tests never write the shared store
+        return None
+    try:
+        body = json.dumps(rec, indent=1) + "\n"
+        d = record_store(env) / rec["plan_sha256"][:16]
+        d.mkdir(parents=True, exist_ok=True)
+        p = d / f"{hashlib.sha256(body.encode()).hexdigest()[:16]}.json"
+        tmp = p.with_suffix(f".tmp{os.getpid()}")
+        tmp.write_text(body)
+        os.replace(tmp, p)
+        return p
     except OSError:
         return None
 
@@ -3556,6 +3653,7 @@ def main(argv=None):
         print(f"{a.out}: {len(pr['types'])} types, result {a.result}")
         return 0
     lane_slot(a.tree)
+    _t0 = time.time()
     brun = None
     if a.base:                                           # PRE-DIFF: the base check runs beside the row check (or comes from the cache)
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -3590,12 +3688,21 @@ def main(argv=None):
         for x in adv:                                    # PRECHECK-R2: advisories reach the plan lanes even from --quiet callers
             print(x)
     unchecked = [x for x in fails if x.split()[1].endswith("-UNCHECKED")]
+    try:
+        _scope = parse_types(a.types, set((_load(a.plan) or {}).get("partition_types") or {})) if a.types else None
+    except ValueError:
+        _scope = None
+    prec = pre_record(a.plan, a.asbuilt, a.baseline_plan, _scope, a.skip, f, round(time.time() - _t0), a.tree)
+    if not unchecked:                                    # PRE-REUSE-1125: an UNCHECKED PRE is never reused
+        sp = store_record(prec)
+        if sp:
+            print(f"LIST PRE-RECORD {sp} plan_sha256 {prec['plan_sha256'][:12]} result {prec['result']}")
     print(f"PLAN-GATE-PRE {'UNCHECKED' if unchecked and len(unchecked) == len(fails) else 'FAIL' if fails else 'PASS'} tree={a.tree} plan={a.plan} findings={len(fails)}"
           + (" classes=" + ",".join(sorted({x.split()[1].split('-')[0] for x in fails})) if fails else "")
           + (f" advisories={len(adv)}" if adv else "")
           + (f" base={a.base} inherited={len(pdiff['inherited'])} gone={len(pdiff['gone'])}" if pdiff is not None else ""))
     if a.json:
-        rec = {"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv}
+        rec = {"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv, "pre_record": prec}
         if pdiff is not None:
             rec.update(base=a.base, inherited=pdiff["inherited"], gone=pdiff["gone"], changed=pdiff["changed"])
         Path(a.json).write_text(json.dumps(rec, indent=1) + "\n")
