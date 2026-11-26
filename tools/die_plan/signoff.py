@@ -3042,7 +3042,87 @@ def stamp_flow_tag(rec):
     tag = (os.environ.get(FLOW_TAG_ENV) or "").strip()
     if tag and FLOW_TAG_RE.match(tag) and not rec.get("flow_tag"):
         rec["flow_tag"] = tag
+    sha = os.environ.get(SRC_COMMIT_ENV)
+    if sha and SHA40_RE.match(sha) and not rec.get("src_commit"):
+        rec["src_commit"] = sha
     return rec
+
+
+SRC_COMMIT_ENV = 'OT_SRC_COMMIT'
+SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _git(repo, *args):
+    p = subprocess.run(["git", "-C", str(repo)] + list(args), capture_output=True, text=True, timeout=120)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def kit_source_shas(kit, here=None):
+    """candidate commits that built this kit, best first: the kit's own records (resign.kit_build_commit fields, an rt pin file),
+    then the git revision of the tree this signoff.py runs from.  -> [(sha, basis)]"""
+    out = []
+    for n in ("PROVENANCE.json", "AUTOPILOT.json", "freeze.json", "kit_provenance.json", "rt_pin.json"):
+        try:
+            x = json.loads((Path(kit) / n).read_text()) if kit else None
+        except (OSError, ValueError):
+            continue
+        if not isinstance(x, dict) or x.get("kind") == "resign":
+            continue
+        for k in ("build_commit", "src_commit", "source_commit", "rt_sha", "rt_commit", "repo_rev"):
+            v = x.get(k)
+            if isinstance(v, str) and re.match(r"^[0-9a-f]{7,40}$", v):
+                out.append((v, f"{n}:{k}"))
+    here = Path(here or __file__).resolve().parent
+    rev = _git(here, "rev-parse", "HEAD")
+    if SHA40_RE.match(rev):
+        out.append((rev, "git rev of the tree running signoff.py"))
+    return out
+
+
+def derive_flow_tag(kit, here=None):
+    """P-SIGNED-UNVERSIONED forward gap (COORD 11-26): no --flow-tag / $OT_FLOW_TAG -> the flow tag of the kit's own rt/tree.
+    A flow tag ON the source commit, else a flow tag whose tools/die_plan/signoff.py is byte-identical to this one (the tag's
+    tools).  -> dict(src_commit, flow_tag or '', basis) ; src_commit '' = nothing found."""
+    here = Path(here or __file__).resolve().parent
+    repo = _git(here, "rev-parse", "--show-toplevel")
+    shas = kit_source_shas(kit, here)
+    for sha, basis in shas:
+        if not repo:
+            break
+        full = _git(repo, "rev-parse", "-q", "--verify", sha + "^{commit}")
+        if not full:
+            continue
+        tags = sorted(t for t in _git(repo, "tag", "--points-at", full).split() if FLOW_TAG_RE.match(t))
+        if tags:
+            return dict(src_commit=full, flow_tag=tags[-1], basis=f"{basis}; tag on commit")
+        mine = hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+        for t in sorted((t for t in _git(repo, "tag", "-l", "flow-*").split() if FLOW_TAG_RE.match(t)), reverse=True):
+            blob = subprocess.run(["git", "-C", repo, "show", f"{t}:tools/die_plan/signoff.py"], capture_output=True).stdout
+            if blob and hashlib.sha256(blob).hexdigest() == mine:
+                return dict(src_commit=full, flow_tag=t, basis=f"{basis}; {t} carries this signoff.py")
+        return dict(src_commit=full, flow_tag="", basis=basis)
+    if shas:
+        return dict(src_commit="", flow_tag="", basis=shas[0][1])
+    return dict(src_commit="", flow_tag="", basis="")
+
+
+def ensure_flow_tag(kit, here=None):
+    """at the start of a sign-off run: a tag from --flow-tag / env stays; else derive it from the kit's rt/tree and export it
+    (flow tag + source commit) for stamp_flow_tag.  Fails loud only when neither a tag nor any source commit can be found."""
+    if (os.environ.get(FLOW_TAG_ENV) or "").strip():
+        return os.environ[FLOW_TAG_ENV].strip()
+    d = derive_flow_tag(kit, here)
+    if not d["src_commit"] and not d["basis"]:
+        raise SystemExit("signoff: no flow tag (--flow-tag / $OT_FLOW_TAG) and none derivable: no kit rt pin "
+                         "(PROVENANCE/AUTOPILOT/freeze.json) and no git revision of the tree running signoff.py")
+    if d["src_commit"]:
+        os.environ[SRC_COMMIT_ENV] = d["src_commit"]
+    if d["flow_tag"]:
+        os.environ[FLOW_TAG_ENV] = d["flow_tag"]
+        print(f"SIGNOFF flow tag {d['flow_tag']} derived from the kit rt/tree ({d['basis']})")
+    else:
+        print(f"SIGNOFF WARNING no flow tag carries the kit rt/tree ({d['basis']}): record stays unversioned")
+    return d["flow_tag"]
 
 
 def cmd_run(a):
@@ -3051,6 +3131,7 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     require_signoff_bundle()
+    ensure_flow_tag(disc.get("kit"))
     retain_clock = getattr(a, "retain_child_clock_witness", False)
     parent_targets = tuple(getattr(a, "parent_boundary_instance", ()) or ())
     parent_std_limit = getattr(a, "parent_boundary_std_query_limit", 0)
