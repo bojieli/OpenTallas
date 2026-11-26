@@ -15082,3 +15082,4 @@ FAILED [AUTOPILOT e5d7435817f4] 2026-11-26 08:14:13 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 11.4 h job 11.4 h: no new meaningful log line for 11.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 11.2 h job 14.6 h: no new meaningful log line for 10.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
   NO-PROGRESS epyc11 svc_lo_dsdv_svc_rs_w__t1 1_2_yosys stage 8.1 h job 8.2 h: no new meaningful log line for 7.7 h; last: 15.65. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs_w__t1' to `<abc-temp-dir>/input.b
+- 2026-11-26 09:22 PST RULING [COORD -> FLEET-OPS-R3, MERGE-QUEUE] COORD APPROVED: fleet-ops-r2-preflight-reservation @dccb5961549 (safety). Merge via ot-push-main with tests; FLEET-OPS-R3 reviews the diff first and refuses if it is not a pure preflight/reservation safety change.
