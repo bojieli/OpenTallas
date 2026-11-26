@@ -175,6 +175,20 @@ class HubSync(unittest.TestCase):
         self.assertIn("p2", self.remote_file("lanes/posts/L.md"))
         self.assertEqual(self.remote_file("lanes/OWNERS-SWEEP.tsv"), "a\nb\n")
 
+    def test_any_lane_tsv_left_dirty_is_committed(self):
+        # P-HUB-SYNC-DIRTY 11-26: lanes/SMELL.tsv (written by the autopilot) failed the sync from 09:53; every lanes/*.tsv is a lane-written table
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "lanes/SMELL.tsv").write_text("h\n")
+        self.git(self.other, "add", "lanes/SMELL.tsv")
+        self.git(self.other, "commit", "-qm", "smell")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "lanes/SMELL.tsv", "row1")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertIn("row1", self.remote_file("lanes/SMELL.tsv"))
+
     def test_refused_edit_names_its_mtime(self):
         self.append(self.hub, "BRIEFING.md", "x")
         self.assertNotEqual(self.sync().returncode, 0)

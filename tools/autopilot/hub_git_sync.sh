@@ -38,7 +38,7 @@ URL=git@github.com:bojieli/OpenTallas.git
 # HUB-DIRTY-1122 (FABLE-FLOW-0600 X1): HUB-SYNC-FAILED 04:26-05:5x on lanes/OWNERS-SWEEP.tsv (an owners_sweep.py run with its default
 # --out) and lanes/posts/<LANE>.md (post.sh appends, then commits; a post left between the two, or a lane appending by hand); both are lane
 # text the hub may commit, and the failure line now names each refused file's mtime and any process holding it open
-APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/posts/[^/]+\.md|lanes/OWNERS-SWEEP\.tsv|lanes/handoff/[^/]+\.(md|json)|lanes/SIGN-RATE\.tsv|[A-Za-z0-9._]+-FIX-[A-Za-z0-9._-]+\.md|autopilot/(queue|resolved|auto_resign)\.tsv)$'
+APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/posts/[^/]+\.md|lanes/[A-Za-z0-9._-]+\.tsv|lanes/handoff/[^/]+\.(md|json)|lanes/SIGN-RATE\.tsv|[A-Za-z0-9._]+-FIX-[A-Za-z0-9._-]+\.md|autopilot/(queue|resolved|auto_resign)\.tsv)$'
 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): lanes/NOPROG*.tsv, FLOW-HEALTH.tsv, STALE.tsv, VISUAL-QUEUE.tsv are rewritten on the hub by timers that commit them
 # themselves; a dirty copy between the write and the commit raised HUB-SYNC-FAILED 494 times (19:02-20:22), so they are generated files too
 GENERATED_RE='^(RELEASE_TREE\.md|lanes/(NOPROG|NOPROG-ACTIONS|FLOW-HEALTH|STALE|VISUAL-QUEUE)\.tsv|lanes/NOPROG-TABLE\.md)$'
