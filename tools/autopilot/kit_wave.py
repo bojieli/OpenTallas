@@ -14593,8 +14593,7 @@ def tool_skew_closure(cfg, main_root):
 
 
 def tool_skew_measure(AP, cfg, st, die):
-    """measure one die's tree against main (or its tools_sha pin) once per tick; -> result dict, or None when off.  Posts one
-    NEEDS-LANE per die per changed set.  Called for every enabled die each tick (not only on launch)."""
+    """Measure one die's tree against main or its pin and report a changed skew or admission verdict."""
     d = (cfg.get("dies") or {}).get(die) or {}
     mode = opt(cfg, die, "tool_skew")
     if mode is False or not d.get("src"):
@@ -14619,16 +14618,19 @@ def tool_skew_measure(AP, cfg, st, die):
     if not res["measured"]:
         log_hourly(AP, st, f"TS|{die}|unmeasured", f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
     elif not res["ok"]:
-        if mode == "warn":
-            log_hourly(AP, st, f"TS|{die}|warn", f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
-        else:
-            log_hourly(AP, st, f"TS|{die}|refuse", f"KIT-WAVE TOOL-SKEW REFUSE {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (launches refused)")
+        runtime_tools = mode != "warn" and bool(rt_tools_fields(cfg, die))
+        blocking = mode != "warn" and not runtime_tools
+        level = "REFUSE" if blocking else "WARN"
+        why = "launches refused" if blocking else ("launch uses pinned runtime" if runtime_tools else "warn, launching")
+        baseline = f"pin {res['pin']}" if res.get("pin") else "main"
+        log_hourly(AP, st, f"TS|{die}|{level.lower()}",
+                   f"KIT-WAVE TOOL-SKEW {level} {die}: {n} of {tot} import-closure module(s) differ from {baseline} ({why})")
         posted = st.setdefault("tool_skew_posted", {})
-        sig = TS.signature(res)
+        sig = f"{level}:{TS.signature(res)}"
         if posted.get(die) != sig and not AP.DRY:
             posted[die] = sig
-            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                            f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} " +
+                            TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", ""), blocking=blocking))
     else:
         log_hourly(AP, st, f"TS|{die}|ok", f"KIT-WAVE TOOL-SKEW OK {die}: 0 of {tot} import-closure module(s) differ")
         st.get("tool_skew_posted", {}).pop(die, None)
