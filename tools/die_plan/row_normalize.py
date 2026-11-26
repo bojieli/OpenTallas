@@ -277,10 +277,78 @@ def step_landremap(braw, raw, tree, plan_path, types):
     return {**n, **failed}, prot
 
 
-def step_retap(braw, raw, base_path, plan_path, types, protect=None):
-    """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
+def _init_base_reset_worker(raw, path):
+    global _base_reset_context
+    _base_reset_context = raw, path
+
+
+def _solve_base_reset_trees(types):
     import retap as RT
-    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types))
+    read = RT._plan_tree(*_base_reset_context)
+    return {tn: read(tn) for tn in types}
+
+
+def _prepare_base_reset_trees(stack, braw, raw, base_path, changed):
+    """Start the immutable BASE trees while LANDREMAP solves the new geometry."""
+    import multiprocessing
+    from concurrent.futures import ProcessPoolExecutor
+    from bind_emit_par import allocated_cpus
+    import landing_remap as LM
+    import reset_anchor as RA
+    import reset_tree
+    import retap as RT
+
+    if not changed or "fork" not in multiprocessing.get_all_start_methods():
+        return {}
+    # These LANDREMAP paths have all OLD anchor information in the existing
+    # receipt and compute a new tree. RETAP later needs the canonical OLD solve
+    # to determine ownership of its published collector tree.
+    try:
+        if min(allocated_cpus(), reset_tree.pool_size(2)) < 2:
+            return {}
+        if any(not RA.refs(_pt(raw)[tn]) or (_pt(raw)[tn].get("clock") or {}).get("landing_raw_branches")
+               or not LM.bound_old_tree(tn, _pt(braw)[tn]) for tn in changed):
+            return {}
+        eligible = [tn for tn in changed if RT._published(_pt(braw)[tn]) is not None]
+    except (AttributeError, KeyError, TypeError, ValueError):
+        # The canonical steps still diagnose malformed input in their usual order.
+        return {}
+    if not eligible:
+        return {}
+    try:
+        pool = stack.enter_context(ProcessPoolExecutor(
+            max_workers=1, mp_context=multiprocessing.get_context("fork"),
+            initializer=_init_base_reset_worker, initargs=(braw, str(base_path)),
+        ))
+        future = pool.submit(_solve_base_reset_trees, eligible)
+    except (OSError, RuntimeError):
+        return {}
+    return dict.fromkeys(eligible, future)
+
+
+def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_trees=None):
+    """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
+    from functools import cache
+    import retap as RT
+
+    def tree_factory(context, path):
+        if context is not braw:
+            return RT._plan_tree(context, path)
+        fallback = cache(lambda: RT._plan_tree(context, path))
+
+        def read(tn):
+            if tn in base_trees:
+                try:
+                    return base_trees[tn].result()[tn]
+                except Exception:
+                    # Preserve the original solver/verdict if the worker could
+                    # not prepare the BASE result under its current lease.
+                    pass
+            return fallback()(tn)
+        return read
+
+    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types),
+                     tree_fn=tree_factory if base_trees else None)
     for tn, keep in (protect or {}).items():
         _restore(_pt(raw)[tn], keep)
     return {tn: len(ch) for tn, ch in rep.items()}
@@ -294,7 +362,8 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
     types = touched_types(raw, braw)
     rep["touched_types"] = types
     prot = {}
-    with in_tree(tree):
+    base_trees = {}
+    with in_tree(tree), contextlib.ExitStack() as workers:
         for name in STEPS:
             t0 = time.time()
             if name in skip:
@@ -311,6 +380,8 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                     r, prot = hooks["landremap"](braw, raw, types)
                 else:
                     ch = tapset_changed(braw, raw, base_path, plan_path, types) if types else []
+                    if "retap" not in skip and "retap" not in hooks:
+                        base_trees = _prepare_base_reset_trees(workers, braw, raw, base_path, ch)
                     r, prot = step_landremap(braw, raw, tree, plan_path, ch)
             else:
                 if "retap" in hooks:
@@ -318,7 +389,7 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                     for tn, keep in prot.items():
                         _restore(_pt(raw)[tn], keep)
                 else:
-                    r = step_retap(braw, raw, base_path, plan_path, types, prot) if types else {}
+                    r = step_retap(braw, raw, base_path, plan_path, types, prot, base_trees=base_trees) if types else {}
             rep["steps"][name] = r
             rep["seconds"][name] = round(time.time() - t0, 1)
     rep["changed"] = {k: len(v) for k, v in rep["steps"].items() if isinstance(v, dict) and v}
