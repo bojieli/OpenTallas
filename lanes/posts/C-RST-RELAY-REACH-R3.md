@@ -1,0 +1,1 @@
+- 2026-11-26 11:10 PST DONE [C-RST-RELAY-REACH-R3] ot-run oth-ubuntu-665274-1795719171 on viable-ram: rc=0 after 1085 s, ended 19:10:53, log /srv/opentallas-scratch2/claude/C-RST-RELAY-REACH-R3/out/s81/otrun.log, cmd: --mem 40 --threads 8 --disk 10 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/C-RST-RELAY-REACH-R3 -- bash /srv/opentallas-scratch2/cl
