@@ -2105,6 +2105,10 @@ PLATEAU2_WALL_S = 3 * 3600
 PLATEAU2_FALL = 0.05               # best violations fell >= 5 % in the window = TRENDING
 PLATEAU2_LOW = 50                  # R2: flat and <= 50 = LOW (ECO-route at DRT end), flat and > 50 = DEAD
 PLATEAU2_ECO_MAX = 20              # R9 (QC-DRT-ECO-R2 11-26): at or under this many violations the kit is an ECO-route hand-off candidate; a silent log is a long stubborn-tile iteration, never DEAD
+ECO_HANDOFF_LIVE_FILE = "lanes/ECO-HANDOFF.live"    # COORD 11-26: absent = the ECO-HANDOFF line stays report-only; present = the watchdog arms one waiter per kit
+ECO_KIT_HOSTS = ("epyc7", "epyc8", "epyc10", "epyc11", "intel1")     # kit hosts only (CLAUDE-LANE-BRIEF-1126); never intel2, epyc9, epyc12, epyc2
+ECO_WAITER_DIR = "/srv/opentallas-scratch2/claude/QC-DRT-ECO"
+ECO_WAITER_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eco_handoff_waiter.sh")
 PLATEAU2_SILENT_H = 3.0            # R3: log silent this long while openroad burns CPU = no trend = DEAD
 PLATEAU2_CPU = 1.0
 PLATEAU2_LIVE_FILE = "lanes/PLATEAU-V2.live"     # absent: the v2 rule posts rows and notices only (first pass is report-only); the hub writes it via coord-commit when COORD says go
@@ -2314,6 +2318,36 @@ def plateau_act_class(r):
     return None
 
 
+def eco_handoff(r, st, now, run=None):
+    """R9 launcher.  A LOW row at <= PLATEAU2_ECO_MAX violations on a kit host -> arm eco_handoff_waiter.sh for its kit (waits for the routed DB, ONE ECO attempt, < 5 % gain = P-ECO-NO-GAIN).
+    At most one waiter per kit: the seen-state key, the waiter's own mkdir lock, and a host ps scan for any waiter already carrying the kit path.  -> (launched bool, text)."""
+    run = run or run_host
+    host, kit = str(r.get("host") or ""), str(r.get("kit") or "")
+    if not os.path.exists(os.path.join(COORD, ECO_HANDOFF_LIVE_FILE)):
+        return False, f"report-only (no {ECO_HANDOFF_LIVE_FILE})"
+    if host not in ECO_KIT_HOSTS:
+        return False, f"not armed: {host or '?'} is not a kit host"
+    if not kit.startswith("/srv/") or not re.fullmatch(r"[\w./+-]+", kit):
+        return False, "not armed: no usable kit path"
+    key = f"eco_handoff|{kit}"
+    if key in st:
+        return False, "waiter already armed for this kit"
+    name = re.sub(r"[^\w.-]", "_", os.path.basename(kit.rstrip("/")))[:60]
+    cmd = (f"cd {ECO_WAITER_DIR} 2>/dev/null || exit 4; test -d {shlex.quote(kit)} || exit 5; "
+           f"if ps -eo args | grep -F -- {shlex.quote(kit)} | grep -E 'waiter' | grep -v grep >/dev/null; then cat >/dev/null; echo EXISTS; exit 0; fi; "
+           f"cat > eco_handoff_waiter.sh.new && mv -f eco_handoff_waiter.sh.new eco_handoff_waiter.sh && "
+           f"nohup setsid bash eco_handoff_waiter.sh {name} {shlex.quote(kit)} {host} >/dev/null 2>&1 </dev/null & echo ARMED")
+    try:
+        res = run(host, cmd, inp=open(ECO_WAITER_SRC).read(), timeout=60)
+    except (subprocess.SubprocessError, OSError) as e:
+        return False, f"launch failed: {e}"
+    out = (res.stdout or "").strip()
+    if res.returncode != 0 and "ARMED" not in out and "EXISTS" not in out:
+        return False, f"launch refused rc={res.returncode} on {host}"
+    st[key] = now
+    return True, ("waiter already present on the kit, not duplicated" if "EXISTS" in out else f"ECO-HANDOFF armed: waiter {name} on {host}")
+
+
 def plateau_act_pass(rows, seen, now, post=True, cancel=None, sweep=None):
     """HUB (PLATEAU-ACT, COORD FLOW-0930 F-10): the plateau rule acts.  Per DRT kit on a plateau (drt_plateau3): < 100 marks -> one 'hand to DRC repair / ECO-route' notice to the owner (OWNERS-SWEEP
     fresh_owner, else the die's ALLFIX lane); > 1000 marks and job > 3 h -> a CANCEL-ELIGIBLE row, and `ot-run --cancel <exact unit>` only when that owner is dead or has been silent for over 1 h
@@ -2372,6 +2406,13 @@ def plateau_act_pass(rows, seen, now, post=True, cancel=None, sweep=None):
                     cls, how = "ALREADY-GONE", f"ot-run --cancel {r['unit']}: {line} (not counted as a cancel)"
                 else:
                     cls, how = "CANCELLED", f"ot-run --cancel {r['unit']} --reason design rc={rc}: {line}; 5_1_grt.odb kept at {odb or 'twin ' + str(twin_of)}"
+        elif cls == "REPAIR-NOTICE" and r.get("plateau_v2") and r["plateau_v2"][0] == "LOW" and r["plateau_v2"][1] <= PLATEAU2_ECO_MAX and not act_off:
+            ok, why = eco_handoff(r, seen.setdefault("eco_handoff", {}), now)
+            if ok:
+                how = why
+                first = True                      # the arming is an event: row + notice
+            elif not first:
+                continue
         elif not first:
             continue
         if not first and cls == "CANCEL-ELIGIBLE":

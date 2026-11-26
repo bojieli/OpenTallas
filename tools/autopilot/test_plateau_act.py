@@ -190,3 +190,41 @@ def test_r9_low_notice_carries_report_only_eco_handoff():
     assert cls == "REPAIR-NOTICE" and "ECO-HANDOFF (report-only" in txt and "/k/gen/slw_fe_v1__cl epyc8" in txt and "P-ECO-NO-GAIN" in txt
     r2 = prow(plateau3=40, plateau3_kind="low", plateau_v2=["LOW", 40, "40 violations flat"], age_h=9.0)
     assert "ECO-HANDOFF" not in nw.plateau_act_class(r2)[1]
+
+
+class _R:
+    def __init__(self, rc=0, out="ARMED\n"): self.returncode, self.stdout = rc, out
+
+
+def test_eco_handoff_launch_gates(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    r = prow(plateau3=9, plateau3_kind="low", plateau_v2=["LOW", 9, "9 flat"], host="epyc8", kit="/srv/x/gen/slw_fe_v1__cl")
+    calls = []
+    run = lambda h, c, inp=None, timeout=0: calls.append((h, c, inp)) or _R()
+    st = {}
+    assert nw.eco_handoff(r, st, 1.0, run)[0] is False and calls == []                 # no enable file: report-only
+    (tmp_path / "lanes/ECO-HANDOFF.live").write_text("1\n")
+    assert nw.eco_handoff(dict(r, host="intel2"), st, 1.0, run)[0] is False and calls == []   # not a kit host
+    assert nw.eco_handoff(dict(r, host="epyc9"), st, 1.0, run)[0] is False and calls == []
+    ok, why = nw.eco_handoff(r, st, 1.0, run)
+    assert ok and len(calls) == 1 and calls[0][0] == "epyc8" and "mkdir" in open(nw.ECO_WAITER_SRC).read() and calls[0][2].startswith("#!/bin/bash")
+    assert "grep -F -- /srv/x/gen/slw_fe_v1__cl" in calls[0][1]
+    assert nw.eco_handoff(r, st, 2.0, run)[0] is False and len(calls) == 1             # one waiter per kit
+    st2 = {}
+    ok, why = nw.eco_handoff(r, st2, 3.0, lambda h, c, inp=None, timeout=0: _R(0, "EXISTS\n"))
+    assert ok and "not duplicated" in why                                               # a waiter already on the kit host
+    assert nw.eco_handoff(dict(r, kit="/srv/x; rm -rf /"), {}, 1.0, run)[0] is False   # path is shell-checked
+
+
+def test_eco_handoff_pass_arms_once_and_stays_report_only_without_file(tmp_path, monkeypatch):
+    coord(tmp_path, monkeypatch)
+    sweep_file(tmp_path, [("QC", "slw_fe_v1", "yes", at(NOW, 5), "QC-DRT-TAIL")])
+    r = prow(plateau3=9, plateau3_kind="low", plateau_v2=["LOW", 9, "9 flat"], host="epyc8", kit="/srv/x/gen/slw_fe_v1__cl")
+    calls = []
+    monkeypatch.setattr(nw, "run_host", lambda h, c, inp=None, timeout=0: calls.append(h) or _R())
+    seen = {}
+    nw.plateau_act_pass([r], seen, NOW)
+    assert calls == []
+    (tmp_path / "lanes/ECO-HANDOFF.live").write_text("1\n")
+    out = nw.plateau_act_pass([r], {}, NOW)
+    assert calls == ["epyc8"] and any("ECO-HANDOFF armed" in o["action"] for o in out)
