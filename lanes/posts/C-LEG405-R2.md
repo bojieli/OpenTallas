@@ -1,1 +1,2 @@
 - 2026-11-26 09:25 PST DONE [C-LEG405-R2] ot-push-main otpush-civil-redfish-2864757 on civil-redfish: rc=0 after 0 s, ended 17:25:14, log none, cmd: ot-push-main --help
+- 2026-11-26 09:26 PST DONE [C-LEG405-R2] ot-push-main otpush-civil-redfish-2872562 on civil-redfish: rc=0 after 66 s, ended 17:26:52, log /tmp/leg405_push.log, cmd: ot-push-main 
