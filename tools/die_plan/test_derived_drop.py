@@ -153,6 +153,24 @@ def test_solver_tree_method_not_shadowed():
     assert callable(S.tree) and S.root == "/some/tree"
 
 
+def test_tap_names_and_sites_share_the_warmed_plan_grid(monkeypatch):
+    import schema
+
+    plan = object()
+    calls = []
+
+    def tap_grid(p, type_name):
+        assert p is plan
+        calls.append(type_name)
+        return [("clk", 10, 20), ("clk_t1", 30, 40)]
+
+    monkeypatch.setattr(schema, "tap_grid", tap_grid)
+    solver = D.Solver({"partition_types": {}}, "/x/p.json", plan_obj=plan)
+    assert solver.grid("t") == {"clk": (10.0, 20.0), "clk_t1": (30.0, 40.0)}
+    assert solver.taps("t") == {"clk", "clk_t1"}
+    assert calls == ["t"]
+
+
 def test_references_the_bind_repicks_are_warn():
     """LOCAL-RESET-RAW-1: the bind re-picks a gone / far landing_local_resets raw (S81 leaf, bk_sel): WARN, not FAIL"""
     t = {"clock": {"landing_local_resets": [{"name": "fstart_2", "raw": "rst_rl_27", "xy_um": [0, 0]}]}}

@@ -2777,7 +2777,7 @@ def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=N
     return sel
 
 
-def reset_prewarm(tree, plan, sel, landremap_base=None):
+def reset_prewarm(tree, plan, sel, landremap_base=None, *, warmed_plans=None):
     """solve the selected trees once, in a fork pool, into reset_tree's process-wide cache -> LIST line"""
     import schema
     import reset_tree as RT
@@ -2794,6 +2794,8 @@ def reset_prewarm(tree, plan, sel, landremap_base=None):
         except Exception as e:  # noqa: BLE001 - each class then solves (and reports) on demand
             info.append(f"{side} {len(tns)} type(s) not prewarmed ({type(e).__name__}: {str(e)[:120]})")
             continue
+        if warmed_plans is not None:
+            warmed_plans[side] = P
         info.append(f"{side} {res['todo']}/{len(tns)} type(s) in {res['seconds']:.0f} s on {res['jobs']} worker(s)")
     return f"LIST RESET-PREWARM {'; '.join(info) or 'nothing to solve'} ({time.time() - t0:.0f} s)"
 
@@ -2835,6 +2837,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _stop = input_stop(findings)                       # PRE-INPUT-STOP-1124: missing inputs stop PRE here, in seconds
     if _stop:
         return findings + [_stop, _pt.line()]
+    warmed_plans = {}
     _warm = (os.environ.get("OT_RESET_TREE_CACHE", "1") != "0" and os.environ.get("OT_PRE_RESET_PREWARM", "1") != "0"
              and ("PYTEST_CURRENT_TEST" not in os.environ or os.environ.get("OT_PRE_RESET_PREWARM") == "on"))
     if _warm:                                            # RESET-TREE-CACHE-1124: every reset tree the classes below solve, once, in a pool
@@ -2843,7 +2846,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
             _sel = reset_solve_types(tree, plan, _load(plan), skip, landremap_base=rb, derived_base=rb or baseline,
                                      sidecar=sidecar, asbuilt=asbuilt)
             _sel = scope_selection(_sel, _SCOPE)
-            findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb))
+            findings.append(reset_prewarm(tree, plan, _sel, landremap_base=rb, warmed_plans=warmed_plans))
         except Exception as e:  # noqa: BLE001 - the classes solve on demand
             findings.append(f"LIST RESET-PREWARM not run: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("TOOLS")
@@ -2982,8 +2985,17 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import derived_drop as DD
         try:
-            _ddkw = {"scope": _SCOPE} if _SCOPE is not None and "scope" in __import__("inspect").signature(DD.findings).parameters else {}
-            findings += DD.findings(_load(plan) or {}, plan, tree, [c for c in DD.CLASSES if c not in skip],
+            params = __import__("inspect").signature(DD.findings).parameters
+            _ddkw = {"scope": _SCOPE} if _SCOPE is not None and "scope" in params else {}
+            raw = _load(plan) or {}
+            warmed = warmed_plans.get("plan")
+            # A row gate can refresh its candidate while PRE runs. Reuse the wavefront only for the exact snapshot
+            # and plan-relative input directory DERIVED_DROP would read, with the same pinned tree.
+            if warmed is not None and "plan_obj" in params:
+                root = Path(tree).resolve() if tree and Path(tree).is_dir() else Path.cwd()
+                if warmed.path.parent.resolve() == (root / Path(plan).parent).resolve() and warmed.raw == raw:
+                    _ddkw["plan_obj"] = warmed
+            findings += DD.findings(raw, plan, tree, [c for c in DD.CLASSES if c not in skip],
                                     bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline, **_ddkw)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
