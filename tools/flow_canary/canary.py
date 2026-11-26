@@ -22,6 +22,7 @@ reference's recorded baseline (canary.json "regression"); a reference with no ba
 """
 import argparse
 import glob
+import importlib.util
 import json
 import os
 import re
@@ -679,8 +680,22 @@ def missing_input_snapshot(spec, src, *, before_checkout=False):
     return inp if inp and not (Path(inp) / "MANIFEST.json").is_file() else ""
 
 
+def placement_review():
+    spec = importlib.util.spec_from_file_location("canary_placement_review", HERE / "placement_review.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def launch_client(unit, cmd):
+    return subprocess.run(["systemd-run", "--user", "--unit", unit, "--collect", "--property=Type=exec",
+                           "--property=KillMode=process", "--", "bash", "-lc", cmd],
+                          capture_output=True, text=True)
+
+
 def cmd_submit(a):
     specs, _ = load_spec(a.spec)
+    review = placement_review() if getattr(a, "review_before_route", False) else None
     dies = a.die or list(specs)
     src = Path(a.src).resolve()
     # FLOW-SHARED-9 (COORD 10-27 19:36 (3)): canaries run from immutable commit snapshots only (the trigger's
@@ -694,6 +709,9 @@ def cmd_submit(a):
     for n, die in enumerate(dies):
         PIN = pin_for(n)
         c = specs[die]
+        if review and not review.supported(c):
+            print(f"CANARY {die} HELD: no supported place/review/route resume for this flow")
+            continue
         # FLOW-CANARY-1121: a canary whose recorded input snapshot is gone (flow-canary/inputs/* was lost with epyc1/epyc4) is
         # skipped, not run: it could only fail on "CANARY_INPUTS missing" and would sit as a permanent FAIL reference.
         inp = "" if getattr(a, "dry", False) else missing_input_snapshot(c, src)
@@ -723,8 +741,10 @@ def cmd_submit(a):
         # autopilot canary_gate, summary) globs */canary_meta.json, so a dry run must never look like a live,
         # verdict-less canary (FLOW-TAG 10-26: a dry submit into the real root held 3 dies for 12 h).
         meta_name = "canary_meta.dry.json" if getattr(a, "dry", False) else "canary_meta.json"
-        (run / meta_name).write_text(json.dumps(dict(spec=c, kit=kit, src=str(src), src_commit=sha,
-                                                              submitted=time.strftime("%F %T %Z")), indent=1) + "\n")
+        meta = dict(spec=c, kit=kit, src=str(src), src_commit=sha, submitted=time.strftime("%F %T %Z"))
+        if review:
+            meta.update(review_before_route=True, submitted_at=time.time(), ot_run_args=shlex.split(CRIT + PIN))
+        (run / meta_name).write_text(json.dumps(meta, indent=1) + "\n")
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
                          prep="\n".join(fmt(c.get("prep", []), **kv)), gen_cwd=fmt(c.get("gen_cwd", "{src}"), **kv),
@@ -758,16 +778,45 @@ def cmd_submit(a):
                          "--kit", kit, "--mem", str(kv["mem"]), "--jobs", str(kv["cpus"])]
             route_script += shlex.join(proof_cmd) + '\necho "CANARY_ROUTED_LEC_RC $?"\n'
             prepare_runtime += f"cp {run}/canary.py {harness}/canary.py; "
+        if review:
+            cmd_prefix = [sys.executable, "-I", str(harness / "placement_review.py")]
+            runner = run / "gen/run_kit.sh"
+            prepare = shlex.join(cmd_prefix + ["prepare-route", "--receipt", str(review.receipt_path(run)),
+                "--approval", str(harness / "route_approval.json"), "--kit", kit, "--runner", str(runner)])
+            route_script = route_script.replace("set -u\n", f"set -u\n{prepare} || exit $?\nexport OT_RESUME=0\n", 1)
+            harness.mkdir(exist_ok=True)
+            tools = harness / "review_tools"
+            tools.mkdir(exist_ok=True)
+            for path in review.REVIEW_FILES:
+                source = HERE.parent / path
+                (tools / source.name).write_bytes(source.read_bytes())
+            (harness / "placement_review.py").write_bytes((HERE / "placement_review.py").read_bytes())
+            (harness / "route_canary.sh").write_text(route_script)
+            (harness / "canary.py").write_bytes((run / "canary.py").read_bytes())
+            place = shlex.join(["bash", str(runner), kit, "place", str(kv["mem"]), str(kv["cpus"])])
+            render = shlex.join(cmd_prefix + ["render", "--kit", kit, "--out", str(review.receipt_path(run).parent),
+                "--tools", str(tools), "--die", die, "--item", c["item"], "--src-commit", sha,
+                "--host", os.environ.get("OT_HUB_NAME", "intel2"), "--image", a.image])
+            (harness / "place.sh").write_text(f"#!/bin/bash\n{place}\nrc=$?\necho CANARY_PLACE_RC $rc\n"
+                                               f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{render}\n")
+            if not a.dry:
+                (run / ".keep").write_text("Flow Canary retained placement pending viewed route review\n")
         (run / "route.sh").write_text(route_script)
         # ot-run ISOLATION step 3 (enforced since 11-10): the generation job names the source snapshot and any input snapshot, so it
         # declares them with --stage (every die was REFUSED, exit 96, when the canary restarted 11-21).
         stage = f"--stage {src} --stage {run} " + (f"--stage {kv['inputs']} " if kv.get("inputs") else "")
-        launch = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh; "
-                  f"if [ -f {run}/GENERATED ]; then mkdir -p {harness}; {prepare_runtime}"
-                  f"cp {run}/route.sh {harness}/route_canary.sh; "
-                  f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} "
-                  f"--dir {run}/gen --stage {run}/gen --stage {harness} -- bash {harness}/route_canary.sh; "
-                  f"python3 -I {run}/canary.py check --run {run}; fi")
+        generate = f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh"
+        physical = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} "
+                    f"--dir {run}/gen --stage {run}/gen --stage {harness} -- bash ")
+        if review:
+            # The staged placement script has no route action and no report that could seed a route baseline.
+            launch = (f"{generate}; if [ -f {run}/GENERATED ]; then {physical}{harness}/place.sh; "
+                      f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
+                      f"python3 -I {run}/canary.py check --run {run}; fi; fi")
+        else:
+            launch = (f"{generate}; if [ -f {run}/GENERATED ]; then mkdir -p {harness}; {prepare_runtime}"
+                      f"cp {run}/route.sh {harness}/route_canary.sh; {physical}{harness}/route_canary.sh; "
+                      f"python3 -I {run}/canary.py check --run {run}; fi")
         cmd = f"( {launch} ) > {run}/otrun.log 2>&1"
         print(f"CANARY {die} {c['item']} src {sha}: {run}")
         if a.dry:
@@ -776,9 +825,7 @@ def cmd_submit(a):
         # nohup/new-session does not leave the trigger's systemd cgroup: oneshot exit kills those clients.
         # A separate user service owns each ot-run client until its job has finished.
         unit = "flow-canary-" + die.replace("_", "-") + "-" + sha[:9] + "-" + stamp.replace("_", "-")
-        r = subprocess.run(["systemd-run", "--user", "--unit", unit, "--collect", "--property=Type=exec",
-                            "--property=KillMode=process", "--", "bash", "-lc", cmd],
-                           capture_output=True, text=True)
+        r = launch_client(unit, cmd)
         mp = run / "canary_meta.json"
         meta = jload(mp) or {}
         meta["client_unit"] = unit
@@ -793,6 +840,63 @@ def cmd_submit(a):
             return r.returncode
         mp.write_text(json.dumps(meta, indent=1) + "\n")
         print(f"CANARY {die} client service {unit}")
+    return 0
+
+
+def cmd_resume(a):
+    review = placement_review()
+    run = Path(a.run).resolve()
+    meta = jload(run / "canary_meta.json") or {}
+    spec = meta.get("spec") or {}
+    try:
+        if not meta.get("review_before_route") or not review.supported(spec) or not meta.get("client_unit"):
+            raise ValueError("not a staged type canary awaiting route review")
+        if (run / "canary.json").exists():
+            raise ValueError("canary already has a terminal result")
+        active = subprocess.run(["systemctl", "--user", "is-active", "--quiet", meta["client_unit"]],
+                                capture_output=True).returncode == 0
+        if active:
+            raise ValueError("placement client is still active")
+        receipt = review.receipt_path(run)
+        doc = review.read_receipt(run)
+        kit = Path(meta["kit"])
+        if (kit.parent != run / "gen" or doc["src_commit"] != meta["src_commit"]
+                or (doc["die"], doc["item"]) != (spec["die"], spec["item"])):
+            raise ValueError("placement receipt belongs to another canary")
+        review.validate_placement(kit, receipt, doc)
+        verdict = review.latest_viewed(doc, review.canonical_review_log())
+        if verdict not in review.ACCEPT:
+            hold = "WAIT-FORM" if verdict in review.REJECT else "WAIT-VISUAL"
+            raise ValueError(f"{hold} for {doc['kit_location']} (current exact verdict: {verdict or 'none'})")
+        for sibling in run.parent.glob("*/canary_meta.json"):
+            other = jload(sibling) or {}
+            if (other.get("review_before_route") and (other.get("spec") or {}).get("die") == spec["die"]
+                    and other.get("submitted_at", 0) > meta["submitted_at"]
+                    and other.get("client_unit") and not other.get("submission_error")):
+                raise ValueError("a newer reference for this die has already been submitted")
+        harness = run / "harness"
+        request = harness / "route_approval.json"
+        with request.open("x") as f:
+            json.dump({"placement_sha256": review.digest(receipt), "verdict": verdict}, f)
+    except (ValueError, KeyError, TypeError, OSError) as exc:
+        print(f"CANARY RESUME REFUSED [{exc}]")
+        return 3
+
+    # A durable claim prevents a second admission even if the local client drops
+    # the transport. Only a systemd refusal before launch automatically clears it.
+    gen, log = run / "gen", run / "route.otrun.log"
+    route = shlex.join([str(Path.home() / ".local/bin/ot-run"), *meta.get("ot_run_args", ()),
+        "--mem", str(spec["mem_gb"]), "--threads", str(spec.get("threads", 8)), "--dir", str(gen),
+        "--stage", str(gen), "--stage", str(harness), "--", "bash", str(harness / "route_canary.sh")])
+    collect = shlex.join([sys.executable, "-I", str(run / "canary.py"), "check", "--run", str(run)])
+    qlog, qcombined = shlex.quote(str(log)), shlex.quote(str(run / "otrun.log"))
+    r = launch_client(meta["client_unit"] + "-route", f"{route} > {qlog} 2>&1; rc=$?; cat {qlog} >> {qcombined}; "
+                      f"if grep -q '^CANARY_FLOW_RC ' {qlog}; then {collect}; else exit \"$rc\"; fi")
+    if r.returncode:
+        request.unlink()
+        print(f"CANARY RESUME NOT RUN [{r.stderr.strip()}]")
+        return r.returncode
+    print(f"CANARY RESUME {doc['kit_location']} via {meta['client_unit']}-route")
     return 0
 
 
@@ -829,6 +933,9 @@ def main(argv=None):
     s.add_argument("--root", default="/srv/opentallas-scratch2/claude/flow-canary/runs")
     s.add_argument("--image", default=IMAGE)
     s.add_argument("--dry", action="store_true")
+    s.add_argument("--review-before-route", action="store_true")
+    resume = sub.add_parser("resume")
+    resume.add_argument("--run", required=True)
     l = sub.add_parser("lint")
     l.add_argument("--kit", required=True)
     l.add_argument("--top", required=True)
@@ -846,7 +953,7 @@ def main(argv=None):
     m.add_argument("--root", default="/srv/opentallas-scratch2/claude/flow-canary/runs")
     sub.add_parser("list")
     a = ap.parse_args(argv)
-    return {"submit": cmd_submit, "lint": cmd_lint, "check": cmd_check,
+    return {"submit": cmd_submit, "resume": cmd_resume, "lint": cmd_lint, "check": cmd_check,
             "summary": cmd_summary, "list": cmd_list, "prove-routed": cmd_prove_routed}[a.cmd](a)
 
 
