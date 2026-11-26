@@ -27,7 +27,7 @@ def _plan(tw, lockup=None, sites=None):
 
 def _run(monkeypatch, P):
     monkeypatch.setattr(S, "tap_grid", lambda P_, tn: TAPS)
-    monkeypatch.setattr(ft_xtap, "station_sites", lambda P_, tn, s: (P_._sites, 1))
+    monkeypatch.setattr(ft_xtap, "station_sites", lambda P_, tn, s, **unused: (P_._sites, 1))
 
     def pw(P_, tn, port):
         tab = ((P_.clock.get("tap_window") or {}).get("per_port_ps") or {}).get(tn) or {}
@@ -79,6 +79,50 @@ def test_no_tap_model(monkeypatch):
 def test_flat_window_reports_mode(monkeypatch):
     R, s = _run(monkeypatch, _plan({"window_ps": 160}))
     assert s["mode"] == "flat" and s["hops"] == 1 and s["worst_delta_ps"] == 160
+
+
+def test_resolve_each_pin_table_site_and_port_once_per_type(monkeypatch):
+    tw = _tw(160, 0)
+    tw["per_port_ps"]["U"] = {"clk": 0, "clk_t1": 150}
+    plan = _plan(tw)
+    plan.clock["seam_hold"] = True
+    slots = [{"name": "first", "stations": 2, "width": 2,
+              "regs_um": [[100, 100], [500, 100]]},
+             {"name": "landed", "stations": 2, "width": 2,
+              "regs_um": [[1, 1], [100, 100]]}]
+    kind = {"ft_slots": slots, "outline_um": [600, 200],
+            "clock": {"landing_contract": {"bands": {"landed_i": {}}}}}
+    plan.types = {"T": kind, "U": kind}
+
+    pin_calls, tap_calls, window_calls = [], [], []
+    old_nearest = ft_xtap._nearest
+
+    def pins(_plan, tn):
+        pin_calls.append(tn)
+        return [("first_i", 0, "M4", 100, 100, "W"),
+                ("first_i", 1, "M4", 100, 100, "W"),
+                ("landed_o", 0, "M4", 500, 100, "E")]
+
+    def nearest(*args):
+        tap_calls.append(args[1:])
+        return old_nearest(*args)
+
+    def window(p, tn, tap):
+        window_calls.append((tn, tap))
+        return p.clock["tap_window"]["per_port_ps"][tn][tap]
+
+    monkeypatch.setattr(S, "tap_grid", lambda *_: TAPS)
+    monkeypatch.setattr(gen_phys, "type_pins", pins)
+    monkeypatch.setattr(ft_xtap, "_nearest", nearest)
+    monkeypatch.setattr(gen_phys, "port_window_ps", window)
+    _, hops, stats = C.xtap_latency_hops(plan)
+    assert [(h["type"], h["slot"], h["delta_ps"]) for h in hops] == [
+        ("T", "first", 160), ("T", "landed", 160), ("U", "first", 150), ("U", "landed", 150),
+    ]
+    assert stats["hops_total"] == 4
+    assert pin_calls == ["T", "U"]
+    assert tap_calls == [(100.0, 100.0), (500.0, 100.0)] * 2
+    assert window_calls == [(tn, tap) for tn in ("T", "U") for tap in ("clk", "clk_t1")]
 
 
 # ---- tap sink cap (ERROR) ----

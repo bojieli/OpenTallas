@@ -80,6 +80,7 @@ Outputs in --out (default: next to the plan): g0_report.json and, with --png, di
 """
 import argparse
 import bisect
+from functools import cache
 import json
 import math
 import re
@@ -1034,8 +1035,20 @@ def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
         if len(taps) < 2:
             continue
         lock = gen_rtl.ft_hop_lockup(P.raw, tn)
+        pin_index = ft_xtap.type_pin_index(P, tn)
+
+        # All slots here share one read-only type geometry and tap contract.
+        # Keep the caches local so a different plan or type cannot reuse them.
+        @cache
+        def site_tap(site):
+            return ft_xtap._nearest(taps, *site)
+
+        @cache
+        def port_window(port):
+            return gen_phys.port_window_ps(P, tn, port)
+
         for s in slots:
-            st, _nb = ft_xtap.station_sites(P, tn, s)
+            st, _nb = ft_xtap.station_sites(P, tn, s, pin_index=pin_index)
             xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lock else set()
             ltap = S.ft_hop_latch_tap(P.raw, tn).get(s["name"], {}) if lock else {}
             lfrac = S.ft_hop_latch_frac(P.raw, tn).get(s["name"], {}) if lock else {}
@@ -1048,12 +1061,12 @@ def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
                 m = max(len(a), len(b))
                 best = None
                 for i in range(m):
-                    na = ft_xtap._nearest(taps, *a[min(i, len(a) - 1)])
-                    nb_ = ft_xtap._nearest(taps, *b[min(i, len(b) - 1)])
+                    na = site_tap(a[min(i, len(a) - 1)])
+                    nb_ = site_tap(b[min(i, len(b) - 1)])
                     if na == nb_:
                         continue
                     # COORD intent: a hop between different tap PORTS pays the full window (same port: CRPR credit)
-                    d = max(gen_phys.port_window_ps(P, tn, na), gen_phys.port_window_ps(P, tn, nb_))
+                    d = max(port_window(na), port_window(nb_))
                     if best is None or d > best[0]:
                         best = (d, na, nb_)
                 if best is None or best[0] <= thresh:
