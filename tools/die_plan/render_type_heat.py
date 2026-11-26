@@ -46,16 +46,21 @@ def _face_point(t, face, win):
     return {"W": (0.0, m), "E": (W, m), "S": (m, 0.0), "N": (m, H)}.get(face, (0.0, m))
 
 
-def chain_legs(t):
+def chain_legs(t, slot_ends=None):
     """DETAIL-1 (HEAD-SMALL-TAPS 11-25): [(name, [pts], [hop um])] for every ft slot / internal station, including slots that
     carry no regs_um (pass-through shims, st_*, turn_*): in-window mid -> `stations` evenly spaced points on the Manhattan
-    route -> out-window mid, the way the kit places them (reach_fix.ft_slot_hops 'even')."""
+    route -> out-window mid, the way the kit places them (reach_fix.ft_slot_hops 'even').
+    Prefer resolved native pin centers when supplied. Standalone type records can only approximate the window centers.
+    """
     out = []
     for f in t.get("ft_slots") or []:
         if not isinstance(f, dict):
             continue
-        a = _face_point(t, f.get("in_face", "W"), f.get("in_window_um"))
-        b = _face_point(t, f.get("out_face", "E"), f.get("out_window_um"))
+        ends = (slot_ends or {}).get(f.get("name"))
+        if ends is None:
+            ends = (_face_point(t, f.get("in_face", "W"), f.get("in_window_um")),
+                    _face_point(t, f.get("out_face", "E"), f.get("out_window_um")))
+        a, b = ends
         k = max(1, int(f.get("stations", 1) or 1))
         regs = [tuple(r[:2]) for r in f.get("regs_um") or [] if isinstance(r, (list, tuple)) and len(r) >= 2]
         if len(regs) >= k:
@@ -92,20 +97,17 @@ def pin_pts(t):
     return [(p.get("name"), p.get("dir"), p["xy_um"][0], p["xy_um"][1]) for p in lc.get("pins") or [] if isinstance(p, dict) and p.get("xy_um")]
 
 
-def exported_taps(plan_path, tn, repo=None):
-    """the kit's exported tap grid (schema.tap_grid) of type tn; [] when the plan side files do not resolve"""
+def exported_taps(plan, tn):
+    """The kit's exported tap grid, when the plan side files resolve."""
+    import schema as S
+
     try:
-        import reach_fix as RF
-        RF.set_repo(repo)
-        raw, _sha = RF.load_raw(plan_path)
-        P = RF.plan_obj(raw, plan_path)
-        import schema as S
-        return [(n, x, y) for n, x, y in S.tap_grid(P, tn)]
+        return S.tap_grid(plan, tn)
     except Exception:  # noqa: BLE001
         return []
 
 
-def render_type(tn, t, out_png, grid_taps=None, radius=200.0):
+def render_type(tn, t, out_png, grid_taps=None, radius=200.0, *, slot_ends=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -145,7 +147,7 @@ def render_type(tn, t, out_png, grid_taps=None, radius=200.0):
         ax.add_patch(Circle((x, y), radius, fill=False, ec="m", lw=0.4, ls="--", alpha=0.5))
     for pn, pd, x, y in pin_pts(t):
         ax.plot(x, y, "s", color="tab:blue" if pd == "in" else "tab:green", ms=2.5)
-    dlegs = chain_legs(t)
+    dlegs = chain_legs(t, slot_ends)
     dmax = 0.0
     dover = 0
     for nm, pts, hops in dlegs:
@@ -188,7 +190,11 @@ def main(argv=None):
     ap.add_argument("--repo", help="source tree the plan side files resolve against: draws the exported tap grid (DETAIL-1)")
     ap.add_argument("--radius", type=float, default=200.0)
     a = ap.parse_args(argv)
-    raw = json.loads(Path(a.plan).read_text())
+    import reach_fix as RF
+
+    RF.set_repo(a.repo)
+    raw, _ = RF.load_raw(a.plan)
+    plan = RF.plan_obj(raw, a.plan) if "die" in raw else None
     Path(a.out).mkdir(parents=True, exist_ok=True)
     want = set(a.types.split(",")) if a.types else None
     rows = []
@@ -196,8 +202,9 @@ def main(argv=None):
         if (want and tn not in want) or not isinstance(t, dict) or not t.get("outline_um"):
             continue
         try:
-            gt = exported_taps(a.plan, tn, a.repo) if a.repo else None
-            rows.append(render_type(tn, t, str(Path(a.out) / f"{tn}.png"), gt, a.radius))
+            gt = exported_taps(plan, tn) if plan and a.repo else None
+            ends = RF.slot_ends(plan, tn) if plan and t.get("ft_slots") else None
+            rows.append(render_type(tn, t, str(Path(a.out) / f"{tn}.png"), gt, a.radius, slot_ends=ends))
         except Exception as e:  # noqa: BLE001
             rows.append({"type": tn, "error": f"{type(e).__name__}: {str(e)[:100]}"})
     (Path(a.out) / "summary.json").write_text(json.dumps(rows, indent=1))
