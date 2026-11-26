@@ -18,6 +18,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import hold_records as HR  # noqa: E402
+from derive_gen_hosts import excluded_hosts  # noqa: E402
 
 
 def atomic(path, data):
@@ -216,7 +217,7 @@ def marker_kit_rtl(marker):
     return dict(legacy, **(marker.get("kit_rtl") or {})) | ((marker.get("config") or {}).get("kit_rtl") or {})
 
 
-FLEET_KEYS = ("gen_hosts", "gen_host", "gen_host_min_free_gb", "gen_disk_min_gb", "host_requires", "restage_max_per_tick", "restage_min_wait_s", "restage_place_waiters", "place_prefer", "hosts", "host_share")
+FLEET_KEYS = ("gen_hosts", "gen_host", "gen_host_min_free_gb", "gen_disk_min_gb", "derive_exclude_hosts", "host_requires", "restage_max_per_tick", "restage_min_wait_s", "restage_place_waiters", "place_prefer", "hosts", "host_share")
 
 
 def _free_gb(host):
@@ -277,8 +278,9 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     replicated = []
     if not keep:
         _cfg0 = json.loads((C / "autopilot/kit_wave.json").read_text())
-        _cur = [h for h in (_cfg0["dies"][die].get("gen_hosts") or []) if h not in (_cfg0.get("retired_hosts") or [])]
-        _pool = [h for h in (_cfg0.get("hosts") or FLEET_POOL) if h not in (_cfg0.get("retired_hosts") or [])]
+        excluded = set(_cfg0.get("retired_hosts") or ()) | excluded_hosts(_cfg0, die)
+        _cur = [h for h in (_cfg0["dies"][die].get("gen_hosts") or []) if h not in excluded]
+        _pool = [h for h in (_cfg0.get("hosts") or FLEET_POOL) if h not in excluded]
         _cur = _cur + [h for h in old_tree_holders(str(_cfg0["dies"][die].get("src") or ""), _pool, set(_cur) | set(hosts)) if h not in _cur]
         hosts, replicated = ensure_tree_on_hosts(tree, want, _cur, hosts, rt or HERE, link_from=os.path.basename(str(_cfg0["dies"][die].get("src") or "")))
         mc.pop("gen_hosts", None) if replicated else None
@@ -325,6 +327,13 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         assert d["src"] == expect_source and d["event"] == expect_event, "die changed since reviewed candidate"
         if keep:
             assert sorted(d.get("gen_hosts") or []) == sorted(hosts), "keep_gen_hosts: gen_hosts changed since the guard read; nothing applied"
+        else:
+            # A drain can be recorded while an inferred host's transfer is in flight.
+            excluded = excluded_hosts(cfg, die) | set(cfg.get("retired_hosts") or ())
+            drop = (set(hosts) - candidate_hosts) & excluded
+            if drop:
+                hosts = [h for h in hosts if h not in drop]
+                warnings.append(f"APPLY-KEPT gen_hosts: {', '.join(sorted(drop))} excluded during transfer")
         old = dict(src=d["src"], event=d["event"], plan=d.get("plan"), plan_sha256=d.get("plan_sha256"), kit_rtl=d.get("kit_rtl"))
         old_bt = {k: d.get(k) for k in ("src", "plan", "plan_sha256", "src_sha", "queue_src", "src_manifest_hash") if d.get(k)}
         old_bt["kit_rtl"] = {k: v for k, v in (d.get("kit_rtl") or {}).items() if k in ("mode", "bind_out", "asbuilt")}

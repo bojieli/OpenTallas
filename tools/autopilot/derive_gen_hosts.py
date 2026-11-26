@@ -6,7 +6,7 @@ usage: derive_gen_hosts.py [--coord ~/coord] [--hosts h1,h2,..] [--apply]"""
 import argparse, fcntl, json, os, shlex, shutil, subprocess, sys
 
 # COMPOSE-FAST 11-25 (COORD 06:2x, Fable flow review): epyc9/10/11 take no new jobs; the hourly --apply re-added them to gen_hosts.
-# kit_wave.json derive_exclude_hosts (list) drops more hosts without a code change.
+# kit_wave.json derive_exclude_hosts lists apply fleet-wide or under dies.<die>.
 HOSTS = ("epyc12", "epyc7", "epyc8", "epyc2", "intel1", "intel2")
 HASHFILE = ".src-manifest.sha256"
 HARD_FLOOR, MARGIN = 50, 20
@@ -69,13 +69,19 @@ def host_requires(host, paths, run=subprocess.run):
     return [l.split(None, 1)[1].strip("'") for l in r.stdout.splitlines() if l.startswith("MISSING ")]
 
 
+def excluded_hosts(cfg, die):
+    """Hosts temporarily excluded from automatic generation-host discovery."""
+    scoped = cfg["dies"][die].get("derive_exclude_hosts") or ()
+    return set(cfg.get("derive_exclude_hosts") or ()) | set(scoped)
+
+
 def derive(cfg, hosts=HOSTS, prober=probe, floor=None, checker=host_requires):
     """-> {die: (new list, [reasons])}"""
     out = {}
     _req = {}
     base = max(HARD_FLOOR, int(floor if floor is not None else HARD_FLOOR))
-    excl = set(cfg.get("derive_exclude_hosts") or ())
     for die, d in (cfg.get("dies") or {}).items():
+        excl = excluded_hosts(cfg, die)
         tree, want = d.get("src"), d.get("src_manifest_hash")
         if not tree or not want or not d.get("gen_hosts"):
             continue
