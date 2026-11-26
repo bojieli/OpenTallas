@@ -1,0 +1,1 @@
+- 2026-11-26 08:47 PST DONE [QC-INT-R2-COLLX] ot-run oth-ubuntu-1513236-1795710833 on tolerant-swine: rc=0 after 794 s, ended 08:47:05, log /srv/opentallas-scratch2/claude/QC-INT-R2-COLLX/gate_c9d.otrun.log, cmd: --priority die --mem 192 --threads 48 --hosts epyc10 --disk 60 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-COLLX -- bash /srv/opentallas
