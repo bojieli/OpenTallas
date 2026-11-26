@@ -2312,6 +2312,20 @@ class Landings:
                 wreg = ring_write_reg(wplan, key, b) or ring_write_reg(wplan, tn, b)
                 if wreg and wreg.get("reach") and not cat.get("straps"):
                     wreg = None          # CLAND-RING-LOCALITY reach default: strap form only (no K carrier otherwise)
+                band = self.types[key].get("clock", {}).get("landing_contract", {}).get("bands", {}).get(b, {})
+                local_write = band.get("write_select_local", False)
+                if not isinstance(local_write, bool):
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_local must be a boolean"))
+                    continue
+                if local_write:
+                    ring_width = w + 2 if self.dataflow else w
+                    if (not cat.get("straps") or hard is not None or wreg or status_copy
+                            or lite.get(b, {}).get("lite") or cat["rings"][b]["depth"] != 4 or ring_width > 64):
+                        self._collect_err(tn, b, None, None, LandingError(
+                            f"{tn}.{b}: write_select_local requires a full narrow soft legacy strap ring of depth four"))
+                        continue
+                    ring_mod = ring_mod[:-1] + ", .WRITE_SELECT_LOCAL(1))"
+                    self.reset_placements[tn][b].update(write_select_local=True, write_select_local_added_cycles=0)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
