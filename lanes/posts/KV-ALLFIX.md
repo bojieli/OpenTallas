@@ -1207,3 +1207,4 @@
   set -euo pipefail
   if [ 
 - 2026-11-25 21:34 PST DIED [KV-ALLFIX] ot-run oth-ubuntu-2089295-1795669688 on open-snipe: rc=1 after 1580 s, ended 05:34:23, log /srv/opentallas-scratch2/claude/kv-allfix/phy_station/phy_v1_fclk_gate.otrun.log, cmd: --hosts epyc12 --die --mem 72 --threads 8 --dir /srv/opentallas-scratch2/claude/kv-allfix/phy_station -- python3 -I /srv/opentallas-scratch2 | class=DESIGN-FAIL cause=no cause line
+- 2026-11-25 21:42 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-2274806-1795670022 on open-snipe: rc=0 after 1729 s, ended 05:42:26, log /srv/opentallas-scratch2/claude/kv-allfix/a5t9/r8_g3_1125/run.otrun.log, cmd: --hosts epyc12 --die --mem 96 --threads 10 --dir /srv/opentallas-scratch2/claude/kv-allfix/a5t9/r8_g3_1125 -- bash /srv/opentallas-scratch2/
