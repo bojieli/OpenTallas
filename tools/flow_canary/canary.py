@@ -31,6 +31,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 SPEC = HERE / "canaries.json"
@@ -681,7 +682,10 @@ def missing_input_snapshot(spec, src, *, before_checkout=False):
 
 
 def placement_review():
-    spec = importlib.util.spec_from_file_location("canary_placement_review", HERE / "placement_review.py")
+    helper = HERE / "placement_review.py"
+    if not helper.is_file():
+        helper = HERE / "harness/placement_review.py"
+    spec = importlib.util.spec_from_file_location("canary_placement_review", helper)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -707,7 +711,7 @@ def cmd_submit(a):
     sha = git_head(src)
     stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
     for n, die in enumerate(dies):
-        PIN = pin_for(n)
+        PIN = f"--hosts {review.ADMISSION_HOSTS} --strict-host " if review else pin_for(n)
         c = specs[die]
         if review and not review.supported(c):
             print(f"CANARY {die} HELD: no supported place/review/route resume for this flow")
@@ -783,7 +787,7 @@ def cmd_submit(a):
             runner = run / "gen/run_kit.sh"
             prepare = shlex.join(cmd_prefix + ["prepare-route", "--receipt", str(review.receipt_path(run)),
                 "--approval", str(harness / "route_approval.json"), "--kit", kit, "--runner", str(runner)])
-            route_script = route_script.replace("set -u\n", f"set -u\n{prepare} || exit $?\nexport OT_RESUME=0\n", 1)
+            route_script = route_script.replace("set -u\n", f"set -u\n{prepare} || exit $?\necho CANARY_ROUTE_STARTED\nexport OT_RESUME=0\n", 1)
             harness.mkdir(exist_ok=True)
             tools = harness / "review_tools"
             tools.mkdir(exist_ok=True)
@@ -800,7 +804,7 @@ def cmd_submit(a):
             (harness / "place.sh").write_text(f"#!/bin/bash\n{place}\nrc=$?\necho CANARY_PLACE_RC $rc\n"
                                                f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{render}\n")
             if not a.dry:
-                (run / ".keep").write_text("Flow Canary retained placement pending viewed route review\n")
+                (run / ".keep").write_text(review.keep_text(run))
         (run / "route.sh").write_text(route_script)
         # ot-run ISOLATION step 3 (enforced since 11-10): the generation job names the source snapshot and any input snapshot, so it
         # declares them with --stage (every die was REFUSED, exit 96, when the canary restarted 11-21).
@@ -864,7 +868,8 @@ def cmd_resume(a):
                 or (doc["die"], doc["item"]) != (spec["die"], spec["item"])):
             raise ValueError("placement receipt belongs to another canary")
         review.validate_placement(kit, receipt, doc)
-        verdict = review.latest_viewed(doc, review.canonical_review_log())
+        decision = review.latest_decision(doc, review.canonical_review_log())
+        verdict = decision[0] if decision else None
         if verdict not in review.ACCEPT:
             hold = "WAIT-FORM" if verdict in review.REJECT else "WAIT-VISUAL"
             raise ValueError(f"{hold} for {doc['kit_location']} (current exact verdict: {verdict or 'none'})")
@@ -877,7 +882,8 @@ def cmd_resume(a):
         harness = run / "harness"
         request = harness / "route_approval.json"
         with request.open("x") as f:
-            json.dump({"placement_sha256": review.digest(receipt), "verdict": verdict}, f)
+            json.dump({"placement_sha256": review.digest(receipt), "verdict": verdict,
+                       "review_line_sha256": decision[1], "requested_at": time.time()}, f)
     except (ValueError, KeyError, TypeError, OSError) as exc:
         print(f"CANARY RESUME REFUSED [{exc}]")
         return 3
@@ -886,18 +892,32 @@ def cmd_resume(a):
     # the transport. Only a systemd refusal before launch automatically clears it.
     gen, log = run / "gen", run / "route.otrun.log"
     route = shlex.join([str(Path.home() / ".local/bin/ot-run"), *meta.get("ot_run_args", ()),
-        "--mem", str(spec["mem_gb"]), "--threads", str(spec.get("threads", 8)), "--dir", str(gen),
+        "--mem", str(spec["mem_gb"]), "--threads", str(spec.get("threads", 8)),
+        "--max-wait", str(review.MAX_ROUTE_WAIT_S), "--dir", str(gen),
         "--stage", str(gen), "--stage", str(harness), "--", "bash", str(harness / "route_canary.sh")])
-    collect = shlex.join([sys.executable, "-I", str(run / "canary.py"), "check", "--run", str(run)])
-    qlog, qcombined = shlex.quote(str(log)), shlex.quote(str(run / "otrun.log"))
-    r = launch_client(meta["client_unit"] + "-route", f"{route} > {qlog} 2>&1; rc=$?; cat {qlog} >> {qcombined}; "
-                      f"if grep -q '^CANARY_FLOW_RC ' {qlog}; then {collect}; else exit \"$rc\"; fi")
+    complete = shlex.join([sys.executable, "-I", str(run / "canary.py"), "finish-route", "--run", str(run)])
+    qlog = shlex.quote(str(log))
+    r = launch_client(meta["client_unit"] + "-route", f'{route} > {qlog} 2>&1; {complete} --rc "$?"')
     if r.returncode:
         request.unlink()
         print(f"CANARY RESUME NOT RUN [{r.stderr.strip()}]")
         return r.returncode
     print(f"CANARY RESUME {doc['kit_location']} via {meta['client_unit']}-route")
     return 0
+
+
+def cmd_finish_route(a):
+    review = placement_review()
+    run = Path(a.run).resolve()
+    log = (run / "route.otrun.log").read_text(errors="replace")
+    with (run / "otrun.log").open("a") as f:
+        f.write(log)
+    if "CANARY_FLOW_RC " in log:
+        return cmd_check(SimpleNamespace(run=str(run), root=None, out=None))
+    if a.rc and review.definitely_not_started(log):
+        (run / "harness/route_approval.json").unlink(missing_ok=True)
+        print("CANARY ROUTE NOT STARTED: retained exact placement is available for a fresh reviewed request")
+    return a.rc
 
 
 def cmd_summary(a):
@@ -936,6 +956,9 @@ def main(argv=None):
     s.add_argument("--review-before-route", action="store_true")
     resume = sub.add_parser("resume")
     resume.add_argument("--run", required=True)
+    finish_route = sub.add_parser("finish-route")
+    finish_route.add_argument("--run", required=True)
+    finish_route.add_argument("--rc", required=True, type=int)
     l = sub.add_parser("lint")
     l.add_argument("--kit", required=True)
     l.add_argument("--top", required=True)
@@ -954,7 +977,7 @@ def main(argv=None):
     sub.add_parser("list")
     a = ap.parse_args(argv)
     return {"submit": cmd_submit, "resume": cmd_resume, "lint": cmd_lint, "check": cmd_check,
-            "summary": cmd_summary, "list": cmd_list, "prove-routed": cmd_prove_routed}[a.cmd](a)
+            "summary": cmd_summary, "list": cmd_list, "prove-routed": cmd_prove_routed, "finish-route": cmd_finish_route}[a.cmd](a)
 
 
 if __name__ == "__main__":

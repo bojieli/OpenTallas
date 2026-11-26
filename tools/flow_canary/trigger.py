@@ -111,6 +111,40 @@ def client_never_started(run, unit):
     return not unit_active(unit)
 
 
+def release_review_leases(root):
+    """Release only our expired canary holds once terminal or demonstrably superseded."""
+    review = _canary_module.placement_review()
+    newest, pending = {}, []
+    for path in Path(root).glob("*/canary_meta.json"):
+        m = _canary_module.jload(path) or {}
+        if not m.get("review_before_route") or not m.get("client_unit"):
+            continue
+        run, die = path.parent, m["spec"]["die"]
+        result = run / "canary.json"
+        if review.receipt_path(run).is_file():
+            candidate = (m.get("submitted_at", 0), m.get("src_commit", ""))
+            newest[die] = max(newest.get(die, (0, "")), candidate)
+        if not (run / ".keep").is_file():
+            continue
+        if result.is_file():
+            review.release_owned_keep(run, result)
+        else:
+            pending.append((run, m, die))
+    log = review.canonical_review_log() if pending else ""
+    for run, m, die in pending:
+        next_time, next_sha = newest.get(die, (0, ""))
+        if (next_time <= m.get("submitted_at", 0) or not next_sha or next_sha == m.get("src_commit")
+                or (run / "harness/route_approval.json").exists()
+                or unit_active(m["client_unit"])):
+            continue
+        try:
+            doc = review.read_receipt(run)
+            if review.latest_viewed(doc, log) in review.REJECT:
+                review.release_owned_keep(run, review.receipt_path(run))
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+
+
 def source_lock_file(source):
     p = Path(source) / ".git"
     if not p.is_file():
@@ -288,6 +322,7 @@ def main(argv=None):
     print(f"FLOW_CANARY_TRIGGER main {new[:9]}: submit {dies}; existing live {sorted(busy)}; changes {hits[:8]}")
     if a.dry:
         return 0
+    release_review_leases(a.root)
     if dies:
         selected = {c["die"]: c for c in spec["canaries"] if c["die"] in dies}
         source = snapshot_path(a.root, new)

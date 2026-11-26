@@ -1,4 +1,6 @@
+from datetime import datetime
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -14,13 +16,13 @@ import trigger as T
 
 
 def viewed(doc, delay=0, verdict="OK", reviewer="Human placement viewed", path=None, attempt=1):
-    stamp = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() - delay))
+    stamp = datetime.fromtimestamp(time.time() - delay, R.HUB_TZ).strftime("%Y-%m-%d %H:%M")
     return (f"- {stamp} PST GEOM VERDICT [{reviewer}] {doc['die']}/{doc['item']} attempt_{attempt} "
             f"(note: with (nested) review): {verdict} kit={path or doc['kit_location']} .")
 
 
 @pytest.fixture
-def placement(tmp_path):
+def placement(tmp_path, monkeypatch):
     run = tmp_path / "runs/reference"
     kit = run / "gen/t1"
     odb = kit / "run/results/asap7/leaf/base/3_place.odb"
@@ -41,7 +43,11 @@ def placement(tmp_path):
                images={name: R.digest(receipt.parent / name) for name in R.IMAGES})
     R.write_json(receipt, doc)
     approval = run / "approval.json"
-    R.write_json(approval, {"placement_sha256": R.digest(receipt), "verdict": "OK"})
+    line = viewed(doc)
+    monkeypatch.setattr(R, "worker_review_log", lambda _: line)
+    verdict, sha = R.latest_decision(doc, line)
+    R.write_json(approval, {"placement_sha256": R.digest(receipt), "verdict": verdict,
+                            "review_line_sha256": sha, "requested_at": time.time()})
     args = SimpleNamespace(kit=str(kit), runner=str(runner), receipt=str(receipt), approval=str(approval))
     return run, args, doc
 
@@ -102,6 +108,8 @@ def test_unattended_submit_defers_route_and_holds_core(tmp_path, monkeypatch):
     assert C.cmd_submit(a) == 0
     (run,) = list((tmp_path / "runs").iterdir())
     assert len(calls) == 1 and "harness/place.sh" in calls[0][1] and "route_canary.sh" not in calls[0][1]
+    assert calls[0][1].count(f"--hosts {R.ADMISSION_HOSTS} --strict-host") == 2
+    assert all(host not in R.ADMISSION_HOSTS.split(",") for host in ("intel2", "localhost", "epyc9", "epyc2", "epyc12"))
     place = (run / "harness/place.sh").read_text()
     route = (run / "harness/route_canary.sh").read_text()
     assert " place 20 8" in place and " render " in place
@@ -154,3 +162,90 @@ def test_resume_uses_current_human_approval_once_and_rejects_superseded(placemen
     assert "--no-spill" in launches[0][1] and "harness/route_canary.sh" in launches[0][1]
     approval = json.loads((run / "harness/route_approval.json").read_text())
     assert approval["placement_sha256"] == R.digest(a.receipt)
+
+
+def test_worker_rechecks_revoked_changed_expired_decisions(placement, monkeypatch):
+    _, a, doc = placement
+    monkeypatch.setattr(R, "worker_review_log", lambda _: viewed(doc, verdict="BAD"))
+    with pytest.raises(ValueError, match="changed or revoked"):
+        R.prepare_route(a)
+    monkeypatch.setattr(R, "worker_review_log", lambda _: viewed(doc, reviewer="Another person viewed"))
+    with pytest.raises(ValueError, match="changed or revoked"):
+        R.prepare_route(a)
+    approval = json.loads(Path(a.approval).read_text())
+    approval["requested_at"] -= R.MAX_ROUTE_WAIT_S + 1
+    R.write_json(Path(a.approval), approval)
+    with pytest.raises(ValueError, match="expired while waiting"):
+        R.prepare_route(a)
+
+
+def test_route_claim_retries_only_when_no_start_is_proven(placement, monkeypatch):
+    run, _, _ = placement
+    (run / "harness").mkdir()
+    claim = run / "harness/route_approval.json"
+    log = run / "route.otrun.log"
+    monkeypatch.setattr(C, "placement_review", lambda: R)
+    for body, cleared in (
+        ("ot-run: NOT RUN: no host qualifies", True),
+        ("CANARY PREPARE-ROUTE REFUSED [request expired]\not-run: RAN on a host: exit 3", True),
+        ("ot-heavy: admitted on an unknown host\not-run: NOT RUN", False),
+        ("CANARY_ROUTE_STARTED\not-run: NOT COMPLETED: transport", False),
+        ("ssh transport dropped", False),
+    ):
+        claim.write_text("{}")
+        log.write_text(body)
+        assert C.cmd_finish_route(SimpleNamespace(run=run, rc=3)) == 3
+        assert claim.exists() is not cleared
+
+
+def test_release_lease_preserves_age_and_ownership(placement):
+    run, _, _ = placement
+    lease = run / ".keep"
+    receipt = R.receipt_path(run)
+    lease.write_text(R.keep_text(run))
+    R.release_owned_keep(run, receipt)
+    assert lease.exists() and receipt.is_file()
+    old = time.time() - R.REVIEW_KEEP_S - 30
+    os.utime(receipt, (old, old))
+    lease.write_text("operator placed lease\n")
+    R.release_owned_keep(run, receipt)
+    assert lease.exists()
+    lease.write_text(R.keep_text(run))
+    R.release_owned_keep(run, receipt)
+    assert not lease.exists() and receipt.is_file()
+
+
+def test_review_stamp_uses_los_angeles_even_on_utc_workers(placement, monkeypatch):
+    from datetime import timezone
+
+    _, _, doc = placement
+    now = datetime(2026, 7, 10, 19, 30, 40, tzinfo=timezone.utc).timestamp()
+    doc["ready_at"] = now - 10
+    monkeypatch.setattr(R.time, "time", lambda: now)
+    monkeypatch.setattr(R.time, "mktime", lambda _: pytest.fail("host local clock would misread the hub stamp"))
+    assert R.latest_viewed(doc, viewed(doc)) == "OK"
+    assert R.latest_viewed(doc, viewed(doc).replace("12:30", "19:30")) is None
+
+
+def test_trigger_releases_only_superseded_rejected_aged_canary_lease(placement, monkeypatch):
+    run, _, doc = placement
+    lease = run / ".keep"
+    lease.write_text(R.keep_text(run))
+    old = time.time() - R.REVIEW_KEEP_S - 30
+    os.utime(R.receipt_path(run), (old, old))
+    meta = dict(spec={"die": doc["die"]}, client_unit="old-unit", review_before_route=True,
+                submitted_at=old, src_commit=doc["src_commit"])
+    R.write_json(run / "canary_meta.json", meta)
+    monkeypatch.setattr(T._canary_module, "placement_review", lambda: R)
+    monkeypatch.setattr(T, "unit_active", lambda _: False)
+    monkeypatch.setattr(R, "canonical_review_log", lambda: viewed(doc, verdict="BAD"))
+    T.release_review_leases(run.parent)
+    assert lease.is_file()
+
+    newer = run.parent / "new-reference"
+    R.receipt_path(newer).parent.mkdir(parents=True)
+    R.write_json(newer / "canary_meta.json", dict(meta, client_unit="new-unit",
+                src_commit="abcdef123456", submitted_at=time.time()))
+    R.write_json(R.receipt_path(newer), dict(doc, src_commit="abcdef123456"))
+    T.release_review_leases(run.parent)
+    assert not lease.exists() and R.receipt_path(run).is_file()

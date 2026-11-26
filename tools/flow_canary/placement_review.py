@@ -1,17 +1,24 @@
 """Retain and verify an exact placed Flow Canary kit before routing it."""
 import argparse
+from datetime import datetime
 import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import time
+from zoneinfo import ZoneInfo
 
 TYPE_ROUTE = "bash {gen}/run_kit.sh {kit} route {mem} {cpus}"
 ACCEPT = {"GOOD", "OK", "ISSUES-ACCEPT"}
 REJECT = {"BAD", "ISSUES"}
 IMAGES = ("floorplan.png", "density.png")
+HUB_TZ = ZoneInfo("America/Los_Angeles")
+MAX_ROUTE_WAIT_S = 30 * 60
+REVIEW_KEEP_S = 12 * 3600
+ADMISSION_HOSTS = "intel1,epyc7,epyc8,epyc10,epyc11"
 REVIEW_FILES = (
     "autopilot/render_review.sh", "autopilot/render_review.py",
     "ref_tile/layout_dump.tcl", "ref_tile/layout_png.py", "ref_tile/layout_review.tcl",
@@ -97,8 +104,8 @@ def line_verdict(tail):
     return None
 
 
-def latest_viewed(doc, log):
-    """Use the last current human GEOM VERDICT naming this exact run and kit."""
+def latest_decision(doc, log):
+    """Return the last current human verdict and line identity for this exact kit."""
     row = doc["die"], doc["item"], str(doc["attempt"])
     ready_minute = int(doc["ready_at"]) // 60 * 60
     verdict = None
@@ -109,12 +116,18 @@ def latest_viewed(doc, log):
         if h[1].startswith("AUTO-VISUAL-REVIEW") or not re.search(r"\bviewed\b", h[1], re.I):
             continue
         try:
-            reviewed = time.mktime(time.strptime(ts[1], "%Y-%m-%d %H:%M"))
+            reviewed = datetime.strptime(ts[1], "%Y-%m-%d %H:%M").replace(tzinfo=HUB_TZ).timestamp()
         except ValueError:
             continue
         if ready_minute <= reviewed <= time.time():
-            verdict = line_verdict(line[h.end():])
+            parsed = line_verdict(line[h.end():])
+            verdict = (parsed, hashlib.sha256(line.encode()).hexdigest()) if parsed else None
     return verdict
+
+
+def latest_viewed(doc, log):
+    decision = latest_decision(doc, log)
+    return decision[0] if decision else None
 
 
 def canonical_review_log():
@@ -123,6 +136,48 @@ def canonical_review_log():
         if path.is_file():
             return path.read_text(errors="replace")
     return ""
+
+
+def worker_review_log(doc):
+    """Read the latest exact lines from the canonical hub at worker entry."""
+    hub = doc["kit_location"].partition(":")[0]
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", hub):
+        raise ValueError("invalid review hub")
+    cmd = ('f="$HOME/coord/lanes/GEOM-REVIEW.md"; '
+           'if [ ! -f "$f" ]; then f="$HOME/coord/GEOM-REVIEW.md"; fi; '
+           f'grep -F -- {shlex.quote(doc["kit_location"])} "$f"')
+    result = subprocess.run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none",
+                             "-o", "ConnectTimeout=10", hub, "bash -c " + shlex.quote(cmd)],
+                            capture_output=True, text=True, timeout=15)
+    if result.returncode not in (0, 1):
+        raise ValueError("cannot refresh canonical viewed approval")
+    return result.stdout
+
+
+def keep_text(run):
+    return f"Flow Canary retained placement pending viewed route review: {run.name}\n"
+
+
+def release_owned_keep(run, evidence, now=None):
+    """Retain evidence through the ordinary probe review window."""
+    try:
+        lease = run / ".keep"
+        oldest = (time.time() if now is None else now) - REVIEW_KEEP_S
+        if evidence.stat().st_mtime <= oldest and not lease.is_symlink() and lease.read_text() == keep_text(run):
+            lease.unlink()
+    except OSError:
+        return
+
+
+def definitely_not_started(log):
+    """Permit retry only on positive evidence that the route script never started CAD."""
+    if any(marker in log for marker in ("CANARY_ROUTE_STARTED", "CANARY_FLOW_RC ", "STILL RUNNING", "NOT COMPLETED")):
+        return False
+    if "CANARY PREPARE-ROUTE REFUSED" in log:
+        return True
+    return "ot-run: NOT RUN" in log and not any(
+        marker in log for marker in ("ot-heavy: admitted on", "ot-run: RAN on")
+    )
 
 
 def validate_placement(kit, receipt, doc):
@@ -144,6 +199,12 @@ def prepare_route(a):
     approval = json.loads(Path(a.approval).read_text())
     if approval["placement_sha256"] != digest(receipt) or approval["verdict"] not in ACCEPT:
         raise ValueError("route request does not approve this exact placement receipt")
+    waited = time.time() - approval["requested_at"]
+    if not 0 <= waited <= MAX_ROUTE_WAIT_S:
+        raise ValueError("viewed route request expired while waiting for admission")
+    expected = approval["verdict"], approval["review_line_sha256"]
+    if latest_decision(doc, worker_review_log(doc)) != expected:
+        raise ValueError("canonical viewed verdict is absent, changed or revoked")
     kit, runner = Path(a.kit), Path(a.runner)
     validate_placement(kit, receipt, doc)
     if runner != kit.parent / "run_kit.sh":
@@ -170,7 +231,7 @@ def main():
     a = cli.parse_args()
     try:
         (render if a.command == "render" else prepare_route)(a)
-    except (OSError, TypeError, ValueError, KeyError, subprocess.CalledProcessError) as exc:
+    except (OSError, TypeError, ValueError, KeyError, subprocess.SubprocessError) as exc:
         print(f"CANARY {a.command.upper()} REFUSED [{exc}]")
         return 3
     return 0
