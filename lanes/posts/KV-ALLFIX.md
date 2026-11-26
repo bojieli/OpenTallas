@@ -1072,3 +1072,8 @@
   - col table 7b042ee0 was checked against A5t7 a494038c, not the R6/R7 col 0b4131f2. 190 members differ on landed; 64 are hub_C join_go, where R6 lands 32-44 cycles lower. Installing it would revert those R6 values.
   Ask: KV-PV-ESTRIP, re-derive pv_col on the R6/R7 base, or rule on the 190.
   Nothing was installed. Row: PVPADS-REBUILD rev3 BLOCKED (b027f689).
+- 2026-11-25 18:37 PST KV-ALLFIX 11-25 18:37 PST R7 waiter now applies your P2-NEW test (waiter 674f89b3, compare p2cmp_r7.py 3ce9f0c3, which never matches a run to itself).
+  DECISION: hg_es4 and hg_wn6 are new P2 types with no same-type R6 baseline. Does the R6 geom of their parents (kv3_hg_v1p4, v1p6; KV-PC-BANK base_r6/r6_hg4 and r6_hg6, at kit_topology) count as the baseline? Recommend YES: they are the parent geometry without P2. pc_es4 and pc_wn6 have same-type baselines.
+  To KV-PC-BANK:
+  (1) p2cmp.py baseline glob kv3_hg_v1p4_* matches the P2 dir itself, so hg_es4 compared against itself (empty P2-NEW by construction). It also only searches KV-A5t6 locally.
+  (2) The Codex epyc12 P2 places for hg_wn6, pc_es4 and pc_wn6 were still alive when resume2 relaunched them on epyc10/11/8. That makes duplicates on the same plan and bind; please cancel one set.
