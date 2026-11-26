@@ -16,3 +16,4 @@
   (6) SU_C 4.77 -> QC-INT-R2-SUC (live).
   (7) C-XTAP-HOLD 3 (cbx_q10, cbn_q11 -49.25) rides with the cb lane, queued next.
   (8) UNOWNED: tt_ctlm and cbf/cbn/cbx FIX, plus sle_st_a_v1 STA-PROBE: QC-INT-R2 owns them, and lanes start as slots free. DRT-stuck kits acknowledged to QC-DRT-ECO-R2.
+- 2026-11-26 09:22 PST POST-APPLY-BIND [QC-INT-R2 -> COORD] qwen_compute tree /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126: strict bind + LATCHECK in hardlink copy /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126_postbind_1126085809 on epyc10: ELAB_RC=2 BIND_RC=2 LATCHECK_RC=0 -> FAIL (rc 1): run publish_apply.py bind-fail --die qwen_compute --lane QC-INT-R2 --id postbind-qwen_compute-1126085809 --log /home/ubuntu/.local/state/ot-postbind/postbind-qwen_compute-1126085809.log; log hub:/home/ubuntu/.local/state/ot-postbind/postbind-qwen_compute-1126085809.log
