@@ -12,7 +12,7 @@ Late bind failures of 11-17/18 that a bind found only after its full run, and th
   RELAYSINK  (FABLE-FLOW-0230 B1: OPUS-FIX-S81-SVC-R9 2.0 h, FAM-S81-COL-R3 139 rows "relay_depth <type>: N row(s) matched no
              internal sink" at EMIT)  every partition_types[*].relay_depth row names a leaf of the elaborated die (bind.sv_id form,
              matched as the leaf path's tail, as bind's rel_of inside a partition) that has the row's port.  Rows on bind-generated
-             stations (u_bout_*) are counted in a WARN (they exist only in the emitted RTL).  Needs the elab output.
+             stations (u_bout_*) or inbound lane-pad inputs are checked during bind because they only exist in emitted RTL.
   MODULES    (rows naming missing modules)  every module named by asbuilt.substitute_inst / substitute / sub_core_leaf exists as RTL (module_index) or in the elaborated netlist.
   TOOLSTALE  (S81 D8e: tools older than rt/current without b8f543dd448)  a tools/die_plan file of the bind tree that differs from the
              live reference tree's (OT_RT_CURRENT, --ref-tools, or <scratch>/claude/rt/current) and is OLDER than it.
@@ -289,12 +289,15 @@ def check_relaysink(plan, ab, yjs, ab_path=None):
     by_tail = {}                                         # last '_' token -> leaf keys (a key ending in '_' + s shares s's last token)
     for k in sv:
         by_tail.setdefault(k.rsplit("_", 1)[-1], []).append(k)
-    out, n_bad, n_gen = [], 0, 0
+    out, n_bad, n_gen, n_pad = [], 0, 0, 0
     for tn, row in rows:
         s = _bind_sv(row["inst"])
         port = row.get("port", "i" if row.get("side") == "sink" else "o")
         if s.startswith("u_bout_"):
             n_gen += 1
+            continue
+        if s.startswith("lpad_") and row.get("side") == "sink" and port == "d":
+            n_pad += 1
             continue
         hits = sv.get(s) or [h for k in by_tail.get(s.rsplit("_", 1)[-1], ()) if k.endswith("_" + s) for h in sv[k]]
         if not hits and "__" in port:
@@ -316,6 +319,9 @@ def check_relaysink(plan, ab, yjs, ab_path=None):
     if n_gen:
         out.append(f"WARN RELAYSINK {n_gen} relay_depth row(s) on bind-generated u_bout_* stations: decided only by the bind "
                    f"(the bind tools must generate that out-bus station)")
+    if n_pad:
+        out.append(f"WARN RELAYSINK {n_pad} relay_depth row(s) on generated inbound lane-pad inputs: "
+                   "strict bind requires each named pad and applies its input stages")
     return out
 
 
