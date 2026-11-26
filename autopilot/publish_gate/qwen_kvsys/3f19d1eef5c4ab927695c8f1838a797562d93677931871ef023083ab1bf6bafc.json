@@ -1,0 +1,135 @@
+{
+ "advisory": [
+  "foreign_tree"
+ ],
+ "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/coord/autopilot/publish_probe_kv_a5t9_r6_1125/work/qwen_kvsys/3f19d1eef5c4/kv3_hub_Eo",
+   "gen_host": "epyc8",
+   "item": "kv3_hub_Eo",
+   "kind": "type",
+   "origin": "/home/ubuntu/coord/autopilot/publish_probe_kv_a5t9_r6_1125/work/qwen_kvsys/3f19d1eef5c4/kv3_hub_Eo/published_gen_origin.json",
+   "origin_sha256": "9b16a39e30c953b502f8beba5d6bb95f4e89d0438e7d97c8ecaac7e228d6aeb6",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "7ba0dd1a69b8d2ab53aad69fb306aaf307bd62e865181a02f09a169b64592431",
+   "spec_sha256": "d80015f0e94aeb8ec7e76fb8b6fc006bb94305be02929caad0ef2c3c6fddb238",
+   "spec_src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125",
+   "stage": "preflight",
+   "unit_log_sha256": "f87c49934ad3e820aa5de706cbc1ebf7182cff6925b3bb33be0b696696a62c89",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/bind/inputs/kv_bound_rtl6/kv_hard_models.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/bind/kv45/group_r2c_native.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/qkd_d2d_cal_seq_bc4_rom64.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_bb.v (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/ot_qkh_subtiles.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/ot_qwen_tp8_pv_slice_lc_gen.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/hdc/nearhbm/qkd_ahub_static_dw.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/lib/face_land/qkd_astk_rly_296_fl.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/lib/face_land/qkd_kvs_attn_fl_r17.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/ot_qkh_head_kst.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r3.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_astk_er_owner_st.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_astk_phys.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkd_rst_region_pr_h273.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/split_20261014/qkh_head_stages.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/static_embedding_20261014/qkd_embgw_boot_s.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r3_rel_tree_1125, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r6_publish_1125.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kv_pvfin_views_1119/qkd_pv_fin_s8_pin/signoff.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125)"
+   ],
+   "n": 56,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 83
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-dg9qna03/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: plicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nPRE-TIME ADVISORY 45 s (PRE at 208 s)\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/8bbe6aad888f/tools/die_plan",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r6_publish_1125.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/bind.f",
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_bind_1125/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 1160.2,
+ "hosts": [
+  "epyc8",
+  "intel1",
+  "intel2"
+ ],
+ "item": "kv3_hub_Eo",
+ "manifest_hash": "3f19d1eef5c4ab927695c8f1838a797562d93677931871ef023083ab1bf6bafc",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r6_publish_1125.json",
+ "plan_sha256": "1cca73462c2778ac2d11cf6d97409632ecad11a5b4f95089c10d59611fd57762",
+ "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_1300_cut_r2_1125.json",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1160.2,
+ "t": 1795652745.8110344,
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125",
+ "verdict": "PASS"
+}
