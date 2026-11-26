@@ -6232,7 +6232,7 @@
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/int-r2-cut0900/bindS",
+    "bind_out": "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_su_1126_bind_1126140529",
     "asbuilt": "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_su_1126/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_c10b_r11_svc_t5_north_1125.json",
     "note": "S81-INT-R2 cut0900 STATUS-UP whole 403 strict, G0 PASS, LAT947."
    },
@@ -38468,10 +38468,10 @@
     }
    ],
    "bind_copy_of_record": [
+    "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_su_1126_postbind_1126124641",
     "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_svc_north_1125_postbind_1126024654",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work_postbind_1123072950",
-    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work_postbind_1122042101",
-    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_postbind_1120135739"
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work_postbind_1122042101"
    ],
    "hold_items": {
     "col_h9_r0_p3__t1__cl0cd90c0e__*": "SUPERSEDED by J7 col rows (j7-col-held-until-view-1122): old-plan col_h9_r0_p3 not started, running J6 kits keep going. (J8) | RE-ETA 11-24 09:0x PST (S81-HOLD-TRIAGE): old J7/J8/J9 reason superseded by the bound c8/c9 plans; this key only stops kit_wave starting an old-plan kit; the live launch is from c9seal_tree after C9 SWAPPED (rom_elem_hw swap). owner=S81-C9-ROWS old_eta_=2026-11-24 14:00 | RE-ETA 11-24 21:0x PST (S81-ALLFIX-INT owns S81 hold triage, ex S81-HOLD-TRIAGE-R2): release when superseded: the bound-plan c8s kit is launched (S81-ALLFIX-INT private); this key only stops an old-plan wave start; retire at the wave s81 event switch to the c9 bound plan (S81-C9-ROWS SWAPPED); eta=2026-11-25 12:00",
