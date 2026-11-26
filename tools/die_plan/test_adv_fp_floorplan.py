@@ -114,3 +114,9 @@ def test_cut_and_overlap_use_signed_placed_macro_box():
     assert F.overlaps(t) == ([], [])
     t["hard_cores"][0]["track_offset_um"] = [0, 0]
     assert F.overlaps(t) == ([], ["wall"])
+
+
+def test_roundoff_seam_is_closed_and_outside_boxes_add_no_capacity():
+    assert F._free([(-60, 200.0), (200.0 + 1e-12, 500.0 - 1e-12)], 500.0) == []
+    assert F._free([(-60, -2), (550, 580)], 500.0) == [(0.0, 500.0)]
+    assert F._free([(-60, 200), (200.005, 510)], 500.0) == [(200, 200.005)]

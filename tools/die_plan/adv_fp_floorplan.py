@@ -27,6 +27,7 @@ USABLE = 0.6
 STREET_MAX = 1.0
 CELL_CAP = 400000
 MIN_CORE_UM2 = 20000.0         # only cores that split the die into streets define a cut
+GEOM_EPS = 1e-6
 CROSS_MIN_UM = 2.0             # a leg segment must run >= this far inside a core box (shrunk by 1 um) to count as crossing it
 
 
@@ -36,11 +37,14 @@ def _box(c):
 
 def _free(blocked, length):
     cur, out = 0.0, []
-    for a, b in sorted(blocked):
-        if a > cur:
+    for start, end in sorted(blocked):
+        a, b = max(0.0, start), min(length, end)
+        if b <= a:
+            continue
+        if a - cur > GEOM_EPS:
             out.append((cur, a))
         cur = max(cur, b)
-    if cur < length:
+    if length - cur > GEOM_EPS:
         out.append((cur, length))
     return out
 
@@ -143,7 +147,7 @@ def street_worst(t):
                         if _inside_um(a, e, cb) < CROSS_MIN_UM:
                             continue
                         for j, (left, right) in enumerate(fr):
-                            if abs(right - cb[1 - axis]) < 1e-6 or abs(left - cb[3 - axis]) < 1e-6:
+                            if abs(right - cb[1 - axis]) < GEOM_EPS or abs(left - cb[3 - axis]) < GEOM_EPS:
                                 streets.add(j)
                     # Both neighbouring cores can name the same gap. This leg occupies it once.
                     for j in streets:
@@ -166,11 +170,11 @@ def overlaps(t):
     bx = [_box(c) for c in cores]
     pairs, outside = [], []
     for i, a in enumerate(bx):
-        if a[0] < -1e-6 or a[1] < -1e-6 or a[2] > W + 1e-6 or a[3] > H + 1e-6:
+        if a[0] < -GEOM_EPS or a[1] < -GEOM_EPS or a[2] > W + GEOM_EPS or a[3] > H + GEOM_EPS:
             outside.append(nm[i])
         for j in range(i + 1, len(bx)):
             b = bx[j]
-            if min(a[2], b[2]) - max(a[0], b[0]) > 1e-6 and min(a[3], b[3]) - max(a[1], b[1]) > 1e-6:
+            if min(a[2], b[2]) - max(a[0], b[0]) > GEOM_EPS and min(a[3], b[3]) - max(a[1], b[1]) > GEOM_EPS:
                 pairs.append((nm[i], nm[j]))
     return pairs, outside
 
