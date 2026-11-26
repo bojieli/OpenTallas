@@ -838,11 +838,12 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             // data: BF column b lane j = element 8 j + b of the beat (half rows; both halves carry it), q: block half
             reg [255:0] wd;
             integer k, b;
+            // Each 16-bit lane shares its selects. Keep the mux vectorized during elaboration.
             always @* begin
-                for (k = 0; k < 256; k = k + 1) begin
-                    wd[k] = qm[k / 32] & (M[1] ? d[266 + k] : d[k]);
+                for (k = 0; k < 256; k = k + 16) begin
+                    wd[k +: 16] = {16{qm[k / 32]}} & (M[1] ? d[266 + k +: 16] : d[k +: 16]);
                     for (b = 0; b < 8; b = b + 1)
-                        wd[k] = wd[k] | (rsel[b][k / 32] & d[16 * (8 * ((k % 128) / 16) + b) + (k % 16)]);
+                        wd[k +: 16] = wd[k +: 16] | ({16{rsel[b][k / 32]}} & d[16 * (8 * ((k % 128) / 16) + b) +: 16]);
                 end
             end
 `ifdef OT_S81SL_XS4_WREG
