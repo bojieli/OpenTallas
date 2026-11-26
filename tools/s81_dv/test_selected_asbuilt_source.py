@@ -107,6 +107,19 @@ class SelectedAsbuiltTest(unittest.TestCase):
                 result=resolve(die,'s',root)
                 self.assertEqual(result['streamer'],'ot_s81sl_xs4')
                 self.assertEqual(result['streamer_added_capture_edges'],1)
+                self.assertEqual(result['source_sha256']['rtl/xs4.sv'],
+                                 '560fdc504a2fc14a69fb41523157cabd861a558c5d11e3a6d9d5dfd1c32fd080')
+                for flag in ('OT_S81SL_XS4_WREG', 'OT_S81SL_XS4_WREG=1', 'OT_S81SL_XS4_WREG=0',
+                             'OT_S81SL_XS4_WREG=invalid', '-DOT_S81SL_XS4_WREG=1',
+                             '+define+OT_S81SL_XS4_WREG', 'OT_S81SL_XS4_MUT_WCOPY'):
+                    with self.subTest(flag=flag):
+                        spec['defines'] = ['ACTUAL', flag]
+                        path.write_text(json.dumps(spec))
+                        with patch.dict(os.environ, {'OT_S81_SELECTED_DEFINES': ','.join(spec['defines'])}):
+                            with self.assertRaisesRegex(ValueError, 'default-only XS4 capture-stage receipt excludes'):
+                                resolve(die, 's', root)
+                spec['defines'] = ['ACTUAL']
+                path.write_text(json.dumps(spec))
                 selected.write_text(selected.read_text()+'\n// unqualified source mutation\n')
                 with self.assertRaisesRegex(ValueError,'no matching capture-stage receipt'):
                     resolve(die,'s',root)
