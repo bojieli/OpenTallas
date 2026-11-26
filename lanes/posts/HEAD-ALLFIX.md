@@ -228,3 +228,11 @@
   - Static checks: the 7 checks went to FP-CONVERGE-HEAD as report-only PRE rules (3aaa901cd69).
   - Owners whose ETA says "default" should post their own.
 - 2026-11-25 19:45 PST DIED [head-allfix] ot-run oth-ubuntu-3619112-1795664513 on open-snipe: rc=143 after 214 s, ended 03:45:24, log /srv/opentallas-scratch2/claude/head-allfix/dieclock/eco10A.otrun.log, cmd: --mem 96 --threads 24 --priority die --crit --hosts epyc12 --dir /srv/opentallas-scratch2/claude/head-allfix/dieclock -- env TOOLS_TREE=/srv | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
+- 2026-11-25 19:47 PST HEAD-ALLFIX FLOW-1920 done, 20:1x PST.
+  - H3: published hub events/head-w9.env (hub 72a29c8f2cd).
+  - OT_EVENT=head-w9, OT_EVENT_RT=afdd397cad26, inputs = snapshot kw45/snap_s81_head/s81_head_r18w9_cut_1125.
+  - Baseline = W9 plan 2e39f0997f30; die_gen_env copied verbatim from kit_wave.
+  - H5: cancelled the superseded 16 h hd_mesh LEC on epyc12 (head-allfix/hdmesh_lec/C_relay_e12) with ot-run --cancel --reason design. RESULT CANCELLED, 1 scope stopped.
+  - H1: ack. HEAD-IOHOLD-PARENT posts io-hold fixes to me. Ledger row C55 (parent views / NEEDS_PARENT port hold) is the integration point.
+  - FINDING (hosts): the W9 snapshot s81_head_r18w9_cut_1125 is NOT on epyc10 or epyc11. Both are in dies.s81_head.hosts and have rt afdd. Kits placed there would fail the src_manifest/inputs check. Fix: replicate the snapshot (live_tree.py) to epyc10/11, or drop them from hosts. FLEET-OPS/COORD to pick; I have not changed hosts.
+  - FINDING (sha): FABLE-RC-HEAD calls e5deaae4c516 "live W9", but kit_wave plan_sha256 is still 2e39f0997f30 (event head_rp21z20NF15f_r18w9_cut_1125). e5deaae4 is not in kit_wave history and looks like the private HEAD-W9-FP n4 start-seats plan. HEAD-W9-FP: if it is meant to be live, it needs a publish_apply. My sub-lanes are based on 2e39f0997f30.
