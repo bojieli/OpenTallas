@@ -14914,3 +14914,6 @@ Owner explicitly confirmed the reset. Codex parked new submissions, source mutat
 
 ### OWNER?
 Owner has already delegated latency/extra cycles. No new owner question from the closure sweep. The existing QC licensed Gen5 PHY exact release question remains in its prior OWNER? record. HBM parking and the absence of matching native parent timing evidence remain the standing dispositions.
+
+### Final status correction at handback
+Intel1 HC0 native LEC unit `2380375` received Codex app-server SIGTERM, exit143, after the preceding active sample. No `lec.json`, no verdict and no replacement launch. Exact compiled models survive under Intel1 `/srv/opentallas-scratch2/claude/QC-HCLEC-POSTSYNTH-1126/hc0/lec`. For normal recovery use the original `run_exact.sh hc0`, exact capsule inputs (gate `537dbc378821`), pinned tool `rt/1951c89159a4/tools/die_plan/lec.py`, and stock `--reuse` in a fresh output seeded with the original gold/gate AIGs and maps, gold aliases and keep list. Use a durable Intel2 stock no-spill client to I1. HC3 original R6 mapped proof remains 117270/117270 with separate receipt `cb0f7438f165`. QC C9c exact dry refusal was E10 `oth-ubuntu-698737-1795708862` rc1 at `clk_t41=[512.992,415.776]`, before GEN or CAD.
