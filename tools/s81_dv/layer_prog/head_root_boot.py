@@ -2,23 +2,22 @@
 import hashlib,json,re
 from pathlib import Path
 
-# HEAD W6 coherent source bundle (HEAD-R18, COORD ruling 11-24), built by
-# results/token_pass/head_w6_compiler_1124/make_bundle.py from the live W6 plan b3507e628de6, the W6 sidecar with the
-# lep0N_w status-network fix and the START tree re-sited on the W6 type raw exports.  Was l48uo f140216c (11-07).
-# A later event needs its own reviewed source selection; this bundle is not physically admitted.
+# HEAD W10 bundle from the staged SerDes and tap-split plan f6d1bf51c90d.
+# The START tree is re-sited on that plan and paired with its selected sidecar.
 PINS={
- 'source_plan.json':'b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381',
- 'source_sidecar.json':'ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac',
- 'start_stages.json':'b0970ff4a93ecc1a7aa92302e17dd06b89acfb7560def25cc14c982956aae649',
- 'start_stages.sv':'8ac30434ad222d125771e4f5891376064f5bf0a5a5c72acca9bcac1178923b5f',
- 'root88_report.json':'ab60927a80ad8e2974bfa5b76f109a05844ab2872861722af93fff52d03f756d',
- 'boot88_account.json':'332d8fcadaf6faa04b7a0c75b1567381c6f620927a021e4c788aa6d3b3fc23a2'}
-MANIFEST_SHA256='793d69f1300dbc46525e200b6a6474bf72f3db76fa782dd8260aa37f3d14231d'
-# The l48ui n4 links as the W6 sidecar carries them: (added_cycles, count-aligned sched_lat).  Since l48uo the plan
+ 'source_plan.json': 'f6d1bf51c90d7438e97545ba0e6df3c325a4408802be8f255ea691bc2759274d',
+ 'source_sidecar.json': 'ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac',
+ 'start_stages.json': '8690ca802f6550a1b871ca292f4c1291c2c02fdc4aca029100fe4f7c9e7376ea',
+ 'start_stages.sv': 'a237cf9b14363f5e1b3b8dbbd22ac99180e4cfdc99a7715a8895f80bd7e275a6',
+ 'root88_report.json': '50a2de8b01b1dda7d79677983ef949ad74406203445ac5872c76ba23a3bb7d14',
+ 'boot88_account.json': '80e76561101bbac1edf2d8ae988873fe05437f5e24a39453964f9054543cb539'
+}
+MANIFEST_SHA256='3a2ef7b830efe1036efdbce4d5566f571631a6dbdf2ef64c6a64808f31c55e15'
+# The l48ui n4 links as the W10 sidecar carries them: (added_cycles, count-aligned sched_lat).  Since l48uo the plan
 # latency equals sidecar sched_lat; the d links carry +2 added and sched_lat 4.
 N4_LINK_ADDED_CYCLES={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':2,'coll_WN2_d__0':2}
 N4_LINK_SCHED_LAT={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':4,'coll_WN2_d__0':4}
-# Recomputed W6 boot account (make_bundle.py, 10-30 accountant arithmetic).  The sidecar boot_budget still states the
+# Recomputed W10 boot account (make_bundle.py, 10-30 accountant arithmetic).  The sidecar boot_budget still states the
 # l48uo values 110/382/5861; the witness uses the recomputed bounds.
 SOURCE_BOUNDS=dict(root_start_upper_cycle=113,part_start_max_cycle=365,control_ready_or_fault_upper_cycle=5851)
 
@@ -30,7 +29,7 @@ def read_witness(selection,root):
     if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=MANIFEST_SHA256:
         raise ValueError('current HEAD coherent source manifest differs')
     manifest=json.loads(manifest_path.read_text())
-    if manifest.get('schema')!='opentallas.head_current_source.w6.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
+    if manifest.get('schema')!='opentallas.head_current_source.w10.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
         raise ValueError('actual HEAD bundle source-only qualification differs')
     for key,wanted in PINS.items():
         data=(bundle/key).read_bytes()
@@ -64,7 +63,7 @@ def read_witness(selection,root):
         raise ValueError('source-only HEAD bound unexpectedly advertises a physical date')
     if account['physical_clock_phase_qualified']is not False or account['actual_external_host_event_cycle']is not None or account['actual_physical_full_array_boot_receipt']is not None:
         raise ValueError('source-only HEAD accounting is not a global physical witness')
-    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='w6',
+    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='w10',
         n4_link_added_cycles=dict(N4_LINK_ADDED_CYCLES),n4_link_sched_lat=dict(N4_LINK_SCHED_LAT),n4_data_cycles_added_per_link=1,
         source_plan_sha256=PINS['source_plan.json'],source_witness_sha256=dict(PINS),
         root=expected,root_settle_cycles=88,previous_settle_cycles=64,delta_boot_cycles=24,
