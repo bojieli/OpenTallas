@@ -98,6 +98,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   LAND-REACH       a hard landing core parked farther from its port than the cland data allowance (QC sle_ctl 300 um / 192 ps vs 45 ps)
   TIED-BITS        UNBOUND-tied bits: observed in the bind of record + predicted unlisted parameterized blackbox leaves (S81 svc c8)
   TREE-DRIFT       a view LEF / porous map / flow script / tool fix on main the bound tree lacks (u_cf view 31c7ccbd1b on J7/J8)
+  CONE-DEPTH       (C-CONE-DEPTH) a register/port logic cone in the elab json deeper than period - 130 ps at 22 ps per level (adv_cone_depth.py;
+                   needs the bind's asbuilt.json next to the as-built or $OT_CONE_YOSYS_JSON; silent without it)
   OFF-GRID         exact station / bank sites off the placement grid (KV sys_c row C)
   RESET-NAME       a generated reset relay (rst_rl_<k>) / density tap (clk_t<i>) name the clock section references that the
                    type's reset tree / tap table no longer emits (tap rows renumbered the tree: S81 J8, HEAD Row B, KV D29 14
@@ -119,7 +121,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 # (check name, module in this directory); a module absent from an older tree is skipped quietly
 CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), ("SITE-COLLIDE", "adv_site_collide"),
-          ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
+          ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("CONE-DEPTH", "adv_cone_depth"), ("DENSITY", "adv_density"),
           ("CELLCAP", "adv_cellcap"), ("CELL-BUDGET", "adv_cell_budget"), ("HOLDCELL-BUDGET", "adv_holdcell_budget"),
           ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"), ("TAP-REACH", "tap_reach_fix"), ("STALE-BINS", "adv_stale_bins"),
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
