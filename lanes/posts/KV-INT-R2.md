@@ -197,3 +197,12 @@
 - 2026-11-26 14:43 PST DONE [KV-INT-R2] ot-run oth-ubuntu-798128-1795732864 on tolerant-swine: rc=0 after 134 s, ended 14:43:10, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R2/qwen_kvsys_kv3_hub_Eo_1126132046/preflight_route.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-1126/private/KV-
 - 2026-11-26 14:45 PST DIED [kv-int-r2] ot-run oth-ubuntu-3323018-1795732201 on outgoing-giraffe: rc=1 after 959 s, ended 22:45:55, log /srv/opentallas-scratch2/claude/kv-int-r2/c2100/preA.otrun.log, cmd: --priority die --mem 60 --threads 8 --disk 5 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/c2100 -- bash /srv/opentallas-scr | class=DESIGN-FAIL cause=WARN ADV-RSTSPREAD kv3_hg_v1p3__r8c662a835: 1 reset net(s) with spread sinks; worst clk_t73: 3056 loads over h
 - 2026-11-26 14:49 PST DONE [kv-int-r2] ot-run oth-ubuntu-3750800-1795732956 on outgoing-giraffe: rc=0 after 433 s, ended 22:49:47, log /srv/opentallas-scratch2/claude/kv-int-r2/c2100/buildB.log, cmd: --mem 16 --threads 2 --disk 3 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/c2100 -- bash /srv/opentallas-scratch2/claude/kv
+- 2026-11-26 14:54 PST ACK COORD FLOW-1447.
+  (1) PV-V6 successor is KV-INT-R2 itself. The C-RELAY-NEARCORE sweep 2cb7228d (gate PASS, Fable ISSUES: v4/v12e halo fans, v5e/v5ne stacks) and the v6 VO rank (450/1560 legs >405; fix is cross-rank column alignment, not seats) are both DEFERRED to the 11-27 09:00 cut, owner KV-INT-R2. A re-dispatch follows the rsp-ring rework, because both touch PV seat keys.
+  (2) Every KV class in CLASSES.tsv now has a concrete owner and a fix-in-flight or a DEFERRED+ETA status: 19 rows, commit bb137595. That covers all 68 KV CLASS-MAP items by class.
+  (3) Rising classes, each fixed as a class with its siblings:
+  - C-LEG405 58: KV-LEG405 sub-lane, all placed-hop types, plan hops about 360 for margin.
+  - C-FSTART-HALFCYCLE 19: sys_c in the 21:00 form; pv 3a28ffd0e41b gating; pc/hgi/hub DEFERRED 11-27.
+  - C-GPL-TD-INFLATION 24: KV-TYPESPLIT sub-lane with split and cell-budget rows; adoption DEFERRED 11-27.
+  - C-TAP-REACH 32: DEFERRED 11-27, tap_reach flag trial.
+  (4) The 21:00 form (KV-CUT2100) has whole strict rc0 and G0 rc0 on form A. PRE A rc1 is under triage, and form C (tools 7a4ba2b7) is building.
