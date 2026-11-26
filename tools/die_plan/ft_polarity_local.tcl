@@ -6,6 +6,10 @@
 # Placement only: no cells, connections, clocks, or cycles change. The ordinary
 # face_flops_release hook releases these cells for legalisation before DPL.
 if {![info exists ::env(OT_FT_POLARITY_LOCAL)] || $::env(OT_FT_POLARITY_LOCAL) ne "1"} {return}
+set fpl_only_group ""
+if {[info exists ::env(OT_FT_POLARITY_LOCAL_GROUP)]} {
+  set fpl_only_group $::env(OT_FT_POLARITY_LOCAL_GROUP)
+}
 set fpl_blk [ord::get_db_block]
 set fpl_core [$fpl_blk getCoreArea]
 set fpl_n 0
@@ -17,6 +21,7 @@ set fpl_groups {}
 foreach fpl_ff [$fpl_blk getInsts] {
   set fpl_name [string map {\\ {}} [$fpl_ff getName]]
   if {![regexp {^((?:.*[./])?u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
+  if {$fpl_only_group ne "" && $fpl_group ne $fpl_only_group} {continue}
   if {![string match DFF* [[$fpl_ff getMaster] getName]]} {continue}
   set fpl_bb [$fpl_ff getBBox]
   set fpl_box [list [$fpl_bb xMin] [$fpl_bb yMin] [$fpl_bb xMax] [$fpl_bb yMax]]
@@ -31,6 +36,7 @@ set fpl_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 foreach fpl_ff [$fpl_blk getInsts] {
   set fpl_name [string map {\\ {}} [$fpl_ff getName]]
   if {![regexp {^((?:.*[./])?u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
+  if {$fpl_only_group ne "" && $fpl_group ne $fpl_only_group} {continue}
   if {![string match DFF* [[$fpl_ff getMaster] getName]]} {continue}
   if {[$fpl_ff getPlacementStatus] ni {FIRM PLACED}} {continue}
   foreach fpl_q [$fpl_ff getITerms] {
@@ -87,4 +93,7 @@ foreach fpl_ff [$fpl_blk getInsts] {
   }
 }
 close $fpl_out
+if {$fpl_only_group ne "" && $fpl_n == 0} {
+  error "OT_FT_POLARITY_LOCAL no movable launch pairs for $fpl_only_group"
+}
 puts "OT_FT_POLARITY_LOCAL launch pairs $fpl_n (placement only, PIN CYCLES 0)"
