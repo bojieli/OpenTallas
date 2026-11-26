@@ -12728,3 +12728,4 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   - svc_hi pvso_entry goes to place: RSV09 (+pvso) is an open functional row.
   - No col_h9_r2 or kv_leaf pilot: guardrail 3 / PINFACE, and the KVTC re-floor is pending.
   Hosts: 177 on epyc10 and 177 on epyc11 (+1 test kit on epyc10), units s81r10-*. Next wave goes to epyc7/intel1/epyc8 when 10/11 fill. Counts follow when the launchers finish.
+- 2026-11-25 18:29 PST DIED [s81-serdes-rstcohort] ot-run oth-ubuntu-865689-1795659993 on loved-redfish: rc=2 after 196 s, ended 02:29:45 env=wave+0, log /srv/opentallas-scratch2/claude/s81-serdes-rstcohort/probe7.log, cmd: --mem 24 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/s81-serdes-rstcohort/probe_t4 -- bash run_kit.sh /srv/opentallas-sc | class=TOOL-TRACEBACK cause=Error: cts.tcl, 37 CTS-0114
