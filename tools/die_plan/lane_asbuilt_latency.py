@@ -412,7 +412,7 @@ def bind_check(B, out, lat):
 
 
 # ---- standalone CLI on a bind output dir ----------------------------------------------------------------------------
-def load_bind_dir(bd, plan, plan_path=None):
+def load_bind_dir(bd, plan, plan_path=None, *, probe_top=False):
     bd = Path(bd)
     rtl = bd / "rtl"
     mod_file, type_mod = {}, {}
@@ -424,7 +424,8 @@ def load_bind_dir(bd, plan, plan_path=None):
         if h and m:
             mod_file[m.group(1)] = f
             type_mod[h.group(1)] = m.group(1)
-    top = next(rtl.glob("*_bound_top.sv"), None)
+    top_dir = bd / "probe_top" if probe_top else rtl
+    top = next(top_dir.glob("*_bound_top.sv"), None)
     part_mod = {}
     if top is not None:
         txt = top.read_text(errors="replace")
@@ -439,7 +440,7 @@ def load_bind_dir(bd, plan, plan_path=None):
 
     if top is None:
         # an EMIT stop leaves no bound top: partition -> module is then unknown (split / canon types), refuse
-        raise SystemExit(f"lane_asbuilt_latency: {rtl} has no *_bound_top.sv (the bind did not finish emitting); "
+        raise SystemExit(f"lane_asbuilt_latency: {top_dir} has no *_bound_top.sv (the requested top was not emitted); "
                          "nothing to check")
 
     def module_of(p):
@@ -519,11 +520,12 @@ def main(argv=None):
     ap.add_argument("--asbuilt", help="the bind's asbuilt manifest (reads kit_source_station_pricing for the report)")
     ap.add_argument("--pricing", choices=("as-bound", "on", "off"), default="as-bound",
                     help="as-bound, or predict the bind with kit_source_station_pricing on / off (needs --asbuilt)")
+    ap.add_argument("--probe-top", action="store_true", help="audit a scoped bind using its probe_top, with other lanes reported as unobserved")
     ap.add_argument("--tsv")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
-    rows, module_of, ptype_of, types, landing_of, part_mod = load_bind_dir(a.bind_dir, plan, a.plan)
+    rows, module_of, ptype_of, types, landing_of, part_mod = load_bind_dir(a.bind_dir, plan, a.plan, probe_top=a.probe_top)
     ab = json.loads(Path(a.asbuilt).read_text()) if a.asbuilt else {}
     bound_sel = ab.get("kit_source_station_pricing")
     mode = None
@@ -542,7 +544,7 @@ def main(argv=None):
     if ip_info:
         sm["internal_pipe"] = ip_info
     sm.update(bind_dir=str(a.bind_dir), plan=str(a.plan), pricing=a.pricing, bound_pricing=bound_sel if a.asbuilt else "unknown",
-              modules_indexed=len(set(part_mod.values())))
+              modules_indexed=len(set(part_mod.values())), scope="probe" if a.probe_top else "die")
     if a.json:
         Path(a.json).write_text(json.dumps(dict(summary=sm, lanes=recs), indent=1) + "\n")
     if a.tsv:

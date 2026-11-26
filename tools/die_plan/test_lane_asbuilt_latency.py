@@ -325,3 +325,18 @@ def test_lep_ros_not_on_other_buses_or_without_selector():
     assert recs[0]["verdict"] == "PASS" and "lep_ros" not in recs[0]["receiver"]
     recs, _ = ros_run(ros_plan(["OT_S81SL_LEP_RIP3"]))
     assert recs[0]["verdict"] == "PASS" and "lep_ros" not in recs[0]["receiver"]
+
+
+def test_scoped_top_is_explicit(tmp_path):
+    import pytest
+    from lane_asbuilt_latency import load_bind_dir
+
+    (tmp_path / "rtl").mkdir()
+    probe = tmp_path / "probe_top"
+    probe.mkdir()
+    (probe / "die_bound_top.sv").write_text("module die_bound_top; endmodule")
+    (tmp_path / "bind_latency.json").write_text('{"buses": {}}')
+    plan = {"partitions": {}, "partition_types": {}, "latency": {"lanes": {}}}
+    with pytest.raises(SystemExit, match=r"rtl has no"):
+        load_bind_dir(tmp_path, plan)
+    assert load_bind_dir(tmp_path, plan, probe_top=True)[-1] == {}
