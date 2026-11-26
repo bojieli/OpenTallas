@@ -803,16 +803,43 @@ ARCH_ODB = re.compile(r"^([1-5]_[^/]*|6_1_fill)\.odb$")
 CLOSED_QUIET_H = 6
 
 
-def signed_record(k):
-    """the kit's own sign-off record reads SIGNED / LOCAL_PASS / NEEDS_PARENT"""
-    p = os.path.join(k, "signoff", "signoff.json")
+def _signed_json(p):
     try:
         with open(p, errors="replace") as f:
             j = json.load(f)
     except (OSError, ValueError):
         return None
+    if not isinstance(j, dict):
+        return None
     txt = json.dumps({x: j.get(x) for x in ("verdict", "status", "result")})
     return j if SIGNED_RE.search(txt) else None
+
+
+def signed_records(k):
+    """[(mtime, path)] newest first: the kit-top signoff/signoff.json and every ECO pass record of the kit
+    (eco_*/i*/signoff/signoff.json, signoff_eco_*/signoff.json)."""
+    import glob
+    out = []
+    for p in ([os.path.join(k, "signoff", "signoff.json")]
+              + glob.glob(os.path.join(k, "eco_*", "i*", "signoff", "signoff.json"))
+              + glob.glob(os.path.join(k, "signoff_eco_*", "signoff.json"))):
+        try:
+            out.append((os.path.getmtime(p), p))
+        except OSError:
+            pass
+    return sorted(out, reverse=True)
+
+
+def signed_record(k):
+    """the kit's newest sign-off record that reads SIGNED / LOCAL_PASS / NEEDS_PARENT.
+    AUTO-EXPORT 11-25 (COORD, sle_st_b_v2__clfde1249e): an ECO pass signs in eco_<stamp>/i<n>/signoff/ while the kit-top
+    signoff/signoff.json stays the pre-ECO NOT SIGNED base; reading the top record alone skipped the ECO-signed kit.
+    The newest SIGNED record wins, so must_keep() keeps the ECO DB that record read."""
+    for _, p in signed_records(k):
+        j = _signed_json(p)
+        if j is not None:
+            return j
+    return None
 
 
 def must_keep(k, rec, prot_exact):
