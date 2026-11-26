@@ -307,6 +307,23 @@ def _relay_mid_re(budgets, tn, die=None):
     return budgets.get("relay_mid_re", RELAY_MID_RE_DIE.get(die, RELAY_MID_RE))
 
 
+def _stage_seat_on(P, tn):
+    """S81-STAGE-SEAT 11-25: OT_STAGE_SEAT knob (stage_seat.enabled): the bind's own stage chains (u_bin_*, u_lpad_*, u_d<D>_*) are
+    seated by relay_mid.tcl like the u_y_* relays.  Off = byte-identical kits."""
+    import stage_seat as SS
+    die = P.die.get("name") if isinstance(getattr(P, "die", None), dict) else None
+    return SS.enabled(P.budgets, tn, die)
+
+
+def _stage_seat_re(P, tn, rtl_files, base_re):
+    """the relay regex widened by one alternative per stage-module instance of the bound RTL (stage_seat.widen); base_re unchanged when off"""
+    if not _stage_seat_on(P, tn):
+        return base_re
+    import stage_seat as SS
+    texts = [Path(f).read_text(errors="replace") for f in rtl_files if Path(f).suffix in (".sv", ".v") and Path(f).is_file()]
+    return SS.widen(base_re, texts, os.environ.get("OT_STAGE_SEAT_RE_EXTRA") or None)
+
+
 def _relay_mid_tail(budgets, tn):
     """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_TAIL), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_tail, per type budgets.relay_mid_tail_types (types or unsplit base names), or GEN env
@@ -8307,7 +8324,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export CORNERS = tc bc",
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
-           *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn, P.die.get('name') if isinstance(getattr(P, 'die', None), dict) else None)}"]
+           *([f"export OT_RELAY_MID_RE = {_stage_seat_re(P, tn, rtl_files, _relay_mid_re(P.budgets, tn, P.die.get('name') if isinstance(getattr(P, 'die', None), dict) else None))}"]
              if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
            *(_relay_mid_half_exports(P.budgets, tn) if macros else []),
@@ -8317,14 +8334,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if macros and _relay_mid_soft_frac(P.budgets, tn) is not None else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
-           *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn)) else []),
-           *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and _relay_mid_fit_chain(P.budgets, tn) else []),
+           *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
+           *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and (_relay_mid_fit_chain(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_MID_STAGGER = 1"] if macros and _relay_mid_stagger(P.budgets, tn) else []),
            *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
-           *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
+           *(["export OT_RELAY_POLY = 1"] if macros and (_relay_poly_on(P, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_POLY_FAIL = 1"] if macros and _relay_hop_fail(P.budgets, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
@@ -9008,6 +9025,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     shutil.copyfile(Path(__file__).with_name("kit_reports.py"), kd / "kit_reports.py")
+    shutil.copyfile(Path(__file__).resolve().parents[1] / "fleet" / "seal_gate.py", kd / "seal_gate.py")           # FLEET-OPS 11-25 F-06: run_kit.sh seal gate
     shutil.copyfile(Path(__file__).resolve().parents[1] / "autopilot" / "kit_resume.py", kd / "kit_resume.py")           # FLOW-FIX-2045: run_kit.sh writes its own resume file for an in-place restart       # FLOW-FIX-2045: run_kit.sh quarantines reports that are not this kit's own
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
@@ -9459,6 +9477,8 @@ set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 # AUTO-RESUME block (FLOW-FIX-2045; S81-GEOM-OPUS 39ed0e56: an in-place restart with no resume.json redid floorplan onward): a kit that already has stage results and no wave resume plan gets K/resume.json for
 # the newest valid step (complete, passed, inputs not newer); OT_RESUME=0 opts out; any doubt = the full flow as before.  Refusal-free; no physical step  # KWRS-BEGIN
+# FLEET-OPS 11-25 (F-06): a kit whose physical/ holds a symlink into another lane's scratch tree is reported (1 h), then refused; OT_SEAL_GATE=0 disables
+if [ -f "$K/seal_gate.py" ]; then python3 -I "$K/seal_gate.py" "$K" run_kit >&2; [ $? = 4 ] && { echo "run_kit: SEAL-GATE refused (symlink into another scratch tree)" >&2; exit 4; }; fi
 if [ "${OT_RESUME:-1}" != 0 ] && [ ! -f "$K/.no_auto_resume" ] && [ -f "$K/kit_resume.py" ] && [ "$GOAL" != synth ] && ls "$K"/run/results/asap7/*/base/1_synth.odb >/dev/null 2>&1; then
   python3 -I "$K/kit_resume.py" auto "$K" "$GOAL" >&2 || true
 fi
@@ -10048,7 +10068,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     """land_slots of a --kit-rtl type (DIE-KV-31): Landings.land_slots(tn), fail-closed against the bound RTL text.
     Every declared hold_mux ring <b> (cland_dn_ready_/fault_<b> ride ring <b>) must be an ot_dp_clk_landing_ca/_cas
     instance u_cland_<b> with DEPTH == D; every ring_start must name a declared ring; an origin_start origin must be
-    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
+    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance (or, without copies/stages, the rx_pin_plain ot_dp_rrelay pin flop); and every count-aligned u_cland_* ring in the bound RTL must be declared
     (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
     import copy
     import clock_landings
@@ -10096,7 +10116,10 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            module = r"ot_dp_landing_relay" if v.get("copies") or v.get("stages") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)"
+            # FACEDECL-GEN (HEAD-ALLFIX 11-25, W8b hd_lep0N_w gen): with landing_relay_rx_pin_plain the typed origin u_cland_rstart_rx_p0
+            # is a bare ot_dp_rrelay pin flop (clock_landings RX-PIN-PLAIN); face_guard already accepts it (FACEDECL 426bc4b641c),
+            # so the gen-side bound check accepts it too -- only without copies/stages, which still require typed relays.
+            module = r"ot_dp_landing_relay" if v.get("copies") or v.get("stages") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay|ot_dp_rrelay)"
             path = _kit_inst_path(txt, v["origin"], module)
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "

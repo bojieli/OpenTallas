@@ -735,12 +735,25 @@ def main(argv=None):
     for name, row in sorted((record.get('contract_advisory') or {}).items()):
         if row.get('verdict') == 'FAIL':
             print('KIT_PREFLIGHT ADVISORY', name, (row.get('errors') or [''])[0][:200])
+    # RELAY-ORIENT (S81-STAGE-SEAT 11-25, COORD; default on, OT_RELAY_ORIENT=0 off): relay / exit-relay seats oriented by their
+    # outgoing hop in macro_place.tcl before macro placement (relay_orient.py); a kit without a seats json is SKIP
+    try:
+        import kit_relay_orient
+        print(kit_relay_orient.apply(args.kit)[1])
+    except ImportError:
+        print('SKIP RELAY-ORIENT no-module')
     # FP-CONVERGE-S81 (FABLE-RC-S81): LAUNCH-SCOPE + FT-SITE-LEGAL, report-only; they fail the kit only with OT_LAUNCH_GATES_BLOCK=1
     try:
         import launch_gates
     except ImportError:
         launch_gates = None
     gate_lines = launch_gates.lines(args.kit, args.plan) if launch_gates else ['SKIP LAUNCH-GATES no-module']
+    # FP-CONVERGE-S81 (COORD FLOW-0930 S-08): SEAT-ORIENT from the PLAN (no kit seats needed), guarded import, report-only like the rest
+    try:
+        import seat_resite
+        gate_lines = list(gate_lines) + seat_resite.orient_lines(args.kit, args.plan)
+    except ImportError:
+        pass
     for line in gate_lines:
         print(line)
     if launch_gates and launch_gates.blocking() and any(x.startswith('WARN') for x in gate_lines):

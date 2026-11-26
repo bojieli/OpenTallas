@@ -352,6 +352,45 @@ def test_rsync_lockups_group_by_connected_hard_core():
     assert re.search(r"u_lk_nk_short_b .*\.d\(rs_ri_pv_rst_n_r2\[0\]\)", new)
 
 
+def _lockup_fixture():
+    txt = rs_mod(6).replace("    assign o[6] = glue_rst;\n", "")
+    lockups = (
+        '    ot_dp_lk #(.W(1)) u_lk_nk_short_a (.clk(clk), .d(glue_rst), .q(lock_a));\n'
+        '    ot_dp_lk #(.W(1)) u_lk_nk_short_b (.clk(clk), .d(ri_pv_rst_n_q[0]), .q(lock_b));\n'
+    )
+    txt = txt.replace('    // as-built pvg0.p0', lockups + '    // as-built pvg0.p0')
+    txt = txt.replace('.s0__rst_n(ri_pv_rst_n_q[0])', '.s0__rst_n(lock_a)', 1)
+    start = txt.index('    rcore u_pvg0_p1 (')
+    txt = txt[:start] + txt[start:].replace('.s0__rst_n(ri_pv_rst_n_q[0])', '.s0__rst_n(lock_b)', 1)
+    return txt, {"u_pvg0_p0": (0, 0), "u_pvg0_p1": (400, 0), "u_pvg3_p2": (800, 0)}
+
+
+def test_lockup_region_check_flags_the_inert_bound_text():
+    """FABLE-FIX-KV-LOCKUP-INERT: the 11-22 KV R6h form (row present, latches left on the common rest copy) warns; the
+    effective form and a type without the row do not"""
+    txt, pos = _lockup_fixture()
+    spec = {**RS_SPEC[0], "lockup_regions": True}
+    inert, _ = RR.apply(txt, RS_SPEC, pos)              # what the inert binds wrote: latch grouping not applied
+    good, rep = RR.apply(txt, [spec], pos)
+    assert "core rest: reset spine" in inert and "core rest: reset spine" not in good
+    warns = RR.lockup_region_check(inert, [spec], pos, "kv3_t")
+    assert len(warns) == 1 and warns[0].startswith("RESET_LOCKUP_REGIONS kv3_t: u_rs_ri_pv_rst_n: ")
+    assert f"4 tail copies, {rep[0]['copies']} expected" in warns[0] and rep[0]["copies"] == 3
+    assert "rest copy present" in warns[0] and "2 NK lockup latch(es)" in warns[0] and "u_lk_nk_short_" in warns[0]
+    assert RR.lockup_region_check(good, [spec], pos, "kv3_t") == []
+    assert RR.lockup_region_check(inert, RS_SPEC, pos, "kv3_t") == []      # no lockup_regions row: nothing is checked
+    # a latch moved back to another core's copy is named even when no rest copy is left
+    bad = re.sub(r"(u_lk_nk_short_b .*\.d\()\w+(\[0\]\))", lambda m: m[1] + "rs_ri_pv_rst_n_r2" + m[2], good)
+    assert bad != good
+    w2 = RR.lockup_region_check(bad, [spec], pos, "kv3_t")
+    assert len(w2) == 1 and "rest copy absent" in w2[0] and "1 NK lockup latch(es)" in w2[0]
+
+
+def test_bind_reports_lockup_region_warnings():
+    src = (Path(__file__).resolve().parent / "bind.py").read_text()
+    assert "reset_replicate.lockup_region_check(text, t[\"reset_replicate\"]" in src and "self.warns.append(_w)" in src
+
+
 def test_rsync_s2_has_no_relay_stage_and_is_unchanged():
     """the default landing is the two synchroniser flops: nothing to copy, the row says so (stages come from sink_stages)"""
     new, rep = RR.apply(rs_mod(2), RS_SPEC)

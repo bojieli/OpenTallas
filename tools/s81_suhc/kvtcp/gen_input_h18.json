@@ -1,0 +1,109 @@
+{
+  "name": "s81su_kvleaf_kvtcp_h18",
+  "top": "dsfd_su_t_kvtc",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cmp_pool.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kvcn.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv",
+    "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_sram_bank.sv",
+    "rtl/hdc/ot_sram_dline.sv",
+    "rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst"
+  ],
+  "outline": {
+    "w": 702.0,
+    "h": 155.52
+  },
+  "util": 0.52,
+  "pins": {
+    "S": [
+      "ck",
+      "rst",
+      "dn_st",
+      "dn_kind",
+      "dn_gsel",
+      "dn_jid",
+      "dn_v",
+      "i_f",
+      "dn_d",
+      "e_cs",
+      "e_nb"
+    ],
+    "N": [
+      "e_d",
+      "e_v",
+      "e_gk",
+      "e_gr",
+      "e_gw",
+      "e_go",
+      "e_ob",
+      "e_eps",
+      "o_fu",
+      "o_fo",
+      "o_alive",
+      "o_den",
+      "o_rdy",
+      "o_rjid",
+      "e_mode"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "hold_margin_ns": 0.01,
+    "pin_v": "M3 M5",
+    "pin_h": "M4",
+    "pin_min_tracks": 2
+  },
+  "aspect": 1.0,
+  "job": {
+    "owner": "S81-KVTC-PINS",
+    "branch": "s81-kvleaf-t2-hardkv",
+    "purpose": "kvtc position-major e_d pins: kv_leaf T2B GRT overflow fix B (COORD 11-25)",
+    "benched_by": "rtlgap_sukv_1021",
+    "no_bench_reason": "Owning KV leaf production-shape oracle compares soft and hard hierarchy",
+    "views_to": "physical/ref_tile/s81su_kvleaf_kvtcp_h18/views",
+    "record_to": "results/rtl/ref_tile/s81su_kvleaf_kvtcp_h18"
+  },
+  "orfs_vars": {
+    "SYNTH_KEEP_MODULES": "ot_s81_su_qn_keep_ff"
+  },
+  "io_tcl": "physical/ref_tile/s81su_kvleaf_kvtcp_h18/pins_ns.tcl",
+  "outline_reason": "Position-major e_d pin groups (S81-KVTC-PINS): the rotation transpose moves inside the tap; height 155.52 for the M4 centre cut.",
+  "clock": "spine",
+  "unregistered_ok": {
+    "o_fo": "constant low in the mapped netlist (TIELO via one buffer), as in the signed kvtch (recover_place_1437.sh proof); run_kvtcp.sh re-proves it on 1_2_yosys.v"
+  }
+}

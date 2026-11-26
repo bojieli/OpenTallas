@@ -524,6 +524,51 @@ def jobroot_refusal(t):
     return ""
 
 
+PROBE_RE = re.compile(r"/(private|ot-jobs)/")
+PROBE_HOLD_S = 12 * 3600
+
+
+def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
+    """FLEET-OPS 11-25 (COORD: aggressive cleanup deleted the HEAD-SERDES-REFLOOR v2 place-probe job dir on epyc10 about 10 min after it finished, before its odb and path reports were reviewed):
+    a probe / private-kit job dir (under .../private/ or .../ot-jobs/) with ANY file written in the last 12 h is refused, for every caller of the guard (ot-delete, autoclean, auto-retire).  The walk stops at the
+    first fresh file; a dir that cannot be read is treated as fresh.  OT_PROBE_HOLD_S overrides (0 = off)."""
+    try:
+        hold_s = float(os.environ.get("OT_PROBE_HOLD_S", hold_s))
+    except ValueError:
+        pass
+    if hold_s <= 0:
+        return None
+    t = os.path.abspath(target)
+    if not PROBE_RE.search(t + "/"):
+        return None
+    now = time.time() if now is None else now
+    stack, seen = [t], 0
+    try:
+        if now - os.lstat(t).st_mtime < hold_s:
+            return "young probe dir: written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (hold_s / 3600)
+    except OSError:
+        return None
+    while stack:
+        d = stack.pop()
+        try:
+            with os.scandir(d) as it:
+                for e in it:
+                    seen += 1
+                    try:
+                        st = e.stat(follow_symlinks=False)
+                    except OSError:
+                        continue
+                    if now - st.st_mtime < hold_s:
+                        return "young probe dir: %s written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (os.path.relpath(e.path, t), hold_s / 3600)
+                    if e.is_dir(follow_symlinks=False):
+                        stack.append(e.path)
+                    if seen > 50000:
+                        return None
+        except OSError:
+            return "young probe dir: unreadable (kept)"
+    return None
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
@@ -536,6 +581,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     kr = keep_refusal(target)
     if kr:
         return kr
+    yp = young_probe_refusal(target)
+    if yp:
+        return yp
     rr = routed_unsigned_refusal(t)
     if rr:
         return rr

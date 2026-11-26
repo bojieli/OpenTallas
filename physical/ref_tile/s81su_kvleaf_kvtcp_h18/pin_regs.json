@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_su_t_kvtc",
+ "enable": false,
+ "reason": "TILE-FLOW recipe 5: registers come from the RTL; pin_reg_face_fence.tcl fences every pin register at its face and refuses an unregistered pin bit not listed in unregistered_ok"
+}

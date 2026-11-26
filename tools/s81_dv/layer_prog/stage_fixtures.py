@@ -101,6 +101,17 @@ def x_shapes(m, experts, spec):
     return sh
 
 
+def compressor_x_shape(files):
+    """The BF compiler views the checkpoint bytes as little-endian 16-bit words."""
+    weight = files["weights/indexer.wk.bin"]
+    _, storage_cols = weight["shape"]
+    row_bytes = storage_cols * np.dtype(weight["dtype"]).itemsize
+    width, remainder = divmod(row_bytes, np.dtype("<u2").itemsize)
+    if weight["format"] != "BF16" or not width or remainder:
+        raise ValueError("invalid BF16 indexer projection row")
+    return (width,)
+
+
 def synth_x(op, shape):
     rng = np.random.default_rng(X_SEED + zlib.crc32(op.encode()))
     return (rng.standard_normal(shape) * 0.25).astype(np.float32)
@@ -139,6 +150,8 @@ def gen(stage, rank, out, path=None, ck=None):
                 a, dt = LC._raw(ck, tensor, rows, cols)
                 o.put(f"weights/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
     shapes = x_shapes(m, experts, spec)
+    if "attn.cmp.wk" in bf:
+        shapes["attn.cmp.norm.scale"] = compressor_x_shape(o.files)
     if engram:
         # The weights-only planner still needs a vector at the released K.
         # The actual runtime Engram all-gather is outside this image fixture.

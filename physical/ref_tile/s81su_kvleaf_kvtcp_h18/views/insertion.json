@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/claude/S81-KVTC-PINS/runs/kvtcp_h18/work/orfs/results/asap7/opentallas_dsfd_su_t_kvtc_asap7_ref_kvtcp_h18/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 7213
+  },
+  "boundary": {
+   "n": 6861,
+   "mean": 560.6,
+   "min": 523.7,
+   "max": 586.3
+  },
+  "all": {
+   "n": 7213,
+   "mean": 560.4,
+   "min": 523.7,
+   "max": 586.3
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 7213
+  },
+  "boundary": {
+   "n": 6861,
+   "mean": 426.8,
+   "min": 398.2,
+   "max": 448.2
+  },
+  "all": {
+   "n": 7213,
+   "mean": 426.8,
+   "min": 398.2,
+   "max": 450.5
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 7213
+  },
+  "boundary": {
+   "n": 6861,
+   "mean": 345.5,
+   "min": 322.2,
+   "max": 366.6
+  },
+  "all": {
+   "n": 7213,
+   "mean": 345.5,
+   "min": 322.2,
+   "max": 368.7
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 561,
+  "CK_SS_ALL_MEAN": 560,
+  "CK_SS_MIN": 524,
+  "CK_SS_ALL_MIN": 524,
+  "CK_SS_MAX": 586,
+  "CK_SS_ALL_MAX": 586,
+  "CK_TT_MEAN": 427,
+  "CK_TT_ALL_MEAN": 427,
+  "CK_TT_MIN": 398,
+  "CK_TT_ALL_MIN": 398,
+  "CK_TT_MAX": 448,
+  "CK_TT_ALL_MAX": 450,
+  "CK_FF_MEAN": 346,
+  "CK_FF_ALL_MEAN": 346,
+  "CK_FF_MIN": 322,
+  "CK_FF_ALL_MIN": 322,
+  "CK_FF_MAX": 367,
+  "CK_FF_ALL_MAX": 369,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]",
+ "clock_measurements": {
+  "ck": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/S81-KVTC-PINS/runs/kvtcp_h18/work/orfs/results/asap7/opentallas_dsfd_su_t_kvtc_asap7_ref_kvtcp_h18/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 7213
+    },
+    "boundary": {
+     "n": 6861,
+     "mean": 560.6,
+     "min": 523.7,
+     "max": 586.3
+    },
+    "all": {
+     "n": 7213,
+     "mean": 560.4,
+     "min": 523.7,
+     "max": 586.3
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 7213
+    },
+    "boundary": {
+     "n": 6861,
+     "mean": 426.8,
+     "min": 398.2,
+     "max": 448.2
+    },
+    "all": {
+     "n": 7213,
+     "mean": 426.8,
+     "min": 398.2,
+     "max": 450.5
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 7213
+    },
+    "boundary": {
+     "n": 6861,
+     "mean": 345.5,
+     "min": 322.2,
+     "max": 366.6
+    },
+    "all": {
+     "n": 7213,
+     "mean": 345.5,
+     "min": 322.2,
+     "max": 368.7
+    },
+    "errors": [],
+    "macros": null,
+    "macro_libs": 0
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 0,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 561,
+    "CK_SS_ALL_MEAN": 560,
+    "CK_SS_MIN": 524,
+    "CK_SS_ALL_MIN": 524,
+    "CK_SS_MAX": 586,
+    "CK_SS_ALL_MAX": 586,
+    "CK_TT_MEAN": 427,
+    "CK_TT_ALL_MEAN": 427,
+    "CK_TT_MIN": 398,
+    "CK_TT_ALL_MIN": 398,
+    "CK_TT_MAX": 448,
+    "CK_TT_ALL_MAX": 450,
+    "CK_FF_MEAN": 346,
+    "CK_FF_ALL_MEAN": 346,
+    "CK_FF_MIN": 322,
+    "CK_FF_ALL_MIN": 322,
+    "CK_FF_MAX": 367,
+    "CK_FF_ALL_MAX": 369,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "ck",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {ck}]"
+  }
+ }
+}

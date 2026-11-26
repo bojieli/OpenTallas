@@ -1,0 +1,41 @@
+{
+ "view": "dsfd_su_t_kvtc_kvtcp_h18_v2",
+ "lane": "S81-KVTC-PINS",
+ "top": "dsfd_su_t_kvtc",
+ "outline_um": [
+  702.0,
+  155.52
+ ],
+ "supersedes_for_probe": "kvtch_eco 702x25.92 (signed 11-23, unchanged; this is a NEW view, not an overwrite)",
+ "change": "pin move only + re-shape: e_d/e_v position-major groups (129 pins in 22.5-23.4 um), p0-15 S face, p16-31 N face, groups ordered by consumer kve x (T2B seating v11/v12); dn_d/e_cs/e_ob/e_nb bit-local in 8-bit chunks; control band mid",
+ "gates": {
+  "drc": 0,
+  "tt_setup_ps": -16.11,
+  "ff_hold_r2r_ps": 13.52,
+  "ff_hold_in_ps": 21.85,
+  "lec": "EQUIVALENT",
+  "lec_note": "12585 compare points proved; 9359 key points matched by name, 325 register pairs / merges and 3 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as ",
+  "child_lint": "PASS",
+  "abstract": "M1-M3 blanket, M4/M5 exact (kvpc_exact_m45 v3) + pinwire"
+ },
+ "files": {
+  "abstract.json": "d02a2330d06be567d1b6b4423bb0aef0605b667c76756290704267b28fda1f3e",
+  "access_v1.json": "bb7d69c7839e3b5099f58dee17f7ed15f1600917e47616d4521c5614c13c8c8b",
+  "child_lint.json": "aaaf93381bfbaaeffb0baad80d37dbd9d18fd8d066f51ba8d4c27c144ad6c937",
+  "corners.json": "2b6b75ed438b0d9054e4716c2f06338b5b373426be4dd9f9979557516beec82c",
+  "dsfd_su_t_kvtc.blanket_export.lef": "4e16866d060d3f03dae0d320e2e677be8f5f49f617960e23ea648bbe75877c59",
+  "dsfd_su_t_kvtc.lef": "33216664db5001078a7d32a76d53a8264682b63553f98bd69f671547c2bc3770",
+  "dsfd_su_t_kvtc_ff.lib": "27785dccc74042a55eddc6ef09d96baeaec4393e9e96ac65e80ffaa14b0223b6",
+  "dsfd_su_t_kvtc_ss.lib": "d0d5054831f1f9d916fbe7f541a9d9cdfee376ed66b6b6eb6b9b8d996447469e",
+  "dsfd_su_t_kvtc_tt.lib": "e385cd877a25121523576ac21f8a3225dacf96e936208a1c05fe71c2ed22a345",
+  "exact_m45_receipt.json": "c30beb6e831e62a5ebacba0a9ee3175c3515434e791db5aa7ef7556fb61931ff",
+  "gen_receipt.json": "be10495f8adc0627e3c6876abfd898f310595971a37c2087aa07c2b78ce56d79",
+  "insertion.json": "99ad1a25380c8af491315511ccf10cf2752e5bdd9e8aad2bc57a9407c1b7f782",
+  "lec.json": "928167c26018dbb3ffb15d3d749694935687e97b375cd2558eab4d12fa7e8ab2",
+  "pins_ns.tcl": "661a01a2f6051711843ef8ba2ef141666b721a4b0d5467ad10b5a7d7d164ef44",
+  "pinwire_receipt.json": "2b3f19e4199a6eadd71f671752e5a5f5b1abe9151d963ac468069aa2c111002d",
+  "render.png": "8a2f272404a0a2b78bef747aae1f3b09b6ec7c39da3444da810ad253705d314a"
+ },
+ "derived_from": "dsfd_su_t_kvtc_kvtcp_h18_v1 (same ODB, libs, gates)",
+ "lef_change": "abstract_detail.py pinwire M4/M5: 3417 signal pins had their own same-layer OBS wire abutting the pin (the Lef58EolKeepOut class, COORD r163); merged into the pin shapes (10427 rects); re-run merges 0; access check 6867/6867 edge OK; M4/M5 OBS below min width 0"
+}

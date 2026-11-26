@@ -458,7 +458,7 @@ UNSIGNABLE_FORGET_S = 6 * 3600        # a unit not seen for 6 h is forgotten; a 
 PRIVATE_RE = re.compile(r"/private/")
 HOLD_ONLY_RE = re.compile(r"(?i)(?:^|[/_\-.])hold(?:[_-]?only|[_-]?fix|[_-]?eco|[_-]?gate)?(?:$|[/_\-.0-9])")
 # never auto-cancelled: posted to the named lane for a decision (COORD 11-21 FLOW-OPS-0900 brief); lanes/UNSIGNABLE-DECIDE.tsv (regex<TAB>lane) adds more
-DECIDE_ONLY = ((r"ot_s81sl_leaf__t11(?![0-9])", "FABLE-FIX-S81-LEAF-R5"), (r"(?:^|[^A-Za-z0-9])slw_su_c(?![A-Za-z0-9])", "QC-PLAN-R10"))
+DECIDE_ONLY = ((r"ot_s81sl_leaf__t11(?![0-9])", "FABLE-FIX-S81-LEAF-R5"), (r"(?:^|[^A-Za-z0-9])slw_su_c(?![A-Za-z0-9])", "QC-SUC-FTSITE"))
 ECO_RE = re.compile(r"(?i)(?:^|[/_\-.])eco(?:$|[/_\-.0-9])")
 PROOF_RE = re.compile(r"(?i)(?:^|[/_\-.])proofs?(?:$|[/_\-.0-9])")
 UNSIG_GLOBS = ("run/logs/*/*/*/4_1_cts.json", "gen/*/run/logs/*/*/*/4_1_cts.json", "logs/*/*/*/4_1_cts.json", "*/4_1_cts.json", "4_1_cts.json")
@@ -1242,6 +1242,9 @@ def scan(now=None, act=False, probe_s=4):
                 rounds_s = grt_rounds(os.path.dirname(log).replace("/logs/", "/reports/")) if kind == "grt" else None
                 row["smell"] = smell_triggers(kind, stage, (now - mt) / 3600, (now - lbirth) / 3600, rounds_s, drt_vals, drc_t, log_text if kind == "gpl" else "", cts_)
                 if drt_vals:
+                    p3 = drt_plateau3(drt_vals)         # PLATEAU-ACT 11-25: the progress measure (within 5 % over 3 iterations, or rising)
+                    if p3:
+                        row["plateau3"], row["plateau3_kind"] = p3
                     p5 = drt_plateau5(drt_vals)
                     if p5 is not None:
                         row["plateau5"] = p5
@@ -1496,6 +1499,11 @@ def hub(now=None, post=True):
         plateau_route_pass(rows, seen, now, post=post)
     except Exception as e:
         print(f"noprog plateau route failed: {e!r}", file=sys.stderr)
+    try:
+        if plateau_act_pass(rows, seen, now, post=post):
+            files.append("lanes/PLATEAU-ACT.tsv")
+    except Exception as e:      # the act pass must never stop the other passes or the table commit
+        print(f"noprog plateau act failed: {e!r}", file=sys.stderr)
     if vis_queue_append(rows, now, post):
         files.append("lanes/VIS-QUEUE.tsv")
     try:
@@ -1634,10 +1642,55 @@ def _private_lane(path, coord=None):
     return m.group(1)
 
 
-def owner_of(rs):
+def legacy_owner_of(rs):
     """the job's OT_LANE, else the lane of its tree / kit path (most units carry no OT_LANE), else COORD (wave jobs)"""
     return (next((r["lane"] for r in rs if r.get("lane")), "") or next((l for r in rs for l in [_private_lane(r.get("kit") or ""), lane_from_path(r.get("kit") or ""), lane_from_path(r.get("ident") or "")] if l), "")
             or "COORD")
+
+
+_FILE_CACHE = {}
+
+
+def _cached_file(path, loader):
+    """loader(path) cached by (path, mtime): the sweep table is read by every notice of a pass"""
+    try:
+        mt = os.stat(path).st_mtime
+    except OSError:
+        return loader(None)
+    c = _FILE_CACHE.get(path)
+    if not c or c[0] != mt:
+        c = _FILE_CACHE[path] = (mt, loader(path))
+    return c[1]
+
+
+def stood_down_lanes(coord=None):
+    """lane names whose lanes/LANE-STATUS.tsv row says stood-down"""
+    def load(path):
+        out = set()
+        if path:
+            for l in open(path, errors="replace").read().splitlines():
+                f = l.split("\t")
+                if len(f) >= 2 and f[1].startswith("stood-down"):
+                    out.add(f[0])
+        return out
+    return _cached_file(os.path.join(coord or COORD, "lanes/LANE-STATUS.tsv"), load)
+
+
+def owner_of(rs):
+    """FLEET-WATCH F-15 (COORD FLOW-0930, PLATEAU-ACT 11-25): THE routing path of every noprog notice.  The live OWNERS-SWEEP fresh_owner of the job's (die, type); else the job's own lane (OT_LANE /
+    tree path) unless that lane is stood down; else the die's ALLFIX lane; COORD only for a job of no known die."""
+    own = legacy_owner_of(rs)
+    r0 = rs[0] if rs else {}
+    ident = " ".join(str(r0.get(x) or "") for x in ("container", "kit", "work", "ident"))
+    tag = DIE_TAG.get(die_of(ident), "")
+    sw = owners_sweep()
+    if tag and sw:
+        lane, state = route_owner(tag, str(r0.get("type") or ""), sw, "")
+        if state == "alive":
+            return lane
+    if own and own != "COORD" and own not in stood_down_lanes():
+        return own
+    return ALLFIX_LANE.get(tag) or own
 
 
 def _post(lane_from, txt):
@@ -2038,6 +2091,172 @@ def plateau_route_pass(rows, seen, now, post=True):
         for (cls, to), items in sorted(groups.items()):
             _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"), f"PLATEAU-{cls} [SMELL-WATCH -> {to}; cc COORD] {len(items)} kit(s), report-only: " + " | ".join(items[:25]))
     return [(k, c, t) for k, c, t, _ in out]
+
+
+# ---------------------------------------------------------------- PLATEAU-ACT (COORD FLOW-0930 F-10, 11-25): the plateau rule acts
+PLATEAU3_ITERS = 3
+PLATEAU3_FALL = 0.05               # a DRT run that fell < 5 % over its last 3 iterations, or rose, is on a plateau
+PLATEAU_CANCEL_MIN = 1000          # over this many marks, flat or rising, job > DF_MIN_AGE_H: CANCEL-ELIGIBLE
+PLATEAU_OWNER_SILENT_S = 3600      # cancel only when the owner lane is dead or has not posted for this long
+PLATEAU_ACT_FILE = "lanes/PLATEAU-ACT.tsv"
+PLATEAU_ACT_COLS = ["t", "class", "die", "type", "host", "unit", "marks", "trend", "age_h", "owner", "owner_state", "action", "evidence"]
+ALLFIX_LANE = {"QC": "QC-ALLFIX", "KV": "KV-ALLFIX", "S81": "S81-ALLFIX-INT", "HEAD": "HEAD-ALLFIX"}
+
+
+def drt_plateau3(vals):
+    """PLATEAU-ACT: -> (last total, 'flat' | 'rising') when the DRT totals VALS (iteration 0 first) fell by less than 5 % over the last 3 iterations ('flat') or are higher than 3 iterations ago
+    ('rising'), else None.  Needs 4 totals and a non-zero last total.  Pure."""
+    if len(vals) < PLATEAU3_ITERS + 1:
+        return None
+    t = vals[-(PLATEAU3_ITERS + 1):]
+    if t[-1] <= 0 or t[0] <= 0:
+        return None
+    if t[-1] > t[0]:
+        return t[-1], "rising"
+    if (t[0] - t[-1]) / t[0] < PLATEAU3_FALL:
+        return t[-1], "flat"
+    return None
+
+
+def owners_sweep(coord=None):
+    """lanes/OWNERS-SWEEP.tsv -> {(die tag, type): dict(owner, alive, last_post)}; owner = the first lane of fresh_owner ('A+B').  {} when unreadable"""
+    return _cached_file(os.path.join(coord or COORD, "lanes/OWNERS-SWEEP.tsv"), _load_sweep)
+
+
+def _load_sweep(path):
+    out = {}
+    try:
+        lines = open(path, errors="replace").read().splitlines()
+    except (OSError, TypeError):
+        return out
+    hdr = next((i for i, l in enumerate(lines) if l.startswith("die\ttype\t")), None)
+    if hdr is None:
+        return out
+    cols = lines[hdr].split("\t")
+    ix = {c: i for i, c in enumerate(cols)}
+    for l in lines[hdr + 1:]:
+        f = l.split("\t")
+        if len(f) <= ix.get("fresh_owner", 99):
+            continue
+        g = lambda c: f[ix[c]].strip() if c in ix and ix[c] < len(f) else ""
+        out[(g("die"), g("type"))] = dict(owner=g("fresh_owner").split("+")[0].strip(), alive=g("owner_alive"), last_post=g("lane_last_post"))
+    return out
+
+
+def route_owner(tag, typ, sweep, fallback_owner=""):
+    """F-15: the live owner of (die tag, type) by OWNERS-SWEEP fresh_owner; no live owner -> the die's ALLFIX lane.  -> (lane, state) state 'alive' | 'dead' | 'unknown'"""
+    best = sweep.get((tag, typ))
+    if not best:
+        base = typ.split("__")[0]
+        best = next((v for (d, t), v in sweep.items() if d == tag and (t.split("__")[0] == base)), None)
+    if best and best["owner"] and best["alive"] == "yes":
+        return best["owner"], "alive"
+    if best and best["owner"]:
+        return ALLFIX_LANE.get(tag, best["owner"]), "dead"
+    return ALLFIX_LANE.get(tag) or (fallback_owner if fallback_owner and fallback_owner != "COORD" else "COORD"), "unknown"
+
+
+def owner_silent_s(sweep, tag, typ, now):
+    """seconds since the owning lane's last post (OWNERS-SWEEP lane_last_post 'MM-DD HH:MM' PST), None when unknown"""
+    import datetime as _dt
+    best = sweep.get((tag, typ)) or next((v for (d, t), v in sweep.items() if d == tag and t.split("__")[0] == typ.split("__")[0]), None)
+    if not best or not best.get("last_post"):
+        return None
+    try:
+        from zoneinfo import ZoneInfo
+        z = ZoneInfo("America/Los_Angeles")
+        t = _dt.datetime.strptime(best["last_post"], "%m-%d %H:%M")
+        ref = _dt.datetime.fromtimestamp(now, z)
+        t = t.replace(year=ref.year, tzinfo=z)
+        if t > ref:
+            t = t.replace(year=ref.year - 1)
+        return max(0.0, now - t.timestamp())
+    except Exception:
+        return None
+
+
+def plateau_act_class(r):
+    """-> (class, text) for a row with r['plateau3'] set: REPAIR-NOTICE (< 100 marks), CANCEL-ELIGIBLE (> 1000, job > 3 h), SPARED-TNS0 (would be CANCEL-ELIGIBLE but its post-CTS TT setup passes the gate: a
+    converged / near sign-off kit is never cancelled), else None (100..1000: no action)"""
+    n, kind = r.get("plateau3"), r.get("plateau3_kind") or "flat"
+    if n is None:
+        return None
+    if n < PLATEAU_REPAIR_MAX:
+        return "REPAIR-NOTICE", f"DRT {kind} at {n:g} violations over the last 3 iterations: hand to DRC repair / ECO-route"
+    if n > PLATEAU_CANCEL_MIN and float(r.get("age_h") or 0) > DF_MIN_AGE_H:
+        if r.get("setup_ps") is not None and float(r["setup_ps"]) >= GATE_SETUP_PS:
+            return "SPARED-TNS0", f"DRT {kind} at {n:g} violations, job {r.get('age_h')} h, but TT setup {r['setup_ps']} ps passes the {GATE_SETUP_PS:g} ps gate: never cancelled"
+        return "CANCEL-ELIGIBLE", f"DRT {kind} at {n:g} violations over the last 3 iterations, job {r.get('age_h')} h > 3 h"
+    return None
+
+
+def plateau_act_pass(rows, seen, now, post=True, cancel=None, sweep=None):
+    """HUB (PLATEAU-ACT, COORD FLOW-0930 F-10): the plateau rule acts.  Per DRT kit on a plateau (drt_plateau3): < 100 marks -> one 'hand to DRC repair / ECO-route' notice to the owner (OWNERS-SWEEP
+    fresh_owner, else the die's ALLFIX lane); > 1000 marks and job > 3 h -> a CANCEL-ELIGIBLE row, and `ot-run --cancel <exact unit>` only when that owner is dead or has been silent for over 1 h
+    (and the kit is not KEEP / decide-only / TT-passing).  Rows go to lanes/PLATEAU-ACT.tsv.  NOPROG_PLATEAU_ACT=report or lanes/PLATEAU-ACT.off = rows + notices only.  -> [row dict] written"""
+    cancel = cancel or ot_run_cancel
+    sweep = owners_sweep() if sweep is None else sweep
+    act_off = os.environ.get("NOPROG_PLATEAU_ACT") == "report" or os.path.exists(os.path.join(COORD, "lanes/PLATEAU-ACT.off"))
+    st = seen.setdefault("plateau_act", {})
+    keeps = keep_posts()
+    out, notes = [], []
+    for r in rows:
+        pc = plateau_act_class(r)
+        if not pc or smell_exempt(r) or plateau_exempt(r):
+            continue
+        cls, text = pc
+        ident = " ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))
+        tag = DIE_TAG.get(die_of(ident), "?")
+        typ = str(r.get("type") or "")
+        owner, ostate = route_owner(tag, typ, sweep, owner_of([r]))
+        silent = owner_silent_s(sweep, tag, typ, now)
+        k = f"{r.get('host')}|{r.get('unit') or r.get('container')}|{cls}"
+        first = k not in st
+        if first:
+            st[k] = now
+        how = ""
+        if cls == "CANCEL-ELIGIBLE":
+            can = r.get("unit") and r["unit"] not in keeps and not decide_only(ident + " " + str(r.get("kit") or ""))
+            gone = ostate != "alive" or (silent is not None and silent > PLATEAU_OWNER_SILENT_S)
+            dkey = k + "|done"
+            if act_off:
+                how = "report-only (switch off)"
+            elif not can:
+                how = "not cancelled: KEEP / decide-only / no unit"
+            elif not gone:
+                how = f"owner {owner} alive (last post {int(silent // 60) if silent is not None else '?'} min ago): notice only, cancel when it is dead or silent > 1 h"
+            elif dkey in st:
+                continue
+            else:
+                write_cancel_marks([r.get("kit")], "PLATEAU-ACT", f"CANCEL-PLATEAU: {text}", now)
+                rc, line = cancel(r["unit"])
+                st[dkey] = now
+                cls, how = "CANCELLED", f"ot-run --cancel {r['unit']} --reason design rc={rc}: {line}"
+        elif not first:
+            continue
+        if not first and cls == "CANCEL-ELIGIBLE":
+            continue                                     # eligible and still waiting for its owner: one row + notice per 24 h
+        out.append(dict(t=int(now), **{"class": cls}, die=tag, type=typ, host=r.get("host"), unit=r.get("unit") or r.get("container"), marks=f"{r.get('plateau3'):g}", trend=r.get("plateau3_kind"),
+                        age_h=r.get("age_h"), owner=owner, owner_state=ostate + (f", silent {int(silent // 60)} min" if silent is not None else ""), action=how or text, evidence=text))
+        notes.append((owner, cls, f"{typ} {r.get('host')} {r.get('unit') or r.get('container')}: {text}" + (f"; {how}" if how else "")))
+    for k in [k for k, t in st.items() if now - float(t) > 86400]:
+        del st[k]
+    if out:
+        path = os.path.join(COORD, PLATEAU_ACT_FILE)
+        new = not os.path.exists(path)
+        with open(path, "a") as f:
+            if new:
+                f.write("\t".join(PLATEAU_ACT_COLS) + "\n")
+            for o in out:
+                f.write("\t".join(str(o[c]).replace("\t", " ").replace("\n", " ") for c in PLATEAU_ACT_COLS) + "\n")
+    if post and notes:
+        by = {}
+        for owner, cls, txt in notes:
+            by.setdefault((owner, cls), []).append(txt)
+        for (owner, cls), items in sorted(by.items()):
+            head = "hand to DRC repair / ECO-route" if cls == "REPAIR-NOTICE" else ("cancelled (owner dead or silent > 1 h)" if cls == "CANCELLED" else cls)
+            _post(os.environ.get("NOPROG_SMELL_LANE", "PLATEAU-ACT"), f"PLATEAU-ACT [PLATEAU-ACT -> {owner}; cc COORD] {head}: {len(items)} kit(s): " + " | ".join(items[:25]) + f". Evidence {PLATEAU_ACT_FILE}.")
+    return out
 
 
 def hold_stall_evidence(stage, res, verdict, why, detail="", anchors=None, now=None, window=None):

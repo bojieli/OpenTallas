@@ -405,6 +405,31 @@ def test_per_type_relay_reach_only_tightens():
 
 
 
+def test_per_type_plan_margin_only_widens_the_slack():
+    # CB-REFLOOR 11-25 (cbf_q00_s2: planned max hop 275.0 um, placed 300.8 > 300 FAIL): reset.plan_margin_um plans that
+    # type's tree further under the reach; the placed check stays at relay_um; other types keep MARGIN_UM
+    P0 = schema.Plan(piped(PAIR))
+    tn = max(P0.types, key=lambda t: RT.for_type(P0, t)["max_hop_um"])
+    reach = RT.relay_um(P0, tn)
+    assert RT.plan_margin_um(P0, tn) == RT.MARGIN_UM
+    raw = piped(PAIR)
+    raw["partition_types"][tn].setdefault("reset", {})["plan_margin_um"] = 60.0
+    assert schema.validate(raw) == []
+    P = schema.Plan(raw)
+    T = RT.for_type(P, tn)
+    assert RT.verify(T) == [] and T["max_hop_um"] <= reach - 60.0 + 1e-6 and T["reach_um"] == reach
+    for t in P.types:
+        if t != tn:
+            assert RT.for_type(P, t)["max_hop_um"] == RT.for_type(P0, t)["max_hop_um"]
+    raw["partition_types"][tn]["reset"]["plan_margin_um"] = 10.0
+    assert schema.validate(raw) != []
+    try:
+        RT.plan_margin_um(schema.Plan(raw), tn)
+        raise AssertionError("a margin under MARGIN_UM must be refused")
+    except RT.ResetError as e:
+        assert "must be in" in str(e)
+
+
 def test_cbc_rule4_reset_hop_cap_is_the_default(monkeypatch):
     # CBC-ALL-0200 (OWNER 11-20): every reset hop <= 300 um by default, whatever the plan's relay_um; env restores the old rule
     P = schema.Plan(piped(PAIR))

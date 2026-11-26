@@ -119,3 +119,16 @@ def test_named_hard_ring_keeps_land_slots_and_rejects_missing_master():
             pass
         else:
             assert False, "a planned hard ring without its actual instance must be refused"
+
+
+def test_rx_pin_plain_rrelay_origin_accepted_only_without_copies():
+    """FACEDECL-GEN (W8b hd_lep0N_w): landing_relay_rx_pin_plain makes the typed origin u_cland_rstart_rx_p0 a bare ot_dp_rrelay;
+    gen accepts it as an origin_start origin (as face_guard does), but never with copies/stages (those need typed relays)."""
+    text = RTL.replace("ot_dp_landing_origin_s #(.PADW(1)) u_cland_origin (.clk(clk));",
+                       "ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d(cland_rstart_in), .q(cland_rstart_rx_p0));")
+    got = run(spec(origin="u_cland_rstart_rx_p0"), text)
+    assert got["buses"]["cland_start_in"]["origin"] == "u_bound.u_cland_rstart_rx_p0"
+    ls = spec(origin="u_cland_rstart_rx_p0")
+    ls["buses"]["cland_start_in"]["copies"] = ["u_cland_rstart_rx_p0"]
+    assert refused(ls, text)
+    assert refused(spec(origin="u_cland_rstart_rx_p0"), text.replace("ot_dp_rrelay u_cland", "ot_dp_rrelay_wrong u_cland"))

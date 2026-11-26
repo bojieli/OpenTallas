@@ -1518,6 +1518,7 @@ def write_type(M, t_new, cfg, log):
         nold = len(s.get("regs_um") or [])
         rep["stations"] += 1
         rep["regs_old"] += nold
+        old_ab = (tuple(s["from_um"]), tuple(s["to_um"]), [tuple(r[:2]) for r in s.get("regs_um") or []])
         s["from_um"], s["to_um"] = [round(a[0], 4), round(a[1], 4)], [round(b[0], 4), round(b[1], 4)]
         regs_free = all(R.free(*r[:2]) for r in s.get("regs_um") or [])
         if not mv and regs_free:
@@ -1528,7 +1529,13 @@ def write_type(M, t_new, cfg, log):
         if nold == 0:
             rep["regs_new"] += 0
             continue
-        if r is not None and len(r["regs"]) == nold:
+        if (r is not None and len(r["regs"]) == nold and cfg.get("obstacle_aware") and regs_free and nold and
+                HR.chain_metrics(R, [tuple(a)] + old_ab[2] + [tuple(b)])[0] <= cfg["reach"] + EPS and
+                not HR.resite_no_worse(R, [old_ab[0]] + old_ab[2] + [old_ab[1]], [tuple(a)] + [tuple(p) for p in r["regs"]] + [tuple(b)])):
+            # --obstacle-aware: the kept registers are legal, still within reach of the moved pins, and the re-site is longer: keep them
+            rep["rejected_worse"] = rep.get("rejected_worse", 0) + 1
+            rep["regs_new"] += nold
+        elif r is not None and len(r["regs"]) == nold:
             s["regs_um"] = [list(p) for p in r["regs"]]
             rep["rerouted"] += 1
             rep["regs_new"] += nold
@@ -2066,6 +2073,11 @@ def ft_resite(M, t_new, R, cfg, rep):
                 prev = tuple(regs[j0 - 1]) if j0 > 0 else A
                 nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
                 r = HR.route_station(R, prev, nxt, len(run), reach)
+                if (r is not None and len(r["regs"]) == len(run) and cfg.get("obstacle_aware") and
+                        not HR.resite_no_worse(R, [prev] + [tuple(snap0[0][j][:2]) for j in run] + [nxt],
+                                               [prev] + [tuple(p) for p in r["regs"]] + [nxt])):
+                    rep["ft_resite_rejected_worse"] = rep.get("ft_resite_rejected_worse", 0) + 1
+                    r = None        # --obstacle-aware: a longer chain than the old site is not taken; nearest-free search from the old sites
                 if r is not None and len(r["regs"]) == len(run):
                     newp = [list(p) for p in r["regs"]]
                 else:           # no routed form: start the nearest-free search from the old sites
@@ -2426,6 +2438,9 @@ def main(argv=None):
                          "one gets its own bus row with that depth (0 cycles)")
     ap.add_argument("--taps-movable", action="store_true",
                     help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
+    ap.add_argument("--obstacle-aware", action="store_true",
+                    help="FP-CONVERGE-S81: station / ft re-site legs may not cross any core (M5/M7 obstructed): hub_repack.route_station "
+                    "skips straight HV/VH/Z candidates that cross a core and falls back to the street-only A* (default OFF)")
     ap.add_argument("--ft-resite", action="store_true",
                     help="B4L4: ft-station registers + bit sites no longer pin cores; covered ones are re-sited with the same count")
     ap.add_argument("--take-regs", action="store_true",
@@ -2471,6 +2486,10 @@ def main(argv=None):
                slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs, slot_ft=a.slot_ft, block_shift=a.block_shift,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
+    if a.obstacle_aware:
+        import hub_repack as _HR
+        _HR.OBSTACLE_AWARE = True
+        cfg["obstacle_aware"] = True
     Q = copy.deepcopy(P)
     rows = []
     log = lambda s: print(s, flush=True)   # noqa: E731

@@ -99,3 +99,16 @@ def test_takeover_requires_viewed_exact_attempt_after_auto_geom(monkeypatch, tmp
         out.write("- 2026-11-23 07:15 PST GEOM VERDICT [LANE viewed] s81/t1 a1: OK kit=epyc9:/k\n")
     assert K.route_hold_reason(cfg, row) is None
     assert not K.strict_wave_route_review("hbm")
+
+
+def test_geometry_only_private_goal_defers_global_route():
+    checkpoint = "/scratch/kit/run/results/asap7/top/base/3_place.odb"
+    spec = dict(item="top", event="first", geom_mem_gb=8, private={"lane": "TEST"}, goal="geom")
+    for config in (
+        K.placed_geom_check(spec, checkpoint, "10x20"),
+        K.placed_geom_check(dict(spec, goal="route"), checkpoint, "10x20", "geom"),
+    ):
+        assert config["grt"] is False
+        assert "--grt-deferred" in config["rules_args"]
+    routed = K.placed_geom_check(spec, checkpoint, "10x20", "route")
+    assert routed["grt"] is True

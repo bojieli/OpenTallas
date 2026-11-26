@@ -86,3 +86,21 @@ def test_union_never_loses_the_light_root_t4_edge_shape(tmp_path):
     assert {x["key"]: x["root_candidates"][0]["name"] for x in r["groups"]} == {222: "clk_t3", 223: "clk_t2"}
     assert any(x.get("rejected_union_no_light_root") for x in r["rejected_unions"])
     E.env_values(r)                                                     # no fail-closed raise
+
+
+def test_union_over_ff_cap_is_rejected_even_when_span_fits(tmp_path):
+    """S81-SERDES-RSTCOHORT 11-25: t13 group 242 (56 RRL, 103 FF, 380 um) / t4 group 150 (37 RRL, 68 FF) fit the span but cts.tcl refuses > 64 FF."""
+    rows = ["TAP\tclk_t1\t100\t100"]
+    for i in range(10):
+        for k in range(3):
+            rows.append(f"NODE\tRRL\t{i}\tu_rrl_{i}/q{k}\t{90 + i}\t{90 + k}\tFIRM\tclk")
+        if i:
+            rows.append(f"FANIN\tRRL\t{i}\tu_rrl_{i}/q0\tD\t{i - 1}")
+    p = tmp_path / "g.tsv"
+    p.write_text("\n".join(rows) + "\n")
+    free = M.model(p, auto_encoder=False, max_ff=10**6)
+    assert len(free["groups"]) == 1 and free["groups"][0]["FF_count"] == 30
+    r = M.model(p, auto_encoder=False, max_ff=12)
+    assert len(r["groups"]) > 1 and all(g["FF_count"] <= 12 for g in r["groups"]) and r["max_cohort_FF"] == 12
+    assert sum(g["FF_count"] for g in r["groups"]) == 30
+    assert M.model(p, auto_encoder=False)["max_cohort_FF"] == 64

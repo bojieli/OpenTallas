@@ -511,6 +511,35 @@ def place_cancelled(AP, rec):
         return None
 
 
+def stage_cancelled(argv, started, txt=""):
+    """PLATEAU-ACT 11-25 (S81-ALLFIX-INT: a private stage client stopped by `ot-run --cancel` was read as 'ot-run never admitted it' and rerun up to SSH_RETRIES times; the place stage was fixed in
+    FLOW-NOADV-R4, no other stage): the explicit cancel of THIS stage client -> the evidence line, else None.  The client's own `OT-RUN-CANCEL reason=...` line (not reason infra) or the
+    signals.log line of an `ot-run --cancel` naming the client's --dir, at or after the stage started."""
+    mc = manual_cancel_reason(txt)
+    if mc and mc != "infra":
+        return f"OT-RUN-CANCEL reason={mc}"
+    try:
+        kdir = str(argv[list(argv).index("--dir") + 1]).rstrip("/")
+    except (ValueError, IndexError, TypeError):
+        return None
+    try:
+        import autopilot as AP
+        return AP.signals_cancel({"path": kdir, "started": float(started)})
+    except Exception:                                    # noqa: BLE001  no signals file / module: no cancel evidence
+        return None
+
+
+def stage_retry_decision(rc, txt, argv, started, ot_run, idempotent, i, retries):
+    """one try of a private/wave stage client -> ('cancel', evidence) | ('retry', None) | ('done', None).  An explicit `ot-run --cancel` is final for EVERY stage (no retry, a marker is written by
+    the caller); an ot-run NOT RUN admission refusal or an ssh transport drop before 'RAN on' still retries (up to `retries` more tries)."""
+    if rc != 0:
+        cx = stage_cancelled(argv, started, txt)
+        if cx:
+            return "cancel", cx
+    drop = (rc != 0 and SSH_DROP.search(txt or "") and not re.search(r"ot-run: RAN on", txt or "") and (idempotent or list(argv)[:1] == [ot_run]))
+    return ("retry", None) if drop and i < retries else ("done", None)
+
+
 def now_s():
     return time.strftime("%Y-%m-%d %H:%M %Z")
 
@@ -9902,22 +9931,34 @@ def bind_asbuilt(bind_out, src):
     if not os.path.isabs(m) and not src:
         return None
     f = Path(m) if os.path.isabs(m) else Path(src) / m
-    if f.is_file():
-        return str(f)
-    # BIND-COPY-1124 (COORD, KV-PV-CAP lost ~7 h: a bind copied epyc11 -> epyc10 records the as-built at its ORIGIN tree path): the same file
-    # in this tree, by the tree's .fork.json (origin -> this tree) or the physical/... suffix, accepted when its sha256 equals the bind's
-    # native_topology.json asbuilt_sha256; a bind without that sha takes only the exact .fork.json mapping
     import hashlib
     try:
         want = json.loads((Path(bind_out) / "native_topology.json").read_text()).get("asbuilt_sha256")
     except (OSError, ValueError, AttributeError):
         want = None
+    # BIND-ASBUILT-SHA 11-25 (QC-C1O-BINDPATH, FLOW-0930 F-05): the recorded absolute path is only a hint.  A different (stale) tree can sit at that
+    # path on another host (epyc11: the paused QC-CB-C1L/n/tree), so a file there counts only when its sha256 is the bind's asbuilt_sha256.
+    if f.is_file() and (not want or hashlib.sha256(f.read_bytes()).hexdigest() == want):
+        return str(f)
+    # BIND-COPY-1124 (COORD, KV-PV-CAP lost ~7 h: a bind copied epyc11 -> epyc10 records the as-built at its ORIGIN tree path): the same file
+    # in this tree, by the tree's .fork.json (origin -> this tree) or the physical/... suffix, accepted when its sha256 equals the bind's
+    # native_topology.json asbuilt_sha256; a bind without that sha takes only the exact .fork.json mapping
     for c, exact in _tree_map(m, src):
         if c.is_file():
             if want and hashlib.sha256(c.read_bytes()).hexdigest() == want:
                 return str(c)
             if not want and exact:
                 return str(c)
+    # by sha: a file of the same name anywhere under the tree (and the bind's own dir) whose sha256 is the bind's
+    if want:
+        roots = [r for r in (Path(src) / "physical" if src else None, Path(bind_out)) if r and r.is_dir()]
+        for r in roots:
+            for c in r.rglob(os.path.basename(m)):
+                try:
+                    if c.is_file() and hashlib.sha256(c.read_bytes()).hexdigest() == want:
+                        return str(c)
+                except OSError:
+                    continue
     return None
 
 
@@ -10886,10 +10927,11 @@ def env_effect_refusal(sp, run, remote, K):
     return EE.describe(EE.mismatches(env, str(txt).split(ENV_EFFECT_MARK, 1)[1], plan_fields=sp.get("plan_fields")))
 
 
-def placed_geom_check(sp, odb, outline):
-    """Prepare an exact placed ODB render. Strict new wave specs defer the routing probe."""
+def placed_geom_check(sp, odb, outline, goal=None):
+    """Prepare an exact placed ODB render. Geometry-only private jobs omit the routing probe."""
     item = sp["item"]
-    deferred = sp.get("geom_grt_deferred") is True
+    deferred = sp.get("geom_grt_deferred") is True or (
+        bool(sp.get("private")) and (goal or sp.get("goal")) == "geom")
     rules = ["--all-kits"]
     if re.fullmatch(r"[\d.]+x[\d.]+", outline):
         rules.extend(("--outline", outline))
@@ -10996,7 +11038,10 @@ def run_item(spec_path):
                 txt_all += ln + "\n"
             roamer.log.clear()
         print(f"KW_STAGE {stage} {now_s()} :: {' '.join(shlex.quote(a) for a in argv)[:600]}", flush=True)
+        t_stage = time.time()
         for i in range(SSH_RETRIES + 1):
+            if i and (out / f"{stage}.cancelled").exists():          # PLATEAU-ACT: a cancelled stage is final for this attempt
+                break
             # stderr streams to <stage>.live.log so the tick can see whether ot-run already started the command
             # ('ot-heavy: admitted on') or it still waits in the memory queue (cancel_class_volume)
             live = out / f"{stage}.live.log"
@@ -11008,9 +11053,15 @@ def run_item(spec_path):
                     p = subprocess.run(argv, stdout=subprocess.PIPE, stderr=ef, text=True, timeout=timeout)
             txt = (p.stdout or "") + (getattr(p, "stderr", None) or "") + live.read_text(errors="replace")
             txt_all += txt
-            drop = (p.returncode != 0 and SSH_DROP.search(txt) and not re.search(r"ot-run: RAN on", txt)
-                    and (idempotent or argv[:1] == [sp["ot_run"]]))
-            if not drop or i == SSH_RETRIES:
+            _act, _cx = stage_retry_decision(p.returncode, txt, argv, t_stage, sp["ot_run"], idempotent, i, SSH_RETRIES)
+            if _act == "cancel":
+                (out / f"{stage}.cancelled").write_text(_cx + "\n")
+                _note = f"KW_STAGE_CANCELLED {stage}: explicit ot-run --cancel is final, no retry: {_cx[:200]}" + ("" if manual_cancel_reason(txt) else "\nOT-RUN-CANCEL reason=manual")
+                print(_note, flush=True)
+                txt_all += "\n" + _note + "\n"
+                txt += "\n" + _note + "\n"
+                break
+            if _act != "retry":
                 break
             wait = 20 * (i + 1) + random.uniform(0, 20)
             print(f"KW_SSH_RETRY {stage} try {i + 2} in {wait:.0f} s (transport drop before the command ran)", flush=True)
@@ -11209,7 +11260,7 @@ def run_item(spec_path):
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
-        chk = placed_geom_check(sp, odb, ol)
+        chk = placed_geom_check(sp, odb, ol, chain_goal)
         gd = f"{W}/geom"
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:

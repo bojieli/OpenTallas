@@ -2094,6 +2094,37 @@ def remote_clients(sub, run=None, fleet=None):
     return out
 
 
+def remote_dir_clients(sub, run=None, fleet=None):
+    """FLEET-OPS 11-25 (FP-CONVERGE-KV: queued clients pid 151343 / 266030 on epyc8, `--cancel <dir>` answered 'no local ot-run client matches' from another node): a client is
+    found only on the node it runs on, and only a unit or tag selector was routed to its node.  A kit-dir / path selector (/srv/...) is now looked up in the process list of every
+    other fleet host (python entry points that are ot-run clients only, never a wrapper that merely names the path) and the same --cancel runs there.  -> [(host, host, pid)]"""
+    if not str(sub).startswith("/srv/"):
+        return []
+    run = run or subprocess.run
+    me = _this_node()
+    hosts = [h for h in dict.fromkeys(list(NODE_HOST.values()) if fleet is None else fleet) if h != "localhost" and h not in me]
+    out = []
+    for h in hosts:
+        try:
+            r = _host_run(run, h, "ps -eo pid=,args=", timeout=60)
+        except (OSError, subprocess.SubprocessError):
+            continue
+        for ln in (r.stdout or "").splitlines():
+            parts = ln.strip().split(None, 1)
+            if len(parts) < 2 or not parts[0].isdigit() or sub not in parts[1]:
+                continue
+            a = parts[1].split()
+            i = next((k for k, x in enumerate(a[:8]) if is_client_exe(x) and not any(w in ("-c", "bash", "sh", "ssh") for w in a[:k])), None)
+            if i is None or "--" not in a or "--cancel" in a[i + 1:i + 2]:
+                continue
+            opts = a[i + 1:a.index("--")]
+            if "--dir" in opts[:-1] and opts[opts.index("--dir") + 1] != sub and sub not in " ".join(a):
+                continue
+            if (h, h, int(parts[0])) not in out:
+                out.append((h, h, int(parts[0])))
+    return out
+
+
 def cancel_remote(sub, reason, found, run=None):
     """run the same --cancel SUB on the client's own node (its exact local match: pid, tag, unit via its status record), once (no further
     remote hop).  -> rc (worst of the nodes)"""
@@ -2148,8 +2179,8 @@ def cancel(sub, all_dirs, reason="manual"):
     hit = {p: v for p, v in cl.items() if client_matches(sub, p, v[0], v[1])}
     if not hit and re.fullmatch(r"oth-[A-Za-z0-9_-]+", sub):      # OTRUN-ORPHAN 11-23: an admitted unit -> the client whose status record names it
         hit = {p: cl[p] for p in unit_clients(sub) if p in cl}
-    if not hit and sub.startswith(("oth-", "otrun-")) and not os.environ.get("OT_RUN_CANCEL_NO_REMOTE"):
-        found = remote_clients(sub)                   # CANCEL-XHOST-1124: the client runs on another node -> cancel it there
+    if not hit and sub.startswith(("oth-", "otrun-", "/srv/")) and not os.environ.get("OT_RUN_CANCEL_NO_REMOTE"):
+        found = remote_clients(sub) or remote_dir_clients(sub)       # CANCEL-XHOST-1124: the client runs on another node -> cancel it there (a kit-dir selector too: FLEET-OPS 11-25)
         if found:
             return cancel_remote(sub, reason, found)
     if not hit and sub.startswith(("oth-", "otrun-")):
@@ -2167,7 +2198,8 @@ def cancel(sub, all_dirs, reason="manual"):
     for p, (rest, d) in sorted(hit.items()):
         print(f"ot-run --cancel: pid {p} dir {d}: {' '.join(rest)[:200]}")
     if not hit:
-        print(f"ot-run --cancel: no local ot-run client matches {sub!r}")
+        print(f"ot-run --cancel: no local ot-run client matches {sub!r}"
+              + ("" if os.environ.get("OT_RUN_CANCEL_NO_REMOTE") else " (the selector must equal a client's pid, its exact --dir path, or one whole argument; a substring or a flag never matches)"))
         return 1
     if len(hit) > 1 and not all_dirs:
         print(f"ot-run --cancel: REFUSED: {sub!r} matches {len(hit)} clients (listed above): a prefix is not one job.  Use a substring unique to ONE job, or pass --all-dirs (= all) to stop every one listed.  Nothing killed.")

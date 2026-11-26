@@ -297,7 +297,7 @@ set pg_rr_guard [expr {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is
 #   0   repair_timing -hold only (the form before this rule).
 # A pad tool error falls back to repair_timing for that pass.  The TT setup headroom check is per endpoint (ot_hold_pad), the
 # whole-build accept test (pg_verdict) and the rr setup guard stay as they are.
-@PG_HOLD_PAD_PROCS@
+@PG_HOLD_SCOPE@@PG_HOLD_PAD_PROCS@
 set pg_pad_mode [expr {[info exists ::env(OT_PREGRT_HOLD_PAD)] && $::env(OT_PREGRT_HOLD_PAD) in {0 rr all} ? $::env(OT_PREGRT_HOLD_PAD) : "@PG_HOLD_PAD@"}]
 proc pg_pad_on {tag} { expr {$::pg_pad_mode eq "all" || ($::pg_pad_mode eq "rr" && $tag eq "rr")} }
 set pg_pad_last -1
@@ -516,6 +516,18 @@ def pad_mode(env=None):
     return v
 
 
+PAD_SCOPE_ENV = "OT_HOLD_PAD_SCOPE"
+
+
+def pad_scope(env=None):
+    """KV-HOLD-STRUCT 11-25: gen env OT_HOLD_PAD_SCOPE=zlxt scopes the family-margin pad (hold_pad.tcl) to zero-logic and cross-tap
+    pairs; same-tap pairs with real logic stay at the base margin.  Unset / empty = off (the pad covers every end below the margin)."""
+    v = str((os.environ if env is None else env).get(PAD_SCOPE_ENV, "")).strip()
+    if v not in ("", "zlxt"):
+        raise ValueError(f"{PAD_SCOPE_ENV}: '{v}' is not zlxt")
+    return v
+
+
 SAME_LEAF_ENV = "OT_HOLD_SAME_LEAF"
 SAME_LEAF_TCL = "hold_same_leaf.tcl"
 
@@ -621,6 +633,8 @@ def config_lines(t):
         if sc not in ("vclk", "ctl"):
             raise ValueError(f"OT_PREGRT_HOLD_PORTS_SCOPE: '{sc}' is not 'vclk' or 'ctl'")
         lines.append(f"export OT_PREGRT_HOLD_PORTS = {sc}")
+    if pad_scope():         # KV-HOLD-STRUCT: evidence line + what refresh() reads back
+        lines.append(f"export {PAD_SCOPE_ENV} = {pad_scope()}")
     if same_leaf_on():      # HOLD-SAMELEAF-1: evidence line, and the switch the GRT / route stage reads (hold_guard_grt.tcl)
         lines.append(f"export {SAME_LEAF_ENV} = 1")
     return lines
@@ -629,7 +643,7 @@ def config_lines(t):
 def tail_text(amin=-1):
     """TAIL with the AUTO threshold and the planned hold pad (hold_pad.tcl + the gen-time mode) filled in."""
     pad = (Path(__file__).resolve().parent / PAD_TCL).read_text().rstrip("\n")
-    return TAIL.replace("@PG_AUTO_MIN@", str(int(amin))).replace("@PG_HOLD_PAD_PROCS@", pad).replace("@PG_HOLD_PAD@", pad_mode())
+    return TAIL.replace("@PG_AUTO_MIN@", str(int(amin))).replace("@PG_HOLD_SCOPE@", ('if {![info exists ::env(OT_HOLD_PAD_SCOPE)]} { set ::env(OT_HOLD_PAD_SCOPE) "zlxt" }\n' if pad_scope() else "")).replace("@PG_HOLD_PAD_PROCS@", pad).replace("@PG_HOLD_PAD@", pad_mode())
 
 
 def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):
@@ -678,8 +692,11 @@ def refresh(kit, env=None):
     if pm and PAD_ENV not in env:
         env[PAD_ENV] = pm.group(1)
     env[SAME_LEAF_ENV] = "1" if "pg_sl_begin OT_PREGRT_FF_HOLD" in old else "0"
+    cm = kd / "config.mk"       # KV-HOLD-STRUCT: the pad scope survives a refresh (old baked line or the kit config.mk export)
+    if PAD_SCOPE_ENV not in env and ('set ::env(OT_HOLD_PAD_SCOPE) "zlxt"' in old or (cm.is_file() and f"export {PAD_SCOPE_ENV} = zlxt" in cm.read_text())):
+        env[PAD_SCOPE_ENV] = "zlxt"
     basis = "global_routing" if "OT_PREGRT_GRT_HOLD" in old else "placement"
-    keep = {k: os.environ.get(k) for k in (PAD_ENV, SAME_LEAF_ENV)}
+    keep = {k: os.environ.get(k) for k in (PAD_ENV, SAME_LEAF_ENV, PAD_SCOPE_ENV)}
     try:
         for k in keep:
             if env.get(k) is None:

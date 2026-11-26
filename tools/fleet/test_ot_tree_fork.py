@@ -260,3 +260,27 @@ def test_outside_symlinks_are_listed_as_a_warning_and_still_kept(tmp_path):
     finally:
         del os.environ["OT_TREE_FORK_LINK_WARN"]
     assert not any("WARN" in m for m in msgs)
+
+
+def test_fork_json_is_never_written_through_a_link_and_links_into_other_scratch_trees_are_refused(tmp_path, monkeypatch):
+    """FLEET-OPS 11-25 F-06 (third recurrence): a .fork.json that is a kept link rewrote the paused C1L tree"""
+    monkeypatch.setattr(TF, "SCRATCH_TREE_RE", __import__("re").compile("^" + str(tmp_path) + "/claude/"))
+    other = tmp_path / "claude/paused_tree"
+    other.mkdir(parents=True)
+    victim = mk(other / ".fork.json", "ORIGINAL")
+    src = tmp_path / "claude/lane/src"
+    mk(src / "a.txt")
+    os.symlink(str(victim), src / ".fork.json")                 # the poisoned provenance link
+    rec = TF.fork(str(src), str(tmp_path / "claude/lane/fork"), jobs=2, out=lambda *_: None)
+    assert victim.read_text() == "ORIGINAL"
+    f = tmp_path / "claude/lane/fork/.fork.json"
+    assert f.is_file() and not f.is_symlink() and json.loads(f.read_text())["files"] >= 1
+    os.symlink(str(other / "x"), src / "into_other")
+    mk(other / "x")
+    with pytest.raises(TF.Refused):
+        TF.fork(str(src), str(tmp_path / "claude/lane/fork2"), jobs=2, out=lambda *_: None)
+    assert not (tmp_path / "claude/lane/fork2").exists()
+    monkeypatch.setenv("OT_TREE_FORK_ALLOW_EXTERNAL", "1")
+    TF.fork(str(src), str(tmp_path / "claude/lane/fork3"), jobs=2, out=lambda *_: None)
+    bad = TF.seal_check(str(src))
+    assert any("into_other" in b for b in bad) and any(".fork.json is a symlink" in b or ".fork.json" in b for b in bad)

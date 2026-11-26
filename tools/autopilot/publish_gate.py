@@ -441,6 +441,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     allowance = g0_baseline_check(plan, g0_report, g0_baseline, rc2)
     res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and allowance["verdict"] == "PASS" else "FAIL", "tools": tools_src, "tools_dir": dp,
                      "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
+                     "reset_solved": os.environ.get("OT_RESETPUB_SOLVE") == "1",
                      "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
@@ -462,7 +463,8 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
     q = shlex.quote
-    cmd = (f"mkdir -p {q(work_dir)} && nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
+    reset_solve = "OT_RESETPUB_SOLVE=1 " if os.environ.get("OT_RESETPUB_SOLVE") == "1" else ""
+    cmd = (f"mkdir -p {q(work_dir)} && {reset_solve}nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
            + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
@@ -513,6 +515,8 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
     cfg["_hub"] = hub
     cfg["dies"][die]["event"] = "pg" + str(want)[:10]
     sp = KW.spec_for(dict(cfg, _otrun_status={}), die, item, hub, kind=kind)
+    if not sp.get("gen_tools_manifest_sha"):
+        sp.update(KW.rt_tools_fields(cfg, die))
     sp.update(dry_gen=True, gen_host=gen_host)
     jd = Path(work_root) / die / str(want)[:12] / item
     jd.mkdir(parents=True, exist_ok=True)

@@ -332,6 +332,103 @@ def _one(lines, di, m, spec, positions):
     return lines, row
 
 
+TAIL_COPY = re.compile(r"^\s*ot_dp_rtail\s*#\(\.D\(\d+\)\)\s+(?P<inst>\S+)\s*\(.*\.q\((?P<w>\w+)\[0\]\)\);\s*"
+                       r"// landing pad tail copy for core (?P<region>\S+?): reset spine relay")
+NK_LOCKUP_DQ = re.compile(r"^\s*ot_dp_lk\s*#\(\.W\(\d+\)\)\s+(?P<inst>u_lk_nk_\w+)\s*"
+                          r"\(\.clk\([^()]*\),\s*\.d\((?P<d>[^()]*)\),\s*\.q\((?P<q>\w+)\)\);")
+
+
+def lockup_region_check(text, specs, positions=None, type_name=""):
+    """FABLE-FIX-KV-LOCKUP-INERT 11-25 (COORD): report-only read-back of the BOUND text of a type with a "lockup_regions" row.
+    KV R6h strict binds of 11-22 wrote every hg / hgi type with the row present but without effect: the NK lockup latches of the
+    even head cores stayed on the common "rest" copy (kv3_hgi_v2: 11 tail copies + rest with 40 loads instead of 18), found only
+    by reading the bound text by hand.  Here, per row: every NK latch that reads a tail copy and feeds exactly one instance must
+    read the copy of THAT instance, and no "rest" copy may be left.  The expected copy count is derived from the text (the cores
+    behind the latches), not a constant; `positions` (plan hard cores) only says whether a missed core is known to the plan.
+    -> list of warning lines (bind.py: bind_report.json warnings); never an error."""
+    rows = [sp for sp in specs or [] if sp.get("form") == "rsync" and sp.get("lockup_regions")]
+    if not rows:
+        return []
+    lines = text.split("\n")
+    cur, encl, assigns, latches = None, {}, {}, []
+    for i, ln in enumerate(lines):
+        h = HDR.match(ln)
+        if h and not ln.lstrip().startswith(("assign", "wire", "//", "ot_dp_")):
+            cur = h["inst"]
+        elif ln.strip().startswith(");"):
+            cur = None
+        encl[i] = None if ln.lstrip().startswith("assign") else cur
+        am, lk = ASSIGN.match(ln), NK_LOCKUP_DQ.match(ln)
+        if am:
+            assigns[am["lhs"]] = am["rhs"]
+        if lk:
+            latches.append((i, lk["inst"], lk["d"], lk["q"]))
+    qs = {q for _, _, _, q in latches}
+    q_cores = {}
+    for i, ln in enumerate(lines):
+        port = CORE_PORT.match(ln)
+        if port and encl[i] is not None:
+            for sig in re.findall(r"\b\w+\b", port[1]):
+                if sig in qs:
+                    q_cores.setdefault(sig, set()).add(encl[i])
+    out = []
+    for sp in rows:
+        pat = re.escape(sp["driver"]) if sp.get("driver") else sp.get("driver_re") or ""
+        copies = {}                                                  # copy wire -> (driver instance, region)
+        for ln in lines:
+            m = TAIL_COPY.match(ln)
+            if m and re.fullmatch(f"(?:{pat})_r\\d+", m["inst"]):
+                copies[m["w"]] = (m["inst"].rsplit("_r", 1)[0], m["region"])
+
+        def source(expr, depth=0):
+            for sig in re.findall(r"\b\w+\b", expr):
+                if sig in copies:
+                    return sig
+                if sig in assigns and depth < 16:
+                    w = source(assigns[sig], depth + 1)
+                    if w:
+                        return w
+            return None
+
+        for drv in sorted({d for d, _ in copies.values()}):
+            mine = {w: r for w, (d, r) in copies.items() if d == drv}
+            wrong, wrong_lines = [], set()
+            for i, inst, d, q in latches:
+                w = source(d)
+                cores = q_cores.get(q, set())
+                if w in mine and len(cores) == 1 and mine[w] not in cores:
+                    wrong.append((inst, mine[w], next(iter(cores))))
+                    wrong_lines.add(i)
+            regions = set(mine.values())
+            rest_w = next((w for w, r in mine.items() if r == "rest"), None)
+            rest_loads = []
+            if rest_w:
+                ru = re.compile(r"\b" + re.escape(rest_w) + r"\b")
+                rest_loads = [i for i, ln in enumerate(lines) if ru.search(ln) and not TAIL_COPY.match(ln)
+                              and not re.match(r"^\s*wire\b", ln)]
+            if not wrong and not rest_w:
+                continue
+            want = {c for _, _, c in wrong}
+
+            def only_wrong(w, depth=0):
+                """True when every load of wire w is a mis-grouped latch, directly or through assigns (the copy would go away)"""
+                wu = re.compile(r"\b" + re.escape(w) + r"\b")
+                ls = [i for i, ln in enumerate(lines) if wu.search(ln) and not TAIL_COPY.match(ln) and not re.match(r"^\s*wire\b", ln)
+                      and not (ASSIGN.match(ln) and ASSIGN.match(ln)["lhs"] == w)]
+                return bool(ls) and all(i in wrong_lines or (depth < 16 and ASSIGN.match(lines[i]) is not None
+                                                             and only_wrong(ASSIGN.match(lines[i])["lhs"], depth + 1)) for i in ls)
+
+            keep_rest = bool(rest_w) and not only_wrong(rest_w)
+            expected = len((regions - {"rest"}) | want) + (1 if keep_rest else 0)
+            missed = sorted(want - regions)
+            known = sum(1 for c in missed if c in (positions or {}))
+            out.append(f"RESET_LOCKUP_REGIONS {type_name}: {drv}: lockup_regions row without full effect: {len(mine)} tail "
+                       f"copies, {expected} expected; rest copy {'present, ' + str(len(rest_loads)) + ' load(s)' if rest_w else 'absent'}; "
+                       f"{len(wrong)} NK lockup latch(es) read another region's copy; cores without their own copy "
+                       f"({len(missed)}, {known} of them plan hard cores): {missed[:12]}; first: {wrong[:3]}")
+    return out
+
+
 def positions_from_plan(t):
     """{bound instance name: (x, y)} of a plan type's hard cores ('u_' + last component of the plan instance path)."""
     out = {}

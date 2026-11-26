@@ -27,3 +27,6 @@ for _k in ("OT_HEAVY_CPU", "OT_HEAVY_DIRECT", "OT_HEAVY_DISK_GB", "OT_HEAVY_MEM_
            "OT_HEAVY_SHORT_SLOTS", "OT_HEAVY_TAG", "OT_HEAVY_THREADS", "OT_HEAVY_UNIT", "OT_HEAVY_WAIT_SINCE", "OT_VL_JCAP_N",
            "OT_VL_JCAP_WHY", "OT_RUN_CRIT", "OT_TOOLSTALE_RT"):
     os.environ.pop(_k, None)
+
+# FLEET-OPS 11-25: the delete guard keeps probe / private-kit dirs written in the last 12 h; the guard tests build fresh dirs and expect the other rules to decide (test_ot_delete_guard_probe.py sets its own)
+os.environ.setdefault("OT_PROBE_HOLD_S", "0")

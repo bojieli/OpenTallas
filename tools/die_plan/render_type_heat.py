@@ -74,11 +74,19 @@ def render_type(tn, t, out_png):
             ax.annotate(str(n), (x, y), fontsize=5, color="k")
     ax.set_xlim(-5, W + 5)
     ax.set_ylim(-5, H + 5)
-    ax.set_title(f"{tn}  {W:g}x{H:g} um  cores {len(gr['cores'])}  taps {len(taps)}  legs>405: {nlong}  route util peak {peak:.2f}", fontsize=8)
+    # a peak of 0.00 means the demand model saw no loaded lane, not that the type is clean (FP-CONVERGE-HEAD 11-25: 20 of 27 HEAD types)
+    nlegs = len(leg_pts(t))
+    modelled = peak > 0.0 and nlegs > 0
+    if modelled:
+        ax.set_title(f"{tn}  {W:g}x{H:g} um  cores {len(gr['cores'])}  taps {len(taps)}  legs>405: {nlong}  route util peak {peak:.2f}", fontsize=8)
+    else:
+        ax.set_title(f"{tn}  {W:g}x{H:g} um  cores {len(gr['cores'])}  taps {len(taps)}  legs {nlegs}  NOT MODELLED (no lane load; NOT a pass)", fontsize=8, color="red")
+        ax.text(0.5, 0.5, "NOT MODELLED", transform=ax.transAxes, ha="center", va="center", fontsize=18, color="red", alpha=0.35)
     fig.tight_layout()
     fig.savefig(out_png)
     plt.close(fig)
-    return {"type": tn, "peak_util": round(peak, 2), "legs_over_405": int(nlong), "taps": len(taps), "cores": len(gr["cores"])}
+    return {"type": tn, "modelled": modelled, "peak_util": round(peak, 2) if modelled else None, "legs_over_405": int(nlong) if nlegs else None,
+            "legs": nlegs, "taps": len(taps), "cores": len(gr["cores"])}
 
 
 def main(argv=None):

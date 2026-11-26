@@ -20,8 +20,11 @@ import json
 from pathlib import Path
 
 
+MAX_COHORT_FF = 64   # = the cts.tcl / clock_taps.tcl sizing cap (llength its > 64 -> "unsized group" abort)
+
+
 def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
-          type_name=None, source=None):
+          type_name=None, source=None, max_ff=MAX_COHORT_FF):
     if hop_um <= 0:
         raise ValueError('positive modelled hop budget required')
     rows = [s.split('\t') for s in path.read_text().splitlines() if s]
@@ -130,6 +133,12 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
             continue
         union = groups[x] | groups[y]
         extent = span(union)
+        # S81-SERDES-RSTCOHORT 11-25 (serdes__t13 group 242: 56 RRL / 103 FF / 380 um; serdes__t4 group 150: 37 RRL / 68 FF / 250 um): the
+        # span-only union built groups the CTS sizing guard (<= 64 FF) refuses.  A union over the FF cap is a rejected union like an over-span one.
+        if len(points(union)) > max_ff:
+            rejected.append(dict(edge=[a, b], edge_centroid_span_um=edge_length((a, b)),
+                                 rejected_union_bbox_span_um=extent, rejected_union_FF=len(points(union))))
+            continue
         # FAM-S81-SERDES-R4 11-21 (serdes__t4 J6 rep + a15, CTS fail-closed "unfit light-root groups [222]"): a union whose
         # bbox fits the hop budget can still have no light root within reach of ALL its FFs (two RRL+collector pairs 278 um
         # apart on the die edge, each 171 / 213 um from its own tap, 445 um from any shared one).  Never make a fitting
@@ -193,7 +202,7 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
                 type=type_name, source=source or str(path), input_graph=str(path),
                 verdict='ANALYTICAL_BOUNDED_COHORT_PROPOSAL_NOT_CTS_QUALIFIED',
                 model_delta=dict(RTL_cells=0, mission_cycles=0, reset_cycles=0),
-                hop_budget_um=hop_um,
+                hop_budget_um=hop_um, max_cohort_FF=max_ff,
                 algorithm='atomic actual RRL+its compiled collectors, then ascending actual edge distance unions only when whole resulting bbox Manhattan diameter fits hop budget; no all-tree union',
                 root_collector_groups=root_groups,
                 RRL_modules=len(nodes), RRL_FF=rrl_ff, collector_FF=collector_ff,
@@ -216,12 +225,13 @@ def main():
     ap.add_argument('output', type=Path)
     ap.add_argument('--type', dest='type_name')
     ap.add_argument('--hop-um', type=float, default=405.)
+    ap.add_argument("--max-ff", type=int, default=MAX_COHORT_FF)
     ap.add_argument('--exclude-root', action='append', default=[])
     ap.add_argument('--no-auto-encoder-exclusion', action='store_true')
     ap.add_argument('--source')
     a = ap.parse_args()
     result = model(a.input, hop_um=a.hop_um, excluded_roots=a.exclude_root,
-                   auto_encoder=not a.no_auto_encoder_exclusion,
+                   auto_encoder=not a.no_auto_encoder_exclusion, max_ff=a.max_ff,
                    type_name=a.type_name, source=a.source)
     a.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(dict(groups=len(result['groups']),

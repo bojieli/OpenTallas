@@ -238,7 +238,7 @@ def test_wave_kit_smell_goes_to_the_die_fp_lane_never_to_coord(tmp_path, monkeyp
     r2 = dict(r, kit=r["kit"] + "b", work=r["work"] + "b", container="dpkit-kv3_pv_v3-2")
     nw.smell_pass([r, r2], {"smell_t0": NOW - 4000}, NOW, render=lambda *a: ("rendering", "/rev"))
     p = [x for x in posted(tmp_path) if x.startswith("SMELL-WATCH|SMELL [")]
-    assert len(p) == 1 and "-> FP-CONVERGE-KV;" in p[0] and "COORD" not in p[0].split("]")[0].replace("cc KV-ALLFIX", "") and "2 kit-class(es)" in p[0]
+    assert len(p) == 1 and "-> FP-CONVERGE-KV, KV-ALLFIX;" in p[0] and "COORD" not in p[0].split("]")[0].replace("cc KV-ALLFIX", "") and "2 kit-class(es)" in p[0]
 
 
 def test_vis_queue_status_follows_the_render(tmp_path):

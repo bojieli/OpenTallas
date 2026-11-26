@@ -104,3 +104,20 @@ def test_apply_spine_noop_when_all_wavefront():
 def test_stages_from_bare_synchroniser():
     t = "    ot_dp_rsync #(.W(1), .S(2)) u_rs_ri_a_rst_n (.clk(clk), .a(ri_a_rst_n), .q(ri_a_rst_n_q));\n"
     assert C._stages(t, "ri_a_rst_n_q[0]") == 2
+
+
+def test_bound_leaf_identity_takes_precedence_over_matching_tail():
+    instance = "u_r0.u_e0.u_w"
+    W = _w(dict(inst=instance, pin="rst_n", tap=8))
+    text = TXT.replace("endmodule", "ot_core_w u_u_r0_u_e0_u_w (.rst_n(rst_n_t7));\nendmodule")
+    mapped = {"kv3_t": [dict(inst=instance, pin="rst_n", leaf="u_u_r0_u_e0_u_w", reset="rst_n_t8")]}
+    row = C.check(W, {"kv3_t": text}, mapped)["types"]["kv3_t"][0]
+    assert (row["rtl_inst"], row["rtl_net"], row["rtl_class"]) == ("u_u_r0_u_e0_u_w", "rst_n_t7", "other")
+
+
+def test_disagreeing_bound_leaf_drivers_do_not_publish_a_spine():
+    W = _w(dict(inst="split_core", pin="rst_n", tap=8))
+    mapped = {"kv3_t": [dict(inst="split_core", pin="rst_n", leaf=leaf) for leaf in ("u_w", "u_pv_u_g0_j")]}
+    report = C.check(W, {"kv3_t": TXT}, mapped)
+    assert report["by_class"] == {"ambiguous": 1}
+    assert C.apply_spine(W, report, {"kv3_t": TXT}) == 0
