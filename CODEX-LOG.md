@@ -14672,3 +14672,5 @@ The owner reported Claude is back at 17:33 local time. Jobs below were left runn
 
 OWNER?
 KV ECTL increase resolved at response26 with original K-return timing. HBM owner park remains in force. No additional owner decision pending at handback.
+
+Handback checks: dcf66af8ccac merged as cfa7d1e750df7535cff3c68c4b6722e0f697f878, now the active runtime. HEAD Host W GEN unit oth-ubuntu-3592315-1795656692 on E12 exited 1: explicit tap clk_t7 violates outline/halo/tap spacing after the SF SRAM shift. Re-seat clk_t7 against revised macro halos before GEN and image review.
