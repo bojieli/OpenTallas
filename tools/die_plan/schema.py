@@ -1010,6 +1010,8 @@ SCHEMA = {
                         "leaf_um": _xy,
                         # EXPORT-SEAT-1125: raw start export port -> seat of its export_q flop near the port (reset_tree._with_export_seats)
                         "export_seats_um": {"type": "object", "additionalProperties": _xy},
+                        # RELAY-SITES-WIN-1125: plan relay_sites <u_rrl_N|u_srl_N>/q win over the tree site in reset_tree.tcl
+                        "relay_sites_win": {"type": "boolean"},
                         # Type-local control reset copies: emitted old net, equal published depth and core clock.
                         "consumer_localization": {"type": "array", "items": {
                             "type": "object", "additionalProperties": False,

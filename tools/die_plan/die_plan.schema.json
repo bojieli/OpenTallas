@@ -5245,6 +5245,9 @@
          "maxItems": 2
         }
        },
+       "relay_sites_win": {
+        "type": "boolean"
+       },
        "consumer_localization": {
         "type": "array",
         "items": {

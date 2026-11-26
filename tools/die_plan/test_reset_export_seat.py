@@ -37,3 +37,19 @@ def test_unknown_port_refused(monkeypatch):
 def test_no_key_no_change():
     P = FakeP({}); P.types["t"]["reset"] = {}
     T = tree(); assert RT._with_export_seats(P, "t", T) is T and "export_seats" not in T
+
+
+def test_relay_sites_win(monkeypatch):
+    monkeypatch.setattr(RT, "relay_um", lambda P, tn: 405.0)
+    P = FakeP({})
+    P.types["t"]["reset"] = {"relay_sites_win": True}
+    P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1500.0, 9.0], "u_srl_30/q": [1502.0, 9.0], "u_phy.x/q": [1.0, 2.0]}
+    T = RT._with_export_seats(P, "t", tree())
+    assert T["relay_seats"] == {"u_rrl_30": [1500.0, 9.0], "u_srl_30": [1502.0, 9.0]}
+
+
+def test_relay_sites_win_off():
+    P = FakeP({})
+    P.types["t"]["reset"] = {}
+    P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1500.0, 9.0]}
+    assert "relay_seats" not in RT._with_export_seats(P, "t", tree())
