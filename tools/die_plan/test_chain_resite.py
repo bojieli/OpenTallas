@@ -146,3 +146,21 @@ def test_same_stage_count_when_inherited_detour_has_no_legal_seats():
     CR.apply_ops({"partition_types": {"T": t}}, ops)
     assert len(row["regs_um"]) == 2
     assert max(CR.hops(CR.chain_points(t, row))) <= 405
+
+
+def test_resite_rechecks_far_window_end_after_first_seat_moves(monkeypatch):
+    row = {"conn": "bus:b", "bits": 32, "from_um": [0, 300], "to_um": [460, 300],
+           "regs_um": [[80, 55], [300, 285]]}
+    t = {"outline_um": [650, 800], "buses": [{"name": "b", "dir": "in", "face": "W",
+           "window_um": [0, 600], "width": 32}], "internal_stations": [row]}
+    prior_worst_end = CR.chain_points(t, row)[0]
+    old_window_proposal = [[60, 578], [275, 500]]
+    assert max(CR.hops([prior_worst_end, *old_window_proposal, row["to_um"]])) <= 404
+    assert max(CR.hops(CR.chain_points(t, dict(row, regs_um=old_window_proposal)))) > 405
+
+    monkeypatch.setattr(CR, "place_routed", lambda *args, **kwargs: old_window_proposal)
+    ops, latency, skipped = CR.resite_type("T", t)
+    assert len(ops) == 1 and not latency and not skipped
+    CR.apply_ops({"partition_types": {"T": t}}, ops)
+    assert len(row["regs_um"]) == 2
+    assert max(CR.hops(CR.chain_points(t, row))) <= 405

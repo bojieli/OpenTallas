@@ -227,6 +227,10 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         offs = [group_box(g, r, cell) for g, r in zip(groups, regs)] if groups else [None] * k
         new = place_routed(t, pts, k, offs, exact_rects if groups else rects, w, h, cap, gate, routed,
                            anchors=regs if groups else None)
+        if new is not None and groups is None:
+            moved_pts = chain_points(t, dict(e, regs_um=new))
+            if max(hops(moved_pts)) > gate or (routed and routed_max(t, moved_pts) > gate):
+                new = None
         if new is None and routed and groups is None:
             new = place_shorter_chain(t, e, pts, k, cap, gate)
         path = f"/partition_types/{name}/internal_stations/{i}"
