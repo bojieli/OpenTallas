@@ -65,21 +65,35 @@ def _inside_um(a, b, box, shrink=1.0):
     return (t1 - t0) * math.hypot(dx, dy)
 
 
+def _face_center(face, window, w, h):
+    center = (window[0] + window[1]) / 2
+    return {"N": (center, h), "S": (center, 0), "E": (w, center), "W": (0, center)}.get(face)
+
+
 def _lanes(t):
-    """[(bits, [points], name)] planned multi-bit legs of type dict t (internal_stations + ft_slots)."""
+    """(bits, points, label) for each planned lane, including FT face legs."""
     bw = {b.get("name"): b.get("width", 1) for b in t.get("buses", [])}
     lanes = []
     for s in t.get("internal_stations", []):
-        nm = (s.get("launch", "") or "").replace("bus ", "").strip()
-        w = bw.get(nm)
-        if w is None:
-            w = bw.get((s.get("conn", "") or "").replace("bus:", ""), 1)
-        pts = [q for q in [s.get("from_um")] + list(s.get("regs_um", [])) + [s.get("to_um")] if q]
-        lanes.append((w, pts, nm or s.get("conn", "")))
+        nm = (s.get("launch") or "").removeprefix("bus ").strip()
+        conn = s.get("conn") or ""
+        banks = s.get("bit_sites_um")
+        bits = s.get("bits") or (len(banks[0]) - 1 if banks else 0)
+        bits = bits or bw.get(nm, bw.get(conn.removeprefix("bus:"), 1))
+        pts = [q for q in [s.get("from_um"), *(s.get("regs_um") or []), s.get("to_um")] if q]
+        lanes.append((bits, pts, nm or conn))
+    w, h = t.get("outline_um", (0, 0))
     for s in t.get("ft_slots", []):
-        lanes.append((s.get("width", 1), list(s.get("regs_um", [])), s.get("name")))
+        pts = list(s.get("regs_um") or [])
+        for end, i in (("in", 0), ("out", len(pts) + 1)):
+            face = s.get(f"{end}_face")
+            window = s.get(f"{end}_window_um")
+            if face and window:
+                point = _face_center(face, window, w, h)
+                if point:
+                    pts.insert(i, point)
+        lanes.append((s.get("width", 1), pts, s.get("name")))
     return lanes
-
 
 def core_crossings(t):
     """[(lane name, core name, bits, um inside, (a, b))] planned legs whose straight path crosses a street-defining hard-core box."""
@@ -109,32 +123,38 @@ def street_worst(t):
         cuts = sorted({(b[axis] + b[axis + 2]) / 2 for b in bx if (b[2] - b[0]) * (b[3] - b[1]) > MIN_CORE_UM2})
         for c in cuts:
             fr = _free([(b[1 - axis], b[3 - axis]) for b in bx if b[axis] < c < b[axis + 2]], length)
-            if not fr:
-                continue
             spanning = [b for b in bx if b[axis] < c < b[axis + 2] and (b[2] - b[0]) * (b[3] - b[1]) > MIN_CORE_UM2]
             dem, who = collections.Counter(), collections.defaultdict(collections.Counter)
             for w, pts, nm in lanes:
                 for a, e in zip(pts, pts[1:]):
                     lo, hi = sorted((a[axis], e[axis]))
-                    if lo < c < hi:
-                        m = (a[1 - axis] + e[1 - axis]) / 2
-                        k = min(range(len(fr)), key=lambda i: 0 if fr[i][0] <= m <= fr[i][1] else min(abs(m - fr[i][0]), abs(m - fr[i][1])))
-                        dem[k] += w
-                        who[k][nm] += w
-                        # core interiors have no routing capacity: a leg whose straight path crosses a core box that spans this
-                        # cut detours round it, so the streets on both sides of that core carry its bits too
-                        for cb in spanning:
-                            if _inside_um(a, e, cb) < CROSS_MIN_UM:
-                                continue
-                            for j2 in range(len(fr)):
-                                if j2 != k and (abs(fr[j2][1] - cb[1 - axis]) < 1e-6 or abs(fr[j2][0] - cb[3 - axis]) < 1e-6):
-                                    dem[j2] += w
-                                    who[j2][nm] += w
+                    if not lo <= c < hi:
+                        continue
+                    if not fr:
+                        dem[0] += w
+                        who[0][nm] += w
+                        continue
+                    # Intersect at this cut. A segment's midpoint is generally on a different street.
+                    along = (c - a[axis]) / (e[axis] - a[axis])
+                    m = a[1 - axis] + along * (e[1 - axis] - a[1 - axis])
+                    k = min(range(len(fr)), key=lambda i: max(fr[i][0] - m, 0, m - fr[i][1]))
+                    streets = {k}
+                    for cb in spanning:
+                        if _inside_um(a, e, cb) < CROSS_MIN_UM:
+                            continue
+                        for j, (left, right) in enumerate(fr):
+                            if abs(right - cb[1 - axis]) < 1e-6 or abs(left - cb[3 - axis]) < 1e-6:
+                                streets.add(j)
+                    # Both neighbouring cores can name the same gap. This leg occupies it once.
+                    for j in streets:
+                        dem[j] += w
+                        who[j][nm] += w
             for k, d in dem.items():
-                cap = (fr[k][1] - fr[k][0]) * tracks * USABLE
-                r = d / cap if cap > 0 else 99.0
+                street = fr[k] if fr else (0.0, 0.0)
+                cap = (street[1] - street[0]) * tracks * USABLE
+                r = d / cap if cap > 0 else math.inf
                 if worst is None or r > worst[0]:
-                    worst = (r, "V" if axis else "H", round(c), [round(x) for x in fr[k]], d, round(cap), who[k].most_common(3))
+                    worst = (r, "V" if axis else "H", round(c), [round(x) for x in street], d, round(cap), who[k].most_common(3))
     return worst
 
 
@@ -169,9 +189,11 @@ def findings(raw, plan_path=None, tree=None, **kw):
             w = street_worst(t)
             if w and w[0] > STREET_MAX:
                 n_street += 1
+                tracks = TV if w[1] == "V" else TH
+                required = w[4] / (tracks * USABLE)
                 out.append(f"{lvl} ADV-FP-STREET {name}: lane demand {w[0]:.2f} > {STREET_MAX} on {w[1]} cut {w[2]} um street {w[3]} um "
                            f"({w[4]} bits vs {w[5]} usable tracks); load {', '.join(f'{a}:{b}' for a, b in w[6])}; "
-                           "fix: widen the street / grow the outline / re-seat lanes onto another cut")
+                           f"fix: reserve at least {required:.2f} um or re-seat lanes onto another cut")
             cells = t.get("cells") or 0
             if isinstance(cells, (int, float)) and cells > CELL_CAP:
                 n_big += 1
