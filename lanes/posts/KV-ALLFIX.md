@@ -1115,3 +1115,4 @@
   - sys_SD_v1 ISSUES-ACCEPT (r2r max 383), at CTS.
   - hub_Eo finding only: 1479 r2r over 405 um, 406 collapses, clock on 2 astk macros.
   DECISION: sys_SD placed ISSUES-ACCEPT (empty slivers, density 0.53). run-item capped it at place from stale A5t6 SMELL rows (CTS setup -298, hold -114). Resume it as an OT_KPG_FULL=1 route pilot from the R6 placement, or hold? Recommend pilot: one kit, and the smell is not R6 evidence.
+- 2026-11-25 19:33 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3276007-1795663779 on open-snipe: rc=0 after 235 s, ended 03:33:30, log none, cmd: --mem 24 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I probe1.py
