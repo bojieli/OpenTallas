@@ -4,7 +4,10 @@ The OLD hd_serdes wrapper (committed evidence results/arch/head_rtl5_1026/cand/g
 with only .rx/.tx bound, 514-b coll_o0_d into the 512-b rx) passed the die-top port-bind; the nested check must FAIL it.
 
 The plan supplies leaf sources dynamically. The sparse gate prefetches the
-tracked directories "rtl/hdc" and "rtl/v41rom" for that closure."""
+tracked directories "rtl/hdc", "rtl/v41rom",
+"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1", and
+"physical/asap7_memory_macros_v2/ot_rom_4096x274_m8" for that closure."""
 import copy
 import json
 import sys
