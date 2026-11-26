@@ -115,14 +115,12 @@ CALL = "-density 0.5 -pad_left 0 -pad_right 0 -timing_driven -keep_resize_below_
 
 
 @needs_tcl
-def test_top_trigger_splits_the_call(tmp_path):
+def test_top_trigger_keeps_one_call_and_restricts_the_reweight_thresholds(tmp_path):
     out = _tcl(tmp_path, f"global_placement {CALL}\nforeach c $::calls {{ puts \"C: $c\" }}\n", env="set ::env(OT_GPL_TD_TOP) 0.25")
     c = re.findall(r"^C: (.*)$", out, re.M)
-    assert len(c) == 2, out
-    assert "-timing_driven" not in c[0] and "-keep_resize" not in c[0] and c[0].endswith("-overflow 0.25") and "-force_center_initial_place" in c[0]
-    assert c[1].startswith("-skip_initial_place ") and "-force_center_initial_place" not in c[1]
-    assert "-timing_driven -keep_resize_below_overflow 0.25" in c[1] and "-timing_driven_net_reweight_overflow 25" in c[1]
-    assert "OT_GPL_TD_TOP phase 1" in out and "OT_GPL_TD_TOP phase 2" in out
+    assert len(c) == 1, out                                          # one call: no restart (a two-phase form was measured and rejected)
+    assert c[0] == CALL + " -timing_driven_net_reweight_overflow 25", c
+    assert "OT_GPL_TD_TOP timing-driven repair only at overflow <= 0.25" in out
 
 
 @needs_tcl
@@ -130,8 +128,7 @@ def test_top_trigger_keeps_only_thresholds_at_or_below_settle(tmp_path):
     call = CALL + " -timing_driven_net_reweight_overflow {79 64 49 29 21 15}"
     out = _tcl(tmp_path, f"global_placement {call}\nforeach c $::calls {{ puts \"C: $c\" }}\n", env="set ::env(OT_GPL_TD_TOP) 0.25")
     c = re.findall(r"^C: (.*)$", out, re.M)
-    assert "-timing_driven_net_reweight_overflow {21 15}" in c[1], out
-    assert "reweight" not in c[0]
+    assert c == [CALL + " -timing_driven_net_reweight_overflow {21 15}"], c
 
 
 @needs_tcl
@@ -139,7 +136,7 @@ def test_settle_is_capped_by_the_keep_threshold(tmp_path):
     call = CALL.replace("0.25", "0.2")
     out = _tcl(tmp_path, f"global_placement {call}\nforeach c $::calls {{ puts \"C: $c\" }}\n", env="set ::env(OT_GPL_TD_TOP) 0.3")
     c = re.findall(r"^C: (.*)$", out, re.M)
-    assert c[0].endswith("-overflow 0.2") and "-timing_driven_net_reweight_overflow 20" in c[1], out
+    assert c == [call + " -timing_driven_net_reweight_overflow 20"], c
 
 
 @needs_tcl
@@ -152,10 +149,10 @@ def test_calls_without_timing_driven_or_flag_are_untouched(tmp_path):
 
 
 @needs_tcl
-def test_exit_overflow_at_or_above_settle_leaves_the_call(tmp_path):
+def test_exit_overflow_at_or_above_settle_moves_the_pass_five_points_above_the_exit(tmp_path):
     call = CALL + " -overflow 0.3"
     out = _tcl(tmp_path, f"global_placement {call}\nforeach c $::calls {{ puts \"C: $c\" }}\n", env="set ::env(OT_GPL_TD_TOP) 0.25")
-    assert re.findall(r"^C: (.*)$", out, re.M) == [call] and "call unchanged" in out
+    assert re.findall(r"^C: (.*)$", out, re.M) == [call + " -timing_driven_net_reweight_overflow 35"]
 
 
 @needs_tcl
@@ -164,7 +161,7 @@ def test_wraps_an_existing_guard_alias(tmp_path):
     pre = MOCK % dict(CELLS="A B", RES=str(tmp_path), ENV="set ::env(OT_GPL_TD_TOP) 0.25") + "rename global_placement ot_native\nset ::guarded {}\n" + body \
         + "interp alias {} ::global_placement {} ::guard\n" + GP + f"global_placement {CALL}\nputs \"G=[llength $::guarded] N=[llength $::calls]\"\n"
     out = subprocess.run(["tclsh"], input=pre, capture_output=True, text=True)
-    assert out.returncode == 0 and "G=2 N=2" in out.stdout, out.stdout + out.stderr
+    assert out.returncode == 0 and "G=1 N=1" in out.stdout, out.stdout + out.stderr
 
 
 @needs_tcl

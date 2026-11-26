@@ -1,14 +1,17 @@
 # GENERATED-KIT HOOK tools/die_plan/gpl_td.tcl (C-GPL-TD-INFLATION 11-26, CLASS-OWNERS-B; plan flag gpl_td, default OFF).
 # Sourced at the end of face_flops.tcl (PRE_GLOBAL_PLACE, after the OT_GPL_GUARD) and at the end of face_flops_release.tcl
 # (PRE_DETAIL_PLACE) only when the plan carries gpl_td.  Three parts, one per plan key:
-#  top_overflow_trigger (env OT_GPL_TD_TOP = settle overflow S, 0 = off): timing-driven GPL repair must fire on the TOP-LEVEL overflow.
-#     OpenROAD tests the timing-driven trigger on the MEAN overflow of the top-level region and every odb region/group; tiny
-#     regions (OT_LOGIC_CLUSTER, place_regions) finish at once, so the mean falls under the first reweight threshold (0.64) at
-#     iteration 1 while the top-level overflow is still 0.73 (HEAD hd_lep0N fed00: trigger read 0.185, 56,515 repair buffers on
-#     an unsettled placement, HPWL 1.30e7 -> 1.90e7).  The wrapper splits a timing-driven call in two: phase 1 is the same call
-#     without any timing-driven key, stopped at -overflow S (regions are finished by then, so the mean IS the top-level overflow);
-#     phase 2 is the same call with -skip_initial_place (Nesterov from the current cell positions; OpenROAD's -incremental only places UNPLACED cells and skips a fully placed design, measured on hd_lep0N_w 11-26) whose only reweight threshold is S, so the repair runs once,
-#     on a placement that has settled, and the placement then continues to the call's own exit overflow.
+#  top_overflow_trigger (env OT_GPL_TD_TOP = settle overflow S, 0 = off): timing-driven GPL repair fires only on a SETTLED placement.
+#     OpenROAD tests the timing-driven trigger on the MEAN overflow of the top-level region and every odb region/group (log:
+#     "GPL-0101 Iter 1, overflow 0.185" while the top-level overflow was 0.7317, 15 regions of 3-20 cells), and its default first reweight
+#     threshold is 0.64, so on a sparse design the first repair_design runs at iteration 1..170 on an unspread placement and every long
+#     wire gets repeaters (HEAD hd_lep0N fed00 +56,515 buffers, HPWL 1.30e7 -> 1.90e7; hd_lep0N_w pass 1 at 0.635: +20,234; HEAD has no
+#     GPL_KEEP_OVERFLOW).  The engine cannot be told to read the top-level overflow (a two-phase run was measured and rejected: OpenROAD
+#     -incremental skips a fully placed design, and -skip_initial_place restarts Nesterov, the overflow climbs back 0.31 -> 0.66 and the
+#     whole spread is repeated).  So the wrapper keeps ONE call and keeps only the call's -timing_driven_net_reweight_overflow thresholds at or
+#     under S (the single threshold S when the call names none or none qualifies), after
+#     firm_small_clusters has removed the tiny regions that made the mean read low.  A call whose exit overflow is >= S would never reach
+#     a pass: the threshold becomes exit + 5 points (the sparse-exit rule of OT_GPL_GUARD (3)).
 #  firm_small_clusters: see logic_cluster.py (small OT_LOGIC_CLUSTER cells are seated FIRM, never a GPL region).
 #  cell_growth_gate (env OT_GPL_TD_GROWTH = 1 report, 2 fail): the non-tap standard cell count after global placement and after the
 #     place resize (this file again at PRE_DETAIL_PLACE, ::ot_gpl_td_release) must stay under min(OT_CELL_CENSUS_CAP, pre-GPL count x (1 + OT_GPL_TD_GROWTH_REL)).
@@ -52,18 +55,6 @@ proc ot_gpl_td_growth_gate {stage} {
   puts [format "OT_GPL_TD_GROWTH stage=%s pre=%d now=%d bound=%d growth=%.3f: %s" $stage $pre $now $bound $growth $verdict]
   if {$verdict eq "FAIL"} { error "OT_GPL_TD_GROWTH stage=$stage: non-tap cells $now exceed the bound $bound (pre-GPL $pre, cap $cap, rel $rel)" }
 }
-# global_placement arguments without any timing-driven key (routability and the rest are kept)
-proc ot_gpl_td_strip_args {argl} {
-  set out {}
-  set n [llength $argl]
-  for {set k 0} {$k < $n} {incr k} {
-    set a [lindex $argl $k]
-    if {$a in {-timing_driven -timing_driven_repair_timing -virtual_cts}} continue
-    if {[regexp {^-(timing_driven_|keep_resize_below_overflow$|virtual_cts_)} $a]} { incr k; continue }
-    lappend out $a
-  }
-  return $out
-}
 proc ot_gpl_td_top_value {} {
   if {![info exists ::env(OT_GPL_TD_TOP)] || $::env(OT_GPL_TD_TOP) eq ""} { return 0 }
   set v $::env(OT_GPL_TD_TOP)
@@ -85,37 +76,21 @@ proc ot_gpl_td_wrapped {args} {
   set prev $::ot_gpl_td_prev
   set growth [expr {[ot_gpl_td_growth_mode] > 0}]
   if {$growth} { ot_gpl_td_growth_record }
-  if {$s <= 0 || [lsearch -exact $args -timing_driven] < 0} {
-    set rc [uplevel 1 [list {*}$prev {*}$args]]
-    if {$growth} { ot_gpl_td_growth_gate post_gpl }
-    return $rc
+  if {$s > 0 && [lsearch -exact $args -timing_driven] >= 0} {
+    # the settle overflow never exceeds the call's own keep threshold (a pass above it would run and be discarded)
+    set keep [ot_gpl_td_opt $args -keep_resize_below_overflow]
+    if {[string is double -strict $keep] && $keep > 0 && $keep < $s} { set s $keep }
+    set exit [ot_gpl_td_opt $args -overflow]
+    if {[string is double -strict $exit] && $exit >= $s} { set s [expr {$exit + 0.05}] }
+    set thr [expr {int(round(100.0 * $s))}]
+    set have [ot_gpl_td_opt $args -timing_driven_net_reweight_overflow]
+    set keepl {}
+    foreach t $have { if {$t <= $thr} { lappend keepl $t } }
+    if {![llength $keepl]} { set keepl [list $thr] }
+    set args [ot_gpl_td_set $args -timing_driven_net_reweight_overflow $keepl]
+    puts "OT_GPL_TD_TOP timing-driven repair only at overflow <= $s (reweight thresholds $keepl): $args"
   }
-  # settle overflow: never above the call's own keep threshold, else the repair would run on the settled placement and be discarded
-  set keep [ot_gpl_td_opt $args -keep_resize_below_overflow]
-  if {[string is double -strict $keep] && $keep > 0 && $keep < $s} { set s $keep }
-  set exit [ot_gpl_td_opt $args -overflow]
-  if {[string is double -strict $exit] && $exit >= $s} {
-    puts "OT_GPL_TD_TOP exit overflow $exit >= settle overflow $s: no settled placement to repair on, call unchanged"
-    set rc [uplevel 1 [list {*}$prev {*}$args]]
-    if {$growth} { ot_gpl_td_growth_gate post_gpl }
-    return $rc
-  }
-  set p1 [ot_gpl_td_set [ot_gpl_td_strip_args $args] -overflow $s]
-  set p2 {}
-  foreach a $args { if {$a ne "-force_center_initial_place"} { lappend p2 $a } }
-  set p2 [concat [list -skip_initial_place] $p2]
-  set thr [expr {int(round(100.0 * $s))}]
-  set have [ot_gpl_td_opt $p2 -timing_driven_net_reweight_overflow]
-  set keepl {}
-  foreach t $have { if {$t <= $thr} { lappend keepl $t } }
-  if {![llength $keepl]} { set keepl [list $thr] }
-  set p2 [ot_gpl_td_set $p2 -timing_driven_net_reweight_overflow $keepl]
-  puts "OT_GPL_TD_TOP phase 1 (no timing-driven keys, stop at overflow $s): $p1"
-  set ::ot_gpl_td_phase 1
-  set rc [uplevel 1 [list {*}$prev {*}$p1]]
-  puts "OT_GPL_TD_TOP phase 2 (skip_initial_place, timing-driven reweight at $keepl): $p2"
-  set rc [uplevel 1 [list {*}$prev {*}$p2]]
-  unset -nocomplain ::ot_gpl_td_phase
+  set rc [uplevel 1 [list {*}$prev {*}$args]]
   if {$growth} { ot_gpl_td_growth_gate post_gpl }
   return $rc
 }
