@@ -110,7 +110,7 @@ def judge(raw, plan_path, tn, census, budget_ps):
                 kit=str(census.get("kit", ""))[:80]), ""
 
 
-def findings(raw, plan_path=None, cache=None, types=None, max_lines=MAX_LINES, budget_ps=BUDGET_PS):
+def findings(raw, plan_path=None, cache=None, types=None, max_lines=MAX_LINES, budget_ps=BUDGET_PS, **_kw):
     try:
         return _findings(raw, plan_path, cache, types, max_lines, budget_ps)[0]
     except Exception as e:  # noqa: BLE001

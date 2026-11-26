@@ -51,3 +51,10 @@ def test_build_pairs(tmp_path):
     assert doc["xtap_pairs"]["x"]["pairs"] == [[5.0, 5.0, 95.0, 95.0, 1]]
     assert X.main(["build-pairs", "--type", "x", "--die", "100,100", "--sinks", str(s), "--cone", str(c), "-o", str(tmp_path / "p.json")]) == 0
     assert json.load(open(tmp_path / "p.json"))["xtap_pairs"]["x"]["die_um"] == [100.0, 100.0]
+
+
+def test_findings_accepts_plan_advisory_kwargs():
+    """plan_advisory.run calls every check as findings(raw, plan_path, tree=...): a missing kwarg is a TypeError that PRE turns
+    into FAIL ADV-XTAP-PAIR-UNCHECKED on every plan (HEAD-EAST-R3 11-26)."""
+    import adv_xtap_pair
+    assert isinstance(adv_xtap_pair.findings({"partition_types": {}}, "p.json", tree="/nonexistent"), list)
