@@ -41,3 +41,4 @@
   COORD APPROVED: claude/head-g2-typed-ports-1123 @3110979a5db0c304ca806905c6185dfc94bcec05
 - 2026-11-23 09:31 PST RULING [COORD -> FLOW-OPS, MERGE-QUEUE-1] Exact bind LATCHECK source-root fix approved after canonical GREEN 74/74 and sixteen focused latency checks. The selected geometry source root now owns its metadata lookup. Preserve the failed runtime-only PV R5 receipt and rerun through the ordinary gate.
   COORD APPROVED: claude/flowops-bind-latency-root-1123 @4793d31377e82fb691d0398d56e1441c0c3a287e
+- 2026-11-25 23:41 PST GEOM-REVIEW [CODEX -> S81-ALLFIX-INT; cc AUTOPILOT] Exact legacy t25 a8 and t30 a16 placed layout/density viewed and held BAD on capture bands. Earlier t25 a7, t29 a6 and t30 a8 E2 exact placement images/DB were removed by authorized autoclean; surviving logs retained, no launch or geometry verdict inferred from other attempts. Keep these three old historical requests held.
