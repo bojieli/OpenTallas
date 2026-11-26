@@ -2625,3 +2625,72 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "E") is None
     older_hold = ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older")
     assert older_hold.startswith("WAIT-VISUAL") if strict else older_hold is None
+
+
+def test_archive_preserves_same_revision_routes_and_provenance(tmp_path):
+    import subprocess
+    import autopilot as ap
+
+    def probe(script, args):
+        result = subprocess.run([sys.executable, "-I", "-c", script, json.dumps(args)],
+                                capture_output=True, text=True, check=True)
+        return json.loads(result.stdout.split("AP_JSON ", 1)[1])
+
+    legacy = tmp_path / "closed" / "s81_head" / "hd_ctl__6d2e187f0d"
+    kit, base, signoff = (tmp_path / name for name in ("kit", "base", "signoff"))
+    for path in (kit, base, signoff):
+        path.mkdir()
+    (base / "6_final.v").write_text("route netlist")
+    (signoff / "signoff.json").write_text('{"verdict": "SIGNED"}')
+
+    def archive(job, body):
+        (base / "6_final.odb").write_text(body)
+        return probe(ap.PROBE_ARCHIVE, dict(kit=str(kit), base=str(base), signoff_dir=str(signoff),
+                                             dest=str(legacy), record=dict(id=job, die="s81_head", type="hd_ctl",
+                                                                           src="main@6d2e187f0d")))
+
+    assert archive("original", "W6p")["dest"] == str(legacy)
+    assert probe(ap.PROBE_PROVENANCE, dict(dest=str(legacy), prov={"id": "original"}))["ok"]
+    assert archive("original", "W6p")["exists"]
+    new = Path(archive("candidate", "W8b")["dest"])
+    assert new == legacy.with_name(legacy.name + "__candidate")
+    assert (new / "base" / "6_final.odb").read_text() == "W8b"
+    assert archive("candidate", "W8b")["exists"]
+    refreshed = Path(archive("candidate", "W8b ECO")["dest"])
+    assert refreshed != new and refreshed.name.startswith(new.name + "__")
+    assert archive("candidate", "W8b ECO")["exists"]
+    error = probe(ap.PROBE_PROVENANCE, dict(dest=str(legacy), prov={"id": "candidate"}))
+    assert "does not own" in error["error"]
+    assert json.loads((legacy / "PROVENANCE.json").read_text())["id"] == "original"
+    assert (legacy / "base" / "6_final.odb").read_text() == "W6p"
+    assert (new / "base" / "6_final.odb").read_text() == "W8b"
+
+
+def test_archive_consumes_resolved_variant_for_export_and_provenance(monkeypatch):
+    import autopilot as ap
+
+    variants = []
+    recorded = []
+
+    def rpy(host, script, args, **kwargs):
+        if script is ap.PROBE_ARCHIVE:
+            variants.append(args["dest"] + "__second")
+            return {"dest": variants[0], "files": 18, "errors": []}
+        assert script is ap.PROBE_AUTO_EXPORT
+        assert args["signoff"] == variants[0] + "/kit/signoff/signoff.json"
+        return {"queued": "/test/spool.json"}
+
+    monkeypatch.setattr(ap, "DRY", False)
+    monkeypatch.setattr(ap, "ARCHIVE_ROOT", "/test/archive")
+    monkeypatch.setattr(ap, "rpy", rpy)
+    monkeypatch.setattr(ap, "log", lambda _: None)
+    monkeypatch.setattr(ap, "resolve_provenance", lambda *_: {"src_commit": "abcdef1234", "flow_tag": "flow-test"})
+    monkeypatch.setattr(ap, "apply_legacy", lambda _: None)
+    monkeypatch.setattr(ap, "write_provenance", lambda host, path, j: recorded.append(path) or {})
+    monkeypatch.setattr(ap, "record_signed", lambda *args: False)
+
+    job = dict(id="second", die="s81_head", type="hd_ctl", src="main@abcdef1234", host="hub",
+               path="/test/kit", signoff={"base": "/test/base", "path": "/test/signoff/signoff.json"})
+    ap.archive({}, job)
+    assert recorded == variants
+    assert job["archive"].endswith(":" + variants[0])
