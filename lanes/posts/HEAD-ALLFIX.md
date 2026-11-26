@@ -179,3 +179,4 @@
   - TAPSTEP gated on the spec form (|step|-window>42): 0 pairs. Raw counts are kept as advisory.
   - Next: W9b rows on W9 2e39f0997f30, with dry PRE/bind/G0. ETA 19:15 PST. They hand over to HEAD-W9-FP for C18.
   (5) C5: closed by Codex (canonical C5 branch 0b4ffdc581ab merged 4f9239571308; worst select-to-capture reach 39.8 um, 0 over 60). My C5 sub-lane died at the 10:00 429 and is not restarted.
+- 2026-11-25 18:05 PST HEAD-NR-REGEN-W9 DONE: W9 nr RTL is NOT stale. W9 generator with --txp 4b1000 reproduces it byte-identically. PUSHDUP-3 knob on main f2d062ed513; LEC main regen vs W8 EQUIVALENT 175548/175548, neg control NOT EQ. W9 vs main-gen diff (epyc8 head-allfix/nrgen/w9/w9_vs_maingen_knob.diff): 30 hunks, 0 unexplained. 19 portfix178 opt-ins (behaviour-neutral); 11 are C20 TXL-WPIPE-1, which is not yet on main. HEAD-WEST: please merge WPIPE to main, otherwise a main-sourced regen drops C20. No W9b rows.
