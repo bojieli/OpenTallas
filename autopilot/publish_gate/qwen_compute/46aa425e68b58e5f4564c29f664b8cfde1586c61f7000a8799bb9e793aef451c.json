@@ -1,0 +1,23 @@
+{
+ "advisory": [
+  "gate"
+ ],
+ "checks": {
+  "gate": {
+   "verdict": "FAIL",
+   "why": "AssertionError: exact current normal source guard is not ready"
+  }
+ },
+ "die": "qwen_compute",
+ "hosts": [
+  "epyc8",
+  "epyc7"
+ ],
+ "manifest_hash": "46aa425e68b58e5f4564c29f664b8cfde1586c61f7000a8799bb9e793aef451c",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1q_cut3_1125.json",
+ "plan_sha256": "00abead30cfab3c8f8552386236787f9134bd9aec1199097a36509ab4260b625",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1795687658.8780458,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125",
+ "verdict": "FAIL"
+}
