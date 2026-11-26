@@ -72,6 +72,18 @@ def test_wiring_is_opt_in():
     c = (HERE / 'clock_taps.tcl').read_text()
     assert re.search(r'OT_TAP_RELAY_COHORT\) eq "1"\} \{\n source .*tap_relay_cohort\.tcl\]', c)
     g = (HERE / 'gen_phys.py').read_text()
-    assert 'get("tap_relay_cohort") is True' in g and '"tap_relay_cohort.tcl"' in g
+    assert 'tap_relay_cohort_on(t, P.name)' in g and '"tap_relay_cohort.tcl"' in g
     assert '"tap_relay_cohort": {"type": "boolean"}' in (HERE / 'schema.py').read_text()
     assert 'tap_relay_cohort' in (HERE / 'die_plan.schema.json').read_text()
+
+
+def test_default_on_for_s81_with_explicit_override():
+    src = (HERE / 'gen_phys.py').read_text()
+    m = re.search(r'^def tap_relay_cohort_on\(t, die=None\):.*?(?=^def )', src, re.S | re.M)
+    ns = {}
+    exec(m.group(0), ns)
+    f = ns['tap_relay_cohort_on']
+    assert f({}, 's81') is True and f({'clock': {}}, 's81') is True
+    assert f({'clock': {'tap_relay_cohort': False}}, 's81') is False     # per-kit opt-out
+    assert f({}, 's81_head') is False and f({}, 'qwen_compute') is False and f({}, None) is False
+    assert f({'clock': {'tap_relay_cohort': True}}, 'qwen_compute') is True

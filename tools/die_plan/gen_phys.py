@@ -4761,6 +4761,16 @@ def tap_pair_affinity_exports(t):
         (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring + extra
 
 
+def tap_relay_cohort_on(t, die=None):
+    """C-XTAP-HOLD (S81-XTAP-COHORT 11-26): same-site reset/run relay pairs on two clock taps are a cross-tap FF hold class
+    (slice_station__t23 CTS-only screen with the hook on: cross-tap FF hold 4 -> 0, TT WNS +213.9, TNS 0).  Explicit
+    clock.tap_relay_cohort true/false in the plan wins on any die; unset = on for the S81 die by exact name (s81_head is not S81)."""
+    v = (t.get("clock") or {}).get("tap_relay_cohort")
+    if v is not None:
+        return v is True
+    return str(die or "") == "s81"
+
+
 def tap_post_merge_exports(t):
     """QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"): clock.tap_post_merge_min_sinks
     (default absent = off).  After every tap assignment / affinity pass a tap left with 0 < n < min sinks merges WHOLE
@@ -8592,7 +8602,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_group_exports(t)
     if (t.get("clock") or {}).get("tap_landing_seam") is True:   # KV-HUB-HOLD 11-23, opt-in: landing ring + u_bin on one hard-free tap
         cfg.append("export OT_TAP_LANDING_SEAM = 1")
-    if (t.get("clock") or {}).get("tap_relay_cohort") is True:   # QC-TTC-R2 11-23, opt-in: same-site reset/run relays on one tap
+    if tap_relay_cohort_on(t, P.name):   # QC-TTC-R2 11-23 opt-in; S81-XTAP-COHORT 11-26: default on for die s81 (clock.tap_relay_cohort=false opts a type out)
         cfg.append("export OT_TAP_RELAY_COHORT = 1")
     cfg += pinreg_tap_exports(t)
     cfg += ft_stage0_exports(t)
