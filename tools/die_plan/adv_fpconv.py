@@ -13,6 +13,9 @@ LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S
                 route setup -1117 ps on u_cland_origin -> u_cland_reader_start_ft42).  Fix: kv_start_corridor_event.py start.
 LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stages_existing + D < ceil(path_um / 405) - 1 (the stations
                 that make every hop <= 405 um), plus the cland legs above.  LEG405-ZERO stays as the legacy scan.
+                (C-LEG405-R3 11-26) plus the per-bit station-chain census of leg405_perbit.py: every bit from its true source pin through
+                its own seats to the out pin, planned hop + 3 um placed drift > 405 (calibrated on the retained KV 3_place OT_FT_LANE
+                lines; the relay_depth rows alone read 0 of 65 placed KV pairs).
 RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point that relay_spread.py cannot seat within the hop margin (S81 t15 32 seats in lane cores; OT_ADV_RELAY_STACK_ALL=1 lists every stack).
 SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
 PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
@@ -27,6 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import adv_geom_static as G  # noqa: E402
+import leg405_perbit as LB  # noqa: E402
 
 TOL = 0.01
 LEG_UM = 405.0
@@ -429,9 +433,62 @@ def _f_leg(raw, plan_path, tree=None, **_k):
     return _run("LEG405-ZERO", lambda t, tn, r: leg405_zero(t), lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} 0 stages", raw)
 
 
+def leg405_perbit_types(raw, plan_path, budget_s=None):
+    """C-LEG405-R3: per-bit station-chain census from the true source (leg405_perbit.py) -> ({type: (over, near, worst um, slot list)}, n unmeasured,
+    note).  over = hop + DRIFT_UM > 405, near = hop + NEAR_UM > 405.  Needs the plan on disk (schema.Plan); a type that cannot be built
+    is counted as unmeasured, a plan that cannot load measures nothing and says so.  Bounded by OT_ADV_LEG405_S seconds (default 150)."""
+    import time
+    from pathlib import Path as _P
+    import schema as S
+    budget = float(os.environ.get("OT_ADV_LEG405_S", "150")) if budget_s is None else budget_s
+    t0, out, skipped, left = time.time(), {}, 0, 0
+    P = S.Plan(raw, _P(plan_path))
+    names = [tn for tn, t in _types(raw) if t.get("ft_slots")]
+    for i, tn in enumerate(names):
+        if time.time() - t0 > budget:
+            left = len(names) - i
+            break
+        try:
+            cen = LB.type_census(P, tn)
+        except Exception:  # noqa: BLE001 - one unbuildable type never stops the scan
+            skipped += 1
+            continue
+        over = [(sn, v["full_max"], v["first_max"], v["full_over"]) for sn, v in cen.items() if v["full_max"] + LB.DRIFT_UM > LB.LIMIT_UM]
+        near = [sn for sn, v in cen.items() if v["full_max"] + LB.NEAR_UM > LB.LIMIT_UM]
+        if near:
+            out[tn] = (len(over), len(near), max(v["full_max"] for v in cen.values()), sorted(over, key=lambda x: -x[1]))
+    note = f"{skipped} type(s) not buildable" if skipped else ""
+    if left:
+        note = (note + "; " if note else "") + f"scan stopped at {budget:g} s, {left} type(s) not read"
+    return out, note
+
+
 def _f_leg_staged(raw, plan_path, tree=None, **_k):
-    return _run("LEG405-STAGED", lambda t, tn, r: leg405_staged(t),
+    """ADV-LEG405-STAGED = relay_depth rows still short of ceil(path/405)-1 stations (C-LEG405-R2) + the per-bit chain census from the true
+    source with the calibrated placed-drift margin (C-LEG405-R3).  The relay_depth form alone read 0 on QC / KV: 0 of 65 placed KV pairs."""
+    rows = _run("LEG405-STAGED", lambda t, tn, r: leg405_staged(t),
                 lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)", raw)
+    rows = rows[:-1]
+    flagged = {x.split()[2] for x in rows}
+    pb, note = {}, ""
+    if plan_path and os.path.exists(str(plan_path)):
+        try:
+            pb, note = leg405_perbit_types(raw, plan_path)
+        except Exception as e:  # noqa: BLE001
+            note = f"per-bit census not run: {type(e).__name__}: {str(e)[:120]}"
+    lines, n_over = [], 0
+    for tn, (n_over_slots, n_near, worst, over) in sorted(pb.items()):
+        if n_over_slots:
+            n_over += 1
+            ex = "; ".join(f"{sn} {h:.1f} um (first hop {f:.1f}, {nb} hop(s) over)" for sn, h, f, nb in over[:MAX_EX])
+            lines.append(_w("LEG405-STAGED", tn, f"per-bit chain from the pin: {n_over_slots} slot(s) over 405 um incl. {LB.DRIFT_UM:g} um placed drift: {ex}"))
+        else:
+            lines.append(_w("LEG405-STAGED", tn, f"near: {n_near} slot(s) within {LB.NEAR_UM:g} um of 405 (worst planned hop {worst:.1f} um); not counted"))
+    both = flagged & {tn for tn, v in pb.items() if v[0]}
+    total = len(flagged | {tn for tn, v in pb.items() if v[0]})
+    summ = _w("LEG405-STAGED", f"summary {total} types flagged ({len(flagged)} relay_depth / cland rows, {n_over} per-bit chain, {len(both)} both; "
+                               f"drift {LB.DRIFT_UM:g} um){(' [' + note + ']') if note else ''} (report only)")
+    return rows + lines + [summ]
 
 
 def relay_stack_hurt(t):
