@@ -39868,7 +39868,8 @@
     "epyc7",
     "epyc8",
     "intel1",
-    "intel2"
+    "intel2",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -41974,7 +41975,8 @@
    "pilot_item": "hd_lep0N",
    "prev_gen_hosts_derive": [
     "epyc7",
-    "epyc10",
+    "epyc8",
+    "intel1",
     "intel2"
    ],
    "event_lineage": [
@@ -42959,7 +42961,8 @@
    "gen_hosts": [
     "intel1",
     "epyc8",
-    "epyc7"
+    "epyc7",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -52838,12 +52841,9 @@
    ],
    "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4",
    "prev_gen_hosts_derive": [
-    "epyc2",
     "intel1",
-    "epyc10",
     "epyc8",
-    "epyc7",
-    "epyc9"
+    "epyc7"
    ],
    "tools_refresh": false,
    "plan_event": "qc_c1p_coll_a_rows_r6_1125",
