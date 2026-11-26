@@ -39445,8 +39445,7 @@
     "epyc7",
     "epyc8",
     "intel1",
-    "intel2",
-    "epyc2"
+    "intel2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": false,
@@ -41648,7 +41647,8 @@
     "hd_spn_end",
     "hd_spn_wshim_rx",
     "hd_tile"
-   ]
+   ],
+   "note_gen_hosts_w10_epyc2": "W10 exact epyc2 source replica retained. No new HEAD kits while epyc2 root above 90%; measured 93% at 21:39 PST. Existing builds remain."
   },
   "qwen_compute": {
    "private_retired_specs_qcglue_1125": [
