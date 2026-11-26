@@ -123,13 +123,14 @@ def addressees(text):
 def load_live_map(coord):
     """P-DEAD-LANE-ROUTING (FABLE-FLOW-0847 A16, 11-26): lanes/LIVE-LANES.tsv rows {lane: (status, integrator)}; empty when absent."""
     out = {}
-    try:
-        for ln in (Path(coord) / "lanes" / "LIVE-LANES.tsv").read_text().splitlines()[1:]:
-            f = ln.split("\t") + [""] * 7
-            if f[0]:
-                out[f[0].casefold()] = (f[5], f[6])
-    except OSError:
-        pass
+    for fn in ("LIVE-LANES.tsv", "DEAD-LANES.tsv"):    # COORD 14:52: the live map is pruned to lanes that posted within 6 h; dead lanes live in DEAD-LANES.tsv
+        try:
+            for ln in (Path(coord) / "lanes" / fn).read_text().splitlines()[1:]:
+                f = ln.split("\t") + [""] * 7
+                if f[0]:
+                    out[f[0].casefold()] = (f[5], f[6])
+        except OSError:
+            pass
     return out
 
 
