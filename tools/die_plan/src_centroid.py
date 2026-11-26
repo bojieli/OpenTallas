@@ -114,11 +114,20 @@ def source_chain(g, bus, out_bus=True, limit=LIMIT_UM):
         for s in _station_cells(cells, bus, n - 1):
             for c in _fwd(cells, fan, s):
                 edges.append(((cells[c][1], cells[c][2]), (cells[s][1], cells[s][2]), cells[c][3]))
+    inter = []                                   # placed station k -> station k+1 register edges (the chain between the pin-side hop and the far end)
+    for k in range(n - 1):
+        nxt = set(_station_cells(cells, bus, k + 1))
+        for s in _station_cells(cells, bus, k):
+            for c in _fwd(cells, fan, s):
+                if c in nxt:
+                    inter.append(man((cells[s][1], cells[s][2]), (cells[c][1], cells[c][2])))
+    inter_max = round(max(inter), 1) if inter else 0.0
     if not edges:
-        return dict(stations=n, n_edges=0, src_centroid=None, max_um=0.0, n_over=0, worst=[])
+        return dict(stations=n, n_edges=0, src_centroid=None, max_um=0.0, n_over=0, worst=[], inter_max_um=inter_max)
     hops = sorted(((man(a, b), nm) for a, b, nm in edges), reverse=True)
     return dict(stations=n, n_edges=len(edges), src_centroid=(round(sum(e[0][0] for e in edges) / len(edges), 1), round(sum(e[0][1] for e in edges) / len(edges), 1)),
-                max_um=round(hops[0][0], 1), n_over=sum(1 for h, _ in hops if h > limit), worst=[(round(h, 1), nm) for h, nm in hops[:3]])
+                max_um=round(hops[0][0], 1), n_over=sum(1 for h, _ in hops if h > limit), worst=[(round(h, 1), nm) for h, nm in hops[:3]],
+                inter_max_um=inter_max, inter_n_over=sum(1 for h in inter if h > limit))
 
 
 def overrides(g, t, limit=LIMIT_UM):

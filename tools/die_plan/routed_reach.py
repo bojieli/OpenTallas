@@ -266,8 +266,8 @@ def hops(pts, boxes, outline=None):
 
 def type_hops(t, ceiling="M7", root=None, src=None):
     """[{conn, hop, from, to, man, routed}] of every internal_stations hop of a type.  src = src_centroid.overrides(geom, t) (C-LEG405 SRC-NOT-AT-LEAF):
-    an out bus starts at the centroid of its real source registers, an in bus ends at the centroid of its real consumers; without it (or for a bus it
-    does not list) the chain keeps from_um / to_um as before."""
+    an out bus's first hop is the worst edge from its real source registers to the first station, an in bus's last hop the worst edge to its real
+    consumers (placed geometry); without it (or for a bus it does not list) the chain keeps from_um / to_um as before."""
     boxes, info = blocking_boxes(t, ceiling, root)
     W, H = t["outline_um"]
     rows = []
@@ -276,18 +276,20 @@ def type_hops(t, ceiling="M7", root=None, src=None):
             continue
         pts = [tuple(e["from_um"])] + [tuple(r) for r in e.get("regs_um", [])] + [tuple(e["to_um"])]
         ov = (src or {}).get(str(e.get("conn", "")))
-        if ov:
-            pts[0 if ov["end"] == "src" else -1] = tuple(ov["xy"])
         buses = {b.get("name"): b for b in t.get("buses") or []}
         pbh = per_bit_reach.per_bit_hops(e, buses.get(str(e.get("conn", ""))[4:]), W, H)
         if pbh:   # kit per_bit chain (HEAD-INT-R2): sites follow the pin -> leaf_um L, not regs_um
             for i, m in enumerate(pbh):
                 rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[0]), b=list(pts[-1]), man=round(m, 3), routed=round(m, 3), bits=e.get("bits")))
             continue
-        cm = ((ov or {}).get("chain") or {}).get("max_um", 0.0)
+        ch = (ov or {}).get("chain")
+        last = len(pts) - 2
         for i, m, L in hops(pts, boxes, (W, H)):
-            if i == (0 if ov and ov["end"] == "src" else len(pts) - 2) and cm > m:   # worst real register edge, not the centroid average
-                m, L = cm, max(L, cm)
+            if ch is not None:   # placed chain: pin-side hop = worst real register edge, hops between stations = worst placed station -> station edge, far end = plan
+                if i == (0 if ov["end"] == "src" else last):
+                    m = L = ch["max_um"]
+                elif 0 < i < last:
+                    m = L = ch.get("inter_max_um") or 0.0
             rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[i]), b=list(pts[i + 1]), man=round(m, 3),
                              routed=round(L, 3) if L != float("inf") else -1.0, bits=e.get("bits")))
     return rows, boxes, info
