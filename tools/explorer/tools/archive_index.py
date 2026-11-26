@@ -30,7 +30,8 @@ with (root / 'INDEX.tsv').open() as f:
         try:
             d = json.loads(path.read_text())
             fields = ('verdict', 'profile', 'local_verdict', 'signed_period_ps',
-                      'internal_hold', 'checks', 'route', 'reasons', 'release_qualified')
+                      'internal_hold', 'checks', 'route', 'reasons', 'release_qualified',
+                      'clock_period_evidence')
             compact = {k: d[k] for k in fields if k in d}
             corners = d.get('corners') or {}
             compact['corners'] = {}

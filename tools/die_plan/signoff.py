@@ -3159,6 +3159,10 @@ def cmd_run(a):
         disc["ft_interface_model"] = model
         rec["ft_interface"] = dict(declaration=decl, model=model, path=str(mp))
     rec["sdc_lint"] = run_sdc_lint(disc, ports, mpol) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
+    if rec["sdc_lint"]["verdict"] == "PASS" and disc.get("sdc_lint_ctx"):
+        proof = _SP.edge_clock_evidence(Path(disc["sdc"]).read_bytes(), Path(disc["sdc_lint_ctx"]).read_bytes())
+        if proof:
+            rec["clock_period_evidence"] = proof
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
     rec["latch_swap"] = latch_swap_check(disc)
