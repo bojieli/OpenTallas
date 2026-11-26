@@ -311,6 +311,12 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
    if {![dict exists $ff_orient $y]} continue
    set x $endx
+   if {[info exists ::cland_pinslot_row_cap]} {
+    lassign $::cland_pinslot_row_cap yl yh xe
+    if {$yl <= $y && $y < $yh && $xe < $bx} {
+     set x [expr {$ff_x0+int(floor(double($xe-$w-$ff_x0)/$ff_sw))*$ff_sw}]
+    }
+   }
    while {$x>=$startx && $x>=$ax} {
     set lim $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
     for {set r $r0} {$r<$r1} {incr r} {
@@ -842,7 +848,50 @@ proc cland_bus_pins {bus} {
 # at its own pin with a nearest-free-site search drifts instead (HEAD turn_a what-if: the band's last bits found their
 # rows taken and fell back to holes 323 um away).  Applies to a pin column whose y order follows the key order (the
 # plan's +ff/+ffr choice); any other band (pins along x, or y order against the keys) keeps the old fill.
-proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
+# The five optional writer guards consume explicit legal sites before filling
+# the unchanged bit-major sequence. Keep their keys in the sequence so the
+# per-bit y targets and clock/data age are independent of these guard seats.
+proc cland_pinslot_guard {ordered guards edge rect tag} {
+ global ff_dbu ff_x0 ff_y0 ff_sw ff_rh cland_done
+ lassign $rect ax ay bx by
+ set mapped {}
+ foreach pr $ordered {
+  set i [lindex $pr 1]
+  set n [string map [list "\\" ""] [$i getName]]
+  if {[regexp {/(u_ring\.g_wreg\..+)$} $n -> tail]} {
+   if {[dict exists $mapped $tail]} {error "OT_CLAND pinslot_profile duplicate FF $tail"}
+   dict set mapped $tail $i
+  }
+ }
+ set skipped {}
+ foreach g $guards {
+  lassign $g n gx gy
+  if {![dict exists $mapped $n]} {error "OT_CLAND pinslot_profile missing writer FF $n"}
+  set i [dict get $mapped $n]
+  set m [$i getMaster]
+  set nm [$i getName]
+  set x [expr {round($gx*$ff_dbu)}]; set y [expr {round($gy*$ff_dbu)}]
+  set width [$m getWidth];set height [$m getHeight]
+  if {![regexp {^DFF} [$m getName]] || [dict exists $cland_done $nm] ||
+      ($x-$ff_x0)%$ff_sw || ($y-$ff_y0)%$ff_rh ||
+      $x+$width > round($edge*$ff_dbu) || $y+$height > round($by*$ff_dbu)} {
+   error "OT_CLAND pinslot_profile incompatible writer FF or site $n at ($gx,$gy)"
+  }
+  # Quantization of this window admits exactly the declared native body.
+  set box [list [expr {($x-0.25)/$ff_dbu}] [expr {($y-0.25)/$ff_dbu}] \
+                [expr {($x+$width+0.25)/$ff_dbu}] [expr {($y+$height+0.25)/$ff_dbu}]]
+  cland_put $i $box $tag 0.4
+  if {![info exists ::cland_fill_dry]} {
+   lassign [$i getLocation] observed_x observed_y
+   if {$x != $observed_x || $y != $observed_y} {error "OT_CLAND pinslot_profile guard moved off exact site $n"}
+  }
+  dict set skipped $i 1
+ }
+ puts "OT_CLAND pinslot_profile [dict size $skipped] fixed writer guards for $tag"
+ return $skipped
+}
+
+proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
  global ff_dbu ff_y0 ff_rh cland_cursor
  lassign $rect ax ay bx by
  set rest {}; set al {}
@@ -859,6 +908,7 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
   set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
  }
  if {!$n || $hi <= $lo || $dy < $dx} {
+  if {[llength $profile]} {error "OT_CLAND pinslot_profile requires an ordered east-facing y column ($tag)"}
   set sp [cland_fill_spread $ordered $rect $tag $sp]
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
   return [list 0 [llength $ordered] "pins not a y column in key order: old fill"]
@@ -872,10 +922,18 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
  set ::cland_pinslot_fit 1
  if {$xdesc} { set ::cland_xdesc 1 }
  try {
+ set skip {}
+ if {[llength $profile]} {
+  if {!$xdesc} {error "OT_CLAND pinslot_profile must face east ($tag)"}
+  lassign $profile inset edge guards
+  set skip [cland_pinslot_guard $ordered $guards $edge $rect $tag]
+  set ::cland_pinslot_row_cap [lmap q $inset {expr {round($q*$ff_dbu)}}]
+ }
  set j 0
  foreach e $al {
   set i [lindex $e 0]
   set ty [expr {$lo+($hi-$lo)*double($j)/($n-1)}]; incr j
+  if {[dict exists $skip $i]} {continue}
   set ry [expr {$ff_y0+int(round(($ty-$ff_rh/2.0-$ff_y0)/$ff_rh))*$ff_rh}]
   set w [list $ax [expr {max($ay,double($ry)/$ff_dbu)}] $bx $by]
   # target row to band top all taken: the whole band, first fit (fails closed with the usual error)
@@ -885,8 +943,11 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
   }
  }
  set cland_cursor {}
- foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
- } finally { unset -nocomplain ::cland_pinslot_fit ::cland_xdesc }
+ foreach pr $rest {
+  set i [lindex $pr 1]
+  if {![dict exists $skip $i]} {cland_put $i $rect $tag $psp 1}
+ }
+ } finally { unset -nocomplain ::cland_pinslot_fit ::cland_xdesc ::cland_pinslot_row_cap }
  return [list $n [llength $rest] "[expr {$xdesc ? {E face, from the band E edge, } : {}}]stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
 }
 # FLOW-12 10-30 (COORD 20:4x, DIE-HEAD-45 turn_b pin_reg_p90 92.5 with pinslot on): the +x column form of a ring whose
@@ -1325,7 +1386,13 @@ proc cland_place_ff {prefix rect tag} {
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
  if {[llength [info commands cland_group_prepare]]} { cland_group_prepare $ordered }
- set pinx {}
+ set pinx {}; set profile {}
+ if {[info exists ::cland_pinslot_profiles] && [dict exists $::cland_pinslot_profiles $prefix]} {
+  set profile [dict get $::cland_pinslot_profiles $prefix]
+  if {![info exists ::env(OT_CLAND_PINSLOT)] || $::env(OT_CLAND_PINSLOT) ne "1"} {
+   error "OT_CLAND pinslot_profile requires OT_CLAND_PINSLOT=1 ($prefix)"
+  }
+ }
  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
      && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag])
      && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
@@ -1356,7 +1423,12 @@ proc cland_place_ff {prefix rect tag} {
   # in key order: old fill").  Pins along x beyond the band's N/S edge in key order take the FLOW-12 face-strip column
   # form (the same tag with +x); it places nothing unless that holds, and the y-column form below runs as before.
   set xt [regsub {\+ff(r?)$} $tag {+x+ff\1}]
-  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp 1]
+  if {[llength $profile]} {
+   # The y-slot procedure checks the east-facing geometry before placing.
+   set pinx {0}
+  } else {
+   set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp 1]
+  }
   if {[lindex $pinx 0]} {
    lassign $pinx na nr how
    puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
@@ -1374,10 +1446,11 @@ proc cland_place_ff {prefix rect tag} {
    set ypsp [expr {max($ypsp,min(0.4*$::env(OT_CLAND_STRIP_ROWS),$sp))}]
    puts "OT_CLAND strip rows $tag: y-column spread [format %.4f $ypsp0] -> [format %.4f $ypsp] (band fill spread [format %.4f $sp])"
   }
-  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $ypsp] na nr how
+  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $ypsp $profile] na nr how
   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $ypsp]), $nr by the band cursor"
   }
  } else {
+  if {[llength $profile]} {error "OT_CLAND pinslot_profile needs a mapped east y pin column ($prefix)"}
   set sp [cland_fill_spread $ordered $rect $tag $sp]
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
@@ -1836,7 +1909,7 @@ foreach spec $cland_groups {
  }
  return -options $cland_opts $cland_err
 }
-unset -nocomplain ::cland_fill_dry
+unset -nocomplain ::cland_fill_dry ::cland_pinslot_profiles
 if {[llength $cland_fails]} {
  foreach cf $cland_fails {
   lassign $cf fp ft fr fe

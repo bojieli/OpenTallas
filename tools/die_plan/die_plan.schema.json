@@ -3189,7 +3189,51 @@
         }
        },
        "landing_contract": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+         "bands": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "object",
+           "properties": {
+            "pinslot_profile": {
+             "type": "object",
+             "additionalProperties": false,
+             "required": [
+              "inset_um",
+              "guard_east_um",
+              "guard_seats_um"
+             ],
+             "properties": {
+              "inset_um": {
+               "type": "array",
+               "minItems": 3,
+               "maxItems": 3,
+               "items": {
+                "type": "number"
+               }
+              },
+              "guard_east_um": {
+               "type": "number"
+              },
+              "guard_seats_um": {
+               "type": "object",
+               "minProperties": 1,
+               "additionalProperties": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                 "type": "number"
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
        },
        "pad_clock": {
         "type": "object",
