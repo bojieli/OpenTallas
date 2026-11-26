@@ -541,6 +541,22 @@ def output_qreg(plan, tn, bus):
     return bus in cfg
 
 
+def ctl_hold_hb4(plan, tn, bus):
+    """SEAMHOLD-CTL-K5-DI (HEAD-INT-R2 11-26): HB4 count in front of the three control inputs (cland_dn_ready_<bus>,
+    cland_dn_fault_<bus>, cland_fstart_in_<bus>) of landed input bus <bus> of type tn, from
+    partition_types[tn].clock.landing_ctl_hold_hb4 {bus: N}; 0 / absent = none (byte-same RTL).  A split copy
+    "<base>__<suffix>" reads its base.  Pure delay, no flop, no data or status cycle."""
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    cfg = (typ.get("clock") or {}).get("landing_ctl_hold_hb4")
+    if cfg is None:
+        return 0
+    if (not isinstance(cfg, dict) or not cfg
+            or any(type(v) is not int or not 1 <= v <= 8 or not re.fullmatch(r"[A-Za-z_]\w*", str(k)) for k, v in cfg.items())):
+        raise LandingError(f"{tn}: landing_ctl_hold_hb4 must map landed input buses to an HB4 count 1..8")
+    return int(cfg.get(bus, 0))
+
+
 def check_ca_freg_declared(plan, tn, bus, c, pid, err=None):
     """FREG-DECL-1 (COORD 11-11, fail closed): the count-aligned FREG face register (landing_ring_wreg.freg) delays data
     AND writer start one fclk; strap_ties adds K + 2 (WREG + FREG), so q is ONE clk later than the plan's geometric
@@ -2522,10 +2538,23 @@ class Landings:
                 # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
                 # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
                 ring = f"cland_ring_{b}"
+                hb_n = ctl_hold_hb4(self.plan, key, b) or ctl_hold_hb4(self.plan, tn, b)
+                d_ctl, d_fs = f"cland_dn_fault_{b}, cland_dn_ready_{b}", f"cland_fstart_in_{b}"
+                if hb_n:
+                    # SEAMHOLD-CTL-K5-DI: pads on the control bits only (never the data bus); the ring still sees the same bits
+                    if f".t_rst_n({d_fs})" not in ring_rst:
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_ctl_hold_hb4 needs the ring t_rst_n on cland_fstart_in_{b}"))
+                        continue
+                    logic += [f"    wire [1:0] cland_dn_ctl_hd_{b};  // SEAMHOLD-CTL-K5-DI hold pad: {hb_n} x HB4 per bit",
+                              f"    ot_dp_hd #(.W(2), .N({hb_n})) u_hdly_cland_ctl_{b} (.a({{{d_ctl}}}), .y(cland_dn_ctl_hd_{b}));",
+                              f"    wire cland_fs_hd_{b};  // SEAMHOLD-CTL-K5-DI hold pad: {hb_n} x HB4",
+                              f"    ot_dp_hd #(.W(1), .N({hb_n})) u_hdly_cland_fs_{b} (.a({d_fs}), .y(cland_fs_hd_{b}));"]
+                    d_ctl, d_fs = f"cland_dn_ctl_hd_{b}", f"cland_fs_hd_{b}"
+                    ring_rst = ring_rst.replace(f".t_rst_n(cland_fstart_in_{b})", f".t_rst_n({d_fs})")
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
                           f"    {ring_mod.format(w=w+2)} u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{{d_ctl}, {b}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]

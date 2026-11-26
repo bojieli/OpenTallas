@@ -3292,7 +3292,9 @@ def pin_entry_cell(T, signal):
     if T.get('root_entry_negedge'):
         return 'ot_dp_rrelay_nl'
     if T.get('pin_entry_phase'):
-        return 'ot_dp_rrelay_ph'
+        import pin_entry_phase as PH
+        n = PH.hb_count(T, signal)
+        return f'{PH.CELL_HB} #(.N({n}))' if n else 'ot_dp_rrelay_ph'
     return D.entry_cell(T, signal)
 
 

@@ -1063,6 +1063,11 @@ SCHEMA = {
                         # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff
                         # (pin_entry_phase.py); needs the 1-bit id_strap strap_rst_ph; instances give reset_entry_phase.
                         "pin_entry_phase": {"type": "boolean"},
+                        # SEAMHOLD-HB4-HOSTN-RST 11-26 (opt-in, needs pin_entry_phase): N kept HB4xp67 between the pin and the
+                        # phase entry's capture registers (pin_entry_phase.CELL_RTL_HB), 0 flops, 0 cycles.
+                        "pin_entry_hb4": {"type": "object", "additionalProperties": False, "minProperties": 1,
+                            "properties": {"reset": {"type": "integer", "minimum": 0, "maximum": 8},
+                                           "start": {"type": "integer", "minimum": 0, "maximum": 8}}},
                         # RESET-RELAY-GEN-R3 11-21: root entry u_rst_in = ot_dp_rrelay_nl (launch-side lockup, 0 cycles)
                         "root_entry_negedge": {"type": "boolean"},
                         # Exact physical input-to-capture technology chain; no new FF/cycle.
@@ -2228,6 +2233,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
     "type": "array", "minItems": 1, "uniqueItems": True,
     "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
+# SEAMHOLD-CTL-K5-DI 11-26 (opt-in, default absent = byte-identical): {landed input bus: N} puts N kept HB4xp67 (gen_rtl.ot_dp_hd,
+# instances u_hdly_cland_ctl_<bus> / u_hdly_cland_fs_<bus>) in front of the dataflow ring's three control inputs
+# cland_dn_ready_<bus>, cland_dn_fault_<bus> and cland_fstart_in_<bus> (the ring d bits above the data and t_rst_n): 0 flops,
+# 0 cycles.  For a seam whose receiver capture insertion exceeds the sender launch (host_w -> st_k5 d_i, FF hold -50 ps).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ctl_hold_hb4"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8},
+    "propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
 # CLAND-QREG-1 (opt-in, default absent = byte-identical): one rclk register stage on the landing ring output q of
 # each listed input bus (legacy and count-aligned rings), +1 data cycle on that crossing (counted by clock_landings).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_output_qreg"] = {

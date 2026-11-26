@@ -4155,6 +4155,12 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
     hb += [(int(s["hold_hb4"]), int(s["width"])) for s in P.types[tn].get("ft_slots", [])      # HOLDFORM-1 for ft slots
            if int(s.get("hold_hb4") or 0) > 0 and int(s.get("stations", 1)) > 0]
+    # SEAMHOLD-CTL-K5-DI: landing_ctl_hold_hb4 {bus: N} = N HB4 on 3 control bits (type-level ot_dp_hd, counted from the kit RTL)
+    hb += [(int(n), 3) for n in ((P.types[tn].get("clock") or {}).get("landing_ctl_hold_hb4") or {}).values() if int(n) > 0]
+    # SEAMHOLD-HB4-HOSTN-RST: reset.pin_entry_hb4 pads live inside the phase entry cell (u_rst_in / u_run_in .u_hdly_in, not counted in RTL)
+    _eh = (P.types[tn].get("reset") or {}).get("pin_entry_hb4") or {}
+    entry_hb = sum(int(v) for v in _eh.values())
+    hb += [(int(v), 1) for v in _eh.values() if int(v) > 0]
     lk = _lockup_pad_type(P, tn)
     if not hb and lk:
         return ("# latch_except_hb4 (clock.core_input_lockup): keep the bit-level lockup hold pads (u_hdly_lk_*, HB4xp67)\n"
@@ -4174,7 +4180,7 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
     if exact is not None:
         if exact > hi:
             raise ValueError(f"HOLDFORM-1 {tn}: the kit RTL declares {exact} hold-pad cells, more than the plan allows ({hi})")
-        lo = hi = exact
+        lo = hi = exact + entry_hb
     return ("# HOLDFORM-1: keep the ot_dp_hd hold pads (gen_rtl.HOLD_CELLS)\n"
             "set ot_hb {}\n"
             "foreach i [[ord::get_db_block] getInsts] {\n"

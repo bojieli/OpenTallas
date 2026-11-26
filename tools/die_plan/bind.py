@@ -1178,6 +1178,7 @@ def optional_gen_cells(raw, cells):
     for used, mod, text in ((gen_rtl.uses_entry_fall(raw), "ot_dp_rrelay_fn", gen_rtl.ENTRY_FALL_CELLS),
                             (PED.uses(raw), "ot_dp_rrelay_delay", PED.CELL_RTL),
                             (PEP.uses(raw), "ot_dp_rrelay_ph", PEP.CELL_RTL),
+                            (PEP.uses_hb(raw), "ot_dp_rrelay_ph_hb", PEP.CELL_RTL_HB),
                             (gen_rtl.uses_relay_lockup(raw, "negedge"), "ot_dp_rrelay_nl", gen_rtl.LOCKUP_CELLS)):
         if used and not re.search(r"^\s*module\s+" + re.escape(mod) + r"\b", cells, re.M):
             cells += "\n" + text
