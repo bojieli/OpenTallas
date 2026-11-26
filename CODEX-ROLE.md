@@ -103,3 +103,12 @@ up to 17 h (removed 11-24 04:3x).
 Any setting added for a takeover names this checklist in its comment, so the next handback finds it.
 
 **11-25 20:1x (COORD, OWNER ruling): track problem CLASSES, not items.** Use lanes/CLASSES.tsv and lanes/CLASS-MAP.tsv, owned by VIS-REOWN. Map every finding to a class_id and report only deltas (NEW classes, rising counts, unowned items). Convergence test, at each 09:00 and 21:00 cut: NEW classes go to about 0 and class counts fall. Two cuts without that is a LOOP, and it goes to the owner. Twice-daily cuts and lanes/CLOSURE.tsv also apply (OWNER 11-25 19:4x). Details are in handoff/claude_to_codex_1125_2005.md.
+
+## Standing owner instructions, 2026-11-26 PST
+
+- Give each independent problem one subagent and run independent owners in parallel. An integrator collects and combines completed fixes. Avoid putting unrelated work in an agent's serial queue.
+- Scan active types for each confirmed recurring failure class. Fix the shared source or generator where possible, prove it on a representative, and carry it across the matching cohort. Clear confirmed known defects before long physical trials or routing. Use the earliest short diagnostic when new actual physical evidence is essential.
+- Render and visually review the exact changed plan before kit submission, including every substantive revision after a failed review. Automatically dispatch an image-review subagent for the exact completed detailed placement. A missing, bad, or unresolved verdict holds routing. Reuse an already reviewed byte-identical artifact and preserve other admission and sign-off gates.
+- Parallelize every full-die bind across available admitted CPUs, using a current qualified runtime and the actual CPU and memory allocation. Run independent dies and design work concurrently. Keep forward progress of in-flight jobs.
+- Count qualifying sign-offs across any plan. Keep parent or die release checks intact. Codex may approve scoped latency increases or additional clock cycles after determining the affected interfaces and dates; the 833 ps clock remains fixed.
+- Batch small source changes, review notes, and ledger updates into meaningful milestone commits. Push an individual revision when a shared gate or another lane needs that exact revision. Publish live hold and review decisions immediately on the coordinator so the workers see them before the next batch commit.
