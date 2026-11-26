@@ -372,6 +372,9 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
             rep["steps"]["landreach"] = {f"{m['type']}/{m['landing']}": m["shift_um"] for m in lr["moved"]}
             rep["landreach"] = lr
             rep["seconds"]["landreach"] = round(time.time() - t0, 1)
+            if lr["moved"]:           # the re-seated types are changed types now: legal / tapname / landremap / retap must see them
+                types = touched_types(raw, braw)
+                rep["touched_types"] = types
         for name in STEPS:
             t0 = time.time()
             if name in skip:
