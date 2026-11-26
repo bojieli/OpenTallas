@@ -16,7 +16,7 @@ import re
 import sys
 
 COLS = ["lane", "die", "classes", "agent", "last_post", "status", "integrator"]
-INTEGRATOR = {"S81": "S81-INT-R2", "HEAD": "HEAD-INT-R2", "QC": "QC-INT-R2", "KV": "KV-INT-R2", "FLEET": "FLEET-OPS-R3"}
+INTEGRATOR = {"S81": "S81-INT-R2", "HEAD": "HEAD-INT-R2", "QC": "QC-INT-R2", "KV": "KV-INT-R2", "FLEET": "FLEET-OPS-R4"}
 STAMP = re.compile(r"^- (\d{4}-\d{2}-\d{2} \d{2}:\d{2})")
 DIE_TOKEN = re.compile(r"(?:^|[-_.])(S81|HEAD|QC|KV|FLEET)(?:[-_.]|$)", re.I)
 
@@ -66,8 +66,11 @@ def build(spec, dead_rows, posts_dir, active_since=""):
     out, seen = [], set()
     for r in spec:
         d = r["die"].upper()
+        lp = last_post(posts_dir, r["lane"])
+        # COORD 11-26 14:52: a lane with no post in the window is pruned from the live map (die integrators stay: notices fall through to them)
+        live = (not active_since) or r["lane"] in INTEGRATOR.values() or (lp != "" and lp >= active_since)
         out.append({"lane": r["lane"], "die": d, "classes": r.get("classes", ""), "agent": r.get("agent", "") or "-",
-                    "last_post": last_post(posts_dir, r["lane"]), "status": "live", "integrator": INTEGRATOR.get(d, "COORD")})
+                    "last_post": lp, "status": "live" if live else "dead", "integrator": INTEGRATOR.get(d, "COORD")})
         seen.add(r["lane"])
     for r in dead_rows:
         if r["lane"] in seen:
@@ -106,6 +109,7 @@ def main(argv=None):
     b.add_argument("--dead-from", default="")
     b.add_argument("--posts", required=True)
     b.add_argument("--out", required=True)
+    b.add_argument("--dead-out", default="", help="write the dead rows here (post_redirect reads both files); --out then holds live lanes only")
     b.add_argument("--active-hours", type=float, default=0, help="also add every posting lane: live when it posted within this many hours")
     r = sub.add_parser("resolve")
     r.add_argument("name")
@@ -119,10 +123,14 @@ def main(argv=None):
         import datetime
         since = (datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-8))) - datetime.timedelta(hours=a.active_hours)).strftime("%Y-%m-%d %H:%M")
     rows = build(read_tsv(a.spec), read_tsv(a.dead_from) if a.dead_from else [], a.posts, since)
-    with open(a.out, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=COLS, delimiter="\t", lineterminator="\n")
-        w.writeheader()
-        w.writerows(rows)
+    live_rows = [x for x in rows if x["status"] == "live"] if a.dead_out else rows
+    for path, rs in ((a.out, live_rows), (a.dead_out, [x for x in rows if x["status"] != "live"])):
+        if not path:
+            continue
+        with open(path, "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=COLS, delimiter="\t", lineterminator="\n")
+            w.writeheader()
+            w.writerows(rs)
     print(f"{sum(1 for x in rows if x['status'] == 'live')} live, {sum(1 for x in rows if x['status'] == 'dead')} dead -> {a.out}")
     return 0
 

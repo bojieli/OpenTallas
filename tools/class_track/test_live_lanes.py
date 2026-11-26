@@ -30,3 +30,14 @@ def test_active_lanes_added_case_insensitive(tmp_path):
     by = {r["lane"]: r for r in rows}
     assert by["HEAD-INT-R2"]["last_post"] == "2026-11-26 10:23" and len(rows) == 3
     assert by["QC-NEW"]["status"] == "live" and by["S81-OLD"]["status"] == "dead" and by["S81-OLD"]["integrator"] == "S81-INT-R2"
+
+
+def test_quiet_spec_lane_pruned_integrator_kept(tmp_path):
+    posts = tmp_path / "posts"
+    posts.mkdir()
+    (posts / "S81-OLD-SUB.md").write_text("- 2026-11-26 01:00 PST x\n")
+    (posts / "S81-INT-R2.md").write_text("- 2026-11-25 01:00 PST x\n")
+    spec = [{"lane": "S81-OLD-SUB", "die": "S81", "classes": "", "agent": ""}, {"lane": "S81-INT-R2", "die": "S81", "classes": "", "agent": ""}]
+    by = {r["lane"]: r for r in ll.build(spec, [], str(posts), "2026-11-26 06:00")}
+    assert by["S81-OLD-SUB"]["status"] == "dead" and by["S81-INT-R2"]["status"] == "live"
+    assert ll.INTEGRATOR["FLEET"] == "FLEET-OPS-R4"
