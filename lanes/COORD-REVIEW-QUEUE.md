@@ -13286,3 +13286,5 @@ FAILED [AUTOPILOT 5e6d78b8b430] 2026-11-25 19:54:48 PST AUTOPILOT -> KIT-WAVE-12
   - P2 pilots relaunched on the real R7 bind; the earlier bind_r3 was probe-only, with no bound_top.
   - The R6 baselines failed because their specs had no tools_rt (stale tree tools); relaunching them on the rt.
   DECISION: the pc_es4 R6 baseline, pc_v1 cl7f r8e7d31598, FAILS at place on epyc10 with OT_CLAND no legal row/site for u_cland_reader_start_i_embgw_est_5. Count that as a pre-existing R6 failure? Then P2 pc_es4 passes if it adds nothing beyond that class. Recommend YES; owner KV-PC-BANK.
+- 2026-11-25 20:15 PST CANARY s81_head @ 5d4d6629a6: PASS (NO-REGRESSION within tolerance of baseline canary-passed-main /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_df947261c_1125_013030_169890)
+  [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
