@@ -1,0 +1,3 @@
+partition_types.coll_ftn.clock.landing_contract.collector_tree.relays* # QC-COLLFTN-REFLOOR: collector tree re-solved by retap --republish-reset on the 432-wide outline (44->24 relays)
+clock.tap_offset.per_port_ps.coll_ftn.clk_t* # QC-COLLFTN-REFLOOR: density taps re-solved on the shrunk outline (12->11), rows rebuilt by retap TAPOFF
+partition_types.coll_ftn.clock.* # QC-COLLFTN-REFLOOR: coll_ftn clock contract re-derived (retap)

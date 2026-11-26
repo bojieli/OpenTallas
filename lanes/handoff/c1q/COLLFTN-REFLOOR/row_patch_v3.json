@@ -1,0 +1,1646 @@
+{
+ "schema": "opentallas.qc_row_patch.v1",
+ "row": "QC-COLLFTN-REFLOOR C1q",
+ "base_plan_sha256": "de1cef5cf59dced2ead68635a96c2b31673b0eb2f47bc607d584ad9126450bdf",
+ "result_plan_sha256": "155f0ffc9c8c9ee9cab4fa33435ddd369b3f6cc8c18a486f0efd5353225b27e5",
+ "ops": [
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk",
+    "FF"
+   ],
+   "value": 12.6
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk",
+    "TT"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t1",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t10",
+    "FF"
+   ],
+   "value": 7.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t10",
+    "TT"
+   ],
+   "value": 7.5
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t10",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "remove",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t11"
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t3",
+    "FF"
+   ],
+   "value": 11.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t3",
+    "TT"
+   ],
+   "value": 13.2
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t3",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t4",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t5",
+    "FF"
+   ],
+   "value": -0.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t5",
+    "TT"
+   ],
+   "value": -0.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t5",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t7",
+    "FF"
+   ],
+   "value": -14.3
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t7",
+    "TT"
+   ],
+   "value": -17.3
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t7",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t8",
+    "FF"
+   ],
+   "value": 0.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t8",
+    "TT"
+   ],
+   "value": 0.0
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t8",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t9",
+    "FF"
+   ],
+   "value": -1.3
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t9",
+    "TT"
+   ],
+   "value": -0.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "clock",
+    "tap_offset",
+    "per_port_ps",
+    "coll_ftn",
+    "clk_t9",
+    "tol"
+   ],
+   "value": 14.8
+  },
+  {
+   "op": "replace",
+   "path": [
+    "die",
+    "channels"
+   ],
+   "value": [
+    {
+     "rect_um": [
+      0.0,
+      4648.32,
+      777.6,
+      7292.16
+     ],
+     "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth (1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD field, no logic"
+    },
+    {
+     "rect_um": [
+      0.0,
+      12216.96,
+      777.6,
+      13694.4
+     ],
+     "reason": "west-strip edge column above tt_ctlm: same strip-depth reason; decap"
+    },
+    {
+     "rect_um": [
+      0.0,
+      15759.36,
+      1563.84,
+      25643.52
+     ],
+     "reason": "west strip above serdes S3: IO content (16.07 mm tall) is shorter than the compute column (26.27 mm); strip width = serdes PHY depth. Bump/decap field; spare for the KV-die UCIe second port if the TP8 pair needs it"
+    },
+    {
+     "rect_um": [
+      1209.6,
+      12260.16,
+      1563.84,
+      12908.16
+     ],
+     "reason": "QC-COLLFTN-REFLOOR C1q: east part of the old coll_f5 (coll_ftn) slot; coll column width is set by the 786.24 um coll stack, coll_ftn feedthrough content is 0-245 um (+ start-stage spine at 395-400). Decap/bump field, no logic; die-level route only (coll_f5 cland monitor 3 nets to sl_W5_fw.W)"
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_local_sources"
+   ],
+   "value": [
+    {
+     "name": "crec_rx_s0_i",
+     "ready": "landing_ready_crec_rx_s0_i",
+     "fault": "landing_fault_crec_rx_s0_i",
+     "tap": 9,
+     "xy_um": [
+      61.488,
+      648.0
+     ],
+     "pin_xy_um": [
+      61.488,
+      648.0
+     ],
+     "band": {
+      "rect_um": [
+       17.28,
+       589.68,
+       131.616,
+       630.72
+      ],
+      "width": 547,
+      "ring_width": 576,
+      "live_data_storage_flops": 2740,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 128.448,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_rx_s0_i",
+      "resized_from_um": [
+       17.28,
+       606.96,
+       131.616,
+       630.72
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "ring_place": "ff"
+     },
+     "node": "rst_n_t9"
+    },
+    {
+     "name": "crec_tx_s0_i",
+     "ready": "landing_ready_crec_tx_s0_i",
+     "fault": "landing_fault_crec_tx_s0_i",
+     "tap": 4,
+     "xy_um": [
+      176.584,
+      0
+     ],
+     "pin_xy_um": [
+      176.584,
+      0
+     ],
+     "band": {
+      "rect_um": [
+       119.616,
+       17.28,
+       233.552,
+       41.04
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 98.008,
+      "area_reserve_um2": 2636.064,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_tx_s0_i"
+     },
+     "node": "rst_n_t4"
+    },
+    {
+     "name": "fltk_i",
+     "ready": "landing_ready_fltk_i",
+     "fault": "landing_fault_fltk_i",
+     "tap": 10,
+     "xy_um": [
+      234.712,
+      648.0
+     ],
+     "pin_xy_um": [
+      234.712,
+      648.0
+     ],
+     "band": {
+      "rect_um": [
+       230.392,
+       451.44,
+       239.032,
+       535.68
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 200.88,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltk_i",
+      "resized_from_um": [
+       230.392,
+       583.2,
+       239.032,
+       630.72
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "ring_place": "ff"
+     },
+     "node": "rst_n_t10"
+    },
+    {
+     "name": "fltv_i",
+     "ready": "landing_ready_fltv_i",
+     "fault": "landing_fault_fltv_i",
+     "tap": 10,
+     "xy_um": [
+      237.176,
+      648.0
+     ],
+     "pin_xy_um": [
+      237.176,
+      648.0
+     ],
+     "band": {
+      "rect_um": [
+       232.856,
+       546.48,
+       241.496,
+       630.72
+      ],
+      "width": 12,
+      "ring_width": 64,
+      "live_data_storage_flops": 65,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 105.84,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltv_i",
+      "resized_from_um": [
+       232.856,
+       535.68,
+       241.496,
+       583.2
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "ring_place": "ff"
+     },
+     "node": "rst_n_t10"
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "depth"
+   ],
+   "value": 4
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "max_hop_um"
+   ],
+   "value": 268.9
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "n_clock_taps"
+   ],
+   "value": 11
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "n_pad"
+   ],
+   "value": 12
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "n_reset_consumers"
+   ],
+   "value": 11
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "n_tree"
+   ],
+   "value": 12
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "own_depth"
+   ],
+   "value": 4
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "relays"
+   ],
+   "value": [
+    {
+     "name": "u_rrl_0",
+     "xy": [
+      405.024,
+      17.312
+     ],
+     "d": "rst_root_n",
+     "q": "rst_rl_0",
+     "depth": 1,
+     "tap": 2,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_1",
+     "xy": [
+      405.024,
+      17.312
+     ],
+     "d": "rst_rl_0",
+     "q": "rst_rl_1",
+     "depth": 2,
+     "tap": 2,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_2",
+     "xy": [
+      405.024,
+      17.312
+     ],
+     "d": "rst_rl_1",
+     "q": "rst_rl_2",
+     "depth": 3,
+     "tap": 2,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_3",
+     "xy": [
+      405.024,
+      17.312
+     ],
+     "d": "rst_rl_2",
+     "q": "rst_n_t2",
+     "depth": 4,
+     "tap": 2,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_4",
+     "xy": [
+      210.592,
+      37.792
+     ],
+     "d": "rst_root_n",
+     "q": "rst_rl_4",
+     "depth": 1,
+     "tap": 4,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_5",
+     "xy": [
+      210.592,
+      37.792
+     ],
+     "d": "rst_rl_4",
+     "q": "rst_rl_5",
+     "depth": 2,
+     "tap": 4,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_6",
+     "xy": [
+      210.592,
+      37.792
+     ],
+     "d": "rst_rl_5",
+     "q": "rst_rl_6",
+     "depth": 3,
+     "tap": 4,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_7",
+     "xy": [
+      210.592,
+      37.792
+     ],
+     "d": "rst_rl_6",
+     "q": "rst_n_t4",
+     "depth": 4,
+     "tap": 4,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_8",
+     "xy": [
+      70.176,
+      17.312
+     ],
+     "d": "rst_rl_5",
+     "q": "rst_rl_8",
+     "depth": 3,
+     "tap": 1,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_9",
+     "xy": [
+      70.176,
+      17.312
+     ],
+     "d": "rst_rl_8",
+     "q": "rst_n_t1",
+     "depth": 4,
+     "tap": 1,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_10",
+     "xy": [
+      70.176,
+      286.176
+     ],
+     "d": "rst_rl_8",
+     "q": "rst_n_t6",
+     "depth": 4,
+     "tap": 6,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_11",
+     "xy": [
+      145.824,
+      37.792
+     ],
+     "d": "rst_rl_5",
+     "q": "rst_rl_11",
+     "depth": 3,
+     "tap": 3,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_12",
+     "xy": [
+      145.824,
+      37.792
+     ],
+     "d": "rst_rl_11",
+     "q": "rst_n_t3",
+     "depth": 4,
+     "tap": 3,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_13",
+     "xy": [
+      232.224,
+      253.792
+     ],
+     "d": "rst_rl_5",
+     "q": "rst_rl_13",
+     "depth": 3,
+     "tap": 5,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_14",
+     "xy": [
+      232.224,
+      253.792
+     ],
+     "d": "rst_rl_13",
+     "q": "rst_n_t5",
+     "depth": 4,
+     "tap": 5,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_15",
+     "xy": [
+      178.208,
+      318.624
+     ],
+     "d": "rst_rl_13",
+     "q": "rst_n_t0",
+     "depth": 4,
+     "tap": 0,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_16",
+     "xy": [
+      394.208,
+      224.38400000000001
+     ],
+     "d": "rst_root_n",
+     "q": "rst_rl_16",
+     "depth": 1,
+     "tap": null,
+     "kind": "wire"
+    },
+    {
+     "name": "u_rrl_17",
+     "xy": [
+      394.208,
+      469.792
+     ],
+     "d": "rst_rl_16",
+     "q": "rst_rl_17",
+     "depth": 2,
+     "tap": 7,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_18",
+     "xy": [
+      394.208,
+      469.792
+     ],
+     "d": "rst_rl_17",
+     "q": "rst_rl_18",
+     "depth": 3,
+     "tap": 7,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_19",
+     "xy": [
+      394.208,
+      469.792
+     ],
+     "d": "rst_rl_18",
+     "q": "rst_n_t7",
+     "depth": 4,
+     "tap": 7,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_20",
+     "xy": [
+      232.224,
+      556.192
+     ],
+     "d": "rst_rl_17",
+     "q": "rst_rl_20",
+     "depth": 3,
+     "tap": 8,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_21",
+     "xy": [
+      232.224,
+      556.192
+     ],
+     "d": "rst_rl_20",
+     "q": "rst_n_t8",
+     "depth": 4,
+     "tap": 8,
+     "kind": "pad"
+    },
+    {
+     "name": "u_rrl_22",
+     "xy": [
+      80.992,
+      610.208
+     ],
+     "d": "rst_rl_20",
+     "q": "rst_n_t9",
+     "depth": 4,
+     "tap": 9,
+     "kind": "tap"
+    },
+    {
+     "name": "u_rrl_23",
+     "xy": [
+      189.024,
+      630.688
+     ],
+     "d": "rst_rl_20",
+     "q": "rst_n_t10",
+     "depth": 4,
+     "tap": 10,
+     "kind": "tap"
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "root"
+   ],
+   "value": [
+    423.84,
+    8.608
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "start_in"
+   ],
+   "value": [
+    422.88,
+    10.272
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "start_raw_used"
+   ],
+   "value": [
+    "rr_t5",
+    "rr_t6",
+    "rr_t8",
+    "rr_t9"
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "tap_depth"
+   ],
+   "value": {
+    "0": 3,
+    "1": 2,
+    "2": 1,
+    "3": 2,
+    "4": 1,
+    "5": 2,
+    "6": 3,
+    "7": 2,
+    "8": 3,
+    "9": 4,
+    "10": 4
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "tap_roles"
+   ],
+   "value": {
+    "0": "mission",
+    "1": "mission",
+    "2": "mission",
+    "3": "mission",
+    "4": "mission",
+    "5": "mission",
+    "6": "mission",
+    "7": "mission",
+    "8": "mission",
+    "9": "mission",
+    "10": "mission"
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "collector_tree",
+    "taps"
+   ],
+   "value": [
+    "clk",
+    "clk_t1",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9",
+    "clk_t10"
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_contract",
+    "pins"
+   ],
+   "value": [
+    {
+     "name": "fclk_in_crec_rx_s0_i",
+     "dir": "in",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      61.536,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_fstart_in_crec_rx_s0_i",
+     "dir": "in",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      70.176,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_in_crec_tx_s0_i",
+     "dir": "in",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      176.48,
+      2.656
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_fstart_in_crec_tx_s0_i",
+     "dir": "in",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      185.12,
+      2.656
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_in_fltk_i",
+     "dir": "in",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      234.784,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_fstart_in_fltk_i",
+     "dir": "in",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      243.424,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_in_fltv_i",
+     "dir": "in",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      237.088,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_fstart_in_fltv_i",
+     "dir": "in",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      245.728,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_out_crec_rx_s0_o",
+     "dir": "out",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      61.536,
+      2.656
+     ],
+     "epoch": false,
+     "source_clock_port": "clk_t1",
+     "source_clock_tap": "clk_t1"
+    },
+    {
+     "name": "cland_fstart_out_crec_rx_s0_o",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      70.176,
+      2.656
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_out_crec_tx_s0_o",
+     "dir": "out",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      176.48,
+      645.344
+     ],
+     "epoch": false,
+     "source_clock_port": "clk_t8",
+     "source_clock_tap": "clk_t8"
+    },
+    {
+     "name": "cland_fstart_out_crec_tx_s0_o",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      185.12,
+      645.344
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_out_fltk_o",
+     "dir": "out",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      234.784,
+      2.656
+     ],
+     "epoch": false,
+     "source_clock_port": "clk",
+     "source_clock_tap": "clk"
+    },
+    {
+     "name": "cland_fstart_out_fltk_o",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      243.424,
+      2.656
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_out_fltv_o",
+     "dir": "out",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      237.088,
+      2.656
+     ],
+     "epoch": false,
+     "source_clock_port": "clk",
+     "source_clock_tap": "clk"
+    },
+    {
+     "name": "cland_fstart_out_fltv_o",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      245.728,
+      2.656
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_up_ready",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      429.856,
+      12.768
+     ],
+     "epoch": false
+    },
+    {
+     "name": "cland_up_fault",
+     "dir": "out",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      429.856,
+      14.624
+     ],
+     "epoch": false
+    },
+    {
+     "name": "fclk_out_cland_up",
+     "dir": "out",
+     "kind": "clock",
+     "layer": "M7",
+     "xy_um": [
+      429.856,
+      10.272
+     ],
+     "epoch": false,
+     "source_clock_port": "clk_t2",
+     "source_clock_tap": "clk_t2"
+    },
+    {
+     "name": "cland_tstart_in",
+     "dir": "in",
+     "kind": "ctl",
+     "layer": "M7",
+     "xy_um": [
+      199.2,
+      129.632
+     ],
+     "epoch": false
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "crec_rx_s0_i"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       114.48,
+       539.21
+      ],
+      "raw_reset": "rr_t9"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "crec_tx_s0_i"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       178.31,
+       172.27
+      ],
+      "raw_reset": "rr_t5"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "fltk_i"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       216.61,
+       469.48
+      ],
+      "raw_reset": "rr_t8"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_reader_start",
+    "branches",
+    "fltv_i"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       214.19,
+       520.65
+      ],
+      "raw_reset": "rr_t8"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "fltk_o"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       211.78,
+       192.8
+      ],
+      "raw_reset": "rr_t5"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "landing_writer_start",
+    "branches",
+    "fltv_o"
+   ],
+   "value": {
+    "stages": [
+     {
+      "xy_um": [
+       212.92,
+       192.79
+      ],
+      "raw_reset": "rr_t5"
+     }
+    ]
+   }
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "sink_bins_file"
+   ],
+   "value": "physical/die_plan/qwen_compute/plan_of_record/sink_bins/hf1c/coll_ftn_c1q_refloor.json"
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "tap_um"
+   ],
+   "value": [
+    129.6,
+    302.4
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "clock",
+    "taps"
+   ],
+   "value": [
+    {
+     "name": "glue",
+     "kind": "glue",
+     "xy": [
+      397.44,
+      302.4
+     ],
+     "insertion_ps": 244,
+     "insertion_tol_ps": 40,
+     "from_root_um": 267.84
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "count_straps"
+   ],
+   "value": [
+    {
+     "name": "strap_ca_efall",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       129.624,
+       302.4
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_crec_rx_s0_i",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       125.304,
+       302.4
+      ],
+      [
+       129.624,
+       306.72
+      ],
+      [
+       133.944,
+       302.4
+      ],
+      [
+       129.624,
+       298.08
+      ],
+      [
+       120.984,
+       302.4
+      ],
+      [
+       125.304,
+       306.72
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_crec_tx_s0_i",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       129.624,
+       311.04
+      ],
+      [
+       133.944,
+       306.72
+      ],
+      [
+       138.264,
+       302.4
+      ],
+      [
+       125.304,
+       298.08
+      ],
+      [
+       129.624,
+       293.76
+      ],
+      [
+       133.944,
+       298.08
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_fltk_i",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       120.984,
+       306.72
+      ],
+      [
+       125.304,
+       311.04
+      ],
+      [
+       129.624,
+       315.36
+      ],
+      [
+       133.944,
+       311.04
+      ],
+      [
+       138.264,
+       306.72
+      ],
+      [
+       142.584,
+       302.4
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_fltv_i",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       116.616,
+       302.4
+      ],
+      [
+       120.984,
+       298.08
+      ],
+      [
+       125.304,
+       293.76
+      ],
+      [
+       129.624,
+       289.44
+      ],
+      [
+       133.944,
+       293.76
+      ],
+      [
+       138.264,
+       298.08
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_pad",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M5",
+     "sites_um": [
+      [
+       120.984,
+       311.04
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "note"
+   ],
+   "value": "west strip: io_collective segment coll_ftn (QC-FIX: coll split along y into 9 abutted segments <= 1209.6 um, one tap + reset sync each; face cores at their PHYs; face<->core records = plan lanes with stations). Carry-over: E/W seam pins M6 only (flx R M4 hotspot on the PHY side); codec_pl landing in coll_c; est. std-cell fill 0.01 at util 0.6: 50% of M4-M7 to ft | QC-PLAN-M S4q9l2d (d) 11-16 option 1: coll_f4 (coll_ftc) +43.2 um top / coll_f5 (coll_ftn) -43.2 um bottom (origin y +43.2); sl_W5_fw.W / coll_f4.E re-packed per pin over the longer face | QC-COLLFTN-REFLOOR C1q 11-25 (FABLE rev3 coll_ftn): outline 786.24 -> 432.00 wide, origin kept; x 432-786 freed as die channel (no logic; carries only the coll_f5<->sl_W5_fw cland monitor seam, gap 354.24 um < 405 hop); clock/reset root 388.8 -> 129.6 over the bus strip (glue tap stays on START node b914 at 397.44, from_root 8.6 -> 267.84), count straps moved with the tap; bus pins already x-aligned per bus (crec_rx 4.3-118.7 N=S, crec_tx 119.6-233.6 S=N, fltk/fltv 233-239), stations already in-column (rx x61, tx x177, flt x234-238, y 216/432): unchanged. Not 250 um: the die start-stage spine nodes r914_0/b914 sit at x 395.3-399.6 and the cland monitor to sl_W5_fw needs E-face gap <= ~380 um; a 250-wide form needs spine re-route + monitor retarget (types slw_fw_v3/coll_ftc) | QC-COLLFTN-REFLOOR v3: E-face reset/monitor block (reset entry, cland_up pins, collector tree, anchor relays) moved -354.24 to the new E face, y kept (sl_W5_fw W-face pins / reset sender unchanged); sink bins file physical/die_plan/qwen_compute/plan_of_record/sink_bins/hf1c/coll_ftn_c1q_refloor.json (6 bins moved inside)"
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "outline_um"
+   ],
+   "value": [
+    432.0,
+    648.0
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "partition_types",
+    "coll_ftn",
+    "reset",
+    "tap_um"
+   ],
+   "value": [
+    129.6,
+    302.4
+   ]
+  },
+  {
+   "op": "replace",
+   "path": [
+    "reset",
+    "in_sites",
+    "coll_ftn"
+   ],
+   "value": [
+    423.84,
+    8.608
+   ]
+  }
+ ]
+}
