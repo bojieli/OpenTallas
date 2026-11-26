@@ -579,3 +579,4 @@ time	die	class	state	posted	text
 2026-11-26 12:05:51	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
 2026-11-26 12:16:18	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
 2026-11-26 12:26:30	s81_head	NO-PROGRESS	alert	yes	NO-PROGRESS s81_head: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 104 min (last 10:41) and 0 private-spec launches for 60 min (last 11:23 ot-run HEAD-SERDES-R2 hd_serdes); no current launch blocker logged
+2026-11-26 13:06:44	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
