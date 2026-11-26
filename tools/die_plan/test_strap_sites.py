@@ -20,3 +20,23 @@ def test_declared_interior_skips_tile_id_and_reads_other_pins():
     t = dict(count_straps=[dict(name="strap_u_t_2_3_tile_id", sites_um=[[1, 1]]), dict(name="strap_ca_pad", sites_um=[[5.0, 6.0]])],
              clock=dict(taps=[dict(xy=[7, 8])], landing_contract=dict(pins=[dict(xy_um=[9, 10])])))
     assert sorted(SS._declared_interior(t)) == [(5.0, 6.0), (7.0, 8.0), (9.0, 10.0)]
+
+
+def test_native_count_sites_move_only_measured_opposite_bits():
+    from types import SimpleNamespace
+
+    name = "strap_ca_k_ft0_i"
+    t = {"outline_um": [100, 100], "count_straps": [
+        {"name": name, "width": 2, "layer": "M7", "sites_um": [[20, 4.32], [22.16, 4.32]]}],
+        "clock": {"keepouts_um": [[18, 88, 22, 92]]}}
+    P = SimpleNamespace(types={"io": t}, layers={})
+    census = {f"{name}[0]": ((20, 4.32), [(20, 90)]), f"{name}[1]": ((22.16, 4.32), [(22.16, 20)])}
+    rows, skipped = SS.site_placed_count_straps(P, "io", census)
+    assert not skipped
+    row = rows[name]
+    assert row["moved_bits"] == [0]
+    assert row["sites_um"][1] == [22.16, 4.32]
+    x, y = row["sites_um"][0]
+    assert not (18 <= x <= 22 and 88 <= y <= 92)
+    assert row["max_after_um"] < 10
+    assert t["count_straps"][0]["sites_um"][0] == [20, 4.32]
