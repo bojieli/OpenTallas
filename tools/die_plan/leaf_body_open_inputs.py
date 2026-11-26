@@ -14,6 +14,9 @@ from pathlib import Path
 import die_port_bind as D
 
 
+_INSTANCE_HEAD = re.compile(r'\s*([A-Za-z_]\w*|\\\S+)\s*(?:\[[^\]]*\]\s*)*\(')
+
+
 def _instances(body):
     """[(master, inst, connection text or None)] for 'M [#(...)] I [range] (...)' at statement boundaries."""
     masked = D._unlabel(D._lexical_mask(body, strings=True))
@@ -31,10 +34,11 @@ def _instances(body):
                 i = D._closing_paren_masked(masked, j) + 1
             except ValueError:
                 continue
-        im = re.match(r'\s*([A-Za-z_]\w*|\\\S+)\s*(?:\[[^\]]*\]\s*)*\(', masked[i:])
+        # Match at an offset without copying the rest of a large module for every candidate.
+        im = _INSTANCE_HEAD.match(masked, i)
         if not im or im.group(1) in D._SV_KW:
             continue
-        k = i + im.end() - 1
+        k = im.end() - 1
         try:
             e = D._closing_paren_masked(masked, k)
         except ValueError:
