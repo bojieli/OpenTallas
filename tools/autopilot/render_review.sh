@@ -6,13 +6,14 @@
 set -uo pipefail
 REV=$(cd "$1" && pwd)
 read -r KIT ODB IMG ID MEM SP < <(python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["kit"],d["odb"],d["image"],d["id"],d.get("mem_gb",8),int(bool(d.get("stage_paths"))))' "$REV/review.json")
-case "$ODB" in "$KIT"/*) REL=${ODB#"$KIT"/} ;; *) echo "AP_REVIEW_ERROR odb $ODB not inside kit $KIT"; exit 2 ;; esac
+# FABLE-FLOW-1920 F5: a checkpoint render reads its private snapshot copy in the review dir (noprog_watchdog odb_snapshot), deleted when the render ends
+case "$ODB" in "$REV"/snap_*.odb) DBP=/rev/${ODB#"$REV"/}; trap 'rm -f "$ODB"' EXIT ;; "$KIT"/*) DBP=/kit/${ODB#"$KIT"/} ;; *) echo "AP_REVIEW_ERROR odb $ODB not inside kit $KIT"; exit 2 ;; esac
 test -f "$ODB" || { echo "AP_REVIEW_ERROR routed ODB missing: $ODB"; exit 2; }
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
-printf 'read_db /kit/%s\nsource /rev/tools/layout_dump.tcl\n' "$REL" > "$REV/dump.tcl"
+printf 'read_db %s\nsource /rev/tools/layout_dump.tcl\n' "$DBP" > "$REV/dump.tcl"
 # stage_paths (SMELL / checkpoint renders, no sign-off STA yet): worst-50 setup + hold paths of this DB for the paths.png overlay
 if [ "${SP:-0}" = 1 ] && [ -f "$REV/tools/stage_paths.tcl" ]; then
-  printf 'set ::env(SP_ODB) /kit/%s\nset ::env(SP_OUT) /rev\nsource /rev/tools/stage_paths.tcl\n' "$REL" >> "$REV/dump.tcl"
+  printf 'set ::env(SP_ODB) %s\nset ::env(SP_OUT) /rev\nsource /rev/tools/stage_paths.tcl\n' "$DBP" >> "$REV/dump.tcl"
 fi
 $DK run --rm --name "ap-render-$ID-$$" --cpus 2 --memory "${MEM}g" --memory-swap "${MEM}g" -v "$KIT":/kit:ro -v "$REV":/rev \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_LAYOUT_OUT=/rev/layout.json -w /rev "$IMG" bash -lc \

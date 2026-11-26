@@ -115,8 +115,11 @@ def mkkit(tmp_path, names=("3_3_place_gp.odb", "5_1_grt.odb"), old=True):
     work = tmp_path / "kit"
     d = work / "run/results/asap7/d/base"
     d.mkdir(parents=True)
+    lg = work / "run/logs/asap7/d/base"
+    lg.mkdir(parents=True)
     for n in names:
         (d / n).write_text("odb")
+        (lg / n.replace(".odb", ".log")).write_text("...\nElapsed time: 0:12.34[h:]min:sec. CPU time: user 1 sys 0 (99%). Peak memory: 100KB.\n")      # F5: the stage has ended
         if old:
             os.utime(d / n, (1_000_000, 1_000_000))
     return str(work)
@@ -358,3 +361,105 @@ def test_sta_numbers_reach_the_vis_rows_and_a_wns_below_150_is_a_smell(tmp_path,
     p = [x for x in posted(tmp_path) if "STA-WNS" in x]
     assert len(p) == 1 and "FP-CONVERGE-S81, S81-ALLFIX-INT" in p[0]
     assert nw.vis_sta_sync(str(q), runner, post=True, now=NOW) == 0          # filled rows are not redone
+
+
+# ---------------------------------------------------------------- FABLE-FLOW-1920 F5 / H6 (VIS-REOWN 11-25): no render of a DB whose stage still runs or that changes under it
+def test_stage_done_reads_the_elapsed_line_or_a_newer_later_stage(tmp_path):
+    work = tmp_path / "kit"
+    d, lg = work / "run/results/asap7/d/base", work / "run/logs/asap7/d/base"
+    d.mkdir(parents=True); lg.mkdir(parents=True)
+    gp = d / "3_3_place_gp.odb"
+    gp.write_text("odb"); os.utime(gp, (1_000_000, 1_000_000))
+    (lg / "3_3_place_gp.log").write_text("global placement iteration 400\n")           # still running
+    assert not nw.stage_done(str(gp))
+    (d / "3_place.odb").write_text("odb"); os.utime(d / "3_place.odb", (900_000, 900_000))       # a later stage, but OLDER (resumed kit): proves nothing
+    assert not nw.stage_done(str(gp))
+    os.utime(d / "3_place.odb", (1_000_100, 1_000_100))
+    assert nw.stage_done(str(gp))
+    os.remove(d / "3_place.odb")
+    (lg / "3_3_place_gp.log").write_text("x\nElapsed time: 20:21.94[h:]min:sec. CPU time: user 1661.31 sys 46.04 (139%). Peak memory: 3941092KB.\n")
+    assert nw.stage_done(str(gp))
+    grt = d / "5_1_grt.odb"
+    grt.write_text("odb"); os.utime(grt, (1_000_000, 1_000_000))
+    (lg / "5_1_grt.tmp.log").write_text("x\nElapsed time: 1:00\n")                    # its own temp log is not a later stage
+    assert not nw.stage_done(str(grt))
+
+
+def test_vis_candidates_skip_a_running_stage(tmp_path):
+    work = mkkit(tmp_path)
+    (tmp_path / "kit/run/logs/asap7/d/base/5_1_grt.log").write_text("[INFO GRT-0101] Running extra iterations\n")
+    assert [c for c, _, _ in nw.vis_candidates(work, {})] == ["PLACE-GP"]
+
+
+def _failed_render(work, cp, odb, log, stamp):
+    rd = os.path.join(work, "vis_review", f"{cp.lower()}-{stamp}")
+    os.makedirs(rd)
+    open(os.path.join(rd, "SMELL.txt"), "w").write(f"kit {work}\nstage {cp.lower()}\nodb {odb}\n")
+    open(os.path.join(rd, "render.log"), "w").write(log)
+
+
+def test_an_odb_invalid_render_is_rearmed_up_to_three_times(tmp_path):
+    work = mkkit(tmp_path, names=("3_3_place_gp.odb",))
+    (cp, odb, key), = nw.vis_candidates(work, {})
+    done = {key: NOW}
+    assert nw.vis_candidates(work, done) == []                                      # rendered once, nothing failed yet
+    bad = "[ERROR ORD-0054] odb file /kit/run/results/asap7/d/base/3_3_place_gp.odb is invalid: basic_ios::clear: iostream error\nAP_REVIEW_ERROR no layout.json\nexit 1\n"
+    _failed_render(work, cp, odb, bad, "1125-1200")
+    assert nw.vis_candidates(work, done) == [(cp, odb, key)]                        # F5: re-armed although the key is done
+    _failed_render(work, cp, odb, "ot-run: RAN on epyc7\n", "1125-1230")            # the retry is still running: no second launch
+    assert nw.vis_candidates(work, done) == []
+    os.remove(os.path.join(work, "vis_review/place-gp-1125-1230/render.log"))
+    _failed_render(work, cp, odb, bad, "1125-1300")
+    os.makedirs(os.path.join(work, "vis_review/place-gp-1125-1230"), exist_ok=True)
+    open(os.path.join(work, "vis_review/place-gp-1125-1230/render.log"), "w").write(bad)
+    assert nw.vis_candidates(work, done) == []                                      # three ODB failures: given up
+    _failed_render(work, cp, "/other.odb", bad, "1125-1400")
+    assert not nw.vis_odb_refail(work, cp, "/other2.odb")
+
+
+def test_odb_snapshot_copies_and_refuses_a_db_that_changes(tmp_path):
+    src = tmp_path / "3_3_place_gp.odb"
+    src.write_text("odb-bytes")
+    rev = tmp_path / "rev"; rev.mkdir()
+    snap, why = nw.odb_snapshot(str(src), str(rev))
+    assert why == "" and open(snap).read() == "odb-bytes" and os.path.basename(snap) == "snap_3_3_place_gp.odb"
+    os.remove(snap)
+    def trunc(argv, **k):
+        import shutil; shutil.copy(argv[-2], argv[-1]); open(argv[-2], "w").close()     # a stage-cap emptied it during the copy
+    snap, why = nw.odb_snapshot(str(src), str(rev), run=trunc)
+    assert snap == "" and "changed" in why and not os.listdir(rev)
+
+
+def test_checkpoint_render_reads_the_snapshot_and_names_the_dir_in_pst(tmp_path):
+    work = mkkit(tmp_path, names=("3_3_place_gp.odb",))
+    odb = os.path.join(work, "run/results/asap7/d/base/3_3_place_gp.odb")
+    root = tmp_path / "tools"
+    for t in nw.RENDER_TOOLS:
+        (root / os.path.dirname(t)).mkdir(parents=True, exist_ok=True)
+        (root / t).write_text("x")
+    st, rev = nw.smell_render(work, work, "place-gp", "img:1", "c1", ["checkpoint PLACE-GP"], now=1795611600, popen=lambda argv, **k: None, tools_roots=[str(root)],
+                              odb=odb, tag="vis_review", snapshot=True)
+    assert st == "rendering" and rev.endswith("vis_review/place-gp-1125-0500PST")     # 1795611600 = 11-25 13:00 UTC = 05:00 PST
+    meta = json.load(open(os.path.join(rev, "review.json")))
+    assert meta["odb"] == os.path.join(rev, "snap_3_3_place_gp.odb") and meta["src_odb"] == odb and os.path.isfile(meta["odb"])
+    assert f"odb {odb}\n" in open(os.path.join(rev, "SMELL.txt")).read()            # vis_odb_refail matches the kit DB, not the copy
+
+
+def test_render_review_sh_maps_the_snapshot_into_rev_and_deletes_it(tmp_path):
+    import subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    kit = tmp_path / "kit"; (kit / "r").mkdir(parents=True); (kit / "r/a.odb").write_text("odb")
+    rev = kit / "vis_review/x"; (rev / "tools").mkdir(parents=True)
+    (rev / "tools/render_review.py").write_text("print('AP_REVIEW_PNG /rev/density.png')\n")
+    (rev / "snap_a.odb").write_text("odb")
+    bin_ = tmp_path / "bin"; bin_.mkdir()
+    (bin_ / "docker").write_text("#!/bin/bash\nexit 0\n"); os.chmod(bin_ / "docker", 0o755)
+    (rev / "dump.log").write_text("")
+    json.dump({"kit": str(kit), "odb": str(rev / "snap_a.odb"), "image": "img", "id": "c1"}, open(rev / "review.json", "w"))
+    env = dict(os.environ, PATH=f"{bin_}:{os.environ['PATH']}")
+    p = subprocess.run(["bash", os.path.join(here, "render_review.sh"), str(rev)], env=env, capture_output=True, text=True, timeout=60)
+    assert p.returncode == 0, p.stdout + p.stderr
+    assert (rev / "dump.tcl").read_text().startswith("read_db /rev/snap_a.odb\n") and not (rev / "snap_a.odb").exists()
+    json.dump({"kit": str(kit), "odb": str(kit / "r/a.odb"), "image": "img", "id": "c1"}, open(rev / "review.json", "w"))
+    p = subprocess.run(["bash", os.path.join(here, "render_review.sh"), str(rev)], env=env, capture_output=True, text=True, timeout=60)
+    assert p.returncode == 0 and (rev / "dump.tcl").read_text().startswith("read_db /kit/r/a.odb\n") and (kit / "r/a.odb").exists()
