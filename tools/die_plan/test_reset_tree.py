@@ -598,3 +598,38 @@ def test_rtr_rsclone_glob_semantics():
     assert fnmatchcase(src, pat) and fnmatchcase(clone, pat)          # mutant: without the guard the clone is captured
     g = "*__rs[0-9]*"
     assert fnmatchcase(clone, g) and not fnmatchcase(src, g) and not fnmatchcase(pat, g)
+
+
+def test_shared_reset_parent_reuses_equal_age_while_retaining_terminal_names():
+    from types import SimpleNamespace
+
+    root = "rst_root_n"
+    early = (0, 0)
+    source = (10, 0)
+    alternate = (20, 0)
+    before = "rst_rl_1"
+    donor = "rst_rl_2"
+
+    def relay(k, d, xy, tap=None):
+        return dict(q=f"rst_rl_{k}" if tap is None else f"rst_n_t{tap}", d=d, xy=xy,
+                    name=f"u_rrl_{k}", depth=1 if tap is None else 2, tap=tap,
+                    kind="wire" if tap is None else "tap")
+
+    tree = dict(start=True, start_role="mission", depth=2, reach_um=405,
+                relays=[relay(1, root, early), relay(2, root, source),
+                        relay(3, before, alternate, 0), relay(4, donor, alternate, 1)])
+    rule = dict(donor=donor, retire=[before], targets=["rst_n_t0"])
+    typ = {"outline_um": [100.0, 100.0], "reset": {"shared_relay_parent": rule}}
+    plan = SimpleNamespace(types={"leaf": typ})
+    out = RT.shared_relay_parent(plan, "leaf", tree)
+    assert [r["q"] for r in out["relays"]] == ["rst_rl_2", "rst_n_t0", "rst_n_t1"]
+    assert all(r["d"] == donor for r in out["relays"][1:])
+    assert out["depth"] == tree["depth"] and tree["relays"][2]["d"] == before
+
+    typ["reset_start_raw_exports"] = [{"instance": "u_rrl_1", "net": before}]
+    with pytest.raises(RT.ResetError, match="retired reset or START"):
+        RT.shared_relay_parent(plan, "leaf", tree)
+    typ.pop("reset_start_raw_exports")
+    tree["relays"].append(relay(5, before, alternate, 2))
+    with pytest.raises(RT.ResetError, match="another consumer"):
+        RT.shared_relay_parent(plan, "leaf", tree)

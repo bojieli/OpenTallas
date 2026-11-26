@@ -682,6 +682,13 @@ def crossing_hops(T, boxes):
     return [r["name"] for r in T["relays"] if r["d"] in xy and not _edge_ok(tuple(xy[r["d"]]), tuple(r["xy"]), boxes)]
 
 
+def rounded_obstacle_faces(boxes):
+    """Keep a relay on a rounded blockage face outside the blockage interior."""
+    faces = [tuple(round(v, 4) for v in bx) for bx in boxes]
+    interiors = [(a + 1e-6, b + 1e-6, c - 1e-6, d - 1e-6) for a, b, c, d in faces]
+    return faces, interiors
+
+
 def resite_crossing(T, boxes, box_out=None, reach=None):
     """the class rule above on an assigned tree T (in place on a copy).  Returns (T, moves {name: [old, new]},
     unresolved [name]).  A tree without crossing hops comes back unchanged (byte-identical)."""
@@ -689,8 +696,7 @@ def resite_crossing(T, boxes, box_out=None, reach=None):
     if not boxes:
         return T, {}, []
     # grown faces are legal (relays sit ON them); decimal faces differ by binary roundoff (997.932 vs 997.9319999)
-    faces = [tuple(round(v, 4) for v in bx) for bx in boxes]
-    boxes = [(a + 1e-6, b + 1e-6, c - 1e-6, d - 1e-6) for a, b, c, d in faces]
+    faces, boxes = rounded_obstacle_faces(boxes)
     bad = crossing_hops(T, boxes)
     if not bad:
         return T, {}, []
@@ -1552,6 +1558,72 @@ def cache_clear():
         XP_STATS[k] = 0
 
 
+def shared_relay_parent(P, tn, T):
+    """Reuse a private branch's same-age reset/START sibling at named terminal taps."""
+    typ = P.types[tn]
+    rule = typ.get("reset", {}).get("shared_relay_parent")
+    if not rule:
+        return T
+
+    def fail(reason):
+        raise ResetError(f"type {tn}: shared_relay_parent {reason}")
+
+    if not T.get("start") or T.get("start_role") != "mission" or T.get("relay_lockup") or T.get("relay_driver"):
+        fail("requires an ordinary paired mission reset/START relay tree")
+    retired, targets, donor = rule["retire"], rule["targets"], rule["donor"]
+    if not retired or not targets or len(set(retired + targets + [donor])) != len(retired) + len(targets) + 1:
+        fail("requires distinct retired nets, terminal nets and a donor")
+    by_q = {r["q"]: r for r in T["relays"]}
+    if not set(retired + targets + [donor]) <= by_q.keys():
+        fail("the declared exact nets do not exist in the solved tree")
+    old = [by_q[n] for n in retired]
+    ends = [by_q[n] for n in targets]
+    new = by_q[donor]
+    if any(r.get("tap") is not None or r["kind"] not in {"pad", "wire"} for r in old + [new]):
+        fail("the old branch and donor must be internal pad/wire relays")
+    if any(r["kind"] != "tap" or r["depth"] != T["depth"] or r["d"] != retired[-1] for r in ends):
+        fail("each terminal must be the declared private branch's full-age tap")
+    if new["depth"] != old[-1]["depth"] or [r["d"] for r in old[1:]] != retired[:-1]:
+        fail("the donor and the private branch must have equal relay age")
+
+    expected = {n: {q} for n, q in zip(retired, retired[1:])}
+    expected[retired[-1]] = set(targets)
+    consumers = {n: set() for n in retired}
+    for r in T["relays"]:
+        if r["d"] in consumers:
+            consumers[r["d"]].add(r["q"])
+    if expected != consumers:
+        fail("the old relay branch has another consumer")
+    # Walking the donor backwards for the exact retired length proves the
+    # shared predecessor. The run chain is emitted by mirroring this graph.
+    node = donor
+    for _ in retired:
+        r = by_q.get(node)
+        if not r or node in consumers or r.get("tap") is not None or r["kind"] not in {"pad", "wire"}:
+            fail("the donor must have an independent same-root internal relay chain")
+        node = r["d"]
+    if node != old[0]["d"]:
+        fail("the donor and replaced branch do not start at the same reset/run predecessor")
+
+    refs = dict(typ, reset={k: v for k, v in typ["reset"].items() if k != "shared_relay_parent"})
+    instances = [by_q[q]["name"] for q in retired]
+    forbidden = retired + ["rn_" + q for q in retired]
+    forbidden += instances + [n.replace("u_rrl_", "u_srl_") for n in instances]
+    pattern = r"(?<!\w)(?:" + "|".join(map(re.escape, forbidden)) + r")(?!\w)"
+    if re.search(pattern, json.dumps(refs)):
+        fail("type records still reference a retired reset or START relay")
+    _, boxes = rounded_obstacle_faces(blockages(typ))
+    for r in ends:
+        hop = _man(new["xy"], r["xy"])
+        if hop > min(T["reach_um"], _man(old[-1]["xy"], r["xy"])):
+            fail(f"substituted arm to {r['q']} exceeds previous or native reach")
+        if not _edge_ok(tuple(new["xy"]), tuple(r["xy"]), boxes):
+            fail(f"substituted arm to {r['q']} crosses a native reset blockage")
+    rows = [dict(r, d=donor) if r["q"] in targets else r for r in T["relays"] if r["q"] not in consumers]
+    return dict(T, relays=rows, n_tree=sum(r["kind"] != "pad" for r in rows),
+                n_pad=sum(r["kind"] == "pad" for r in rows), shared_relay_parent=rule)
+
+
 def for_type_uncached(P, tn, reach=None):
     """the reset tree of a plan type in its own frame (taps = schema.tap_grid, entry = gen_phys reset tap).
     Pipelined plans: entry 'relayed', depth = the plan contract K.  Other plans (kit_rsync interim): entry 'sync', the
@@ -1563,6 +1635,8 @@ def for_type_uncached(P, tn, reach=None):
         configured = _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree)))))
         if configured != tree:
             raise ResetError(f"type {tn}: pin root copies require regenerated bound RTL and a fresh native source contract")
+        if tree.get("shared_relay_parent") != P.types[tn].get("reset", {}).get("shared_relay_parent"):
+            raise ResetError(f"type {tn}: shared_relay_parent requires regenerated bound RTL and a fresh native source contract")
         return tree
     reach = float(reach or relay_um(P, tn))
     boot_buses, boot_contents = bootstrap_consumers(P, tn)
@@ -1602,7 +1676,10 @@ def for_type_uncached(P, tn, reach=None):
             if boot_buses or boot_contents:
                 T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
                          bootstrap_taps=list(range(nck)))
-        return _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))))
+        T = _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))))
+        return shared_relay_parent(P, tn, T)
+    if P.types[tn].get("reset", {}).get("shared_relay_parent"):
+        raise ResetError(f"type {tn}: shared_relay_parent requires a wavefront reset tree")
     if pipelined(P):
         K = part_depth(P)
         T = _type_tree(P, tn, K, reach)
