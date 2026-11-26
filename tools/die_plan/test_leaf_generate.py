@@ -125,3 +125,14 @@ def test_fstart_reseat_uses_anchor_output_and_stays_opt_in(tmp_path):
     assert "--report" in steps[-1][1]
     a.fstart_reseat = False
     assert LG.steps(a, tmp_path)[-1][0] == "anchor"
+
+
+def test_rst_reach_step_is_opt_in_and_last_before_schema(tmp_path):
+    a = argparse.Namespace(base="b.json", types="T", out="o.json", grow=0, ft_xcut=0,
+                           tree="/t", seed=None, extra_reg=False, no_core_place=True,
+                           work=None, dry=True, fstart_reseat=True, rst_reach=True)
+    steps = LG.steps(a, tmp_path)
+    assert [s[0] for s in steps][-3:] == ["anchor", "fstart", "rstreach"]
+    assert steps[-1][2] == steps[-2][3] and "--require" in steps[-1][1] and steps[-1][1][steps[-1][1].index("fix")+1] == steps[-2][3].__str__()
+    a.rst_reach = False
+    assert LG.steps(a, tmp_path)[-1][0] == "fstart"
