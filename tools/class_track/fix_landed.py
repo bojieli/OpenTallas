@@ -16,6 +16,11 @@ Status per (scope, type, op class):
 `stale_base` = 1 when the kit's recorded plan sha (budget.json io_hold.plan_sha256, kit_preflight plan sha) is not the scope base.
 
     fix_landed.py --plan PLAN [--scope-file S.json] --kit-root ROOT [--kit-root ROOT ...] [--out FIX-LANDED.tsv]
+
+Fleet form (kits live on many hosts; the 100 MB plan stays on one):
+    fix_landed.py extract --plan PLAN --die S81 --out expected.json         (small; ship to every kit host)
+    fix_landed.py audit   --expected expected.json --kit-root ROOT ... --out host.tsv      (on each host, via ot-run)
+    fix_landed.py merge   --out FIX-LANDED.tsv host1.tsv host2.tsv ...      (newest kit per type across hosts)
 """
 import argparse
 import csv
@@ -50,8 +55,12 @@ def find_kits(roots):
                 m = os.path.getmtime(os.path.join(dp, "clock_taps.tcl"))
                 if t not in best or m > best[t][0]:
                     best[t] = (m, dp)
+                dns[:] = []  # a kit dir: never descend into it
+                continue
             if dp.count(os.sep) - root.count(os.sep) > 9:
                 dns[:] = []
+            else:
+                dns[:] = [d for d in dns if d not in ("results", "objects", "logs", "reports", "macros", "__pycache__")]
     return best
 
 
@@ -118,12 +127,23 @@ def expected_items(entry):
     return ex
 
 
-def check_type(kit, entry):
+def freeze(ex):
+    """JSON-safe form of expected_items() (tuples -> lists) and back."""
+    return {k: [list(map(lambda v: list(map(list, v)) if v and isinstance(v[0], (list, tuple)) else (list(v) if isinstance(v, tuple) else v), i))
+                for i in items] for k, items in ex.items()}
+
+
+def thaw(ex):
+    def t(v):
+        return tuple(t(x) for x in v) if isinstance(v, list) else v
+    return {k: [t(i) for i in items] for k, items in ex.items()}
+
+
+def check_type(kit, ex):
     """-> list of (op_class, expected_n, found_n, detail).  Pure file reads of the kit dir."""
     out = []
     ct = read(os.path.join(kit, "clock_taps.tcl"))
     ist = read(os.path.join(kit, "istations.tcl"))
-    ex = expected_items(entry)
     # 1. kit-original source lines of clock_taps.tcl (the two known silent undos)
     want = ["/work/vpw_bank_clock.tcl"]
     for extra in ("landing_exports.tcl", "phy_clock_export_source.tcl"):
@@ -164,6 +184,7 @@ def check_type(kit, entry):
 
 
 def audit(scopes, plan_types, kits, kit_filter=None):
+    """plan_types: {type: partition_types entry}  or  {type: thawed expected dict} (from `extract`)."""
     rows = []
     for sc in scopes:
         for t in sc["types"]:
@@ -171,7 +192,7 @@ def audit(scopes, plan_types, kits, kit_filter=None):
             if entry is None:
                 continue
             k = kits.get(t)
-            ex = expected_items(entry)
+            ex = entry if "taps" in entry and "relay_sites" in entry and "clock" not in entry else expected_items(entry)
             if k is None or k[0] < sc["adopted_epoch"]:
                 for oc, items in ex.items():
                     rows.append(_row(sc, t, oc, len(items), 0, NOT_YET, 0, "", k, "no kit" if k is None else "kit older than scope"))
@@ -179,7 +200,7 @@ def audit(scopes, plan_types, kits, kit_filter=None):
                 continue
             kp = kit_plan_sha(k[1])
             stale = int(bool(kp) and kp != sc["base_sha"][:12])
-            for oc, n, f, detail in check_type(k[1], entry):
+            for oc, n, f, detail in check_type(k[1], ex):
                 if n == 0:
                     continue
                 rows.append(_row(sc, t, oc, n, f, LANDED if f == n else NOT_LANDED, stale, kp, k, detail, placed(k[1])))
@@ -203,7 +224,65 @@ def load_scopes(a, plan_types):
              "adopted_epoch": os.path.getmtime(a.plan), "types": sorted(plan_types)}]
 
 
+def merge(paths):
+    """one row set from several per-host TSVs: per (scope, type, op_class) the row with the newest kit; NOT-YET-BUILT wins only
+    when no host has a kit newer than the scope."""
+    best = {}
+    for p in paths:
+        with open(p, newline="") as fh:
+            for r in csv.DictReader(fh, delimiter="\t"):
+                k = (r["scope_id"], r["type"], r["op_class"])
+                rank = (1 if r["kit"] else 0, int(r["kit_mtime"] or 0) if r["status"] != NOT_YET else -1)
+                if k not in best or rank > best[k][0]:
+                    best[k] = (rank, r)
+    return [v[1] for _, v in sorted(best.items())]
+
+
 def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv and argv[0] == "extract":
+        ap = argparse.ArgumentParser(prog="fix_landed extract", description="plan -> small expected.json shipped to kit hosts")
+        ap.add_argument("--plan", required=True)
+        ap.add_argument("--die", required=True)
+        ap.add_argument("--out", required=True)
+        a = ap.parse_args(argv[1:])
+        pt = json.load(open(a.plan)).get("partition_types") or {}
+        doc = {"die": a.die, "plan": a.plan, "base_sha": sha12(a.plan), "adopted_epoch": os.path.getmtime(a.plan),
+               "types": {t: freeze(expected_items(e)) for t, e in pt.items()}}
+        json.dump(doc, open(a.out, "w"))
+        print(f"{a.die} {len(pt)} types base {doc['base_sha']}")
+        return 0
+    if argv and argv[0] == "merge":
+        ap = argparse.ArgumentParser(prog="fix_landed merge")
+        ap.add_argument("--out", required=True)
+        ap.add_argument("tsv", nargs="+")
+        a = ap.parse_args(argv[1:])
+        rows = merge(a.tsv)
+        with open(a.out, "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=COLS, delimiter="\t", lineterminator="\n")
+            w.writeheader()
+            w.writerows(rows)
+        from collections import Counter
+        print("FIX-LANDED merged " + ", ".join(f"{k}={v}" for k, v in sorted(Counter(r["status"] for r in rows).items())) +
+              f"; stale_base={sum(int(r['stale_base']) for r in rows)}")
+        return 0
+    if argv and argv[0] == "audit":
+        ap = argparse.ArgumentParser(prog="fix_landed audit")
+        ap.add_argument("--expected", required=True)
+        ap.add_argument("--kit-root", action="append", default=[])
+        ap.add_argument("--out", required=True)
+        a = ap.parse_args(argv[1:])
+        doc = json.load(open(a.expected))
+        sc = [{"scope_id": "plan-" + doc["base_sha"], "die": doc["die"], "base_sha": doc["base_sha"], "plan": doc["plan"],
+               "adopted_epoch": doc["adopted_epoch"], "types": sorted(doc["types"])}]
+        rows = audit(sc, {t: thaw(e) for t, e in doc["types"].items()}, find_kits(a.kit_root))
+        with open(a.out, "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=COLS, delimiter="\t", lineterminator="\n")
+            w.writeheader()
+            w.writerows(rows)
+        print(f"{doc['die']} rows {len(rows)} kits {len(find_kits(a.kit_root))}")
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--plan", required=True)
     ap.add_argument("--die", default="")

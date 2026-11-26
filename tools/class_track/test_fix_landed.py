@@ -56,3 +56,23 @@ def test_stale_base_flag(tmp_path):
     (k / "budget.json").write_text(json.dumps({"clock": {"taps": []}, "io_hold": {"plan_sha256": "ffff" * 16}}))
     rows = fl.audit(_scope(1000), {"t": ENTRY}, fl.find_kits([str(tmp_path)]))
     assert all(r["stale_base"] == 1 for r in rows)
+
+
+def test_freeze_thaw_roundtrip_and_merge(tmp_path):
+    ex = fl.expected_items(ENTRY)
+    assert fl.thaw(json.loads(json.dumps(fl.freeze(ex)))) == ex
+    good = [{"name": "clk", "xy": [1.5, 2.5]}, {"name": "clk_t1", "xy": [3.0, 4.0]}]
+    _kit(tmp_path, "t", good, 2000)
+    rows_a = fl.audit(_scope(1000), {"t": fl.thaw(json.loads(json.dumps(fl.freeze(ex))))}, fl.find_kits([str(tmp_path)]))
+    assert {r["status"] for r in rows_a} == {fl.LANDED}
+    rows_b = fl.audit(_scope(1000), {"t": ENTRY}, {})
+    import csv as _csv
+    paths = []
+    for i, rows in enumerate((rows_b, rows_a)):
+        p = tmp_path / f"h{i}.tsv"
+        with open(p, "w", newline="") as fh:
+            w = _csv.DictWriter(fh, fieldnames=fl.COLS, delimiter="\t", lineterminator="\n")
+            w.writeheader()
+            w.writerows(rows)
+        paths.append(str(p))
+    assert {r["status"] for r in fl.merge(paths)} == {fl.LANDED}
