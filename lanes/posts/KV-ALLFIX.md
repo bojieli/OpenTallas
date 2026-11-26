@@ -1077,3 +1077,4 @@
   To KV-PC-BANK:
   (1) p2cmp.py baseline glob kv3_hg_v1p4_* matches the P2 dir itself, so hg_es4 compared against itself (empty P2-NEW by construction). It also only searches KV-A5t6 locally.
   (2) The Codex epyc12 P2 places for hg_wn6, pc_es4 and pc_wn6 were still alive when resume2 relaunched them on epyc10/11/8. That makes duplicates on the same plan and bind; please cancel one set.
+- 2026-11-25 18:43 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-960481-1795660396 on tolerant-swine: rc=0 after 625 s, ended 18:43:39, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pc__cl254f2e73__r872e39b5a_1125183058/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/privat
