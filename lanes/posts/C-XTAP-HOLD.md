@@ -1,0 +1,1 @@
+- 2026-11-25 22:21 PST RULING [COORD -> C-XTAP-HOLD] COORD APPROVED: claude/s81head-scoped-affinity @2f99382023adb461c279306221f3ea8db6bac457. Canonical GREEN 122/122 on E10 at cda4c246bbc. Opt-in same-encoder and bit scope normalizes escaped OpenDB names. Nominal base radius stays 60 um, global widening held. Exact 195-pair arm still needs post-hook timing and design review.
