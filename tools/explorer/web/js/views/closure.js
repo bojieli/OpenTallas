@@ -6,7 +6,7 @@ import { stateBar } from '../shell/inspector.js';
 // academic profile (owner 11-13): the only blocking gates
 const GATE = { tt_wns: (v) => v >= -42, ff_wns: (v) => v >= 0, drc: (v) => v === 0 };
 const displayState = (r) => r.signoff_basis ? 'signed' : r.display_state || r.state;
-const label = (s) => s === 'uncredited' ? 'Uncredited' : STATE_LABEL[s] || s;
+const label = (s) => STATE_LABEL[s] || s;
 const COLS = [
   ['state', 'State', (r) => STATES.indexOf(displayState(r)), null], ['name', 'Design', (r) => r.name, null], ['level', 'Level', (r) => r.level, null], ['stage', 'Stage', (r) => r.stage || '', null],
   ['attempt', 'Att.', (r) => r.attempt ?? -1, 'r'], ['tt_wns', 'Setup TT ps', (r) => r.tt_wns ?? -1e9, 'r'], ['ff_wns', 'Hold FF ps', (r) => r.ff_wns ?? -1e9, 'r'], ['drc', 'DRC', (r) => r.drc ?? 1e9, 'r'],
@@ -51,7 +51,7 @@ export default {
         const state = displayState(r);
         byState[state] = (byState[state] || 0) + 1;
       }
-      clear(chipsEl).append(...[...STATES, 'uncredited'].filter((s) => byState[s]).map((s) => {
+      clear(chipsEl).append(...STATES.filter((s) => byState[s]).map((s) => {
         const n = byState[s];
         return h('button.chip.' + stateCls(s), { type: 'button', 'aria-pressed': String(S.states.has(s)), style: S.states.size && !S.states.has(s) ? { opacity: 0.5 } : null, dataset: { testid: 'closure-state-' + s.replace(/\s/g, '') }, title: 'Show only this state (click again to clear)',
           onclick: () => { if (S.states.has(s)) S.states.delete(s); else S.states.add(s); paint(); } }, h('i.dot'), `${label(s)} ${n}`);
@@ -77,12 +77,12 @@ export default {
     async function matrixTab() {
       const r = await api.dies();
       const block = (lvl, title) => h('div.card', { style: { padding: 0, overflow: 'auto', marginBottom: '14px' } }, h('table.grid', { testid: 'closure-matrix-' + lvl }, h('thead', h('tr', { style: { cursor: 'default' } }, h('th', title), STATES.map((s) => h('th.r.' + stateCls(s), h('i.dot'), ' ', STATE_LABEL[s])), h('th.r', 'Total'), h('th', { style: { width: '30%' } }, 'Share'))),
-        h('tbody', r.dies.map((d) => { const c = d.counts[lvl], tot = STATES.reduce((a, s) => a + (c[s] || 0), 0);
+        h('tbody', r.dies.map((d) => { const c = (d.counts_any_plan || d.counts)[lvl], tot = STATES.reduce((a, s) => a + (c[s] || 0), 0);
           return h('tr', { 'aria-selected': d.id === S.die ? 'true' : null, onclick: () => store.go({ node: d.id, params: { tab: null } }) }, h('td', h('b', d.label)), STATES.map((s) => h('td.r' + (c[s] ? '' : '.muted'), c[s] || 0)), h('td.r', tot), h('td', tot ? stateBar(c) : '')); }))));
       const area = h('div.card', { style: { padding: 0, overflow: 'auto' } }, h('table.grid', { testid: 'closure-matrix-area' }, h('thead', h('tr', { style: { cursor: 'default' } }, h('th', 'Share of die area by state of the placed type'), STATES.map((s) => h('th.r', STATE_LABEL[s])), h('th.r', 'Uncovered'))),
-        h('tbody', r.dies.map((d) => { const a = d.area_um2, cov = Object.values(a.by_state).reduce((x, y) => x + y, 0);
-          return h('tr', { style: { cursor: 'default' } }, h('td', h('b', d.label)), STATES.map((s) => h('td.r' + (a.by_state[s] ? '' : '.muted'), a.by_state[s] ? fmt(100 * a.by_state[s] / a.die, 1) + ' %' : '–')), h('td.r', fmt(100 * (1 - cov / a.die), 1) + ' %')); }))));
-      return h('div.page', { style: { maxWidth: 'none', padding: '12px 14px 30px' } }, h('h2.sect', { style: { marginTop: '4px' } }, 'Current plan partition types'), block('type', 'Die'), h('h2.sect', 'Hard cores'), block('core', 'Die'), h('h2.sect', 'Die area'), area);
+        h('tbody', r.dies.map((d) => { const a = d.area_um2, states = a.by_state_any_plan || a.by_state, cov = Object.values(states).reduce((x, y) => x + y, 0);
+          return h('tr', { style: { cursor: 'default' } }, h('td', h('b', d.label)), STATES.map((s) => h('td.r' + (states[s] ? '' : '.muted'), states[s] ? fmt(100 * states[s] / a.die, 1) + ' %' : '–')), h('td.r', fmt(100 * (1 - cov / a.die), 1) + ' %')); }))));
+      return h('div.page', { style: { maxWidth: 'none', padding: '12px 14px 30px' } }, h('h2.sect', { style: { marginTop: '4px' } }, 'Current partition types with sign-offs from any plan'), block('type', 'Die'), h('h2.sect', 'Hard cores'), block('core', 'Die'), h('h2.sect', 'Die area'), area);
     }
     function failuresTab() {
       const G = new Map();

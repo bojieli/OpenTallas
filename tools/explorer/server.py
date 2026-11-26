@@ -221,10 +221,11 @@ def signoff_census():
             data = None
         names = {}
         for die, entry in (data or {}).get('dies', {}).items():
-            for bucket in ('current', 'deferred'):
-                for item in entry[bucket]:
+            for bucket in ('current', 'deferred', 'retired'):
+                for item in entry.get(bucket, []):
+                    aliases = (item['name'],) if bucket == 'retired' else (item['name'], item.get('module'))
                     for level in census_levels(item):
-                        for name in (item['name'], item.get('module')):
+                        for name in aliases:
                             if name:
                                 names.setdefault((die, level, name), bucket)
         _CENSUS = (stamp, data, names)
@@ -237,12 +238,20 @@ def census_levels(item):
     return ['core' if k in ('c', 'core') else 'type' for k in item['kinds']]
 
 
-def signoff_basis(n):
+def signoff_basis(n, *, include_retired=False):
     signoff_census()
     die, level = n.get('die'), n.get('level')
     matches = [_CENSUS[2].get((die, level, name))
                for name in (n.get('name'), (n.get('plan') or {}).get('module')) if name]
-    return 'current' if 'current' in matches else 'deferred' if 'deferred' in matches else None
+    if 'current' in matches:
+        return 'current'
+    if 'deferred' in matches:
+        return 'deferred'
+    # The index can lag the census plan. Credit an exact visible name at the
+    # same level, but don't transfer retired sign-offs through module aliases.
+    if include_retired and _CENSUS[2].get((die, level, n.get('name'))) == 'retired':
+        return 'retired'
+    return None
 
 
 def signoff_display_state(n, basis):
@@ -252,6 +261,20 @@ def signoff_display_state(n, basis):
     if state == 'signed' and signoff_census():
         return 'uncredited'
     return state
+
+
+def signoff_display_node(n):
+    basis = signoff_basis(n, include_retired=True)
+    return dict(n, signoff_basis=basis, signoff_display_state=signoff_display_state(n, basis))
+
+
+def any_plan_counts(nodes, states):
+    counts = {level: dict.fromkeys([*states, 'uncredited'], 0) for level in ('type', 'core')}
+    for n in nodes:
+        c = counts[n['level']]
+        state = n['signoff_display_state'] or 'not built'
+        c[state] = c.get(state, 0) + 1
+    return counts
 
 
 def datasets():
@@ -320,12 +343,14 @@ def meta():
 def dies():
     s = DS.summary(); idx = index(); census = signoff_census()
     by_die, totals = defaultdict(Counter), Counter()
-    if census:
-        # Use the same records as /api/v1/records, including historical entries
-        # whose level was resolved against the current index.
-        for record in records().values():
+    signed_packs = defaultdict(Counter)
+    # Use the same records as /api/v1/records, including historical entries.
+    for record in records().values():
+        if census:
             by_die[record['die']][record['level']] += 1
             totals[record['level']] += 1
+        if record.get('pack'):
+            signed_packs[record['die']][record['level']] += 1
 
     def with_levels(summary, counts):
         return dict(summary, by_level=dict(type=counts['type'], core=counts['core'])) if summary else None
@@ -334,24 +359,34 @@ def dies():
     for d in s['dies']:
         p = idx['nodes'][d['id']]['plan']
         d['plan'] = plan_ref(p); d['period_ps'] = p.get('period_ps'); d['reach_um'] = p.get('reach_um')
-        ns = [n for n in idx['nodes'].values() if n['die'] == d['id'] and n['level'] != 'die']
+        nodes = {nid: signoff_display_node(n) for nid, n in idx['nodes'].items()
+                 if n['die'] == d['id'] and n['level'] != 'die'}
+        ns = nodes.values()
+        d['counts_any_plan'] = any_plan_counts(ns, idx['states'])
         d['packs'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store')),
                           core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store')))
         # a pack of a design that is not signed off is a view of a build in progress (wave run, any stage): shown, never counted
         d['packs_unsigned'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')),
                                    core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')))
+        unsigned_packs = Counter(n['level'] for n in ns if (n.get('layout') or {}).get('store')
+                                 and n['signoff_display_state'] != 'signed')
+        d['packs_signed_any_plan'] = {level: signed_packs[d['id']][level] for level in ('type', 'core')}
+        d['packs_unsigned_any_plan'] = {level: unsigned_packs[level] for level in ('type', 'core')}
         d['cores'] = sum(1 for n in ns if n['level'] == 'core')
         summary = ((census or {}).get('dies', {}).get(d['id']) or {}).get('summary')
         d['any_plan'] = with_levels(summary, by_die[d['id']])
-        d['instances'] = dict(total=len(p['partitions']))
-        st = {}
+        st, st_any, area, area_any = Counter(), Counter(), Counter(), Counter()
         for q in p['partitions']:
-            k = ((idx['nodes'].get(q[1]) or {}).get('status') or {}).get('state', 'not built'); st[k] = st.get(k, 0) + 1
-        d['instances']['by_state'] = st
-        area = {}
-        for q in p['partitions']:
-            k = ((idx['nodes'].get(q[1]) or {}).get('status') or {}).get('state', 'not built'); area[k] = area.get(k, 0) + q[4] * q[5]
-        d['area_um2'] = dict(die=p['outline'][0] * p['outline'][1], by_state=area)
+            n = nodes.get(q[1]) or {}
+            raw = (n.get('status') or {}).get('state', 'not built')
+            display = n.get('signoff_display_state') or raw
+            size = q[4] * q[5]
+            st[raw] += 1
+            st_any[display] += 1
+            area[raw] += size
+            area_any[display] += size
+        d['instances'] = dict(total=len(p['partitions']), by_state=st, by_state_any_plan=st_any)
+        d['area_um2'] = dict(die=p['outline'][0] * p['outline'][1], by_state=area, by_state_any_plan=area_any)
     return s
 
 
@@ -359,9 +394,8 @@ def die(d):
     idx = index()
     if d not in idx['dies']: raise ApiError(404, 'no such die', d)
     r = DS.die(d); r['plan'] = plan_ref(r['die']['plan'])
-    for nid, n in r['nodes'].items():
-        basis = signoff_basis(n)
-        r['nodes'][nid] = dict(n, signoff_basis=basis, signoff_display_state=signoff_display_state(n, basis))
+    r['nodes'] = {nid: signoff_display_node(n) for nid, n in r['nodes'].items()}
+    r['die'] = dict(r['die'], counts_any_plan=any_plan_counts(r['nodes'].values(), r['states']))
     return r
 
 
@@ -375,8 +409,10 @@ def node(nid):
     idx = index()
     if nid not in idx['nodes']: return record_node(nid)
     r = DS.node(nid); n = r['node']
-    r['signoff_basis'] = signoff_basis(n)
-    r['signoff_display_state'] = signoff_display_state(n, r['signoff_basis'])
+    display = r['node'] = signoff_display_node(n)
+    r['signoff_basis'] = display['signoff_basis']
+    r['signoff_display_state'] = display['signoff_display_state']
+    r['children'] = {cid: signoff_display_node(c) for cid, c in r['children'].items()}
     r['record'] = records().get(nid)   # the any-plan record of this node (plan label, archive rows), if any
     r['plan'] = plan_ref(idx['nodes'][n['die']]['plan'])
     r['packs'] = history(nid)
@@ -386,7 +422,7 @@ def node(nid):
         uses = []
         for u in (n.get('plan') or {}).get('used_by') or []:
             t = idx['nodes'].get(u)
-            if t: uses.append(dict(type=u, name=t['name'], state=t['status']['state'], count=sum(1 for h in t['plan']['hard_cores'] if h[1] == nid),
+            if t: uses.append(dict(type=u, name=t['name'], state=t['status']['state'], signoff_display_state=signoff_display_node(t)['signoff_display_state'], count=sum(1 for h in t['plan']['hard_cores'] if h[1] == nid),
                                    insts=[h[0] for h in t['plan']['hard_cores'] if h[1] == nid][:24], placements=t['plan'].get('instances')))
         r['uses'] = uses
     return r
@@ -399,7 +435,7 @@ def closure(d):
     for n in idx['nodes'].values():
         if n['die'] != d or n['level'] == 'die': continue
         st = n.get('status') or {}; m = st.get('metrics') or {}; lay = n.get('layout') or {}; s = lay.get('store') or {}; v = n.get('vis') or {}; p = n.get('plan') or {}
-        basis = signoff_basis(n)
+        basis = signoff_basis(n, include_retired=True)
         rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), signoff_basis=basis,
                          display_state=signoff_display_state(n, basis),
                          label=st.get('label'), basis=st.get('basis'), cls=st.get('cls'), stage=st.get('stage'),
@@ -578,7 +614,7 @@ def census_records(census, nodes, layouts):
                 node_names.setdefault((node['die'], level, name), node['id'])
     for die, entry in census['dies'].items():
         for bucket, label in (('current', 'current'), ('deferred', 'resign'), ('retired', 'retired')):
-            for item in entry[bucket]:
+            for item in entry.get(bucket, []):
                 name = item['name']
                 levels = census_levels(item)
                 nid = next((node_names[die, level, name] for level in levels if (die, level, name) in node_names), None)

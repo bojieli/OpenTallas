@@ -1,6 +1,6 @@
 // 2-D floorplan canvas: pan / zoom camera (world um, y up) and the two plan drawings (die plan, type plan).
 // The drawings are pure functions of (context, transform, data, options), so the Overview thumbnails reuse them.
-import { cssv, STATE_VAR } from '../core/dom.js';
+import { cssv, STATE_VAR, displayState } from '../core/dom.js';
 
 export class PlanCanvas {
   constructor(host, { draw, onHover, onClick, onDblClick, onView }) {
@@ -92,11 +92,11 @@ export function drawDiePlan(g, T, die, nodes, opts = {}) {
   const col = (t) => {
     if (colorBy === 'pack') return t && t.layout && t.layout.store ? P['--accent'] : P['--s-notbuilt'];
     if (colorBy === 'vis') { const v = t && t.vis && t.vis.verdict; return !v ? P['--s-notbuilt'] : /GOOD|PASS|OK/i.test(v) ? P['--ok'] : /BAD|FAIL/i.test(v) ? P['--bad'] : P['--warn']; }
-    return P[t ? t.status.state : 'not built'] || P['not built'];
+    return P[displayState(t)] || P['not built'];
   };
   const hide = opts.hide || new Set(), sel = opts.selType, landing = opts.landing;
   for (const q of p.partitions) {
-    const t = nodes[q[1]], st = t ? t.status.state : 'not built';
+    const t = nodes[q[1]], st = displayState(t);
     let dim = hide.has(st) || (landing && (!t || t.plan.landing_base !== landing));
     const isSel = sel && (sel instanceof Set ? sel.has(q[1]) : q[1] === sel);
     g.globalAlpha = dim ? 0.1 : sel && !isSel ? 0.38 : 0.82; g.fillStyle = col(t);
@@ -152,7 +152,7 @@ const faceSeg = (face, win, W, H, inset = 0) => { const [a, b] = win; return fac
 export function drawTypePlan(g, T, n, kids, opts = {}) {
   const P = palette(), { X, Y, k } = T, pl = n.plan, [W, H] = pl.outline || [10, 10], ov = opts.ov || {};
   const rect = (x, y, w, h) => g.rect(X(x), Y(y + h), w * k, h * k);
-  g.fillStyle = P['--surface']; g.strokeStyle = P[n.status.state] || P['--line-strong']; g.lineWidth = 2;
+  g.fillStyle = P['--surface']; g.strokeStyle = P[displayState(n)] || P['--line-strong']; g.lineWidth = 2;
   g.beginPath(); rect(0, 0, W, H); g.fill(); g.stroke();
   if (ov.ft !== false) for (const s of pl.ft_slots || []) {
     g.strokeStyle = P['--faint']; g.lineWidth = 6; g.globalAlpha = 0.6;
@@ -161,7 +161,7 @@ export function drawTypePlan(g, T, n, kids, opts = {}) {
     for (const r of s.regs || []) if (Array.isArray(r) && typeof r[0] === 'number') g.fillRect(X(r[0]) - 2.5, Y(r[1]) - 2.5, 5, 5);
   }
   for (const hc of pl.hard_cores || []) {
-    const c = kids[hc[1]], st = c ? c.status.state : null, [w, hh] = coreSize(hc);
+    const c = kids[hc[1]], st = c ? displayState(c) : null, [w, hh] = coreSize(hc);
     g.globalAlpha = 0.78; g.fillStyle = st ? P[st] : P['--s-notbuilt'];
     g.beginPath(); rect(hc[3], hc[4], w, hh); g.fill(); g.globalAlpha = 1;
     const hot = opts.hover === hc || (opts.selCore && hc[1] === opts.selCore);

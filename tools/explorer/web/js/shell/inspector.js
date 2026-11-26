@@ -1,5 +1,5 @@
 // Inspector: details of the current selection (the same in every view) plus the tabs a view adds.
-import { h, clear, fmt, fmtBytes, fmtCount, STATES, STATE_LABEL, stateCls, badge, dieShort, levelOf, fmtTime } from '../core/dom.js';
+import { h, clear, fmt, fmtBytes, fmtCount, STATES, STATE_LABEL, stateCls, badge, dieShort, levelOf, fmtTime, displayState } from '../core/dom.js';
 import { store } from '../core/store.js';
 import { api } from '../core/api.js';
 
@@ -45,18 +45,18 @@ function layoutFacts(l, src) {
     s && s.timing ? ['timing data', s.timing.sta ? `${s.timing.setup} setup + ${s.timing.hold} hold paths (${(s.timing.corners || []).join(', ').toUpperCase()}), clock tree ${fmtCount(s.timing.clock_leaves)} sinks` : `clock tree ${fmtCount(s.timing.clock_leaves)} sinks (topology only)`] : null]),
     h('p.note', 'The routed view draws the layout pack (cut once from the signed database and kept in the explorer store); it does not open the database, on any host.')];
 }
-const nodeRow = (n, extra, patch) => h('a.row.' + stateCls(n.status ? n.status.state : n.state), { href: store.href(Object.assign({ node: n.id }, patch || {})), title: n.id }, h('i.dot'), h('span.nm', n.name), extra ? h('small', extra) : null);
+const nodeRow = (n, extra, patch) => h('a.row.' + stateCls(displayState(n)), { href: store.href(Object.assign({ node: n.id }, patch || {})), title: n.id }, h('i.dot'), h('span.nm', n.name), extra ? h('small', extra) : null);
 
 function dieDetails(D, view) {
-  const d = D.die, p = d.plan;
+  const d = D.die, p = d.plan, counts = d.counts_any_plan || d.counts;
   return [
     h('section.sec', h('h1', d.label), h('p.sub', `${d.target || ''} · ${fmt(p.outline[0] / 1000, 2)} × ${fmt(p.outline[1] / 1000, 2)} mm`), actions(d, view)),
-    sec('Sign-off', null, h('p.note', { style: { margin: '0 0 4px' } }, h('b', d.counts.type.signed || 0), ` of ${d.type_count} types signed off`), stateBar(d.counts.type), h('div', { style: { height: '6px' } }), stateLegend(d.counts.type),
-      h('p.note', h('b', d.counts.core.signed || 0), ` of ${STATES.reduce((a, s) => a + (d.counts.core[s] || 0), 0)} hard cores signed off`), stateBar(d.counts.core)),
+    sec('Sign-off on any plan', null, h('p.note', { style: { margin: '0 0 4px' }, testid: 'insp-signoff-types' }, h('b', counts.type.signed || 0), ` of ${d.type_count} types signed off`), stateBar(counts.type), h('div', { style: { height: '6px' } }), stateLegend(counts.type),
+      h('p.note', h('b', counts.core.signed || 0), ` of ${STATES.reduce((a, s) => a + (counts.core[s] || 0), 0)} hard cores signed off`), stateBar(counts.core)),
     sec(D.plan.wave ? 'Plan (kit wave, as counted)' : 'Plan of record', null, D.plan.wave ? h('p.note', { style: { margin: '0 0 6px' }, dataset: { testid: 'plan-wave-note' } }, `This is the plan the kit wave builds and the sign-off count counts (${D.plan.wave.host}:${D.plan.wave.path}). It is not on main yet; the pinned plan of record is ${D.plan.wave.pinned}.`) : null, kv([['plan', h('b.mono', D.plan.sha)], ['file', h('span.mono', p.path)], ['commit', h('span.mono', (p.commit || '').slice(0, 10) + ' · ' + String(p.date || '').slice(0, 10))],
       ['subject', p.subject], ['clock period', p.period_ps + ' ps'], ['reach', p.reach_um + ' µm per cycle'], ['partitions', `${p.partitions.length} placed, ${d.type_count} types` + ((d.hard_ip || []).length ? `, ${d.hard_ip.length} hard IP` : '')],
       ['clock', `${p.clock.topology || '?'} on ${(p.clock.layers || []).join('/')}` + (p.clock.insertion_ps ? `, ${p.clock.insertion_ps} ps insertion` : '')], ['PG domains', p.pg_domains.length], ['seams', (p.seams || []).length + ' abutting pairs with ports']]),
-      p.release_header ? h('p.note', p.release_header) : null),
+      p.release_header ? h('p.note', h('b', 'Historical release note. '), p.release_header) : null),
     sec('What is real here', null, h('p.note', { style: { margin: 0 } }, 'Inside a signed type or core the routed wires are exact. The die-level route has not run: die-top nets, the M8/M9 power grid and the clock trunks are plan data, shown as plan overlays.')),
   ];
 }
@@ -84,7 +84,7 @@ function nodeDetails(R, view, inst) {
       ['internal stations', (p.stations || []).length], ['clock taps', ((p.clock || {}).taps || []).length + ((p.clock || {}).layer ? ` on ${p.clock.layer}` : '')], p.landing_base ? ['landing cohort', p.landing_base] : null])));
   } else {
     const uses = R.uses || [];
-    out.push(sec('Used by', uses.length + ' types', h('div.list', uses.map((u) => nodeRow({ id: u.type, name: u.name, state: u.state }, `${u.count}× · ${u.placements || 0} placements`)))));
+    out.push(sec('Used by', uses.length + ' types', h('div.list', uses.map((u) => nodeRow({ id: u.type, name: u.name, state: u.state, signoff_display_state: u.signoff_display_state }, `${u.count}× · ${u.placements || 0} placements`)))));
   }
   if (R.archive && R.archive.length) out.push(sec('Signed-layout archive', 'SIGNED-DB-AUDIT', R.archive.map((a) => kv(Object.entries(a).filter(([, v]) => v).slice(0, 12).map(([k, v]) => [k, h('span.mono', String(v))]))),
     h('p.note', 'Where the signed routed database lives after it left the fleet hosts. The routed view itself reads the layout pack cut from that database, so it keeps working when the fleet path is gone.')));

@@ -1,11 +1,7 @@
 // Navigator: die > status group > type > core tree with a filter.  Rows are plain links to the current view.
-import { h, clear, STATES, STATE_LABEL, stateCls, dieShort, ls, debounce, levelOf } from '../core/dom.js';
+import { h, clear, STATES, STATE_LABEL, stateCls, dieShort, ls, debounce, levelOf, displayState, displayStateLabel } from '../core/dom.js';
 import { store } from '../core/store.js';
 import { api } from '../core/api.js';
-
-const displayState = (n) => n.signoff_display_state || n.status.state;
-const displayLabel = (n) => n.signoff_basis === 'deferred' ? 'Signed off on an earlier plan' :
-  displayState(n) === 'uncredited' ? 'Uncredited' : n.signoff_basis ? 'Signed off' : n.status.label || n.status.state;
 
 export function mountNavigator(host) {
   const S = { die: null, data: null, filter: '', packOnly: false, closed: new Set(ls.get('nav.closed', ['cores'])), node: null, view: null, seq: 0 };
@@ -19,7 +15,7 @@ export function mountNavigator(host) {
   const href = (id) => store.href({ view: S.view === 'overview' ? 'plan' : S.view, node: id });
   function row(n, cls) {
     const pack = !!(n.layout && n.layout.store);
-    return h('a.row' + (cls || '') + '.' + stateCls(displayState(n)), { href: href(n.id), 'aria-current': n.id === S.node ? 'true' : null, title: `${n.name} · ${displayLabel(n)}${pack ? ' · routed layout available' : ''}`, dataset: { node: n.id } },
+    return h('a.row' + (cls || '') + '.' + stateCls(displayState(n)), { href: href(n.id), 'aria-current': n.id === S.node ? 'true' : null, title: `${n.name} · ${displayStateLabel(n)}${pack ? ' · routed layout available' : ''}`, dataset: { node: n.id } },
       h('i.dot'), h('span.nm', n.name), pack ? h('i.pk', { title: 'routed layout pack' }) : null,
       h('small', n.level === 'type' ? (n.plan.instances || 0) + '×' : ''));
   }
@@ -44,7 +40,7 @@ export function mountNavigator(host) {
     const cores = all.filter((n) => n.level === 'core' && ok(n)).sort((a, b) => a.name.localeCompare(b.name));
     const die = S.data.die;
     tree.append(h('a.row', { href: href(die.id), 'aria-current': S.node === die.id ? 'true' : null, dataset: { node: die.id } }, h('span.nm', { style: { fontFamily: 'var(--sans)', fontWeight: 600 } }, die.label), h('small', 'die')));
-    for (const st of [...STATES, 'uncredited']) {
+    for (const st of STATES) {
       const rows = types.filter((n) => displayState(n) === st); if (!rows.length) continue;
       const body = rows.map((n) => {
         const out = [row(n)];
