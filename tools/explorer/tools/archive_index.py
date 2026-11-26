@@ -38,8 +38,8 @@ with (root / 'INDEX.tsv').open() as f:
             for name, c in corners.items():
                 if not isinstance(c, dict):
                     continue
-                relevant = ('periods', 'done', 'errors', 'rc', 'std_min_start',
-                            'std_wns_min', 'std_nviol_min') if name == 'ff' else ('periods',)
+                relevant = ('periods', 'generated_clocks', 'vclks', 'done', 'errors', 'rc', 'std_min_start',
+                            'std_wns_min', 'std_nviol_min') if name == 'ff' else ('periods', 'generated_clocks', 'vclks')
                 compact['corners'][name] = {k: c[k] for k in relevant if k in c}
             out[meta] = compact
         except (OSError, TypeError, ValueError, AttributeError):
