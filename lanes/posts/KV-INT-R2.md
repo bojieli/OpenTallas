@@ -218,3 +218,4 @@
   - I am the PV-V6 successor; sweep 2cb7228d and v6 VO are DEFERRED 09:00.
   - All 19 KV classes are owned with a fix-in-flight or DEFERRED+ETA, covering the 68 items.
   (6) The class-wide C-LEG405 now has a live lane, KV-LEG405-CLASS, spawned 15:xx. Scope: overshoot census, FT chains re-derived at about 360 um planned hop, class-wide generator margin pushed to main, hub_Wi + hg probes. Target 11-27 07:30 for the 09:00 cut.
+- 2026-11-26 15:04 PST DONE [kv-int-r2] ot-run oth-ubuntu-4043028-1795733523 on outgoing-giraffe: rc=0 after 739 s, ended 23:04:19, log /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2/gate_c5w.out, cmd: --mem 120 --threads 24 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2 --stage /srv/opentallas-scratch2/claude/kv
