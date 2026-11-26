@@ -1245,6 +1245,18 @@ class BoundedGeomWaiver(unittest.TestCase):
         self.assertEqual(KW.geom_verdict(line, w)[:2], ("PASS-COND", ["fill", "partial_face"]))
 
 
+def test_signed_queue_notice_reports_pending_parent_qualification(tmp_path):
+    rec = dict(die="qwen_compute", item="sle_hc0", status="ENQUEUED", kit="intel1:/k")
+    job = dict(id="test-job", status="ARCHIVED", archive="intel1:/archive", kit=rec["kit"],
+               signoff=dict(release_qualified=False, parent_qualification={"status": "NEEDS_PARENT"}))
+    (tmp_path / "state.json").write_text(json.dumps({"jobs": {job["id"]: job}}))
+    notices = {}
+    with mock.patch.object(KW, "QUEUE_OUTCOMES", []):
+        assert KW.follow_queue({"items": {"row": rec}}, tmp_path, notices) == 1
+    assert rec["q_status"] == "SIGNED"
+    assert "count eligible; parent qualification pending" in notices[rec["die"]][0]
+
+
 class PreRouteHoldReason(unittest.TestCase):
     # KIT-TRIAGE-1/G5 11-01: a post-CTS stop has no sign-off record; the reason carries the gate line, never 'TT None'
     def test_no_none_wns_without_signoff(self):

@@ -81,6 +81,8 @@ def internal_hold_measurement(rec):
     measurement, but an old local SIGNED/port-only verdict is not evidence.
     """
     ff = (rec.get("corners") or {}).get("ff")
+    if not isinstance(ff, dict):
+        ff = rec.get("ff_census")     # Stored autopilot summaries carry the native census here.
     if isinstance(ff, dict):
         c = ff.get("std_min_start") or {}
         if not isinstance(c, dict):
