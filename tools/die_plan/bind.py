@@ -8425,6 +8425,15 @@ def cmd_kit_rtl(a):
     if key not in rep["types"]:
         raise BindError(f"kit-rtl: bound type {key} not in {out}/bind_report.json (variants: {variants})")
     bmod = rep["types"][key]["module"]
+    abi_reference = getattr(a, "svc_lane_abi", None)
+    if abi_reference:
+        import svc_lane_abi
+        try:
+            abi_lanes = svc_lane_abi.check_type(abi_reference, out, tn, bmod, a.instance)
+        except (OSError, ValueError, KeyError) as exc:
+            raise BindError(f"KIT_SVC_LANE_ABI: {exc}") from exc
+        if abi_lanes:
+            print(f"KIT_SVC_LANE_ABI PASS {tn}: {','.join(abi_lanes)}", flush=True)
     bfile = out / "rtl" / f"{bmod}.sv"
     btxt = bfile.read_text()
     import bound_reset_contract as BRC
@@ -9284,6 +9293,8 @@ def _main(argv=None):
     k.add_argument("--kit", help="output directory (default OUT/kit_rtl/TYPE)")
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
+    k.add_argument("--svc-lane-abi", default=os.environ.get("OT_SVC_LANE_ABI"),
+                   help="approved ordered S81 SVC lane ABI for independently reused kit inputs")
     k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
     k.add_argument("--src-tree", help="the kit's own source tree (src_rel2 copy): every kit source resolves against it, not the "
                                       "plan's baked asbuilt.base; the filelist must lie inside it (env OT_KIT_SRC_TREE)")
