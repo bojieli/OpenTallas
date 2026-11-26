@@ -1,0 +1,9 @@
+[Unit]
+Description=Review completed OpenTallas placements with independent visual agents
+After=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/usr/bin/python3 -I %h/.local/share/opentallas/placement_visual_agent.py --hub intel2 --state %h/.local/state/opentallas-placement-reviews --codex %h/.local/bin/codex --workers 4 --limit 12 --publish
+TimeoutStartSec=900

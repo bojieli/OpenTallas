@@ -1,0 +1,10 @@
+[Unit]
+Description=Dispatch exact OpenTallas placement image reviews
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=2min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target
