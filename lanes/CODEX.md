@@ -10628,3 +10628,54 @@ Current owners and cut conditions come from the 11-23 queue and live handoffs. H
 | HBM | Owner parked. | Preserve state. |
 
 S81 review opened epyc12 FP-S81/render/c9s_tmpl/v4/type_ot_s81sl_leaf__{t35,t57,t70}.png. t35 FAIL (406 um leg, four narrow gaps); t57 PASS-COND for static gate only (403 um max, three narrow gaps, visibly converging east trunk); t70 BLOCKED (precheck max404 um, anchor depth changes and compressed central corridors). Exact placed view needed to check pin access and PG continuity before routing.
+
+## CODEX active takeover 2026-11-25 20:52 PST
+
+Current handoff: handoff/claude_to_codex_1125_2005.md. Latest live paths, job IDs and source SHAs are in the linked lane posts. HBM parked. Earlier plan events in CODEX-HANDOFF.md are historical.
+
+| Lane | Scope | Handoff state | Next | Last fleet receipt |
+|---|---|---|---|---|
+| [S81-ALLFIX-INT](posts/S81-ALLFIX-INT.md) | S81 | R11 PRE clean; push 48f09f449abe + strict bind; ledger | 21:00 cut R11 (+col_h9 views, svc, xo, colh10 p4, serdes station groups) | ot-run oth-ubuntu-3345736-1795667952 on tolerant-swine: rc=0 after 1400 s, ended 20:52:18, log /home/ubuntu/tmp/s81int/r10_1125/spec_ot_s81sl_leaf__t34/kit_rtl.live.log |
+| [FP-CONVERGE-S81](posts/FP-CONVERGE-S81.md) | S81 | demote unproven rules; bits_over_cycle gate; leaf template t70 | post new route/place split | See lane handoff |
+| S81-GUNIT-RRL | S81 | new 19:3x | row + place probe | See lane handoff |
+| [S81-BKSEL-RTL](posts/S81-BKSEL-RTL.md) | S81 | new 19:3x | RTL, LEC, row | ot-run oth-ubuntu-269066-1795666052 on tolerant-swine: rc=0 after 294 s, ended 20:12:24, log /home/ubuntu/s81-bksel-rtl-logs/fork.log |
+| [S81-OWN-COLH10](posts/S81-OWN-COLH10.md) | S81 | ROW-READY e15d8654, PRE+bind rerun ~21:15 | place probe | ot-run oth-ubuntu-4125519-1795665515 on open-snipe: rc=0 after 2033 s, ended 04:32:26, log none |
+| [S81-SERDES-RSTCOHORT](posts/S81-SERDES-RSTCOHORT.md) | S81 | station groups ROW-READY 1c6ae0527537; hold -21 | key-check R10/R11; LA probe; enc -314 | ot-run oth-ubuntu-1222405-1795665127 on civil-redfish: rc=0 after 2846 s, ended 04:39:30 env=wave+0, log /srv/opentallas-scratch2/claude/s81-serdes-rstcohort/probe_la2.log |
+| S81-KVLEAF-T2 | S81 | row KVLEAF-PINFACE-ALL draft | v19/v20 verdict 06:00 | See lane handoff |
+| [FAM-S81-SVC-OWN](posts/FAM-S81-SVC-OWN.md) | S81 | ABSENT in R10; 3 place probes epyc11 | post-GP review | ot-run oth-ubuntu-3248383-1795663712 on open-snipe: rc=1 after 2 s, ended 03:28:32, log /srv/opentallas-scratch2/claude/fam-s81-svc-own/r10.out |
+| shift-in-place | S81 | PRE pass; strict bind epyc12 | render + ROW-READY | See lane handoff |
+| leaf_grow | S81 | visual PASS; t68 +1 reg | PRE+bind -> ROW-READY | See lane handoff |
+| REF-SITE speed | FLEET | tests pass; real-plan diff | push | See lane handoff |
+| [ABSTRACT-EXACT](posts/ABSTRACT-EXACT.md) | ALL | 3 waiters | send col_h9 view shas to INT | ot-run oth-ubuntu-2050452-1795666162 on civil-redfish: rc=1 after 802 s, ended 04:22:42, log /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc/reroute_he4/reroute.log |
+| [KV-ALLFIX](posts/KV-ALLFIX.md) | KV | 17 RC causes + FLOW K items | 21:00 cut; gen dry check | ot-run oth-ubuntu-3345717-1795667211 on tolerant-swine: rc=0 after 1515 s, ended 20:52:02, log /home/ubuntu/tmp/kvallfix/r7_promote_1125/p2r7/base_pc_wn6/gen.live.log |
+| [KV-OWN-HG-R3](posts/KV-OWN-HG-R3.md) | KV | new 19:2x | rows | See lane handoff |
+| [KV-PV-ESTRIP](posts/KV-PV-ESTRIP.md) | KV | 5 ROW-READY; v7e/v4/v3e rework | fork + probes v6 v5ne v2 | ot-run oth-ubuntu-3404811-1795667261 on tolerant-swine: rc=0 after 825 s, ended 20:41:23, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-PV-ESTRIP/qwen_kvsys_kv3_pv_v6_1125201021/gen.live.log |
+| [KV-HGI-WGATE](posts/KV-HGI-WGATE.md) | KV | gate8 + gate9 control | verdicts then probes | ot-run oth-ubuntu-683705-1795666638 on open-snipe: rc=0 after 217 s, ended 04:20:53, log /srv/opentallas-scratch2/claude/KV-HGI-WGATE/min.otrun |
+| [KV-OWN-HUB](posts/KV-OWN-HUB.md) | KV | running | row shas | See lane handoff |
+| [KV-SINKBINS](posts/KV-SINKBINS.md) | KV | job F epyc7; 8 RSTREACH -> corridor step | rerun without hgi_v6; ROW-READY | ot-run oth-ubuntu-3584892-1795663455 on ubuntu: rc=5 after 2532 s, ended 20:06:11, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/jobF.otrun.log |
+| KV R7 promote | KV | relaunch 3 P2 place; abs gates | promote or not | See lane handoff |
+| [QC-ALLFIX](posts/QC-ALLFIX.md) | QC | RC + FLOW Q items | C1q sha | ot-run oth-ubuntu-4099462-1795536522 on tolerant-swine: rc=0 after 118480 s, ended 17:03:16, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_sle_fe_v1__cl8210183c_1124052754/chain_a1.live.lo |
+| [QC-C1P-PUBLISH](posts/QC-C1P-PUBLISH.md) | QC | gate passed; RESETPUB default | push default | ot-run oth-ubuntu-1340926-1795659486 on tolerant-swine: rc=0 after 294 s, ended 18:22:58, log /home/ubuntu/qc-c1p-r6-publish-1125/work/qwen_compute/5cd2bbeafcf6/sle_st_a_v2__pv4242de79/gen.live.log |
+| [QC-XHEAD3-LEC](posts/QC-XHEAD3-LEC.md) | QC | branch 56fb2ac979b3 | merge only on NOT-EQ | ot-run oth-ubuntu-3969657-1795663292 on civil-redfish: rc=0 after 658 s, ended 03:32:29, log none |
+| [LEC-AUTOFILL](posts/LEC-AUTOFILL.md) | ALL | sle_hc0 epyc11, hd_mesh epyc10 | verdicts | ot-run oth-ubuntu-3427722-1795666399 on outgoing-giraffe: rc=0 after 2214 s, ended 04:50:11, log /srv/opentallas-scratch2/claude/LEC-AUTOFILL/q9/qwen_compute_sle_stm_v2__cl55be2264_8d66d58fbf89/run/otrun.log |
+| [QC-DRT-ECO](posts/QC-DRT-ECO.md) | QC | 3 waiters armed; fe_v1 family row | ECO-route at DRT end | See lane handoff |
+| [QC-HC0-GROW](posts/QC-HC0-GROW.md) | QC | chain epyc10 | draft row 23:00 | ot-run oth-ubuntu-645574-1795664339 on viable-ram: rc=0 after 3576 s, ended 04:38:28, log /home/ubuntu/qc-hc0-grow-tmp/hopchk2.out |
+| [QC-COLLFTN-REFLOOR](posts/QC-COLLFTN-REFLOOR.md) | QC | PRE v3 | ROW-READY | ot-run oth-ubuntu-1523465-1795665504 on civil-redfish: rc=0 after 2259 s, ended 04:35:59, log none |
+| [QC-HC2-REFLOOR](posts/QC-HC2-REFLOOR.md) | QC | running | - | ot-run oth-ubuntu-498716-1795664149 on civil-redfish: rc=0 after 215 s, ended 03:39:22, log /home/ubuntu/coord/autopilot/private_specs/QC-HC2-REFLOOR/qwen_compute_slw_hc2__cla3497502__cldc737267_1126033320/gen.live.log |
+| [QC-HC0-CMASTER](posts/QC-HC0-CMASTER.md) | QC | running | - | ot-run oth-ubuntu-3731114-1795666601 on outgoing-giraffe: rc=0 after 394 s, ended 04:23:12, log /srv/opentallas-scratch2/claude/QC-HC0-CMASTER/p4.txt |
+| [HEAD-ALLFIX](posts/HEAD-ALLFIX.md) | HEAD | C18 variant A; follow_re hold; ledger | 21:00 cut | ot-run oth-ubuntu-513753-1795666380 on open-snipe: rc=0 after 654 s, ended 04:23:51, log /srv/opentallas-scratch2/claude/head-allfix/dieclock/post_eco10A2.otrun.log |
+| HEAD-CLK-RESITE | HEAD | variant A + B; 2nd review | adopt A ~20:15+ | See lane handoff |
+| [HEAD-EAST-R2](posts/HEAD-EAST-R2.md) | HEAD | new 19:3x | row + probe | ot-run oth-ubuntu-457241-1795666306 on tolerant-swine: rc=0 after 391 s, ended 20:18:14, log /home/ubuntu/head-east-r2/chain_b.out |
+| [HEAD-W9-FP](posts/HEAD-W9-FP.md) | HEAD | 2 probes epyc11 | post-GP review; u_rrl_271, local_r | ot-run oth-ubuntu-3557339-1795668219 on tolerant-swine: rc=0 after 731 s, ended 20:45:38, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-W9-FP/hd_lep0N_w_rows2_1125/gen_lint.live.log |
+| [HEAD-MESH-REFLOOR](posts/HEAD-MESH-REFLOOR.md) | HEAD | G0 fixed; r14 probe; r18 bind | ROW-READY | See lane handoff |
+| [HEAD-SERDES-REFLOOR](posts/HEAD-SERDES-REFLOOR.md) | HEAD | R7b PRE | probe; default-on + census | ot-run oth-ubuntu-4140588-1795665536 on open-snipe: rc=0 after 708 s, ended 04:10:42, log /srv/opentallas-scratch2/claude/head-serdes-refloor/r7b_relaywin_1125/out.log |
+| [HEAD-SPN-STREET](posts/head-spn-street.md) | HEAD | place probes + part b plan | verdicts | ot-run oth-ubuntu-396292-1795666229 on open-snipe: rc=0 after 2463 s, ended 04:51:30, log /srv/opentallas-scratch2/claude/head-spn-street/fork11.out |
+| [HEAD-SMALL-TAPS](posts/HEAD-SMALL-TAPS.md) | HEAD | v3 chain epyc12 | ROW-READY | See lane handoff |
+| [HEAD-IOHOLD-PARENT](posts/HEAD-IOHOLD-PARENT.md) | HEAD | blocked on W9 views; build driver | advisory run | See lane handoff |
+| C1+C2 lep bank | HEAD | CTS probe epyc8 | C2 measure | See lane handoff |
+| [FLEET-OPS-R2](posts/FLEET-OPS-R2.md) | FLEET | new 19:3x | safety fixes + census | See lane handoff |
+| [VIS-REOWN](posts/VIS-REOWN.md) | ALL | FLOW F5/S6/H6 | - | ot-run oth-ubuntu-243278-1795650612 on tolerant-swine: rc=0 after 157 s, ended 15:52:45, log /srv/opentallas-scratch2/claude/vis-reown/census/qwen_compute__slw_sc_v3__qwen_compute_slw_sc_v3_1125084946.log |
+| [AUTO-EXPORT](posts/AUTO-EXPORT.md) | ALL | eco_*/i<n> ingest; rtx-pro reserve | - | See lane handoff |
+| Fable hw_r13 reviewer | HEAD | running | verdict to MESH-REFLOOR | See lane handoff |
+
+- Token, ROM and software handoffs continue through TOKEN, TOK-DS, TOK-QK and ROM-WEIGHTS-1119. See CODEX-LOG.md for milestones and FOR-CLAUDE items.
