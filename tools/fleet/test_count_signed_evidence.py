@@ -71,3 +71,41 @@ def test_archive_counts_only_matching_measured_record(tmp_path, monkeypatch):
     gate = Gate(path, root, now=100)
     assert gate.index[('qwen_compute', 'good')]['record'] == ident
     assert gate.check('qwen_compute', ['unknown'])[0] is None
+
+
+def test_exact_odb_revocation_preserves_a_later_same_name_replacement(tmp_path, monkeypatch):
+    import count_hourly
+    from release_tree_plan import revoke_hit
+
+    coord = tmp_path / 'coord'
+    (coord / 'lanes').mkdir(parents=True)
+    monkeypatch.setattr(count_hourly, 'COORD', coord)
+    odb_old = 'ae' * 32
+    odb_new = 'cf' * 32
+    (coord / 'lanes/COUNT-REVOKED.tsv').write_text(
+        f'qc\tcoll_ucie\todb_sha256:{odb_old}\tfloating PHY clock\n')
+    root = tmp_path / 'store'
+    manifest = {
+        'id': 'a1' * 32, 'origin': 'e7:/old/signoff.json', 'scan': {'name': 'coll_ucie'},
+        'files': [['/old/6_final.odb', 10, odb_old]],
+    }
+    assert signed_store.write_entry(manifest, str(root))
+    records, _ = signed_store.load_records(str(root))
+    selectors = [{'name': 'coll_ucie', 'key': 'odb_sha256:' + odb_old}]
+    assert revoke_hit(records[0], selectors)
+    assert not revoke_hit(dict(records[0], odb_sha=odb_new), selectors)
+
+    header = 'die\telement\tkind\trecord\tdb\trtx_db\tsize\tsha256\tpack\tmeta\tstatus\tsrc'
+    def row(name, sha):
+        return '\t'.join(['qwen_compute', name, 't', '', '', '', '', sha, '',
+                          '/archive/' + name + '/signoff.json', 'ARCHIVED-BOTH', 'legacy'])
+    path = tmp_path / 'index.json'
+    path.write_text(json.dumps({
+        'agidock': [], 'agidock_listed': 100,
+        'agidock_index_tsv': '\n'.join([header, row('coll_ucie__legalrows_1117', odb_old),
+                                        row('coll_ucie', odb_old), row('coll_ucie', odb_new)]),
+    }))
+    assert index_rows(path) == [('qwen_compute', 'coll_ucie', 't')]
+    gate = Gate(path, root, now=100, coord=coord)
+    assert gate.index[('qwen_compute', 'coll_ucie')]['sha256'] == odb_new
+    assert ('qwen_compute', 'coll_ucie__legalrows_1117') not in gate.index

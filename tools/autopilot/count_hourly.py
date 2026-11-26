@@ -23,6 +23,7 @@ tools = Path(__file__).resolve().parent
 fleet_tools = tools.parent / "fleet"
 sys.path.insert(0, str(fleet_tools if fleet_tools.is_dir() else tools))
 from count_signoff import index_record_counts
+from signed_store import revoked_odb_shas
 
 HOME = Path.home()
 COORD = Path(os.environ.get("COUNT_COORD", str(HOME / "coord")))
@@ -68,9 +69,10 @@ def archived_index_rows(index_json):
     if not lines:
         return
     head = lines[0].split("\t")
+    revoked = revoked_odb_shas(COORD)
     for ln in lines[1:]:
         row = dict(zip(head, ln.split("\t")))
-        if row.get("die") not in INDEX_DIES:
+        if row.get("die") not in INDEX_DIES or row.get("sha256") in revoked:
             continue
         if not row.get("status", "").startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
             continue

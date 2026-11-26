@@ -19,7 +19,7 @@ import argparse, gzip, json, os, pathlib, re, sys, time
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from count_signoff import counts_signed, index_record_counts
-from signed_store import unblob
+from signed_store import revoked_odb_shas, unblob
 
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
 LISTING = pathlib.Path(os.environ.get('AGIDOCK_ARCHIVE_INDEX', STATE / 'agidock_archive_index.json'))
@@ -31,7 +31,7 @@ VIEW_EXT = ('.v', '.def', '.spef', '.gds', '.lef', '.lib', '.v.zst', '.def.zst',
 KEYS = (('signed_types', 'pending_archive_types'), ('signed_cores', 'pending_archive_cores'), ('signed_designs', 'pending_archive_designs'))
 
 
-def store_archived(root=None):
+def store_archived(root=None, revoked=()):
     """{(die, key)} of signed-store records whose 6_final.odb is in an archive"""
     out = set(); root = pathlib.Path(root or SIGNED_STORE) / 'records'
     if not root.is_dir(): return out
@@ -49,6 +49,9 @@ def store_archived(root=None):
                     continue
                 if not isinstance(record, dict) or not counts_signed(record):
                     continue
+            if any(len(f) >= 3 and os.path.basename(f[0]) == '6_final.odb' and f[2] in revoked
+                   for f in e.get('files') or []):
+                continue
             for r in e.get('rows') or []: out.add((r.get('die'), r.get('key')))
     return out
 
@@ -70,7 +73,7 @@ def variant_of(module, element):
 
 
 class Gate:
-    def __init__(self, listing=None, store=None, now=None):
+    def __init__(self, listing=None, store=None, now=None, coord=None):
         self.error = None; self.ent = {}; self.rows = set(); self.store = set(); self.index = {}; self.by_die = {}
         p = pathlib.Path(listing or LISTING)
         try: A = json.loads(p.read_text())
@@ -86,17 +89,23 @@ class Gate:
         # INDEX.tsv (SIGNED-RECOVER): die element kind record db rtx_db size sha256 pack meta status src
         lines = [l for l in (A.get('agidock_index_tsv') or '').splitlines() if l.strip() and not l.startswith('#')]
         self.index = {}
+        revoked = revoked_odb_shas(coord or pathlib.Path.home() / 'coord')
+        blocked_paths = set()
         if lines and lines[0].split('\t')[:2] == ['die', 'element']:
             head = lines[0].split('\t')
             for ln in lines[1:]:
                 r = dict(zip(head, ln.split('\t')))
+                if r.get('sha256') in revoked:
+                    blocked_paths.update(str(pathlib.Path(r[k]).parent) for k in ('db', 'meta') if r.get(k))
+                    continue
                 if not index_record_counts(A, r, store):
                     continue
                 self.index[(r.get('die'), r.get('element'))] = r
                 self.by_die.setdefault(r.get('die'), []).append(r)
         else:
             for ln in lines: self.rows.update(c.strip() for c in ln.split('\t') if c.strip())
-        self.store = store_archived(store)
+        self.ent = {key: value for key, value in self.ent.items() if value.get('path') not in blocked_paths}
+        self.store = store_archived(store, revoked)
 
     def view_pack(self, die, names):
         """is the routed-layout view pack of the design in the archive (_view-packs/<die>.<t|c>.<name>.lvp or <name>/...)"""
