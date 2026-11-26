@@ -107,6 +107,28 @@ def type_census(P, tn, limit=LIMIT_UM):
     return res
 
 
+def internal_census(t, src=None, limit=LIMIT_UM):
+    """internal_stations chains (from_um -> regs_um -> to_um) of one type: {conn: dict(max_um, first_um, n_over, start, end, moved)}.  src =
+    src_centroid.overrides(geom, t): an out bus starts at its real source register centroid, an in bus ends at its consumer centroid; the plan's
+    leaf_um / from_um / to_um is the fallback (SRC-NOT-AT-LEAF: sle_su_c x_su_l0_o plan first hop 171 um, placed 565.8 um)."""
+    res = {}
+    for e in t.get("internal_stations") or []:
+        if "from_um" not in e or "to_um" not in e:
+            continue
+        pts = [tuple(e["from_um"])] + [tuple(r[:2]) for r in e.get("regs_um") or []] + [tuple(e["to_um"])]
+        conn = str(e.get("conn", ""))
+        ov = (src or {}).get(conn)
+        if ov:
+            pts[0 if ov["end"] == "src" else -1] = tuple(ov["xy"])
+        hops = [md(a, b) for a, b in zip(pts, pts[1:])]
+        mx, first, nov = max(hops), hops[0], sum(1 for h in hops if h > limit)
+        ch = (ov or {}).get("chain")
+        if ch:   # the worst real register -> first station edge (sle_su_c x_su_l0_o: 565.8 um) is a hop the centroid chain averages away
+            mx, first, nov = max(mx, ch["max_um"]), max(first, ch["max_um"]), max(nov, 1 if ch["n_over"] else 0)
+        res[conn] = dict(max_um=round(mx, 1), first_um=round(first, 1), n_over=nov, start=pts[0], end=pts[-1], moved=bool(ov))
+    return res
+
+
 def type_flag(cen, drift=DRIFT_UM, limit=LIMIT_UM):
     """(n_slots flagged, worst planned hop um, slot list) for one type: a slot is flagged when its worst full-chain hop + drift > limit"""
     bad = [(sn, v["full_max"]) for sn, v in cen.items() if v["full_max"] + drift > limit]
