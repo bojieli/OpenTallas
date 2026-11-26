@@ -20,7 +20,8 @@ margin, band-to-pin hop <= cland_band_fit.REACH.  Port windows and die pins are 
 with the abutting type); a landing with no legal spot is reported UNRESOLVED, never forced.
 
 Flag (default off; with it absent the plan and every report are byte-identical):
-    plan top level  "land_reach": {"enable": 1, "margin_ps": -100, "target_ps": 0, "types": "regex", "landings": ["type/band", ...]}
+    plan top level  "land_reach": {"enable": 1, "margin_ps": -100, "target_ps": 0, "types": "regex", "landings": ["type/band", ...],
+                                 "sidecar": "tree-relative clock-landing sidecar json (collector reset sites are obstacles)"}
     row_normalize.normalize_plan runs it first (before reprice / legal / tapname / landremap / retap), so later steps see the seat.
     CLI:  land_reach.py PLAN OUT [--tree TREE] [--sidecar SIDECAR] [--types RE] [--margin-ps N] [--force] [--check] [--report R]
 
@@ -151,6 +152,12 @@ def apply(raw, tree=None, side=None, check=False, **over):
     """re-seat every flagged hard landing core (raw in place unless check); report dict.  Runs only when the flag is on or force."""
     cfg = config(raw, **{k: v for k, v in over.items() if k != "force"})
     rep = dict(enabled=True, moved=[], unresolved=[], skipped=[], cfg={k: cfg[k] for k in ("margin_ps", "target_ps", "types")})
+    if side is None and cfg.get("sidecar") and tree:          # the clock-landing sidecar carries the collector reset sites (obstacles)
+        sp = Path(cfg["sidecar"])
+        try:
+            side = json.loads((sp if sp.is_absolute() else Path(tree) / sp).read_text())
+        except (OSError, ValueError) as e:
+            rep["sidecar_error"] = f"{type(e).__name__}: {e}"[:200]
     thr, target = float(cfg["margin_ps"]), float(cfg["target_ps"])
     only = set(cfg.get("landings") or [])
     det = []

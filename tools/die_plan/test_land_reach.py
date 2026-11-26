@@ -104,3 +104,11 @@ def test_cli_flag_gate(tmp_path):
     assert L.main([str(p), str(o), "--tree", tree]) == 0 and not o.exists()      # flag absent: nothing written
     assert L.main([str(p), str(o), "--tree", tree, "--force"]) == 0 and o.exists()
     assert A.rows(json.loads(o.read_text()), tree)[0]["verdict"] != "FAIL"
+
+
+def test_sidecar_path_read_or_named_error(tmp_path):
+    tree = _tree(tmp_path)
+    (tmp_path / "side.json").write_text(json.dumps({"collector": {"types": {}}}))
+    ok = L.apply(_plan(flag={"enable": 1, "sidecar": "side.json"}), tree, check=True)
+    bad = L.apply(_plan(flag={"enable": 1, "sidecar": "nope.json"}), tree, check=True)
+    assert "sidecar_error" not in ok and "sidecar_error" in bad and bad["summary"]["moved"] == 1
