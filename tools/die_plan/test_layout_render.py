@@ -102,6 +102,26 @@ def test_channel_estimate_is_labelled_and_no_macro_is_no_flag(tmp_path):
     assert c["value"] is None and not c["flag"]
 
 
+@pytest.mark.parametrize("along", ["V", "H"])
+def test_place_channel_selects_pressure_after_scoring_wider_gaps(tmp_path, along):
+    # Forty 1-um gaps hide a 9-um gap with 500 complete crossings and 437.5 tracks.
+    def xy(x, y):
+        return (x, y) if along == "V" else (y, x)
+
+    lines = [inst(i, "ram", *xy(x, 10), *xy(2, 80), block=1, top=5)
+             for i, x in enumerate([10 + 3*i for i in range(41)] + [141], 1)]
+    for i in range(500):
+        n = "wide%d" % i
+        lines.extend([net(n), pin(n + "a", n, *xy(132, 20)), pin(n + "b", n, *xy(141, 80))])
+    p = dump(tmp_path, lines, stage="place", die=(0, 0, 200, 200))
+    r = LS.check_channels(LS.Design(p), set())
+    assert r["flag"] and r["channels"] > 40 and len(r["offenders"]) == LS.TOP
+    top = r["offenders"][0]
+    assert (top["a"], top["b"], top["along"], top["gap_um"]) == ("u41", "u42", along, 9)
+    assert top["nets"] == 500 and top["tracks"] == 437.5
+    assert top["use"] == pytest.approx(1.143)
+
+
 def clock_tree_lines():
     # entry at the SW corner; root buffer 1 -> branch buffers 2 (near west) and 3 (far east) -> flops 4 and 5, which are related
     return [pin("clk", "c0", 0, 0, sig="CLOCK"), inst(1, "BUFx4_ASAP7_75t_R", 100, 50), inst(2, "BUFx4_ASAP7_75t_R", 20, 50), inst(3, "BUFx4_ASAP7_75t_R", 180, 50),
