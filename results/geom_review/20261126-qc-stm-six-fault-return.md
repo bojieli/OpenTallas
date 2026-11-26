@@ -1,0 +1,13 @@
+# QC STM six fault returns
+
+The approved private repair lengthens the scalar STM-to-FW fault path by two cycles and shortens only the existing FE bit 47 pad from five stages to three. The effective FUP input dates remain **21, 21, 21, 21, 20, 21** across E0–E5. The native FUP capture dates remain **22, 22, 22, 22, 21, 22**.
+
+The bound FW source has one consumer of the STM scalar. The hardened FDN passes it to st_dn_o[0]. FW puts that bit on sc_eo[47] and exports the ordinary ST data from st_dn_o[1087:1]. E0 reaches W0 FE sc_ei[47]. E1–E5 reach the preceding East FE sc_wi[47]. The affected FE pad drives FUP st_dn_i[0] exclusively. All six routes are explicit in the source price record.
+
+The native harness uses the actual hardened ARF1, l9h and e5 FDN source forms and the actual FUP. It checked 227 measured edges per lane through fault pulses, overlapping traffic and a reset restart, with unchanged ordinary payload and valid timing. Each lane independently caught the one-edge-late and the missed-fault controls. The exact E8 receipt is `native_six_reset.log` in the packet below.
+
+I viewed the exact proposed source image in `fault_source_plan_review.png`. The five source types have the same fault path and macro bodies. The old planned legs are about 536–548 µm. The typed endpoints are at least 1627.788 µm apart, which makes four legs of 405 µm infeasible at these endpoints. Four proposed relays make five local legs of at most 328.320 µm, with a clear path around all hard macros. I also viewed the retained Intel1 cl8210183c FE detailed placement. Its five old sc_wi bit 47 pad registers lie in a 4.860 µm span, with the previous face flop about 211 µm away. That representatives' local pad reduction has no long-hop indication. The changed placement still needs review.
+
+The immutable candidate input bytes are on `epyc8:/srv/opentallas-scratch2/claude/QC-STM-FAM/codex_fault_six_1126/`. The exact R6-based plan is `plan_fault_six.json` SHA prefix 3a598ad0bb71. The 12-member owner override is `fault_six_r8_extra.json` SHA prefix 305c2b4040c4. No existing owner override overlaps. The corresponding 14 C1q type blocks and six pre-change lane pricing rows match the R6 input.
+
+**Keep the release and routing held.** The exact source gate is E8 unit oth-ubuntu-3155378-1795686656, log `gate_fault_six.r3.otrun.log`. The initial no-fork source launch failed the relocated as-built path check. The retry resolves base and map through the exact immutable R6 snapshot. The live C1p and C1q source/gate paths were kept separate. No physical kit was submitted.
