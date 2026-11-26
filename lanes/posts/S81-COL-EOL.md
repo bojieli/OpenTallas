@@ -1,0 +1,1 @@
+- 2026-11-26 10:45 PST DONE [S81-COL-EOL] ot-push-main otpush-open-snipe-1518616 on open-snipe: rc=0 after 36 s, ended 18:45:29, log /srv/opentallas-scratch2/claude/S81-COL-EOL-work/push_a.log, cmd: ot-push-main 
