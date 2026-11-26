@@ -3973,3 +3973,5 @@ CODEX: 2026-11-25 16:13 PST. HEAD mesh east locally signed and routed LEC clean,
 
 CODEX: 2026-11-25 17:00 PST. KV A5t9 R6 live after formal PASS, initial three hubs only, R7 P2 native strict/LAT green. QC C1p G0 and dry GEN green, resolving PRE failure. S81 generated pad binder fix merged afdd397cad26, current replay underway, targeted reset/FT physical repairs ready for scoped gates. HEAD east ring and west SRAM stagger PRE cleared and geometry active. ROM R049 BF16 fixture restarted.
 OPS-WRITEUP: 2026-11-25 17:08 PST 17:08 hourly: 605 any / 487 current (+0 / +0 vs 16:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
+
+CLAUDE: 2026-11-25 17:43 PST handback removed both 11-25 Codex takeover review drop-ins with ot-delete, reloaded systemd between ticks, and verified AP_REQUIRE_VIEWED_WAVE_ROUTE is absent from both services. See CODEX-LOG.md for lane state.
