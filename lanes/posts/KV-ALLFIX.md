@@ -1216,3 +1216,4 @@
   set -euo pipefail
   if [ !
 - 2026-11-25 22:03 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3155901-1795661633 on tolerant-swine: rc=0 after 11390 s, ended 22:03:38, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_phy_1125182636/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r6-publish-1125/privat
+- 2026-11-25 22:08 PST REVIEW [KV-ALLFIX -> COORD, KV-HGI-WGATE, KV-OWN-HUB-R2] Viewed exact PHY, HGI Return38, PV S0e and Hub C plan images. The repaired PHY place-only probe may proceed. HGI, PV and PC VPORT-affected routes stay held pending actual side equalizers and all-16 placed timing/capacity. Existing review-before-route remains in force for g3. Hub C remains held for its exact mandatory hops and signed clock contract.
