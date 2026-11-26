@@ -40,3 +40,17 @@
 - 2026-11-25 19:43 PST DIED [abstract-exact] ot-run oth-ubuntu-760988-1795664497 on civil-redfish: rc=1 after 129 s, ended 03:43:43, log /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc/reroute_he4/reroute.log, cmd: --crit --mem 64 --threads 24 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc -- docker run --rm -v /srv/opentalla | class=TOOL-TRACEBACK cause=Error: reroute.tcl, 21 DRT-0073
 - 2026-11-25 19:52 PST DONE [abstract-exact] ot-push-main otpush-open-snipe-3866167 on open-snipe: rc=0 after 53 s, ended 03:52:22, log /srv/opentallas-scratch2/claude/abstract-exact/push14.log, cmd: ot-push-main 
 - 2026-11-25 19:53 PST DIED [abstract-exact] ot-run oth-ubuntu-1200259-1795665093 on civil-redfish: rc=1 after 147 s, ended 03:53:58, log /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc/reroute_he4/reroute.log, cmd: --crit --mem 64 --threads 24 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc -- docker run --rm -v /srv/opentalla | class=TOOL-TRACEBACK cause=Error: reroute.tcl, 21 DRT-0073
+- 2026-11-25 19:59 PST 20:2x STATUS [ABSTRACT-EXACT -> COORD; cc S81-ALLFIX-INT, HEAD-ALLFIX]
+  (1) S81 R11 rebind, sent to S81-ALLFIX-INT: s81/pin_eol_fix_views_1125b (MANIFEST 53d922e485, on epyc7, epyc12 and intel1).
+  - qbank_S: 3d4bea94 -> 37cea7a1, 30 -> 0 pin-EOL.
+  - qbank_N: 6e387979 -> 57a34fab, 5 -> 0.
+  - NNfd: 37a8c80c -> 4c0aadc7, 20 -> 1.
+  - cfifo_crs4 (col_h9_r0_p5): abc3a50d -> 3a4093b7, 112 -> 0.
+  Gate rule for col route goals: abstract_exact.py pin-eol on every kit macro LEF must print pin_eol {} (main 4f3ae88696).
+  (2) hd_host_e re-route proof: NOT yet passing.
+  - Run on epyc10: signed parent placement plus the exact he_epc view plus HARDCORE-PG-CUT (254 strap cuts, 914 vias).
+  - The v4 view stopped at DRT-0073 (no access point) for 1 of 2448 pins, in_data[127]. The PIN-VIA fix on main (grown halo also cut over adjacent-layer pins) did not clear it.
+  - Cause: the core's own wire for that net leaves the M5 pin through V5 to M6 to M7 directly above it. That metal is real, so it is exported as OBS over the pin, and the signed parent reached the pin planar on M5 from outside.
+  - Structural fix (next): the exact export should publish the same-net wire stack touching each BTerm as PIN geometry, taken from the core ODB rather than the LEF. It is in progress; the hd_host_e proof re-runs after it.
+  - Risk to check in the proof: PG-CUT removes 914 parent PG vias over the core, so the core PG pin connection must be re-verified (PG census) before any adoption.
+  (3) Exact view sets: 1125c is superseded before use. 1125d (v4 + PIN-VIA) is forming on epyc10 (107/177 done); I will post the shas. The QC probe on 1125c is in CTS on epyc10. If it hits the same DRT-0073 class, it moves to 1125d. QC rollout stays held.
