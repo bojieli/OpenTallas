@@ -333,6 +333,31 @@ def touched_bound_types(raw, braw):
     return [t for t in RN.touched_types(raw, braw) if t in used]
 
 
+def whole_cow_r8_pin(src, asbuilt, pre, pre_sha, extra):
+    """Resolve the deliberate R8 policy from the immutable source before applying any row."""
+    from pin_r8_v2 import PIN_MARK
+
+    table, _ = RN.r8_tables(src, asbuilt)
+    reference = json.loads(table.read_text()) if table is not None else {}
+    if not isinstance(reference, dict):
+        raise ValueError(f"invalid sealed main R8 table: {table}")
+    note = str(reference.get("note", ""))
+    if PIN_MARK not in note:
+        if pre is not None:
+            raise ValueError("pinned R8 inputs require a deliberate pin in the sealed main R8 table")
+        return {}
+    if pre is None:
+        raise ValueError("sealed main R8 table has a deliberate pin; --r8-pin-pre, --r8-pin-pre-sha256 and --r8-pin-extra are required")
+    if f"{PIN_MARK} extra={extra}:" not in note:
+        raise ValueError("--r8-pin-extra disagrees with the sealed main R8 table")
+    pin = (src / pre).resolve()
+    if pre.is_absolute() or not pin.is_relative_to(src) or not pin.is_file():
+        raise ValueError(f"--r8-pin-pre must name a file inside the sealed source: {pre}")
+    if sha(pin) != pre_sha:
+        raise ValueError(f"--r8-pin-pre-sha256 disagrees with the sealed source file: {pre}")
+    return dict(pin_pre=pin, pin_extra=extra)
+
+
 # ------------------------------------------------------------------ the gate
 def gate(a):
     t_all = time.time()
@@ -390,6 +415,15 @@ def gate(a):
         if not os.path.isfile(s["path"]):
             done("NOT", f"row missing: {s['path']}")
             return finish()
+    r8_pin = {}
+    if a.cow and a.types == "all":
+        try:
+            r8_pin = whole_cow_r8_pin(src, a.asbuilt, a.r8_pin_pre, a.r8_pin_pre_sha256, a.r8_pin_extra)
+        except (OSError, ValueError) as e:
+            done("NOT", str(e))
+            return finish()
+        if r8_pin:
+            R["r8_pin"] = dict(pre=str(a.r8_pin_pre), sha256=a.r8_pin_pre_sha256, extra=a.r8_pin_extra)
     env, how = die_env(a.die, a.env)
     R["bind_env"] = dict(env, _source=how)
     base_env = dict(os.environ, **env, PYTHONDONTWRITEBYTECODE="1", OT_LANE=lane, TMPDIR=str(work))
@@ -533,7 +567,7 @@ def gate(a):
                 r["r8"] = dict(rc=2, r8=f"R8 refresh not run: r8-prepass rc {r['r8_prepass']} wrote no bus_groups.json", fixed={})
                 return r, s
         try:
-            tr = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json")) if not a.no_r8 else dict(rc=0, r8="skipped", fixed={})
+            tr = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json"), **r8_pin) if not a.no_r8 else dict(rc=0, r8="skipped", fixed={})
         except Exception as e:  # noqa: BLE001
             tr = dict(rc=2, r8=f"R8 refresh crashed: {type(e).__name__}: {str(e)[:300]}", fixed={})
         s["r8"] = round(time.time() - t0, 1)
@@ -548,7 +582,7 @@ def gate(a):
             # R8 LOOP (bind_r8_loop of the die bind scripts): the pre-pass bus groups can price a member one stage off the full bind
             # (KV g4 11-25: pv_v_pads_ffkpv 68 members bound 43 vs table 42 after the pre-pass refresh) -> refresh from THIS bind, bind again once
             t1 = time.time()
-            tr2 = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json"))
+            tr2 = RN.normalize_tables(str(plan), str(tree), a.asbuilt, str(B / "bus_groups.json"), **r8_pin)
             s["r8_loop"] = round(time.time() - t1, 1)
             r["r8_loop"] = tr2
             if not tr2["rc"]:
@@ -670,6 +704,9 @@ def main(argv=None):
     g.add_argument("--tap-manifest", type=Path, help="native placed sink bins manifest for per-cut tap derivation")
     g.add_argument("--skip-normalize", action="append", default=[], choices=RN.STEPS)
     g.add_argument("--no-r8", action="store_true", help="do not refresh R8 tables (the strict bind still checks them)")
+    g.add_argument("--r8-pin-pre", type=Path, help="sealed-source relative pre-derive R8 table for whole --cow")
+    g.add_argument("--r8-pin-pre-sha256", help="expected SHA-256 of the sealed pre-derive R8 table")
+    g.add_argument("--r8-pin-extra", type=int, help="deliberate R8 pin extra cycles from the sealed main R8 table")
     g.add_argument("--keep-tree", action="store_true", help="keep the fork and the launch tree")
     g.add_argument("--keep-fork", action="store_true", help="keep the fork (the rolling compose publishes it), delete the launch tree")
     g.add_argument("--drop-failed-rows", action="store_true", help="a row that fails to apply is dropped (recorded), the rest go on")
@@ -679,6 +716,12 @@ def main(argv=None):
                    help="isolate a terminal gate in a copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
     cow_whole = a.cow and a.types == "all"
+    pin_flags = [v is not None for v in (a.r8_pin_pre, a.r8_pin_pre_sha256, a.r8_pin_extra)]
+    if any(pin_flags):
+        if not cow_whole or not all(pin_flags):
+            g.error("R8 pin inputs require whole --cow and all three --r8-pin-* options")
+        if not re.fullmatch(r"[0-9a-f]{64}", a.r8_pin_pre_sha256):
+            g.error("--r8-pin-pre-sha256 requires a full lowercase SHA-256")
     if a.cow and (a.keep_tree or a.keep_fork):
         g.error("--cow cannot retain a materialized tree or fork")
     if cow_whole and (a.ledger or a.no_r8 or a.skip_normalize or a.drop_failed_rows):

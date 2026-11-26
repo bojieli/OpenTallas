@@ -141,7 +141,70 @@ def test_whole_cow_cli_uses_the_existing_overlay_runner_without_a_publish_ledger
     assert RG.main(argv) == 0
     assert seen["argv"][1:] == argv
     assert seen["src"] == src and seen["out"] == out and seen["ledger"] is None
+    pins = ["--r8-pin-pre", "pre.json.gz", "--r8-pin-pre-sha256", "a" * 64, "--r8-pin-extra", "0"]
+    assert RG.main(argv + pins) == 0
+    assert seen["argv"][1:] == argv + pins
+    scoped = list(argv)
+    scoped[scoped.index("all")] = "a"
+    for invalid in (scoped + pins, argv + pins[:-2], argv + pins[:-3] + ["deadbee", "--r8-pin-extra", "0"]):
+        with pytest.raises(SystemExit) as exc:
+            RG.main(invalid)
+        assert exc.value.code == 2
     for option in (["--keep-fork"], ["--ledger", "ledger"], ["--no-r8"], ["--skip-normalize", "retap"]):
         with pytest.raises(SystemExit) as exc:
             RG.main(argv + option)
         assert exc.value.code == 2
+
+
+def test_whole_cow_requires_exact_sealed_inputs_for_a_deliberate_r8_pin(tmp_path):
+    import pytest
+    from pin_r8_v2 import PIN_MARK
+
+    src = tmp_path / "sealed"
+    src.mkdir()
+    (src / "asbuilt.json").write_text(json.dumps({"land_r8": "r8.json"}))
+    table = src / "r8.json"
+    table.write_text("{}")
+    assert RG.whole_cow_r8_pin(src, "asbuilt.json", None, None, None) == {}
+    pre = Path("pre.json.gz")
+    (src / pre).write_bytes(b"pinned bytes")
+    digest = RG.sha(src / pre)
+    with pytest.raises(ValueError, match="require a deliberate pin"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", pre, digest, 0)
+
+    table.write_text(json.dumps({"note": f"prefix | DIE-QC-102 {PIN_MARK} extra=0: preserved"}))
+    with pytest.raises(ValueError, match="all three|are required"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", None, None, None)
+    with pytest.raises(ValueError, match="disagrees with the sealed main"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", pre, digest, 1)
+    with pytest.raises(ValueError, match="disagrees with the sealed source file"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", pre, "0" * 64, 0)
+    with pytest.raises(ValueError, match="must name a file"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", Path("missing"), digest, 0)
+    outside = tmp_path / "outside.json.gz"
+    outside.write_bytes((src / pre).read_bytes())
+    (src / "escape").symlink_to(outside)
+    with pytest.raises(ValueError, match="must name a file inside"):
+        RG.whole_cow_r8_pin(src, "asbuilt.json", Path("escape"), digest, 0)
+    assert RG.whole_cow_r8_pin(src, "asbuilt.json", pre, digest, 0) == {
+        "pin_pre": src / pre, "pin_extra": 0,
+    }
+
+
+def test_normalize_tables_forwards_the_exact_pin_to_r8_refresh(tmp_path, monkeypatch):
+    import r8_refresh
+
+    (tmp_path / "asbuilt.json").write_text(json.dumps({"land_r8": "r8.json"}))
+    (tmp_path / "r8.json").write_text("{}")
+    seen = []
+
+    def refresh(argv):
+        seen.append(argv)
+        return 0
+
+    monkeypatch.setattr(r8_refresh, "main", refresh)
+    pre = tmp_path / "pre.json.gz"
+    args = ("plan.json", str(tmp_path), "asbuilt.json", "bus_groups.json")
+    assert RG.RN.normalize_tables(*args, pin_pre=pre, pin_extra=0)["rc"] == 0
+    assert RG.RN.normalize_tables(*args)["rc"] == 0
+    assert seen[0] == seen[1] + ["--pin-pre", str(pre), "--pin-extra", "0"]
