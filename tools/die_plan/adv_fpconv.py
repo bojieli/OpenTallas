@@ -11,6 +11,8 @@ LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S
                 clock.landing_reader_start whose cland origin (landing_raw_branches consumer 'origin', last stage) is > 405 um
                 (Manhattan) from an input ring's cland_fstart_in_<bus> pin: origin -> reader_start is one cycle (kv3_pv_v4n
                 route setup -1117 ps on u_cland_origin -> u_cland_reader_start_ft42).  Fix: kv_start_corridor_event.py start.
+LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stages_existing + D < ceil(path_um / 405) - 1 (the stations
+                that make every hop <= 405 um), plus the cland legs above.  LEG405-ZERO stays as the legacy scan.
 RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point (S81 t15 32 seats in lane cores).
 SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
 PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
@@ -136,6 +138,24 @@ def leg405_zero(t):
     return [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D")) for r in t.get("relay_depth") or []
             if isinstance(r, dict) and _num(r.get("path_um")) and r["path_um"] > LEG_UM and not (r.get("stages_existing") or 0)] \
         + cland_reader_legs(t)
+
+
+def staged_short(r, limit=LEG_UM):
+    """stations missing on one relay_depth entry: ceil(path_um / limit) - 1 stations make every hop <= limit, stages_existing + D are
+    the stations the plan already carries (relay_depth.py rows are D = needed - existing).  0 = compliant by construction"""
+    p = r.get("path_um")
+    if not _num(p) or p <= limit:
+        return 0
+    need = int(-(-p // limit)) - 1
+    return max(0, need - int(r.get("stages_existing") or 0) - int(r.get("D") or 0))
+
+
+def leg405_staged(t):
+    """C-LEG405-R2: staged-aware LEG405-ZERO.  LEG405-ZERO ignores D, so every relay_depth row the generator already staged is a false
+    positive (S81 plan_t14_b8_coll0_1125: 1638 of 1644 flagged legs carry stations_existing + D >= ceil(path / 405) - 1).  Flags only
+    entries still short of that count, plus the cland origin -> reader_start legs (no stage count to credit)."""
+    return [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D"), staged_short(r)) for r in t.get("relay_depth") or []
+            if isinstance(r, dict) and staged_short(r)] + [h + (1,) for h in cland_reader_legs(t)]
 
 
 def relay_seats(t):
@@ -408,6 +428,11 @@ def _f_leg(raw, plan_path, tree=None, **_k):
     return _run("LEG405-ZERO", lambda t, tn, r: leg405_zero(t), lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} 0 stages", raw)
 
 
+def _f_leg_staged(raw, plan_path, tree=None, **_k):
+    return _run("LEG405-STAGED", lambda t, tn, r: leg405_staged(t),
+                lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)", raw)
+
+
 def _f_relay(raw, plan_path, tree=None, **_k):
     def fn(t, tn, r):
         ins, st = relay_seats(t)
@@ -443,6 +468,6 @@ def _f_seat(raw, plan_path, tree=None, **_k):
     return _run("SEAT-UNIQUE", lambda t, tn, r: seat_unique(t), lambda h: f"{h[0]} stations at {h[1]}", raw)
 
 
-F = {"IN-OUTLINE": _f_in_outline, "LEG405-ZERO": _f_leg, "RELAY-SEAT": _f_relay, "SEAT-DENSITY": _f_dens,
+F = {"IN-OUTLINE": _f_in_outline, "LEG405-ZERO": _f_leg, "LEG405-STAGED": _f_leg_staged, "RELAY-SEAT": _f_relay, "SEAT-DENSITY": _f_dens,
      "PIN-FACE-CLEAR": _f_pin, "HUB-BOX": _f_hub, "FT-CLEAR": _f_ft, "TAP-STEP-DUP": _f_tap, "BAND-AT-PIN": _f_band, "SEAT-UNIQUE": _f_seat}
 findings_by_check = {k: G._safe(k, v) for k, v in F.items()}
