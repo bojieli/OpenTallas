@@ -3,3 +3,4 @@ cut_local	die	candidate	plan_sha	scoped_rows_ready	scoped_types_ready	adopted_ro
 2026-11-25 21:00 PST	HEAD	W10	f6d1bf51c90d	0	0	0	0	0	PRE0, strict PASS, LAT334/334, G0 1. Six-row replacement excludes the 77 reset-sensitive SerDes ops and gates separately.
 2026-11-25 21:00 PST	QC	C1q	00abead30cfa	0	0	0	0	0	Initial candidate lost 782 ST_B fields and was refused. Three-row rebuild covers 6 types, guard PASS, complete release gate running.
 2026-11-25 21:00 PST	KV	A5t9 R8	73d3f3d765d6	0	0	0	0	0	PRE0, G0 23 across five ESTRIP types. Return to structural corridor repair. Separate generator-only refresh in progress.
+2026-11-25 21:40 PST	HEAD	W10 public follow-up	f6d1bf51c90d	6	25	6	0	0	Exact source adopted by CAS; LAT334/334, native reset recovery with four mutants, G0 0/0, portable a942ab04bc71a. Eleven place-only and fourteen require exact review. C18 and signed mesh_e separate.
