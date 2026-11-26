@@ -4485,7 +4485,8 @@ class Event:
                         ts = self.ts[self.raw_type(v)]
                         whole_keep = (self.spec.get("whole_map_to_keep") and ts.pname[v][ts.keep] == v
                                       and set(ts.content_piece.values()) <= {ts.keep})
-                        if not whole_keep:
+                        explicit_keep = (self.spec.get("whole_map_keep_paths") or {}).get(k) == v and ts.pname[v][ts.keep] == v
+                        if not (whole_keep or explicit_keep):
                             raise SplitError(f"map {k}: whole split partition {v} (needs a piece)")
                         # FLOW-STRIPBODY-1121 (spec whole_map_to_keep): every as-built content of the type sits in
                         # the keep piece (strip pieces hold only plan-generated face infrastructure), so the whole
@@ -4519,6 +4520,52 @@ class Event:
         self.ab_out = ab
         self.rep["map_entries"] = len(moved)
         self.rep["map_pieces"] = dict(Counter(v[0] for v in moved.values()))
+
+    def _census_route_ends(self, mp):
+        """Extend source-bound witnesses through the native cut lanes generated for their moved face buses."""
+        witnesses = mp.get("forward_routes", [])
+        if not witnesses:
+            return
+        lanes = {r["id"]: r for r in self.out["lanes"]}
+        ports = {r["id"]: r for r in self.out["ports"]}
+        pieces = {piece: base for base, names in self.pmap.items() for piece in names}
+        for route in witnesses:
+            if not isinstance(route, dict) or not all(k in route for k in ("src", "dst")):
+                continue
+            chain = route.get("lanes") or []
+            if (not isinstance(chain, list) or not chain or not all(isinstance(lid, str) for lid in chain)
+                    or chain[0] not in lanes or chain[-1] not in lanes):
+                continue
+            first, last = ports[lanes[chain[0]]["ports"][0]], ports[lanes[chain[-1]]["ports"][-1]]
+            for which, endpoint, how in (("src", first["src"], "leaf"), ("dst", last["dst"], "sink")):
+                logical = mp.get("parts", {}).get(route[which])
+                physical = endpoint["part"]
+                base = pieces.get(physical)
+                if logical == physical or base is None or pieces.get(logical) != base:
+                    continue
+                names = self.pmap[base]
+                a, b = (logical, physical) if which == "src" else (physical, logical)
+                starts, ends = names.index(a), names.index(b)
+                lane, width = (chain[0], first["width"]) if which == "src" else (chain[-1], last["width"])
+                selectors = route.get("lane_bits", {})
+                bits = len(selectors[lane]) if lane in selectors else width
+                matching = [r["lane"] for r in self.rep.get("census_routes", [])
+                            if r["part"] == base and r.get("bus") == endpoint["bus"] and r["how"] == how
+                            and (r["frm"], r["to"], r["bits"]) == (starts, ends, bits)]
+                if len(matching) != 1:
+                    raise SplitError(f"forward witness {route[which]}.{endpoint['bus']}: expected one typed cut lane, "
+                                     f"got {matching}")
+                if which == "src":
+                    route["lanes"] = matching + route["lanes"]
+                else:
+                    route["lanes"] = route["lanes"] + matching
+                    # Original outgoing lane prefill already stages source-side cuts. A final sink-side
+                    # cut has no original outgoing consumer, so reserve its frozen driver before generic packing.
+                    reserved = self.__dict__.setdefault("_census_sink_cuts", {})
+                    cut = matching[0]
+                    payload = (base, lane, tuple(selectors.get(lane, range(width))))
+                    if reserved.setdefault(cut, payload) != payload:
+                        raise SplitError(f"forward witnesses cannot reserve different payloads on cut lane {cut}")
 
     def _census(self, out_dir):
         """G0 census coverage (census_cov): the as-built leaf -> partition map moves the split partitions' leaves to
@@ -4569,8 +4616,16 @@ class Event:
                     if rx == f"^{base}$":
                         fv[j] = f"^{base}(" + "|".join(re.escape(s) for s in self._suffixes()) + ")?$"
             for key in ("forward_routes", "bit_rules", "exempt"):
-                if any(base in json.dumps(mp.get(key, [])) for base in self.pmap):
+                records = mp.get(key, [])
+                if key == "exempt":
+                    records = [{k: v for k, v in row.items() if k not in {"reason", "replaced_by", "note"}} for row in records]
+                if any(base in json.dumps(records) for base in self.pmap):
                     raise SplitError(f"census map {src['map']}: {key} names a split partition (not handled)")
+            if self.spec.get("lane_reference") and mp.get("forward_routes"):
+                self._census_route_ends(mp)
+                mp["route_lane_reference"] = "split_lane_reference.json"
+            elif any(isinstance(route, dict) and route.get("lane_bits") for route in mp.get("forward_routes", [])):
+                raise SplitError("census forward route bit selections require a frozen lane reference")
             mp["note"] = f"{self.tag}: leaves of {sorted(self.pmap)} moved to their pieces | " + mp.get("note", "")
             name = f"census_map_split_{k}.json"
             md5[name] = jdump(mp, Path(out_dir) / name)
@@ -4649,7 +4704,8 @@ class Event:
 
     def _lane_reference(self, out):
         """publish the base bind's frozen lane payloads (spec lane_reference) for the split bind: every split base
-        partition's group becomes its pieces; the lanes, cells and source receipts are the base bind's, unchanged"""
+        partition's group becomes its pieces. Preserve all base lanes, cells and source receipts, and reserve any
+        new sink-side census cut for its existing incoming driver. The binder prefill honors that reservation."""
         ref = json.loads(rpath(self.spec["lane_reference"]).read_text())
         if ref.get("schema") != "opentallas.split_lane_reference.v1" or not isinstance(ref.get("part_groups"), dict):
             raise SplitError(f"lane_reference {self.spec['lane_reference']}: not a split lane reference")
@@ -4663,7 +4719,21 @@ class Event:
         gone = sorted(r["id"] for r in ref.get("lanes", []) if r["id"] not in ids)
         if gone:
             raise SplitError(f"lane_reference: {len(gone)} base lanes are not in the split plan, e.g. {gone[:5]}")
+        reserved = getattr(self, "_census_sink_cuts", {})
+        if reserved:
+            from split_bind_routes import payload_sha256
+            lanes = ref["lanes"]
+            if payload_sha256(lanes) != ref.get("payload_sha256"):
+                raise SplitError("cannot reserve a cut from a stale original lane payload digest")
+            frozen = {r["id"]: r["drivers"] for r in lanes}
+            for cut, (base, lane, indices) in sorted(reserved.items()):
+                if cut in frozen or lane not in frozen or any(type(i) is not int or not 0 <= i < len(frozen[lane])
+                                                               for i in indices):
+                    raise SplitError(f"cut lane {cut}: cannot reserve payload of {lane} at bits {indices}")
+                lanes.append(dict(id=cut, src=base, dst=base, drivers=[frozen[lane][i] for i in indices]))
+            ref["payload_sha256"] = payload_sha256(lanes)
         self.rep["lane_reference"] = dict(lanes=len(ref["lanes"]), bits=sum(len(r["drivers"]) for r in ref["lanes"]),
+                                          census_sink_cuts=sorted(reserved),
                                           payload_sha256=ref.get("payload_sha256"),
                                           groups={b: list(n) for b, n in self.pmap.items()})
         txt = json.dumps(ref, separators=(",", ":")) + "\n"
@@ -4873,24 +4943,30 @@ def census(spec, bind_dir):
                     inbits[(L["dst"], f"{sb[1]}.{sb[2]}[{sb[3]}]")].add(L["bus_in"])
     sinks = json.loads((Path(bind_dir) / "bind_sinks.json").read_text())
     intra, intra_pins, miss = Counter(), Counter(), Counter()
-    for k, v in sinks.items():
-        if len(v) < 2 or not isinstance(v[1], str):
+    direct_cuts, expression_cuts = defaultdict(set), defaultdict(set)
+    for k, desc in sinks.items():
+        if len(desc) < 2:
             continue
-        # A generated hierarchy may contain indices before the pin
-        # suffix (u.g_pc[0].u_pc.rq[5]). Drop only the terminal pin.
-        sc, sep, source_pin = v[1].rpartition(".")
-        if not sep:
-            sc = source_pin
+        expr = desc[0] in ("or", "and") and isinstance(desc[1], list)
+        sources = desc[1] if expr else [desc[1]]
         kc = k.rsplit(".", 1)[0]
-        sp, spc = piece(sc)
         kp, kpc = piece(kc)
-        if kp in TS and sp == kp:
-            if spc != kpc:
-                intra[(kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc)] += 1
-                pin = source_pin.split("[", 1)[0]
-                intra_pins[(kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc, pin)] += 1
-        elif kp in TS:
-            buses = inbits.get((kp, v[1]))
+        if kp not in TS:
+            continue
+        for source in dict.fromkeys(r for r in sources if isinstance(r, str)):
+            # A generated hierarchy may contain indices before the terminal pin.
+            sc, sep, source_pin = source.rpartition(".")
+            if not sep:
+                sc = source_pin
+            sp, spc = piece(sc)
+            if sp == kp:
+                if spc != kpc:
+                    a = (kp, sc.split(".")[0][:40], kc.split(".")[0][:40], spc, kpc)
+                    pin = source_pin.split("[", 1)[0]
+                    intra[a] += 1
+                    intra_pins[(*a, pin)] += 1
+                continue
+            buses = inbits.get((kp, source))
             if not buses:
                 miss[(kp, sp)] += 1
                 continue
@@ -4900,8 +4976,19 @@ def census(spec, bind_dir):
                     continue
                 bp = BP[kp][bus]
                 ENDS[(kp, bus)][("sink", lookup(kc)[1] or kc, kpc)] += 1
-                if bp != kpc:
-                    T[(kp, bus, "sink")][(bp, kpc)] += 1
+                if bp == kpc:
+                    continue
+                key = (kp, bus, "sink"), (bp, kpc)
+                if expr:
+                    expression_cuts[key].add(source)
+                else:
+                    direct_cuts[key].add(source)
+                    T[key[0]][key[1]] += 1
+    # Many Boolean sinks can use the same existing face bit in one piece. Add that conductor once.
+    for (key, edge), sources in expression_cuts.items():
+        extra = len(sources - direct_cuts.get((key, edge), set()))
+        if extra:
+            T[key][edge] += extra
     transit = [dict(hub=h, bus=bus, how=how, frm=a, to=b, bits=n)
                for (h, bus, how), c in sorted(T.items()) for (a, b), n in sorted(c.items(), key=str)]
     ends, pins = defaultdict(dict), defaultdict(dict)

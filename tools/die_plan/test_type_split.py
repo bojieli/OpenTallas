@@ -543,6 +543,47 @@ def test_x_split_preserves_local_place_regions_and_edge_tap_y():
         TS.TypeSplit(_Ev(raw, spec), "T").split()
 
 
+
+def test_census_sink_cut_reserves_the_incoming_native_driver(tmp_path):
+    from split_bind_routes import payload_sha256
+
+    ev = TS.Event.__new__(TS.Event)
+    ev.pmap = {"hub": ["hub", "hub_cut"]}
+    ev.out = dict(
+        ports=[
+            dict(id="source", src=dict(part="origin", bus="o_src_status"),
+                 dst=dict(part="relay", bus="i_src_status"), width=1),
+            dict(id="incoming", src=dict(part="relay", bus="o_src_status"),
+                 dst=dict(part="hub_cut", bus="i_src_status"), width=1),
+            dict(id="cut", src=dict(part="hub_cut", bus="o_src_status_p"),
+                 dst=dict(part="hub", bus="i_src_status_p"), width=1),
+        ],
+        lanes=[dict(id=i, ports=[i]) for i in ("source", "incoming", "cut")],
+    )
+    ev.rep = dict(census_routes=[dict(lane="cut", part="hub", bus="i_src_status",
+                                     how="sink", frm=1, to=0, bits=1)])
+    mp = dict(parts={"src": "origin", "sink": "hub"},
+              forward_routes=[dict(src="src", dst="sink", lanes=["source", "incoming"])])
+    ev._census_route_ends(mp)
+    assert mp["forward_routes"][0]["lanes"] == ["source", "incoming", "cut"]
+    expected = ["u_status", "status", 0]
+    lanes = [
+        dict(id="source", src="origin", dst="relay", drivers=[expected]),
+        dict(id="incoming", src="relay", dst="hub", drivers=[expected]),
+    ]
+    base = tmp_path / "original.json"
+    base.write_text(json.dumps(dict(schema="opentallas.split_lane_reference.v1",
+                                   part_groups={n: [n] for n in ("origin", "relay", "hub")},
+                                   lanes=lanes, payload_sha256=payload_sha256(lanes))))
+    ev.spec = dict(lane_reference=str(base))
+    ev._lane_reference(tmp_path)
+    frozen = json.loads((tmp_path / "split_lane_reference.json").read_text())
+    assert frozen["lanes"][:-1] == lanes
+    assert frozen["lanes"][-1] == dict(id="cut", src="hub", dst="hub", drivers=[expected])
+    assert payload_sha256(frozen["lanes"]) == frozen["payload_sha256"]
+    assert ev.rep["lane_reference"]["census_sink_cuts"] == ["cut"]
+
+
 def test_split_census_keeps_generated_instance_indices(tmp_path):
     """PC page-cache leaves keep their full path while finding the owner."""
     raw = {

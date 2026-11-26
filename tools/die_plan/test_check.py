@@ -486,6 +486,54 @@ def test_census_explicit_control_routes_fail_closed(tmp_path):
     assert any("witness capacity exceeds planned lanes" in e["msg"] for e in R.errors())
 
 
+
+def test_census_mixed_lane_bit_requires_the_same_frozen_driver(tmp_path):
+    from types import SimpleNamespace
+    import census_cov
+    import split_bind_routes
+
+    ports = {
+        "data": dict(src=dict(part="pa", bus="o_data"), dst=dict(part="pb", bus="i_data"), width=4),
+        "control": dict(src=dict(part="pa", bus="o_alias_status"), dst=dict(part="pm", bus="i_alias_status"), width=1),
+        "mixed": dict(src=dict(part="pm", bus="o_data_bundle"), dst=dict(part="pb", bus="i_data_bundle"), width=3),
+    }
+    parts = {n: {"type": "t"} for n in ("pa", "pm", "pb")}
+    P = SimpleNamespace(raw=dict(census=[dict(rows="rows.json", map="map.json")]), types={}, parts=parts,
+                        ports=ports, lanes={p: dict(ports=[p]) for p in ports})
+    rows = [dict(src="alias", src_bus=bus, dst="pb", dst_bus=bus, bits=width, kind="data")
+            for bus, width in (("data", 4), ("status", 1))]
+    reference = [
+        dict(id="control", src="pa", dst="pm", drivers=[["u_source", "status", 0]]),
+        dict(id="mixed", src="pm", dst="pb", drivers=[["u_other", "data", 0], ["u_other", "data", 1],
+                                                       ["u_source", "status", 0]]),
+    ]
+    ref = dict(schema=split_bind_routes.SCHEMA, lanes=reference, part_groups={n: [n] for n in parts},
+               payload_sha256=split_bind_routes.payload_sha256(reference),
+               cells={"u_source": {"part": "pa"}, "u_other": {"part": "pm"}})
+    (tmp_path / "rows.json").write_text(json.dumps(rows))
+    (tmp_path / "native.json").write_text(json.dumps(ref))
+
+    def check_selected(bit, ref_path="native.json"):
+        witness = dict(src="alias", src_bus="status", dst="pb", dst_bus="status", lanes=["control", "mixed"],
+                       lane_bits={"mixed": [bit]})
+        mp = dict(parts={"alias": "pa", "pb": "pb"}, forward_via=["pm"], route_lane_reference=ref_path,
+                  forward_routes=[witness])
+        (tmp_path / "map.json").write_text(json.dumps(mp))
+        R = check.Report()
+        return census_cov.coverage(P, tmp_path, R), R.errors()
+
+    summary, errors = check_selected(2)
+    assert summary["dropped_bits"] == 0 and not errors
+    for bit in (0, 3, -1, True):
+        summary, errors = check_selected(bit)
+        assert summary["dropped_bits"] == 1 and errors
+    assert check_selected(2, "missing.json")[1]
+
+    ref["lanes"][1]["drivers"][2] = ["u_other", "data", 2]
+    (tmp_path / "native.json").write_text(json.dumps(ref))
+    assert any("payload digest" in item["msg"] for item in check_selected(2)[1])
+
+
 def test_zroute_turn_is_L():
     """COORD 10-23: a turning slot (perpendicular faces) routes as an L, a straight slot with a jog as a Z."""
     assert check.zroute((0, 10), (50, 100), "W", "N") == [(0, 10), (50, 10), (50, 100)]
