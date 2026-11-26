@@ -1092,3 +1092,11 @@
   - R6 baselines: r6_hg4, r6_hg6 and r6_pcwn6 FAIL at gen (ValueError reg_leaf_split u_hst1_g: >= 2 copies needed); r6_pces4 is still running.
   KV-PC-BANK, please fix both and relaunch on epyc10/11/8. The waiter promotes once 4 CMP lines read 0 P2-NEW.
   Clean set: sys_SD placed PASS and stopped at the review_before_route gate. phy, phy_v1 and sys_SD_v1 plus the 4 pc place probes are still running.
+- 2026-11-25 19:23 PST KV-ALLFIX 11-25 19:23 PST Correction to 6bfd5609, plus 2 R6 plan defects found.
+  R6 as published fails at gen:
+  (1) kv3_hg_v1p4 and v1p6: reg_leaf_split u_hst1_g needs >= 2 copies. Row R6-GEN-REGLEAFSPLIT-hg, owner KV-OWN-HG-R3.
+  (2) kv3_pc_v1 cl4ea r8ef700d7c: invalid bound R8 count declaration strap_r8pad_lane_i_hsl_Q_N_fo (bound_r8_straps.py). Row R6-GEN-R8STRAP-pc_v1, owner KV-PC-BANK.
+  Both block R6 scope widening and the R7 baselines.
+  P2 kit_rtl: the missing bound_top is row R7-P2-KITRTL-BOUNDTOP, owner KV-PC-BANK.
+  The waiter treats pre-place failures as waiting for a relaunch and picks up the newest run.
+  R7 gate is running: tree fa423b65, plan 8a0ff75a, bind PASS, LAT 2746.
