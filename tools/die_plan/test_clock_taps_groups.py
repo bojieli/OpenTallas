@@ -308,6 +308,27 @@ def test_fixed_output_group_uses_declared_forwarded_clock(tmp_path):
         assert f"NET ck_u_ft_ft0_s1/q_{bit} nt1" in p.stdout
 
 
+def test_only_named_fixed_group_is_reasserted_before_reset_split(tmp_path, monkeypatch):
+    hook = tmp_path / HOOK.name
+    shutil.copyfile(HOOK, hook)
+    monkeypatch.setitem(globals(), 'HOOK', hook)
+    (tmp_path / 'tap_pair_affinity.tcl').write_text(
+        'ck_a/q disconnect; ck_a/q connect nclk\nck_b/q disconnect; ck_b/q connect nclk\n')
+    (tmp_path / 'tap_reset_split.tcl').write_text(
+        'puts "RESET_SPLIT_TAPS [ck_a/q getNet] [ck_b/q getNet]"\n')
+    env = '''
+set ::env(OT_TAP_GROUP_RE) {^([ab])/}
+set ::env(OT_TAP_GROUP_FIXED) {a:clk_t1,b:clk_t1}
+set ::env(OT_TAP_PAIR_AFFINITY) 1
+set ::env(OT_TAP_RESET_SPLIT) 1
+set ::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) a
+'''
+    p = run(tmp_path, 'mkflop a/q 900\nmkflop b/q 900\n', env=env)
+    assert p.returncode == 0, p.stderr
+    assert 'RESET_SPLIT_TAPS nt1 nclk' in p.stdout
+    assert 'NET ck_a/q nt1' in p.stdout and 'NET ck_b/q nt1' in p.stdout
+
+
 def test_fixed_output_group_survives_cap_and_min_merges(tmp_path):
     env = (GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
            "\nset ::env(OT_TAP_MAX_SINKS) 3"

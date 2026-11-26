@@ -257,9 +257,11 @@ proc ct_fixed_target {group} {
   foreach tap $ct_taps {if {[lindex $tap 0] eq $name} {return $tap}}
   error "OT_TAP_GROUP_FIXED unknown or non-grid clock port: $name"
 }
-proc ct_reassert_fixed_groups {} {
+proc ct_reassert_fixed_groups {{groups {}}} {
   global ct_fixed ct_grp ct_pinned ct_group_owned
-  dict for {group name} $ct_fixed {
+  if {![llength $groups]} {set groups [dict keys $ct_fixed]}
+  foreach group $groups {
+    if {![dict exists $ct_fixed $group]} {error "Reset-split fixed group has no declared tap: $group"}
     if {![dict exists $ct_grp $group]} {error "OT_TAP_GROUP_FIXED group has no sinks: $group"}
     set target [ct_fixed_target $group]
     foreach pin [dict get $ct_grp $group] {
@@ -867,6 +869,10 @@ if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) 
 # a same-tap pair.  Clock pins only; no data/reset/cell change.  Before the hop-latch pass so latches follow it.
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_pair_affinity.tcl]
+}
+# A named reset cohort must present its final capture tap to the reset split.
+if {[info exists ::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT)] && $::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) ne ""} {
+ ct_reassert_fixed_groups [split $::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) ,]
 }
 # S81-SEAM-RST-1115 form pg (default off, OT_TAP_RESET_AFFINITY=1): the last reset stage of an async clear takes the clock tap
 # its sinks use (tap_reset_affinity.tcl), so launch and capture of every async pin share one insertion delay.
