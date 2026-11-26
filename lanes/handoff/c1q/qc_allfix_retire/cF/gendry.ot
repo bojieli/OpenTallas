@@ -1,0 +1,60 @@
+ot-run: epyc7          admits   369 GB (avail 681, reserve 0, fresh 0, peak 39.4, headroom 0, waiters 5/208 GB, oldest 0.1 h) load 75/96 running 25 disk 434 GB 
+ot-run: -> epyc7
+ot-run: rt pinned for this unit: OT_TOOLSTALE_RT=/srv/opentallas-scratch2/claude/rt/929d2392ed3d (current; TOOLSTALE reference for the whole run)
+ot-heavy: request 96G is charged 7G (load 75); the cap stays 96G
+ot-heavy: waiting for memory on loved-redfish: CPU_CHARGE: 3169 cores committed by 25 running + 4 for this job > 96 (1 x 96); load 75
+ot-heavy: admitted on loved-redfish as oth-ubuntu-1538318-1795513871 after 22 s
+KW_RT_TOOLS composed /srv/opentallas-scratch2/claude/QC-ALLFIX/cF/launch_aa4d91420554 (rt /srv/opentallas-scratch2/claude/rt/aa4d91420554; 0 tool files only the die tree has kept)
+FAIL ISTPRICE no as-built found (--asbuilt, plan asbuilt section, plan_of_record/native_bind/asbuilt_run*.json): FIXED-SPLIT / OUT-LANES (native station rules) cannot be judged; pass the integrator's as-built
+FAIL ISTPRICE 0 lane(s) over-cycle; fix: refresh the latency table / fixed_cycles = source + destination (ADV-IST-PRICE has the per-lane fix)
+FAIL RESETPUB slw_sc_v3: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the base's (local
+FAIL RESETPUB slw_sc_v2: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the base's (local
+FAIL RESETPUB sle_sc_v2: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the base's (local
+FAIL RESETPUB sle_sc_v3: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the base's (local
+FAIL RESETPUB slw_sc_v1__cl63e5a7a2: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the b
+FAIL RESETPUB slw_sc_v1__cl64543eaf__cl5e017c6f: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identi
+FAIL RESETPUB slw_sc_v1__cl64543eaf__cl4590432d: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identi
+FAIL RESETPUB sle_sc_v1__cl115da35f: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the b
+FAIL RESETPUB sle_sc_v1__cl7479a5ec: clock / reset inputs changed vs base (clock.edge_clocks,clock.landing_contract.bands.x_su_c_i.rect_um,clock.landing_contract.bands.x_su_c_i.resized_from_um,clock.landing_contract.collector_local_sources) but the published collector_tree is byte-identical to the b
+FAIL GENDRY cbn_q00__cl622f65d2: kit generator rc=1: ValueError: entry footprint differs from actual emitted utility pin
+FAIL GENDRY glue: kit generator rc=1: gen phys: ERROR type glue: pad bump_bump_fwd_epoch_pad_i must bind a leaf port: None
+FAIL GENDRY sle_ctl__cla4f6f12f: kit generator rc=1: gen phys: ERROR type sle_ctl__cla4f6f12f: u_ctl.x_fw bound twice
+FAIL GENDRY sle_sc_v1__cl115da35f: kit generator rc=1: gen phys: ERROR type sle_sc_v1__cl115da35f: u_sc.x_ctl bound twice
+FAIL GENDRY sle_sc_v1__cl7479a5ec: kit generator rc=1: gen phys: ERROR type sle_sc_v1__cl7479a5ec: u_sc.x_ctl bound twice
+FAIL GENDRY sle_sc_v2: kit generator rc=1: gen phys: ERROR type sle_sc_v2: u_sc.x_ctl bound twice
+FAIL GENDRY sle_sc_v3: kit generator rc=1: gen phys: ERROR type sle_sc_v3: u_sc.x_ctl bound twice
+FAIL GENDRY sle_stm_v1__cl27746664: kit generator rc=1: gen phys: ERROR type sle_stm_v1__cl27746664: u_stm.x_fw bound twice
+FAIL GENDRY sle_stm_v1__clbe630b9c: kit generator rc=1: gen phys: ERROR type sle_stm_v1__clbe630b9c: u_stm.x_fw bound twice
+FAIL GENDRY sle_stm_v2__cl55be2264: kit generator rc=1: gen phys: ERROR type sle_stm_v2__cl55be2264: u_stm.x_fw bound twice
+FAIL GENDRY sle_stm_v2__cl7b3062fa: kit generator rc=1: gen phys: ERROR type sle_stm_v2__cl7b3062fa: u_stm.x_fw bound twice
+FAIL GENDRY sle_stm_v3: kit generator rc=1: gen phys: ERROR type sle_stm_v3: u_stm.x_fw bound twice
+FAIL GENDRY sle_su_c: kit generator rc=1: ValueError: physical FT target instance identity missing/ambiguous u_u_suvm_u_vm8q_u_va
+FAIL GENDRY sle_su_l1__clc6d66f5b: kit generator rc=1: core_clock_contract.ContractError: /srv/opentallas-scratch2/claude/QC-ALLFIX/cF/launch_aa4d91420554/physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l4/qfd_qc_su_lane_w_l4_tt.lib: no SIGNED mean clock contract; ETM max_clock_tr
+FAIL GENDRY slw_sc_v1__cl63e5a7a2: kit generator rc=1: gen phys: ERROR type slw_sc_v1__cl63e5a7a2: u_sc.x_ctl bound twice
+FAIL GENDRY slw_sc_v1__cl64543eaf__cl4590432d: kit generator rc=1: gen phys: ERROR type slw_sc_v1__cl64543eaf__cl4590432d: u_sc.x_ctl bound twice
+FAIL GENDRY slw_sc_v1__cl64543eaf__cl5e017c6f: kit generator rc=1: gen phys: ERROR type slw_sc_v1__cl64543eaf__cl5e017c6f: u_sc.x_ctl bound twice
+FAIL GENDRY slw_sc_v2: kit generator rc=1: gen phys: ERROR type slw_sc_v2: u_sc.x_ctl bound twice
+FAIL GENDRY slw_sc_v3: kit generator rc=1: gen phys: ERROR type slw_sc_v3: u_sc.x_ctl bound twice
+FAIL GENDRY slw_stm_v1__cle34a73c3: kit generator rc=1: gen phys: ERROR type slw_stm_v1__cle34a73c3: u_stm.x_fw bound twice
+FAIL GENDRY slw_stm_v2__cl1ca9c415: kit generator rc=1: gen phys: ERROR type slw_stm_v2__cl1ca9c415: u_stm.x_fw bound twice
+FAIL GENDRY slw_stm_v2__cl9beb65e6: kit generator rc=1: gen phys: ERROR type slw_stm_v2__cl9beb65e6: u_stm.x_fw bound twice
+FAIL GENDRY slw_stm_v3: kit generator rc=1: gen phys: ERROR type slw_stm_v3: u_stm.x_fw bound twice
+FAIL GENDRY slw_su_c__cl19bb38ef: kit generator rc=1: ValueError: physical FT target instance identity missing/ambiguous u_u_suvm_u_vm8q_u_va
+FAIL GENDRY slw_su_c__cl92142dac: kit generator rc=1: ValueError: physical FT target instance identity missing/ambiguous u_u_suvm_u_vm8q_u_va
+FAIL GENDRY tt_ctlm: kit generator rc=1: gen phys: ERROR type tt_ctlm: u_tt_ctlm.command_stage bound twice
+FAIL DEPTH qfd_dv_s5_ctl_repair4: 237 of 7207 flops at logic depth >= 18 (the 833 ps budget; max 19; worst u_6458=19, u_6457=19, u_6456=19) in rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv -- cap / retime the constructor
+FAIL DEPTH qfd_sys_face_n32_bounded: 26 of 4483 flops at logic depth >= 18 (the 833 ps budget; max 29; worst u_374=29, u_3698=20, u_1167=20) in rtl/qwen_split/qfd_sys_face_n32_bounded.sv -- cap / retime the constructor
+FAIL DEPTH qfd_sys_face_n32_bounded_p192: 26 of 4483 flops at logic depth >= 18 (the 833 ps budget; max 29; worst u_374=29, u_3698=20, u_1167=20) in rtl/qwen_split/qfd_sys_face_n32_bounded_p192.sv -- cap / retime the constructor
+FAIL DEPTH qfd_sys_face_n32_opt: 25 of 4483 flops at logic depth >= 18 (the 833 ps budget; max 20; worst u_3698=20, u_1167=20, u_1166=20) in rtl/qwen_split/qfd_sys_face_n32_opt.sv -- cap / retime the constructor
+FAIL DEPTH qfd_sys_face_n32_opt_p192: 25 of 4483 flops at logic depth >= 18 (the 833 ps budget; max 20; worst u_3698=20, u_1167=20, u_1166=20) in rtl/qwen_split/qfd_sys_face_n32_opt_p192.sv -- cap / retime the constructor
+WARN GENDRY-UNCHECKED cbf_q00__cl1b5a6458: kit generator timeout after 1800 s
+WARN GENDRY-UNCHECKED cbf_q11: kit generator timeout after 1800 s
+WARN GENDRY-UNCHECKED cbn_q00__cld7bf7197: kit generator timeout after 1800 s
+WARN GENDRY-UNCHECKED cbx_q10__cl89936551: kit generator timeout after 1800 s
+WARN GENDRY-UNCHECKED cbx_q10__cl89936551_h: kit generator timeout after 1800 s
+WARN GENDRY-UNCHECKED cbx_q10__cl94a12200_h: kit generator timeout after 1800 s
+WARN GENDRY-SUMMARY 52 changed type(s) generated dry (0 kit-RTL from the bound RTL), 0 kit-RTL classified not generated, 26 failed
+WARN ADV-TREE-DRIFT tool files: LAG 19 file(s) [adv_g0_hops.py, bind.py, bind_elab.py, bind_open_inputs.py, clock_landings.py, core_clock_contract.py +13], missing 35 main commit(s): d4a09a78ff reset: host-independent root stable counter reset.source.hold (QC-RSTCNT) (x4); 6490dc4988 PRE ENTRYFOOT +
+PLAN-GATE-PRE FAIL tree=. plan=physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json findings=42 classes=DEPTH,GENDRY,ISTPRICE,RESETPUB advisories=170
+GENDRY_PRE_RC 1
+ot-run: RAN on epyc7 (unit oth-ubuntu-1538318-1795513871): exit 0

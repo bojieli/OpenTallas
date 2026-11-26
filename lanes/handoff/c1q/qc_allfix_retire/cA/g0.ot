@@ -1,0 +1,26 @@
+ot-run: epyc8          admits   169 GB (avail 572, reserve 0, fresh 0, peak 147.6, headroom 0, waiters 0/0 GB, oldest 0.0 h) load 87/96 running 38 disk 201 GB 
+ot-run: HOLD epyc8: disk-ETA: 201 GB free falling 316 GB/h, minus 20 GB this job's peak writes, leaves -135 GB < floor 50 GB within 1 h
+ot-run: HOLD: no new admission until the scratch fall rate allows it; re-placing every 120 s
+ot-run: -> epyc8
+ot-heavy: admitted on outgoing-giraffe as oth-ubuntu-1054646-1795486316 after 0 s
+TAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+OT_LEF_OVERRIDE {"lef": "qfd_dv_s8x_vmr.lef", "action": "applied", "md5": "3954803f44ca2406facfaa8edbf97fef"}
+G0C per type: 84/130 types clean (G3-eligible: 84); die-level {}; reported as WARN (run --completeness)
+G0 PASS: 0 errors, 0 pending-view, 865 warnings; 130 types / 377 partitions (91 in near-duplicate groups); worst cut {'ratio': 0.2369, 'at': 'horizontal@13750'}, worst partition segment {'ratio': 0.5336, 'at': 'horizontal@11500:sl_W4_su_l1'}; report /srv/opentallas-scratch2/claude/QC-ALLFIX/cA/g0/g0_report.json
+G0 PASS errors 0 pending 0
+ot-run: RAN on epyc8 (unit oth-ubuntu-1054646-1795486316): exit 0

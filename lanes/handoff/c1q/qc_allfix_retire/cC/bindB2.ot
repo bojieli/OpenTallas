@@ -1,0 +1,22 @@
+ot-run: epyc7          admits   451 GB (avail 666, reserve 0, fresh 0, peak 350.6, headroom 0, waiters 0/0 GB, oldest 0.0 h) load 98/96 running 20 disk 450 GB 
+ot-run: -> epyc7
+ot-heavy: request 64G is charged 7G (load 97 | SIMPLE_PEAK: MemAvailable 667 - 48 headroom - 30 expected growth of 20 running [stage peaks 30 GB over 37 build procs] (x0) - 0 unstarted = 589 GB vs expected peak 7 GB of class 'bindB#.sh' (p90 of its completed runs, else the request), admissible 589 GB); the cap stays 64G
+ot-heavy: admitted on loved-redfish as oth-ubuntu-844687-1795487492 after 2 s
+OVERLAY physical/die_plan/qwen_compute/bind/inputs/die_r56.v.gz 5c3646b57802
+OVERLAY rtl/qwen_split/qfd_sys_face_lctx3_core.sv c4b1353312b1
+OVERLAY rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv 432d1d0569e2
+OVERLAY physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json a7b19ca57d6d
+OVERLAY physical/die_plan/qwen_compute/bind/inputs/die_r56.v.gz 869ff3514538
+OVERLAY rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_f5_cpub39_1.sv 6a5f53239424
+OVERLAY physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_extra_red_plus2_c4.json 3daaf93866cb
+OVERLAY physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json 2b8f9c025c0f
+OVERLAY physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_r8_s29q103S4Q9N46V0EBQ.json 29c2e816348d
+KW_RT_TOOLS composed /srv/opentallas-scratch2/claude/QC-ALLFIX/cC/launch (rt /srv/opentallas-scratch2/claude/rt/70b6f0430ea9; 0 tool files only the die tree has kept)
+FAIL ROWS-NO-PROOF 9 partition types carry consumer_localization rows that differ from the baseline and have no passing ROWS-PROOF (dry-run of the consumer check on the EMITTED bind RTL): sle_sc_v1__cl115da35f, sle_sc_v1__cl7479a5ec, sle_sc_v2, sle_sc_v3, slw_sc_v1__cl63e5a7a2, slw_sc_v1__cl64543eaf__cl4590432d, ... +3
+PLAN-GATE-PRE FAIL tree=. plan=physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json findings=1 classes=ROWS advisories=126
+PRE_RC 1
+V4 strict plan=9ecb9b695705 side=466b3f222e62 r8=29c2e816348d launch={"rt": "/srv/opentallas-scratch2/claude/rt/70b6f0430ea9", "src": "/srv/opentalla host=loved-redfish
+BIND_R8_LOOP 1: R8_STALE -> r8_refresh + re-bind
+LAND_R8 DERIVED physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_r8_s29q103S4Q9N46V0EBQ.json sha256 7809eba19ff9: members 9051, changed 24 (+0 -0) vs physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_r8_s29q103S4Q9N46V0EBQ.json; lanes {"sl_E0_hc1__cws1": 1, "sl_E0_hc2__cws2": 1, "sl_E1_hc1__cws1": 1, "sl_E1_hc2__cws2": 1, "sl_E2_hc1__cws1": 1, "sl_E2_hc2__cws2": 1, "sl_E3_hc1__cws1": 1, "sl_E3_hc2__cws2": 1, "sl_E4_hc1__cws1": 1, "sl_E4_hc2__cws2": 1, "sl_E5_hc1__cws1": 1, "sl_E5_hc2__cws2": 1, "sl_W0_hc1__cws1": 1, "sl_W0_hc2__cws2": 1, "sl_W1_hc1__cws1": 1, "sl_W1_hc2__cws2": 1,
+R8_REFRESH OK table physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_r8_s29q103S4Q9N46V0EBQ.json extras {"zz_extra_s29q103S4Q9N46V0EBQ_0.json": {"rebound": 0, "delta": {}}, "zz_extra_s29q103S4Q9N46V0EBQ_1.json": {"rebound": 0, "delta": {}}, "zz_extra_red_plus2_c4.json": {"rebound": 0, "delta": {}}}
+ot-run: RAN on epyc7 (unit oth-ubuntu-844687-1795487492): exit 143

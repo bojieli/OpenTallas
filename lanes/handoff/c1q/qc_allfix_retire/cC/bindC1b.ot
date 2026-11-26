@@ -1,0 +1,25 @@
+ot-run: epyc7          admits   263 GB (avail 456, reserve 0, fresh 0, peak 210, headroom 0, waiters 0/0 GB, oldest 0.0 h) load 82/96 running 18 disk 515 GB 
+ot-run: -> epyc7
+ot-run: rt pinned for this unit: OT_TOOLSTALE_RT=/srv/opentallas-scratch2/claude/rt/c66090747375 (current; TOOLSTALE reference for the whole run)
+ot-heavy: request 64G is charged 7G (load 80 | SIMPLE_PEAK: MemAvailable 455 - 48 headroom - 46 expected growth of 18 running [stage peaks 46 GB over 12 build procs] (x0) - 0 unstarted = 361 GB vs expected peak 7 GB of class 'bindC.sh' (p90 of its completed runs, else the request), admissible 361 GB); the cap stays 64G
+ot-heavy: admitted on loved-redfish as oth-ubuntu-1925328-1795491328 after 1 s
+FAIL ROWS-NO-PROOF 9 partition types carry consumer_localization rows that differ from the baseline and have no passing ROWS-PROOF (dry-run of the consumer check on the EMITTED bind RTL): sle_sc_v1__cl115da35f, sle_sc_v1__cl7479a5ec, sle_sc_v2, sle_sc_v3, slw_sc_v1__cl63e5a7a2, slw_sc_v1__cl64543eaf__cl4590432d, ... +3
+PLAN-GATE-PRE FAIL tree=. plan=physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json findings=1 classes=ROWS advisories=117
+PRE_RC 1
+V4 strict plan=62ce8aba0292 side=466b3f222e62 r8=7809eba19ff9 launch={"rt": "/srv/opentallas-scratch2/claude/rt/70b6f0430ea9", "src": "/srv/opentalla host=loved-redfish
+V4 bind errors 1 {'EMIT': 1}
+EMIT sle_su_c: sle_su_c.x_ctl_o: writer START raw reset rr_t85 drives an output port; plan a non-port registered relay
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)
+TAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)
+COLLECTOR-REACH-INFO collector source child0 -> rst_n_t69: 1183.947um exceeds 405 (info: not blocking)
+COLLECTOR-REACH-INFO collector source child1 -> rst_n_t69: 1183.947um exceeds 405 (info: not blocking)
+bind: emit parallel j=5: 130 types in 1644.9 s (sum of type walls 3977.5 s, max worker private 9688 MB)
+{"partitions": 377, "types": 130, "crossings": 1922, "crossing_bits": 790476, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0}
+   EMIT sle_su_c: sle_su_c.x_ctl_o: writer START raw reset rr_t85 drives an output port; plan a non-port registered relay
+BIND_RC 1
+ot-run: RAN on epyc7 (unit oth-ubuntu-1925328-1795491328): exit 1
