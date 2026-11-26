@@ -3042,6 +3042,8 @@ def stamp_flow_tag(rec):
     tag = (os.environ.get(FLOW_TAG_ENV) or "").strip()
     if tag and FLOW_TAG_RE.match(tag) and not rec.get("flow_tag"):
         rec["flow_tag"] = tag
+    elif not tag and os.environ.get(UNRESOLVED_ENV) and not rec.get("flow_tag"):
+        rec["flow_tag"] = UNRESOLVED
     sha = os.environ.get(SRC_COMMIT_ENV)
     if sha and SHA40_RE.match(sha) and not rec.get("src_commit"):
         rec["src_commit"] = sha
@@ -3049,6 +3051,8 @@ def stamp_flow_tag(rec):
 
 
 SRC_COMMIT_ENV = 'OT_SRC_COMMIT'
+UNRESOLVED_ENV = 'OT_FLOW_TAG_UNRESOLVED'   # set by ensure_flow_tag; never read as a tag
+UNRESOLVED = 'UNRESOLVED'
 SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -3108,20 +3112,25 @@ def derive_flow_tag(kit, here=None):
 
 def ensure_flow_tag(kit, here=None):
     """at the start of a sign-off run: a tag from --flow-tag / env stays; else derive it from the kit's rt/tree and export it
-    (flow tag + source commit) for stamp_flow_tag.  Fails loud only when neither a tag nor any source commit can be found."""
+    (flow tag + source commit) for stamp_flow_tag.  REPORT-ONLY (COORD 11-26): when nothing can be derived the run prints a loud
+    WARNING and the record is stamped flow_tag "UNRESOLVED"; a sign-off is never blocked over metadata."""
     if (os.environ.get(FLOW_TAG_ENV) or "").strip():
         return os.environ[FLOW_TAG_ENV].strip()
     d = derive_flow_tag(kit, here)
     if not d["src_commit"] and not d["basis"]:
-        raise SystemExit("signoff: no flow tag (--flow-tag / $OT_FLOW_TAG) and none derivable: no kit rt pin "
-                         "(PROVENANCE/AUTOPILOT/freeze.json) and no git revision of the tree running signoff.py")
+        os.environ[UNRESOLVED_ENV] = "1"
+        print("SIGNOFF WARNING no flow tag (--flow-tag / $OT_FLOW_TAG) and none derivable: no kit rt pin "
+              "(PROVENANCE/AUTOPILOT/freeze.json) and no git revision of the tree running signoff.py; "
+              f"record is stamped flow_tag {UNRESOLVED}")
+        return ""
     if d["src_commit"]:
         os.environ[SRC_COMMIT_ENV] = d["src_commit"]
     if d["flow_tag"]:
         os.environ[FLOW_TAG_ENV] = d["flow_tag"]
         print(f"SIGNOFF flow tag {d['flow_tag']} derived from the kit rt/tree ({d['basis']})")
     else:
-        print(f"SIGNOFF WARNING no flow tag carries the kit rt/tree ({d['basis']}): record stays unversioned")
+        os.environ[UNRESOLVED_ENV] = "1"
+        print(f"SIGNOFF WARNING no flow tag carries the kit rt/tree ({d['basis']}): record stamped flow_tag {UNRESOLVED}")
     return d["flow_tag"]
 
 

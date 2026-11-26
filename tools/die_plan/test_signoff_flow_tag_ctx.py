@@ -141,11 +141,16 @@ class DeriveFlowTag(unittest.TestCase):
             d = self.S.derive_flow_tag(None, r / "tools" / "die_plan")
             self.assertEqual((d["src_commit"], d["flow_tag"]), (sha, ""))
 
-    def test_nothing_found_fails_loud(self):
+    def test_nothing_found_warns_and_stamps_unresolved(self):
         with tempfile.TemporaryDirectory() as td:
-            with unittest.mock.patch.object(self.S, "_git", return_value=""):
-                with self.assertRaises(SystemExit):
-                    self.S.ensure_flow_tag(Path(td))
+            with unittest.mock.patch.object(self.S, "_git", return_value=""), \
+                    unittest.mock.patch.object(self.S, "kit_source_shas", return_value=[]):
+                try:
+                    self.assertEqual(self.S.ensure_flow_tag(Path(td)), "")
+                    self.assertEqual(self.S.stamp_flow_tag({})["flow_tag"], "UNRESOLVED")
+                    self.assertNotIn(self.S.FLOW_TAG_ENV, os.environ)
+                finally:
+                    os.environ.pop(self.S.UNRESOLVED_ENV, None)
 
     def test_explicit_env_wins(self):
         os.environ[self.S.FLOW_TAG_ENV] = "flow-20261117-sg-kv"
