@@ -1003,7 +1003,13 @@ set so_vclk {}
 foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend so_vclk $c } }
 so CLOCKS {*}[lmap c [all_clocks] {get_full_name $c}]
 so VCLKS {*}[lmap c $so_vclk {get_full_name $c}]
-foreach c [all_clocks] { so PERIOD [get_full_name $c] [get_property $c period] }
+set so_gen {}
+foreach c [all_clocks] {
+  set name [get_full_name $c]
+  so PERIOD $name [get_property $c period]
+  if {[get_property $c is_generated]} { lappend so_gen $name }
+}
+so GENERATED_CLOCKS {*}$so_gen
 # ---- timing with the block's own SDC ----
 proc so_timing {tag} {
   so ${tag}_WNS_MAX [so_ps [sta::worst_slack_cmd max]]
@@ -1953,6 +1959,7 @@ def corner_result(parsed, hard_signed=()):
     out = dict(done=kv.get("DONE") == "1", design=kv.get("DESIGN"), cells=_f(kv.get("CELLS")),
                parasitics=kv.get("PARASITICS"), clocks=(kv.get("CLOCKS") or "").split(),
                vclks=(kv.get("VCLKS") or "").split(), periods=kv.get("PERIOD", {}),
+               generated_clocks=(kv.get("GENERATED_CLOCKS") or "").split(),
                clock_ports=(kv.get("CLOCK_PORTS") or "").split(), inputs=(kv.get("INPUTS") or "").split(),
                outputs=(kv.get("OUTPUTS") or "").split(), overlay=kv.get("OVERLAY"),
                ff_vclk_reference=kv.get("FF_VCLK"))

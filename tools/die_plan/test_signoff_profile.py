@@ -272,3 +272,15 @@ create_clock -name rateclk -period 4998.0000 [get_ports rateclk]
     assert SP.judge(row)["verdict"] == "NOT SIGNED"
     assert not SP.edge_clock_evidence(sdc, context.replace(b'6}', b'5}'))
     assert not SP.edge_clock_evidence(sdc.replace(b'period 6 x T', b'period 5 x T'), context)
+
+
+def test_native_generated_clock_cannot_replace_the_measured_primary():
+    row = rec()
+    row["corners"]["ff"]["periods"] = {"clk": 833, "fdi": 999.6}
+    assert SP.judge(row)["verdict"] == "NOT SIGNED"
+    row["corners"]["ff"]["generated_clocks"] = ["fdi"]
+    assert SP.judge(row)["verdict"] == "SIGNED"
+    row["corners"]["ff"]["periods"]["clk"] = 834
+    assert SP.judge(row)["verdict"] == "NOT SIGNED"
+    row["corners"]["ff"]["periods"].pop("clk")
+    assert SP.judge(row)["verdict"] == "NOT SIGNED"

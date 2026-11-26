@@ -211,11 +211,14 @@ def record_clock_period_ps(rec):
         if not isinstance(c, dict) or not isinstance(c.get("periods"), dict):
             continue
         periods = c["periods"]
+        generated = c.get("generated_clocks")
+        generated = set(generated) if isinstance(generated, list) else set()
+        have_primary = any(name not in generated and (_num(v) or 0) > 0 for name, v in periods.items())
         root = _num(periods.get(proof.get("root")))
         bound = declared is not None and root is not None and math.isclose(root, declared, rel_tol=0, abs_tol=1e-3)
         for name, value in periods.items():
             v = _num(value)
-            if v is None or v <= 0:
+            if v is None or v <= 0 or (have_primary and name in generated):
                 continue
             m = ratios.get(name)
             if bound and type(m) is int and m > 1 and math.isclose(v, root * m, rel_tol=0, abs_tol=1e-3):
