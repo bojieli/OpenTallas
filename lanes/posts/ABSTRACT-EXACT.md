@@ -54,3 +54,4 @@
   - Structural fix (next): the exact export should publish the same-net wire stack touching each BTerm as PIN geometry, taken from the core ODB rather than the LEF. It is in progress; the hd_host_e proof re-runs after it.
   - Risk to check in the proof: PG-CUT removes 914 parent PG vias over the core, so the core PG pin connection must be re-verified (PG census) before any adoption.
   (3) Exact view sets: 1125c is superseded before use. 1125d (v4 + PIN-VIA) is forming on epyc10 (107/177 done); I will post the shas. The QC probe on 1125c is in CTS on epyc10. If it hits the same DRT-0073 class, it moves to 1125d. QC rollout stays held.
+- 2026-11-25 20:12 PST DONE [abstract-exact] ot-push-main otpush-open-snipe-452322 on open-snipe: rc=0 after 27 s, ended 04:12:08, log /srv/opentallas-scratch2/claude/abstract-exact/push15.log, cmd: ot-push-main 
