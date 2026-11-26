@@ -1,31 +1,30 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125",
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126",
  "main_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
- "manifest_hash": "90efe10b23c87ba8436130453c338e70222a454779898119f2453044d9ab59b6",
- "src_manifest_sha": "90efe10b23c87ba8436130453c338e70222a454779898119f2453044d9ab59b6",
- "tools_sha": "cd36dca159ca0a5aaa873d8f0f1cbc16807de0e4",
+ "manifest_hash": "4d942e131143366962c26cb73a0ed3bd88d9a0457078a34aa9cfd2a420a7294d",
+ "src_manifest_sha": "4d942e131143366962c26cb73a0ed3bd88d9a0457078a34aa9cfd2a420a7294d",
+ "tools_sha": "72ea87d81a86fb1bc637b8efa50d378fdb9b3417",
  "hosts": [
   "intel1",
   "epyc8",
   "intel2"
  ],
- "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g4_sysc_pvfold_1125.json",
- "plan_sha256": "5f3fb2865853bd314f61e4005907e872f13a4fe1cc617c7a6ec6f9beec396938",
- "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g5_sinkbins_street_1125.json",
+ "plan_sha256": "87d01254579e5c18ef6ca10490b743694b0ec75c46b6193cf43a4d2bdc6ec3bf",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
  "asbuilt_sha256": "3e09a662e239f4c1c68a9a27f0ea44e96ac32d308191e423f038d8b141a780c9",
- "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json",
- "sidecar_sha256": "62d92397e179b4c7e3de84f854dfdc18e42dde6519e7d16fa69b157c55b77ebe",
- "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_bind_rt_1125",
+ "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json",
+ "sidecar_sha256": "69cf42f344084228690687835dca107cf136d7ecd0a77409968bf29a48ffd758",
+ "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_bind_1126",
  "config": {
-  "event": "KV-A5t9-r8-g4-1125",
-  "plan_event": "KV-A5t9-r8-g4-1125",
-  "tools_sha": "cd36dca159ca0a5aaa873d8f0f1cbc16807de0e4",
+  "event": "KV-A5t9-r8-g5-1126",
+  "plan_event": "KV-A5t9-r8-g5-1126",
+  "tools_sha": "72ea87d81a86fb1bc637b8efa50d378fdb9b3417",
   "tools_from_rt": true,
   "tools_refresh": false,
   "gen_host": "epyc8",
   "gen_hosts": [
-   "intel1",
    "epyc8",
    "intel2"
   ],
@@ -33,12 +32,12 @@
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json"
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_bind_rt_1125",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_bind_1126",
    "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
   },
   "only_items": [
@@ -48,7 +47,7 @@
   ],
   "only_items_regen": false,
   "review_before_route": {
-   "event": "KV-A5t9-r8-g4-1125",
+   "event": "KV-A5t9-r8-g5-1126",
    "items": [
     "kv3_hgi",
     "kv3_hgi_v7",
@@ -63,7 +62,7 @@
   ]
  },
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
   "OT_GRT_NONPORT_HOLD": "1",
   "OT_CORE_TAP_REACH_UM": "0",
   "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -84,9 +83,9 @@
  },
  "records": {},
  "smoke": "PASS",
- "smoke_detail": "G3 to G4 exact SYS_C four boot-only +1 stage lanes and signed PV pair mirror 28 instances. Whole geometry 0/0, strict 93/93 and LAT 2746/2746 identical mission internal digest. Affected private specimens remain place-only pending viewed review.",
- "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
- "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_estrip_r6_g3.json",
+ "smoke_detail": "G4 to G5 exact SINKBINS12 plus three PV leg/aisle adjustments and IO_COR R1; whole strict 93/93, LAT 2746/2746 and G0 0/0; 19 site-matched sys_SD_v1 estimated TT/FF timing rows. VPORT parity unresolved physically; reviewed-route holds preserved.",
+ "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g4_sysc_pvfold_1125.json",
+ "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g4_sysc_pvfold_1125.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }
