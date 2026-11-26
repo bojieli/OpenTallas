@@ -81,3 +81,23 @@ def test_known_class_on_new_die_starts_from_zero(tmp_path, capsys):
     assert ct.main(["cut", "--label", "c1", "--pre-dir", str(pre), "--carry", str(carry), "--trend", str(trend)]) == 0
     head = [ln for ln in capsys.readouterr().out.splitlines() if ln.startswith("HEAD")][0]
     assert "NEW=0" in head and "comparable classes 0->2 (+2)" in head
+
+
+def test_lane_sha_row_is_kept_and_carry_sha_wins(tmp_path):
+    cls = tmp_path / "CLASSES.tsv"
+    cols = ["class_id", "die", "kind", "static_check", "owner", "cut_local", "mapped_count", "status", "owner_measurement"]
+    _w(cls, [["C-A", "S81", "DESIGN", "x", "o", "c0", "6", "s", "LEG405-STAGED 6 tool 5632156a860"],
+             ["C-B", "S81", "DESIGN", "x", "o", "c0", "9", "s", "census pending"]], cols)
+    rows = [{"cut_local": "c1", "die": "S81", "class_id": "C-A", "count": 277, "basis": "exact", "source": "PRE legacy",
+             "prev_count": 273, "prev_basis": "exact", "move": "UP"},
+            {"cut_local": "c1", "die": "S81", "class_id": "C-B", "count": 4, "basis": "exact", "source": "PRE", "prev_count": "", "prev_basis": "",
+             "move": "NEW"}]
+    ct.update_classes(str(cls), rows, "c1")
+    got = {r["class_id"]: r for r in ct.read_tsv(str(cls))}
+    assert got["C-A"]["mapped_count"] == "6" and "5632156a860" in got["C-A"]["owner_measurement"]
+    assert got["C-B"]["mapped_count"] == "4"
+    ct.OWNER_OVERRIDE[("S81", "C-A")] = "KV-INT-R2"
+    rows[0].update(count=2, source="KV-INT-R2 dafa157")
+    ct.update_classes(str(cls), rows, "c2")
+    got = {r["class_id"]: r for r in ct.read_tsv(str(cls))}
+    assert got["C-A"]["mapped_count"] == "2" and got["C-A"]["owner"] == "KV-INT-R2"
