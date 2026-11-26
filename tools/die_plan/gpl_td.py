@@ -6,7 +6,7 @@ Why (FABLE-FLOW-0847 A3): timing-driven GPL repair fires on the MEAN overflow of
 a handful of tiny OT_LOGIC_CLUSTER regions (3-20 cells, finished at once) pull the mean under the first reweight threshold at
 iteration 1 and repair_design buffers an unsettled placement (HEAD hd_lep0N fed00: +56,515 buffers, HPWL 1.30e7 -> 1.90e7).
   top_overflow_trigger  0 / 1 / settle overflow in (0, 1): timing-driven repair only on a placement whose TOP-LEVEL overflow has
-                        settled (gpl_td.tcl: phase 1 plain GPL to the settle overflow, phase 2 incremental timing-driven).  1 = the
+                        settled (gpl_td.tcl: phase 1 plain GPL to the settle overflow, phase 2 skip_initial_place timing-driven).  1 = the
                         R-FLOW gpl_keep_overflow (0.25).
   firm_small_clusters   0 / 1 / N (3..20): logic_cluster_rects_um clusters of at most N movable cells (1 = 20) are seated FIRM at their
                         rect (logic_cluster.py), released for DPL, and are no GPL region.

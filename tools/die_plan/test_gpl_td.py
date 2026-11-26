@@ -120,7 +120,7 @@ def test_top_trigger_splits_the_call(tmp_path):
     c = re.findall(r"^C: (.*)$", out, re.M)
     assert len(c) == 2, out
     assert "-timing_driven" not in c[0] and "-keep_resize" not in c[0] and c[0].endswith("-overflow 0.25") and "-force_center_initial_place" in c[0]
-    assert c[1].startswith("-incremental ") and "-force_center_initial_place" not in c[1]
+    assert c[1].startswith("-skip_initial_place ") and "-force_center_initial_place" not in c[1]
     assert "-timing_driven -keep_resize_below_overflow 0.25" in c[1] and "-timing_driven_net_reweight_overflow 25" in c[1]
     assert "OT_GPL_TD_TOP phase 1" in out and "OT_GPL_TD_TOP phase 2" in out
 

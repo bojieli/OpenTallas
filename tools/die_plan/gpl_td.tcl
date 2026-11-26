@@ -7,7 +7,7 @@
 #     iteration 1 while the top-level overflow is still 0.73 (HEAD hd_lep0N fed00: trigger read 0.185, 56,515 repair buffers on
 #     an unsettled placement, HPWL 1.30e7 -> 1.90e7).  The wrapper splits a timing-driven call in two: phase 1 is the same call
 #     without any timing-driven key, stopped at -overflow S (regions are finished by then, so the mean IS the top-level overflow);
-#     phase 2 is the same call -incremental (no initial placement) whose only reweight threshold is S, so the repair runs once,
+#     phase 2 is the same call with -skip_initial_place (Nesterov from the current cell positions; OpenROAD's -incremental only places UNPLACED cells and skips a fully placed design, measured on hd_lep0N_w 11-26) whose only reweight threshold is S, so the repair runs once,
 #     on a placement that has settled, and the placement then continues to the call's own exit overflow.
 #  firm_small_clusters: see logic_cluster.py (small OT_LOGIC_CLUSTER cells are seated FIRM, never a GPL region).
 #  cell_growth_gate (env OT_GPL_TD_GROWTH = 1 report, 2 fail): the non-tap standard cell count after global placement and after the
@@ -103,7 +103,7 @@ proc ot_gpl_td_wrapped {args} {
   set p1 [ot_gpl_td_set [ot_gpl_td_strip_args $args] -overflow $s]
   set p2 {}
   foreach a $args { if {$a ne "-force_center_initial_place"} { lappend p2 $a } }
-  set p2 [concat [list -incremental] $p2]
+  set p2 [concat [list -skip_initial_place] $p2]
   set thr [expr {int(round(100.0 * $s))}]
   set have [ot_gpl_td_opt $p2 -timing_driven_net_reweight_overflow]
   set keepl {}
@@ -113,7 +113,7 @@ proc ot_gpl_td_wrapped {args} {
   puts "OT_GPL_TD_TOP phase 1 (no timing-driven keys, stop at overflow $s): $p1"
   set ::ot_gpl_td_phase 1
   set rc [uplevel 1 [list {*}$prev {*}$p1]]
-  puts "OT_GPL_TD_TOP phase 2 (incremental, timing-driven reweight at $keepl): $p2"
+  puts "OT_GPL_TD_TOP phase 2 (skip_initial_place, timing-driven reweight at $keepl): $p2"
   set rc [uplevel 1 [list {*}$prev {*}$p2]]
   unset -nocomplain ::ot_gpl_td_phase
   if {$growth} { ot_gpl_td_growth_gate post_gpl }
