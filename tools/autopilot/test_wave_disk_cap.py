@@ -27,6 +27,13 @@ def test_heavy_args_carry_the_disk_budget():
     assert "--disk" not in KW.heavy_args({})
 
 
+def test_stage_budget_uses_the_larger_explicit_item_estimate():
+    assert KW.heavy_args({}, stage_disk_gb=2) == ["--disk", "2"]
+    assert KW.heavy_args({"item_disk_gb": 1}, stage_disk_gb=2) == ["--disk", "2"]
+    assert KW.heavy_args({"item_disk_gb": 12}, stage_disk_gb=2) == ["--disk", "12"]
+    assert KW.heavy_args({}) == []
+
+
 def test_launch_refused_when_in_flight_plus_new_exceeds_free_minus_150():
     c = cfg(20.0)
     st = {"items": {"a": {"die": "s", "status": "RUNNING", "gen_host": "h1", "item_disk_gb": 100},
