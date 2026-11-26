@@ -1,0 +1,1 @@
+- 2026-11-26 10:39 PST DONE [s81-xtap-cohort] ot-push-main otpush-tolerant-swine-2505106 on tolerant-swine: rc=0 after 98 s, ended 10:39:57, log /srv/opentallas-scratch2/claude/s81-xtap-cohort/wtg/push.log, cmd: ot-push-main 
