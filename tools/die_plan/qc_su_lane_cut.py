@@ -230,6 +230,13 @@ def preserve_input_abi(rtl, frame, report, body, widths, contract, extra, segmen
             reverse[replacement[0]] = original
             sinks.add((leaf, port, sink_bit))
             hookups[idx] = item['replacement_frame_expr']
+    # An aliased input must reach every sink through its replacement: one sink still reading the original net would be
+    # fed the replacement through the shared c_i bit (a silent cycle change), so it is refused here.
+    aliased = {ib[i] for i in aliases}
+    for leaf in actual:
+        for port, expr in actual[leaf][1].items():
+            if aliased & set(_expr_bits(expr, widths)):
+                raise ValueError(f'aliased reference input is also read unchanged: {leaf}.{port}')
     # This comparison covers every port, including unchanged inputs, outputs,
     # internal connections, constants, clock and the exact delivered reset.
     for leaf in expected:
@@ -328,6 +335,86 @@ def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0, memory_r
         return preserve_input_abi(rtl, frame, report, body, widths, input_abi,
                                   memory_read_extra, segmented_memory_delay, kv_wr_pipe)
     return rtl, frame, report
+
+
+PAD = re.compile(r'^    ot_dp_dly #\(\.W\(1\), \.D\([1-9]\d*\)\) (\w+) \(\.clk\(clk\), \.d\(([^()]+)\), \.q\(([^()]+)\)\);[ \t]*// landing pad\b', re.M)
+
+
+def landing_pad_input_abi(source, lane, module, reference, kv_wr_pipe=0, memory_read_extra=0,
+                          segmented_memory_delay=0, source_type=None, source_partition=None):
+    """P-SU-LANE-COMMITTED-STALE (11-26): derive the input ABI contract that keeps the committed lane module when the
+    only change is that the bound frame now feeds a lane input through bind.py R8 landing pads (`ot_dp_dly ... //
+    landing pad`, outside the cut).  A refreshed R8 pin renames the lane inputs (x_su_c_i_q[N] -> pd1_x_su_c_i_N) and
+    so permutes the raw cut's sorted c_i order, although no register or cycle inside the lane changes.  Each alias
+    is one W=1 landing-pad output whose pad chain starts at exactly the committed module's own input bit; every
+    other leaf port bit must already match.  preserve_input_abi then re-verifies all ports.  Returns None when no
+    leaf input is a landing-pad alias (the strict committed-source comparison then decides)."""
+    widths = {name: int(hi) + 1 if hi else 1 for hi, name in WIRE.findall(source)}
+    widths.update(clk=1, rst_n=1)
+    vectors = vector_names(source)
+    pads = {}
+    for m in PAD.finditer(source):
+        d, q = _expr_bits(m[2], widths), _expr_bits(m[3], widths)
+        if len(d) != 1 or len(q) != 1 or d[0][0] == 'constant' or q[0] in pads:
+            raise ValueError('unsupported landing pad ' + m[1])
+        pads[q[0]] = (d[0], m[1])
+
+    def root(bit):
+        chain, seen = [], set()
+        while bit in pads:
+            if bit in seen:
+                raise ValueError('cyclic landing pad chain')
+            seen.add(bit)
+            bit, inst = pads[bit]
+            chain.append(inst)
+        return bit, chain
+
+    raw, _, report = cut(source, lane, module, kv_wr_pipe=kv_wr_pipe, memory_read_extra=memory_read_extra,
+                         segmented_memory_delay=segmented_memory_delay)
+    rw = {name: int(hi) + 1 if hi else 1 for hi, name in WIRE.findall(reference)}
+    rw.update(clk=1, rst_n=1)
+    rvectors = vector_names(reference)
+    ib, _ = _reference_abi(reference)
+    index = {b: i for i, b in enumerate(ib)}
+    ref_body = kv_wr_pipe_head(reference) if kv_wr_pipe else reference
+    ref_body = read_extra_head(ref_body, memory_read_extra, segmented_memory_delay)
+    expected, actual = _instances(ref_body), _instances(raw)
+    if set(expected) != set(actual):
+        return None
+    chosen, groups = {}, {}
+    for leaf in sorted(expected):
+        eh, ep = expected[leaf]; ah, ap = actual[leaf]
+        for port in sorted(set(ep) & set(ap)):
+            rb, ab = _expr_bits(ep[port], rw), _expr_bits(ap[port], widths)
+            if len(rb) != len(ab):
+                return None
+            for sink_bit, (want, got) in enumerate(zip(rb, ab)):
+                if got == want or got not in pads:
+                    continue
+                origin, chain = root(got)
+                if origin != want or want not in index:
+                    continue
+                idx = index[want]
+                if chosen.setdefault(idx, got) != got:
+                    raise ValueError(f'reference input {want[0]}[{want[1]}] reaches the lane through different landing pads')
+                if any(idx == x['abi_bit'] for g in groups.values() for x in g['bits']):
+                    continue
+                g = groups.setdefault((leaf, port), dict(
+                    type=source_type, partition=source_partition, module=report['module'],
+                    reference_sha256=hashlib.sha256(reference.encode()).hexdigest(),
+                    sink_leaf=leaf.replace('u_u_', 'u_', 1), sink_port=port, bits=[], landing_pads=[]))
+                g['bits'].append(dict(abi_bit=idx, sink_bit=sink_bit,
+                                      original_local=dict(name=want[0], bit=want[1]),
+                                      original_frame_expr=f'{want[0]}[{want[1]}]' if rw[want[0]] > 1 or want[0] in rvectors else want[0],
+                                      replacement_frame_expr=f'{got[0]}[{got[1]}]' if widths[got[0]] > 1 or got[0] in vectors else got[0]))
+                g['landing_pads'].append(chain)
+    if not groups:
+        return None
+    for g in groups.values():
+        g['r8_member_id'] = 'landing_pad:' + hashlib.sha256(json.dumps(g['landing_pads']).encode()).hexdigest()[:16]
+    return dict(reference_rtl=reference, reference_sha256=hashlib.sha256(reference.encode()).hexdigest(),
+                aliases=list(groups.values()), reference_module=report['module'], retarget_module=None,
+                source_type=source_type, source_partition=source_partition, derived='landing_pad')
 
 
 def main():
