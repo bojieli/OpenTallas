@@ -4880,6 +4880,8 @@ def sdc(P, tn, pins):
     io = IO_BUDGET * per
     tw_in, _tw_out = tap_window_io_shift(P, tn)
     note_tap_window_fallback(P, tn)
+    import hard_clock_source as HCS
+    hard_clocks = HCS.sources(P, tn)
     cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
@@ -4892,6 +4894,7 @@ def sdc(P, tn, pins):
            + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
                      f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
                      for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
+           "".join(_SL.hard_clock_source_sdc(row) + "\n" for row in hard_clocks.values()) +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "
@@ -7827,6 +7830,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
         _VL.stage_kit_macros(kd, macros, lambda q: _CR.resolve(q, base), prune=not bump_ports)
+        import hard_clock_source as HCS
+        HCS.validate_macro_views(P, tn, kd / "macros")
         import lef_override as _LO
         _LO.write_receipt(kd, macros)     # COORD 11-09 DRT-0073 class: corrected child LEFs this kit took, with both hashes
         import porous_views as _PV

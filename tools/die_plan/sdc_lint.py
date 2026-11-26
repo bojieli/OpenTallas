@@ -364,6 +364,13 @@ def _num(x, what):
         raise SdcLintError(f"{what}: not a number: {x}")
 
 
+def hard_clock_source_sdc(row):
+    """The only permitted SDC form for a declared related macro source."""
+    src = row['source_port']
+    return (f"create_generated_clock -name {row['name']} -master_clock {src} -source [get_ports {{{src}}}] "
+            f"-multiply_by {row['multiply_by']} [get_pins {{{row['instance']}/{row['pin']}}}]")
+
+
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=None, unc_hold_ps=None, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
@@ -371,7 +378,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None):
+         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None, hard_clock_sources=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -507,6 +514,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     # 'set_multicycle_path 0 -setup -from [get_ports {<port>[*]}]'; refused on any other port, required on each.
     same_edge = {pt for pt, r in (pad_clock_data_inputs or {}).items() if r.get('capture') == 'same_edge'}
     same_edge_fp = set()
+    hard_sources = hard_clock_sources or {}
+    hard_seen = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
     root_fp = 0
     cdc_ex = {}                       # (max|hold, from clock, to clock) -> ps (hold: 0) : declared pad cdc exceptions
@@ -602,6 +611,18 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     err.append(f"straps: set_false_path -from on non-strap object(s) {bad or k} (fail-closed): {cmd}")
                     continue
                 strap_fp.update(ps)
+                continue
+            if c == "create_generated_clock" and len(w) >= 3 and w[1] == "-name" and w[2] in hard_sources:
+                name = w[2]
+                row = hard_sources[name]
+                source = row['source_port']
+                if cmd.strip() != hard_clock_source_sdc(row):
+                    err.append(f"hard_clock: {name} differs from its declared macro pin and synchronous source")
+                elif name in ctx.clocks or name in ctx.gclocks or clk_src.get(source) != source:
+                    err.append(f"hard_clock: {name} duplicates a clock or has no declared source port {source}")
+                else:
+                    ctx.gclocks[name] = [f"{row['instance']}/{row['pin']}"]
+                    hard_seen.add(name)
                 continue
             if c == "create_generated_clock" and export_l:
                 opts, objs, i = {}, [], 1
@@ -852,6 +873,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         except (SdcLintError, IndexError) as e:
             err.append(f"parse (fail-closed): {e} [{cmd}]")
     # ---- checks
+    for name in sorted(set(hard_sources) - hard_seen):
+        err.append(f"hard_clock: {name} has no valid related macro output declaration")
     for p in ctx.ft_in + ctx.ft_out:
         if idly[p] or odly[p]:
             err.append(f"ft: declared die-timed ft port {p} has a core IO delay (12.2a1 ruling: no core IO budget)")
@@ -1130,12 +1153,15 @@ def kit_context(P, tn):
                 if ck_ in fall_ and s_.split("[")[0] in ft_:
                     floor[s_.split("[")[0]] = gen_phys._ft_in_max_ps(P, float(rh_["ft_ring_max_ps"]), port=s_.split("[")[0], tn=tn)
     ib = gen_phys.insertion_binding(P, tn)
+    import hard_clock_source as HCS
+    hard_sources = HCS.sources(P, tn)
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 **dict(zip(("unc_setup_ps", "unc_hold_ps"), policy_uncertainty())),
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge,
+                **({'hard_clock_sources': hard_sources} if hard_sources else {}),
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
                 **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}),
                 **({"edge_clock_cdc": gen_phys.edge_cdc(P, tn)} if gen_phys.edge_cdc(P, tn) else {}),
