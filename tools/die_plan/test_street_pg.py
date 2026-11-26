@@ -21,7 +21,7 @@ def test_loss_derived_from_band_table():
 def test_street_rule_default_off_is_identical():
     cfg = dict(SR.DEFAULTS)
     assert SR.pg_loss(cfg) == 0.0
-    assert SR.k_per_um(cfg) == 3.0 * 0.6 / 0.048 == 37.5
+    assert abs(SR.k_per_um(cfg) - 37.5) < 1e-9
     assert SR.need_um(1620, cfg) == 43.2
 
 
@@ -45,7 +45,7 @@ def test_adv_flag_flips_borderline_type_only_when_on(monkeypatch):
     monkeypatch.delenv("OT_STREET_PG", raising=False)
     t0 = _type(bits=1, gap=100.0)
     w = F.street_worst(t0)
-    bits = math.ceil(0.97 * w[5] / w[0]) if w[0] else 1       # scale the lane so the stock ratio is ~0.97
+    bits = math.floor(0.97 * w[5] / w[4])       # demand is linear in bits: stock ratio ~0.97
     t = _type(bits=bits, gap=100.0)
     w = F.street_worst(t)
     assert w and 0.9 < w[0] < 1.0
