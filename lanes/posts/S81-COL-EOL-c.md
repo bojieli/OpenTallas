@@ -1,0 +1,1 @@
+- 2026-11-26 13:07 PST DONE [S81-COL-EOL-c] ot-run oth-ubuntu-677003-1795719706 on loved-redfish: rc=0 after 7548 s, ended 21:07:32, log /srv/opentallas-scratch2/claude/S81-COL-EOL-c/mgd.otrun.log, cmd: --hosts epyc7 --mem 100 --threads 8 --disk 20 --dir /srv/opentallas-scratch2/claude/S81-COL-EOL-c -- bash /srv/opentallas-scratch2/claude/S8
