@@ -7770,6 +7770,17 @@ def raw_tap_hold_pinned(RT, P, tn):
     return 0
 
 
+def colls_rx_istations_guard(tn, t, ist):
+    """Coll_s RX-stable seats replace the plan-site istations.tcl: accept a candidate istations.tcl that is byte-equal to the stock plan-site writer
+    (kit_istations.relay_sites_only_tcl, which kit_rtl always writes) and return [] ; refuse any real native station sidecar."""
+    if not ist:
+        return ist
+    import kit_istations as _KI_RX
+    if Path(ist[0]).read_text() != _KI_RX.relay_sites_only_tcl(tn, t):
+        raise ValueError("Coll_s RX stable seats require direct plan relay_sites")
+    return []
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -8904,6 +8915,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f'{tn}: realized source lacks its exact station placement sidecar')
     if not ist:
         ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    relay_type = t
+    if tn == "coll_s" and os.environ.get("OT_COLLS_RX_STABLE") == "1":
+        ist = colls_rx_istations_guard(tn, t, ist)
+        import colls_rx_stable_sites
+        relay_type = colls_rx_stable_sites.install(kd, t)
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
         if t.get('realize_internal_stations'):
@@ -8913,7 +8929,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     elif t.get("relay_sites") or t.get("relay_rank_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
-        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))
+        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, relay_type))
     if rls_rec is not None:
         _RLS.install(kd, rls_rec)     # REG-LEAF-SPLIT: copy sites into istations.tcl + kd/reg_leaf_split.json
     # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
