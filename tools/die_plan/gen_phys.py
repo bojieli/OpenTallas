@@ -4702,6 +4702,16 @@ def tap_pair_affinity_exports(t):
     if not isinstance(macro, bool):
         raise ValueError("tap_pair_affinity macro_follow must be a boolean")
     extra = ["export OT_TAP_PAIR_MACRO = 1"] if macro else []
+    if "scope" in spec:
+        scope = spec["scope"]
+        if not isinstance(scope, dict):
+            raise ValueError("tap_pair_affinity scope must contain re and pair_um")
+        rx, reach = scope.get("re", ""), scope.get("pair_um")
+        if not rx or any(char in rx for char in "#$ \t\n") or not re.compile(rx).groups:
+            raise ValueError("tap_pair_affinity scope.re must capture a key without '#', '$' or whitespace")
+        if isinstance(reach, bool) or not isinstance(reach, (int, float)) or not pair_um < reach <= 200:
+            raise ValueError("tap_pair_affinity scope.pair_um must exceed pair_um and be at most 200")
+        extra.extend([f"export OT_TAP_PAIR_SCOPE_RE = {rx}", f"export OT_TAP_PAIR_SCOPE_UM = {reach:g}"])
     if "pair_cap" in spec:
         pc = spec["pair_cap"]
         if isinstance(pc, bool) or not isinstance(pc, int) or not _tap_cap(t) < pc <= 2 * _tap_cap(t):

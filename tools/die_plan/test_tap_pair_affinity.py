@@ -510,3 +510,30 @@ def test_span_export_and_schema_key_are_opt_in():
         if old is not None:
             os.environ['OT_TAP_SPAN_UM'] = old
     assert 'tap_span_um' in Path(schema.__file__).read_text()
+
+
+def test_extended_pair_distance_requires_a_matching_capture_scope():
+    scope = r"(^.*[./]u_enc[./])d[2-5]\[([0-9]+)\]"
+    checks = tcl(
+        f"set scope {{{scope}}}\n"
+        "set a [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d2[85]$_DFF_P_}]\n"
+        "set b [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d3[85]$_DFF_P_}]\n"
+        "set c [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d3[86]$_DFF_P_}]\n"
+        "set d [::ot_tap_pair::scope_key $scope {u_other.u_enc.d3[85]$_DFF_P_}]\n"
+        "set e [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d1[85]$_DFF_P_}]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 2 80 2 85 $a $b]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 2 80 2 85 $a $c]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 2 80 2 85 $a $d]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 2 80 2 85 $a $e]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 3 80 2 85 $a $b]\n"
+        "puts [::ot_tap_pair::scoped_pair_ok 2 86 2 85 $a $b]"
+    )
+    assert checks == ["1", "0", "0", "0", "0", "0"]
+
+    from gen_phys import tap_pair_affinity_exports
+
+    exports = tap_pair_affinity_exports({"clock": {"tap_pair_affinity": {
+        "scope": {"re": scope, "pair_um": 85}
+    }}})
+    assert f"export OT_TAP_PAIR_SCOPE_RE = {scope}" in exports
+    assert "export OT_TAP_PAIR_SCOPE_UM = 85" in exports

@@ -361,6 +361,16 @@ namespace eval ::ot_tap_pair {
  proc walk_depth {depth rdepth key} {
   expr {$key ne {} && $rdepth > $depth ? $rdepth : $depth}
  }
+ # Extra-distance candidates share a capture key, e.g. encoder instance and bit.
+ # An unmatched or capture-free name cannot join a scoped pair.
+ proc scope_key {pattern name} {
+  set key [lrange [regexp -inline -- $pattern $name] 1 end]
+  if {{} in $key} {return {}}
+  return $key
+ }
+ proc scoped_pair_ok {d dd depth span ka kb} {
+  expr {$ka ne {} && $ka eq $kb && $d <= $depth && $dd <= $span}
+ }
  # A pair found after d combinational cells, dd apart: 1 = today's short pair (d <= depth, dd <= pair); 2 = a ring-only
  # pair (both registers in the SAME ring, d <= ring depth, dd <= ring pair); 0 = not a pair.  Off (keys {}) = today's rule.
  proc pair_ok {d dd depth pair ka kb rdepth rpair} {
