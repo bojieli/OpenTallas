@@ -1055,13 +1055,77 @@ done()
 '''
 
 PROBE_ARCHIVE = r'''
-import json, os, sys, glob, shutil, hashlib
-a = json.loads(sys.argv[1]); K = a["kit"]; A = a["dest"]; base = a["base"]; so = a["signoff_dir"]
-out = {"dest": A, "files": 0, "errors": []}
+import atexit, fcntl, glob, hashlib, json, os, re, shutil, sys, tempfile
+a = json.loads(sys.argv[1])
+K, initial, base, so = a["kit"], a["dest"], a["base"], a["signoff_dir"]
+record = a["record"]
+out = {"dest": initial, "files": 0, "errors": []}
 def done(): print("AP_JSON " + json.dumps(out)); sys.exit(0)
-if os.path.exists(os.path.join(A, "MD5SUMS")):
-    out["exists"] = True; done()
-os.makedirs(A, exist_ok=True)
+def sha(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for data in iter(lambda: f.read(1 << 20), b""):
+            h.update(data)
+    return h.hexdigest()
+
+# A source revision identifies a recipe, not a particular physical route.
+# Match the immutable route and sign-off payload before claiming idempotency.
+inputs = (("base/6_final.odb", os.path.join(base, "6_final.odb")),
+          ("base/6_final.v", os.path.join(base, "6_final.v")),
+          (os.path.join("kit", os.path.basename(so), "signoff.json"), os.path.join(so, "signoff.json")))
+source_shas = {}
+def source_sha(path):
+    if path not in source_shas:
+        source_shas[path] = sha(path)
+    return source_shas[path]
+
+def same_record(dest):
+    if not os.path.isfile(os.path.join(dest, "MD5SUMS")):
+        return False
+    try:
+        with open(os.path.join(dest, "AUTOPILOT.json")) as f:
+            previous = json.load(f)
+        if any(previous.get(key) != record.get(key) for key in ("id", "die", "type", "src")):
+            return False
+        return all(sha(os.path.join(dest, rel)) == source_sha(src) for rel, src in inputs)
+    except (OSError, ValueError):
+        return False
+
+job_id = record["id"]
+if not re.fullmatch(r"[A-Za-z0-9_-]+", job_id):
+    out["errors"].append("invalid archive job id")
+    done()
+for _, src in inputs:
+    if not os.path.isfile(src):
+        out["errors"].append("FileNotFoundError: " + src)
+        done()
+parent = os.path.dirname(initial)
+os.makedirs(parent, exist_ok=True)
+# Serialize resolution and publication for a type/revision on this host.
+lock = open(os.path.join(parent, "." + os.path.basename(initial) + ".archive.lock"), "a")
+fcntl.flock(lock, fcntl.LOCK_EX)
+dest = initial
+for collision in range(3):
+    out["dest"] = dest
+    if not os.path.lexists(dest):
+        break
+    if same_record(dest):
+        out["exists"] = True
+        module = (a.get("view") or {}).get("module")
+        view_path = os.path.join(dest, "view", module) if module else None
+        if view_path and os.path.isdir(view_path):
+            out["view"] = view_path
+        done()
+    if collision == 0:
+        dest = initial + "__" + job_id
+    elif collision == 1:
+        suffix = hashlib.sha256("".join(source_sha(src) for _, src in inputs).encode()).hexdigest()[:12]
+        dest += "__" + suffix
+else:
+    out["errors"].append("archive destination belongs to another payload: " + dest)
+    done()
+A = tempfile.mkdtemp(prefix="." + os.path.basename(dest) + ".", dir=parent)
+atexit.register(shutil.rmtree, A, ignore_errors=True)
 def cp(src, rel):
     dst = os.path.join(A, rel)
     os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -1098,7 +1162,7 @@ if V.get("module"):
         with open(os.path.join(vd, V["module"] + ".core.json"), "w") as f: json.dump(V["core"], f, indent=1)
     with open(os.path.join(vd, "provenance.json"), "w") as f: json.dump(V["provenance"], f, indent=1)
     with open(os.path.join(vd, "gates.json"), "w") as f: json.dump(V["gates"], f, indent=1)
-    out["view"] = vd
+    out["view"] = os.path.join(dest, os.path.relpath(vd, A))
 if V.get("gates"):
     with open(os.path.join(A, "gates.json"), "w") as f: json.dump(V["gates"], f, indent=1)
 lines = []
@@ -1112,6 +1176,10 @@ for dp, dn, fn in os.walk(A):
         lines.append("%s  %s" % (h.hexdigest(), os.path.relpath(p, A)))
 with open(os.path.join(A, "MD5SUMS"), "w") as f:
     f.write("\n".join(sorted(lines, key=lambda l: l[34:])) + "\n")
+mask = os.umask(0)
+os.umask(mask)
+os.chmod(A, 0o777 & ~mask)
+os.rename(A, dest)
 out["files"] = len(lines)
 done()
 '''
@@ -3224,7 +3292,11 @@ import json, os, sys
 a = json.loads(sys.argv[1]); out = {}
 def done(): print("AP_JSON " + json.dumps(out)); sys.exit(0)
 try:
-    p = os.path.join(a["dest"], "PROVENANCE.json"); t = p + ".tmp"
+    with open(os.path.join(a["dest"], "AUTOPILOT.json")) as f:
+        archived = json.load(f)
+    if archived.get("id") != a["prov"]["id"]:
+        raise ValueError("provenance job id does not own this archive")
+    p = os.path.join(a["dest"], "PROVENANCE.json"); t = p + ".tmp" + str(os.getpid())
     with open(t, "w") as f: json.dump(a["prov"], f, indent=1)
     os.replace(t, p); out["ok"] = True
 except Exception as e:
@@ -4219,6 +4291,7 @@ def archive(st, j):
     # AUTO-EXPORT-1118 (FABLE-FLOW-0800 class H, OWNER r711): the fleet mirror copy is gone; the signed-store export is
     # AUTO-EXPORT alone (full record to rtx-pro, metadata + display to AGIdock, INDEX rows).  The dest above stays: it is
     # the wave's local relocation of the kit and its bind view, not an export.  The record is spooled on the host.
+    dest = r.get("dest") or dest
     q = rpy(host, PROBE_AUTO_EXPORT, {"signoff": os.path.join(dest, "kit", os.path.basename(os.path.dirname(so["path"])), "signoff.json"),
                                       "fallback": so["path"], "die": j.get("die"), "element": j.get("type")}, timeout=120)
     mirror = "AUTO-EXPORT " + (q.get("queued") or "NOT QUEUED (%s); the hub scan picks it up" % (q.get("error") or "?"))[:200]
