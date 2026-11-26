@@ -1411,10 +1411,10 @@ def _with_export_seats(P, tn, T):
     site, so its pin leg is the whole distance from the tree site to the port.  A seat re-places only export_q near the port; the relay q
     flop, its net, xy and depth are untouched.  The D leg (relay D source -> seat) must stay within the type relay reach."""
     rst = P.types[tn].get("reset") or {}
+    rs = {}
     if rst.get("relay_sites_win", True):
         # Preserve the plan's explicit reset/run seats when reset_tree.tcl places the same relays.
         # A type can retain its generated tree sites with reset.relay_sites_win=false.
-        rs = {}
         for k, v in (P.types[tn].get("relay_sites") or {}).items():
             m = re.fullmatch(r"(u_[rs]rl_\d+)/q", str(k))
             if m and len(v) >= 2:
@@ -1426,7 +1426,7 @@ def _with_export_seats(P, tn, T):
         return T
     rows = {r.get("port"): r for r in P.types[tn].get("reset_start_raw_exports") or []}
     byname = {r["name"]: r for r in T.get("relays", [])}
-    xy = {r["q"]: r["xy"] for r in T.get("relays", [])}
+    xy = {r["q"]: rs.get(r["name"], r["xy"]) for r in T.get("relays", [])}
     reach = float(relay_um(P, tn))
     out = {}
     for port, pt in sorted(seats.items()):
