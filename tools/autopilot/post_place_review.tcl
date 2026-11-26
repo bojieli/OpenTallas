@@ -37,6 +37,21 @@ proc ppr_net_bbox {net} {
   if {$n < 2} { return {} }
   return [list [tcl::mathfunc::min {*}$xs] [tcl::mathfunc::min {*}$ys] [tcl::mathfunc::max {*}$xs] [tcl::mathfunc::max {*}$ys] $n]
 }
+proc ppr_pin_net_fields {net cache_name} {
+  upvar 1 $cache_name cache
+  if {$net eq "NULL" || $net eq ""} { return {- 0.0 0} }
+  set name [$net getName]
+  if {![info exists cache($name)]} {
+    set bbox [ppr_net_bbox $net]
+    set hpwl 0.0; set fanout 0
+    if {$bbox ne ""} {
+      lassign $bbox x0 y0 x1 y1 fanout
+      set hpwl [expr {($x1 - $x0 + $y1 - $y0) / $::ppr_dbu}]
+    }
+    set cache($name) [list $name $hpwl $fanout]
+  }
+  return $cache($name)
+}
 ppr_log "NETS_START"
 set f [open $ppr_out/nets.tsv w]
 puts $f "x0\ty0\tx1\ty1\tpins"
@@ -115,6 +130,7 @@ proc ppr_sta {} {
   # pin table for every pin that appears in the report
   set txt [read [set fh [open $ppr_out/paths_ideal_raw.txt]]]; close $fh
   array set seen {}
+  array set pin_net_cache {}
   set o [open $ppr_out/pins.tsv w]
   puts $o "pin\tx\ty\tnet\tnet_hpwl_um\tfanout"
   foreach {all pin} [regexp -all -inline -line {^\s+(?:[-\d.]+\s+)+[\^v]\s+(\S+)\s+\(} $txt] {
@@ -126,20 +142,14 @@ proc ppr_sta {} {
     foreach nm [list $pin $un $esc] { if {![catch {$::ppr_block findITerm $nm} r] && $r ne "NULL" && $r ne ""} { set it $r; break } }
     if {$it ne ""} {
       lassign [ppr_iterm_xy $it] x y
-      set net [$it getNet]
-      set nn "-"; set hp 0.0; set fo 0
-      if {$net ne "NULL" && $net ne ""} {
-        set nn [$net getName]
-        set b [ppr_net_bbox $net]
-        if {$b ne ""} { set hp [expr {([lindex $b 2] - [lindex $b 0] + [lindex $b 3] - [lindex $b 1]) / $::ppr_dbu}]; set fo [lindex $b 4] }
-      }
+      lassign [ppr_pin_net_fields [$it getNet] pin_net_cache] nn hp fo
       puts $o "$pin\t[ppr_um $x]\t[ppr_um $y]\t$nn\t[format %.3f $hp]\t$fo"
       continue
     }
     foreach nm [list $pin $un $esc] {
       if {![catch {$::ppr_block findBTerm $nm} bt] && $bt ne "NULL" && $bt ne ""} {
-        set bb [$bt getBBox]; set net [$bt getNet]; set hp 0.0; set fo 0; set nn "-"
-        if {$net ne "NULL" && $net ne ""} { set nn [$net getName]; set b [ppr_net_bbox $net]; if {$b ne ""} { set hp [expr {([lindex $b 2] - [lindex $b 0] + [lindex $b 3] - [lindex $b 1]) / $::ppr_dbu}]; set fo [lindex $b 4] } }
+        set bb [$bt getBBox]
+        lassign [ppr_pin_net_fields [$bt getNet] pin_net_cache] nn hp fo
         puts $o "$pin\t[ppr_um [expr {([$bb xMin] + [$bb xMax]) / 2}]]\t[ppr_um [expr {([$bb yMin] + [$bb yMax]) / 2}]]\t$nn\t[format %.3f $hp]\t$fo"
         break
       }
