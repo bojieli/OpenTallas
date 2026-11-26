@@ -38,3 +38,14 @@ Clone: E2 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/wt_1124 (branch s81
 - LEC: eq15 (E2 blk97c_pb/eq15.sh, m0a/m1a from xmrg_assume.py, blacklist eq15_blacklist.txt = exit path, k=14) PROVES all data outputs (8688/8689 targets). The open point is fault (sticky g_mrg.col was blacklisted). eq16 = the same with g_mrg.col re-matched, on intel1 blk97c_pb (queued, load cap); E2 and intel2 scratch are under their disk floors. Assumption: engine exit valid and CN exit valids never coincide (fault flags it); this needs bench or schedule evidence.
 - Route: v11 (kvtc respace) GRT it0 is 17.86M, no gain, and the pin-edge hypothesis is withdrawn. Stripe overflow nets are buffered kvi input relay buses (repair wires, ~500 um H) and kve u_fd. All piece-B IO goes through seam landing [0,695.52,60.48,820.8] (125 um) for ~16.9k port bits, against about 8000 raw H tracks: suspected root of the H fan-out. pins.py on intel1 rde/ (run_pins.sh) checks where io placement put them.
 - t5: COORD 02:xx correction says t5 stays with S81-RST-SIDECAR. My one queued c10_e.sh client was killed before admission.
+
+## 11-25 21:00 PST update (S81-KVLEAF-T2-ARCH)
+- T2B growth REFUTED: probe_v18 (grow11 49d0db2b4765) GRT i0 Total 18,253,322 vs v12 16,823,166. Overflow = strips on macro pin faces facing away from consumers (rde/v18_grt_i0.png).
+- Baseline: compare GRT-0096 Total only (0 iterations). The png title sum is a capped rpt sample.
+- Netlist connectivity with widths: rde/v18_mconn.json (macro pairs), rde/v18_mconn2.json (per pin group). Block b = kvq b + cnw b + engines 4b..4b+3 + store b. Stores feed a 16x576 b read mux to x_wd at the seam, so the farm stays together.
+- RESITE tool: tile_t2b.py -> t2b_seats_tile8_1125.json (c8249ea9a37d); probe_v19 on epyc10 (oth-ubuntu-2393870-1795660946).
+- Orientation solver: core_orient.py (kvtc excluded) -> grow11o; probe_v20 on intel1 (oth-ubuntu-2858918-1795661217).
+- Static demand: static_demand.py (mconn widths + chains) -> *_dump_w.json + png. Plan render: plan_render.py. Probe build: mk_tile.py.
+- Both run.sh do GRT i0 first, then 5 iterations. Waiters bqasnxpd5 (v19) and bvrk2gqwp (v20).
+- XMRG/latency bench v3 (BB golden artefact fixed, vacuity mutant forces ov=x_cv): intel1 bench/b3_run.sh, unit oth-ubuntu-511217-1795657871, waiter bzskztjxx.
+- Scripts: intel1 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/ (copies in the lane scratchpad kvt2/).
