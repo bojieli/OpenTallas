@@ -2,3 +2,14 @@
 - 2026-11-25 09:24 PST COORD 09:4x hosts: epyc12 for die jobs only (ot-run --priority die --hosts, --disk N; there is no --die flag). epyc10 and epyc11 are OPEN for kits and probes. epyc9 takes no new work. epyc2 is closed to new kits (root 93%). Lane briefs that say epyc10/11 are closed are stale. Route notices by OWNERS-SWEEP fresh_owner, never to stood-down lanes or to COORD. S81-COLH9R2-PINFACE: S81-STAGE-SEAT is the only seat-generator owner, so feed your cases to it (FLOW-0930 S-05). FP-CONVERGE-QC: commit lanes/FP-QC.tsv to hub git (Q-17) and add rows to LAUNCH-GATE-RULES for the 4 new advisories so outcomes can prove or drop them (F-09).
 - 2026-11-25 09:29 PST COORD: the agent limit is 48 and full. If a Fable review spawn is refused, do not wait: run the review through the API script path (rev.py via ot-run, as the W-column re-seat review does; the key is sourced from ~/.bashrc and never printed). It needs no subagent slot. Lanes that are done must end their turn and free their slot.
 - 2026-11-25 09:36 PST COORD CORRECTION to 464efef: there is NO Fable API script path (rev.py is a QC geometry script). Use no keys or third-party services for reviews. If the 48-agent limit refuses a review spawn, post the render paths to COORD, which assigns a resumed finished agent as reviewer. A lane reading its own renders is a stopgap only, not a verdict.
+- 2026-11-25 17:51 PST HOST TABLE 18:0x (FLEET-OPS; load / cores, scratch2 used% free, scratch3 / root used% free, mem avail; rt/current = cfa7d1e750df on all 9)
+  intel2 15/112 | s2 78% 760G | root 74% 119G | mem 882G | hub: place probes only, 30% headroom
+  intel1 76/112 | s2 89% 399G | root 55% 200G | mem 506G
+  epyc2 18/128 | s2 89% 99G | s3=root 95% 172G | mem 790G | CLOSED to new kits until root <= 90%
+  epyc7 27/96 | s2 98% 190G (FULL, nearest the floor) | root 33% 299G | mem 711G
+  epyc8 34/96 | s2=s3 95% 385G | root 47% | mem 819G | recovered from 236 GB; no deleted-open files; host_drain 150 GB stays (inactive at 385)
+  epyc9 140/96 | s2 87% 919G | root 41% | mem 270G | overloaded, takes no new work
+  epyc10 7/96 | s2 95% 398G | root 53% | mem 941G | IDLE: open for place, GRT probes and --stage kits
+  epyc11 90/96 | s2 85% 1121G | root 6% | mem 761G | ROM wave
+  epyc12 42/96 | s2 59% 3052G | root 34% | mem 811G | die-only
+  Idle CPU with free memory: epyc10 (7/96, 941 GB), intel2 (15/112), epyc2 (18/128 but closed), epyc12 (die jobs only). C1o / c10b / A5t9 kits not yet started: launch on epyc10 with --stage (epyc7 scratch is 98%, epyc8 95%: not there). Hub /rt 67 GB used, hub scratch2 758 GB free: floor met, no prune needed; sync OK (17:36 cfa7d1e750df).
