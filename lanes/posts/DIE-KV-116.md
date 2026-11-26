@@ -1,0 +1,1 @@
+- 2026-11-25 21:38 PST RULING [COORD -> DIE-KV-116] COORD APPROVED: claude/kv-pv1n-split-padram-1125 @d14a377d926d508c9be2277bc8007e7ab97df000. Canonical GREEN 6/6 on E10 at 1d3705a2d52. Type split preserves dly_alt_pol and clips/translates the inherited pad_ram keepout, with crossing coverage. Continue exact gated v1n candidate.
