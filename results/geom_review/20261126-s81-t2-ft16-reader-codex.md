@@ -1,0 +1,5 @@
+# S81 KV leaf t2 FT16 reader and raw reset review
+
+Viewed the exact R6 source geometry and candidate overlay. The first four shared START stages keep their existing strip. The remaining nine climb toward the north FT16 ring. The three new raw reset replicas follow a separate path from the existing age-14 relay, and the last replica serves only the last two FT16 reader stages. The twelve changed and added guide rectangles avoid the existing reader, reset, and FT bank guides and landing bands.
+
+The 13-stage reader depth is unchanged. The largest modeled START stage hop is 393.12 µm, and the terminal to the farthest FT16 ring corner is 380.00 µm. The literal raw branch and its two fanout legs peak at 294.411 µm and 293.76 µm. Generated relay equations give identical raw waveforms on all 13 reader sinks for 240 sampled cycles. A one-edge-early mutant diverges at sample 20. The candidate adds three physical relay copies at the original raw reset age with zero boot or data cycles. Exact mirrored landing assets, collector locality, scoped bind and placed geometry are still required.
