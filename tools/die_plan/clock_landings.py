@@ -2080,6 +2080,17 @@ class Landings:
             guard_reg = True
         if guard_reg and not cat:
             self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_guard_reg needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
+        # An explicit bus set enables the existing fault-observation retime only on priced input rings.
+        guard_buses = self.types[key].get("landing_guard_reg_buses", [])
+        if (not isinstance(guard_buses, list) or any(not isinstance(b, str) or not b for b in guard_buses)
+                or len(guard_buses) != len(set(guard_buses))):
+            self._collect_err(tn, None, None, None, LandingError(
+                f"{tn}: landing_guard_reg_buses must be a list of distinct nonempty bus names"))
+            guard_buses = []
+        invalid_buses = set(guard_buses) - set(cmask["inputs"]) if cat else set(guard_buses)
+        if invalid_buses:
+            self._collect_err(tn, None, None, None, LandingError(
+                f"{tn}: landing_guard_reg_buses selects non-count-aligned input rings {sorted(invalid_buses)}"))
         status_reg = status_reg or guard_reg
         if status_reg and not cat:
             self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_status_reg needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
@@ -2261,13 +2272,17 @@ class Landings:
                 # QC-PARAMWRAP 11-12: a ring realised by a signed hard child keeps the child's exact parameters; the
                 # die-wide STATUS_REG / GUARD_REG / RSTREP / PLACEREP knobs only re-parameterise soft rings
                 hard = hard_ring_params(self.plan, tn, b, key)
-                b_status, b_guard = status_reg, guard_reg
+                b_guard = guard_reg or b in guard_buses
+                b_status = status_reg or b_guard
                 if hard is not None:
                     b_status, b_guard = bool(hard.get("STATUS_REG")), bool(hard.get("GUARD_REG"))
                     for flag, on in (("landing_status_reg", b_status), ("landing_guard_reg", b_guard)):
                         if self.types[key].get(flag, False) and not on:
                             raise LandingError(f"{tn}.{b}: {flag} asks for a ring parameter the signed hard child "
                                                f"u_cland_{b} does not carry (param_wrap {hard})")
+                    if b in guard_buses and not (b_status and b_guard):
+                        raise LandingError(f"{tn}.{b}: landing_guard_reg_buses asks for STATUS_REG and GUARD_REG "
+                                           f"the signed hard child u_cland_{b} does not carry (param_wrap {hard})")
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
