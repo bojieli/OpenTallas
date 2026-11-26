@@ -517,7 +517,7 @@ def test_extended_pair_distance_requires_a_matching_capture_scope():
     checks = tcl(
         f"set scope {{{scope}}}\n"
         "set a [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d2[85]$_DFF_P_}]\n"
-        "set b [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d3[85]$_DFF_P_}]\n"
+        "set b [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d3\\[85\\]$_DFF_P_}]\n"
         "set c [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d3[86]$_DFF_P_}]\n"
         "set d [::ot_tap_pair::scope_key $scope {u_other.u_enc.d3[85]$_DFF_P_}]\n"
         "set e [::ot_tap_pair::scope_key $scope {u_bound.u_enc.d1[85]$_DFF_P_}]\n"

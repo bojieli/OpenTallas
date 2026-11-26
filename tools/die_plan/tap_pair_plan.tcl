@@ -364,6 +364,7 @@ namespace eval ::ot_tap_pair {
  # Extra-distance candidates share a capture key, e.g. encoder instance and bit.
  # An unmatched or capture-free name cannot join a scoped pair.
  proc scope_key {pattern name} {
+  set name [string map [list {\[} {[} {\]} {]}] $name]
   set key [lrange [regexp -inline -- $pattern $name] 1 end]
   if {{} in $key} {return {}}
   return $key
