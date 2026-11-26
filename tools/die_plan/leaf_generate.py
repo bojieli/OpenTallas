@@ -149,7 +149,6 @@ def steps(a, work):
         if a.ft_xcut:
             argv += ["--ft-xcut", str(a.ft_xcut)]
         add("shift", argv, w / "s1_shift.json")
-        pre = pre   # refresh deltas are measured against the BASE
     elif a.grow:
         argv = py + [str(HERE / "leaf_grow.py"), "grow", cur, "--types", types, "--dx", str(a.grow), "--ft-interior", "--out", str(w / "s1_grow.json")]
         if getattr(a, "die_cap", None) is not None:
@@ -157,6 +156,12 @@ def steps(a, work):
         if a.ft_xcut:
             argv += ["--ft-xcut", str(a.ft_xcut)]
         add("grow", argv, w / "s1_grow.json")
+    if (getattr(a, "shift", 0.0) or a.grow) and not a.no_core_place:
+        # grown t10: u_vsw moved +151.2 but its core tap sat west of the grow cut and stayed (STALE 160 um).  Ride the
+        # grow/shift move first (deltas against the BASE; refresh only moves items still at their base xy, so points the
+        # grow already moved are left alone), then the core_place move is refreshed against that plan.
+        argv = py + [str(HERE / "leaf_refresh.py"), "run", pre, cur, str(w / "s1_refresh.json"), "--types", types, "--report", str(w / "refresh0.json")]
+        add("refresh0", argv, w / "s1_refresh.json")
         pre = cur
     if not a.no_core_place:
         argv = py + [str(HERE / "core_place.py"), cur, "--types", types, "--die", "s81", "--repo", a.tree, "--slot-clear", ".*", "--ft-resite",

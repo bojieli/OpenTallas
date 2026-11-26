@@ -5234,6 +5234,17 @@
         "minItems": 2,
         "maxItems": 2
        },
+       "export_seats_um": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       },
        "consumer_localization": {
         "type": "array",
         "items": {

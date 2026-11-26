@@ -249,9 +249,12 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=(), flows=Non
     occ = raster(W, H, keepouts, g)
     free = ~occ
     dem = None
+    req = narrow = None
     if flows is not None:                 # per-street demand (HBM-STREETS-2): width counted per cross-section
         req_y, req_x = demand(free, g, flows, cfg)
         wide = free & (_runs(free, 0) * g >= req_y - 1e-6) & (_runs(free, 1) * g >= req_x - 1e-6)
+        req = np.maximum(req_y, req_x)    # R6-RENDER-LEGEND-STREET: the street map shades streets by this demand
+        narrow = free & ~wide & (req > base_width(cfg) + 1e-6)
         fy, fx = req_y[free], req_x[free]
         dem = dict(mode="per_street", base_um=base_width(cfg), ft_um_per_bit=ft_um_per_bit(cfg),
                    max_req_ew_um=round(float(fy.max()) if fy.size else 0.0, 2),
@@ -314,7 +317,7 @@ def analyze(W, H, keepouts, cfg=None, legs=(), points=(), unplaced=(), flows=Non
               demand=dem)
     worst = sorted((c for c in cores), key=lambda c: -(c["street_dist_um"] if c["street_dist_um"] is not None else 1e9))
     return dict(cfg=cfg, streets=st, cores=cores, worst_cores=worst[:10], legs_over_core=over, points_in_core=inside,
-                errors=errors, net=net)
+                errors=errors, net=net, req=req, narrow=narrow)
 
 
 def clock_build_legs(build_dir):
@@ -344,7 +347,8 @@ def clock_build_legs(build_dir):
 
 
 def render(A, keepouts, png, W, H, title=""):
-    """street map: grey = hard cores / PHY, green = street network, yellow = pockets, red = cores over reach,
+    """street map: grey = hard cores / PHY, streets green (flat width) or shaded by the per-street demand (required width, colour bar;
+    R6-RENDER-LEGEND-STREET), dark red = free run narrower than its demand (off the network), red = cores over reach,
     magenta = clock legs over a core, blue x = stations / drivers inside a core."""
     import matplotlib
     matplotlib.use("Agg")
@@ -353,9 +357,21 @@ def render(A, keepouts, png, W, H, title=""):
     g = A["cfg"]["raster_um"]
     fig, ax = plt.subplots(figsize=(16, 16 * H / W + 0.8))
     net = A["net"]
+    ext = (0, net.shape[1] * g, 0, net.shape[0] * g)
+    req, narrow = A.get("req"), A.get("narrow")
     img = np.zeros(net.shape + (4,))
-    img[net] = (0.55, 0.85, 0.55, 1.0)
-    ax.imshow(img, origin="lower", extent=(0, net.shape[1] * g, 0, net.shape[0] * g), interpolation="nearest")
+    if req is None:
+        img[net] = (0.55, 0.85, 0.55, 1.0)
+    if narrow is not None:
+        img[narrow] = (0.55, 0.0, 0.0, 1.0)
+    ax.imshow(img, origin="lower", extent=ext, interpolation="nearest")
+    if req is not None and net.any():
+        vals = req[net]
+        lo, hi = float(vals.min()), float(vals.max())
+        shade = np.ma.masked_where(~net, req)
+        im = ax.imshow(shade, origin="lower", extent=ext, interpolation="nearest", cmap="YlGnBu", vmin=lo, vmax=max(hi, lo + 1e-3))
+        cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
+        cb.set_label(f"street demand: required width um (base {lo:.1f}, max {hi:.1f})", fontsize=8)
     bad = {c["name"] for c in A["cores"] if c["street_dist_um"] is None or c["street_dist_um"] > A["cfg"]["reach_um"] + 1e-6}
     for r in keepouts:
         c = "#d62728" if r[4] in bad else ("#9a9a9a" if not is_phy(r[4]) else "#6a6aa0")
@@ -369,7 +385,9 @@ def render(A, keepouts, png, W, H, title=""):
     ax.set_aspect("equal")
     st = A["streets"]
     wl = (f"per-street demand (base {st['demand']['base_um']:g} um + FT)" if st.get("demand") else f">= {st['width_um']:g} um")
-    ax.set_title(f"{title} street map (12.10c): green = streets {wl}, red = {len(bad)} cores > "
+    nn = int(narrow.sum()) if narrow is not None else 0
+    wl += (f", shaded by required width; dark red = {nn * g * g / 1e6:.3f} mm2 of free run narrower than its demand" if req is not None else "")
+    ax.set_title(f"{title} street map (12.10c): streets {wl},\nred = {len(bad)} cores > "
                  f"{A['cfg']['reach_um']:g} um from a street, magenta = {len(A['legs_over_core'])} clock legs over a core, "
                  f"x = {len(A['points_in_core'])} stations in a core", fontsize=9)
     fig.tight_layout()

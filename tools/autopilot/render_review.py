@@ -39,6 +39,26 @@ def violated_blocks(text, path_type):
     return out
 
 
+def worst_blocks(text, path_type, n=50):
+    """every path block of path_type (max|min) in report order (report_checks -sort_by_slack: worst first), violated or not, up to n"""
+    out = []
+    for blk in re.split(r"\n(?=Startpoint: )", text or ""):
+        if not blk.startswith("Startpoint: "):
+            continue
+        end = blk.find("slack (")
+        if end < 0 or f"Path Type: {path_type}" not in blk:
+            continue
+        out.append(blk[:blk.find("\n", end) if blk.find("\n", end) > 0 else len(blk)].strip())
+        if len(out) >= n:
+            break
+    return out
+
+
+def block_slack(blk):
+    m = re.search(r"^\s*(-?[\d.]+)\s+slack \(", blk, re.M)
+    return float(m.group(1)) if m else None
+
+
 def path_points(blk):
     """data-path pins of a report block (after the launch clock pin) -> [(name, is_port)]"""
     pts, data = [], False
@@ -101,7 +121,7 @@ def zoom_window(layout, paths, margin=0.25, min_um=20.0):
     return [max(d[0], x0 - margin * w), max(d[1], y0 - margin * h), min(d[2], x1 + margin * w), min(d[3], y1 + margin * h)]
 
 
-def draw_paths(layout, groups, out_png, title, window=None):
+def draw_paths(layout, groups, out_png, title, window=None, caption=None):
     import layout_png as L
     v = L.View(window or layout["die"])
     c = L.Canvas(v.cw, v.ch)
@@ -128,9 +148,30 @@ def draw_paths(layout, groups, out_png, title, window=None):
         c.text(ex + 7, ey - 3, str(k + 1), color)
         drawn += 1
     c.text(6, 6, (title + (" (zoom %.0f,%.0f-%.0f,%.0f um)" % tuple(window) if window else ""))[:110], (0, 0, 0), 2)
-    c.text(6, 24, f"failing sign-off paths: red = TT setup, blue = FF hold (start square, end cross, n = report order); "
+    c.text(6, 24, (caption or "failing sign-off paths: red = TT setup, blue = FF hold") + f" (start square, end cross, n = report order); "
                   f"{drawn} drawn", (60, 60, 60))
     return c.save(out_png)
+
+
+def stage_groups(rev, n=50):
+    """no sign-off STA yet (SMELL / checkpoint render): the worst-n setup (red) and hold (blue) paths of the rendered DB itself, from
+    stage_paths.tcl.  -> (groups, caption, note for summary.txt); the summary also lists each path's slack"""
+    groups, lines = [], []
+    for fname, ptype, color, lab in (("paths_stage_setup.txt", "max", (220, 0, 0), "setup"), ("paths_stage_hold.txt", "min", (0, 70, 220), "hold")):
+        p = rev / fname
+        blks = worst_blocks(p.read_text(errors="replace") if p.exists() else "", ptype, n)
+        groups.append((color, blks))
+        sl = [block_slack(b) for b in blks]
+        sl = [v for v in sl if v is not None]
+        if sl:
+            lines.append(f"{lab} worst {min(sl):.3f}, {sum(v < 0 for v in sl)}/{len(sl)} negative")
+    info = (rev / "stage_paths.txt").read_text(errors="replace") if (rev / "stage_paths.txt").exists() else ""
+    mode = " ".join(l.split(None, 1)[1] for l in info.splitlines() if l.startswith(("clock ", "parasitics ")))
+    err = (rev / "stage_paths_error.txt").read_text(errors="replace").strip()[:200] if (rev / "stage_paths_error.txt").exists() else ""
+    if lines and mode.startswith("ideal"):
+        lines.append("hold at ideal clock is before CTS and hold repair")
+    note = (f"stage STA {mode}: " + "; ".join(lines)) if lines else ("stage STA failed: " + err if err else "no stage STA paths (stage_paths.tcl not run)")
+    return groups, f"worst-{n} paths of this DB ({mode or 'stage STA'}): red = setup, blue = hold", note
 
 
 def main(argv=None):
@@ -152,6 +193,9 @@ def main(argv=None):
             (rev / fname).write_text("\n\n".join(blks) + "\n")
             print(f"AP_REVIEW_PATHS {rev / fname}")
         groups.append((color, blks))
+    caption, note = None, ""
+    if not any(b for _, b in groups):
+        groups, caption, note = stage_groups(rev, int(meta.get("npath") or 50))
     lj = rev / "layout.json"
     if not lj.exists():
         print("AP_REVIEW_ERROR no layout.json (dump failed); paths only")
@@ -161,10 +205,13 @@ def main(argv=None):
     for k, p in L.render_tile(layout, rev, None, meta.get("title", "")).items():
         if p:
             print(f"AP_REVIEW_PNG {p}")
-    print(f"AP_REVIEW_PNG {draw_paths(layout, groups, rev / 'paths.png', meta.get('title', ''))}")
-    win = zoom_window(layout, path_coords(layout, groups))
+    print(f"AP_REVIEW_PNG {draw_paths(layout, groups, rev / 'paths.png', meta.get('title', ''), caption=caption)}")
+    pc = path_coords(layout, groups)
+    with open(rev / "summary.txt", "a") as f:
+        f.write(f"paths drawn {len(pc)} of {sum(len(b) for _, b in groups)}" + (f" ({note})" if note else "") + "\n")
+    win = zoom_window(layout, pc)
     if win:
-        print(f"AP_REVIEW_PNG {draw_paths(layout, groups, rev / 'paths_zoom.png', meta.get('title', ''), win)}")
+        print(f"AP_REVIEW_PNG {draw_paths(layout, groups, rev / 'paths_zoom.png', meta.get('title', ''), win, caption=caption)}")
     try:
         lj.unlink()                                       # large (every std cell); the PNGs are the record
     except OSError:

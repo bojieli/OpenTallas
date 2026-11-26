@@ -1659,6 +1659,45 @@ Path Type: max
             p = R.draw_paths(layout, [((0, 0, 255), R.violated_blocks(self.LOG, "min"))], Path(d) / "p.png", "t")
             self.assertTrue(Path(p).read_bytes().startswith(b"\x89PNG"))
 
+    def test_stage_paths_feed_the_overlay_when_no_signoff(self):
+        """VIS-REOWN 11-25 (COORD: paths.png '0 drawn' on SMELL renders): with no sign-off STA the worst-N setup AND hold paths of the
+        rendered DB itself (stage_paths.tcl output) are drawn, met paths included, and summary.txt says how many were drawn"""
+        import render_review as R
+        setup = self.LOG.replace("Path Type: min", "Path Type: max")
+        self.assertEqual(len(R.worst_blocks(self.LOG + "\n" + self.LOG, "min", n=3)), 3)            # report order, met paths kept, capped at n
+        self.assertEqual(R.block_slack(R.worst_blocks(self.LOG, "min")[0]), -3.64)
+        layout = {"die": [0, 0, 100, 50], "std_cells": [["a/q_reg", "DFF", "PLACED", 1, 1, 2, 2], ["hold1", "BUF", "PLACED", 50, 20, 51, 21],
+                                                         ["b/q_reg", "DFF", "PLACED", 90, 40, 91, 41], ["c/q_reg", "DFF", "PLACED", 9, 9, 10, 10]],
+                  "pins": [["x\\[3\\]", "M4", 0, 10, 0.1, 10.1]], "blocks": [], "density": {"nx": 1, "ny": 1, "grid": [0.1]}}
+        with tempfile.TemporaryDirectory() as d:
+            rev = Path(d)
+            (rev / "signoff.json").write_text(json.dumps({"verdict": "SMELL-MIDSTAGE", "reasons": ["checkpoint PLACE-GP"]}))
+            (rev / "review.json").write_text(json.dumps({"kit": "/k", "odb": "/k/3_3_place_gp.odb", "signoff": str(rev / "signoff.json"), "title": "SMELL", "npath": 50}))
+            (rev / "paths_stage_setup.txt").write_text(setup)
+            (rev / "paths_stage_hold.txt").write_text(self.LOG)
+            (rev / "stage_paths.txt").write_text("clock ideal\nparasitics placement\n")
+            groups, cap, note = R.stage_groups(rev)
+            self.assertEqual([len(b) for _, b in groups], [3, 3])
+            self.assertIn("ideal placement", cap)
+            self.assertIn("setup worst -3.640, 2/3 negative", note)
+            seen = []
+            import layout_png
+            orig, orig_draw = layout_png.render_tile, R.draw_paths
+            R.draw_paths = lambda lay, g, out, t, window=None, caption=None: seen.append((sum(len(b) for _, b in g), caption)) or str(out)
+            layout_png.render_tile = lambda *a, **k: {}
+            try:
+                (rev / "layout.json").write_text(json.dumps(layout))
+                self.assertEqual(R.main([str(rev)]), 0)
+            finally:
+                layout_png.render_tile, R.draw_paths = orig, orig_draw
+            self.assertEqual(seen[0][0], 6)
+            self.assertTrue(seen[0][1].startswith("worst-50 paths of this DB"))
+            self.assertRegex((rev / "summary.txt").read_text(), r"paths drawn [1-9]\d* of 6 \(stage STA ideal placement")
+            (rev / "stage_paths_error.txt").write_text("no sdc found next to /kit/x.odb")
+            for f in ("paths_stage_setup.txt", "paths_stage_hold.txt", "stage_paths.txt"):
+                (rev / f).unlink()
+            self.assertIn("stage STA failed: no sdc found", R.stage_groups(rev)[2])
+
 
 class TestOwnership(TickBase):
     """OWNERS.tsv + OWNERSHIP summary + UNOWNED-ITEM gaps (ownership.py) from fake origin/main + coord files"""

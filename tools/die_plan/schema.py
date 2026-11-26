@@ -1008,6 +1008,8 @@ SCHEMA = {
                         "obstacle_model": {"enum": ["canonical", "lef_origin"]},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # EXPORT-SEAT-1125: raw start export port -> seat of its export_q flop near the port (reset_tree._with_export_seats)
+                        "export_seats_um": {"type": "object", "additionalProperties": _xy},
                         # Type-local control reset copies: emitted old net, equal published depth and core clock.
                         "consumer_localization": {"type": "array", "items": {
                             "type": "object", "additionalProperties": False,

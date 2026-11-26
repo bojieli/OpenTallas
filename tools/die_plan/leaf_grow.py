@@ -32,6 +32,9 @@ from pathlib import Path
 FT_XCUT = [0.0]           # --ft-xcut: in-band ft points with x < this never shift (default 0 = all follow)
 FT_MODE = [True]          # True: ft slots pin-anchored; "ft": in-band ft points shift with the cores (--ft-interior)
 LEAF_RE = re.compile(r"^ot_s81sl_(kv_)?leaf__")
+SHIFT_MARGIN = [8.0]      # shift-in-place: E-band points are clamped to W - margin
+SHIFT_NEAR = 30.0         # shift-in-place: band points within this of the core block ride the full +dx
+SHIFT_EBAND = [None]      # shift-in-place: E edge of the source core block; the E band [cx, W-margin] is compressed, never clamped
 SHIFT_ONLY = [False]      # shift-in-place: outline and E/N face points stay, the core block translates east inside the original outline
 VE_MIN_GAP = 28.08        # ve_m|ve_s: never abut (386 mated M4 pins per side): gap >= this, or the source's own pin-aligned offset
 ANY_TYPE = [False]        # --any-type: the growth / retap / check commands accept any partition type (non-leaf: dsdv_slice_*_C ...)
@@ -72,6 +75,15 @@ def xform(pt, W, H, dx, dy, xcut, ycut, pinned):
     else:
         if x >= xcut:
             nx = x + dx
+            cx, wm = SHIFT_EBAND[0], W - SHIFT_MARGIN[0]
+            if SHIFT_ONLY[0] and cx is not None and x > cx:
+                # shift-in-place E band (east of every core): [cx, W-margin] maps linearly onto [cx+dx, W-margin], so band
+                # points keep their order and distinct x (a clamp piled clk_t17/clk_t44 onto one xy: bind spacing refusal)
+                # a point within SHIFT_NEAR of the cores keeps its full +dx (it rides its core: t50 clk_t41 10.8 um E of
+                # the block landed in the shifted core halo when compressed); only the band beyond is compressed
+                near = max(0.0, min(SHIFT_NEAR, (wm - cx - dx) / 2.0))
+                c0 = cx + near
+                nx = x if x >= wm else (x + dx if x <= c0 else x + dx * (wm - x) / (wm - c0))
         if dy and y >= ycut:
             ny = y + dy
     return [pt[0] if nx == x else round(nx, 4), pt[1] if ny == y else round(ny, 4)] + list(pt[2:])
@@ -112,7 +124,7 @@ def ft_slot_interior(sl, f, W, H, dx):
         if on_face:
             groups.append([f(q, True) for q in g])
         elif cx >= FT_XCUT[0]:
-            groups.append([[round(q[0] + dx, 4), round(q[1], 4)] + list(q[2:]) for q in g])
+            groups.append([[round(q[0] + dx, 4), q[1]] + list(q[2:]) for q in g])   # y kept exact (round(y, 4) moved a 5-decimal y)
         else:
             groups.append([list(q) for q in g])
         # (dy growth of interior ft groups is not supported here: grow y in a separate call without --ft-interior)
@@ -214,16 +226,23 @@ def shift_row(t, dx, margin=8.0, xcut=None):
     stay, the core block (cores, taps, internal stations, in-band ft points, relay sites, reach-fix sinks) translates +dx
     east inside the ORIGINAL outline.  ValueError when a shifted core would end closer than margin to the E face."""
     W, H = t["outline_um"]
+    # the E band ends at the tap clear (schema.type_tap_clear, 8.64 default): a margin of 8.0 moved t50 clk_t17 to
+    # x 1434.51 > W - 8.64 and the bind refused it ("violates outline/halo/tap spacing")
+    tc = (t.get("clock") or {}).get("tap_clear_um")
+    margin = max(margin, 8.64 if tc is None else float(tc))
     hc = t.get("hard_cores") or []
     x0 = min(h["origin_um"][0] for h in hc) if (xcut is None and hc) else (xcut or 0.0)
     room = W - margin - max(b[2] for b in core_boxes(t).values())
     if dx > room + 1e-9:
         raise ValueError("shift %.2f um exceeds the E room %.2f um (outline %.2f, margin %.1f)" % (dx, room, W, margin))
     SHIFT_ONLY[0] = True
+    SHIFT_MARGIN[0] = margin
+    SHIFT_EBAND[0] = max(b[2] for b in core_boxes(t).values()) if hc else None
     try:
         g = grow_row(t, dx, 0.0, None, x0)
     finally:
         SHIFT_ONLY[0] = False
+        SHIFT_EBAND[0] = None
     g["note"] = g["note"].replace("LEAF-GROW 11-25: outline", "LEAF-SHIFT 11-25: core block shifted in place (outline fixed)")
     return g
 
@@ -413,6 +432,17 @@ def cmd_widen(a):
             print("%s grid taps %d: %d added taps renamed" % (tn, ng, len(mp)))
     Path(a.out).write_text(json.dumps(P, separators=(",", ":")))
     return 0
+
+
+def pick_grow_dx(W, need_min, cap, lattice=LATTICE):
+    """largest dx <= cap, a multiple of the lattice, whose grown width is not raster-truncating and dx >= need_min -> dx | None"""
+    k = int(round(cap / lattice, 6))
+    while k * lattice >= need_min - 1e-9:
+        dx = round(k * lattice, 4)
+        if not raster_bad(round(W + dx, 4)):
+            return dx
+        k -= 1
+    return None
 
 
 def cmd_grow(a):
