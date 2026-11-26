@@ -345,7 +345,29 @@ def regrow(lef_in, lef_out, layers, extra=None):
     return stats
 
 
-def form(base, detail, out, receipt=None, layers="auto"):
+def add_pin_stack(lines, stack, layers):
+    """PIN-STACK 11-25 (hd_host_e in_data[127]): the core's own routed metal of each signal BTerm net next to its pin
+    (pin_stack json from tools/die_plan/pinstack_def.py on the signed core DEF) becomes PIN geometry on `layers`: the router
+    may land on it (it is that net's metal) instead of seeing it as OBS over the pin.  lines keepends.  -> (lines, n rects)"""
+    out, cur, n = [], None, 0
+    for ln in lines:
+        m = re.match(r"\s*PIN\s+(\S+)", ln)
+        if m:
+            cur = m.group(1)
+        if cur and ln.strip() == "END" and ln.startswith("    END") and not ln.startswith("     "):
+            add = [r for r in (stack.get(cur) or {}).get("stack", []) if r[0] in layers]
+            for L in sorted({r[0] for r in add}):
+                out.append("      LAYER %s ;\n" % L)
+                for r in add:
+                    if r[0] == L:
+                        out.append("        RECT  %.3f %.3f %.3f %.3f ;\n" % tuple(v / 1000 for v in r[1:]))
+                        n += 1
+            cur = None
+        out.append(ln)
+    return out, n
+
+
+def form(base, detail, out, receipt=None, layers="auto", pin_stack=None):
     """splice exact OBS of the blanket or stale routing layers (M4-M7), regrow, check -> rc (0 ok, 1 nothing to do, 2 refused)"""
     base, detail, out = Path(base), Path(detail), Path(out)
     st = {}
@@ -383,6 +405,8 @@ def form(base, detail, out, receipt=None, layers="auto"):
     # PIN-EOL: the pin's own same-layer wire (exact metal, touching the pin) becomes pin shape before the OBS is grown
     with open(tmp) as fh:
         lns = fh.readlines()
+    if pin_stack:     # first: the stack becomes pin shape, then its touching exact metal (via enclosures) merges in too
+        lns, rec["pin_stack_rects"] = add_pin_stack(lns, json.load(open(pin_stack)), set(sel))
     lns, rec["pin_wire_merge"] = A.merge_pin_wires(lns, set(sel))
     tmp.write_text("".join(lns))
     # PIN-METAL 11-25: exact BTerm metal the bound pins do not cover (a bound view whose pin shapes differ from the signed DB,
@@ -400,8 +424,8 @@ def form(base, detail, out, receipt=None, layers="auto"):
     for ln in bh:
         if ln in added:
             added.remove(ln)
-    pins_ok = all(_RECT.match(ln) for ln in added) and [ln for ln in nh if not _RECT.match(ln)] == \
-        [ln for ln in bh if not _RECT.match(ln)]
+    pins_ok = all(_RECT.match(ln) or re.match(r"\s*LAYER\s+M[4-7]\s*;", ln) for ln in added) and [ln for ln in nh if not _RECT.match(ln) and not (pin_stack and re.match(r"\s*LAYER ", ln))] == \
+        [ln for ln in bh if not _RECT.match(ln) and not (pin_stack and re.match(r"\s*LAYER ", ln))]
     base_pm = out.with_name(out.name + ".basepm.tmp")
     base_pm.write_text("".join(nh + (bb or []) + bt))
     with contextlib.redirect_stdout(io.StringIO()):
@@ -492,6 +516,7 @@ def main(argv=None):
     f.add_argument("--out", required=True)
     f.add_argument("--receipt")
     f.add_argument("--layers", default="auto")
+    f.add_argument("--pin-stack", help="pinstack_def.py json of the signed core DEF (same-net metal at each pin -> PIN)")
     c = sub.add_parser("census")
     c.add_argument("--lef", required=True)
     c.add_argument("--detail")
@@ -505,7 +530,7 @@ def main(argv=None):
     t.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "form":
-        return form(a.base, a.detail, a.out, a.receipt, a.layers)
+        return form(a.base, a.detail, a.out, a.receipt, a.layers, a.pin_stack)
     if a.cmd == "pin-eol-fix":
         print(json.dumps(pin_eol_fix(a.lef, a.out)))
         return 0
