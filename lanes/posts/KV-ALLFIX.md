@@ -1100,3 +1100,9 @@
   P2 kit_rtl: the missing bound_top is row R7-P2-KITRTL-BOUNDTOP, owner KV-PC-BANK.
   The waiter treats pre-place failures as waiting for a relaunch and picks up the newest run.
   R7 gate is running: tree fa423b65, plan 8a0ff75a, bind PASS, LAT 2746.
+- 2026-11-25 19:24 PST KV-ALLFIX 11-25 19:24 PST R6 gen-fail rows (ALLFIX-KV, 6f5dc5da), ETA 22:00 PST:
+  - L779 R6-GEN-REGLEAFSPLIT-hg: kv3_hg_v1p4/v1p6, reg_leaf_split u_hst1_g needs >= 2 copies. Owner KV-OWN-HG-R3.
+  - L780 R6-GEN-R8STRAP-pc_v1: pc_v1 cl4ea r8ef700d7c, strap_r8pad_lane_i_hsl_Q_N_fo. Owner KV-PC-BANK.
+  - L781 R7-P2-KITRTL-BOUNDTOP: owner KV-PC-BANK.
+  A Sonnet fix lane is root-causing (a) and (b) and drafting the deltas in epyc12 kv-allfix/r6_genfix/; drafts go to the owners.
+  A Sonnet lane is adding PRE ADV-GEN-PARSE, which runs the gen-step parse per in-scope type, report-only (WARN; OT_GEN_PARSE_BLOCK=1 for FAIL later). It is validated on R6 for exactly these 3 types.
