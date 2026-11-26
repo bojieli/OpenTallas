@@ -68,7 +68,10 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-SIGNED-UNVERSIONED	4	seen-in-review	FABLE-FLOW-0847 A20			NEW
 2026-11-26 09:00 PST	HEAD	P-STALE-TABLE	2	seen-in-review	FABLE-FLOW-0847 A11 exports lep0N_w			NEW
+2026-11-26 09:00 PST	KV	C-FSTART-HALFCYCLE	4	seen-in-review	FABLE-INDEP full review (COORD 09:3x) hub Eo/Wo/Wi + sys_c: fstart flop half-cycle reach (lanes/posts/FABLE-INDEP.md 09:21/09:24)			NEW
 2026-11-26 09:00 PST	KV	C-FT-CROSSES-CORE	78	exact	PRE ADV-FT-CROSSES-CORE types on live plan 87d01254579e			NEW
+2026-11-26 09:00 PST	KV	C-FWDCLK-WRONG-TAP	2	seen-in-review	FABLE-INDEP full review (COORD 09:3x) kv io_ft forwarded clock from the wrong tap			NEW
+2026-11-26 09:00 PST	KV	C-GPL-TD-INFLATION	1	seen-in-review	FABLE-INDEP full review (COORD 09:3x) folded C-RESIZE-CELLCAP: hub_Wi			NEW
 2026-11-26 09:00 PST	KV	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-LEG405	2	exact-staged	KV-INT-R2 measurement dafa157 (real under-staged 2; legacy 40 superseded; COORD ruling 09:22)	40	exact	BASIS-CHANGE
 2026-11-26 09:00 PST	KV	C-OVERSIZE	1	exact	PRE ADV-FP-OVERSIZE types on live plan 87d01254579e			NEW
@@ -77,6 +80,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	KV	C-STREET	32	exact	PRE ADV-FP-STREET types on live plan 87d01254579e	41	exact	DOWN
 2026-11-26 09:00 PST	KV	C-TAP-LOAD	12	exact	PRE ADV-TAP-LOAD types on live plan 87d01254579e	17	lead	FIRST-EXACT
 2026-11-26 09:00 PST	KV	C-XTAP-HOLD	1	exact-kits	carried 21:00 QC-DRT-ECO 1/62; no KV figure in the 08:20 census	1	exact-kits	FLAT
+2026-11-26 09:00 PST	KV	P-CHECKER-AXIS-GAP	1	seen-in-review	FABLE-INDEP full review (COORD 09:3x) CA strap check tests only across-face axis; 331 legs up to 1564 um invisible			NEW
 2026-11-26 09:00 PST	KV	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	KV	P-SIGNED-UNVERSIONED	52	seen-in-review	FABLE-FLOW-0847 A20			NEW
 2026-11-26 09:00 PST	QC	C-FT-CROSSES-CORE	50	exact	PRE ADV-FT-CROSSES-CORE types on live plan c9eb8883ad40			NEW
@@ -103,10 +107,12 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	QC	P-SIGNED-UNVERSIONED	13	seen-in-review	FABLE-FLOW-0847 A20			NEW
 2026-11-26 09:00 PST	QC	P-STALE-TABLE	4	seen-in-review	FABLE-FLOW-0847 A11 cA4 coll_core coll_s D2			NEW
 2026-11-26 09:00 PST	S81	C-CLK-LAND-OBS	8	seen-in-review	FABLE-FLOW-0847 A1 lepw_mus_C mu_C + dsdv_slice_c1x_C t1 t3 t5 t7 t8 t9			NEW
+2026-11-26 09:00 PST	S81	C-ENC-CONE-DETOUR	2	seen-in-review	FABLE-INDEP full review (COORD 09:3x) blocking items, 2 placements			NEW
 2026-11-26 09:00 PST	S81	C-FT-CROSSES-CORE	272	exact	PRE ADV-FT-CROSSES-CORE types on live plan 1f8fcdd9c4d7			NEW
-2026-11-26 09:00 PST	S81	C-GPL-TD-INFLATION	1	seen-in-review	FABLE-FLOW-0847 A3 lepw_mus_C			NEW
+2026-11-26 09:00 PST	S81	C-GPL-TD-INFLATION	3	seen-in-review	FABLE-INDEP full review (COORD 09:3x) folded C-RESIZE-CELLCAP: LEPW lepw_mus_C, c1x t5, COL (resize inflation + 400k cell cap)			NEW
 2026-11-26 09:00 PST	S81	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-LEG405	6	exact-staged	LEG405-STAGED 6 legs/6 types CLASS-OWNERS-R2 09:19 tool c-leg405-stage-seats @5632156a860 (legacy stage-blind 277 superseded; COORD ruling 09:22)	273	exact	BASIS-CHANGE
+2026-11-26 09:00 PST	S81	C-LEGACY-VIEW-EOL	4	seen-in-review	FABLE-INDEP full review (COORD 09:3x) COL types: live North binds legacy macro views (dsfd_qbank_N legacy lef)			NEW
 2026-11-26 09:00 PST	S81	C-OVERSIZE	4	exact	PRE ADV-FP-OVERSIZE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-PARENT-SEAM-HOLD	2	seen-in-review	FABLE-FLOW-0847 A9 t23 arst_n + SerDes peer			NEW
 2026-11-26 09:00 PST	S81	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 t23 mus_C			NEW
@@ -127,6 +133,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	P-KIT-BIND-PLAN-MISMATCH	7	seen-in-review	FABLE-FLOW-0847 A13 COL P2 7 types			NEW
 2026-11-26 09:00 PST	S81	P-POSTPUBLISH-DISK	1	adjudicated	FABLE-FLOW-0847 B23 COL P2 waiter	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-PRIVATE-BASE-DIVERGENCE	3	seen-in-review	FABLE-FLOW-0847 A14 LEPW WREG6 + 1			NEW
+2026-11-26 09:00 PST	S81	P-ROUTE-NO-VIEW-GATE	87	seen-in-review	FABLE-INDEP full review (COORD 09:3x) 87 old-plan S81 units routing without review (AP_REQUIRE_VIEWED_WAVE_ROUTE absent)			NEW
 2026-11-26 09:00 PST	S81	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-SIGNED-UNVERSIONED	1	seen-in-review	FABLE-FLOW-0847 A20 dsdv_bksel_q			NEW
 2026-11-26 09:00 PST	S81	P-STALE-TABLE	1	seen-in-review	FABLE-FLOW-0847 A11 seal_derived latpkg			NEW
