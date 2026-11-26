@@ -146,3 +146,4 @@
   Candidate: tree kv_a5t9_g6v6r3_pv1nsplit5_1126 (epyc8), plan 6956fad12a7b. G0 and TAPOFF PASS.
   Strict bind is blocked on R8 pv_v_pads_ffkpv: 156 UNDERIVED members. Fix: regenerate via kv_pv_v_pads.py from the nopvv bind.
   No probe yet. FABLE-RC-KV item 9: all 10 KV class rows are already in CLASSES.tsv; nothing new added.
+- 2026-11-26 13:16 PST DONE [kv-int-r2] ot-run oth-ubuntu-3367767-1795727503 on loved-redfish: rc=0 after 278 s, ended 21:16:18, log /srv/opentallas-scratch2/claude/kv-int-r2/hub/hroot_scoped.otrun.log, cmd: --mem 70 --threads 8 --disk 2 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/kv-int-r2/hub -- bash /srv/opentallas-scratch2/claude/kv-i
