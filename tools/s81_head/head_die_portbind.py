@@ -67,7 +67,9 @@ def run_independent(left, right):
 
 
 def generator_env(threads, mem_gb):
-    env = dict(os.environ, OT_HEAVY_THREADS=str(threads))
+    # The split SRC/TOOLS launcher may have an older frozen generator. It
+    # ignores this opt-in instead of rejecting a newer command-line option.
+    env = dict(os.environ, OT_HEAVY_THREADS=str(threads), OT_HEAD_RESET_PREWARM=str(int(threads > 1)))
     if mem_gb is not None:
         env["OT_HEAVY_MEM_GB"] = str(max(1, mem_gb))
     reset_jobs = positive_int(env.get("OT_RESET_POOL_J"))
@@ -92,10 +94,6 @@ available = _mem_limit_bytes()
 memory = max(1, available >> 30) if available is not None else None
 left_mem = memory // 2 if memory and workers > 1 else memory
 right_mem = memory - left_mem if memory and workers > 1 else memory
-if left_jobs > 1:
-    module_cmd.append('--prewarm-reset')
-if right_jobs > 1:
-    gen_cmd.append('--prewarm-reset')
 started = monotonic()
 mc, g = run_independent(
     lambda: subprocess.run(module_cmd, capture_output=True, text=True, env=generator_env(left_jobs, left_mem)),

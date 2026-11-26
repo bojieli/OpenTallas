@@ -29,6 +29,7 @@ import gzip
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -294,7 +295,8 @@ def _run(a):
             files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
                                      plan_path=Path(a.plan).resolve(),
                                      landing=load_json(a.clock_landing) if a.clock_landing else None,
-                                     kit_rtl=kit or None, prewarm_reset=a.prewarm_reset)
+                                     kit_rtl=kit or None,
+                                     prewarm_reset=a.prewarm_reset or os.environ.get("OT_HEAD_RESET_PREWARM") == "1")
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1
