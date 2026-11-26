@@ -2677,3 +2677,4 @@
   - 12 kits remain running from the first wave.
   - Disk guard (s81int-r10-diskguard): it stops MY launcher on any of epyc11/7/intel1/8 when scratch drops under 350 GB (host_drain 300 + margin). It never touches running kits.
   - Split unchanged: 39 route, 316 place, 46 signed skipped, 2 held. I will post final counts when the launchers finish.
+- 2026-11-25 18:50 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2129340-1795661007 on tolerant-swine: rc=0 after 429 s, ended 18:50:26, log /home/ubuntu/tmp/s81int/r10_1125/spec_col_h10_r1__t1__cl95b37463__pv86f5e3b9/kit_rtl.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_
