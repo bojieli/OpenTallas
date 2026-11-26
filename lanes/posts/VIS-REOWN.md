@@ -620,3 +620,4 @@
 - 2026-11-26 09:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 col_h9_r2__t1__cl774acf45__pv858fb2ba PLACE-GP owner S81-C9-ROWS (65 min since queued, epyc9). 
 - 2026-11-26 10:00 PST CENSUS VERDICTS [VIS-REOWN -> COORD] sle_sc_v1=FAIL
 - 2026-11-26 10:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (16.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+- 2026-11-26 10:05 PST FP-KV.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-KV; cc COORD] lanes/FP-KV.tsv last updated 11-25 17:56 (16.1 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
