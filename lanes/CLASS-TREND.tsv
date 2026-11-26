@@ -162,7 +162,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	C-TAP-LOAD	10	exact	PRE ADV-TAP-LOAD types on live plan 1f8fcdd9c4d7	24	lead	FIRST-EXACT
 2026-11-26 09:00 PST	S81	C-TAP-REACH	1	seen-in-review	FABLE-FLOW-0847 A2 t23			NEW
 2026-11-26 09:00 PST	S81	C-VIEW-NO-OBS	1	seen-in-review	FABLE-FLOW-0847 A8 ot_s81dv_norm_finish			NEW
-2026-11-26 09:00 PST	S81	C-VIEW-OBS-PIN-ABUT	216	seen-in-review	FABLE-RC-S81 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-S81_1126-d612d6a3ba8e.tsv sha12 d612d6a3ba8e) sstn_base566 M3 OBS strips abut pin slots: 216 col types (660 instances: 444 legacy view, 216 pin_eol_fix_1125d)			NEW
+2026-11-26 09:00 PST	S81	C-VIEW-OBS-PIN-ABUT	216	seen-in-review	FABLE-RC-S81 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-S81_1126-d612d6a3ba8e.tsv sha12 d612d6a3ba8e) sstn_base566 M3 OBS strips abut pin slots: 216 col types, counted in types (660 instances: 444 legacy view, 216 pin_eol_fix_1125d) [note: 660 instances]			NEW
 2026-11-26 09:00 PST	S81	C-XTAP-HOLD	2	exact-kits	CLASS-OWNERS-R2 08:20 xtap_hold_census residual kits 2/42 (report-only, unpushed)	3	exact-kits	DOWN
 2026-11-26 09:00 PST	S81	P-CLOCK-TAPS-COPY	1	adjudicated	FABLE-FLOW-0847 fix 418ea00b4298 landed; kit census = FIX-LANDED.tsv	1	adjudicated	FLAT
 2026-11-26 09:00 PST	S81	P-ELAB-REUSE-DRIFT	11	seen-in-review	FABLE-FLOW-0847 A22 SVC lanes			NEW
