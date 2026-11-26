@@ -50,7 +50,7 @@ def test_overview_five_cards_and_totals(page):
             expect(geometry).to_have_text(
                 f"{counts['type'].get('signed', 0)} of {d['types']} types, "
                 f"{counts['core'].get('signed', 0)} of {d['cores']} cores")
-            assert sum(counts['type'].values()) == d['types']
+            assert sum(counts['type'].values()) == sum(d['counts']['type'].values())
             assert sum(counts['core'].values()) == d['cores']
             expect(page.get_by_test_id('ov-signed-area-' + d['id'])).to_contain_text('of current die area signed on any plan')
 

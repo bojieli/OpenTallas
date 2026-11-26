@@ -49,7 +49,7 @@ export function mountNavigator(host) {
           if (hc.length) out.push(h('div.more', { dataset: { testid: 'nav-macros-head' } }, `${hc.length} macros in this type`));
           for (const c of hc.slice(0, 300)) { const cn = S.data.nodes[c[1]];
             out.push(h('a.row.core.' + stateCls(cn ? displayState(cn) : 'not built'), { href: store.href({ view: S.view === 'overview' || S.view === 'closure' || S.view === 'token' || S.view === 'dataflow' ? 'element' : S.view, node: n.id, inst: c[0] }), 'aria-current': S.inst === c[0] ? 'true' : null,
-              title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + displayLabel(cn) : ' · generated memory macro'}`, dataset: { macro: c[0] },
+              title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + displayStateLabel(cn) : ' · generated memory macro'}`, dataset: { macro: c[0] },
               onmouseenter: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: c[0] })), onmouseleave: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: null })) },
               h('i.dot'), h('span.nm', c[0]), h('small', c[2].length > 16 ? '…' + c[2].slice(-14) : c[2]))); }
           if (hc.length > 300) out.push(h('div.more', `${hc.length - 300} more: see the Macros tab of the inspector.`));
