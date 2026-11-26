@@ -425,6 +425,47 @@ def _plan_kit(kit, tmp_path, abut):
     return pd
 
 
+def test_standalone_preflight_distinguishes_macro_geometry_coverage(kit, tmp_path, capsys, monkeypatch):
+    pd = _plan_kit(kit, tmp_path, ["W"])
+    # The conventional filename expressly permits the edge abutment. The separately named plan does not.
+    given = pd / "exact_candidate.json"
+    explicit = json.loads((pd / "die_plan.json").read_text())
+    explicit["partition_types"]["t"]["contents"][0].pop("abut_core_edge")
+    given.write_text(json.dumps(explicit))
+    monkeypatch.delenv("OT_LAUNCH_PLAN", raising=False)
+    monkeypatch.setenv("OT_RELAY_ORIENT", "0")
+
+    def preflight(name, *args):
+        receipt = tmp_path / (name + ".json")
+        result = KP.main([str(kit), "--no-emit", "--out", str(receipt), *args])
+        return result, json.loads(receipt.read_text()), capsys.readouterr().out
+
+    rc, skipped, log = preflight("skipped")
+    assert skipped["verdict_scope"] == "blocking_checks"
+    assert skipped["macro_geometry"]["verdict"] == "SKIP"
+    assert "KIT_MACRO_GEOMETRY SKIP" in log
+    assert "no plan contents (pass --plan or --plan-dir)" in log
+    assert all(skipped["contract_advisory"][name]["verdict"] == "SKIP" for name in KC.MACRO_GEOMETRY_CHECKS)
+    assert not (kit / "preflight.json").exists()
+
+    clean_rc, clean, _ = preflight("directory", "--plan-dir", str(pd))
+    assert clean_rc == rc and clean["issues"] == skipped["issues"]
+    assert clean["macro_geometry"]["verdict"] == "PASS"
+
+    scoped_rc, scoped, log = preflight("explicit", "--plan-dir", str(pd), "--plan", str(given))
+    assert scoped_rc == rc and scoped["issues"] == skipped["issues"]
+    assert scoped["macro_geometry"]["verdict"] == "FINDINGS"
+    assert scoped["macro_geometry"]["checks"] == {
+        "macro_channels": "FAIL", "clock_entry_clear": "PASS", "macro_pin_grid": "PASS",
+    }
+    assert "KIT_MACRO_GEOMETRY FINDINGS" in log
+    assert "column 0 x[4.32,24.32]" in scoped["contract_advisory"]["macro_channels"]["errors"][0]
+
+    monkeypatch.setenv("OT_LAUNCH_PLAN", str(given))
+    _, env, _ = preflight("env")
+    assert env["macro_geometry"] == scoped["macro_geometry"]
+
+
 @pytest.mark.parametrize("abut,verdict", [(None, "FAIL"), (["E"], "FAIL"), (["W"], "PASS")])
 def test_declared_core_edge_abutment(kit, tmp_path, abut, verdict):
     """DIE-KV-51 10-31 (OWNER): a macro exactly on the core W edge passes only with a plan-declared abut_core_edge W."""

@@ -3,6 +3,7 @@
 
 Static only (no synth, no place): each check is one bug class seen on 10-26/10-27.  Every check returns
 (errors, info); an empty error list is PASS, info['applies'] False marks a check with nothing to judge (NA).
+The advisory macro geometry checks report SKIP if an instance-based placement lacks the plan contents to measure.
 
   corner_modes         one mode per corner in every generated sdc/tcl: TT setup vclk 250, FF hold 202.5; no global
                        vclk latency in a hook of a single-mode multi-corner session other than TT; per-mode (MM) kits
@@ -33,6 +34,7 @@ Static only (no synth, no place): each check is one bug class seen on 10-26/10-2
 import json
 import math
 import re
+from functools import cached_property
 from pathlib import Path
 
 TT_PS, FF_PS = 250.0, 202.5          # METHODOLOGY 12.3 common core latency (TT setup / FF hold)
@@ -964,18 +966,27 @@ def _foreach_lists(txt):
     return out
 
 
+class _MacroPlan:
+    """Read the type entry once for the related geometry checks in a single preflight."""
+
+    def __init__(self, kd, source, *, directory=True):
+        self.kit = Path(kd)
+        self.path = (Path(source) / "die_plan.json" if directory else Path(source)) if source else None
+
+    @cached_property
+    def type_entry(self):
+        budget = self.kit / "budget.json"
+        if not self.path or not self.path.is_file() or not budget.is_file():
+            return None
+        typ = json.loads(budget.read_text()).get("type")
+        return json.loads(self.path.read_text()).get("partition_types", {}).get(typ)
+
+
 def _plan_contents(kd, plan_dir, prefer_hard=False):
-    """{instance: contents / hard_cores entry} of this partition kit's type from plan_dir/die_plan.json (budget.json
-    type); a contents entry wins over a hard core of the same instance name, unless prefer_hard (DIE-QC-97 11-09: the
-    clock entry check judges the declared hard core, as gen_phys._placed_entries does)."""
-    if not plan_dir:
-        return None
-    pf = Path(plan_dir) / "die_plan.json"
-    bj = Path(kd) / "budget.json"
-    if not pf.is_file() or not bj.is_file():
-        return None
-    typ = json.loads(bj.read_text()).get("type")
-    pt = json.loads(pf.read_text()).get("partition_types", {}).get(typ)
+    """{instance: contents / hard_cores entry} of this partition kit's type (from budget.json).
+    A contents entry wins unless prefer_hard, which matches the declared hard core used to judge clock entry."""
+    source = plan_dir if isinstance(plan_dir, _MacroPlan) else _MacroPlan(kd, plan_dir)
+    pt = source.type_entry
     if not pt:
         return None
     # DIE-KV-47-SD: a kit-only physical specialization (physical_inst/physical_master, gen_phys.content_physical_identity)
@@ -1001,6 +1012,9 @@ def _plan_contents(kd, plan_dir, prefer_hard=False):
         import bound_macro_paths
         out = bound_macro_paths.overlay(kd, out)
     return out
+
+
+MACRO_PLAN_UNAVAILABLE = "place_macro by instance name: no plan contents (pass --plan or --plan-dir) to resolve macro masters"
 
 
 def macro_boxes(kd, plan_dir=None, sites_out=None):
@@ -1044,10 +1058,10 @@ def macro_boxes(kd, plan_dir=None, sites_out=None):
     if pm:
         # gen.py phys partition form: instance names at plan sites. KV-KITS-7: master + outline come from the plan's
         # partition_types[type].contents entry of that instance (plan_dir/die_plan.json, type from budget.json); a
-        # staged LEF SIZE of the master must agree. No plan -> fail closed.
+        # staged LEF SIZE of the master must agree. Without the plan, geometry cannot be measured.
         inst = _plan_contents(kd, plan_dir)
         if inst is None:
-            return None, "place_macro by instance name: no plan contents (pass --plan-dir) to resolve macro masters"
+            return None, MACRO_PLAN_UNAVAILABLE
         for m in pm:
             name = m.group(1).strip("{}").replace("\\[", "[").replace("\\]", "]")
             x, y, o = float(m.group(2)), float(m.group(3)), (m.group(4) or "R0")
@@ -1670,6 +1684,7 @@ CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", 
 # duplicate_modules = Yosys "Re-definition of module"; macro_instances = place_macro / MACRO_PLACEMENT_TCL on an instance
 # the netlist does not have (OpenROAD error).  Every other check is a design target, reported as contract_advisory.
 TOOL_FAIL_CHECKS = ("duplicate_modules", "macro_instances")
+MACRO_GEOMETRY_CHECKS = ("macro_channels", "clock_entry_clear", "macro_pin_grid")
 
 
 def is_core_kit(kd):
@@ -1688,15 +1703,24 @@ def is_core_kit(kd):
     return (kd / "core.json").is_file() or (kd / "core_infra_plan.json").is_file()
 
 
-def run_all(kd, plan_dir=None):
+def run_all(kd, plan_dir=None, *, plan=None):
     out = {}
+    macro_plan = _MacroPlan(kd, plan or plan_dir, directory=not plan)
     for name in CHECKS:
         fn = globals()[name]
         try:
-            errors, info = fn(kd, plan_dir) if name in ("pins_canonical", "macro_channels", "clock_entry_clear",
-                                                           "macro_pin_grid") else fn(kd)
-        except Exception as error:      # fail closed: a check that cannot run is a FAIL, never a skip
+            if name in MACRO_GEOMETRY_CHECKS:
+                errors, info = fn(kd, macro_plan)
+            elif name == "pins_canonical":
+                errors, info = fn(kd, plan_dir)
+            else:
+                errors, info = fn(kd)
+        except Exception as error:
             errors, info = [f"check could not run: {type(error).__name__}: {error}"], dict(applies=True)
-        verdict = "FAIL" if errors else ("PASS" if info.get("applies", True) else "NA")
+        if name in MACRO_GEOMETRY_CHECKS and errors == [MACRO_PLAN_UNAVAILABLE]:
+            verdict, errors = "SKIP", []
+            info["reason"] = MACRO_PLAN_UNAVAILABLE
+        else:
+            verdict = "FAIL" if errors else ("PASS" if info.get("applies", True) else "NA")
         out[name] = dict(verdict=verdict, errors=errors[:40], n_errors=len(errors), info=info)
     return out
