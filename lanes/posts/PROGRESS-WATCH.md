@@ -529,3 +529,4 @@
 - 2026-11-25 22:45 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
 - 2026-11-25 23:05 PST ALERT STUCK-STATE qwen_kvsys: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_pv_v8e, 2026-11-25 16:51)
 - 2026-11-25 23:46 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
+- 2026-11-26 00:05 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
