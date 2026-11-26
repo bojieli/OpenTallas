@@ -725,9 +725,18 @@ def main(argv=None):
     g.add_argument("--drop-failed-rows", action="store_true", help="a row that fails to apply is dropped (recorded), the rest go on")
     g.add_argument("--plan-name", help="file name of the gated plan in the fork's plan dir (default plan_row_<lane>.json)")
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
+    g.add_argument("--light", action="store_true", default=os.environ.get("OT_ROW_GATE_LIGHT") == "1",
+                   help="P-POSTPUBLISH-DISK: use the sparse --cow overlay instead of a full 60 GB fork when the gate is eligible "
+                        "(scoped types, sealed source, pinned OT_BIND_YOSYS, no --keep-*); otherwise the ordinary fork. env OT_ROW_GATE_LIGHT=1")
     g.add_argument("--cow", action="store_true",
                    help="isolate a terminal gate in a copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
+    if a.light and not a.cow:
+        use, why = COW.light_choice(Path(a.src).resolve(), rt_dir(a.rt), a.types, a.keep_tree or a.keep_fork)
+        print(f"row_gate: light fork {'ON (' + why + ')' if use else 'off, ordinary fork: ' + why}", flush=True)
+        if use:
+            a.cow = True
+            argv = [*argv, "--cow"]
     cow_whole = a.cow and a.types == "all"
     pin_flags = [v is not None for v in (a.r8_pin_pre, a.r8_pin_pre_sha256, a.r8_pin_extra)]
     if any(pin_flags):

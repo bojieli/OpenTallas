@@ -67,6 +67,30 @@ def run(argv, src, out, ledger=None):
     return rc
 
 
+def light_choice(src, rt, types, keep, env=None):
+    """P-POSTPUBLISH-DISK (FLEET-OPS-R4 11-26): the light fork.  A gate that only needs to READ a sealed source runs in the kernel overlay
+    (sparse upper = only the files the gate writes) instead of a full private copy (about 60 GB per run).  -> (use_cow, reason).
+    Any doubt falls back to the ordinary ot-tree-fork copy; light never turns a gate into NOT-READY by itself."""
+    env = os.environ if env is None else env
+    if types == "all":
+        return False, "whole-die gate needs --cow with R8 pins (explicit)"
+    if keep:
+        return False, "--keep-tree/--keep-fork needs a materialized fork"
+    if not shutil.which("bwrap"):
+        return False, "no bwrap"
+    yosys = env.get("OT_BIND_YOSYS")
+    if not yosys or not shutil.which(yosys, path=env.get("PATH")):
+        return False, "no OT_BIND_YOSYS executable pin (Docker cannot see the overlay)"
+    try:
+        fleet = runpy.run_path(str(Path(rt) / "tools/fleet/ot-tree-fork"))
+        ident = fleet["src_identity"](str(src))
+    except Exception as e:  # noqa: BLE001
+        return False, f"source identity unreadable: {e}"
+    if not ident.get("src_manifest_hash") or not ident.get("src_sealed") or (Path(src) / ".fork.json").exists():
+        return False, "source is not an immutable sealed manifest tree"
+    return True, "bwrap-overlay"
+
+
 def mounted(out):
     view = out / "tree"
     if os.environ.get(INNER) != str(view):
