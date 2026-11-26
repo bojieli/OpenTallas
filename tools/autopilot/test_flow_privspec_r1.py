@@ -83,6 +83,18 @@ def probe_of(tree, binds=None, siblings=(), gens=None, plans_missing=()):
     return probe
 
 
+def test_private_explicit_no_spill_host_uses_an_approved_producer():
+    c = wave_cfg(hosts=["epyc7", "epyc8"], place_spill=False, place_spill_hosts=[])
+    sp = KW.private_spec(c, D, I, "intel2", host="epyc7", goal="place")
+    assert (sp["gen_host"], sp["roam_hosts"], sp["place_spill_hosts"]) == ("epyc7", ["epyc7"], ["epyc7"])
+    assert sp["place_spill"] is False
+    with pytest.raises(ValueError, match="approved PLACE host pool"):
+        KW.private_spec(c, D, I, "intel2", host="unknown", goal="place")
+    c["dies"][D]["place_spill_hosts"] = ["epyc7"]
+    with pytest.raises(ValueError, match="outside the approved pool"):
+        KW.private_spec(c, D, I, "intel2", host="epyc8", goal="place")
+
+
 def test_tree_uses_its_own_bind_not_the_wave_bind(rts):
     T = "/srv/lane/tree_j7"
     inb = T + "/physical/die_plan/qwen_kvsys/plan_of_record/native_bind/out"
