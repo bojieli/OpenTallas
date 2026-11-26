@@ -691,6 +691,13 @@ def placement_review():
     return mod
 
 
+def pre_submit_review():
+    spec = importlib.util.spec_from_file_location("canary_pre_submit_review", HERE / "pre_submit_review.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def launch_client(unit, cmd):
     return subprocess.run(["systemd-run", "--user", "--unit", unit, "--collect", "--property=Type=exec",
                            "--property=KillMode=process", "--", "bash", "-lc", cmd],
@@ -699,7 +706,10 @@ def launch_client(unit, cmd):
 
 def cmd_submit(a):
     specs, _ = load_spec(a.spec)
-    review = placement_review() if getattr(a, "review_before_route", False) else None
+    pre_review = pre_submit_review() if getattr(a, "require_plan_review", False) else None
+    review = placement_review() if pre_review or getattr(a, "review_before_route", False) else None
+    reviews = pre_review.ledger() if pre_review else ""
+    deferred = []
     dies = a.die or list(specs)
     src = Path(a.src).resolve()
     # FLOW-SHARED-9 (COORD 10-27 19:36 (3)): canaries run from immutable commit snapshots only (the trigger's
@@ -714,6 +724,8 @@ def cmd_submit(a):
         PIN = f"--hosts {review.ADMISSION_HOSTS} --strict-host " if review else pin_for(n)
         c = specs[die]
         if review and not review.supported(c):
+            if pre_review:
+                deferred.append(die)
             print(f"CANARY {die} HELD: no supported place/review/route resume for this flow")
             continue
         # FLOW-CANARY-1121: a canary whose recorded input snapshot is gone (flow-canary/inputs/* was lost with epyc1/epyc4) is
@@ -722,6 +734,12 @@ def cmd_submit(a):
         if inp:
             print(f"CANARY {die} SKIPPED: input snapshot {inp} has no MANIFEST.json")
             continue
+        if pre_review:
+            refusal = pre_review.hold(c, src, sha, a.root, a.image, reviews, staged=True)
+            if refusal:
+                deferred.append(die)
+                print(f"CANARY {die} HELD: {refusal}")
+                continue
         run = Path(a.root) / f"{die}_{sha[:9]}_{stamp}"
         run.mkdir(parents=True, exist_ok=True)
         kv = dict(src=str(src), gen=str(run / "gen"), run=str(run), item=c["item"], top=c["top"], image=a.image,
@@ -844,6 +862,8 @@ def cmd_submit(a):
             return r.returncode
         mp.write_text(json.dumps(meta, indent=1) + "\n")
         print(f"CANARY {die} client service {unit}")
+    if getattr(a, "plan_review_status", None):
+        Path(a.plan_review_status).write_text(json.dumps({"deferred": deferred}) + "\n")
     return 0
 
 
@@ -954,6 +974,8 @@ def main(argv=None):
     s.add_argument("--image", default=IMAGE)
     s.add_argument("--dry", action="store_true")
     s.add_argument("--review-before-route", action="store_true")
+    s.add_argument("--require-plan-review", action="store_true")
+    s.add_argument("--plan-review-status", help=argparse.SUPPRESS)
     resume = sub.add_parser("resume")
     resume.add_argument("--run", required=True)
     finish_route = sub.add_parser("finish-route")
