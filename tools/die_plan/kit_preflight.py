@@ -758,6 +758,8 @@ def main(argv=None):
         print(line)
     if launch_gates and launch_gates.blocking() and any(x.startswith('WARN') for x in gate_lines):
         return 1
+    if launch_gates and launch_gates.bits_blocking() and any('ADV-BITS-OVER-CYCLE' in x for x in gate_lines):
+        return 1
     return int(record['verdict'] != 'PASS')
 
 
