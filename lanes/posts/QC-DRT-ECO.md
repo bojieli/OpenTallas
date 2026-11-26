@@ -20,3 +20,4 @@
 - 2026-11-26 09:21 PST DONE [QC-DRT-ECO] ot-push-main otpush-tolerant-swine-3165707 on tolerant-swine: rc=0 after 11 s, ended 09:21:56, log none, cmd: ot-push-main 
 - 2026-11-26 09:29 PST DONE [QC-DRT-ECO] ot-push-main otpush-tolerant-swine-3530666 on tolerant-swine: rc=0 after 18 s, ended 09:29:51, log none, cmd: ot-push-main 
 - 2026-11-26 13:24 PST DIED [QC-DRT-ECO] ot-push-main otpush-tolerant-swine-4050422 on tolerant-swine: rc=6 after 14 s, ended 13:24:33, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 6 after 14 s, no log
+- 2026-11-26 13:41 PST DIED [QC-DRT-ECO] ot-push-main otpush-tolerant-swine-4104760 on tolerant-swine: rc=3 after 1002 s, ended 13:41:29, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 1002 s, no log
