@@ -1,0 +1,1 @@
+- 2026-11-25 18:22 PST DIED [head-spn-street] ot-run oth-ubuntu-753603-1795659754 on open-snipe: rc=4 after 6 s, ended 02:22:38, log /srv/opentallas-scratch2/claude/head-spn-street/gate_a.out, cmd: --mem 40 --threads 4 --priority die --hosts epyc12 --disk 5 --dir /srv/opentallas-scratch2/claude/head-spn-street -- bash /srv/opentallas-sc | class=NO-PATTERN cause=STOP_REPUB
