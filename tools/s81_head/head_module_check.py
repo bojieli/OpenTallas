@@ -58,10 +58,13 @@ def defined(rev, name):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan'); ap.add_argument('--rev', default='HEAD'); ap.add_argument('--out')
+    ap.add_argument("--prewarm-reset", action="store_true")
     a = ap.parse_args(argv)
     with tempfile.TemporaryDirectory() as td:
-        g = subprocess.run([sys.executable, str(ROOT / 'tools/die_plan/gen.py'), 'rtl', a.plan, '--out', td],
-                           capture_output=True, text=True)
+        cmd = [sys.executable, str(ROOT / 'tools/die_plan/gen.py'), 'rtl', a.plan, '--out', td]
+        if a.prewarm_reset:
+            cmd.append('--prewarm-reset')
+        g = subprocess.run(cmd, capture_output=True, text=True)
         if g.returncode: print(g.stdout[-2000:], g.stderr[-2000:]); return 2
         gen = {p.name: p.read_text() for p in Path(td).glob('*.sv')}
     genmods = {m for t in gen.values() for m in re.findall(r'^\s*module\s+(\w+)', t, re.M)}

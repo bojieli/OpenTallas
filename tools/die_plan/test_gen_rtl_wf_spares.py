@@ -58,6 +58,26 @@ def test_gen_rtl_declares_wavefront_open_outs(tmp_path, start):
     assert not pf.exists() or "stale_x" not in json.loads(pf.read_text())["instances"]
 
 
+def test_parallel_reset_generation_is_byte_identical(tmp_path, monkeypatch, capsys):
+    raw = plan()
+    raw["reset"]["start"] = "broadcast"
+    monkeypatch.setenv("OT_RESET_POOL_J", "2")
+    monkeypatch.delenv("OT_RESET_TREE_CACHE", raising=False)
+    serial = tmp_path / "serial"
+    parallel = tmp_path / "parallel"
+    try:
+        RT.cache_clear()
+        gen_rtl.write_rtl(raw, serial)
+        RT.cache_clear()
+        gen_rtl.write_rtl(raw, parallel, prewarm_reset=True)
+        assert "type trees in 2 workers" in capsys.readouterr().out
+        assert {p.name: p.read_bytes() for p in parallel.iterdir()} == {
+            p.name: p.read_bytes() for p in serial.iterdir()
+        }
+    finally:
+        RT.cache_clear()
+
+
 def test_writer_refuses_a_connected_port(tmp_path):
     raw = plan()
     P = schema.Plan(raw)
