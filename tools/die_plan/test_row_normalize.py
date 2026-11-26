@@ -163,3 +163,29 @@ def test_landremap_error_naming_no_type_fails_all(monkeypatch):
     raw = {"partition_types": {"sd": {"clock": {}}, "pv": {"clock": {}}}}
     rep, prot = RN.step_landremap({}, raw, "/", "/x/plan.json", ["sd", "pv"])
     assert set(rep) == {"sd", "pv"} and all("bad tree" in v["failed"] for v in rep.values()) and prot == {}
+
+def test_retap_reuses_only_the_prepared_base_tree(monkeypatch):
+    from concurrent.futures import Future
+    import retap
+
+    base, candidate = {}, {}
+    good, failed = Future(), Future()
+    good.set_result({"old": {"relays": [{"name": "prepared"}]}})
+    failed.set_exception(RuntimeError("worker stopped"))
+    calls = []
+
+    def direct(raw, path):
+        return lambda tn: calls.append((raw is base, path, tn)) or {"relays": []}
+
+    def repoint(braw, raw, base_path, path, *, types, tree_fn):
+        assert types == {"old", "missing"}
+        assert tree_fn(braw, base_path)("old") == good.result()["old"]
+        assert tree_fn(braw, base_path)("missing") == {"relays": []}
+        assert tree_fn(raw, path)("old") == {"relays": []}
+        return {}
+
+    monkeypatch.setattr(retap, "_plan_tree", direct)
+    monkeypatch.setattr(retap, "repoint", repoint)
+    assert RN.step_retap(base, candidate, "/base/plan.json", "/candidate/plan.json",
+                         ["old", "missing"], base_trees={"old": good, "missing": failed}) == {}
+    assert calls == [(True, "/base/plan.json", "missing"), (False, "/candidate/plan.json", "old")]
