@@ -10358,6 +10358,13 @@
       "type": "string"
      }
     },
+    "ft_polarity_local_group_by_type": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "string",
+      "pattern": "^(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)$"
+     }
+    },
     "r_reach": {
      "enum": [
       "error",

@@ -2056,6 +2056,12 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
+
+# Exact native launch group for a slot-local polarity inverter placement hook.
+FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)"
+SCHEMA["properties"]["budgets"]["properties"]["ft_polarity_local_group_by_type"] = {
+    "type": "object", "additionalProperties": {"type": "string", "pattern": "^" + FT_POLARITY_GROUP_PATTERN + "$"}
+}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 # ROUTED-REACH (KV-PV-RIDER 11-18, routed_reach.py): G0 severity of check "routed_reach" (internal_stations hops routed
 # round the hard cores whose LEF OBS reaches partition_signal_max); default warn
