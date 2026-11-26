@@ -28,10 +28,27 @@ def run_scope(tmp_path, ends, verdicts, on):
     e = " ".join("{%s}" % " ".join(str(x) for x in row) for row in ends)
     v = " ".join("%s %s" % (k, x) for k, x in verdicts.items())
     env = 'set ::env(OT_HOLD_PAD_SCOPE) zlxt\n' if on else ''
+    scope_stub = r'''
+set ::clock_arrival_queried 0
+rename get_property mock_get_property
+proc get_property {pe key} {
+    if {$::clock_arrival_queried && [lindex $pe 0] eq "min"} {
+        error "hold PathEnd expired after a clock arrival query"
+    }
+    return [mock_get_property $pe $key]
+}
+proc ot_hp_scope_keep {it launch pin} {
+    set ::clock_arrival_queried 1
+    if {$launch ne $pin} { error "scope expected the captured launch pin" }
+    set r [dict get $::V $pin]
+    if {$r eq "boom"} { error x }
+    return $r
+}
+'''
     body = ("namespace eval ord {}\nnamespace eval sta {}\n" + TH.STUB + env + f"\nset ::E {{{e}}}\n"
             + (HERE / "hold_pad.tcl").read_text()
             + f"\nset ::V {{{v}}}\n"
-            + "proc ot_hp_scope_keep {it pe pin} { set r [dict get $::V $pin]; if {$r eq \"boom\"} { error x }; return $r }\n"
+            + scope_stub
             + f"\nputs \"N [ot_hold_pad t 40 0 {tmp_path}]\"\n")
     (tmp_path / "t.tcl").write_text(body)
     r = subprocess.run(["tclsh", str(tmp_path / "t.tcl")], capture_output=True, text=True)
