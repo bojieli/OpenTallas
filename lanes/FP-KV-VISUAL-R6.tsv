@@ -1,0 +1,13 @@
+review_no	scope	mapped_to	owner	status
+1,2,3	renderer: no per-type street ramp, truncated legend, tap markers overplot	NEW R6-RENDER-LEGEND-STREET	STAGE-PLATEAU	needs row
+4,5,6,7	tap trunks/clumps (spine, pv edge bars, hg per-core taps, hub band blobs)	L742 CENTRE-STATIONS + TAPSPLIT rows L659/L661 + TAP-CAP types (hub_C 4462, hgi_v1 cl42bc 2041)	KV-OWN-HG-R3 / KV-OWN-HUB-R2 / KV-SINKBINS	partial, TAP-CAP hub_C and io_cor rows from L750+ (e1703c1e)
+8,15,19	hub band: stacked seams, east/west imbalance, full-width hroot arms	L744 HUB-REFLOOR + L745 HROOT-REFLOOR	KV-OWN-HUB-R2	mapped
+9,10,11	feedthrough lanes crossing partitions; N-S trunks through tiles without N/S ports; N vs S topology	L723 FT-CROSSES-CORE-hg + FT-CROSSES-CORE rows (hgi, pv, rest)	KV-OWN-HG-R3 / KV-HGI-WGATE / KV-OWN-PV-R2 / KV-ALLFIX	mapped for the class, die-level N-S port-window rule NEW R6-NS-TRUNKS
+12,13,14	small cores in seam streets; white strips between cores; off-grid cores	L743 LANDING-OFF-STREETS + CORE-FACE-GAP rule	KV-OWN-HG-R3	partial
+16,17,18	east strip, sparse top band, IO window overhang	NEW R6-DIE-OUTLINE-TRIM	KV-ALLFIX	needs row (low)
+20,23,24	kv3_hg 14.23, hg_v1* family, hg_v3	L741 HG-REFLOOR-EXROW + L641 STREET-LANE-DEMAND	KV-OWN-HG-R3	mapped
+21,22,28,29,30	oversize and split: pc_v3, pv_v1n/v3n, hub_Eo, pc_v1	L697 PC-V3-OVERSIZE, L728 PCV1-RESTRUCT, L747 PV1N-SPLIT-CHANNELS, L744	KV-PC-BANK / KV-PV-ESTRIP / KV-OWN-HUB-R2	mapped
+25,26,27,37	hgi streets, hub_C TAP-CAP, hub_Wi street 3.49, io_cor TAP-CAP	L641, TAP-CAP rows e1703c1e, L744	KV-OWN-HG-R3 / KV-SINKBINS / KV-OWN-HUB-R2	mapped (hub_Wi 3.49 confirm)
+31,32,38	pv families: street, LEG405, reach, v12 split	L730 ESTRIP-A5t9 + L746 PV-REPIN-FENCE + L748 CELLCAP-PV12	KV-PV-ESTRIP / KV-OWN-PV-R2	mapped
+34,35,36,39,40	hgi/hub/hroot/sys_c/io_ft stations and boundary	L688, L712 FP-BOUNDARY-49, L745	KV-OWN-HG-R3 / KV-OWN-HUB-R2	mapped
+33,41	CLEAN=NO on all 93; first clean-launch candidates (pc cl254f/cl5a95, phy, sys_SD) pending per-type render	-	-	info
