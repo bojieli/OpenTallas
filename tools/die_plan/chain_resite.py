@@ -81,16 +81,17 @@ def cands(target, offs, rects, w, h, n=400, rmax=160, *, anchor=None):
     return out[:n]
 
 
-def place_chain(pts, k, offs_list, rects, w, h, cap, *, anchors=None):
+def place_chain(pts, k, offs_list, rects, w, h, cap, *, anchors=None, pin_ends=None):
     """DP: k registers, hops <= cap, minimal total displacement from the equal-arc targets; None when infeasible"""
     tg = respace(pts, k)
     cs = [cands(t, offs_list[j] if j < len(offs_list) else None, rects, w, h,
                 anchor=anchors[j] if anchors is not None else None) for j, t in enumerate(tg)]
     if any(not c for c in cs):
         return None
-    start, end = tuple(pts[0]), tuple(pts[-1])
+    starts, ends = pin_ends or ((pts[0],), (pts[-1],))
     inf = 1e18
-    cost = [{p: (man(p, tg[0]) if man(start, p) <= cap else inf) for p in cs[0]}]
+    cost = [{p: (man(p, tg[0]) if max(man(start, p) for start in starts) <= cap else inf)
+             for p in cs[0]}]
     back = [{}]
     for j in range(1, k):
         cj, bj = {}, {}
@@ -104,7 +105,8 @@ def place_chain(pts, k, offs_list, rects, w, h, cap, *, anchors=None):
             cj[p], bj[p] = best
         cost.append(cj)
         back.append(bj)
-    fin = min(((c, p) for p, c in cost[-1].items() if c < inf and man(p, end) <= cap), default=None)
+    fin = min(((c, p) for p, c in cost[-1].items() if c < inf and max(man(p, end) for end in ends) <= cap),
+              default=None)
     if fin is None:
         return None
     seq = [fin[1]]
@@ -113,20 +115,30 @@ def place_chain(pts, k, offs_list, rects, w, h, cap, *, anchors=None):
     return [list(p) for p in reversed(seq)]
 
 
-def chain_points(t, e):
-    """[from, regs..., to] of an internal_stations entry with the worst-bit window end, as precheck measures it"""
+def chain_endpoints(t, e):
+    """Start and finish constraints, including both edges of a fixed pin window."""
+    start, finish = tuple(e["from_um"]), tuple(e["to_um"])
     w, h = t.get("outline_um") or (0, 0)
-    pts = [tuple(e["from_um"])] + [tuple(r) for r in (e.get("regs_um") or [])] + [tuple(e["to_um"])]
     conn = e.get("conn", "")
-    buses = {b.get("name"): b for b in t.get("buses") or []}
-    bus = buses.get(conn[4:]) if conn.startswith("bus:") else None
-    if bus and bus.get("face") in ("N", "S", "E", "W") and bus.get("window_um") and len(pts) >= 2:
-        if bus.get("dir") == "in" and PC.on_face(bus["face"], pts[0], w, h):
-            pts[0] = PC.face_end_worst(bus["face"], bus["window_um"], w, h, pts[1])
-        elif bus.get("dir") == "out" and PC.on_face(bus["face"], pts[-1], w, h):
-            pts[-1] = PC.face_end_worst(bus["face"], bus["window_um"], w, h, pts[-2])
-    return pts
+    bus = next((b for b in t.get("buses") or [] if conn == "bus:" + b.get("name", "")), None)
+    if bus and bus.get("face") in ("N", "S", "E", "W") and bus.get("window_um"):
+        face = bus["face"]
+        lo, hi = sorted(map(float, bus["window_um"]))
+        edges = tuple({"N": (v, h), "S": (v, 0.0), "E": (w, v), "W": (0.0, v)}[face] for v in (lo, hi))
+        if bus.get("dir") == "in" and PC.on_face(face, start, w, h):
+            return edges, (finish,)
+        if bus.get("dir") == "out" and PC.on_face(face, finish, w, h):
+            return (start,), edges
+    return (start,), (finish,)
 
+
+def chain_points(t, e):
+    """Chain centres with the farther pin-window edge, as precheck measures it."""
+    starts, ends = chain_endpoints(t, e)
+    regs = [tuple(r) for r in e.get("regs_um") or []]
+    a = max(starts, key=lambda p: man(p, regs[0] if regs else ends[0]))
+    b = max(ends, key=lambda p: man(p, regs[-1] if regs else starts[0]))
+    return [a, *regs, b]
 
 def hops(pts):
     return [man(pts[i], pts[i + 1]) for i in range(len(pts) - 1)]
@@ -162,11 +174,11 @@ def routed_max(t, pts):
     return HR.chain_metrics(R, pts)[0]
 
 
-def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True, *, anchors=None):
+def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True, *, anchors=None, pin_ends=None):
     """place_chain, accepted only when its routed max hop is <= gate; tries tighter Manhattan caps; None when infeasible"""
     caps = [c for c in ROUTED_CAPS if c <= cap] or [cap]
     for c in (caps if routed else caps[:1]):
-        new = place_chain(pts, k, offs_list, rects, w, h, c, anchors=anchors)
+        new = place_chain(pts, k, offs_list, rects, w, h, c, anchors=anchors, pin_ends=pin_ends)
         if new is None:
             return None
         if not routed or routed_max(t, [pts[0]] + [tuple(r) for r in new] + [pts[-1]]) <= gate:
@@ -186,10 +198,12 @@ def place_shorter_chain(t, entry, pts, stages, cap, gate):
     start, finish = HR.escape(grid, pts[0]), HR.escape(grid, pts[-1])
     elbows = ((finish[0], start[1]), (start[0], finish[1]))
     paths = [[start, elbow, finish] for elbow in elbows]
+    pin_ends = chain_endpoints(t, entry)
     for path in paths:
         if HR.poly_crosses_core(grid, path):
             continue
-        seats = place_chain([pts[0], *path, pts[-1]], stages, [None] * stages, obstacles, w, h, cap)
+        seats = place_chain([pts[0], *path, pts[-1]], stages, [None] * stages, obstacles, w, h, cap,
+                            pin_ends=pin_ends)
         if seats is not None:
             actual = chain_points(t, dict(entry, regs_um=seats))
             if max(hops(actual)) <= gate and HR._hops_clear(grid, actual):
@@ -225,8 +239,9 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         if not bad_bank and max(hops(pts)) <= gate and (not routed or routed_max(t, pts) <= gate):
             continue
         offs = [group_box(g, r, cell) for g, r in zip(groups, regs)] if groups else [None] * k
+        pin_ends = chain_endpoints(t, e) if groups is None else None
         new = place_routed(t, pts, k, offs, exact_rects if groups else rects, w, h, cap, gate, routed,
-                           anchors=regs if groups else None)
+                           anchors=regs if groups else None, pin_ends=pin_ends)
         if new is not None and groups is None:
             moved_pts = chain_points(t, dict(e, regs_um=new))
             if max(hops(moved_pts)) > gate or (routed and routed_max(t, moved_pts) > gate):
@@ -235,7 +250,8 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
             new = place_shorter_chain(t, e, pts, k, cap, gate)
         path = f"/partition_types/{name}/internal_stations/{i}"
         if new is None and extra_reg and groups is None and (not whole_bus or e.get("conn") not in exact_conns):
-            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)
+            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed,
+                               pin_ends=pin_ends)
             if new is not None:
                 latency.append({"type": name, "index": i, "conn": e.get("conn"), "bits": e.get("bits"), "regs": k, "new_regs": k + 1})
                 plus1.add(e.get("conn"))
@@ -255,7 +271,8 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
             pts = chain_points(t, e)
             regs = [list(r) for r in e["regs_um"]]
             k = len(regs)
-            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)
+            new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed,
+                               pin_ends=chain_endpoints(t, e))
             path = f"/partition_types/{name}/internal_stations/{i}/regs_um"
             if new is None:
                 skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": "whole-bus +1 register: no legal placement"})

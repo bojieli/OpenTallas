@@ -164,3 +164,13 @@ def test_resite_rechecks_far_window_end_after_first_seat_moves(monkeypatch):
     CR.apply_ops({"partition_types": {"T": t}}, ops)
     assert len(row["regs_um"]) == 2
     assert max(CR.hops(CR.chain_points(t, row))) <= 405
+
+
+def test_seat_search_enforces_both_pin_window_constraints():
+    # A candidate close to the old endpoint's edge can miss the other edge.
+    start, end = ((0, 650), (650, 350))
+    edges = (((0, 50), (0, 650)), (end,))
+    regs = CR.place_chain([start, (60, 350), end], 2, [None, None], [],
+                          700, 800, 404, pin_ends=edges)
+    assert regs is not None
+    assert all(max(CR.hops([a, *regs, end])) <= 404 for a in edges[0])
