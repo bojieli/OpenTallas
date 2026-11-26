@@ -122,7 +122,7 @@ button.chip { cursor: pointer; } button.chip:hover { border-color: var(--line-st
 .sq { width: 10px; height: 10px; border-radius: 2px; background: var(--c, var(--s-notbuilt)); flex: none; display: inline-block; }
 .st { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: var(--fs-s); white-space: nowrap; }
 .st-signed { --c: var(--s-signed); } .st-pendingarchive { --c: var(--s-pending); } .st-failed { --c: var(--s-failed); } .st-building { --c: var(--s-building); } .st-queued { --c: var(--s-queued); }
-.st-waiting { --c: var(--s-waiting); } .st-notbuilt { --c: var(--s-notbuilt); } .st-hardip { --c: var(--s-hardip); }
+.st-waiting { --c: var(--s-waiting); } .st-notbuilt, .st-uncredited { --c: var(--s-notbuilt); } .st-hardip { --c: var(--s-hardip); }
 .fresh-fresh { --c: var(--ok); } .fresh-stale { --c: var(--warn); } .fresh-missing { --c: var(--bad); }
 .muted { color: var(--ink-3); }
 .kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 12px; margin: 0; font-size: var(--fs-s); }

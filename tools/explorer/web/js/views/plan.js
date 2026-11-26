@@ -1,6 +1,6 @@
 // Plan: the die plan of record drawn to scale (partitions by sign-off state, seams, clock, PG, hard cores), and the
 // plan contents of one type (hard cores, face buses, feed-through slots, stations, clock taps).
-import { h, clear, fmt, icon, STATES, STATE_LABEL, stateCls, levelOf, dieShort, shortName, debounce, ls } from '../core/dom.js';
+import { h, clear, fmt, icon, STATES, STATE_LABEL, stateCls, levelOf, dieShort, shortName, debounce, ls, displayState, displayStateLabel } from '../core/dom.js';
 import { PlanCanvas, drawDiePlan, drawTypePlan, placeChild, coreSize } from '../engine/plan-canvas.js';
 import { showBusy } from '../shell/shell.js';
 
@@ -17,7 +17,7 @@ export default {
     wrap.append(tip, legend);
     const scopeSeg = h('div.seg', { role: 'group', 'aria-label': 'Scope' },
       h('button', { type: 'button', dataset: { scope: 'die', testid: 'plan-scope-die' }, title: 'The whole die' }, 'Die'), h('button', { type: 'button', dataset: { scope: 'type', testid: 'plan-scope-type' }, title: 'The plan contents of the selected type' }, 'Type'));
-    const colorSel = h('select.field', { 'aria-label': 'Colour partitions by', title: 'Colour partitions by', testid: 'plan-colorby' }, h('option', { value: 'state' }, 'Colour: sign-off state'), h('option', { value: 'pack' }, 'Colour: routed pack'), h('option', { value: 'vis' }, 'Colour: visual verdict'));
+    const colorSel = h('select.field', { 'aria-label': 'Colour partitions by', title: 'Colour partitions by', testid: 'plan-colorby' }, h('option', { value: 'state' }, 'Colour: sign-off on any plan'), h('option', { value: 'pack' }, 'Colour: routed pack'), h('option', { value: 'vis' }, 'Colour: visual verdict'));
     const fitBtn = h('button.btn', { type: 'button', title: 'Fit (F)', testid: 'plan-fit' }, icon('fit'), 'Fit');
     tools.append(scopeSeg, colorSel, fitBtn);
     scopeSeg.querySelectorAll('button').forEach((b) => b.onclick = () => ctx.setParams({ scope: b.dataset.scope === 'die' ? null : 'type' }, { notify: true }));
@@ -41,10 +41,10 @@ export default {
         pc.cv.style.cursor = 'pointer';
         clear(tip);
         if (hit.part) { const q = hit.part, t = S.D.nodes[q[1]];
-          tip.append(h('b', q[0]), h('div.m', shortName(q[1])), h('div', t ? h('span.st.' + stateCls(t.status.state), h('i.dot'), t.status.label || t.status.state) : 'not in the index'),
+          tip.append(h('b', q[0]), h('div.m', shortName(q[1])), h('div', t ? h('span.st.' + stateCls(displayState(t)), h('i.dot'), displayStateLabel(t)) : 'not in the index'),
             h('div.m', `${fmt(q[4], 1)} × ${fmt(q[5], 1)} µm at ${fmt(q[2], 0)}, ${fmt(q[3], 0)} · ${q[6]}`), h('div.m', 'click: select · double-click: open the element'));
         } else { const c = hit.core, cn = S.R.children[c[1]];
-          tip.append(h('b', c[0]), h('div.m', c[2]), h('div', cn ? h('span.st.' + stateCls(cn.status.state), h('i.dot'), cn.status.label || cn.status.state) : 'generated memory macro (no design of its own)'),
+          tip.append(h('b', c[0]), h('div.m', c[2]), h('div', cn ? h('span.st.' + stateCls(displayState(cn)), h('i.dot'), displayStateLabel(cn)) : 'generated memory macro (no design of its own)'),
             h('div.m', `${fmt(coreSize(c)[0], 1)} × ${fmt(coreSize(c)[1], 1)} µm · ${c[7]}`), cn ? h('div.m', 'click: select this core') : null); }
         tip.hidden = false; const r = wrap.getBoundingClientRect(); tip.style.left = Math.min(r.width - tip.offsetWidth - 8, mx + 14) + 'px'; tip.style.top = Math.min(r.height - tip.offsetHeight - 8, my + 14) + 'px';
       },
@@ -68,7 +68,7 @@ export default {
       if (S.scope === 'type') { legend.append(h('div.legend', h('span', h('i.sq', { style: { '--c': 'var(--pin-in)' } }), 'bus in'), h('span', h('i.sq', { style: { '--c': 'var(--pin-out)' } }), 'bus out'), h('span', h('i.sq', { style: { '--c': 'var(--faint)' } }), 'feed-through'), h('span', h('i.sq', { style: { '--c': 'var(--tree)' } }), 'clock tap'), h('span', h('i.sq', { style: { '--c': 'var(--macro)' } }), 'hard core (fill = its state)'))); return; }
       if (S.colorBy === 'pack') { legend.append(h('div.legend', h('span', h('i.sq', { style: { '--c': 'var(--accent)' } }), 'routed pack in the store'), h('span', h('i.sq', { style: { '--c': 'var(--s-notbuilt)' } }), 'no pack'))); return; }
       if (S.colorBy === 'vis') { legend.append(h('div.legend', h('span', h('i.sq', { style: { '--c': 'var(--ok)' } }), 'good'), h('span', h('i.sq', { style: { '--c': 'var(--warn)' } }), 'other verdict'), h('span', h('i.sq', { style: { '--c': 'var(--bad)' } }), 'bad'), h('span', h('i.sq', { style: { '--c': 'var(--s-notbuilt)' } }), 'not reviewed'))); return; }
-      const c = S.D ? S.D.die.counts.type : {};
+      const c = S.D ? (S.D.die.counts_any_plan || S.D.die.counts).type : {};
       legend.append(h('div.legend', STATES.filter((s) => c[s]).map((s) => h('label.' + stateCls(s), { style: { display: 'inline-flex', gap: '5px', alignItems: 'center', cursor: 'pointer', opacity: S.hide.has(s) ? 0.45 : 1 }, title: 'Click to hide or show' },
         h('input', { type: 'checkbox', checked: !S.hide.has(s), style: { display: 'none' }, dataset: { testid: 'plan-state-' + s.replace(/\s/g, '') }, onchange: (e) => { if (e.target.checked) S.hide.delete(s); else S.hide.add(s); paintLegend(); pc.redraw(); } }),
         h('i.sq'), `${STATE_LABEL[s]} ${c[s]}`))));
@@ -76,8 +76,8 @@ export default {
     function overlaysTab(el) {
       const list = S.scope === 'type' ? OV_TYPE : OV_DIE;
       el.append(h('section.sec', h('h3', 'Overlays'), list.map(([k, label]) => h('label.chk', h('input', { type: 'checkbox', checked: !!S.ov[k], dataset: { testid: 'plan-ov-' + k }, onchange: (e) => { S.ov[k] = e.target.checked; ls.set('plan.ov', S.ov); pc.redraw(); } }), label))),
-        h('section.sec', h('h3', 'Reading the plan'), h('p.note', { style: { margin: 0 } }, S.scope === 'type' ? 'Hard cores are filled with their own sign-off state. Thick lines on the faces are buses (width grows with the bit count); grey bars are feed-through windows with their register stations; crosses are clock taps and the star is the type clock entry.'
-          : 'Partitions are drawn to scale from the plan of record. Blue seam lines mark abutting partition pairs that exchange ports (thicker = more bits). The dashed clock tree is the planned topology, not routed metal.')));
+        h('section.sec', h('h3', 'Reading the plan'), h('p.note', { style: { margin: 0 } }, S.scope === 'type' ? 'Hard cores are filled by their sign-off status across all plans. Thick lines on the faces are buses (width grows with the bit count); grey bars are feed-through windows with their register stations; crosses are clock taps and the star is the type clock entry.'
+          : 'Partitions use the geometry of the plan of record and sign-offs from any plan. Blue seam lines mark abutting partition pairs that exchange ports (thicker = more bits). The dashed clock tree is the planned topology, not routed metal.')));
     }
     ctx.inspector.setTabs([{ id: 'overlays', label: 'Overlays', render: overlaysTab }]);
     const onTheme = () => pc.redraw(); window.addEventListener('otx:theme', onTheme);

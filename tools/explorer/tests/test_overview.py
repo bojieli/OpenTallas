@@ -45,7 +45,14 @@ def test_overview_five_cards_and_totals(page):
             assert d['any_plan']['any'] == sum(expected.values())
             expect(page.get_by_test_id('ov-signoff-any-' + d['id'])).to_contain_text(
                 f"{expected['type']:,} partition types · {expected['core']:,} hard cores")
-            expect(page.get_by_test_id('card-' + d['id'])).to_contain_text('current-plan layouts')
+            counts = d['counts_any_plan']
+            geometry = page.get_by_test_id('ov-current-designs-' + d['id'])
+            expect(geometry).to_have_text(
+                f"{counts['type'].get('signed', 0)} of {d['types']} types, "
+                f"{counts['core'].get('signed', 0)} of {d['cores']} cores")
+            assert sum(counts['type'].values()) == sum(d['counts']['type'].values())
+            assert sum(counts['core'].values()) == d['cores']
+            expect(page.get_by_test_id('ov-signed-area-' + d['id'])).to_contain_text('of current die area signed on any plan')
 
 
 @pytest.mark.parametrize('die', DIES)
@@ -80,10 +87,12 @@ def test_overview_theme_repaints_thumbs(page):
 
 
 def test_overview_counts_signed_packs_apart_from_unsigned_views(page):
-    ds = api('dies')['dies']; idx = {d['id']: d for d in ds}
-    uns = sum(d['packs_unsigned']['type'] + d['packs_unsigned']['core'] for d in ds); allp = sum(d['packs']['type'] + d['packs']['core'] for d in ds)
+    ds = api('dies')['dies']
     assert all(d['packs_unsigned']['type'] <= d['packs']['type'] and d['packs_unsigned']['core'] <= d['packs']['core'] for d in ds)
+    unsigned = sum(sum(d['packs_unsigned_any_plan'].values()) for d in ds)
+    signed = sum(sum(d['packs_signed_any_plan'].values()) for d in ds)
     goto(page, '#/overview')
-    expect(page.get_by_test_id('ov-packs')).to_contain_text('signed-off layout packs')
-    expect(page.get_by_test_id('ov-packs')).to_contain_text('%d unsigned build views' % uns if uns < 1000 else 'unsigned build views')
-    assert str(allp - uns) in page.get_by_test_id('ov-packs').inner_text().replace(',', '')
+    packs = page.get_by_test_id('ov-packs')
+    expect(packs).to_contain_text('signed-off layout packs from any plan')
+    expect(packs).to_contain_text(f"{unsigned:,} unsigned build views")
+    expect(packs.locator('.big')).to_have_text(re.compile(r'^' + re.escape(format(signed, ','))))

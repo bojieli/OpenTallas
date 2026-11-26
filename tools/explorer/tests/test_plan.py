@@ -201,3 +201,20 @@ def test_plan_selected_instance_ring_changes_canvas(page):
     goto(page, '#/plan/s81'); wait_painted(page); page.wait_for_timeout(300); a = canvas_signature(page, CV)
     goto(page, '#/plan/%s?inst=%s' % (SIGNED_TYPE, S_INST)); wait_painted(page); page.wait_for_timeout(400)
     assert canvas_signature(page, CV)['hash'] != a['hash']
+
+
+def test_plan_and_inspector_count_earlier_signoffs_in_current_geometry(page):
+    for die in ALL_DIES:
+        payload = api('die/' + die)
+        if any(n.get('signoff_basis') in ('deferred', 'retired') and n['status']['state'] != 'signed'
+               for n in payload['nodes'].values() if n['level'] == 'type'):
+            break
+    else:
+        pytest.skip('fixture has no historically signed active type with an unsigned current state')
+    d = payload['die']
+    expected = d['counts_any_plan']['type']['signed']
+    assert expected == sum(n.get('signoff_display_state') == 'signed'
+                           for n in payload['nodes'].values() if n['level'] == 'type')
+    goto(page, '#/plan/' + die)
+    expect(page.get_by_test_id('plan-legend')).to_contain_text(f'Signed off {expected}')
+    expect(page.get_by_test_id('insp-signoff-types')).to_have_text(f"{expected} of {d['type_count']} types signed off")
