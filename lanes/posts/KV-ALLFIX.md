@@ -1056,3 +1056,9 @@
   - Wi GEN kw-qwenkv-kv3hubWi-1-54928 is a normal wave row headed for sign-off. It is in floorplan on intel2 now. The die review_before_route gate (required, all items) stops it at route, so it is a place probe in effect. I will not pass its review until the HUB rows (street 3.49) land.
   - Eo and Wo private specs are goal=geom (place plus geom only): Eo on epyc8 in global place, Wo on intel1 in PDN.
   Nothing cancelled.
+- 2026-11-25 18:27 PST KV-ALLFIX 11-25 18:27 PST:
+  - P2 checks: hg_es4 geom PASS-COND (advisory: worst reg wire 1477 um, 443 relay collapses; better than D29 v1p6). hg_wn6, pc_wn6 and pc_es4 still placing.
+  - R7 had no sealed tree or mirror, so I am running the R6 steps for it on epyc12 (unit kvallfix-r7-prep-1125). A waiter (kvallfix-r7-promote-waiter-1125) mirrors, writes the candidate, gates and applies once all 4 checks PASS, with no switch on any failure.
+  - DECISION: the R7 event name is KV-A5t9-r7-p2-publish-1125, so review_before_route and the hub reviews move to it (hub types are byte-identical). Recommend keeping it.
+  - PVPADS: rerun landed (v 24a9ed32 2114/2114, col 7b042ee0, take-back diff 0); L729 released (3c543f6c). The rebuild script needs rev3 without the overlay refusal, per L751.
+  - No superseded-plan job is live.
