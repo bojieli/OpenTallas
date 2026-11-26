@@ -1,12 +1,13 @@
-# Exact HEAD West d51 native post-tap seats, after stock cap and reset affinity.
+# Exact HEAD West ff95 native post-tap seats, after stock cap and reset affinity.
 # Names and coordinates pin the reviewed native placement. No clock connection changes.
 namespace eval ::ot_hdwest_ck5 {
 variable seats {
-    {{u_rg1.u_lfan.g_leaf\[2\].leaf_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t51 {441696 759264} {25110 693900} R0 {106110 693900} MY}
-    {{u_rg1.u_txl.g_tx\[1\].g_safe_write.u_m.g_slice\[23\].valid_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t54 {25440 884512} {25056 429570} MX {25110 485190} MX}
-    {{u_rg1.u_ltree.g_local\[24\].local_r$_DFF_PN0__rtap_clk_t54} DFFASRHQNx1_ASAP7_75t_R clk_t54 {25440 884512} {32778 464940} R0 {31320 490860} R0}
-    {{u_rg2.u_txl.g_tx\[2\].g_safe_write.u_m.g_slice\[3\].forwarded\[0\]$_DFFE_PP_} DFFHQNx1_ASAP7_75t_R clk_t8 {89632 528096} {457488 568080} MY {454032 562950} MX}
-    {{u_rg1.u_ltree.g_local\[11\].local_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t53 {25440 867232} {52542 486270} MX {52380 494640} R0}
+    {{u_rg2.u_lfan.g_l3.g_n3\[0\].n3_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t12 {787296 610208} {439992 736830} MX 473923 {441936 665550} R180}
+    {{u_rg1.u_lfan.g_leaf\[2\].leaf_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t51 {441696 759264} {63396 640980} R0 496312 {147690 652320} MY}
+    {{u_rg1.u_txl.g_tx\[1\].g_safe_write.u_m.g_slice\[23\].valid_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t54 {25440 884512} {59022 548370} MX 369727 {} -}
+    {{u_rg1.u_ltree.g_local\[24\].local_r$_DFF_PN0__rtap_clk_t54} DFFASRHQNx1_ASAP7_75t_R clk_t54 {25440 884512} {56673 530145} R0 385516 {} -}
+    {{u_rg2.u_txl.g_tx\[2\].g_safe_write.u_m.g_slice\[3\].forwarded\[0\]$_DFFE_PP_} DFFHQNx1_ASAP7_75t_R clk_t10 {93856 597216} {457650 567810} R180 394047 {} -}
+    {{u_rg1.u_ltree.g_local\[11\].local_r$_DFF_PN0_} DFFASRHQNx1_ASAP7_75t_R clk_t18 {199200 644768} {58914 536760} R0 248022 {} -}
 }
 proc box {o} {
     set r [$o getBBox]
@@ -23,13 +24,35 @@ proc ck_distance {pin xy} {
     lassign $xy px py
     expr {abs($x-$px)+abs($y-$py)}
 }
+proc long_clock_receivers {block} {
+    set long {}
+    foreach root [$block getBTerms] {
+        if {![regexp {^(clk(_t[0-9]+|_c[0-9]+)?|fclk_in_coll_i[012])$} [$root getName]]} {continue}
+        set net [$root getNet]
+        if {$net eq "NULL"} {continue}
+        lassign [box $root] a b c d
+        set xy [list [expr {($a+$c)/2}] [expr {($b+$d)/2}]]
+        foreach pin [$net getITerms] {
+            set t [$pin getMTerm]
+            if {[$t getIoType] ne "INPUT"} {continue}
+            if {[$t getSigType] ne "CLOCK" && ![regexp -nocase {^(clk|clkn|ck|gclk|clock)$} [$t getName]]} {continue}
+            if {[ck_distance $pin $xy] > 405000} {lappend long [[$pin getInst] getName]}
+        }
+    }
+    return [lsort -unique $long]
+}
 proc run {} {
     variable seats
     set block [ord::get_db_block]
     if {[$block getDbUnitsPerMicron] != 1000} { error "HEAD West CK5: unexpected DBU scale" }
+    set expected_long {}
+    foreach row $seats { if {[lindex $row 7] ne {}} { lappend expected_long [lindex $row 0] } }
+    if {[long_clock_receivers $block] ne [lsort $expected_long]} {
+        error "HEAD West CK5: native over-405 receiver census differs from ff95"
+    }
     set pending {}
     foreach row $seats {
-        lassign $row name master tap tap_xy old old_ori new new_ori
+        lassign $row name master tap tap_xy old old_ori expected_dbu new new_ori
         set inst [$block findInst $name]
         set root [$block findBTerm $tap]
         if {$inst eq "NULL" || $root eq "NULL" || [[$inst getMaster] getName] ne $master} {
@@ -44,11 +67,11 @@ proc run {} {
             error "HEAD West CK5: bridge tap origin changed $tap"
         }
         set old_dbu [ck_distance $pin $tap_xy]
-        if {$old_dbu<=399500} { continue }
         if {[$inst getLocation] ne $old || [$inst getOrient] ne $old_ori ||
-            [$inst getPlacementStatus] ne "PLACED"} {
+            [$inst getPlacementStatus] ne "PLACED" || $old_dbu != $expected_dbu} {
             error "HEAD West CK5: original detailed-placement site changed $name"
         }
+        if {$new eq {}} {continue}
         lassign $new x y
         lassign [box $inst] a b c d
         set rect [list $x $y [expr {$x+$c-$a}] [expr {$y+$d-$b}]]
@@ -96,6 +119,7 @@ proc run {} {
         }
         puts "OT_HEAD_WEST_CK5 [$inst getName] $old_dbu -> $new_dbu DBU"
     }
+    if {[llength [long_clock_receivers $block]]} {error "HEAD West CK5: a clock leg still exceeds 405 um"}
 }
 }
 ::ot_hdwest_ck5::run
