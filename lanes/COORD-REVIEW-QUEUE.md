@@ -13660,3 +13660,4 @@ FAILED [AUTOPILOT 5e6d78b8b430] 2026-11-25 19:54:48 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 22:00 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: QC sle_ctl__cla4f6f12f GRT owner QC-SLECTL-PILE (60 min since queued, epyc12); S81 col_h9_r0_p5__t1__pvee6f8140 PLACE-GP owner S81-C9-ROWS (60 min since queued, epyc9). 
 - 2026-11-25 22:00 PST CANARY s81_head @ c0f06dc007: PASS (NO-REGRESSION within tolerance of baseline canary-passed-main /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_df947261c_1125_013030_169890)
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
+- 2026-11-25 22:00 PST ALERT STUCK-STATE qwen_kvsys: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. kv3_pv_v8e, 2026-11-25 16:51)
