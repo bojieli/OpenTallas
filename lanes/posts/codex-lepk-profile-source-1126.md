@@ -1,0 +1,1 @@
+- 2026-11-26 04:59 PST DONE [codex-lepk-profile-source-1126] ot-run oth-ubuntu-879502-1795697487 on loved-redfish: rc=0 after 459 s, ended 12:59:03, log /srv/opentallas-scratch2/claude/codex-lepk-profile-source-1126/canonical.otrun.log, cmd: --no-spill --hosts epyc7 --mem 48 --threads 24 --disk 6 --dir /srv/opentallas-scratch2/claude/codex-lepk-profile-source-1126 -- /home/ubuntu
