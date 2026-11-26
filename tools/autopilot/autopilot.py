@@ -547,7 +547,57 @@ def upgrade_header(p, head):
 
 
 # ------------------------------------------------------------------------------------------------ host probes
-PROBE_KIT = r'''
+PREPLACE_LEC_READER = r"""
+def read_preplace_lec(kit):
+    import json
+    from pathlib import Path
+    kit = Path(kit)
+
+    def small(name):
+        try:
+            with (kit / name).open(errors="replace") as stream:
+                return stream.read(8192).strip()
+        except OSError:
+            return ""
+
+    ready = kit / "lec_async.ready"
+    command = small(ready.name)
+    off = small("lec_preplace.off")
+    skip = "LEC_PREPLACE_DROPPED R-MINIMAL"
+    if "echo " + skip in command.splitlines() or (not command and off):
+        return {"verdict": "SKIPPED", "reason": off or skip}
+    done = (kit / "lec_async.done").is_file()
+    rc = small("lec_async.rc")
+    if not command and done and rc == "0":
+        # Older retained kits can carry just the terminal log. An active command
+        # takes precedence over a drop marker from a previous attempt.
+        try:
+            with (kit / "lec_async.log").open("rb") as stream:
+                stream.seek(max(0, stream.seek(0, 2) - 16384))
+                for line in reversed(stream.read().splitlines()):
+                    if line.startswith(b"LEC_ASYNC ") and b" start (" in line:
+                        break
+                    if line == skip.encode():
+                        return {"verdict": "SKIPPED", "reason": skip}
+        except OSError:
+            pass
+    if command and not (done and rc):
+        return {"verdict": "PENDING", "reason": "async proof has no terminal exit"}
+    receipt = kit / "lec" / "lec.json"
+    try:
+        if not ready.is_file() or receipt.stat().st_mtime_ns >= ready.stat().st_mtime_ns:
+            verdict = json.loads(receipt.read_text()).get("verdict")
+            if verdict == "EQUIVALENT" and rc in ("0", ""):
+                return {"verdict": verdict, "receipt": "lec/lec.json"}
+            if verdict in ("NOT EQUIVALENT", "UNDECIDED"):
+                return {"verdict": verdict, "receipt": "lec/lec.json"}
+    except (OSError, ValueError, AttributeError):
+        pass
+    return {"verdict": "UNVERIFIED", "reason": "no current pre-place proof receipt"}
+"""
+
+
+PROBE_KIT = PREPLACE_LEC_READER + r'''
 import json, os, sys, glob, re, time
 a = json.loads(sys.argv[1]); K = a["kit"]; out = {"kit": K, "exists": os.path.isdir(K)}
 def done(): print("AP_JSON " + json.dumps(out)); sys.exit(0)
@@ -615,6 +665,7 @@ def _async_read(n):
 out["async_proof"] = dict(identity=_async_read("identity"), owner=_async_read("owner"),
                           pid=_async_read("pid"), done=os.path.exists(os.path.join(K, "lec_async.done")),
                           rc=_async_read("rc"))
+out["preplace_lec"] = read_preplace_lec(K)
 # A lane-adopted runner has no autopilot client process exit. Keep its honest
 # current invocation receipt rather than inferring success from an ODB.
 try:
@@ -2122,6 +2173,7 @@ def poll_physical_completion(st, j):
     j["proof_wait"] = dict(host=host, owner=r["proof_owner"],
                            identity=r["proof_id"], pid=r.get("proof_pid"), scope=r.get("proof_scope"),
                            pending=not proof.get("done"), rc=proof.get("rc"))
+    j["preplace_lec"] = p.get("preplace_lec") or {}
     finish(st, j, c, {"exit": r["rc"], "physical_only": True, "receipt": r.get("path")})
     return True
 
@@ -2137,8 +2189,10 @@ def poll_pending_proofs(st):
         if proof.get("identity") != w.get("identity"):
             continue
         w.update(pending=not proof.get("done"), rc=proof.get("rc"))
+        j["preplace_lec"] = p.get("preplace_lec") or {}
         if proof.get("done"):
-            log(f"PROOF-COLLECT {j['id']} {w['owner']} exit {w.get('rc')}; physical result retained, EQ still gates signoff")
+            verdict = j["preplace_lec"].get("verdict", "UNVERIFIED")
+            log(f"PROOF-COLLECT {j['id']} {w['owner']} pre-place LEC {verdict} (command exit {w.get('rc')})")
 
 def poll_adopted(st, j):
     if poll_physical_completion(st, j):
