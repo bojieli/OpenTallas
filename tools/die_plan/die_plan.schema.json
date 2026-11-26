@@ -2085,6 +2085,41 @@
          }
         }
        },
+       "pg_isolated_stripes": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "net",
+          "layer",
+          "rect_um"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "net": {
+           "enum": [
+            "VDD",
+            "VSS"
+           ]
+          },
+          "layer": {
+           "enum": [
+            "M5",
+            "M6",
+            "M7"
+           ]
+          },
+          "rect_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          }
+         }
+        }
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
