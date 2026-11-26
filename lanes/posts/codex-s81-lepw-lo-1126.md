@@ -1,0 +1,1 @@
+- 2026-11-26 05:21 PST DIED [codex-s81-lepw-lo-1126] ot-run oth-ubuntu-4169392-1795699257 on outgoing-giraffe: rc=2 after 4 s, ended 13:20:59, log none, cmd: --hosts localhost --no-spill --threads 4 --mem 6 --disk 2 --dir /srv/opentallas-scratch2/claude/codex-s81-lepw-lo-1126 --stage /srv/opentall | class=SETUP cause=died after 4 s with no log: the command failed at start (rc 2)
