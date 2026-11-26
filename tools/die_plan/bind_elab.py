@@ -1136,20 +1136,24 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
             return mname
         return m.get("attributes", {}).get("hdlname", mname)
 
+    # Every instance of an elaborated module has the same local net table and
+    # keep annotations. Cache these scans without changing traversal or net IDs.
+    from functools import cache
+
+    @cache
+    def local_shape(mname):
+        nets = mods[mname].get("netnames", {}).values()
+        nb = max((b + 1 for nn in nets for b in nn["bits"] if isinstance(b, int)), default=0)
+        # KEEP-THROUGH: a glue FF driving a kept bit is re-emitted with (* keep *).
+        keep_bits = {b for nn in nets if _attr_true(nn.get("attributes", {}).get("keep"))
+                     for b in nn["bits"] if isinstance(b, int)}
+        return nb, keep_bits
+
     def walk(mname, path, portmap, instance_params=None):
         """portmap: {local bit: global net or const} for the module's port bits"""
         m = mods[mname]
-        local = {}
-        nb = 0
-        for nn in m.get("netnames", {}).values():
-            for b in nn["bits"]:
-                if isinstance(b, int):
-                    nb = max(nb, b + 1)
+        nb, keep_bits = local_shape(mname)
         base = F.new(nb)
-        # KEEP-THROUGH (COORD 11-22, LEPE-4): bits of the (* keep *) registers of this module; a glue FF driving one is re-emitted
-        # with (* keep *) so the per-copy registers of a dissolved parent are not folded by opt_merge in the bound kit RTL
-        keep_bits = {b for nn in m.get("netnames", {}).values() if _attr_true(nn.get("attributes", {}).get("keep"))
-                     for b in nn["bits"] if isinstance(b, int)}
 
         def g(b):
             if isinstance(b, str):

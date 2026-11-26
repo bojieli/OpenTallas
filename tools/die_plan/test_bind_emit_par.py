@@ -290,6 +290,28 @@ def test_all_gaps_from_separate_types_remain_parallel(tmp_path, capfd, monkeypat
     assert (tmp_path / "bind_emit_par.json").is_file()
 
 
+@pytest.mark.parametrize("workers", ["1", "2"])
+def test_managed_whole_bind_cannot_drop_into_serial(tmp_path, monkeypatch, workers):
+    import bind
+
+    monkeypatch.setenv("OT_HEAVY_PRIO", "plan")
+    monkeypatch.setenv("OT_BIND_EMIT_J", workers)
+    monkeypatch.delenv("OT_BIND_ONLY_TYPES", raising=False)
+    monkeypatch.setattr(bind.Binder, "wavefront_plan", lambda self: None)
+
+    def unsafe_parallel(*a, **kw):
+        raise EP.ParUnsafe("cross-type fixture")
+
+    monkeypatch.setattr(EP, "run", unsafe_parallel)
+    b = bind.Binder.__new__(bind.Binder)
+    b.plan = {}
+    b.ab = {}
+    b.by_type = {"first": ["p0"], "second": ["p1"]}
+    b.types = {"first": {}, "second": {}}
+    with pytest.raises(bind.BindError, match="BIND_PARALLEL_REQUIRED"):
+        b.emit(tmp_path)
+
+
 # BIND-SPEED-1124: one parent snapshot + consecutive-type chunks per worker
 @pytest.mark.parametrize("n,j,per_job", [(12, 2, 3), (12, 3, 1), (12, 2, 0), (5, 4, 3)])
 def test_chunked_parallel_equals_serial(tmp_path, capfd, monkeypatch, n, j, per_job):
