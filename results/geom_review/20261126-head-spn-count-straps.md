@@ -58,3 +58,18 @@ I viewed the exact actual layout, density, and obstruction zoom. The stock repor
 The automatic independent image review consumed exact request `8e4257fd307915da3275e66c29b2f1ffa5fa1c6cf6b67ae2d70f8da7a0637b8d` and returned `ISSUES` for pin access through the south density band. A second independent pass viewed the same stock PNGs plus the exact native zoom. It confirmed the corrected 3 µm starts and kept `ISSUES` for access through the wider band. Both receipts are preserved. The supplemental receipt is `post_place/escape_supplemental_visual_review.json`.
 
 The deeper native replay in `post_place/dense_window_depths.json` covers the four visible north/south density pockets. Each of the 2,585 pins has a simultaneous straight same-layer witness through 8 µm, and 2,581 have one through 40 µm. The four exceptions each reach beyond 8 µm and meet a fixed peer pin. The sole south exception is M7 `b_i[525]` at x296.16 µm, behind `clk_t2` and `rst_start_raw_1`. North exceptions are M7 `fclk_in_x_i` behind `clk_t39`, M7 `hd_i[271]` behind `clk_t41`, and M5 `bd_i[8]` behind the aligned `strap_ca_k_bd_i[1:5]` sites. These are specific local turns or via-access cases. No missing straight witness was attributed to power geometry or cell density. CTS and route remain held.
+
+## Four residual preferred-track bypasses
+
+The read-only exact `0477d7900476` geometry has an early bypass through 40 µm for all four sites. Each uses the native preferred M6 horizontal track 4.448 µm from the corresponding die edge. Native default via pairs use the original vertical pin layer and a clear neighboring vertical track.
+
+| Port | Via pair | Lateral X shift |
+| --- | --- | ---: |
+| South `b_i[525]` | VIA67 | −0.768 µm |
+| North `fclk_in_x_i` | VIA67 | +0.384 µm |
+| North `bd_i[8]` | VIA56 | −0.240 µm |
+| North `hd_i[271]` | VIA67 | −0.256 µm |
+
+The four witnesses fit simultaneously with the other 2,581 straight 40 µm witnesses in the density windows. The checked geometry includes native track grids, signal and power BPin shapes, special-wire metal, cut and enclosure rectangles, routing obstructions, and both via enclosures per turn. The tested spacing checks have at least 128 nm excess clearance. The exact DB reports allowed layers M2–M8 and zero ordinary routed wires. These are prospective escape paths applied only to geometry checks. Routed connectivity and signoff remain open.
+
+I viewed the exact four-site illustration. The independent three-image pass returned `GOOD` after seeing the same stock layout and density PNGs and the new illustration. It identified all four native peer obstructions and the clear jogs to 40 µm. Both earlier `ISSUES` receipts remain intact. The new supplemental verdict, illustration and measured proof are `post_place/escape_depth_independent_visual_review.json`, `post_place/actual_spn_depth_access.png` and `post_place/jog_proofs.json`, respectively. This closes the reviewed local geometry concern. CTS and route remain held.
