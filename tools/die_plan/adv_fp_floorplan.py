@@ -105,8 +105,17 @@ def _lanes(t):
         lanes.append((s.get("width", 1), pts, s.get("name")))
     return lanes
 
-def core_crossings(t):
-    """[(lane name, core name, bits, um inside, (a, b))] planned legs whose straight path crosses a street-defining hard-core box."""
+def _l_clear(a, b, bx):
+    """True when a Manhattan L (either corner) between a and b crosses no box in bx (the router is Manhattan)."""
+    def clear(p, q):
+        return all(_inside_um(p, q, x) < CROSS_MIN_UM for x in bx)
+    return any(clear(a, c) and clear(c, b) for c in ((a[0], b[1]), (b[0], a[1])))
+
+
+def core_crossings(t, manhattan=False):
+    """[(lane name, core name, bits, um inside, (a, b))] planned legs whose straight path crosses a street-defining hard-core box.
+    manhattan=True (OT_FT_CROSS_MANHATTAN=1 in findings, C-FT-CROSSES-CORE): a leg whose Manhattan L between the same two points
+    clears every core is not a crossing (the straight diagonal over-counts: S81 53 %, QC 70 %, KV 66 % of the 09:00 bit-legs)."""
     cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
     bx = [(_box(c), c.get("name") or c.get("inst")) for c in cores if c["outline_um"][0] * c["outline_um"][1] > MIN_CORE_UM2]
     out = []
@@ -115,6 +124,8 @@ def core_crossings(t):
             for box, cn in bx:
                 d = _inside_um(a, b, box)
                 if d >= CROSS_MIN_UM:
+                    if manhattan and _l_clear(a, b, [x for x, _ in bx]):
+                        break
                     out.append((nm, cn, w, d, (a, b)))
     return out
 
@@ -240,7 +251,7 @@ def findings(raw, plan_path=None, tree=None, **kw):
             elif isinstance(cells, (int, float)) and cells > CELL_CAP:
                 n_big += 1
                 out.append(f"{lvl} ADV-FP-OVERSIZE {name}: {int(cells)} cells > {CELL_CAP} single-run cap; fix: split the type")
-            cr = core_crossings(t)
+            cr = core_crossings(t, manhattan=os.environ.get("OT_FT_CROSS_MANHATTAN") == "1")
             if cr:
                 agg = collections.Counter()
                 for nm, cn, w, d, _ in cr:

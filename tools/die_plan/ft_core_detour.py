@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""ft_core_detour.py -- C-FT-CROSSES-CORE generator fix: re-site hop-chain stations so no planned hop needs a path through a core.
+
+PRE ADV-FT-CROSSES-CORE (adv_fp_floorplan.core_crossings, report only) flags planned legs whose straight pin-to-pin path
+crosses a hard-core box.  Core interiors carry no routing capacity, so such a leg detours through the bordering streets, and
+C-STREET (ADV-FP-STREET) counts those bits as detours on the streets.  This tool removes the crossing at its SOURCE (it never
+resizes a street).
+
+FLAG (default OFF): plan top-level  "ft_core_detour": {"enable": 1}  (optional "types": [...]).  With the key absent `apply`
+returns the plan object untouched and the CLI copies the input bytes (byte-identical).
+
+What it does (zero added cycles): for every hop chain of a flagged type -- ft_slots stations (bit sites translated rigidly with
+the station) and internal_stations regs_um chains -- a DP over candidate station points (the station's own site, a 7 x 7 lattice
+within 60 um, and the outer corners of nearby cores at +2.5 um) picks points so that every hop is Manhattan-clear (a Manhattan L
+between the two points crosses no core: the router is Manhattan) and no hop exceeds max(405 x 0.98 - 2 um, its current length),
+including the hop to the fixed end (to_um / out-face centre).  Cost = non-clear hops, then total station displacement.  The chain
+is replaced only when it has strictly fewer non-clear hops.  Station COUNT, port windows, pins, cores and outlines never change,
+so there is no producer / consumer / LATCHECK cycle effect (LEG405 is held, never relaxed).  A ft-slot station moves only where
+its translated bit sites stay >= 1 um outside every core.
+Chains that cannot be made clear without a longer path (e.g. hd_tile reg line>ad1 > eA2, 128 b) are left unchanged: they need
++k stations (owner-delegated latency, to be carried through producer, consumer and LATCHECK by the type's row) or a pin / core
+re-site, and are reported by the ledger as bad_hops_after > 0.
+
+    ft_core_detour.py PLAN [--out PLAN2] [--types a,b] [--ledger L.json]
+"""
+import argparse
+import json
+import shutil
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parents[1]))
+import adv_fp_floorplan as A  # noqa: E402
+
+FLAG = "ft_core_detour"
+
+
+def enabled(raw):
+    v = (raw or {}).get(FLAG) if isinstance(raw, dict) else None
+    return bool(isinstance(v, dict) and v.get("enable"))
+
+
+def _cores(ty):
+    return [c for c in ty.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
+
+
+REACH_BUDGET = 394.9    # ft_corridor hop budget: 405 x 0.98 - 2 um (Manhattan)
+GRID_R, GRID_N = 60.0, 7  # candidate lattice around a station: +-60 um, 7 x 7
+CORNER_CLR = 2.5          # candidate corner points sit this far outside a core edge (pin-access ring + 0.5)
+MAX_CAND_PTS = 80
+
+
+def _boxes(ty):
+    return [A._box(c) for c in _cores(ty) if c["outline_um"][0] * c["outline_um"][1] > A.MIN_CORE_UM2]
+
+
+def clear_straight(a, b, bx):
+    return all(A._inside_um(a, b, x) < A.CROSS_MIN_UM for x in bx)
+
+
+def clear_manhattan(a, b, bx):
+    """a Manhattan L (either corner) between a and b crosses no core box: the router is Manhattan, so this is the
+    realistic crossing test (the straight pin-to-pin diagonal over-counts)."""
+    return A._l_clear(a, b, bx)
+
+
+def _man(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def _cand_points(p, bx, outline):
+    W, H = outline
+    pts = [tuple(p)]
+    step = 2 * GRID_R / (GRID_N - 1)
+    for i in range(GRID_N):
+        for j in range(GRID_N):
+            pts.append((p[0] - GRID_R + i * step, p[1] - GRID_R + j * step))
+    for x0, y0, x1, y1 in bx:
+        if x0 - GRID_R - 20 < p[0] < x1 + GRID_R + 20 and y0 - GRID_R - 20 < p[1] < y1 + GRID_R + 20:
+            for cx in (x0 - CORNER_CLR, x1 + CORNER_CLR):
+                for cy in (y0 - CORNER_CLR, y1 + CORNER_CLR):
+                    pts.append((cx, cy))
+    out, seen = [], set()
+    for q in pts:
+        q = (round(min(max(q[0], 0.0), W), 3), round(min(max(q[1], 0.0), H), 3))
+        if q in seen or any(b[0] < q[0] < b[2] and b[1] < q[1] < b[3] for b in bx):
+            continue
+        seen.add(q)
+        out.append(q)
+    out.sort(key=lambda q: _man(q, p))
+    return out[:MAX_CAND_PTS]
+
+
+def resite_chain(fixed, stations, bx, outline, end=None, sites_ok=None):
+    """zero-cycle re-site of one hop chain.  fixed = the fixed start point, stations = [(x, y)] in order.  DP over candidate
+    points per station: every hop Manhattan-clear and <= max(REACH_BUDGET, its current length); cost = non-clear hops first,
+    then total displacement.  Returns (new stations, non-clear hops before, after)."""
+    pts0 = [tuple(fixed)] + [tuple(s) for s in stations] + ([tuple(end)] if end else [])
+    bad0 = sum(0 if clear_manhattan(a, b, bx) else 1 for a, b in zip(pts0, pts0[1:]))
+    if bad0 == 0:
+        return list(stations), 0, 0
+    cap = [max(REACH_BUDGET, _man(a, b)) for a, b in zip(pts0, pts0[1:])]
+    cands = [_cand_points(s, bx, outline) for s in stations]
+    if sites_ok is not None:
+        cands = [[q for q in c if sites_ok(k, q)] or [tuple(stations[k])] for k, c in enumerate(cands)]
+    ns = len(cands)
+    if end:
+        cands.append([tuple(end)])
+    INF = float("inf")
+    prev = [(0.0, None)]
+    prevpts = [tuple(fixed)]
+    back = []
+    for k, cs in enumerate(cands):
+        cur = []
+        for q in cs:
+            best = (INF, None)
+            for pi, pp in enumerate(prevpts):
+                h = _man(pp, q)
+                if h > cap[k]:
+                    continue
+                c = prev[pi][0] + (_man(q, stations[k]) * 0.01 if k < ns else 0.0) + (0 if clear_manhattan(pp, q, bx) else 1e4)
+                if c < best[0]:
+                    best = (c, pi)
+            cur.append(best)
+        back.append(cur)
+        prev, prevpts = cur, cs
+    if not prev or min(c for c, _ in prev) == INF:
+        return list(stations), bad0, bad0
+    k = min(range(len(prev)), key=lambda i: prev[i][0])
+    path = []
+    for lvl in range(len(cands) - 1, -1, -1):
+        path.append(cands[lvl][k])
+        k = back[lvl][k][1]
+    path.reverse()
+    path = path[:ns]
+    pts1 = [tuple(fixed)] + [tuple(q) for q in path] + ([tuple(end)] if end else [])
+    bad1 = sum(0 if clear_manhattan(a, b, bx) else 1 for a, b in zip(pts1, pts1[1:]))
+    if bad1 >= bad0:
+        return list(stations), bad0, bad0
+    return [list(q) for q in path], bad0, bad1
+
+
+def _sites_ok_factory(bx, sites_per_station, stations):
+    """a station may move only where its translated bit sites stay outside every core box (1-um keep-off)."""
+    def ok(k, q):
+        if k >= len(sites_per_station) or not sites_per_station[k]:
+            return True
+        dx, dy = q[0] - stations[k][0], q[1] - stations[k][1]
+        for st in sites_per_station[k]:
+            for s in st:
+                x, y = s[0] + dx, s[1] + dy
+                for b in bx:
+                    if b[0] - 1 < x < b[2] + 1 and b[1] - 1 < y < b[3] + 1:
+                        return False
+        return True
+    return ok
+
+
+def _flat_sites(slot, k):
+    bs = slot.get("bit_sites_um")
+    if not bs or k >= len(bs):
+        return []
+    return [bs[k]] if bs[k] and isinstance(bs[k][0][0], (int, float)) else [x for x in bs[k]]
+
+
+def detour_type(raw, tn, ledger):
+    """re-site, in place, the crossing hop chains of type tn: ft_slots stations (+ their bit sites, translated rigidly) and
+    internal_stations regs_um.  Station COUNT never changes (no new cycle).  True when anything changed."""
+    ty = raw["partition_types"][tn]
+    bx = _boxes(ty)
+    outline = ty["outline_um"]
+    changed = 0
+    for s in ty.get("ft_slots") or []:
+        regs = s.get("regs_um") or []
+        if len(regs) < 2:
+            continue
+        st = [tuple(q) for q in regs[1:]]
+        sites = [s["bit_sites_um"][k] if k < len(s.get("bit_sites_um") or []) else [] for k in range(len(st))]
+        ok = _sites_ok_factory(bx, [[x] if x else [] for x in sites], st)
+        end = (A._face_center(s.get("out_face"), s["out_window_um"], *outline) if s.get("out_face") and s.get("out_window_um") else None)
+        new, b0, b1 = resite_chain(regs[0], st, bx, outline, end=end, sites_ok=ok)
+        if b1 < b0:
+            for k, q in enumerate(new):
+                dx, dy = q[0] - st[k][0], q[1] - st[k][1]
+                regs[k + 1] = [round(q[0], 4), round(q[1], 4)]
+                if k < len(s.get("bit_sites_um") or []):
+                    s["bit_sites_um"][k] = [[round(p[0] + dx, 6), round(p[1] + dy, 6)] for p in s["bit_sites_um"][k]]
+            changed += 1
+        ledger.append(dict(type=tn, kind="ft_slot", slot=s.get("name"), bad_hops_before=b0, bad_hops_after=b1))
+    for s in ty.get("internal_stations") or []:
+        regs, fr = s.get("regs_um") or [], s.get("from_um")
+        if not regs or not fr or s.get("bit_sites_um"):
+            continue
+        st = [tuple(q) for q in regs]
+        new, b0, b1 = resite_chain(fr, st, bx, outline, end=s.get("to_um"))
+        if b1 < b0:
+            s["regs_um"] = [[round(q[0], 4), round(q[1], 4)] for q in new]
+            changed += 1
+        if b0:
+            ledger.append(dict(type=tn, kind="station_chain", conn=s.get("conn"), bad_hops_before=b0, bad_hops_after=b1))
+    return bool(changed)
+
+
+def apply(raw, types=None, max_cand=None):
+    """returns (raw, ledger).  Flag absent -> raw untouched, empty ledger."""
+    if not enabled(raw):
+        return raw, []
+    cfg = raw[FLAG]
+    ledger = []
+    want = set(types or cfg.get("types") or [])
+    for tn, ty in sorted(raw["partition_types"].items()):
+        if want and tn not in want:
+            continue
+        if A.core_crossings(ty):
+            detour_type(raw, tn, ledger)
+    return raw, ledger
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("plan")
+    ap.add_argument("--out")
+    ap.add_argument("--types")
+    ap.add_argument("--ledger")
+    a = ap.parse_args()
+    src = Path(a.plan)
+    raw = json.loads(src.read_text())
+    if not enabled(raw):
+        print(f"{FLAG}: flag absent, plan unchanged")
+        if a.out and Path(a.out) != src:
+            shutil.copyfile(src, a.out)
+        return 0
+    raw, ledger = apply(raw, a.types.split(",") if a.types else None)
+    Path(a.out or a.plan).write_text(json.dumps(raw, indent=0) + "\n")
+    if a.ledger:
+        Path(a.ledger).write_text(json.dumps(ledger, indent=1) + "\n")
+    n = sum(1 for x in ledger if x.get("status") == "TYPE-DONE")
+    print(f"{FLAG}: {n} type(s) re-sited, {sum(1 for x in ledger if x.get('status') == 'NEEDS-STAGE')} NEEDS-STAGE trial(s)")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
