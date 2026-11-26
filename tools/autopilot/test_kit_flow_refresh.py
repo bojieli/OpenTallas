@@ -153,6 +153,16 @@ def test_main_copy_keeps_kit_original_source_lines(tmp_path):
     assert p.read_text() == t
 
 
+def test_vpw_required_source_survives_before_placement_generates_it(tmp_path):
+    p = tmp_path / "clock_taps.tcl"
+    prefix = (b'if {![file exists /work/vpw_bank_clock.tcl]} {error "missing placement clock record"}\n'
+              b"source /work/vpw_bank_clock.tcl\n")
+    p.write_bytes(prefix + b"puts old\nputs old clock\n")
+    assert not (tmp_path / "vpw_bank_clock.tcl").exists()
+    K._put(str(p), b"puts new clock\n")
+    assert p.read_bytes() == prefix + b"puts new clock\n"
+
+
 def test_source_line_kept_only_when_the_file_is_in_the_kit(tmp_path):
     kit = tmp_path / "k"
     kit.mkdir()
