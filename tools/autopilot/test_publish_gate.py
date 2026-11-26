@@ -287,6 +287,31 @@ class RtToolsForPreG0(unittest.TestCase):
         self.assertIn("--tree", pre); self.assertEqual(pre[pre.index("--tree") + 1], str(self.tree))
         self.assertEqual(res["pre_g0"]["tools"], "rt")
 
+    def test_runtime_pre_checks_schema_in_its_composed_launch_tree(self):
+        composer = self.rt / "tools/autopilot/rt_launch_tree.sh"
+        composer.parent.mkdir(parents=True)
+        composer.write_text("#!/bin/bash\n")
+        work = Path(self.td) / "gate-work"
+        launch = str(work / "pre-rt")
+        calls = []
+
+        def sub(argv, cwd, timeout=None):
+            calls.append((argv, cwd))
+            return 0, ""
+
+        orig = PG._sub
+        PG._sub = sub
+        try:
+            PG.run_static(self.tree, self.plan, work=work, tool_root=self.rt)
+        finally:
+            PG._sub = orig
+        compose = (["bash", str(composer), str(self.tree), str(self.rt), launch], str(self.tree))
+        self.assertEqual(calls[1], compose)
+        pre, cwd = calls[2]
+        self.assertEqual(cwd, launch)
+        self.assertEqual(pre[pre.index("--tree") + 1], launch)
+        self.assertEqual(pre[pre.index("--plan") + 1], str(self.plan))
+
     def test_tree_tools_without_tool_root_or_incomplete_rt(self):
         res, pre, _ = self.run_calls()
         self.assertTrue(pre[2].startswith(str(self.tree)))

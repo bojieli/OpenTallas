@@ -419,7 +419,14 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     # schema.py imports its sibling modules; python3 -I drops the script directory from sys.path, so put the tree's in
     rc, txt = _sub([py, "-I", "-c", "import sys; sys.path.insert(0, %r); import schema; sys.exit(schema.main(['schema.py', 'validate', %r]))" % (dp, plan)], tree)
     res["schema"] = {"verdict": "PASS" if rc == 0 else "FAIL", "rc": rc, "tail": txt[-1500:]}
-    pre = [py, "-I", os.path.join(dp, "plan_gate_pre.py"), "check", "--tree", tree, "--plan", plan, "--quiet"]
+    Path(work).mkdir(parents=True, exist_ok=True)
+    pre_tree, rc1, t1 = tree, 0, ""
+    if tools_src == "rt":
+        composer = Path(tool_root, "tools/autopilot/rt_launch_tree.sh")
+        if composer.is_file():
+            pre_tree = str(Path(work, "pre-" + Path(tool_root).resolve().name).resolve())
+            rc1, t1 = _sub(["bash", str(composer), tree, str(tool_root), pre_tree], tree)
+    pre = [py, "-I", os.path.join(dp, "plan_gate_pre.py"), "check", "--tree", pre_tree, "--plan", plan, "--quiet"]
     if asbuilt:
         pre += ["--asbuilt", str(asbuilt)]
     # QC N2B 11-17: new consumer_localization rows need their rows proof (ROWS-NO-PROOF otherwise); candidate.rows_proofs -> --rows-proof
@@ -433,8 +440,8 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     pre_tool = Path(dp, "plan_gate_pre.py")
     if pre_base and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
         pre += ["--remap-base", str(pre_base)]
-    rc1, t1 = _sub(pre, tree)
-    Path(work).mkdir(parents=True, exist_ok=True)
+    if rc1 == 0:
+        rc1, t1 = _sub(pre, pre_tree)
     g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker
     g0 = [py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", g0_dir]
     # LANDING-BAND-CORE (COORD 11-22): the die's live plan of record is the base: its band x core overlaps are inherited (WARN), new ones ERROR.
