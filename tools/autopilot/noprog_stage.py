@@ -396,6 +396,7 @@ def run_host(host, cmd, inp=None, timeout=120):
 
 
 RT_CURRENT = os.environ.get("NOPROG_SRC", "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot")
+ACTION_WATCHDOG = "~/.local/bin/ot-noprog-watchdog"
 
 
 def push_src_dir():
@@ -408,10 +409,23 @@ def push_src_dir():
 
 def push_and_scan(host):
     d = LIB
+    source = push_src_dir()
+    published = source == RT_CURRENT
+    source = os.path.realpath(source)
     try:
         for fn in ("noprog_watchdog.py", "noprog_stage.py"):
-            src = open(os.path.join(push_src_dir(), fn)).read()
-            run_host(host, f"mkdir -p {d} && cat > {d}/{fn}.new && mv {d}/{fn}.new {d}/{fn}", inp=src, timeout=60)
+            src = open(os.path.join(source, fn)).read()
+            dest = f"{d}/{fn}"
+            cmd = f"mkdir -p {d} && cat > {dest}.new && mv {dest}.new {dest}"
+            if published and fn == "noprog_watchdog.py":
+                # The action timer executes a separate standalone copy. Only deploy approved runtime
+                # bytes here and leave hosts without an installed action timer artifact alone.
+                action = ACTION_WATCHDOG
+                cmd += (f' && if [ -x {action} ] && ! cmp -s {dest} {action}; then '
+                        f'tmp=$(mktemp {action}.new.XXXXXX) && install -m 0755 {dest} "$tmp" && mv -f "$tmp" {action}; fi')
+            installed = run_host(host, cmd, inp=src, timeout=60)
+            if installed.returncode:
+                return host, None
         p = run_host(host, f"OT_HUB_NAME={HUB} python3 -I {d}/noprog_stage.py scan", timeout=180)
         rows = json.loads(p.stdout)
         for r in rows:
