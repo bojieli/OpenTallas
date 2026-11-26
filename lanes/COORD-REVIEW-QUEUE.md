@@ -15976,3 +15976,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-26 13:25 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): slw_sc_v1__cl64543eaf__cl4590432d queue job 38b80dbf0004 CANCELLED -> row CANCELLED (retry slw_sc_v1__cl64543eaf__cl4590432d@2 relaunches)
 - 2026-11-26 13:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: HEAD-INT-R2 on intel1 wrote 54 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-26 13:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-26 13:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-int-r2 on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
