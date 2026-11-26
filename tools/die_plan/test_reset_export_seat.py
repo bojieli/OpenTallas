@@ -53,3 +53,7 @@ def test_relay_sites_win_off():
     P.types["t"]["reset"] = {}
     P.types["t"]["relay_sites"] = {"u_rrl_30/q": [1500.0, 9.0]}
     assert "relay_seats" not in RT._with_export_seats(P, "t", tree())
+
+
+def test_relay_glob_skips_export_q():
+    assert 'string match "*export_q*" $nm] && ![string match "exp:*" $key]' in RT.TCL_HEAD

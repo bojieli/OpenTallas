@@ -3603,6 +3603,8 @@ proc rtr_place {key pat x y tag} {
     # *u_rrl_N[./]* also matched it: the reset placer moved the clone back onto the source seat and took its Q net as the
     # relay's. Clones are seated by kit_istations rs_place_all (relay_sites); skip them unless the pattern names one.
     if {[string match {*__rs[0-9]*} $nm] && ![string match {*__rs[0-9]*} $pat]} continue
+    # EXPORT-Q-GLOB-1125: the raw-pair export_q flop belongs to its face/pin seat; a relay glob *u_rrl_N[./]* must not drag it to the relay site
+    if {[string match "*export_q*" $nm] && ![string match "exp:*" $key]} continue
     if {[info exists ::ot_reset_pair_locs] && [dict exists $::ot_reset_pair_locs $nm]} {
       set got [dict get $::ot_reset_pair_locs $nm]
     } else {
