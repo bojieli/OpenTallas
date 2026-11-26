@@ -53,11 +53,11 @@ def index_rows(index_json):
     return rows
 
 
-def any_plan_extra(cache, rows, by_die=False):
+def any_plan_members(cache, rows):
     """archived (AGIdock INDEX) units that the current plan's signed set does not hold, split (COORD r711 correction 11-18):
     deferred = name or VARIANT-stripped name is a type / type module / hard core of that die's current plan that is NOT signed there (the re-sign backlog);
     retired  = no current-plan name at all (old-plan units: QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that will never be re-signed.
-    Units already signed on the current plan are in neither.  -> total int, or with by_die {"defer": {short: n}, "retired": {short: n}}"""
+    Units already signed on the current plan are in neither. Each bucket maps (die, base name) to the archived kinds."""
     plan_k, signed_k = {}, {}
     for e in (cache.get("plans") or {}).values():
         k = plan_k.setdefault(e.get("die"), set())
@@ -68,13 +68,20 @@ def any_plan_extra(cache, rows, by_die=False):
             k.add(x)
         for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}) + list(e.get("signed_designs") or {}):
             sk.add(x)
-    dfr, ret = set(), set()
+    dfr, ret = {}, {}
     for die, el, kind in rows:
         base = VARIANT.sub("", el)
         sk, pk = signed_k.get(die, set()), plan_k.get(die, set())
         if el in sk or base in sk:
             continue
-        (dfr if (el in pk or base in pk) else ret).add((die, base))
+        bucket = dfr if (el in pk or base in pk) else ret
+        bucket.setdefault((die, base), set()).add(kind)
+    return {"defer": dfr, "retired": ret}
+
+
+def any_plan_extra(cache, rows, by_die=False):
+    members = any_plan_members(cache, rows)
+    dfr, ret = members["defer"], members["retired"]
     if not by_die:
         return len(dfr) + len(ret)
     short = dict(DIES)
@@ -84,6 +91,34 @@ def any_plan_extra(cache, rows, by_die=False):
             n = short.get(die, die)
             out[key][n] = out[key].get(n, 0) + 1
     return out
+
+
+def explorer_census(cache, rows):
+    """Export the stock census and exact eligible identities for Explorer."""
+    dies = {die: dict(current=[], deferred=[], retired=[]) for die, _ in DIES}
+    for plan in (cache.get("plans") or {}).values():
+        die = plan.get("die")
+        if die not in dies:
+            continue
+        current = dies[die]["current"]
+        modules = plan.get("plan_types") or {}
+        designs = plan.get("designs") or {}
+        current.extend(dict(key=name, level="type", name=name, module=modules.get(name))
+                       for name in (plan.get("signed_types") or {}))
+        current.extend(dict(key=key, level="core", name=(designs.get(key) or {}).get("module") or key.split("#", 1)[0])
+                       for key in (plan.get("signed_designs") or {}))
+    members = any_plan_members(cache, rows)
+    for bucket, source in (("deferred", "defer"), ("retired", "retired")):
+        for (die, name), kinds in sorted(members[source].items()):
+            dies[die][bucket].append(dict(key=name, name=name, kinds=sorted(kinds)))
+    totals = dict(current=0, deferred=0, retired=0, any=0)
+    for entry in dies.values():
+        summary = {k: len(v) for k, v in entry.items()}
+        summary["any"] = sum(summary.values())
+        entry["summary"] = summary
+        for k, value in summary.items():
+            totals[k] += value
+    return dict(schema="opentallas.signoff_census.v1", generated=cache.get("generated"), summary=totals, dies=dies)
 
 
 def rate_row(cache, stamp, extra=0):
@@ -224,4 +259,10 @@ def _commit():
 
 
 if __name__ == "__main__":
-    sys.exit(run())
+    if sys.argv[1:] == ["--explorer-json"]:
+        archive = CACHE.with_name("agidock_archive_index.json")
+        if not archive.is_file():
+            sys.exit("count_hourly: archive index is missing")
+        print(json.dumps(explorer_census(read_cache(), index_rows(archive)), separators=(",", ":")))
+    else:
+        sys.exit(run())
