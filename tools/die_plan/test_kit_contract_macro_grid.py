@@ -90,3 +90,31 @@ def test_in_contract_and_fails_closed(tmp_path):
 def test_no_macros_is_na(tmp_path):
     (tmp_path / "config.mk").write_text("export DESIGN_NAME = x\n")
     assert KC.macro_pin_grid(tmp_path) == ([], dict(applies=False))
+
+
+def test_generated_reservations_cover_all_rectangles_of_one_signal_pin(tmp_path):
+    kd = _kit(tmp_path, [(8.64, 17.28, "R0")])
+    lef = kd / "macros" / "ot_fix_ram.lef"
+    lef.write_text(LEF.replace("RECT 0 0.048 0.192 0.072 ;",
+                               "RECT 0 0.048 0.192 0.072 ; LAYER M5 ; RECT 0 0.048 0.192 0.072 ;"))
+    reserved = kd / "reserved_sites.tcl"
+
+    def write(rows):
+        reserved.write_text("".join("odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer "
+                                    + layer + "] "
+                                    + " ".join(f"[expr {{round({coord}*$rs_u)}}]" for coord in rect) + "\n"
+                                    for layer, rect in rows))
+
+    left = ("M4", (8.639, 17.279, 8.74, 17.359))
+    right = ("M4", (8.74, 17.279, 8.833, 17.359))
+    wrong_layer = ("M6", (8.639, 17.279, 8.833, 17.359))
+    write([left, wrong_layer])
+    assert KC.reserved_macro_pin_access(kd)[0] == []
+    write([left, right, wrong_layer])
+    report = KC.run_all(kd)["reserved_macro_pin_access"]
+    assert report["verdict"] == "FAIL" and report["info"]["blocked_pins"] == 1
+    assert "(d)" in report["errors"][0]
+    assert "reserved_macro_pin_access" not in KC.TOOL_FAIL_CHECKS
+    lef.write_text(LEF.replace("RECT 0 0.048 0.192 0.072 ;", "RECT 0 0.048 0.192 0.072 ;\n"
+                                 "      LAYER M5 ; POLYGON 0 0 0.048 0 0.048 0.048 0 0.048 ;"))
+    assert KC.reserved_macro_pin_access(kd)[1]["blocked_pins"] == 1

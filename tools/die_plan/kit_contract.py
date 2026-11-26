@@ -1420,7 +1420,7 @@ def _kit_tracks(kd, cfg):
     return {k: (d, p, w, offs[k]) for k, (d, p, w) in TECH_LAYERS.items() if k in offs}, src
 
 
-def _lef_pins(kd, cfg):
+def _lef_pins(kd, cfg, *, rectangular_only=False):
     """{master: [(pin, layer, x0, y0, x1, y1)]} signal pin port rects (macro frame) of the kit's macro LEFs."""
     files = list((Path(kd) / "macros").glob("*.lef")) if (Path(kd) / "macros").is_dir() else []
     for w in cfg.get("ADDITIONAL_LEFS", "").split():
@@ -1446,6 +1446,8 @@ def _lef_pins(kd, cfg):
                 body = text[start:heading.start()]
                 pin = None
                 if re.search(r"\bUSE\s+(POWER|GROUND)\b", body):
+                    continue
+                if rectangular_only and re.search(r"\b(?:PATH|POLYGON|VIA)\s", body):
                     continue
                 layer = None
                 for tok in re.finditer(r"LAYER\s+(\S+)\s*;|RECT\s+" + r"\s+".join([_NUM] * 4), body):
@@ -1513,6 +1515,66 @@ def macro_pin_grid(kd, plan_dir=None):
             err.append(f"macro {master}#{k} at ({x:g}, {y:g}) {o}: {off} signal pin(s) off the {src} track grid "
                        f"({first})")
     return err, dict(applies=True, macros=len(sites), pins=n_pins, tracks=src, worst_off_nm=round(worst * 1000, 1))
+
+
+def _rect_covered(rect, blockers):
+    """Whether same-layer rectangles completely cover a rectangular pin shape."""
+    x0, y0, x1, y1 = rect
+    clips = [(max(x0, a), max(y0, b), min(x1, c), min(y1, d))
+             for a, b, c, d in blockers if a < x1 and x0 < c and b < y1 and y0 < d]
+    if not clips:
+        return False
+    cuts = sorted({x0, x1} | {x for a, _, c, _ in clips for x in (a, c)})
+    for left, right in zip(cuts, cuts[1:]):
+        if right - left <= 1e-6:
+            continue
+        covered = y0
+        for bottom, top in sorted((b, d) for a, b, c, d in clips if a <= left and right <= c):
+            if bottom > covered + 1e-6:
+                break
+            covered = max(top, covered)
+        if covered < y1 - 1e-6:
+            return False
+    return True
+
+
+def reserved_macro_pin_access(kd, plan_dir=None):
+    """Find macro signal pins fully covered by generated hard routing reservations."""
+    kd = Path(kd)
+    reserved = kd / "reserved_sites.tcl"
+    if not reserved.is_file():
+        return [], dict(applies=False)
+    # Read only the literal dbObstruction records emitted by gen_phys.route_obstruction_lines
+    # after pin cuts and snap. Placement blockages do not obstruct pin routing.
+    coord = r"\[expr \{round\(" + _NUM + r"\*\$rs_u\)\}\]"
+    pattern = (r"^\s*odb::dbObstruction_create \$rs_b \[\[ord::get_db_tech\] findLayer (\S+)\] "
+               + " ".join([coord] * 4) + r"[ \t]*$")
+    by_layer = {}
+    for layer, *rect in re.findall(pattern, reserved.read_text(), re.M):
+        by_layer.setdefault(layer, []).append(tuple(map(float, rect)))
+    if not by_layer:
+        return [], dict(applies=False)
+    sites = []
+    boxes, problem = macro_boxes(kd, plan_dir, sites_out=sites)
+    if problem:
+        return [problem], dict(applies=True)
+    if not boxes:
+        return [], dict(applies=False)
+    cfg = _mk(kd)
+    pins, sizes = _lef_pins(kd, cfg, rectangular_only=True), _lef_sizes(kd, cfg)
+    errors, blocked_count = [], 0
+    for k, (master, x, y, o) in enumerate(sites):
+        shapes = {}
+        for name, layer, *rect in pins.get(master, []):
+            shapes.setdefault(name, []).append((layer, rect))
+        blocked = [name for name, ports in shapes.items() if all(
+            layer in by_layer and _rect_covered(_place_rect(rect, x, y, o, *sizes[master]), by_layer[layer])
+            for layer, rect in ports)]
+        if blocked:
+            blocked_count += len(blocked)
+            errors.append(f"macro {master}#{k} at ({x:g}, {y:g}) {o}: {len(blocked)} signal pin(s) fully covered "
+                          f"by routing reservations ({', '.join(blocked[:4])})")
+    return errors, dict(applies=True, macros=len(sites), blocked_pins=blocked_count)
 
 
 # ---------------------------------------------------------------------------------------------- 13 macro instances
@@ -1699,12 +1761,12 @@ def macro_instances(kd):
 
 CHECKS = ("corner_modes", "ff_binding", "clock_pin_geometry", "rc_calibration", "duplicate_modules", "keep_hook",
           "pins_canonical", "mesh_vias", "macro_channels", "clock_entry_clear", "island_macro_clear", "macro_pin_grid",
-          "macro_instances")
+          "reserved_macro_pin_access", "macro_instances")
 # OWNER 11-03 07:0x (KW-FIX-4): the only contract checks that block a kit (kit_preflight) are certain tool failures:
 # duplicate_modules = Yosys "Re-definition of module"; macro_instances = place_macro / MACRO_PLACEMENT_TCL on an instance
 # the netlist does not have (OpenROAD error).  Every other check is a design target, reported as contract_advisory.
 TOOL_FAIL_CHECKS = ("duplicate_modules", "macro_instances")
-MACRO_GEOMETRY_CHECKS = ("macro_channels", "clock_entry_clear", "macro_pin_grid")
+MACRO_GEOMETRY_CHECKS = ("macro_channels", "clock_entry_clear", "macro_pin_grid", "reserved_macro_pin_access")
 
 
 def is_core_kit(kd):

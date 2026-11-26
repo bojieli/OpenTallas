@@ -70,7 +70,7 @@ def verdicts(kd):
 def test_fixture_passes_every_check(kit):
     r = KC.run_all(kit)
     # macro_instances is NA here: the fixture places by master (foreach {master sites}), no instance paths
-    want = {k: "NA" if k == "macro_instances" else "PASS" for k in KC.CHECKS}
+    want = {k: "NA" if k in {"macro_instances", "reserved_macro_pin_access"} else "PASS" for k in KC.CHECKS}
     assert {k: v["verdict"] for k, v in r.items()} == want, \
         {k: v["errors"] for k, v in r.items() if v["errors"]}
 
@@ -168,7 +168,8 @@ def test_preflight_emits_beside_freeze(kit):
     # OWNER 11-03 07:0x: blocking checks = TOOL_FAIL_CHECKS; the rest are reported in contract_advisory
     rows = dict(rec["checks"], **rec["contract_advisory"])
     assert set(KC.TOOL_FAIL_CHECKS) <= set(rec["checks"]) and set(KC.CHECKS) <= set(rows)
-    assert all(rows[c]["verdict"] == ("NA" if c == "macro_instances" else "PASS") for c in KC.CHECKS)
+    inapplicable = {"macro_instances", "reserved_macro_pin_access"}
+    assert all(rows[c]["verdict"] == ("NA" if c in inapplicable else "PASS") for c in KC.CHECKS)
     assert rc == int(rec["verdict"] != "PASS")
 
 
@@ -445,7 +446,10 @@ def test_standalone_preflight_distinguishes_macro_geometry_coverage(kit, tmp_pat
     assert skipped["macro_geometry"]["verdict"] == "SKIP"
     assert "KIT_MACRO_GEOMETRY SKIP" in log
     assert "no plan contents (pass --plan or --plan-dir)" in log
-    assert all(skipped["contract_advisory"][name]["verdict"] == "SKIP" for name in KC.MACRO_GEOMETRY_CHECKS)
+    assert skipped["macro_geometry"]["checks"] == {
+        "macro_channels": "SKIP", "clock_entry_clear": "SKIP", "macro_pin_grid": "SKIP",
+        "reserved_macro_pin_access": "NA",
+    }
     assert not (kit / "preflight.json").exists()
 
     clean_rc, clean, _ = preflight("directory", "--plan-dir", str(pd))
@@ -457,6 +461,7 @@ def test_standalone_preflight_distinguishes_macro_geometry_coverage(kit, tmp_pat
     assert scoped["macro_geometry"]["verdict"] == "FINDINGS"
     assert scoped["macro_geometry"]["checks"] == {
         "macro_channels": "FAIL", "clock_entry_clear": "PASS", "macro_pin_grid": "PASS",
+        "reserved_macro_pin_access": "NA",
     }
     assert "KIT_MACRO_GEOMETRY FINDINGS" in log
     assert "column 0 x[4.32,24.32]" in scoped["contract_advisory"]["macro_channels"]["errors"][0]
