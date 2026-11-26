@@ -293,3 +293,20 @@ def test_pick_grow_dx_skips_raster_truncating_and_respects_min():
     dx = LG.pick_grow_dx(1512.0, 144.06, 155.52)
     assert dx is not None and 144.06 <= dx <= 155.52 and round(dx / 4.32, 6) == round(dx / 4.32) and not LG.raster_bad(1512.0 + dx)
     assert LG.pick_grow_dx(1512.0, 200.0, 155.52) is None                    # mutant: need above the die cap -> none
+
+
+def test_shift_e_band_respects_tap_clear_and_keeps_exact_y():
+    r = row()
+    r["clock"]["taps"].append({"name": "e", "xy": [991.36, 8.64]})       # at W - 8.64 (tap clear): must not move east
+    r["ft_slots"][0]["bit_sites_um"].append([[600.0, 123.456789], [604.32, 123.456789]])
+    g = LG.shift_row(r, 100.0)
+    assert g["clock"]["taps"][1]["xy"][0] <= 1000.0 - 8.64 + 1e-9         # mutant (margin 8.0): 991.36 + ... > 991.36
+    assert g["ft_slots"][0]["bit_sites_um"][-1][0][1] == 123.456789       # mutant round(y, 4): 123.4568 -> "y moved"
+    assert LG.check_rows(r, g) == []
+
+
+def test_shift_e_band_point_near_cores_rides_full_dx():
+    r = row()                                                             # core block E edge 450
+    r["clock"]["taps"].append({"name": "n", "xy": [460.8, 600.0]})       # 10.8 um E of the block
+    g = LG.shift_row(r, 100.0)
+    assert g["clock"]["taps"][1]["xy"][0] == 560.8                        # mutant (compress from cx): ~541 -> inside shifted halo
