@@ -68,9 +68,9 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-SIGNED-UNVERSIONED	4	seen-in-review	FABLE-FLOW-0847 A20			NEW
 2026-11-26 09:00 PST	HEAD	P-STALE-TABLE	2	seen-in-review	FABLE-FLOW-0847 A11 exports lep0N_w			NEW
-2026-11-26 09:00 PST	KV	C-FSTART-HALFCYCLE	4	seen-in-review	FABLE-INDEP full review (COORD 09:3x) hub Eo/Wo/Wi + sys_c: fstart flop half-cycle reach (lanes/posts/FABLE-INDEP.md 09:21/09:24)			NEW
+2026-11-26 09:00 PST	KV	C-FSTART-HALFCYCLE	4	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) hub Eo 00a749e64092, Wo 173edb522637, Wi e2bf0d30ef2e, sys_c R3 820d27894005			NEW
 2026-11-26 09:00 PST	KV	C-FT-CROSSES-CORE	78	exact	PRE ADV-FT-CROSSES-CORE types on live plan 87d01254579e			NEW
-2026-11-26 09:00 PST	KV	C-FWDCLK-WRONG-TAP	2	seen-in-review	FABLE-INDEP full review (COORD 09:3x) kv io_ft forwarded clock from the wrong tap			NEW
+2026-11-26 09:00 PST	KV	C-FWDCLK-WRONG-TAP	2	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) kv3_io_ft g4 odb 6f7008e48f05 (live form) + kv3_pv legacy odb fe9233e91059 (legacy form)			NEW
 2026-11-26 09:00 PST	KV	C-GPL-TD-INFLATION	1	seen-in-review	FABLE-INDEP full review (COORD 09:3x) folded C-RESIZE-CELLCAP: hub_Wi			NEW
 2026-11-26 09:00 PST	KV	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-LEG405	2	exact-staged	KV-INT-R2 measurement dafa157 (real under-staged 2; legacy 40 superseded; COORD ruling 09:22)	40	exact	BASIS-CHANGE
@@ -110,12 +110,15 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	C-ENC-CONE-DETOUR	2	seen-in-review	FABLE-INDEP full review (COORD 09:3x) blocking items, 2 placements			NEW
 2026-11-26 09:00 PST	S81	C-FT-CROSSES-CORE	272	exact	PRE ADV-FT-CROSSES-CORE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-GPL-TD-INFLATION	3	seen-in-review	FABLE-INDEP full review (COORD 09:3x) folded C-RESIZE-CELLCAP: LEPW lepw_mus_C, c1x t5, COL (resize inflation + 400k cell cap)			NEW
+2026-11-26 09:00 PST	S81	C-GRT-GUIDE-GAP	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-LEG405	6	exact-staged	LEG405-STAGED 6 legs/6 types CLASS-OWNERS-R2 09:19 tool c-leg405-stage-seats @5632156a860 (legacy stage-blind 277 superseded; COORD ruling 09:22)	273	exact	BASIS-CHANGE
-2026-11-26 09:00 PST	S81	C-LEGACY-VIEW-EOL	4	seen-in-review	FABLE-INDEP full review (COORD 09:3x) COL types: live North binds legacy macro views (dsfd_qbank_N legacy lef)			NEW
+2026-11-26 09:00 PST	S81	C-LEGACY-VIEW-EOL	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) live North col_h9_r1 pv8aaf8508 binds legacy dsfd_qbank_N/S lefs (type digest 704e06b35e2c, odb 0efb21e45974); siblings H9 P5 00687902914d and R2 a677c836b166 already superseded by North; other CURRENT COL types not tested			NEW
 2026-11-26 09:00 PST	S81	C-OVERSIZE	4	exact	PRE ADV-FP-OVERSIZE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-PARENT-SEAM-HOLD	2	seen-in-review	FABLE-FLOW-0847 A9 t23 arst_n + SerDes peer			NEW
+2026-11-26 09:00 PST	S81	C-PIN-FACE-BUNCH	4	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 4 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 t23 mus_C			NEW
+2026-11-26 09:00 PST	S81	C-RCK-HALFCYCLE-MACRO	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-RELAY-SEAT	110	exact	PRE ADV-RELAY-SEAT types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-RST-PINREG-DROPPED	3	adjudicated	dsfd_node LL* signed netlists dropped reset pin register rn; 3 records REVOKED-PENDING-FIX (COORD 09:22)			NEW
 2026-11-26 09:00 PST	S81	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan 1f8fcdd9c4d7 (91 advisory WARN types)	26	exact	DOWN
@@ -132,6 +135,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	P-INPUT-RECEIPT	3	adjudicated	FABLE-FLOW-0847 B19	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-KIT-BIND-PLAN-MISMATCH	7	seen-in-review	FABLE-FLOW-0847 A13 COL P2 7 types			NEW
 2026-11-26 09:00 PST	S81	P-POSTPUBLISH-DISK	1	adjudicated	FABLE-FLOW-0847 B23 COL P2 waiter	0	adjudicated	UP
+2026-11-26 09:00 PST	S81	P-PREGRT-HOLD-CRASH	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	P-PRIVATE-BASE-DIVERGENCE	3	seen-in-review	FABLE-FLOW-0847 A14 LEPW WREG6 + 1			NEW
 2026-11-26 09:00 PST	S81	P-ROUTE-NO-VIEW-GATE	87	seen-in-review	FABLE-INDEP full review (COORD 09:3x) 87 old-plan S81 units routing without review (AP_REQUIRE_VIEWED_WAVE_ROUTE absent)			NEW
 2026-11-26 09:00 PST	S81	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
