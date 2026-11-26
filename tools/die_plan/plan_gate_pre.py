@@ -3101,7 +3101,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         findings.append(reset_cache_line())
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
-    return findings
+    return promote_crashes(findings)
 
 
 INST_NAME = re.compile(r"^\s*(?:\(\*[^*]*\*\)\s*)?([A-Za-z_]\w*)\s*(?:#|[A-Za-z_\\][\w$]*\s*[\(\[])", re.M)
@@ -3159,6 +3159,32 @@ def scope_lines(lines, scope, names):
         toks = set(re.findall(r"[A-Za-z0-9_]+", x)) & names
         if toks and not (toks & scope):
             continue
+        out.append(x)
+    return out
+
+
+_EXC_RE = re.compile(r"\b[A-Za-z_]*(?:Error|Exception|Exit|Interrupt)\b")
+
+
+def promote_crashes(lines, env=None):
+    """P-FALSE-GREEN-1126 (HEAD-INT-R2, FABLE-INDEP 08:46: MONLEG-REACH-UNCHECKED KeyError 'index' and ADV-RESET-NAME KeyError
+    sp5 ended in PASS): a check that CRASHED has judged nothing.  Every WARN line that names an exception class and says
+    UNCHECKED / "not checked" becomes FAIL <CHECK>-UNCHECKED, the existing verdict of the other crash-FAILs (TAPNAME, RESETPUB,
+    DEPTH, LANDREMAP): PLAN-GATE-PRE UNCHECKED, exit 1, never a reusable PRE record.  Declared coverage limits (a budget or
+    cap, no exception named: GENDRY over , ADV budget) stay WARN.  Default ON because a crash is not a
+    verdict; OT_PRE_CRASH_WARN=1 restores the old WARN for a lane that must see the other findings of a plan whose check
+    cannot run (the line is still printed as UNCHECKED, and the PRE record is marked crash_warn)."""
+    env = os.environ if env is None else env
+    if env.get("OT_PRE_CRASH_WARN") == "1":
+        return lines
+    out = []
+    for x in lines:
+        if x.startswith("WARN ") and len(x.split()) > 1 and _EXC_RE.search(x):
+            tok = x.split()[1].rstrip(":")
+            if tok.endswith("-UNCHECKED"):
+                x = "FAIL " + x[5:]
+            elif "not checked" in x:
+                x = f"FAIL {tok}-UNCHECKED" + x[5 + len(x.split()[1]):]
         out.append(x)
     return out
 
@@ -3571,7 +3597,9 @@ def site_off_outline_findings(plan):
 # the out-of-scope lines.  Scoped, the per-type advisories run on a scope view of the plan (partition_types and partitions of the scope
 # types; 58 s, same or more in-scope lines since the per-check caps no longer fill with other types); the lane-context checks
 # (ADV_DIE_CONTEXT: their per-type lines read the far end of each lane) still run on the whole plan.  OT_PRE_ADV_SCOPE=full: old behaviour.
-ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE")
+# P-FALSE-GREEN-1126: RESET-NAME solves the die reset wavefront (reset.root_part e.g. sp5 is a partition of ANOTHER type), so on a scoped
+# view it died with KeyError 'sp5' and the crash ended in PASS; it runs on the whole plan, limited to the scope's types (OT_ADV_RESETNAME_TYPES).
+ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME")
 
 
 def scope_view(raw, scope):
@@ -3595,7 +3623,14 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None):
         if scope is not None and raw and os.environ.get("OT_PRE_ADV_SCOPE", "view") != "full":
             lines = PA.run(scope_view(raw, scope), plan, tree, checks=[c for c in checks if c not in ADV_DIE_CONTEXT], asbuilt=asbuilt,
                            baseline=baseline)
-            lines += PA.run(raw, plan, tree, checks=[c for c in checks if c in ADV_DIE_CONTEXT], asbuilt=asbuilt, baseline=baseline)
+            _env0 = os.environ.get("OT_ADV_RESETNAME_TYPES")
+            if _env0 is None:
+                os.environ["OT_ADV_RESETNAME_TYPES"] = ",".join(sorted(scope))
+            try:
+                lines += PA.run(raw, plan, tree, checks=[c for c in checks if c in ADV_DIE_CONTEXT], asbuilt=asbuilt, baseline=baseline)
+            finally:
+                if _env0 is None:
+                    os.environ.pop("OT_ADV_RESETNAME_TYPES", None)
         else:
             lines = PA.run(raw, plan, tree, checks=checks, asbuilt=asbuilt, baseline=baseline)
     except Exception as e:  # noqa: BLE001
@@ -3676,6 +3711,16 @@ def record_store(env=None):
     return Path.home() / ".cache" / "ot-pre-record"
 
 
+def reset_forms_of(plan, scope=None):
+    """P-RESET-RECEIPT-1126: {type: reset form sha256} of the judged types (reset_form.py); {} when the plan cannot be read"""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import reset_form as RF
+        return {k: v["sha256"] for k, v in RF.forms(_load(plan) or {}, sorted(scope) if scope is not None else None).items()}
+    except Exception:  # noqa: BLE001 the record is still written; the missing forms are visible as {}
+        return {}
+
+
 def pre_record(plan, asbuilt, baseline, scope, skip, lines, seconds=None, tree=None):
     """the PRE-RECORD-1125 dict of one check's final lines (after PRE-DIFF)"""
     fails = [x for x in lines if x.startswith("FAIL ")]
@@ -3685,7 +3730,8 @@ def pre_record(plan, asbuilt, baseline, scope, skip, lines, seconds=None, tree=N
             "baseline": str(baseline) if baseline else None, "baseline_sha256": file_sha(baseline),
             "types": sorted(scope) if scope is not None else None, "skip": sorted({s.upper() for s in skip or ()}),
             "tools": str(Path(__file__).resolve().parent), "result": "FAIL" if fails else "PASS", "fails": fails, "warns": warns,
-            "advisories": sum(1 for x in lines if x.startswith("WARN ADV")), "seconds": seconds, "time": round(time.time())}
+            "advisories": sum(1 for x in lines if x.startswith("WARN ADV")), "seconds": seconds, "time": round(time.time()),
+            "reset_forms": reset_forms_of(plan, scope), "crash_warn": os.environ.get("OT_PRE_CRASH_WARN") == "1"}
 
 
 def store_record(rec, env=None):
@@ -3736,6 +3782,8 @@ def main(argv=None):
                                    "also the --baseline-plan when none is given.  Relative paths of the base run resolve in --base-tree")
     c.add_argument("--base-tree", help="PRE-DIFF: the tree the base findings are taken in (default --tree)")
     c.add_argument("--no-base-cache", action="store_true", help="PRE-DIFF: re-run the base check even when cached")
+    c.add_argument("--reset-receipts", help="P-RESET-RECEIPT-1126: a reset_form.py emit file of the plan the types were signed on (or {types:{T:{form_sha256}}}); "
+                   "a type whose reset form differs is LIST RESET-RECEIPT RE-SIGN-REQUIRED (per-type flag in pre.json, never a PRE FAIL)")
     lz = sub.add_parser("localize", help="ABSPATH-1122: copy outside absolute inputs into <plan dir>/inputs/, rewrite tree-relative")
     lz.add_argument("--plan", required=True)
     lz.add_argument("--out", required=True)
@@ -3791,6 +3839,17 @@ def main(argv=None):
             rf = [x for x in f if x.startswith("FAIL ")]
             pdiff = PD.diff(rf, bf, PD.subs_for(a.plan, a.base, a.tree, a.base_tree), PD.subs_for(a.base, None, a.base_tree or a.tree))
             f = PD.lines(pdiff, a.base, how) + [x for x in f if not x.startswith("FAIL ")] + pdiff["new"] + pdiff["changed"]
+    resign = {}
+    if getattr(a, "reset_receipts", None):          # P-RESET-RECEIPT-1126: per-type flag, not a die-gate finding
+        try:
+            import reset_form as RF
+            _plan = _load(a.plan) or {}
+            _sc = parse_types(a.types, set(_plan.get("partition_types") or {})) if a.types else None
+            _rc = json.loads(Path(a.reset_receipts).read_text()).get("types") or {}
+            resign = {k: v for k, v in RF.compare(RF.forms(_plan, sorted(_sc) if _sc is not None else None), _rc).items() if v["verdict"] != "SAME"}
+            f += ["LIST " + RF.line(k, v) for k, v in sorted(resign.items())]
+        except Exception as e:  # noqa: BLE001 a receipt file that cannot be read is named, never silently skipped
+            f.append(f"FAIL RESET-RECEIPT-UNCHECKED {type(e).__name__}: {str(e)[:200]}")
     lst = [x for x in f if x.startswith("LIST ")]
     fails = [x for x in f if x.startswith("FAIL ")]
     warns = [x for x in f if x.startswith("WARN ")]
@@ -3816,7 +3875,10 @@ def main(argv=None):
           + (f" advisories={len(adv)}" if adv else "")
           + (f" base={a.base} inherited={len(pdiff['inherited'])} gone={len(pdiff['gone'])}" if pdiff is not None else ""))
     if a.json:
-        rec = {"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv, "pre_record": prec}
+        rec = {"tree": a.tree, "plan": a.plan, "plan_sha256": prec["plan_sha256"], "result": prec["result"], "findings": fails,
+               "advisories": adv, "pre_record": prec, "reset_forms": prec["reset_forms"],
+               "reset_receipt": {"resign_required": sorted(k for k, v in resign.items() if v["verdict"] == "RE-SIGN-REQUIRED"),
+                                 "no_receipt": sorted(k for k, v in resign.items() if v["verdict"] == "NO-RECEIPT")}}
         if pdiff is not None:
             rec.update(base=a.base, inherited=pdiff["inherited"], gone=pdiff["gone"], changed=pdiff["changed"])
         Path(a.json).write_text(json.dumps(rec, indent=1) + "\n")

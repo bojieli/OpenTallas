@@ -315,7 +315,10 @@ def main(argv=None):
     sm.update(plan=str(a.plan), rtl=a.rtl, landings=a.landings, modules=src, mode="gen", fixed_in_core=sm_fixed,
               built_only=dict(lanes=len(unbuilt), cycles=sum(r["unbuilt_stations"] for r in unbuilt)))
     if a.json:
-        Path(a.json).write_text(json.dumps(dict(summary=sm, lanes=recs, errors=errs), indent=1) + "\n")
+        import hashlib   # P-FALSE-GREEN-1126: the LATCHECK json names the plan (and base plan) it judged
+        _sha = lambda f: hashlib.sha256(Path(f).read_bytes()).hexdigest() if f else None
+        Path(a.json).write_text(json.dumps(dict(plan_sha256=_sha(a.plan), base_plan_sha256=_sha(a.base_plan), summary=sm, lanes=recs,
+                                                errors=errs), indent=1) + "\n")
     if a.tsv:
         with open(a.tsv, "w") as f:
             f.write("lane\tsrc\tsrc_type\tbus_out\tdst\tdst_type\tbus_in\ttable\tdelivered\tdelta\tft\tlanding\tverdict\tclass\n")

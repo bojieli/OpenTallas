@@ -1803,8 +1803,10 @@ def check_reset(P, R):
     if info is None:
         return dict(release=P.reset.get("release", "counted"))
     if info.get("release") == "wavefront":     # OWNER DECISION 13: per-partition release offsets (reset_tree.py offsets)
-        return {k: info[k] for k in ("release", "sync_stages", "root", "hop_um", "relay_um", "max_release",
-                                     "max_die_hop_um", "unreachable")}
+        import head_native_release as HNR
+        return {**{k: info[k] for k in ("release", "sync_stages", "root", "hop_um", "relay_um", "max_release",
+                                        "max_die_hop_um", "unreachable")},
+                "native_release": HNR.status(info.get("release_qualification"))}
     return dict(release=info["release"], part_depth_K=info["part_depth_K"], relay_um=info["relay_um"],
                 regions=[{k: v for k, v in r.items() if k not in ("nonuniform_types", "busiest_hosts")}
                          for r in info["regions"]])
@@ -2948,6 +2950,15 @@ def g0c_summary(P, R):
                 g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
 
 
+def _file_sha(path):
+    """sha256 of the plan file a report judged (None when the file is not readable, e.g. a plan loaded through a stub)"""
+    import hashlib
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
 def find_native_reset_receipt(P, repo_root=None):
     """HEAD-DIE-R 11-16 (COORD): every G0 of a plan picks up the native reset release receipt bound to THAT plan, so no
     caller has to remember --native-reset-receipt.  Looks in <root>/results/*/native_release_receipt.json (root =
@@ -3236,7 +3247,9 @@ def main(argv=None):
                 or (i["check"] == "landing_band_core" and i["level"] == "WARN"))   # inherited band overlaps never fail --strict   # advisory: not a --strict failure
     ok = ne == 0 and not (a.strict and nw - n_adv)
     verdict = ("PENDING-VIEW" if npv else "PASS") if ok else "FAIL"   # PENDING-VIEW is never PASS
-    rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict=verdict, pending_view=npv,
+    rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()),
+               plan_sha256=_file_sha(a.plan),     # P-FALSE-GREEN-1126: the plan file this verdict judged
+               verdict=verdict, pending_view=npv,
                mode="G0C" if a.completeness else "G0",
                errors=ne, warnings=nw, summary=summ, findings=R.items)
     (out / "g0_report.json").write_text(json.dumps(rep, indent=1) + "\n")

@@ -59,6 +59,10 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
     if str(here) not in sys.path:
         sys.path.insert(0, str(here))
     types = (raw or {}).get("partition_types") or {}
+    rp = ((raw or {}).get("reset") or {}).get("root_part")
+    if rp and rp not in {x.get("name") for x in (raw or {}).get("partitions") or [] if isinstance(x, dict)}:
+        # P-FALSE-GREEN-1126: a scoped view dropped the reset root partition; the tree solve would die with KeyError (sp5)
+        raise KeyError(f"reset.root_part {rp!r} is not a partition of this plan view: run RESET-NAME on the whole plan (OT_ADV_RESETNAME_TYPES limits the types)")
     only = set(filter(None, os.environ.get("OT_ADV_RESETNAME_TYPES", "").split(",")))
     todo = [(tn, r) for tn, t in sorted(types.items()) if isinstance(t, dict) and not t.get("hard")
             and (not only or tn in only) for r in [refs(t)] if r]
