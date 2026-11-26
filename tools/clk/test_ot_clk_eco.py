@@ -52,3 +52,11 @@ def test_eco_uses_the_kit_body_site_map(tmp_path):
     c["extra_argv"] += ["--clock-body-sites"]
     a1 = O.eco_argv(c, tmp_path / "kit", None, None, "/p", "/t/die_trial.py")
     assert "--body-sites" in a1
+
+
+def test_eco_loop_keys_argv(tmp_path):
+    c = cfg(base_tree="/b", keep_attach="/r/rep.json", redo=["p:clk_t1", "q:clk_c0"], core_target_tapoff=True,
+            core_tol_ps=42, no_feed_hang=True, max_added_kids=2, near_um=2)
+    a = O.eco_argv(c, tmp_path / "kit", None, None, "/p", "/t/die_trial.py")
+    assert a[a.index("--keep-attach") + 1] == "/r/rep.json" and a[a.index("--redo") + 1] == "p:clk_t1,q:clk_c0"
+    assert "--core-target-tapoff" in a and "--no-feed-hang" in a and a[a.index("--max-added-kids") + 1] == "2"

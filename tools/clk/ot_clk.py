@@ -460,7 +460,8 @@ def eco_tree_path(kit_out):
 
 
 ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "match_um", "plan_root", "calib", "balance_types", "max_attach_leg_um",
-            "balance_ps"}
+            "balance_ps", "near_um", "keep_attach", "redo", "core_target_tapoff", "core_tol_ps", "no_feed_hang",
+            "max_added_kids"}
 
 
 def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
@@ -490,9 +491,17 @@ def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     if er:                                     # same model-ps ratio die_trial's DME early sinks use (--region-dme-early)
         a += ["--early-ratio", _fmt(er)]
     for k, f in (("max_leaf_leg_um", "--max-leaf-leg-um"), ("lift_tol_ps", "--lift-tol-ps"), ("match_um", "--match-um"),
-                 ("balance_ps", "--balance-ps"), ("max_attach_leg_um", "--max-attach-leg-um")):
+                 ("balance_ps", "--balance-ps"), ("max_attach_leg_um", "--max-attach-leg-um"), ("near_um", "--near-um"),
+                 ("core_tol_ps", "--core-tol-ps"), ("max_added_kids", "--max-added-kids")):
         if e.get(k) is not None:
             a += [f, _fmt(e[k])]
+    if e.get("keep_attach"):                   # ECO loop: re-take a previous run's attaches, redo only the listed taps
+        a += ["--keep-attach", str(e["keep_attach"])]
+    if e.get("redo"):
+        a += ["--redo", ",".join(e["redo"] if isinstance(e["redo"], list) else [e["redo"]])]
+    for k, f in (("core_target_tapoff", "--core-target-tapoff"), ("no_feed_hang", "--no-feed-hang")):
+        if e.get(k):
+            a += [f]
     if e.get("calib"):                         # closed loop: a previous routed eco run dir (tree_eco --calib)
         a += ["--calib", str(e["calib"])]
     bt = e.get("balance_types") or []

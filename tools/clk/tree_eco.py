@@ -260,9 +260,16 @@ def keep_interval(v0, p, ks):
 
 def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None, match_um=0.05, max_leaf_leg_um=2.0,
         resite_types=(), lift_tol_ps=1.0, nrep_fn=None, target="local", k_local=4, early=None, calib=None,
-        balance_types=(), balance_ps=None, max_attach_leg_um=None):
+        balance_types=(), balance_ps=None, max_attach_leg_um=None, near_um=0.0, keep=None, redo=(), core_off=None,
+        core_tol_ps=None, no_feed_hang=False, max_added_kids=None, core_reach_um=1500.0):
     """base: tree.json dict; cur_taps [(part, port, x, y)]; site: object with legal(q) / nearest(q); part_region {part: region}.
     calib: None or dict(node={id: routed ps}, tap={(part, port): routed ps}, leg=(c0, c1)) (load_calib).
+    near_um: an unmatched tap within near_um of a gone base tap (any part) keeps that leaf, slid onto it (NEAR pass).
+    keep {(part, port): {how, parent, node}} (a previous run's report "attached"): those taps are attached exactly as
+    before unless listed in redo [(part, port)] (the local ECO loop: only the listed taps change).
+    core_off {(part, port): planned offset ps vs the part glue median}: core taps target it; a site-matched core tap
+    more than core_tol_ps off it is detached and re-attached.  no_feed_hang: feed-trunk nodes take no hang;
+    max_added_kids: at most that many new kids per node, and none on a node driving a core-tap leaf.
     -> (tree.json dict, report dict).  Pure: base is not modified."""
     nodes = {int(k): json.loads(json.dumps(v)) for k, v in base["nodes"].items()}
     btaps = base["taps"]
@@ -270,6 +277,17 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     arr0 = arrivals(nodes, model)
     reg = region_of_nodes(nodes)
     matched, unm, gone = match_taps(btaps, cur_taps, match_um)
+    slid = {}
+    if near_um and near_um > match_um:     # NEAR: a tap moved less than near_um keeps its own (gone) base leaf
+        gset = set(gone)
+        for ci in list(unm):
+            x, y = cur_taps[ci][2:4]
+            rg = part_region.get(cur_taps[ci][0])     # same region only: a gone leaf of another region's branch
+            best = min(((man(btaps[k]["xy"], (x, y)), k) for k in gset      # routes that region's latency (HEAD
+                        if part_region.get(btaps[k]["part"]) == rg), default=None)   # eco10A lep0N_w t6 on nst4 +250)
+            if best is not None and best[0] <= near_um:
+                gset.discard(best[1]); unm.remove(ci); matched[ci] = best[1]; slid[ci] = best[1]
+        gone = [k for k in gone if k in gset]
     base_arr = {k: arr0[t["node"]] + model.tap(man(t["xy"], (nodes[t["node"]]["x"], nodes[t["node"]]["y"])))
                 for k, t in enumerate(btaps)}
     c0, c1 = 0.0, 1.0
@@ -333,11 +351,32 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
             return None
         near = sorted(g, key=lambda q: man(q[:2], xy))[:k_local]
         return statistics.median(q[2] for q in near)
+    core_moved = []
+    if core_off and core_tol_ps is not None:
+        for ci, k in list(matched.items()):
+            p, port = cur_taps[ci][:2]
+            if (p, port) in core_off and p in med:
+                d = base_arr[k] - (med[p] + core_off[(p, port)])
+                if abs(d) > core_tol_ps:
+                    core_moved.append((ci, k, round(d, 1)))
+        for ci, k, _ in core_moved:
+            del matched[ci]
+            slid.pop(ci, None)
+            unm.append(ci)
+            gone.append(k)
+    core_ci = {ci for ci, _, _ in core_moved}
     new_taps = []                 # [(part, port, x, y, node)]
     for ci, k in matched.items():
         p, port, x, y = cur_taps[ci]
         new_taps.append([p, port, x, y, btaps[k]["node"]])
         nodes[btaps[k]["node"]]["_ntap"] = 1
+    for ci, k in slid.items():           # the leaf moves onto its tap's new site and re-lays its leg
+        v = nodes[btaps[k]["node"]]
+        q = cur_taps[ci][2:4]
+        q = q if site.legal(q) else site.nearest(q)
+        v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
+        v["req_xy"] = [v["x"], v["y"]]
+        drop_chain(v)
     free = defaultdict(list)      # part -> freed leaf ids
     for k in gone:
         t = btaps[k]
@@ -352,7 +391,9 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     for ci in unm:
         p, port, x, y = cur_taps[ci]
         kb = base_by_name.get((p, port))
-        if port.startswith("clk_c") and kb is not None:
+        if core_off and (p, port) in core_off and p in med:
+            tgt = med[p] + core_off[(p, port)]
+        elif port.startswith("clk_c") and kb is not None:
             tgt = base_arr[kb]
         elif port.startswith("clk_c"):   # a core tap new to the tree: its glue neighbourhood minus the plan's early delivery
             tgt = (local_target(p, (x, y)) if target == "local" else None)
@@ -364,33 +405,74 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
             tgt = (local_target(p, (x, y)) if target == "local" else None)
             if tgt is None:
                 tgt = med.get(p, rmed.get(part_region.get(p)))
-        kind = "balance" if ci in bal_ci else "moved" if kb is not None else "new"
+        kind = "core" if ci in core_ci else "balance" if ci in bal_ci else "moved" if kb is not None else "new"
         work.append(dict(ci=ci, part=p, port=port, xy=(x, y), target=tgt, kind=kind,
                          region=part_region.get(p)))
     att = []
     used_free = set()
     pending = list(work)
-    while pending:
-        best = None
-        for w in pending:
+    added = defaultdict(int)
+    core_par = {nodes[t["node"]].get("parent") for t in btaps if t["tap"].startswith("clk_c") and t["node"] in nodes}
+    redo = set(map(tuple, redo or ()))
+    forced = []
+    for w in list(pending) if keep else ():            # the ECO loop: a kept tap re-takes its previous attach exactly
+        kp = keep.get((w["part"], w["port"]))
+        if not kp or (w["part"], w["port"]) in redo:
+            continue
+        q = site.nearest(w["xy"]) if not site.legal(w["xy"]) else w["xy"]
+        dtap = man(q, w["xy"])
+        if kp["how"] == "reuse" and kp["node"] in nodes and kp["node"] not in used_free and \
+                any(kp["node"] in l for l in free.values()):
+            pa = nodes[kp["node"]]["parent"]
+            a = arr0[pa] + newleg(model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap))
+            o = (0.0, "reuse", kp["node"], pa, a)
+        elif kp["how"] == "hang" and kp["parent"] in nodes and nodes[kp["parent"]].get("kids") is not None:
+            cv = nodes[kp["parent"]]
+            a = arr0[kp["parent"]] + newleg(model.leg(man((cv["x"], cv["y"]), q)) + model.kf + model.tap(dtap))
+            o = (0.0, "hang", None, kp["parent"], a)
+        else:
+            continue
+        forced.append((w, o, q))
+        pending.remove(w)
+    all_internal = [i for v in internal.values() for i in v]
+    free_by_region = defaultdict(list)
+    for prt, lst in free.items():
+        free_by_region[part_region.get(prt)].extend(lst)
+    queue = list(forced)
+    while pending or queue:
+        if queue:
+            w, o, q = queue.pop(0)
+            best = (w, o, q)
+            pending.append(w)          # removed again below
+        else:
+            best = None
+        for w in (pending if best is None else ()):
             q = site.nearest(w["xy"]) if not site.legal(w["xy"]) else w["xy"]
             dtap = man(q, w["xy"])
             opts, long_ = [], []
-            for lf in free.get(w["part"], ()):
+            for lf in free_by_region.get(w["region"], ()):   # any part of the region (FABLE eco7 #2: a split part)
                 if lf in used_free:
                     continue
                 pa = nodes[lf]["parent"]
                 long_.append(max_attach_leg_um is not None and man((nodes[pa]["x"], nodes[pa]["y"]), q) > max_attach_leg_um)
                 a = arr0[pa] + newleg(model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap))
                 opts.append((abs(a - w["target"]) if w["target"] is not None else 0.0, "reuse", lf, pa, a))
-            for c in internal.get(w["region"], ()):
+            is_core = w["kind"] == "core"
+            # a core tap planned EARLY needs an upstream branch: any internal node of the die within core_reach_um
+            # (a buffered leg isolates the trunk; one added inverter load), no fan-out-under penalty, no soft cap
+            cands = all_internal if is_core else internal.get(w["region"], ())
+            for c in cands:
                 cv = nodes[c]
+                if no_feed_hang and cv.get("feed") and not is_core:
+                    continue               # a feed trunk serves whole downstream regions (FABLE eco7 #5)
+                if max_added_kids is not None and (added[c] >= max_added_kids or c in core_par):
+                    continue               # no fan-out stacking, no load on a core-tap driver (FABLE eco7 #6)
                 L = man((cv["x"], cv["y"]), q)
-                if L > 4 * model.rep:
+                if L > (core_reach_um if is_core else 4 * model.rep):
                     continue
-                long_.append(max_attach_leg_um is not None and L > max_attach_leg_um)
+                long_.append(max_attach_leg_um is not None and L > max_attach_leg_um and not is_core)
                 a = arr0[c] + newleg(model.leg(L) + model.kf + model.tap(dtap))
-                pen = model.kf + 0.05 * model.kf * ntap_under.get(c, 0)
+                pen = model.kf + (0.0 if is_core else 0.05 * model.kf * ntap_under.get(c, 0))
                 opts.append(((abs(a - w["target"]) if w["target"] is not None else 0.0) + pen, "hang", None, c, a))
             if any(not x for x in long_):  # soft cap: a long re-laid leg routes far slower than the stage model (HEAD W9
                 opts = [o for o, x in zip(opts, long_) if not x]   # eco7: 240-280 um legs +70 ps); only when nothing shorter
@@ -420,6 +502,7 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                               inv_parity=cv.get("inv_parity", 0), ntaps=1, _ntap=1, eco="hang", _relaid=True,
                               **({"dme": cv["dme"]} if cv.get("dme") else {}))
             cv["kids"] = list(cv["kids"]) + [nid]
+            added[pa] += 1
         p, port, x, y = cur_taps[w["ci"]]
         new_taps.append([p, port, x, y, nid])
         att.append(dict(part=p, port=port, kind=w["kind"], how=how, node=nid, parent=pa, target_ps=None if w["target"] is None else round(w["target"], 1),
@@ -504,12 +587,16 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     rep = dict(counts=dict(current=len(cur_taps), base=len(btaps), matched=len(matched), unmatched=len(unm), gone=len(gone),
                            attached={k: dict(v) for k, v in kinds.items()}, unplaced=len(unplaced), pruned=len(removed),
                            resited_leaves=len(resite), lifted=len(lifted), relaid_legs=relaid, parity_set=flipped,
-                           balanced=len(balanced)),
+                           balanced=len(balanced), slid=len(slid), core_detached=len(core_moved), forced=len(forced)),
                attach_err_ps=dict(n=len(errs), max=round(max(errs), 1) if errs else None,
                                   p95=round(sorted(errs)[int(0.95 * (len(errs) - 1))], 1) if errs else None),
                attached=att, unplaced=unplaced, resite=resite, lifted=lifted,
                calib=None if not calib else dict(leg=[round(c0, 3), round(c1, 3)], nodes=len(calib["node"]), taps=len(calib.get("tap", {}))),
-               balanced=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], dev_ps=d) for ci, _, d in balanced])
+               balanced=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], dev_ps=d) for ci, _, d in balanced],
+               slid=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], moved_um=round(man(btaps[k]["xy"], cur_taps[ci][2:4]), 3))
+                     for ci, k in slid.items()],
+               core_detached=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], off_ps=d) for ci, _, d in core_moved],
+               forced=len(forced), redo=sorted(map(list, redo)))
     return tree, rep
 
 
@@ -580,6 +667,15 @@ def main(argv=None):
     ap.add_argument("--balance-ps", type=float, default=20.0)
     ap.add_argument("--max-attach-leg-um", type=float, default=None,
                     help="soft cap: an attach lays a new leg longer than this only when no shorter option exists (hang always <= 4 x rep)")
+    ap.add_argument("--near-um", type=float, default=0.0, help="NEAR pass: a tap moved <= this keeps its own leaf, slid")
+    ap.add_argument("--keep-attach", help="previous run's TREE.json.report.json: re-take its attaches exactly (ECO loop)")
+    ap.add_argument("--redo", default="", help="part:port,.. re-attached afresh despite --keep-attach")
+    ap.add_argument("--core-target-tapoff", action="store_true",
+                    help="core taps target the plan clock.tap_offset per_port TT value (vs the part glue median)")
+    ap.add_argument("--core-tol-ps", type=float, default=None, help="detach a site-matched core tap this far off its target")
+    ap.add_argument("--no-feed-hang", action="store_true")
+    ap.add_argument("--core-reach-um", type=float, default=1500.0, help="a re-attached core tap may hang this far upstream")
+    ap.add_argument("--max-added-kids", type=int, default=None)
     ap.add_argument("--body-sites", action="store_true", help="site map on native cell bodies (the kit runs with "
                     "--region-dme-actual-max or --clock-body-sites)")
     ap.add_argument("--tools", default=str(DIE_PLAN), help="die_plan tool dir whose die_trial/schema read the plan (a launch "
@@ -622,13 +718,27 @@ def main(argv=None):
             if e > 0:                 # --calib attaches on routed ps: the plan's early as is
                 early[(n, port)] = e / (1.0 if a.calib else float(a.early_ratio))
 
+    core_off = None
+    if a.core_target_tapoff:              # the plan's own core-tap contract (tap_offset per_port TT, vs glue median)
+        tab = ((P.raw if hasattr(P, "raw") else S.load(a.plan)).get("clock", {}).get("tap_offset", {}) or {}).get("per_port_ps", {})
+        core_off = {}
+        for n, p in P.parts.items():
+            for port, v in (tab.get(p["type"]) or {}).items():
+                if port.startswith("clk_c") and isinstance(v, dict) and v.get("TT") is not None:
+                    core_off[(n, port)] = float(v["TT"])
+
     def nrep_fn(p, v):            # the kit's own leg layout (die_trial._leg_layout), as clksite_stamp_native.fix_parity
         return D._leg_layout(0, dict(v, physical_leg=None), p, site, a.rep_um, False)[1]
     tree, rep = eco(base, cur, site, model, pr, ptype, pbox, a.match_um, a.max_leaf_leg_um,
                     [t for t in a.resite_types.split(",") if t], a.lift_tol_ps, nrep_fn, a.target, early=early,
                     calib=load_calib(a.calib, model) if a.calib else None,
                     balance_types=[t for t in a.balance_types.split(",") if t], balance_ps=a.balance_ps,
-                    max_attach_leg_um=a.max_attach_leg_um)
+                    max_attach_leg_um=a.max_attach_leg_um, near_um=a.near_um,
+                    keep=({(x["part"], x["port"]): x for x in json.loads(Path(a.keep_attach).read_text())["attached"]}
+                          if a.keep_attach else None),
+                    redo=[tuple(r.split(":", 1)) for r in a.redo.split(",") if r],
+                    core_off=core_off, core_tol_ps=a.core_tol_ps, no_feed_hang=a.no_feed_hang,
+                    max_added_kids=a.max_added_kids, core_reach_um=a.core_reach_um)
     sha = lambda f: hashlib.sha256(Path(f).read_bytes()).hexdigest()
     tree["meta"]["eco"].update(base_tree=str(a.base_tree), base_tree_sha256=sha(a.base_tree), plan=str(a.plan),
                                plan_sha256=sha(a.plan))

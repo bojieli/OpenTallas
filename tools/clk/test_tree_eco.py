@@ -188,3 +188,58 @@ def test_max_attach_leg_caps_reuse_and_hang():
     _, r2 = E.eco(b, cur2, Site(), M, {"a": "r"}, max_attach_leg_um=100.0)
     a9 = [x for x in r2["attached"] if x["port"] == "clk_t9"][0]
     assert a9["parent"] == 1 or a9["how"] == "hang"          # a short option exists: the 300 um reuse is not taken for it
+
+
+def test_near_pass_slides_own_leaf():
+    b = base_tree()
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.5, 0.0), ("a", "clk_t3", 100.0, -50.0)]
+    t, r = E.eco(b, cur, Site(), M, {"a": "r"}, near_um=2.0)
+    assert r["counts"]["slid"] == 1 and r["counts"]["unmatched"] == 0 and not r["attached"]
+    assert (t["nodes"]["3"]["x"], t["nodes"]["3"]["y"]) == (150.5, 0.0)
+
+
+def test_keep_reproduces_and_redo_changes_only_listed():
+    b = base_tree()
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_t3", 100.0, -50.0),
+           ("a", "clk_t4", 60.0, 0.0), ("a", "clk_t5", 140.0, 30.0)]
+    _, r0 = E.eco(b, cur, Site(), M, {"a": "r"})
+    keep = {(x["part"], x["port"]): x for x in r0["attached"]}
+    _, r1 = E.eco(b, cur, Site(), M, {"a": "r"}, keep=keep)
+    assert r1["counts"]["forced"] == 2
+    assert {x["port"]: (x["how"], x["parent"]) for x in r1["attached"]} == {x["port"]: (x["how"], x["parent"]) for x in r0["attached"]}
+    _, r2 = E.eco(b, cur, Site(), M, {"a": "r"}, keep=keep, redo=[("a", "clk_t5")])
+    assert r2["counts"]["forced"] == 1 and r2["redo"] == [["a", "clk_t5"]]
+
+
+def test_core_tap_detached_to_plan_offset_and_no_feed_hang():
+    b = base_tree()
+    b["nodes"]["1"]["feed"] = True
+    b["taps"][2]["tap"] = "clk_c0"; b["taps"][2]["port"] = "t_a__clk_c0"
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_c0", 100.0, -50.0)]
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, core_off={("a", "clk_c0"): -30.0}, core_tol_ps=10.0, no_feed_hang=True)
+    assert [x["port"] for x in r["core_detached"]] == ["clk_c0"]
+    a = r["attached"][0]
+    assert a["kind"] == "core" and a["target_ps"] == 20.0              # glue 50 - 30
+    assert a["how"] == "reuse" or a["parent"] != 1                     # never a new hang on feed node 1
+
+
+def test_core_tap_reaches_upstream_for_early():
+    b = base_tree()
+    b["taps"][2]["tap"] = "clk_c0"; b["taps"][2]["port"] = "t_a__clk_c0"
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t2", 150.0, 0.0), ("a", "clk_c0", 100.0, -50.0)]
+    # glue arrive at 50; the plan wants the core tap 40 ps early; node 1 drives the core leaf (no hang there):
+    # the core tap takes the best of reusing its own leaf or hanging on the root, never worse than the reuse
+    _, r = E.eco(b, cur, Site(), M, {"a": "r"}, core_off={("a", "clk_c0"): -40.0}, core_tol_ps=5.0, max_added_kids=2)
+    a = r["attached"][0]
+    _, r0 = E.eco(b, cur, Site(), M, {"a": "r"}, core_off={("a", "clk_c0"): -40.0}, core_tol_ps=5.0, max_added_kids=2,
+                  core_reach_um=0.0)
+    assert a["kind"] == "core" and abs(a["err_ps"]) <= abs(r0["attached"][0]["err_ps"]) + 1e-9
+    assert r0["attached"][0]["how"] == "reuse"
+
+
+def test_near_pass_same_region_only():
+    b = base_tree()
+    b["taps"][1]["part"] = "z"; b["taps"][1]["port"] = "t_z__clk_t2"     # base leaf 3 belonged to region s
+    cur = [("a", "clk_t1", 100.0, 50.0), ("a", "clk_t9", 150.5, 0.0), ("a", "clk_t3", 100.0, -50.0)]
+    _, r = E.eco(b, cur, Site(), M, {"a": "r", "z": "s"}, near_um=2.0)
+    assert r["counts"]["slid"] == 0
