@@ -139,19 +139,20 @@ def thaw(ex):
     return {k: [t(i) for i in items] for k, items in ex.items()}
 
 
-def check_type(kit, ex):
+def check_type(kit, ex, die=""):
     """-> list of (op_class, expected_n, found_n, detail).  Pure file reads of the kit dir."""
     out = []
     ct = read(os.path.join(kit, "clock_taps.tcl"))
     ist = read(os.path.join(kit, "istations.tcl"))
     # 1. kit-original source lines of clock_taps.tcl (the two known silent undos)
-    want = ["/work/vpw_bank_clock.tcl"]
+    want = ["/work/vpw_bank_clock.tcl"] if die.upper() == "S81" else []  # the VPW bank record is an S81-only kit-original line
     for extra in ("landing_exports.tcl", "phy_clock_export_source.tcl"):
         if os.path.exists(os.path.join(kit, extra)) or os.path.exists(os.path.join(kit, "..", "..", extra)):
             want.append("/work/" + extra)
     have = set(SRC_RE.findall(ct)) | {w for w in want if w in ct}
     miss = [w for w in want if w not in have]
-    out.append(("clock_taps_source", len(want), len(want) - len(miss), "missing " + ",".join(miss) if miss else ""))
+    if want:
+        out.append(("clock_taps_source", len(want), len(want) - len(miss), "missing " + ",".join(miss) if miss else ""))
     # 2. taps: plan clock.taps vs the kit's budget.json clock.taps (name + xy)
     try:
         kt = {(t["name"], tuple(t["xy"])) for t in json.load(open(os.path.join(kit, "budget.json")))["clock"]["taps"]}
@@ -196,21 +197,23 @@ def audit(scopes, plan_types, kits, kit_filter=None):
             if k is None or k[0] < sc["adopted_epoch"]:
                 for oc, items in ex.items():
                     rows.append(_row(sc, t, oc, len(items), 0, NOT_YET, 0, "", k, "no kit" if k is None else "kit older than scope"))
-                rows.append(_row(sc, t, "clock_taps_source", 1, 0, NOT_YET, 0, "", k, "no kit" if k is None else "kit older than scope"))
+                if sc.get("die", "").upper() == "S81":
+                    rows.append(_row(sc, t, "clock_taps_source", 1, 0, NOT_YET, 0, "", k, "no kit" if k is None else "kit older than scope"))
                 continue
             kp = kit_plan_sha(k[1])
             stale = int(bool(kp) and kp != sc["base_sha"][:12])
-            for oc, n, f, detail in check_type(k[1], ex):
+            for oc, n, f, detail in check_type(k[1], ex, sc.get("die", "")):
                 if n == 0:
                     continue
                 rows.append(_row(sc, t, oc, n, f, LANDED if f == n else NOT_LANDED, stale, kp, k, detail, placed(k[1])))
     return rows
 
 
-def _row(sc, t, oc, n, f, status, stale, kp, k, detail, pl=0):
+def _row(sc, t, oc, n, f, status, stale, kp, k, detail, pl=0):  # noqa: C901
     return {"scope_id": sc["scope_id"], "die": sc["die"], "type": t, "op_class": oc, "expected": n, "found": f, "status": status,
             "stale_base": stale, "placed": pl, "kit": k[1] if k else "", "kit_mtime": int(k[0]) if k else "",
-            "scope_epoch": int(sc["adopted_epoch"]), "detail": (detail + (f" kit_plan={kp}" if kp else "")).strip()}
+            "scope_epoch": int(sc["adopted_epoch"]), "detail": (detail + (f" kit_plan={kp}" if kp else "") +
+                                                                       (" [kit built on another plan than the scope base]" if stale else "")).strip()}
 
 
 def load_scopes(a, plan_types):

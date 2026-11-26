@@ -51,6 +51,13 @@ def test_kit_older_than_scope_not_yet_built(tmp_path):
     assert {r["status"] for r in fl.audit(_scope(1000), {"t": ENTRY}, {})} == {fl.NOT_YET}
 
 
+def test_vpw_source_is_s81_only(tmp_path):
+    _kit(tmp_path, "t", [], 2000, src=False)
+    sc = _scope(1000)
+    sc[0]["die"] = "HEAD"
+    assert "clock_taps_source" not in _status(fl.audit(sc, {"t": ENTRY}, fl.find_kits([str(tmp_path)])))
+
+
 def test_stale_base_flag(tmp_path):
     k = _kit(tmp_path, "t", [{"name": "clk", "xy": [1.5, 2.5]}], 2000)
     (k / "budget.json").write_text(json.dumps({"clock": {"taps": []}, "io_hold": {"plan_sha256": "ffff" * 16}}))
