@@ -38,7 +38,8 @@ Steps (each timed in ROW-READY.seconds):
 --cow runs a terminal scoped gate against an immutable sealed source in a
 private kernel overlay. The normal plan, changed tables, binding reports and
 ROW-READY receipt remain. A materialized tree for publishing requires the
-ordinary fork.
+ordinary fork. The existing OT_BIND_YOSYS setting must name an approved
+namespace-local executable on the host.
 
 The bind env is the die's (coord autopilot/kit_wave.json dies[DIE] die_gen_env + bind_env, read on the hub), overridden by --env.
 Outside an ot-run job the command re-runs itself under `ot-run --die --mem GB --dir TREE` (the die slice); --local runs here.
@@ -397,6 +398,11 @@ def gate(a):
     t0 = time.time()
     tree, L = out / "tree", out / "launch"
     if getattr(a, "cow", False):
+        yosys = base_env.get("OT_BIND_YOSYS")
+        if not yosys or not shutil.which(yosys, path=base_env.get("PATH")):
+            done("NOT", "copy-on-write needs an explicit executable OT_BIND_YOSYS pin; "
+                        "the Docker daemon cannot see this private tree")
+            return finish()
         try:
             if not COW.mounted(out):
                 raise ValueError("copy-on-write requires the private overlay")
