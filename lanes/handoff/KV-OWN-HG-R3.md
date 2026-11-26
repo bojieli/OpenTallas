@@ -20,3 +20,7 @@
 8 check head1_e1 orientation.
 9 405k instances: split per head or cut stations (decide after station count from items 1/7).
 Method: read the review text from FP-CONVERGE-KV, write one delta on A5t9 base, PRE + strict bind, then compose with SITE-OFF-OUTLINE pull. Core moves/rotates/re-shapes are pre-approved.
+
+## RESUMED 11-25 evening: base is now A5t9 R6 (plan 1cca73462c27, tree epyc12 kv-allfix/pub/kv_a5t9_r6_rel_tree_1125, plan_a5t9_r6_publish_1125.json)
+- Checked: 0 internal_stations regs_um outside the outline in all 11 hg/hg_v1* types -> the SITE-OFF-OUTLINE 0.3 um pull row is NOT needed (R6 repaired it). CLOSED.
+- Remaining A5t9-follow-on rows (still open, rebase on R6): HG-REFLOOR-EXROW (9 Fable hg_v1p5 items), CENTRE-STATIONS, LANDING-OFF-STREETS, HEAD-WLAND-SPLIT, HG-V1P5-CTS-REGRESS, hgi bin re-seat, WESTLAND5. Next: write HG-REFLOOR-EXROW delta on R6 for hg_v1p5 + siblings, PRE, strict bind.
