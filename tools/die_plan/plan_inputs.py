@@ -27,7 +27,7 @@ def set_roots(roots):
     ROOTS[:] = [Path(r) for r in (roots or []) if r]
 
 
-def dirs(P):
+def dirs(P, *, include_tree=True):
     """ordered, de-duplicated folders a relative plan input is looked up in"""
     out = []
     path = getattr(P, "path", None)
@@ -39,7 +39,8 @@ def dirs(P):
     own = raw.get("plan_root") if isinstance(raw, dict) else None
     if own:
         out += [Path(r) for r in ([own] if isinstance(own, str) else own)]
-    out.append(TREE_ROOT)
+    if include_tree:
+        out.append(TREE_ROOT)
     seen, res = set(), []
     for d in out:
         k = str(d)
