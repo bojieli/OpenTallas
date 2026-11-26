@@ -1,7 +1,5 @@
 {
- "advisory": [
-  "pre_g0"
- ],
+ "advisory": [],
  "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
  "checks": {
   "bound_params": {
@@ -19,17 +17,13 @@
    "gen_host": "epyc7",
    "item": "hd_lep0N",
    "kind": "type",
-   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/a942ab04bc71/hd_lep0N/published_gen_origin.json",
-   "origin_sha256": "70d1fb1095e9371af1676005ebc93dac3ad98cd7e3d43a638a4f51ca8faba2e2",
+   "origin_capture_error": "different origin already recorded; use a new jobdir",
    "preflight_fail_advisory": null,
-   "proof_kind": "published-gen",
+   "published_gen_import_declined": "original spec changed",
    "rc": 0,
    "result": "DRY-PASS",
-   "result_sha256": "03ecac37f11c532bbef7784d534f1790a14c633094033bcebd3906c87e59e74c",
-   "spec_sha256": "0b607ce0f0568c2d816eee39d68559a692a00faefaa61ac1cd19e83102c9addc",
    "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125",
    "stage": "preflight",
-   "unit_log_sha256": "906d0712dfa0debc2a548ca4a8b9d8fbbe58ec9a4828688fd32bcb4fac7c2fa2",
    "verdict": "PASS"
   },
   "foreign_tree": {
@@ -49,13 +43,13 @@
     "verdict": "PASS"
    },
    "g0_rc": 0,
-   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-ccngubys/g0_report.json",
-   "pre_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-_lb9l4cg/g0_report.json",
+   "pre_rc": 0,
    "reset_solved": false,
-   "tail": "PRE: LIST PRE-RECORD /srv/opentallas-scratch2/claude/.cache/pre-record/f6d1bf51c90d7438/738c1e68478c0dce.json plan_sha256 f6d1bf51c90d result FAIL\nPLAN-GATE-PRE FAIL tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125/physical/die_plan/s81_head/prep/NF15f/prep_r18w10_1125/source_plan.json findings=7 classes=SCHEMA\n\nG0: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "tail": "PRE: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n\nG0: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
    "tools": "rt",
-   "tools_dir": "/srv/opentallas-scratch2/claude/rt/c0f06dc00739/tools/die_plan",
-   "verdict": "FAIL"
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/cda4c246bbc8/tools/die_plan",
+   "verdict": "PASS"
   },
   "schema": {
    "rc": 0,
@@ -71,7 +65,7 @@
    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125/physical/die_plan/s81_head/prep/NF15f/prep_r18w10_1125/source_sidecar.json"
   ]
  },
- "gate_s": 502.6,
+ "gate_s": 542.8,
  "hosts": [
   "epyc7",
   "epyc8",
@@ -87,8 +81,8 @@
  "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125/physical/die_plan/s81_head/prep/NF15f/prep_r18w9_cut_1125/source_plan.json",
  "rows_proofs": [],
  "schema": "opentallas.publish_gate.v1",
- "static_s": 37.7,
- "t": 1795671648.3703923,
+ "static_s": 114.6,
+ "t": 1795673244.561494,
  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w10_1125",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
