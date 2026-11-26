@@ -79,6 +79,9 @@ def file_sha(path, host=None, image=False):
 
 def request(spec, plan_sha="", producer=None, overlay_sha=None):
     """Keep attempt directories, placement hosts, and route-only options out of the key."""
+    source_manifest = str(spec.get("src_manifest_hash") or "")
+    if spec.get("private") and not SHA.fullmatch(source_manifest):
+        raise ValueError("private plan review requires an exact sealed or verified source manifest SHA-256")
     plan = spec["plan"]
     plan_sha = plan_sha or file_sha(plan, producer)
     overlay = spec.get("type_overlay")
@@ -108,11 +111,11 @@ def request(spec, plan_sha="", producer=None, overlay_sha=None):
         "relay_bay_re": spec.get("relay_bay_re"), "canonical_topology_prepare": spec.get("canonical_topology_prepare"),
     })
     form = {"plan_sha256": plan_sha, "overlay_sha256": overlay_sha, "recipe": recipe,
-            "source": spec.get("src_manifest_hash") or spec.get("src_sha") or ""}
+            "source": source_manifest or spec.get("src_sha") or ""}
     fingerprint = hashlib.sha256(json.dumps(form, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     return {"die": spec["die"], "item": spec["item"], "plan": plan, "plan_sha256": plan_sha,
             "overlay": overlay, "overlay_sha256": overlay_sha, "gen_host": spec.get("gen_host"),
-            "form_sha256": fingerprint}
+            "source_manifest_sha256": source_manifest, "form_sha256": fingerprint}
 
 
 def verdict(text, candidate):

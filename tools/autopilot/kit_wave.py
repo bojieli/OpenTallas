@@ -10301,9 +10301,13 @@ def private_spec_cmd(a):
     _lw = private_lbl_refusal(sp, chain_goal_of(sp), hub, record=False)
     if _lw:                                               # LAUNCH-GUARD 11-23: run-item refuses this spec until its VIS row passes (a probe goal place / geom / grt runs)
         print(f"private-spec: LBL WARN {a.die}/{a.item}: run-item will refuse goal {sp['goal']}: {_lw}", file=sys.stderr)
-    plan_review = plan_visual_refusal(sp, out, hub)
-    if plan_review:
-        print(f"private-spec: {plan_review}", file=sys.stderr)
+    if PVR.applies(sp):
+        if PVR.SHA.fullmatch(str(sp.get("src_manifest_hash") or "")):
+            plan_review = plan_visual_refusal(sp, out, hub)
+        else:
+            plan_review = "run-item will verify or seal the exact source and request plan review before building"
+        if plan_review:
+            print(f"private-spec: {plan_review}", file=sys.stderr)
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
           + (f"{stop})" if stop else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
@@ -10947,6 +10951,23 @@ def legacy_plan_visual_form(rec, plan):
         return ""
 
 
+def private_plan_visual_policy(sp):
+    """Pick up the committed review requirement for private specs saved before rollout."""
+    if PVR.applies(sp) or not PVR.enabled(True, sp.get("die"), sp.get("item"), sp.get("kind", "type")):
+        return ""
+    import autopilot as AP
+    hub = sp.get("hub") or PRIVATE_HUB
+    try:
+        cfg = json.loads(private_config_text(AP, hub, read=None if hub == "localhost" else lambda _ap: ""))
+        if not isinstance(cfg, dict) or sp["die"] not in (cfg.get("dies") or {}):
+            raise ValueError(f"no {sp['die']} in the committed configuration")
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+        return f"WAIT-PLAN-VISUAL: cannot read current review policy from {hub}: {exc}"
+    if PVR.enabled(opt(cfg, sp["die"], "launch_plan_review_required"), sp["die"], sp["item"], sp.get("kind", "type")):
+        sp["launch_plan_review_required"] = True
+    return ""
+
+
 def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None):
     """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
     if not PVR.applies(sp):
@@ -10959,7 +10980,7 @@ def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=Tru
         plan_sha = plan_shas[plan_key] if plan_shas is not None else ""
         candidate = PVR.request(sp, plan_sha=plan_sha, producer=producer)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
-        return f"WAIT-PLAN-VISUAL: cannot resolve exact plan or overlay on {sp.get('gen_host')}: {e}"
+        return f"WAIT-PLAN-VISUAL: cannot resolve exact plan, source or overlay on {sp.get('gen_host')}: {e}"
     request_path = Path(out) / "plan_visual_request.json"
     try:
         verdict = PVR.verdict(PVR.read_ledger(hub) if ledger is None else ledger, candidate)
@@ -11127,7 +11148,7 @@ def _run_item(spec_path, resume_reviewed=False):
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
-    plan_review = "" if resume_reviewed else plan_visual_refusal(sp, out, hub)
+    plan_review = "" if (resume_reviewed or sp.get("private")) else plan_visual_refusal(sp, out, hub)
     if plan_review:
         print(f"KW_STAGE plan_visual {now_s()} :: {plan_review}", flush=True)
         res.update(stage="plan_visual", verdict="FAIL", cls="PLAN-VISUAL", tail=plan_review)
@@ -11631,6 +11652,9 @@ def _run_item(spec_path, resume_reviewed=False):
             resume_release(svc['kit'])
         return chain_after_geom(rc)
     if sp.get("private"):                                # FLOW-PROC-A ENV-PROVENANCE: a private spec built from an older die config is refused before gen
+        why = private_plan_visual_policy(sp)
+        if why:
+            return fail("plan_visual", why)
         why = private_spec_stale(sp)
         if why:
             return fail("private_spec", "ENV-PROVENANCE " + why)
@@ -11648,9 +11672,13 @@ def _run_item(spec_path, resume_reviewed=False):
             return _pg
     if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
         run("work_alt", idempotent=True, argv=remote(work_alt_cmd(W, sp["work_alt_lane"])))
-    rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
-    if rc:
-        return fail("mkdir", txt)
+    review_private_plan = bool(sp.get("private") and PVR.applies(sp))
+    mkdir = f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"
+    if not review_private_plan:
+        rc, txt = run("mkdir", idempotent=True, argv=remote(mkdir))
+        if rc:
+            return fail("mkdir", txt)
+    _seal = {}
     _smc = src_manifest_cmd(sp)                          # SRC-TREE-1115: refuse a src tree that drifted from its manifest, before any gen
     if _smc:
         _mrc, _mtxt = run("src_manifest", remote(_smc), idempotent=True)
@@ -11665,6 +11693,19 @@ def _run_item(spec_path, resume_reviewed=False):
             (out / "result.json").write_text(json.dumps(interim_record(res), indent=1))
         print("KW_SRC_MANIFEST ok " + next((ln for ln in (_mtxt or "").splitlines() if ln.startswith(("SRC_MANIFEST SEALED", "SRC_MANIFEST OK"))),
                                            (_mtxt or "")[-200:].strip())[:300], flush=True)
+    if review_private_plan:
+        # Bind review to the manifest this attempt actually verified or sealed, including fork edits.
+        # This runs after reattachment to a saved PLACE service and before fresh generation or PLACE.
+        reviewed_spec = dict(sp, src_manifest_hash=_seal.get("manifest_hash", ""))
+        plan_review = plan_visual_refusal(reviewed_spec, out, hub)
+        if plan_review:
+            print(f"KW_STAGE plan_visual {now_s()} :: {plan_review}", flush=True)
+            res["cls"] = "PLAN-VISUAL"
+            return fail("plan_visual", plan_review)
+        rc, txt = run("mkdir", idempotent=True, argv=remote(mkdir))
+        if rc:
+            return fail("mkdir", txt)
+
     def compose_rt():
         """the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there; -> fail result or None"""
         for _h in [G] + [h for h in roamer.others if h != G]:

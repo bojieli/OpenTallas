@@ -357,7 +357,8 @@ def kit_dir(lane, die, item):
 
 
 def run_kit(r, item, host, eff, rt_dir, a, kd, stream=None):
-    kw = f"{rt_dir}/tools/autopilot/kit_wave.py"
+    # Admission follows this controller. --rt still pins the binder and kit-generation tools.
+    kw = str(Path(__file__).resolve().with_name("kit_wave.py"))
     exp = swap_prefix((r.get("asbuilt") or ""), r["tree"], r["tree"])
     # the bind host names the tree by ITS real path (epyc2: scratch2 -> scratch3 alias): its paths inside the tree map back onto
     # this side's tree path before any comparison or hand-on (e2e defect D5, OPUS-PIPELINE-R2 11-22)

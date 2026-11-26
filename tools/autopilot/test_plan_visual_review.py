@@ -1,11 +1,13 @@
 """A repair needs a fresh plan image, and an exact retry reuses its review."""
 import base64
 import json
+from subprocess import CompletedProcess
 
 import pytest
 
 import kit_wave as K
 import plan_visual_review as PVR
+import launch_gate
 
 
 @pytest.fixture
@@ -14,7 +16,7 @@ def spec(tmp_path):
     plan.write_text('{"partition_types":{"t1":{"outline":[10,20]}}}')
     return {"die": "s81", "item": "t1", "kind": "type", "plan": str(plan),
             "gen_host": "localhost", "hub": "localhost", "work": str(tmp_path / "kit"),
-            "launch_plan_review_required": True, "src": "/old/tree",
+            "launch_plan_review_required": True, "src": "/old/tree", "src_manifest_hash": "b" * 64,
             "gen_env": {"OT_FLOW_TAG": "previous", "OT_FENCE_PATH": "/old/tree/fence"}}
 
 
@@ -50,16 +52,63 @@ def test_overlay_and_physical_recipe_are_part_of_form(spec, tmp_path):
         dict(spec, leafslew_form={"side": "east"}), tmp_path, "localhost", ledger=accepted)
 
 
-def test_unreviewed_private_place_fails_before_old_lbl(spec, tmp_path, monkeypatch):
+@pytest.mark.parametrize("goal", ["place", "geom", "route"])
+def test_private_fresh_place_uses_live_policy_and_actual_seal(spec, tmp_path, monkeypatch, goal):
     spec_path = tmp_path / "spec.json"
-    spec_path.write_text(json.dumps(dict(spec, private={"lane": "review"}, goal="place")))
+    saved = dict(spec, private={"lane": "review"}, goal=goal, root=str(tmp_path),
+                 ot_run="/fake/ot-run", src_manifest="seal", src_manifest_hash="")
+    saved.pop("launch_plan_review_required")
+    spec_path.write_text(json.dumps(saved))
     monkeypatch.setattr(K, "runitem_bind_landing", lambda _sp: None)
     monkeypatch.setattr(K, "repick_stage_hosts", lambda sp: sp)
+    monkeypatch.setattr(K, "private_spec_stale", lambda _sp: "")
+    monkeypatch.setattr(K, "private_lbl_refusal", lambda *_a: "")
+    monkeypatch.setattr(K, "pre_gen_inputs", lambda *_a: [])
+    monkeypatch.setattr(K, "src_manifest_cmd", lambda _sp: "seal-exact-tree")
+    monkeypatch.setattr(K, "private_config_text", lambda *_a, **_kw:
+                        '{"dies": {"s81": {"launch_plan_review_required": ["t1"]}}}')
+    monkeypatch.setattr(launch_gate, "private_goal", lambda *_a, **_kw: goal)
     monkeypatch.setattr(PVR, "read_ledger", lambda _hub: "")
-    monkeypatch.setattr(K, "private_lbl_refusal", lambda *_a: pytest.fail("entered existing admission path"))
+    probe = []
+    actual_source = "c" * 64
+
+    def run(argv, **kwargs):
+        probe.append(argv[-1])
+        if argv[-1].startswith("mkdir"):
+            return CompletedProcess(argv, 1, "test stops before generation")
+        assert argv[-1] == "seal-exact-tree", "unexpected launch before review"
+        return CompletedProcess(argv, 0, "SRC_MANIFEST_SEAL " + json.dumps({
+            "manifest_hash": actual_source, "main_sha": "d" * 40
+        }))
+
+    monkeypatch.setattr(K.subprocess, "run", run)
     assert K.run_item(spec_path) != 0
+    assert probe == ["seal-exact-tree"]
     assert json.loads((tmp_path / "result.json").read_text())["stage"] == "plan_visual"
-    assert (tmp_path / "plan_visual_request.json").exists()
+    candidate = json.loads((tmp_path / "plan_visual_request.json").read_text())
+    assert candidate["source_manifest_sha256"] == actual_source
+    assert candidate["form_sha256"] == PVR.request(dict(saved, src_manifest_hash=actual_source))["form_sha256"]
+
+    if goal == "place":
+        # Recheck the actual source after review, then allow the original place-only path.
+        monkeypatch.setattr(PVR, "read_ledger", lambda _hub: receipt(candidate, "GOOD"))
+        probe.clear()
+        assert K.run_item(spec_path) != 0
+        assert len(probe) == 2 and probe[0] == "seal-exact-tree" and probe[1].startswith("mkdir")
+        assert json.loads((tmp_path / "result.json").read_text())["stage"] == "mkdir"
+
+
+def test_private_plan_review_names_exact_source_and_rejects_unsealed(spec, tmp_path):
+    private = dict(spec, private={"lane": "review"})
+    request = PVR.request(private)
+    accepted = receipt(request, "GOOD")
+    assert not K.plan_visual_refusal(private, tmp_path, "localhost", ledger=accepted)
+    changed = dict(private, src_manifest_hash="e" * 64)
+    assert "missing fresh plan image" in K.plan_visual_refusal(changed, tmp_path, "localhost", ledger=accepted)
+    for missing in ("", "f" * 40):
+        unsealed = dict(private, src_manifest_hash=missing, src_sha="d" * 40)
+        assert "exact sealed or verified source manifest SHA-256" in K.plan_visual_refusal(
+            unsealed, tmp_path, "localhost", ledger=accepted)
 
 
 def test_scope_and_dry_run(spec, tmp_path):
