@@ -505,7 +505,39 @@ def rerecord_anchors(old_raw, new_raw, names, root, tree_fn, relay_um_fn):
     return out
 
 
-def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
+def write_origin_raw(new_raw, names, plan_dir=None):
+    """KV-SINKBINS 11-25: record clock.landing_origin_raw for each type with landing_raw_branches, from the SAME function the bind uses
+    (origin_raw.pick_origin_raw over origin_raw.plan_candidates = band_face_xy / nearest_tap extracted from clock_landings), and point
+    the branch finals that ended on the type's old origin node at it.  -> {type: {"origin_raw", "how", "was", "finals"}}"""
+    import clock_landings as CL
+    import origin_raw as OR
+    out = {}
+    for tn in names:
+        t = new_raw["partition_types"][tn]
+        ck = t.get("clock") or {}
+        brs = ck.get("landing_raw_branches") or []
+        if not brs or not t.get("outline_um"):
+            continue
+        taps = CL.ring_taps(new_raw, tn)
+        cands = OR.plan_candidates(t, taps)
+        raw, how = OR.pick_origin_raw(cands, CL.plan_origin_xy(t), None,
+                                      fallback=[(f"rst_n_t{i}", tuple(xy)) for i, xy in enumerate(taps)])
+        if raw is None:
+            out[tn] = dict(origin_raw=None, how=how)
+            continue
+        old = next((b["stages"][-1].get("original") for b in brs if "origin" in (b.get("consumers") or []) and b.get("stages")), None)
+        n = 0
+        for b in brs:
+            st = b.get("stages") or []
+            if old and st and st[-1].get("original") == old and old != raw:
+                st[-1]["original"] = raw
+                n += 1
+        ck[OR.KEY] = raw
+        out[tn] = dict(origin_raw=raw, how=how, was=old, finals=n)
+    return out
+
+
+def _remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
                ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0, ident_fn=None,
                bound_rtl=None, bound_old=True):
     """rewrite new_raw in place.  resets: 'resel' (street_rule.reset_resel: raw exports, pin sources, START stages, local
@@ -647,6 +679,15 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
     return rec
 
 
+def remap_plan(old_raw, new_raw, root, plan_dir, types=None, *a, origin_raw=False, **kw):
+    """_remap_plan, then (origin_raw=True, CLI --origin-raw) record clock.landing_origin_raw (write_origin_raw) -> receipt with receipt['origin_raw']"""
+    rec = _remap_plan(old_raw, new_raw, root, plan_dir, types, *a, **kw)
+    if origin_raw:
+        names = [tn for tn in new_raw["partition_types"] if (not types or tn in types) and tn in old_raw["partition_types"]]
+        rec["origin_raw"] = write_origin_raw(new_raw, names, plan_dir)
+    return rec
+
+
 def main(argv):
     import argparse
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -665,6 +706,7 @@ def main(argv):
                          "rstnode = the LANDREMAP-RSTNODE tap reset node pass alone (every mode runs it last)")
     ap.add_argument("--bound-rtl", help="rtl/ of the bind of record of OLD_PLAN: anchor mode reads the OLD relay depth + site there "
                                         "(then from OLD_PLAN's reset_tree_anchor; the rebuilt OLD tree is the last resort)")
+    ap.add_argument("--origin-raw", action="store_true", help="record clock.landing_origin_raw (origin_raw.pick_origin_raw, the bind's own rule) and re-point the raw branch finals")
     ap.add_argument("--rebuilt-old", action="store_true", help="anchor mode: ignore the bound tree, rebuild the OLD tree (pre 11-22 behaviour)")
     a = ap.parse_args(argv[1:])
     import os
@@ -674,7 +716,7 @@ def main(argv):
     old = json.loads(Path(a.old).read_text())
     new = json.loads(Path(a.new).read_text())
     rec = remap_plan(old, new, a.root, Path(a.new).parent, set(filter(None, a.types.split(","))), a.keep_anchor,
-                     resets=a.resets, adopt=not a.no_adopt, keep_xy=not a.move_pins, bound_rtl=a.bound_rtl, bound_old=not a.rebuilt_old)
+                     resets=a.resets, adopt=not a.no_adopt, keep_xy=not a.move_pins, bound_rtl=a.bound_rtl, bound_old=not a.rebuilt_old, origin_raw=a.origin_raw)
     Path(a.out).write_text(json.dumps(new, indent=1, ensure_ascii=False) + "\n")
     if a.receipt:
         Path(a.receipt).write_text(json.dumps(rec, indent=1) + "\n")
@@ -688,6 +730,8 @@ def main(argv):
           f"{sum(r['finals_renamed'] for r in rec.get('rstnodes') or [])} final(s) renamed, "
           f"{sum(len(r['chains']) for r in rec.get('rstnodes') or [])} raw-branch chain(s) rebuilt, "
           f"{len(rec.get('rstnode_unresolved') or [])} unresolved")
+    for tn_, r_ in (rec.get("origin_raw") or {}).items():
+        print(f"  origin_raw {tn_}: {json.dumps(r_)}")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
         for where, name in (r["kept"] if isinstance(r.get("kept"), list) else []):   # anchor-mode receipts carry kept = a count

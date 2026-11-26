@@ -148,6 +148,25 @@ def repoint_type(t, old, new, reset=True):
     return out
 
 
+def tap_rename_map(old, new):
+    """explicit old -> new tap rename map of one type (KV-SINKBINS 11-25): the tool's own rule (tap_map: nearest NEW site to each OLD
+    site, Manhattan, ties by name) for every OLD tap whose name is not a NEW tap; names that are in both grids map to themselves and
+    are left out.  old/new: [(name, x, y)].  Consumers rename with apply_rename and never guess: a clk_t name in neither grid is an error."""
+    live = {n for n, _, _ in new}
+    return {o: n for o, n in tap_map(old, new).items() if o not in live}
+
+
+def apply_rename(names, rename, live, where=""):
+    """rename every name of `names` (a list, in place) through `rename`; a clk_t<i> name that is neither renamed nor live raises
+    RetapError naming `where` and the name (never guessed)"""
+    for i, v in enumerate(names):
+        if isinstance(v, str) and re.match(r"^clk_t\d+$", v) and v not in live:
+            if v not in rename:
+                raise RetapError(f"{where}: tap {v} is in neither the old nor the new tap grid (no rename)")
+            names[i] = rename[v]
+    return names
+
+
 def _plan_taps(raw, path):
     sys.path.insert(0, str(HERE))
     import schema

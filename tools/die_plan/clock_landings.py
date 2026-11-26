@@ -2187,28 +2187,19 @@ class Landings:
             # This is a timed local data relay, never another synchronizer.
             t = self.types[key]
             # A bus declaration without face/window is not physical geometry.
-            geom = next((x for x in t.get("buses", []) if x["name"] == b and "face" in x and "window_um" in x), None)
-            if geom is None and collector_info:
-                geom=collector_info.get("bus_geometry",{}).get(b)
-            if geom is None:
-                slot = next((x for x in t.get("ft_slots", []) if x["name"] + "_i" == b), None)
-                if slot:
-                    geom = dict(face=slot["in_face"], window_um=slot["in_window_um"])
-            if geom is None:
+            # KV-SINKBINS 11-25: face centre / nearest tap live in origin_raw (shared with landing_remap), unchanged
+            from origin_raw import band_face_xy, nearest_tap
+            _f = band_face_xy(t, b, collector_info.get("bus_geometry", {}) if collector_info else None)
+            if _f is None:
                 self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: receiver face geometry not found"))   # BIND-ALL-ERRORS: collect, next item
                 continue
-            face = geom["face"]; at = sum(geom["window_um"]) / 2
-            tw, th = t["outline_um"]
-            x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
+            x, y = _f
             hard_tree = collector_info and (collector_info.get("tree") or {}).get("hard")
             taps = ring_taps(self.plan, key)
             if hard_tree:
                 tap, xy = None, [x, y]
-            elif taps:
-                tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-x) + abs(taps[i][1]-y))
-                xy = list(taps[tap])
             else:
-                tap, xy = 0, t.get("clock", {}).get("tap_um", [tw/2, th/2])
+                tap, xy = nearest_tap(t, taps, x, y)
             if hard_tree:
                 # Hard partition (no generated reset tree): the ring sits in the
                 # soft wrapper at the received window, on the delivered reset
@@ -2749,8 +2740,13 @@ class Landings:
             _ck = _t.get('clock') or {}
             _pr = _ck.get(_ORIGIN_RAW_KEY)
             _rp = self.reset_placements.get(tn, {})
-            raw, _how = _pick_origin_raw([(n, (_rp.get(b) or {}).get('xy_um')) for b, n in ca_raw.items()],
-                                         plan_origin_xy(_t) if _t.get('outline_um') else None, _pr, legacy_first=True)
+            _oxy = plan_origin_xy(_t) if _t.get('outline_um') else None
+            # empty / unknown candidates: only a plan that records landing_origin_raw gets the nearest-tree-node fallback (unrecorded plans keep rst_n_t0)
+            _fb = [(f'rst_n_t{i}', tuple(xy)) for i, xy in enumerate(ring_taps(self.plan, type_key or tn))] if (_pr and _t.get('outline_um')) else None
+            raw, _how = _pick_origin_raw([(n, (_rp.get(b) or {}).get('xy_um')) for b, n in ca_raw.items()], _oxy, _pr, legacy_first=True, fallback=_fb)
+            if _how == 'fallback-nearest':
+                import sys
+                print(f'WARN clock_landings {tn}: no input ring reset node; {_ORIGIN_RAW_KEY} {_pr} -> nearest tree node {raw}', file=sys.stderr)
             if _how == 'plan-unknown':
                 import sys
                 print(f'WARN clock_landings {tn}: {_ORIGIN_RAW_KEY} {_pr} is not an input ring reset node; using {raw}', file=sys.stderr)
