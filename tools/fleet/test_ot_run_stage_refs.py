@@ -44,9 +44,9 @@ def plan(monkeypatch, states):
     monkeypatch.setattr(m, "spill_dst_full", lambda *a: False)
     monkeypatch.setattr(m, "spill_room", lambda *a: (True, ""))
     monkeypatch.setattr(m, "drop_low_disk", lambda ok, *a, **k: ok)
-    monkeypatch.setattr(m, "choose", lambda ok, *a: ("epyc2", False))
+    monkeypatch.setattr(m, "choose", lambda ok, *a: (next(iter(ok), None), False))
     monkeypatch.setattr(m, "log_signal", lambda s: None)
-    monkeypatch.setattr(m, "HOSTS", ["epyc7", "epyc2"])
+    monkeypatch.setattr(m, "HOSTS", list(states))
     return m._spill_plan("epyc7", D, [D + "/run.sh"], 64, 8, False, 20, set(), lambda s: None)
 
 
@@ -64,3 +64,14 @@ def test_explicit_stage_refused_when_dst_dir_is_empty_or_missing(monkeypatch, st
 def test_explicit_stage_spills_when_dst_has_the_refs(monkeypatch, staged):
     p, why, perm = plan(monkeypatch, {"epyc7": {L + "/k/refm": 1, L + "/m": 1}, "epyc2": {L + "/k/refm": 1, L + "/m": 1}})
     assert p and p[0] == "epyc2"
+
+
+def test_explicit_stage_uses_next_admittable_host_with_all_inputs(monkeypatch, staged):
+    complete = {L + "/k/refm": 1, L + "/m": 1}
+    result, why, permanent = plan(monkeypatch, {
+        "epyc7": complete,
+        "epyc2": {L + "/m": 0},
+        "epyc8": complete,
+    })
+    assert result == ("epyc8", [D], 0.0)
+    assert not why and not permanent
