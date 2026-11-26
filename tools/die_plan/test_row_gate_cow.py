@@ -125,3 +125,10 @@ def test_light_choice_falls_back_unless_eligible(tmp_path, monkeypatch):
     plain = tmp_path / "plain"
     plain.mkdir()
     assert cow.light_choice(plain, RT, "auto", False, env)[0] is False
+
+
+def test_light_is_on_by_default_and_env_zero_turns_it_off():
+    """COORD 11-26: --light is the default; OT_ROW_GATE_LIGHT=0 opts out"""
+    src = (Path(__file__).resolve().parent / "row_gate.py").read_text()
+    assert 'default=os.environ.get("OT_ROW_GATE_LIGHT") != "0"' in src
+    assert "DEFAULT ON" in src

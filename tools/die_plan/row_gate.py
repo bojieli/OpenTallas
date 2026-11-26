@@ -725,9 +725,9 @@ def main(argv=None):
     g.add_argument("--drop-failed-rows", action="store_true", help="a row that fails to apply is dropped (recorded), the rest go on")
     g.add_argument("--plan-name", help="file name of the gated plan in the fork's plan dir (default plan_row_<lane>.json)")
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
-    g.add_argument("--light", action="store_true", default=os.environ.get("OT_ROW_GATE_LIGHT") == "1",
+    g.add_argument("--light", action="store_true", default=os.environ.get("OT_ROW_GATE_LIGHT") != "0",
                    help="P-POSTPUBLISH-DISK: use the sparse --cow overlay instead of a full 60 GB fork when the gate is eligible "
-                        "(scoped types, sealed source, pinned OT_BIND_YOSYS, no --keep-*); otherwise the ordinary fork. env OT_ROW_GATE_LIGHT=1")
+                        "(scoped types, sealed source, pinned OT_BIND_YOSYS, no --keep-*); otherwise the ordinary fork. DEFAULT ON (COORD 11-26); OT_ROW_GATE_LIGHT=0 turns it off")
     g.add_argument("--cow", action="store_true",
                    help="isolate a terminal gate in a copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
