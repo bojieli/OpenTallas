@@ -14773,3 +14773,5 @@ FAILED [AUTOPILOT 3d856195d57a] 2026-11-25 23:03:38 PST AUTOPILOT -> KIT-WAVE-5:
   NO-PROGRESS epyc10 probe_v19 grt_it0 stage 10.9 h job 12.7 h: no new meaningful log line for 10.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
   NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 9.4 h job 9.4 h: no new meaningful log line for 9.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 9.2 h job 12.6 h: no new meaningful log line for 8.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
+- 2026-11-26 07:22 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc2: rt/current 7b75109e831b != hub fecae044be51. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-26 07:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc2: rt/current 7b75109e831b != hub 06de0db50894
