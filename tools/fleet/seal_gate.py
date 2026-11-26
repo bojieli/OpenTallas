@@ -9,13 +9,49 @@ import re
 import sys
 import time
 
-SEAL_BLOCK_AFTER = 1795633675          # epoch: report-only before this, blocking after
+SEAL_BLOCK_AFTER = 4102444800          # epoch: report-only before this, blocking after (11-25 COORD: back to report-only until the own-fork rule is live on every host; 2100-01-01 = never by default; OT_SEAL_GATE=block forces it)
 WALK_CUT = "(walk cut after "
 SCRATCH_TREE_RE = re.compile(r"^/srv/opentallas-scratch\d*/claude/")
 
 
-def findings(tree, sub=("physical",), skip=("run",), budget_s=60.0):
+def lane_root(path):
+    m = re.match(r"^(.*?/claude/[^/]+)(/|$)", path)
+    return m.group(1) if m else ""
+
+
+def lane_of(path):
+    r = lane_root(path)
+    return os.path.basename(r) if r else ""
+
+
+def own_fork_roots(tree, env=None, forks_file=None):
+    """FLEET-OPS 11-25 (COORD: a launch tree always symlinks into the private ot-tree-fork it was composed from; KV-PV-ESTRIP hit the gate with 309 links): the trees a launch tree of this lane may link into =
+    the launching lane's own claude/<lane>/ dir, plus every fork destination recorded for this lane (OT_LANE) in ~/.local/state/ot-tree-fork/forks.jsonl.  Another lane's tree or a sealed / event tree is never in the list."""
+    import json
+    env = os.environ if env is None else env
+    roots = set()
+    ln = lane_of(os.path.realpath(tree))
+    if ln:
+        roots.add(lane_root(os.path.realpath(tree)))
+    me = env.get("OT_LANE", "")
+    ff = forks_file or os.path.expanduser("~/.local/state/ot-tree-fork/forks.jsonl")
+    try:
+        for line in open(ff):
+            try:
+                r = json.loads(line)
+            except ValueError:
+                continue
+            d = r.get("dst", "")
+            if d and (r.get("lane") == me and me or lane_of(d) == ln and ln):
+                roots.add(os.path.realpath(d))
+    except OSError:
+        pass
+    return roots
+
+
+def findings(tree, sub=("physical",), skip=("run",), budget_s=60.0, forks_file=None, env=None):
     tree = os.path.realpath(tree)
+    own = own_fork_roots(tree, env, forks_file)
     t0 = time.time()
     bad = []
     for s in sub:
@@ -37,7 +73,7 @@ def findings(tree, sub=("physical",), skip=("run",), budget_s=60.0):
                 inside = res == tree or res.startswith(tree + os.sep)
                 if n == ".fork.json":
                     bad.append(f"{rel} is a symlink (-> {os.readlink(q)}): the provenance file must be a regular file")
-                elif SCRATCH_TREE_RE.match(res) and not inside:
+                elif SCRATCH_TREE_RE.match(res) and not inside and not any(res == o or res.startswith(o + os.sep) for o in own):
                     bad.append(f"{rel} -> {os.readlink(q)} (resolves to {res}, outside the tree)")
             dn[:] = [d for d in dn if not os.path.islink(os.path.join(dp, d))]
     return bad

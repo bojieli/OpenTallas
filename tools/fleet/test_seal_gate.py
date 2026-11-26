@@ -36,6 +36,7 @@ def test_outside_link_found_only_under_the_checked_subtree_and_agrees_with_ot_tr
 def test_report_only_first_then_blocking_and_switches(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(SG, "SCRATCH_TREE_RE", re.compile("^" + str(tmp_path) + "/claude/"))
     tree = mk(tmp_path)
+    monkeypatch.setattr(SG, "SEAL_BLOCK_AFTER", 1_800_000_000)
     before, after = SG.SEAL_BLOCK_AFTER - 10, SG.SEAL_BLOCK_AFTER + 10
     assert SG.gate(str(tree), "bind", now=before, env={}) == 0
     assert "REPORT-ONLY" in capsys.readouterr().err
@@ -59,3 +60,30 @@ def test_walk_budget_is_advisory_in_block_mode(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(SG, "findings", lambda *a: [f"{SG.WALK_CUT}60 s)"])
     assert SG.gate(tmp_path, "bind", env={"OT_SEAL_GATE": "block"}) == 0
     assert "walk cut" in capsys.readouterr().err
+
+
+def test_default_is_report_only_and_own_fork_links_are_allowed_others_blocked(tmp_path, monkeypatch):
+    """FLEET-OPS 11-25: KV-PV-ESTRIP launch tree (309 links) into its own private ot-tree-fork was refused"""
+    import json
+    monkeypatch.setattr(SG, "SCRATCH_TREE_RE", re.compile("^" + str(tmp_path) + "/claude/"))
+    assert SG.mode(now=1_900_000_000, env={}) == "report"                      # default: report-only for now
+    own = tmp_path / "claude/kv-pv-estrip"
+    fork = tmp_path / "claude/kv-fork-elsewhere/forkA"       # a recorded fork of THIS lane living in another dir
+    other = tmp_path / "claude/other-lane/tree"
+    sealed = tmp_path / "claude/kw45/src_x"
+    for d in (own / "tree_fork", fork, other, sealed):
+        d.mkdir(parents=True)
+        (d / "plan.json").write_text("p")
+    tree = own / "launch12"
+    (tree / "physical/die_plan").mkdir(parents=True)
+    os.symlink(str(own / "tree_fork/plan.json"), tree / "physical/die_plan/a.json")      # own lane dir
+    os.symlink(str(fork / "plan.json"), tree / "physical/die_plan/b.json")               # recorded fork of this lane
+    os.symlink(str(other / "plan.json"), tree / "physical/die_plan/c.json")              # another lane: blocked
+    os.symlink(str(sealed / "plan.json"), tree / "physical/die_plan/d.json")             # sealed tree: blocked
+    ff = tmp_path / "forks.jsonl"
+    ff.write_text(json.dumps({"dst": str(fork), "lane": "kv-pv-estrip"}) + "\n")
+    f = SG.findings(str(tree), forks_file=str(ff), env={"OT_LANE": "kv-pv-estrip"})
+    names = " ".join(f)
+    assert "c.json" in names and "d.json" in names and "a.json" not in names and "b.json" not in names
+    f2 = SG.findings(str(tree), forks_file=str(ff), env={"OT_LANE": "someone-else"})
+    assert "b.json" in " ".join(f2) and "a.json" not in " ".join(f2)
