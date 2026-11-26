@@ -463,3 +463,29 @@ def test_render_review_sh_maps_the_snapshot_into_rev_and_deletes_it(tmp_path):
     json.dump({"kit": str(kit), "odb": str(kit / "r/a.odb"), "image": "img", "id": "c1"}, open(rev / "review.json", "w"))
     p = subprocess.run(["bash", os.path.join(here, "render_review.sh"), str(rev)], env=env, capture_output=True, text=True, timeout=60)
     assert p.returncode == 0 and (rev / "dump.tcl").read_text().startswith("read_db /kit/r/a.odb\n") and (kit / "r/a.odb").exists()
+
+
+def test_spill_checkpoint_render_stays_on_scratch_and_is_retried(tmp_path, monkeypatch):
+    work = tmp_path / "scratch" / "ot-jobs" / "hd-serdes-place" / "work"
+    odb = work / "run/results/asap7/d/base/3_3_place_gp.odb"
+    odb.parent.mkdir(parents=True)
+    odb.write_text("odb")
+    tools = tmp_path / "tools"
+    for name in nw.RENDER_TOOLS:
+        source = tools / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text("render")
+    monkeypatch.setattr(nw, "host_unfit", lambda: "")
+    monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "root-state"))
+    launched = []
+    status, review = nw.smell_render(
+        str(work), str(work), "place-gp", "img", "serdes", [],
+        now=NOW, popen=lambda argv, **kw: launched.append(argv),
+        tools_roots=[str(tools)], odb=str(odb), tag="vis_review",
+    )
+    assert status == "rendering"
+    assert os.path.dirname(review) == str(tmp_path / "scratch" / "noprog-review" / "vis_review")
+    assert launched[0][launched[0].index("--dir") + 1] == review
+    with open(os.path.join(review, "render.log"), "w") as log:
+        log.write("ORD-0054 odb file is invalid")
+    assert nw.vis_odb_refail(str(work), "PLACE-GP", str(odb))
