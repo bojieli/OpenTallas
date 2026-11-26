@@ -3970,3 +3970,5 @@ CODEX: 2026-11-25 15:1x PST KV A5t9 R3 exact 93/2746/G0 zero, three-hub publish 
 OPS-WRITEUP: 2026-11-25 16:08 PST 16:08 hourly: 605 any / 487 current (+0 / +0 vs 15:05). VIS-COVERAGE: 435/469 types with a verdict (93%); PROBE-PASS 2
 
 CODEX: 2026-11-25 16:13 PST. HEAD mesh east locally signed and routed LEC clean, parent hold remains. Exact n4 repair routes, views gated. Native S81 ROS + QC G0 root fixes merged and in use. KV R6 portable candidate now closes the formal PRE blockers, strict replay and replicas in progress. QC R5 strict/LAT passed, formal gate in progress. ROM staged continuing lanes. Live takeover continues.
+
+CODEX: 2026-11-25 17:00 PST. KV A5t9 R6 live after formal PASS, initial three hubs only, R7 P2 native strict/LAT green. QC C1p G0 and dry GEN green, resolving PRE failure. S81 generated pad binder fix merged afdd397cad26, current replay underway, targeted reset/FT physical repairs ready for scoped gates. HEAD east ring and west SRAM stagger PRE cleared and geometry active. ROM R049 BF16 fixture restarted.
