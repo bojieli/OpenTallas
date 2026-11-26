@@ -131,12 +131,38 @@ class PlaceAsync(unittest.TestCase):
             sp = json.loads(p.read_text())
             sp.update(private={"wave_env": {}}, goal="place")
             p.write_text(json.dumps(sp))
-            with patch.object(KW, "private_spec_stale", return_value=""), patch.object(KW, "PLACE_POLL_S", 0), patch.object(KW.subprocess, "run", f):
+            with (
+                patch.object(KW, "private_config_text", return_value='{"dies":{"s81":{}}}'),
+                patch.object(KW, "private_spec_stale", return_value=""),
+                patch.object(KW, "PLACE_POLL_S", 0),
+                patch.object(KW.subprocess, "run", f),
+            ):
                 rc = KW.run_item(p)
             res = json.loads((Path(d) / "result.json").read_text())
             self.assertEqual((rc, res["verdict"], res["stage"]), (0, "PASS", "place"))
             self.assertEqual(res["evidence"], "intel1:/w/gen/T/run/results/asap7/x/base/3_place.odb")
             self.assertFalse(any("geom_check.sh" in c or "signoff_chain" in c for c in f.calls))
+
+    def test_private_worker_reattaches_without_new_plan_review(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = Fake(d)
+            p = spec(d)
+            sp = json.loads(p.read_text())
+            sp.update(private={"wave_env": {}}, goal="place", launch_plan_review_required=True)
+            p.write_text(json.dumps(sp))
+            (Path(d) / "place_service.json").write_text(json.dumps({
+                "unit": "existing-place", "argv": ["ot-run", "place"], "kit": "/w/gen/T",
+                "host": "intel1", "started": 1, "log": str(Path(d) / "place.live.log"),
+            }))
+            with (
+                patch.object(KW, "private_plan_visual_policy", side_effect=AssertionError("already launched")),
+                patch.object(KW, "src_manifest_cmd", side_effect=AssertionError("already sealed")),
+                patch.object(KW.subprocess, "run", f),
+            ):
+                rc = KW.run_item(p)
+            res = json.loads((Path(d) / "result.json").read_text())
+            self.assertEqual((rc, res["verdict"], res["stage"]), (0, "PASS", "place"))
+            self.assertFalse(any(c.startswith("systemd-run") or "rm -rf" in c for c in f.calls))
 
     def test_place_spill_false_keeps_gen_host_pin(self):
         with tempfile.TemporaryDirectory() as d:

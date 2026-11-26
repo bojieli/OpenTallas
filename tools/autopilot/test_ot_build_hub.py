@@ -97,6 +97,8 @@ def test_end_to_end_then_everything_fresh(fleet, capsys):
     assert "bind host h2 = least loaded holder of the tree" in out and "h3" in out and "no tree" in out
     c = fleet.spec_cmd
     assert c[c.index("--bind-out") + 1] == "/srv/out/b_1" and c[c.index("--tree") + 1] == SRC and c[c.index("--goal") + 1] == "finish"
+    assert Path(c[2]) == HERE / "kit_wave.py"
+    assert c[c.index("--rt") + 1] == "aaaabbbbcccc"
     assert "OT_HCPARAM_ALL" in out and "OT_KV_HEAD_KST" in out
     del fleet.calls[:]
     assert go(fleet) == 0
