@@ -471,7 +471,50 @@ def test_bind_env_passes_the_die_bind_env_and_bind_first_has_no_fixed_wall_cap(t
             seen.update(k, body=argv[-1])
         return types.SimpleNamespace(returncode=0, stdout="", stderr="")
     PA.bind_first(tmp_path, cand, "L", "s81", run=fake, host="epyc8", stamp="1", log_dir=tmp_path / "ld")
-    assert seen["timeout"] is None and "BIND-NO-PROGRESS" in seen["body"] and "kill $pid" in seen["body"]
+    assert seen["timeout"] is None and "BIND-NO-PROGRESS" in seen["body"] and 'kill "$pid"' in seen["body"]
+
+
+@pytest.mark.parametrize("cpu_advances", [False, True])
+def test_bind_first_observes_remote_scope_and_still_stops_stalled_launch(tmp_path, monkeypatch, cpu_advances):
+    import os
+    import subprocess
+
+    ssh = tmp_path / "ssh"
+    ssh.write_text("""#!/bin/bash
+[[ "$*" == *epyc8*oth-ubuntu-231-12345* ]] || exit 4
+count=$(cat "$TICKS" 2>/dev/null || echo 0)
+count=$(( count + 1 ))
+echo "$count" > "$TICKS"
+if [[ "$ADVANCE" == yes ]]; then
+    printf '33:50 %s\n' "$count"
+else
+    printf '33:50 1\n'
+fi
+""")
+    ssh.chmod(0o755)
+    log = tmp_path / "client log"
+    log.write_text("ot-heavy: admitted on key-cardinal as oth-ubuntu-231-12345 after 0 s\n")
+    env = dict(os.environ, PATH=f"{tmp_path}:{os.environ['PATH']}", TICKS=str(tmp_path / "ticks"),
+               CLOCK=str(tmp_path / "clock"), ADVANCE="yes" if cpu_advances else "no")
+    monkeypatch.setattr(PA, "BIND_NO_PROGRESS_S", 120)
+    poll = PA.postbind_wait_sh({"copy": "/other host/design", "host": "epyc8"}, log)
+    bash = """date() {
+        t=$(cat "$CLOCK" 2>/dev/null || echo 0)
+        t=$(( t + 61 ))
+        echo "$t" > "$CLOCK"
+        echo "$t"
+    }
+    sleep() { /bin/sleep 0.05; }
+    /bin/sleep 0.65 &
+    """ + poll
+    result = subprocess.run(["bash", "-c", bash], capture_output=True, text=True, env=env, timeout=5)
+    assert (tmp_path / "ticks").is_file(), (result.stderr, poll)
+    if cpu_advances:
+        assert result.returncode == 0, result.stderr
+        assert "BIND-NO-PROGRESS" not in log.read_text()
+    else:
+        assert result.returncode != 0
+        assert "BIND-NO-PROGRESS" in log.read_text()
 
 
 def _local_ssh(calls=None):

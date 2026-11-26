@@ -26,6 +26,7 @@ Not static (reported by the kit only): PLACE-HPWL (needs the global placement), 
 
 Modes
   place_precheck.py --plan PLAN.json [--types a,b] [--jobs N] [--out DIR]    every type of the plan (G0 / pre-launch)
+    [--bound-rtl TYPE=FILE ...] supplies already-local exact bound type RTL for packed input-station advisories.
   place_precheck.py --kit KITDIR [--kit KITDIR ...]                           generated kits (OVERLAP on the kit's own tables)
 Report only: exit 0 unless --strict and findings.  Never a gate (OWNER: no new gates)."""
 import argparse
@@ -189,7 +190,32 @@ def overlap_plan(P, tn, t):
     return fs
 
 
-def knee_plan(P, tn, t):
+def bound_packed_inputs(tn, t, path):
+    """Recognize the same complete input receiver the kit would choose."""
+    import kit_istations as KI
+    from gen_rtl import sv_id
+
+    rtl = Path(path).read_text()
+    buses = {b["name"]: b for b in t.get("buses", ()) if b.get("dir") == "in"}
+    packed = {}
+    for entry in t.get("internal_stations", ()):
+        conn = str(entry.get("conn") or "")
+        bus = conn.removeprefix("bus:")
+        if (not conn.startswith("bus:") or entry.get("core") or entry.get("bit_route") != "per_bit" or bus not in buses
+                or f"u_lpad_{sv_id(bus)}" not in rtl):
+            continue
+        b = buses[bus]
+        try:
+            width = KI.bound_bus_width(tn, b, rtl, {})
+            receiver = KI.packed_input_delay(tn, b, rtl, width, len(entry.get("regs_um", ())))
+        except (SystemExit, ValueError):
+            continue             # absent or insufficient topology evidence keeps the plan estimate
+        if receiver:
+            packed[bus] = receiver
+    return packed
+
+
+def knee_plan(P, tn, t, packed=None):
     """istation_knee.replay rule incl. leg_order along_first (kit passes order along); leg_order channel is another rule: unchecked."""
     import istation_knee as K
     import gen_phys as G
@@ -202,6 +228,8 @@ def knee_plan(P, tn, t):
         pins.setdefault(bus, {})[int(bit)] = (x, y)
     for e in ents:
         bus = e["conn"].split(":", 1)[1]
+        if not e.get("core") and bus in (packed or {}):
+            continue             # validated packed branches do not call is_bits / is_knee_site
         b = next((x for x in t["buses"] if x["name"] == bus), None)
         bp = pins.get(bus) or {}
         if b is None or len(bp) not in (int(b["width"]), int(b["width"]) + 1) or e.get("leg_order") == "channel" or "leaf_um" not in e:
@@ -227,12 +255,13 @@ def macro_plan(P, tn, t):
     return [F("MACRO", "kit_fit", s) for s in kit_fit.findings({tn: t}, core_margin=CORE_MARGIN_UM)]
 
 
-def station_core_plan(P, tn, t):
+def station_core_plan(P, tn, t, packed=None):
     """STATION-CORE (FABLE-FIX-QC-SLE-R2 11-21): every station row (bus chains with no `core` key included) on the kit's per-bit
     site model against every hard macro; the kit prints no message for it, the build ends in flat GRT overflow (QC sle_ctl)."""
     import station_core as SC
     return [F("STATIONCORE", r["conn"], SC.line(tn, r), sub=r["kind"], sites_in_macro=r["sites_in_macro"],
-              routes_crossing=r["routes_crossing"], macros=r["macros"]) for r in SC.report(P, tn)]
+              routes_crossing=r["routes_crossing"], packed_center_hops_crossing=r.get("packed_center_hops_crossing", 0),
+              macros=r["macros"]) for r in SC.report(P, tn, packed=packed)]
 
 
 _CACHE = {}
@@ -249,14 +278,15 @@ def _load(plan_path):
 
 
 def check_type(args):
-    plan_path, tn = args
+    plan_path, tn, *bound = args
     try:
         raw, P = _load(plan_path)
         t = raw["partition_types"][tn]
         out = []
+        packed = bound_packed_inputs(tn, t, bound[0]) if bound and bound[0] else {}
         for fn in (overlap_plan, knee_plan, macro_plan, station_core_plan):
             try:
-                out += fn(P, tn, t)
+                out += fn(P, tn, t, packed) if fn in (knee_plan, station_core_plan) else fn(P, tn, t)
             except Exception as ex:
                 out.append(F("ERROR", fn.__name__, f"{type(ex).__name__}: {ex}"[:300]))
         return tn, out
@@ -264,12 +294,12 @@ def check_type(args):
         return tn, [F("ERROR", "load", f"{type(ex).__name__}: {ex}"[:300], tb=traceback.format_exc()[-400:])]
 
 
-def run_plan(plan, types=None, jobs=1):
+def run_plan(plan, types=None, jobs=1, bound_rtl=None):
     raw = json.load(open(plan))
     pt = raw["partition_types"]
     used = {p.get("type") for p in (raw["partitions"].values() if isinstance(raw["partitions"], dict) else raw["partitions"])}
     names = sorted(types or [n for n in pt if n in used or not used])
-    work = [(str(plan), n) for n in names]
+    work = [(str(plan), n, (bound_rtl or {}).get(n)) for n in names]
     if jobs > 1:
         with ProcessPoolExecutor(jobs) as ex:
             res = list(ex.map(check_type, work, chunksize=2))
@@ -439,13 +469,25 @@ def main(argv=None):
     ap.add_argument("--kit", action="append", default=[])
     ap.add_argument("--netlist", help="synth netlist (1_2_yosys.v) for the --kit MPL-0020 / CONE checks; default: the kit's own run/results")
     ap.add_argument("--types")
+    ap.add_argument("--bound-rtl", action="append", default=[], metavar="TYPE=FILE",
+                    help="already-local exact bound type RTL, optional for plan-only checks")
     ap.add_argument("--jobs", type=int, default=1)
     ap.add_argument("--out", help="directory for place_precheck.json + .tsv")
     ap.add_argument("--strict", action="store_true")
     a = ap.parse_args(argv)
+    bound_rtl = {}
+    for assignment in a.bound_rtl:
+        tn, sep, path = assignment.partition("=")
+        if not a.plan or not tn or not sep or not Path(path).is_file() or tn in bound_rtl:
+            ap.error("--bound-rtl needs --plan and one readable TYPE=FILE per selected type")
+        bound_rtl[tn] = path
     findings = []
     if a.plan:
-        names, res = run_plan(a.plan, a.types.split(",") if a.types else None, a.jobs)
+        names, res = run_plan(a.plan, a.types.split(",") if a.types else None, a.jobs, bound_rtl)
+        if unused := bound_rtl.keys() - set(names):
+            ap.error(f"--bound-rtl type not checked: {', '.join(sorted(unused))}")
+        for tn, path in sorted(bound_rtl.items()):
+            print(f"place_precheck bound RTL for {tn}: {path}")
         for tn in names:
             for f in res[tn]:
                 findings.append(dict(f, type=tn, mode="plan"))

@@ -87,6 +87,7 @@ import flow_guard as FG
 import repeat_stop as RS
 import lbl_gate as LBL
 import private_place_review as PPV
+import plan_visual_review as PVR
 import env_effect as EE
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
@@ -94,7 +95,7 @@ OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: fre
 # older in-memory launch logic; the next ordinary tick imports the new package.
 def scheduler_code_id():
     h = hashlib.sha256()
-    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py"):
+    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "plan_visual_review.py", "private_place_review.py"):
         p = Path(__file__).with_name(name)
         h.update(name.encode())
         h.update(p.read_bytes())
@@ -5463,6 +5464,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "kit_rtl_mem_gb": int(opt(cfg, die, "kit_rtl_mem_gb") or 8),
             "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
+            **({"place_spill_hosts": opt_get(cfg, die, "place_spill_hosts")}
+               if opt_get(cfg, die, "place_spill_hosts") is not None else {}),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
@@ -5470,6 +5473,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
         | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
+        | ({"launch_plan_review_required": True} if PVR.enabled(opt(cfg, die, "launch_plan_review_required"), die, item, kind) else {}) \
         | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {}) \
         | ({"bind_stream_launch": True} if bind_stream_on(cfg, die) else {})  # cell_check: PLAN-GEN-RULES-1 rule C (advisory)
 
@@ -8152,6 +8156,26 @@ def write_redesign(cfg, st, ap_dir):
     return rows
 
 
+def place_dispatch_limits(sp, gen_host, hub, spill):
+    """Honor an explicit pool on every detached PLACE admission and spill."""
+    pool = sp.get("place_spill_hosts")
+    if pool is None:
+        if not sp.get("private"):
+            return []
+        # Legacy private specs captured --host in their one-host roam list.
+        pool = [gen_host] if sp.get("roam_hosts") == [gen_host] else sp.get("hosts")
+    if (not isinstance(pool, (list, tuple)) or not pool
+            or any(not isinstance(h, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", h) for h in pool)):
+        raise ValueError("invalid or empty approved PLACE host pool")
+    if not spill:
+        if gen_host not in pool:
+            raise ValueError(f"PLACE gen host {gen_host} is outside the approved pool")
+        return ["--strict-host", "--no-spill"]
+    hosts = list(dict.fromkeys(target_hosts(pool, hub, allow_hub=True)))
+    guard = ["--hosts", ",".join(hosts), "--strict-host"]
+    return guard if len(hosts) > 1 else guard + ["--no-spill"]
+
+
 def restage_waiters(AP, cfg, st, notices):
     """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged): a RUNNING attempt of a die with gen_hosts whose
     current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the best one is
@@ -8202,7 +8226,9 @@ def restage_waiters(AP, cfg, st, notices):
             # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
             # KW-FIX-40 11-08 (COORD 23:06): a kit under a path only the root disk of the other hosts has (scratch3) cannot spill past
             # their root floors, so restage_place_waiters makes such waiters movable from mkdir like an earlier stage.
-            mobile = (spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
+            place_args = svc0.get("argv") or []
+            scoped_dispatch = "--strict-host" in place_args
+            mobile = (spill and svc0.get("launch") == "launched" and ("--hosts" not in place_args or scoped_dispatch)
                       and not cfg.get("restage_place_waiters"))
             if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die, item=r.get("item"))       # KW-FIX-35-RD: a target with its inputs
@@ -8213,7 +8239,7 @@ def restage_waiters(AP, cfg, st, notices):
                         - die_score(cfg, die, g, row(g)) * host_share(cfg, g) >= wsize(row(g), mem)):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
-            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
+            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in place_args and not scoped_dispatch:
                 why, best = f"pinned async PLACE waiter on {g} -> spillable PLACE", g
             if counted_now(cfg, st, die, r.get("item"), r.get("block_sha")):
                 why, best = "counted by the sign-off counter", g      # the INFRA path below ends it instead of relaunching
@@ -9866,6 +9892,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         for k in ("hosts", "place_prefer"):
             sp[k] = [host] + [h for h in (sp.get(k) or []) if h != host]
         sp["roam_hosts"] = [host]
+        # The private-spec CLI documents --host as its actual place host.
+        # Do not re-expand the physical pool after generating its exact kit.
+        permitted = sp.get("place_spill_hosts")
+        if permitted is not None and host not in permitted:
+            raise ValueError(f"private --host {host} is outside the configured PLACE pool")
+        sp["place_spill_hosts"] = [host]
     if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
         sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
     landing = None
@@ -10269,6 +10301,9 @@ def private_spec_cmd(a):
     _lw = private_lbl_refusal(sp, chain_goal_of(sp), hub, record=False)
     if _lw:                                               # LAUNCH-GUARD 11-23: run-item refuses this spec until its VIS row passes (a probe goal place / geom / grt runs)
         print(f"private-spec: LBL WARN {a.die}/{a.item}: run-item will refuse goal {sp['goal']}: {_lw}", file=sys.stderr)
+    plan_review = plan_visual_refusal(sp, out, hub)
+    if plan_review:
+        print(f"private-spec: {plan_review}", file=sys.stderr)
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
           + (f"{stop})" if stop else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
@@ -10894,6 +10929,58 @@ def ended_unit_result(res):
     return res
 
 
+def legacy_plan_visual_form(rec, plan):
+    """Return the prior wave form only when its exact placement was already viewed and accepted."""
+    old_sha = str(rec.get("plan_sha") or "")
+    if not rec.get("dir") or not rec.get("started") or not PVR.SHA.fullmatch(old_sha):
+        return ""
+    if exact_kit_visual_verdict(rec, viewed_only=True) not in VISUAL_ACCEPT:
+        return ""
+    try:
+        old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        if ((old.get("die"), old.get("item")) != (rec.get("die"), rec.get("item"))
+                or old.get("private") or old.get("plan") != plan):
+            return ""
+        overlay_sha = str(old.get("type_overlay_sha") or "") if old.get("type_overlay") else ""
+        return PVR.request(old, plan_sha=old_sha, overlay_sha=overlay_sha)["form_sha256"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None):
+    """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
+    if not PVR.applies(sp):
+        return ""
+    try:
+        producer = sp.get("gen_host")
+        plan_key = (producer, sp["plan"])
+        if plan_shas is not None and plan_key not in plan_shas:
+            plan_shas[plan_key] = PVR.file_sha(sp["plan"], producer)
+        plan_sha = plan_shas[plan_key] if plan_shas is not None else ""
+        candidate = PVR.request(sp, plan_sha=plan_sha, producer=producer)
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
+        return f"WAIT-PLAN-VISUAL: cannot resolve exact plan or overlay on {sp.get('gen_host')}: {e}"
+    request_path = Path(out) / "plan_visual_request.json"
+    try:
+        verdict = PVR.verdict(PVR.read_ledger(hub) if ledger is None else ledger, candidate)
+        if verdict == "GOOD":
+            return ""
+        fingerprint = candidate["form_sha256"]
+        if not verdict and not sp.get("private"):
+            if sp.get("plan_visual_legacy_form_sha") == fingerprint:
+                return ""
+            if prior and legacy_plan_visual_form(prior, sp["plan"]) == fingerprint:
+                sp["plan_visual_legacy_form_sha"] = fingerprint
+                return ""
+        if record:
+            PVR.write_request(request_path, candidate)
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        return f"WAIT-PLAN-VISUAL: review request or ledger unavailable: {e}"
+    state = "BAD" if verdict == "BAD" else "missing"
+    return (f"WAIT-PLAN-VISUAL: {state} fresh plan image verdict for {sp['die']}/{sp['item']} "
+            f"form {candidate['form_sha256']}; request {request_path}")
+
+
 def private_lbl_refusal(sp, chain_goal, hub=None, record=True):
     """LAUNCH-GUARD 11-23 FIX 1: '' or the LOOK-BEFORE-LAUNCH refusal of a private run-item that drives to sign-off (goal auto / route / finish).  Probe specs
     (goal place / geom / cts / grt, or OT_PROBE_THROUGH=1 in the gen env) and wave specs (gated in launch()) are never refused; a spec with
@@ -11040,6 +11127,12 @@ def _run_item(spec_path, resume_reviewed=False):
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
+    plan_review = "" if resume_reviewed else plan_visual_refusal(sp, out, hub)
+    if plan_review:
+        print(f"KW_STAGE plan_visual {now_s()} :: {plan_review}", flush=True)
+        res.update(stage="plan_visual", verdict="FAIL", cls="PLAN-VISUAL", tail=plan_review)
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 1
     _lbl = private_lbl_refusal(sp, chain_goal, hub)
     if _lbl:                                             # LAUNCH-GUARD 11-23 FIX 1: a private sign-off launch of a DRAFT / PRE-PASS type waits for its VIS row
         print(f"KW_STAGE lbl {now_s()} :: LAUNCH-REFUSED {sp['die']}/{T}: {_lbl}", flush=True)
@@ -11477,7 +11570,9 @@ def _run_item(spec_path, resume_reviewed=False):
             return place_wait(json.loads(svc_file.read_text()))
         # FLEET-WATCH-R8 11-21 (COORD URGENT, owner 11-12 capped build host): the hub-only target refusal is gone; ot-run HOST_RESERVE (64 thr / 600 GB / 150 GB reserve) bounds the hub
         cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
-        if sp.get("place_spill", True):
+        spill = sp.get("place_spill", True)
+        limits = place_dispatch_limits(sp, G, hub, spill)
+        if spill:
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
             # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
             # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
@@ -11486,9 +11581,10 @@ def _run_item(spec_path, resume_reviewed=False):
             # own files follow at client end and G:K is the one physical /work, so route runs there.  Without a hand-off
             # the receipt appears on G at the client's end (KW_PLACE_RC wins).  Die option place_spill false = the old pin.
             argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
-                    + heavy_args(sp) + ["--", "bash", "-c", cmd])
+                    + limits + heavy_args(sp) + ["--", "bash", "-c", cmd])
         else:
             argv = otrun(m, t, K, cmd, [G])
+            argv[1:1] = limits
         unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
         svc = {"schema": "opentallas.kw_place_service.v1", "unit": unit, "argv": argv, "kit": K, "host": G,
                "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
@@ -16056,6 +16152,20 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if _h != sp["gen_host"]:
         AP.log(f"KIT-WAVE GEN-HOST-TREE {die}/{r['item']}: {sp['gen_host']} lacks tree {sp.get('src')}; launching on {_h} instead")
         sp["gen_host"] = _h
+    if PVR.applies(sp):
+        if "_plan_visual_reviews" not in cfg:
+            cfg["_plan_visual_reviews"] = AP.read_coord(PVR.LEDGER)
+        prior = None
+        if sp["plan"] == d.get("plan") and not ((d.get("item_inputs") or {}).get(r["item"]) or {}).get("plan"):
+            prior = prev or max((rec for rec in st["items"].values()
+                                 if rec.get("die") == die and rec.get("item") == r["item"]),
+                                key=lambda rec: float(rec.get("started") or 0), default=None)
+        request_dir = Path(AP.AP_DIR) / "plan_visual_requests" / jd.parent.name / jd.name
+        plan_review = plan_visual_refusal(sp, request_dir, hub, plan_shas=cfg.setdefault("_plan_visual_plan_shas", {}),
+                                          ledger=cfg["_plan_visual_reviews"], record=not AP.DRY, prior=prior)
+        if plan_review:
+            log_hourly(AP, st, f"PLAN-VISUAL|{die}|{r['item']}", f"KIT-WAVE {plan_review}")
+            return None
     unit = f"{unit_prefix}{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")

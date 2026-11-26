@@ -1669,22 +1669,21 @@ class Binder:
         for ci, c in enumerate(F.cells):
             if G.kind[ci] in ("transport", "reducer", "source", "unknown"):
                 continue
-            p = self.R.part_of(c.path)
+            p, lo = self.R._lookup(c.path)
             if p is None:
-                unmapped.append(c.path)
+                unmapped.append(c)
                 continue
             if p not in self.parts:
                 self.errors.append(f"MAP_PARTITION {c.path} -> {p}: not a plan partition")
                 continue
             self.cpart[ci] = p
-            lo = self.R.local_of(c.path)
             if lo:
                 self.local[ci] = lo
         self.glue_moved = self._glue_follow_sinks() if self.ab.get("glue_follows_sinks") else {}
         for ci, p in self.cpart.items():
             self.members[p].append(ci)
-        for u in unmapped[:200]:
-            self.errors.append(f"UNMAPPED {u} ({F.cells[[c.path for c in F.cells].index(u)].module})")
+        for c in unmapped[:200]:
+            self.errors.append(f"UNMAPPED {c.path} ({c.module})")
         if len(unmapped) > 200:
             self.errors.append(f"UNMAPPED ... {len(unmapped) - 200} more")
         self.n_unmapped = len(unmapped)
@@ -4290,11 +4289,19 @@ class Binder:
         if getattr(self, "collect_gaps", False):
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
         print(f"bind: EMIT-HEAD {_time.time() - _t0:.1f} s before the types", flush=True)
-        if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
+        emit_jobs = min(len(emit_set), bind_emit_par.jobs(scoped=only is not None))
+        managed_full = (only is None and len(emit_set) > 1
+                        and os.environ.get("OT_HEAVY_PRIO") in ("die", "plan"))
+        if managed_full and emit_jobs < 2:
+            raise BindError("BIND_PARALLEL_REQUIRED: whole-die emit has fewer than two workers; "
+                            "increase the fleet CPU/memory lease or remove the one-worker override")
+        if emit_jobs > 1:
             try:
-                bind_emit_par.run(self, out, files, bind_emit_par.jobs(), beat=beat)
+                bind_emit_par.run(self, out, files, emit_jobs, beat=beat)
                 _par = True
             except bind_emit_par.ParUnsafe as exc:
+                if managed_full:
+                    raise BindError(f"BIND_PARALLEL_REQUIRED: unsafe parallel merge; {exc}") from exc
                 print(f"bind: emit parallel fell back to serial: {exc}", flush=True)
         if not _par:
             beat.done = 0
@@ -6786,6 +6793,15 @@ def _reset_anchor_prewarm(B, raw):
 def _bind_through_landings(a):
     """cmd_bind up to and including align_landings (R8 table read): -> (raw, out dir, Binder, yjs, input_topology).  Shared by `bind` and
     `r8-prepass` (BIND-SPEED-1118).  Also returns the elab netlist and the input topology the rest of `bind` still reads."""
+    from time import monotonic
+    phase_start = monotonic()
+
+    def phase(name):
+        nonlocal phase_start
+        now = monotonic()
+        print(f"bind: HEAD {name} {now - phase_start:.1f} s", flush=True)
+        phase_start = now
+
     raw = load_plan(a.plan)
     _write_provenance(a, "bind")
     out = Path(a.out)
@@ -6793,7 +6809,9 @@ def _bind_through_landings(a):
     import kit_topology
     input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
     yjs = load_asbuilt_netlist(out)
+    phase("loaded netlist and topology")
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    phase("built die graph")
     # ELAB-PORT-WIDTH 11-24 (COORD, S81-SVC-TIED): every cell's connected port widths vs its master's declared widths
     # under its own parameters (slang reuses the first instance's ABI for an unlisted parameterized leaf).  Report only:
     # OUT/elab_port_width.json; a hit is a silent mis-bind.
@@ -6844,8 +6862,11 @@ def _bind_through_landings(a):
             if getattr(exc, "errors", None):     # BIND-ALL-ERRORS: every table error, listed, then the stop
                 write_all_errors(out, [f"CLOCK_LANDING {e['error']}" for e in exc.errors], ())
             raise BindError(f"clock landing: {exc}") from exc
+    phase("checked interfaces and reset anchors")
     B.map_cells()
+    phase("mapped die cells")
     B.analyse()
+    phase("classified net sources")
     if getattr(B, "clock_landings", None):
         import clock_landings as CL
         try:
@@ -6856,6 +6877,7 @@ def _bind_through_landings(a):
     if getattr(B, 'reset_carriers', None):
         _fresh_write_text(out / "bind_reset_carriers.json", json.dumps(B.reset_carriers, indent=1) + "\n")
     B.align_landings()
+    phase("assigned lanes and aligned landings")
     return raw, out, B, yjs, input_topology
 
 

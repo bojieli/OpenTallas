@@ -1468,23 +1468,21 @@ def for_type(P, tn, reach=None):
 
 
 def pool_size(n_todo, env=None):
-    """RESET-TREE-CACHE-1124: workers = min(cores this process may use, $OT_RUN_THREADS, free memory / $OT_RESET_POOL_GB (4) per
-    worker, $OT_RESET_POOL_MAX (32), the types to solve); $OT_RESET_POOL_J sets it outright"""
+    """RESET-TREE-CACHE-1124: workers = min(allocated CPUs, available/admitted memory per worker,
+    optional $OT_RESET_POOL_MAX, the types to solve); $OT_RESET_POOL_J sets it outright"""
     env = os.environ if env is None else env
     if env.get("OT_RESET_POOL_J"):
         return max(1, min(int(env["OT_RESET_POOL_J"]), n_todo))
-    try:
-        cores = len(os.sched_getaffinity(0))
-    except (AttributeError, OSError):
-        cores = os.cpu_count() or 1
-    if env.get("OT_RUN_THREADS"):
-        cores = min(cores, max(1, int(env["OT_RUN_THREADS"])))
-    try:
-        avail = next(int(ln.split()[1]) for ln in open("/proc/meminfo") if ln.startswith("MemAvailable:")) / 2 ** 20
-    except (OSError, StopIteration, ValueError):
-        avail = 8.0
-    mem = int(avail // float(env.get("OT_RESET_POOL_GB") or 4))
-    return max(1, min(cores, mem, int(env.get("OT_RESET_POOL_MAX") or 32), n_todo))
+    from bind_emit_par import _mem_limit_bytes, _rss_bytes, allocated_cpus, positive_int
+    cores = allocated_cpus(env)
+    reserve = positive_int(env.get("OT_HEAVY_MEM_GB"))
+    limit = _mem_limit_bytes()
+    if reserve:
+        limit = min(limit or reserve << 30, reserve << 30)
+    available = max(0, limit - _rss_bytes()) / 2 ** 30 if limit is not None else 8
+    mem = int(available // float(env.get("OT_RESET_POOL_GB") or 4))
+    cap = positive_int(env.get("OT_RESET_POOL_MAX")) or cores
+    return max(1, min(cores, mem, cap, n_todo))
 
 
 _POOL_PLAN = []

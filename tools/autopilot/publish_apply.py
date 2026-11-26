@@ -409,7 +409,11 @@ def postbind_run_sh(s):
     runtime = postbind_runtime_sh(s)
     tools = '"$runtime"/tools/die_plan' if runtime else "tools/die_plan"
     return (f"#!/bin/bash\n# publish_apply.py post-bind: strict bind + LATCHECK of {s['tree']} in its hardlink copy\nset -uo pipefail\n"
-            f"export PYTHONDONTWRITEBYTECODE=1\n{env}cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
+            "export PYTHONDONTWRITEBYTECODE=1\n"
+            f"{env}"
+            # Older pinned runtimes still bound auto workers by JMAX. Preserve an explicit lower cap.
+            'export OT_BIND_EMIT_JMAX="${OT_BIND_EMIT_JMAX:-${OT_HEAVY_THREADS:-8}}"\n'
+            f"cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
             f"python3 -I -B {tools}/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
             f"e=$?; echo ELAB_RC=$e; tail -n 1 {q(L)}/elab.log | cut -c1-300\n"
             f"python3 -I -B {tools}/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
@@ -455,7 +459,7 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
             f"grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || "
             f"{{ bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die}: the bind copy could not be made on {s['host']} "
             f"(log {log}); run publish_apply.py post-bind again\"; exit 3; }}\n"
-            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --threads 48 --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
             f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1; rc=$?\n"
             f"r=$(grep -E '^(ELAB|BIND|LATCHECK)_RC=' {q(str(log))} | tr '\\n' ' ')\n"
             f"if [ $rc = 0 ]; then v=PASS; else v=\"FAIL (rc $rc): run {fail}\"; fi\n"
@@ -578,6 +582,64 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
     return 0
 
 
+def postbind_wait_sh(spec, log):
+    """Wait for the exact local launcher, observing files and its scope on the bind host."""
+    q = shlex.quote
+    postbind = q(f"{spec['copy']}/{POSTBIND_DIR}")
+    remote = f"""dir={postbind}
+stamp=$(stat -c '%Y:%s' "$dir"/*.log "$dir"/out/* 2>/dev/null | sort -t: -k1,1n -k2,2n | tail -1)
+cpu=0
+if [ -n "$1" ]; then
+    cpu=$(systemctl --user show --property=CPUUsageNSec --value "$1.scope" 2>/dev/null)
+fi
+printf '%s %s\\n' "${{stamp:-0:0}}" "${{cpu:-0}}"
+"""
+    probe = q("bash -c " + q(remote) + " --")
+    return f"""pid=$!
+log={q(str(log))}
+probe={probe}
+last_progress=$(date +%s)
+last_local=
+last_remote=
+last_cpu=0
+last_scope=
+while kill -0 "$pid" 2>/dev/null; do
+    sleep 60
+    kill -0 "$pid" 2>/dev/null || break
+    now=$(date +%s)
+    local_stamp=$(stat -c '%Y:%s' "$log" 2>/dev/null)
+    scope=$(sed -nE 's/^ot-heavy:.* as (oth-[A-Za-z0-9_-]+) after.*$/\\1/p' "$log" | tail -1)
+    if [ "$local_stamp" != "$last_local" ] && [ -n "$local_stamp" ]; then
+        last_progress=$now
+        last_local=$local_stamp
+    fi
+    observed=$(timeout 30s ssh -n -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 \
+        {q(spec['host'])} "$probe $scope" 2>/dev/null) || observed=
+    if [ -n "$observed" ]; then
+        read -r remote_stamp cpu <<< "$observed"
+        if [ "$remote_stamp" != 0:0 ] && [ "$remote_stamp" != "$last_remote" ]; then
+            last_progress=$now
+            last_remote=$remote_stamp
+        fi
+        if [ "$scope" != "$last_scope" ]; then
+            last_scope=$scope
+            last_cpu=0
+        fi
+        if [[ "$cpu" =~ ^[0-9]+$ ]] && [ "$cpu" -gt "$last_cpu" ]; then
+            last_progress=$now
+            last_cpu=$cpu
+        fi
+    fi
+    if [ "$(( now - last_progress ))" -gt {BIND_NO_PROGRESS_S} ]; then
+        echo "BIND-NO-PROGRESS {BIND_NO_PROGRESS_S}s: stopping ot-run $pid" >> "$log"
+        kill "$pid" 2>/dev/null
+        break
+    fi
+done
+wait "$pid"
+"""
+
+
 def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_dir=None):
     """COORD 11-19 (FABLE-FLOW-0358 A, other half): run the strict bind + LATCHECK of the candidate's PUBLISHED tree in its hardlink copy BEFORE the apply and wait for it (the old tree keeps building
     meanwhile: an ordering, not a hold), seal its output beside the tree and replicate it to the other gen hosts.  -> (dest or '', text, failing types from the bind log).  '' = no bind output:
@@ -594,13 +656,9 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
     q = shlex.quote
     otrun = HERE.parent / "fleet" / "ot-run"
     body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || exit 3\n"
-            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --threads 48 --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
             f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1 &\n"
-            # no fixed wall cap (OWNER: delete conservative limits): stopped only when the job is gone or nothing changed for BIND_NO_PROGRESS_S (exact pid)
-            f"pid=$!\nwhile kill -0 $pid 2>/dev/null; do\n  sleep 60\n"
-            f"  new=$(stat -c %Y {q(str(log))} {q(s['copy'] + '/' + POSTBIND_DIR)}/*.log {q(s['copy'] + '/' + POSTBIND_DIR)}/out/* 2>/dev/null | sort -n | tail -1); now=$(date +%s)\n"
-            f"  if [ -n \"$new\" ] && [ $(( now - new )) -gt {BIND_NO_PROGRESS_S} ]; then echo \"BIND-NO-PROGRESS {BIND_NO_PROGRESS_S}s: stopping ot-run $pid\" >> {q(str(log))}; kill $pid; break; fi\ndone\n"
-            f"wait $pid\n")
+            + postbind_wait_sh(s, log))
     r = run(["bash", "-c", body], capture_output=True, text=True, timeout=None)
     txt = ""
     try:
