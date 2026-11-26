@@ -207,3 +207,4 @@
   - C-TAP-REACH 32: DEFERRED 11-27, tap_reach flag trial.
   (4) The 21:00 form (KV-CUT2100) has whole strict rc0 and G0 rc0 on form A. PRE A rc1 is under triage, and form C (tools 7a4ba2b7) is building.
 - 2026-11-26 14:56 PST DONE [kv-int-r2] ot-run oth-ubuntu-3496564-1795732512 on outgoing-giraffe: rc=0 after 1258 s, ended 22:56:07, log /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2/gate_c5.out, cmd: --mem 100 --threads 6 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2 --stage /srv/opentallas-scratch2/claude/kv-
+- 2026-11-26 14:57 PST DONE [kv-int-r2] ot-run oth-ubuntu-3955130-1795733352 on outgoing-giraffe: rc=0 after 525 s, ended 22:57:52, log /srv/opentallas-scratch2/claude/kv-int-r2/c2100/buildC.log, cmd: --mem 16 --threads 2 --disk 3 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/c2100 -- bash /srv/opentallas-scratch2/claude/kv
