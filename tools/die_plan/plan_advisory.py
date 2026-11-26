@@ -107,6 +107,9 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    type's reset tree / tap table no longer emits (tap rows renumbered the tree: S81 J8, HEAD Row B, KV D29 14
                    EMIT); fix = landing_remap --resets anchor from the TREE's tools (adv_reset_names.py, TAP-GRID-R5)
 
+  PUB-STALE        (P-RESET-PUB-STALE, C-RST-RELAY-REACH 11-26) the published clock.landing_contract.collector_tree vs the tree the bind re-solves
+                   (reset_tree.for_type): relay-set / tap-count / depth mismatch and any collector ref > 405 um on the solved tree (S81 v3: 126 types,
+                   col_h10_r2 rst_n_t30 950 um); budgeted solve, never reports unchecked types as clean (adv_pub_stale.py)
   PHASE-BIND       (DIECLOCK-PHASE-BIND-CHECK, C-DIECLOCK-PHASE-BIND 11-26) plan reset_entry_phase / strap_rst_ph / START edge_fall
                    vs the choices phase_bind.py derived from a die STA on the ROUTED die clock (<plan dir>/phase_bind.json or
                    $OT_PHASE_BIND); NO-BIND when a phase-using plan has none (HEAD W10: 33/358 entry phases below 60 ps)
@@ -140,7 +143,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
           ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
-          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("PHASE-BIND", "adv_phase_bind"))
+          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
