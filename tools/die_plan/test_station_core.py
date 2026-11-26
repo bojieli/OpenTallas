@@ -93,3 +93,16 @@ def test_own_landing_macro_is_not_a_crossing_and_pad_relay_sites_are_read():
         t["relay_sites"][f"u_lpad_i.q[{b}]"] = [500.0, 300.0 if b else 450.0]
     r = SC.rows(t, PINS)[0]
     assert r["kind"] == "bus_chain_relay_sites" and r["sites_in_macro"] == 1 and r["macros"] == ["u_c"]
+
+
+def test_bound_packed_sites_keep_real_center_crossings_distinct():
+    e = dict(conn="bus:i", bit_route="per_bit", leaf_um=[650.0, 440.0],
+             regs_um=[[300.0, 450.0], [450.0, 450.0], [700.0, 450.0]], bits=5)
+    t = typ(internal_stations=[e])
+    packed = {"i": {"instance": "u_lpad_i", "depth": 2}}
+    static = SC.rows(t, PINS)[0]
+    exact = SC.rows(t, PINS, packed=packed)[0]
+    assert static["kind"] == "bus_chain_in"
+    assert exact["kind"] == "packed_lane_pad" and exact["sites"] == 2 and exact["sites_in_macro"] == 0
+    assert exact["packed_center_hops_crossing"] == 1 and exact["routes_crossing"] == 0
+    assert "bit route coverage requires emitted placement" in SC.line("t", exact)
