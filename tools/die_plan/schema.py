@@ -1519,6 +1519,9 @@ SCHEMA = {
                                "param": {"type": "string"}}}},
             # S81-COLGEN-3 11-17: acknowledgement that the token sim / compiler consumed the internal pipe cycles declared in
             # bind_core_input_pipe.json (relay_depth stages); digest = lane_asbuilt_latency.internal_pipe_digest of that record
+            # KV-INT-R2 11-26: extra cycles the PC read-landing consumer (kv_static_programme profile landing_uncertainty) waits after
+            # the PHY->PCC ingress relay_depth stages (kv3_pc* pc__pi); default 0 -> landing_uncertainty stays 1
+            "pc_landing_extra": {"type": "integer", "minimum": 0, "maximum": 64},
             "internal_pipe_ack": {"type": "object", "additionalProperties": False, "required": ["digest"],
                                   "properties": {"digest": {"type": "string", "minLength": 8}, "note": {"type": "string"}}},
             # BIND-EQDEPTH 11-23: equal-depth align groups (align_groups.py): bits that must keep cycle alignment across a

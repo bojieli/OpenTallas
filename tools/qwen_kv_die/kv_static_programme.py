@@ -578,6 +578,18 @@ def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
                      '+ emb_tx_slot relays; r = RESULT at the KV d2d + svc relays to the fan root')
 
 
+def plan_pc_landing_extra(plan_path=None):
+    """KV-INT-R2 11-26: latency.pc_landing_extra of the plan named by OT_KV_PLAN_JSON (or plan_path): extra edges the PC read-landing
+    consumer waits for PHY->PCC ingress relay_depth stages.  Absent plan / key = 0 (landing_uncertainty stays 1)."""
+    path = plan_path or os.environ.get('OT_KV_PLAN_JSON')
+    if not path:
+        return 0
+    n = (json.loads(Path(path).read_text()).get('latency') or {}).get('pc_landing_extra', 0)
+    if type(n) is not int or not 0 <= n <= 64:
+        raise ValueError(f'latency.pc_landing_extra {n!r}: integer 0..64 expected')
+    return n
+
+
 def profile(kind, ages=None):
     if kind == 'component':
         return dict(kind='component', start_relays=0, att=0, rx=0, writer=0, kvn=0, groups=0, crossing=False,
@@ -596,7 +608,7 @@ def profile(kind, ages=None):
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19,
                 pv_result_extra=int(ages['pv'].get('RESULT_TRUNK_EXTRA', 0)),
                 attn_service_pad=int(os.environ.get('OT_KV_ATTN_SERVICE_PAD', '0')), d_qk=QKH32.calendar_d_qk(ages['qk']['QK_ISSUE_AGE'], AC.QK_CONSUME),
-                phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
+                phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1 + plan_pc_landing_extra(),
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V), astk_law=astk_law() if ASTK_EXPAND else None,
                 # KV-BOOTAGE 10-19: the result face's boot F_DLY (kv_bootage image; 1 = the closed face law, unchanged)
                 f_dly=((ages.get('boot_ages') or {}).get('attn') or {}).get('F_DLY') or 1,
