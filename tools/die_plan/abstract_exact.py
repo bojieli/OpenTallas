@@ -264,6 +264,12 @@ def pin_eol_fix(lef_in, lef_out, layers=STALE_LAYERS):
         if m and cur and sig and lay in layers:
             pins.append((cur, lay, tuple(_nm(v) for v in m.groups()), i))
     move, ins = set(), {}
+    # A routed pin stack can publish a conductor already present in OBS.
+    # Remove the redundant OBS box only if exactly one signal pin owns it.
+    pin_owners = {}
+    for pin, L, r, _ in pins:
+        pin_owners.setdefault((L, r), set()).add(pin)
+    duplicates = {(L, r) for (L, r), owners in pin_owners.items() if len(owners) == 1}
     for pin, L, r, i in pins:
         e = _nm(EOL_CLEAR[L])
         horiz = (r[2] - r[0]) >= (r[3] - r[1])
@@ -279,6 +285,7 @@ def pin_eol_fix(lef_in, lef_out, layers=STALE_LAYERS):
             if 0 < ext < e:
                 move.add((L, q))
                 ins.setdefault(i, []).append(q)
+    redundant = move | duplicates
     out, lay = [], None
     for j, ln in enumerate(lines):
         if j > obs_start:
@@ -286,7 +293,7 @@ def pin_eol_fix(lef_in, lef_out, layers=STALE_LAYERS):
             if m:
                 lay = m.group(1)
             m = _RECT.match(ln)
-            if m and (lay, tuple(_nm(v) for v in m.groups())) in move:
+            if m and (lay, tuple(_nm(v) for v in m.groups())) in redundant:
                 continue
         out.append(ln)
         for q in ins.get(j, []):
