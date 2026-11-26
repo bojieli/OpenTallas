@@ -227,19 +227,16 @@ def planned_sinks(P, tn, bit_sites=False):
             for j in range(1, k):
                 xy = tuple(regs[j]) if len(regs) >= k else _point_at(pts, L * j / k)
                 out.append((xy[0], xy[1], f"ft_s{j}"))
-        else:
-            if name in exact_faces:
-                e=exact_faces[name];cw,ch=e["bit_site_cell_um"];bx,by=e["face_bit_sites_um"][bit]
-                out.append((bx+cw/2,by+ch/2,"face"))
-            else:
-                out.append(_inset(x, y, face, w, h) + ("face",))
-    for bus,e in exact_faces.items():
-        # Payload face bits were counted above. Exact-bank physical metadata
-        # also carries the epoch FF, which is not a payload bus pin.
-        n=max((bit for name,bit,*_ in pins if name==bus),default=-1)+1
-        cw,ch=e["bit_site_cell_um"]
-        for bx,by in e["face_bit_sites_um"][n:]:
-            out.append((bx+cw/2,by+ch/2,"face_epoch"))
+        elif name not in exact_faces:
+            out.append(_inset(x, y, face, w, h) + ("face",))
+    for e in exact_faces.values():
+        # Exact physical banks list native payload registers followed by the
+        # epoch register. A public bus may have additional unregistered pins.
+        cw, ch = e["bit_site_cell_um"]
+        sites = e["face_bit_sites_um"]
+        out.extend((bx + cw / 2, by + ch / 2, "face") for bx, by in sites[:-1])
+        bx, by = sites[-1]
+        out.append((bx + cw / 2, by + ch / 2, "face_epoch"))
     out += per_bit_station_sites(t, pins, __import__("pathlib").Path(P.path).resolve().parent if getattr(P, "path", None) else None)
     import soft_reg_banks
     out += [(x, y, "soft_reg_bank") for x, y, _ in soft_reg_banks.sink_sites(t)]
