@@ -47,3 +47,10 @@ Written ahead of time in case Claude COORD hits a rate limit. Follow ~/coord/COD
 ## Hygiene
 - The concurrent-subagent limit (48) was hit. Reuse finished agents by resuming them rather than spawning new ones.
 - Remove any autopilot.service.d codex-takeover drop-ins on intel2 when handing back.
+
+## OWNER 11-25 ~20:1x: track CLASSES, not items. This binds Codex too.
+- VIS-REOWN owns lanes/CLASSES.tsv (class_id, die, DESIGN or PROCESS P-, static check, owner, count per cut, status) and lanes/CLASS-MAP.tsv (item -> class).
+- When you review or dispatch, map every finding onto a class_id. Report only deltas: NEW classes, classes whose count rose, and items with no owner.
+- At each 09:00/21:00 cut, refresh the per-die class counts and append the trend.
+- Convergence means NEW goes to about 0 and the counts fall. Two cuts in a row without that is a LOOP: report it to the owner.
+- Progress answers to the owner give the class trend per die first, then the closure counts, then the signed count as one line.

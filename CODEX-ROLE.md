@@ -101,3 +101,5 @@ up to 17 h (removed 11-24 04:3x).
    must print 0. After the next tick, ROUTE-HELD kits with an auto-ACCEPT must route (no WAIT-VISUAL line for them).
 3. **Log** the removal as one `CLAUDE:` line in ~/coord/HANDOFF.md.
 Any setting added for a takeover names this checklist in its comment, so the next handback finds it.
+
+**11-25 20:1x (COORD, OWNER ruling): track problem CLASSES, not items.** Use lanes/CLASSES.tsv and lanes/CLASS-MAP.tsv, owned by VIS-REOWN. Map every finding to a class_id and report only deltas (NEW classes, rising counts, unowned items). Convergence test, at each 09:00 and 21:00 cut: NEW classes go to about 0 and class counts fall. Two cuts without that is a LOOP, and it goes to the owner. Twice-daily cuts and lanes/CLOSURE.tsv also apply (OWNER 11-25 19:4x). Details are in handoff/claude_to_codex_1125_2005.md.
