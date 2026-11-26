@@ -141,7 +141,7 @@ def test_missing_manifest_batch_skips_checkout_and_replays_mixed_batch(tmp_path,
     monkeypatch.setattr(T, "HERE", tmp_path)
     monkeypatch.setattr(T, "git", lambda *_: SimpleNamespace(returncode=0, stdout="current"))
     monkeypatch.setattr(T, "unlock_completed_sources", lambda *_: [])
-    monkeypatch.setattr(T, "live_dies", lambda *_: set())
+    monkeypatch.setattr(T, "live_dies", lambda *_, **__: set())
     monkeypatch.setattr(T, "source_staging_refusal", lambda *_: operations.append("reserve"))
     monkeypatch.setattr(T, "source_snapshot", lambda *_: operations.append("checkout") or "/pinned")
     monkeypatch.setattr(T.subprocess, "run", lambda argv: operations.append(argv) or SimpleNamespace(returncode=0))
