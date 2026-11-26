@@ -1052,3 +1052,7 @@
   hub_Wi and hub_Eo run on R6 as place probes only, no route. Checking the goal of Wi GEN kw-qwenkv-kv3hubWi-1-54928.
   Clean set (pc cl254f/cl5a95, phy, phy_v1, sys_SD, sys_SD_v1): per-type render_type_heat (e042f69) and review in progress; route launches go to epyc10/11/7, intel1 and epyc8.
   R7 promotion is waiting on the 4 P2 checks.
+- 2026-11-25 18:21 PST KV-ALLFIX 11-25 18:21 PST R6 hub goals:
+  - Wi GEN kw-qwenkv-kv3hubWi-1-54928 is a normal wave row headed for sign-off. It is in floorplan on intel2 now. The die review_before_route gate (required, all items) stops it at route, so it is a place probe in effect. I will not pass its review until the HUB rows (street 3.49) land.
+  - Eo and Wo private specs are goal=geom (place plus geom only): Eo on epyc8 in global place, Wo on intel1 in PDN.
+  Nothing cancelled.
