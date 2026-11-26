@@ -14855,3 +14855,4 @@ FAILED [AUTOPILOT e5d7435817f4] 2026-11-26 08:14:13 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc7 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 10.4 h job 10.4 h: no new meaningful log line for 10.0 h; last: 15.74. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs__t7' to `<abc-temp-dir>/input.bli
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 10.2 h job 13.6 h: no new meaningful log line for 9.5 h; last: [INFO GRT-0102] Start extra iteration 2/5
   NO-PROGRESS epyc11 svc_lo_dsdv_svc_rs_w__t1 1_2_yosys stage 7.1 h job 7.2 h: no new meaningful log line for 6.7 h; last: 15.65. Extracting gate netlist of module `\s81p_svc_lo_dsdv_svc_rs_w__t1' to `<abc-temp-dir>/input.b
+- 2026-11-26 08:25 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on intel1 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
