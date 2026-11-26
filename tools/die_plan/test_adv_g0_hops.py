@@ -46,3 +46,34 @@ def test_bit_lines_report_per_bit_over_reach(monkeypatch):
 def test_bit_lines_off(monkeypatch):
     monkeypatch.setenv("OT_ADV_G0_HOPS_BIT_S", "0")
     assert A.bit_lines(None)[0] == "WARN ADV-G0-HOPS bit summary off (OT_ADV_G0_HOPS_BIT_S=0)"
+
+
+def test_regs_only_advisory_uses_the_kits_affine_lanes(monkeypatch):
+    from types import SimpleNamespace
+
+    import die_hop_scan as D
+
+    slot = dict(name="ft0", stations=2, regs_um=[[500, 800], [500, 400]])
+    P = SimpleNamespace(types={"T": {}})
+    pins = {"ft0_i": {0: (100, 800, "N"), 1: (900, 800, "N")},
+            "ft0_o": {0: (100, 0, "S"), 1: (900, 0, "S")}}
+    monkeypatch.setattr(D, "normal_slot", lambda *_: True)
+    monkeypatch.setattr(D, "input_site", lambda p: p[:2])
+    monkeypatch.delenv("OT_FT_LANE", raising=False)
+    assert A.slot_bit_worst(P, "T", slot, pins)[0] == 400
+    monkeypatch.setenv("OT_FT_LANE", "0")
+    assert A.slot_bit_worst(P, "T", slot, pins)[0] == 800
+
+
+def test_landed_first_hop_uses_the_declared_ring_extent(monkeypatch):
+    from types import SimpleNamespace
+
+    import die_hop_scan as D
+
+    slot = dict(name="ft0", stations=2, regs_um=[[0, 1000], [0, 300]])
+    landing = {"bands": {"ft0_i": {"rect_um": [0, 600, 10, 650]}}}
+    P = SimpleNamespace(types={"T": {"clock": {"landing_contract": landing}}})
+    pins = {"ft0_i": {0: (0, 1000, "N")}, "ft0_o": {0: (0, 0, "S")}}
+    monkeypatch.setattr(D, "normal_slot", lambda *_: False)
+    monkeypatch.setattr(D, "input_site", lambda p: p[:2])
+    assert A.slot_bit_worst(P, "T", slot, pins) == (360, 0, 0)

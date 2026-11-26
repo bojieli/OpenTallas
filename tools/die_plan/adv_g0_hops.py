@@ -8,9 +8,9 @@ and DERIVEDNAME (derived_drop.py: stale START raw pointers, the 28 reset-reach F
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.  Needs a tree whose tools/die_plan carries check.py.
 
 BIT lines (S81-B1-RTHOPS 11-24, report only): check_hops measures station CENTRES.  A wide ft slot (1104 bits) can pass there
-and still have bits whose real hop is over reach: S0 (the bit's in pin) -> its S1 bit site, Sj -> Sj+1 bit sites, last bit site
--> its out pin (die_hop_scan.station_site / pin_table, the same per-bit model ft_reach_fix uses; the seam beyond the out pin is
-not added).  On c8 + RTHOPS-98 the centres were all <= 405 while 14 slots had bits up to 484 um.  Bounded by
+and still have bits whose planned hop is over reach: input pin or declared landing ring -> first bit site, successive bit sites,
+and last bit site -> out pin. The planned sites include the kit's default affine offsets for regs_um and retain explicit bit sites.
+The farthest ring corner bounds the first post-landing hop. The seam beyond the out pin is excluded.  On c8 + RTHOPS-98 the centres were all <= 405 while 14 slots had bits up to 484 um.  Bounded by
 OT_ADV_G0_HOPS_BIT_S seconds (default 120; 0 = off); a partial scan says so in its summary.
 """
 import os
@@ -62,13 +62,33 @@ def slot_bit_worst(P, tn, slot, pins):
     pi, po = pins.get(sn + "_i", {}), pins.get(sn + "_o", {})
     nm = D.normal_slot(P, tn, sn)
     exp0 = bool(nm) and slot.get("explicit_stage0") is True   # unlanded explicit S0: in pin -> S0 is a placed hop
+    t = getattr(P, "types", {}).get(tn, {})
+    band = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands", {}).get(sn + "_i", {})
+    rect = band.get("rect_um") if not nm else None
+    corners = [(x, y) for x in rect[::2] for y in rect[1::2]] if rect else []
+    affine = (pi and slot.get("regs_um") and not slot.get("bit_sites_um")
+              and not t.get("ft_full_stage_placement_file") and os.environ.get("OT_FT_LANE") != "0")
+    if affine:
+        in_x, in_y = (sum(p[i] for p in pi.values()) / len(pi) for i in (0, 1))
+        if po:
+            out_x, out_y = (sum(p[i] for p in po.values()) / len(po) for i in (0, 1))
     best = (0.0, None, None)
     for b in set(pi) | set(po):
         a, z = pi.get(b) or po[b], po.get(b) or pi[b]
         st = [D.station_site(slot, j, b, a, z, normal=nm) for j in range(k)]
+        if affine and b in pi:
+            dx, dy = a[0] - in_x, a[1] - in_y
+            ex, ey = (z[0] - out_x, z[1] - out_y) if b in po else (dx, dy)
+            for j in range(0 if exp0 else 1, k):
+                x, y = st[j]
+                fraction = j / k
+                st[j] = (x + (1 - fraction)*dx + fraction*ex,
+                         y + (1 - fraction)*dy + fraction*ey)
         if exp0 and b in pi:   # QC-STA-HOP: explicit stage 0 is a placed site, so in pin -> S0 is a real hop (index -1)
             st = [D.input_site(pi[b])] + st
         h = [D.md(x, y) for x, y in zip(st, st[1:])]
+        if corners and h:
+            h[0] = max(D.md(p, st[1]) for p in corners)
         if b in po:
             h.append(D.md(st[-1], D.input_site(po[b])))
         off = -1 if (exp0 and b in pi) else 0
