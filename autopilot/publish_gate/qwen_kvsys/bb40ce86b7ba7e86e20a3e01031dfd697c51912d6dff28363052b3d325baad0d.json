@@ -1,5 +1,6 @@
 {
  "advisory": [
+  "dry_gen",
   "foreign_tree"
  ],
  "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
@@ -15,22 +16,20 @@
    "verdict": "PASS"
   },
   "dry_gen": {
-   "dir": "/home/ubuntu/tmp/kvallfix/r8_g3_ship/publish/qwen_kvsys/bb40ce86b7ba/kv3_hg_v1p4",
-   "gen_host": "intel2",
-   "item": "kv3_hg_v1p4",
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/bb40ce86b7ba/kv3_hg_v1",
+   "gen_host": "intel1",
+   "item": "kv3_hg_v1",
    "kind": "type",
-   "origin": "/home/ubuntu/tmp/kvallfix/r8_g3_ship/publish/qwen_kvsys/bb40ce86b7ba/kv3_hg_v1p4/published_gen_origin.json",
-   "origin_sha256": "3b3a85c9068d5db2b62fc65888639e12883459b1d551e2816fa1e506979bbab0",
-   "preflight_fail_advisory": null,
-   "proof_kind": "published-gen",
-   "rc": 0,
-   "result": "DRY-PASS",
-   "result_sha256": "e1066346a3b98118908fb90d286caf1ca9e838c7a64036cbf1ce7e3a6c92d9bd",
-   "spec_sha256": "7578ec4a4cad1a41454846cd6d7193b897670315517b68024476b65fd45bc77e",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/bb40ce86b7ba/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "69bd673216d35bf9db87baec3c08a2bfe7a74b82f7011c9f1c47cb4929f82b64",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "dcc0dbc3727a6dcee87b5408c7953f8832aab09cd341544a991cad78ae757f0e",
    "spec_src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125",
-   "stage": "preflight",
-   "unit_log_sha256": "f658d28aeb1564239d39310a4624b5f51a1a3305bd25676ca8edfea45360079c",
-   "verdict": "PASS"
+   "stage": "kit_rtl",
+   "verdict": "FAIL",
+   "why": "stage kit_rtl: bind: ERROR kit-rtl: no partition type kv3_hg_v1 in the plan"
   },
   "foreign_tree": {
    "advisory": true,
@@ -90,12 +89,12 @@
     "verdict": "PASS"
    },
    "g0_rc": 0,
-   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-jzwja6g8/g0_report.json",
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-37wmlep0/g0_report.json",
    "pre_rc": 0,
    "reset_solved": false,
-   "tail": "PRE: plicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nPRE-TIME ADVISORY 90 s (PRE at 481 s)\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "tail": "PRE: licit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nPRE-TIME ADVISORY 125 s (PRE at 568 s)\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
    "tools": "rt",
-   "tools_dir": "/srv/opentallas-scratch2/claude/rt/98ec6b0b1923/tools/die_plan",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/cda4c246bbc8/tools/die_plan",
    "verdict": "PASS"
   },
   "schema": {
@@ -116,21 +115,21 @@
    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_bind_1125/asbuilt_manifest_injected.json"
   ]
  },
- "gate_s": 2363.2,
+ "gate_s": 2291.5,
  "hosts": [
-  "intel2",
   "intel1",
-  "epyc8"
+  "epyc8",
+  "intel2"
  ],
- "item": "kv3_hg_v1p4",
+ "item": "kv3_hg_v1",
  "manifest_hash": "bb40ce86b7ba7e86e20a3e01031dfd697c51912d6dff28363052b3d325baad0d",
  "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_estrip_r6_g3.json",
  "plan_sha256": "bac4f9e1bf66dfe8a83a7912bc886c39925bcd2559d24314dbbabe620932da2a",
  "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r6_publish_1125.json",
  "rows_proofs": [],
  "schema": "opentallas.publish_gate.v1",
- "static_s": 2363.2,
- "t": 1795671795.627616,
+ "static_s": 2291.5,
+ "t": 1795674348.0461478,
  "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125",
- "verdict": "PASS"
+ "verdict": "FAIL"
 }
