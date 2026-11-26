@@ -748,7 +748,9 @@ SCHEMA = {
                             "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
                                 "follow_re": {"type": "string"},
                                 "fixed_taps": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z0-9_./-]+$"},
-                                    "additionalProperties": _name}}},
+                                    "additionalProperties": _name},
+                                "fixed_before_reset_split": {"type": "array", "minItems": 1, "uniqueItems": True,
+                                    "items": {"type": "string", "pattern": "^[A-Za-z0-9_./-]+$"}}}},
                         # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,
                         # private_leaf.tcl, run_kit.sh post-CTS step): clone the leaf clock buffer that drives the anchor
                         # instance's clock pin (a macro) and move only the sinks matching re onto the clone: they get the

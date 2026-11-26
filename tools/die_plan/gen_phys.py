@@ -4465,6 +4465,14 @@ def tap_group_exports(t):
             raise ValueError("clock.tap_group.fixed_taps uses unsafe group or port name")
     if fixed:
         out.append("export OT_TAP_GROUP_FIXED = " + ",".join(f"{g}:{fixed[g]}" for g in sorted(fixed)))
+    group_cfg = clock["tap_group"]
+    if "fixed_before_reset_split" in group_cfg:
+        groups = group_cfg["fixed_before_reset_split"]
+        if (not isinstance(groups, list) or not groups or
+                any(not isinstance(group, str) or group not in fixed for group in groups) or
+                len(groups) != len(set(groups)) or clock.get("tap_reset_split") is not True):
+            raise ValueError("clock.tap_group.fixed_before_reset_split requires distinct fixed groups and tap_reset_split")
+        out.append("export OT_TAP_FIXED_BEFORE_RESET_SPLIT = " + ",".join(groups))
     # HEAD-TYPES-OPUS 11-18 (hd_mesh mesh_w1 -> mesh_w2, FABLE-DIE-HEAD 05:42): group mode also turns on the reset-relay
     # follower rule (clock_taps.tcl default u_rrl_<k>), which re-hung 20 relays onto remote taps and left 5 taps with a late
     # branch the balancer cannot pad.  follow_re (default absent = the clock_taps default) sets OT_TAP_FOLLOW_RE; "" = off.
