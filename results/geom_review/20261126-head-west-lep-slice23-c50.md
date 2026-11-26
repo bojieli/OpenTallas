@@ -1,0 +1,13 @@
+# HEAD West LEP slice 23 clock group
+
+**Scoped plan PASS. A fresh actual placement must be reviewed before routing.**
+
+The retained E8 tap-balanced rows2 CTS has g_local[24] and the first slice23 valid stage on clk_t40. The second valid stage sits on clk_t54. On that exact checkpoint, reset removal is −78.158 ps and the related valid-stage data hold is −60.730 ps. Both production flops share the same raw reset equation. The second flop takes its D directly from the first valid stage.
+
+W10 source candidate f35e03694ab3873bf9ddcad9f3a841215d5455e31f72a26016337d9f130bba7c fixes the two exact data clock pins to clk_t54. The named reset-split option reasserts this group after short-pair affinity so the stock splitter sees the final capture clock. The reset copy is proposed at the two sink centers by the unchanged stock splitter. Other existing fixed clock groups retain their original assignment sequence.
+
+I opened the revised image for this exact source at epyc8:/srv/opentallas-scratch2/claude/codex-head-west/c51_1126/c50-r2/slice23_t54_plan_review.png. The planned clock legs run south from the tap along the west side of the pair macro, then enter the two nearby register sites. Both are within the 200 µm tap radius at projected 188.001 and 167.481 µm. The destination tap had 126 of 800 sinks. One moved flop and one projected reset copy would give 128. The picture uses the actual retained centers. A later CTS result must confirm the reset copy, group membership, exact period constraints, hold, setup, and any upstream reset regression.
+
+Stock Tcl identified exactly two DFFs out of 19,619 and rejected adjacent selectors. The regenerated RTL wrapper is byte-identical to W10. An isolated lockstep using both production valid equations passed 256 sampled edges, and a wrong-phase mutant departed on falling edge 4. Source PRE in E8 unit 3218895 passed with zero findings and 101 advisories.
+
+The independent flow commit is e0a04c7340306e850213276677f0372bf12ed8d1. On the new fixed_before_reset_split option, the Tcl regression confirms only designated groups are reasserted early. The default path preserves its existing ordering. The two focused suites passed 54 tests. The canonical gate uses E8 unit 3339412. The first candidate remained source-only after revealing the stock affinity ordering. The final guarded rows and source evidence are under epyc8:/srv/opentallas-scratch2/claude/codex-head-west/c51_1126/c50-r2. The West integrator owns combined review and any later submission.
