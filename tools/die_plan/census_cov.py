@@ -25,6 +25,8 @@ Paths are relative to the plan file. The instance map JSON:
      "forward_routes": [{"src": "host", "src_bus": "link_rst_n", "dst": "serdes_E", "dst_bus": "rst_n",
                          "lanes": ["L745", "L746", "L747"]}],  optional exact control-route witnesses;
                                                              validated lane/slot identity, not an exemption
+     "route_lane_reference": "<split_lane_reference.json>",   required when a forward route selects a subset of a lane
+     Route "lane_bits": {"<lane ID>": [<payload bit>, ...]}     indexes a frozen native driver in an existing wider lane
      "collapse_broadcast": true,                              count one driver bus once per sink partition/group
      "bit_rules": [{"inst": "<regex>", "port": "<regex>", "lo": 0, "hi": 521, "part": "<partition>"}],
                                                               bitcon only: a destination split over partitions by bit
@@ -269,9 +271,28 @@ def coverage(P, plan_dir, R):
 
         # A small control can travel independently beside a wide data route. Such additions require an
         # explicit, source-bound route witness; aggregate capacity alone must not hide a missing control lane.
-        proven = defaultdict(list)
+        proven, reserved = defaultdict(list), defaultdict(set)
         route_keys = set()
-        for ri, route in enumerate(mp.get("forward_routes", [])):
+        forward_routes = mp.get("forward_routes", [])
+        native_lanes, native_cells, native_groups = {}, {}, {}
+        has_reference = "route_lane_reference" in mp
+        if has_reference or any(isinstance(r, dict) and r.get("lane_bits") for r in forward_routes):
+            from split_bind_routes import SCHEMA, payload_sha256
+            try:
+                ref = json.loads((Path(plan_dir) / mp["route_lane_reference"]).read_text())
+                lanes = ref["lanes"]
+                if ref["schema"] != SCHEMA or payload_sha256(lanes) != ref["payload_sha256"]:
+                    raise ValueError("wrong split reference schema or payload digest")
+                native_lanes = {r["id"]: r for r in lanes}
+                if len(native_lanes) != len(lanes):
+                    raise ValueError("duplicate split reference lane")
+                native_cells, native_groups = ref["cells"], ref["part_groups"]
+                if not isinstance(native_cells, dict) or not isinstance(native_groups, dict):
+                    raise ValueError("malformed split reference cells or groups")
+            except (OSError, KeyError, TypeError, ValueError) as exc:
+                R.err("census", f"census[{k}] forward_routes: invalid native lane reference: {exc}")
+                native_lanes = {}
+        for ri, route in enumerate(forward_routes):
             prefix = f"census[{k}] forward_routes[{ri}]"
             if not isinstance(route, dict) or not all(isinstance(route.get(f), str)
                     for f in ("src", "src_bus", "dst", "dst_bus")):
@@ -291,40 +312,83 @@ def coverage(P, plan_dir, R):
                 R.err("census", f"{prefix}: endpoints must map to distinct real partitions with positive width")
                 continue
             expected_bus = f"{row['src']}_{row['src_bus']}"
-            normalize = lambda bus: re.sub(r"_d[0-9]+$", "", re.sub(r"^[io]_", "", bus))
+
+            def bus_matches(bus):
+                stem = re.sub(r"_d[0-9]+$", "", re.sub(r"^[io]_", "", bus))
+                return stem == expected_bus or (has_reference and re.fullmatch(
+                    re.escape(expected_bus) + r"_p(?:_[0-9]+)?", stem))
+
+            selectors = route.get("lane_bits", {})
+            if not isinstance(selectors, dict) or selectors.keys() - set(lids) or any(
+                not isinstance(indices, list) or len(indices) != row["bits"]
+                or any(type(i) is not int or i < 0 for i in indices) or len(set(indices)) != len(indices)
+                for indices in selectors.values()
+            ):
+                R.err("census", f"{prefix}: invalid lane bit selection")
+                continue
             current, valid = start, True
+            observed, bits_used = None, set()
             for j, lid in enumerate(lids):
                 lane = P.lanes.get(lid)
                 if not lane or not lane.get("ports"):
                     valid = False
                     break
                 ports_ = [P.ports.get(pid) for pid in lane["ports"]]
-                if any(not pr or pr.get("width") != row["bits"] for pr in ports_) or \
-                        normalize(ports_[0]["src"]["bus"]) != expected_bus or \
-                        normalize(ports_[-1]["dst"]["bus"]) != expected_bus:
+                width = ports_[0].get("width") if ports_[0] else None
+                indices = selectors.get(lid, range(row["bits"]))
+                if type(width) is not int or any(not pr or pr.get("width") != width for pr in ports_) or \
+                        max(indices) >= width or (lid not in selectors and width != row["bits"]):
                     valid = False
                     break
+                a_, b_ = ports_[0]["src"]["part"], ports_[-1]["dst"]["part"]
+                names_match = bus_matches(ports_[0]["src"]["bus"]) and bus_matches(ports_[-1]["dst"]["bus"])
+                if not names_match and lid not in selectors:
+                    valid = False
+                    break
+                ref_lane = native_lanes.get(lid)
+                if lid in selectors and (ref_lane is None or observed is None):
+                    valid = False
+                    break
+                if ref_lane is not None:
+                    drivers = ref_lane["drivers"]
+                    if (a_ not in native_groups.get(ref_lane["src"], [ref_lane["src"]])
+                            or b_ not in native_groups.get(ref_lane["dst"], [ref_lane["dst"]])
+                            or max(indices) >= len(drivers)):
+                        valid = False
+                        break
+                    mapped = [drivers[i] for i in indices]
+                    if observed is None:
+                        if any(not isinstance(driver, list) or len(driver) != 3 or driver[1] != row["src_bus"]
+                               or not isinstance(native_cells.get(driver[0]), dict)
+                               or start not in native_groups.get(native_cells[driver[0]].get("part"), ())
+                               for driver in mapped):
+                            valid = False
+                            break
+                        observed = mapped
+                    elif mapped != observed:
+                        valid = False
+                        break
                 for left, right in zip(ports_, ports_[1:]):
                     mid = left["dst"]["part"]
                     in_bus, out_bus = left["dst"]["bus"], right["src"]["bus"]
                     slot = P.slot(mid, in_bus[:-2]) if in_bus.endswith("_i") else None
                     if mid != right["src"]["part"] or not is_fwd(g_of.get(mid, mid)) or \
-                            not slot or out_bus != in_bus[:-2] + "_o" or slot.get("width") != row["bits"]:
+                            not slot or out_bus != in_bus[:-2] + "_o" or slot.get("width") != width:
                         valid = False
                         break
-                a_, b_ = ports_[0]["src"]["part"], ports_[-1]["dst"]["part"]
                 if a_ != current or (j and not is_fwd(g_of.get(a_, a_))):
                     valid = False
                     break
                 current = b_
-            if not valid or current != finish:
+                bits_used.update((lid, i) for i in indices)
+            if not valid or current != finish or (has_reference and observed is None):
                 R.err("census", f"{prefix}: missing, discontinuous, wrong-width/bus, undeclared-forwarder or wrong-endpoint route")
                 continue
             pair = (g_of.get(start, start), g_of.get(finish, finish))
-            used = {lid for _, path in proven[pair] for lid in path}
-            if used.intersection(lids):
+            if reserved[pair].intersection(bits_used):
                 R.err("census", f"{prefix}: witnesses for {pair} reuse planned lane capacity")
                 continue
+            reserved[pair].update(bits_used)
             proven[pair].append((row["bits"], lids))
 
         def bottleneck(a, b, graph=None):
