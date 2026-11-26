@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.grt_est_calibration.v1",
+ "warn_util": 0.8,
+ "overflow_bad": 2000.0,
+ "min_bad": 2,
+ "m_max": 4.0,
+ "families": {
+  "fw": {
+   "multiplier": 1.0,
+   "status": "no-data",
+   "n": 0,
+   "n_bad": 0,
+   "median_bad_est_peak": null,
+   "clean_false_alarms": 0,
+   "n_clean": 0,
+   "types": []
+  },
+  "fe": {
+   "multiplier": 1.0,
+   "status": "no-data",
+   "n": 0,
+   "n_bad": 0,
+   "median_bad_est_peak": null,
+   "clean_false_alarms": 0,
+   "n_clean": 0,
+   "types": []
+  },
+  "st_a": {
+   "multiplier": 1.0,
+   "status": "no-data",
+   "n": 0,
+   "n_bad": 0,
+   "median_bad_est_peak": null,
+   "clean_false_alarms": 0,
+   "n_clean": 0,
+   "types": []
+  },
+  "coll": {
+   "multiplier": 1.0,
+   "status": "calibrated",
+   "n": 2,
+   "n_bad": 2,
+   "median_bad_est_peak": 2.194,
+   "clean_false_alarms": 0,
+   "n_clean": 0,
+   "types": [
+    "coll_core"
+   ]
+  }
+ }
+}

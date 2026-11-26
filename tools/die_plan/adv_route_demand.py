@@ -30,7 +30,9 @@ with 4_cts dumps + 18 type totals from NOPROG-TABLE):
     findings(raw, plan_path, tree=None, types=None, warn=WARN_UTIL) -> ["WARN ADV-ROUTE-DEMAND ..."]
     grid(t) -> dict(nx, ny, G, util, hot, ...) for one plan type (renders / calibration)
 """
+import json
 import math
+from pathlib import Path
 import re
 
 CHECK = "ROUTE-DEMAND"
@@ -86,6 +88,34 @@ def legs(t):
         for a, b in zip(pts, pts[1:]):
             out.append((float(a[0]), float(a[1]), float(b[0]), float(b[1]), n, "ft " + str(f.get("name", "?"))))
     return out
+
+
+CALIB_ENV = "OT_GRT_CALIB_JSON"
+_CALIB = {}
+
+
+def calibration(env=None):
+    """GRT-EST-OPTIMISTIC: {family: multiplier} from $OT_GRT_CALIB_JSON, else tools/die_plan/grt_est_calibration.json next to this module; {} when absent.
+    Only status "calibrated" families scale.  Advisory: the usable supply is divided by the multiplier."""
+    import os
+    path = (env if env is not None else os.environ).get(CALIB_ENV) or str(Path(__file__).resolve().parent / "grt_est_calibration.json")
+    if path not in _CALIB:
+        try:
+            d = json.loads(Path(path).read_text())
+            _CALIB[path] = {f: float(v["multiplier"]) for f, v in (d.get("families") or {}).items()
+                            if v.get("status") == "calibrated" and float(v.get("multiplier", 1)) > 1.0}
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            _CALIB[path] = {}
+    return _CALIB[path]
+
+
+def type_multiplier(tn):
+    try:
+        import grt_est_calibrate as GC
+    except ImportError:
+        return 1.0, None
+    fam = GC.family_of(tn)
+    return (calibration().get(fam, 1.0), fam) if fam else (1.0, None)
 
 
 def grid(t, supply_frac=None, g=G):
@@ -187,7 +217,8 @@ def _short(n):
 
 
 def type_lines(tn, t, warn=WARN_UTIL):
-    gr = grid(t)
+    mult, fam = type_multiplier(tn)
+    gr = grid(t, SUPPLY_FRAC / mult) if mult > 1.0 else grid(t)
     regs = _regions(gr, warn)
     if not regs:
         return []
@@ -208,7 +239,7 @@ def type_lines(tn, t, warn=WARN_UTIL):
             tot[lab] = tot.get(lab, 0.0) + k * (dH + dV)
     top = sorted(tot.items(), key=lambda kv: -kv[1])[:3]
     s = (f"WARN ADV-{CHECK} {tn}: {hot} gcell(s) ({hot * g * g / 1e3:.1f}k um2) at est. routing util >= {warn} "
-         f"(peak {peak:.2f}); worst region x{box[0]:.0f}-{box[2]:.0f} y{box[1]:.0f}-{box[3]:.0f} "
+         f"(peak {peak:.2f}{f', calibrated x{mult:g} family {fam}' if mult > 1.0 else ''}); worst region x{box[0]:.0f}-{box[2]:.0f} y{box[1]:.0f}-{box[3]:.0f} "
          f"({len(r)} gcells, {on_core:.0%} over cores)")
     if ch:
         s += "; channel " + ", ".join(f"{c[0]:g} um {c[1]} {_short(c[2])}|{_short(c[3])}" for c in ch[:2])
