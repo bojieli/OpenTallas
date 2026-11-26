@@ -2641,3 +2641,13 @@
 - 2026-11-25 18:07 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-683333-1795637654 on tolerant-swine: rc=0 after 21310 s, ended 18:07:13, log /home/ubuntu/tmp/s81int/c8s_mv_epyc12_1125/spec_slice_station__t22/chain_a1.live.log, cmd: --mem 56 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
 - 2026-11-25 18:14 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-1083380-1795649833 on tolerant-swine: rc=0 after 17740 s, ended 18:14:38, log /home/ubuntu/tmp/s81int/c8s_mv_epyc12_1125/spec_slice_station__t24__cl64811a5d/chain_a1.live.log, cmd: --mem 56 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
 - 2026-11-25 18:23 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-317224-1795634491 on tolerant-swine: rc=0 after 45555 s, ended 18:23:19, log /home/ubuntu/tmp/s81int/c8s/spec_slice_station__t31/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+- 2026-11-25 18:29 PST S81-ALLFIX-INT 18:29 PST: C10b R10 LAUNCH STARTED (not waiting on R11).
+  Inputs: plan 6c46b720 (sha checked on epyc10), bind bind_r3, as-built asbuilt_c10b_r10_portable_r2, rt 8bbe6aad888f. That rt contains both 2be21fa8aba4 and c2b2891fc034, so serdes is covered. Tree and bind are staged on epyc10 (VERIFY OK, 3470/3470 bind files); epyc11 is staging and its half starts at VERIFY.
+  Split over 403 types (lanes/S81-R10-LAUNCH-SPLIT.tsv):
+  - 39 ROUTE. 7 are clean: svc_hi rs t2/t2_att/t5_att and svc_lo rs t2/t3/t4/t5. 32 are one route pilot per open family: bk_sel, col_h10_r0_p1/p4, col_h10_r1/r2, col_h9_r0_p1..p6, col_h9_r1, 13 dsdv_slice families, eng, gunit, iqf, leaf t27, phy, seqhost, serdes, svc_lo rs_w.
+  - 316 PLACE probes: every type that is PRE-findings (29 types), in VIS-CAUSES or SMELL, or in a failing FP-S81 class.
+  - 46 SKIP: already signed on a plan.
+  - 2 HOLD: svc_hi rs t4/t4_att (RSV09).
+  - svc_hi pvso_entry goes to place: RSV09 (+pvso) is an open functional row.
+  - No col_h9_r2 or kv_leaf pilot: guardrail 3 / PINFACE, and the KVTC re-floor is pending.
+  Hosts: 177 on epyc10 and 177 on epyc11 (+1 test kit on epyc10), units s81r10-*. Next wave goes to epyc7/intel1/epyc8 when 10/11 fill. Counts follow when the launchers finish.
