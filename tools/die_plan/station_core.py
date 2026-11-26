@@ -98,7 +98,7 @@ def _relay(rs, inst, bit, width):
     return None
 
 
-def rows(t, pins, plan_dir=None, tn="?"):
+def rows(t, pins, plan_dir=None, tn="?", packed=None):
     """pins: {bus: {bit: (x, y)}} (gen_phys.type_pins, type frame)"""
     import istation_knee as K
     import istation_channel as IC
@@ -134,6 +134,24 @@ def rows(t, pins, plan_dir=None, tn="?"):
             out.append(row)
             continue
         bus = b["name"]
+        receiver = (packed or {}).get(bus)
+        if receiver and not e.get("core") and e.get("leg_order") != "channel" and not any(
+                key.startswith(receiver["instance"]) for mapping in (rs, t.get("relay_rank_sites") or {}) for key in mapping
+        ):
+            import kit_istations as KI
+
+            points = [regs[k] for _, k in KI.packed_sites(regs, receiver["depth"])]
+            row.update(kind="packed_lane_pad", sites=len(points), packed_center_hops_crossing=0)
+            for point in points:
+                hits = hit_names(point)
+                row["sites_in_macro"] += bool(hits)
+                row["macros"].update(hits)
+            for a, c in zip(points, points[1:]):
+                crossings = {nm for nm, box in bx.items() if hop_in_box(a, c, box)} - landing
+                row["packed_center_hops_crossing"] += bool(crossings)
+                row["macros"].update(crossings)
+            out.append(row)
+            continue
         starts = dict(pins[bus])
         W = max(starts)
         keep = None
@@ -239,7 +257,7 @@ def type_pins(P, tn):
     return pins
 
 
-def report(P, tn, plan_dir=None, landing_routes=False):
+def report(P, tn, plan_dir=None, landing_routes=False, packed=None):
     """rows with a station site inside a hard macro or a bit route over a hard CORE; a route that only passes a clock-landing
     macro on its way to the pins behind it (M6-M8, short) is listed with landing_routes=True"""
     t = P.types[tn]
@@ -247,11 +265,16 @@ def report(P, tn, plan_dir=None, landing_routes=False):
         return []
     if plan_dir is None and getattr(P, "path", None):
         plan_dir = Path(P.path).resolve().parent
-    return [r for r in rows(t, type_pins(P, tn), plan_dir, tn)
-            if r["sites_in_macro"] or r.get("routes_over_cores") or (landing_routes and r["routes_crossing"])]
+    return [r for r in rows(t, type_pins(P, tn), plan_dir, tn, packed)
+            if r["sites_in_macro"] or r.get("packed_center_hops_crossing")
+            or r.get("routes_over_cores") or (landing_routes and r["routes_crossing"])]
 
 
 def line(tn, r):
+    if r["kind"] == "packed_lane_pad":
+        return (f"type {tn}: {r['conn']}: {r['sites_in_macro']} of {r['sites']} bound packed centers inside hard macros, "
+                f"{r['packed_center_hops_crossing']} planned center-to-center hops cross a hard macro {r['macros']}. "
+                "Individual bit route coverage requires emitted placement.")
     return (f"type {tn}: {r['kind']} {r['conn']}: {r['sites_in_macro']} of {r['sites']} station sites inside hard macros, "
             f"{r['routes_crossing']} of {r['bits']} bit routes cross a hard macro ({r.get('routes_over_cores', 0)} a hard core; M1-M5 blocked) {r['macros']}"
             + (f"; packed lane-pad form: {r['regs_in_macro']} of {r['stations']} regs_um sites inside" if "regs_in_macro" in r else ""))

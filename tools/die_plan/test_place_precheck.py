@@ -86,3 +86,30 @@ def test_cone_and_mpl0020_on_a_tiny_netlist(tmp_path):
     assert [f["key"] for f in PP.mpl0020(tmp_path, cells)] == ["u_gone[2].u_mem"]
     assert PP.cone_regions(tmp_path, cells, nets, limit=3)[0]["sub"] == "DROP"
     assert PP.cone_regions(tmp_path, cells, nets, limit=8) == []
+
+
+def test_bound_packed_receiver_replaces_only_its_hypothetical_knee(tmp_path, monkeypatch):
+    import gen_phys
+
+    buses = [dict(name=n, width=4, dir="in", face="W") for n in ("packed", "other")]
+    t = {"buses": buses, "internal_stations": [
+        dict(conn=f"bus:{n}", bit_route="per_bit", leaf_um=[950, 450], regs_um=[[100, 450], [900, 450]])
+        for n in ("packed", "other")
+    ]}
+    rtl = tmp_path / "bound.sv"
+    rtl.write_text("""
+        module t;
+          ot_dp_st #(.W(4)) u_bin_packed (.q(bq), .eq(be));
+          ot_dp_dly #(.W(5), .D(2)) u_lpad_packed (.clk(clk), .d({be,bq}), .q({packed_eq,packed_q}));
+        endmodule
+    """)
+    monkeypatch.setattr(gen_phys, "type_pins", lambda _p, _n: [
+        (b, i, None, 0, 450 + i, "W") for b in ("packed", "other") for i in range(4)
+    ])
+    packed = PP.bound_packed_inputs("t", t, rtl)
+    assert set(packed) == {"packed"}
+    assert [f["key"] for f in PP.knee_plan(None, "t", t)] == ["packed", "other"]
+    assert [f["key"] for f in PP.knee_plan(None, "t", t, packed)] == ["other"]
+
+    rtl.write_text(rtl.read_text().replace("{be,bq}", "{wrong,bq}"))
+    assert PP.bound_packed_inputs("t", t, rtl) == {}
