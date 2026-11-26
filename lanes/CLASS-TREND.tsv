@@ -40,6 +40,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	FLEET	P-POSTPUBLISH-DISK	5	adjudicated	FABLE-FLOW-0847 B23 hosts	1	adjudicated	UP
 2026-11-26 09:00 PST	FLEET	P-PRIVATE-BASE-DIVERGENCE	2	seen-in-review	FABLE-FLOW-0847 C17 30 route-only waits + guard draft			NEW
 2026-11-26 09:00 PST	FLEET	P-RUNTIME-MANIFEST	0	adjudicated	cleared 20:53, exact 326992cfe785	0	adjudicated	FLAT
+2026-11-26 09:00 PST	HEAD	C-CA-FARSTRAP-UNSEEN	3	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) 3 types: n3_turn, str, transit: only the u-side CA group moved, d-side group, efall and pad unmeasured			NEW
 2026-11-26 09:00 PST	HEAD	C-CLK-LAND-OBS	3	seen-in-review	FABLE-RC-HEAD 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-HEAD_1126-51568451c6ac.tsv sha12 51568451c6ac) includes folded C-SITE-IN-MACRO 1			NEW
 2026-11-26 09:00 PST	HEAD	C-DIECLOCK-PHASE-BIND	1	seen-in-review	FABLE-RC-HEAD 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-HEAD_1126-51568451c6ac.tsv sha12 51568451c6ac) die: routed W10 tap arrivals 947..7006 ps vs period 833; plan phase rows not re-derived			NEW
 2026-11-26 09:00 PST	HEAD	C-FIRM-RESIZE-OVERLAP	1	seen-in-review	FABLE-FLOW-0847 A5 lep0N			NEW
@@ -60,6 +61,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	C-STREET	0	exact	PRE ADV-FP-STREET types on live plan f6d1bf51c90d	0	exact	FLAT
 2026-11-26 09:00 PST	HEAD	C-TAP-LOAD	3	exact	lane count 3 CLASS-OWNERS-R2 09:19 c-tap-load-r2 @9adf5e241f4 (hd_spn, host_w, +1; COORD ruling 09:22)	1	lead	FIRST-EXACT
 2026-11-26 09:00 PST	HEAD	C-TAP-REACH	1	seen-in-review	FABLE-FLOW-0847 A2 hd_spn			NEW
+2026-11-26 09:00 PST	HEAD	C-TDREPAIR-REGION-MEAN	2	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) cause class of the GPL TD buffer inflation: East lep0N fed00 (TD fired at iteration 1, +56,515 buffers) and West lep0N_w (TD pass 2 at mean 0.186, +14,970); C-GPL-TD-INFLATION stays as the symptom class			NEW
 2026-11-26 09:00 PST	HEAD	C-XTAP-HOLD	6	exact-types	6 types (hd_spn lep0N lep0N_w Wshim TX Transit STR) FABLE-FLOW-0847 B2 + census tool 0f12e89113; COORD ruling 09:22	0	exact-kits	BASIS-CHANGE
 2026-11-26 09:00 PST	HEAD	P-CLOCK-TAPS-COPY	3	adjudicated	FABLE-FLOW-0847 B21	0	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-EVIDENCE-VOLATILE	3	seen-in-review	FABLE-FLOW-0847 A15 BF50, west-composed-request, ...			NEW
@@ -71,6 +73,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
 2026-11-26 09:00 PST	HEAD	P-STALE-TABLE	2	seen-in-review	FABLE-FLOW-0847 A11 exports lep0N_w			NEW
+2026-11-26 09:00 PST	KV	C-CA-FARSTRAP-UNSEEN	2	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) 2 types: kv3_io_ft (331 legs over 405, max 1563.6 um) and kv3_io_cor (11 more far groups, 66 bits, 429-1341 um, beyond the 18 the fix moved); sibling of C-STRAP-REACH (placed far) and P-CHECKER-AXIS-GAP (checker blind)			NEW
 2026-11-26 09:00 PST	KV	C-CELLCAP-NATIVE	1	seen-in-review	FABLE-RC-KV 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-KV_1126-633090bb503f.tsv sha12 633090bb503f) hub_Wi 411,443 synth, 662,789 placed			NEW
 2026-11-26 09:00 PST	KV	C-CLKSITE-LANDPIN	29	seen-in-review	FABLE-RC-KV 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-KV_1126-633090bb503f.tsv sha12 633090bb503f) 29 types / 93 rows			NEW
 2026-11-26 09:00 PST	KV	C-FIRM-RESIZE-OVERLAP	16	seen-in-review	FABLE-RC-KV 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-KV_1126-633090bb503f.tsv sha12 633090bb503f) 16 pc types, DPL max displacement 225-258 um			NEW
@@ -124,6 +127,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	QC	P-ECO-NO-GAIN	5	seen-in-review	FABLE-RC-QC 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-QC_1126-47611006e65b.tsv sha12 47611006e65b) 5 kits			NEW
 2026-11-26 09:00 PST	QC	P-ECO-TIMER-MISMATCH	3	seen-in-review	FABLE-RC-QC 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-QC_1126-47611006e65b.tsv sha12 47611006e65b) 3 kits			NEW
 2026-11-26 09:00 PST	QC	P-ELAB-REUSE-DRIFT	1	seen-in-review	FABLE-FLOW-0847 A22 C1q ELAB_REUSE_REFUSED			NEW
+2026-11-26 09:00 PST	QC	P-EVIDENCE-VOLATILE	1	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) slw_st_b_v1 cl6357f1cc pv6ace3e48 ECO i2: ot-autoclean 11-26 05:36 removed the whole tree, no 3_place.odb / 6_final.odb / renders, identity STALE-ID (line 96)			NEW
 2026-11-26 09:00 PST	QC	P-FALSE-GREEN	0	adjudicated	FABLE-FLOW-0847 C9 gate FAIL 08:22 superseded	1	adjudicated	DOWN
 2026-11-26 09:00 PST	QC	P-HOLD-OVERDUE	6	seen-in-review	FABLE-FLOW-0847 A21 6 overdue of 55 holds			NEW
 2026-11-26 09:00 PST	QC	P-INPUT-RECEIPT	2	adjudicated	FABLE-FLOW-0847 B20	1	adjudicated	UP
@@ -145,12 +149,13 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	C-GRT-GUIDE-GAP	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-LEG405	6	exact-staged	LEG405-STAGED 6 legs/6 types CLASS-OWNERS-R2 09:19 tool c-leg405-stage-seats @5632156a860 (legacy stage-blind 277 superseded; COORD ruling 09:22)	273	exact	BASIS-CHANGE
-2026-11-26 09:00 PST	S81	C-LEGACY-VIEW-EOL	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) live North col_h9_r1 pv8aaf8508 binds legacy dsfd_qbank_N/S lefs (type digest 704e06b35e2c, odb 0efb21e45974); siblings H9 P5 00687902914d and R2 a677c836b166 already superseded by North; other CURRENT COL types not tested			NEW
+2026-11-26 09:00 PST	S81	C-LEGACY-VIEW-EOL	0	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) SUPERSEDED: FABLE-INDEP 10:05 corrected the round-1 lead (the stall is not the legacy lef); predicate now lives in C-POROUS-VIEW-EOL-STALL			NEW
 2026-11-26 09:00 PST	S81	C-OVERSIZE	4	exact	PRE ADV-FP-OVERSIZE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-PARENT-SEAM-HOLD	2	seen-in-review	FABLE-FLOW-0847 A9 t23 arst_n + SerDes peer			NEW
 2026-11-26 09:00 PST	S81	C-PIN-FACE-BUNCH	4	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 4 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-PIN-REG-REACH	1	seen-in-review	FABLE-RC-S81 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-S81_1126-d612d6a3ba8e.tsv sha12 d612d6a3ba8e) S81 row per COORD 13:01 ruling (7); FABLE-INDEP placements			NEW
 2026-11-26 09:00 PST	S81	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 t23 mus_C			NEW
+2026-11-26 09:00 PST	S81	C-POROUS-VIEW-EOL-STALL	3	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) 3 COL types (col_h9_r0_p5, col_h9_r0_p6, col_h10_r2): 7 porous kits of 18 measured stall (P5 pvee6f8140 flat at 396 with 388 M5 EolKeepOut, P6 pv082a7609, H10 R2 cl99efd374 pv4c1f67ff); non-porous kits route clean (P4 DRC 0 at iteration 6). COORD cites 33 of 34 kits: that figure is not in the FABLE-INDEP post, the 18-kit measurement is			NEW
 2026-11-26 09:00 PST	S81	C-RCK-HALFCYCLE-MACRO	1	seen-in-review	FABLE-INDEP (lanes/posts/FABLE-INDEP.md sha12 89e26b5e0f57) 1 blocking placements			NEW
 2026-11-26 09:00 PST	S81	C-RELAY-SEAT	110	exact	PRE ADV-RELAY-SEAT types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-RING-LUMP	1	seen-in-review	FABLE-FLOW-1047 A11 slice_station t51 97,525 instances, 129 bins over 0.7			NEW
@@ -175,7 +180,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	P-PREGRT-HOLD-CRASH	0	seen-in-review	FABLE-RC-S81 13:0x draft rows (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/ROWS_FABLE-RC-S81_1126-d612d6a3ba8e.tsv sha12 d612d6a3ba8e) FOLDED under C-GPL-TD-INFLATION / C-OVERSIZE (oversize-type SIGSEGV symptom, COORD 13:01 ruling 4)			NEW
 2026-11-26 09:00 PST	S81	P-PRIVATE-BASE-DIVERGENCE	3	seen-in-review	FABLE-FLOW-0847 A14 LEPW WREG6 + 1			NEW
 2026-11-26 09:00 PST	S81	P-REVOKE-NOT-LEDGERED	0	seen-in-review	FABLE-FLOW-1047 A16 4 revocations ledgered 11:0x (COUNT-REVOKED d85b64a6afb); rule: ledger with the ruling from now on			NEW
-2026-11-26 09:00 PST	S81	P-ROUTE-NO-VIEW-GATE	87	seen-in-review	FABLE-INDEP full review (COORD 09:3x) 87 old-plan S81 units routing without review (AP_REQUIRE_VIEWED_WAVE_ROUTE absent)			NEW
+2026-11-26 09:00 PST	S81	P-ROUTE-NO-VIEW-GATE	87	seen-in-review	FABLE-INDEP (/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-INDEP-adf02e2b0cfe.md sha12 adf02e2b0cfe) COORD name P-PRIVATE-ROUTE-NO-VIEWGATE = this class (private kit_wave run-item --goal route without the viewed-wave gate); owner S81-INT-R2			NEW
 2026-11-26 09:00 PST	S81	P-RUNTIME-MANIFEST	1	adjudicated	FABLE-FLOW-0847 B22 pinned tools older than plan schema	0	adjudicated	UP
 2026-11-26 09:00 PST	S81	P-SIGNED-UNVERSIONED	0	seen-in-review	FABLE-FLOW-1047 CLOSED (COORD 10:4x): 70 records handed to RESIGN-R2 (lanes/SIGNED-UNVERSIONED-70.tsv)			NEW
 2026-11-26 09:00 PST	S81	P-STALE-TABLE	1	seen-in-review	FABLE-FLOW-0847 A11 seal_derived latpkg			NEW
