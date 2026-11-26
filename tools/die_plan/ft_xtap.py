@@ -50,16 +50,30 @@ def _nearest(taps, x, y):
     return best
 
 
-def _in_pins(P, tn, slot, suffix="_i"):
-    """{bit: (x, y)} of the slot's in (suffix _i) / out (_o) port pins in the type frame ({} when the plan has no instance /
-    ports)."""
+def _type_pins(P, tn):
     try:
         import gen_phys
-        pins = gen_phys.type_pins(P, tn)
+        return gen_phys.type_pins(P, tn)
     except Exception:
-        return {}
+        return ()
+
+
+def type_pin_index(P, tn):
+    """Resolve a type's pin geometry once for a traversal of its slots."""
+    index = {}
+    for bus, bit, _layer, x, y, _face in _type_pins(P, tn):
+        index.setdefault(gen_rtl.sv_id(bus), {})[int(bit)] = (float(x), float(y))
+    return index
+
+
+def _in_pins(P, tn, slot, suffix="_i", pin_index=None):
+    """{bit: (x, y)} of the slot's in (suffix _i) / out (_o) port pins in the type frame ({} when the plan has no instance /
+    ports)."""
     want = gen_rtl.sv_id(slot + suffix)
-    return {int(b): (float(x), float(y)) for bn, b, _l, x, y, _f in pins if gen_rtl.sv_id(bn) == want}
+    if pin_index is not None:
+        return pin_index.get(want, {})
+    return {int(b): (float(x), float(y)) for bn, b, _l, x, y, _f in _type_pins(P, tn)
+            if gen_rtl.sv_id(bn) == want}
 
 
 def _landed(t, slot):
@@ -67,7 +81,7 @@ def _landed(t, slot):
     return f"{slot}_i" in ((((t.get("clock") or {}).get("landing_contract") or {}).get("bands")) or {})
 
 
-def _landed_sites(P, tn, s, n, bs, regs, w, h):
+def _landed_sites(P, tn, s, n, bs, regs, w, h, pin_index):
     """QC-BANKRST-OFF1 11-25 (same off-by-one as bank_reset_delta.bank_xy): on a LANDED slot the ring takes the in-face role and
     face_flops.tcl (FLOW-KITFAIL-3 landed path) seats station i at plan stage i + 1 (bit_sites_um[i] / regs_um[i + 1]); the
     last station is the out-face register.  The unlanded form below (station j at stage j, station 0 at the in pins) put
@@ -78,7 +92,7 @@ def _landed_sites(P, tn, s, n, bs, regs, w, h):
             st[i] = [tuple(map(float, p)) for p in bs[i]]
         elif len(regs) == n:
             st[i] = [tuple(map(float, regs[i + 1]))]
-    pins = _in_pins(P, tn, s["name"], "_o")
+    pins = _in_pins(P, tn, s["name"], "_o", pin_index)
     if pins:
         st[n - 1] = [pins[b] for b in sorted(pins)]
     elif n > 1 and st[n - 2]:
@@ -90,7 +104,7 @@ def _landed_sites(P, tn, s, n, bs, regs, w, h):
     return st
 
 
-def station_sites(P, tn, s):
+def station_sites(P, tn, s, *, pin_index=None):
     """[[(x, y) per bit] per station] for ft slot s of type tn (type frame, um); bits = the slot's planned sites."""
     t = P.types[tn]
     w, h = t["outline_um"]
@@ -100,14 +114,14 @@ def station_sites(P, tn, s):
     nb = int(s.get("width", 1))
     st = [None] * n
     if _landed(t, s.get("name")):
-        return _landed_sites(P, tn, s, n, bs, regs, w, h), nb
+        return _landed_sites(P, tn, s, n, bs, regs, w, h, pin_index), nb
     for j in range(1, n):
         if len(bs) == n - 1 and bs[j - 1]:
             st[j] = [tuple(map(float, p)) for p in bs[j - 1]]
         elif len(regs) == n:
             st[j] = [tuple(map(float, regs[j]))]
     if n >= 1:
-        pins = _in_pins(P, tn, s["name"])
+        pins = _in_pins(P, tn, s["name"], pin_index=pin_index)
         if pins:
             st[0] = [pins[b] for b in sorted(pins)]
         elif len(regs) == n:
