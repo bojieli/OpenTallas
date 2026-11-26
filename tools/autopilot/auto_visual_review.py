@@ -23,6 +23,11 @@ import subprocess
 import time
 from pathlib import Path
 
+try:                                   # RST-SPREAD-PLACED (report-only section, CLASS-OWNERS-R2 C-RST-PLACED)
+    import rst_spread_placed as RSP
+except ImportError:                    # pragma: no cover
+    RSP = None
+
 SETUP_FLOOR_PS = -300.0
 SLEW_LIMIT_PS = 1000.0
 HELD_TSV = "AUTO-REVIEW-HELD.tsv"
@@ -160,7 +165,7 @@ def decide(info):
     rep = parse_report(info.get("rpt"))
     # setup estimate = worst path that counts (ports into cland cores excluded); falls back to the report wns when no path is readable
     setup = rep["path_slack"] if rep.get("path_slack") is not None else rep["wns"]
-    facts = dict(wns=setup, wns_report=rep["wns"], worst_slew=rep["worst_slew"], **(info.get("scan") or {}))
+    facts = dict(wns=setup, wns_report=rep["wns"], worst_slew=rep["worst_slew"], rst_spread=info.get("rst_spread"), **(info.get("scan") or {}))
     if info.get("rpt") is None or rep["wns"] is None or info.get("dp") is None or info.get("cells_on_macros") is None:
         return "NODATA", "placed report / auto_geom / place log not readable", facts
     illegal = []
@@ -192,9 +197,36 @@ def remote_info(kit_loc, timeout=120):
     try:
         p = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host,
                             "python3", "-I", "-", path], input=REMOTE_SCRIPT, capture_output=True, text=True, timeout=timeout)
+        out = json.loads(p.stdout.strip().splitlines()[-1])
+    except (OSError, subprocess.TimeoutExpired, ValueError, IndexError):
+        return None
+    out["rst_spread"] = remote_rst_spread(kit_loc)       # report-only; None when geom.tsv is absent
+    return out
+
+
+def remote_rst_spread(kit_loc, timeout=240):
+    """report-only RST-SPREAD-PLACED section: run rst_spread_placed.py on the kit host over the geom.tsv the review already has
+    (3_place.odb dump), write geom/rst_spread.json + geom/rst_spread_proposal.json next to it.  -> summary dict or None.  Never raises."""
+    host, _, path = kit_loc.partition(":")
+    if not host or not path.startswith("/") or RSP is None:
+        return None
+    X = path.rstrip("/").rsplit("/gen/", 1)[0]
+    try:
+        src = Path(RSP.__file__).read_text()
+        p = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, "python3", "-I", "-",
+                            X + "/geom/geom.tsv", "--print-json", "--json", X + "/geom/rst_spread.json",
+                            "--proposal", X + "/geom/rst_spread_proposal.json"], input=src, capture_output=True, text=True, timeout=timeout)
         return json.loads(p.stdout.strip().splitlines()[-1])
     except (OSError, subprocess.TimeoutExpired, ValueError, IndexError):
         return None
+
+
+def rst_line(facts):
+    s = (facts or {}).get("rst_spread")
+    try:
+        return RSP.line(s) if s and RSP else ""
+    except (KeyError, TypeError, ValueError):
+        return ""
 
 
 def verdict_line(rec, kit_loc, reason, facts, now=None):
@@ -204,7 +236,7 @@ def verdict_line(rec, kit_loc, reason, facts, now=None):
         scan = f"; {facts.get('over_reach')} hop groups over 405 um, {facts.get('bits_over_cycle')} bits over one cycle"
     return (f"- {ts} PST GEOM VERDICT [AUTO-VISUAL-REVIEW viewed auto_geom.json + placed_scan.json + place log/report] "
             f"{rec['die']}/{rec['item']} attempt_{int(rec.get('attempt') or 0)}: ISSUES-ACCEPT (advisory; owner 11-13 visual review "
-            f"never blocks) kit={kit_loc} . {reason}{scan}. Layout smells are improvements for the die owner, not route blockers.")
+            f"never blocks) kit={kit_loc} . {reason}{scan}{('; ' + rst_line(facts)) if rst_line(facts) else ''}. Layout smells are improvements for the die owner, not route blockers.")
 
 
 def auto_review_pass(cfg, st, review_before_route, review_kit_location, hold_text="WAIT-VISUAL", max_rows=8, log=None,
@@ -243,7 +275,7 @@ def auto_review_pass(cfg, st, review_before_route, review_kit_location, hold_tex
         if cls == "ACCEPT":
             lines.append(verdict_line(rec, kit, reason, facts))
         else:
-            held.append("\t".join([rec["die"], rec["item"], str(rec.get("attempt")), cls, reason,
+            held.append("\t".join([rec["die"], rec["item"], str(rec.get("attempt")), cls, reason + (("; " + rst_line(facts)) if rst_line(facts) else ""),
                                    "" if facts.get("wns") is None else f"{facts['wns']:.0f}",
                                    "" if facts.get("worst_slew") is None else f"{facts['worst_slew']:.0f}", kit,
                                    owner_for(rec["die"], rec["item"], cls, cfg)]))
