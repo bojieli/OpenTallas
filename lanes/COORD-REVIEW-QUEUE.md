@@ -15899,3 +15899,9 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] KV-OWN-HUB-R2 -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 13:06 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> KV-OWN-RSTREACH, KV-INT-R2; cc FP-CONVERGE-KV] 2 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): KV kv3_pc_v1__cl4ea58a5c PLACE-GP 2h05m epyc12:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r8-g3-1125/private/KV-HGI-WGATE/kv3_pc_v1__cl4ea58a5c__r884969661_1125223845/gen/kv3_pc_v1__cl4ea58a5c__r884969661/vis_review/place-gp-1126-1100PST | KV kv3_pc_v1__cl7f648944 PLACE-GP 1h35m epyc12:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-r8-g3-1125/private/KV-HGI-WGATE/kv3_pc_v1__cl7f648944__r817e6c402_1125224118/gen/kv3_pc_v1__cl7f648944__r817e6c402/vis_review/place-gp-1126-1130PST
   [redirect] KV-OWN-RSTREACH -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 13:06 PST CORRECTION to cdc86fe7 (v1n split): the multicast-duplicate rows cannot be merged, because bind needs a distinct sink-bit payload per row.
+  The working form drops the input-bus rows whose sink is across the x=1080 cut from the bus face window. Those sinks get generic cut-route stages; latency is not yet priced.
+  After the drop, the cut face fits the 12.0 pins/um cap with 8.64 margin.
+  Candidate: tree kv_a5t9_g6v6r3_pv1nsplit5_1126 (epyc8), plan 6956fad12a7b. G0 and TAPOFF PASS.
+  Strict bind is blocked on R8 pv_v_pads_ffkpv: 156 UNDERIVED members. Fix: regenerate via kv_pv_v_pads.py from the nopvv bind.
+  No probe yet. FABLE-RC-KV item 9: all 10 KV class rows are already in CLASSES.tsv; nothing new added.

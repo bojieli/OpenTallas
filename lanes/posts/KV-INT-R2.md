@@ -140,3 +140,9 @@
   - Candidate for the 21:00 cut.
 - 2026-11-26 13:02 PST DONE [kv-int-r2] ot-run oth-ubuntu-78515-1795726564 on outgoing-giraffe: rc=0 after 381 s, ended 21:02:22, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_d4.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
 - 2026-11-26 13:04 PST DONE [kv-int-r2] ot-run oth-ubuntu-156060-1795726707 on outgoing-giraffe: rc=0 after 387 s, ended 21:04:52, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_s4.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
+- 2026-11-26 13:06 PST CORRECTION to cdc86fe7 (v1n split): the multicast-duplicate rows cannot be merged, because bind needs a distinct sink-bit payload per row.
+  The working form drops the input-bus rows whose sink is across the x=1080 cut from the bus face window. Those sinks get generic cut-route stages; latency is not yet priced.
+  After the drop, the cut face fits the 12.0 pins/um cap with 8.64 margin.
+  Candidate: tree kv_a5t9_g6v6r3_pv1nsplit5_1126 (epyc8), plan 6956fad12a7b. G0 and TAPOFF PASS.
+  Strict bind is blocked on R8 pv_v_pads_ffkpv: 156 UNDERIVED members. Fix: regenerate via kv_pv_v_pads.py from the nopvv bind.
+  No probe yet. FABLE-RC-KV item 9: all 10 KV class rows are already in CLASSES.tsv; nothing new added.
