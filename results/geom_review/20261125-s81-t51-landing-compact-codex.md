@@ -1,0 +1,5 @@
+# S81 t51 north and west landing band review
+
+The measured attempt 9 placement puts several west-face landing capture groups in two tiers against the north edge. In the projected layout FT13 and FT14 sit nearer their west input windows, while FT15 through FT18 occupy slim bands between the west border and the shifted FT2/FT3 bounds. FT5 and FT6 are offset west to bring their FSTART write-enable flops closer to the pins. The empty rectangle east of FT7 is space freed by the compact FT7 band. I viewed the before and after capture overlay and inspected the clearance where FT2 sits below FT15–18. The exact placed fixed-cell replay found zero intruders and no overlap among the eleven guides.
+
+The private two-file overlay preserves the exact a9 post-relay RTL and transport depth. The projected input pin p90 is 76.52 µm and maximum 146.25 µm. The projected whole-tile station capture maximum is 397.33 µm with zero of 58,410 over 405 µm. The placement experiment needs exact regenerated geometry after detailed legalization. The partial-face and fill findings remain route blockers.
