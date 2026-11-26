@@ -1,0 +1,1 @@
+- 2026-11-26 11:29 PST DONE [C-XTAP-HOLD-PUSH] ot-push-main otpush-tolerant-swine-521840 on tolerant-swine: rc=0 after 240 s, ended 11:29:05, log /srv/opentallas-scratch2/claude/C-XTAP-HOLD-PUSH/push.log, cmd: ot-push-main 
