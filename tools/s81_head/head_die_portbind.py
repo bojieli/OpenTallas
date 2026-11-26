@@ -35,25 +35,76 @@ HEAD-BIND-1 (11-14): --clock-landing SIDECAR passes the landed plan's sidecar to
    the kit cohort: rings, collectors, landing relays); without it the die top is the unlanded composition (as before).
    The nested check reads the landing closure too (its cells are the landed wrappers' masters).
 Exit 0 iff module check 0 missing AND die_port_bind PASS AND tie audit PASS AND nested check PASS."""
-import argparse, hashlib, json, re, subprocess, sys
+import argparse, hashlib, json, os, re, subprocess, sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from time import monotonic
 
 ap = argparse.ArgumentParser(description=__doc__)
 ap.add_argument('plan'); ap.add_argument('--out', required=True)
 ap.add_argument('--clock-landing', help='landed plan sidecar (gen.py rtl --clock-landing)')
+ap.add_argument("--jobs", type=int, help="cap CPU workers at this value within the fleet lease")
 a = ap.parse_args()
+if a.jobs is not None and a.jobs < 1:
+    ap.error("--jobs must be positive")
+sys.path.insert(0, 'tools/die_plan')
+from bind_emit_par import _mem_limit_bytes, allocated_cpus, positive_int  # noqa: E402
+
+workers = allocated_cpus()
+if a.jobs is not None:
+    workers = min(workers, a.jobs)
+if workers < 2 and os.environ.get("OT_HEAVY_PRIO") in ("plan", "die"):
+    raise SystemExit("HEAD_BIND_PARALLEL_REQUIRED: request at least two CPUs for a whole-die HEAD bind")
+
+
+def run_independent(left, right):
+    if workers == 1:
+        return left(), right()
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        pending = pool.submit(left)
+        right_result = right()
+        return pending.result(), right_result
+
+
+def generator_env(threads, mem_gb):
+    env = dict(os.environ, OT_HEAVY_THREADS=str(threads))
+    if mem_gb is not None:
+        env["OT_HEAVY_MEM_GB"] = str(max(1, mem_gb))
+    reset_jobs = positive_int(env.get("OT_RESET_POOL_J"))
+    if reset_jobs:
+        env["OT_RESET_POOL_J"] = str(min(reset_jobs, threads))
+    return env
+
+
 out = Path(a.out)
 if out.is_absolute():
     raise SystemExit('--out must be repo-relative')
 out.mkdir(parents=True, exist_ok=True)
-mc = subprocess.run([sys.executable, 'tools/s81_head/head_module_check.py', a.plan, '--out', str(out / 'module_check.json')],
-                    capture_output=True, text=True)
-missing = json.loads((out / 'module_check.json').read_text())['missing_modules'] if (out / 'module_check.json').exists() else None
-print('MODULE_CHECK missing=%s rc=%d' % (missing, mc.returncode))
 gen = out / 'gen'
 gen.mkdir(parents=True, exist_ok=True)
-g = subprocess.run([sys.executable, 'tools/die_plan/gen.py', 'rtl', a.plan, '--out', str(gen), '--rtl-root', '.']
-                   + (['--clock-landing', a.clock_landing] if a.clock_landing else []), capture_output=True, text=True)
+module_cmd = [sys.executable, 'tools/s81_head/head_module_check.py', a.plan, '--out', str(out / 'module_check.json')]
+gen_cmd = [sys.executable, 'tools/die_plan/gen.py', 'rtl', a.plan, '--out', str(gen), '--rtl-root', '.']
+if a.clock_landing:
+    gen_cmd += ['--clock-landing', a.clock_landing]
+left_jobs = max(1, workers // 2)
+right_jobs = max(1, workers - left_jobs)
+available = _mem_limit_bytes()
+memory = max(1, available >> 30) if available is not None else None
+left_mem = memory // 2 if memory and workers > 1 else memory
+right_mem = memory - left_mem if memory and workers > 1 else memory
+if left_jobs > 1:
+    module_cmd.append('--prewarm-reset')
+if right_jobs > 1:
+    gen_cmd.append('--prewarm-reset')
+started = monotonic()
+mc, g = run_independent(
+    lambda: subprocess.run(module_cmd, capture_output=True, text=True, env=generator_env(left_jobs, left_mem)),
+    lambda: subprocess.run(gen_cmd, capture_output=True, text=True, env=generator_env(right_jobs, right_mem)),
+)
+missing = json.loads((out / 'module_check.json').read_text())['missing_modules'] if (out / 'module_check.json').exists() else None
+print('MODULE_CHECK missing=%s rc=%d' % (missing, mc.returncode))
+budget = f"{left_jobs}+{right_jobs}" if workers > 1 else "1 (serial)"
+print(f"HEAD_PORTBIND_GENERATION jobs={budget}, wall={monotonic() - started:.1f}s", flush=True)
 (out / 'gen_rtl.log').write_text(g.stdout + g.stderr)
 if g.returncode:
     print('GEN_RTL FAIL rc', g.returncode); sys.exit(g.returncode)
@@ -72,7 +123,6 @@ for im in re.finditer(r'^\s{4}(\w+)(?:\s*#\(.*?\))?\s+(\w+)\s*\((.*?)\n\s{4}\);'
         pads[inst] = dict(master=mst, reason='reset/START wavefront out with no child at this instance '
                           '(reset_tree.py: wavefront pins are the per-type union of the sites any instance uses)',
                           ports={p: [[0, 0]] for p in opn})
-sys.path.insert(0, 'tools/die_plan')
 import straps as STR  # noqa: E402
 import port_bind_gate as PBG  # noqa: E402
 pim = gen / 'parent_id_straps.json'
@@ -119,15 +169,21 @@ print('LANDING_CLOSURE %d %s' % (len(land), land))
 fl = sorted(str(p) for p in gen.glob('*.sv')) + src + extra + land
 (out / 'portbind.f').write_text('\n'.join(fl) + '\n')
 print('pads: %d instances, %d open wavefront outs' % (len(pads), sum(len(v['ports']) for v in pads.values())))
-r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),
+strict_cmd = [sys.executable, 'tools/die_port_bind.py', str(top), '--top', 's81_head_top', '-f', str(out / 'portbind.f'),
                     '--pad-file', str(out / 'pads.json'), '--strap-file', str(out / 'straps.json'), '--out', str(out / 'port_bind_strict.json'), '--logic-free-stub',
-                    '--manifest-only'],
-                   capture_output=True, text=True)
+                    '--manifest-only']
+started = monotonic()
+r, nest = run_independent(
+    lambda: subprocess.run(strict_cmd, capture_output=True, text=True),
+    lambda: PBG.nested_check(
+        {p.name: p.read_text() for p in sorted(gen.glob('*.sv')) if p.name != 's81_head_top.sv'},
+        [Path(x).read_text(errors='replace') for x in src + extra + land],
+        optional_ports=[('ot_dp_clk_landing_cas', 'rst_xn', 'RSTREP', 0)],
+    ),
+)
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])
-nest = PBG.nested_check({p.name: p.read_text() for p in sorted(gen.glob('*.sv')) if p.name != 's81_head_top.sv'},
-                        [Path(x).read_text(errors='replace') for x in src + extra + land],
-                        optional_ports=[('ot_dp_clk_landing_cas', 'rst_xn', 'RSTREP', 0)])
+print(f'HEAD_PORTBIND_CHECKS wall={monotonic()-started:.1f}s', flush=True)
 (out / 'nested_portbind.json').write_text(json.dumps(nest, indent=1) + '\n')
 print('PORT_BIND_NESTED', nest['verdict'], json.dumps({k: v for k, v in nest.items() if k != 'examples'}))
 for k, v in nest.get('examples', {}).items():

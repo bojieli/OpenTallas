@@ -899,7 +899,7 @@ def check_kit_rtl_ports(P, tn, ep, filelist):
 
 
 def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True,
-              validate_types=None, typed_scope=False, kit_rtl=None):
+              validate_types=None, typed_scope=False, kit_rtl=None, prewarm_reset=False):
     """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
     as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
     generated die top, so the landed form is one complete source-bound netlist; the declared observer is checked
@@ -947,6 +947,15 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                                         + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
                                         + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))
     files = [out / "ot_dp_cells.sv"]
+    if prewarm_reset:
+        import reset_tree as RT
+        selected = sorted(tn for tn, t in P.types.items() if not t.get("hard")
+                          and (types is None or tn in types) and tn not in (kit_rtl or {}))
+        jobs = RT.pool_size(len(selected))
+        if jobs > 1 and RT.delivered(P):
+            timing = RT.prewarm(P, selected, jobs)
+            print(f"gen rtl: RESET-PREWARM {timing['todo']} type trees in {timing['jobs']} workers, "
+                  f"{timing['seconds']} s", flush=True)
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):
             continue

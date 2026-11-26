@@ -147,6 +147,7 @@ def main(argv=None):
     a2.add_argument("--out", required=True)
     a2.add_argument("--rtl-root", help="repo root for the types' leaf `sources` (enables the leaf port-binding check)")
     a2.add_argument("--types", help="comma list of partition types (default all non-hard)")
+    a2.add_argument("--prewarm-reset", action="store_true", help="precompute independent type reset trees in the admitted worker pool")
     a2.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="the type's partition RTL is this bound filelist (as in gen.py phys): no plan wrapper and no leaf "
                     "binding check; the plan buses are checked against the bound module header instead")
@@ -293,7 +294,7 @@ def _run(a):
             files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
                                      plan_path=Path(a.plan).resolve(),
                                      landing=load_json(a.clock_landing) if a.clock_landing else None,
-                                     kit_rtl=kit or None)
+                                     kit_rtl=kit or None, prewarm_reset=a.prewarm_reset)
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1
