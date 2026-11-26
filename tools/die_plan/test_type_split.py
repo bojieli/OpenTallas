@@ -1448,3 +1448,54 @@ def test_relay_split_resolves_bound_netlist_names():
     assert [r["flop"] for r in s.T[1]["relay_split"]] == ["u_vport_E.rst_q", "u_y_xd_vport_E_rst_n_0_1.q"]
     assert [r["flop"] for r in s.T[0]["relay_split"]] == ["u_vport_W.rst_q"]
     assert s.rep["relay_keys"]["relay_split_dropped"] == ["u_vport_W.rst_q2"]
+
+
+def _exact_seat_cut(row, key, bus_pieces):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.cut = "t", 2, TS.Cut("x", [108], 216)
+    ts.ev = _Ev({}, {})
+    ts.t = {key: [row], "buses": [dict(name="out", dir="out", width=1)]}
+    ts.T = [{"buses": []}, {"buses": []}]
+    ts.W, ts.H = 216, 100
+    ts.rep = {}
+    ts.new_bus = [[], []]
+    ts.bus_piece = bus_pieces
+    return ts
+
+
+def test_split_internal_exact_banks_follow_folded_stage_indices():
+    row = dict(conn="bus:out", from_um=[180, 20], to_um=[0, 20],
+               regs_um=[[145, 20], [105, 20], [55, 20]],
+               bit_sites_um=[[[144, 20], [145, 20]], [[104, 20], [105, 20]], [[54, 20], [55, 20]]],
+               bit_site_cell_um=[1, 0.27], face_bit_sites_um=[[4, 20], [5, 20]])
+    # The source produces two internal stages and the sink one before the
+    # fold. The sink stage becomes the new cut-face station.
+    ts = _exact_seat_cut(row, "internal_stations", {"out": 0})
+    row["regs_um"][1][0] = 112
+    row["bit_sites_um"][1] = [[111, 20], [112, 20]]
+    ts._internal_stations()
+    outgoing = ts.T[1]["internal_stations"][0]
+    original_face = ts.T[0]["internal_stations"][0]
+    assert outgoing["bit_sites_um"] == [[[36, 20], [37, 20]], [[3, 20], [4, 20]]]
+    assert outgoing["bit_site_cell_um"] == [1, .27]
+    assert "face_bit_sites_um" not in outgoing
+    assert original_face["face_bit_sites_um"] == [[4, 20], [5, 20]]
+    assert original_face["regs_um"] == original_face["bit_sites_um"] == []
+    assert len(ts.legs[0]["dropped"]) == 1
+    assert row["bit_sites_um"][2] == [[54, 20], [55, 20]]
+
+
+def test_split_ft_full_explicit_s0_and_a_straddling_bank():
+    row = dict(name="ft0", width=1, stations=3, in_face="W", out_face="E",
+               regs_um=[[8, 20], [100, 20], [123, 20]], explicit_stage0=True,
+               bit_sites_um=[[[7, 20], [8, 20]], [[91, 20], [107.5, 20]], [[122, 20], [123, 20]]],
+               bit_site_cell_um=[1, .27])
+    ts = _exact_seat_cut(row, "ft_slots", {"ft0_i": 0, "ft0_o": 1})
+    ts._ft_slots()
+    first, second = (t["ft_slots"][0] for t in ts.T)
+    assert first["stations"] == 2 and first["explicit_stage0"]
+    assert first["bit_sites_um"] == [[[7, 20], [8, 20]], [[91, 20], [98.86, 20]]]
+    assert first["regs_um"][1] == [100, 20]
+    assert second["stations"] == 2 and "explicit_stage0" not in second
+    assert second["bit_sites_um"] == [[[14, 20], [15, 20]]]
+    assert row["bit_sites_um"][1] == [[91, 20], [107.5, 20]]

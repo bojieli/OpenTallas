@@ -107,6 +107,7 @@ sys.path.insert(0, str(HERE))
 
 EPS = 1e-6
 G = 0.432            # cut-face window grid (precedent hg_split windows_for)
+BANK_SPLIT_GRID_UM = 4.32
 OPP = {"N": "S", "S": "N", "E": "W", "W": "E"}
 LAND_PIN = re.compile(r"^(fclk_in|fclk_out|cland_fstart_in|cland_fstart_out)_(.*)$")
 COLL_PIN = re.compile(r"^(cland_up_ready|cland_up_fault|fclk_out_cland_up|cland_dn_ready_(\d+)|cland_dn_fault_(\d+)|"
@@ -692,6 +693,7 @@ class TypeSplit:
         self._id_straps()
         self._reset_start_exports()
         self._relay_keys()
+        self._legalize_split_bit_adjustments()
         if t.get("reach_homes"):
             raise SplitError(f"{self.tn}: reach_homes present (drop them before the split; re-derive after)")
         if "pads" in t:
@@ -736,6 +738,72 @@ class TypeSplit:
         if offset:
             end[window_key] = [rnd(v - offset, 6) for v in end[window_key]]
 
+    def _split_bank(self, bank, cell, piece, label):
+        """Translate an FF bank without moving bits already owned by the same piece."""
+        cut = self.cut
+        points = [cut.sh(p, piece) for p in bank]
+        ax, extent, grid = cut.ax, cut.ext(piece), BANK_SPLIT_GRID_UM
+        displaced = []
+        for bit, xy in enumerate(points):
+            x = xy[ax]
+            if x < -EPS:
+                delta = math.ceil((grid - x - EPS) / grid) * grid
+            elif x + cell[ax] > extent + EPS:
+                delta = -math.ceil((x + cell[ax] - extent + grid - EPS) / grid) * grid
+            else:
+                continue
+            if x + delta < -EPS or x + delta + cell[ax] > extent + EPS:
+                raise SplitError(f"{self.tn} {label}: bit {bit} footprint does not fit piece {piece}")
+            xy[ax] = rnd(x + delta, 6)
+            displaced.append((bit, xy, rnd(delta, 6)))
+        if displaced:
+            adjustments = self.__dict__.setdefault("_split_bit_adjustments", {})
+            for bit, xy, _ in displaced:
+                adjustments.setdefault(piece, []).append((f"{label}:{bit}", xy, cell))
+            self.rep.setdefault("split_bit_banks_shifted", []).append(
+                dict(bank=label, piece=piece, bits=len(displaced),
+                     max_delta_um=max(abs(delta) for _, _, delta in displaced)))
+        return points
+
+    def _legalize_split_bit_adjustments(self):
+        """Reserve inherited seats before finding free rows for bits displaced by the cut."""
+        if not getattr(self, "_split_bit_adjustments", None):
+            return
+        from ft_bit_sites import legalize_slots
+        from kit_fit import kit_core_area
+        from placement_obstacles import placement_boxes
+
+        for piece, adjustments in self._split_bit_adjustments.items():
+            child = self.T[piece]
+            area = kit_core_area(child)
+            pending = {id(xy) for _, xy, _ in adjustments}
+            fixed = []
+            for key in ("ft_slots", "internal_stations"):
+                for row in child.get(key, []):
+                    cell = row.get("bit_site_cell_um")
+                    if not cell:
+                        continue
+                    banks = list(row.get("bit_sites_um") or [])
+                    if row.get("face_bit_sites_um"):
+                        banks.append(row["face_bit_sites_um"])
+                    fixed.extend(("", *xy, *cell) for bank in banks for xy in bank if id(xy) not in pending)
+            slots = [dict(name=name, bit_site_cell_um=cell, bit_sites_um=[[xy]])
+                     for name, xy, cell in adjustments]
+            try:
+                seated, moves = legalize_slots(slots, area[:2], area,
+                                               blocks=placement_boxes(child, halo=1.08).values(), fixed=fixed)
+            except ValueError as exc:
+                raise SplitError(f"{self.tn} piece {piece}: cut bit sites: {exc}") from exc
+            for (_, xy, _), slot in zip(adjustments, seated):
+                xy[:] = slot["bit_sites_um"][0][0]
+            self.rep.setdefault("split_bit_banks_legalized", []).append(dict(piece=piece, moved=len(moves)))
+
+    @staticmethod
+    def _ft_stage_banks(slot):
+        sites = slot.get("bit_sites_um") or []
+        explicit = slot.get("explicit_stage0") is True and len(sites) == int(slot["stations"])
+        return dict(enumerate(sites, 0 if explicit else 1))
+
     # -------------------------------------------------------------- ft slots
     def _ft_slots(self):
         t, cut, T = self.t, self.cut, self.T
@@ -751,6 +819,13 @@ class TypeSplit:
             if f["name"] in reroute:
                 f = self._reroute_slot(f, reroute[f["name"]])
             regs = f["regs_um"]
+            if f.get("bit_sites_um") is not None:
+                from ft_bit_sites import validate_slot
+
+                try:
+                    validate_slot(f)
+                except ValueError as exc:
+                    raise SplitError(f"{self.tn}.{f['name']}: {exc}") from exc
             if int(f.get("stations", len(regs))) != len(regs):
                 raise SplitError(f"{self.tn}.{f['name']}: stations {f.get('stations')} != {len(regs)} regs")
             si, so = self.bp(f["name"] + "_i"), self.bp(f["name"] + "_o")
@@ -779,13 +854,13 @@ class TypeSplit:
                         if hops_ok and all(abs(regs[q][cut.ax] - c) <= snap for q in range(k, e)):
                             f = copy.deepcopy(f)
                             regs = f["regs_um"]
+                            stage_banks = self._ft_stage_banks(f)
                             to = c + 4.32 if seq[k - 1] > seq[k] else c - 4.32
                             for q in range(k, e):
                                 dv = to - regs[q][cut.ax]
                                 regs[q][cut.ax] = rnd(to)
-                                if f.get("bit_sites_um") and q >= 1:
-                                    for p in f["bit_sites_um"][q - 1]:
-                                        p[cut.ax] = rnd(p[cut.ax] + dv)
+                                for p in stage_banks.get(q, []):
+                                    p[cut.ax] = rnd(p[cut.ax] + dv)
                                 seq[q] = seq[k - 1]
                                 self.rep.setdefault("stations_snapped", []).append(
                                     dict(slot=f["name"], station=q, moved_um=rnd(dv, 3), to=list(regs[q])))
@@ -806,22 +881,24 @@ class TypeSplit:
             if len(set(ps)) != len(ps) or any(abs(a - b) != 1 for a, b in zip(ps, ps[1:])):
                 raise SplitError(f"{self.tn}.{f['name']}: re-entrant / non-adjacent crossing {ps}")
             bs = f.get("bit_sites_um")
+            localized = {}
+            if bs is not None:
+                for k, bank in self._ft_stage_banks(f).items():
+                    localized[k] = self._split_bank(bank, f["bit_site_cell_um"], seq[k], f"{f['name']} stage {k}")
             if len(runs) == 1:
                 g = copy.deepcopy(f)
                 for end in ("in", "out"):
                     self._shift_piece_window(g, f"{end}_face", f"{end}_window_um", si)
                 g["regs_um"] = [cut.sh(r, si) for r in regs]
                 if bs is not None:
-                    g["bit_sites_um"] = [[cut.sh(p, si) for p in st] for st in bs]
+                    g["bit_sites_um"] = list(localized.values())
                 T[si]["ft_slots"].append(g)
                 continue
             pieces = []
             for j, (s, ks) in enumerate(runs):
                 g = copy.deepcopy(f)
                 rr = [cut.sh(regs[k], s) for k in ks]
-                sites = [copy.deepcopy(bs[k - 1]) for k in ks if k >= 1] if bs is not None else None
-                if sites is not None:
-                    sites = [[cut.sh(p, s) for p in st] for st in sites]
+                sites = [localized[k] for k in ks if k in localized] if bs is not None else None
                 if j > 0:
                     # new in-face station at the cut where the chain enters this piece (+1 cycle)
                     prev = regs[runs[j - 1][1][-1]]
@@ -832,9 +909,9 @@ class TypeSplit:
                     face_xy[cut.ax] = 0.0 if s > runs[j - 1][0] else cut.ext(s)
                     face_xy[1 - cut.ax] = xc
                     rr = [face_xy] + rr
-                    if sites is not None:
-                        # bit_sites_um[j] belongs to regs[j + 1]: the new in-face station carries no bit sites
-                        pass
+                    # The new station is placed at its cut pin instead of
+                    # taking ownership of the original explicit stage zero.
+                    g.pop("explicit_stage0", None)
                     g["in_face"] = cut.low_face() if s > runs[j - 1][0] else cut.high_face()
                 if j < len(runs) - 1:
                     g["out_face"] = cut.high_face() if runs[j + 1][0] > s else cut.low_face()
@@ -890,14 +967,12 @@ class TypeSplit:
         hop = total / (n - 1)
         if hop > reach:
             raise SplitError(f"{self.tn}.{f['name']}: reroute hop {hop:.0f} um > reach {reach:.0f}")
-        bs = f.get("bit_sites_um")
-        for k in range(1, n):
+        for k, bank in self._ft_stage_banks(f).items():
             dx, dy = new[k][0] - regs[k][0], new[k][1] - regs[k][1]
-            if bs is not None:
-                for p in bs[k - 1]:
-                    p[0], p[1] = rnd(p[0] + dx), rnd(p[1] + dy)
-                    if not (0 <= p[0] <= W and 0 <= p[1] <= H):
-                        raise SplitError(f"{self.tn}.{f['name']}: rerouted station {k} bit site {p} outside the outline")
+            for p in bank:
+                p[0], p[1] = rnd(p[0] + dx), rnd(p[1] + dy)
+                if not (0 <= p[0] <= W and 0 <= p[1] <= H):
+                    raise SplitError(f"{self.tn}.{f['name']}: rerouted station {k} bit site {p} outside the outline")
         old_len = sum(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(regs, regs[1:]))
         f["regs_um"] = new
         f["note"] = (f.get("note", "") + f" | {self.ev.tag}: rerouted via {how['waypoints']} ({n} stations kept, "
@@ -942,6 +1017,23 @@ class TypeSplit:
             k += 1
         return nm
 
+    def _split_internal_banks(self, source, row, piece, indices, keep_face):
+        if "bit_sites_um" not in source:
+            return
+        banks = source["bit_sites_um"]
+        if len(banks) != len(source["regs_um"]):
+            raise SplitError(f"{self.tn} {source['conn']}: exact bit banks do not match existing stations")
+        cell = source["bit_site_cell_um"]
+        row["bit_sites_um"] = []
+        for original in indices:
+            row["bit_sites_um"].append(
+                self._split_bank(banks[original], cell, piece, f"{source['conn']} stage {original}"))
+        if keep_face and "face_bit_sites_um" in source:
+            row["face_bit_sites_um"] = self._split_bank(
+                source["face_bit_sites_um"], cell, piece, f"{source['conn']} face")
+        else:
+            row.pop("face_bit_sites_um", None)
+
     def _internal_stations(self):
         t, cut, T = self.t, self.cut, self.T
         self.legs = []
@@ -964,6 +1056,7 @@ class TypeSplit:
                 s = seq[0]
                 rr["from_um"], rr["to_um"] = cut.sh(r["from_um"], s), cut.sh(r["to_um"], s)
                 rr["regs_um"] = [cut.sh(p, s) for p in regs]
+                self._split_internal_banks(r, rr, s, range(len(regs)), keep_face=True)
                 T[s]["internal_stations"].append(rr)
                 continue
             out_row = bw[bus]["dir"] == "out"
@@ -1067,6 +1160,7 @@ class TypeSplit:
                 rr = {k: copy.deepcopy(v) for k, v in r.items() if k not in ("from_um", "to_um", "regs_um", "launch",
                                                                                "capture", "conn", "note")}
                 rr["regs_um"] = [cut.sh(pts[k], s) for k in piece_regs[j]]
+                self._split_internal_banks(r, rr, s, (k - 1 for k in piece_regs[j]), keep_face=j == (last if out_row else 0))
                 # every piece but the last forwards to its cut out bus (an OUT row: native_istations prices its
                 # stations as the source stations of that cut lane); the last piece keeps the row's own form
                 if j == seg_e and j < last:
