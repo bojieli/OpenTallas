@@ -1059,7 +1059,68 @@ proc cland_dsel_cone_assign {combs fanout ykeys} {
  }
  return $out
 }
-proc cland_dsel_cone_cells {combinsts ffs} {
+# Opt-in mapped data ownership for narrow collector bands. Shared read
+# selector logic and storage write muxes keep their normal placement.
+proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
+ set owners [dict create]
+ dict for {y key} $ykeys {
+  foreach e [cland_dsel_cone_assign $names $fanout [dict create $y $key]] {
+   dict lappend owners [lindex $e 0] $e
+  }
+ }
+ set result {}
+ set reads [dict create]
+ dict for {name hits} $owners {
+  if {[llength $hits] != 1} continue
+  lassign [lindex $hits 0] _ key y
+  dict set reads $name $y
+  lappend result [list $key [dict get $byname $name] $y]
+ }
+ set launches 0
+ set used [dict create]
+ foreach pr $ffs {
+  lassign $pr key ff
+  set ffname [$ff getName]
+  if {![regexp {^(.*[/.]s_d\\?\[[0-9]+\\?\]\\?\[([0-9]+)\\?\])\$} $ffname -> data bit]} continue
+  set choice {}
+  foreach it [$ff getITerms] {
+   if {![$it isOutputSignal] || [[$it getMTerm] getName] ne "QN"} continue
+   set n [$it getNet]
+   if {$n eq "NULL"} continue
+   foreach pin [$n getITerms] {
+    if {![$pin isInputSignal]} continue
+    set inv [$pin getInst]
+    set iname [$inv getName]
+    if {![dict exists $fanout $iname] || ![regexp {^INVx} [[$inv getMaster] getName]]} continue
+    set match 0
+    foreach out [$inv getITerms] {
+     if {[$out isOutputSignal] && [$out getNet] ne "NULL" && [[$out getNet] getName] eq $data} { set match 1 }
+    }
+    if {!$match} continue
+    foreach sink [dict get $fanout $iname] {
+     if {![dict exists $reads $sink]} continue
+     if {[regexp {/y\\?\[([0-9]+)\\?\]} [dict get $reads $sink] -> ybit] && $ybit == $bit} {
+      lappend choice $inv
+      break
+     }
+    }
+   }
+  }
+  if {[llength $choice] != 1} {
+   error "OT_CLAND dsel_data_launch $ffname: expected one same-bit data inverter, found [llength $choice]"
+  }
+  set inv [lindex $choice 0]
+  set iname [$inv getName]
+  if {[dict exists $used $iname]} { error "OT_CLAND dsel_data_launch shared inverter $iname" }
+  dict set used $iname 1
+  lappend result [list $key $inv $ffname]
+  incr launches
+ }
+ if {!$launches} { error "OT_CLAND dsel_data_launch found no canonical s_d storage inverter" }
+ puts "OT_CLAND dsel_data_launch: [dict size $reads] uniquely owned read cells and $launches storage launch inverters"
+ return [lsort -dictionary -index 0 $result]
+}
+proc cland_dsel_cone_cells {combinsts ffs {data_launch 0}} {
  set ykeys [dict create]
  foreach pr $ffs {
   set k [lindex $pr 0]
@@ -1081,6 +1142,7 @@ proc cland_dsel_cone_cells {combinsts ffs} {
   }
   dict set fanout $nm $fo
  }
+ if {$data_launch} { return [cland_dsel_data_cells $names $fanout $ykeys $byname $ffs] }
  return [lmap e [cland_dsel_cone_assign $names $fanout $ykeys] { list [lindex $e 1] [dict get $byname [lindex $e 0]] [lindex $e 2] }]
 }
 # C5 second half: the storage flops that drive the chunk wire dch[c].sd_c[k] into the u_dsel cone are DFF*QNx1 cells; the
@@ -1113,7 +1175,7 @@ proc cland_dsel_cone_reach {cone {lim 60.0}} {
 }
 # Seat the cone after its capture registers have their final FIRM sites. A
 # pin-column spill can assign widely separated sites to adjacent abstract keys.
-proc cland_place_dsel_near {cone rects tag} {
+proc cland_place_dsel_near {cone rects tag {radii {8.0 14.0 20.0 28.0}}} {
  global ff_blk ff_dbu
  set saved [info exists ::cland_pinslot_fit]
  if {$saved} { set old $::cland_pinslot_fit }
@@ -1127,7 +1189,7 @@ proc cland_place_dsel_near {cone rects tag} {
    set x [expr {double($xd)/$ff_dbu}]
    set y [expr {double($yd)/$ff_dbu}]
    set placed 0
-   foreach radius {8.0 14.0 20.0 28.0} {
+   foreach radius $radii {
     foreach r $rects {
      lassign $r ax ay bx by
      set lo_x [expr {max($ax,$x-$radius)}]
@@ -1148,7 +1210,7 @@ proc cland_place_dsel_near {cone rects tag} {
     # The face pin pack can seat a capture outside the nominal ring rectangle.
     # Stay near the actual capture, with core rows, macro halos and pending
     # foreign ring bands still enforced by cland_put.
-    foreach radius {8.0 14.0 20.0 28.0} {
+    foreach radius $radii {
      set box [list [expr {$x-$radius}] [expr {$y-$radius}] [expr {$x+$radius}] [expr {$y+$radius}]]
      if {![catch {cland_put $i $box "dsel-near:$tag" 0.6 0} err opts]} {
       set placed 1
@@ -1167,6 +1229,7 @@ proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0;set combinsts {};set nsized 0
  set dsel_enabled [expr {[info exists ::cland_dsel_cone] && [lsearch -exact $::cland_dsel_cone $prefix] >= 0}]
+ set dsel_data_launch [expr {[info exists ::cland_dsel_data_launch] && [lsearch -exact $::cland_dsel_data_launch $prefix] >= 0}]
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
@@ -1244,7 +1307,7 @@ proc cland_place_ff {prefix rect tag} {
   }
  }
  if {$dsel_enabled} {
-  set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs] : {}}]
+  set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs $dsel_data_launch] : {}}]
   if {![llength $cone]} { error "OT_CLAND dsel_cone requested for $prefix but no u_dsel AND-OR cone cell reaches a keyed y flop (chunk width $wch)" }
   foreach pr $cone {
    set m [[lindex $pr 1] getMaster]
@@ -1320,10 +1383,17 @@ proc cland_place_ff {prefix rect tag} {
  }
  set cland_cursor {};set cland_col_cursor {}
  if {![info exists ::cland_fill_dry]} { if {[info exists cone] && [llength $cone]} {
-  cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag}
-  lassign [cland_dsel_cone_reach $cone] rn rmax rbad
-  puts "OT_CLAND dsel_cone $prefix: $nsized sd_c storage flops sized x1 -> x2; cone-to-y reach max [format %.1f $rmax] um over $rn cells, $rbad beyond 60 um"
-  if {$rbad} { error "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop (max [format %.1f $rmax] um)" }
+  if {$dsel_data_launch} {
+   cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag {2.0 4.0 8.0}}
+   lassign [cland_dsel_cone_reach $cone 16.0] rn rmax rbad
+   puts "OT_CLAND dsel_data_launch reach $prefix: $rn cone cells max [format %.2f $rmax] um from data anchor, $rbad beyond 16 um"
+   if {$rbad} { error "OT_CLAND dsel_data_launch $prefix: $rbad/$rn combo cells more than 16 um from their data anchor" }
+  } else {
+   cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag}
+   lassign [cland_dsel_cone_reach $cone] rn rmax rbad
+   puts "OT_CLAND dsel_cone $prefix: $nsized sd_c storage flops sized x1 -> x2; cone-to-y reach max [format %.1f $rmax] um over $rn cells, $rbad beyond 60 um"
+   if {$rbad} { error "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop (max [format %.1f $rmax] um)" }
+  }
  }
  puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement" }
  return [llength $ffs]

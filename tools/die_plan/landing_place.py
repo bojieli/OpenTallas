@@ -926,14 +926,27 @@ def _dsel_cone_tcl(c):
     """HEAD-TOOLS-RINGDSEL (ALLFIX-HEAD C5): opt-in band key dsel_cone=true (needs ring_place='ff') -> 'set cland_dsel_cone
     {prefix ..}' so landing_placement.tcl keys and places each chunked-ring u_dsel AND-OR cone cell FIRM right behind its y
     flop; '' (output unchanged) when no band carries the key."""
-    names=[]
-    for name,band in sorted((c or {}).get('bands',{}).items()):
-        v=band.get('dsel_cone')
-        if v is None:continue
-        if v is not True:raise ValueError(f"landing band {name}: dsel_cone must be true or absent")
-        if band.get('ring_place')!='ff':raise ValueError(f"landing band {name}: dsel_cone requires ring_place='ff'")
-        names.append(band.get('instance','u_cland_'+name))
-    return ('set cland_dsel_cone {'+' '.join(names)+'}\n') if names else ''
+    names = []
+    data_launch = []
+    for name, band in sorted((c or {}).get('bands', {}).items()):
+        v = band.get('dsel_cone')
+        launch = band.get('dsel_data_launch')
+        if launch is not None and (launch is not True or v is not True):
+            raise ValueError(f"landing band {name}: dsel_data_launch must be true and requires dsel_cone=true")
+        if v is None:
+            continue
+        if v is not True:
+            raise ValueError(f"landing band {name}: dsel_cone must be true or absent")
+        if band.get('ring_place') != 'ff':
+            raise ValueError(f"landing band {name}: dsel_cone requires ring_place='ff'")
+        instance = band.get('instance', 'u_cland_' + name)
+        names.append(instance)
+        if launch:
+            data_launch.append(instance)
+    out = ('set cland_dsel_cone {' + ' '.join(names) + '}\n') if names else ''
+    if data_launch:
+        out += 'set cland_dsel_data_launch {' + ' '.join(data_launch) + '}\n'
+    return out
 
 
 def tcl(P,tn,macro_moves=None):
