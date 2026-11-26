@@ -18,3 +18,4 @@
 - 2026-11-26 09:57 PST DIED [CLASS-OWNERS-B] ot-push-main otpush-viable-ram-15060 on viable-ram: rc=3 after 9 s, ended 17:57:32, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 9 s, no log
 - 2026-11-26 10:00 PST DONE [CLASS-OWNERS-B] ot-push-main otpush-viable-ram-27304 on viable-ram: rc=0 after 139 s, ended 18:00:42, log none, cmd: ot-push-main 
 - 2026-11-26 10:01 PST DONE [CLASS-OWNERS-B] ot-push-main otpush-viable-ram-49786 on viable-ram: rc=0 after 79 s, ended 18:01:45, log /srv/opentallas-scratch2/claude/CLASS-OWNERS-B/clkland/push.log, cmd: ot-push-main 
+- 2026-11-26 10:02 PST DIED [CLASS-OWNERS-B] ot-push-main otpush-key-cardinal-3597584 on key-cardinal: rc=3 after 15 s, ended 10:02:45, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 15 s, no log
