@@ -2104,6 +2104,7 @@ PLATEAU2_MIN_ITERS = 10            # R1: window = max(10 iterations, 3 h of wall
 PLATEAU2_WALL_S = 3 * 3600
 PLATEAU2_FALL = 0.05               # best violations fell >= 5 % in the window = TRENDING
 PLATEAU2_LOW = 50                  # R2: flat and <= 50 = LOW (ECO-route at DRT end), flat and > 50 = DEAD
+PLATEAU2_ECO_MAX = 20              # R9 (QC-DRT-ECO-R2 11-26): at or under this many violations the kit is an ECO-route hand-off candidate; a silent log is a long stubborn-tile iteration, never DEAD
 PLATEAU2_SILENT_H = 3.0            # R3: log silent this long while openroad burns CPU = no trend = DEAD
 PLATEAU2_CPU = 1.0
 PLATEAU2_LIVE_FILE = "lanes/PLATEAU-V2.live"     # absent: the v2 rule posts rows and notices only (first pass is report-only); the hub writes it via coord-commit when COORD says go
@@ -2139,6 +2140,8 @@ def plateau_v2(vals, iter_s, log_age_h, cores):
         return None
     last = vals[-1]
     if log_age_h is not None and log_age_h > PLATEAU2_SILENT_H and cores is not None and cores > PLATEAU2_CPU:
+        if 0 < last <= PLATEAU2_ECO_MAX:      # R9: sle_su_l0 (1) and slw_fe_v1 cl95 (9) were CANCEL-ELIGIBLE on 5-11 h stubborn iterations that were still falling; hand off at DRT end instead
+            return "LOW", last, f"{last:g} violations, log silent {log_age_h:.1f} h while openroad runs at {cores:.1f} cores: long stubborn-tile iteration, not a hang (R9)"
         return "DEAD", last, f"log silent {log_age_h:.1f} h while openroad runs at {cores:.1f} cores: no trend (R3)"
     if last <= 0:
         return None
@@ -2290,7 +2293,11 @@ def plateau_act_class(r):
     pv = r.get("plateau_v2")
     if pv:                                        # rule v2 (R1-R3): LOW -> ECO-route at DRT end, DEAD -> cancel eligible, TRENDING never gets here
         if pv[0] == "LOW":
-            return "REPAIR-NOTICE", f"DRT flat but low ({pv[2]}): ECO-route AT DRT END on the final 5_2_route.odb (none exists before), not now"
+            auto = ""
+            if pv[1] <= PLATEAU2_ECO_MAX:     # R9: automatic hand-off, report-only until lanes/PLATEAU-V2.live exists
+                auto = (f"; ECO-HANDOFF (report-only, auto at <= {PLATEAU2_ECO_MAX} violations): would arm QC-DRT-ECO waiter.sh "
+                        f"{str(r.get('type') or 'kit')} {r.get('kit') or r.get('work') or '?'} {r.get('host') or '?'}; ECO stops after ONE attempt gaining < 5 % (P-ECO-NO-GAIN) and the type returns to the die integrator as a structural row")
+            return "REPAIR-NOTICE", f"DRT flat but low ({pv[2]}): ECO-route AT DRT END on the final 5_2_route.odb (none exists before), not now{auto}"
         if pv[0] == "DEAD":
             if float(r.get("age_h") or 0) <= DF_MIN_AGE_H:
                 return None

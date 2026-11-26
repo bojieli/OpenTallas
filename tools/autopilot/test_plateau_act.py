@@ -139,8 +139,11 @@ def test_v2_window_classes_low_trending_dead_and_hang():
     trend = [300, 251] + [251 - i * 3 for i in range(1, 14)]
     assert nw.plateau_v2(trend, 1000, 0.1, 4)[0] == "TRENDING"                 # cldb4efe33: 251 > 208 = 17 %
     assert nw.plateau_v2([9000] + [800] * 25, 600, 0.1, 4)[0] == "DEAD"       # flat over 50
-    h = nw.plateau_v2([9000, 4, 4, 4], 300, 7.4, 4.0)                          # cl08d14f0d: log silent 7.4 h, openroad at 400 %
+    h = nw.plateau_v2([9000, 4, 4, 4], 300, 7.4, 4.0)                          # R9: <= 20 violations and silent = long stubborn iteration, LOW not DEAD
+    assert h[0] == "LOW" and "R9" in h[2]
+    h = nw.plateau_v2([9000, 800, 800, 800], 300, 7.4, 4.0)                    # above 20: silent while openroad burns CPU is still DEAD
     assert h[0] == "DEAD" and "no trend" in h[2]
+    assert nw.plateau_v2([9000, 21, 21, 21], 300, 7.4, 4.0)[0] == "DEAD"        # boundary: 20 is LOW, 21 is not
     assert nw.plateau_v2([9000, 4, 4, 4], 300, 7.4, 0.01) is None             # silent and idle is the old hung rule, not this one
 
 
@@ -179,3 +182,11 @@ def test_v2_last_copy_without_5_1_grt_is_not_cancelled(tmp_path, monkeypatch):
     calls = []
     out = nw.plateau_act_pass([r], {}, NOW, post=False, cancel=lambda u: calls.append(u) or (0, "ok"), sweep=nw.owners_sweep(str(tmp_path)))
     assert calls == [] and "5_1_grt.odb" in out[0]["action"]
+
+
+def test_r9_low_notice_carries_report_only_eco_handoff():
+    r = prow(plateau3=9, plateau3_kind="low", plateau_v2=["LOW", 9, "9 violations flat"], age_h=48.6, type="slw_fe_v1", kit="/k/gen/slw_fe_v1__cl", host="epyc8")
+    cls, txt = nw.plateau_act_class(r)
+    assert cls == "REPAIR-NOTICE" and "ECO-HANDOFF (report-only" in txt and "/k/gen/slw_fe_v1__cl epyc8" in txt and "P-ECO-NO-GAIN" in txt
+    r2 = prow(plateau3=40, plateau3_kind="low", plateau_v2=["LOW", 40, "40 violations flat"], age_h=9.0)
+    assert "ECO-HANDOFF" not in nw.plateau_act_class(r2)[1]
