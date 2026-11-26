@@ -144,7 +144,15 @@ def test_missing_manifest_batch_skips_checkout_and_replays_mixed_batch(tmp_path,
     monkeypatch.setattr(T, "live_dies", lambda *_, **__: set())
     monkeypatch.setattr(T, "source_staging_refusal", lambda *_: operations.append("reserve"))
     monkeypatch.setattr(T, "source_snapshot", lambda *_: operations.append("checkout") or "/pinned")
-    monkeypatch.setattr(T.subprocess, "run", lambda argv: operations.append(argv) or SimpleNamespace(returncode=0))
+    outcomes = []
+    approved = set()
+    monkeypatch.setattr(T._canary_module, "pre_submit_review", lambda: SimpleNamespace(
+        ledger=lambda: "", hold=lambda spec, *_: "" if spec["die"] in approved else "WAIT-PLAN-VISUAL"))
+    def submit(argv):
+        operations.append(argv)
+        Path(argv[argv.index("--plan-review-status") + 1]).write_text(json.dumps({"deferred": outcomes}))
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(T.subprocess, "run", submit)
     args = ["--src", "/warm", "--root", str(tmp_path / "runs"), "--state", str(state), "--force"]
 
     manifest.write_text(json.dumps({"canaries": [base], "watch": []}))
@@ -155,8 +163,20 @@ def test_missing_manifest_batch_skips_checkout_and_replays_mixed_batch(tmp_path,
 
     manifest.write_text(json.dumps({"canaries": [base, other], "watch": []}))
     assert T.main(args) == 0
+    assert operations == []
+    assert json.loads(state.read_text())["die_sha"] == {"qwen_kvsys_core": "current"}
+
+    approved.add("s81")
+    outcomes.append("s81")             # the receipt changed between staging and submission
+    assert T.main(args) == 0
     assert operations[:2] == ["reserve", "checkout"]
-    assert operations[2][-4:] == ["--die", "qwen_kvsys_core", "--die", "s81"]
+    assert operations[2][-2:] == ["--die", "s81"]
+    assert "--require-plan-review" in operations[2]
+    assert json.loads(state.read_text())["die_sha"] == {"qwen_kvsys_core": "current"}
+
+    outcomes.clear()
+    assert T.main(args) == 0
+    assert json.loads(state.read_text())["die_sha"] == {"qwen_kvsys_core": "current", "s81": "current"}
 
     templated = dict(base, vars={"inputs": "{src}/inputs"})
     assert T._canary_module.missing_input_snapshot(templated, tmp_path, before_checkout=True) == ""
