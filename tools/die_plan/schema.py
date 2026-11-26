@@ -1032,6 +1032,14 @@ SCHEMA = {
                             "required": ["instance", "pin", "old_reset", "new_reset", "clock_net"],
                             "properties": {k: {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
+                        # Reuse a same-age reset/START sibling at exact named terminal taps.
+                        "shared_relay_parent": {"type": "object", "additionalProperties": False,
+                            "required": ["donor", "retire", "targets"],
+                            "properties": {"donor": {"type": "string", "pattern": "^rst_rl_[0-9]+$"},
+                                "retire": {"type": "array", "minItems": 1, "uniqueItems": True,
+                                           "items": {"type": "string", "pattern": "^rst_rl_[0-9]+$"}},
+                                "targets": {"type": "array", "minItems": 1, "uniqueItems": True,
+                                            "items": {"type": "string", "pattern": "^rst_n_t[0-9]+$"}}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
                         # LEAF-CLUSTERS (FAM-KV-HROOT-R1 11-23): per-bus-group reset leaf: the bin/bout/ft flops of the listed buses take
