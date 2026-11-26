@@ -757,18 +757,24 @@ if so:
     c = d.get("checks") or {}
     out["signoff"] = {"path": so[-1], "verdict": d.get("verdict"), "local_verdict": d.get("local_verdict"),
         "release_qualified": d.get("release_qualified"), "parent_qualification": d.get("parent_qualification"), "reasons": d.get("reasons"),
+        "profile": d.get("profile"), "signed_period_ps": d.get("signed_period_ps"),
+        "internal_hold": d.get("internal_hold"), "checks": {"fwd_pads": c.get("fwd_pads")},
         "fails": sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
         "tt_wns": (c.get("setup_tt") or {}).get("wns_ps"), "ff_wns": (c.get("hold_ff") or {}).get("wns_ps"),
         "tt_n": (c.get("setup_tt") or {}).get("violators"), "ff_n": (c.get("hold_ff") or {}).get("violators"),
         "drc": (c.get("drc") or {}).get("count"), "antenna": (c.get("antenna") or {}).get("count"),
         "pg": (c.get("pg") or {}).get("verdict"),
         "base": (d.get("inputs") or {}).get("base"), "odb": (d.get("inputs") or {}).get("odb")}
-    ff = (d.get("corners") or {}).get("ff")
-    if isinstance(ff, dict):        # COORD 11-22 (1): the internal FF census the R-MINIMAL near-miss window reads (not a gate input)
-        out["signoff"]["ff_census"] = {k: ff[k] for k in ("done", "rc", "errors", "std_min_start", "std_wns_min", "std_nviol_min") if k in ff}
-    if a.get("retained_return_to") and isinstance(ff, dict):
-        out["signoff"]["corners"] = {"ff": {k: ff[k] for k in ("done", "rc", "errors", "std_min_start",
-                                                             "std_wns_min", "std_nviol_min") if k in ff}}
+    corners = d.get("corners") or {}
+    measured = {name: {"periods": data["periods"]} for name, data in corners.items()
+                if isinstance(data, dict) and isinstance(data.get("periods"), dict)}
+    ff = corners.get("ff")
+    if isinstance(ff, dict):
+        census = {k: ff[k] for k in ("done", "rc", "errors", "std_min_start", "std_wns_min", "std_nviol_min") if k in ff}
+        out["signoff"]["ff_census"] = census
+        measured.setdefault("ff", {}).update(census)
+    if measured:
+        out["signoff"]["corners"] = measured
     try:
         out["signoff"]["odb_bytes"] = os.path.getsize(out["signoff"]["odb"])
     except Exception:
@@ -1417,6 +1423,8 @@ def classify(c, client):
                                         + (f"; advisory: {adv}" if adv else "") + ")")
         if minimal_near_miss(c, so, jm):
             return "NEAR-MISS", "routed", "; ".join(so.get("reasons") or jm.get("reasons") or []) or "NOT SIGNED"
+        if so.get("verdict") == "SIGNED":
+            return "STRUCTURAL", "rminimal-evidence", "; ".join(jm["reasons"])
     if so:
         if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
             return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"

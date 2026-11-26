@@ -19964,8 +19964,17 @@ def follow_queue(st, ap_dir, notices, stops=None):
         if (status, cls) != old and status in ("FAIL", "SIGNED"):
             QUEUE_OUTCOMES.append((rec, status, str(stage or "route"), cls, why))          # processed by repeat_queue_outcomes() (it has cfg / AP)
         if (status, cls) != old and (status in ("SIGNED", "FAIL")):
-            msg = (f"{rec['item']} SIGNED OFF -> count ({why[:120]})" if status == "SIGNED" else
-                   f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}")
+            if status == "SIGNED":
+                parent = so.get("parent_qualification")
+                parent_status = parent.get("status") if isinstance(parent, dict) else parent
+                qualification = ""
+                if parent_status == "NEEDS_PARENT":
+                    qualification = "; parent qualification pending"
+                elif so.get("release_qualified") is False:
+                    qualification = "; full release qualification withheld"
+                msg = f"{rec['item']} SIGNED OFF -> count eligible{qualification} ({why[:120]})"
+            else:
+                msg = f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}"
             notices.setdefault(rec["die"], []).append(msg)
     return n
 
