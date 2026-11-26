@@ -271,7 +271,7 @@ ot_s81sl_leaf__t31	ot_s81sl_leaf	FAIL 20	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t32	ot_s81sl_leaf	FAIL 17	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	26/593	2
 ot_s81sl_leaf__t33	ot_s81sl_leaf	FAIL 55	pass	FAIL 1	FAIL 1	pass	FAIL 1			REACH,TAP-CAP,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	119/623	1
 ot_s81sl_leaf__t34	ot_s81sl_leaf	FAIL 30	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	35/644	0
-ot_s81sl_leaf__t35	ot_s81sl_leaf	FAIL 100	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD (gains but stale core taps/relay seats, 4 GATE REACH, ft0 445 um)	c9s-1	88/605	1
+ot_s81sl_leaf__t35	ot_s81sl_leaf	FAIL 100	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	CODEX t35_slot_clear_1125: no geom result yet (no geom.log): not reviewable	c9s-1	88/605	1
 ot_s81sl_leaf__t36	ot_s81sl_leaf	FAIL 62	pass	pass	FAIL 1	pass	FAIL 1	1479	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed | SETUP-AT-CTS (VIS-CAUSES): see ALLFIX LEAF-T25-T36-SETUP-C11 / KVLEAF-T5-SETUP-CHECK	c9s-1	120/631	1
 ot_s81sl_leaf__t37	ot_s81sl_leaf	FAIL 9	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	49/609	0
 ot_s81sl_leaf__t38	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	9/598	0
@@ -285,7 +285,7 @@ ot_s81sl_leaf__t42	ot_s81sl_leaf	FAIL 24	pass	pass	pass	pass	FAIL 1			REACH,CORE
 ot_s81sl_leaf__t43	ot_s81sl_leaf	FAIL 16	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	48/587	1
 ot_s81sl_leaf__t44__clf4ea6d4b	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	53/633	3
 ot_s81sl_leaf__t44__clf6cf8492	ot_s81sl_leaf	FAIL 21	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	27/613	2
-ot_s81sl_leaf__t45	ot_s81sl_leaf	FAIL 11	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	80/695	0
+ot_s81sl_leaf__t45	ot_s81sl_leaf	FAIL 11	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	R11 zero-stage (plan_c10b_r11_phys_anchored): ft1 hops 331.2/305.9/378.5/39.7 max 378.5 <=405 OK in plan; no render/precheck review yet	c9s-1	80/695	0
 ot_s81sl_leaf__t46	ot_s81sl_leaf	FAIL 60	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	56/624	1
 ot_s81sl_leaf__t47	ot_s81sl_leaf	FAIL 14	pass	pass	FAIL 1	pass	FAIL 1	8175	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	12/472	2
 ot_s81sl_leaf__t5	ot_s81sl_leaf	FAIL 20	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	29/303	1
@@ -311,7 +311,7 @@ ot_s81sl_leaf__t67	ot_s81sl_leaf	FAIL 26	pass	pass	FAIL 1	pass	FAIL 1			REACH,BO
 ot_s81sl_leaf__t68	ot_s81sl_leaf	FAIL 24	pass	pass	FAIL 1	pass	FAIL 1	4135	no	REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	11/611	0
 ot_s81sl_leaf__t69	ot_s81sl_leaf	FAIL 86	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	FAIL type-review v2 (Fable 11-25): sub-28 slots, hub corridor pile 1.5-1.85x, ft trunk over lane column, tap pile+starvation, far-face lane pins	c9s-1	66/624	1
 ot_s81sl_leaf__t7	ot_s81sl_leaf	FAIL 43	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	61/635	1
-ot_s81sl_leaf__t70	ot_s81sl_leaf	FAIL 101	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	TEMPLATE v1 review (Fable 11-25 16:5x): HOLD closest (ANCHORDRY, dangling collector sources x=1620, ft hops 402-404 um)	c9s-1	104/628	0
+ot_s81sl_leaf__t70	ot_s81sl_leaf	FAIL 101	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	CODEX GEOM 11-25 (t70_collector_local_1125 place): HOLD: fill 0.03, empty 0.85, pin_reg_max 383.7, r2r 1328 (834 paths), relay_collapse 70, channel_h 1.46 / channel_v 2.23, col_v 1.86, clock_tap_sinks 2060, 3 partial faces	c9s-1	104/628	0
 ot_s81sl_leaf__t71	ot_s81sl_leaf	FAIL 22	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	34/609	1
 ot_s81sl_leaf__t72	ot_s81sl_leaf	FAIL 40	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	102/629	0
 ot_s81sl_leaf__t73	ot_s81sl_leaf	FAIL 13	pass	pass	FAIL 1	pass	FAIL 1			REACH,BOUNDARY-REG,CORE-TAP-OWNER	not-reviewed	c9s-1	33/611	0
@@ -334,7 +334,7 @@ serdes__t3	serdes	FAIL 1	pass	FAIL 1	FAIL 1	pass	pass			REACH,TAP-CAP,BOUNDARY-R
 serdes__t4	serdes	FAIL 1	pass	FAIL 1	FAIL 1	pass	pass	3593	no	REACH,TAP-CAP,BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t12	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t14	slice_station	FAIL 7	pass	pass	FAIL 1	pass	pass			REACH,BOUNDARY-REG	not-reviewed	c9s-1	0	0
-slice_station__t17	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	not-reviewed	c9s-1	0	0
+slice_station__t17	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	CODEX GEOM c10b monitor r2 place: SHIP-ADVISORY: placed reach 0 need-station, r2r 324.9, relay_collapse 0, but geom FAIL fill 0.0016 empty 0.9875 pin_reg_max 189.5 partial_face 2 (same as signed siblings)	c9s-1	0	0
 slice_station__t18	slice_station	FAIL 2	pass	pass	FAIL 1	pass	pass	1322	no	REACH,BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t20	slice_station	pass	pass	pass	pass	pass	pass			none	not-reviewed	c9s-1	0	0
 slice_station__t21	slice_station	FAIL 3	pass	pass	FAIL 1	pass	pass	1500	no	REACH,BOUNDARY-REG	not-reviewed	c9s-1	0	0
@@ -344,7 +344,7 @@ slice_station__t24__cl64811a5d	slice_station	pass	pass	FAIL 1	FAIL 1	pass	pass	1
 slice_station__t24__cl66b71008	slice_station	FAIL 2	pass	FAIL 1	FAIL 1	pass	pass			REACH,TAP-CAP,BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t24__cleece78ec	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t25	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	not-reviewed	c9s-1	0	0
-slice_station__t26	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	not-reviewed	c9s-1	0	0
+slice_station__t26	slice_station	pass	pass	pass	FAIL 1	pass	pass			BOUNDARY-REG	CODEX same-D split d5dbe55 (scope_1125): SHIP-ADVISORY: bind 0 errors, placed reach 0, r2r 376.5 count 0; geom FAIL fill 0.0089 empty 0.9353 pin_reg_p90 35.9 partial_face 3 (signed-sibling class)	c9s-1	0	0
 slice_station__t27	slice_station	FAIL 5	pass	FAIL 1	FAIL 1	pass	pass			REACH,TAP-CAP,BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t28	slice_station	FAIL 2	pass	pass	FAIL 1	pass	pass			REACH,BOUNDARY-REG	not-reviewed	c9s-1	0	0
 slice_station__t29__cl2e5c855a	slice_station	FAIL 2	pass	FAIL 1	FAIL 1	pass	pass	1476	no	REACH,TAP-CAP,BOUNDARY-REG	not-reviewed	c9s-1	0	0
