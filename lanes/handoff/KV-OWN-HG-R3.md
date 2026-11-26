@@ -24,3 +24,6 @@ Method: read the review text from FP-CONVERGE-KV, write one delta on A5t9 base, 
 ## RESUMED 11-25 evening: base is now A5t9 R6 (plan 1cca73462c27, tree epyc12 kv-allfix/pub/kv_a5t9_r6_rel_tree_1125, plan_a5t9_r6_publish_1125.json)
 - Checked: 0 internal_stations regs_um outside the outline in all 11 hg/hg_v1* types -> the SITE-OFF-OUTLINE 0.3 um pull row is NOT needed (R6 repaired it). CLOSED.
 - Remaining A5t9-follow-on rows (still open, rebase on R6): HG-REFLOOR-EXROW (9 Fable hg_v1p5 items), CENTRE-STATIONS, LANDING-OFF-STREETS, HEAD-WLAND-SPLIT, HG-V1P5-CTS-REGRESS, hgi bin re-seat, WESTLAND5. Next: write HG-REFLOOR-EXROW delta on R6 for hg_v1p5 + siblings, PRE, strict bind.
+
+## From KV-PC-BANK (P2 pilot kv3_hg_v1p4__ret4_es_4, plan_a5t9_pc_p2_1125, place geom-only; NOT attributed to R6 base yet)
+pin_reg_max 258 (<=150), pin_unreg 291, r2r 1477 (<=405), r2r_count 10543, partial_face 2, relay_collapse 443, channel_h 5.8/channel_v 4.3/col_v 7.3 (<=0.6), clock_on_macro 12, clock_tap_sinks 1652 (<=1500), quick WNS -2172. File epyc12 .../KV-A5t6/private/KV-PC-BANK/kv3_hg_v1p4__ret4_es_4_1125161810/geom/auto_geom.json. KV-PC-BANK is running R6-base geom probes of kv3_hg_v1p4 and v1p6 and will send the comparison; use it to decide which of these my HG-REFLOOR-EXROW row must cover (clock_on_macro 12 and tap sinks 1652 overlap Fable items 5/6/9).
