@@ -1,0 +1,5 @@
+# KV SYSC-LEG405 R3 boot geometry, 2026-11-25
+
+Viewed epyc12:/srv/opentallas-scratch2/claude/KV-NOROW/sysc_leg405_r6_r3_1125/sysc_boot_paths.png. R3 places the four parallel boot configuration lanes above the large ROM and small SRAM banks, then drops to the western receiver outside the ROM footprint. The 40 lanes of data and control share a short north corridor and retain the existing relative alignment. Each of 24 planned right-angle legs clears the six modeled 6 µm macro halos and measures at most 401.76 µm. The revised rx_we center is (1356.48, 942.84) µm. Compared with the published R6 model, the four worst chains were 524.78, 563.96, 485.75 and 449.58 µm. Five stations per chain yield one parallel boot cycle on L1431–L1434, as independently exercised by the token lane.
+
+**PASS-COND for place-only after bind/LAT.** North corridor layer capacity, actual pin access, tap balance and PG continuity require the placed checkpoint. Existing sys_c post-GRT TT/FF structural timing evidence remains open outside the boot-corridor fix. C-LEG405 / KV-NOROW.
