@@ -24,3 +24,4 @@
   (5) S-09: ALLFIX-S81 row ABSTRACT-PIN-EOL filed (ebc4e77209). The fleet pin-EOL census is running on epyc7, intel1, epyc8 and a light read on epyc12; the affected-macro list goes to all ALLFIX lanes by 20:00.
 - 2026-11-25 18:23 PST DIED [abstract-exact] ot-push-main otpush-open-snipe-708829 on open-snipe: rc=3 after 168 s, ended 02:23:47, log /srv/opentallas-scratch2/claude/abstract-exact/push9.log, cmd: ot-push-main  | class=TEST-FAIL cause=no cause line
 - 2026-11-25 18:28 PST DONE [abstract-exact] ot-push-main otpush-open-snipe-836649 on open-snipe: rc=0 after 135 s, ended 02:28:06, log /srv/opentallas-scratch2/claude/abstract-exact/push10.log, cmd: ot-push-main 
+- 2026-11-25 18:45 PST DONE [abstract-exact] ot-push-main otpush-open-snipe-1237537 on open-snipe: rc=0 after 470 s, ended 02:45:13, log /srv/opentallas-scratch2/claude/abstract-exact/push11.log, cmd: ot-push-main 
