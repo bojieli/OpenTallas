@@ -16,8 +16,8 @@ tail -n +2 live_plans.tsv | while IFS=$'\t' read die plan tree asb bind; do
   d=$(echo $die | tr A-Z a-z); [ "$plan" = "-" ] && continue
   A=$asb; [ "$A" = "-" ] && A=-
   ST=""; EL=-; if [ "$bind" != "-" ]; then ST="--stage $bind"; EL=$bind; fi
-  nohup ot-run --mem 48 --threads 4 --dir $tree --disk 5 --hosts $HOSTS --stage $B $ST -- bash $B/pre_cut2.sh $d $plan $tree $A $CK $B/pre_$TAG > $D/pre_$d.log 2>&1 &
-  nohup ot-run --mem 32 --threads 2 --dir $tree --disk 5 --hosts $HOSTS --stage $B $ST -- bash $B/rst_cut.sh $d $plan $tree $EL $B/pre_$TAG > $D/rst_$d.log 2>&1 &
+  nohup ot-run --mem 48 --threads 4 --dir $tree --disk 5 --hosts $HOSTS --stage $B --stage $S2/rt/current/tools/die_plan $ST -- bash $B/pre_cut2.sh $d $plan $tree $A $CK $B/pre_$TAG > $D/pre_$d.log 2>&1 &
+  nohup ot-run --mem 32 --threads 2 --dir $tree --disk 5 --hosts $HOSTS --stage $B --stage $S2/rt/current/tools/die_plan $ST -- bash $B/rst_cut.sh $d $plan $tree $EL $B/pre_$TAG > $D/rst_$d.log 2>&1 &
 done
 # wait for the 8 jobs (max 50 min), then collect the outputs from whichever host ran them
 for i in $(seq 1 100); do
