@@ -173,3 +173,21 @@ endmodule
     with pytest.raises(X.XsError):
         X.apply("module broken #(parameter A = (1;\nendmodule\n", dict(pairs=[dict(inst="u_c", ports=["a"], form="hb4", n=1)]))
     assert X.apply("module nop;\nendmodule\n", dict(pairs=[dict(inst="u_c", ports=["a"], form="hb4", n=1)]))[1] == []
+
+
+def test_abutted_capture_core_is_reported():
+    """S81 live plan 1f8fcdd9c4d7 col_h9_r2: u_view.u_ha (17.28, 959.04, 241.92 x 95.04) ends exactly where u_view.u_c begins."""
+    t = {"hard_cores": [
+        {"inst": "u_r2.u_e13w.u_view.u_c", "module": "ot_v41_bf_col3_c", "orient": "R0", "origin_um": [259.2, 959.04], "outline_um": [208.248, 198.72]},
+        {"inst": "u_r2.u_e13w.u_view.u_ha", "module": "ot_v41_bf16_half", "orient": "R0", "origin_um": [17.28, 959.04], "outline_um": [241.92, 95.04]},
+        {"inst": "u_r2.u_e13w.u_view.u_hb", "module": "ot_v41_bf16_half", "orient": "R0", "origin_um": [17.28, 1062.72], "outline_um": [241.92, 95.04]},
+        {"inst": "u_r2.u_far", "module": "x", "orient": "R0", "origin_um": [600.0, 959.04], "outline_um": [10.0, 10.0]}]}
+    pair = dict(inst="u_c", types=["ot_v41_bf_col3_c"], ports=["r_v_a"], form="hb4", n=2)
+    ab = X.abutted(t, pair)
+    assert sorted(a[1] for a in ab) == ["u_r2.u_e13w.u_view.u_ha", "u_r2.u_e13w.u_view.u_hb"] and all(a[2] == 0 for a in ab)
+    raw = {"partition_types": {"col_h9_r2__t1": t}, "clock": {"xtap_seam_element": {"col_h9_r2*": dict(pairs=[pair])}}}
+    f = X.findings(raw)
+    assert len(f) == 1 and "ABUT" in f[0] and "gap 0 um" in f[0]
+    t["hard_cores"][0]["origin_um"] = [265.2, 959.04]          # a 6 um aisle: soft sites exist
+    assert X.abutted(t, pair) == [] and X.findings(raw) == []
+    assert X.abutted({}, pair) == [] and X.abutted({"hard_cores": [{"inst": "u_c"}]}, pair) == []

@@ -321,6 +321,39 @@ def keep_tcl(spec):
             "if {![llength $ot_xs]} { error \"OT_XTAP_SEAM: plan declares an hb4 hard-seam element for this type but the netlist has no u_xshd_ cell\" }\n")
 
 
+ABUT_UM = 1.0           # two hard cores closer than this on a facing edge leave no soft site between their face pins
+
+
+def _box(h):
+    """(x0, y0, x1, y1) of a plan hard core record, or None without origin / outline."""
+    o, wh = h.get("origin_um"), h.get("outline_um")
+    if not o or not wh:
+        return None
+    w, ht = (wh[1], wh[0]) if "90" in str(h.get("orient") or "") or "270" in str(h.get("orient") or "") else (wh[0], wh[1])
+    return (float(o[0]), float(o[1]), float(o[0]) + float(w), float(o[1]) + float(ht))
+
+
+def abutted(t, pair):
+    """[(capture core inst, neighbour core inst, gap um)] for every capture core of pair on type record t that has another
+    hard core within ABUT_UM on a facing edge.  Face pins on that edge meet by abutment (S81 col_h9 / col_h10 u_view.u_ha |
+    u_c: 0 um, M4 face pins at the same y): no soft-side element can sit between them, the pair needs the core-tap
+    contract (or the core's own boundary) instead."""
+    rx, types = re.compile(pair["inst"]), set(pair.get("types") or [])
+    cores = [(h, _box(h)) for h in (t or {}).get("hard_cores") or []]
+    out = []
+    for h, b in cores:
+        if b is None or not rx.fullmatch(str(h.get("inst", "")).split(".")[-1]) or (types and h.get("module") not in types):
+            continue
+        for g, c in cores:
+            if g is h or c is None:
+                continue
+            ox = min(b[2], c[2]) - max(b[0], c[0])          # overlap along x / y (negative = gap)
+            oy = min(b[3], c[3]) - max(b[1], c[1])
+            if (oy > 0 and -ABUT_UM < ox <= 0) or (ox > 0 and -ABUT_UM < oy <= 0):
+                out.append((h.get("inst"), g.get("inst"), abs(round(max(-ox if oy > 0 else -oy, 0.0), 3))))
+    return out
+
+
 def _w(obj, msg):
     return f"WARN ADV-{CHECK} {obj}: {msg}"
 
@@ -337,6 +370,12 @@ def findings(raw, plan_path=None, tree=None, **_kw):
             out.append(_w(key, "matches no partition type (the element is never emitted)"))
         for p in spec.get("pairs") or []:
             obj = f"{key}/{p.get('inst')}"
+            ab = [(tn, x) for tn in hit for x in abutted(types[tn], p)] if p.get("inst") else []
+            if ab:
+                tn, (ci, ni, gap) = ab[0]
+                out.append(_w(obj, f"ABUT: capture core abuts a neighbour core on {len({a_[0] for a_ in ab})} type(s) "
+                                   f"({len(ab)} faces; e.g. {tn}: {ci} | {ni} gap {gap:g} um): pins on that face have no soft site, "
+                                   "the element is not placeable there; use the core-tap pair contract for those pins"))
             d = float(p.get("delta_ps") or 0.0)
             if p.get("form") == "hb4":
                 try:
