@@ -3191,7 +3191,7 @@ def explicit_pg_cfg(cfg):
     Unset keys add no lines and retain the existing generation fast path/defaults.
     Do not duplicate values already emitted by the selected kit profile.
     """
-    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_CELL_KEEPOUT")
+    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_TRACK_TRUTH_M3", "OT_PG_CELL_KEEPOUT")
     requested = {k: os.environ.get(k, "").strip() for k in keys
                  if os.environ.get(k, "").strip() in ("0", "1")}
     if not requested:
