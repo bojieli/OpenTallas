@@ -51,15 +51,40 @@ BEOL_AWK = ('{sub(/\\r$/, "")}\n'            # the deck has CRLF line ends
 GATING_ZONE = "HARDCORE"
 
 
+# P-DRC-DECK-BASELINE (S81-COL-EOL 11-26): the ASAP7 *.AUX.* rules are layout-style auxiliary rules (via width = metal width, no M4 bends), not
+# spacing/width/short rules, and the ORFS router does not honour them: macros_only already carries V4.M5.AUX.2 on signed DRC-0 cores, and their count depends on how the
+# layout is structured, not on the geometry (clipped window of the H10 R2 ECO merged.gds: 2 markers hierarchical, 39072 after flatten, same shapes; the full run gave
+# 1,687,643 on merged vs 2 on parent_only).  They stay in the verdict as ignored_aux but never gate.
+AUX_RE = re.compile(r"\.AUX\.")
+
+
+def gating_counts(cmp):
+    """-> (gating hard-core markers, ignored AUX hard-core markers, {category: n} of the gating ones); per_category absent: the raw new_hardcore"""
+    per = cmp.get("per_category")
+    if not isinstance(per, dict):
+        return cmp.get("new_hardcore", 0), 0, {}
+    gate, aux, cats = 0, 0, {}
+    for cat, z in per.items():
+        n = (z or {}).get(GATING_ZONE, 0)
+        if AUX_RE.search(cat):
+            aux += n
+        elif n:
+            gate += n
+            cats[cat.strip("'")] = n
+    return gate, aux, cats
+
+
 def judge(cmp, cells):
     """-> verdict dict from compare.json + parent_cells.json"""
     problems = []
     if cells.get("missing"):
         problems.append("cells without GDS (not --allow-empty): %s" % cells["missing"][:10])
-    if cmp.get("new_hardcore", 0):
-        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract)" % cmp["new_hardcore"])
+    gate, aux, cats = gating_counts(cmp)
+    if gate:
+        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract), AUX rules excluded" % gate)
     return dict(verdict="PASS" if not problems else "FAIL", problems=problems,
-                new_hardcore=cmp.get("new_hardcore", 0), new_parent=cmp.get("new_parent", 0),
+                new_hardcore=gate, ignored_aux_hardcore=aux, gating_categories=cats, new_hardcore_raw=cmp.get("new_hardcore", 0),
+                new_parent=cmp.get("new_parent", 0),
                 new_unchecked=cmp.get("new_unchecked", 0), merged_markers=cmp.get("merged_markers"),
                 hard_cores=sorted(cells.get("filled", {})), empty_allowed=sorted({r["master"] for r in
                                                                                   cells.get("empty_allowed", [])}))
