@@ -238,7 +238,8 @@ def test_run_kit_step_is_guarded_advisory_and_before_grt():
     step = rk[rk.index("grep -q '^export OT_PREGRT_FF_HOLD = 1'"):rk.index("HM=; if [")]
     assert "print-TC_LIB_FILES" in step and "TLIBS=" in step and "OT_PREGRT_HOLD_GUARD=" in step
     # a failed build never stops the kit: no FAIL_POSTCTS, rc stays 0, the temporary database is removed
-    assert "FAIL_POSTCTS" not in step and "rc=6" not in step and "pgrc=" in step
+    # P-PREGRT-HOLD-CRASH (11-26): a tool CRASH (rc >= 128, SIGSEGV in findRegAsyncPins) fails the kit loud; an ordinary rc stays a fallback
+    assert "tee -a /work/FAIL_POSTCTS" in step and "rc=9" in step and "pgrc -ge 128" in step and "rc=6" not in step and "pgrc=" in step
     assert "OT_PREGRT_FF_HOLD FALLBACK step rc" in step and '.pg_tmp' in step
     # COORD 11-13 07:2x: both fallbacks (tool rc, the build's own guard) print one classified line autopilot records
     assert step.count("PREGRT_HOLD_FALLBACK tool rc") == 1 and step.count("PREGRT_HOLD_FALLBACK guard") == 1
