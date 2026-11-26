@@ -209,13 +209,15 @@ def legalize_slots(slots, origin, core_box, blocks=(), fixed=(), site_w=0.054, r
     def cells_of(c, r, cw, rh):
         return [(cc, rr) for rr in range(r, r + rh) for cc in range(c, c + cw)]
 
-    def legal(c, r, cw, rh, w, h):
-        x, y = x0 + c * site_w, y0 + r * row_h
+    def clear(x, y, w, h):
         if x < bx0 - 1e-6 or y < by0 - 1e-6 or x + w > bx1 + 1e-6 or y + h > by1 + 1e-6:
             return False
-        if any(x < b2 and a < x + w and y < d and b < y + h for a, b, b2, d in blocks):
-            return False
-        return not any(k in occ for k in cells_of(c, r, cw, rh))
+        return not any(x < right and left < x + w and y < top and bottom < y + h
+                       for left, bottom, right, top in blocks)
+
+    def legal(c, r, cw, rh, w, h):
+        return (clear(x0 + c * site_w, y0 + r * row_h, w, h)
+                and not any(k in occ for k in cells_of(c, r, cw, rh)))
 
     for _, x, y, w, h in fixed:
         cw, rh = _cells(w, h, site_w, row_h)
@@ -232,7 +234,7 @@ def legalize_slots(slots, origin, core_box, blocks=(), fixed=(), site_w=0.054, r
             for bit, (x, y) in enumerate(stage):
                 c, r = round((float(x) - x0) / site_w), round((float(y) - y0) / row_h)
                 ks = cells_of(c, r, cw, rh)
-                if any(k in occ for k in ks):
+                if not clear(x, y, w, h) or not legal(c, r, cw, rh, w, h):
                     pending.append((slot, j, bit, c, r, cw, rh, w, h))
                     continue
                 occ.update(ks)              # kept exactly as planned (gen snap_slots puts it on the grid point)

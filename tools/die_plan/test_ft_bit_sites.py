@@ -180,3 +180,19 @@ def test_pre_ftsite_reports_offcore_and_collisions_warn_only(tmp_path):
     assert out[0].startswith('WARN FTSITE leaf_bad: 2 explicit FT bit site(s) off CORE_AREA, 1 on an already used grid point')
     assert out[-1].startswith('WARN FTSITE-SUMMARY 1 type(s), 2 off-core and 1 colliding')
     assert 'FTSITE' in G.CLASSES
+
+
+def test_legalize_repairs_blocked_singletons_before_and_after_snap():
+    from ft_bit_sites import legalize_slots, snap_slots
+
+    # Neither site shares grid occupancy with another register.  The first
+    # cell hits the moved SRAM at its raw x only, the second only after snap.
+    slot = _slot([[10.013, 10.80], [20.001, 13.50]])
+    blocks = [(11.402, 10.8, 15.0, 11.07), (19.0, 13.50, 20.0, 13.77)]
+    out, moves = legalize_slots([slot], (0.0, 0.0), (0.0, 0.0, 100.0, 100.0), blocks=blocks)
+    assert len(moves) == 2
+    snapped, _ = snap_slots(out, (0.0, 0.0))
+    for sites in (out[0]["bit_sites_um"][0], snapped[0]["bit_sites_um"][0]):
+        for x, y in sites:
+            assert all(x + 1.404 <= left or right <= x or y + 0.27 <= bottom or top <= y
+                       for left, bottom, right, top in blocks)
