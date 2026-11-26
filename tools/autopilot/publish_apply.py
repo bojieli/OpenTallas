@@ -364,9 +364,40 @@ def postbind_spec(obj, stamp, host="", live=None):
     remap_base = marker.get("remap_base") or obj.get("remap_base")
     if remap_base:
         env["OT_PLAN_GATE_BASELINE"] = str(remap_base)
+    cfg = {**(live or {}), **(marker.get("config") or {})}
+    pin = ""
+    if cfg.get("tools_from_rt") is not False:
+        pin = str(cfg.get("gen_tools_pin") or marker.get("tools_sha") or cfg.get("tools_sha") or "")
+        if pin and not re.fullmatch(r"[0-9a-f]{12}([0-9a-f]{28})?", pin):
+            raise ValueError(f"post-bind: invalid tools pin {pin!r}")
     return {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
             "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": env,
-            "bind_out": args["bind_out"]}
+            "bind_out": args["bind_out"], "tools_sha": pin,
+            "tools_rt_root": str(cfg.get("tools_rt_root") or "/srv/opentallas-scratch2/claude/rt")}
+
+
+def postbind_runtime_sh(s):
+    """Select the exact published tools on the bind host. The checkout copy remains the design root."""
+    pin = s.get("tools_sha")
+    if not pin:
+        return ""
+    q = shlex.quote
+    root = q(s["tools_rt_root"])
+    manifest_sha = q("import json,sys; print(json.load(open(sys.argv[1]))['sha'])")
+    return (f"tool_root={root}\n"
+            "resolved=$(readlink -f -- \"$tool_root/current\") || resolved=\"$tool_root/current\"\n"
+            "resolved_root=$(dirname -- \"$resolved\")\n"
+            f"pin={q(pin)}\n"
+            "runtime=\n"
+            "for root in \"$tool_root\" \"$resolved_root\"; do\n"
+            "    candidate=\"$root/${pin:0:12}\"\n"
+            "    [ -r \"$candidate.manifest.json\" ] && [ -r \"$candidate/tools/die_plan/bind.py\" ] || continue\n"
+            f"    actual=$(python3 -I -c {manifest_sha} \"$candidate.manifest.json\") || continue\n"
+            "    case \"$actual\" in \"$pin\"*) runtime=$candidate; break;; esac\n"
+            "done\n"
+            "[ -n \"$runtime\" ] || { echo \"POSTBIND_RUNTIME unavailable pin $pin in $tool_root or $resolved_root\" >&2; exit 6; }\n"
+            f"export OT_REPO_ROOT={q(s['copy'])} OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
+            "echo \"POSTBIND_RUNTIME $pin $runtime\"\n")
 
 
 def postbind_run_sh(s):
@@ -375,14 +406,16 @@ def postbind_run_sh(s):
     L = f"{s['copy']}/{POSTBIND_DIR}"
     ab = f" --asbuilt {q(s['asbuilt'])}" if s["asbuilt"] else ""
     env = "".join(f"export {k}={q(v)}\n" for k, v in sorted(s["env"].items()))
+    runtime = postbind_runtime_sh(s)
+    tools = '"$runtime"/tools/die_plan' if runtime else "tools/die_plan"
     return (f"#!/bin/bash\n# publish_apply.py post-bind: strict bind + LATCHECK of {s['tree']} in its hardlink copy\nset -uo pipefail\n"
-            f"export PYTHONDONTWRITEBYTECODE=1\n{env}cd {q(s['copy'])} || exit 6\nmkdir -p {q(L)}/out\n"
-            f"python3 -I -B tools/die_plan/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
+            f"export PYTHONDONTWRITEBYTECODE=1\n{env}cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
+            f"python3 -I -B {tools}/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
             f"e=$?; echo ELAB_RC=$e; tail -n 1 {q(L)}/elab.log | cut -c1-300\n"
-            f"python3 -I -B tools/die_plan/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
+            f"python3 -I -B {tools}/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
             f"b=$?; echo BIND_RC=$b; tail -n 2 {q(L)}/bind.log | cut -c1-600\n"
             f"[ $b = 0 ] || grep -E '^ +[A-Z_]+ ' {q(L)}/bind.log | head -20 | cut -c1-600\n"
-            f"python3 -I -B tools/die_plan/lane_asbuilt_latency.py {q(L)}/out {q(s['plan'])}{ab} --pricing as-bound --tsv {q(L)}/latcheck.tsv "
+            f"python3 -I -B {tools}/lane_asbuilt_latency.py {q(L)}/out {q(s['plan'])}{ab} --pricing as-bound --tsv {q(L)}/latcheck.tsv "
             f"--json {q(L)}/latcheck.json > {q(L)}/latcheck.log 2>&1\n"
             f"l=$?; echo LATCHECK_RC=$l; tail -n 2 {q(L)}/latcheck.log | cut -c1-300\n"
             f"echo POSTBIND_DONE elab $e bind $b latcheck $l\nexit $(( e || b || l ))\n")
