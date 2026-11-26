@@ -109,6 +109,8 @@ def gate_cmd(a, st, batch, out, plan_name):
            "--lane", f"ROLL-{a.die}", "--keep-fork", "--drop-failed-rows", "--plan-name", plan_name, "--mem", str(a.mem)]
     if a.rt:
         cmd += ["--rt", a.rt]
+    if getattr(a, "tap_manifest", None):
+        cmd += ["--tap-manifest", str(Path(a.tap_manifest).resolve())]
     for e in a.env:
         cmd += ["--env", e]
     for r in batch:
@@ -219,6 +221,7 @@ def main(argv=None):
     r.add_argument("--types", default="all")
     r.add_argument("--rt")
     r.add_argument("--env", action="append", default=[])
+    r.add_argument("--tap-manifest", type=Path, help="native placed sink bins manifest for per-cut tap derivation")
     r.add_argument("--mem", type=int, default=160)
     r.add_argument("--max-rows", type=int, default=0, help="at most N row sets per round (0 = all pending)")
     r.add_argument("--keep", type=int, default=2, help="published trees kept")
