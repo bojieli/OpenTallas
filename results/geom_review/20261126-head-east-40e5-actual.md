@@ -21,10 +21,19 @@ Exact kit is `epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_hea
 
 ## Exact VDD connectivity follow-up
 
-The independent full connectivity check rejected VDD with one `PSM-0038` shape and `PSM-0069`. The reported M5 box is [723.636, 1371.330]–[723.756, 1371.600] µm. A narrow read-only exact ODB extract identified it as VDD SWire 2, SBox 2376586, a routed STRIPE. The full component is one 0.120 × 0.270 µm metal piece. It touches no same-net M5 metal, M5-access via, PG BPin or placed instance. The adjacent VSS SWire 1/SBox 509773 is the corresponding physically isolated M5 piece at [723.444, 1371.330]–[723.564, 1371.600] µm. That VSS observation comes from geometry.
+The independent full connectivity check rejected VDD with one `PSM-0038` shape and `PSM-0069`. The reported M5 box is [723.636, 1371.330]–[723.756, 1371.600] µm. A narrow read-only exact ODB extract identified it as VDD SWire 2, SBox 2376586, a routed STRIPE. The full component is one 0.120 × 0.270 µm metal piece. It touches no same-net M5 metal, M5-access via, PG BPin or placed instance. The adjacent VSS SWire 1/SBox 509773 is the corresponding physically isolated M5 piece at [723.444, 1371.330]–[723.564, 1371.600] µm. That VSS observation was first identified from geometry, then confirmed by the original full connectivity check.
 
 The generated `reserved_pg_cut.tcl` entries at y1369.980–1371.330 and y1371.600–1372.950 clip the stripes on both sides. Each continuing same-net M5 stripe is 1.350 µm away in y and has its own M5 vias. Intact M1/M2 rails and their M1–M2 vias cross the same xy coordinates on their own layers. The earlier `pg_rail_check` established row rail and stack structure, and `pg_pin_check` measured spacing. A floating cut remainder can pass both of those checks. The West W10 exact retention has the same cut-generator mechanism for its M5 and M6 fragments, at distinct coordinates.
 
 The smallest proposed correction is one additional M5-only window [723.444, 1371.330, 723.756, 1371.600] supplied solely to the existing reserved-PG cut generator for the exact East source. Keep the placement and route reservations and other layers as they are. Replaying the existing interval split in integer DBU removes exactly the two isolated rectangles, leaves all eight other extracted M5 stripe rectangles intact, and touches no M5 via, BPin or load. Only materialize it on a fresh combined source after rechecking the shape and load guards. The official connectivity receipt is still required on the resulting checkpoint.
 
 PSM evidence is in `epyc7:/srv/opentallas-scratch2/claude/head-east-r2/codex-route-capacity/actual_40e5/rail_only.otrun.log`. The exact inspection used a read-only E7 ODB window with no placement, route, or duplicate power solve. The BAD visual verdict and physical hold stay in effect.
+
+The original VSS connectivity check subsequently finished. It confirmed the VSS M5 fragment and reported two additional isolated VSS M6 shapes. Both were routed STRIPE boxes on SWire 1.
+
+| SBox | Exact M6 rectangle (µm) | Reserved-cut lines |
+| --- | --- | --- |
+| 488344 | [488.970, 559.104]–[490.266, 559.392] | 244–245 |
+| 469889 | [497.610, 585.024]–[498.204, 585.312] | 254–255 |
+
+A narrow read of the exact ODB found no M6-contact via, PG BPin or placed instance touching either fragment. The first crosses a VSS M5 stripe in projection without a connecting via. Both cross intact M1/M2 followpin rails on other layers. The stock split replay removes just these two boxes when their exact rectangles are supplied as M6-only windows. All six other M6 stripes in the two inspected windows, including both continuations on each affected track, keep their exact bounds. The M5 projection and all existing vias, pins and loads remain intact. Add the two M6 windows to the same existing PG-only cut input as the M5 pair, then require clean native connectivity on the resulting fresh checkpoint. The original PSM now confirms all four identified pieces. No duplicate full solve was run.
