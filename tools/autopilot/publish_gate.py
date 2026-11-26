@@ -52,6 +52,21 @@ CHECKS = ("schema", "pre_g0", "hashes", "contained", "dry_gen")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
+# RESETPUB-SOLVE-DEFAULT-1125: mirror of plan_gate_pre.resetpub_solve (this file is shipped inline to the gen host, so no import):
+# OT_RESETPUB_SOLVE=1 / =0 decides, unset = on for these dies.  Recorded as pre_g0.reset_solved.
+RESETPUB_SOLVE_DIES = ("qwen_compute",)
+
+
+def resetpub_solve_default(plan, env=None):
+    env = os.environ if env is None else env
+    v = str(env.get("OT_RESETPUB_SOLVE", "")).strip()
+    if v in ("0", "1"):
+        return v == "1"
+    parts = Path(str(plan)).parts
+    die = next((parts[i + 1] for i, x in enumerate(parts[:-1]) if x == "die_plan" and i + 2 < len(parts)), "")
+    return die in RESETPUB_SOLVE_DIES
+
+
 def sha256_file(p):
     h = hashlib.sha256()
     with open(p, "rb") as f:
@@ -441,7 +456,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     allowance = g0_baseline_check(plan, g0_report, g0_baseline, rc2)
     res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and allowance["verdict"] == "PASS" else "FAIL", "tools": tools_src, "tools_dir": dp,
                      "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
-                     "reset_solved": os.environ.get("OT_RESETPUB_SOLVE") == "1",
+                     "reset_solved": resetpub_solve_default(plan),
                      "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
@@ -463,7 +478,8 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
     q = shlex.quote
-    reset_solve = "OT_RESETPUB_SOLVE=1 " if os.environ.get("OT_RESETPUB_SOLVE") == "1" else ""
+    _rs = str(os.environ.get("OT_RESETPUB_SOLVE", "")).strip()     # an explicit caller value (1 or 0) is forwarded; unset = the PRE default
+    reset_solve = f"OT_RESETPUB_SOLVE={_rs} " if _rs in ("0", "1") else ""
     cmd = (f"mkdir -p {q(work_dir)} && {reset_solve}nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
