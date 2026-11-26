@@ -1,9 +1,9 @@
-# COORD snapshot 2026-11-26 13:00 PST
+# COORD snapshot 2026-11-26 13:15 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
 ## main and the merge lane
-- origin/main: cc35e2fc7ed0
+- origin/main: 90d99325a68e
 - 2026-11-26 11:23 PST MERGED [CLASS-OWNERS-R2 C-RST-PLACED] [-> COORD, S81/HEAD/KV-INT-R2] claude/c-rst-placed-1126 @2ee0b8a0151 landed on main @2977ac7f6d6df669ea8fa2c341533a6d2818f200 via ot-push-main, per the COORD 11:22 RULING. Tests: test_auto_visual_review + test_rst_spread_placed, 15 pass; no --no-test. Pushed from a worktree off the shared bare repo (intel2 C-RST-PLACED/pushwt); the lane worktree origin poin
 - 2026-11-26 11:25 PST MERGED [MERGE-QUEUE -> C-RST-PLACED] claude/c-rst-placed-1126@2ee0b8a0151: nothing to land, every commit of 2ee0b8a0151 is already in main 4f98b480223 (patch-equal).
 - 2026-11-26 11:29 PST MERGED [CLASS-OWNERS-R2] [-> COORD, HEAD-SERDES-R2, S81/HEAD/QC/KV-INT-R2] C-XTAP seam hold element @1bb6be5205e6 (clock.xtap_seam_element, hb4 and lockup forms, ADV-XTAP-SEAM with ABUT guard, default off) landed on main @c92c46a6520bbccfbf565a77a88fa653c3c47418 via ot-push-main, per the COORD 11:24 RULING. Its 32 test files ran; main moved during the push, so the 6 affected schema tests re-ran
@@ -11,23 +11,30 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 ## READY/ASK with no later COORD post naming them (0, heuristic: check each)
 
 ## Lane handoff files (age) and last queue post
-- CLAUDE-LANE-BRIEF-1126: handoff 293 min old; last post none in recent queue
-- HEAD-WEST: handoff 1102 min old; last post 2026-11-26 02:42 READY
-- KV-OWN-HG-R3: handoff 1124 min old; last post 2026-11-25 18:20 PIN-MAP
-- LEC-AUTOFILL: handoff 303 min old; last post 2026-11-26 11:12 DIED
-- QC-ALLFIX: handoff 713 min old; last post 2026-11-26 12:33 QC-ALLFIX-RETIRE
-- QC-HC0-GROW-c2spec: handoff 1123 min old; last post none in recent queue
-- S81-KVLEAF-T2-ARCH: handoff 1092 min old; last post 2026-11-25 22:43 PROBE
+- CLAUDE-LANE-BRIEF-1126: handoff 308 min old; last post none in recent queue
+- HEAD-WEST: handoff 1117 min old; last post 2026-11-26 02:42 READY
+- KV-OWN-HG-R3: handoff 1139 min old; last post 2026-11-25 18:20 PIN-MAP
+- LEC-AUTOFILL: handoff 318 min old; last post 2026-11-26 11:12 DIED
+- QC-ALLFIX: handoff 728 min old; last post 2026-11-26 12:33 QC-ALLFIX-RETIRE
+- QC-HC0-GROW-c2spec: handoff 1138 min old; last post none in recent queue
+- S81-KVLEAF-T2-ARCH: handoff 1107 min old; last post 2026-11-25 22:43 PROBE
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
-- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 71 live
-- PRECHECK-1119 agent ? last post 2026-11-26 12:59 EVENT-CENSUS
+- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 67 live
+- PLAN-GATE-PRE-1115 agent ? last post 2026-11-26 13:14 NEEDS-ACTION
+- QC-INT-R2-COLLCORE-PROBE agent ? last post 2026-11-26 13:11 PROGRESS
+- CLASS-TRACK agent ? last post 2026-11-26 13:08 RESULT
+- MERGE-QUEUE agent ? last post 2026-11-26 13:07 DRIFT
+- s81_head agent ? last post 2026-11-26 13:06 KIT-WAVE
+- QC-INT-R2-TTCTLM agent ? last post 2026-11-26 13:02 READY-CANDIDATE
+- QC-INT-R2-STA agent ? last post 2026-11-26 13:01 BLOCKED
+- C-CLK-LAND-OBS, agent ? last post 2026-11-26 13:01 REVIEW
+- PRECHECK-1119 agent ? last post 2026-11-26 13:00 PLACE-PRECHECK
+- C-TAP-LOAD, agent ? last post 2026-11-26 13:00 RESULT
 - FLEET-OPS-R agent ? last post 2026-11-26 12:58 ALERT
 - HEAD-EAST-R3 agent ? last post 2026-11-26 12:57 START
 - QC-INT-R2-COLLCORE agent ? last post 2026-11-26 12:56 PROGRESS
-- QC-INT-R2-TTCTLM agent ? last post 2026-11-26 12:56 DIED
 - QC-INT-R2-SUC agent ? last post 2026-11-26 12:49 DIED
-- QC-INT-R2-COLLCORE-PROBE agent ? last post 2026-11-26 12:48 PROGRESS
 - FABLE-INDEP-HEADCUT agent ? last post 2026-11-26 12:47 DIED
 - S81-INT-R2 agent ? last post 2026-11-26 12:46 APPLIED-OPTIMISTIC
 - NOPROG-WATCHDOG agent ? last post 2026-11-26 12:45 STATE
@@ -53,16 +60,12 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - C-STREET, agent ? last post 2026-11-26 11:50 RESULT
 - C-RST-RELAY-REACH agent ? last post 2026-11-26 11:48 DIED
 - KIT-WAVE agent ? last post 2026-11-26 11:45 STATE
-- MERGE-QUEUE agent ? last post 2026-11-26 11:40 MERGE-FAIL
-- s81_head agent ? last post 2026-11-26 11:37 KIT-WAVE
 - KV-INT-R2 agent ? last post 2026-11-26 11:37 ADOPT-BIND
 - QC-INT-R2-TOOLS agent ? last post 2026-11-26 11:35 READY-CANDIDATE
 - KV-INT-R2/HUB agent ? last post 2026-11-26 11:34 RESULT
-- CLASS-TRACK agent ? last post 2026-11-26 11:34 RESULT
 - KV-INT-R2/PV-V6 agent ? last post 2026-11-26 11:32 RESULT
 - C-TAP-REACH agent ? last post 2026-11-26 11:31 CLASSES-ROWS
 - CLASS-OWNERS-R2 agent ? last post 2026-11-26 11:29 MERGED
-- PLAN-GATE-PRE-1115 agent ? last post 2026-11-26 11:24 NEEDS-ACTION
 - KV-INT-R2/PV-STRUCT agent ? last post 2026-11-26 11:22 RESULT
 - head-int-r2 agent ? last post 2026-11-26 11:17 DIED
 - LEC-AUTOFILL agent ? last post 2026-11-26 11:12 DIED
@@ -72,10 +75,8 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - C-RELAY-SEAT agent ? last post 2026-11-26 11:00 CLASS-ROWS
 - C-XTAP-HOLD; agent ? last post 2026-11-26 10:59 RESULT
 - QC-INT-R2 agent ? last post 2026-11-26 10:56 CORRECTION
-- QC-INT-R2-STA agent ? last post 2026-11-26 10:55 PROGRESS
 - S81-GATE-LINT agent ? last post 2026-11-26 10:54 DIED
 - KV-INT-R2/HGI-IOCOR agent ? last post 2026-11-26 10:48 RESULT
-- C-CLK-LAND-OBS, agent ? last post 2026-11-26 10:48 REVIEW
 - ADOPT-ROWS agent ? last post 2026-11-26 10:40 NEEDS-LANE
 - PLAN-CONFIG-DRIFT agent ? last post 2026-11-26 10:38 ALERT
 - s81-rstreach agent ? last post 2026-11-26 10:38 DIED
@@ -87,17 +88,12 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - OT-TOOLS-SYNC agent ? last post 2026-11-26 10:20 ALERT
 - FABLE-INDEP agent ? last post 2026-11-26 10:17 REVIEW
 - wt agent ? last post 2026-11-26 10:15 DIED
-- C-LAND-REACH agent ? last post 2026-11-26 10:14 RESULT
-- C-XTAP-HOLD agent ? last post 2026-11-26 10:11 DIED
-- QC-INT-R2-SUL1 agent ? last post 2026-11-26 10:09 READY-CANDIDATE
-- kw43-wave-1109n agent ? last post 2026-11-26 10:02 DIED
-- S81-LEG405 agent ? last post 2026-11-26 10:00 ROW-READY
 
 ## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kit
 
 ## Failure breakdown (tools/failure_breakdown.py)
-## FAILURES · unsigned cores and types by class (auto, 2026-11-26 13:00 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-26 13:15 PST)
 count_hourly: signed any plan 608 | current plan 482 | deferred re-sign 25 (hbm 1, head 10, qc 7, s81 7) | retired-plan 101 (head 2, kv 13, qc 57, s81 29)
 - [ ] FAIL.S81.CORES 68/72 signed · open: no kit-wave row 3 (dsfd_node_LLd, dsfd_node_LLfd, dsfd_node_LLfu) · signed off, not counted 1 (dsdv_gunit_l5f)
 - [ ] FAIL.S81.TYPES 48/402 signed · kit rows: cancelled (superseded) 194 (bk_sel__t2, +193) · held by die owner (plan event pending) 153 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +152)
@@ -109,71 +105,56 @@ count_hourly: signed any plan 608 | current plan 482 | deferred re-sign 25 (hbm 
 - [ ] FAIL.KV.TYPES 10/93 signed · kit rows: held by die owner (plan event pending) 42 (kv3_hg, +41) · running (lint advisory) 39 (kv3_hgi_v1__cl141fc26e, +38) · placed, route held 1 (kv3_hub_Wi)
 - [ ] FAIL.HBM.CORES 90/119 signed · open: no kit-wave row 19 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group0, +12) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
-### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 0 current-event (+6 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
-- [ ] STALE.QC 5 (cores 0, types 5) · by owner: KIT-WAVE-1 2, FAM-QC-FEFW-R3 1, unowned 1, QC-STALE-GEOM 1
-  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (49.3h) · owner unowned
-  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (49.2h) · owner KIT-WAVE-1
-  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (40.5h) · owner QC-STALE-GEOM
-  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (17.4h) · owner KIT-WAVE-1
-  - type slw_fe_v2__clf110fab2 · CANCELLED kit_topology SUPERSEDED @ 2026-11-25 19:34 (17.4h) · owner FAM-QC-FEFW-R3
+### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 0 current-event (+7 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
+- [ ] STALE.QC 6 (cores 0, types 6) · by owner: KIT-WAVE-1 2, FAM-QC-FEFW-R3 1, unowned 1, QC-STALE-GEOM 1, KIT-WAVE-12 1
+  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (67.9h) · owner KIT-WAVE-12
+  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (49.6h) · owner unowned
+  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (49.4h) · owner KIT-WAVE-1
+  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (40.7h) · owner QC-STALE-GEOM
+  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (17.7h) · owner KIT-WAVE-1
+  - type slw_fe_v2__clf110fab2 · CANCELLED kit_topology SUPERSEDED @ 2026-11-25 19:34 (17.7h) · owner FAM-QC-FEFW-R3
 - [ ] STALE.KV 1 (cores 0, types 1) · by owner: FAM-KV-HUBC-SYSC-R2 1
-  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (64.1h) · owner FAM-KV-HUBC-SYSC-R2
+  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (64.3h) · owner FAM-KV-HUBC-SYSC-R2
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
-- TOOLS-LAG qwen_compute 0 commits / missing none
-- TOOLS-LAG qwen_kvsys 0 commits / missing none
-- TOOLS-LAG s81_head 0 commits / missing none
+- TOOLS-LAG qwen_compute 1 commits / missing none
+- TOOLS-LAG qwen_kvsys 1 commits / missing none
+- TOOLS-LAG s81_head 1 commits / missing none
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
-- TAP-INSERTION qwen_compute: 5440 taps in 51 types, 150 over 1650 sinks; insertion max 696 ps (p50 268, p90 283), skew max 176 ps; oversized taps: ins max 340 ps, skew max 90 ps
+- TAP-INSERTION qwen_compute: 5320 taps in 50 types, 150 over 1650 sinks; insertion max 696 ps (p50 268, p90 283), skew max 176 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 596 taps in 6 types, 17 over 1650 sinks; insertion max 516 ps (p50 258, p90 289), skew max 208 ps; oversized taps: ins max 412 ps, skew max 100 ps
 - TAP-INSERTION s81: 3591 taps in 55 types, 130 over 1650 sinks; insertion max 1000 ps (p50 466, p90 498), skew max 313 ps; oversized taps: ins max 838 ps, skew max 175 ps
-- TAP-INSERTION s81_head: 618 taps in 14 types, 9 over 1650 sinks; insertion max 613 ps (p50 458, p90 468), skew max 171 ps; oversized taps: ins max 466 ps, skew max 62 ps
+- TAP-INSERTION s81_head: 639 taps in 15 types, 9 over 1650 sinks; insertion max 613 ps (p50 458, p90 468), skew max 171 ps; oversized taps: ins max 466 ps, skew max 62 ps
 
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
-    HOST-REPORT 2026-11-26 12:05 | tolera L35.01/112 units0 free505G | key-ca L13.19/112 units4 free85G | dear-c L14.83/128 units3 free264G | loved- L37.89/96 units14 free277G | outgoi L27.86/96 units5 free128G | renewe L30.50/96 units4 free1196G | civil- L5.63/96 units1 free83G | viable L4.03/96 units1 free160G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (219.9 h left); e
+    HOST-REPORT 2026-11-26 13:05 | tolera L20.64/112 units0 free483G | key-ca L4.82/112 units3 free148G | dear-c L12.32/128 units2 free263G | loved- L28.40/96 units14 free227G | outgoi L20.60/96 units3 free184G | renewe L9.95/96 units4 free1194G | civil- L14.87/96 units3 free87G | viable L2.70/96 units1 free224G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (218.9 h left); e
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  332G  113G  75% /
-    13:00:17 up 33 days,  8:40, 190 users,  load average: 23.89, 25.73, 27.54
+    13:15:17 up 33 days,  8:55, 185 users,  load average: 26.14, 28.25, 27.18
 
 ## ot-run status
-    ot-run status: epyc2 admits 872 GB (avail 920, reserve 0, fresh 0, peak 0) load 13/128 run 2 threads 24/128 root 92% scratch 261 GB
-    intel1 admits 837 GB (avail 911, reserve 0, fresh 0, peak 29.4) load 6/112 run 3 threads 72/112 root 55% scratch 148 GB
-    localhost admits 739 GB (avail 887, reserve 0, fresh 0, peak 123.7) load 24/112 run 6 threads 62/112 root 75% scratch 484 GB
-    epyc7 admits 129 GB (avail 219, reserve 0, fresh 0, peak 119.5) load 29/96 run 15 threads 276/96 root 34% scratch 244 GB
-    epyc8 admits 879 GB (avail 931, reserve 0, fresh 0, peak 170.9) load 19/96 run 6 threads 216/96 root 48% scratch 183 GB
-    epyc9 admits 767 GB (avail 832, reserve 0, fresh 0, peak 0) load 14/96 run 5 threads 89/96 root 41% scratch 1196 GB
-    epyc10 admits 870 GB (avail 919, reserve 0, fresh 0, peak 361.6) load 47/96 run 2 threads 266/96 root 53% scratch 86 GB DRAINING (86 of 300 GB, new job dirs ref
-    epyc11 admits 929 GB (avail 978, reserve 0, fresh 0, peak 0) load 2/96 run 1 threads 144/96 root 12% scratch 223 GB
-    epyc12 admits 856 GB (avail 908, reserve 0, fresh 0, peak 783.3) load 19/96 run 6 threads 58/96 root 36% scratch 156 GB
+    ot-run status: epyc2 admits 902 GB (avail 946, reserve 0, fresh 0, peak 0) load 11/128 run 2 threads 24/128 root 92% scratch 254 GB
+    intel1 admits 837 GB (avail 911, reserve 0, fresh 0, peak 29.4) load 5/112 run 3 threads 72/112 root 55% scratch 145 GB
+    localhost admits 772 GB (avail 901, reserve 0, fresh 0, peak 128.4) load 26/112 run 3 threads 38/112 root 75% scratch 475 GB
+    epyc7 admits 726 GB (avail 793, reserve 0, fresh 0, peak 260.9) load 76/96 run 11 threads 264/96 root 34% scratch 178 GB
+    epyc8 admits 891 GB (avail 944, reserve 0, fresh 0, peak 4.5) load 16/96 run 2 threads 198/96 root 48% scratch 178 GB
+    epyc9 admits 795 GB (avail 868, reserve 0, fresh 0, peak 0) load 9/96 run 5 threads 89/96 root 41% scratch 1186 GB
+    epyc10 admits 878 GB (avail 926, reserve 0, fresh 0, peak 446.3) load 7/96 run 3 threads 286/96 root 53% scratch 136 GB DRAINING (136 of 300 GB, new job dirs re
+    epyc11 admits 929 GB (avail 977, reserve 0, fresh 0, peak 0) load 4/96 run 1 threads 146/96 root 12% scratch 221 GB
+    epyc12 admits 846 GB (avail 894, reserve 0, fresh 0, peak 910.2) load 70/96 run 6 threads 170/96 root 36% scratch 146 GB
     next 16-thread 32 GB job -> epyc2
-    ot-run status: BLOCKED 1770 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-hd_serdes-3275033-5_1_grt-1125-0730: 12:51 --disk 20 GB (default); toleran
-    ot-run status: BLOCKED 1530 min - /home/ubuntu/.local/state/noprog/vis_review/dpkit-hd_ctl-1246411-place-gp-1125-1130: 12:59 --disk 20 GB (default); tolerant-sw
-    ot-run status: BLOCKED 1470 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-sle_ctl__cla4f6f12f-1437376-3_3_place_gp-1125-1230: 12:59 --disk 20 GB (de
-    ot-run status: BLOCKED 959 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-hd_serdes-2767259-3_3_place_gp-1125-2100PST: 12:56 --disk 20 GB (default); 
-    ot-run status: BLOCKED 127 min QC-COLLN-C9E /srv/opentallas-scratch2/claude/QC-INT-R2-COLLX/colln/dry_generation/qwen_compute/pg49c6c3ae09/private/QC-COLLN-C9E/
+    ot-run status: BLOCKED 1785 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-hd_serdes-3275033-5_1_grt-1125-0730: 13:11 --disk 20 GB (default); toleran
+    ot-run status: BLOCKED 1545 min - /home/ubuntu/.local/state/noprog/vis_review/dpkit-hd_ctl-1246411-place-gp-1125-1130: 13:09 --disk 20 GB (default); tolerant-sw
+    ot-run status: BLOCKED 1485 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-sle_ctl__cla4f6f12f-1437376-3_3_place_gp-1125-1230: 13:09 --disk 20 GB (de
+    ot-run status: BLOCKED 974 min - /home/ubuntu/.local/state/noprog/smell_review/dpkit-hd_serdes-2767259-3_3_place_gp-1125-2100PST: 13:06 --disk 20 GB (default); 
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-26 12:57:24 PST AUTOPILOT: KIT-WAVE PLAN-ROWS qwen_kvsys: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
-    2026-11-26 12:57:24 PST AUTOPILOT: KIT-WAVE DIE-OFF s81: no launches this tick, the die gate says: DIE-PARKED owner S81-INT-R2 since 2026-11-26 09:50 PST: R11 STATUS-UP cut. Preserve existing kits; ne
-    2026-11-26 12:57:24 PST AUTOPILOT: KIT-WAVE FAMILIES s81_head: 1 famil(ies), 1 representative(s) (high priority), 0 sibling(s) (spare capacity), 0 held by a failed representative; picks this tick 1, s
-    2026-11-26 12:57:24 PST AUTOPILOT: KIT-WAVE PLAN-ROWS s81_head: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
-    2026-11-26 12:57:30 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-26 12:57:51 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 96.0 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 95.7 
+    2026-11-26 13:06:51 PST AUTOPILOT: KIT-WAVE FAMILIES s81_head: 1 famil(ies), 1 representative(s) (high priority), 0 sibling(s) (spare capacity), 0 held by a failed representative; picks this tick 1, s
+    2026-11-26 13:06:51 PST AUTOPILOT: KIT-WAVE PLAN-ROWS s81_head: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
+    2026-11-26 13:06:57 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-26 13:07:19 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 96.2 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 95.9 
+    2026-11-26 13:14:20 PST AUTOPILOT: KIT-WAVE AUTO-VIEWS overlay: hbm=21 qwen_compute=5 s81=3
+    2026-11-26 13:14:23 PST AUTOPILOT: KIT-WAVE HOLD-AUTO-RELEASE summary: 0 keys released by their terms, 0 new this pass
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-26 12:03 PST ALERT [HOLD-OVERDUE -> FP-CONVERGE-KV, KV-ALLFIX, KV-OWN-HG-R2, KV-OWN-HUB-R2, KV-OWN-RSTREACH, KV-RSTREACH, QC-INT-R2, COORD] holds past their ETA: qwen_compute/sle_hc0__cl05696ed1 [owner QC-INT-R2]; qwen_compute/sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv48712631 [owner QC-INT-R2]; qwen_compute/sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304 [owner QC-INT-R2]; qwen_compute/slw_hc0__cl4f54b7a3
-- 2026-11-26 12:03 PST RESULT [C-GPL-TD-INFLATION] [-> S81-INT-R2; cc COORD, CLASS-TRACK] S81 lepw_mus_C 6512 probe (unit oth-ubuntu-3957633-1795717390, probe_mus_gen on epyc7), 3_3 read: with gpl_td top_overflow_trigger ON the TD pass is no longer virtual: one pass at iter 344 overflow 0.245 inserts 114,774 buffers (+35.9 pct gcells, +29.5 pct area) and keeps them; baseline kept 0 TD buffers (virtual) and took +151,
-- 2026-11-26 12:06 PST DIED [QC-INT-R2-FWLEAF2] ot-run oth-ubuntu-1434530-1795723561 on viable-ram: rc=1 after 7 s, ended 20:06:06, log /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2/otrun_meas_v1a.log, cmd: --mem 24 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2 --disk 2 -- bash /srv/opentallas-scratch2/claude | class=NO-PATTERN cause=rc 1 after 7 s; the log holds only ot-run l
-- 2026-11-26 12:06 PST DIED [QC-INT-R2-FWLEAF2] ot-run oth-ubuntu-1438226-1795723569 on viable-ram: rc=1 after 6 s, ended 20:06:14, log /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2/otrun_meas_v2a.log, cmd: --mem 24 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2 --disk 2 -- bash /srv/opentallas-scratch2/claude | class=NO-PATTERN cause=rc 1 after 6 s; the log holds only ot-run l
-- 2026-11-26 12:06 PST DIED [QC-INT-R2-FWLEAF2] ot-run oth-ubuntu-1441496-1795723577 on viable-ram: rc=1 after 6 s, ended 20:06:22 env=wave+0, log /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2/otrun_meas_w1.log, cmd: --mem 24 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2 --disk 2 -- bash /srv/opentallas-scratch2/claude | class=NO-PATTERN cause=rc 1 after 6 s; the log holds onl
-- 2026-11-26 12:06 PST DIED [QC-INT-R2-FWLEAF2] ot-run oth-ubuntu-1898221-1795723586 on key-cardinal: rc=1 after 10 s, ended 12:06:34, log /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2/otrun_meas_v3.log, cmd: --mem 24 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2 --disk 2 -- bash /srv/opentallas-scratch2/claude | class=NO-PATTERN cause=rc 1 after 10 s; the log holds only ot-ru
-- 2026-11-26 12:06 PST DIED [QC-INT-R2-FWLEAF2] ot-run oth-ubuntu-1902791-1795723597 on key-cardinal: rc=1 after 10 s, ended 12:06:45, log /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2/otrun_meas_w2.log, cmd: --mem 24 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-FWLEAF2 --disk 2 -- bash /srv/opentallas-scratch2/claude | class=NO-PATTERN cause=rc 1 after 10 s; the log holds only ot-ru
-- 2026-11-26 12:07 PST LAUNCHED [QC-INT-R2-FEFW -> QC-INT-R2; cc COORD] P2 (cldb4efe33, run-item pid 56418) and P3 (cl6740750e, pid 56419) relaunched on intel2 after my own plan visual review: GOOD x2 (reviewer QC-INT-R2-FEFW, ledger commit 72796b347aae; renders epyc7 QC-INT-R2-FEFW/plan_cldb4efe33.png and plan_cl6740750e.png; the cldb plan render shows all station chains fanning from the single core point (311,916) 
-- 2026-11-26 12:07 PST DIED [QC-INT-R2-SUC] ot-run oth-ubuntu-1456390-1795723652 on viable-ram: rc=1 after 8 s, ended 20:07:37, log none, cmd: --hosts epyc11 --mem 48 --threads 1 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-SUC/w -- python3 -I suc_verify2.py p6.json plan_qc_integ | class=SETUP cause=died after 8 s with no log: the command failed at start (rc 1)
-- 2026-11-26 12:08 PST PROGRESS [QC-INT-R2-COLLCORE -> QC-INT-R2; cc COORD] gate8 FORM A = ROW-READY READY: stock PRE 0 findings / 0 inherited, scoped strict bind (types coll_core,coll_ft__cla4a25d77) 0 errors, row_gate LAT step ok (scoped probe LAT reports INCOMPLETE 1922 unobserved as with gate1, nothing FAILed; full-die as-bound LAT 1922 not run), die bind env from hub. Plan zz_c9_collcore_formA_1126 (gate8/tree/p
-- 2026-11-26 12:08 PST DIED [kv-int-r2] ot-run oth-ubuntu-2805939-1795723710 on outgoing-giraffe: rc=1 after 4 s, ended 20:08:32, log /srv/opentallas-scratch2/claude/kv-int-r2/lp/build2.log, cmd: --mem 16 --threads 2 --disk 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/lp -- bash /srv/opentallas-scratch2/claude/kv-in | class=TOOL-TRACEBACK cause=ModuleNotFoundError: No module named 'goal_table'
-- 2026-11-26 12:12 PST DIED [QC-INT-R2-SUC] ot-run oth-ubuntu-1780049-1795723958 on civil-redfish: rc=1 after 17 s, ended 20:12:52, log /srv/opentallas-scratch2/claude/QC-INT-R2-SUC/w/suc_gate6.otrun.log, cmd: --die --no-spill --mem 384 --threads 48 --disk 20 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c | class=SETUP cause=PermissionError: [Errno 13] Permission denied: '/
-- 2026-11-26 12:13 PST DIED [QC-INT-R2-SUC] ot-run oth-ubuntu-1790506-1795723995 on civil-redfish: rc=1 after 31 s, ended 20:13:43, log /srv/opentallas-scratch2/claude/QC-INT-R2-SUC/w/suc_gate6.otrun.log, cmd: --die --no-spill --mem 384 --threads 48 --disk 20 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c | class=TOOL-TRACEBACK cause=ValueError: sle_su_c: density added tap 
-- 2026-11-26 12:15 PST RENDER [SMELL-WATCH -> FP-CONVERGE-S81, S81-C9-ROWS, S81-INT-R2; cc S81-ALLFIX-INT] 1 checkpoint render(s) started: bk_sel__t2 PLACE-GP on epyc9: epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/bk_sel__t2_1124220235/gen/bk_sel__t2/vis_review/place-gp-1126-1215PST (floorplan.png, density.png, SMELL.txt with the GRT per-layer overflow
-- 2026-11-26 12:15 PST READY-CANDIDATE [QC-INT-R2-COLLCORE -> QC-INT-R2; cc COORD] FORM A (coll_core + CollFT cA4), classes C-LEG405 (coll_core staged seats), C-TAP-REACH, P-STALE-TABLE. Path: epyc7 /srv/opentallas-scratch2/claude/QC-INT-R2-COLLCORE/formA/ (SHA256.json inside). plan zz_c9_collcore_formA_1126.json sha256 c6dddffafeb9 (base C9 c9eb8883ad40); r8_derived.json d111339c4e56; ROW-READY b1c7b755c257; row_for
 - 2026-11-26 12:15 PST SMELL [SMELL-WATCH -> FP-CONVERGE-S81, S81-C9-ROWS, S81-INT-R2; cc S81-ALLFIX-INT] STA-WNS: quick setup STA (TT, placement parasitics, ideal clock) WNS below -150 ps: bk_sel__t2 PLACE-GP: WNS -173.4 ps, TNS -151758, 29 endpoints < -150; epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/bk_sel__t2_1124220235/gen/bk_sel__t2/vis_review/p
 - 2026-11-26 12:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned S81 119 types; CBC-FALLBACK (r713: >= 2 failed design fix rounds -> close-by-construction form; die owner folds tools/die_plan/cbc_pass.py rows into the next event): S81 col_h9_r1: 60 unsigned (col_h9_r1__t1__cl49d7a23e__pv047ea3b3,col_h9_r1__t1__cl49d7a23e__pv0a45e191,col_h9
 - 2026-11-26 12:17 PST DIED [HEAD-INT-R2] ot-run oth-ubuntu-1560220-1795724218 on viable-ram: rc=1 after 60 s, ended 20:17:55, log /srv/opentallas-scratch2/claude/HEAD-INT-R2/a2probe/place.otrun.log, cmd: --hosts epyc11 --mem 32 --threads 8 --disk 30 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R2/a2probe -- python3 -I /srv/opentallas-scratc | class=NO-PATTERN cause=KW_STAGE plan_visual 2026-11-26 20:17 UTC :: WAIT
@@ -219,4 +200,19 @@ count_hourly: signed any plan 608 | current plan 482 | deferred re-sign 25 (hbm 
 - 2026-11-26 12:58 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc9 wrote 201 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-26 12:59 PST ADOPT-DIFF [PRECHECK-1119 -> S81-INT-R2; cc COORD, ADOPT-CENSUS-1800] event da07bac383 s81 source_c10b_r11_int_r2_su_1126: pin 3c913dbdfb23 -> main cc35e2fc7ed0 (4111 commits): LAG 510 (carry automatically; physical/die_plan 156, physical/ref_tile 129, tools/die_plan 104, rtl/test 26, tools/autopilot 23), BOTH 216 (die owner), CURRENT 2707; ledger 17 rows, 2 missing: rip1-rtl-319f91aaf1, rip1-d
 - 2026-11-26 12:59 PST EVENT-CENSUS [PRECHECK-1119 -> S81-INT-R2; cc COORD, ADOPT-CENSUS-1800] s81 da07bac383: 403 types vs the previous event (0 new), kits prev 0 / new 0; REGRESS 0 types (none). Rows /srv/opentallas-scratch2/claude/precheck-runs/s81_da07bac383_11262046/event_census/EVENT-CENSUS.tsv (previous event 1f8fcdd9c4)
+- 2026-11-26 13:00 PST RESULT [C-TAP-LOAD, C-CLK-LAND-OBS] clk6 gate PASS (only fail flag = the known MONLEG KeyError line). host_w: 65 -> 84 taps (19 appended clk_t65..t83, cap 1000/target 800, legalized bind-exact, tap_group u_rrl_139 -> u_rrl_179 following landing_remap rst_rl_139->179, fixed tap clk_t62 kept), nearest-model max 2411 -> 881, far 132.6 um; G0 tapcap: 0 host_w taps over 1000 (remaining tapcap lines 
+- 2026-11-26 13:00 PST PLACE-PRECHECK [PRECHECK-1119 -> S81-INT-R2; cc COORD, ADOPT-CENSUS-1800] s81 event da07bac383: 403 types checked, 119 with findings. Advisory, not a gate (kit place guards decided statically).
+- 2026-11-26 13:01 PST BLOCKED [QC-INT-R2-STA -> QC-INT-R2; cc COORD] class C-LEG405 + P-R8-REFRESH. Candidate plan_qc_int_r2_sta_1126.json sha 98fb421e00aa (epyc7+epyc8 /srv/opentallas-scratch2/claude/QC-INT-R2-STA/). Gate gate5 (epyc8 unit oth-ubuntu-2780070-1795723663, full 130 types, rt a16f6ffe17d6, R8 pin refreshed cf10604337a0 -> 7ae65d324f99 = bind r8_derived.json of gate4, saved assets/r8_derived_gate4.json)
+- 2026-11-26 13:01 PST REVIEW [C-CLK-LAND-OBS, C-TAP-LOAD, C-LEG405, C-RST-RELAY-REACH] hd_host_w place-only on clkland_r3 (plan 444f91090c4a, 3_place 66188f2d8dba, sha re-checked): ISSUES. blocks-adopt n for every finding (no regression vs W11, which already carries BF50); blocks-CTS y only F1; route held on F1-F4. Own dump, own r2r trace with SRAMs as endpoints (260,154 pairs), own tap loads, own GRT M2-M7 (0 overf
+- 2026-11-26 13:01 PST RULING [COORD -> S81-INT-R2, CLASS-TRACK] FABLE-RC-S81 13:00: 1 new class (C-VIEW-OBS-PIN-ABUT: sstn_base566 M3 OBS strips abut pin slots, both bound views), 7 classes up, 9 fixes that will not close. Rulings: (1) XTAP lag row must cover all 216 col types (72 omitted) + one place+CTS probe proving the lag realises; (2) RSTREACH leaf t8/t10: depth change APPROVED (owner-delegated latency) instea
+- 2026-11-26 13:01 PST DIED [QC-INT-R2-TTCTLM] ot-run oth-ubuntu-135240-1795726670 on outgoing-giraffe: rc=1 after 215 s, ended 21:01:22, log /srv/opentallas-scratch2/claude/QC-INT-R2-TTCTLM/g0c.otrun.log, cmd: --priority die --no-spill --mem 32 --threads 4 --disk 5 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_comp | class=DESIGN-FAIL cause=G0 FAIL: 3 errors, 0 pending-view, 946 war
+- 2026-11-26 13:02 PST READY-CANDIDATE [QC-INT-R2-TTCTLM -> QC-INT-R2; cc COORD] class RC-QC-29 tt_ctlm depth/bcast. Private plan delta on C9 c9eb8883ad40: plan sha 39f4abf02433de4310dee64943fe04fe3891a34b65c7a59ad6778a9213fff6c3 (only partition_types.tt_ctlm.dead_inputs.module_sha256 df62aafd98db -> e62eb3c487fc), at epyc8+epyc7 /srv/opentallas-scratch2/claude/QC-INT-R2-TTCTLM/p_ttr.json. Overlay: core_formR.sv sha 
+- 2026-11-26 13:02 PST RULING [COORD -> QC-INT-R2, QC-DRT-ECO-R2, CLASS-TRACK] FABLE-RC-QC 13:05: 3 new classes (P-MERGED-GDS-NOT-RUN 7 kits, C-FACE-SHARED-LOAD 3, P-ECO-TIMER-MISMATCH 3) + 2 unregistered (C-PIN-REG-REACH, C-BANK-PILE), 9 up. Rulings: (1) QC-DRT-ECO-R2 runs merged_gds_drc now on the 7 kits blocked only by it (any-plan count); (2) the 3 epyc7 signoff_chain ECO loops on 11-24/25 tool copies are measure
+- 2026-11-26 13:03 PST RULING [COORD -> KV-INT-R2, CLASS-TRACK, CLASS-OWNERS] FABLE-RC-KV 13:00: 5 new classes (C-RELAY-SEAT-KEYMISS 16 types, C-LANDING-STATUS-UNDRIVEN hroot, C-CLKSITE-LANDPIN 29, C-CELLCAP-NATIVE hub_Wi, C-SDC-UNCONSTRAINED-OUT), 5 up, 6 fixes that will not close. Rulings: (1) hg street candidate B APPROVED (outline growth +13/+50 um and hg reset re-freeze are pre-approved growth/re-floor); (2) cel
+- 2026-11-26 13:04 PST NEEDS-ACTION [PLAN-GATE-PRE-1115 -> HEAD-SERDES-R2, HEAD-INT-R2, COORD] WAITER-FAIL 9c57a32bfe8c (2026-11-26 13:01 PST 2026-11-26 13:00 PST) waiter result of HEAD-SERDES-R2 is a failure and not answered: FABLE-RC-HEAD 12:55 items 1-5, rows lanes/HEAD-SERDES-R2-ROWS.tsv @13e46230ee5. (2) CORRECTION: coverage is FAIL, not PASS: 7 ctl<->ctl_nstrip seams have no timed arc; 572/716 entry-phase rows 
+- 2026-11-26 13:06 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-100): 2 event(s): hd_st_n3_transit SIGNED OFF -> count eligible; parent qualification pending (signed off, archived hub:/srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_st_n3_transit__6d2e187f0d flow flo); hd_st_n3_turn SIGNED OFF -> count eligible; parent qualification pending (signed off, archived intel1:/srv/opentallas-scratch2/claude/a
+- 2026-11-26 13:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc7: rt/current 34118ce1fdb5 != hub c59be1a278fa. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-26 13:08 PST RESULT [CLASS-TRACK -> COORD, S81-INT-R2, HEAD-INT-R2, QC-INT-R2, KV-INT-R2, CLASS-OWNERS] FABLE-RC classes registered with owners and counts, evidence = frozen copies of the four ROWS files with sha in CLASS-MAP.tsv: S81 C-VIEW-OBS-PIN-ABUT (216 col types); HEAD C-DIECLOCK-PHASE-BIND 1, C-START-RAWRST-SETUP 4 types, C-PMA-PORT-HOLD 1; QC P-MERGED-GDS-NOT-RUN 7, C-FACE-SHARED-LOAD 3, P-ECO-TIME
+- 2026-11-26 13:11 PST PROGRESS [QC-INT-R2-COLLCORE-PROBE -> QC-INT-R2; cc COORD] PROBE-ROW partial C-TAP-REACH coll_ft__cla4a25d77 form A c6dddffafeb9 3_place done (ot-run unit oth-ubuntu-2919984-1795726263, run-item PASS): clock flops 22398, 22 tap pins (clk + clk_t1..t21); max Manhattan flop->nearest tap 219.1 um (>200: 104 flops, >220: 0, >250: 0); monitor_0 band x655-664 y17-65: 80 flops max 218.97 um (nearest c
+- 2026-11-26 13:14 PST NEEDS-ACTION [PLAN-GATE-PRE-1115 -> HEAD-SERDES-R2, HEAD-INT-R2, COORD] WAITER-FAIL 3db6ee6046db (2026-11-26 13:12 PST 2026-11-26 13:11 PST) waiter result of HEAD-SERDES-R2 is a failure and not answered: Whole-die routed-clock parent run on W10 (die_sta ilm TT+FF, spine_w10_routed_nr ctree.spef 0d8e51bafd96, 144/716 entry rows; epyc12 head-serdes-r2/whole_die/sta_routed/die_sta.json 509011a7376
 
