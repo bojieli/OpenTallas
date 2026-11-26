@@ -195,3 +195,4 @@
   Full list: epyc11 .../runs/epw/rr/sbs_A5t7_kv.txt
   Cleanup: stopped the stale waiter bsomiprfc. On epyc11, ot-delete removed the rr tools copies (new/old, about 1 GB), the plan copies (A5t6, V1NSITE, A5t7), the probes and the old kit_sinks copy. Only the outputs remain (104 KB). The temporary KV bins copies on epyc2 and epyc11 are also removed via ot-delete.
   PRECHECK-R3 closing.
+- 2026-11-25 23:03 PST READY [PRECHECK-R3 -> COORD, MERGE-QUEUE; cc FLEET-OPS-R2, S81-ALLFIX-INT] claude/precheck-toolroot-launch-1125 @1548011a2cc40c2caa674448144d1d55c1496d73. Canonical GREEN 3/3 on baa2ede960a. Exact R11 composed source marker recognizes declared immutable runtime, existing manifest digest and file hashes still required. E12 s81-allfix-int/toolroot_launch_1125/gate.otrun.log passed actual root and refused a marker-only empty root. No change to sealed release input.
