@@ -2629,9 +2629,15 @@ def odb_snapshot(odb, rev, run=subprocess.run):
     return "", why
 
 
+def spill_review_root(work, tag):
+    """Keep review artifacts on the job's scratch volume after the spill workdir is reaped."""
+    root, marker, _ = os.path.realpath(work or ".").partition("/ot-jobs/")
+    return os.path.join(root, "noprog-review", tag) if marker else None
+
+
 def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subprocess.Popen, tools_roots=None, odb=None, tag="smell_review", nice=False, snapshot=False):
     """HOST half of (a): render the kit's CURRENT DB through the existing render_review.sh (an ot-run --direct job, 2 threads, read-only on the kit).
-    Review dir = <work>/smell_review/<stage>-<time> (next to the kit; else ~/.local/state/noprog/smell_review/<id>).  -> (status, review_dir).
+    Review output lives next to the kit, or on the same scratch volume outside an ephemeral spill job.  -> (status, review_dir).
     The existing tool draws floorplan + density and, when the kit has a sign-off STA log, the failing-path overlay; it has no congestion heatmap, so the GRT
     congestion reports are named in summary.txt instead."""
     now = now or time.time()
@@ -2647,9 +2653,12 @@ def smell_render(work, kit, stage, image, rid, summary, now=None, popen=subproce
     if not root:
         return "no-render-tools", ""
     stamp = pst_stamp(now) + "PST"          # H6: the hosts' clock is UTC; the dir name says PST
-    cands = [os.path.join(work, tag, f"{stage}-{stamp}"), os.path.expanduser(f"~/.local/state/noprog/{tag}/{rid}-{stage}-{stamp}")]
-    if "/ot-jobs/" in (work or ""):
-        cands.reverse()      # 5 of 30 failed renders sat in an ot-jobs work dir that was cleaned with the job: keep those in the persistent state dir
+    work_review = os.path.join(work, tag, f"{stage}-{stamp}")
+    persistent = spill_review_root(work, tag)
+    if persistent:
+        cands = [os.path.join(persistent, f"{rid}-{stage}-{stamp}")]
+    else:
+        cands = [work_review, os.path.join(STATE_DIR, tag, f"{rid}-{stage}-{stamp}")]
     rev = ""
     for c in cands:
         try:
@@ -2786,10 +2795,13 @@ def stage_done(odb):
 
 def vis_odb_refail(work, cp, odb, state_root=None):
     """-> True when every earlier checkpoint render of this exact DB failed reading it (ORD-0054 / invalid odb, render.log) and fewer than VIS_ODB_RETRIES did: the render is
-    re-armed.  Render dirs: <work>/vis_review/<cp>-* and (ot-jobs kits) ~/.local/state/noprog/vis_review/*-<cp>-*; SMELL.txt names the DB each one read."""
+    re-armed. SMELL.txt names the DB each render read."""
     pats = [os.path.join(work or "", "vis_review", f"{cp.lower()}-*")]
-    if "/ot-jobs/" in (work or ""):
-        pats.append(os.path.join(state_root or os.path.expanduser("~/.local/state/noprog/vis_review"), f"*-{cp.lower()}-*"))
+    persistent = spill_review_root(work, "vis_review")
+    if persistent:
+        prefix = f"*-{cp.lower()}-*"
+        pats.append(os.path.join(persistent, prefix))
+        pats.append(os.path.join(state_root or os.path.join(STATE_DIR, "vis_review"), prefix))
     bad = 0
     for pat in pats:
         for rd in glob.glob(pat):
