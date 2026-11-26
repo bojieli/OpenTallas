@@ -158,7 +158,10 @@ def _norm(name, lines):
     return out
 
 
-def _run_one(name, mod, raw, plan_path, tree, kw, cap):
+PARENT_CHECKS = ("REF-SITE",)   # REF-SITE-SPEED-1125: they fork their own per-type pool, which a daemonic pool worker cannot
+
+
+def _run_one(name, mod, raw, plan_path, tree, kw, cap, alarm=True):
     """-> (name, lines, seconds) of one check (never raises); the per-check alarm needs the main thread of the process"""
     t0 = time.time()
     try:
@@ -172,7 +175,7 @@ def _run_one(name, mod, raw, plan_path, tree, kw, cap):
     main_thread = threading.current_thread() is threading.main_thread()
     old = None
     try:
-        if main_thread and CHECK_TIMEOUT_S > 0:
+        if alarm and main_thread and CHECK_TIMEOUT_S > 0:
             old = signal.signal(signal.SIGALRM, _alarm)
             signal.alarm(CHECK_TIMEOUT_S)
         lines = m.findings(raw, plan_path, tree=tree, **{k: v for k, v in kw.items() if v})
@@ -218,9 +221,15 @@ def run(raw, plan_path, tree=None, checks=None, skip=(), timing=None, cap=True, 
         if jobs > 1 and len(todo) > 1:
             try:
                 import multiprocessing
-                _JOB["todo"], _JOB["args"] = todo, (raw, plan_path, tree, kw, cap)
-                with multiprocessing.get_context("fork").Pool(min(jobs, len(todo))) as pool:
-                    res = list(pool.imap(_job, range(len(todo)), chunksize=1))
+                par = [(n, m) for n, m in todo if n in PARENT_CHECKS]
+                rest = [(n, m) for n, m in todo if n not in PARENT_CHECKS]
+                _JOB["todo"], _JOB["args"] = rest, (raw, plan_path, tree, kw, cap)
+                with multiprocessing.get_context("fork").Pool(max(1, min(jobs, len(rest)))) as pool:
+                    it = pool.imap(_job, range(len(rest)), chunksize=1)
+                    mine = {n: _run_one(n, m, raw, plan_path, tree, kw, cap, alarm=False) for n, m in par}
+                    got = {r[0]: r for r in it}
+                got.update(mine)
+                res = [got[n] for n, _m in todo]
             except Exception:  # noqa: BLE001 e.g. a daemonic parent cannot fork a pool
                 res = None
         if res is None:

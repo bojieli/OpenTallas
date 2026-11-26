@@ -25,6 +25,7 @@ plan is written for the compose to adopt.  Exit 0 either way.
 """
 import argparse
 import json
+import os
 import re
 import sys
 from collections import Counter
@@ -190,19 +191,21 @@ def moved_rows(refs, brefs, tol=TOL_UM):
     return mv, kind
 
 
-def run(raw, plan_path, braw=None, base_path=None, types=None, log=print):
-    reach = _reach_um()
-    P = TS._plan(raw, plan_path)
-    PB = TS._plan(braw, base_path) if braw is not None else None
+# REF-SITE-SPEED-1125 (FLOW-0930 follow-up, COORD: a full-die advisory spent 1022-1290 s in REF-SITE; profile: tap_grid 1193 s, 370
+# baseline reset trees solved serially inside it): the per-type work (tap grid + reset tree of the plan and the baseline) runs in a fork
+# pool (reset_tree.pool_size; $OT_REF_SITE_J sets it, 1 = serial; a daemonic process runs serial).  Each type's rows are computed
+# exactly as before and merged in type order, so the lines are identical to the serial run.
+_POOL = {}
+
+
+def _type_rows(tn):
+    """-> (tot, fam_reach, fam_moved, fam_kind, fam_une, [(n, line)]) of one type (the serial loop body)"""
+    raw, braw, P, PB, plan_path, base_path, reach = _POOL["args"]
     tot = Counter()
     fam_reach, fam_moved, fam_kind, fam_une = Counter(), Counter(), Counter(), Counter()
     lines = []
-    for tn in sorted(raw.get("partition_types") or {}):
-        if types and tn not in types:
-            continue
-        t = raw["partition_types"][tn]
-        if not TS.type_tables(raw, tn) and not index_refs(t):
-            continue
+    res = (tot, fam_reach, fam_moved, fam_kind, fam_une, lines)
+    for _once in (0,):
         try:
             TS._plandir(plan_path)
             refs, n = type_refs(P, raw, tn)
@@ -248,6 +251,53 @@ def run(raw, plan_path, braw=None, base_path=None, types=None, log=print):
                                              + (f"; KIND worst consumer distance {max(x[4] for x in kd if x[4] is not None):.0f} um" if any(x[4] is not None for x in kd) else "")
                                              + "".join(f"; KIND {k}: {a}->{b} now {c}" + (f" {d:.0f} um from consumer" if d is not None else "")
                                                        for k, a, b, c, d in sorted(kd, key=lambda x: -(x[4] or 0))[:3])))
+    return res
+
+
+def _jobs(n):
+    import multiprocessing as mp
+    if mp.current_process().daemon:
+        return 1
+    if os.environ.get("OT_REF_SITE_J"):
+        return max(1, min(int(os.environ["OT_REF_SITE_J"]), n))
+    try:
+        import reset_tree as RT
+        return RT.pool_size(n)
+    except Exception:  # noqa: BLE001
+        return 1
+
+
+def run(raw, plan_path, braw=None, base_path=None, types=None, log=print, jobs=None):
+    reach = _reach_um()
+    P = TS._plan(raw, plan_path)
+    PB = TS._plan(braw, base_path) if braw is not None else None
+    tot = Counter()
+    fam_reach, fam_moved, fam_kind, fam_une = Counter(), Counter(), Counter(), Counter()
+    lines = []
+    todo = [tn for tn in sorted(raw.get("partition_types") or {}) if not (types and tn not in types)
+            and (TS.type_tables(raw, tn) or index_refs(raw["partition_types"][tn]))]
+    _POOL["args"] = (raw, braw, P, PB, plan_path, base_path, reach)
+    try:
+        n = jobs or _jobs(len(todo))
+        parts = None
+        if n > 1 and len(todo) > 1:
+            try:
+                import multiprocessing as mp
+                with mp.get_context("fork").Pool(n) as pool:
+                    parts = pool.map(_type_rows, todo, chunksize=1)
+            except Exception:  # noqa: BLE001 - unpicklable result / no fork: serial
+                parts = None
+        if parts is None:
+            parts = [_type_rows(tn) for tn in todo]
+    finally:
+        _POOL.clear()
+    for a, r, m, k, u, ln in parts:                   # type order, as the serial loop appended them
+        tot.update(a)
+        fam_reach.update(r)
+        fam_moved.update(m)
+        fam_kind.update(k)
+        fam_une.update(u)
+        lines += ln
     lines.sort(key=lambda x: -x[0])
     for _n, ln in lines:
         log(ln)
