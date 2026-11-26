@@ -11048,6 +11048,47 @@
     }
    }
   },
+  "gpl_td": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "top_overflow_trigger": {
+     "type": [
+      "integer",
+      "number",
+      "boolean"
+     ]
+    },
+    "firm_small_clusters": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "cell_growth_gate": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    }
+   }
+  },
+  "street_sizing": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "pg": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "pg_track_loss": {
+     "type": "number",
+     "minimum": 0
+    }
+   }
+  },
   "core_shape_exceptions": {
    "type": "array",
    "items": {

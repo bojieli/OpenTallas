@@ -2128,6 +2128,14 @@ SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": F
     "enable": {"type": ["integer", "boolean"]}, "radius_um": {"type": "number", "exclusiveMinimum": 0},
     "span_um": {"type": "number", "exclusiveMinimum": 0}, "rounds": {"type": "integer", "minimum": 1},
     "jobs": {"type": "integer", "minimum": 1}, "types": {"type": "string"}}}
+# GPL-TD (CLASS-OWNERS-B C-GPL-TD-INFLATION 11-26, gpl_td.py) and STREET-PG (C-STREET-R2 11-26, street_rule.plan_street_cfg): top-level
+# opt-in flags the generator / advisories already read; declared so PRE SCHEMA-UNKNOWN-KEY admits a plan that sets them (HEAD-EAST-R3
+# 11-26: the flag-ready probes used private plan copies and never met the schema check).  Value rules stay in gpl_td.spec.
+SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": False, "properties": {
+    "top_overflow_trigger": {"type": ["integer", "number", "boolean"]}, "firm_small_clusters": {"type": ["integer", "boolean"]},
+    "cell_growth_gate": {"type": ["integer", "boolean"]}}}
+SCHEMA["properties"]["street_sizing"] = {"type": "object", "additionalProperties": False, "properties": {
+    "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0}}}
 
 # Exact native launch group for a slot-local polarity inverter placement hook.
 FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)"
