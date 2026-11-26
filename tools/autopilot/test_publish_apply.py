@@ -109,6 +109,24 @@ def test_apply_starts_background_precheck_on_first_gen_host(tmp_path):
         assert ("precheck precheck-qc-" in post) is (not off) and ("precheck off" in post) is off
 
 
+def test_publish_event_env_preserves_exact_inputs_and_manual_override(tmp_path):
+    applied = {"applied": "qc", "event": "C1p-r6", "source": "/scratch/current"}
+    cfg = {"event": applied["event"], "src": applied["source"], "tools_sha": "b" * 40,
+           "kit_rtl": {"bind_out": "/scratch/current/bind"}, "die_gen_env": {"OT_PGCAP": 1},
+           "bind_env": {"OT_HCPARAM_ALL": "ABC"}, "gen_tools_pin": "a" * 40}
+    path = PA.write_published_event_env(tmp_path, applied, cfg)
+    assert path == tmp_path / "events/C1p-r6.env"
+    assert PA.EE.load(str(path)) == {
+        "OT_EVENT": "C1p-r6", "OT_EVENT_RT": "a" * 12, "OT_RUN_PREFLIGHT": "fail",
+        "OT_EVENT_INPUTS": "/scratch/current,/scratch/current/bind", "OT_PGCAP": "1",
+        "OT_HCPARAM_ALL": "ABC",
+    }
+    path.write_text("OT_EVENT=custom\n")
+    assert PA.write_published_event_env(tmp_path, applied, cfg) is None
+    assert path.read_text() == "OT_EVENT=custom\n"
+    assert PA.write_published_event_env(tmp_path, dict(applied, event="other"), cfg) is None
+
+
 # S81-DIE-R3 11-18 (COORD): the post-apply strict bind + LATCHECK run in a hardlink copy publish_apply makes, never in the composed tree
 import hashlib  # noqa: E402
 import os  # noqa: E402

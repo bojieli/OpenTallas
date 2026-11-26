@@ -39,6 +39,8 @@ sys.path.insert(0, str(HERE))
 import apply_reviewed_tree_marker as A  # noqa: E402
 import flow_guard as FG  # noqa: E402
 import hold_records as HR  # noqa: E402
+sys.path.insert(0, str(HERE.parent / "fleet"))
+import ot_event_env as EE  # noqa: E402
 
 
 def post(C, lane, text, run=subprocess.run):
@@ -308,6 +310,45 @@ def live_die_cfg(C, die):
         return (json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {}
     except (OSError, ValueError):
         return {}
+
+
+def write_published_event_env(coord, applied, cfg):
+    """Write the adopted event's default inputs once; the die owner can keep a hand-authored file."""
+    event = applied.get("event")
+    source = applied.get("source")
+    if not event or cfg.get("event") != event or cfg.get("src") != source:
+        return None
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", event):
+        raise EE.EventEnvError(f"event has no safe env filename: {event!r}")
+    dest = Path(coord) / "events" / f"{event}.env"
+    if dest.exists():
+        return None
+    pin = str(cfg.get("gen_tools_pin") or cfg.get("tools_sha") or "")
+    if not re.fullmatch(r"[0-9a-f]{12}([0-9a-f]{28})?", pin):
+        raise EE.EventEnvError(f"{event}: a versioned tools pin is required")
+    args = [source]
+    kit = cfg.get("kit_rtl") or {}
+    bind = kit.get("bind_out") or cfg.get("bind_out")
+    if bind:
+        args.append(bind)
+    values = {key: value for key, value in bind_env_of(cfg).items()
+              if key not in EE.META and key != "OT_TOOLSTALE_RT"}
+    values.update(OT_EVENT=event, OT_EVENT_RT=pin[:12], OT_EVENT_INPUTS=",".join(dict.fromkeys(args)),
+                  OT_RUN_PREFLIGHT="fail")
+    data = ("# Generated from the adopted wave configuration. The die owner may edit this file.\n"
+            + "".join(f"{key}={value}\n" for key, value in sorted(values.items())))
+    if EE.parse(data, where=str(dest)) != values:
+        raise EE.EventEnvError(f"{event}: an environment value cannot be represented literally")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", dir=dest.parent, encoding="utf-8") as tmp:
+        tmp.write(data)
+        tmp.flush()
+        os.chmod(tmp.name, 0o644)
+        try:
+            os.link(tmp.name, dest)
+        except FileExistsError:
+            return None
+    return dest
 
 
 def postbind_spec(obj, stamp, host="", live=None):
@@ -638,6 +679,13 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     except SelectedBindVerificationError:
         print("APPLY REFUSED: the candidate's selected bind output could not be verified across publish hosts; fix the host named above or pass --skip-out-check")
         return 5
+    live_new = live_die_cfg(C, res["applied"])
+    try:
+        env_path = write_published_event_env(C, res, live_new)
+        if env_path:
+            res["event_env"] = str(env_path)
+    except (OSError, EE.EventEnvError) as e:
+        res["warnings"] = list(res.get("warnings") or []) + [f"ADVISORY event env: {e}"]
     res["commit"] = (commit_fn or A.commit_apply)(C, res)
     res["plan_probe"] = A.start_plan_probe(res) if commit_fn is None else "skipped: custom commit"      # COORD FABLE-FLOW-0200 C: the new event's plan blocks are cached before the next tick
     res["apply_s"] = round(time.time() - t0, 1)
@@ -660,8 +708,7 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     res["advisory_gate"] = gate
     pc = "off"
     if not getattr(a, "no_precheck", False):
-        live_new = live_die_cfg(C, res.get("applied") or die0) if commit_fn is None else {}
-        pa = precheck_argv(obj, res, a.lane, prev=prev, tools_sha=(live_new or {}).get("tools_sha") or "")
+        pa = precheck_argv(obj, res, a.lane, prev=prev, tools_sha=live_new.get("tools_sha") or "")
         if pa:
             try:
                 r = run(pa, capture_output=True, text=True, timeout=120)

@@ -447,6 +447,8 @@ def commit_apply(coord, res):
         rel.append(str(Path(res["receipt"]).relative_to(C)))
     except (KeyError, ValueError):
         pass
+    if res.get("event_env"):
+        rel.append(str(Path(res["event_env"]).relative_to(C)))
     r = subprocess.run(["bash", str(script), "atomic apply %s %s (written by apply_reviewed_tree_marker)" % (res.get("applied"), str(res.get("event"))[:60]), *rel],
                        cwd=str(C), capture_output=True, text=True, timeout=600)
     return "ok" if r.returncode == 0 else "FAILED rc %d: %s" % (r.returncode, (r.stderr or r.stdout)[-160:])
