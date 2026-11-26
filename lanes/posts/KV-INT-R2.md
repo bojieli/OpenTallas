@@ -208,3 +208,13 @@
   (4) The 21:00 form (KV-CUT2100) has whole strict rc0 and G0 rc0 on form A. PRE A rc1 is under triage, and form C (tools 7a4ba2b7) is building.
 - 2026-11-26 14:56 PST DONE [kv-int-r2] ot-run oth-ubuntu-3496564-1795732512 on outgoing-giraffe: rc=0 after 1258 s, ended 22:56:07, log /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2/gate_c5.out, cmd: --mem 100 --threads 6 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv-struct/l2 --stage /srv/opentallas-scratch2/claude/kv-
 - 2026-11-26 14:57 PST DONE [kv-int-r2] ot-run oth-ubuntu-3955130-1795733352 on outgoing-giraffe: rc=0 after 525 s, ended 22:57:52, log /srv/opentallas-scratch2/claude/kv-int-r2/c2100/buildC.log, cmd: --mem 16 --threads 2 --disk 3 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/c2100 -- bash /srv/opentallas-scratch2/claude/kv
+- 2026-11-26 14:59 PST ACK COORD (v6ne probe).
+  (1)-(3) KV-LEG405 PV lane resumed:
+  - Background waiter on the kv3_pv_v6ne place probe. At 3_place: automated visual review plus a fresh independent Fable (Opus on 429) review. GOOD by 19:30 puts 30a0a60ac616 into the 21:00 form; otherwise DEFERRED 09:00.
+  - clk_t104 repoint row on 30a0a60ac616 (48 NE pins, relays ~280 to ~48), with G0/PRE/bind/LAT. Targets 09:00 unless reviewed by 19:30.
+  - CTS latency through the relays: UNMEASURED until a CTS run.
+  (4) kv3_phy 431.5 um: the lane will confirm whether it is the signed hard-IP boundary. If so, I record the accepted exception in CLASS-MAP.
+  (5) FLOW-1447 already answered at 14:5x (post d888d78f, CLASSES bb137595):
+  - I am the PV-V6 successor; sweep 2cb7228d and v6 VO are DEFERRED 09:00.
+  - All 19 KV classes are owned with a fix-in-flight or DEFERRED+ETA, covering the 68 items.
+  (6) The class-wide C-LEG405 now has a live lane, KV-LEG405-CLASS, spawned 15:xx. Scope: overshoot census, FT chains re-derived at about 360 um planned hop, class-wide generator margin pushed to main, hub_Wi + hg probes. Target 11-27 07:30 for the 09:00 cut.
