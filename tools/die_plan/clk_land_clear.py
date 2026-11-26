@@ -14,7 +14,7 @@ Generator step: every type's clock landings, reserved die clock sites and relay 
             still covers a face-pin corridor (needs gen_phys; P given).  HEAD hd_host_w BF50: 10 windows in SRAM bodies + 9 in halo.
   relay     relay_sites{name: xy}: body (0.5 um inset) or halo ring of any macro -> nearest point clear of every macro + halo, not
             within 0.5 um of another relay / the other relays' seats (no stacking is created).
-Options (all optional): clear_um (2.0), max_move_um (120), classes (["tap","reserved","relay"]), types (limit to these types).
+Options (all optional): clear_um (2.0), land_clear_um (8.0, the landing-pin escape corridor of the clksite_pinclear pass), max_move_um (120), classes (["tap","reserved","relay"]), types (limit to these types).
 A move over max_move_um (default 120 taps / relays, 80 reserved) is left and reported `new: null` in the ledger.
 
   clk_land_clear.py PLAN -o OUT.json --ledger L.json [--types T,..] [--clear-um 2.0] [--max-move-um 120] [--rt RT]
@@ -45,7 +45,8 @@ def enabled(raw):
 def _opts(raw):
     v = (raw or {}).get("clk_land_clear") or {}
     return dict(clear=float(v.get("clear_um", CLEAR_UM)), max_move=float(v.get("max_move_um", MAX_MOVE_UM)),
-                classes=tuple(v.get("classes") or CLASSES), types=set(v.get("types") or ()))
+                classes=tuple(v.get("classes") or CLASSES), types=set(v.get("types") or ()),
+                land_clear=float(v.get("land_clear_um", 8.0)))
 
 
 def _up(v, step):
@@ -228,11 +229,11 @@ def apply(types, raw, plan_path=None, P=None, root=None, only=None):
         if not any(r["type"] == tn and r["new"] is not None for r in led) and t == t0:
             types[tn] = t0                              # nothing changed: keep the shared object
     if P is not None and "reserved" in o["classes"]:
-        led += _pinclear(types, raw, P, only)
+        led += _pinclear(types, raw, P, only, o["land_clear"])
     return led
 
 
-def _pinclear(types, raw, P, only):
+def _pinclear(types, raw, P, only, land_clear=8.0):
     import gen_phys as G
     import clksite_pinclear as PC
     import clksite_points as CP
@@ -242,7 +243,7 @@ def _pinclear(types, raw, P, only):
     for tn in todo:                                      # private copy before an in-place row shift
         types[tn] = copy.deepcopy(types[tn])
     fake = {"partition_types": types, "partitions": raw.get("partitions")}
-    led = PC.run(P, fake, G, RS, CP, todo or None, 2.0, 20.0, 0.1)
+    led = PC.run(P, fake, G, RS, CP, todo or None, 2.0, 20.0, 0.1, land_clear)
     for r in led:
         r["cls"] = "reserved-pinclear"
     return led
