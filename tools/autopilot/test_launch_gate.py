@@ -163,7 +163,7 @@ def test_real_table_layouts():
     assert proven(G.flags("qwen_kvsys", "kv3_pc_v1__cl4ea58a5c", kv)) == []
     assert proven(G.flags("qwen_kvsys", "kv3_pv_v8", kv)) == ["SMELL:DENSITY-PILE"]
     fl = G.flags("qwen_kvsys", "kv3_hg__r889141819", kv)
-    assert proven(fl) == ["FP:STREET", "PRE:TAPNAME"] and {"FP:STREET", "FP:VISUAL", "FP:NOT-CLEAN"} <= {f["rule"] for f in fl}
+    assert proven(fl) == ["PRE:TAPNAME"] and {"FP:STREET", "FP:VISUAL", "FP:NOT-CLEAN"} <= {f["rule"] for f in fl}
     assert G.flags("qwen_kvsys", "kv3_hg_v2", kv) == []
     assert [f["rule"] for f in G.flags("qwen_kvsys", "kv3_hg_v3", kv)] == ["FP:NOT-CLEAN"]
     s81 = {"fp": G.parse_tsv("type\tfamily\tREACH\tfails\tvisual\titer\ncol_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97\tcol_h10_r0_p1\tFAIL 11\tREACH\tFAIL die:x\tc9s-1\n")}
@@ -179,7 +179,9 @@ def test_hand_proven_rules_place_only():
     files = {"lanes/FP-KV.tsv": fp, G.SMELL_REL: smell, G.RULES_REL: rules}
     G.reset_cache()
     kv = G.tables("qwen_kvsys", reader=lambda rel: files.get(rel))
-    for c in ("CORE-TAP-OWNER", "MISAIM", "STREET", "REACH"):
+    for c in ("STREET",):                                                       # FLOW-1920 F6: demoted (lift 1.13, p 0.34): mutant of the old hand list
+        assert proven(G.flags("qwen_kvsys", "t_" + c, kv)) == [] and not any(f.get("hand") for f in G.flags("qwen_kvsys", "t_" + c, kv))
+    for c in ("CORE-TAP-OWNER", "MISAIM", "REACH"):
         fl = G.flags("qwen_kvsys", "t_" + c, kv)
         assert proven(fl) == ["FP:" + c]                                        # PROVEN even though the table says ADVISORY
         m, why, key = G.decide("qwen_kvsys", "t_" + c, fl, "f", {"t_" + c}, {}, _st({}))
@@ -190,16 +192,18 @@ def test_hand_proven_rules_place_only():
         assert not any(f.get("hand") for f in G.flags("qwen_kvsys", t_, kv))
     assert proven(G.flags("qwen_kvsys", "t_TAP", kv)) == [] and proven(G.flags("qwen_kvsys", "t_BOUNDARY", kv)) == []
     assert G.decide("qwen_kvsys", "t_TAP", G.flags("qwen_kvsys", "t_TAP", kv), "f", {"t_TAP"}, {}, _st({}))[0] == "FULL"
-    txt = G.rules_tsv({"FP:REACH": [102, 95, 95, 63], "FP:TAP": [22, 20, 175, 138]})
+    txt = G.rules_tsv({"FP:REACH": [102, 95, 95, 63], "FP:TAP": [22, 20, 175, 138], "FP:STREET": [13, 11, 184, 138]})
     rows = {r["rule"]: r["status"] for r in G.parse_tsv(txt)}
-    assert rows == {"FP:REACH": "PROVEN-HAND", "FP:TAP": "ADVISORY"}
+    assert rows == {"FP:REACH": "PROVEN-HAND", "FP:TAP": "ADVISORY", "FP:STREET": "ADVISORY"}
 
 
-def test_site_in_macro_firm_blocks_halo_only_does_not():
+def test_site_in_macro_is_advisory_after_f6_demotion():
+    """FLOW-1920 F6: SITE-IN-MACRO measured 4/9 flagged fail vs 145/188 unflagged (lift 0.58): advisory now, a firm site no longer forces place-only"""
     fp = "type\tSITE-IN-MACRO\nt_firm\tFAIL:176 on core\nt_halo\tWARN:216 halo only\nt_ok\tPASS\n"
     files = {"lanes/FP-KV.tsv": fp, G.RULES_REL: "rule\tstatus\n"}
     G.reset_cache()
     kv = G.tables("qwen_kvsys", reader=lambda rel: files.get(rel))
-    fl = G.flags("qwen_kvsys", "t_firm", kv)
-    assert proven(fl) == ["FP:SITE-IN-MACRO"] and G.decide("qwen_kvsys", "t_firm", fl, "f", {"t_firm"}, {}, _st({}))[0] == "PROBE"
-    assert proven(G.flags("qwen_kvsys", "t_halo", kv)) == [] and proven(G.flags("qwen_kvsys", "t_ok", kv)) == []
+    for t_ in ("t_firm", "t_halo", "t_ok"):
+        assert proven(G.flags("qwen_kvsys", t_, kv)) == []
+    assert "FP:SITE-IN-MACRO" not in G.HAND_PLACE_ONLY and "FP:STREET" not in G.HAND_PLACE_ONLY
+    assert {"FP:CORE-TAP-OWNER", "FP:MISAIM", "SMELL:GRT", "FP:REACH"} == set(G.HAND_PLACE_ONLY)
