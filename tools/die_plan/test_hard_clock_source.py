@@ -22,7 +22,7 @@ def test_exact_related_hard_source_and_missing_or_weakened_constraints():
     p, row = source_plan()
     text = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
     ctx = SL.kit_context(p, 'mid')
-    line = HCS.sdc_line(row)
+    line = SL.hard_clock_source_sdc(row)
     assert './' not in line and line in text
     assert not SL.lint(text, **ctx)
     assert SL.lint(text.replace(line, ''), **ctx)

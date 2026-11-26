@@ -4894,7 +4894,7 @@ def sdc(P, tn, pins):
            + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
                      f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
                      for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
-           "".join(HCS.sdc_line(row) + "\n" for row in hard_clocks.values()) +
+           "".join(_SL.hard_clock_source_sdc(row) + "\n" for row in hard_clocks.values()) +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "

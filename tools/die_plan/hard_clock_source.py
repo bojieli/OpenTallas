@@ -33,13 +33,6 @@ def sources(plan, type_name):
     return out
 
 
-def sdc_line(row):
-    """The only permitted SDC form for a declared related macro source."""
-    src = row['source_port']
-    return (f"create_generated_clock -name {row['name']} -master_clock {src} -source [get_ports {{{src}}}] "
-            f"-multiply_by {row['multiply_by']} [get_pins {{{row['instance']}/{row['pin']}}}]")
-
-
 def validate_macro_views(plan, type_name, staged_dir):
     """Fail generation if an active provider would disappear during physical link."""
     from pathlib import Path

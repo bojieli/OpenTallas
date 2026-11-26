@@ -364,6 +364,13 @@ def _num(x, what):
         raise SdcLintError(f"{what}: not a number: {x}")
 
 
+def hard_clock_source_sdc(row):
+    """The only permitted SDC form for a declared related macro source."""
+    src = row['source_port']
+    return (f"create_generated_clock -name {row['name']} -master_clock {src} -source [get_ports {{{src}}}] "
+            f"-multiply_by {row['multiply_by']} [get_pins {{{row['instance']}/{row['pin']}}}]")
+
+
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=None, unc_hold_ps=None, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
@@ -507,7 +514,6 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     # 'set_multicycle_path 0 -setup -from [get_ports {<port>[*]}]'; refused on any other port, required on each.
     same_edge = {pt for pt, r in (pad_clock_data_inputs or {}).items() if r.get('capture') == 'same_edge'}
     same_edge_fp = set()
-    import hard_clock_source as HCS
     hard_sources = hard_clock_sources or {}
     hard_seen = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
@@ -610,7 +616,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 name = w[2]
                 row = hard_sources[name]
                 source = row['source_port']
-                if cmd.strip() != HCS.sdc_line(row):
+                if cmd.strip() != hard_clock_source_sdc(row):
                     err.append(f"hard_clock: {name} differs from its declared macro pin and synchronous source")
                 elif name in ctx.clocks or name in ctx.gclocks or clk_src.get(source) != source:
                     err.append(f"hard_clock: {name} duplicates a clock or has no declared source port {source}")
