@@ -269,3 +269,27 @@ def test_die_cap_refuses_big_growth(tmp_path):
     p.write_text(json.dumps({"partition_types": {"ot_s81sl_leaf__t1": row()}}))
     rc = LG.main(["grow", str(p), "--types", "t1", "--dx", "185.76", "--die-cap", "155.52", "--out", str(tmp_path / "o.json")])
     assert rc == 1 and not (tmp_path / "o.json").exists()
+
+
+def test_shift_clamps_e_band_points_inside_the_outline():
+    r = row()
+    r["clock"]["taps"].append({"name": "e", "xy": [980.0, 300.0]})         # E-band tap: x + 100 would leave the outline
+    g = LG.shift_row(r, 100.0)
+    assert g["clock"]["taps"][1]["xy"][0] <= 1000.0 - 8.0 + 1e-9
+    assert LG.check_rows(r, g) == []
+
+
+def test_shift_e_band_compresses_keeps_order_and_distinct_x():
+    r = row()
+    r["clock"]["taps"].append({"name": "e1", "xy": [970.0, 8.64]})
+    r["clock"]["taps"].append({"name": "e2", "xy": [995.0, 8.64]})         # already past W - margin: stays put
+    g = LG.shift_row(r, 100.0)
+    x1, x2 = g["clock"]["taps"][1]["xy"][0], g["clock"]["taps"][2]["xy"][0]
+    assert x1 < x2 and x2 == 995.0 and x1 < 992.0 - 0.5                        # mutant (clamp to W-8): x1 == 992 == pile-up
+    assert x2 - x1 > 0.5
+
+
+def test_pick_grow_dx_skips_raster_truncating_and_respects_min():
+    dx = LG.pick_grow_dx(1512.0, 144.06, 155.52)
+    assert dx is not None and 144.06 <= dx <= 155.52 and round(dx / 4.32, 6) == round(dx / 4.32) and not LG.raster_bad(1512.0 + dx)
+    assert LG.pick_grow_dx(1512.0, 200.0, 155.52) is None                    # mutant: need above the die cap -> none

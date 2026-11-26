@@ -82,15 +82,21 @@ def test_chain_order_and_plan_handover():
     a = argparse.Namespace(base="/b.json", types="T1,T2", out="/o.json", grow=185.76, ft_xcut=246.24, tree="/tree", seed=None,
                            extra_reg=True, no_core_place=False, work=None, dry=True)
     st = LG.steps(a, "/w")
-    assert [s[0] for s in st] == ["grow", "core_place", "refresh", "chain_resite", "retap", "anchor"]
-    assert st[0][2] == "/b.json" and st[1][2] == "/w/s1_grow.json"
+    assert [s[0] for s in st] == ["grow", "refresh0", "core_place", "refresh", "chain_resite", "retap", "anchor"]
+    assert st[0][2] == "/b.json" and st[1][2] == "/w/s1_grow.json" and st[2][2] == "/w/s1_refresh.json"
     for prev, nxt in zip(st, st[1:]):
         if nxt[0] != "refresh":
             assert nxt[2] == prev[3]                                         # every step reads the previous step's output
-    refresh = st[2][1]
-    assert refresh[refresh.index("run") + 1] == "/w/s1_grow.json"            # deltas against the plan core_place started from
-    assert st[5][1][st[5][1].index("--root") + 1] == "/tree"                 # reset_anchor reads the tree's views, not the sparse worktree
-    assert "--extra-reg" in st[3][1] and "--obstacle-aware" in st[1][1] and "--repick" in st[5][1]
+    r0 = st[1][1]
+    assert r0[r0.index("run") + 1] == "/b.json"                               # grow move rides against the BASE
+    refresh = st[3][1]
+    assert refresh[refresh.index("run") + 1] == "/w/s1_refresh.json"         # deltas against the plan core_place started from
+    assert st[6][1][st[6][1].index("--root") + 1] == "/tree"                 # reset_anchor reads the tree's views, not the sparse worktree
+    assert "--extra-reg" in st[4][1] and "--obstacle-aware" in st[2][1] and "--repick" in st[6][1]
+    a.no_core_place = True                                                    # grow only: one refresh, against the BASE
+    st1 = LG.steps(a, "/w")                                                   # (mutant: grown plan as base -> u_vsw.clk left 160 um away)
+    assert [s[0] for s in st1] == ["grow", "refresh", "chain_resite", "retap", "anchor"]
+    assert st1[1][1][st1[1][1].index("run") + 1] == "/b.json"
     a.grow, a.no_core_place, a.extra_reg = 0.0, True, False
     st2 = LG.steps(a, "/w")
     assert [s[0] for s in st2] == ["refresh", "chain_resite", "retap", "anchor"] and "--extra-reg" not in st2[1][1]
