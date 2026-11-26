@@ -2426,6 +2426,23 @@
           "type": "number",
           "exclusiveMinimum": 0
          },
+         "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "re",
+           "pair_um"
+          ],
+          "properties": {
+           "re": {
+            "type": "string"
+           },
+           "pair_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           }
+          }
+         },
          "macro_follow": {
           "type": "boolean"
          },

@@ -770,6 +770,9 @@ SCHEMA = {
                                            "chains": {"type": "boolean"},
                                            "ring_depth": {"type": "integer", "minimum": 0, "maximum": 4},
                                            "ring_pair_um": _pos,
+                                           "scope": {"type": "object", "additionalProperties": False,
+                                                     "required": ["re", "pair_um"],
+                                                     "properties": {"re": {"type": "string"}, "pair_um": _pos}},
                                            "macro_follow": {"type": "boolean"},
                                            "pair_cap": {"type": "integer", "minimum": 2}}},
                         # Default-off (QC-EVENT-S26 11-11): a tap left with fewer sinks after the affinity passes

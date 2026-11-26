@@ -30,6 +30,17 @@ namespace eval ::ot_tap_pair {
   set rdepth [expr {[info exists ::env(OT_TAP_PAIR_RING_DEPTH)] ? $::env(OT_TAP_PAIR_RING_DEPTH) : $depth}]
   set rpair [expr {([info exists ::env(OT_TAP_PAIR_RING_UM)] ? $::env(OT_TAP_PAIR_RING_UM) : $pair_um)*$dbu}]
   set nring 0
+  set scoped [expr {[info exists ::env(OT_TAP_PAIR_SCOPE_RE)] && [info exists ::env(OT_TAP_PAIR_SCOPE_UM)]}]
+  set scope_keys {}
+  set nscoped 0
+  if {$scoped} {
+   set scope_re $::env(OT_TAP_PAIR_SCOPE_RE)
+   set scope_um $::env(OT_TAP_PAIR_SCOPE_UM)
+   if {![string is double -strict $scope_um] || !($scope_um > $pair_um && $scope_um <= 200)} {
+    error "OT_TAP_PAIR scope range must be greater than the base pair range and at most 200 um"
+   }
+   set scope_span [expr {$scope_um*$dbu}]
+  }
   # Cover the existing tap loads even when the planner cannot move them (for example reset relays).
   set span_um [expr {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] ? $::env(OT_TAP_SPAN_UM) : 0}]
   set span_seed {}
@@ -74,6 +85,9 @@ namespace eval ::ot_tap_pair {
   set pairs {}
   set rkeys {}
   if {$ring} { dict for {iname row} $regs { dict set rkeys $iname [::ot_tap_pair::ring_key $iname] } }
+  if {$scoped} {
+   dict for {iname row} $regs { dict set scope_keys $iname [::ot_tap_pair::scope_key $scope_re $iname] }
+  }
   dict for {iname row} $regs {
    lassign $row it x y t
    set inst [$it getInst]
@@ -99,6 +113,11 @@ namespace eval ::ot_tap_pair {
         set dd [expr {abs($sx-$x)+abs($sy-$y)}]
         set kb [expr {$ring ? [dict get $rkeys $sn] : {}}]
         set ok [::ot_tap_pair::pair_ok $d $dd $depth $pair $ka $kb $rdepth $rpair]
+        if {!$ok && $scoped && [::ot_tap_pair::scoped_pair_ok $d $dd $depth $scope_span \
+              [dict get $scope_keys $iname] [dict get $scope_keys $sn]]} {
+         incr nscoped
+         set ok 3
+        }
         if {$ok} { lappend pairs [list $dd $iname $sn] }
         if {$ok == 2} { incr nring }
        }
@@ -114,6 +133,7 @@ namespace eval ::ot_tap_pair {
    set nr 0; dict for {n k} $rkeys { if {$k ne {}} { incr nr } }
    puts "OT_TAP_PAIR ring: $nr ring registers, ring depth $rdepth ring pair_um [expr {$rpair/$dbu}], $nring ring-only pairs added"
   }
+  if {$scoped} { puts "OT_TAP_PAIR scope_um $scope_um scoped-only pairs $nscoped" }
   if {$chains && [dict size $idents]} {
    set seen {}
    foreach e $pairs {lassign $e d a b;dict set seen "$a $b" 1;dict set seen "$b $a" 1}
