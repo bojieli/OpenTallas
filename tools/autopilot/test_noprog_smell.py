@@ -465,6 +465,43 @@ def test_render_review_sh_maps_the_snapshot_into_rev_and_deletes_it(tmp_path):
     assert p.returncode == 0 and (rev / "dump.tcl").read_text().startswith("read_db /kit/r/a.odb\n") and (kit / "r/a.odb").exists()
 
 
+def test_review_snapshot_uses_the_kit_odb_only_as_sta_context(tmp_path):
+    import subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    kit = tmp_path / "kit"
+    stage = kit / "run/results/asap7/test/base/4_cts.odb"
+    stage.parent.mkdir(parents=True)
+    stage.write_text("original")
+    rev = tmp_path / "scratch-reviews"
+    tools = rev / "tools"
+    tools.mkdir(parents=True)
+    (tools / "render_review.py").write_text("")
+    (tools / "stage_paths.tcl").write_text("")
+    (rev / "dump.log").write_text("")
+    commands = tmp_path / "docker-argv"
+    bin_ = tmp_path / "bin"
+    bin_.mkdir()
+    docker = bin_ / "docker"
+    docker.write_text('#!/bin/bash\n[ "$1" = ps ] && exit 0\nprintf "%s\\n" "$@" > "$OT_TEST_DOCKER_ARGS"\n')
+    docker.chmod(0o755)
+    env = dict(os.environ, PATH=f"{bin_}:{os.environ['PATH']}", OT_TEST_DOCKER_ARGS=str(commands))
+    snapshot = rev / "snap_4_cts.odb"
+    for src, expected in ((stage, "/kit/run/results/asap7/test/base/4_cts.odb"),
+                          (kit / "../elsewhere/4_cts.odb", "/rev/snap_4_cts.odb")):
+        snapshot.write_text("frozen input")
+        (rev / "review.json").write_text(json.dumps({
+            "kit": str(kit), "odb": str(snapshot), "src_odb": str(src),
+            "stage_paths": True, "image": "img", "id": "cts",
+        }))
+        result = subprocess.run(["bash", os.path.join(here, "render_review.sh"), str(rev)],
+                                env=env, capture_output=True, text=True, timeout=60)
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert (rev / "dump.tcl").read_text().startswith("read_db /rev/snap_4_cts.odb\n")
+        assert f"SP_ODB={expected}" in commands.read_text().splitlines()
+        assert stage.read_text() == "original"
+        assert not snapshot.exists()
+
+
 def test_spill_checkpoint_render_stays_on_scratch_and_is_retried(tmp_path, monkeypatch):
     work = tmp_path / "scratch" / "ot-jobs" / "hd-serdes-place" / "work"
     odb = work / "run/results/asap7/d/base/3_3_place_gp.odb"
