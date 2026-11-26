@@ -103,6 +103,37 @@ def test_frame_round_trip(tmp_path):
         CF.load(plan, pp)
 
 
+def test_relocated_count_frame_uses_plan_root(tmp_path, monkeypatch):
+    source = tmp_path / "source" / "qwen_compute"
+    plan, original = die(source)
+    original_frame = CF.load(plan, original)
+    private = tmp_path / "private"
+    private.mkdir()
+    relocated = private / "candidate.json"
+    relocated.write_bytes(original.read_bytes())
+    monkeypatch.chdir(private)
+    monkeypatch.delenv("OT_PLAN_ROOT", raising=False)
+    with pytest.raises(CF.FrameError, match="files not found"):
+        CF.load(plan, relocated)
+
+    monkeypatch.setenv("OT_PLAN_ROOT", str(source))
+    assert CF.load(plan, relocated).meta(offsets=True) == original_frame.meta(offsets=True)
+    landing_plan = dict(plan, ports=[])
+    sidecar = dict(ports=[], part_region=PR, count_aligned=dict(frame=original_frame.meta()))
+    assert CL.Landings(landing_plan, sidecar, plan_path=relocated).frame.meta() == original_frame.meta()
+
+    # A present local file remains authoritative and must still match the plan's hash.
+    shadow = private / "plan_of_record"
+    shadow.mkdir()
+    (shadow / "feed_t.json").write_text("{}")
+    with pytest.raises(CF.FrameError, match="sha mismatch"):
+        CF.load(plan, relocated)
+    (shadow / "feed_t.json").unlink()
+    (source / "plan_of_record" / "regions_t.json").write_text("{}")
+    with pytest.raises(CF.FrameError, match="sha mismatch"):
+        CF.load(plan, relocated)
+
+
 def test_landed_lane_end_to_end_both_frames(tmp_path):
     plan, pp = die(tmp_path)
     fr = CF.load(plan, pp)

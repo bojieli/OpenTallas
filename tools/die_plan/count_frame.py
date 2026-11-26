@@ -24,6 +24,9 @@ count_frame), lane_asbuilt_latency (bind_clock_landings count_frame == plan feed
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
+
+import plan_inputs
 
 FRAMES = ("wall_aligned",)
 SCHEMA = "opentallas.count_frame.v1"
@@ -37,8 +40,8 @@ def _sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
-def _resolve(rel, plan_path, base=None):
-    """a plan-relative path (plan_of_record/x.json is relative to the die dir = plan file's dir or its parent)"""
+def _resolve(rel, plan, plan_path, base=None):
+    """Look beside the plan first, then use the stock roots for relocated plan inputs."""
     p = Path(rel)
     if p.is_absolute():
         return p if p.is_file() else None
@@ -48,6 +51,7 @@ def _resolve(rel, plan_path, base=None):
             continue
         b = Path(b)
         cands += [b / p, b.parent / p, b / p.name]
+    cands.extend(root / p for root in plan_inputs.dirs(SimpleNamespace(raw=plan)))
     cands.append(Path.cwd() / p)
     return next((c for c in cands if c.is_file()), None)
 
@@ -94,7 +98,8 @@ def load(plan, plan_path=None, base=None):
     rm = sp.get("region_map")
     if not rm:
         raise FrameError("clock.spine.feed without clock.spine.region_map")
-    fp, mp = _resolve(fd["path"], plan_path, base), _resolve(rm["path"], plan_path, base)
+    fp = _resolve(fd["path"], plan, plan_path, base)
+    mp = _resolve(rm["path"], plan, plan_path, base)
     if fp is None or mp is None:
         raise FrameError(f"count frame files not found: feed {fd['path']} -> {fp}, region map {rm['path']} -> {mp}")
     fb, mb = fp.read_bytes(), mp.read_bytes()
