@@ -104,9 +104,13 @@ def path_rows(paths, pintab, top=50):
     rank slack group start end sx sy ex ey n_cells manhattan_um path_wl_um (sum of the HPWL of the distinct nets the path crosses) nets"""
     rows = []
     for p in sorted((p for p in paths if p["slack"] is not None), key=lambda p: p["slack"])[:top]:
+        path_pins = [pin for pin, _edge, _cell in p["pins"]]
+        if (len(path_pins) >= 2 and inst_of(path_pins[0]) == inst_of(path_pins[1]) == p["start"]
+                and path_pins[0].rsplit("/", 1)[-1] in {"CK", "CLK", "CP"}):
+            path_pins = path_pins[1:]
+        located = [pintab.get(pin) or pintab.get(pin.replace("\\", "")) for pin in path_pins]
         pts, nets, cells = [], {}, []
-        for pin, _e, _c in p["pins"]:
-            r = pintab.get(pin) or pintab.get(pin.replace("\\", ""))
+        for pin, r in zip(path_pins, located):
             if not r:
                 continue
             pts.append((r[0], r[1]))
@@ -115,12 +119,15 @@ def path_rows(paths, pintab, top=50):
             i = inst_of(pin)
             if i and (not cells or cells[-1] != i):
                 cells.append(i)
-        sx, sy = pts[0] if pts else (float("nan"),) * 2
-        ex, ey = pts[-1] if pts else (float("nan"),) * 2
+        start_pos = located[0] if located else None
+        end_pos = located[-1] if located else None
+        sx, sy = start_pos[:2] if start_pos else (float("nan"),) * 2
+        ex, ey = end_pos[:2] if end_pos else (float("nan"),) * 2
         rows.append({"rank": len(rows) + 1, "slack": p["slack"], "group": p["group"], "start": p["start"], "end": p["end"],
                      "sx": sx, "sy": sy, "ex": ex, "ey": ey, "n_cells": len(cells),
-                     "manhattan_um": abs(ex - sx) + abs(ey - sy) if pts else float("nan"),
-                     "path_wl_um": sum(nets.values()), "nets": len(nets), "pts": pts})
+                     "manhattan_um": abs(ex - sx) + abs(ey - sy),
+                     "path_wl_um": sum(nets.values()), "nets": len(nets), "pts": pts,
+                     "all_pins_located": bool(located) and all(located)})
     return rows
 
 
@@ -359,7 +366,9 @@ def finish(rev, npath=50):
         rows = path_rows(parse_paths(raw), read_pin_table(_read(rev / "pins.tsv")), npath)
         (rev / "paths_ideal.tsv").write_text(paths_tsv(rows))
         summary["files"] += ["paths_ideal.tsv", "paths_ideal.txt"]
-        summary["paths"] = {"n": len(rows), "worst_slack_ps": rows[0]["slack"] if rows else None}
+        n_located = sum(row["all_pins_located"] for row in rows)
+        summary["paths"] = {"n": len(rows), "n_located": n_located,
+                            "worst_slack_ps": rows[0]["slack"] if rows else None}
         sta = parse_sta(_read(rev / "sta_wns.txt"), _read(rev / "sta_tns.txt"), _read(rev / "sta_below150.txt"), _read(rev / "sta_clocks.txt"))
         if "wns_ps" not in sta and rows:
             sta["wns_ps"] = rows[0]["slack"]            # report_wns not available: the worst of the dumped paths
@@ -404,11 +413,13 @@ def finish(rev, npath=50):
     except (OSError, ValueError):
         pass
     if rows:
-        cv = Canvas(die, f"top {len(rows)} setup paths, ideal clock, placement RC (red = worst, label = slack ps)" + (f"; magenta x = {len(marks)} DRT violations" if marks else "") + f" {ttl}")
+        cv = Canvas(die, f"top {len(rows)} setup paths, {n_located} mapped, ideal clock, placement RC (label = slack ps)" + (f"; magenta x = {len(marks)} DRT violations" if marks else "") + f" {ttl}")
         draw_macros(cv, macros, fill=(225, 225, 225), outline=(170, 170, 170))
         for x, y, _l, _t in marks:
             cv.cross(x, y, (200, 0, 200), 2)
         for r in reversed(rows):
+            if not r["all_pins_located"]:
+                continue
             col = slack_color(r["rank"], len(rows))
             if len(r["pts"]) > 1:
                 cv.line(r["pts"], col, 1)
@@ -482,11 +493,12 @@ def find_drt_report(kit):
 
 STA_WNS = re.compile(r"wns\s+(?:max\s+)?(-?\d+(?:\.\d+)?)")
 STA_TNS = re.compile(r"tns\s+(?:max\s+)?(-?\d+(?:\.\d+)?)")
+STA_END_SLACK = re.compile(r"\s(-?\d+(?:\.\d+)?)(?:\s+\((?:VIOLATED|MET)\))?\s*$")
 SMELL_WNS_PS = -150.0
 
 
 def parse_sta(wns_txt, tns_txt, below_txt, clocks_txt=""):
-    """quick setup STA numbers from the tcl dumps -> {wns_ps, tns_ps, n_below_150, period_ps}.  Pure.  n_below_150 counts endpoint rows of a `-format end` report whose last column (slack) is < -150."""
+    """quick setup STA numbers from the tcl dumps -> {wns_ps, tns_ps, n_below_150, period_ps}.  Pure.  n_below_150 counts endpoint rows of a `-format end` report with slack below -150 ps, including OpenSTA's trailing status marker."""
     out = {}
     m = STA_WNS.search(wns_txt or "")
     if m:
@@ -496,8 +508,8 @@ def parse_sta(wns_txt, tns_txt, below_txt, clocks_txt=""):
         out["tns_ps"] = float(m.group(1))
     n = 0
     for ln in (below_txt or "").splitlines():
-        t = ln.split()
-        if len(t) >= 3 and re.fullmatch(r"-?\d+(?:\.\d+)?", t[-1]) and float(t[-1]) < -150.0 and not ln.startswith(("Endpoint", "-")):
+        m = STA_END_SLACK.search(ln)
+        if m and len(ln.split()) >= 4 and float(m.group(1)) < SMELL_WNS_PS:
             n += 1
     out["n_below_150"] = n
     for ln in (clocks_txt or "").splitlines():
