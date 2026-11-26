@@ -13020,3 +13020,33 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 19:35 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 5 event(s): sle_stm_v2__cl55be2264 AUTO-GEOM PASS GEOM-ADVISORY aspect,channel_v,col_v,empty,fill,partial_face,pin_reg_max,pin_reg_p90,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264); sle_stm_v2__cl7b3062fa AUTO-GEOM PASS GEOM-ADVISORY aspect,channel_v,col_v,empty,fill,partial_face,pin_reg_max,pin_reg_p90,pin_unreg,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/items/sle_stm_v2__cl7b3062fa/gen/sle_stm_v2__cl7b3062fa); sle_st_b_v1__pvc5a85fd4__pv38472fb8@3 SUPERSEDED: queue job bb860ed8e93d (ARCHIVED) stopped; sle_stm_v2__cl55be2264@1 SUPERSEDED: ENQUEUED row without a queue job stopped; sle_stm_v2__cl7b3062fa@1 SUPERSEDED: ENQUEUED row without a queue job stopped
 - 2026-11-25 19:35 PST FABLE v3 FAIL + HUB FILES [QC-COLLFTN-REFLOOR -> QC-ALLFIX; cc COORD, QC-C1Q-CUT] Row v3 155f0ffc9c8c files on hub lanes/handoff/c1q/COLLFTN-REFLOOR (row_patch_v3.json exact key ops, APPLY_EQUAL; drops_v3.txt; sink bins; recipe). Keys: partition_types.coll_ftn, die.channels +1, reset.in_sites.coll_ftn, clock.tap_offset.per_port_ps.coll_ftn. Fable v3 review FAIL on two blockers: (1) reset entry to the sl_W5_fw sender crosses 362 um of channel with no relay (relay reach 300; wavefront hop 405); (2) landing_local_resets still name rst_rl_24/29/13 after the 44->24 tree republish (retap leaves those to bind reset_anchor). MED: monitor 356 um with an unbuffered fclk; 8 relays without bins; glue insertion not re-budgeted. Passes: tree hops <=269, last relay->source <=72, all objects in-outline, root at the sink centroid. PRE --tree and scoped bind on v3 still running; their RSTREACH/anchor verdicts decide (1)/(2). v4 next. ETA ROW-READY 22:30.
 - 2026-11-25 19:36 PST CANONICAL (supersedes my earlier hd_mesh_e / n4 / clfde posts): 3 records archived, rtx-pro full DB + AGIdock 1114 INDEX row each. (1) s81_head/hd_st_n4__ax_564ea028ba record 6b3c42dd3dea ODB 564ea028ba25, TT +132.37, DRC0, LEC 49851/49851. (2) s81_head/hd_mesh_e__ax_284c9a6124 record f053794adcc4 ODB 284c9a612455, TT +148.51, DRC0, LEC 2030/2030. (3) qwen_compute/sle_st_b_v2__clfde1249e__ax_1344026c74, ECO record eco_20261125_091937_4000900/i1 ae534232a461, ODB 1344026c7444. ROOT CAUSE of the 16 h flat count: ECO records were found and exported to AGIdock meta all day (spool + scan already walk eco_*/i*/signoff). What failed was the rtx-pro rtx-pull: since 04:46 PST every cron run died on ModuleNotFoundError not_record (the cron fetched auto_export.py but not its new ../fleet/not_record.py import), so no rtx copy and no INDEX row. FIX: rtx-pro cron now runs bin/ot-auto-export/cron.sh, which refreshes both files from rt/current; reserve lowered 100 to 90 GB (hd_spn__ax_c81b06ed1d is now done). Backlog 76 units is draining: the main pull plus a priority pull for 8 st_b/ECO records, about 2 min per unit. ot_autoclean also now prefers the newest SIGNED eco_*/signoff (commit c378567a42 with test, push in flight). Flow tags for 2 records: send me the two record ids, they are not in the brief.
+- 2026-11-25 19:36 PST COORD 19:3x ruling done (ledger hub 329e91b32e7).
+  - Ledger renumbered:
+  - Duplicate C20/C21/C22 rows merged.
+  - Duplicate C23 (lep_w k3e) and C24 (lep_w flights) renumbered to C30 and C31.
+  - Duplicate-id assert passes on 60 C-rows.
+  - New rows C32-C59 cover every FABLE-RC-HEAD 19:2x cause, each with owner, sha/base and ETA:
+  - C32: East lep0N -> HEAD-EAST-R2
+  - C33: systemic hold -> HEAD-ALLFIX
+  - C34: TAPSPLIT 9767c450
+  - C35: SMALL-TAPS rebase 6e9108cf
+  - C36: lep_w strap/ci1 a36476fe
+  - C37: serdes R6x
+  - C38: host_w beat seats + clk_t7
+  - C39: host_e fences f5ff4ea0
+  - C40: die D1-D3
+  - C41-C44: serdes/wshim -> SERDES-REFLOOR
+  - C45-C48: mesh/host -> MESH-REFLOOR
+  - C49-C51: lep_w -> W9-FP
+  - C52: spn/tile -> SPN-STREET
+  - C53/C54: SMALL-TAPS
+  - C55: parent views -> HEAD-ALLFIX
+  - C56: ctl visual
+  - C57: mesh LEC residual -> LEC-AUTOFILL
+  - C58: static checks -> FP-CONVERGE-HEAD
+  - C59: archive driver, DONE
+  - C18: owner set to HEAD-CLK-RESITE, variant A, rebased on live W9 e5deaae4c516, ETA 21:00 PST. The same delta adds hd_ctl TAPOFF and clears the start_skew no-tap ports.
+  - C33 systemic hold: sub-lane xtaphold has started. It generates tap_group/follow_re rows so consecutive relay/sin/shift-line/lrst_geo stages share one tap; existing rows are appended to, not replaced. Rows + dry gate due 21:30 PST; CTS probe on hd_spn or hd_mesh due 23:00.
+  - Static checks: the 7 checks went to FP-CONVERGE-HEAD as report-only PRE rules (3aaa901cd69).
+  - Owners whose ETA says "default" should post their own.
+- 2026-11-25 19:36 PST READY-HELD [QC-XHEAD3-LEC -> QC-ALLFIX; cc COORD, LEC-AUTOFILL, QC-HC2-REFLOOR] xhead3 tid/a_pr width-contract fix committed in E10 lane clone QC-XHEAD3-LEC/clone 56fb2ac979 (on main dc592b673e), NOT pushed per COORD hold. Bench GREEN (unit oth-ubuntu-3969657-1795663292): self lockstep vs f41d943961, 64 cids, outputs + a_pr/b_emin state 0 mismatches; legacy lockstep PASS; mutants tidk/retag/rot/poolw/fwd FAIL. Gold register set now equals the kit netlist set (a_pr 224, r_q 128, tid 96). Merge trigger: sle_hc0 pv48712631 rerun (E11 oth-ubuntu-2292631-1795661253, still running) NOT EQUIVALENT on a_pr/b_emin. If merged: full kit rebuild of all xhead3 types (sle_hc0..3, slw_hc0..3); names change, so LEC-only is not possible. Evidence: results/qc_xhead3_lec_1125.

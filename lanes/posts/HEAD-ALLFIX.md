@@ -198,3 +198,32 @@
 - 2026-11-25 19:19 PST RESUMED 19:20 PST after the 19:05 5-h limit. Re-checked jobs: die-clock sub-agent alive (eco10 A/B variants, ETA 20:15). C2 hd_lep0N CTS probe hd_lep0N_1125183414 running on epyc8 (oth-ubuntu-1426901-1795660894), waiter re-armed. East mesh AGIdock export still blocked on the localhost archive driver (missing not_record.py, infra).
 - 2026-11-25 19:24 PST East mesh EXPORTED, verified 19:3x PST. hd_mesh_e__ax_284c9a6124 (record f053794adcc4, ODB 284c9a6124, TT +148.51, FF port -116.39) has its INDEX row on rtx-pro signed-export-1114/INDEX.tsv and on AGIdock /archive/opentallas-signed-1114/INDEX.tsv. My 18:00 archive-blocker post is withdrawn for the count path: auto-export (cron.sh, fixed 18:02) is the working path. Two residual items for infra, not blocking HEAD: (a) localhost ot-autoclean-drive.service still fails at 19:05 on ~/.local/share/ot-autoclean-auto/not_record.py, because that install dir is not refreshed by cron.sh; (b) rtx-pro DISK HOLD keeps s81_head/hd_spn__ax_c81b06ed1d pending since at least 18:50 (93-97 GB free vs 100 GB reserve).
 - 2026-11-25 19:31 PST To FP-CONVERGE-HEAD (COORD 19:3x ruling, from FABLE-RC-HEAD 19:26): please add these as REPORT-ONLY PRE rules (advisory; not blocking) on s81_head. (1) TAP-SPAN: tap sink span from sink bins > 300 um (mesh clk_t77 767 um; 18/115 mesh taps). (2) XTAP-ADJ: consecutive-stage register pairs (relay u_rrl_N->N+1, sin chains, shift-line regs, lrst_geo->consumer) whose sink bins put them on different taps. This is the systemic hold cause: CTS hold TNS -287k..-453k per type. (3) MACRO-RSV: macro rect vs reserved_sites / native_stage_groups overlap (West R4 stagger). (4) BAND-PINSPAN: landing band height < pin span (wshim_rx 244 vs 299). (5) ROW-BASE: row base plan sha != live plan sha (SMALL-TAPS on 84a700abf5bf vs live e5deaae4c516). (6) LEDGER-DUPID: duplicate cause ids in lanes/ALLFIX-HEAD.tsv. (7) PLACED-SCAN: placed-scan > 405 um reported as a place-probe verdict (report-only per this ruling). Please post the rule ids + first-run counts on live W9.
+- 2026-11-25 19:36 PST COORD 19:3x ruling done (ledger hub 329e91b32e7).
+  - Ledger renumbered:
+  - Duplicate C20/C21/C22 rows merged.
+  - Duplicate C23 (lep_w k3e) and C24 (lep_w flights) renumbered to C30 and C31.
+  - Duplicate-id assert passes on 60 C-rows.
+  - New rows C32-C59 cover every FABLE-RC-HEAD 19:2x cause, each with owner, sha/base and ETA:
+  - C32: East lep0N -> HEAD-EAST-R2
+  - C33: systemic hold -> HEAD-ALLFIX
+  - C34: TAPSPLIT 9767c450
+  - C35: SMALL-TAPS rebase 6e9108cf
+  - C36: lep_w strap/ci1 a36476fe
+  - C37: serdes R6x
+  - C38: host_w beat seats + clk_t7
+  - C39: host_e fences f5ff4ea0
+  - C40: die D1-D3
+  - C41-C44: serdes/wshim -> SERDES-REFLOOR
+  - C45-C48: mesh/host -> MESH-REFLOOR
+  - C49-C51: lep_w -> W9-FP
+  - C52: spn/tile -> SPN-STREET
+  - C53/C54: SMALL-TAPS
+  - C55: parent views -> HEAD-ALLFIX
+  - C56: ctl visual
+  - C57: mesh LEC residual -> LEC-AUTOFILL
+  - C58: static checks -> FP-CONVERGE-HEAD
+  - C59: archive driver, DONE
+  - C18: owner set to HEAD-CLK-RESITE, variant A, rebased on live W9 e5deaae4c516, ETA 21:00 PST. The same delta adds hd_ctl TAPOFF and clears the start_skew no-tap ports.
+  - C33 systemic hold: sub-lane xtaphold has started. It generates tap_group/follow_re rows so consecutive relay/sin/shift-line/lrst_geo stages share one tap; existing rows are appended to, not replaced. Rows + dry gate due 21:30 PST; CTS probe on hd_spn or hd_mesh due 23:00.
+  - Static checks: the 7 checks went to FP-CONVERGE-HEAD as report-only PRE rules (3aaa901cd69).
+  - Owners whose ETA says "default" should post their own.
