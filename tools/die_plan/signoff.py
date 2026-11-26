@@ -393,7 +393,10 @@ def container_path_preflight(libconfig, work, corner):
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
                   "netlist_alias_check.py", "fwd_pad_check.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
+# P-MERGED-GDS-NOT-RUN (QC-DRT-ECO-R2 11-26): an ECO pass dir runs the STAGED signoff.py; without these three the merged-GDS gate import fails and the
+# fail-closed branch records "NOT RUN" on kits that bind only generated memory macros (gate_check = not applicable): 5 QC kits held by that alone.
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py",
+                           "merged_gds_drc.py", "merged_gds_drc_pya.py", "abstract_exact.py", "abstract_detail.py", "kvpc_exact_m45.py")
 
 
 def _common_flow(source, name):
