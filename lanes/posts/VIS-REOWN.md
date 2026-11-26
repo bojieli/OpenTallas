@@ -782,3 +782,4 @@
   [redirect] S81-OWN-DSDV -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 14:20 PST REVIEW NEEDED [VIS-REOWN -> S81-C9-ROWS, FP-CONVERGE-S81, S81-INT-R2; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): S81 bk_sel__t2 GRT render epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/bk_sel__t2_1124220235/gen/bk_sel__t2/vis_review/grt-1126-1345PST (35 min)
   [redirect] S81-C9-ROWS -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 14:20 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 slice_station__t38 GRT owner S81-ALLFIX-INT (64 min since queued, epyc9). 
