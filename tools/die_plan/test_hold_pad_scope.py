@@ -53,3 +53,20 @@ def test_scope_on_drops_same_tap_logic_keeps_unknown(tmp_path):
     out = run_scope(tmp_path, ENDS, VERD, on=True)
     assert "ends 3 padded 3" in out                  # b dropped; a keep, c unk kept, d error -> unk kept
     assert "scope zlxt: scope_dropped 1 scope_unk 2 kept 3" in out
+
+
+def test_config_line_and_refresh_keep_scope(tmp_path, monkeypatch):
+    on = {"clock": {"pregrt_ff_hold": True}}
+    monkeypatch.delenv("OT_HOLD_PAD_SCOPE", raising=False)
+    assert not any("OT_HOLD_PAD_SCOPE" in x for x in PG.config_lines(on))
+    monkeypatch.setenv("OT_HOLD_PAD_SCOPE", "zlxt")
+    assert "export OT_HOLD_PAD_SCOPE = zlxt" in PG.config_lines(on)
+    (tmp_path / "hold_gate.tcl").write_text((HERE / "hold_gate.tcl").read_text())
+    assert PG.install(on, tmp_path)
+    monkeypatch.delenv("OT_HOLD_PAD_SCOPE")          # the refresh runs without the gen env
+    f = tmp_path / "pregrt_ff_hold.tcl"
+    f.write_text(f.read_text().replace('set ::env(OT_HOLD_PAD_SCOPE) "zlxt"', "#"))   # a kit baked before the knob
+    (tmp_path / "config.mk").write_text("export OT_HOLD_PAD_SCOPE = zlxt\n")
+    assert PG.refresh(tmp_path).startswith("refreshed")
+    assert 'set ::env(OT_HOLD_PAD_SCOPE) "zlxt"' in f.read_text()
+    assert "OT_HOLD_PAD_SCOPE" not in __import__("os").environ

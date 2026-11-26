@@ -633,6 +633,8 @@ def config_lines(t):
         if sc not in ("vclk", "ctl"):
             raise ValueError(f"OT_PREGRT_HOLD_PORTS_SCOPE: '{sc}' is not 'vclk' or 'ctl'")
         lines.append(f"export OT_PREGRT_HOLD_PORTS = {sc}")
+    if pad_scope():         # KV-HOLD-STRUCT: evidence line + what refresh() reads back
+        lines.append(f"export {PAD_SCOPE_ENV} = {pad_scope()}")
     if same_leaf_on():      # HOLD-SAMELEAF-1: evidence line, and the switch the GRT / route stage reads (hold_guard_grt.tcl)
         lines.append(f"export {SAME_LEAF_ENV} = 1")
     return lines
@@ -690,8 +692,11 @@ def refresh(kit, env=None):
     if pm and PAD_ENV not in env:
         env[PAD_ENV] = pm.group(1)
     env[SAME_LEAF_ENV] = "1" if "pg_sl_begin OT_PREGRT_FF_HOLD" in old else "0"
+    cm = kd / "config.mk"       # KV-HOLD-STRUCT: the pad scope survives a refresh (old baked line or the kit config.mk export)
+    if PAD_SCOPE_ENV not in env and ('set ::env(OT_HOLD_PAD_SCOPE) "zlxt"' in old or (cm.is_file() and f"export {PAD_SCOPE_ENV} = zlxt" in cm.read_text())):
+        env[PAD_SCOPE_ENV] = "zlxt"
     basis = "global_routing" if "OT_PREGRT_GRT_HOLD" in old else "placement"
-    keep = {k: os.environ.get(k) for k in (PAD_ENV, SAME_LEAF_ENV)}
+    keep = {k: os.environ.get(k) for k in (PAD_ENV, SAME_LEAF_ENV, PAD_SCOPE_ENV)}
     try:
         for k in keep:
             if env.get(k) is None:
