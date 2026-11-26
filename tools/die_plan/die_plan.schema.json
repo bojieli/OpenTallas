@@ -10846,6 +10846,42 @@
     }
    }
   },
+  "clk_land_clear": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "types": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "classes": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "tap",
+       "reserved",
+       "relay"
+      ]
+     }
+    },
+    "clear_um": {
+     "type": "number",
+     "minimum": 0
+    },
+    "max_move_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    }
+   }
+  },
   "tap_reach": {
    "type": "object",
    "additionalProperties": false,
