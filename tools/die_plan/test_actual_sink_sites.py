@@ -38,3 +38,18 @@ def test_actual_bit_outside_reach_still_fails_no_nominal_fallback(monkeypatch):
     # site is kept (still no nominal fallback) and the check no longer raises.
     got=taps.explicit_taps(P,'t')
     assert got
+
+
+def test_exact_native_face_bank_excludes_spare_public_pins(monkeypatch):
+    bus = "wide"
+    pins = [(bus, bit, "M4", float(bit), 100., "N") for bit in range(5)]
+    monkeypatch.setattr(gen_phys, "type_pins", lambda P, tn: pins)
+    station = dict(conn="bus:" + bus, regs_um=[[10., 10.]], bit_site_cell_um=[2., 2.],
+                   bit_sites_um=[[[10., 10.], [12., 10.], [14., 10.]]],
+                   face_bit_sites_um=[[10., 30.], [12., 30.], [14., 30.]])
+    typ = dict(outline_um=[100., 100.], internal_stations=[station])
+    P = SimpleNamespace(types={"t": typ})
+    sinks = taps.planned_sinks(P, "t")
+    assert [(x, y, role) for x, y, role in sinks if role.startswith("face")] == [
+        (11., 31., "face"), (13., 31., "face"), (15., 31., "face_epoch"),
+    ]
