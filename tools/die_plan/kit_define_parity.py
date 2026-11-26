@@ -29,7 +29,7 @@ LAT_NAMES = {"OT_S81SL_VP_CFX", "OT_S81SL_VP_SRAMREG", "OT_S81SL_VP_SELREP", "OT
 
 
 def _split(d):
-    n, _, v = d.partition("=")
+    n, _, v = _norm(d).partition("=")
     return n, (v if _ else "")
 
 
@@ -51,7 +51,7 @@ def parity(kit):
     kitd = {}
     for tok in cfg.get("VERILOG_DEFINES", []):
         if tok.startswith("-D"):
-            n, v = _split(tok[2:])
+            n, v = _split(tok)
             if n != "SYNTHESIS":
                 kitd[n] = v
     used = set()
@@ -62,11 +62,12 @@ def parity(kit):
     bind = {}
     for d in doc.get("defines", []) or []:
         n, v = _split(d)
-        if n in used:
+        if n != "SYNTHESIS" and n in used:
             bind[n] = v
     for d in doc.get("type_defines", []) or []:
         n, v = _split(d)
-        bind[n] = v
+        if n != "SYNTHESIS":
+            bind[n] = v
     rows = []
     for n in sorted(set(kitd) | set(bind)):
         kv, bv = kitd.get(n), bind.get(n)
