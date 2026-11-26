@@ -107,3 +107,70 @@ def test_release_scan_names_every_released_cell_and_fails_only_when_opted_in():
     assert "FIRM released = 2 cland cells (OT_FIRM_RELEASE_FAIL=1 requires 0)" in r.stderr + r.stdout, r.stdout + r.stderr   # tclsh stdin: the error is printed
     r = _release('set ::env(OT_FIRM_RELEASE_FAIL) 0')
     assert "requires 0" not in r.stdout + r.stderr
+
+
+def _td(util=2.244, area1=13.10, h1=5088913173, h2=5070566942, a1=12438, a2=972, area2=0.92, hdr=True):
+    """West W11 shaped log (kit_work3 3_3_place_gp.log lines); None drops the line."""
+    t = ""
+    if util is not None:
+        t += f"OT_GPL_SPARSE movable util {util} % < 10.000 %: routability-driven GPL off, timing-driven kept\n"
+    t += (f"[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.\n[INFO GPL-0101]    Iter: 165, overflow: 0.635, keep resizer changes at: 1, HPWL: {h1}\n"
+          "[INFO RSZ-0038] Inserted 19572 buffers in 10304 nets.\n"
+          f"[INFO GPL-0107] Timing-driven: repair_design delta area: 1121.260 um^2 (+{area1}%)\n")
+    if a1 is not None:
+        t += f"[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: {a1} (+14.59%)\n"
+    t += (f"[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.\n[INFO GPL-0101]    Iter: 343, overflow: 0.193, keep resizer changes at: 1, HPWL: {h2}\n"
+          "[INFO RSZ-0038] Inserted 14834 buffers in 10252 nets.\n"
+          f"[INFO GPL-0107] Timing-driven: repair_design delta area: 88.905 um^2 (+{area2}%)\n")
+    if a2 is not None:
+        t += f"[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: {a2} (+0.99%)\n"
+    return t
+
+
+def test_west_like_passes_under_the_relaxed_rule():
+    ok, why = G.gpl_td_verdict(_td())
+    assert ok and not why, why
+    r = G.gpl_td_relaxed(_td())
+    assert r["evaluated"] and r["ok"] and "relaxed 15 %" in r["line"] and "movable util 2.244 %" in r["line"], r
+    assert "HPWL ratio 0.9964" in r["line"] and "972/12438" in r["line"], r["line"]
+
+
+def test_each_condition_alone_falls_back_to_10_and_fails_at_13_1():
+    for kw in (dict(util=10.5), dict(h2=int(5088913173 * 1.03)), dict(a2=2000)):
+        ok, why = G.gpl_td_verdict(_td(**kw))
+        assert not ok and any("13.1 % > 10 %" in w and "old 10 %" in w for w in why), (kw, why)
+        assert G.gpl_td_relaxed(_td(**kw))["evaluated"] and not G.gpl_td_relaxed(_td(**kw))["ok"]
+    assert G.gpl_td_verdict(_td(h2=int(5088913173 * 1.02)))[0]        # boundary 1.02 passes
+
+
+def test_growth_over_15_fails_even_when_relaxed_holds():
+    ok, why = G.gpl_td_verdict(_td(area1=15.5))
+    assert not ok and any("15.5 % > 15 %" in w for w in why), why
+    assert G.gpl_td_verdict(_td(area1=15.0))[0]
+
+
+def test_unparseable_values_fall_back_and_say_unevaluated():
+    for kw in (dict(util=None), dict(a1=None), dict(a2=None)):
+        ok, why = G.gpl_td_verdict(_td(**kw))
+        assert not ok and any("UNEVALUATED" in w and "13.1 % > 10 %" in w for w in why), (kw, why)
+        r = G.gpl_td_relaxed(_td(**kw))
+        assert not r["evaluated"] and "UNEVALUATED" in r["line"]
+    # a single pass has no HPWL-after / pass-2 value
+    one = _td().split("[INFO GPL-0100] Timing-driven iteration 2/2")[0]
+    assert not G.gpl_td_relaxed(one)["evaluated"] and not G.gpl_td_verdict(one)[0]
+
+
+def test_existing_results_unchanged_with_the_relaxed_rule():
+    ok, why = G.gpl_td_verdict(FED00_GPL, cells=153589)
+    assert not ok and any("25.53" in w for w in why), why
+    s81 = _td(area1=71.0)
+    ok, why = G.gpl_td_verdict(s81)
+    assert not ok and any("71 % > 15 %" in w for w in why), why
+    assert G.gpl_td_verdict(FFBE77_GPL, cells=85000)[0] is False
+
+
+def test_cli_prints_the_rule_line(tmp_path, capsys):
+    f = tmp_path / "gp.log"
+    f.write_text(_td())
+    assert G.main(["x", "gpl", str(f)]) == 0
+    assert "TD area rule: relaxed 15 %" in capsys.readouterr().out
