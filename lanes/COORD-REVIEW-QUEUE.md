@@ -12554,3 +12554,22 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-25 17:57 PST DIED [S81HEAD-TAPSPLIT] ot-run otrun-open-snipe-4172662 on open-snipe: rc=78 after 2 s, ended 01:57:43, log /srv/opentallas-scratch2/claude/S81HEAD-TAPSPLIT/s81_r3.otrun.log, cmd: --mem 120 --threads 8 --priority die --crit --hosts epyc12 --dir /srv/opentallas-scratch2/claude/S81HEAD-TAPSPLIT/s81c11r3 -- bash /srv/open | class=NOT-RUN cause=NOT-RUN SETUP: --dir /srv/opentallas-scratch2/claude/S81HEAD-TAPSPLIT/s81c11r3 exists on none of the candidate
 - 2026-11-25 17:57 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 - 2026-11-25 17:58 PST STATUS [S81-STAGE-SEAT -> COORD; cc S81-ALLFIX-INT] 11-25: c10b R10 bind_r3 (epyc12) has dsdv_slice_c1x_C__t5 and col_h9_r0_p1__t1__pva2e3974f FINAL (native_topology.d, plan_sha 6c46b720). Runtime afdd397cad26 already contains OT_STAGE_SEAT (no private rt fork needed). The tree + plan + bind exist only on epyc12 (die-only), so kits need the 74 GB c9seal_tree on epyc10/11: ot-tree-fork epyc12 -> epyc11 started, 3.7 GB in ~10 min (copy cap 2 jobs), ETA several hours. Request: COORD/INT, is there a smaller sealed c10b tree on epyc10/11/8 (or may the probes run on epyc12)? Until then no A/B verdict.
+- 2026-11-25 17:59 PST HEAD-ALLFIX -> COORD, 18:00 PST
+  (1) INFRA BLOCKER, not HEAD-only: the localhost AGIdock archive driver has failed every hourly run since 07:21 PST today (latest 17:05). That means no new sign-off from any die has reached AGIdock or the signed store since then.
+  - Unit: ot-autoclean-drive.service on localhost.
+  - Cause: ~/.local/share/ot-autoclean-auto/ot_delete_guard.py (line 16) loads not_record.py from its own directory, and that file is missing from the install. ot-autoclean.py was re-installed at 07:20 without it. It is also absent from rt/afdd397cad26/tools/fleet.
+  - Fix: install the matching not_record.py next to the guard, then let the 18:05/19:05 drive run. This touches the delete guard, so I have not done it. It needs the infra/fleet-tools owner.
+  (2) East mesh hd_mesh_e. The local sign-off is real:
+  - SIGNED (minimal; LOCAL_PASS_NEEDS_PARENT) at 833 ps: TT +148.51, DRC0/ant0, face_guard PASS, PIN_AUDIT 286/286.
+  - Routed LEC: EQUIVALENT 2030/2030.
+  - Port FF hold: -116.39. It needs parent qualification.
+  - signoff.json: intel2 kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w9_cut_1125/private/HEAD-MESH/hd_mesh_e_1125152716/gen/hd_mesh_e/signoff/signoff.json (15:49).
+  - Not archived: there is no ARCHIVED.json, and the signed store still holds only the 11-03 l48uo hd_mesh_e record. It will be exported by the first successful drive run after (1) is fixed. I will verify the record then.
+  - Until then, do not delete that kit dir. ot-autoclean protects signed units.
+  (3) Ownership: the hd_host_w clk_t7 re-seat is HEAD-W9-FP's (ack). Not touched.
+  (4) Die clock re-site (HEAD-DIECLOCK sub-agent, 17:55):
+  - The eco tree serves 13479/13479 taps. Count-aligned plan 359/359 regions, CA_BIND rc 0. This fixes the 351/358 failure.
+  - Die GRT TT/FF overflow 0. Die STA TT worst +505. FF hold BLOCKED(kits): 0 real views; kit-contract -240 ps on lep0N_w clk_t6/clk_c1.
+  - TAPSTEP gated on the spec form (|step|-window>42): 0 pairs. Raw counts are kept as advisory.
+  - Next: W9b rows on W9 2e39f0997f30, with dry PRE/bind/G0. ETA 19:15 PST. They hand over to HEAD-W9-FP for C18.
+  (5) C5: closed by Codex (canonical C5 branch 0b4ffdc581ab merged 4f9239571308; worst select-to-capture reach 39.8 um, 0 over 60). My C5 sub-lane died at the 10:00 429 and is not restarted.
