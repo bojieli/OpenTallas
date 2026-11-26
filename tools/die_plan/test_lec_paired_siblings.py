@@ -132,3 +132,42 @@ def test_constant_class_split_by_witness_into_copy_groups(tmp_path):
     st = _sim_prove(m)
     assert st["ff:u_dut.o"] == "proved" and st["ff:u_dut.p"] == "proved"
     assert all(v == "proved" for n, v in st.items() if n.startswith("hyp:"))
+
+
+def _dropped_design(tmp_path, b_mode="copy"):
+    """QC sle_hc0 a_pr[1][58] shape: gold a, b hold one value (b a copy of a, or the 'en' mutant); the gate merged
+    them into ga, paired to gold a.  Gold o <= b, gate o <= ga.  Gold b is no partner and carries no hypothesis: its
+    constant hypothesis was dropped by noreset_filter (X power-up), so it stays a free input unless related to a."""
+    bf = {"copy": lambda m, l: _mux(m, l["rn"], l["x"], l["b"]),
+          "en": lambda m, l: _mux(m, m.AND(l["rn"], l["s"]), l["x"], l["b"])}[b_mode]
+    g, gm = _seq(tmp_path, "gold", ["rn", "x", "s"], ["a", "b", "o"],
+                 lambda m, l: {"a": _mux(m, l["rn"], l["x"], l["a"]), "b": bf(m, l), "o": l["b"]})
+    t, tm = _seq(tmp_path, "gate", ["rn", "x", "s"], ["ga", "o"],
+                 lambda m, l: {"ga": _mux(m, l["rn"], l["x"], l["ga"]), "o": l["ga"]})
+    L = lec.Lec(g, gm, t, tm)
+    L.hyp[("gate", "ff:u_dut.ga")] = ("eq", "gold", "ff:u_dut.a", 0)
+    L.noreset_dropped = {("gold", "ff:u_dut.b"): 0}
+    L.trace_const = {("gold", "ff:u_dut.a"): 0, ("gold", "ff:u_dut.b"): 0}
+    return L, {("gold", "ff:u_dut.a"): None, ("gold", "ff:u_dut.b"): None}
+
+
+def test_noreset_dropped_copy_joins_its_partner_class(tmp_path):
+    L, T = _dropped_design(tmp_path)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _sim_prove(m)["ff:u_dut.o"] == "differs"            # the sle_hc0 false NOT EQUIVALENT
+    assert lec.paired_sibling_closure(L, [], T, collections.Counter()) == 1
+    assert L.hyp[("gold", "ff:u_dut.b")] == ("eq", "gold", "ff:u_dut.a", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    st = _sim_prove(m)
+    assert st["ff:u_dut.o"] == "proved" and all(v == "proved" for n, v in st.items() if n.startswith("hyp:"))
+
+
+def test_noreset_dropped_non_copy_stays_free(tmp_path):
+    L, T = _dropped_design(tmp_path, "en")
+    assert lec.paired_sibling_closure(L, [], T, collections.Counter()) == 0
+    assert ("gold", "ff:u_dut.b") not in L.hyp
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _sim_prove(m)["ff:u_dut.o"] == "differs"            # a real difference is still reported
+    M, T = _dropped_design(tmp_path)
+    M.noreset_dropped = {}                                      # not dropped, not a partner: unchanged behaviour
+    assert lec.paired_sibling_closure(M, [], T, collections.Counter()) == 0
