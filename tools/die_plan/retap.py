@@ -174,6 +174,41 @@ def _plan_taps(raw, path):
     return lambda tn: [(n, float(x), float(y)) for n, x, y in schema.tap_grid(P, tn)]
 
 
+def _init_tap_pair_worker(old_taps, new_taps):
+    global _pair_taps
+    _pair_taps = old_taps, new_taps
+
+
+def _tap_pair(tn):
+    old_taps, new_taps = _pair_taps
+    return old_taps(tn), new_taps(tn)
+
+
+def prepare_tap_pairs(old_raw, new_raw, old_path, new_path, types, old_grids=None):
+    """Exact clock grids of eligible types, sharing each plan's wavefront across workers."""
+    names = [tn for tn in types if tn in old_raw["partition_types"] and tn in new_raw["partition_types"]]
+    if not names:
+        return {}
+    import multiprocessing
+    from bind_emit_par import allocated_cpus
+    from reset_tree import pool_size
+
+    old_taps = (_plan_taps(old_raw, str(old_path)) if old_grids is None else old_grids.__getitem__)
+    new_taps = _plan_taps(new_raw, str(new_path))
+    # The first grid warms the plan's common wavefront and geometry caches.
+    # The remaining independent types inherit them through fork.
+    first, *rest = names
+    grids = {first: (old_taps(first), new_taps(first))}
+    jobs = min(allocated_cpus(), pool_size(len(rest))) if len(rest) > 1 else 1
+    if jobs <= 1 or "fork" not in multiprocessing.get_all_start_methods():
+        grids.update((tn, (old_taps(tn), new_taps(tn))) for tn in rest)
+    else:
+        ctx = multiprocessing.get_context("fork")
+        with ctx.Pool(jobs, initializer=_init_tap_pair_worker, initargs=(old_taps, new_taps)) as pool:
+            grids.update(zip(rest, pool.map(_tap_pair, rest, chunksize=1)))
+    return grids
+
+
 def _plan_tree(raw, path):
     sys.path.insert(0, str(HERE))
     import schema
@@ -351,17 +386,19 @@ def repick_start_raws(raw, path=None, types=None, far_um=FAR_UM, ctaps_fn=None):
 
 
 def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False,
-            tapoff=True, far_um=FAR_UM, ctaps_fn=None):
+            tapoff=True, far_um=FAR_UM, ctaps_fn=None, *, tap_pairs=None):
     """Re-point new_raw (in place) against old_raw, then re-solve and republish the collector_tree of every type whose
     tap set changed.  taps_fn(raw, path) -> (tn -> [(n, x, y)]) (default schema.tap_grid); tree_fn(raw, path) ->
-    (tn -> tree) (default reset_tree.for_type on the re-pointed plan).
+    (tn -> tree) (default reset_tree.for_type on the re-pointed plan). tap_pairs can provide the same clock grids
+    precomputed by prepare_tap_pairs before the mutation loop.
     RESETPUB-1122 (COORD: TAP-GRID-R5 clock keys changed the reset tree, the tap set did not, so nothing was republished and the QC V3
     binds died at EMIT): a type whose tap set is unchanged but whose clock / reset inputs changed is re-solved too, and republished
     when its old published tree was its own (reset_tree.for_type of the old plan).  republish_reset=True republishes every selected
     type that publishes a tree (also an already stale one) with the tree the tools solve now.
     -> {type: [[where, key, was, now, um_or_n]]} for the types that changed."""
-    tf = taps_fn or _plan_taps
-    to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
+    if tap_pairs is None:
+        tf = taps_fn or _plan_taps
+        to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
     rep, moved = {}, []
     key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
     todo, own_todo = [], []
@@ -370,7 +407,7 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
             continue
         if tn not in old_raw["partition_types"]:
             continue
-        a, b = to(tn), tn_(tn)
+        a, b = tap_pairs[tn] if tap_pairs is not None else (to(tn), tn_(tn))
         if key(a) == key(b):
             continue
         todo.append((tn, a, b))

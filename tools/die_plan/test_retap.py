@@ -72,6 +72,26 @@ def test_apply_sets_bins_and_repoints_in_one_step():
     assert raw["partition_types"]["U"] == typ()                # untouched type keeps old bins and refs
 
 
+def test_prepare_tap_pairs_reuses_only_the_base(monkeypatch):
+    names = ["T", "U", "V", "W"]
+    base = {"partition_types": {tn: 0 for tn in names}}
+    candidate = {"partition_types": {tn: i for i, tn in enumerate(names)}}
+
+    def taps(raw, _path):
+        return lambda tn: [("clk", raw["partition_types"][tn], 0)]
+
+    monkeypatch.setattr(retap, "_plan_taps", taps)
+    monkeypatch.setenv("OT_RESET_POOL_J", "2")
+    monkeypatch.setenv("OT_HEAVY_THREADS", "2")
+    pairs = retap.prepare_tap_pairs(base, candidate, "/base", "/candidate", names)
+    assert pairs == {tn: ([("clk", 0, 0)], [("clk", i, 0)]) for i, tn in enumerate(names)}
+    old_grids = {tn: old for tn, (old, _) in pairs.items()}
+    candidate["partition_types"]["V"] = 10
+    updated = retap.prepare_tap_pairs(base, candidate, "/base", "/candidate", names, old_grids)
+    assert [tn for tn in names if updated[tn] != pairs[tn]] == ["V"]
+    assert updated["V"] == ([("clk", 0, 0)], [("clk", 10, 0)])
+
+
 def test_retap_cli_round_trip(tmp_path, monkeypatch):
     old = dict(partition_types=dict(T=typ())); new = copy.deepcopy(old)
     new["partition_types"]["T"]["clock"]["sink_bins_file"] = "placed.json"

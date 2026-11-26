@@ -215,16 +215,12 @@ def step_tapname(raw, types, plan_path=None, base_count=None, legal_for=None):
 LANDREMAP_KEYS = ("landing_raw_branches", "landing_reader_start", "landing_writer_start", "landing_local_resets")
 
 
-def tapset_changed(braw, raw, base_path, plan_path, types):
-    """the touched types whose tap set (names, sites) differs from BASE (the retap rule)"""
-    import retap as RT
-    to, tn_ = RT._plan_taps(braw, str(base_path)), RT._plan_taps(raw, str(plan_path))
-    key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
-    out = []
-    for tn in types:
-        if tn in _pt(braw) and key(to(tn)) != key(tn_(tn)):
-            out.append(tn)
-    return out
+def tapset_changed(pairs):
+    """The touched types whose tap names or sites differ from BASE."""
+    def grid_key(grid):
+        return [(n, round(x, 6), round(y, 6)) for n, x, y in grid]
+
+    return [tn for tn, (before, after) in pairs.items() if grid_key(before) != grid_key(after)]
 
 
 def _protect(t):
@@ -277,10 +273,12 @@ def step_landremap(braw, raw, tree, plan_path, types):
     return {**n, **failed}, prot
 
 
-def step_retap(braw, raw, base_path, plan_path, types, protect=None):
+def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, old_grids=None):
     """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
     import retap as RT
-    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types))
+    # Recompute the candidate grids after LANDREMAP. The BASE remains fixed.
+    grids = RT.prepare_tap_pairs(braw, raw, base_path, plan_path, types, old_grids)
+    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types), tap_pairs=grids)
     for tn, keep in (protect or {}).items():
         _restore(_pt(raw)[tn], keep)
     return {tn: len(ch) for tn, ch in rep.items()}
@@ -294,6 +292,7 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
     types = touched_types(raw, braw)
     rep["touched_types"] = types
     prot = {}
+    old_grids = None
     with in_tree(tree):
         for name in STEPS:
             t0 = time.time()
@@ -310,15 +309,17 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                 if "landremap" in hooks:
                     r, prot = hooks["landremap"](braw, raw, types)
                 else:
-                    ch = tapset_changed(braw, raw, base_path, plan_path, types) if types else []
-                    r, prot = step_landremap(braw, raw, tree, plan_path, ch)
+                    import retap as RT
+                    pairs = RT.prepare_tap_pairs(braw, raw, base_path, plan_path, types)
+                    old_grids = {tn: before for tn, (before, _) in pairs.items()}
+                    r, prot = step_landremap(braw, raw, tree, plan_path, tapset_changed(pairs))
             else:
                 if "retap" in hooks:
                     r = hooks["retap"](braw, raw, types)
                     for tn, keep in prot.items():
                         _restore(_pt(raw)[tn], keep)
                 else:
-                    r = step_retap(braw, raw, base_path, plan_path, types, prot) if types else {}
+                    r = step_retap(braw, raw, base_path, plan_path, types, prot, old_grids=old_grids) if types else {}
             rep["steps"][name] = r
             rep["seconds"][name] = round(time.time() - t0, 1)
     rep["changed"] = {k: len(v) for k, v in rep["steps"].items() if isinstance(v, dict) and v}
