@@ -1,1 +1,2 @@
 - 2026-11-26 09:51 PST DIED [QC-INT-R2-HCSETUP] ot-push-main otpush-civil-redfish-3442445 on civil-redfish: rc=2 after 0 s, ended 17:51:38, log /srv/opentallas-scratch2/claude/QC-INT-R2-HCSETUP/push_dry.log, cmd: ot-push-main --dry-run | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-26 09:52 PST DONE [QC-INT-R2-HCSETUP] ot-push-main otpush-civil-redfish-3464442 on civil-redfish: rc=0 after 9 s, ended 17:52:27, log /srv/opentallas-scratch2/claude/QC-INT-R2-HCSETUP/push_dry.log, cmd: ot-push-main --dry-run
