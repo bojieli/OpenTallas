@@ -417,8 +417,30 @@ def gate(a):
     t0 = time.time()
     braw = json.loads((tree / a.base).read_text())
     raw = json.loads(plan.read_text())
+    tap_manifest = getattr(a, "tap_manifest", None)
+    tap_types = []
     try:
+        if tap_manifest:
+            import tap_derive
+
+            tap_types, report = tap_derive.derive(raw, plan, tree, tap_manifest)
+            (out / "tap_derive.json").write_text(json.dumps(report, indent=1) + "\n")
+            R["tap_derive"] = {"types": tap_types, "report": str(out / "tap_derive.json")}
         nrep = RN.normalize_plan(braw, raw, str(L), (tree / a.base).resolve(), plan.resolve(), a.skip_normalize)
+        if tap_types:
+            import tap_offset_cover
+
+            density = tap_derive.density_results(raw, plan, tree, tap_types)
+            for tn, result in density.items():
+                report[tn].update(result)
+            (out / "tap_derive.json").write_text(json.dumps(report, indent=1) + "\n")
+            excess = [tn for tn, result in density.items() if not result["within_limits"]]
+            if excess:
+                raise ValueError(f"density tap load/span still exceeds the limit: {', '.join(excess)}")
+            tap_pattern = "^(?:" + "|".join(re.escape(tn) for tn in tap_types) + ")$"
+            with RN.in_tree(L):
+                covered = tap_offset_cover.fill(raw, plan.resolve(), types=tap_pattern)
+            R["tap_derive"]["tap_offset_cover"] = covered
     except Exception as e:  # noqa: BLE001 - a normalize crash is a named NOT-READY, never a silent pass
         nrep = dict(error=f"{type(e).__name__}: {str(e)[:400]}")
     (out / "normalize_plan.json").write_text(json.dumps(nrep, indent=1, default=str) + "\n")
@@ -426,7 +448,7 @@ def gate(a):
     if nrep.get("error"):
         done("NOT", f"normalize crashed: {nrep['error']}")
         return finish()
-    if nrep["changed"]:
+    if nrep["changed"] or tap_types:
         RN.dump(raw, plan)
     nfail = {k: [tn for tn, x in v.items() if isinstance(x, dict) and (x.get("failed") or x.get("bank_failed"))]
              for k, v in nrep["steps"].items() if isinstance(v, dict)}
@@ -440,7 +462,7 @@ def gate(a):
     elif a.types == "all":
         types = []
     else:
-        types = [t for t in a.types.split(",") if t]
+        types = sorted({t for t in a.types.split(",") if t} | set(tap_types))
     R["types"] = types or "all"
     if a.types == "auto" and not types:
         done("NOT", "the rows changed no bound partition type (nothing to bind; use --types)")
@@ -593,6 +615,7 @@ def main(argv=None):
     g.add_argument("--env", action="append", default=[], help="K=V over the die bind env")
     g.add_argument("--mem", type=int, default=96, help="ot-run --mem for the whole gate (GB)")
     g.add_argument("--bind-mem", type=int, default=48)
+    g.add_argument("--tap-manifest", type=Path, help="native placed sink bins manifest for per-cut tap derivation")
     g.add_argument("--skip-normalize", action="append", default=[], choices=RN.STEPS)
     g.add_argument("--no-r8", action="store_true", help="do not refresh R8 tables (the strict bind still checks them)")
     g.add_argument("--keep-tree", action="store_true", help="keep the fork and the launch tree")

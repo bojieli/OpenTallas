@@ -108,7 +108,7 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=5000):
         if observed.get("max_sinks") is not None:
             row.update(
                 measured_max_sinks=observed["max_sinks"],
-                measured_kit=observed.get("kit") or observed.get("path"),
+                measured_kit=observed.get("kit") or observed.get("path") or observed.get("log"),
             )
         group = clock.get("tap_group") or {}
         try:
