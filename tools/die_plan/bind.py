@@ -4886,6 +4886,7 @@ class Binder:
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
+        lane_pad_instances = {}
         for L in ibus:
             n, W = L["iname"], L["width"]
             if L.get("spine"):
@@ -4912,6 +4913,7 @@ class Binder:
             pad = lane_pad(L)
             count = getattr(self, "lane_count_pads", {}).get((p, n))
             if pad > 0 or count:
+                lane_pad_instances[sv_id(f"lpad_{n}")] = f"u_lpad_{n}"
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
@@ -5969,14 +5971,33 @@ class Binder:
                    "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
-        if t.get("relay_depth"):
-            used = getattr(self, "_rd_used", set())
-            miss = [f"{row['inst']}.{row.get('port', 'i' if row.get('side') == 'sink' else 'o')}" for row in t["relay_depth"]
-                    if (tn, sv_id(row["inst"]), row.get("port", "i" if row.get("side") == "sink" else "o")) not in used]
-            if miss:      # a row that names no leaf / drives no internal sink would silently leave a hop over the reach
-                self._et_err(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
         text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
             "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
+        if t.get("relay_depth"):
+            used = getattr(self, "_rd_used", set())
+            generated, missing = [], []
+            for row in t["relay_depth"]:
+                target = sv_id(row["inst"])
+                sink = row.get("side") == "sink"
+                port = row.get("port", "i" if sink else "o")
+                if (tn, target, port) in used:
+                    continue
+                if sink and port == "d" and target in lane_pad_instances:
+                    generated.append(row)
+                else:
+                    missing.append(f"{row['inst']}.{port}")
+            if generated:
+                # A lane pad is emitted above, so it has no as-built leaf entry.
+                # Apply the same per-bit sink stages supported by kit-rtl.
+                import kit_relay_depth
+                try:
+                    text, _ = kit_relay_depth.apply(
+                        text, tn, generated, lambda inst: lane_pad_instances[sv_id(inst)], sv_id
+                    )
+                except ValueError as exc:
+                    raise BindError(str(exc)) from exc
+            if missing:
+                self._et_err(f"relay_depth {tn}: {len(missing)} row(s) matched no internal sink: {missing[:6]}")
         rb_rep = []
         if t.get("relay_branch"):
             # S81-RLYBR-1 11-19 (COORD family class): one copy of a relay per far sink branch, same stage count (relay_branch.py);
