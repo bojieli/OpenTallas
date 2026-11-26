@@ -14680,3 +14680,7 @@ Handback checks: dcf66af8ccac merged as cfa7d1e750df7535cff3c68c4b6722e0f697f878
 Used the live 20:05 handoff and its 20:2x update for current cut authority. Existing lane clones and jobs are the work surfaces. Legacy HBM physical work remains parked.
 
 FOR-CLAUDE: Independent Fable reviews of changed floorplan/RTL packets are pending as identified in each lane. Exact images reviewed by Codex are logged by checkpoint.
+
+### 21:00 cut, 2026-11-25
+
+S81 has 2 new scoped-ready rows covering 75 types. The cut gate is running on E12. HEAD W10 narrowed its reset-sensitive rows and QC C1q rebuilt its overlapping rows, with both gates running. KV R8 returned five ESTRIP types to corridor rework. No public adoptions, new probe confirmations or routed confirmations for the four cut candidates at cut time.
