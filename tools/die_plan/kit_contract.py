@@ -1428,19 +1428,39 @@ def _lef_pins(kd, cfg):
         if f is not None and f.is_file() and f not in files:
             files.append(f)
     out = {}
+    boundaries = re.compile(r"^[ \t]*(MACRO|PIN|END)[ \t]+(\S+)[ \t]*(?:;[ \t]*)?(?:#[^\n]*)?$", re.M)
     for f in files:
-        for m in re.finditer(r"^MACRO\s+(\S+)(.*?)^END\s+\1", f.read_text(errors="replace"), re.M | re.S):
-            rows = out.setdefault(m.group(1), [])
-            for pm in re.finditer(r"^\s*PIN\s+(\S+)(.*?)^\s*END\s+\1\b", m.group(2), re.M | re.S):
-                if re.search(r"\bUSE\s+(POWER|GROUND)\b", pm.group(2)):
+        text = f.read_text(errors="replace")
+        macro = pin = None
+        for heading in boundaries.finditer(text):
+            kind, name = heading.groups()
+            if kind == "END" and name not in (pin, macro):
+                name = name.removesuffix(";")
+            if kind == "MACRO":
+                macro, rows, pin = name, [], None
+            elif macro is None:
+                continue
+            elif kind == "PIN":
+                pin, start = name, heading.end()
+            elif name == pin:
+                body = text[start:heading.start()]
+                pin = None
+                if re.search(r"\bUSE\s+(POWER|GROUND)\b", body):
                     continue
                 layer = None
-                for tok in re.finditer(r"LAYER\s+(\S+)\s*;|RECT\s+" + r"\s+".join([_NUM] * 4), pm.group(2)):
+                for tok in re.finditer(r"LAYER\s+(\S+)\s*;|RECT\s+" + r"\s+".join([_NUM] * 4), body):
                     if tok.group(1):
                         layer = tok.group(1)
                     elif layer:
                         x0, y0, x1, y1 = (float(tok.group(i)) for i in range(2, 6))
-                        rows.append((pm.group(1), layer, min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)))
+                        rows.append((name, layer, min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)))
+            elif name == macro:
+                out.setdefault(macro, []).extend(rows)
+                macro = pin = None
+            else:
+                # An unmatched named END invalidates the current pin. Bare
+                # PORT endings are not boundaries and stay inside the record.
+                pin = None
     return out
 
 
