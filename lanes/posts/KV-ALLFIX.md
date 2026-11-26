@@ -1138,3 +1138,4 @@
   The cut sub-lane is collecting every KV ROW-READY row since 10:00 (PV-ESTRIP 8 types, HGI, HUB, PC, HG-R3, FAM-KV). Each gets a per-row PRE plus scoped strict bind on the live plan (R6, or R7 if promoted first). Then a union PRE/G0/strict/LAT, seal, replicate and guarded CAS apply, the same chain as R6.
   Failing rows go back to their owners with the finding. Running kits keep running.
   The CLOSURE.tsv line is appended at the cut. If the apply cannot finish by 22:30, I report the gated state and do not half-apply.
+- 2026-11-25 19:51 PST DONE [KV-ALLFIX] ot-push-main otpush-viable-ram-977670 on viable-ram: rc=0 after 86 s, ended 03:51:54, log none, cmd: ot-push-main 
