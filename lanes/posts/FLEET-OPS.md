@@ -96,3 +96,4 @@
 - 2026-11-25 10:51 PST DONE [FLEET-OPS] ot-run oth-ubuntu-143873-1795632300 on viable-ram: rc=0 after 379 s, ended 18:51:16, log /srv/opentallas-scratch2/claude/mq-gate/fleet_ops_seal_1125.log, cmd: --mem 24 --threads 8 --disk 15 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/rt/curre
 - 2026-11-25 17:49 PST RESUMED 17:5x: read Codex handback; host check, seal-hook confirmed on main (f724676875 / 6a07aa0fa11), probe-dir guard push (12 h hold, all guard callers incl. autoclean) in flight, then epyc8 writer scan and ALL-LANES host table.
 - 2026-11-25 17:49 PST DONE [FLEET-OPS] ot-push-main otpush-tolerant-swine-2672058 on tolerant-swine: rc=0 after 36 s, ended 17:49:51, log /tmp/fo_push16.log, cmd: ot-push-main 
+- 2026-11-25 18:23 PST DONE [FLEET-OPS] ot-push-main otpush-tolerant-swine-89232 on tolerant-swine: rc=0 after 33 s, ended 18:23:26, log /tmp/fo_push17.log, cmd: ot-push-main 
