@@ -14,6 +14,7 @@ displacement, SAME register count (zero cycles).  A chain with no such placement
 when --extra-reg (internal_stations only: +1 cycle, listed under 'latency'), else it is reported under 'skipped'.
 Exact station bit-site groups move rigidly with their register on the row grid. A moved bank's full cell
 footprints must avoid placement obstacles, even when its register centre was already in reach.
+Rows whose positions are generated from a per-bit route or left to placement are reported for native geometry review.
 Writes OUT (the plan with the rows applied) and OPS (plan_ops.v1 replace ops carrying the old values)."""
 import argparse
 import json
@@ -222,6 +223,11 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
     ents = t.get("internal_stations") or []
     slots = t.get("ft_slots") or []
     exact_conns = {e.get("conn") for e in ents if e.get("bit_sites_um") is not None}
+    fixed_conns = {e.get("conn") for e in ents if e.get("sites") != "float"}
+    derived_rows = {i for i, e in enumerate(ents) if e.get("bit_sites_um") is None and (
+        e.get("bit_route") in ("per_bit", "chain") or e.get("conn") not in fixed_conns
+    )}
+    special_conns = exact_conns | {ents[i].get("conn") for i in derived_rows}
     exact_rects = list(placement_boxes(t, halo=HALO).values()) if exact_conns or any(
         s.get("bit_sites_um") is not None for s in slots) else []
     for i, e in enumerate(ents):
@@ -238,6 +244,10 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         bad_bank = groups and sites_collide(groups, cell, exact_rects, w, h)
         if not bad_bank and max(hops(pts)) <= gate and (not routed or routed_max(t, pts) <= gate):
             continue
+        if i in derived_rows:
+            skipped.append({"type": name, "index": i, "conn": e.get("conn"),
+                            "why": "station positions require the native route or placement geometry"})
+            continue
         offs = [group_box(g, r, cell) for g, r in zip(groups, regs)] if groups else [None] * k
         pin_ends = chain_endpoints(t, e) if groups is None else None
         new = place_routed(t, pts, k, offs, exact_rects if groups else rects, w, h, cap, gate, routed,
@@ -249,7 +259,7 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         if new is None and routed and groups is None:
             new = place_shorter_chain(t, e, pts, k, cap, gate)
         path = f"/partition_types/{name}/internal_stations/{i}"
-        if new is None and extra_reg and groups is None and (not whole_bus or e.get("conn") not in exact_conns):
+        if new is None and extra_reg and groups is None and (not whole_bus or e.get("conn") not in special_conns):
             new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed,
                                pin_ends=pin_ends)
             if new is not None:

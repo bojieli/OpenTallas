@@ -174,3 +174,13 @@ def test_seat_search_enforces_both_pin_window_constraints():
                           700, 800, 404, pin_ends=edges)
     assert regs is not None
     assert all(max(CR.hops([a, *regs, end])) <= 404 for a in edges[0])
+
+
+
+def test_derived_per_bit_positions_require_native_geometry():
+    t = _type([[900.0, 600.0], [950.0, 600.0]])
+    t["internal_stations"][0].update(bit_route="per_bit", leaf_um=[990.0, 500.0])
+
+    ops, latency, skipped = CR.resite_type("T", t, extra_reg=True, routed=False)
+    assert not ops and not latency
+    assert len(skipped) == 1 and "native route" in skipped[0]["why"]
