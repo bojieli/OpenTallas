@@ -1,0 +1,12 @@
+HEAD-ALLFIX C2 LEP-MACROTAP-1: tap_group strings for HEAD-WEST R4, 2026-11-25 19:1x PST (source epyc12 head-allfix/c1c2w9/merge_for_head_west.txt)
+hd_lep0N_w /clock/tap_group/re (R4 0babf3efc2d9 value minus C20 wdata2 + g_wpipe group alternatives):
+(u_rg[0-3]\.u_txl\.g_tx\\?\[[0-3]\\?\]\.g_safe_write\.u_m\.g_slice\\?\[[0-9]+\\?\]\.forwarded(?=\\?\[)|u_core\.u\.g_plw\.g_s\\?\[[0-9]+\\?\]\.u_st\.q(?=\\?\[)|^u_b(?:in_(?:lepf|unit)_i0|out_(?:coll_o[0-3]|ctrl_o0|fault_o0|lw_o))(?=[/.])|u_rg1\.g_rxf(?=\.g_s\\?\[0\\?\]\.u_st\.q\\?\[)|u_rg[0-3]\.u_txl\.g_tx\\?\[[0-3]\\?\]\.g_safe_write\.u_m\.wdata(?=\\?\[))
+
+hd_lep0N_w /clock/tap_group/follow_re (R4 value + TX write-side followers):
+(?:^|[/.])(u_rg2\.u_ltree\.g_local\\?\[75\\?\]\.local_r|u_rg1\.u_ltree\.g_local\\?\[97\\?\]\.local_r|u_rg[0-3]\.u_txl\.g_tx\\?\[[0-3]\\?\]\.g_safe_write\.u_m\.(?:g_wpipe\.wdata2|g_address\\?\[[0-9]+\\?\]\.g_wpipe\.(?:address_r2|valid_r2)|g_slice\\?\[[0-9]+\\?\]\.g_wpipe\.valid_r2))
+
+hd_lep0N /clock/tap_group/re (R4 0babf3efc2d9 value minus C20 wdata2 + g_wpipe group alternatives):
+(u_rg[0-3]\.u_txl\.g_tx\\?\[[0-3]\\?\]\.g_safe_write\.u_m\.g_slice\\?\[[0-9]+\\?\]\.forwarded(?=\\?\[)|u_core\.u\.g_plw\.g_s\\?\[[0-9]+\\?\]\.u_st\.q(?=\\?\[)|^u_b(?:in_(?:lepf|unit)_i0|out_(?:coll_o[0-3]|ctrl_o0|fault_o0|lw_o))(?=[/.])|u_rg[0-3]\.u_txl\.g_tx\\?\[[0-3]\\?\]\.g_safe_write\.u_m\.wdata(?=\\?\[)|u_core\.u\.u_lep\.u\.g_rx\\?\[[0-3]\\?\]\.g_sa\.g_true_sram\.u_rx_mem\.wdata(?=\\?\[))
+
+hd_lep0N /clock/tap_group/follow_re: rows_c1c2_w9.json value unchanged (R4 does not touch it)
+
