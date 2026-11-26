@@ -576,3 +576,25 @@ def test_wavefront_reaches_short_hop_descendants_after_die_relay(monkeypatch):
     assert got["unreachable"] == ["behind_broken", "broken", "unattached"]
     assert got["long_hops"] == [["broken", "root.rst_o_0", 400.0]]
     assert got["parts"]["behind_bridge"]["release"] == 11
+
+
+def test_rtr_place_skips_relay_split_clones():
+    """RTR-RSCLONE: rtr_place / rtr_place_lk never capture a relay_split clone (<flop>__rs<N>) through the source relay glob"""
+    import reset_tree as RT
+    src = Path(RT.__file__).read_text()
+    guard = "if {[string match {*__rs[0-9]*} $nm] && ![string match {*__rs[0-9]*} $pat]} continue"
+    assert src.count(guard) == 2
+    for proc in ("proc rtr_place {key pat x y tag}", "proc rtr_place_lk {key pat x y tag}"):
+        body = src[src.index(proc):]
+        body = body[:body.index("\n}\n")]
+        assert body.index("![string match $pat $nm]") < body.index(guard)
+
+
+def test_rtr_rsclone_glob_semantics():
+    """the Tcl globs as Python fnmatch: source relay glob matches the clone (the bug); clone guard separates them"""
+    from fnmatch import fnmatchcase
+    pat = "u_bound[./]u_rrl_60[./]*"
+    src, clone = "u_bound.u_rrl_60/q$_DFF_P_", "u_bound.u_rrl_60/q__rs0$_DFF_P_"
+    assert fnmatchcase(src, pat) and fnmatchcase(clone, pat)          # mutant: without the guard the clone is captured
+    g = "*__rs[0-9]*"
+    assert fnmatchcase(clone, g) and not fnmatchcase(src, g) and not fnmatchcase(pat, g)

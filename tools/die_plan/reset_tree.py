@@ -3559,6 +3559,10 @@ proc rtr_place {key pat x y tag} {
   set hit 0
   foreach {nm i} $rtr_dff {
     if {![string match $pat $nm]} continue
+    # RTR-RSCLONE 11-25 (S81-REACH t26): a relay_split clone <flop>__rs<N> keeps its source relay's hierarchy prefix, so
+    # *u_rrl_N[./]* also matched it: the reset placer moved the clone back onto the source seat and took its Q net as the
+    # relay's. Clones are seated by kit_istations rs_place_all (relay_sites); skip them unless the pattern names one.
+    if {[string match {*__rs[0-9]*} $nm] && ![string match {*__rs[0-9]*} $pat]} continue
     if {[info exists ::ot_reset_pair_locs] && [dict exists $::ot_reset_pair_locs $nm]} {
       set got [dict get $::ot_reset_pair_locs $nm]
     } else {
@@ -3597,6 +3601,10 @@ LOCKUP_PLACE_TCL = """proc rtr_place_lk {key pat x y tag} {
   foreach i [$ff_blk getInsts] {
     set nm [$i getName]
     if {![string match $pat $nm]} continue
+    # RTR-RSCLONE 11-25 (S81-REACH t26): a relay_split clone <flop>__rs<N> keeps its source relay's hierarchy prefix, so
+    # *u_rrl_N[./]* also matched it: the reset placer moved the clone back onto the source seat and took its Q net as the
+    # relay's. Clones are seated by kit_istations rs_place_all (relay_sites); skip them unless the pattern names one.
+    if {[string match {*__rs[0-9]*} $nm] && ![string match {*__rs[0-9]*} $pat]} continue
     set m [[$i getMaster] getName]
     if {![string match "DLLx*" $m] && ![string match "DHLx*" $m]} continue
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
