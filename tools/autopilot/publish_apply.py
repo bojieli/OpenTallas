@@ -55,7 +55,7 @@ def gate_argv(C, cand_path, tree, event):
 # FABLE-FLOW-1400 (1): QC sat 3.2 h on 56 BIND-STALE rows because the candidate's kit_rtl.asbuilt named the N2BBR clock table while its bind was made
 # on N4DBQ.  apply now runs kit_topology.bind_matches (the wave's own bind preflight) on the candidate, on a host that holds the tree, BEFORE the switch.
 PROBE_CAND = r"""
-import json, os, sys
+import functools, json, os, sys
 from pathlib import Path
 a = json.loads(sys.argv[1])
 try:
@@ -65,8 +65,23 @@ try:
     import kit_topology as kt
     raw = json.loads(Path(a["plan"]).read_text())
     ab = a.get("asbuilt") or None
+    plan = a["plan"]
+    native_contract = kt.native_contract
+
+    @functools.cache
+    def candidate_contract():
+        return native_contract(raw, ab, plan)
+
+    def shared_contract(data, asbuilt=None, plan_path=None):
+        if data is raw and asbuilt == ab and plan_path == plan:
+            return candidate_contract()
+        return native_contract(data, asbuilt, plan_path)
+
+    # For this one sealed candidate, reuse its whole-plan fingerprint in the
+    # frozen checker. Per-type receipt and separate producer checks still run.
+    kt.native_contract = shared_contract
     types = [t for t in (raw.get("partition_types") or {}) if kt.has_topology(raw, t, ab)]
-    stale = [t for t in types if not kt.bind_matches(raw, t, a["bind_out"], ab, a["plan"])]
+    stale = [t for t in types if not kt.bind_matches(raw, t, a["bind_out"], ab, plan)]
     diff = {}
     if stale:
         old = json.loads((Path(a["bind_out"]) / "native_topology.json").read_text())

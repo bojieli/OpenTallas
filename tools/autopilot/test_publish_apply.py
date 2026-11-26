@@ -2,6 +2,7 @@
 import argparse
 import json
 import pytest
+import subprocess
 import sys
 import types
 from pathlib import Path
@@ -20,6 +21,36 @@ def coord(tmp_path, die_extra=None):
     d.update(die_extra or {})
     (c / "autopilot/kit_wave.json").write_text(json.dumps({"dies": {"qc": d}}))
     return c
+
+
+def test_bind_probe_reuses_candidate_contract_without_caching_producer(tmp_path):
+    tools = tmp_path / "tools" / "die_plan"
+    tools.mkdir(parents=True)
+    (tools / "kit_topology.py").write_text("""
+def native_contract(raw, asbuilt=None, plan_path=None):
+    print("contract", raw["name"])
+    return {"types": raw["partition_types"]}
+
+def has_topology(raw, tn, asbuilt=None):
+    return True
+
+def bind_matches(raw, tn, out, asbuilt=None, plan_path=None):
+    candidate = native_contract(raw, asbuilt, plan_path)
+    producer = native_contract({
+        "name": "producer", "partition_types": {"same": 1, "changed": 1}
+    }, asbuilt, plan_path + ".producer")
+    return candidate["types"][tn] == producer["types"][tn]
+""")
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"name": "candidate", "partition_types": {"same": 1, "changed": 2}}))
+    (tmp_path / "native_topology.json").write_text("{}")
+    args = dict(src=str(tmp_path), plan=str(plan), bind_out=str(tmp_path))
+    result = subprocess.run([sys.executable, "-I", "-c", PA.PROBE_CAND, json.dumps(args)],
+                            check=True, capture_output=True, text=True)
+    lines = result.stdout.splitlines()
+    assert lines.count("contract candidate") == 1
+    assert lines.count("contract producer") == 2
+    assert json.loads(lines[-1].removeprefix("AP_JSON ")) == {"checked": 2, "stale": ["changed"], "diff": {}}
 
 
 def test_types_from_log_matches_whole_plan_item_names():
