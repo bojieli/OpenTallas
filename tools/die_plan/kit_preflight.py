@@ -6,6 +6,7 @@ This is a static gate; RTL elaboration, netlist LEC/face/fanout, PG and routed
 corner checks remain mandatory later stages, and are not reported as passed here.
 """
 import math
+import os
 import argparse
 import bisect
 import functools
@@ -569,7 +570,7 @@ def hook_sources(kit, advisory=None):
     return errors
 
 
-def check(kit, plan_dir=None, contract=False):
+def check(kit, plan_dir=None, contract=False, *, plan=None):
     kit = Path(kit).resolve()
     issues, checks = [], {}
     def run(name, fn):
@@ -691,15 +692,24 @@ def check(kit, plan_dir=None, contract=False):
     # partition / tile kits too, not only core kits or --contract runs (HEAD runs preflight_args [] = no --contract).
     binding = contract or kit_contract.is_core_kit(kit)
     advisory = {}
-    for name, row in kit_contract.run_all(kit, plan_dir).items():
+    for name, row in kit_contract.run_all(kit, plan_dir, plan=plan).items():
         if name in kit_contract.TOOL_FAIL_CHECKS:
             checks[name] = row
             issues.extend(f'{name}: {error}' for error in row['errors'])
         else:
             advisory[name] = row
+    geometry = {name: advisory[name]['verdict'] for name in kit_contract.MACRO_GEOMETRY_CHECKS}
+    statuses = set(geometry.values())
+    if 'SKIP' in statuses:
+        geometry_verdict = 'SKIP'
+    elif 'FAIL' in statuses:
+        geometry_verdict = 'FINDINGS'
+    else:
+        geometry_verdict = 'PASS' if 'PASS' in statuses else 'NA'
     return dict(schema='opentallas.kit_preflight.v2', kit=str(kit), contract=list(kit_contract.CHECKS),
                 contract_binding=binding, contract_advisory=advisory,
-                verdict='FAIL' if issues else 'PASS', checks=checks, issues=issues,
+                macro_geometry=dict(verdict=geometry_verdict, checks=geometry),
+                verdict='FAIL' if issues else 'PASS', verdict_scope='blocking_checks', checks=checks, issues=issues,
                 deferred=['RTL elaboration/SELRANGE', 'synthesis face/fanout/port binding/LEC',
                           'placed and routed PG', 'TT setup / FF hold', 'routed LEC'])
 
@@ -711,12 +721,13 @@ def main(argv=None):
     ap.add_argument('--plan-dir', type=Path, help='plan dir resolving freeze.json pins_file (optional)')
     ap.add_argument('--no-emit', action='store_true', help='do not write <kit>/preflight.json')
     ap.add_argument('--contract', action='store_true', help='kit contract binding on any kit (default: core kits)')
-    ap.add_argument('--plan', type=Path, help='die plan json for the LAUNCH-SCOPE / FT-SITE-LEGAL lines (default $OT_LAUNCH_PLAN)')
+    ap.add_argument('--plan', type=Path, help='exact die plan JSON for macro geometry and launch checks')
     args = ap.parse_args(argv)
-    record = check(args.kit, args.plan_dir, args.contract)
+    # Keep an existing --plan-dir authoritative unless the caller names an exact --plan.
+    plan = args.plan or (os.environ.get('OT_LAUNCH_PLAN') if not args.plan_dir else None)
+    record = check(args.kit, args.plan_dir, args.contract, plan=plan)
     if not args.no_emit:
         # latest verdict beside freeze.json (timestamped --out receipts stay immutable)
-        import os
         import tempfile
         kd = Path(record['kit'])
         with tempfile.NamedTemporaryFile('w', dir=kd, prefix='.preflight.', delete=False) as handle:
@@ -727,6 +738,9 @@ def main(argv=None):
         with args.out.open('x') as handle:
             handle.write(json.dumps(record, indent=1)+'\n')
     print('KIT_PREFLIGHT', record['verdict'], 'issues', len(record['issues']))
+    geometry = record['macro_geometry']
+    print('KIT_MACRO_GEOMETRY', geometry['verdict'], '(advisory)',
+          ' '.join(f'{name}={status}' for name, status in geometry['checks'].items()))
     # KITDEF-PARITY (S81-OWN-SLICE 11-24, COORD, report-only r703): kit defines vs the bind's effective per-type set
     try:                                  # the kit's staged copy of this script has no kit_define_parity beside it
         import kit_define_parity
@@ -739,6 +753,8 @@ def main(argv=None):
     for name, row in sorted((record.get('contract_advisory') or {}).items()):
         if row.get('verdict') == 'FAIL':
             print('KIT_PREFLIGHT ADVISORY', name, (row.get('errors') or [''])[0][:200])
+        elif row.get('verdict') == 'SKIP':
+            print('KIT_PREFLIGHT SKIP', name, row['info']['reason'])
     # RELAY-ORIENT (S81-STAGE-SEAT 11-25, COORD; default on, OT_RELAY_ORIENT=0 off): relay / exit-relay seats oriented by their
     # outgoing hop in macro_place.tcl before macro placement (relay_orient.py); a kit without a seats json is SKIP
     try:
