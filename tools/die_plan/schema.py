@@ -532,6 +532,8 @@ SCHEMA = {
                     "landing_control_status_copy": {"type": "boolean"},
                     "landing_status_reg": {"type": "boolean"},
                     "landing_guard_reg": {"type": "boolean"},   # GUARD-REG-1 (implies landing_status_reg)
+                    "landing_guard_reg_buses": {"type": "array", "uniqueItems": True,
+                                                "items": {"type": "string", "minLength": 1}},
                     "landing_wen_local": {"type": "boolean"},   # WEN-LOCAL-1 (soft WREG rings; 0 cycles)
                     "landing_relay_start_copy": {"type": "boolean"},
                     # UNIFY-TOOLS ROLE-STRAP: origin and relay copies of one type, strap_ca_relay (count_align_bind)
