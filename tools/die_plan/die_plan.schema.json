@@ -10928,6 +10928,42 @@
      }
     }
    ]
+  },
+  "land_reach": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "margin_ps": {
+     "type": "number",
+     "maximum": 0
+    },
+    "target_ps": {
+     "type": "number",
+     "maximum": 200
+    },
+    "types": {
+     "type": "string"
+    },
+    "landings": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "sidecar": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   }
   }
  }
 }

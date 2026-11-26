@@ -4148,6 +4148,15 @@ SCHEMA["properties"]["cbc"] = {"oneOf": [{"type": "boolean"}, {
                    "depth_levels": {"type": "integer", "minimum": 4}, "tap_sinks": {"type": "integer", "minimum": 100},
                    "reset_leaf": {"type": "integer", "minimum": 1, "maximum": 48}, "note": {"type": "string"}}}]}
 
+# C-LAND-REACH 11-26 (land_reach.py; row_normalize runs it when enabled; default off): re-seat a hard clock-landing core + band within the
+# data-wire allowance of its port.  Absent = byte-identical plans and reports.
+SCHEMA["properties"]["land_reach"] = {
+    "type": "object", "additionalProperties": False,
+    "properties": {"enable": {"type": ["integer", "boolean"]}, "margin_ps": {"type": "number", "maximum": 0},
+                   "target_ps": {"type": "number", "maximum": 200}, "types": {"type": "string"},
+                   "landings": {"type": "array", "uniqueItems": True, "items": {"type": "string"}},
+                   "sidecar": {"type": "string"}, "note": {"type": "string"}}}
+
 # Exact sites for existing DLY lockup latches. The physical kit checks their
 # data connectivity, row legality and the exact launch and capture taps.
 _PT["dly_latch_sites"] = {
