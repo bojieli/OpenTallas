@@ -13136,3 +13136,4 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   Cause: stale tools in the R6 tree. Main allows 1 copy and passes the lane widths; with main tools, 0 types fail.
   Fix: the 21:00 cut refreshes reg_leaf_split, bound_r8_straps, r8, schema and bind_position_bank from main, and the cut is gated on GEN-PARSE = 0.
   L779/L780 are re-classed as tool skew; the owners have no plan delta to do.
+- 2026-11-25 19:53 PST DIED [abstract-exact] ot-run oth-ubuntu-1200259-1795665093 on civil-redfish: rc=1 after 147 s, ended 03:53:58, log /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc/reroute_he4/reroute.log, cmd: --crit --mem 64 --threads 24 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/abstract-exact/gdsdrc -- docker run --rm -v /srv/opentalla | class=TOOL-TRACEBACK cause=Error: reroute.tcl, 21 DRT-0073
