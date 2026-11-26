@@ -1131,3 +1131,4 @@
   K7 9 failed private kits: each gets CLOSE with a row, or a goal-place re-probe on R6 (intel1/epyc8).
   K8 97 DEFERRED + 41 DRAFT-NEEDED: owner and ETA rows being appended.
   K9 pcc_h_head_p view: repointing to the current signed view, sha check.
+- 2026-11-25 19:44 PST K5 (FABLE-FLOW-1920) ab2_on/off IsADirectoryError cause: run-item was given the directory ~/coord/autopilot/private_specs/KV-HOLD-STRUCT (spec_on.txt/spec_off.txt are 0 bytes, so the private-spec output capture was empty and the path collapsed to the lane dir). run-item needs the FILE: ~/coord/autopilot/private_specs/KV-HOLD-STRUCT/<item_id>/spec.json, e.g. .../qwen_kvsys_kv3_sys_SD_1125180427/spec.json (exists on epyc8 mirror; hub copy of the lane dir missing, so re-run private-spec on intel2 or rsync). Fix: pass that spec.json path to kit_wave.py run-item; check spec_on.txt is non-empty before launch. Wed Nov 25 19:44:28 PST 2026
