@@ -78,3 +78,59 @@ def test_declared_lef_malformed_or_unknown_contract_fails_closed(tmp_path,mutati
     if mutation=='unknown-format':lef.write_text('this is not LEF or JSON')
     f['pins_sha256']=hashlib.sha256(lef.read_bytes()).hexdigest();(tmp_path/'freeze.json').write_text(json.dumps(f))
     with pytest.raises(ValueError):K.pins_canonical(tmp_path)
+
+
+def test_macro_lef_pin_rectangles_respect_exact_named_boundaries(tmp_path):
+    macros = tmp_path / "macros"
+    macros.mkdir()
+    (macros / "child.lef").write_bytes(r"""MACRO child
+ PIN clk
+  PORT
+   LAYER M5 ;
+   RECT 0 1 1 2 ;
+  END
+ END clk
+ PIN child[0]
+  PORT
+   LAYER M4 ;
+   RECT 2 3 3 4 ;
+  END
+END child[0] # index must terminate the exact pin name
+ PIN unclosed[1]
+  PORT
+   LAYER M3 ;
+   RECT 9 9 10 10 ;
+  END
+ PIN \legacy.out
+  PORT
+   LAYER M2 ;
+   RECT 4 5 5 6 ;
+  END
+ END \legacy.out;
+ END unclosed[1]
+ PIN sig
+  PORT
+   LAYER M3 ;
+   RECT 6 7 7 8 ;
+  END
+ END sig.member
+ END sig
+ PIN VSS
+  USE GROUND ;
+  PORT
+   LAYER M7 ;
+   RECT 8 9 9 10 ;
+  END
+ END VSS
+END child
+MACRO child_aux
+ SIZE 20 BY 20 ;
+END child_aux""".replace("\n", "\r\n").encode())
+    assert K._lef_pins(tmp_path, {}) == {
+        "child": [
+            ("clk", "M5", 0, 1, 1, 2),
+            ("child[0]", "M4", 2, 3, 3, 4),
+            (r"\legacy.out", "M2", 4, 5, 5, 6),
+        ],
+        "child_aux": [],
+    }
