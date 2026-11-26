@@ -138,12 +138,47 @@ def pg_enabled(raw):
     return bool((isinstance(f, dict) and f.get("pg")) or os.environ.get("OT_STREET_PG") == "1")
 
 
+PILE_BIN_UM = 25.92            # coreless lane band: 3 x 8.64 (the HEAD SPN hotspot lane was x222-250, 28 um wide)
+
+
+def lane_band_worst(t, pg=True):
+    """Coreless types have no macro streets, so street_worst is blind to them (HEAD hd_spn: 3.11 measured lane, no verdict).
+    Same tuple as street_worst: the worst PILE_BIN_UM-wide x band, demand = the bits of every planned leg crossing one horizontal
+    cut inside it, capacity = band width x vertical tracks/um x USABLE x PG factor.  Only used with the PG flag (opt-in)."""
+    W, H = t.get("outline_um", (0, 0))
+    lanes = _lanes(t)
+    if not W or not H or not lanes:
+        return None
+    nb = max(1, int(W // PILE_BIN_UM) + 1)
+    tracks = TV * (SP.pg_factor("V") if pg else 1.0)
+    best = None
+    cuts = sorted({round(q[1] / 10.0) * 10.0 for _, pts, _ in lanes for q in pts if 0 < q[1] < H})
+    for c in cuts or [H / 2]:
+        dem, who = collections.Counter(), collections.defaultdict(collections.Counter)
+        for w, pts, nm in lanes:
+            for a, e in zip(pts, pts[1:]):
+                lo, hi = sorted((a[1], e[1]))
+                if not lo <= c < hi:
+                    continue
+                al = (c - a[1]) / (e[1] - a[1])
+                m = a[0] + al * (e[0] - a[0])
+                k = min(nb - 1, max(0, int(m // PILE_BIN_UM)))
+                dem[k] += w
+                who[k][nm] += w
+        for k, d in dem.items():
+            cap = PILE_BIN_UM * tracks * USABLE
+            r = d / cap
+            if best is None or r > best[0]:
+                best = (r, "V", round(c), [round(k * PILE_BIN_UM), round((k + 1) * PILE_BIN_UM)], d, round(cap), who[k].most_common(3))
+    return best
+
+
 def street_worst(t, pg=False):
     """(ratio, orient, cut_um, street, bits, cap, top lanes) of the worst street of type dict t, or None.
     pg=True: usable tracks per um are scaled by street_pg.pg_factor (PART_PG_BANDS exclusion), default off."""
     cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
     if not cores:
-        return None
+        return lane_band_worst(t, pg) if pg else None
     W, H = t["outline_um"]
     bx = [_box(c) for c in cores]
     lanes = _lanes(t)
