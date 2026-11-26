@@ -84,8 +84,10 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
                 taps = taps_fn(tn)
         except Exception as e:  # noqa: BLE001 the bind reports its own tree error
             errs += 1
+            # P-FALSE-GREEN (S81-GATE-LINT 11-26, col_h10_r0_p1 KeyError): a crashed check is an ERROR (FAIL line), never "not checked"
             if errs <= 3:
-                out.append(f"WARN {CHECK} {tn}: not checked ({type(e).__name__}: {str(e)[:120]})")
+                out.append(f"FAIL {CHECK} {tn}: TREE-ERROR ({type(e).__name__}: {str(e)[:120]}); the reset tree / tap table could not "
+                           f"be solved, so this type was NOT checked (a tool error, not a clean result)")
             continue
         bad = stale(r, relays, taps)
         if bad:
@@ -97,6 +99,6 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
                            f"--resets anchor from the TREE's tools/die_plan over this type")
     left = len(todo) - done
     if nbad or left or errs:
-        out.append(f"WARN {CHECK} summary: {done} of {len(todo)} referencing type(s) checked, {nbad} with stale names"
-                   + (f", {left} not checked (budget {budget:.0f} s)" if left else "") + (f", {errs} tree error(s)" if errs else ""))
+        out.append(f"WARN {CHECK} summary: {done - errs} of {len(todo)} referencing type(s) checked, {nbad} with stale names"
+                   + (f", {left} not checked (budget {budget:.0f} s)" if left else "") + (f", {errs} TREE ERROR(S) (FAIL)" if errs else ""))
     return out

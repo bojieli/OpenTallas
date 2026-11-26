@@ -6475,7 +6475,11 @@ def _write_provenance(a, step):
             return str(Path(p).resolve().relative_to(E.REPO.resolve()))
         except ValueError:
             return str(Path(p).resolve())
-    rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
+    try:                    # P-KIT-BIND-PLAN-MISMATCH: the plan content the bind was made from (kit_wave run-item refuses a spec of another plan)
+        plan_sha = hashlib.sha256(Path(a.plan).read_bytes()).hexdigest() if a.plan else None
+    except OSError:
+        plan_sha = None
+    rec.update(step=step, plan=rel(a.plan), plan_sha256=plan_sha, manifest=rel(getattr(a, "asbuilt", None)),
                external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
     rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
     Path(a.out).mkdir(parents=True, exist_ok=True)
@@ -7274,7 +7278,9 @@ def cmd_bind(a):
         import leaf_cs_depth as LCD
         _lcd_errs = []
         rep["leaf_cs_depth"] = LCD.bind_gate(raw, out, _lcd_errs)
-        B.errors.extend(probe_only_filter(_lcd_errs, getattr(B, "probe_only", None)))
+        _lcd_kept = probe_only_filter(_lcd_errs, getattr(B, "probe_only", None))
+        rep["leaf_cs_depth"] = LCD.probe_scope(rep["leaf_cs_depth"], _lcd_kept, getattr(B, "probe_only", None))     # P-FALSE-GREEN
+        B.errors.extend(_lcd_kept)
     # TOK-VERIFY-1 / COORD 11-10: signed landing phase class (WNEG=1 rings flip +3 -> +2 at zero phase).  ADVISORY
     # (targets, not gates): reported here and in landing_phase_sign.json, never a bind error.  Arrivals at the rings
     # (routed clock, TT + FF, OCV-derated) come from OT_LANDING_PHASE_ARRIVALS; without them every ring is UNMEASURED.

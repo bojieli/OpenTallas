@@ -144,11 +144,17 @@ def _alarm(_sig, _frm):
     raise _Timeout()
 
 
+FAIL_KEEP = ("FAIL ADV-RESET-NAME ",)
+
+
 def _norm(name, lines):
     out = []
     for x in lines or []:
         x = str(x)
         if not x.strip() or x.startswith("#"):          # module debug / coverage lines
+            continue
+        if x.startswith(FAIL_KEEP):                     # P-FALSE-GREEN: a crashed estimator is an ERROR, kept as a FAIL line
+            out.append(x)
             continue
         if not x.startswith("WARN "):
             x = f"WARN ADV-{name} {x}"

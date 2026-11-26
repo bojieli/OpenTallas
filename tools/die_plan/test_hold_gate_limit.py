@@ -85,8 +85,26 @@ def test_default_screen_is_info(tmp_path, wns, n, win):
     lim = -100 + min(0, -(win or 0))
     if wns < lim or (n > 2000 and (win or 0) <= 20):
         assert f"OT_HOLD_GATE INFO FF wns_ps {wns:.2f} endpoints {n} " in r.stdout
-    else:
-        assert f"OT_HOLD_GATE PASS FF wns_ps {wns:.2f} endpoints {n} " in r.stdout
+    else:       # P-FALSE-GREEN: inside the advisory limit but still negative = INFO (never PASS)
+        assert f"OT_HOLD_GATE INFO FF wns_ps {wns:.2f} endpoints {n} " in r.stdout
+        assert "OT_HOLD_GATE PASS" not in r.stdout
+
+
+def test_negative_hold_inside_advisory_limit_is_never_pass(tmp_path):
+    """S81 t23 arst_n: wns -42.34 inside the -210 advisory limit printed PASS; the blocking limit is the academic profile's 0 ps"""
+    r = _run(tmp_path, -42.34, n=6, in_min=-40, win=10, stop=False, period=833)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_HOLD_GATE INFO FF wns_ps -42.34 endpoints 6 " in r.stdout and "OT_HOLD_GATE PASS" not in r.stdout
+    assert "blocking hold limit 0.0 ps" in r.stdout
+    for wns in (0.0, 4.39):
+        r = _run(tmp_path, wns, n=0, in_min=-40, win=10, stop=False, period=833)
+        assert f"OT_HOLD_GATE PASS FF wns_ps {wns:.2f} endpoints 0 " in r.stdout, r.stdout + r.stderr
+
+
+def test_blocking_hold_limit_is_the_academic_profile():
+    import signoff_profile
+    assert signoff_profile.HOLD_MIN_PS == 0.0
+    assert "set hg_block 0.0" in (HERE / "hold_gate.tcl").read_text()
 
 
 # COORD 11-01 05:1x / OWNER 12.28b: the one default stop is OT_HOLD_STOP_PS = -200 (COORD 11-05 07:36), counted from the kit contract like

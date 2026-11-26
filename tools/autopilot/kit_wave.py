@@ -4862,6 +4862,21 @@ def geom_verdict(line, waived=None, standing=True):
     return "FAIL", failing, ""
 
 
+def geom_json_verdict(line):
+    """P-FALSE-GREEN (S81-GATE-LINT 11-26): the raw AUTO-GEOM verdict of the line (= geom/auto_geom.json), PASS | FAIL | None.  geom_gate /
+    geom_verdict map a FAIL to PASS-COND (advisory, a granted exception) so the kit goes on to sign-off; that mapping must never be shown
+    as the geometry result: every record / status carries this raw verdict next to the mapped one."""
+    m = re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or "")
+    return m.group(1) if m else None
+
+
+def geom_display(mapped, raw):
+    """one status word: 'FAIL' when the raw json verdict is FAIL (waived / advisory pass named 'FAIL (waived: PASS-COND)'), else the verdict"""
+    if raw == "FAIL":
+        return "FAIL" if mapped not in ("PASS", "PASS-COND") else f"FAIL (waived: {mapped})"
+    return mapped
+
+
 GEOM_ADVISORY_REF = "OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory)"
 
 
@@ -10061,6 +10076,80 @@ def asbuilt_clock_landing(asbuilt, src):
     return None
 
 
+def bind_plan_probe(bind_out, src, plan):
+    """P-KIT-BIND-PLAN-MISMATCH (S81-GATE-LINT 11-26; self-contained: also run on the gen host over ssh) -> {"bind_sha", "spec_sha", "how"}.
+    bind_sha = provenance_bind.json provenance.plan_sha256 (binds since this fix), else the sha of the plan file its provenance.plan names when
+    that resolves under src to a file other than the spec plan; None = cannot tell.  spec_sha = sha256 of the spec plan."""
+    import hashlib
+    import json
+    import os
+    from pathlib import Path
+
+    def sha(p):
+        try:
+            return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        except OSError:
+            return None
+
+    def under(p):
+        if not p:
+            return None
+        c = Path(p) if os.path.isabs(p) else (Path(src) / p if src else None)
+        return str(c) if c is not None and c.is_file() else None
+    spec_plan = under(plan)
+    out = {"bind_sha": None, "spec_sha": sha(spec_plan) if spec_plan else None, "how": "no provenance"}
+    try:
+        pv = json.loads((Path(bind_out) / "provenance_bind.json").read_text()).get("provenance") or {}
+    except (OSError, ValueError, AttributeError):
+        return out
+    if pv.get("plan_sha256"):
+        out.update(bind_sha=str(pv["plan_sha256"]), how="provenance plan_sha256")
+        return out
+    bp = under(pv.get("plan"))
+    if bp and spec_plan and os.path.realpath(bp) != os.path.realpath(spec_plan):
+        out.update(bind_sha=sha(bp), how=f"provenance plan {pv.get('plan')} under src")
+    else:
+        out["how"] = "provenance plan_sha256 absent and its plan path is not a distinct file under src"
+    return out
+
+
+BIND_PLAN_REMOTE = None        # tests: loader(host, hub, bind_out, src, plan) -> probe dict
+
+
+def bind_plan_refusal(sp, run=subprocess.run):
+    """P-KIT-BIND-PLAN-MISMATCH: the reason run-item refuses a spec whose kit_rtl.bind_out was bound from another plan than sp['plan'], else None.
+    COL P2 fb31655c ran with the base bind of plan 1f8fcdd9c4 (308 relays vs 307 on P2 geometry; PRE GENDRY-KITRTL downgraded to WARN).  FAIL,
+    never a WARN; an unreadable bind / unknown sha is not a refusal (nothing to compare)."""
+    kr = sp.get("kit_rtl") or {}
+    bind_out, plan = kr.get("bind_out"), sp.get("plan")
+    if not bind_out or not plan or not str(bind_out).startswith("/"):
+        return None
+    src, host, hub = sp.get("src") or "", sp.get("gen_host"), sp.get("hub") or PRIVATE_HUB
+    if BIND_PLAN_REMOTE is not None:
+        got = BIND_PLAN_REMOTE(host, hub, str(bind_out), src, str(plan))
+    elif (Path(bind_out) / "provenance_bind.json").is_file():
+        got = bind_plan_probe(str(bind_out), src, str(plan))
+    else:
+        import inspect
+        args = json.dumps([str(bind_out), src, str(plan)])
+        py = ("import json, sys\n" + inspect.getsource(bind_plan_probe)
+              + "\nprint('KW_BIND_PLAN ' + json.dumps(bind_plan_probe(*json.loads(sys.argv[1]))))\n")
+        argv = _ssh(host, hub) + ["python3 -I -c " + shlex.quote(py) + " " + shlex.quote(args)]
+        if not _ssh(host, hub):
+            argv = [sys.executable, "-I", "-c", py, args]
+        try:
+            p = run(argv, capture_output=True, text=True, timeout=120)
+            line = [x for x in (p.stdout or "").splitlines() if x.startswith("KW_BIND_PLAN ")]
+            got = json.loads(line[-1][len("KW_BIND_PLAN "):]) if line else {}
+        except (OSError, ValueError, subprocess.SubprocessError):
+            got = {}
+    b, s = str((got or {}).get("bind_sha") or ""), str((got or {}).get("spec_sha") or "")
+    if b and s and b != s:
+        return (f"BIND-PLAN-MISMATCH: kit_rtl.bind_out {bind_out} was bound from plan sha {b[:12]} ({got.get('how')}) but the spec plan {plan} is "
+                f"{s[:12]}; bind that plan strictly and use it as bind_out (a kit built on another plan's bind carries its reset tree / stations)")
+    return None
+
+
 BIND_LANDING_REMOTE = None     # tests: loader(host, hub, bind_out, src) -> {"asbuilt", "clock_landing"} | {} (unreadable)
 
 
@@ -11140,6 +11229,12 @@ def _run_item(spec_path, resume_reviewed=False):
         _t = Path(str(spec_path) + ".bl.tmp")
         _t.write_bytes(spec_bytes)
         os.replace(_t, spec_path)
+    _bpm = None if resume_reviewed else bind_plan_refusal(sp)
+    if _bpm:                                             # P-KIT-BIND-PLAN-MISMATCH: FAIL before anything is built, never a WARN
+        print(f"KW_STAGE bind_plan {now_s()} :: REFUSED {_bpm}", flush=True)
+        (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_plan", "verdict": "FAIL", "cls": "BIND-PLAN", "die": sp.get("die"),
+                                                                    "item": sp.get("item"), "tail": _bpm}, indent=1))
+        return 1
     spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
     goal = RUN_ITEM_GOAL
     if goal and not sp.get("private"):
@@ -11512,7 +11607,8 @@ def _run_item(spec_path, resume_reviewed=False):
             res["control_reach"] = list(CONTROL_REACH)
         if v not in ("PASS", "PASS-COND"):
             return fail("geom", line, f"{kh}:{gd}/auto_geom.json")
-        res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{kh}:{gd}/auto_geom.json")
+        res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{kh}:{gd}/auto_geom.json",
+                   geom_json_verdict=geom_json_verdict(line), geom_display=geom_display(v, geom_json_verdict(line)))
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 0
 
@@ -17662,7 +17758,8 @@ def _collect_body(AP, cfg, st, notices):
                 if res.get(k):
                     rec[k] = res[k]
             rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"),
-                       geom_tag=res.get("geom_tag", ""), geom_verdict=res.get("geom") or "PASS")
+                       geom_tag=res.get("geom_tag", ""), geom_verdict=res.get("geom") or "PASS",
+                       geom_json_verdict=res.get("geom_json_verdict"), geom_display=res.get("geom_display"))
             clear_fail_sig(st, rec)
             enqueue_pass(AP, cfg, st, rec, notices)
             continue

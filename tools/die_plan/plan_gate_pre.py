@@ -260,7 +260,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE", "VIEWOBS")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -3088,6 +3088,9 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _pt.mark("SITE-OFF-OUTLINE")
     if "SITE-OFF-OUTLINE" not in skip:                   # COORD K10 11-25: a site / port pin / clock tap off the outline is a FAIL, never a WARN
         findings += site_off_outline_findings(plan)
+    _pt.mark("VIEWOBS")
+    if "VIEWOBS" not in skip:                            # C-VIEW-NO-OBS 11-26: a hard-macro LEF with no OBS / no PG pins is a FAIL
+        findings += view_obs_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline, scope=_SCOPE)
@@ -3538,6 +3541,17 @@ def inoutline_findings(plan, block=None):
     return out
 
 
+def view_obs_findings(plan):
+    """C-VIEW-NO-OBS (S81-GATE-LINT 11-26): view_lint.findings -- FAIL VIEW-NOOBS per hard-core LEF without OBS or without PG pins.
+    ot_s81dv_norm_finish (576 M5 pins, no OBS, no PG) reached place with 515 floating pins.  A crashed check is a FAIL, never a pass."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import view_lint as VL
+        return VL.findings(_load(plan), str(plan), repo=os.environ.get("OT_REPO") or None)
+    except Exception as e:  # noqa: BLE001
+        return [f"FAIL VIEW-NOOBS not checked: {type(e).__name__}: {str(e)[:160]}"]
+
+
 def site_off_outline_findings(plan):
     """COORD K10 11-25 (FABLE-RC-KV SITE-OFF-OUTLINE): BLOCKING, no opt-in.  FAIL ADV-SITE-OFF-OUTLINE per type with a station site,
     relay / CLAND seat (collector local source, reset tap), port pin or clock tap outside its outline (adv_site_in_macro.off_outline_findings).
@@ -3586,7 +3600,7 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None):
             lines = PA.run(raw, plan, tree, checks=checks, asbuilt=asbuilt, baseline=baseline)
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
-    return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
+    return [x if x.startswith("WARN ") or x.startswith(PA.FAIL_KEEP) else "WARN " + x for x in lines]
 
 
 

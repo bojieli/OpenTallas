@@ -41,7 +41,10 @@ def test_tree_error_is_not_checked_not_raised():
     def boom(tn):
         raise ValueError("no tree")
     out = A.findings(_raw(), "/x/plan.json", tree_fn=boom, taps_fn=lambda tn: set())
-    assert any("not checked (ValueError" in x for x in out)
+    assert any(x.startswith("FAIL ADV-RESET-NAME kv3_hg: TREE-ERROR (ValueError") for x in out)     # P-FALSE-GREEN: error, not "not checked"
+    assert not any("not checked (ValueError" in x for x in out)
+    kept = PA._norm("RESET-NAME", out)
+    assert any(x.startswith("FAIL ADV-RESET-NAME ") for x in kept)                                 # the advisory wrapper keeps the FAIL
 
 
 def test_registered_as_advisory():
