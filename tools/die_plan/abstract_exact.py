@@ -176,7 +176,8 @@ def _grow(rs, g, Wn, Hn):
 
 
 def pin_eol_findings(path, layers=STALE_LAYERS):
-    """signal pin shapes with same-layer OBS touching them or inside EOL_CLEAR beyond a short (line-end) edge
+    """signal pin shapes whose own-wire OBS stub ends less than EOL_CLEAR past the pin line end, or with a separate OBS rect
+    inside EOL_CLEAR beyond a line end (the DRT Lef58EolKeepOut class; a long own wire past the pin is fine)
     -> {layer: {"pins": n pin names, "shapes": n, "example": [pin, rect nm, obs rect nm]}}"""
     lines, _, obs, _, (W, H) = K._parse(Path(path).read_text())
     big = W * H * 1e6 / 2           # a blanket rect (> half the macro) is the blanket form, not a stub
@@ -210,20 +211,29 @@ def pin_eol_findings(path, layers=STALE_LAYERS):
             zones += [(r[0], r[1] - e, r[2], r[1]), (r[0], r[3], r[2], r[3] + e)]
         ix, cell = idx[L]
         rs = obs.get(L, [])
-        hit = None
-        for k, z in enumerate(zones):
-            cand = set()
+        cand = set()
+        for z in zones:
             for bx in range(z[0] // cell, z[2] // cell + 1):
                 for by in range(z[1] // cell, z[3] // cell + 1):
                     cand.update(ix.get((bx, by), ()))
-            for i in cand:
-                q = rs[i]
-                if (q[0] <= z[2] and q[2] >= z[0] and q[1] <= z[3] and q[3] >= z[1]) if k == 0 else \
-                        (q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1]):   # touching the pin / inside the keep-out
+        a0, a1 = (0, 2) if horiz else (1, 3)          # long axis
+        n0, n1 = (1, 3) if horiz else (0, 2)          # narrow axis
+        hit, ext = None, {0: 0, 1: 0}
+        for i in cand:
+            q = rs[i]
+            touch = q[0] <= r[2] and q[2] >= r[0] and q[1] <= r[3] and q[3] >= r[1]
+            if touch:
+                if q[n0] < r[n1] and q[n1] > r[n0]:   # own wire continuing along the pin's track
+                    ext[0] = max(ext[0], r[a0] - q[a0])
+                    ext[1] = max(ext[1], q[a1] - r[a1])
+                continue
+            for z in zones[1:]:                       # foreign / separate OBS inside the line-end keep-out
+                if q[0] < z[2] and q[2] > z[0] and q[1] < z[3] and q[3] > z[1]:
                     hit = q
-                    break
-            if hit:
-                break
+        # an own-wire OBS stub that ends less than the keep-out past the pin end (col_h9_r2: pin to 0.084, OBS to 0.131)
+        for end in (0, 1):
+            if 0 < ext[end] < e and hit is None:
+                hit = ["stub", end, ext[end]]
         if hit:
             d = out.setdefault(L, {"pins": set(), "shapes": 0, "example": [pin, list(r), list(hit)]})
             d["pins"].add(pin)
