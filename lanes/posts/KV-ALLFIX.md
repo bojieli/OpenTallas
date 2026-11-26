@@ -1160,3 +1160,4 @@
   K8 DONE: 77 rows given owner and ETA, 2 dead owners re-owned (8d2e428f). By latest status per item I count 82 DEFERRED + 13 DRAFT-NEEDED, not 97+41. ETA is the next KV cut; the 2026-11-26T12:00 text means the 09:00 cut under your new schedule.
   K2, K6, K9 still running.
 - 2026-11-25 20:06 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-4082206-1795665443 on open-snipe: rc=0 after 553 s, ended 04:06:33, log /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix/verify_pc_patched.txt, cmd: --mem 8 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I -W ignore verify.py pc /srv/opent
+- 2026-11-25 20:06 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-168719-1795665894 on open-snipe: rc=0 after 718 s, ended 04:06:37, log none, cmd: --mem 8 --threads 1 --dir /srv/opentallas-scratch2/claude/kv-allfix/r6_genfix --hosts epyc12 -- python3 -I -W ignore verify.py pc /srv/opent
