@@ -1209,6 +1209,22 @@ def _cam(obj, tn):
     return dict(inputs=tuple(m.get("inputs", ())), outputs=tuple(m.get("outputs", ())))
 
 
+def drop_undriven_local_sources(sources, logic, extra=()):
+    """C-LANDING-STATUS-UNDRIVEN: split collector local sources into (driven, stale).  A source is driven when the emitted
+    type declares its status wire (`wire landing_ready_<b>` in the logic, or an `output wire` port): the ring of every
+    landed input declares it.  A source whose bus is not a landed input of the type (compose sidecar older than the plan
+    prune) declares nothing, so reading it would leave an undriven wire in the collector."""
+    text = "\n".join(list(logic) + list(extra))
+    keep, stale = [], []
+    for src in sources:
+        r = src.get("ready")
+        if r and re.search(r"\bwire\b[^;\n]*\b" + re.escape(r) + r"\b", text) is None:
+            stale.append(src.get("name"))
+        else:
+            keep.append(src)
+    return keep, stale
+
+
 class Landings:
     def __init__(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None, collect=False):
         """BIND-ALL-ERRORS 11-24: _init; collect=True (strict / --all-gaps bind) lists every per-port / per-partition /
@@ -2600,7 +2616,12 @@ class Landings:
             import landing_tie_children as LTC
             lc = self.types[key].get("clock", {}).get("landing_contract", {})
             use_ports = LTC.seam_use_ports(lc.get("tieable_children"))
-            sources=list(collector_info["local_sources"])
+            sources, stale_sources = drop_undriven_local_sources(list(collector_info["local_sources"]), logic, extra)
+            if stale_sources:
+                # C-LANDING-STATUS-UNDRIVEN 11-26: a stale compose-sidecar collector source (bus pruned from the type) has no
+                # landed ring here, so its landing_ready_/fault_ wires would be used and never driven (gen_lint rtl_check FAIL)
+                self.reset_placements.setdefault(tn, {})["collector_stale_sources"] = stale_sources
+                print(f"CLAND-COLLECTOR-STALE {tn}: dropped {len(stale_sources)} sidecar local source(s) without a landed ring: {stale_sources}", flush=True)
             monitor_reset_copies = []
             for ch in collector_info["children"]:
                 i=ch["index"]
