@@ -213,7 +213,10 @@ def record_clock_period_ps(rec):
         periods = c["periods"]
         generated = c.get("generated_clocks")
         generated = set(generated) if isinstance(generated, list) else set()
-        have_primary = any(name not in generated and (_num(v) or 0) > 0 for name, v in periods.items())
+        virtual = c.get("vclks")
+        virtual = set(virtual) if isinstance(virtual, list) else set()
+        peripheral = generated | virtual
+        have_primary = any(name not in peripheral and (_num(v) or 0) > 0 for name, v in periods.items())
         root = _num(periods.get(proof.get("root")))
         bound = declared is not None and root is not None and math.isclose(root, declared, rel_tol=0, abs_tol=1e-3)
         for name, value in periods.items():

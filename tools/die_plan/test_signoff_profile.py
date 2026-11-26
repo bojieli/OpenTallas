@@ -284,3 +284,6 @@ def test_native_generated_clock_cannot_replace_the_measured_primary():
     assert SP.judge(row)["verdict"] == "NOT SIGNED"
     row["corners"]["ff"]["periods"].pop("clk")
     assert SP.judge(row)["verdict"] == "NOT SIGNED"
+    row["corners"]["ff"]["periods"]["vclk"] = 833
+    row["corners"]["ff"]["vclks"] = ["vclk"]
+    assert SP.judge(row)["verdict"] == "NOT SIGNED"
