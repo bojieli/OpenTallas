@@ -1,0 +1,1 @@
+- 2026-11-26 03:22 PST DONE [mq-gate] ot-run oth-ubuntu-2199681-1795691996 on tolerant-swine: rc=0 after 139 s, ended 03:22:10, log none, cmd: --mem 16 --threads 12 --disk 10 --hosts epyc7 --no-spill --dir /srv/opentallas-scratch2/claude/mq-gate -- /home/ubuntu/.local/bin/ot-gate-re
