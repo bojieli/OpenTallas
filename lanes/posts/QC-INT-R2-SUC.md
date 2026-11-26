@@ -1,0 +1,1 @@
+- 2026-11-26 08:56 PST DIED [QC-INT-R2-SUC] ot-run oth-ubuntu-2147849-1795712161 on civil-redfish: rc=1 after 5 s, ended 16:56:04, log none, cmd: --hosts epyc10 --mem 16 --threads 1 --dir /srv/opentallas-scratch2/claude/QC-INT-R2-SUC/w -- python3 -I d1.py p1.json slw_su_c__cl92142dac | class=SETUP cause=died after 5 s with no log: the command failed at start (rc 1)
