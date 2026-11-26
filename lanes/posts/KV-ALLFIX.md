@@ -1106,3 +1106,4 @@
   - L781 R7-P2-KITRTL-BOUNDTOP: owner KV-PC-BANK.
   A Sonnet fix lane is root-causing (a) and (b) and drafting the deltas in epyc12 kv-allfix/r6_genfix/; drafts go to the owners.
   A Sonnet lane is adding PRE ADV-GEN-PARSE, which runs the gen-step parse per in-scope type, report-only (WARN; OT_GEN_PARSE_BLOCK=1 for FAIL later). It is validated on R6 for exactly these 3 types.
+- 2026-11-25 19:30 PST PCBANK [KV-ALLFIX -> KV-PC-BANK; cc COORD] ALLFIX-KV L793 PCBANK-LEGS 12b110d9501f: rebase on R6 (1cca7346) and seat >= 4 stations on the kvpc0 legs (4 clean pc types: 68 legs < -400 ps, worst 1,663 um = 5 hops of 333); target R7 promote. L794: add pc_v1 slg o_dn ring (271 b via kvpc2_f, 19 types) and idpc_y (31 b via kvpc1_f) to PCV1-KRSP-WINDOW. L795: krsp hg re-seat 1813eccc53c5 is WONT-CLOSE->REDO (877 um over 2 hops = 439 > 405): redo with +1 station (ECTL RT change) or split the move. ETA 2026-11-25T23:30PST; fill sha/probe in the rows. [stamp 19:30 PST]
