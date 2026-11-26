@@ -108,3 +108,17 @@ def test_group_that_cannot_fit_is_kept():
 def test_schema_accepts_flag():
     import schema
     assert "relay_spread" in schema.SCHEMA["properties"]
+
+
+def test_row_mode_is_always_on_and_drops_the_flag(tmp_path):
+    plan = _plan({"enable": 0})
+    inp = tmp_path / "in.json"
+    inp.write_text(json.dumps(plan))
+    assert S.main(["--row", str(inp), str(tmp_path / "o.json"), str(tmp_path / "r.json"), "--types", "bk_t"]) == 0
+    new = json.loads((tmp_path / "o.json").read_text())
+    assert "relay_spread" not in new and A.relay_seats(new["partition_types"]["bk_t"])[1] == []
+    assert new["partition_types"]["other"] == plan["partition_types"]["other"]
+    rep = json.loads((tmp_path / "r.json").read_text())["types"]["bk_t"]
+    assert rep["keys_moved"] > 0 and rep["stack_points_after"] == 0
+    assert S.main(["--row", str(inp), str(tmp_path / "o2.json"), str(tmp_path / "r2.json"), "--types", "nope"]) == 0
+    assert json.loads((tmp_path / "o2.json").read_text())["partition_types"] == plan["partition_types"]

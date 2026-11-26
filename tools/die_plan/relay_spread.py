@@ -25,6 +25,7 @@ Leg guard: a leg to a fixed endpoint grows by at most the displacement of the se
 (reach 405 - the type's longest planned hop: relay_depth rows path_um / (D + 1), else 380 = type_relay_sites --reach) and at
 0.3 x clock.tap_radius_um (default 200); a type with no margin is kept whole.
 
+  relay_spread.py --row IN OUT REPORT [--types T ...]     row_gate.py script row (always on; the output plan has no relay_spread key)
   relay_spread.py PLAN OUT_DIR [--types T ...] [--enable] [--stack-min 5] [--max-um 25] [--halo 6] [--out-plan PLAN_OUT]
 OUT_DIR/<type>/relay_spread_sites.json   changed relay_sites keys (the row, merged like pipeseat_sites.json)
 OUT_DIR/report.json                      per type: groups, keys moved, kept groups + reason, max displacement, stack count before / after
@@ -196,7 +197,36 @@ def spread_plan(plan, cfg):
     return out, reports
 
 
+def row_main(argv):
+    """row_gate.py script row: relay_spread.py --row IN OUT REPORT [--types T ...] [--stack-min N] [--max-um U]: always on (the row IS the
+    intent), writes the plan without a relay_spread key (a tool tree without the schema entry still binds it)."""
+    ap = argparse.ArgumentParser()
+    ap.add_argument("inp")
+    ap.add_argument("out")
+    ap.add_argument("report")
+    ap.add_argument("--types", nargs="*")
+    ap.add_argument("--stack-min", type=int)
+    ap.add_argument("--max-um", type=float)
+    A = ap.parse_args(argv)
+    plan = json.loads(Path(A.inp).read_text())
+    cfg = flag_cfg(plan, True, stack_min=A.stack_min, max_um=A.max_um)
+    plan.pop(FLAG, None)
+    only = set(A.types) if A.types else None
+    src = plan["partition_types"]
+    new, reports = spread_plan({**plan, "partition_types": {k: v for k, v in src.items() if only is None or k in only}}, cfg)
+    for tn, t in new["partition_types"].items():
+        src[tn] = t
+    for rep in reports.values():
+        rep.pop("_changed", None)
+    Path(A.out).write_text(json.dumps(plan, separators=(",", ":")) + "\n")
+    Path(A.report).write_text(json.dumps({"config": cfg, "types": reports}, indent=1) + "\n")
+    print(f"relay_spread row: {sum(r['keys_moved'] for r in reports.values())} keys moved in {sum(1 for r in reports.values() if r['keys_moved'])} types")
+    return 0
+
+
 def main(argv=None):
+    if (argv if argv is not None else sys.argv[1:])[:1] == ["--row"]:
+        return row_main((argv if argv is not None else sys.argv[1:])[1:])
     ap = argparse.ArgumentParser()
     ap.add_argument("plan")
     ap.add_argument("out_dir")
