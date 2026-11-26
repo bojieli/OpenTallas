@@ -1405,12 +1405,41 @@ def _xp_key(P, tn, reach):
             None if reach is None else float(reach), cap, tn)
 
 
+def _with_export_seats(P, tn, T):
+    """EXPORT-SEAT-1125 (HEAD-SERDES-REFLOOR, R6 START0): opt-in type.reset.export_seats_um = {raw export port: [x, y]}.  The private raw export
+    flop (export_q of ot_dp_head_raw_export_pair) samples the SAME D as its relay (zero added cycles) but is otherwise placed at the relay
+    site, so its pin leg is the whole distance from the tree site to the port.  A seat re-places only export_q near the port; the relay q
+    flop, its net, xy and depth are untouched.  The D leg (relay D source -> seat) must stay within the type relay reach."""
+    seats = (P.types[tn].get("reset") or {}).get("export_seats_um")
+    if not seats:
+        return T
+    rows = {r.get("port"): r for r in P.types[tn].get("reset_start_raw_exports") or []}
+    byname = {r["name"]: r for r in T.get("relays", [])}
+    xy = {r["q"]: r["xy"] for r in T.get("relays", [])}
+    reach = float(relay_um(P, tn))
+    out = {}
+    for port, pt in sorted(seats.items()):
+        row = rows.get(port)
+        if row is None or row.get("existing_port"):
+            raise ResetError(f"type {tn}: reset.export_seats_um names {port!r}, not a declared private raw start export")
+        r = byname.get(row["instance"])
+        if r is None:
+            raise ResetError(f"type {tn}: export seat {port}: relay {row['instance']} is not in the reset tree")
+        src = xy.get(r["d"], r["xy"])
+        leg = abs(src[0] - pt[0]) + abs(src[1] - pt[1])
+        if leg > reach + 1e-6:
+            raise ResetError(f"type {tn}: export seat {port} is {leg:.1f} um from its D source, over the relay reach {reach:g}")
+        out[r["name"]] = [float(pt[0]), float(pt[1]), port]
+    T["export_seats"] = out
+    return T
+
+
 def for_type(P, tn, reach=None):
     """the reset tree of a plan type (see for_type_uncached), from the process-wide RESET-TREE-CACHE-1124 when it holds it"""
     import copy
     key = _xp_key(P, tn, reach)
     if key is None:
-        return for_type_uncached(P, tn, reach)
+        return _with_export_seats(P, tn, for_type_uncached(P, tn, reach))
     XP_READ.add(key)
     hit = _XP_TREES.get(key)
     if hit is None:
@@ -1424,7 +1453,7 @@ def for_type(P, tn, reach=None):
         XP_STATS["hit"] += 1
     if hit[0] == "err":
         raise copy.copy(hit[1])
-    return copy.deepcopy(hit[1])
+    return _with_export_seats(P, tn, copy.deepcopy(hit[1]))
 
 
 def pool_size(n_todo, env=None):
@@ -3770,6 +3799,10 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
     for r in (native_nodes if native_nodes is not None else rel):
         place = "rtr_place_opt" if r.get("optional") else "rtr_place"
         t.append(f"{place} {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+        seat = (T.get("export_seats") or {}).get(r["name"])
+        if seat and native_nodes is None:
+            # EXPORT-SEAT-1125: only the export_q flop of the raw pair moves to its seat near the port (same D, same cycle)
+            t.append(f"rtr_place exp:{seat[2]} {{*{r['name']}[./]export_q*}} {seat[0]:.3f} {seat[1]:.3f} rexp:{seat[2]}")
         if native_nodes is None and r["q"] in oq:
             # the out relay's tap-net copy (rtl_lines): placed beside it when synthesis kept it (it has loads)
             t.append(f"rtr_place_opt {r['q']}:copy {{*{r['name']}_t[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} "
