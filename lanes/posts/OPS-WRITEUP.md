@@ -66,3 +66,4 @@
 - 2026-11-26 12:08 PST DONE 12:08 hourly: 608 any / 482 current (+0 / -4 vs 11:01). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
 - 2026-11-26 13:09 PST DONE 13:09 hourly: 608 any / 482 current (+0 / +0 vs 12:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
 - 2026-11-26 14:09 PST DONE 14:09 hourly: 608 any / 482 current (+0 / +0 vs 13:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
+- 2026-11-26 15:09 PST DONE 15:08 hourly: 604 any / 482 current (-4 / +0 vs 14:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
