@@ -12,6 +12,7 @@ A BAD or missing receipt never admits a kit. Placement has its own review.
 
 import argparse
 import fcntl
+import fnmatch
 import hashlib
 import json
 import os
@@ -27,6 +28,16 @@ DIES = frozenset(("s81", "s81_head", "qwen_compute", "qwen_kvsys"))
 SHA = re.compile(r"[0-9a-f]{64}\Z")
 HOST = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_.-]*\Z")
 PNG = b"\x89PNG\r\n\x1a\n"
+
+
+def enabled(policy, die, item, kind):
+    if die not in DIES or kind != "type":
+        return False
+    if policy is True:
+        return True
+    return isinstance(policy, list) and any(
+        isinstance(pattern, str) and fnmatch.fnmatchcase(item, pattern) for pattern in policy
+    )
 
 
 def applies(spec):
@@ -66,14 +77,15 @@ def file_sha(path, host=None, image=False):
     return value[0]
 
 
-def request(spec, plan_sha="", producer=None):
+def request(spec, plan_sha="", producer=None, overlay_sha=None):
     """Keep attempt directories, placement hosts, and route-only options out of the key."""
     plan = spec["plan"]
     plan_sha = plan_sha or file_sha(plan, producer)
     overlay = spec.get("type_overlay")
-    overlay_sha = file_sha(overlay, producer) if overlay else ""
-    if not SHA.fullmatch(plan_sha):
-        raise ValueError("invalid plan digest")
+    if overlay_sha is None:
+        overlay_sha = file_sha(overlay, producer) if overlay else ""
+    if not SHA.fullmatch(plan_sha) or (overlay and not SHA.fullmatch(overlay_sha)):
+        raise ValueError("invalid plan or overlay digest")
     if overlay_sha and spec.get("type_overlay_sha") and overlay_sha != spec["type_overlay_sha"]:
         raise ValueError("type overlay bytes differ from spec")
     source = str(spec.get("src") or "").rstrip("/")
@@ -125,7 +137,12 @@ def read_ledger(hub):
     else:
         raise ValueError("invalid coordination hub")
     result = subprocess.run(command, capture_output=True, text=True, timeout=45)
-    return result.stdout if result.returncode == 0 else ""
+    if result.returncode == 0:
+        return result.stdout
+    if result.returncode == 128 and (f"path '{LEDGER}' does not exist in 'HEAD'" in result.stderr
+                                     or f"path '{LEDGER}' exists on disk, but not in 'HEAD'" in result.stderr):
+        return ""
+    raise ValueError(f"cannot read committed {LEDGER} from {hub}")
 
 
 def write_request(path, candidate):

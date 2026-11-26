@@ -87,3 +87,27 @@ def test_cli_records_and_rejects_stale_plan(spec, tmp_path, monkeypatch):
     with pytest.raises(SystemExit, match="1"):
         PVR.main()
     assert ledger.read_text() == old
+
+
+def test_legacy_wave_exact_only_and_bad_wins(spec, tmp_path, monkeypatch):
+    request = PVR.request(spec)
+    record = {"die": spec["die"], "item": spec["item"], "plan_sha": request["plan_sha256"],
+              "dir": str(tmp_path), "started": 1}
+    (tmp_path / "spec.json").write_text(json.dumps(spec))
+    monkeypatch.setattr(K, "exact_kit_visual_verdict", lambda *_a, **_k: "GOOD")
+    assert K.plan_visual_refusal(spec, tmp_path, "localhost", ledger="", prior=record) == ""
+    assert spec["plan_visual_legacy_form_sha"] == request["form_sha256"]
+    assert K.plan_visual_refusal(spec, tmp_path, "localhost", ledger="") == ""
+    assert "BAD fresh plan image" in K.plan_visual_refusal(
+        spec, tmp_path, "localhost", ledger=receipt(request, "BAD"), prior=record)
+    assert "missing fresh plan image" in K.plan_visual_refusal(
+        dict(spec, private={"lane": "review"}), tmp_path, "localhost", ledger="", prior=record)
+    assert "missing fresh plan image" in K.plan_visual_refusal(
+        dict(spec, gen_args=["--different"]), tmp_path, "localhost", ledger="", prior=record)
+
+
+def test_explicit_rollout_scope():
+    assert PVR.enabled(["t1", "near_*"], "s81", "near_one", "type")
+    assert not PVR.enabled(["t1", "near_*"], "s81", "t2", "type")
+    assert not PVR.enabled(True, "hbm", "t1", "type")
+    assert not PVR.enabled(True, "s81", "t1", "core")

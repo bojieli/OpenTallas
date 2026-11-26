@@ -5469,7 +5469,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
         | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
-        | ({"launch_plan_review_required": True} if opt(cfg, die, "launch_plan_review_required") is True else {}) \
+        | ({"launch_plan_review_required": True} if PVR.enabled(opt(cfg, die, "launch_plan_review_required"), die, item, kind) else {}) \
         | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {}) \
         | ({"bind_stream_launch": True} if bind_stream_on(cfg, die) else {})  # cell_check: PLAN-GEN-RULES-1 rule C (advisory)
 
@@ -10888,7 +10888,25 @@ def ended_unit_result(res):
     return res
 
 
-def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True):
+def legacy_plan_visual_form(rec, plan):
+    """Return the prior wave form only when its exact placement was already viewed and accepted."""
+    old_sha = str(rec.get("plan_sha") or "")
+    if not rec.get("dir") or not rec.get("started") or not PVR.SHA.fullmatch(old_sha):
+        return ""
+    if exact_kit_visual_verdict(rec, viewed_only=True) not in VISUAL_ACCEPT:
+        return ""
+    try:
+        old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        if ((old.get("die"), old.get("item")) != (rec.get("die"), rec.get("item"))
+                or old.get("private") or old.get("plan") != plan):
+            return ""
+        overlay_sha = str(old.get("type_overlay_sha") or "") if old.get("type_overlay") else ""
+        return PVR.request(old, plan_sha=old_sha, overlay_sha=overlay_sha)["form_sha256"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None):
     """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
     if not PVR.applies(sp):
         return ""
@@ -10903,13 +10921,20 @@ def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=Tru
         return f"WAIT-PLAN-VISUAL: cannot resolve exact plan or overlay on {sp.get('gen_host')}: {e}"
     request_path = Path(out) / "plan_visual_request.json"
     try:
+        verdict = PVR.verdict(PVR.read_ledger(hub) if ledger is None else ledger, candidate)
+        if verdict == "GOOD":
+            return ""
+        fingerprint = candidate["form_sha256"]
+        if not verdict and not sp.get("private"):
+            if sp.get("plan_visual_legacy_form_sha") == fingerprint:
+                return ""
+            if prior and legacy_plan_visual_form(prior, sp["plan"]) == fingerprint:
+                sp["plan_visual_legacy_form_sha"] = fingerprint
+                return ""
         if record:
             PVR.write_request(request_path, candidate)
-        verdict = PVR.verdict(PVR.read_ledger(hub) if ledger is None else ledger, candidate)
     except (OSError, ValueError, subprocess.SubprocessError) as e:
         return f"WAIT-PLAN-VISUAL: review request or ledger unavailable: {e}"
-    if verdict == "GOOD":
-        return ""
     state = "BAD" if verdict == "BAD" else "missing"
     return (f"WAIT-PLAN-VISUAL: {state} fresh plan image verdict for {sp['die']}/{sp['item']} "
             f"form {candidate['form_sha256']}; request {request_path}")
@@ -16019,8 +16044,14 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if PVR.applies(sp):
         if "_plan_visual_reviews" not in cfg:
             cfg["_plan_visual_reviews"] = AP.read_coord(PVR.LEDGER)
-        plan_review = plan_visual_refusal(sp, jd, hub, plan_shas=cfg.setdefault("_plan_visual_plan_shas", {}),
-                                          ledger=cfg["_plan_visual_reviews"], record=not AP.DRY)
+        prior = None
+        if sp["plan"] == d.get("plan") and not ((d.get("item_inputs") or {}).get(r["item"]) or {}).get("plan"):
+            prior = prev or max((rec for rec in st["items"].values()
+                                 if rec.get("die") == die and rec.get("item") == r["item"]),
+                                key=lambda rec: float(rec.get("started") or 0), default=None)
+        request_dir = Path(AP.AP_DIR) / "plan_visual_requests" / jd.parent.name / jd.name
+        plan_review = plan_visual_refusal(sp, request_dir, hub, plan_shas=cfg.setdefault("_plan_visual_plan_shas", {}),
+                                          ledger=cfg["_plan_visual_reviews"], record=not AP.DRY, prior=prior)
         if plan_review:
             log_hourly(AP, st, f"PLAN-VISUAL|{die}|{r['item']}", f"KIT-WAVE {plan_review}")
             return None
