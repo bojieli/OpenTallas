@@ -108,3 +108,11 @@ def test_dead_lane_falls_through_to_integrator():
     assert "QC-INT-R2" in new.split("\n")[0] and notes
     new2, notes2 = pr.rewrite("NOPROG [WATCH -> QC-INT-R2] x", {}, live)
     assert not notes2 and new2 == "NOPROG [WATCH -> QC-INT-R2] x"
+
+
+def test_dead_chain_end_falls_through():
+    import post_redirect as pr
+    status = {"A-R1": ("stood-down", "A-R2", "")}
+    live = {"a-r2": ("dead", "QC-INT-R2")}
+    new, notes = pr.rewrite("N [W -> A-R1] x", status, live)
+    assert "A-R2" in new and "QC-INT-R2" in new.split("\n")[0]

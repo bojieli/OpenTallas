@@ -152,6 +152,10 @@ def rewrite(text, status, live_map=None):
         final = chain[-1]
         if final not in to and final not in add:
             add.append(final)
+        ent = (live_map or {}).get(final.casefold())      # the end of a stood-down chain can itself be dead (S81-DIE-R5): fall through to its integrator
+        if ent and ent[0] == "dead" and ent[1] and ent[1] not in to and ent[1] not in add:
+            add.append(ent[1])
+            notes.append("REDIRECTED %s -> %s (chain end %s is dead per LIVE-LANES.tsv; die integrator)" % (y, ent[1], final))
         notes.append("REDIRECTED %s -> %s (stood down; chain %s)" % (y, final, " > ".join([y] + chain)))
     if add:
         body = m.group(2)
