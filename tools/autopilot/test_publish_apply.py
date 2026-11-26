@@ -171,6 +171,18 @@ def test_postbind_spec_is_a_sibling_copy_with_tree_relative_inputs(tmp_path):
     assert PA.postbind_spec({"tree": "/x", "plan": "/p"}, "1") is None                                    # no bind candidate: nothing to run
 
 
+def test_postbind_pre_uses_the_candidate_remap_base(tmp_path):
+    cand = bind_candidate(tmp_path / "T")
+    cand["remap_base"] = "/release/previous plan.json"
+    live = {"bind_env": {"OT_PLAN_GATE_BASELINE": "/historical/plan_c.json"}}
+    spec = PA.postbind_spec(cand, "1118", live=live)
+    assert "export OT_PLAN_GATE_BASELINE='/release/previous plan.json'\n" in PA.postbind_run_sh(spec)
+
+    cand["marker"]["remap_base"] = "/release/reviewed.json"
+    spec = PA.postbind_spec(cand, "1118", live=live)
+    assert spec["env"]["OT_PLAN_GATE_BASELINE"] == cand["marker"]["remap_base"]
+
+
 def test_postbind_job_writes_only_under_postbind_never_the_candidate_bind_out(tmp_path):
     s = PA.postbind_spec(bind_candidate(tmp_path / "T"), "1118")
     sh = PA.postbind_run_sh(s)
