@@ -102,3 +102,15 @@ def test_street_assignment_uses_the_cut_intersection_not_segment_center():
     t = {"outline_um": [1000, 900], "hard_cores": [_core("divider", 80, 150, 40, 550)],
          "internal_stations": [{"conn": "core:g", "bits": 64, "from_um": [0, 50], "to_um": [1000, 830]}]}
     assert F.street_worst(t)[:5] == (64 / (150 * F.TH * F.USABLE), "H", 100, [0, 150], 64)
+
+
+def test_cut_and_overlap_use_signed_placed_macro_box():
+    t = {"outline_um": [600, 500],
+         "hard_cores": [dict(_core("wall", 140, -0.54, 500, 300), orient="R90",
+                              track_offset_um=[0, 0.54])],
+         "ft_slots": [{"name": "bring", "width": 256, "in_face": "W", "out_face": "E",
+                       "in_window_um": [20, 30], "out_window_um": [20, 30]}]}
+    assert F.street_worst(t)[:6] == (float("inf"), "H", 290, [0, 0], 256, 0)
+    assert F.overlaps(t) == ([], [])
+    t["hard_cores"][0]["track_offset_um"] = [0, 0]
+    assert F.overlaps(t) == ([], ["wall"])

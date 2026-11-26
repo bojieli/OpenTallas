@@ -19,6 +19,8 @@ findings(raw, plan_path, tree=None, **kw) -> lines, never raises.
 import collections
 import math
 
+from schema import placed_macro_boxes
+
 CHECK = "FP-FLOORPLAN"
 TV, TH = 48.18, 57.55          # tracks per um M2-M8 (auto_geom), vertical / horizontal street
 USABLE = 0.6
@@ -29,9 +31,7 @@ CROSS_MIN_UM = 2.0             # a leg segment must run >= this far inside a cor
 
 
 def _box(c):
-    x, y = c["origin_um"]
-    w, h = c["outline_um"]
-    return x, y, x + w, y + h
+    return placed_macro_boxes({"hard_cores": [dict(c, inst="core")]})["core"]
 
 
 def _free(blocked, length):
