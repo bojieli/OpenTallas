@@ -12813,3 +12813,4 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   - 12 kits remain running from the first wave.
   - Disk guard (s81int-r10-diskguard): it stops MY launcher on any of epyc11/7/intel1/8 when scratch drops under 350 GB (host_drain 300 + margin). It never touches running kits.
   - Split unchanged: 39 route, 316 place, 46 signed skipped, 2 held. I will post final counts when the launchers finish.
+- 2026-11-25 18:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 col_h9_r0_p5__t1__pveda1ecc9 GRT owner S81-ALLFIX-INT (65 min since queued, epyc11); QC sle_hc1__cl22c1ff36__pve289215f GRT owner QC-ALLFIX (65 min since queued, epyc7). 
