@@ -10939,9 +10939,9 @@ def env_effect_refusal(sp, run, remote, K):
 
 
 def placed_geom_check(sp, odb, outline, goal=None):
-    """Prepare an exact placed ODB render. Geometry-only private jobs omit the routing probe."""
+    """Prepare an exact placement render and defer the GRT probe where review is required."""
     item = sp["item"]
-    deferred = sp.get("geom_grt_deferred") is True or (
+    deferred = sp.get("geom_grt_deferred") is True or PPV.applies(sp) or (
         bool(sp.get("private")) and (goal or sp.get("goal")) == "geom")
     rules = ["--all-kits"]
     if re.fullmatch(r"[\d.]+x[\d.]+", outline):
@@ -11035,7 +11035,7 @@ def _run_item(spec_path, resume_reviewed=False):
     completed_stages = {}
     res = prior if resume_reviewed else {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
     if resume_reviewed and chain_goal not in PPV.ROUTING_GOALS:
-        return PPV.wait(out, res, prior["goal"], "independent launch gate still requires a place probe")
+        return PPV.wait(out, res, prior["goal"], "independent launch gate still requires a place probe", blocked=True)
 
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
@@ -19361,9 +19361,12 @@ def strict_wave_route_review(die):
 
 
 def required_route_review(cfg, rec):
-    """The die explicitly requires an exact placement verdict before dispatch."""
-    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
-    return (strict_wave_route_review(rec.get("die"))
+    """Require independent actual placement review for current Wave types on the active dies."""
+    die = rec.get("die")
+    d = (cfg.get("dies") or {}).get(die) or {}
+    current_type = (die in PPV.ACTIVE_DIES and (rec.get("kind") or "type") == "type"
+                    and bool(d.get("event")) and d["event"] == rec.get("event"))
+    return (current_type or strict_wave_route_review(die)
             or ((d.get("review_before_route") or {}).get("required") is True
                 and review_before_route(cfg, rec)))
 

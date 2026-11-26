@@ -162,9 +162,9 @@ def verdict(out, req):
     return ""
 
 
-def wait(out, res, goal, reason="", decision=""):
+def wait(out, res, goal, reason="", decision="", blocked=False):
     res.update(stage="visual_review", goal=goal,
-               verdict="WAIT-FORM" if decision in ("BAD", "ISSUES") else "WAIT-VISUAL",
+               verdict="WAIT-FORM" if blocked or decision in ("BAD", "ISSUES") else "WAIT-VISUAL",
                evidence=res.get("kit", ""), review_hold=reason or "awaiting exact viewed placement")
     write(out / "result.json", res)
     print(f"KW_PRIVATE_VISUAL {res['verdict']} {res['die']}/{res['item']} {res['review_hold']}", flush=True)

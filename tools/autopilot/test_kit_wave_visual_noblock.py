@@ -31,8 +31,8 @@ def test_required_review_blocks_after_auto_geom_pass(verdict, gv):
 
 def test_event_advisory_review_keeps_routing_after_auto_geom_pass(verdict):
     verdict["v"] = "ISSUES"
-    cfg = {"dies": {"s81": {"event": "J", "review_before_route": dict(POLICY, required=False)}}}
-    row = dict(ROW)
+    cfg = {"dies": {"legacy": {"event": "J", "review_before_route": dict(POLICY, required=False)}}}
+    row = dict(ROW, die="legacy")
     assert K.route_hold_reason(cfg, row) is None
     assert row["visual_pending"].startswith("WAIT-VISUAL (advisory)")
 
@@ -104,7 +104,7 @@ def test_required_viewed_is_for_the_current_attempt_and_kit(monkeypatch, tmp_pat
     assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
     if not takeover:
         assert K.route_hold_reason(cfg, dict(row, event="older")) is None
-        assert K.route_hold_reason(cfg, dict(row, item="unscoped")) is None
+        assert K.route_hold_reason(cfg, dict(row, item="unscoped")).startswith("WAIT-VISUAL")
 
     with review.open("a") as out:
         out.write("- 2026-11-23 07:12 PST GEOM VERDICT [LANE viewed] s81/t1 a1: ISSUES kit=epyc9:/k\n")
@@ -127,3 +127,20 @@ def test_geometry_only_private_goal_defers_global_route():
         assert "--grt-deferred" in config["rules_args"]
     routed = K.placed_geom_check(spec, checkpoint, "10x20", "route")
     assert routed["grt"] is True
+
+
+@pytest.mark.parametrize("die", ["s81", "s81_head", "qwen_compute", "qwen_kvsys"])
+def test_current_active_wave_type_requires_view_without_event_flag(verdict, die):
+    cfg = {"dies": {die: {"event": "new-plan"}}}
+    row = dict(ROW, die=die, event="new-plan")
+    assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, dict(row, event="old-plan")) is None
+    assert K.route_hold_reason(cfg, dict(row, kind="core")) is None
+    verdict["v"] = "GOOD"
+    assert K.route_hold_reason(cfg, row) is None
+
+
+@pytest.mark.parametrize("goal", ["place", "cts", "grt", "route", "auto", "finish"])
+def test_private_active_type_defers_all_geometry_grt_until_review(goal):
+    spec = dict(die="s81", kind="type", private={"lane": "TEST"}, item="top", event="current", geom_mem_gb=8)
+    assert not K.placed_geom_check(spec, "/exact/3_place.odb", "10x20", goal)["grt"]

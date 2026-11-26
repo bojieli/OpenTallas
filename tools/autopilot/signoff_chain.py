@@ -354,6 +354,7 @@ def prepare_reviewed_place(kit, runner, goal, review):
     paths = list(kit.glob("run/results/asap7/*/base/3_place.odb"))
     if len(paths) != 1 or str(paths[0].relative_to(kit)) != review["odb"] or not paths[0].stat().st_size:
         raise ValueError("review does not name the kit's unique nonempty detailed placement")
+    before = paths[0].stat()
     with paths[0].open("rb") as placed:
         if hashlib.file_digest(placed, "sha256").hexdigest() != review["odb_sha256"]:
             raise ValueError("reviewed detailed placement bytes changed")
@@ -370,6 +371,9 @@ def prepare_reviewed_place(kit, runner, goal, review):
         raise ValueError("stock resume cannot reuse the reviewed detailed placement")
     if not current_review_allows(review):
         raise ValueError("canonical exact placement approval is missing, rejected or changed")
+    after = paths[0].stat()
+    if (before.st_ino, before.st_size, before.st_mtime_ns) != (after.st_ino, after.st_size, after.st_mtime_ns):
+        raise ValueError("reviewed placement changed during admission")
     # The runner sees this exact plan. Disable its permissive auto-plan fallback on reviewed continuations.
     with tempfile.NamedTemporaryFile("w", dir=kit, prefix=".reviewed-resume-", delete=False) as f:
         temp = Path(f.name)

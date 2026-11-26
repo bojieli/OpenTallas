@@ -159,18 +159,18 @@ def test_event_review_blocks_only_its_changed_items_and_accepts_its_exact_kit(tm
     reviews = tmp_path / "coord" / "lanes" / "GEOM-REVIEW.md"
     reviews.parent.mkdir(parents=True)
     reviews.write_text(
-        "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD kit=epyc9:/old\n"
-        "GEOM VERDICT [viewed] s81/t1 attempt_1: GOOD\n"
-        "GEOM VERDICT [viewed] s81/t1 attempt_2: BAD kit=epyc9:/new\n"
-        "GEOM VERDICT [viewed] s81/t1 attempt_3: GOOD kit=epyc9:/new\n"
-        "GEOM VERDICT [viewed] s81/t1 attempt_4: BAD kit=epyc9:/prior\n"
+        "GEOM VERDICT [viewed] legacy/t1 attempt_1: GOOD kit=epyc9:/old\n"
+        "GEOM VERDICT [viewed] legacy/t1 attempt_1: GOOD\n"
+        "GEOM VERDICT [viewed] legacy/t1 attempt_2: BAD kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed] legacy/t1 attempt_3: GOOD kit=epyc9:/new\n"
+        "GEOM VERDICT [viewed] legacy/t1 attempt_4: BAD kit=epyc9:/prior\n"
     )
     monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
     monkeypatch.setattr(K, "_VISUAL_CACHE", {"mtime": None, "v": {}})
     policy = {"event": "J", "items": ["t1"]}
-    cfg = {"dies": {"s81": {"event": "J", "review_before_route": policy}},
+    cfg = {"dies": {"legacy": {"event": "J", "review_before_route": policy}},
            "stops_off": True, "wait_visual": False, "visual_gate": "signoff"}
-    row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1,
+    row = {"die": "legacy", "event": "J", "item": "t1", "attempt": 1,
            "kit_host": "epyc9", "kit": "/new", "status": "PASS"}
     assert K.route_hold_reason(cfg, row) is None
     assert K.route_hold_reason(cfg, dict(row, attempt=2)).startswith("WAIT-FORM")
@@ -231,7 +231,7 @@ def test_required_route_review_uses_exact_viewed_verdict(tmp_path, monkeypatch):
     assert K.route_hold_reason(cfg, dict(row, attempt=2)).startswith("WAIT-FORM")
     assert K.route_hold_reason(cfg, dict(row, attempt=3)) is None
     assert K.route_hold_reason(cfg, dict(row, event="older")) is None
-    assert K.route_hold_reason(cfg, dict(row, item="unchanged")) is None
+    assert K.route_hold_reason(cfg, dict(row, item="unchanged")).startswith("WAIT-VISUAL")
 
 
 def test_enqueue_sample_reports_measurement_and_skips_completed_required_review():
@@ -250,8 +250,7 @@ def test_enqueue_sample_reports_measurement_and_skips_completed_required_review(
     row = {"die": "s81", "event": "J", "item": "t1", "attempt": 1, "kit": "epyc9:/new",
            "geom_dir": "epyc9:/geom", "geom_verdict": "PASS-COND"}
     cfg = {"geom_sample": 5, "dies": {"s81": {"event": "J"}}}
-    K._enqueue_finish(ap, cfg, {}, dict(row), {}, 0, "", "")
+    K._enqueue_finish(ap, cfg, {}, dict(row, event="historical"), {}, 0, "", "")
     assert len(ap.lines) == 1 and "AUTO-GEOM FAIL (wave PASS-COND)" in ap.lines[0]
-    cfg["dies"]["s81"]["review_before_route"] = {"event": "J", "all_items": True, "required": True}
     K._enqueue_finish(ap, cfg, {}, dict(row), {}, 0, "", "")
     assert len(ap.lines) == 1

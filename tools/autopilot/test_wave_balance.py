@@ -190,7 +190,7 @@ def test_route_move_honors_exact_required_review_and_preserves_advisory(tmp_path
     policy = {"event": "E", "all_items": True}
     if required:
         policy["required"] = True
-    ap.wave_review_snapshot = lambda: ({"dies": {"s81": {"event": "E", "review_before_route": policy}}}, {})
+    ap.wave_review_snapshot = lambda: ({"dies": {"s81": {"event": "E" if required else "new-event", "review_before_route": policy}}}, {})
     ops = FakeOps([ps_waiting()])
 
     ok, why = W.move_one(ap, {"jobs": {"j1": j}}, ops, mv(j, ps_waiting()), lambda _: None)
