@@ -14746,3 +14746,5 @@ S81 has 2 new scoped-ready rows covering 75 types. The cut gate is running on E1
 ## OWNER?
 
 2026-11-26 00:13 PST. May S81 STATUS-UP add seven boot ready/fault cycles to ot_s81sl_leaf__t36, four to ot_s81sl_leaf__t39 and three to ot_s81sl_leaf__t40__clf8bbdae1? The prior proposal was +6, +3 and +2. Those three miss the native R4 300 µm geometry rule. Exact private candidate ec2a31d728d0 meets the rule at 280.8, 282.6 and 243.4 µm. The t38 proposal stays at +3 and 283.0 µm. The additional cycle on each of the three types changes boot status egress age and needs a corresponding collector deadline. The scoped PRE and strict jobs continue, with adoption held.
+
+2026-11-26 00:47 PST. Which licensed Gen5 PHY drop is the release of record for QC coll_ucie and its 1043-bit flit interface? Please identify its lclk output and PLL phase evidence for the related 833 ps, 4998 ps and 999.6 ps clocks. The existing surrogate and fixture support exact binding and model work, and the QC lanes are continuing.
