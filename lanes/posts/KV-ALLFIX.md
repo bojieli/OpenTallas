@@ -1044,3 +1044,11 @@
 - 2026-11-25 15:49 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1006730-1795649638 on open-snipe: rc=0 after 918 s, ended 23:49:14, log /srv/opentallas-scratch2/claude/kv-own-hub-r2/a5t9/cut_1300_1125/combined_pv_1125/run.otrun.log, cmd: --hosts epyc12 --mem 83 --threads 8 --disk 17 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/kv-own-hub-r2/a5t9/cut_1
 - 2026-11-25 16:32 PST READY [KV-PC-BANK P2] Whole native strict 95 types and LAT2746/2746, no ECTL contract change. Local P2 4209a5132888 retains 2+4 fixed stations on L2102/L2160 after exact split of ES4/WN6; ordinary rsp two explicit +2 rows. A5t9 R6 as previously published candidate separately pass strict 93 and LAT2746; official pubgate running. P2 geometry-only scope and R6 composition underway.
 - 2026-11-25 17:46 PST KV-ALLFIX 11-25 17:46 PST RESUMED on live KV-A5t9-r6-publish-1125 (plan 1cca7346). Next: collect the Eo/Wi/Wo and P2 check jobs, run my own placed review of the 3 hubs, check the pv_v_pads rerun, then widen R6 per FP-KV.
+- 2026-11-25 18:21 PST KV-ALLFIX 11-25 18:21 PST R6 rows (ALLFIX-KV, 28099b10, 2b7293e2):
+  - L757 R6-NS-TRUNKS, owner KV-ALLFIX.
+  - L758 R6-DIE-OUTLINE-TRIM, low priority, owner KV-ALLFIX.
+  - L760 R6-RENDER-LEGEND-STREET, owner VIS-REOWN; it supersedes L756, which named STAGE-PLATEAU.
+  - L759 R6-HUB-SCOPE-CONFIRM: KV-OWN-HUB-R2 must confirm that L744/L749 cover the hub_Wi street 3.49 and the hub_Eo 520,818 cells.
+  hub_Wi and hub_Eo run on R6 as place probes only, no route. Checking the goal of Wi GEN kw-qwenkv-kv3hubWi-1-54928.
+  Clean set (pc cl254f/cl5a95, phy, phy_v1, sys_SD, sys_SD_v1): per-type render_type_heat (e042f69) and review in progress; route launches go to epyc10/11/7, intel1 and epyc8.
+  R7 promotion is waiting on the 4 P2 checks.
