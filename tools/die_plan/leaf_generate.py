@@ -2,7 +2,7 @@
 """leaf_generate.py -- ONE generator for the S81 leaf / kv_leaf re-floor chain (FP-CONVERGE-S81, COORD FLOW-0930 S-06).
 
   leaf_generate.py BASE_PLAN --types t1,t2 --out OUT.json [--grow DX] [--ft-xcut X] [--tree TREE] [--seed SEED.json]
-                   [--extra-reg] [--work DIR] [--dry] [--no-core-place]
+                   [--extra-reg] [--work DIR] [--dry] [--no-core-place] [--fstart-reseat]
 
 Chain (every step on the SAME type list, each step's input is the previous step's output; BASE_PLAN is never written):
   1 grow        leaf_grow.py grow --dx DX --ft-interior --ft-xcut X          (only with --grow)
@@ -11,7 +11,8 @@ Chain (every step on the SAME type list, each step's input is the previous step'
   4 chain_resite chain_resite.py run  (first-hop / station chains over the 405 um gate; --extra-reg only with --extra-reg)
   5 retap       leaf_grow.py retap     (grid+explicit added-tap names/order follow the re-derived grid)
   6 anchor      reset_anchor.py record --repick
-  7 schema      schema_test(): exit 1 on any finding of
+  7 fstart      landing_reset_reseat.py (opt-in; keep the anchored local FSTART raw sources)
+  8 schema      schema_test(): exit 1 on any finding of
       FLOAT      an int in BASE that is a float in OUT with an integer value (12 -> 12.0), or any float in a `bits` list
                  (the SCHEMA-INVALID x6 finding: relay_depth[].bits turned into floats)
       TAPNAME    grid+explicit added tap names / order the bind's own taps.grid_explicit_sites refuses (LANDREMAP-UNCHECKED x61)
@@ -179,6 +180,10 @@ def steps(a, work):
     add("anchor", py + ["-u", "-B", str(HERE / "reset_anchor.py"), "record", cur, str(w / "s6_anchor.json"), "--types", types, "--repick",
                   "--root", a.tree],
         w / "s6_anchor.json")
+    if getattr(a, "fstart_reseat", False):
+        add("fstart", py + [str(HERE / "landing_reset_reseat.py"), cur, str(w / "s7_fstart.json"),
+                           "--types", types, "--root", a.tree, "--report", str(w / "fstart.json")],
+            w / "s7_fstart.json")
     return st
 
 
@@ -228,6 +233,7 @@ def main(argv=None):
     ap.add_argument("--seed")
     ap.add_argument("--extra-reg", action="store_true")
     ap.add_argument("--no-core-place", action="store_true", help="skip core_place (refresh/re-site/retap/anchor on an already placed plan)")
+    ap.add_argument("--fstart-reseat", action="store_true", help="re-seat anchored local FSTART reset copies after retap")
     ap.add_argument("--work")
     ap.add_argument("--dry", action="store_true")
     a = ap.parse_args(argv)
