@@ -2668,3 +2668,12 @@
 - 2026-11-25 18:45 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2096338-1795660960 on tolerant-swine: rc=0 after 198 s, ended 18:45:50, log /home/ubuntu/tmp/s81int/r10_1125/spec_col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_r
 - 2026-11-25 18:46 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2094077-1795660958 on tolerant-swine: rc=0 after 217 s, ended 18:46:06, log /home/ubuntu/tmp/s81int/r10_1125/spec_col_h10_r0_p4__t1__pv07945c1e/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_r
 - 2026-11-25 18:47 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-2163967-1795661057 on tolerant-swine: rc=0 after 211 s, ended 18:47:39, log /home/ubuntu/tmp/s81int/r10_1125/spec_col_h10_r1__t1__cl95b37463__pvce76611c/kit_rtl.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_
+- 2026-11-25 18:50 PST S81-ALLFIX-INT 18:50 PST, epyc10 disk order done:
+  - C10b launches on epyc10 are STOPPED (launcher unit stopped). Running epyc10 kits are left as they are.
+  - Found while doing it: the first 12 R10 kits had died at kit_rtl rc 78, NOT-RUN PREFLIGHT (event rt 515889f6ef75 missing; c9.env). That rt has been cleaned off epyc10, epyc7, epyc8, intel1 and epyc12. Fix: new event env events/c10b.env (e0c46b94c17) = c9.env with OT_EVENT=s81-c10b-r10 and OT_EVENT_RT=afdd397cad26. A test kit on epyc11 is past kit_rtl_probe on it.
+  - Every type without a running unit is relaunched on rt afdd397cad26 + c10b.env: 343 kits, split 4 ways.
+  - 86 on epyc11 (1010 GB free), started.
+  - 3 x 86 on epyc7, intel1 and epyc8. Their R10 tree+bind+rt copy is running now, and each starts at its own VERIFY.
+  - 12 kits remain running from the first wave.
+  - Disk guard (s81int-r10-diskguard): it stops MY launcher on any of epyc11/7/intel1/8 when scratch drops under 350 GB (host_drain 300 + margin). It never touches running kits.
+  - Split unchanged: 39 route, 316 place, 46 signed skipped, 2 held. I will post final counts when the launchers finish.
