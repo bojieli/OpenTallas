@@ -40,7 +40,7 @@ def validate(t, tn):
     return rows
 
 
-def tcl(P, tn):
+def tcl(P, tn, *, no_core_rows=()):
     rows = validate(P.types[tn], tn)
     if not rows:
         return ""
@@ -73,6 +73,10 @@ def tcl(P, tn):
            "}"]
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
+        for domain, (px0, py0, px1, py1) in no_core_rows:
+            if px0 <= x0 and py0 <= y0 and x1 <= px1 and y1 <= py1:
+                raise ValueError(f"{tn}: logic_cluster {r['name']} is fully inside PHY domain {domain}, "
+                                 f"which removes its core placement rows: {r['rect_um']}")
         pats = " ".join("{" + p + "}" for p in r["patterns"])
         out.append(f"ot_logic_cluster {r['name']} {x0:g} {y0:g} {x1:g} {y1:g} [list {pats}]")
     out.append("}")

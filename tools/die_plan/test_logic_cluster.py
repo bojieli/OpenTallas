@@ -47,6 +47,23 @@ def test_repeated_name_and_empty_list_fail():
         LC.tcl(plan([]), "T")
 
 
+def test_cluster_inside_effective_phy_row_cut_fails_early():
+    domains = [("phy", [0, 400, 2885.76, 1226.88])]
+    r7e2 = dict(ROW, name="serdes_syndrome_local", rect_um=[1935.36, 400.68, 2073.6, 423.36])
+    r7e3 = dict(r7e2, rect_um=[2201.04, 352.08, 2304.72, 382.32])
+    crossing = dict(r7e2, rect_um=[1935.36, 395.28, 2073.6, 416.88])
+
+    def emit(row, no_core_rows=()):
+        p = N(types={"hd_serdes": dict(outline_um=[2885.76, 1226.88], logic_cluster_rects_um=[row])})
+        return LC.tcl(p, "hd_serdes", no_core_rows=no_core_rows)
+
+    with pytest.raises(ValueError, match="serdes_syndrome_local is fully inside PHY domain phy"):
+        emit(r7e2, domains)
+    for row in (r7e3, crossing):
+        assert emit(row, domains) == emit(row)
+    assert "ot_logic_cluster serdes_syndrome_local" in emit(r7e2)
+
+
 def test_gen_phys_wires_the_hook():
     import gen_phys as GP
     from pathlib import Path
