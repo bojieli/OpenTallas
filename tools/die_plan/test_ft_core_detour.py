@@ -106,3 +106,14 @@ def test_station_never_lands_on_another_station_cell():
     ctx = D.Ctx(raw["partition_types"]["t"])
     cells = [ctx._ck(q) for q in s["regs_um"]] + [ctx._ck([477.5, 442.5])]
     assert len(cells) == len(set(cells))
+
+
+def test_schema_registers_flag():
+    import copy
+    import schema
+    import test_schema
+    p = schema.SCHEMA["properties"]["ft_core_detour"]
+    assert p["additionalProperties"] is False and set(p["properties"]) == {"enable", "types"}
+    base = copy.deepcopy(test_schema.EX)
+    assert schema.validate({**base, "ft_core_detour": {"enable": 1}}) == []
+    assert schema.validate({**base, "ft_core_detour": {"enable": 1, "bogus": 1}})

@@ -10902,6 +10902,24 @@
     }
    }
   },
+  "ft_core_detour": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "types": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
   "relay_spread": {
    "type": "object",
    "additionalProperties": false,

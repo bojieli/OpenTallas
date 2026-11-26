@@ -2101,6 +2101,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
         "note": {"type": "string"}}}
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
+# FT-CORE-DETOUR (CLASS-OWNERS-B C-FT-CROSSES-CORE 11-26, ft_core_detour.py): opt-in, default absent = byte-identical; zero-cycle re-site of
+# hop-chain stations so no hop needs a path through a hard core (optional types = restrict to these partition types)
+SCHEMA["properties"]["ft_core_detour"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "types": {"type": "array", "items": {"type": "string"}}}}
 # RELAY-SPREAD (CLASS-OWNERS-B C-RELAY-SEAT 11-26, relay_spread.py): opt-in, default absent = byte-identical; the tool spreads relay_sites
 # stacks (> stack_min - 1 keys on one point) over the kit's station grid within max_um / the hop margin / 0.3 x clock.tap_radius_um
 SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties": False, "properties": {
