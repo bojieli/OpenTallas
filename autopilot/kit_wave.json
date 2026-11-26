@@ -15,28 +15,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "KV-A5t9-r8-g5-1126",
+   "event": "KV-A5t9-g6v6r3-1126",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS (A5t6 published strict bind / LAT / BPC / R8BASE, rt efc09e5e6036)",
     "clock": "PASS",
     "evidence": "A5t6 published tree (ot-tree-fork of E10 gate tree, sealed over A5t5 2c74bbdfe2dd -> 9249249be101) strict bind on rt efc09e5e6036 (E10 oth-ubuntu-3612579-1795574174): 175 partitions/93 types/errors 0, LATCHECK 2752/2752 PASS, BPC 668/668 PASS, R8BASE PASS new 0; PRE 22 RSTREACH (allowed); gate GENDRY kv3_phy_v1 held; bind fingerprint 23d7f57cf76d distributed to epyc8/11/9/intel1/intel2"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g5_sinkbins_street_1125.json",
+   "plan": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_pcstrap_1126.json",
    "gen_host": "epyc8",
-   "src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126",
+   "src": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126",
    "src_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126_bind_1126025624",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_g6_static_io_pc_pv_1126.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126_bind_1126095500",
     "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_r6_publish_1125.json"
+    "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -3795,10 +3795,10 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "87d01254579e5c18ef6ca10490b743694b0ec75c46b6193cf43a4d2bdc6ec3bf",
+   "plan_sha256": "4c5a163e9a21cf78b927b6991fa220771900ad051f36d337694b8a2da98e7f13",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -4602,7 +4602,8 @@
     "KV-A5t9-r6-publish-1125",
     "KV-A5t9-r8-g3-1125",
     "KV-A5t9-r8-g4-1125",
-    "KV-A5t9-r8-g5-1126"
+    "KV-A5t9-r8-g5-1126",
+    "KV-A5t9-g6v6r3-1126"
    ],
    "hold_items_released_kitops1_kvn2": {
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5677,8 +5678,8 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "4d942e131143366962c26cb73a0ed3bd88d9a0457078a34aa9cfd2a420a7294d",
-   "tools_sha": "72ea87d81a86fb1bc637b8efa50d378fdb9b3417",
+   "src_manifest_hash": "d7c233ac9db1889651aefa47d66d99da037521f74d16f3ed7098ebb45d4cf194",
+   "tools_sha": "1f7f9554db1942db5aa49f32010fdec9f5a2f7c2",
    "prev_widen1116": {
     "gen_host": "epyc10",
     "gen_hosts": [
@@ -5720,13 +5721,14 @@
     "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree",
     "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree",
     "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r6_rel_tree_1125",
-    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125"
+    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g3_rel_tree_1125",
+    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125"
    ],
    "pilot_item": "kv3_hg_v1",
    "prev_gen_hosts_fleetopsr1116d": [
     "epyc10"
    ],
-   "rollback_tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125",
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126",
    "gen_hosts_prev_wpf1117": [
     "epyc10"
    ],
@@ -5768,7 +5770,8 @@
     "KV-A5t6",
     "KV-A5t9-r6-publish-1125",
     "KV-A5t9-r8-g3-1125",
-    "KV-A5t9-r8-g4-1125"
+    "KV-A5t9-r8-g4-1125",
+    "KV-A5t9-r8-g5-1126"
    ],
    "tools_refresh_bind_cmd": "mkdir -p {out}/bind {out}/tmp {out}/home && zcat physical/die_plan/qwen_kvsys/plan_of_record/inputs/bind9_asbuilt.json.gz > {out}/bind/asbuilt.json && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- env OT_HCPARAM_ALL=1 PYTHONDONTWRITEBYTECODE=1 TMPDIR={out}/tmp HOME={out}/home python3 -I -B tools/die_plan/bind.py bind physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --out {out}/bind --asbuilt physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json --mem 48 --strict --all-gaps > {out}/bind.log 2>&1",
    "tools_refresh_bind_sub": "bind",
@@ -5783,6 +5786,41 @@
     "OT_HCPARAM_ALL": "1"
    },
    "bound_trees": [
+    {
+     "src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126",
+     "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g5_sinkbins_street_1125.json",
+     "plan_sha256": "87d01254579e5c18ef6ca10490b743694b0ec75c46b6193cf43a4d2bdc6ec3bf",
+     "src_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
+     "queue_src": "main@315cc722d686026c31eeee5ed3d77f24c8b6cb94",
+     "src_manifest_hash": "4d942e131143366962c26cb73a0ed3bd88d9a0457078a34aa9cfd2a420a7294d",
+     "kit_rtl": {
+      "mode": "bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_r6_publish_1125.json",
+      "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126_bind_1126025624"
+     },
+     "event": "KV-A5t9-r8-g5-1126",
+     "gen_env": {
+      "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+      "OT_GRT_NONPORT_HOLD": "1",
+      "OT_CORE_TAP_REACH_UM": "0",
+      "OT_PREGRT_FF_HOLD_AUTO": "-1",
+      "OT_MAX_BUFFER_PERCENT": "100",
+      "OT_GRT_POST_MAX_S": "0",
+      "OT_HOLD_STOP_PS": "-1000000",
+      "OT_GRT_ALLOW_CONGESTION": "1",
+      "OT_CLAND_STRIP_DENS": "1.0",
+      "OT_TT_SETUP_REPAIR": "both",
+      "OT_PG_DIE_PHASE": "1",
+      "OT_PGCAP": "1",
+      "OT_PG_TRACK_TRUTH": "1",
+      "OT_PG_PIN_CHECK": "1",
+      "OT_KV_HEAD_KST": "2",
+      "OT_PLACE_MAX_TRANSITION": "320",
+      "OT_LAND_RESERVE": "1",
+      "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl",
+      "OT_HCPARAM_ALL": "1"
+     }
+    },
     {
      "src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125",
      "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g4_sysc_pvfold_1125.json",
@@ -5887,41 +5925,6 @@
       "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl",
       "OT_HCPARAM_ALL": "1"
      }
-    },
-    {
-     "src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree",
-     "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t6.json",
-     "plan_sha256": "a498941539fd1b3df600e6864132581c828ce2f84f9881c1ed459afc4c33a012",
-     "src_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
-     "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-     "src_manifest_hash": "9249249be101aa99274be42681dc1afaa7e6718f8b2b5879a0f154d8bc8680ee",
-     "kit_rtl": {
-      "mode": "bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
-      "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_bind"
-     },
-     "event": "KV-A5t6",
-     "gen_env": {
-      "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t6_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
-      "OT_GRT_NONPORT_HOLD": "1",
-      "OT_CORE_TAP_REACH_UM": "0",
-      "OT_PREGRT_FF_HOLD_AUTO": "-1",
-      "OT_MAX_BUFFER_PERCENT": "100",
-      "OT_GRT_POST_MAX_S": "0",
-      "OT_HOLD_STOP_PS": "-1000000",
-      "OT_GRT_ALLOW_CONGESTION": "1",
-      "OT_CLAND_STRIP_DENS": "1.0",
-      "OT_TT_SETUP_REPAIR": "both",
-      "OT_PG_DIE_PHASE": "1",
-      "OT_PGCAP": "1",
-      "OT_PG_TRACK_TRUTH": "1",
-      "OT_PG_PIN_CHECK": "1",
-      "OT_KV_HEAD_KST": "2",
-      "OT_PLACE_MAX_TRANSITION": "320",
-      "OT_LAND_RESERVE": "1",
-      "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl",
-      "OT_HCPARAM_ALL": "1"
-     }
     }
    ],
    "bind_copy_of_record": [
@@ -5933,7 +5936,7 @@
     "*"
    ],
    "review_before_route": {
-    "event": "KV-A5t9-r8-g5-1126",
+    "event": "KV-A5t9-g6v6r3-1126",
     "items": [
      "kv3_hgi",
      "kv3_hgi_v7",
@@ -6205,7 +6208,7 @@
     "qwen_kvsys_qkd_hr_core_prompt_d29_place",
     "qwen_kvsys_sys_c_1123082634"
    ],
-   "plan_event": "KV-A5t9-r8-g5-1126",
+   "plan_event": "KV-A5t9-g6v6r3-1126",
    "tools_from_rt": true,
    "only_items_regen": false,
    "derive_exclude_hosts": [
