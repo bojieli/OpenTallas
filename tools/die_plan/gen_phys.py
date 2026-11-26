@@ -7556,11 +7556,17 @@ def stage_hook_lines(cfg, kd, var, scripts, chain):
     return [f"export {var} = /work/{chain}"]
 
 
-def post_dpl_hook_lines(cfg, kd, env=None):
+def post_dpl_hook_lines(cfg, kd, env=None, type_name=None):
     """Gen env OT_POST_DPL_SCRIPTS = comma list of kit-local script names (already staged in the kit) -> POST_DETAIL_PLACE_TCL chain.
     Unset/empty = no-op."""
     env = os.environ if env is None else env
     scripts = [x.strip() for x in env.get("OT_POST_DPL_SCRIPTS", "").split(",") if x.strip()]
+    if type_name == "hd_lep0N_w" and env.get("OT_HEAD_WEST_RRL265") == "1":
+        script = "head_west_rrl265.tcl"
+        entry = "head_west_rrl265_apply.tcl"
+        shutil.copyfile(Path(__file__).with_name(script), kd / script)
+        (kd / entry).write_text(f"source /work/{script}\nwest_d51_265_buffer apply\n")
+        scripts.append(entry)
     return stage_hook_lines(cfg, kd, "POST_DETAIL_PLACE_TCL", scripts, "post_dpl_chain.tcl")
 
 
@@ -8125,6 +8131,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hc_hook = "source /work/hold_cap.tcl\n"
     (kd / "pre_cts.tcl").write_text(hc_hook + clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
                                     + cc_hook + rsp_hook + pce_hook)
+    if tn == "hd_lep0N_w" and os.environ.get("OT_HEAD_WEST_CK5") == "1":
+        pre_cts = kd / "pre_cts.tcl"
+        tap_line = "source /work/clock_taps.tcl\n"
+        body = pre_cts.read_text()
+        if body.count(tap_line) != 1:
+            raise ValueError("HEAD West CK5 needs exactly one stock clock tap assignment")
+        shutil.copyfile(Path(__file__).with_name("head_west_ck5.tcl"), kd / "head_west_ck5.tcl")
+        pre_cts.write_text(body.replace(tap_line, tap_line + "source /work/head_west_ck5.tcl\n"))
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -8535,7 +8549,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
     cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
-    cfg += post_dpl_hook_lines(cfg, kd)
+    cfg += post_dpl_hook_lines(cfg, kd, type_name=tn)
     import gen_rtl as _GRL
     cfg += hop_latch_leaf_lines(kd, zlk_spec, ft=_GRL.ft_hop_lockup(getattr(P, "raw", None), tn))
     cfg += latch_restore_hook_lines(cfg, kd)
