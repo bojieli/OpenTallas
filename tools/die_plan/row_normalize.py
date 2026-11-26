@@ -364,6 +364,14 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
     prot = {}
     base_trees = {}
     with in_tree(tree), contextlib.ExitStack() as workers:
+        if isinstance(raw.get("land_reach"), dict) and raw["land_reach"].get("enable") and "landreach" not in skip:
+            # C-LAND-REACH (default off, plan flag land_reach.enable): re-seat flagged hard cland cores before the steps that read seats
+            import land_reach as LR
+            t0 = time.time()
+            lr = LR.apply(raw, tree)
+            rep["steps"]["landreach"] = {f"{m['type']}/{m['landing']}": m["shift_um"] for m in lr["moved"]}
+            rep["landreach"] = lr
+            rep["seconds"]["landreach"] = round(time.time() - t0, 1)
         for name in STEPS:
             t0 = time.time()
             if name in skip:

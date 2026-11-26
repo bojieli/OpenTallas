@@ -189,3 +189,30 @@ def test_retap_reuses_only_the_prepared_base_tree(monkeypatch):
     assert RN.step_retap(base, candidate, "/base/plan.json", "/candidate/plan.json",
                          ["old", "missing"], base_trees={"old": good, "missing": failed}) == {}
     assert calls == [(True, "/base/plan.json", "missing"), (False, "/candidate/plan.json", "old")]
+
+
+def _lr_plan(flag=None):
+    core = {"inst": "cl_x", "origin_um": [300.0, 1000.0], "outline_um": [90.0, 50.0], "orient": "R0", "lef": "v/m.lef",
+            "param_wrap": {"params": {"WFALL": 1}}}
+    band = {"hard_core": "cl_x", "rect_um": [300.0, 1000.0, 390.0, 1050.0], "width": 10}
+    t = {"outline_um": [1000.0, 1300.0], "hard_cores": [core], "buses": [], "ft_slots": [{"name": "x", "in_face": "N", "regs_um": [[455.0, 1296.0]]}],
+         "clock": {"landing_contract": {"bands": {"x_i": band}, "pins": [{"name": "fclk_in_x_i", "xy_um": [455.0, 1296.0]}]}}}
+    raw = {"die": {"name": "qwen_compute", "period_ps": 833}, "clock": {}, "partition_types": {"t": t}}
+    if flag is not None:
+        raw["land_reach"] = flag
+    return raw
+
+
+def test_land_reach_flag_off_changes_nothing_and_on_reseats(tmp_path):
+    body = "".join(f"  PIN d[{k}]\n    PORT\n      LAYER M5 ;\n        RECT  {k * 0.144:.3f} 49.9 {k * 0.144 + 0.024:.3f} 49.984 ;\n"
+                   f"    END\n  END d[{k}]\n" for k in range(10))
+    (tmp_path / "v").mkdir()
+    (tmp_path / "v/m.lef").write_text(f"MACRO m\n  SIZE 90.0 BY 50.0 ;\n{body}END m\n")
+    base = _lr_plan()
+    off = copy.deepcopy(base)
+    rep = RN.normalize_plan(base, off, tree=str(tmp_path), hooks=NOHOOK)
+    assert off == base and "landreach" not in rep["steps"] and "landreach" not in rep["seconds"] and rep["changed"] == {}
+    on = _lr_plan({"enable": 1})
+    rep = RN.normalize_plan(base, on, tree=str(tmp_path), hooks=NOHOOK)
+    assert rep["steps"]["landreach"] and rep["changed"]["landreach"] == 1 and on["partition_types"]["t"]["hard_cores"][0]["origin_um"] != [300.0, 1000.0]
+    assert RN.normalize_plan(base, _lr_plan({"enable": 1}), tree=str(tmp_path), skip=["landreach"], hooks=NOHOOK)["steps"].get("landreach") is None

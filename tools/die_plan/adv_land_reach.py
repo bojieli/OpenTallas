@@ -85,7 +85,9 @@ def _core_pins(c, tree):
     return {}, (ox, oy, ox + ow, oy + oh)
 
 
-def rows(raw, tree=None, margin_ps=None):
+def rows(raw, tree=None, margin_ps=None, detail=None):
+    """detail: optional list; one dict per judged-or-not landing {type, landing, core, ports, pins, rect, basis, face} for the
+    generator fix (land_reach.py).  Off (None) the output is unchanged."""
     thr = MARGIN_FLAG_PS if margin_ps is None else float(margin_ps)
     out = []
     T = float((raw.get("die") or {}).get("period_ps") or 833.0)
@@ -133,6 +135,9 @@ def rows(raw, tree=None, margin_ps=None):
                 continue
             if not ports:
                 continue
+            if detail is not None:
+                detail.append(dict(type=tn, landing=bn, core=c["inst"], ports=[tuple(p) for p in ports], pins=ab or None, rect=rect,
+                                   basis=basis, face=face, fall=fall))
             ds = []
             for k, (px, py) in enumerate(ports):
                 if ab:
