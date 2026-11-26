@@ -12,7 +12,9 @@ cycles but recounts ft stations / landing live from the slots, so a table not re
                 (kit_istations depth + hard-core cycles, LANE_ASBUILT UNPRICED_KIT_STATIONS; native: 'native stations exceed
                 priced lane depth')
   FIXED-SPLIT   (needs the as-built: kw asbuilt= / plan_advisory --asbuilt) native-source lane whose fixed_cycles != source
-                station regs + max destination regs (bind: 'native stations L415: fixed_cycles must equal source 6 + destination 5');
+                station regs + max destination regs + the receiver's declared soft cycles (bind: 'native stations L415: fixed_cycles
+                must equal source 6 + destination 5 + receiver soft 0'; soft_latency.in of the destination bus, counted once:
+                S81 c10b seqhost 7N / 7S native 2 + lep ROS receiver 3 = 5, PRE-PRICE-ONCE-1125);
                 the A2f strict refusal that PRICE-SHORT cannot see, since it is about the table's fixed split, not the ft count
   OUT-LANES     (needs the as-built) native source bus of a partition with 0 or >1 outgoing lanes (bind: 'native stations <part>.<bus>:
                 expected one outgoing lane', KV A2g pc_EN_7.o_efault_pc_Q_N_fault: an R8 clone lost its lane)
@@ -62,8 +64,16 @@ def judge(row, st, land, depth, boundary=2):
     return why
 
 
+def soft_in_cycles(typ, bus):
+    """declared receiver soft cycles on IN bus <bus> of plan type <typ> (soft_latency.in, 0 = none): core_latency.soft_in_cycles,
+    read here so a --tree whose tools predate it prices the same"""
+    return int((((typ or {}).get("soft_latency") or {}).get("in") or {}).get(bus, 0) or 0)
+
+
 def native_fixed(P, schema, types, ab, tree_dir):
-    """-> {lane: (fixed, source regs, destination regs)} for native-source lanes violating fixed == source + destination"""
+    """-> {lane: (fixed, source regs, destination regs, receiver soft cycles)} for native-source lanes violating
+    fixed == source + destination + receiver soft (native_istations.annotate; PRE-PRICE-ONCE-1125: the declared receiver
+    soft_latency.in of the destination bus is part of the lane's fixed cycles exactly once, as the bind charges it)"""
     import adv_stn_conflict as S
     bad = {}
     for lid, ln in sorted(P.lanes.items()):
@@ -83,9 +93,10 @@ def native_fixed(P, schema, types, ab, tree_dir):
         src = len(rows[0].get("regs_um") or [])
         dst = max((len(e.get("regs_um") or []) for e in (types.get(dtn) or {}).get("internal_stations") or []
                    if isinstance(e, dict) and e.get("conn") == "bus:" + b["bus"]), default=0)
+        soft = soft_in_cycles(types.get(dtn), b["bus"])
         fixed = int(ln.get("fixed_cycles", 0))
-        if fixed != src + dst:
-            bad[lid] = (fixed, src, dst)
+        if fixed != src + dst + soft:
+            bad[lid] = (fixed, src, dst, soft)
     return bad
 
 
@@ -143,10 +154,12 @@ def _findings(raw, plan_path, tree=None, **_kw):
     if isinstance(ab, dict):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         try:
-            for lid, (fx, src, dst) in native_fixed(P, schema, types, ab, tree).items():
+            for lid, (fx, src, dst, soft) in native_fixed(P, schema, types, ab, tree).items():
                 fixed_bad += 1
-                hits.append((-1000, _w(f"lane {lid}: FIXED-SPLIT fixed_cycles {fx} != native source stations {src} + destination {dst} "
-                                       f"(bind: native stations {lid}: fixed_cycles must equal source {src} + destination {dst}); fix: fixed_cycles = {src + dst}")))
+                rs = f" + receiver soft {soft}" if soft else ""
+                hits.append((-1000, _w(f"lane {lid}: FIXED-SPLIT fixed_cycles {fx} != native source stations {src} + destination {dst}{rs} "
+                                       f"(bind: native stations {lid}: fixed_cycles must equal source {src} + destination {dst}{rs}); "
+                                       f"fix: fixed_cycles = {src + dst + soft}")))
             for part, bus, nl in native_out_lanes(P, schema, types, ab):
                 fixed_bad += 1
                 hits.append((-999, _w(f"{part}.{bus}: OUT-LANES native source bus has {nl} outgoing lane(s) (bind: native stations {part}.{bus}: "

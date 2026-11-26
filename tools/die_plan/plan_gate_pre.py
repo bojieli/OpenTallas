@@ -208,7 +208,8 @@ SEATMATCH-1124 (SEAT-MATCH-AUDIT): with a finished bind OUT of this plan (--elab
 
 ISTPRICE (FABLE FLOW REVIEW 11-23 22:50, PRECHECK-LEDGER-R3): FAIL for every lane whose stored latency row is short of the live counts
   (PRICE-SHORT: cycles < 2 + ft stations + landing + source stations; STALE-TABLE: stored ft stations / landing != live) and, with an
-  as-built, every native-source lane whose fixed_cycles != source + destination stations (FIXED-SPLIT) or whose native source bus has
+  as-built, every native-source lane whose fixed_cycles != source + destination stations + the receiver's declared soft_latency.in
+  cycles, counted once (FIXED-SPLIT; PRE-PRICE-ONCE-1125) or whose native source bus has
   != 1 outgoing lane (OUT-LANES): the strict bind dies on these in build_buses / native_istations 35-60 min later (S81 c8 dn_s_3N_L3
   fixed_cycles 10 != 8 + 1; KV A3c / A2f).  Passes only at 0 flagged lanes.  NOT skippable (--skip ISTPRICE is ignored and said so).
   As-built: --asbuilt, else the plan's own `asbuilt` section, else <plan dir>/{plan_of_record/native_bind,plan_inputs/run}/asbuilt_run*.json, else the same under <tree>/physical/die_plan/*/
@@ -1685,7 +1686,7 @@ def check_istprice(tree, plan, asbuilt=None, max_list=10):
                     "FIXED-SPLIT / OUT-LANES (native station rules) not judged (report-only); pass the integrator's as-built")
     out += warn
     if n:
-        out.append(f"FAIL ISTPRICE {n} lane(s) over-cycle; fix: refresh the latency table / fixed_cycles = source + destination (ADV-IST-PRICE has the per-lane fix)")
+        out.append(f"FAIL ISTPRICE {n} lane(s) over-cycle; fix: refresh the latency table / fixed_cycles = source + destination + declared receiver soft (ADV-IST-PRICE has the per-lane fix)")
     elif ab is not None:
         out.append(f"LIST ISTPRICE 0 lanes flagged (as-built: {how})")
     return out
