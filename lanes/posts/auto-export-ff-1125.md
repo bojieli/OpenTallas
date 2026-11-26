@@ -4,3 +4,4 @@
 - 2026-11-25 19:39 PST DIED [auto-export-ff-1125] ot-push-main otpush-loved-redfish-4058728 on loved-redfish: rc=3 after 394 s, ended 03:39:26, log /tmp/aex_push.log, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 394 s, no log
 - 2026-11-25 19:44 PST DIED [auto-export-ff-1125] ot-push-main otpush-loved-redfish-3623500 on loved-redfish: rc=4 after 1168 s, ended 03:44:28, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1168 s, no log
 - 2026-11-25 20:02 PST DIED [auto-export-ff-1125] ot-push-main otpush-loved-redfish-327788 on loved-redfish: rc=3 after 1222 s, ended 04:02:02, log /tmp/aex_push.log, cmd: ot-push-main  | class=TEST-FAIL cause=no cause line
+- 2026-11-25 20:24 PST DONE [auto-export-ff-1125] ot-push-main otpush-loved-redfish-1625953 on loved-redfish: rc=0 after 1282 s, ended 04:24:44, log /tmp/aex_push.log, cmd: ot-push-main 
