@@ -9,3 +9,9 @@ I opened the exact revised overlay at epyc12:/srv/opentallas-scratch2/claude/cod
 The stock generator emits two seven-edge reset histories from the same rst_root_n and preserves the old reset for the coll_i0 ring. Only the two FSTART loads and the displaced reset fanout copy change. The isolated emitted-relay lockstep passed 118 checked edges, and a one-edge mutant departed on cycle 26.
 
 **PASS for the two revised plan branches.** Source PRE and export run in codex-head-west-c51-source-1126. Any changed kit requires normal admission and a fresh detailed-placement review. The independent C20b read-pointer path at −286.31 ps, internal reset removal, and related parent FF remain open. Route stays held.
+
+## Source gates
+
+E12 source units 2127552 and 2263560 completed successfully. PRE found zero issues. The full HEAD strict check bound 8,218 nested instances, the generated cohort matched 27 of 27 types, and all 334 measured lane ages matched the original. E8 unit 2402694 passed whole G0 with zero errors and zero pending views on the same plan. The isolated native SerDes release witness remains conditional for its 12 unchanged targets. The candidate is ready for plan integration and later changed-kit placement once normal host admission is available.
+
+The retained older E8 placement still has separate FF hold issues. A read-only replay of its final CTS checkpoint reproduced −78.16 ps and 2,948 negative endpoints on the stock gate. The exact internal removal path launches from the clk_t40 local-reset copy into slice23 valid_r2 on clk_t54. The associated valid_r to valid_r2 data path crosses the same taps. The clk_t40 tap is at its 800-sink cap and clk_t54 has 126 sinks. These paths need separate clock-cohort work. They confer no route authority on either kit.
