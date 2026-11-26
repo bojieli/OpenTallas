@@ -10447,6 +10447,14 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     reset_cells = gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", "")
     if tree.get("pin_entry_fall"):
         reset_cells += gen_rtl.ENTRY_FALL_CELLS
+    entry_delay = tree.get("pin_entry_delay") or {}
+    if entry_delay:
+        import pin_entry_delay as PED
+        if tree["entry"] != "relayed" or any(
+                tree.get(key) for key in ("pin_entry_fall", "pin_entry_phase", "root_entry_negedge",
+                                          "pin_root_copies", "pin_start_copies")):
+            raise gen_rtl.GenError(f"type {tn}: native pin entry delay needs a plain rising-edge entry")
+        reset_cells += PED.CELL_RTL
     # KV-OWN-HG: FLOW-6 private reader-START copy.  The raw relay of a wavefront OUT tap may be the exact canonical
     # ot_dp_head_raw_export_pair (same clk/D/Q, export_q <= D); its canonical body is the repo cell, never the bound text.
     PAIR = "ot_dp_head_raw_export_pair"
@@ -10459,7 +10467,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         found = re.findall(rf"\bmodule\s+{re.escape(module)}\b(.*?)\bendmodule\b", src, re.S)
         return re.sub(r"\s+", "", found[0]) if len(found) == 1 else None
 
-    def check(name, module, ports):
+    def check(name, module, ports, *, delay_count=None):
         nonlocal owner
         if module not in verified_cell_classes:
             actual_cell = canonical_cell(text, module)
@@ -10478,11 +10486,22 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         for m in modules:
             if owner is not None and m.group(1) != owner[0]:
                 continue
-            for c in re.finditer(rf"\b{re.escape(module)}\s*(?:#\([^;]*?\))?\s*{re.escape(name)}\s*\((.*?)\)\s*;", m.group(2), re.S):
-                hits.append((m.group(1), m.group(2), c.group(1)))
+            for c in re.finditer(rf"\b{re.escape(module)}\s*(?:#\(([^;]*?)\))?\s*{re.escape(name)}\s*\((.*?)\)\s*;",
+                                 m.group(2), re.S):
+                hits.append((m.group(1), m.group(2), c.group(1), c.group(2)))
         if len(hits) != 1:
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: ambiguous instance")
-        actual = dict(re.findall(r"\.(\w+)\s*\(\s*([^()]*)\s*\)", hits[0][2]))
+        parameter_text, connection_text = hits[0][2:]
+        pin_pattern = r"\.(\w+)\s*\(\s*([^()]*)\s*\)"
+        connections = re.findall(pin_pattern, connection_text)
+        actual = dict(connections)
+        if delay_count is not None:
+            count = re.fullmatch(r"\s*\.N\s*\(\s*(\d+)\s*\)\s*", parameter_text or "")
+            if count is None or int(count[1]) != delay_count:
+                raise gen_rtl.GenError(f"type {tn}: native reset {name}: expected explicit delay count {delay_count}")
+            named_pins = rf"\s*{pin_pattern}(?:\s*,\s*{pin_pattern}){{{len(ports)-1}}}\s*"
+            if not re.fullmatch(named_pins, connection_text) or actual.keys() != ports.keys():
+                raise gen_rtl.GenError(f"type {tn}: native reset {name}: clock/data/reset topology differs")
         if any(re.sub(r"\s+", "", actual.get(k, "")) != re.sub(r"\s+", "", v) for k, v in ports.items()):
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: clock/data/reset topology differs")
         prefix = path.rsplit(".", 1)[0] if "." in path else ""
@@ -10494,11 +10513,18 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
 
     sync = tree["entry"] == "sync"
     ent = "u_rst_root" if sync else "u_rst_in"
-    # The captured contract selects the same two-edge pin cell as the binder.
-    # Keep both its canonical body and its local wrapper connections under audit.
+    # Reset and START may have independently declared input delays.
     mod = "ot_dp_rsync_s2" if sync else "ot_dp_rrelay_fn" if tree.get("pin_entry_fall") else "ot_dp_rrelay"
-    body = check(ent, mod, {"clk": "clk", "async_rst_n" if sync else "d": "arst_n",
-                            "sync_rst_n" if sync else "q": "rst_por_n" if lock else "rst_root_n"})
+
+    def check_entry(name, role, source, target):
+        count = entry_delay.get(role, 0)
+        if type(count) is not int or count < 0:
+            raise gen_rtl.GenError(f"type {tn}: native reset {name}: invalid delay count")
+        return check(name, "ot_dp_rrelay_delay" if count else mod,
+                     {"clk": "clk", "async_rst_n" if sync else "d": source,
+                      "sync_rst_n" if sync else "q": target}, delay_count=count or None)
+
+    body = check_entry(ent, "reset", "arst_n", "rst_por_n" if lock else "rst_root_n")
     for c in pin_copies[1:]:
         check(c['name'], "ot_dp_rrelay", {"clk": "clk", "d": "arst_n", "q": c['q']})
     for c in start_copies[1:]:
@@ -10534,9 +10560,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         if len(re.findall(r"\brst_por_n\b", re.sub(r"\bwire\s+rst_por_n\s*;", "", body))) != 2:
             raise gen_rtl.GenError(f"type {tn}: native reset rst_por_n must join only u_rst_root and u_rst_lockq")
     if tree.get("start"):
-        check("u_run_root" if sync else "u_run_in", mod,
-              {"clk": "clk", "async_rst_n" if sync else "d": "start_i",
-               "sync_rst_n" if sync else "q": "run_root"})
+        check_entry("u_run_root" if sync else "u_run_in", "start", "start_i", "run_root")
     # The verified entry must reach the physical kit ports through the exact
     # native wrapper, never a tied or privately substituted reset/clock input.
     child = owner[0]
@@ -10592,7 +10616,8 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
             raise gen_rtl.GenError(f"type {tn}: native reset out rst_o_{k} is not the registered raw tap {net} of its own relay")
     if actual_nodes != {r["name"] for r in physical_nodes}:
         raise gen_rtl.GenError(f"type {tn}: native reset has undeclared or missing relay nodes")
-    entries = set(re.findall(r"\bot_dp_r\w+\s+(u_(?:rst|run)_(?:in|root)(?:_\w+)?)\s*\(", body))
+    entry_parameters = r"(?:#\([^;]*?\)\s*)?" if entry_delay else ""
+    entries = set(re.findall(rf"\bot_dp_r\w+\s+{entry_parameters}(u_(?:rst|run)_(?:in|root)(?:_\w+)?)\s*\(", body))
     expected_entries = {ent} | ({"u_run_root" if sync else "u_run_in"} if tree.get("start") else set())
     expected_entries |= {c['name'] for c in pin_copies + start_copies}
     if entries != expected_entries:

@@ -8,6 +8,7 @@ from types import SimpleNamespace
 import pytest
 import gen_phys as G
 import gen_rtl
+import pin_entry_delay as PED
 import reset_tree as R
 from test_sdc_lint import TINY, _errs, _kit
 
@@ -19,13 +20,19 @@ def tree(entry='relayed'):
                 n_tree=1, n_pad=0, max_hop_um=17.28, reach_um=405, outs=[], core_resets=[], relay_driver=False)
 
 
-def fixture(tmp_path, entry='relayed', mutate=lambda s:s, start=False, entry_fall=False):
+def fixture(tmp_path, entry='relayed', mutate=lambda s:s, start=False, entry_fall=False, entry_delay=None):
     t = tree(entry)
     if entry_fall:t.update(pin_entry_fall=True, pin_entry_added_flops=1+int(start))
     if start:t.update(start=True,start_in=[8.64,10.8],start_role='mission',tap_roles={'0':'mission'},start_tap=None)
+    if entry_delay:
+        reset_count, start_count = entry_delay
+        delay = dict(cell=PED.CELL, reset=reset_count, start=start_count,
+                     reset_sites_um=[[10 + k, 10] for k in range(reset_count)],
+                     start_sites_um=[[10 + k, 12] for k in range(start_count)], max_hop_um=2)
+        t["pin_entry_delay"] = delay
     text = ('module top(input clk, arst_n);\n bound u_bound(.clk(clk), .arst_n(arst_n));\nendmodule\n'
             'module bound(input clk, arst_n);\n' + '\n'.join(R.rtl_lines(t)) + '\nendmodule\n' + gen_rtl.CELLS
-            + (gen_rtl.ENTRY_FALL_CELLS if entry_fall else ''))
+            + (gen_rtl.ENTRY_FALL_CELLS if entry_fall else '') + (PED.CELL_RTL if entry_delay else ''))
     f = tmp_path/'native.sv'; f.write_text(mutate(text))
     p = SimpleNamespace(types={'t':dict(module='top', outline_um=[100,100],
                                       clock=dict(landing_contract=dict(collector_tree=t)))})
@@ -60,6 +67,31 @@ def test_falling_entry_rejects_wrong_cell_and_edge(tmp_path, mutation, error):
     p, f = fixture(tmp_path, mutate=mutation, entry_fall=True)
     with pytest.raises(gen_rtl.GenError, match=error):
         G.install_bound_native_reset(p, 't', [f])
+
+
+@pytest.mark.parametrize("reset_count,start_count", [(7, 0), (7, 3), (0, 3)])
+def test_declared_pin_entry_delays_are_audited_and_placed(tmp_path, reset_count, start_count):
+    p, f = fixture(tmp_path, start=bool(start_count), entry_delay=(reset_count, start_count))
+    c = G.install_bound_native_reset(p, "t", [f])
+    assert c["entry_path"] == "u_bound.u_rst_in"
+    assert "ot_dp_rrelay_delay" in c["verified_cell_classes"]
+    assert R.release_clocks(c["tree"]) == R.release_clocks(tree())
+    tcl = R.tcl_text(c["tree"], native_paths=c["native_paths"])
+    assert ("ot_pin_entry_delay_place u_rst_in 7" in tcl) == bool(reset_count)
+    assert ("ot_pin_entry_delay_place u_run_in 3" in tcl) == bool(start_count)
+
+
+@pytest.mark.parametrize("old,new,error", [
+    (".N(7)", ".N(6)", "expected explicit delay count 7"),
+    (" #(.N(7)) u_rst_in", " u_rst_in", "expected explicit delay count 7"),
+    (".d(arst_n)", ".d(rst_root_n)", "clock/data/reset topology differs"),
+    (".d(arst_n)", ".d(arst_n), .d(arst_n)", "clock/data/reset topology differs"),
+    ("always @(posedge clk) q<=p[N];", "always @(negedge clk) q<=p[N];", "canonical stage/gate behavior"),
+])
+def test_delayed_entry_rejects_wrong_count_wiring_or_phase(tmp_path, old, new, error):
+    p, f = fixture(tmp_path, entry_delay=(7, 0), mutate=lambda text: text.replace(old, new))
+    with pytest.raises(gen_rtl.GenError, match=error):
+        G.install_bound_native_reset(p, "t", [f])
 
 
 def test_positive_nested_root_has_exact_two_bit_exception(tmp_path):
