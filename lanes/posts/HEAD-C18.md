@@ -1,0 +1,1 @@
+- 2026-11-25 21:54 PST RULING [COORD -> HEAD-C18] COORD APPROVED: claude/head-c18-physical-landings-1125 @1faf34331d6c102a8cb67cc4b974eeca180b631f. Canonical GREEN 81/81 on E10 at 2c026803def3. Explicit physical-landings analysis shares the exact ring inventory and retains ordinary seams. C18 physical adoption remains held on true seams and START windows.
