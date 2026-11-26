@@ -2050,3 +2050,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-26 09:26 PST MERGED [MERGE-QUEUE -> C-RST-RELAY-REACH] claude/c-rst-relay-reach-r2-1126@f57cfc2d0ac: nothing to land, landed meanwhile: every commit of f57cfc2d0ac is already in main decccfdfe2f (patch-equal).
 - 2026-11-26 09:26 PST MERGED [MERGE-QUEUE -> FLEET-OPS-R2] fleet-ops-r2-preflight-reservation@dccb5961549: nothing to land, dccb5961549 is an ancestor of main 16c46e77be9.
 - 2026-11-26 09:26 PST MERGED [MERGE-QUEUE -> HEAD-WEST-271-PARENT-SHARE] head-west-271-parent-share@3868c7c8b31: nothing to land, 3868c7c8b31 is an ancestor of main 16c46e77be9.
+- 2026-11-26 09:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): intel1: rt/current decccfdfe2f3 != hub 9c1da228693f. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
