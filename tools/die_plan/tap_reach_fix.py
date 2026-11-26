@@ -36,6 +36,8 @@ validation sees what the new tap is for.  The BASE taps are frozen as type.reset
 RESET-KEY 11-19) so the reset relays, their indices and sites do not move and the bound reset RTL stays valid.  A type is
 kept only when the exported taps load, the over-radius seat count strictly falls and no seat got farther than before.
 
+Row form for row_gate: `script:tools/die_plan/tap_reach_fix.py::--row {in} {out} {report} --types REGEX` sets the flag (derive runs in step 3).
+
 Relation to tools/die_plan/tap_reach.py (QC-INT-R2-TOOLS, PRE class TAPREACH, report-only): that check is the fast plan-seat
 PRE rule (relay_sites / station regs / collector relays against the stored taps).  This module is the generator side it
 names and its check reads the plan geometry the kit really places (plan_geom.type_sites: it adds the reset-tree relays and
@@ -529,7 +531,36 @@ def _check_job(tn):
         return dict(type=tn, error="%s: %s" % (type(e).__name__, str(e)[:160]))
 
 
+def row_main(argv):
+    """row_gate.py script row: tap_reach_fix.py --row IN OUT REPORT [--types RE] [--radius U] [--span U] [--jobs N] [--rounds N].
+    Only SETS the plan flag (the row IS the intent); row_gate step 3 then derives the taps from the applied plan (it needs the
+    tree: the sink bins and the reset tree resolve there).  Idempotent: an existing flag keeps its other keys."""
+    ap = argparse.ArgumentParser()
+    ap.add_argument("inp")
+    ap.add_argument("out")
+    ap.add_argument("report")
+    ap.add_argument("--types")
+    ap.add_argument("--radius", type=float)
+    ap.add_argument("--span", type=float)
+    ap.add_argument("--jobs", type=int)
+    ap.add_argument("--rounds", type=int)
+    A = ap.parse_args(argv)
+    plan = json.loads(Path(A.inp).read_text())
+    cfg = dict(plan.get(FLAG) or {})
+    cfg["enable"] = 1
+    for key, val in (("types", A.types), ("radius_um", A.radius), ("span_um", A.span), ("jobs", A.jobs), ("rounds", A.rounds)):
+        if val is not None:
+            cfg[key] = val
+    plan[FLAG] = cfg
+    Path(A.out).write_text(json.dumps(plan, separators=(",", ":")) + "\n")
+    Path(A.report).write_text(json.dumps({"config": cfg}, indent=1) + "\n")
+    print("tap_reach row: flag set %s" % json.dumps(cfg, sort_keys=True))
+    return 0
+
+
 def main(argv=None):
+    if (argv if argv is not None else sys.argv[1:])[:1] == ["--row"]:
+        return row_main((argv if argv is not None else sys.argv[1:])[1:])
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("check")

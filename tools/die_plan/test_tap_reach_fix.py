@@ -156,3 +156,15 @@ def test_type_whose_reset_relays_move_is_reverted(tmp_path, monkeypatch):
     selected, report = TR.derive(raw, path, tmp_path)
     assert selected == [] and report["mid"]["status"].startswith("reverted: the new taps move")
     assert json.dumps(raw["partition_types"]["mid"], sort_keys=True) == before
+
+
+def test_row_form_only_sets_the_flag_and_is_idempotent(tmp_path):
+    src = _plan(tmp_path, EX, "in.json")
+    out, rep = tmp_path / "out.json", tmp_path / "rep.json"
+    assert TR.main(["--row", str(src), str(out), str(rep), "--types", "^mid$", "--jobs", "2"]) == 0
+    got = json.loads(out.read_text())
+    assert got[TR.FLAG] == {"enable": 1, "types": "^mid$", "jobs": 2}
+    assert {k: v for k, v in got.items() if k != TR.FLAG} == EX              # nothing else touched
+    out2 = tmp_path / "out2.json"
+    assert TR.main(["--row", str(out), str(out2), str(rep), "--span", "300"]) == 0
+    assert json.loads(out2.read_text())[TR.FLAG] == {"enable": 1, "types": "^mid$", "jobs": 2, "span_um": 300.0}
