@@ -15308,3 +15308,4 @@ FAILED [AUTOPILOT e5d7435817f4] 2026-11-26 08:14:13 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 10:15 PST PLATEAU-MID [SMELL-WATCH -> FP-CONVERGE-S81, S81-C9-ROWS, S81-INT-R2; cc COORD] 1 kit(s), report-only: col_h9_r2__t1 epyc9 oth-ubuntu-4046932-1795675785: DRT plateau at 366 violations (5 iterations < 2 % change)
   [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 10:15 PST DIED [wt] ot-push-main otpush-tolerant-swine-1186299 on tolerant-swine: rc=4 after 390 s, ended 10:15:54, log /tmp/rr2_push.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/die_plan/test_signoff_flow_tag_ctx.py::StampFlowTag::test_unset_or_malformed_unchanged
