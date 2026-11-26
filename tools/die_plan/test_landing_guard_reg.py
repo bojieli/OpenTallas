@@ -53,3 +53,31 @@ def test_guard_reg_rejects_plain_ring_or_non_boolean():
     p["partition_types"]["B"]["landing_guard_reg"] = "true"
     with pytest.raises(LandingError, match="boolean"):
         Landings(p, t).type_rtl("B", B_BODY)
+
+
+def test_named_guard_reg_preserves_unselected_rtl_and_data_ages():
+    p, t = strap_vehicle()
+    base = Landings(copy.deepcopy(p), copy.deepcopy(t))
+    baseline = base.type_rtl("B", B_BODY)
+    p["partition_types"]["B"]["landing_guard_reg_buses"] = ["y"]
+    bound = Landings(copy.deepcopy(p), copy.deepcopy(t))
+    rtl = bound.type_rtl("B", B_BODY)
+    assert rtl.count(".STATUS_REG(1), .GUARD_REG(1)") == 1
+    assert rtl.replace(", .STATUS_REG(1), .GUARD_REG(1)", "") == baseline
+    rec = bound.manifest()["reset_placements"]["B"]["y"]
+    assert rec["status_reg_added_fault_cycles"] == 1
+    assert rec["status_reg_added_data_cycles"] == rec["guard_reg_added_cycles"] == 0
+    assert bound.manifest()["lane_added_cycles"] == base.manifest()["lane_added_cycles"]
+
+
+@pytest.mark.parametrize("selection,match", [
+    (["missing"], "non-count-aligned input"),
+    (["y", "y"], "distinct nonempty"),
+    ("y", "distinct nonempty"),
+    ([0], "distinct nonempty"),
+])
+def test_named_guard_reg_rejects_invalid_selection(selection, match):
+    p, t = strap_vehicle()
+    p["partition_types"]["B"]["landing_guard_reg_buses"] = selection
+    with pytest.raises(LandingError, match=match):
+        Landings(p, t).type_rtl("B", B_BODY)

@@ -1470,6 +1470,14 @@
      "landing_guard_reg": {
       "type": "boolean"
      },
+     "landing_guard_reg_buses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
      "landing_wen_local": {
       "type": "boolean"
      },
