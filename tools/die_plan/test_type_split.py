@@ -494,6 +494,7 @@ def test_split_inline_memory_and_typed_proof_follow_pieces():
                 "port_buf_at_pin": True,
                 "ft_track_frac": 0.35,
                 "dly_alt_pol": True,
+                "clock": {"tap_reset_split": True, "tap_pair_affinity": {"macro_follow": True}},
                 "pad_ram": {"min_d": 8, "wide_min_d": 32,
                             "keepout_um": [[5.0, 30.0, 20.0, 70.0], [5.0, 10.0, 20.0, 50.0]]},
                 "dead_inputs": [{"module": "sx", "ports": {"a": [[0, 2]]}}],
@@ -512,6 +513,8 @@ def test_split_inline_memory_and_typed_proof_follow_pieces():
     assert low["ft_track_frac"] == high["ft_track_frac"] == 0.35
     assert low["verilog_defines"] == high["verilog_defines"] == ["V0"]
     assert low["dly_alt_pol"] and high["dly_alt_pol"]
+    assert low["clock"]["tap_reset_split"] and high["clock"]["tap_reset_split"]
+    assert low["clock"]["tap_pair_affinity"] == high["clock"]["tap_pair_affinity"] == {"macro_follow": True}
     assert low["pad_ram"] == {"min_d": 8, "wide_min_d": 32,
                               "keepout_um": [[5.0, 30.0, 20.0, 50.0], [5.0, 10.0, 20.0, 50.0]]}
     assert high["pad_ram"] == {"min_d": 8, "wide_min_d": 32,

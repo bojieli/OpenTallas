@@ -119,7 +119,7 @@ PIN_STEP = 0.96      # landing pin nudge step (two 0.48 tracks)
 # clock keys copied to every piece unchanged (HEAD gen-mode types, FABLE-FIX-HEAD-LEP0N-R6 11-21): budget / form scalars
 # and the tap_group instance regexes (a pattern that names no instance of a piece groups nothing there)
 CLOCK_COPY_KEYS = {"insertion_basis", "insertion_ff_ps", "landing_export_form", "tap_grt_pre", "tap_model",
-                   "tap_passthrough", "tap_group",
+                   "tap_passthrough", "tap_group", "tap_pair_affinity", "tap_reset_split",
                    "landing_ring_lite", "landing_ring_narrow"}   # RING-LITE-1 type flags: copied to both pieces
 
 
