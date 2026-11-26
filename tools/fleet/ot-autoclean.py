@@ -3288,6 +3288,12 @@ class Driver:
                 shutil.copy(gm, os.path.join(tb, "tools/ot_delete_guard.py"))
             if _dg is None or not os.path.exists(gm):     # FLEET-OPS-R r359: never install a cleaner without the guard module beside it
                 raise RuntimeError("push refused: ot_delete_guard.py missing next to the pushed ot-autoclean.py (fail closed)")
+            # AUTO-EXPORT 11-25: the guard loads not_record.py from its own dir (0fc34a1f46); without it every host run died on
+            # FileNotFoundError at import, so it travels with the guard (fail closed when missing)
+            nr = os.path.join(here, "not_record.py")
+            if not os.path.exists(nr):
+                raise RuntimeError("push refused: not_record.py missing next to ot_delete_guard.py (fail closed)")
+            shutil.copy(nr, os.path.join(tb, "tools/not_record.py"))
             if not push_coord_fresh(self.a.coord):        # a stale local coord clone must not overwrite the hosts' hub-built protected list
                 pass
             elif _dg is not None:                         # protected list for the host guard (kit_wave.json src/bind of record, markers)
