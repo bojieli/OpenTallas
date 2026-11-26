@@ -530,7 +530,7 @@ PROBE_ROOT_RE = re.compile(r"^.*/(?:private/[^/]+|ot-jobs)/[^/]+(?=/)")
 PROBE_HOLD_S = 12 * 3600
 
 
-def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
+def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S, trimmed_dirs=None):
     """FLEET-OPS 11-25 (COORD: aggressive cleanup deleted the HEAD-SERDES-REFLOOR v2 place-probe job dir on epyc10 about 10 min after it finished, before its odb and path reports were reviewed):
     a probe / private-kit job dir (under .../private/ or .../ot-jobs/) with ANY file written in the last 12 h is refused, for every caller of the guard (ot-delete, autoclean, auto-retire).  The walk stops at the
     first fresh file; a dir that cannot be read is treated as fresh.  OT_PROBE_HOLD_S overrides (0 = off)."""
@@ -564,6 +564,7 @@ def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
                 return "young probe dir: probe root written < %g h ago (kept)" % (hold_s / 3600)
         except OSError:
             return "young probe dir: unreadable (kept)"
+    trimmed_dirs = trimmed_dirs or {}
     stack, seen = [scan_root], 0
     while stack:
         d = stack.pop()
@@ -575,9 +576,13 @@ def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
                         st = e.stat(follow_symlinks=False)
                     except OSError:
                         continue
-                    if now - st.st_mtime < hold_s:
+                    directory = stat.S_ISDIR(st.st_mode)
+                    # Ignore only the directory timestamp produced by an
+                    # earlier unlink in this same intermediate trim batch.
+                    trim_mtime = trimmed_dirs.get(e.path) if file_target and directory else None
+                    if trim_mtime != st.st_mtime_ns and now - st.st_mtime < hold_s:
                         return "young probe dir: %s written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (os.path.relpath(e.path, scan_root), hold_s / 3600)
-                    if e.is_dir(follow_symlinks=False):
+                    if directory:
                         stack.append(e.path)
                     if seen > 50000:
                         return "young probe dir: file review window could not be established (kept)" if file_target else None
@@ -586,7 +591,7 @@ def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
     return None
 
 
-def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
+def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None, trimmed_dirs=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
     jr = jobroot_refusal(os.path.abspath(target))
@@ -598,7 +603,7 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     kr = keep_refusal(target)
     if kr:
         return kr
-    yp = young_probe_refusal(target)
+    yp = young_probe_refusal(target, trimmed_dirs=trimmed_dirs)
     if yp:
         return yp
     rr = routed_unsigned_refusal(t)

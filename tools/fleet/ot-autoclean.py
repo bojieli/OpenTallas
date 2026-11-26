@@ -88,10 +88,10 @@ def push_coord_fresh(coord, now=None):
         return False
 
 
-def guard_refuse(path):
+def guard_refuse(path, trimmed_dirs=None):
     if _dg is None:
         return "ot_delete_guard module missing (fail closed)"
-    return _dg.refuse(path)
+    return _dg.refuse(path, trimmed_dirs=trimmed_dirs)
 
 
 EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)")      # src_* trees are held by reference (kit-wave keep + bind refs + live lane), not by name (COORD 11-12 epyc2)
@@ -2360,10 +2360,11 @@ class Job:
 
     def delete(self, cls, files):
         freed = 0
+        trimmed_dirs = {}
         for f in files:
             if EMERGENCY_HOLD_RE.search(os.path.realpath(f) + "/") or EMERGENCY_HOLD_RE.search(f + "/"):
                 raise OSError("emergency hold " + f)
-            _gr = guard_refuse(f)
+            _gr = guard_refuse(f, trimmed_dirs)
             if _gr:
                 raise OSError("delete guard: " + _gr)
             try:                                              # per-delete journal: the manifest is written only when a run ends
@@ -2391,6 +2392,8 @@ class Job:
                     raise OSError("refusing never-delete name " + f)
                 st = os.lstat(f)
                 os.unlink(f)
+                parent = os.path.dirname(os.path.abspath(f))
+                trimmed_dirs[parent] = os.lstat(parent).st_mtime_ns
                 freed += st.st_blocks * 512
         return freed
 
