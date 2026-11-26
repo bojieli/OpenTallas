@@ -1696,6 +1696,20 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
         "capture_tap": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "pattern": "^[^\\s]+$"}},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
         "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}
+# C-XTAP-HOLD 11-26 (COORD 09:22 ruling, kit_xtap_seam.py): per type (exact name or 'prefix*') the planned hard-seam hold
+# elements on hard-core input pins fed by a neighbouring hard core on another core tap: form hb4 (n kept HB4 per bit on the
+# capture-side net) or lockup (negative-level latch on a fabric tap); both 0 cycles.  absent = off, byte-identical kits.
+_XS_PAIR = {"type": "object", "additionalProperties": False, "required": ["inst", "ports", "form"], "properties": {
+    "inst": {"type": "string", "minLength": 1}, "ports": {"type": "array", "minItems": 1, "items": _name},
+    "form": {"type": "string", "enum": ["hb4", "lockup"]}, "types": {"type": "array", "items": _name},
+    "n": {"type": "integer", "minimum": 1, "maximum": 12}, "deficit_ps": {"type": "number"},
+    "margin_ps": {"type": "number", "minimum": 0}, "delta_ps": {"type": "number"},
+    "window_ps": {"type": "number", "minimum": 0},
+    "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}, "launch": {"type": "string"},
+    "allow_missing": {"type": "boolean"}, "note": {"type": "string"}}}
+SCHEMA["properties"]["clock"]["properties"]["xtap_seam_element"] = {"type": "object", "additionalProperties": {
+    "type": "object", "additionalProperties": False, "required": ["pairs"], "properties": {
+        "note": {"type": "string"}, "pairs": {"type": "array", "minItems": 1, "items": _XS_PAIR}}}}
 # KV-SENDER-SKEW 11-24 (COORD ruling, landing_contract.fwd_export_spec): per type (exact name or 'prefix*') the forwarded
 # clock export form; from = leaf hangs each export buffer on its ring's launch-flop leaf at POST_CTS (fwd_export_leaf.tcl),
 # ports = the forwarded outputs covered (default all); absent / from = tap = the source-tap root form, byte-identical kits.

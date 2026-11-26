@@ -7976,6 +7976,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             zlp_rec = _ZLK.apply_ports_kit(kd / "rtl", t["module"], zlk_spec["ports"], zlk_spec.get("clk", "clk"))
             (kd / "zl_ports.json").write_text(json.dumps(zlp_rec, indent=1) + "\n")
             print(f"gen phys: type {tn}: OT_ZL_PORTS {json.dumps(zlp_rec)}")
+    # C-XTAP-HOLD 11-26 (plan clock.xtap_seam_element, kit_xtap_seam.py; absent = nothing): the planned hard-seam hold element
+    # (hb4 chain u_xshd_* / lockup latch u_xslk_*) on hard-core input pins of the staged wrapper RTL.  0 cycles.
+    import kit_xtap_seam as _XS
+    xs_spec = _XS.spec_of(getattr(P, "raw", None), tn)
+    if xs_spec:
+        xs_rec = _XS.apply_kit(kd / "rtl", xs_spec)
+        (kd / "xtap_seam.json").write_text(json.dumps(dict(spec=xs_spec, files=xs_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_XTAP_SEAM " + json.dumps({f: {k: r[k] for k in ("elements", "bits", "hb4_cells", "forms")}
+                                                                  for f, r in xs_rec.items() if isinstance(r, dict)}))
     # KV-PV-CAP 11-23 (plan partition_types[t].dly_alt_pol, kit_dly_ap.py; absent = nothing): ot_dp_dly lines (D >= 2) of the
     # staged bound RTL stored at alternating polarity, so the QN-only ASAP7 flops need no inverter between stages (cycle-exact,
     # same instance/register names; LEC kit RTL vs netlist).  After every pass that parses or splits the delay lines.
@@ -8141,7 +8150,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # COORD 11-04 06:00 (2): opt-in kit-level cap; without the option the file is byte-identical to before
     (kd / "pre_floorplan_type.tcl").write_text((f"set ::ot_native_cell_limit {int(native_cell_cap)}\n" if native_cell_cap else "")
                                                + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n"
-                                               + hold_pad_dont_touch_tcl(P, tn, kd))
+                                               + hold_pad_dont_touch_tcl(P, tn, kd)
+                                               + _XS.keep_tcl(xs_spec))
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
