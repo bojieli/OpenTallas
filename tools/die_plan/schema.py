@@ -2093,6 +2093,12 @@ SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties"
     "enable": {"type": ["integer", "boolean"]}, "stack_min": {"type": "integer", "minimum": 2}, "max_um": {"type": "number", "exclusiveMinimum": 0},
     "halo_um": {"type": "number", "minimum": 0}, "margin_um": {"type": "number", "minimum": 0}, "tap_frac": {"type": "number", "exclusiveMinimum": 0}}}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
+# TAP-REACH (CLASS-OWNERS-B C-TAP-REACH 11-26, tap_reach_fix.py): opt-in, default absent = byte-identical; the per-cut generator appends sink
+# taps (explicit clock.taps / added_taps) for FIRM seats beyond the type's tap radius, optionally splits taps over span_um
+SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "radius_um": {"type": "number", "exclusiveMinimum": 0},
+    "span_um": {"type": "number", "exclusiveMinimum": 0}, "rounds": {"type": "integer", "minimum": 1},
+    "jobs": {"type": "integer", "minimum": 1}, "types": {"type": "string"}}}
 
 # Exact native launch group for a slot-local polarity inverter placement hook.
 FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)"

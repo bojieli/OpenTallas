@@ -10846,6 +10846,37 @@
     }
    }
   },
+  "tap_reach": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "radius_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "span_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "rounds": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "jobs": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "types": {
+     "type": "string"
+    }
+   }
+  },
   "core_shape_exceptions": {
    "type": "array",
    "items": {
