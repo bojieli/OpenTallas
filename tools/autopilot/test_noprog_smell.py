@@ -349,13 +349,14 @@ def test_smell_render_refuses_an_unfit_host(tmp_path, monkeypatch):
 def test_sta_numbers_reach_the_vis_rows_and_a_wns_below_150_is_a_smell(tmp_path, monkeypatch):
     coord(tmp_path, monkeypatch)
     q = tmp_path / "VIS-QUEUE.tsv"
-    row = lambda st, kit: "\t".join(["1", "col_h9_r0_p5__t1", "S81", "PLACE-GP", "epyc9:/d/vis", st, "S81-ALLFIX-INT", kit, "LOG"])
-    q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + row("RENDERED", "/k/a") + "\n" + row("VERDICT-SMELL-STRUCTURAL", "/k/a") + "\n" + row("RENDERED", "/k/b") + "\n")
+    row = lambda st, kit, stage="PLACE-GP": "\t".join(["1", "col_h9_r0_p5__t1", "S81", stage, "epyc9:/d/vis", st, "S81-ALLFIX-INT", kit, "LOG"])
+    q.write_text("t\ttype\tdie\tcheckpoint\trender\tstatus\towner\tkit\treview\n" + row("RENDERED", "/k/a") + "\n" + row("VERDICT-SMELL-STRUCTURAL", "/k/a") + "\n" + row("RENDERED", "/k/b") + "\n" + row("RENDERED", "/k/a", "GRT") + "\n")
     js = lambda w: json.dumps({"sta_cell": f"WNS {w} TNS -9.0 n<-150 3 T 833", "sta": {"wns_ps": w, "tns_ps": -9.0, "n_below_150": 3, "period_ps": 833.0}})
     runner = lambda h, cmd: "===/k/a\n" + js(-171.0) + "\n===/k/b\n" + js(-20.0) + "\n"
     assert nw.vis_sta_sync(str(q), runner, post=True, now=NOW) == 3
     ls = q.read_text().splitlines()
     assert ls[1].split("\t")[9].startswith("WNS -171.0") and ls[2].split("\t")[9].startswith("WNS -171.0") and ls[3].split("\t")[9].startswith("WNS -20.0")
+    assert len(ls[4].split("\t")) == 9  # placement timing cannot label this GRT checkpoint
     sm = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
     assert len(sm) == 2 and "STA-WNS" in sm[1] and "-171.0" in sm[1]
     p = [x for x in posted(tmp_path) if "STA-WNS" in x]
