@@ -110,9 +110,9 @@ def name_refs(t):
 class Solver:
     """per-type reset tree / tap table / raw hop answers of the plan as written (cached); tests inject a fake"""
 
-    def __init__(self, raw, plan_path, tree=None):
+    def __init__(self, raw, plan_path, tree=None, *, plan_obj=None):
         self.raw, self.plan_path, self.root = raw, plan_path, tree
-        self._P, self._c = None, {}
+        self._P, self._c = plan_obj, {}
 
     def _plan(self):
         if self._P is None:
@@ -140,10 +140,16 @@ class Solver:
         self.relays(tn)
         return self._c[("t", tn)]
 
+    def _tap_grid(self, tn):
+        """The fully qualified clock grid shared by the tap-name and export-hop checks."""
+        if ("grid_rows", tn) not in self._c:
+            import schema
+            self._c[("grid_rows", tn)] = self._run(lambda: list(schema.tap_grid(self._plan(), tn)))
+        return self._c[("grid_rows", tn)]
+
     def taps(self, tn):
         if ("k", tn) not in self._c:
-            import schema
-            self._c[("k", tn)] = self._run(lambda: {p[0] for p in schema.tap_grid(self._plan(), tn)})
+            self._c[("k", tn)] = {p[0] for p in self._tap_grid(tn)}
         return self._c[("k", tn)]
 
     def broadcast(self):
@@ -204,8 +210,7 @@ class Solver:
     def grid(self, tn):
         """{tap: (x, y)} of the type's current tap grid (schema.tap_grid, reach_rules R-REACH-4's grid)"""
         if ("g", tn) not in self._c:
-            import schema
-            self._c[("g", tn)] = self._run(lambda: {n: (float(x), float(y)) for n, x, y in schema.tap_grid(self._plan(), tn)})
+            self._c[("g", tn)] = {n: (float(x), float(y)) for n, x, y in self._tap_grid(tn)}
         return self._c[("g", tn)]
 
     def raw_hops(self, tn):
@@ -846,7 +851,7 @@ def reset_tree_types(raw, classes=CLASSES, broadcast=lambda: False):
 
 
 def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=None, budget_s=None, base=None,
-             base_solver=None, scope=None):
+             base_solver=None, scope=None, plan_obj=None):
     """FAIL / WARN lines of the three classes (a type the solver cannot build is WARN ... not checked: the bind names it).
     scope (PRE-SPEED-1125, a plan_gate_pre --types set): the per-type checks judge only these types; the die-wide relay check stays"""
     want = {c.upper() for c in classes}
@@ -856,7 +861,7 @@ def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=N
     only = set(filter(None, os.environ.get("OT_DERIVED_TYPES", "").split(",")))
     if scope is not None:
         todo = [(tn, t) for tn, t in todo if tn in scope]
-    S = solver or Solver(raw, plan_path, tree)
+    S = solver or Solver(raw, plan_path, tree, plan_obj=plan_obj)
     base_raw = None
     if base:
         try:
