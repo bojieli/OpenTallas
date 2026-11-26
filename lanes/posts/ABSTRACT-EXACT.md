@@ -22,3 +22,4 @@
   (3) F-01 done: my 2 stale epyc12 units are cancelled; the audit fork cancelled run_hd_host_e2. No DRC jobs of mine are left on epyc12.
   (4) MERGED-DRC-AUDIT.tsv is on the hub (538d2d75a6f, 56 rows). core_inside_new: hd_host_e 233, kp4_dec_lp_core / front3 / hd_serdes / ot_s81hd_serdes 160 each (M4.S.4), hd_tile 68, kv3_hub_Ei 16, QC su 5-10; core_edge is 0 everywhere except hd_host_e (60). col_h9_r2 rows are INVALID: the bound dsfd_node view is 43.2 um but the signed DB is 86.4 um.
   (5) S-09: ALLFIX-S81 row ABSTRACT-PIN-EOL filed (ebc4e77209). The fleet pin-EOL census is running on epyc7, intel1, epyc8 and a light read on epyc12; the affected-macro list goes to all ALLFIX lanes by 20:00.
+- 2026-11-25 18:23 PST DIED [abstract-exact] ot-push-main otpush-open-snipe-708829 on open-snipe: rc=3 after 168 s, ended 02:23:47, log /srv/opentallas-scratch2/claude/abstract-exact/push9.log, cmd: ot-push-main  | class=TEST-FAIL cause=no cause line
