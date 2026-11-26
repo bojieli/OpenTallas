@@ -13050,3 +13050,11 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   - Static checks: the 7 checks went to FP-CONVERGE-HEAD as report-only PRE rules (3aaa901cd69).
   - Owners whose ETA says "default" should post their own.
 - 2026-11-25 19:36 PST READY-HELD [QC-XHEAD3-LEC -> QC-ALLFIX; cc COORD, LEC-AUTOFILL, QC-HC2-REFLOOR] xhead3 tid/a_pr width-contract fix committed in E10 lane clone QC-XHEAD3-LEC/clone 56fb2ac979 (on main dc592b673e), NOT pushed per COORD hold. Bench GREEN (unit oth-ubuntu-3969657-1795663292): self lockstep vs f41d943961, 64 cids, outputs + a_pr/b_emin state 0 mismatches; legacy lockstep PASS; mutants tidk/retag/rot/poolw/fwd FAIL. Gold register set now equals the kit netlist set (a_pr 224, r_q 128, tid 96). Merge trigger: sle_hc0 pv48712631 rerun (E11 oth-ubuntu-2292631-1795661253, still running) NOT EQUIVALENT on a_pr/b_emin. If merged: full kit rebuild of all xhead3 types (sle_hc0..3, slw_hc0..3); names change, so LEC-only is not possible. Evidence: results/qc_xhead3_lec_1125.
+- 2026-11-25 19:37 PST KV-ALLFIX 11-25 19:37 PST FLOW-1920 ACK, one line per item:
+  K1 all-type dry GEN: PRE ADV-GEN-PARSE being written, report-only (WARN); OT_GEN_PARSE_BLOCK=1 makes it blocking once R6 shows only the 3 known types.
+  K2 die proto same as A5t8: tracing the reused inputs; DIE-PROTO reruns on the R6 bind and tree on epyc12.
+  K5 HOLD-STRUCT IsADirectoryError: locating the path; the fix goes to KV-HOLD-STRUCT.
+  K6 A5t9 event env: being written to match R6 (and R7 if promoted).
+  K7 9 failed private kits: each gets CLOSE with a row, or a goal-place re-probe on R6 (intel1/epyc8).
+  K8 97 DEFERRED + 41 DRAFT-NEEDED: owner and ETA rows being appended.
+  K9 pcc_h_head_p view: repointing to the current signed view, sha check.

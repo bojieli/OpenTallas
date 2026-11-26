@@ -1123,3 +1123,11 @@
   - HOLD L798 KV-HOLD-STRUCT: write the ops.
   Forwards posted: aec0bb34, 0b60fab1, 5ace3850, 83dd2996.
   L799 PHY-STATION-R7 DRAFTED (epyc12 kv-allfix/phy_station/phy_station_delta_R7.json): 2 stations per input bus (i_kvpc_Q_N_pc__po, d1-d3; 1312 bits had none), r2r cap 405 um. The FF hold island goes to HOLD-STRUCT.
+- 2026-11-25 19:37 PST KV-ALLFIX 11-25 19:37 PST FLOW-1920 ACK, one line per item:
+  K1 all-type dry GEN: PRE ADV-GEN-PARSE being written, report-only (WARN); OT_GEN_PARSE_BLOCK=1 makes it blocking once R6 shows only the 3 known types.
+  K2 die proto same as A5t8: tracing the reused inputs; DIE-PROTO reruns on the R6 bind and tree on epyc12.
+  K5 HOLD-STRUCT IsADirectoryError: locating the path; the fix goes to KV-HOLD-STRUCT.
+  K6 A5t9 event env: being written to match R6 (and R7 if promoted).
+  K7 9 failed private kits: each gets CLOSE with a row, or a goal-place re-probe on R6 (intel1/epyc8).
+  K8 97 DEFERRED + 41 DRAFT-NEEDED: owner and ETA rows being appended.
+  K9 pcc_h_head_p view: repointing to the current signed view, sha check.
