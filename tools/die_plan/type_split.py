@@ -608,7 +608,7 @@ class TypeSplit:
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
                    "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources",
                    "id_straps", "private_reset_start_exports", "reset_start_raw_exports", "relay_split",
-                   "dly_alt_pol", "pad_ram"}
+                   "dly_alt_pol", "pad_ram", "place_regions"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -650,6 +650,12 @@ class TypeSplit:
             local = copy.deepcopy(b)
             self._shift_piece_window(local, "face", "window_um", piece)
             T[piece]["buses"].append(local)
+        for region in t.get("place_regions", []):
+            rect = region["box_um"]
+            piece = cut.piece(rect[cut.ax], rect[cut.ax + 2], f"{self.tn} place region {region['name']}")
+            local = copy.deepcopy(region)
+            local["box_um"] = cut.shr(rect, piece)
+            T[piece].setdefault("place_regions", []).append(local)
         # hard cores
         for i in range(n):
             T[i]["hard_cores"] = []
@@ -1495,6 +1501,7 @@ class TypeSplit:
         t, cut, T = self.t, self.cut, self.T
         ck = t.get("clock") or {}
         known = {"tap_um", "layer", "insertion_ps", "insertion_tol_ps", "tap_pitch_um", "tap_edge_y_um", "taps",
+                 "tap_landing_seam",
                  "core_taps", "edge_clocks", "landing_contract", "added_taps", "tap_mode", "sink_sites_um",
                  "reach_fix_sinks", "tap_radius_um", "tap_max_sinks", "tap_target_sinks", "die_islands_um",
                  "keepouts_um", "sink_bins_file", "landing_ring_wreg", "landing_local_resets"} | CLOCK_COPY_KEYS | \
@@ -1539,12 +1546,13 @@ class TypeSplit:
             if "tap_um" in ck:
                 c["tap_um"] = (cut.sh(ck["tap_um"], i) if cut.ppiece(ck["tap_um"]) == i else centre)
             self._clock_sites(ck, c, i)
-            if "tap_edge_y_um" in ck:
-                if cut.ax != 1:
-                    raise SplitError(f"{self.tn}: tap_edge_y_um with an x cut is not handled")
-                h = T[i]["outline_um"][1]
-                e = [rnd(y - cut.lo(i)) for y in ck["tap_edge_y_um"] if cut.lo(i) - EPS <= y <= cut.hi(i) + EPS]
-                c["tap_edge_y_um"] = e or [rnd(21.6 if i < self.n - 1 else h - 21.6)]
+            if "tap_edge_y_um" in ck and "tap_edge_y_um" not in drop:
+                if cut.ax == 0:
+                    c["tap_edge_y_um"] = list(ck["tap_edge_y_um"])
+                else:
+                    h = T[i]["outline_um"][1]
+                    e = [rnd(y - cut.lo(i)) for y in ck["tap_edge_y_um"] if cut.lo(i) - EPS <= y <= cut.hi(i) + EPS]
+                    c["tap_edge_y_um"] = e or [rnd(21.6 if i < self.n - 1 else h - 21.6)]
             c["taps"] = []
             for tp in ck.get("taps", []):
                 s = self._core_tap_piece(tp) if tp.get("kind") == "core" else None
