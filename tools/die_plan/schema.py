@@ -1612,7 +1612,22 @@ SCHEMA = {
 # Regional landing pins use the existing clock/reset infrastructure model,
 # not functional R8 bus ports. Exact scalar endpoints and <=405um registered
 # status hops are checked by landing_contract.py; default plans are unchanged.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {
+    "type": "object", "properties": {
+        "bands": {"type": "object", "additionalProperties": {"type": "object", "properties": {
+            "pinslot_profile": {"type": "object", "additionalProperties": False,
+                "required": ["inset_um", "guard_east_um", "guard_seats_um"],
+                "properties": {
+                    "inset_um": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+                    "guard_east_um": {"type": "number"},
+                    "guard_seats_um": {"type": "object", "minProperties": 1,
+                        "additionalProperties": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                 "items": {"type": "number"}}}
+                }
+            }
+        }}}
+    }
+}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
 # TYPE-SAFE-1/-2 11-06: ft station hop lockup latch (gen_rtl.ft_hop_lockup; absent = off)
 SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
