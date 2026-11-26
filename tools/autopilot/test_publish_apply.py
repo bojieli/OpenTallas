@@ -165,10 +165,13 @@ import subprocess  # noqa: E402
 import src_manifest as SM  # noqa: E402
 
 
-def published_tree(tmp_path):
+PARALLEL_BINDER = "raise RuntimeError('BIND_PARALLEL_REQUIRED: whole-die emit test fixture')\n"
+
+
+def published_tree(tmp_path, *, binder=PARALLEL_BINDER):
     """a minimal published manifest tree: plan, asbuilt and bind out, read-only (src_manifest.publish's make_ro)"""
     t = tmp_path / "kw45" / "src_x_d8f_work"
-    files = {"tools/die_plan/bind.py": "print('bind')\n", "physical/die_plan/s81/plan.json": "{}\n",
+    files = {"tools/die_plan/bind.py": binder, "physical/die_plan/s81/plan.json": "{}\n",
              "physical/die_plan/s81/pr/native_bind/asbuilt_run.json": "{}\n", "physical/die_plan/s81/pr/native_bind/out/a.sv": "module a; endmodule\n"}
     for rel, txt in files.items():
         (t / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -255,6 +258,57 @@ def test_postbind_prep_refuses_a_tree_without_manifest(tmp_path):
     s = PA.postbind_spec(bind_candidate(t), "1")
     assert subprocess.run(["bash", "-c", PA.postbind_prep_sh(s)], capture_output=True).returncode != 0
     assert not os.path.exists(s["copy"]) and not os.path.exists(s["copy"] + ".part")
+
+
+@pytest.mark.parametrize("pinned", [False, True])
+@pytest.mark.parametrize("parallel", [False, True])
+def test_postbind_checks_parallel_capability_before_copy(tmp_path, pinned, parallel):
+    # When a pin is declared only the named runtime may qualify the bind.
+    old = "print('unqualified historical binder')\n"
+    binder = PARALLEL_BINDER if parallel else old
+    other_binder = old if parallel else PARALLEL_BINDER
+    t = published_tree(tmp_path, binder=other_binder if pinned else binder)
+    candidate = bind_candidate(t)
+    if pinned:
+        pin = "0123456789ab" + "1" * 28
+        root = tmp_path / "runtime root"
+        entry = root / pin[:12] / "tools/die_plan/bind.py"
+        entry.parent.mkdir(parents=True)
+        entry.write_text(binder)
+        (root / f"{pin[:12]}.manifest.json").write_text(json.dumps({"sha": pin}))
+        candidate["marker"]["tools_sha"] = pin
+        candidate["marker"]["config"]["tools_rt_root"] = str(root)
+    else:
+        pin = str(t)
+    s = PA.postbind_spec(candidate, "1")
+    try:
+        p = subprocess.run(["bash", "-c", PA.postbind_prep_sh(s)], capture_output=True, text=True)
+        if parallel:
+            assert p.returncode == 0, p.stderr
+            assert Path(s["copy"], "_postbind/run.sh").is_file()
+        else:
+            assert p.returncode == 6
+            assert "POSTBIND_PARALLEL_REQUIRED" in p.stderr and pin in p.stderr
+            assert "parallel-compatible tools pin" in p.stderr
+            assert not Path(s["copy"]).exists() and not Path(s["copy"] + ".part").exists()
+    finally:
+        _chmod_back(tmp_path)
+
+
+def test_bind_first_parallel_refusal_does_not_try_to_seal(tmp_path):
+    t = tmp_path / "published"
+    out = tmp_path / "logs"
+    calls = []
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        (out / "bindfirst-s81-1.log").write_text("POSTBIND_PARALLEL_REQUIRED pin 0123456789ab lacks guard\n")
+        return types.SimpleNamespace(returncode=3, stdout="", stderr="")
+
+    dest, txt, fails = PA.bind_first(tmp_path, bind_candidate(t), "L", "s81", run=run, stamp="1", log_dir=out)
+    assert not dest and not fails
+    assert "POSTBIND_PARALLEL_REQUIRED pin 0123456789ab" in txt
+    assert len(calls) == 1
 
 
 def test_apply_starts_the_post_apply_bind_in_a_copy_and_names_it(tmp_path):
