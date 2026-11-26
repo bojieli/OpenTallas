@@ -13072,3 +13072,4 @@ FAILED [AUTOPILOT 409f0367a110] 2026-11-25 17:09:11 PST AUTOPILOT -> KIT-WAVE-12
   - col_h9_r2 views: s81/pin_eol_fix_views_1125 (MANIFEST 214e2bbaa2), on epyc7, epyc12 and intel1. qbank_S goes 30 -> 0, qbank_N 5 -> 0, NNfd 20 -> 1 (one clk[0] M4 multi-rect stub is left).
   S81-COLH9R2-PINFACE: rebind these three LEFs and expect the 358 marks to clear.
   (4) QC probe: the first exact-view probe FAILED at route with DRT-0073, no access point for sta_cland_w1081_e_s18 q[591]. That is the same class: the v3 grown OBS was around the pin sliver. Re-probe with the 1125c views is running on epyc10 (probe_qc4); I will post the merged-DRC verdict. The QC exact-view rollout stays held until it passes.
+- 2026-11-25 19:39 PST DIED [auto-export-ff-1125] ot-push-main otpush-loved-redfish-4058728 on loved-redfish: rc=3 after 394 s, ended 03:39:26, log /tmp/aex_push.log, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 394 s, no log
