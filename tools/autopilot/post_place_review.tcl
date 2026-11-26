@@ -121,8 +121,9 @@ proc ppr_sta {} {
     if {[info exists seen($pin)]} { continue }
     set seen($pin) 1
     set un [string map {"\\" ""} $pin]
+    set esc [regsub -all {[\[\]]} $un {\\&}]
     set it ""
-    foreach nm [list $pin $un] { if {![catch {$::ppr_block findITerm $nm} r] && $r ne "NULL" && $r ne ""} { set it $r; break } }
+    foreach nm [list $pin $un $esc] { if {![catch {$::ppr_block findITerm $nm} r] && $r ne "NULL" && $r ne ""} { set it $r; break } }
     if {$it ne ""} {
       lassign [ppr_iterm_xy $it] x y
       set net [$it getNet]
@@ -135,7 +136,7 @@ proc ppr_sta {} {
       puts $o "$pin\t[ppr_um $x]\t[ppr_um $y]\t$nn\t[format %.3f $hp]\t$fo"
       continue
     }
-    foreach nm [list $pin $un] {
+    foreach nm [list $pin $un $esc] {
       if {![catch {$::ppr_block findBTerm $nm} bt] && $bt ne "NULL" && $bt ne ""} {
         set bb [$bt getBBox]; set net [$bt getNet]; set hp 0.0; set fo 0; set nn "-"
         if {$net ne "NULL" && $net ne ""} { set nn [$net getName]; set b [ppr_net_bbox $net]; if {$b ne ""} { set hp [expr {([lindex $b 2] - [lindex $b 0] + [lindex $b 3] - [lindex $b 1]) / $::ppr_dbu}]; set fo [lindex $b 4] } }
