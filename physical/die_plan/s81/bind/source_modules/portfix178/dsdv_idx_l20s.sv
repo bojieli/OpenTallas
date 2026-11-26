@@ -1062,6 +1062,27 @@ endmodule
 // Sticky faults (st[0]): lv not a prefix, ranks past K, a job CTL while a job is open.  Reset: control / valid flops.
 // MUT (bench only): 1 = s_first not advanced (every word ranks from 0), 2 = id of lane e + 1.
 // ===================================================================================================================
+// S81-BKSEL-RTL 11-25: one slice of the u_ids o[] bank: its own cnt copy (lv_d popcount, registered), w1v flop and wv / go decode.
+// keep_hierarchy: synthesis must not merge the nine identical copies back into one fanout tree.
+(* keep_hierarchy = 1 *) module dsdv_bk_selids_sl (
+    input  wire        ck, rst,
+    input  wire [15:0] lv_d,
+    input  wire        armed, eg, v6, e_h,
+    input  wire [11:0] tag,
+    input  wire [7:0]  ot,
+    output reg  [4:0]  cnt,
+    output wire        go,
+    output reg         w1v,
+    output wire        wv
+);
+    reg [4:0] cnt_d;
+    always @* begin cnt_d = 5'd0; for (int i = 0; i < 16; i++) cnt_d = cnt_d + 5'(lv_d[i]); end
+    always @(posedge ck) cnt <= cnt_d;
+    assign wv = armed && eg && v6 && e_h && tag[11:8] == 4'd3 && tag[7:0] == ot;
+    assign go = wv && cnt != 5'd0;
+    always @(posedge ck or negedge rst) if (!rst) w1v <= 1'b0; else w1v <= go;
+endmodule
+
 module dsdv_bk_selids #(
     parameter integer V   = 276,
     parameter integer EK  = 5,
@@ -1082,29 +1103,39 @@ module dsdv_bk_selids #(
     wire eg = vr[0] && vr[3:1] == 3'(EK);
     reg armed, e_h; reg [9:0] remaining, rk; reg [7:0] ot; reg [3:0] msk; reg [255:0] lo;
     wire [511:0] w = {vr[275:20], lo};
-    wire wv = armed && eg && vr[6] && e_h && w[511:508] == 4'd3 && w[507:500] == ot;
     wire [15:0] lv = w[335:320];
     // S81-BKSEL-R7 11-22: cnt / pre of lv = w[335:320] = vr[99:84] are registered from vo[99:84] beside vr (vr[V-1:1] is a
     // plain unreset copy of vo), so they equal the old combinational values every cycle after the first edge: 0 cycles.
     // Both are read only under wv (armed, reset 0, set by a jctl at least one edge after reset release).
     wire [15:0] lv_d = vo[99:84];
-    reg [4:0] cnt_d; reg [4:0] cnt; reg pre;
-    always @* begin cnt_d = 5'd0; for (int i = 0; i < 16; i++) cnt_d = cnt_d + 5'(lv_d[i]); end
-    always @(posedge ck) begin cnt <= cnt_d; pre <= ((lv_d + 16'd1) & lv_d) == 16'd0; end
+    // S81-BKSEL-RTL 11-25 (FABLE-RC-S81 UNCOVERED bk_sel__t2: cnt[4] -> u_ids.o[150], 946 um wire, -356 ps, GRT-0116): ONE cnt /
+    // wv / w1v fanned out to the whole o[] / b1 bank.  Now one kept slice (dsdv_bk_selids_sl) per id lane e = 0..7 (bits 21+21e +: 21)
+    // plus one for the header / control bits: each slice holds its OWN copy of cnt (registered from the same lv_d), of w1v (a flop of
+    // the same go) and its own wv / go decode, and drives only its local o[] / b1 bits.  Slice 8 (header) also feeds the control logic.
+    // Every copy is identical at every edge (same D, same reset), so 0 cycles; slice-balanced, no stage added.
+    wire [44:0] cnv; wire [8:0] gov, w1vv, wvv;
+    genvar gs;
+    generate for (gs = 0; gs < 9; gs = gs + 1) begin : g_sl
+        dsdv_bk_selids_sl u_sl (.ck(ck), .rst(rst), .lv_d(lv_d), .armed(armed), .eg(eg), .v6(vr[6]), .e_h(e_h), .tag(w[511:500]), .ot(ot),
+            .cnt(cnv[5*gs +: 5]), .go(gov[gs]), .w1v(w1vv[gs]), .wv(wvv[gs]));
+    end endgenerate
+    wire [4:0] cnt = cnv[44:40]; wire wv = wvv[8]; wire w1v = w1vv[8];   // header slice = control copy
+    reg pre;
+    always @(posedge ck) pre <= ((lv_d + 16'd1) & lv_d) == 16'd0;
     always @(posedge ck) if (eg && !vr[6]) lo <= vr[275:20];
-    reg w1v; reg [V-1:0] b1;
-    function automatic [V-1:0] beat(input [511:0] ww, input h, input [9:0] sf, input [4:0] sc, input [3:0] m);
+    reg [V-1:0] b1;
+    function automatic [V-1:0] beat(input [511:0] ww, input h, input [9:0] sf, input [39:0] scl, input [4:0] sc, input [3:0] m);
         reg [V-1:0] b; integer e, l;
         b = '0; b[0] = 1'b1; b[12:9] = 4'hB; b[20:13] = 8'hA5;
         for (e = 0; e < 8; e = e + 1) begin
             l = 8 * h + e + ((MUT == 2) ? 1 : 0);
-            if (8 * h + e < sc) b[21 + 21 * e +: 21] = (l < 16) ? {1'b0, ww[20 * l +: 20]} : 21'd0;
+            if (8 * h + e < scl[5 * e +: 5]) b[21 + 21 * e +: 21] = (l < 16) ? {1'b0, ww[20 * l +: 20]} : 21'd0;
         end
         b[189] = h; b[199:190] = sf; b[204:200] = sc; b[208:205] = m;
         beat = b;
     endfunction
     always @(posedge ck or negedge rst)
-        if (!rst) begin armed <= 1'b0; e_h <= 1'b0; rk <= 10'd0; fault <= 1'b0; w1v <= 1'b0; o[0] <= 1'b0; end
+        if (!rst) begin armed <= 1'b0; e_h <= 1'b0; rk <= 10'd0; fault <= 1'b0; o[0] <= 1'b0; end
         else begin
             if (eg && !vr[6]) e_h <= 1'b1; else if (eg && vr[6]) e_h <= 1'b0;
             if (jctl) begin
@@ -1115,19 +1146,35 @@ module dsdv_bk_selids #(
                 rk <= (MUT == 1) ? rk : rk + 10'(cnt);
                 if (10'(cnt) >= remaining) armed <= 1'b0;
             end
-            o[0] <= (wv && cnt != 5'd0) | w1v; w1v <= wv && cnt != 5'd0;   // an empty word (lv 0) sends nothing
+            o[0] <= gov[8] | w1v;   // go = wv && cnt != 0 (an empty word, lv 0, sends nothing); w1v = go one edge later (inside the slice)
         end
     // DIE-S81-59 11-05: b1 has a reset, 0 cycles.  A held register whose constant bits (b[18], b[189]) never load before the
     // first wv: synth folds them, a free-init gold flop does not, so LEC read NOT EQUIVALENT with nothing different in
     // function: o reads b1 only on w1v, which follows the wv that loads it.
-    always @(posedge ck or negedge rst)
-        if (!rst) b1 <= {V{1'b0}};
-        else if (wv) b1 <= beat(w, 1'b1, rk, cnt, msk);
+    wire [V-1:0] bw0 = beat(w, 1'b0, rk, cnv[39:0], cnv[44:40], msk);
+    wire [V-1:0] bw1 = beat(w, 1'b1, rk, cnv[39:0], cnv[44:40], msk);
+    // S81-BKSEL-R7 J9 (IDS-RSPLIT) b1 reset split kept: b1 takes its reset from NB1 local copies u_rb1[g] (dsdv_bk_rrd D=1, kept plain
+    // flops, d = rst, <= GB1 = 56 bits each); b1 assert / release move 1 edge later; b1 is read only through w1v (needs armed), so o / fault
+    // are unchanged.  Slice split (S81-BKSEL-RTL 11-25): b1 load enable wv and the o[] select go / w1v are the slice's own copies.
+    localparam integer GB1 = 56, NB1 = (V + GB1 - 1) / GB1;
+    wire [NB1-1:0] rb1;
+    genvar gb;
+    for (gb = 0; gb < NB1; gb = gb + 1) begin : g_b1
+        dsdv_bk_rrd #(.D(1)) u_rb1 (.ck(ck), .d(rst), .q(rb1[gb]));
+    end
+    genvar gj;
+    generate for (gj = 1; gj < V; gj = gj + 1) begin : g_o
+        localparam integer S = (gj >= 21 && gj < 189) ? (gj - 21) / 21 : 8;   // the slice that owns bit gj
+        always @(posedge ck or negedge rb1[gj / GB1])
+            if (!rb1[gj / GB1]) b1[gj] <= 1'b0;
+            else if (wvv[S]) b1[gj] <= bw1[gj];
+        always @(posedge ck) o[gj] <= gov[S] ? bw0[gj] : w1vv[S] ? b1[gj] : 1'b0;
+    end endgenerate
+    always @(posedge ck or negedge rb1[0]) if (!rb1[0]) b1[0] <= 1'b0; else if (wv) b1[0] <= bw1[0];
     always @(posedge ck) begin
         // S81-BKSEL-R7 11-22 (Codex remaining-count): while armed, remaining + rk == the job size cp[40:31]; 0 cycles.
         if (jctl) begin remaining <= cp[40:31]; ot <= cp[68:61]; msk <= cp[72:69]; end
         else if (wv && MUT != 1) remaining <= remaining - 10'(cnt);
-        o[V-1:1] <= (wv && cnt != 5'd0) ? beat(w, 1'b0, rk, cnt, msk) >> 1 : w1v ? b1 >> 1 : {(V-1){1'b0}};
     end
 endmodule
 
