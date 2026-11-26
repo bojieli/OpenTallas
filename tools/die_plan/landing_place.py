@@ -949,6 +949,50 @@ def _dsel_cone_tcl(c):
     return out
 
 
+
+def _pinslot_profile_tcl(tn, c, t):
+    """Optional east edge of the bit-major slot rows and literal writer FF locations."""
+    out = []
+    for name, band in (c or {}).get('bands', {}).items():
+        if 'pinslot_profile' not in band:
+            continue
+        cfg = band['pinslot_profile']
+        hint = f'{tn}.{name}: pinslot_profile'
+        if (not isinstance(cfg, dict) or set(cfg) != {'inset_um', 'guard_east_um', 'guard_seats_um'}
+                or band.get('ring_place') != 'ff'
+                or any(k in band for k in ('rects_um', 'ff_rect_um', 'fill_axis', 'native_role_banks', 'hard_core', 'dsel_cone'))):
+            raise ValueError(f'{hint} requires one existing soft FF y-slot band')
+        ax, ay, bx, by = band_rects(tn, name, band, t)[0]
+        profile = cfg['inset_um']
+        edge = cfg['guard_east_um']
+        num = lambda q: type(q) in (int, float) and isfinite(q)
+        if (not isinstance(profile, list) or len(profile) != 3 or not all(map(num, profile))
+                or not num(edge) or not bx < edge <= t['outline_um'][0]
+                or not ay <= profile[0] < profile[1] <= by or not ax < profile[2] < bx):
+            raise ValueError(f'{hint} has invalid y extent or x edge')
+        guards = cfg['guard_seats_um']
+        if not isinstance(guards, dict) or not guards:
+            raise ValueError(f'{hint} needs exact writer FF guards')
+        named = re.compile(r'u_ring\.g_wreg\.sl\[\d+\]\.ch\[\d+\]\.u_wen/q\$_DFF_P_')
+        rows = []
+        for member, xy in guards.items():
+            if (not isinstance(member, str) or named.fullmatch(member) is None
+                    or not isinstance(xy, list) or len(xy) != 2 or not all(map(num, xy))
+                    or not bx <= xy[0] < edge or not ay <= xy[1] < by
+                    or profile[0] <= xy[1] < profile[1]):
+                raise ValueError(f'{hint} has invalid writer guard {member!r}')
+            rows.append('{ {' + member + '}' + f' {xy[0]:.5f} {xy[1]:.5f}' + ' }')
+        if len({tuple(xy) for xy in guards.values()}) != len(guards):
+            raise ValueError(f'{hint} has duplicate writer guard seats')
+        prefix = band.get('instance', 'u_cland_' + name)
+        if not re.fullmatch(r'u_cland_[A-Za-z0-9_]+', prefix):
+            raise ValueError(f'{hint} has unsupported native ring prefix')
+        lo, hi, xmax = profile
+        out.append(f'dict set ::cland_pinslot_profiles {{{prefix}}} '
+                   f'{{{{{lo:.5f} {hi:.5f} {xmax:.5f}}} {edge:.5f} {{{" ".join(rows)}}}}}')
+    return '\n'.join(out) + '\n' if out else ''
+
+
 def tcl(P,tn,macro_moves=None):
     """macro_moves (gen_phys.macro_move_table, kit macro sites when OT_MACRO_MOVES is set): the hard cores collector
     windows are cleared of (_collector_window); None / {} = plan origins."""
@@ -1011,7 +1055,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+_pinslot_profile_tcl(tn,c,P.types[tn])+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -1033,4 +1077,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+_pinslot_profile_tcl(tn,c,t or {})+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))

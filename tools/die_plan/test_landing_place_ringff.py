@@ -226,3 +226,25 @@ def test_wchkc_writer_storage_keyed_like_s_d():
     assert out[3] == "u_cland_y/u_ring.s_d|000000024|999999960|\\[0\\]$_DFF_P_"
     assert out[4] == "u_cland_y/u_ring.s_d|000000003|000000000|$_DFFE_NP_"
     assert out[5] == "u_cland_y/u_ring.s_d|000000019|000000001|$_DFF_N_"
+
+
+def test_profile_emits_only_one_scoped_native_directive():
+    guard = "u_ring.g_wreg.sl[3].ch[0].u_wen/q$_DFF_P_"
+    lepk = {"rect_um": [935.28, 255.6, 1054.08, 511.2], "instance": "u_cland_lepk_i0", "ring_place": "ff"}
+    profile = {"inset_um": [320, 440, 1028.16], "guard_east_um": 1062.72,
+               "guard_seats_um": {guard: [1054.08, 267.57]}}
+    ordinary = {"rect_um": [1, 2, 3, 4], "instance": "u_cland_q", "ring_place": "ff"}
+    baseline = _P({"lepk_i0": lepk, "q": ordinary})
+    candidate = _P({"lepk_i0": dict(lepk, pinslot_profile=profile), "q": ordinary})
+    for p in (baseline, candidate):
+        p.types["t"]["outline_um"] = [1071.36, 1408.32]
+    before = LP.tcl(baseline, "t")
+    after = LP.tcl(candidate, "t")
+    rows = [line for line in after.splitlines() if line.startswith("dict set ::cland_pinslot_profiles")]
+    assert len(rows) == 1
+    assert "{u_cland_lepk_i0}" in rows[0] and "{u_cland_q}" not in rows[0]
+    assert "{" + guard + "}" in rows[0]
+    assert after.replace(rows[0] + "\n", "") == before
+    with pytest.raises(ValueError, match="invalid writer guard"):
+        LP._pinslot_profile_tcl("t", {"bands": {"lepk_i0": dict(lepk, pinslot_profile=dict(
+            profile, guard_seats_um={guard: [1054.08, 400]}))}}, candidate.types["t"])
