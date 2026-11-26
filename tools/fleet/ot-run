@@ -1029,6 +1029,7 @@ def die_disk_reserved(host, dev=None):
 
 ETA_HORIZON_H = float(os.environ.get("OT_RUN_ETA_HORIZON_H", "1"))     # FABLE-FLOW-1900 (C): hours of the measured fall that must still fit above the floor
 ETA_MAX_AGE_S = 2700
+ETA_SMALL_JOB_GB = float(os.environ.get("OT_RUN_ETA_SMALL_JOB_GB", "5"))    # P-RAIL-BYPASS: jobs this small skip the fall-rate hold (the hard floor still applies)
 
 
 def eta_refusal(row, need_gb, now=None):
@@ -1040,9 +1041,12 @@ def eta_refusal(row, need_gb, now=None):
     if not rate or rate <= 0 or t is None or (now or time.time()) - t > ETA_MAX_AGE_S:
         return ""
     free, fl = row["disk_gb"], max(SCRATCH_DISK_FLOOR_GB, HARD_SCRATCH_FLOOR_GB)
-    left = free - rate * ETA_HORIZON_H - need_gb
+    # P-RAIL-BYPASS (FLEET-OPS-R4 11-26, COORD FLOW-1447: QC-INT-R2-COLLCORE ran `docker run` directly after this hold stopped a 2 GB gate): a SMALL job (its --disk
+    # <= OT_RUN_ETA_SMALL_JOB_GB, default 5) is not held for the host's fall rate -- it cannot move the needle -- only for the hard floor (free - job < floor).
+    horizon = 0.0 if need_gb <= ETA_SMALL_JOB_GB else ETA_HORIZON_H
+    left = free - rate * horizon - need_gb
     if left < fl:
-        return f"disk-ETA: {free} GB free falling {rate:.0f} GB/h, minus {need_gb} GB this job's peak writes, leaves {left:.0f} GB < floor {fl} GB within {ETA_HORIZON_H:g} h"
+        return f"disk-ETA: {free} GB free falling {rate:.0f} GB/h, minus {need_gb} GB this job's peak writes, leaves {left:.0f} GB < floor {fl} GB within {horizon:g} h"
     return ""
 
 

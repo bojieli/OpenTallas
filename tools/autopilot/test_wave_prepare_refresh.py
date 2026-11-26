@@ -26,6 +26,19 @@ class Refresh(unittest.TestCase):
         self.assertEqual(w["prepared_plan_sha256"], W.digest(os.path.join(d, "source_plan.json")))
         self.assertEqual(W.refresh(d)[0], 0); self.assertIn("current", W.refresh(d)[1])
 
+    def test_refresh_works_in_a_read_only_dir_and_keeps_history(self):
+        d = self.prep(True)
+        os.chmod(d, 0o555)
+        try:
+            rc, msg = W.refresh(d)
+            self.assertEqual(rc, 0, msg)
+            self.assertEqual(oct(os.stat(d).st_mode & 0o777), "0o555")
+            w = json.load(open(os.path.join(d, "wave_prepare.json")))
+            self.assertEqual(len(w["refresh_history"]), 1)
+            self.assertIn("old_plan", w["refresh_history"][0])
+        finally:
+            os.chmod(d, 0o755)
+
     def test_missing_receipt(self):
         self.assertEqual(W.refresh(tempfile.mkdtemp())[0], 1)
 

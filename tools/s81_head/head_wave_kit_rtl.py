@@ -145,7 +145,7 @@ def export(args):
     if args.type in HELD or args.type not in receipt['eligible_types']:
         raise ValueError('type held or not explicitly staged')
     if digest(plan_path) != receipt['prepared_plan_sha256']:
-        raise ValueError('prepared plan changed')
+        raise ValueError('prepared plan changed (the supported fix: python3 tools/autopilot/wave_prepare_refresh.py <prepared dir>; never edit wave_prepare.json by hand)')
     sidecar = prepared / 'source_sidecar.json'
     if digest(sidecar) != receipt['sidecar_sha256']:
         raise ValueError('prepared sidecar changed')

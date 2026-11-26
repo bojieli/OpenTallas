@@ -88,3 +88,11 @@ def test_lane_hold_probe_lines_and_recovery_clears_the_file(tmp_path):
     D.HOSTS = ["epyc9"]
     D.main(post=False, now=NOW, pusher=lambda *a: None, stopper=lambda h: " X", clearer=lambda h: cleared.append(h))
     assert cleared == ["epyc9"]
+
+
+def test_small_job_skips_the_fall_rate_hold_but_not_the_hard_floor():
+    """P-RAIL-BYPASS: a --disk 2 gate is not held by a 40 GB/h fall; it is still held when it would cross the floor itself"""
+    assert m.eta_refusal(row(100, 40), 20, NOW) != ""                 # a 20 GB job is held (100 - 40 - 20 < floor)
+    assert m.eta_refusal(row(100, 40), 2, NOW) == ""                  # a 2 GB job passes
+    assert m.eta_refusal(row(100, 400), 5, NOW) == ""                 # even in a steep fall
+    assert m.eta_refusal(row(52, 40), 5, NOW).startswith("disk-ETA")  # 52 - 5 = 47 < floor 50: hard floor still holds it

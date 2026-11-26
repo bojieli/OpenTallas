@@ -6,7 +6,7 @@ plan changed'), so any edit of the plan after prepare (NF10/NF12 style) needs th
 runs this whenever the plan sha it adopts differs from the receipt (KIT-OPS-5 11-15).  Exit 0 = receipt current or refreshed,
 1 = receipt missing/unreadable.  Prints one line.
 """
-import hashlib, json, os, sys
+import hashlib, json, os, stat, sys, time
 
 
 def digest(p):
@@ -45,9 +45,23 @@ def refresh(prep):
         return 0, f"wave_prepare current (plan {plan[:12]})"
     rec["prepared_plan_sha256"], rec["sidecar_sha256"] = plan, side
     rec["republished_by"] = "wave_prepare_refresh (plan/sidecar edited after prepare)"
+    # P-RAIL-BYPASS (FLEET-OPS-R4 11-26, HEAD-INT-R2 hand-edited the shas past the guard): the supported path now also works in a read-only or overlaid fork
+    # (the prep dir is made writable for the rename and restored) and keeps an audit trail of every refresh, so nobody needs to edit the receipt by hand
+    rec.setdefault("refresh_history", []).append({"t": int(time.time()), "lane": os.environ.get("OT_LANE", ""), "host": os.uname().nodename,
+                                                  "old_plan": old[0], "old_sidecar": old[1], "new_plan": plan, "new_sidecar": side})
+    pst = os.lstat(prep)
     tmp = rp + ".new"
-    json.dump(rec, open(tmp, "w"), indent=1)
-    os.replace(tmp, rp)
+    try:
+        os.chmod(prep, pst.st_mode | stat.S_IWUSR)
+        json.dump(rec, open(tmp, "w"), indent=1)
+        os.replace(tmp, rp)
+    except OSError as e:
+        return 1, f"cannot write {rp}: {e} (is {prep} a sealed tree? fork it with ot-tree-fork first)"
+    finally:
+        try:
+            os.chmod(prep, pst.st_mode)
+        except OSError:
+            pass
     return 0, f"wave_prepare refreshed: plan {str(old[0])[:12]} -> {plan[:12]}, sidecar {str(old[1])[:12]} -> {side[:12]}"
 
 
