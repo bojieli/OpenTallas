@@ -1,0 +1,13 @@
+bench unit oth-ubuntu-3969657-1795663292 (E10), verilator 5.050, CYC 150000
+self (vs f41d943961, 64 cids):
+     64 S5_XH3_STATE compares 2399872 mismatches 0 rows_with_k 13696
+      1 S5_XH3_EQ PASS 149297 compares seed 1 cid 9
+      1 S5_XH3_EQ PASS 149297 compares seed 1 cid 8
+S5_XH3_EQ ALL PASS
+pass (vs legacy qfd_dv_s5_xhead, 4 cids x 2 seeds):
+S5_XH3_EQ ALL PASS
+mutant tidk (must FAIL): S5_XH3_EQ STATE MISMATCH cyc 8 row 11 a_pr new 000000 ref 000000 b_emin new 00d4f6 ref 00d4b6
+mutant retag (must FAIL): S5_XH3_EQ MISMATCH cyc 40
+mutant rot (must FAIL): S5_XH3_EQ MISMATCH cyc 40
+mutant poolw (must FAIL): S5_XH3_EQ MISMATCH cyc 663
+mutant fwd (must FAIL): S5_XH3_EQ MISMATCH cyc 11896

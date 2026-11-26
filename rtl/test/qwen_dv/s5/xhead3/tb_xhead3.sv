@@ -24,10 +24,19 @@ module tb_xhead3;
     wire [7:0] o_lrv, o_lrt, o_lrep, n_lrv, n_lrt, n_lrep;
     wire [223:0] o_lrp, n_lrp;
     wire o_lrst, n_lrst, o_flt, n_flt;
+`ifdef OT_XH3_SELF
+    // self mode (QC-XHEAD3-LEC 11-25): the reference is the previous qfd_dv_s5_xhead3 (renamed qfd_dv_s5_xhead3_ref),
+    // same latency, same inputs: new(t) == ref(t) on every output, and on the a_pr / b_emin window state every edge.
+    qfd_dv_s5_xhead3_ref u_old (.ck(ck), .rst_n(rst_n), .cid(cid), .fault_i(fault_i_d), .a_d(a_d), .n_d(o_n), .s_d(o_s),
+        .lw_v(o_lwv), .lw_ep(o_lwep), .lc_v(o_lcv), .lc_ep(o_lcep), .lw_off(o_lwoff), .lw_m(o_lwm), .lw_d(o_lwd),
+        .lw_ctl(o_lwctl), .lr_v(o_lrv), .lr_t(o_lrt), .lr_ep(o_lrep), .lr_p(o_lrp), .lq(lq_d), .lq_v(lq_v_d),
+        .lq_bad(lq_bad_d), .l_rst_n(o_lrst), .fault(o_flt));
+`else
     qfd_dv_s5_xhead u_old (.ck(ck), .rst_n(rst_n), .cid(cid), .fault_i(fault_i), .a_d(a_d), .n_d(o_n), .s_d(o_s),
         .lw_v(o_lwv), .lw_ep(o_lwep), .lc_v(o_lcv), .lc_ep(o_lcep), .lw_off(o_lwoff), .lw_m(o_lwm), .lw_d(o_lwd),
         .lw_ctl(o_lwctl), .lr_v(o_lrv), .lr_t(o_lrt), .lr_ep(o_lrep), .lr_p(o_lrp), .lq(lq), .lq_v(lq_v),
         .lq_bad(lq_bad), .l_rst_n(o_lrst), .fault(o_flt));
+`endif
     qfd_dv_s5_xhead3 u_new (.ck(ck), .rst_n(rst_n), .cid(cid), .fault_i(fault_i_d), .a_d(a_d), .n_d(n_n), .s_d(n_s),
         .lw_v(n_lwv), .lw_ep(n_lwep), .lc_v(n_lcv), .lc_ep(n_lcep), .lw_off(n_lwoff), .lw_m(n_lwm), .lw_d(n_lwd),
         .lw_ctl(n_lwctl), .lr_v(n_lrv), .lr_t(n_lrt), .lr_ep(n_lrep), .lr_p(n_lrp), .lq(lq_d), .lq_v(lq_v_d),
@@ -57,6 +66,7 @@ module tb_xhead3;
 
     integer seed, cycles, cyc, compares, mism, pass_start;
     integer n_lw, n_en, n_lr, n_go, n_vd, n_pool, c_flt, n_ops, n_rst, n_bits_nz;
+    integer st_cmp = 0, st_mism = 0, n_kq = 0;
     // generator state
     integer ph_state, gap, beats, k_cur, sp_cur, tiles_cur, ep_cur, go_due, next_go_min, q, noise, quiet;
     integer w_rows [0:NR-1];
@@ -159,7 +169,21 @@ module tb_xhead3;
         rst_n = 1'b1;
         for (cyc = 0; cyc < cycles; cyc = cyc + 1) begin
             @(negedge ck);
-            // ---- compare: new(now) against old(previous edge) ----
+            // ---- compare: new(now) against old(previous edge) (self mode: against ref(now)) ----
+`ifdef OT_XH3_SELF
+            o_prev = o_all;
+            if (cyc >= 8) begin                              // tid strap filled (cid_q -> tids -> tid_q: 3 edges)
+                for (r = 0; r < NR; r = r + 1) begin
+                    st_cmp = st_cmp + 1;
+                    if ({7'd0, u_new.a_pr[14 * r +: 14], 3'd0} !== u_old.a_pr[r] || u_new.b_emin[r] !== u_old.b_emin[r]) begin
+                        st_mism = st_mism + 1;
+                        if (st_mism <= 4) $display("S5_XH3_EQ STATE MISMATCH cyc %0d row %0d a_pr new %h ref %h b_emin new %h ref %h",
+                            cyc, r, {7'd0, u_new.a_pr[14 * r +: 14], 3'd0}, u_old.a_pr[r], u_new.b_emin[r], u_old.b_emin[r]);
+                    end
+                    if (u_old.r_ks[r] != 5'd0) n_kq = n_kq + 1;
+                end
+            end
+`endif
             if (cyc >= pass_start) begin
                 compares = compares + 1;
                 if (n_all !== o_prev) begin
@@ -237,6 +261,10 @@ module tb_xhead3;
         end
         $display("S5_XH3_COVER ops %0d lw_v %0d en %0d lr_v %0d go %0d xvalid %0d xnz %0d fault %0d resets %0d",
                  n_ops, n_lw, n_en, n_lr, n_go, n_vd, n_bits_nz, c_flt, n_rst);
+`ifdef OT_XH3_SELF
+        $display("S5_XH3_STATE compares %0d mismatches %0d rows_with_k %0d", st_cmp, st_mism, n_kq);
+        if (st_mism != 0) mism = mism + st_mism;
+`endif
         if (mism == 0 && compares > 0 && n_en > 0 && n_vd > 0)
             $display("S5_XH3_EQ PASS %0d compares seed %0d cid %0d", compares, seed, cid);
         else begin

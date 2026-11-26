@@ -2,6 +2,10 @@
 # Lockstep bench of qfd_dv_s5_xhead3 against the current leaf qfd_dv_s5_xhead (new(t+1) == old(t), every output).
 #   bash rtl/test/qwen_dv/s5/xhead3/run.sh OUT pass            8 runs (4 column ids x 2 seeds), all must PASS
 #   bash rtl/test/qwen_dv/s5/xhead3/run.sh OUT retag|rot|poolw|fwd   one mutant build, must FAIL (exec: exit status)
+#   bash rtl/test/qwen_dv/s5/xhead3/run.sh OUT self      lockstep of qfd_dv_s5_xhead3 against its previous version
+#        (REF_REV, default f41d943961, renamed qfd_dv_s5_xhead3_ref): new(t) == ref(t) on every output plus the a_pr /
+#        b_emin window state every edge, all 64 column ids (QC-XHEAD3-LEC tid / a_pr width contract)
+#   bash rtl/test/qwen_dv/s5/xhead3/run.sh OUT tidk      self lockstep with one row constant bit wrong, must FAIL
 set -euo pipefail
 O=$1; MODE=${2:-pass}; CYC=${CYC:-150000}; mkdir -p "$O"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -9,7 +13,14 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 SRC=(rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
      rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv rtl/test/qwen_dv/s5/xhead3/tb_xhead3.sv)
 D=()
+REF_REV=${REF_REV:-f41d943961}
 case "$MODE" in
+  self|tidk)
+    git show "$REF_REV:rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv" | sed 's/^module qfd_dv_s5_xhead3 /module qfd_dv_s5_xhead3_ref /' \
+      > "$O/qfd_dv_s5_xhead3_ref.sv"
+    grep -q '^module qfd_dv_s5_xhead3_ref ' "$O/qfd_dv_s5_xhead3_ref.sv" || { echo "no reference at $REF_REV"; exit 2; }
+    SRC+=("$O/qfd_dv_s5_xhead3_ref.sv"); D+=(-DOT_XH3_SELF)
+    [ "$MODE" = tidk ] && D+=(-DOT_S5_XH3_MUT_TIDK) ;;
   pass) ;;
   retag) D+=(-DOT_S5_XH3_MUT_RETAG) ;;
   rot) D+=(-DOT_S5_XH3_MUT_ROT) ;;
@@ -19,14 +30,16 @@ case "$MODE" in
 esac
 "$V" --binary -O2 -j 8 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN "${D[@]}" \
   --top-module tb_xhead3 "${SRC[@]}" -Mdir "$O/obj_$MODE" > "$O/build_$MODE.log" 2>&1 || { tail -40 "$O/build_$MODE.log"; exit 3; }
-if [ "$MODE" != pass ]; then
+if [ "$MODE" != pass ] && [ "$MODE" != self ]; then         # tidk: row 11 quad bit 3 flips under every split >= 6
   exec "$O/obj_$MODE/Vtb_xhead3" +seed=7 +cid=22 +cycles=$CYC
 fi
+CIDS="0 5 22 63"; SEEDS="1 2"
+if [ "$MODE" = self ]; then CIDS=$(seq 0 63); SEEDS="1"; fi
 rc=0
-for cid in 0 5 22 63; do
-  for seed in 1 2; do
+for cid in $CIDS; do
+  for seed in $SEEDS; do
     set +e
-    "$O/obj_pass/Vtb_xhead3" +seed=$seed +cid=$cid +cycles=$CYC > "$O/run_${cid}_${seed}.log" 2>&1
+    "$O/obj_$MODE/Vtb_xhead3" +seed=$seed +cid=$cid +cycles=$CYC > "$O/run_${cid}_${seed}.log" 2>&1
     r=$?
     set -e
     tail -2 "$O/run_${cid}_${seed}.log"

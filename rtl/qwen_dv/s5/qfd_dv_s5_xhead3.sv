@@ -68,27 +68,42 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
     assign l_rst_n = rr[0];
 
     // ------------------------------------------------------------------------------------------------- strap
-    function automatic integer tid(input integer c, input integer r);
-        integer dr, bc, br, lbc, lbr, blk, z, p, i;
+    // Tile id of row r in column c (the old integer tid(c, r) with bc = br = 4, NCOLD = 48 and 2 NH = 16, both >= 4):
+    // dr = row's die row (NH + r / NH - 1 - (r - NH)), blk = 4 (c / 4) + dr / 4, z interleaves c[0], dr[0], c[1],
+    // dr[1], tid = 16 blk + z.  With c <= 63 and dr <= 15 every term lands in its own bit field, so exactly
+    //     tid(c, r) = {6'b0, c[5:2], dr[3:2], dr[1], c[1], dr[0], c[0]}    (tid <= 1023 for every c).
+    // Width contract (QC-XHEAD3-LEC 11-25): only the six cid bits are registered (one kept copy per row, as before);
+    // the row bits and the zero top bits are literal constants.  The old form registered the 16-bit integer result,
+    // whose row / top bits are constants only through tid()'s arithmetic: synthesis removed those flops (no reset,
+    // constant D) while routed LEC could not prove them constant, so gold a_pr[11][13..15] stayed free (slw_hc2 NEQ).
+    localparam integer TQW = 10;                             // reachable tid / r_q width
+    function automatic [3:0] tid_dr(input integer r);
+        tid_dr = 4'((r < NH) ? NH + r : NH - 1 - (r - NH));
+    endfunction
+    function automatic [15:0] tid_w(input [5:0] c, input integer r);
+        reg [3:0] d;
         begin
-            dr = (r < NH) ? NH + r : NH - 1 - (r - NH);
-            bc = (NCOLD >= 4) ? 4 : NCOLD; br = (2 * NH >= 4) ? 4 : 2 * NH;
-            lbc = (bc >= 4) ? 2 : (bc >= 2) ? 1 : 0; lbr = (br >= 4) ? 2 : (br >= 2) ? 1 : 0;
-            blk = (c / bc) * (2 * NH / br) + dr / br;
-            z = 0; p = 0;
-            for (integer i = 0; i < 2; i = i + 1) begin
-                if (i < lbc) begin z = z | (((c % bc) >> i) & 1) << p; p = p + 1; end
-                if (i < lbr) begin z = z | (((dr % br) >> i) & 1) << p; p = p + 1; end
-            end
-            tid = bc * br * blk + z;
+            d = tid_dr(r);
+`ifdef OT_S5_XH3_MUT_TIDK
+            if (r == 11) d = d ^ 4'b0010;                    // bench mutant: one row constant bit wrong
+`endif
+            tid_w = {6'b000000, c[5:2], d[3:2], d[1], c[1], d[0], c[0]};
+        end
+    endfunction
+    // bits of row r's tid that can be non-zero: the cid fields and the row's one bits
+    function automatic [TQW-1:0] tid_nz(input integer r);
+        reg [15:0] t;
+        begin
+            t = tid_w(6'h3f, r);
+            tid_nz = t[TQW-1:0];
         end
     endfunction
     reg [5:0] cid_q;
-    reg [16*NR-1:0] tids, tid_q;
+    reg [6*NR-1:0] tids, tid_q;                              // per-row copies of cid_q (the tid's variable bits)
     integer ri;
     always @(posedge ck) begin
         cid_q <= cid;
-        for (ri = 0; ri < NR; ri = ri + 1) tids[ri * 16 +: 16] <= 16'(tid(int'(cid_q), ri));
+        for (ri = 0; ri < NR; ri = ri + 1) tids[ri * 6 +: 6] <= cid_q;
         tid_q <= tids;
     end
 
@@ -150,7 +165,6 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
     (* keep = "true" *) reg  [BW-1:0]    r_fb [0:3], r_fbm1 [0:3], r_fbp1 [0:3];
     (* keep = "true" *) reg  [3:0]       r_fbnz, r_fbnao;
     (* keep = "true" *) reg  [5:0]       r_foff [0:NFO-1];
-    (* keep = "true" *) reg  [SMAX:0]    r_q [0:NR-1];                           // quad q = tid mod (S / TG)   (old da_q, one edge early)
     (* keep = "true" *) reg  [4:0]       r_ks [0:NR];        // one-hot {32, 24, 8, 6, 2} of d_k: [r] row r, [NR] fault
     wire [4:0] p_ks = {p_k == 32, p_k == 24, p_k == 8, p_k == 6, p_k == 2};
     integer k, r, e, i, c;
@@ -167,10 +181,30 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
             r_fbnz[c] <= (p_fb != {BW{1'b0}}); r_fbnao[c] <= (p_fb != {BW{1'b1}});
         end
         for (integer k = 0; k < NFO; k = k + 1) r_foff[k] <= p_foff[k / 28];
-        for (integer r = 0; r < NR; r = r + 1)
-            r_q[r] <= tid_q[16*r +: 16] & ((({{SMAX{1'b0}}, 1'b1}) << (p_sp - $clog2(TG))) - 1'b1);
         for (integer r = 0; r <= NR; r = r + 1) r_ks[r] <= p_ks;
     end
+    // quad q = tid mod (S / TG) (old da_q, one edge early), row r at r_q[TQW r +: TQW] (a plain vector, no memory).
+    // A kept flop exists only for the bits that can be non-zero (tid_nz: cid fields and the row's one bits); the others
+    // are literal zeros, so the gold and the netlist carry the same register set (QC-XHEAD3-LEC).  The mask keeps the
+    // old 16-bit evaluation context ((1 << (sp - 2)) - 1; all ones when sp < 2).
+    wire [15:0] p_qm = (({{SMAX{1'b0}}, 1'b1}) << (p_sp - $clog2(TG))) - 1'b1;
+    wire [NR*TQW-1:0] r_q;
+    genvar gr, gb;
+    generate
+        for (gr = 0; gr < NR; gr = gr + 1) begin : g_rq
+            localparam [TQW-1:0] NZ = tid_nz(gr);
+            wire [15:0] tq = tid_w(tid_q[6 * gr +: 6], gr) & p_qm;
+            for (gb = 0; gb < TQW; gb = gb + 1) begin : g_b
+                if (NZ[gb]) begin : v
+                    (* keep = "true" *) reg q;
+                    always @(posedge ck) q <= tq[gb];
+                    assign r_q[TQW * gr + gb] = q;
+                end else begin : z
+                    assign r_q[TQW * gr + gb] = 1'b0;
+                end
+            end
+        end
+    endgenerate
     // fill fields (old f_q)
     wire              d_v   = r_f[0];
     wire [AW-1:0]     d_xb  = r_f[2 +: AW];
@@ -231,10 +265,14 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
     (* keep = "true" *) reg [1:0] a_vc, a_epc;               // feed the 32 stage-B enable copies
     reg              a_ep;
     (* keep = "true" *) reg [AW-1:0] a_xb [0:3];
-    reg  [AW-1:0]    a_pr [0:NR-1];
+    // a_pr = 4 k q / 8 for k in {2, 6, 8, 24, 32}: bits [16:3] of the product, row r at a_pr[PRW r +: PRW] (plain
+    // vector).  Exact width contract: q <= 1023 (TQW bits) gives 4 k q <= 128 * 1023 < 2^17, and every k is a
+    // multiple of 2, so the product's bits [2:0] and [23:17] are zero; b_emin zero-extends it back.
+    localparam integer PRW = TQW + 4;                        // 14
+    reg  [NR*PRW-1:0] a_pr;
     reg  [AW-1:0]    a_fm;
     reg  [5:0]       a_k;
-    reg  [AW-1:0]    q24;
+    reg  [PRW-1:0]   q1, q3;
     always @(posedge ck or negedge rr[4])
         if (!rr[4]) begin a_v <= 1'b0; a_vc <= 2'b0; end else begin a_v <= r_dv[7]; a_vc <= {2{r_dv[7]}}; end
     always @(posedge ck) begin
@@ -243,12 +281,13 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
         a_fm <= TG * d_k - 1;
         a_k <= d_k[5:0];
         for (integer r = 0; r < NR; r = r + 1) begin
-            q24 = ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 4) + ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 3);
-            a_pr[r] <= ({AW{r_ks[r][0]}} & ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 3)) |
-                       ({AW{r_ks[r][1]}} & q24) |
-                       ({AW{r_ks[r][2]}} & ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 5)) |
-                       ({AW{r_ks[r][3]}} & (q24 << 2)) |
-                       ({AW{r_ks[r][4]}} & ({{(AW-SMAX-1){1'b0}}, r_q[r]} << 7));
+            q1 = {{(PRW-TQW){1'b0}}, r_q[TQW * r +: TQW]};
+            q3 = (q1 << 1) + q1;                             // 3 q <= 3069
+            a_pr[PRW * r +: PRW] <= ({PRW{r_ks[r][0]}} & q1) |          // k  2:   8 q
+                                    ({PRW{r_ks[r][1]}} & q3) |          // k  6:  24 q
+                                    ({PRW{r_ks[r][2]}} & (q1 << 2)) |   // k  8:  32 q
+                                    ({PRW{r_ks[r][3]}} & (q3 << 2)) |   // k 24:  96 q
+                                    ({PRW{r_ks[r][4]}} & (q1 << 4));    // k 32: 128 q
         end
     end
     // stage B: emin = xb + product (old stage C's first adder), pool flags, k / 3k
@@ -275,7 +314,8 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
         b_ep <= a_ep;
         b_epc <= {{16{a_epc[1]}}, {16{a_epc[0]}}};
         b_epk <= {3{a_epc[1]}};
-        for (integer r = 0; r < NR; r = r + 1) b_emin[r] <= a_xb[r / 4] + a_pr[r];
+        for (integer r = 0; r < NR; r = r + 1)
+            b_emin[r] <= a_xb[r / 4] + {{(AW-PRW-3){1'b0}}, a_pr[PRW * r +: PRW], 3'b000};
         b_pool <= {NR{a_fm >= 64}};
         b_poolm <= (a_fm >= 64);
         b_pf128 <= (a_fm >= 128);
