@@ -8705,6 +8705,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text(hook.read_text() + "\n# R-REACH-5: zero-logic bin -> pad chains re-spaced when over the reach\n"
                         + CHAIN_EVEN_HOOK + "\n")
     dly_mode = dly_spread_mode(P.budgets, tn)
+    if "dly_latch_sites" in t and not dly_mode:
+        raise ValueError(f"type {tn}: dly_latch_sites requires DLY spread")
     if dly_mode:
         # DLY-SPREAD (FABLE-GENBUG G8, brief 4.3): every generated zero-logic register pipe without a plan site (ot_dp_dly u_d<N>
         # transport pipes, ot_pl_pad) is spread on driver -> load centroid after GPL, LAST in the release hook (after chain_even);
@@ -8712,6 +8714,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("dly_spread.tcl"), kd / "dly_spread.tcl")
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + DLY_SPREAD_HOOK + "\n")
+        if "dly_latch_sites" in t:
+            import dly_latch_sites
+            dly_latch_sites.install(kd, t, tn, dly_mode, dlk_cfg)
         # MACRO-CROSS (QC-CB-GEN-1115, FABLE-PD-QC-1115 L3): advisory count of 2-pin nets > 300 um over a macro, after the spread
         shutil.copyfile(Path(__file__).with_name("macro_cross_check.tcl"), kd / "macro_cross_check.tcl")
         hook.write_text(hook.read_text() + MACRO_CROSS_HOOK + "\n")

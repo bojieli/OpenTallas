@@ -4096,5 +4096,24 @@ SCHEMA["properties"]["cbc"] = {"oneOf": [{"type": "boolean"}, {
                    "depth_levels": {"type": "integer", "minimum": 4}, "tap_sinks": {"type": "integer", "minimum": 100},
                    "reset_leaf": {"type": "integer", "minimum": 1, "maximum": 48}, "note": {"type": "string"}}}]}
 
+# Exact sites for existing DLY lockup latches. The physical kit checks their
+# data connectivity, row legality and the exact launch and capture taps.
+_PT["dly_latch_sites"] = {
+    "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": False,
+        "required": ["latch", "master", "launch", "capture", "launch_tap", "capture_tap", "origin_um"],
+        "properties": {
+            "latch": {"type": "string", "pattern": r"^u_bound[.]u_fl_\S+$"},
+            "master": {"type": "string", "pattern": "^(DLL|DHL)[A-Za-z0-9_]+$"},
+            "launch": {"type": "string", "pattern": r"^u_bound[.]\S+$"},
+            "capture": {"type": "string", "pattern": r"^u_bound[.]\S+$"},
+            "launch_tap": {"type": "string", "pattern": "^clk(_t[0-9]+)?$"},
+            "capture_tap": {"type": "string", "pattern": "^clk(_t[0-9]+)?$"},
+            "origin_um": _XY,
+        },
+    },
+}
+
+
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
