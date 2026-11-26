@@ -39,6 +39,7 @@ PRE_ONLY = {
 }
 TREND_COLS = ["cut_local", "die", "class_id", "count", "basis", "source", "prev_count", "prev_basis", "move"]
 EXACT = "exact"
+CARRIED = set()      # (die, class) rows copied from the previous cut without a fresh measurement: shown, never counted as a fall or a rise
 OWNER_OVERRIDE = {}  # (die, class) -> owner named by a carry row (lane-measured rows may name the right owner)
 LANE_SHA = re.compile(r"\b[0-9a-f]{7,64}\b")
 
@@ -104,6 +105,8 @@ def measure(pre_dir, carry_rows, plans):
             res[(die, "C-RST-RELAY-REACH")] = (len(fails), EXACT, f"derived_drop RSTREACH FAIL types on live plan {sha} ({len(warns)} advisory WARN types)")
     for r in carry_rows:
         res[(r["die"], r["class_id"])] = (int(r["count"]), r["basis"], r["source"])
+        if r.get("carried") == "1":
+            CARRIED.add((r["die"], r["class_id"]))
         if r.get("owner"):
             OWNER_OVERRIDE[(r["die"], r["class_id"])] = r["owner"]
     return res
@@ -134,7 +137,10 @@ def compare(meas, trend_rows, label):
         p = latest.get((die, cid))
         if p is None and cid in known_ids:  # a known class first counted on this die: it was 0 there at the last cut
             p = {"count": "0", "basis": basis}
-        if p is None:
+        if (die, cid) in CARRIED and p is not None:
+            move = "CARRIED"
+            pc, pb = int(p["count"]), p["basis"]
+        elif p is None:
             move = "NEW"
             pc, pb = "", ""
         else:
@@ -181,7 +187,7 @@ def loop_check(summary, trend_rows, label):
     loops = {}
     for die, s in summary.items():
         streak = hist.get(die, 0)
-        streak = 0 if s["fell"] else streak + 1
+        streak = 0 if (s["fell"] or s["total"] + s["new_items"] == 0) else streak + 1
         s["streak"] = streak
         loops[die] = streak >= 2
     return loops
@@ -329,6 +335,11 @@ def main(argv=None):
     summary = summarize(rows, trend)
     loops = loop_check(summary, trend, a.label)
     print(render(summary, loops, a.label))
+    for die in [d for d, v in loops.items() if v]:
+        print(f"LOOP-BREAKDOWN {die}: class prev->now move")
+        for r in rows:
+            if r["die"] == die and (int(r["count"]) > 0 or str(r["prev_count"]) not in ("", "0")):
+                print(f"  {r['class_id']} {r['prev_count'] if r['prev_count'] != '' else '-'}->{r['count']} {r['move']}")
     if a.write:
         write_trend(a.trend, rows, summary, a.label)
         if a.classes:

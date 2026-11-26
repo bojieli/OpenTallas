@@ -60,7 +60,7 @@ def test_two_flat_cuts_make_loop(tmp_path, capsys):
     for lab in ("c1", "c2"):
         assert ct.main(["cut", "--label", lab, "--pre-dir", str(pre), "--trend", str(trend), "--write"]) == 0
     out = capsys.readouterr().out.splitlines()
-    assert any(ln.startswith("LOOP: ") and "QC" in ln for ln in out[-3:])
+    assert any(ln.startswith("LOOP: ") and "QC" in ln and "KV" not in ln for ln in out)
 
 
 def test_scan_finds_unknown_tags(tmp_path):
@@ -101,3 +101,17 @@ def test_lane_sha_row_is_kept_and_carry_sha_wins(tmp_path):
     ct.update_classes(str(cls), rows, "c2")
     got = {r["class_id"]: r for r in ct.read_tsv(str(cls))}
     assert got["C-A"]["mapped_count"] == "2" and got["C-A"]["owner"] == "KV-INT-R2"
+
+
+def test_carried_rows_never_count_and_loop_breakdown(tmp_path, capsys):
+    trend = _setup(tmp_path)
+    carry = tmp_path / "carry.tsv"
+    _w(carry, [["QC", "C-STREET", 3, "exact", "lane sha 0123456", "", "1"]], ["die", "class_id", "count", "basis", "source", "owner", "carried"])
+    pre = tmp_path / "pre"
+    pre.mkdir()
+    for lab in ("c1", "c2"):
+        ct.CARRIED.clear()
+        assert ct.main(["cut", "--label", lab, "--pre-dir", str(pre), "--carry", str(carry), "--trend", str(trend), "--write"]) == 0
+    out = capsys.readouterr().out
+    assert "LOOP: QC" in out and "comparable classes 0->0 (+0)" in out
+    assert "LOOP-BREAKDOWN QC" in out and "C-STREET 3->3 CARRIED" in out
