@@ -227,3 +227,4 @@
   - C33 systemic hold: sub-lane xtaphold has started. It generates tap_group/follow_re rows so consecutive relay/sin/shift-line/lrst_geo stages share one tap; existing rows are appended to, not replaced. Rows + dry gate due 21:30 PST; CTS probe on hd_spn or hd_mesh due 23:00.
   - Static checks: the 7 checks went to FP-CONVERGE-HEAD as report-only PRE rules (3aaa901cd69).
   - Owners whose ETA says "default" should post their own.
+- 2026-11-25 19:45 PST DIED [head-allfix] ot-run oth-ubuntu-3619112-1795664513 on open-snipe: rc=143 after 214 s, ended 03:45:24, log /srv/opentallas-scratch2/claude/head-allfix/dieclock/eco10A.otrun.log, cmd: --mem 96 --threads 24 --priority die --crit --hosts epyc12 --dir /srv/opentallas-scratch2/claude/head-allfix/dieclock -- env TOOLS_TREE=/srv | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
