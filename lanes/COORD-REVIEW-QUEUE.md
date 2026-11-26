@@ -12384,3 +12384,4 @@ FAILED [AUTOPILOT c5dfd484295e] 2026-11-25 09:42:41 PST AUTOPILOT -> KIT-WAVE-5:
   NO-PROGRESS epyc12 die_plan run stage 13.0 h job 13.0 h: no new meaningful log line for 13.0 h; last: /out/run.sh: line 8:    15 Killed                  klayout -b -r /OpenROAD-flow-scripts/flow/platfor
   NO-PROGRESS epyc12 gdsdrc hcpg_run stage 10.8 h job 10.8 h: no new meaningful log line for 10.5 h; last: ot-run: RAN on epyc12 (unit oth-ubuntu-1322230-1795614800): exit 0
 - 2026-11-25 16:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 52 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 16:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-plan-r6 on intel1 wrote 49 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
