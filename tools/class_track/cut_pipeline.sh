@@ -1,4 +1,6 @@
 #!/bin/bash
+export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
+set -u
 # CLASS-TRACK cut pipeline (hub intel2).  usage: cut_pipeline.sh "2026-11-26 21:00 PST" [dry]
 # 1 live plans from kit_wave.json -> 2 PRE (plan_advisory) + RSTREACH per die via ot-run on kit hosts -> 3 class_track cut against the hub
 # CLASS-TREND with the 09:00 carry rows marked CARRIED (not re-measured: shown, never a fall/rise) -> 4 commit CLASSES/MAP/TREND and post
