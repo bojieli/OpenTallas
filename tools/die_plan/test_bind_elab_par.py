@@ -214,6 +214,8 @@ def test_single_variant_runs_beside_the_base(tmp_path, monkeypatch, capsys):
     monkeypatch.delenv("OT_BIND_ELAB_JOBS")
     import type_define_effect as T
     monkeypatch.setattr(T, "unit_mem_gb", lambda: None)
+    monkeypatch.setenv("OT_HEAVY_MEM_GB", "128")
+    monkeypatch.setenv("OT_HEAVY_THREADS", "4")
     assert _elab(plan, out) == 0
     assert "1 define-variant elab(s) started alongside" in capsys.readouterr().out
     assert _digest(out) == serial
