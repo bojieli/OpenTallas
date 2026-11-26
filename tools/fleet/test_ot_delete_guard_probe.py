@@ -70,3 +70,28 @@ def test_individual_odb_keeps_unreadable_probe(tmp_path, monkeypatch):
 
     monkeypatch.setattr(G.os, "scandir", unreadable)
     assert G.young_probe_refusal(str(odb)) == "young probe dir: unreadable (kept)"
+
+
+def test_only_our_intermediate_unlink_timestamp_can_be_ignored(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_PROBE_HOLD_S", raising=False)
+    probe = mk(tmp_path, "claude/die/private/L/probe", 30)
+    base = probe / "run"
+    first = base / "2_1_floorplan.odb"
+    second = base / "2_2_floorplan.odb"
+    (base / "3_place.odb").rename(first)
+    second.write_text("another old intermediate")
+    old = time.time() - 30 * 3600
+    for p in (first, second, base):
+        os.utime(p, (old, old))
+    assert G.young_probe_refusal(str(first)) is None
+    first.unlink()
+    trim_mtime = base.stat().st_mtime_ns
+    trimmed_dirs = {str(base): trim_mtime}
+    assert "young probe dir" in (G.young_probe_refusal(str(second)) or "")
+    assert G.young_probe_refusal(str(second), trimmed_dirs=trimmed_dirs) is None
+    assert "young probe dir" in (G.young_probe_refusal(str(probe), trimmed_dirs=trimmed_dirs) or "")
+    os.utime(base, ns=(trim_mtime + 1_000_000, trim_mtime + 1_000_000))
+    assert "young probe dir" in (G.young_probe_refusal(str(second), trimmed_dirs=trimmed_dirs) or "")
+    (base / "new_review.txt").write_text("fresh evidence")
+    os.utime(base, ns=(trim_mtime, trim_mtime))
+    assert "young probe dir" in (G.young_probe_refusal(str(second), trimmed_dirs=trimmed_dirs) or "")
