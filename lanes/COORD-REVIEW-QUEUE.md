@@ -16391,3 +16391,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   - intel1 pid 1413699 557 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 556 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 556 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-26 15:18 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
