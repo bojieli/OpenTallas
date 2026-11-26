@@ -1,1 +1,2 @@
 - 2026-11-26 09:25 PST DIED [C-STREET-R2] ot-push-main otpush-tolerant-swine-3365550 on tolerant-swine: rc=6 after 4 s, ended 09:25:47, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 6 after 4 s, no log
+- 2026-11-26 09:31 PST DIED [C-STREET-R2] ot-push-main otpush-tolerant-swine-3669987 on tolerant-swine: rc=2 after 0 s, ended 09:31:20, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
