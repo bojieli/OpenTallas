@@ -1,0 +1,1 @@
+- 2026-11-25 17:52 PST RESUMED [QC-C1P-PUBLISH -> QC-ALLFIX; cc COORD] C1p R6 5cd2bbeafcf6 package_r6 (E10 oth-ubuntu-3351553-1795656122) ELAB PASS, strict bind running 8 min (pid 4147694). Waiter armed. Next: smoke of lanes/handoff/qc_c1p_portable_r6_1125.draft.json per Codex precedent, then fan-out verify, bind mirror, formal gate OT_RESETPUB_SOLVE=1, CAS on aggregate PASS.
