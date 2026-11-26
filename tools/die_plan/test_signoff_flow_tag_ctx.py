@@ -62,3 +62,31 @@ class CoreRunnersSignoffFlowTag(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StampFlowTag(unittest.TestCase):
+    """P-SIGNED-UNVERSIONED: signoff.json is stamped with the flow tag at sign time"""
+    def setUp(self):
+        import signoff
+        self.S = signoff
+        self.old = os.environ.get(signoff.FLOW_TAG_ENV)
+
+    def tearDown(self):
+        if self.old is None:
+            os.environ.pop(self.S.FLOW_TAG_ENV, None)
+        else:
+            os.environ[self.S.FLOW_TAG_ENV] = self.old
+
+    def test_stamped_when_env_set(self):
+        os.environ[self.S.FLOW_TAG_ENV] = "flow-20261117-sg-kv"
+        self.assertEqual(self.S.stamp_flow_tag({"verdict": "SIGNED"})["flow_tag"], "flow-20261117-sg-kv")
+
+    def test_unset_or_malformed_unchanged(self):
+        os.environ.pop(self.S.FLOW_TAG_ENV, None)
+        self.assertNotIn("flow_tag", self.S.stamp_flow_tag({}))
+        os.environ[self.S.FLOW_TAG_ENV] = "not-a-tag"
+        self.assertNotIn("flow_tag", self.S.stamp_flow_tag({}))
+
+    def test_existing_not_overwritten(self):
+        os.environ[self.S.FLOW_TAG_ENV] = "flow-20261117-sg-kv"
+        self.assertEqual(self.S.stamp_flow_tag({"flow_tag": "flow-20261113-a-kv"})["flow_tag"], "flow-20261113-a-kv")

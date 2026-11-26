@@ -3032,6 +3032,19 @@ def summary_line(rec):
 
 
 # ---- CLI -----------------------------------------------------------------------------------------------------------
+FLOW_TAG_RE = re.compile(r"^flow-\d{8}-[a-z]+(?:-(?:qc|s81|head|kv|hbm))?$")
+
+
+def stamp_flow_tag(rec):
+    """P-SIGNED-UNVERSIONED (RESIGN-R2 11-26): the sign-off record names the released flow tag it ran at (--flow-tag /
+    $OT_FLOW_TAG, set by the kit runners and resign.py), so a record is not born without one and later needing a re-sign
+    only to be stamped.  Metadata only: no check, threshold or verdict reads it; no tag set or an unrecognised value = unchanged."""
+    tag = (os.environ.get(FLOW_TAG_ENV) or "").strip()
+    if tag and FLOW_TAG_RE.match(tag) and not rec.get("flow_tag"):
+        rec["flow_tag"] = tag
+    return rec
+
+
 def cmd_run(a):
     base = Path(a.base).resolve() if a.base else find_base(a.run_dir)
     disc = discover(base, kit=a.kit, sdc=a.sdc, record=a.record)
@@ -3193,6 +3206,7 @@ def cmd_run(a):
             rec["child_clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
             print(f"CHILD_CLOCK_WITNESS FAILED: {exc}")
     collect_related_pairs(out)
+    stamp_flow_tag(rec)
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
     auto_export_enqueue(out / "signoff.json", rec)
     print("SIGNOFF " + summary_line(rec))
