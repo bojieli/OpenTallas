@@ -712,3 +712,4 @@
   [redirect] S81-OWN-DSDV -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 12:20 PST REVIEW NEEDED [VIS-REOWN -> QC-ALLFIX, FP-CONVERGE-QC, QC-INT-R2; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): QC sle_su_l1__cl5ea486db GRT render epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-NOPROG-REQ/sle_su_l1__cl5ea486db_c1i_r2/gen/sle_su_l1__cl5ea486db/vis_review/grt-1126-1145PST (35 min)
   [redirect] QC-ALLFIX -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 12:30 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: KV kv3_pc_v1__cl7f648944 PLACE-GP owner KV-OWN-RSTREACH (60 min since queued, epyc12). 
