@@ -85,6 +85,7 @@ import kit_wave_roam as ROAM
 import flow_guard as FG
 import repeat_stop as RS
 import lbl_gate as LBL
+import plan_visual_review as PVR
 import env_effect as EE
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
@@ -92,7 +93,7 @@ OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: fre
 # older in-memory launch logic; the next ordinary tick imports the new package.
 def scheduler_code_id():
     h = hashlib.sha256()
-    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py"):
+    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "plan_visual_review.py"):
         p = Path(__file__).with_name(name)
         h.update(name.encode())
         h.update(p.read_bytes())
@@ -5470,6 +5471,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
         | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
+        | ({"launch_plan_review_required": True} if PVR.enabled(opt(cfg, die, "launch_plan_review_required"), die, item, kind) else {}) \
         | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {}) \
         | ({"bind_stream_launch": True} if bind_stream_on(cfg, die) else {})  # cell_check: PLAN-GEN-RULES-1 rule C (advisory)
 
@@ -10297,6 +10299,9 @@ def private_spec_cmd(a):
     _lw = private_lbl_refusal(sp, chain_goal_of(sp), hub, record=False)
     if _lw:                                               # LAUNCH-GUARD 11-23: run-item refuses this spec until its VIS row passes (a probe goal place / geom / grt runs)
         print(f"private-spec: LBL WARN {a.die}/{a.item}: run-item will refuse goal {sp['goal']}: {_lw}", file=sys.stderr)
+    plan_review = plan_visual_refusal(sp, out, hub)
+    if plan_review:
+        print(f"private-spec: {plan_review}", file=sys.stderr)
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
           + (f"{stop})" if stop else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
@@ -10913,6 +10918,58 @@ def ended_unit_result(res):
     return res
 
 
+def legacy_plan_visual_form(rec, plan):
+    """Return the prior wave form only when its exact placement was already viewed and accepted."""
+    old_sha = str(rec.get("plan_sha") or "")
+    if not rec.get("dir") or not rec.get("started") or not PVR.SHA.fullmatch(old_sha):
+        return ""
+    if exact_kit_visual_verdict(rec, viewed_only=True) not in VISUAL_ACCEPT:
+        return ""
+    try:
+        old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        if ((old.get("die"), old.get("item")) != (rec.get("die"), rec.get("item"))
+                or old.get("private") or old.get("plan") != plan):
+            return ""
+        overlay_sha = str(old.get("type_overlay_sha") or "") if old.get("type_overlay") else ""
+        return PVR.request(old, plan_sha=old_sha, overlay_sha=overlay_sha)["form_sha256"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return ""
+
+
+def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None):
+    """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
+    if not PVR.applies(sp):
+        return ""
+    try:
+        producer = sp.get("gen_host")
+        plan_key = (producer, sp["plan"])
+        if plan_shas is not None and plan_key not in plan_shas:
+            plan_shas[plan_key] = PVR.file_sha(sp["plan"], producer)
+        plan_sha = plan_shas[plan_key] if plan_shas is not None else ""
+        candidate = PVR.request(sp, plan_sha=plan_sha, producer=producer)
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
+        return f"WAIT-PLAN-VISUAL: cannot resolve exact plan or overlay on {sp.get('gen_host')}: {e}"
+    request_path = Path(out) / "plan_visual_request.json"
+    try:
+        verdict = PVR.verdict(PVR.read_ledger(hub) if ledger is None else ledger, candidate)
+        if verdict == "GOOD":
+            return ""
+        fingerprint = candidate["form_sha256"]
+        if not verdict and not sp.get("private"):
+            if sp.get("plan_visual_legacy_form_sha") == fingerprint:
+                return ""
+            if prior and legacy_plan_visual_form(prior, sp["plan"]) == fingerprint:
+                sp["plan_visual_legacy_form_sha"] = fingerprint
+                return ""
+        if record:
+            PVR.write_request(request_path, candidate)
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        return f"WAIT-PLAN-VISUAL: review request or ledger unavailable: {e}"
+    state = "BAD" if verdict == "BAD" else "missing"
+    return (f"WAIT-PLAN-VISUAL: {state} fresh plan image verdict for {sp['die']}/{sp['item']} "
+            f"form {candidate['form_sha256']}; request {request_path}")
+
+
 def private_lbl_refusal(sp, chain_goal, hub=None, record=True):
     """LAUNCH-GUARD 11-23 FIX 1: '' or the LOOK-BEFORE-LAUNCH refusal of a private run-item that drives to sign-off (goal auto / route / finish).  Probe specs
     (goal place / geom / cts / grt, or OT_PROBE_THROUGH=1 in the gen env) and wave specs (gated in launch()) are never refused; a spec with
@@ -11029,6 +11086,12 @@ def run_item(spec_path):
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
+    plan_review = plan_visual_refusal(sp, out, hub)
+    if plan_review:
+        print(f"KW_STAGE plan_visual {now_s()} :: {plan_review}", flush=True)
+        res.update(stage="plan_visual", verdict="FAIL", cls="PLAN-VISUAL", tail=plan_review)
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 1
     _lbl = private_lbl_refusal(sp, chain_goal, hub)
     if _lbl:                                             # LAUNCH-GUARD 11-23 FIX 1: a private sign-off launch of a DRAFT / PRE-PASS type waits for its VIS row
         print(f"KW_STAGE lbl {now_s()} :: LAUNCH-REFUSED {sp['die']}/{T}: {_lbl}", flush=True)
@@ -16011,6 +16074,20 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if _h != sp["gen_host"]:
         AP.log(f"KIT-WAVE GEN-HOST-TREE {die}/{r['item']}: {sp['gen_host']} lacks tree {sp.get('src')}; launching on {_h} instead")
         sp["gen_host"] = _h
+    if PVR.applies(sp):
+        if "_plan_visual_reviews" not in cfg:
+            cfg["_plan_visual_reviews"] = AP.read_coord(PVR.LEDGER)
+        prior = None
+        if sp["plan"] == d.get("plan") and not ((d.get("item_inputs") or {}).get(r["item"]) or {}).get("plan"):
+            prior = prev or max((rec for rec in st["items"].values()
+                                 if rec.get("die") == die and rec.get("item") == r["item"]),
+                                key=lambda rec: float(rec.get("started") or 0), default=None)
+        request_dir = Path(AP.AP_DIR) / "plan_visual_requests" / jd.parent.name / jd.name
+        plan_review = plan_visual_refusal(sp, request_dir, hub, plan_shas=cfg.setdefault("_plan_visual_plan_shas", {}),
+                                          ledger=cfg["_plan_visual_reviews"], record=not AP.DRY, prior=prior)
+        if plan_review:
+            log_hourly(AP, st, f"PLAN-VISUAL|{die}|{r['item']}", f"KIT-WAVE {plan_review}")
+            return None
     unit = f"{unit_prefix}{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
