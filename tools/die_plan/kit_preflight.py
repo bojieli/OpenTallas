@@ -319,9 +319,13 @@ def core_tap_reach_rows(kit):
         except (ValueError, AttributeError):
             pass
     boxes = {}
-    for m in _PLACE_MACRO.finditer(mp.read_text()):
+    placements = list(_PLACE_MACRO.finditer(mp.read_text()))
+    # A single placed hard macro backed by one LEF master is unambiguous
+    # even in wrapper kits that have no bound core inventory.
+    lone_master = next(iter(sizes)) if len(placements) == len(sizes) == 1 else None
+    for m in placements:
         inst, x, y, orient = m.group(1).replace('\\', ''), float(m.group(2)), float(m.group(3)), m.group(4) or 'R0'
-        w, h = sizes.get(masters.get(inst), (0.0, 0.0))
+        w, h = sizes.get(masters.get(inst, lone_master), (0.0, 0.0))
         if orient in ('R90', 'R270', 'MXR90', 'MYR90'):
             w, h = h, w
         boxes[inst] = (x, y, x+w, y+h)
