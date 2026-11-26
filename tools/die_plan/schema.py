@@ -2770,6 +2770,21 @@ class Plan:
         self.reset = dict(DEFAULT_RESET, **raw.get("reset", {}))
         self.budgets = dict(DEFAULT_BUDGETS, **raw.get("budgets", {}))
         self._separate_landing_pins()
+        self.clk_land_clear_ledger = []
+        self._clear_clock_landings()
+
+    def _clear_clock_landings(self):
+        """C-CLK-LAND-OBS 11-26: plan flag clk_land_clear {"enable": 1} (default off): clock taps, reserved die clock sites and relay seats
+        inside a hard macro body / halo / OBS stack are re-sited in P.types (clk_land_clear.py); raw stays exactly as read.  Flag absent:
+        nothing runs and P.types stays raw["partition_types"]."""
+        v = self.raw.get("clk_land_clear")
+        if not (isinstance(v, dict) and v.get("enable")):
+            return
+        if str(Path(__file__).resolve().parent) not in sys.path:
+            sys.path.append(str(Path(__file__).resolve().parent))
+        import clk_land_clear as CLC
+        self.types = dict(self.types)
+        self.clk_land_clear_ledger = CLC.apply(self.types, self.raw, self.path, P=self)
 
     def _separate_landing_pins(self):
         """DIE-QC-67 PINDUP 11-03: two landing pins of a type on one site abort global route (GRT-0080).  Every tool
