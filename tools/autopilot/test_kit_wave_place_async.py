@@ -8,6 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import autopilot as AP
 import kit_wave as KW
 
 # FLEET-WATCH-R8 11-21: run_item re-picks the spec hosts from the LIVE ~/coord kit_wave.json gen_hosts (repick_stage_hosts); the fixture hosts must not depend on it
@@ -57,6 +58,8 @@ class Fake:
             out = "LAYOUT_PNG\n"
         elif "geom_check.sh" in s:
             out = "AP_AUTO_GEOM AUTO-GEOM PASS T fill=ok(0.5)\n"
+        if "KW_PREPLACE_LEC" in s:
+            out += 'KW_PREPLACE_LEC {"verdict":"SKIPPED","reason":"R-MINIMAL"}\n'
         return SimpleNamespace(returncode=rc, stdout=out, stderr="")
 
 
@@ -82,6 +85,29 @@ def test_event_wave_stages_declare_exact_composed_inputs():
     command = KW.rt_tree_cmd(sp) + f"cd {launch} && OT_KIT_BIND_OUT={bind} PLAN={plan} bash {src}/kit_rtl.sh"
     stages = KW.event_wave_stages(sp, work, command)
     assert stages == [x for p in (src, rt, mirror, launch, bind) for x in ("--stage", p)]
+
+
+def test_preplace_lec_exit_zero_requires_proof_not_a_skip(tmp_path):
+    namespace = {}
+    exec(AP.PREPLACE_LEC_READER, namespace)
+    read_lec = namespace["read_preplace_lec"]
+    ready = tmp_path / "lec_async.ready"
+    (tmp_path / "lec_async.rc").write_text("0\n")
+    (tmp_path / "lec_async.done").touch()
+    assert read_lec(tmp_path)["verdict"] == "UNVERIFIED"
+
+    (tmp_path / "lec_async.log").write_text("LEC_PREPLACE_DROPPED R-MINIMAL\nLEC exit 0\n")
+    assert read_lec(tmp_path)["verdict"] == "SKIPPED"
+
+    ready.write_text("1\npython3 -I /work/lec.py /work\n")
+    assert read_lec(tmp_path)["verdict"] == "UNVERIFIED"
+    report = tmp_path / "lec" / "lec.json"
+    report.parent.mkdir()
+    report.write_text('{"verdict":"EQUIVALENT"}')
+    assert read_lec(tmp_path) == {"verdict": "EQUIVALENT", "receipt": "lec/lec.json"}
+
+    ready.write_text("1\necho LEC_PREPLACE_DROPPED R-MINIMAL\n")
+    assert read_lec(tmp_path)["verdict"] == "SKIPPED"
 
 
 class PlaceAsync(unittest.TestCase):
@@ -141,6 +167,7 @@ class PlaceAsync(unittest.TestCase):
             res = json.loads((Path(d) / "result.json").read_text())
             self.assertEqual((rc, res["verdict"], res["stage"]), (0, "PASS", "place"))
             self.assertEqual(res["evidence"], "intel1:/w/gen/T/run/results/asap7/x/base/3_place.odb")
+            self.assertEqual(res["preplace_lec"], {"verdict": "SKIPPED", "reason": "R-MINIMAL"})
             self.assertFalse(any("geom_check.sh" in c or "signoff_chain" in c for c in f.calls))
 
     def test_private_worker_reattaches_without_new_plan_review(self):

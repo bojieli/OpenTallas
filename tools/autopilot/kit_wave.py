@@ -11384,6 +11384,7 @@ def _run_item(spec_path, resume_reviewed=False):
         if kh != G:
             print(f"KW_KIT_HOST {T}: place receipt names {kh} before the gen host {G}", flush=True)
 
+        from autopilot import PREPLACE_LEC_READER
         probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
                  f"ls {q(K)}/run/layout_review/*.png {q(K)}/run/layout_review/*/*.png 2>/dev/null | head -1 | sed 's/^.*$/LAYOUT_PNG/'; "
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
@@ -11393,7 +11394,9 @@ def _run_item(spec_path, resume_reviewed=False):
                  # DIE-HBM-97 11-10: GPL-1010 cap lines for classify() (gpl-noconverge); the stage tail does not reach them
                  f"for f in {q(K)}/run/logs/asap7/*/base/3_3_place_gp*.log; do [ -f \"$f\" ] && {GPL_PROBE_AWK} \"$f\"; "
                  f"done 2>/dev/null | tail -40; "
-                 f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
+                 f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30\n"
+                 f"python3 -I - {q(K)} <<'KWLEC'\n{PREPLACE_LEC_READER}\n"
+                 "import json, sys\nprint('KW_PREPLACE_LEC ' + json.dumps(read_preplace_lec(sys.argv[1])))\nKWLEC")
         _, ptxt = run("place_probe", rem(probe), idempotent=True)
         odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
         if not odb:
@@ -11404,6 +11407,12 @@ def _run_item(spec_path, resume_reviewed=False):
                     print(f"KW_KIT_HOST {T}: 3_place.odb found on {_alt}, not on {kh} (sealed copy-back record)", flush=True)
                     kh, ptxt, odb = _alt, _p2, _o2
                     break
+        proof = re.findall(r"(?m)^KW_PREPLACE_LEC (\{[^\n]+\})$", ptxt)
+        if proof:
+            try:
+                res["preplace_lec"] = json.loads(proof[-1])
+            except ValueError:
+                pass
         _ccr = re.search(r"(?m)^CELL_CAP_REPORT (\{[^\n]+\})$", ptxt)
         if _ccr:                             # FLOW-OPS-0900: the floorplan CELL-CAP report reaches unit.log; cell_cap_report_step posts it once per type
             print(f"KW_CELL_CAP_REPORT {T} {_ccr.group(1)}", flush=True)
