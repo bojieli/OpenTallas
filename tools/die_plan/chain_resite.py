@@ -12,7 +12,8 @@ rules as precheck.reach_findings) with a hop over --gate (405 um) gets its regis
 lattice sites: inside the outline (8 um inset), outside every hard core (1 um halo), all hops <= --cap, minimal
 displacement, SAME register count (zero cycles).  A chain with no such placement is retried with one extra register
 when --extra-reg (internal_stations only: +1 cycle, listed under 'latency'), else it is reported under 'skipped'.
-ft_slot bit-site groups move rigidly with their register (their bounding box must stay legal too).
+Exact station bit-site groups move rigidly with their register on the row grid. A moved bank's full cell
+footprints must avoid placement obstacles, even when its register centre was already in reach.
 Writes OUT (the plan with the rows applied) and OPS (plan_ops.v1 replace ops carrying the old values)."""
 import argparse
 import json
@@ -23,9 +24,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent / "precheck"))
 import adv_geom_static as AG  # noqa: E402
+from placement_obstacles import placement_boxes  # noqa: E402
 import precheck as PC  # noqa: E402
 
 HALO, INSET, G = 1.0, 8.0, 4.32
+SITE_W, ROW_H = 0.054, 0.27
 
 
 def man(a, b):
@@ -49,16 +52,19 @@ def respace(pts, k):
     return out
 
 
-def legal_box(p, offs, rects, w, h):
+def legal_box(p, offs, rects, w, h, *, inset=INSET):
     """a register at p with its bit-site group (offs = (dx0, dy0, dx1, dy1) bounding box, or None) is legal"""
     x0, y0, x1, y1 = (p[0], p[1], p[0], p[1]) if offs is None else (p[0] + offs[0], p[1] + offs[1], p[0] + offs[2], p[1] + offs[3])
-    if x0 < INSET or y0 < INSET or x1 > w - INSET or y1 > h - INSET:
+    if x0 < inset or y0 < inset or x1 > w - inset or y1 > h - inset:
         return False
     return not any(r[0] < x1 and x0 < r[2] and r[1] < y1 and y0 < r[3] for r in rects)
 
 
-def cands(target, offs, rects, w, h, n=400, rmax=160):
+def cands(target, offs, rects, w, h, n=400, rmax=160, *, anchor=None):
     tx, ty = target
+    if anchor is not None:
+        tx, ty = (origin + round((v - origin) / pitch) * pitch
+                  for v, origin, pitch in zip(target, anchor, (SITE_W, ROW_H)))
     out = []
     for ring in range(rmax):
         pts = [(tx, ty)] if ring == 0 else []
@@ -66,7 +72,8 @@ def cands(target, offs, rects, w, h, n=400, rmax=160):
             for i in range(-ring, ring + 1):
                 pts += [(tx + i * G, ty - ring * G), (tx + i * G, ty + ring * G), (tx - ring * G, ty + i * G), (tx + ring * G, ty + i * G)]
         for p in pts:
-            p = (round(p[0], 3), round(p[1], 3))
+            digits = 6 if anchor is not None else 3
+            p = (round(p[0], digits), round(p[1], digits))
             if legal_box(p, offs, rects, w, h):
                 out.append(p)
         if len(out) >= n:
@@ -74,10 +81,11 @@ def cands(target, offs, rects, w, h, n=400, rmax=160):
     return out[:n]
 
 
-def place_chain(pts, k, offs_list, rects, w, h, cap):
+def place_chain(pts, k, offs_list, rects, w, h, cap, *, anchors=None):
     """DP: k registers, hops <= cap, minimal total displacement from the equal-arc targets; None when infeasible"""
     tg = respace(pts, k)
-    cs = [cands(t, offs_list[j] if j < len(offs_list) else None, rects, w, h) for j, t in enumerate(tg)]
+    cs = [cands(t, offs_list[j] if j < len(offs_list) else None, rects, w, h,
+                anchor=anchors[j] if anchors is not None else None) for j, t in enumerate(tg)]
     if any(not c for c in cs):
         return None
     start, end = tuple(pts[0]), tuple(pts[-1])
@@ -124,11 +132,23 @@ def hops(pts):
     return [man(pts[i], pts[i + 1]) for i in range(len(pts) - 1)]
 
 
-def group_box(group, reg):
+def group_box(group, reg, cell):
     xs = [s[0] - reg[0] for s in group]
     ys = [s[1] - reg[1] for s in group]
-    return (min(xs), min(ys), max(xs), max(ys))
+    return min(xs), min(ys), max(xs) + cell[0], max(ys) + cell[1]
 
+
+def sites_collide(groups, cell, rects, w, h):
+    for group in groups:
+        for x, y in group:
+            if not legal_box((x, y), (0, 0, *cell), rects, w, h, inset=0):
+                return True
+    return False
+
+
+def translate_groups(groups, before, after):
+    return [[[round(x + new[0] - old[0], 6), round(y + new[1] - old[1], 6)]
+             for x, y in group] for group, old, new in zip(groups, before, after)]
 
 ROUTED_CAPS = (404.0, 380.0, 350.0, 320.0)   # tighter Manhattan caps tried until the OBSTACLE-AVOIDING hop is <= gate
 
@@ -142,11 +162,11 @@ def routed_max(t, pts):
     return HR.chain_metrics(R, pts)[0]
 
 
-def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True):
+def place_routed(t, pts, k, offs_list, rects, w, h, cap, gate, routed=True, *, anchors=None):
     """place_chain, accepted only when its routed max hop is <= gate; tries tighter Manhattan caps; None when infeasible"""
     caps = [c for c in ROUTED_CAPS if c <= cap] or [cap]
     for c in (caps if routed else caps[:1]):
-        new = place_chain(pts, k, offs_list, rects, w, h, c)
+        new = place_chain(pts, k, offs_list, rects, w, h, c, anchors=anchors)
         if new is None:
             return None
         if not routed or routed_max(t, [pts[0]] + [tuple(r) for r in new] + [pts[-1]]) <= gate:
@@ -163,17 +183,29 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
     ops, latency, skipped = [], [], []
     plus1 = set()
     ents = t.get("internal_stations") or []
+    slots = t.get("ft_slots") or []
+    exact_conns = {e.get("conn") for e in ents if e.get("bit_sites_um") is not None}
+    exact_rects = list(placement_boxes(t, halo=HALO).values()) if exact_conns or any(
+        s.get("bit_sites_um") is not None for s in slots) else []
     for i, e in enumerate(ents):
         if not e.get("from_um") or not e.get("to_um") or not e.get("regs_um"):
             continue
         pts = chain_points(t, e)
-        if max(hops(pts)) <= gate and (not routed or routed_max(t, pts) <= gate):
-            continue
         regs = [list(r) for r in e["regs_um"]]
+        groups = e.get("bit_sites_um")
+        cell = e.get("bit_site_cell_um")
         k = len(regs)
-        new = place_routed(t, pts, k, [None] * k, rects, w, h, cap, gate, routed)
-        path = f"/partition_types/{name}/internal_stations/{i}/regs_um"
-        if new is None and extra_reg:
+        if groups is not None and (len(groups) != k or not cell or not all(groups)):
+            skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": "invalid exact bit-bank geometry"})
+            continue
+        bad_bank = groups and sites_collide(groups, cell, exact_rects, w, h)
+        if not bad_bank and max(hops(pts)) <= gate and (not routed or routed_max(t, pts) <= gate):
+            continue
+        offs = [group_box(g, r, cell) for g, r in zip(groups, regs)] if groups else [None] * k
+        new = place_routed(t, pts, k, offs, exact_rects if groups else rects, w, h, cap, gate, routed,
+                           anchors=regs if groups else None)
+        path = f"/partition_types/{name}/internal_stations/{i}"
+        if new is None and extra_reg and groups is None and (not whole_bus or e.get("conn") not in exact_conns):
             new = place_routed(t, pts, k + 1, [None] * (k + 1), rects, w, h, cap, gate, routed)
             if new is not None:
                 latency.append({"type": name, "index": i, "conn": e.get("conn"), "bits": e.get("bits"), "regs": k, "new_regs": k + 1})
@@ -181,9 +213,11 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
         if new is None:
             skipped.append({"type": name, "index": i, "conn": e.get("conn"), "why": f"no legal placement <= {cap} um" + (" (routed)" if routed else "")})
             continue
-        ops.append({"op": "replace", "path": path, "old": regs, "value": new})
+        ops.append({"op": "replace", "path": path + "/regs_um", "old": regs, "value": new})
+        if groups:
+            ops.append({"op": "replace", "path": path + "/bit_sites_um", "old": groups,
+                        "value": translate_groups(groups, regs, new)})
     if extra_reg and whole_bus and plus1:
-        done = {o["path"] for o in ops}
         for i, e in enumerate(ents):
             if e.get("conn") not in plus1 or not e.get("from_um") or not e.get("to_um") or not e.get("regs_um"):
                 continue
@@ -200,29 +234,58 @@ def resite_type(name, t, gate=405.0, cap=404.0, extra_reg=False, routed=True, wh
             ops = [o for o in ops if o["path"] != path]
             ops.append({"op": "replace", "path": path, "old": regs, "value": new})
             latency.append({"type": name, "index": i, "conn": e.get("conn"), "bits": e.get("bits"), "regs": k, "new_regs": k + 1, "whole_bus": True})
-    for si, s in enumerate(t.get("ft_slots") or []):
+    for si, s in enumerate(slots):
         k = int(s.get("stations", 1) or 1)
         regs = [list(r) for r in s.get("regs_um") or []]
-        if not (s.get("in_face") and s.get("out_face") and s.get("in_window_um") and s.get("out_window_um")) or k < 2 or len(regs) < k - 1:
+        if k < 2 or len(regs) < k - 1:
             continue
-        mid = regs[-(k - 1):]
-        a = PC.face_point(s["in_face"], s["in_window_um"], w, h, tuple(mid[0]))
-        b = PC.face_point(s["out_face"], s["out_window_um"], w, h, tuple(mid[-1]))
-        pts = [tuple(a)] + [tuple(r) for r in mid] + [tuple(b)]
-        if max(hops(pts)) <= gate:
-            continue
+        first = len(regs) - (k - 1)
+        mid = regs[first:]
         groups = s.get("bit_sites_um")
-        gl = groups if isinstance(groups, list) and len(groups) == len(mid) else None
-        offs = [group_box(gl[j], mid[j]) if gl else None for j in range(len(mid))]
-        new_mid = place_chain(pts, len(mid), offs, rects, w, h, cap)
+        cell = s.get("bit_site_cell_um")
+        if groups is not None and (len(groups) not in (len(mid), k) or not cell or not all(groups)):
+            skipped.append({"type": name, "slot": s.get("name"), "why": "invalid exact bit-bank geometry"})
+            continue
+        in_face, out_face = s.get("in_face"), s.get("out_face")
+        in_window, out_window = s.get("in_window_um"), s.get("out_window_um")
+        a = PC.face_point(in_face, in_window, w, h, tuple(mid[0])) if in_face and in_window else None
+        b = PC.face_point(out_face, out_window, w, h, tuple(mid[-1])) if out_face and out_window else None
+        if not groups and (a is None or b is None):
+            continue
+        # A generated pin window need not be in the plan. Preserve the nearest
+        # register on an unknown face unless the plan provides its stage-0 seat.
+        if a is None and first and in_face in ("N", "S", "E", "W") and PC.on_face(in_face, regs[first - 1], w, h):
+            a = regs[first - 1]
+        left = int(a is None)
+        right = len(mid) - int(b is None)
+        a = mid[0] if a is None else a
+        b = mid[-1] if b is None else b
+        movable = mid[left:right]
+        movable_groups = groups[-len(mid):] if groups else []
+        bad_bank = groups and sites_collide(movable_groups, cell, exact_rects, w, h)
+        if bad_bank and sites_collide(movable_groups[:left] + movable_groups[right:], cell, exact_rects, w, h):
+            skipped.append({"type": name, "slot": s.get("name"), "why": "blocked edge bank needs an exact face window"})
+            continue
+        pts = [tuple(a)] + [tuple(r) for r in movable] + [tuple(b)]
+        if not bad_bank and max(hops(pts)) <= gate:
+            continue
+        if not movable:
+            skipped.append({"type": name, "slot": s.get("name"), "why": "no movable stage between fixed endpoints"})
+            continue
+        move_groups = movable_groups[left:right]
+        offs = [group_box(g, r, cell) for g, r in zip(move_groups, movable)]
+        new_mid = place_chain(pts, len(movable), offs, exact_rects if move_groups else rects,
+                              w, h, cap, anchors=movable if move_groups else None)
         if new_mid is None:
             skipped.append({"type": name, "slot": s.get("name"), "why": f"no legal placement <= {cap} um"})
             continue
-        idx = len(regs) - len(mid)
-        ops.append({"op": "replace", "path": f"/partition_types/{name}/ft_slots/{si}/regs_um", "old": regs, "value": regs[:idx] + new_mid})
-        if gl:
-            new_groups = [[[x + (new_mid[j][0] - mid[j][0]), y + (new_mid[j][1] - mid[j][1])] for x, y in gl[j]] for j in range(len(mid))]
-            ops.append({"op": "replace", "path": f"/partition_types/{name}/ft_slots/{si}/bit_sites_um", "old": groups, "value": new_groups})
+        path = f"/partition_types/{name}/ft_slots/{si}"
+        new_regs = regs[:first + left] + new_mid + regs[first + right:]
+        ops.append({"op": "replace", "path": path + "/regs_um", "old": regs, "value": new_regs})
+        if move_groups:
+            g0 = len(groups) - len(mid)
+            new_groups = groups[:g0 + left] + translate_groups(move_groups, movable, new_mid) + groups[g0 + right:]
+            ops.append({"op": "replace", "path": path + "/bit_sites_um", "old": groups, "value": new_groups})
     return ops, latency, skipped
 
 

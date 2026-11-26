@@ -75,3 +75,62 @@ def test_whole_bus_plus_one_register():
     assert sorted(l["index"] for l in lat) == [0, 1] and any(l.get("whole_bus") for l in lat)   # rb_d-like short chain gets +1 too
     ops2, lat2, sk2 = CR.resite_type("T", t, extra_reg=True, whole_bus=False)
     assert [l["index"] for l in lat2] == [0]                # mutant: only the failing chain
+
+
+
+def test_exact_station_bank_moves_with_center_when_bit_footprint_hits_macro():
+    # Centre hops meet the limit; the bit-cell body still overlaps a fixed SRAM.
+    t = {"outline_um": [720, 850], "buses": [],
+         "contents": [{"inst": "sram", "origin_um": [430.0, 400], "outline_um": [90, 100]}],
+         "internal_stations": [{"conn": "x", "bits": 1, "from_um": [20, 420], "to_um": [700, 420],
+                                "regs_um": [[360, 420]], "bit_site_cell_um": [1.404, 0.27],
+                                "bit_sites_um": [[[429.84, 420.12], [428.436, 420.12]]]}]}
+    row = t["internal_stations"][0]
+    before = row["regs_um"][0]
+    before_bank = row["bit_sites_um"][0]
+    assert max(CR.hops(CR.chain_points(t, row))) <= 405
+    ops, latency, skipped = CR.resite_type("T", t, routed=False)
+    assert len(ops) == 2 and not latency and not skipped
+    CR.apply_ops({"partition_types": {"T": t}}, ops)
+    dx, dy = (new - old for new, old in zip(row["regs_um"][0], before))
+    assert row["bit_sites_um"][0] == [[round(x + dx, 6), round(y + dy, 6)] for x, y in before_bank]
+    assert abs(dx / CR.SITE_W - round(dx / CR.SITE_W)) < 1e-8
+    assert abs(dy / CR.ROW_H - round(dy / CR.ROW_H)) < 1e-8
+    assert not CR.sites_collide(row["bit_sites_um"], row["bit_site_cell_um"],
+                                [(430, 400, 520, 500)], 720, 850)
+
+
+def test_exact_ft_preserves_explicit_stage0_when_internal_bit_bank_moves():
+    slot = {"name": "ft0", "stations": 2, "width": 1, "explicit_stage0": True,
+            "in_face": "W", "out_face": "E", "in_window_um": [410, 430], "out_window_um": [410, 430],
+            "regs_um": [[0, 420], [360, 420]], "bit_site_cell_um": [1.404, 0.27],
+            "bit_sites_um": [[[8.64, 420.12], [10.044, 420.12]],
+                             [[429.84, 420.12], [428.436, 420.12]]]}
+    stage0 = slot["bit_sites_um"][0]
+    t = {"outline_um": [720, 850], "ft_slots": [slot],
+         "contents": [{"inst": "sram", "origin_um": [430, 400], "outline_um": [90, 100]}]}
+    ops, latency, skipped = CR.resite_type("T", t)
+    assert len(ops) == 2 and not latency and not skipped
+    CR.apply_ops({"partition_types": {"T": t}}, ops)
+    assert slot["bit_sites_um"][0] == stage0
+    assert slot["regs_um"][0] == [0, 420]
+    assert not CR.sites_collide(slot["bit_sites_um"][1:], slot["bit_site_cell_um"],
+                                [(430, 400, 520, 500)], 720, 850)
+
+
+
+def test_exact_ft_keeps_adjacent_register_when_out_window_is_implicit():
+    slot = {"name": "ft0", "stations": 3, "width": 1, "in_face": "W", "out_face": "E",
+            "regs_um": [[0, 420], [260, 420], [545, 420]], "bit_site_cell_um": [1.404, 0.27],
+            "bit_sites_um": [[[429.84, 420.12], [428.436, 420.12]],
+                             [[550.8, 420.12], [552.204, 420.12]]]}
+    out_bank = slot["bit_sites_um"][-1]
+    t = {"outline_um": [800, 850], "ft_slots": [slot],
+         "contents": [{"inst": "sram", "origin_um": [430, 400], "outline_um": [90, 100]}]}
+    ops, latency, skipped = CR.resite_type("T", t)
+    assert len(ops) == 2 and not latency and not skipped
+    CR.apply_ops({"partition_types": {"T": t}}, ops)
+    assert slot["regs_um"][0] == [0, 420] and slot["regs_um"][-1] == [545, 420]
+    assert slot["bit_sites_um"][-1] == out_bank
+    assert not CR.sites_collide(slot["bit_sites_um"], slot["bit_site_cell_um"],
+                                [(430, 400, 520, 500)], 800, 850)
