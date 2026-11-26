@@ -109,9 +109,10 @@ def test_carried_rows_never_count_and_loop_breakdown(tmp_path, capsys):
     _w(carry, [["QC", "C-STREET", 3, "exact", "lane sha 0123456", "", "1"]], ["die", "class_id", "count", "basis", "source", "owner", "carried"])
     pre = tmp_path / "pre"
     pre.mkdir()
+    _pre(pre, "qc", ["WARN ADV-TAP-LOAD a: x"])
     for lab in ("c1", "c2"):
         ct.CARRIED.clear()
         assert ct.main(["cut", "--label", lab, "--pre-dir", str(pre), "--carry", str(carry), "--trend", str(trend), "--write"]) == 0
     out = capsys.readouterr().out
-    assert "LOOP: QC" in out and "comparable classes 0->0 (+0)" in out
-    assert "LOOP-BREAKDOWN QC" in out and "C-STREET 3->3 CARRIED" in out
+    assert "LOOP: QC" in out and "LOOP: QC" in out.split("LOOP-BREAKDOWN")[0].splitlines()[-1]
+    assert "LOOP-BREAKDOWN QC" in out and "C-STREET 3->3 CARRIED" in out and "KV" not in out.split("LOOP: ")[-1].split("\n")[0]

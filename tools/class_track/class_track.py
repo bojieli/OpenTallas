@@ -187,7 +187,7 @@ def loop_check(summary, trend_rows, label):
     loops = {}
     for die, s in summary.items():
         streak = hist.get(die, 0)
-        streak = 0 if (s["fell"] or s["total"] + s["new_items"] == 0) else streak + 1
+        streak = 0 if s["fell"] else (streak if s["comp_cur"] + s["comp_prev"] == 0 else streak + 1)  # nothing re-measured: no evidence either way
         s["streak"] = streak
         loops[die] = streak >= 2
     return loops
