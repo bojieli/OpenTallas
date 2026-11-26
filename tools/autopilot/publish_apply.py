@@ -357,8 +357,15 @@ def postbind_spec(obj, stamp, host="", live=None):
     if not args or not (host or hosts):
         return None
     tree = args["src"].rstrip("/")
+    env = bind_env_of(obj, live)
+    if args["scope"]:
+        env["OT_NATIVE_RESET_SCOPE"] = args["scope"]
+    marker = obj.get("marker", obj)
+    remap_base = marker.get("remap_base") or obj.get("remap_base")
+    if remap_base:
+        env["OT_PLAN_GATE_BASELINE"] = str(remap_base)
     return {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
-            "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": {**bind_env_of(obj, live), **({"OT_NATIVE_RESET_SCOPE": args["scope"]} if args["scope"] else {})},
+            "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": env,
             "bind_out": args["bind_out"]}
 
 
