@@ -1,0 +1,5 @@
+# S81 col_h9_r0_p6 pv082a7609, retained GRT review
+
+Epyc9, /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r0_p6__t1__pv082a7609_1124220400/gen/col_h9_r0_p6__t1__pv082a7609/smell_review/5_2_route-1125-2100PST, floorplan.png, density.png, paths_zoom.png.
+
+Two rows of abutted ROM pairs leave a narrow straight opening at midline and an eastern return partially obstructed by the CFIFO macro. Several longest frame paths wrap around the south macro row instead of crossing the central opening. The standard-cell density concentrates directly below the ROM rows, along the north face, and at the eastern elbow. Top PG straps are present across the drawing and the dashed horizontal band is PG. Channel demand 10.857, clock metric 24.452, fanout spread 990.3 µm, max local density 0.918 and 10,520 GCells over 90%. DRT reported 380,531 violations after its first pass. Existing diagnostic remains active. C-STREET fix first for a new route: stagger the active apertures and check edge capture timing independently of the source-stage repair.
