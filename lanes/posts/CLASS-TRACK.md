@@ -1,0 +1,1 @@
+- 2026-11-26 08:32 PST DONE [CLASS-TRACK] ot-run oth-ubuntu-3434334-1795710615 on tolerant-swine: rc=0 after 152 s, ended 08:32:44, log /srv/opentallas-scratch2/claude/CLASS-TRACK/logs/rst_qc.log, cmd: --mem 32 --threads 2 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125 --disk 5 --hosts intel1,epyc8 -
