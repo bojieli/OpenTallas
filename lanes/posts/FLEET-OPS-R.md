@@ -1461,3 +1461,4 @@
 - 2026-11-25 21:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 67 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 21:28 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on intel1 wrote 61 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
 - 2026-11-25 21:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: s81-allfix-int on intel1 wrote 76 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 21:45 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 0a44f715df68: exit 4 (see /home/ubuntu/merge-queue/log)
