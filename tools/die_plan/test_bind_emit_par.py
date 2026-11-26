@@ -226,7 +226,9 @@ def test_removed_key_is_unsafe(tmp_path, monkeypatch):
 def test_jobs_env(monkeypatch):
     monkeypatch.delenv("OT_BIND_EMIT_J", raising=False)
     monkeypatch.setattr(EP, "mem_jobs", lambda: 3)
-    assert EP.jobs() == min(3, max(1, min(8, (EP.os.cpu_count() or 4) // 4)))     # default auto, capped by memory
+    monkeypatch.setattr(EP, "allocated_cpus", lambda: 48)
+    monkeypatch.delenv("OT_BIND_EMIT_JMAX", raising=False)
+    assert EP.jobs() == 3  # default auto, capped by memory
     monkeypatch.setenv("OT_BIND_EMIT_J", "1")
     assert EP.jobs() == 1
     monkeypatch.setenv("OT_BIND_EMIT_J", "6")
@@ -238,21 +240,22 @@ def test_jobs_env(monkeypatch):
 
 
 def test_jobs_auto_cap_env_bounded_by_memory_and_cpus(monkeypatch):
-    """BIND-SPEED-1124 (COORD 11-25): auto uses up to OT_BIND_EMIT_JMAX (default 8) workers when memory and cpus/4 hold them"""
     monkeypatch.delenv("OT_BIND_EMIT_J", raising=False)
     monkeypatch.delenv("OT_BIND_EMIT_JMAX", raising=False)
-    monkeypatch.setattr(EP.os, "cpu_count", lambda: 256)
-    monkeypatch.setattr(EP, "mem_jobs", lambda: 40)
-    assert EP.jobs() == 8
+    monkeypatch.setattr(EP, "allocated_cpus", lambda: 48)
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 60)
+    assert EP.jobs() == 48
+    assert EP.jobs(scoped=True) == 8
     monkeypatch.setenv("OT_BIND_EMIT_JMAX", "16")
     assert EP.jobs() == 16
     monkeypatch.setattr(EP, "mem_jobs", lambda: 11)
     assert EP.jobs() == 11
-    monkeypatch.setattr(EP, "mem_jobs", lambda: 40)
-    monkeypatch.setenv("OT_BIND_EMIT_JMAX", "8")
-    assert EP.jobs() == 8
-    monkeypatch.setattr(EP.os, "cpu_count", lambda: 24)
-    assert EP.jobs() == 6
+
+
+def test_allocated_cpus_respects_fleet_lease(monkeypatch):
+    monkeypatch.setattr(EP.os, "sched_getaffinity", lambda _: set(range(64)))
+    assert EP.allocated_cpus({"OT_HEAVY_THREADS": "3", "OT_RUN_THREADS": "4"}) <= 3
+    assert EP.allocated_cpus({"OT_HEAVY_THREADS": "junk", "OT_RUN_THREADS": "2"}) <= 2
 
 
 def test_mem_jobs():

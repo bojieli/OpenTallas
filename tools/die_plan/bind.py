@@ -4290,9 +4290,10 @@ class Binder:
         if getattr(self, "collect_gaps", False):
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
         print(f"bind: EMIT-HEAD {_time.time() - _t0:.1f} s before the types", flush=True)
-        if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
+        emit_jobs = min(len(emit_set), bind_emit_par.jobs(scoped=only is not None))
+        if emit_jobs > 1:
             try:
-                bind_emit_par.run(self, out, files, bind_emit_par.jobs(), beat=beat)
+                bind_emit_par.run(self, out, files, emit_jobs, beat=beat)
                 _par = True
             except bind_emit_par.ParUnsafe as exc:
                 print(f"bind: emit parallel fell back to serial: {exc}", flush=True)

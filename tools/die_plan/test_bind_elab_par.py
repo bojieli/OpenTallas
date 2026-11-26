@@ -79,17 +79,16 @@ def test_unit_cap_bounds_the_jobs(tmp_path, monkeypatch):
     assert TDE.unit_mem_gb(str(pc), str(cg)) is None
     monkeypatch.delenv("OT_BIND_ELAB_JOBS", raising=False)
     monkeypatch.delenv("OT_BIND_ELAB_JOB_GB", raising=False)
-    monkeypatch.setattr(TDE.os, "cpu_count", lambda: 512)
-    monkeypatch.setattr(TDE.os, "getloadavg", lambda: (0.0, 0.0, 0.0))
+    monkeypatch.setattr(TDE.os, "sched_getaffinity", lambda _: set(range(96)))
+    monkeypatch.setenv("OT_HEAVY_THREADS", "4")
+    monkeypatch.delenv("OT_HEAVY_MEM_GB", raising=False)
     monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 64.0)
     assert TDE.elab_jobs(5, 96) == 0            # no room for a second Yosys: serial
     monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 128.0)
-    monkeypatch.setattr(TDE.os, "cpu_count", lambda: 96)
-    monkeypatch.setattr(TDE.os, "getloadavg", lambda: (112.0, 0.0, 0.0))
     real = Path.read_text
     monkeypatch.setattr(Path, "read_text", lambda self, *a, **k: "MemAvailable: 524288000 kB\n"
                         if str(self) == "/proc/meminfo" else real(self, *a, **k))
-    assert TDE.elab_jobs(6, 96) == 3            # loaded host: base + 3 variants inside the 128 GB unit
+    assert TDE.elab_jobs(6, 96) == 3            # four allocated CPUs: base + three variants inside 128 GB
     assert TDE.elab_jobs(1, 96) == 1            # S81 c8: the one variant still runs beside the base
 
 

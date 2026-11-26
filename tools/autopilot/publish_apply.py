@@ -409,7 +409,11 @@ def postbind_run_sh(s):
     runtime = postbind_runtime_sh(s)
     tools = '"$runtime"/tools/die_plan' if runtime else "tools/die_plan"
     return (f"#!/bin/bash\n# publish_apply.py post-bind: strict bind + LATCHECK of {s['tree']} in its hardlink copy\nset -uo pipefail\n"
-            f"export PYTHONDONTWRITEBYTECODE=1\n{env}cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
+            "export PYTHONDONTWRITEBYTECODE=1\n"
+            f"{env}"
+            # Older pinned runtimes still bound auto workers by JMAX. Preserve an explicit lower cap.
+            'export OT_BIND_EMIT_JMAX="${OT_BIND_EMIT_JMAX:-${OT_HEAVY_THREADS:-8}}"\n'
+            f"cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
             f"python3 -I -B {tools}/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
             f"e=$?; echo ELAB_RC=$e; tail -n 1 {q(L)}/elab.log | cut -c1-300\n"
             f"python3 -I -B {tools}/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
@@ -455,7 +459,7 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
             f"grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || "
             f"{{ bash {q(str(Path(C) / 'bin/post.sh'))} {q(lane)} \"POST-APPLY-BIND [{lane} -> COORD] {die}: the bind copy could not be made on {s['host']} "
             f"(log {log}); run publish_apply.py post-bind again\"; exit 3; }}\n"
-            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --threads 48 --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
             f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1; rc=$?\n"
             f"r=$(grep -E '^(ELAB|BIND|LATCHECK)_RC=' {q(str(log))} | tr '\\n' ' ')\n"
             f"if [ $rc = 0 ]; then v=PASS; else v=\"FAIL (rc $rc): run {fail}\"; fi\n"
@@ -594,7 +598,7 @@ def bind_first(C, obj, lane, die, run=subprocess.run, host="", stamp=None, log_d
     q = shlex.quote
     otrun = HERE.parent / "fleet" / "ot-run"
     body = (f"cd /; {{ ssh -o BatchMode=yes -o ControlPath=none {q(s['host'])} 'bash -s' < {q(str(prep))} > {q(str(log))} 2>&1 && grep -q '^POSTBIND_COPY ' {q(str(log))}; }} || exit 3\n"
-            f"{q(str(otrun))} --mem {POSTBIND_MEM} --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
+            f"{q(str(otrun))} --mem {POSTBIND_MEM} --threads 48 --hosts {q(s['host'])} --priority plan --plan-job bind --dir {q(s['copy'])} --stage {q(s['copy'])} "
             f"--stage {q(s['tree'])} -- bash {q(s['copy'] + '/' + POSTBIND_DIR + '/run.sh')} >> {q(str(log))} 2>&1 &\n"
             # no fixed wall cap (OWNER: delete conservative limits): stopped only when the job is gone or nothing changed for BIND_NO_PROGRESS_S (exact pid)
             f"pid=$!\nwhile kill -0 $pid 2>/dev/null; do\n  sleep 60\n"

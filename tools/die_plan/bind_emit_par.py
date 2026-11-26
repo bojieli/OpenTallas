@@ -15,7 +15,7 @@ whole value), extend (list tail), union (set).  Anything else (a removed key, a 
 values that do not merge) is UNSAFE: the parent raises ParUnsafe before touching its state and the caller reruns the plain serial loop, so a
 form this module does not understand costs time, never a wrong bind.
 
-    OT_BIND_EMIT_J=N     workers (default `auto` = min(OT_BIND_EMIT_JMAX (8), cpus/4, what the memory limit holds); 1 = the plain serial loop)
+    OT_BIND_EMIT_J=N     workers (default `auto` = allocated CPUs that fit within the unit's memory; 1 = the plain serial loop)
     OT_BIND_EMIT_PAR_REC=FILE   per-type wall / worker private memory record (default OUT/bind_emit_par.json)
 
 Proof duty of a caller that turns it on for a new die: one serial and one parallel bind of the same inputs, `diff -r` of the two out
@@ -30,6 +30,7 @@ import sys
 import tempfile
 import time
 import traceback
+from pathlib import Path
 
 DEEP_MAX = int(os.environ.get("OT_BIND_EMIT_DEEP_MAX", str(16 << 20)))
 _ABSENT = object()
@@ -46,6 +47,9 @@ WORKER_FRAC = 0.8          # a worker's private (dirtied) memory per byte of the
 def _mem_limit_bytes():
     """-> the tightest memory limit over this process's cgroup (v2 memory.max up the tree) and MemAvailable + own RSS"""
     lims = []
+    reserved = positive_int(os.environ.get("OT_HEAVY_MEM_GB"))
+    if reserved:
+        lims.append(reserved << 30)
     try:
         for ln in open("/proc/meminfo"):
             if ln.startswith("MemAvailable:"):
@@ -90,24 +94,52 @@ def mem_jobs(rss=None, limit=None):
     return max(1, int((limit - 1.1 * rss) // (WORKER_FRAC * rss)))
 
 
-JMAX = 8                   # auto cap; OT_BIND_EMIT_JMAX raises it (BIND-SPEED-1124 KV A5t5: j=16 = 47 chunks, deltas 490 -> 1164 s, emit
-                           # 846 -> 821 s, peak 18.9 -> 27.3 GB: the per-chunk delta, not the worker count, bounds the emit today)
-
-
-def jobs():
-    """OT_BIND_EMIT_J: N workers, 1 = the serial loop, `auto` (the default) = min(OT_BIND_EMIT_JMAX (8), cpus/4, what the memory
-    limit holds)"""
-    v = os.environ.get("OT_BIND_EMIT_J", DEFAULT_J).strip() or DEFAULT_J
-    if v == "auto":
-        try:
-            cap = max(1, int(os.environ.get("OT_BIND_EMIT_JMAX") or JMAX))
-        except ValueError:
-            cap = JMAX
-        return max(1, min(cap, (os.cpu_count() or 4) // 4, mem_jobs()))
+def positive_int(value):
     try:
-        return max(1, int(v))
-    except ValueError:
-        return 1
+        n = int(value)
+    except (TypeError, ValueError):
+        return None
+    return n if n > 0 else None
+
+
+def allocated_cpus(env=None):
+    """Return the smallest CPU limit from affinity, the fleet lease and cgroup quota."""
+    env = os.environ if env is None else env
+    try:
+        cores = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        cores = os.cpu_count() or 1
+    for key in ("OT_HEAVY_THREADS", "OT_RUN_THREADS"):
+        request = positive_int(env.get(key))
+        if request:
+            cores = min(cores, request)
+    try:
+        rel = next((line[3:].strip() for line in open("/proc/self/cgroup") if line.startswith("0::")), "")
+        root = Path("/sys/fs/cgroup")
+        path = root / rel.lstrip("/")
+        while path == root or root in path.parents:
+            try:
+                quota, period = (path / "cpu.max").read_text().split()
+                if quota != "max":
+                    cores = min(cores, max(1, (int(quota) + int(period) - 1) // int(period)))
+            except (OSError, ValueError, ZeroDivisionError):
+                pass
+            if path == root:
+                break
+            path = path.parent
+    except OSError:
+        pass
+    return max(1, cores)
+
+
+def jobs(scoped=False):
+    """Auto uses the CPU/memory lease; an explicit worker count keeps its existing meaning."""
+    setting = os.environ.get("OT_BIND_EMIT_J", DEFAULT_J).strip() or DEFAULT_J
+    if setting == "auto":
+        cpu = allocated_cpus()
+        cap = positive_int(os.environ.get("OT_BIND_EMIT_JMAX")) or (8 if scoped else cpu)
+        return max(1, min(cap, cpu, mem_jobs()))
+    return positive_int(setting) or 1
 
 
 # ---- snapshots ------------------------------------------------------------------------------------------------------------------
