@@ -1,0 +1,1 @@
+- 2026-11-25 21:19 PST DONE [QC-FACEGUARD] ot-run oth-ubuntu-2308679-1795666680 on viable-ram: rc=0 after 3682 s, ended 05:19:15, log /srv/opentallas-scratch2/claude/QC-FACEGUARD/ffpre_run.out, cmd: --crit --priority die --no-spill --mem 48 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FACEGUARD -- bash /srv/opental
