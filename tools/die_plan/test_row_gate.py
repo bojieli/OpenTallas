@@ -94,3 +94,11 @@ def test_gate_missing_input_is_not_ready(tmp_path, monkeypatch):
 def test_r8_only_triggers_the_bind_loop():
     assert RG.r8_only(dict(classes={"R8_STALE": 30, "R8_STALE_TOTAL": 1}))
     assert not RG.r8_only(dict(classes={"R8_STALE": 3, "GAP": 1})) and not RG.r8_only(dict(classes={}))
+
+
+def test_repriced_rows_audit_the_full_die_top():
+    base = {"latency": {"lanes": {"L0": {"cycles": 4}}}}
+    repriced = {"latency": {"lanes": {"L0": {"cycles": 5}}}}
+    assert RG.row_bind_scope(["kv_sys"], base, base) == ["kv_sys"]
+    assert RG.row_bind_scope(["kv_sys"], base, repriced) == []
+    assert RG.row_bind_scope([], base, base) == []
