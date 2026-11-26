@@ -7,3 +7,4 @@
 - 2026-11-26 09:38 PST DONE [QC-INT-R2-SUC] ot-push-main otpush-civil-redfish-3145091 on civil-redfish: rc=0 after 0 s, ended 17:38:34, log none, cmd: ot-push-main --help
 - 2026-11-26 09:54 PST DIED [QC-INT-R2-SUC] ot-push-main otpush-civil-redfish-3500928 on civil-redfish: rc=3 after 6 s, ended 17:54:17, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 3 after 6 s, no log
 - 2026-11-26 09:54 PST DIED [QC-INT-R2-SUC] ot-push-main otpush-civil-redfish-3520159 on civil-redfish: rc=2 after 1 s, ended 17:54:53, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
+- 2026-11-26 09:55 PST DIED [QC-INT-R2-SUC] ot-push-main otpush-civil-redfish-3539394 on civil-redfish: rc=2 after 1 s, ended 17:55:48, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
