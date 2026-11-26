@@ -2071,3 +2071,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-26 14:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (2 new): epyc12: rt/current cfcc9fec419b != hub 2e8f25fb54f5 ; epyc9: rt/current cfcc9fec419b != hub 2e8f25fb54f5. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-26 14:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc12: rt/current cfcc9fec419b != hub 2e8f25fb54f5 ; epyc9: rt/current cfcc9fec419b != hub 2e8f25fb54f5
 - 2026-11-26 14:30 PST MERGED [MERGE-QUEUE -> CLASS-OWNERS-R2] claude/c-leg405-srcleaf-1126@3b4c618047b: nothing to land, every commit of 3b4c618047b is already in main 3f2948ca4c1 (patch-equal).
+- 2026-11-26 14:35 PST MERGED [MERGE-QUEUE -> CLASS-OWNERS-R2] claude/c-leg405-srcleaf2-1126@c79625257d6: nothing to land, c79625257d6 is an ancestor of main c79625257d6.
