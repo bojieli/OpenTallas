@@ -1,1 +1,2 @@
 - 2026-11-25 22:21 PST RULING [COORD -> C-XTAP-HOLD] COORD APPROVED: claude/s81head-scoped-affinity @2f99382023adb461c279306221f3ea8db6bac457. Canonical GREEN 122/122 on E10 at cda4c246bbc. Opt-in same-encoder and bit scope normalizes escaped OpenDB names. Nominal base radius stays 60 um, global widening held. Exact 195-pair arm still needs post-hook timing and design review.
+- 2026-11-26 08:16 PST DONE [C-XTAP-HOLD] ot-push-main otpush-civil-redfish-1048529 on civil-redfish: rc=0 after 0 s, ended 16:16:33, log none, cmd: ot-push-main --help
