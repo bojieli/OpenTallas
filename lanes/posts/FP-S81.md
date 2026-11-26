@@ -80,3 +80,4 @@
 - 2026-11-25 18:04 PST DIED [FP-S81] ot-run oth-ubuntu-4126511-1795658139 on open-snipe: rc=1 after 514 s, ended 02:04:11, log /srv/opentallas-scratch2/claude/FP-S81/rowsS/pre_c11leaf_v3_fix2.out, cmd: --priority die --mem 96 --disk 5 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/FP-S81/rowsS -- bash /srv/opentallas-scratch2/claude/F | class=DESIGN-FAIL cause=no cause line
 - 2026-11-25 18:12 PST DONE [FP-S81] ot-push-main otpush-open-snipe-98215 on open-snipe: rc=0 after 564 s, ended 02:12:05, log none, cmd: ot-push-main 
 - 2026-11-25 18:30 PST DONE [FP-S81] ot-push-main otpush-open-snipe-840713 on open-snipe: rc=0 after 295 s, ended 02:30:53, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/push_sh2.log, cmd: ot-push-main 
+- 2026-11-25 18:52 PST DONE [FP-S81] ot-push-main otpush-open-snipe-48962 on open-snipe: rc=0 after 3111 s, ended 02:52:32, log /srv/opentallas-scratch2/claude/FP-S81/tmpl/push_pbs.log, cmd: ot-push-main 
