@@ -83,3 +83,42 @@ def test_hd_mesh_shape_cli(tmp_path, capsys):
     info = json.loads(capsys.readouterr().out)
     assert info["supplied_wrong_phase"] == 1 and info["relays"] == 10
     assert json.loads((tmp_path / "o.json").read_text())
+
+
+REPOINT = """
+module rp_ep(input wire clk, arst_n, brst_n);
+    wire rst_root_n, alt_root_n;
+    ot_dp_rrelay_ph u_rst_in (.clk(clk), .d(arst_n), .q(rst_root_n), .ph(ph));
+    ot_dp_rrelay_ph u_alt_in (.clk(clk), .d(brst_n), .q(alt_root_n), .ph(ph));
+    ot_dp_rrelay u_rrl_4 (.clk(clk), .d(rst_root_n), .q(r4a));   ot_dp_rrelay u_rrl_40 (.clk(clk), .d(r4a), .q(r4));
+    ot_dp_rrelay u_rrl_68 (.clk(clk), .d(rst_root_n), .q(r68a)); ot_dp_rrelay u_rrl_69 (.clk(clk), .d(r68a), .q(r68));
+    ot_dp_rrelay u_rrl_172 (.clk(clk), .d(rst_root_n), .q(r172a)); ot_dp_rrelay u_rrl_173 (.clk(clk), .d(r172a), .q(r172));
+    ot_dp_rrelay u_rrl_90 (.clk(clk), .d(alt_root_n), .q(r90a)); ot_dp_rrelay u_rrl_91 (.clk(clk), .d(r90a), .q(r90));
+    ot_dp_rrelay u_rrl_174 (.clk(clk), .d(r172), .q(r174));
+endmodule
+"""
+
+
+def test_repointed_reset_relays_pair_by_root_and_depth_only():
+    """COORD 11-25 hd_mesh 22dcfc2f: reset_taps.tcl re-points a FIRM flop from one tap's relay to the nearest tap's
+    relay (u_rrl_68 against u_rrl_172).  Same root + same depth -> one class, both hinted to one representative;
+    a different root (same depth) or a different depth (same root) stays a separate class, and a supplied hint
+    across either is counted wrong-phase and replaced, never kept."""
+    rows = rh.relays(rh.module_text(REPOINT, "rp_ep"))
+    cl = rh.classes(rows)
+    assert cl["u_rrl_69"] == cl["u_rrl_173"] == cl["u_rrl_40"]                   # root rst_root_n, depth 2
+    assert cl["u_rrl_91"] != cl["u_rrl_173"]                                      # other root, same depth
+    assert cl["u_rrl_174"] != cl["u_rrl_173"] and cl["u_rrl_68"] != cl["u_rrl_69"]  # same root, other depth
+    hs = {e[1]: e[2][2] for e in rh.hints(rows)}
+    assert hs["ff:u_dut.u_rrl_69.q"] == hs["ff:u_dut.u_rrl_173.q"] == "ff:u_dut.u_rrl_40.q"
+    assert "ff:u_dut.u_rrl_91.q" not in hs and "ff:u_dut.u_rrl_174.q" not in hs
+    supplied = [["both", "ff:u_dut.u_rrl_173.q", ["eq", "gold", "ff:u_dut.u_rrl_69.q", 0]],   # right
+                ["both", "ff:u_dut.u_rrl_91.q", ["eq", "gold", "ff:u_dut.u_rrl_69.q", 0]],    # root differs
+                ["both", "ff:u_dut.u_rrl_174.q", ["eq", "gold", "ff:u_dut.u_rrl_173.q", 0]],  # depth differs
+                ["both", "ff:u_dut.u_rrl_173.q", ["eq", "gold", "ff:u_dut.u_rrl_69.q", 1]]]   # inverted
+    out, info = rh.rewrite(supplied, rows)
+    assert info["supplied_relay"] == 4 and info["supplied_wrong_phase"] == 3
+    pairs = {(e[1], e[2][2]) for e in out}
+    assert ("ff:u_dut.u_rrl_91.q", "ff:u_dut.u_rrl_69.q") not in pairs
+    assert ("ff:u_dut.u_rrl_174.q", "ff:u_dut.u_rrl_173.q") not in pairs
+    assert all(e[2][3] == 0 for e in out)
