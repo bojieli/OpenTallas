@@ -8629,7 +8629,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
     # QC-GLUE 11-25 (QC-ALLFIX): opt-in plan key logic_cluster_rects_um -> odb region/group, last in PRE_GLOBAL_PLACE
     import logic_cluster
-    lc_tcl = logic_cluster.tcl(P, tn)
+    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms])
     if lc_tcl:
         (kd / "logic_cluster.tcl").write_text(lc_tcl)
         hook = kd / "face_flops.tcl"
