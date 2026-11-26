@@ -236,3 +236,14 @@ def test_pin_stack_becomes_pin_shape(tmp_path):
     _, _, obs, pins = AE.layer_rects(o)
     assert AE.uncovered(pins["M6"], [(49977, 208, 50050, 240)]) == []          # whole real pad is pin (enclosure merged)
     assert not any(q[0] < 50024 and q[2] > 50000 and q[1] < 240 and q[3] > 208 for q in obs.get("M6", []))
+
+
+def test_pin_eol_repair_removes_only_duplicate_signal_pin_obs(tmp_path):
+    base, fixed = tmp_path / "base.lef", tmp_path / "fixed.lef"
+    lef = exact(m4=("0.495 19.9 0.535 20.024", "0.823 20 0.847 20.024"))
+    duplicate = "        RECT  0.495 19.9 0.535 20.024 ;\n"
+    lef = lef.replace("  END a\n", "    PORT\n      LAYER M4 ;\n" + duplicate + "    END\n  END a\n")
+    base.write_text(lef)
+    assert AE.pin_eol_findings(base)["M4"]["pins"] == 1
+    assert AE.pin_eol_fix(base, fixed)["after"] == {}
+    assert fixed.read_text() == lef.replace("\n     RECT  0.495 19.9 0.535 20.024 ;", "")
