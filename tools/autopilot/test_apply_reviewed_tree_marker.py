@@ -220,6 +220,18 @@ class KeepGenHosts(unittest.TestCase):
         self.assertEqual(seen, [(["epyc10", "epyc8", "epyc7"], ["epyc10"])])
         self.assertEqual(sorted(json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]["gen_hosts"]), ["epyc10", "epyc7", "epyc8"])
 
+    def test_excluded_hosts_never_enter_opportunistic_source_sync(self):
+        from unittest.mock import patch
+        c = mk({"gen_hosts": ["epyc10", "epyc2"], "derive_exclude_hosts": ["epyc2"]})
+        p = c / "autopilot/kit_wave.json"
+        cfg = json.loads(p.read_text())
+        cfg.update(hosts=["epyc2", "epyc7", "epyc8"], derive_exclude_hosts=["epyc7"])
+        p.write_text(json.dumps(cfg))
+        with patch.object(A, "old_tree_holders", return_value=[]) as discover:
+            apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        self.assertEqual(discover.call_args.args[1], ["epyc8"])
+        self.assertEqual(json.loads(p.read_text())["dies"]["kv"]["gen_hosts"], ["epyc10"])
+
     def test_old_tree_holders_probe(self):
         calls = []
         got = REAL_HOLDERS("/t/old", ["a", "b", "c"], {"c"}, run=lambda cmd: (calls.append(cmd) or (0 if " a " in cmd else 1, "")))
