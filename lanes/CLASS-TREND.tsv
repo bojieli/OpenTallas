@@ -46,7 +46,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	C-GPL-TD-INFLATION	2	seen-in-review	FABLE-FLOW-0847 A3 lep0N lep0N_w			NEW
 2026-11-26 09:00 PST	HEAD	C-HIFANOUT-SELECT	2	seen-in-review	FABLE-FLOW-0847 A10 host_w lep0N			NEW
 2026-11-26 09:00 PST	HEAD	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan f6d1bf51c90d			NEW
-2026-11-26 09:00 PST	HEAD	C-LEG405	0	exact	PRE ADV-LEG405-ZERO types on live plan f6d1bf51c90d	0	exact	FLAT
+2026-11-26 09:00 PST	HEAD	C-LEG405	0	exact-staged	LEG405-STAGED 0 CLASS-OWNERS-R2 09:19 @5632156a860	0	exact	BASIS-CHANGE
 2026-11-26 09:00 PST	HEAD	C-OVERSIZE	1	exact	PRE ADV-FP-OVERSIZE types on live plan f6d1bf51c90d			NEW
 2026-11-26 09:00 PST	HEAD	C-PARENT-SEAM-HOLD	5	seen-in-review	FABLE-FLOW-0847 A9 mesh host_n wshim_tx C18 transit			NEW
 2026-11-26 09:00 PST	HEAD	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 host_w lep0N			NEW
@@ -55,9 +55,9 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	C-SITE-IN-MACRO	1	seen-in-review	FABLE-FLOW-0847 A6 lep0N			NEW
 2026-11-26 09:00 PST	HEAD	C-STRAP-REACH	5	seen-in-review	FABLE-FLOW-0847 A4 lep0N lep0N_w n3_turn str transit			NEW
 2026-11-26 09:00 PST	HEAD	C-STREET	0	exact	PRE ADV-FP-STREET types on live plan f6d1bf51c90d	0	exact	FLAT
-2026-11-26 09:00 PST	HEAD	C-TAP-LOAD	2	exact	PRE ADV-TAP-LOAD types on live plan f6d1bf51c90d	1	lead	FIRST-EXACT
+2026-11-26 09:00 PST	HEAD	C-TAP-LOAD	3	exact	lane count 3 CLASS-OWNERS-R2 09:19 c-tap-load-r2 @9adf5e241f4 (hd_spn, host_w, +1; COORD ruling 09:22)	1	lead	FIRST-EXACT
 2026-11-26 09:00 PST	HEAD	C-TAP-REACH	1	seen-in-review	FABLE-FLOW-0847 A2 hd_spn			NEW
-2026-11-26 09:00 PST	HEAD	C-XTAP-HOLD	1	exact-kits	CLASS-OWNERS-R2 08:20 xtap_hold_census residual kits 1/20	0	exact-kits	UP
+2026-11-26 09:00 PST	HEAD	C-XTAP-HOLD	6	exact-types	6 types (hd_spn lep0N lep0N_w Wshim TX Transit STR) FABLE-FLOW-0847 B2 + census tool 0f12e89113; COORD ruling 09:22	0	exact-kits	BASIS-CHANGE
 2026-11-26 09:00 PST	HEAD	P-CLOCK-TAPS-COPY	3	adjudicated	FABLE-FLOW-0847 B21	0	adjudicated	UP
 2026-11-26 09:00 PST	HEAD	P-EVIDENCE-VOLATILE	3	seen-in-review	FABLE-FLOW-0847 A15 BF50, west-composed-request, ...			NEW
 2026-11-26 09:00 PST	HEAD	P-FALSE-GREEN	7	adjudicated	FABLE-FLOW-0847 B16	0	adjudicated	UP
@@ -70,7 +70,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	HEAD	P-STALE-TABLE	2	seen-in-review	FABLE-FLOW-0847 A11 exports lep0N_w			NEW
 2026-11-26 09:00 PST	KV	C-FT-CROSSES-CORE	78	exact	PRE ADV-FT-CROSSES-CORE types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 87d01254579e			NEW
-2026-11-26 09:00 PST	KV	C-LEG405	40	exact	PRE ADV-LEG405-ZERO types on live plan 87d01254579e	40	exact	FLAT
+2026-11-26 09:00 PST	KV	C-LEG405	2	exact-staged	KV-INT-R2 measurement dafa157 (real under-staged 2; legacy 40 superseded; COORD ruling 09:22)	40	exact	BASIS-CHANGE
 2026-11-26 09:00 PST	KV	C-OVERSIZE	1	exact	PRE ADV-FP-OVERSIZE types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-RELAY-SEAT	45	exact	PRE ADV-RELAY-SEAT types on live plan 87d01254579e			NEW
 2026-11-26 09:00 PST	KV	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan 87d01254579e (0 advisory WARN types)	0	exact	FLAT
@@ -81,7 +81,7 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	KV	P-SIGNED-UNVERSIONED	52	seen-in-review	FABLE-FLOW-0847 A20			NEW
 2026-11-26 09:00 PST	QC	C-FT-CROSSES-CORE	50	exact	PRE ADV-FT-CROSSES-CORE types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-LAND-REACH	3	exact	PRE ADV-LAND-REACH types on live plan c9eb8883ad40			NEW
-2026-11-26 09:00 PST	QC	C-LEG405	0	exact	PRE ADV-LEG405-ZERO types on live plan c9eb8883ad40	0	exact	FLAT
+2026-11-26 09:00 PST	QC	C-LEG405	0	exact-staged	LEG405-STAGED 0 CLASS-OWNERS-R2 09:19 @5632156a860	0	exact	BASIS-CHANGE
 2026-11-26 09:00 PST	QC	C-OVERSIZE	0	exact	PRE ADV-FP-OVERSIZE types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-RELAY-SEAT	29	exact	PRE ADV-RELAY-SEAT types on live plan c9eb8883ad40			NEW
 2026-11-26 09:00 PST	QC	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan c9eb8883ad40 (32 advisory WARN types)	0	exact	FLAT
@@ -106,11 +106,12 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-26 09:00 PST	S81	C-FT-CROSSES-CORE	272	exact	PRE ADV-FT-CROSSES-CORE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-GPL-TD-INFLATION	1	seen-in-review	FABLE-FLOW-0847 A3 lepw_mus_C			NEW
 2026-11-26 09:00 PST	S81	C-LAND-REACH	0	exact	PRE ADV-LAND-REACH types on live plan 1f8fcdd9c4d7			NEW
-2026-11-26 09:00 PST	S81	C-LEG405	277	exact	PRE ADV-LEG405-ZERO types on live plan 1f8fcdd9c4d7	273	exact	UP
+2026-11-26 09:00 PST	S81	C-LEG405	6	exact-staged	LEG405-STAGED 6 legs/6 types CLASS-OWNERS-R2 09:19 tool c-leg405-stage-seats @5632156a860 (legacy stage-blind 277 superseded; COORD ruling 09:22)	273	exact	BASIS-CHANGE
 2026-11-26 09:00 PST	S81	C-OVERSIZE	4	exact	PRE ADV-FP-OVERSIZE types on live plan 1f8fcdd9c4d7			NEW
 2026-11-26 09:00 PST	S81	C-PARENT-SEAM-HOLD	2	seen-in-review	FABLE-FLOW-0847 A9 t23 arst_n + SerDes peer			NEW
 2026-11-26 09:00 PST	S81	C-PIN-TRACK-PG	2	seen-in-review	FABLE-FLOW-0847 A7 t23 mus_C			NEW
 2026-11-26 09:00 PST	S81	C-RELAY-SEAT	110	exact	PRE ADV-RELAY-SEAT types on live plan 1f8fcdd9c4d7			NEW
+2026-11-26 09:00 PST	S81	C-RST-PINREG-DROPPED	3	adjudicated	dsfd_node LL* signed netlists dropped reset pin register rn; 3 records REVOKED-PENDING-FIX (COORD 09:22)			NEW
 2026-11-26 09:00 PST	S81	C-RST-RELAY-REACH	0	exact	derived_drop RSTREACH FAIL types on live plan 1f8fcdd9c4d7 (91 advisory WARN types)	26	exact	DOWN
 2026-11-26 09:00 PST	S81	C-SITE-IN-MACRO	4	seen-in-review	FABLE-FLOW-0847 A6 H10 P4 types			NEW
 2026-11-26 09:00 PST	S81	C-STREET	244	exact	PRE ADV-FP-STREET types on live plan 1f8fcdd9c4d7	245	exact	DOWN
