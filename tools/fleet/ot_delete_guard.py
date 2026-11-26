@@ -11,6 +11,7 @@ impossible.  refuse(target) -> None (may delete) or the reason string.  A target
 The protected list is built on the hub (build_protected) and pushed to every host as protected.txt (header '# built <epoch>'); a missing
 or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_guard.py build COORD_DIR OUT | check PATH [LIST]"""
 import re
+import stat
 import glob, json, os, re, sys, time
 import importlib.util as _ilu
 _nr = _ilu.spec_from_file_location("not_record", os.path.join(os.path.dirname(os.path.realpath(__file__)), "not_record.py"))   # the shared canary / test predicate, loaded by path (the guard itself is loaded by path)
@@ -525,6 +526,7 @@ def jobroot_refusal(t):
 
 
 PROBE_RE = re.compile(r"/(private|ot-jobs)/")
+PROBE_ROOT_RE = re.compile(r"^.*/(?:private/[^/]+|ot-jobs)/[^/]+(?=/)")
 PROBE_HOLD_S = 12 * 3600
 
 
@@ -542,12 +544,27 @@ def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
     if not PROBE_RE.search(t + "/"):
         return None
     now = time.time() if now is None else now
-    stack, seen = [t], 0
     try:
-        if now - os.lstat(t).st_mtime < hold_s:
+        target_stat = os.lstat(t)
+        if now - target_stat.st_mtime < hold_s:
             return "young probe dir: written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (hold_s / 3600)
     except OSError:
         return None
+    scan_root = t
+    file_target = stat.S_ISREG(target_stat.st_mode)
+    if file_target:
+        # Class-c trim passes individual ODBs. An old file still belongs to
+        # the review window if any checkpoint or report in its probe is fresh.
+        match = PROBE_ROOT_RE.match(t)
+        if not match:
+            return "young probe dir: cannot identify the probe root for this file (kept)"
+        scan_root = match.group(0)
+        try:
+            if now - os.lstat(scan_root).st_mtime < hold_s:
+                return "young probe dir: probe root written < %g h ago (kept)" % (hold_s / 3600)
+        except OSError:
+            return "young probe dir: unreadable (kept)"
+    stack, seen = [scan_root], 0
     while stack:
         d = stack.pop()
         try:
@@ -559,11 +576,11 @@ def young_probe_refusal(target, now=None, hold_s=PROBE_HOLD_S):
                     except OSError:
                         continue
                     if now - st.st_mtime < hold_s:
-                        return "young probe dir: %s written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (os.path.relpath(e.path, t), hold_s / 3600)
+                        return "young probe dir: %s written < %g h ago (probe / kit dirs keep their odb and reports 12 h for review)" % (os.path.relpath(e.path, scan_root), hold_s / 3600)
                     if e.is_dir(follow_symlinks=False):
                         stack.append(e.path)
                     if seen > 50000:
-                        return None
+                        return "young probe dir: file review window could not be established (kept)" if file_target else None
         except OSError:
             return "young probe dir: unreadable (kept)"
     return None
