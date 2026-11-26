@@ -35,10 +35,11 @@ Steps (each timed in ROW-READY.seconds):
   The fork and launch tree are deleted with ot-delete afterwards (--keep-tree keeps them); DIR keeps the plan, the changed
   R8 tables, the bind output and the logs.
 
---cow runs a terminal scoped gate against an immutable sealed source in a
-private kernel overlay. The normal plan, changed tables, binding reports and
-ROW-READY receipt remain. A materialized tree for publishing requires the
-ordinary fork. The existing OT_BIND_YOSYS setting must name an approved
+--cow runs a terminal gate against an immutable sealed source in a private
+kernel overlay. Explicit --types all enables the complete whole-die chain in
+that overlay under an admitted parallel CPU and memory lease. The normal plan,
+changed tables, binding reports and ROW-READY receipt remain. Materialized
+publication requires the ordinary fork. OT_BIND_YOSYS must name an approved
 namespace-local executable on the host.
 
 The bind env is the die's (coord autopilot/kit_wave.json dies[DIE] die_gen_env + bind_env, read on the hub), overridden by --env.
@@ -490,8 +491,9 @@ def gate(a):
         done("NOT", "the rows changed no bound partition type (nothing to bind; use --types)")
         return finish()
     bind_types = row_bind_scope(types, braw, raw)
-    if getattr(a, "cow", False) and not bind_types:
-        done("NOT", "copy-on-write is scoped; repriced lane transport requires a normal whole-die gate")
+    cow_whole = getattr(a, "cow", False) and a.types == "all"
+    if getattr(a, "cow", False) and not bind_types and not cow_whole:
+        done("NOT", "repriced lane transport requires explicit --types all for a whole-die gate")
         return finish()
     prel = os.path.relpath(plan, tree)
     benv = dict(base_env, OT_PLAN_GATE_PRE="off")              # PRE-DIFF below is this gate's PRE
@@ -611,6 +613,8 @@ def gate(a):
                             scope=sm.get("scope"), json=str(out / "latency.json"))
         if cr["lat"] not in (0, 5) or nf:                       # 5 = lanes of unbound types unobserved (a scoped bind)
             done("NOT", f"latency check rc {cr['lat']} (fail {nf})")
+    if cow_whole and not whole_latency_complete(cr.get("lat"), R.get("latency", {})):
+        done("NOT", "whole copy-on-write gate requires a complete die LAT receipt with zero unobserved lanes")
     shutil.copy2(plan, out / "plan.json")
     R["plan"]["copy"] = str(out / "plan.json")
     R["tree_deleted"] = not a.keep_tree
@@ -626,6 +630,19 @@ def row_bind_scope(types, base, candidate):
     base_prices = (base.get("latency") or {}).get("lanes")
     candidate_prices = (candidate.get("latency") or {}).get("lanes")
     return types if candidate_prices == base_prices else []
+
+
+def whole_latency_complete(rc, receipt):
+    return (rc == 0 and receipt.get("scope") == "die" and receipt.get("verdict") == "PASS"
+            and receipt.get("fail") == 0 and receipt.get("unobserved") == 0)
+
+
+def whole_cow_lease(a, env=None):
+    env = os.environ if env is None else env
+    try:
+        return int(env["OT_HEAVY_THREADS"]) > 1 and int(env["OT_HEAVY_MEM_GB"]) >= max(a.mem, a.bind_mem)
+    except (KeyError, ValueError):
+        return False
 
 
 def under_ot_run():
@@ -659,8 +676,13 @@ def main(argv=None):
     g.add_argument("--plan-name", help="file name of the gated plan in the fork's plan dir (default plan_row_<lane>.json)")
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
     g.add_argument("--cow", action="store_true",
-                   help="isolate a terminal scoped gate in a local copy-on-write overlay of a sealed source")
+                   help="isolate a terminal gate in a copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
+    cow_whole = a.cow and a.types == "all"
+    if a.cow and (a.keep_tree or a.keep_fork):
+        g.error("--cow cannot retain a materialized tree or fork")
+    if cow_whole and (a.ledger or a.no_r8 or a.skip_normalize or a.drop_failed_rows):
+        g.error("whole --cow requires the complete source gate and cannot stage a publication ledger")
     if not a.local and not under_ot_run():
         cmd = [_tool(OT_RUN), "--die", "--mem", str(a.mem)]
         if a.types == "all":
@@ -670,8 +692,8 @@ def main(argv=None):
         print("row_gate: under ot-run --die:", " ".join(map(shlex.quote, cmd)), flush=True)
         return subprocess.run(cmd).returncode
     if a.cow:
-        if a.keep_tree or a.keep_fork or a.types == "all":
-            g.error("--cow is for terminal scoped gates; use the normal fork for materialized or whole-die output")
+        if cow_whole and not whole_cow_lease(a):
+            g.error("whole --cow requires an admitted parallel ot-run lease covering --mem and --bind-mem")
         out, src = Path(a.out).resolve(), Path(a.src).resolve()
         try:
             if not COW.mounted(out):

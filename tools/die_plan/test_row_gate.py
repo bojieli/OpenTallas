@@ -102,3 +102,46 @@ def test_repriced_rows_audit_the_full_die_top():
     assert RG.row_bind_scope(["kv_sys"], base, base) == ["kv_sys"]
     assert RG.row_bind_scope(["kv_sys"], base, repriced) == []
     assert RG.row_bind_scope([], base, base) == []
+
+
+def test_whole_cow_requires_a_parallel_lease_covering_both_memory_budgets():
+    from argparse import Namespace
+
+    a = Namespace(mem=96, bind_mem=128)
+    assert RG.whole_cow_lease(a, {"OT_HEAVY_THREADS": "48", "OT_HEAVY_MEM_GB": "512"})
+    assert not RG.whole_cow_lease(a, {"OT_HEAVY_THREADS": "1", "OT_HEAVY_MEM_GB": "512"})
+    assert not RG.whole_cow_lease(a, {"OT_HEAVY_THREADS": "48", "OT_HEAVY_MEM_GB": "96"})
+    assert not RG.whole_cow_lease(a, {})
+
+
+def test_whole_cow_requires_a_complete_die_latency_receipt():
+    receipt = {"scope": "die", "verdict": "PASS", "unobserved": 0, "fail": 0}
+    assert RG.whole_latency_complete(0, receipt)
+    assert not RG.whole_latency_complete(5, dict(receipt, unobserved=1))
+    assert not RG.whole_latency_complete(0, dict(receipt, scope="probe"))
+    assert not RG.whole_latency_complete(0, {})
+
+
+def test_whole_cow_cli_uses_the_existing_overlay_runner_without_a_publish_ledger(tmp_path, monkeypatch):
+    import pytest
+
+    seen = {}
+    monkeypatch.setenv("OT_HEAVY_THREADS", "48")
+    monkeypatch.setenv("OT_HEAVY_MEM_GB", "512")
+    monkeypatch.setattr(RG.COW, "mounted", lambda out: False)
+
+    def launch(argv, src, out, ledger):
+        seen.update(argv=argv, src=src, out=out, ledger=ledger)
+        return 0
+
+    monkeypatch.setattr(RG.COW, "run", launch)
+    src, out = tmp_path / "sealed", tmp_path / "attempt"
+    argv = ["gate", "--local", "--cow", "--types", "all", "--die", "qwen_compute", "--src", str(src),
+            "--base", "p.json", "--asbuilt", "a.json", "--row", "ops:o.json", "--out", str(out)]
+    assert RG.main(argv) == 0
+    assert seen["argv"][1:] == argv
+    assert seen["src"] == src and seen["out"] == out and seen["ledger"] is None
+    for option in (["--keep-fork"], ["--ledger", "ledger"], ["--no-r8"], ["--skip-normalize", "retap"]):
+        with pytest.raises(SystemExit) as exc:
+            RG.main(argv + option)
+        assert exc.value.code == 2
