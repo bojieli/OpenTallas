@@ -3456,6 +3456,13 @@ def cmd_verdict(a):
     evaluate(rec, a.insertion_target)
     if getattr(a, "rescore_unconstrained", False) and getattr(a, "write", False):
         Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
+    if getattr(a, "rejudge", False) and getattr(a, "write", False):
+        # P-MERGED-GDS-NOT-RUN 11-26: re-evaluate the SAME recorded measurements with the current tool (no STA, no corner data touched) and store
+        # the result with its provenance; the record before the rewrite is kept beside it as <record>.before-rejudge.
+        import shutil, time as _t
+        shutil.copyfile(a.record, str(a.record) + ".before-rejudge")
+        rec["rejudged"] = dict(by="signoff.py verdict --rejudge --write", at=_t.strftime("%Y-%m-%dT%H:%M:%S%z"), note=getattr(a, "rejudge_note", None) or "same measurements, current tool")
+        Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
@@ -3512,6 +3519,8 @@ def main(argv=None):
                    "with endpoints under SIGNED hard-core views excluded (no STA re-run); --write stores the record")
     v.add_argument("--kit", help="kit dir (default: the record dir parent)")
     v.add_argument("--write", action="store_true")
+    v.add_argument("--rejudge", action="store_true", help="with --write: store the re-evaluated verdict of the same recorded measurements (provenance in rec['rejudged'])")
+    v.add_argument("--rejudge-note")
     rc_ = sub.add_parser("refresh-coverage", help="re-derive child-flop clock coverage of a finished record from its own "
                          "receipts (NOMCAP-MAP) and re-evaluate; --write to store")
     rc_.add_argument("record")
