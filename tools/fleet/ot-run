@@ -382,6 +382,90 @@ def setup_preflight(hosts, d, stage, cmd, probe=None, local_exists=os.path.exist
     return f"SETUP: {'; '.join(what)} exists on none of the candidate hosts ({', '.join(sorted(rows))}); create it or fix the path"
 
 
+# P-LAUNCH-SETUP-FAIL (FLEET-OPS-R4 11-26, 45 setup deaths in 2 h: missing census file, rc 127 with no log, rc 1 at 0 s, --dir on no host):
+# DEEP preflight, one ssh to the first candidate host that holds the --dir.  REFUSE (NOT-RUN SETUP): interpreter not on the host,
+# a python script missing or with a syntax error.  WARN only (a script may extend sys.path itself): a top-level import that resolves neither on
+# the host's sys.path nor beside the script / under --dir.  `ot-run --check ARGS -- CMD` runs it plus the stage / dir preflight without placing
+# anything (no ticket, no ledger, no lease).  Live: runs before admission; OT_RUN_NO_PREFLIGHT=1 skips it.
+DEEP_PREFLIGHT_PY = r"""
+import ast, importlib.util, json, os, shutil, sys
+a = json.loads(sys.stdin.read()); d, toks = a["d"], list(a["cmd"]); out = []
+if toks and shutil.which(toks[0]) is None and not os.path.exists(toks[0]):
+    out.append(["refuse", "interpreter %s not found on this host (rc 127)" % toks[0]])
+nodir = bool(d) and not os.path.isdir(d)      # a spill / autostage copies --dir here later: its script cannot be judged yet (setup_preflight covers --dir)
+script = None
+if not nodir and toks and os.path.basename(toks[0]) in ("python3", "python"):
+    for t in toks[1:]:
+        if t in ("-c", "-m"):
+            break
+        if t.startswith("-"):
+            continue
+        script = t if os.path.isabs(t) else os.path.join(d or ".", t)
+        break
+if script and script.endswith(".py"):
+    if not os.path.isfile(script):
+        out.append(["refuse", "script %s missing" % script])
+    else:
+        tree = None
+        try:
+            tree = ast.parse(open(script, encoding="utf-8", errors="replace").read(), script)
+        except SyntaxError as e:
+            out.append(["refuse", "script %s has a syntax error: %s line %s" % (script, e.msg, e.lineno)])
+        if tree is not None:
+            roots = set()
+            for n in ast.walk(tree):
+                if isinstance(n, ast.Import):
+                    roots.update(x.name.split(".")[0] for x in n.names)
+                elif isinstance(n, ast.ImportFrom) and n.level == 0 and n.module:
+                    roots.add(n.module.split(".")[0])
+            extra = [os.path.dirname(script), d or "", os.path.join(d or "", "tools"), os.path.join(d or "", "tools", "die_plan")]
+            miss = []
+            for r in sorted(roots):
+                if r in sys.stdlib_module_names:
+                    continue
+                try:
+                    ok = importlib.util.find_spec(r) is not None
+                except Exception:
+                    ok = False
+                if not ok:
+                    ok = any(os.path.exists(os.path.join(e, r + ".py")) or os.path.isdir(os.path.join(e, r)) for e in extra if e)
+                if not ok:
+                    miss.append(r)
+            if miss:
+                out.append(["warn", "script %s imports %s: on no sys.path, beside the script or under --dir (ModuleNotFoundError unless it extends sys.path)" % (script, ", ".join(miss[:6]))])
+print(json.dumps(out))
+"""
+
+
+def deep_rows(text):
+    try:
+        return [tuple(x) for x in json.loads((text or "").strip().splitlines()[-1])]
+    except Exception:
+        return []
+
+
+def deep_preflight(host, d, cmd, run=None):
+    """-> [(severity, text)] from one host (severity refuse | warn); an unreachable host or an unreadable answer proves nothing (empty)"""
+    try:
+        r = (run or subprocess.run)(["ssh", "-o", "ConnectTimeout=20", "-o", "BatchMode=yes", host, "python3 -I -c " + shlex.quote(DEEP_PREFLIGHT_PY)],
+                                    input=json.dumps({"d": d, "cmd": list(cmd)}) + "\n", capture_output=True, text=True, timeout=60)
+    except Exception:
+        return []
+    return deep_rows(r.stdout)
+
+
+def preflight_report(hosts, d, stage, cmd, deep=None):
+    """-> (refusals, warnings) for `--check` and the live path; hosts = candidates that answered"""
+    ref, warn = [], []
+    pf = setup_preflight(hosts, d, stage, cmd)
+    if pf:
+        ref.append(pf)
+    for host in hosts[:1]:
+        for sev, txt in (deep or deep_preflight)(host, d, cmd):
+            (ref if sev == "refuse" else warn).append(f"{host}: {txt}")
+    return ref, warn
+
+
 def retryable_queued_probe_failures(first, previously_qualified, notes):
     """Only known transport loss may keep an already-unstarted request queued."""
     if first:
@@ -3003,6 +3087,7 @@ def main():
     spill = not os.environ.get("OT_RUN_NO_SPILL")
     no_spill_requested = False
     snapshot_stages = []
+    check_only = False
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
         _hv = a[a.index("--hosts") + 1] if a.index("--hosts") + 1 < len(a) else ""
@@ -3022,6 +3107,7 @@ def main():
             _ex = {h for h in a.pop(0).split(",") if h}
             HOSTS[:] = [h for h in HOSTS if h not in _ex]
         elif o == "--pick": pick = True
+        elif o == "--check": check_only = True         # P-LAUNCH-SETUP-FAIL: dry preflight, places nothing
         elif o == "--strict-host": os.environ["OT_RUN_STRICT_HOST"] = "1"     # DEATHCLASS-1122 RAIL-KILL: keep a hard pin (no PIN-FALLBACK)
         elif o == "--event-env":
             # EVENT-ENV-PREFLIGHT 11-24: --event-env FILE (~/coord/events/<event>.env; format in ot_event_env.py) gives the unit its plan
@@ -3131,6 +3217,17 @@ def main():
             HOSTS[:] = _dk                 # keeps `pinned = hosts is not HOSTS` false for an unpinned job
         else:
             hosts = _dk
+    if check_only:       # P-LAUNCH-SETUP-FAIL: dry preflight of --dir / --stage / script / interpreter / imports on the candidate hosts; nothing is placed
+        _cand = [h for h in hosts if h not in ("localhost",)] or list(hosts)
+        _ref, _warn = preflight_report(_cand, d, STAGE, cmd)
+        for _w in _warn:
+            print(f"ot-run --check: WARN {_w}", file=sys.stderr)
+        if _ref:
+            for _r in _ref:
+                print(f"ot-run --check: REFUSE {_r}", file=sys.stderr)
+            not_run("SETUP: " + "; ".join(_ref))
+        print(f"ot-run --check: OK on {', '.join(_cand[:6])} ({len(_warn)} warning(s))", file=sys.stderr)
+        sys.exit(0)
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
     if not os.environ.get("OT_LANE"):                 # FLEET-OPS 11-25 (COORD: 38 die cores on epyc12 carried no lane): fill it from the job dir / cwd / spec path
@@ -3227,6 +3324,15 @@ def main():
             if _pf:
                 say(f"ot-run: NOT RUN: {_pf}")
                 not_run(_pf)
+            if _have and not os.environ.get("OT_RUN_NO_DEEP_PREFLIGHT"):     # P-LAUNCH-SETUP-FAIL: interpreter, syntax, imports on the first answering host
+                _dp = [(sv, tx) for sv, tx in deep_preflight(_have[0], d, cmd)]
+                for _sv, _tx in _dp:
+                    if _sv == "warn":
+                        say(f"ot-run: PREFLIGHT WARN {_have[0]}: {_tx}")
+                _rf = [tx for sv, tx in _dp if sv == "refuse"]
+                if _rf:
+                    say(f"ot-run: NOT RUN: SETUP: {'; '.join(_rf)}")
+                    not_run("SETUP: " + "; ".join(_rf))
         _bn = []                                     # BLOCK-NOTE-1123: the rail notes of this pass
         ok = drop_low_disk(raw, die, disk, (say if first else _bn.append), explicit=disk_explicit)
         _el_b = time.time() - t0
