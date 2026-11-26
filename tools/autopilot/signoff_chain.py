@@ -5,8 +5,11 @@ Runs inside the same ot-run allocation as the physical runner. Diagnostic CTS/GR
 goals remain diagnostics. Existing runner corner/hold policy takes precedence.
 """
 import argparse
+import hashlib
+import importlib.util
 import json
 import os
+import re
 import subprocess
 import tempfile
 import sys
@@ -314,8 +317,72 @@ def stage_signoff_tool(kit, bundle=None, source=None):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def current_review_allows(review):
+    """The canonical reviewer may withdraw a GOOD while a route waits for admission."""
+    hub = review.get("review_hub")
+    if not hub:
+        return True
+    ident = review.get("request_id")
+    if (not isinstance(hub, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", hub)
+            or not isinstance(ident, str) or not re.fullmatch(r"[0-9a-f]{64}", ident)):
+        return False
+    directory = f"coord/autopilot/private_visual_requests/{ident}"
+    # The physical host may differ from the controller. Always read its canonical hub.
+    cmd = (f"cat -- \"$HOME/{directory}/visual_request.json\"; printf '\\n'; "
+           f"cat -- \"$HOME/{directory}/visual_review.json\"")
+    argv = ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=5",
+            "hub" if hub == "localhost" else hub, cmd]
+    try:
+        result = subprocess.run(argv, capture_output=True, text=True, check=True, timeout=15)
+        reader = json.JSONDecoder()
+        request, offset = reader.raw_decode(result.stdout.lstrip())
+        approval = json.loads(result.stdout.lstrip()[offset:])
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return False
+    fields = ("die", "item", "attempt", "kit", "stage_fingerprint", "odb_sha256")
+    return (isinstance(request, dict) and isinstance(approval, dict)
+            and request.get("schema") == "placement-visual-request.v1"
+            and request.get("request_id") == ident and request.get("odb") == review["odb"]
+            and request.get("odb_sha256") == review["odb_sha256"]
+            and approval.get("schema") == "placement-visual-review.v1"
+            and approval.get("verdict") == "GOOD"
+            and all(request.get(name) and request.get(name) == approval.get(name) for name in fields))
+
+
+def prepare_reviewed_place(kit, runner, goal, review):
+    """Fail closed after tool refresh if ORFS would start before the reviewed placement."""
+    paths = list(kit.glob("run/results/asap7/*/base/3_place.odb"))
+    if len(paths) != 1 or str(paths[0].relative_to(kit)) != review["odb"] or not paths[0].stat().st_size:
+        raise ValueError("review does not name the kit's unique nonempty detailed placement")
+    with paths[0].open("rb") as placed:
+        if hashlib.file_digest(placed, "sha256").hexdigest() != review["odb_sha256"]:
+            raise ValueError("reviewed detailed placement bytes changed")
+    if "OT_STAGE_RESUME_V1" not in Path(runner).read_text(errors="replace"):
+        raise ValueError("runner cannot resume from the reviewed stage")
+    helper = importlib.util.spec_from_file_location("kit_resume", kit / "kit_resume.py")
+    if not helper or not helper.loader:
+        raise ValueError("stock stage resume helper is missing")
+    kr = importlib.util.module_from_spec(helper)
+    helper.loader.exec_module(kr)
+    prev = load(kit / "resume.json")
+    plan = kr.auto_plan(str(kit), goal, prior=prev) or {}
+    if plan.get("start") not in ("cts", "grt", "route") or "place" not in plan.get("reused_steps", ()):
+        raise ValueError("stock resume cannot reuse the reviewed detailed placement")
+    if not current_review_allows(review):
+        raise ValueError("canonical exact placement approval is missing, rejected or changed")
+    # The runner sees this exact plan. Disable its permissive auto-plan fallback on reviewed continuations.
+    with tempfile.NamedTemporaryFile("w", dir=kit, prefix=".reviewed-resume-", delete=False) as f:
+        temp = Path(f.name)
+        json.dump(plan, f, indent=1)
+    try:
+        temp.replace(kit / "resume.json")
+    finally:
+        temp.unlink(missing_ok=True)
+
+
 def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
-                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh, so_tool=stage_signoff_tool, preflight_only=False):
+                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh, so_tool=stage_signoff_tool,
+                 preflight_only=False, reviewed_place=None):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -358,7 +425,15 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
             runner = alt
     if not proof_only and so_tool and goal not in ("cts", "grt"):
         so_tool(kit)
-    rc = 0 if proof_only else run(["bash", runner, str(kit), goal, str(mem), str(threads)])
+    command = ["bash", runner, str(kit), goal, str(mem), str(threads)]
+    if not proof_only and reviewed_place is not None:
+        try:
+            prepare_reviewed_place(kit, runner, goal, reviewed_place)
+        except (OSError, TypeError, ValueError, KeyError) as exc:
+            print(f"REVIEWED PLACE REFUSED: {exc}; physical runner not started", flush=True)
+            return 3
+        command = ["env", "OT_RESUME=0"] + command
+    rc = 0 if proof_only else run(command)
     if goal in ("cts", "grt"):
         return rc
     receipt = {"started": started, "runner_exit": rc, "goal": goal,
@@ -467,6 +542,7 @@ def main():
     ap.add_argument("--lec", help="separately staged current main lec.py (routed proof); default KIT/lec.py")
     ap.add_argument("--no-late-eco", action="store_true", help="KW-ECO-1 opt-out: no late-stage ECO loop on a NOT SIGNED route")
     ap.add_argument("--plan-dir", help="plan dir for the kit preflight's plan-reading contract checks (optional)")
+    ap.add_argument("--reviewed-place", type=json.loads, help="placement checkpoint identity required at route admission")
     ap.add_argument("--preflight-only", action="store_true",
                     help="PREFLIGHT-EARLY-1122: run only the chain's kit preflight (same tool and args as the route chain), then exit")
     ap.add_argument("runner")
@@ -476,7 +552,7 @@ def main():
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
     return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, lec=a.lec,
-                        late=not a.no_late_eco, plan_dir=a.plan_dir, preflight_only=a.preflight_only)
+                        late=not a.no_late_eco, plan_dir=a.plan_dir, preflight_only=a.preflight_only, reviewed_place=a.reviewed_place)
 
 
 if __name__ == "__main__":

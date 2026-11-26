@@ -274,7 +274,7 @@ class FakeProc:
         return self.rc
 
 
-def chain_fixture(tmp_path, monkeypatch, probe=None, receipt=None, proc_rcs=(0,), stage_rcs=None, live=""):
+def chain_fixture(tmp_path, monkeypatch, probe=None, receipt=None, proc_rcs=(0,), stage_rcs=None, live="", reviewed=True):
     import autopilot as AP
     monkeypatch.setattr(AP, "stage_admission_tools", lambda: {"dir": "/srv/opentallas-scratch2/claude/autopilot/admission_tools/x", "sha256": "s"})
     monkeypatch.setattr(AP, "late_eco_on", lambda: True)
@@ -285,6 +285,13 @@ def chain_fixture(tmp_path, monkeypatch, probe=None, receipt=None, proc_rcs=(0,)
     K = "/srv/w/items/t/gen/t"
     res = {"stage": "geom", "verdict": "PASS", "kit": "epyc9:" + K, "die": D, "item": I}
     out = tmp_path
+    if reviewed:
+        res["stage_fp"] = {"place": "1" * 64}
+        req = KW.PPV.request(out, res, "2" * 64,
+                             {"odb": "run/results/asap7/test/base/3_place.odb", "odb_sha256": "3" * 64})
+        res["visual_request"] = req
+        KW.PPV.write(out / KW.PPV.REVIEW, dict(req, schema=KW.PPV.REVIEW_SCHEMA,
+                                              verdict="GOOD", image_sha256={"place.png": "4" * 64}))
     calls, popens, waits = [], [], []
     p = probe if probe is not None else {"exists": True, "config": True, "routed": [], "signoff_dirs": [], "fail_marks": [], "runner": "/srv/w/items/t/gen/run_kit.sh",
                                          "signoff_goals": ["route"], "signoff_missing": []}
@@ -330,6 +337,7 @@ def test_chain_signs_off_with_the_autopilot_submit_argv(tmp_path, monkeypatch):
     assert argv[:2] == ["/bin/ot-run", "--mem"] and argv[argv.index("--hosts") + 1] == "epyc9" and "--disk" in argv
     assert argv[argv.index("--dir") + 1] == K and AP.ADMISSION_BOOTSTRAP in argv
     assert argv[-5:] == ["/srv/w/items/t/gen/run_kit.sh", K, "route", "40", "8"]
+    assert json.loads(argv[argv.index("--reviewed-place") + 1])["odb_sha256"] == "3" * 64
     assert "--stage" in argv and "/srv/w/items/t/gen/run_kit.sh" in argv          # the runner outside the kit is staged too
     assert "OT_GPL_SPARSE_UTIL" not in env and env.get("OT_LANE")
     assert [w[w.index("--stage") + 1] for w in waits] == ["cts", "grt", "route"]
@@ -401,11 +409,12 @@ def test_chain_retries_not_run_and_refuses_routed_kits(tmp_path, monkeypatch):
     assert res["stage"] == "chain_admit" and "already routed" in res["tail"] and not popens
 
 
-def test_chain_diagnostic_goal_runs_the_runner_only(tmp_path, monkeypatch):
+def test_chain_diagnostic_grt_requires_the_same_review(tmp_path, monkeypatch):
     sp, res, out, run, fail, popen, wait, calls, popens, waits, K = chain_fixture(tmp_path, monkeypatch, receipt={})
     assert KW.private_chain(sp, res, out, "grt", run, fail, {}, popen=popen, wait=wait) == 0
     argv = popens[0][0]
-    assert argv[-6:] == ["bash", "/srv/w/items/t/gen/run_kit.sh", K, "grt", "40", "8"] and res["verdict"] == "PASS" and res["stage"] == "grt"
+    assert argv[-5:] == ["/srv/w/items/t/gen/run_kit.sh", K, "grt", "40", "8"]
+    assert "--reviewed-place" in argv and res["verdict"] == "PASS" and res["stage"] == "grt"
     assert [w[w.index("--stage") + 1] for w in waits] == ["cts", "grt"]
 
 
@@ -468,3 +477,40 @@ def test_resume_goal_finish_is_route_and_auto_is_signoff_goal():
     assert KW.resolve_chain_goal(AP, "finish", dict(rk, resume={"start": "cts"})) == "route"
     assert KW.resolve_chain_goal(AP, "cts", dict(rk, resume={"start": "cts"})) == "cts"
     assert KW.resolve_chain_goal(AP, "auto", {"runner": "/k/run_kit_hbm.sh"}) == "finish"   # another runner's own sign-off goal
+
+
+def test_private_route_missing_exact_review_never_spawns(tmp_path, monkeypatch):
+    sp, res, out, run, fail, popen, wait, _, popens, _, _ = chain_fixture(tmp_path, monkeypatch, reviewed=False)
+    assert KW.private_chain(sp, res, out, "route", run, fail, {}, popen=popen, wait=wait) == 0
+    assert res["verdict"] == "WAIT-VISUAL" and not popens
+
+
+@pytest.mark.parametrize("verdict,edit,expected", [
+    ("BAD", {}, "WAIT-FORM"),
+    ("GOOD", {"odb_sha256": "d" * 64}, "WAIT-VISUAL"),
+])
+def test_private_route_rejected_or_other_checkpoint_never_spawns(tmp_path, monkeypatch, verdict, edit, expected):
+    sp, res, out, run, fail, popen, wait, _, popens, _, _ = chain_fixture(tmp_path, monkeypatch)
+    review = KW.PPV.load(out / KW.PPV.REVIEW)
+    review.update(verdict=verdict, **edit)
+    KW.PPV.write(out / KW.PPV.REVIEW, review)
+    assert KW.private_chain(sp, res, out, "route", run, fail, {}, popen=popen, wait=wait) == 0
+    assert res["verdict"] == expected and not popens
+
+
+def test_custom_place_request_is_indexed_and_uses_only_canonical_verdict(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    out = tmp_path / "custom" / "work"
+    out.mkdir(parents=True)
+    place = {"die": D, "item": I, "kit": "epyc8:/scratch/kit", "stage_fp": {"place": "1" * 64}}
+    checkpoint = {"odb": "run/results/asap7/t/base/3_place.odb", "odb_sha256": "2" * 64}
+    req = KW.PPV.request(out, place, "3" * 64, checkpoint, hub="localhost", spec_path=out / "private.json")
+    index = tmp_path / "coord" / "autopilot" / "private_visual_requests" / req["request_id"]
+    assert req == KW.PPV.load(index / KW.PPV.REQUEST) and req["spec_path"] == str(out / "private.json")
+    good = dict(req, schema=KW.PPV.REVIEW_SCHEMA, verdict="GOOD", image_sha256={"floorplan.png": "4" * 64})
+    KW.PPV.write(out / KW.PPV.REVIEW, good)
+    assert KW.PPV.verdict(out, req) == ""
+    KW.PPV.write(index / KW.PPV.REVIEW, good)
+    assert KW.PPV.verdict(out, req) == "GOOD"
+    KW.PPV.write(index / KW.PPV.REVIEW, dict(good, verdict="BAD"))
+    assert KW.PPV.verdict(out, req) == "BAD"

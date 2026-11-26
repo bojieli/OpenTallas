@@ -307,3 +307,57 @@ class LateEcoTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_reviewed_chain_never_runs_a_changed_placement(tmp_path):
+    import hashlib
+    import signoff_chain as SC
+    odb = tmp_path / "run/results/asap7/t/base/3_place.odb"
+    odb.parent.mkdir(parents=True)
+    odb.write_bytes(b"after")
+    calls = []
+    review = {"odb": str(odb.relative_to(tmp_path)), "odb_sha256": hashlib.sha256(b"before").hexdigest()}
+    result = SC.continue_kit(tmp_path, str(tmp_path / "runner.sh"), "grt", 10, 2,
+                             run=calls.append, refresh=None, so_tool=None, reviewed_place=review)
+    assert result == 3 and calls == []
+
+
+def test_reviewed_chain_uses_only_stock_resume_after_place(tmp_path):
+    import hashlib
+    import json
+    import signoff_chain as SC
+    odb = tmp_path / "run/results/asap7/t/base/3_place.odb"
+    odb.parent.mkdir(parents=True)
+    odb.write_bytes(b"reviewed")
+    runner = tmp_path / "runner.sh"
+    runner.write_text("# OT_STAGE_RESUME_V1")
+    kr = tmp_path / "kit_resume.py"
+    review = {"odb": str(odb.relative_to(tmp_path)), "odb_sha256": hashlib.sha256(b"reviewed").hexdigest()}
+    calls = []
+    def run(args):
+        calls.append(args)
+        return 0
+    kr.write_text("def auto_plan(*a, **kw): return {'start': 'place', 'reused_steps': ['floorplan']}")
+    opts = dict(run=run, refresh=None, so_tool=None, reviewed_place=review)
+    assert SC.continue_kit(tmp_path, str(runner), "grt", 10, 2, **opts) == 3
+    assert calls == []
+    kr.write_text("def auto_plan(*a, **kw): return {'start': 'cts', 'reused_steps': ['place']}")
+    assert SC.continue_kit(tmp_path, str(runner), "grt", 10, 2, **opts) == 0
+    assert calls == [["env", "OT_RESUME=0", "bash", str(runner), str(tmp_path), "grt", "10", "2"]]
+    assert json.loads((tmp_path / "resume.json").read_text())["start"] == "cts"
+
+
+def test_worker_requires_current_canonical_approval(monkeypatch):
+    import json
+    from types import SimpleNamespace
+    import signoff_chain as SC
+    req = dict(schema="placement-visual-request.v1", request_id="1" * 64,
+               die="s81", item="p", attempt="a", kit="epyc7:/kit",
+               stage_fingerprint="2" * 64, odb="place", odb_sha256="3" * 64)
+    review = dict(odb="place", odb_sha256=req["odb_sha256"], request_id=req["request_id"], review_hub="intel2")
+    def check(decision):
+        receipt = dict(req, schema="placement-visual-review.v1", verdict=decision)
+        monkeypatch.setattr(SC.subprocess, "run", lambda *a, **k: SimpleNamespace(stdout=json.dumps(req) + "\n" + json.dumps(receipt)))
+        return SC.current_review_allows(review)
+    assert check("GOOD")
+    assert not check("BAD")
