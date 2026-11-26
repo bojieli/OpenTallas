@@ -6201,7 +6201,10 @@
    ],
    "plan_event": "KV-A5t9-r6-publish-1125",
    "tools_from_rt": true,
-   "only_items_regen": false
+   "only_items_regen": false,
+   "derive_exclude_hosts": [
+    "epyc2"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -39733,7 +39736,10 @@
     "owner": "S81-ALLFIX-INT",
     "since": "2026-11-25 21:47 PST",
     "reason": "OWNER 11-25: no further R10 batch launches. Keep all started work active and continue reviewed private R11 probes."
-   }
+   },
+   "derive_exclude_hosts": [
+    "epyc2"
+   ]
   },
   "s81_head": {
    "enabled": true,
@@ -42060,7 +42066,10 @@
     "hd_tile"
    ],
    "only_items_regen": false,
-   "note_gen_hosts_w10_epyc2": "W10 exact epyc2 source replica retained. No new HEAD kits while epyc2 root above 90%; measured 93% at 21:39 PST. Existing builds remain."
+   "note_gen_hosts_w10_epyc2": "W10 exact epyc2 source replica retained. No new HEAD kits while epyc2 root above 90%; measured 93% at 21:39 PST. Existing builds remain.",
+   "derive_exclude_hosts": [
+    "epyc2"
+   ]
   },
   "qwen_compute": {
    "private_retired_specs_qcglue_1125": [
@@ -53118,7 +53127,10 @@
    "pregrt_refresh": true,
    "pregrt_refresh_pad": "rr",
    "bind_preflight": false,
-   "only_items_regen": false
+   "only_items_regen": false,
+   "derive_exclude_hosts": [
+    "epyc2"
+   ]
   },
   "hbm": {
    "enabled": true,
