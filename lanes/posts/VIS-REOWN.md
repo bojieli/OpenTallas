@@ -715,3 +715,5 @@
 - 2026-11-26 12:30 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: KV kv3_pc_v1__cl7f648944 PLACE-GP owner KV-OWN-RSTREACH (60 min since queued, epyc12). 
 - 2026-11-26 12:42 PST DONE [VIS-REOWN] ot-run oth-ubuntu-2712240-1795725618 on tolerant-swine: rc=0 after 128 s, ended 12:42:18, log /srv/opentallas-scratch2/claude/vis-reown/census/s81_head__hd_serdes__s81_head_hd_serdes_1126092031.log, cmd: --mem 24 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r
 - 2026-11-26 12:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: QC sle_su_l1__cl5ea486db GRT owner QC-ALLFIX (65 min since queued, epyc9). 
+- 2026-11-26 13:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R2; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (19.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
