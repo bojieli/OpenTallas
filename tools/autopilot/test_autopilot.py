@@ -2569,12 +2569,12 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
     assert not r["error"]
     r["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
     die = ap.canonical_die(r["die"])
-    rec = dict(die=die, event="E", item=r["type"], attempt=2, kit=r["kit"])
+    rec = dict(die=die, event="E", item=r["type"], attempt=2, kit=r["kit"], geom_verdict="PASS", geom_dir="/geom")
     cfg = {"dies": {die: {"event": "E"}}}
     if strict:
         monkeypatch.setenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", "1")
-        rec.update(geom_verdict="PASS", geom_dir="/geom")
     else:
+        monkeypatch.delenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", raising=False)
         cfg["dies"][die]["review_before_route"] = {"event": "E", "all_items": True, "required": True}
     monkeypatch.setattr(ap.KW, "read_config_text", lambda *_: json.dumps(cfg))
     monkeypatch.setattr(ap.KW, "load_state", lambda *_: {"items": {"r": rec}})
@@ -2612,13 +2612,12 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
         assert j["wave_review_reason"].startswith(reason)
         assert j["unit"] == "already-submitted"
 
-    if strict:
-        monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: None)
-        for goal in ("finish", "cts", "grt"):
-            j.update(status="CRASH", goal=goal)
-            ap.submit(state, j, "(automatic resubmit)")
-            assert j["status"] == "WAIT-GEOM"
-            assert j["wave_review_reason"].startswith("WAIT-VISUAL")
+    monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: None)
+    for goal in ("finish", "cts", "grt"):
+        j.update(status="CRASH", goal=goal)
+        ap.submit(state, j, "(automatic resubmit)")
+        assert j["status"] == "WAIT-GEOM"
+        assert j["wave_review_reason"].startswith("WAIT-VISUAL")
 
     monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: "GOOD")
     with pytest.raises(ReadyToResume):

@@ -275,9 +275,10 @@ def hold_term_problems(old_doc, new_doc):
 
 
 def required_review_problems(old_doc, new_doc):
-    """VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, FABLE-FLOW-2200 item 1; owner rule "visual review never blocks"): a die's
-    review_before_route.required = true held 50 rows WAIT-VISUAL 24-39 h after it was put back 11-21 03:07-04:12 and 14:16-14:21.
-    An edit that sets it (where the die did not already carry it) is refused; removing it is always allowed.  -> [problem text]"""
+    """New required route reviews enter through reviewed candidate publication.
+
+    Keeping an existing scope or choosing advisory review is a normal edit.
+    """
     od, nd = (old_doc or {}).get("dies") or {}, (new_doc or {}).get("dies") or {}
     out = []
     for die, d in sorted(nd.items()):
@@ -287,8 +288,7 @@ def required_review_problems(old_doc, new_doc):
         o = (od.get(die) or {}).get("review_before_route") if isinstance(od.get(die), dict) else None
         old_req = isinstance(o, dict) and o.get("required") is True
         if new_req and not old_req:
-            out.append(f"REQUIRED-REVIEW refused for {die}: review_before_route.required makes visual review a route hold; owner rule: visual "
-                       "review never blocks (advisory review: leave out 'required', the GEOM queue lists the rows)")
+            out.append(f"REQUIRED-REVIEW refused for {die}: set a new exact required scope through reviewed candidate publication")
     return out
 
 
