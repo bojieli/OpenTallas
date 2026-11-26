@@ -1,0 +1,25 @@
+{
+ "row": "FWGRT-ADJ-C",
+ "class_id": "C-DRT-TAIL-FW",
+ "status": "DRAFT, NOT APPLIED (kit_wave.json is QC-INT-R2's to edit); decision: adopt for the sle_fw_v2 pair only, never family-wide",
+ "kind": "kit_wave item_env (dies.qwen_compute.item_env[<item>])",
+ "set": {
+  "sle_fw_v2__cl6740750e": {"OT_GRT_LAYER_ADJ": "off"},
+  "sle_fw_v2__cl69f5e854": {"OT_GRT_LAYER_ADJ": "off"}
+ },
+ "meaning": "grt_layers.tcl: 'off' keeps the odb layer adjustments = ORFS asap7 uniform 0.25 on M2-M8, i.e. exp variant C. Same as OT_GRT_LAYER_ADJ=0. Default (main 4d190f8035c) is 'M2 0.40 M3 0.40' = variant A.",
+ "evidence": {
+  "dir": "epyc2:/srv/opentallas-scratch2/claude/QC-DRT-LAYERS/fw/exp_{A,B,C} (same 5_1_grt.odb of sle_fw_v2 cl6740750e, fresh GRT, 10 thr, cancelled at DRT iteration 42-47)",
+  "iter0": {"C_0.25_all": 137086, "A_M2M3_0.40": 110751, "B_M2M3_0.50_M4M7_0.15": 108716},
+  "tail_iter_ge_40": {"C": "586 (flat 594 594 586 586, spikes 2213/1207/3302)", "A": "1615 (spikes 5036/7546/5411/14587)", "B": "1687 (spikes 4917/7052/12521/16391)"},
+  "sc_control": "sle_sc_v1 cl7479a5ec: A, B and C all reach DRT 0 (C 24 -> 0): the layer variant does not decide closure on sc",
+  "other_fw": "sle_fw_v1 cl9d029624 (it35 ~25 marks) and slw_fw_v2 cl8f84514c (it50 ~0) already close or nearly close on the default A: no reason to move them"
+ },
+ "why_not_family_wide": [
+  "one type (n=1) and no variant closes: C plateaus at 586, A/B at 1600+; none is signable, so this halves a non-closing tail",
+  "A is the flow default because it cuts iter-0 by 19 % on fw and sc; reverting it for a family without a closing result trades a measured gain for an unproven one",
+  "the surviving fw tail (M4/M3 EOL, M1 clknet-vs-flop, M3 PG pad) is spine congestion, not the M2/M3 derate (see class C-PIN-PG-ADJ census)"
+ ],
+ "gate": "launch as a private place-through-DRT probe of sle_fw_v2 cl6740750e on the C9 bind with OT_GRT_LAYER_ADJ=off; PASS = DRT iteration-30 violations < 300 and falling; otherwise drop the row and keep A",
+ "cost": "none for the signed siblings: item_env is per item"
+}

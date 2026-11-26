@@ -1,0 +1,313 @@
+{
+ "row": "FWLEAF-C9",
+ "class_id": "C-LEG405",
+ "types": {
+  "sle_fw_v1__cl9d029624": [
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "leaf_um": [
+      609.44,
+      1193.338
+     ],
+     "regs_um": [
+      [
+       482.4,
+       1132.808
+      ],
+      [
+       482.4,
+       945.238
+      ],
+      [
+       482.4,
+       757.668
+      ],
+      [
+       375.14,
+       677.608
+      ],
+      [
+       187.57,
+       677.608
+      ]
+     ],
+     "channel_um": [
+      480.0,
+      484.8
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 320.0-324.8 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (per_bit route started there, first hop 1390 um); leaf_um := from_um, channel 480.0-484.8, worst hop 188 um, 5 stations kept"
+    },
+    "src": "R6-channel",
+    "old_first_hop_um": 1390,
+    "new_worst_hop_um": 188
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "leaf_um": [
+      609.393,
+      1603.673
+     ],
+     "regs_um": [
+      [
+       411.142,
+       1603.673
+      ],
+      [
+       212.892,
+       1603.673
+      ],
+      [
+       62.35,
+       1555.964
+      ],
+      [
+       62.35,
+       1357.714
+      ],
+      [
+       62.35,
+       1159.463
+      ],
+      [
+       62.35,
+       961.213
+      ]
+     ],
+     "channel_um": [
+      8.0,
+      116.7
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 8.0-116.7 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 1427.95] was stale (per_bit route started there, first hop 337 um); leaf_um := from_um, channel 8.0-116.7, worst hop 198 um, 6 stations kept"
+    },
+    "src": "R6-channel",
+    "old_first_hop_um": 337,
+    "new_worst_hop_um": 198
+   }
+  ],
+  "sle_fw_v1__clf58b4dfb": [
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "leaf_um": [
+      609.366,
+      1193.362
+     ],
+     "regs_um": [
+      [
+       482.4,
+       1132.766
+      ],
+      [
+       482.4,
+       945.205
+      ],
+      [
+       482.4,
+       757.643
+      ],
+      [
+       375.123,
+       677.608
+      ],
+      [
+       187.562,
+       677.608
+      ]
+     ],
+     "channel_um": [
+      480.0,
+      484.8
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 320.0-324.8 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (per_bit route started there, first hop 1390 um); leaf_um := from_um, channel 480.0-484.8, worst hop 188 um, 5 stations kept"
+    },
+    "src": "R6-channel",
+    "old_first_hop_um": 1390,
+    "new_worst_hop_um": 188
+   },
+   {
+    "conn": "bus:st_eo",
+    "set": {
+     "leaf_um": [
+      609.501,
+      1603.672
+     ],
+     "regs_um": [
+      [
+       411.235,
+       1603.672
+      ],
+      [
+       212.969,
+       1603.672
+      ],
+      [
+       62.35,
+       1556.025
+      ],
+      [
+       62.35,
+       1357.76
+      ],
+      [
+       62.35,
+       1159.494
+      ],
+      [
+       62.35,
+       961.228
+      ]
+     ],
+     "channel_um": [
+      8.0,
+      116.7
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 5->6 stations (census WINDOW-HOP 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 8.0-116.7 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 1427.95] was stale (per_bit route started there, first hop 338 um); leaf_um := from_um, channel 8.0-116.7, worst hop 198 um, 6 stations kept"
+    },
+    "src": "R6-channel",
+    "old_first_hop_um": 338,
+    "new_worst_hop_um": 198
+   }
+  ],
+  "sle_fw_v2__cl6740750e": [
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "leaf_um": [
+      609.326,
+      1193.46
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | KNEE-1 11-10: 3->4 stations, kit knee worst 400.23->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (kit route start, first hop > 1000 um); leaf_um := from_um, planned regs kept (worst hop 167 um)"
+    },
+    "src": "own-leaf-only",
+    "old_first_hop_um": 1200,
+    "new_worst_hop_um": 167
+   }
+  ],
+  "sle_fw_v2__cl69f5e854": [
+   {
+    "conn": "bus:sc_eo",
+    "set": {
+     "leaf_um": [
+      609.257,
+      1193.457
+     ],
+     "regs_um": [
+      [
+       442.543,
+       1193.457
+      ],
+      [
+       309.4,
+       1159.886
+      ],
+      [
+       309.4,
+       993.172
+      ],
+      [
+       309.4,
+       826.458
+      ],
+      [
+       166.714,
+       802.68
+      ]
+     ],
+     "channel_um": [
+      307.0,
+      311.8
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | KNEE-1 11-10: 3->4 stations, kit knee worst 400.23->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 307.0-311.8 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (per_bit route started there, first hop 1411 um); leaf_um := from_um, channel 307.0-311.8, worst hop 167 um, 5 stations kept"
+    },
+    "src": "own",
+    "old_first_hop_um": 1411,
+    "new_worst_hop_um": 167
+   }
+  ],
+  "slw_fw_v1__clf51c11d8__cl592e3d37": [
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "leaf_um": [
+      609.757,
+      1068.309
+     ],
+     "regs_um": [
+      [
+       463.818,
+       1068.309
+      ],
+      [
+       386.4,
+       999.787
+      ],
+      [
+       386.4,
+       853.848
+      ],
+      [
+       291.879,
+       802.68
+      ],
+      [
+       145.939,
+       802.68
+      ]
+     ],
+     "channel_um": [
+      384.0,
+      388.8
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | KNEE-1 11-10: 3->4 stations, kit knee worst 400.23->311.04 um | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 4->5 stations (kit knee 300), lane +1 cycles | VISQC-FEFW-1 11-23: spine de-stack, leg_order channel 26.0-30.8 (was normal_first vertical leg at leaf x 622.1) | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (per_bit route started there, first hop 1286 um); leaf_um := from_um, channel 384.0-388.8, worst hop 146 um, 5 stations kept"
+    },
+    "src": "R6-channel",
+    "old_first_hop_um": 1286,
+    "new_worst_hop_um": 146
+   }
+  ],
+  "slw_fw_v2__cl8537f156": [
+   {
+    "conn": "bus:sc_wo",
+    "set": {
+     "leaf_um": [
+      609.84,
+      1068.326
+     ],
+     "note": "S4fw QC-FWST FABLE-PD-QC-0700 lever 4/6: sle_fw_v3 station set on the type own pin window (no mirror); 3 stations | QC-PLAN-R7 V2 hop300 (FABLE-PD-QC-1840 fix 7): 3->5 stations (kit knee 300), lane +2 cycles | FWLEAF-C9 11-26 (QC-INT-R2-FEFW, C-LEG405): leaf_um [622.08, 6.17] was stale (kit route start, first hop > 1000 um); leaf_um := from_um, planned regs kept (worst hop 167 um)"
+    },
+    "src": "own-leaf-only",
+    "old_first_hop_um": 1200,
+    "new_worst_hop_um": 167
+   }
+  ]
+ },
+ "check": [
+  {
+   "type": "sle_fw_v1__cl9d029624",
+   "conn": "bus:sc_eo",
+   "max_dev_vs_R6_um": 0.125
+  },
+  {
+   "type": "sle_fw_v1__cl9d029624",
+   "conn": "bus:st_eo",
+   "max_dev_vs_R6_um": 3.147
+  },
+  {
+   "type": "sle_fw_v1__clf58b4dfb",
+   "conn": "bus:sc_eo",
+   "max_dev_vs_R6_um": 0.125
+  },
+  {
+   "type": "sle_fw_v1__clf58b4dfb",
+   "conn": "bus:st_eo",
+   "max_dev_vs_R6_um": 3.147
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+   "conn": "bus:sc_wo",
+   "max_dev_vs_R6_um": 0.125
+  }
+ ]
+}
