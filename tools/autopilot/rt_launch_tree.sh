@@ -8,21 +8,47 @@
 # L is never changed after the rename: a new rt sha is a new L.  Exit 97 = cannot compose (missing tree / rt snapshot).
 set -u
 S=${1%/}; RT=${2%/}; L=${3%/}
-[ -f "$L/.rt_launch_ok" ] && exit 0
+PR=""; PIN_ARGS=""
+if [ $# -ge 5 ] && [ -n "$5" ]; then
+  PR=${4%/}; PIN_ARGS=$5
+fi
+stamp_matches() {
+  local marker="$1/.rt_launch_ok"
+  [ -f "$marker" ] && [ ! -L "$marker" ] || return 1
+  python3 -I - "$marker" "$S" "$RT" "$PR" "$PIN_ARGS" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+marker, src, rt, pin_rt, pin_args = sys.argv[1:]
+try:
+    stamp = json.loads(Path(marker).read_text())
+    pins = dict(pair.split("=", 1) for pair in pin_args.replace(",", " ").split())
+    actual = (stamp.get("src"), stamp.get("rt"), stamp.get("pin_rt", ""), stamp.get("pins", {}))
+except (OSError, ValueError, AttributeError):
+    sys.exit(1)
+sys.exit(actual != (src, rt, pin_rt, pins))
+PY
+}
+stamp_matches "$L" && exit 0
 H=$(hostname -s)
 [ -d "$S" ] || { echo "KW_RT_TOOLS FAIL: die tree $S missing on $H" >&2; exit 97; }
 [ -d "$RT/tools" ] || { echo "KW_RT_TOOLS FAIL: rt snapshot $RT/tools missing on $H" >&2; exit 97; }
 mkdir -p "${L%/*}" || exit 97
 exec 8>"$L.lock"
 flock 8
-[ -f "$L/.rt_launch_ok" ] && exit 0
+stamp_matches "$L" && exit 0
+if [ -e "$L/.rt_launch_ok" ] || [ -L "$L/.rt_launch_ok" ]; then
+  echo "KW_RT_TOOLS FAIL: incompatible launch stamp in $L on $H" >&2
+  exit 97
+fi
 T="$L.tmp.$$"
 chmod -R u+w "$T" "$L" 2>/dev/null; rm -rf "$T" "$L"   # an L without .rt_launch_ok was never complete, so nothing runs from it
 mkdir -p "$T/physical" || exit 97
 for e in "$S"/* "$S"/.[!.]*; do
   [ -e "$e" ] || [ -L "$e" ] || continue
   b=${e##*/}
-  case $b in tools|physical) continue;; esac
+  case $b in tools|physical|.rt_launch_ok|.rt_launch_filled) continue;; esac
   ln -s "$e" "$T/$b" || exit 97
 done
 if [ -d "$S/physical" ]; then
@@ -49,14 +75,13 @@ fill() {
     mkdir -p "$T/$1/$(dirname "$f")" && { ln "$S/$1/$f" "$T/$1/$f" 2>/dev/null || cp -a "$S/$1/$f" "$T/$1/$f"; } && echo "$1/${f#./}"
   done
 }
-{ fill tools; fill physical/common_flow; } > "$T/.rt_launch_filled"
+{ fill tools; fill physical/common_flow; } > "$T/.rt_launch_filled" || exit 97
 n=$(wc -l < "$T/.rt_launch_filled")
 # BIND-PIN-1124: rt_launch_tree.sh SRC RT L [PINRT NAME=SHA256,...] -- the named tools/die_plan generators come from PINRT (the bind's rt), each
 # checked against the sha256 the bind stamped; any mismatch or missing file = exit 97 (never a launch tree with other generators than the bind's)
 PINS=""
-if [ $# -ge 5 ] && [ -n "$5" ]; then
-  PR=${4%/}
-  for kv in ${5//,/ }; do
+if [ -n "$PIN_ARGS" ]; then
+  for kv in ${PIN_ARGS//,/ }; do
     f=${kv%%=*}; want=${kv#*=}
     case $f in */*|..*|"") echo "KW_RT_TOOLS FAIL: bad pin $kv" >&2; exit 97;; esac
     got=$(sha256sum "$PR/tools/die_plan/$f" 2>/dev/null | cut -d' ' -f1)
@@ -65,6 +90,7 @@ if [ $# -ge 5 ] && [ -n "$5" ]; then
     PINS="$PINS${PINS:+, }\"$f\": \"$want\""
   done
 fi
-printf '{"rt": "%s", "src": "%s", "tree_only_tool_files": %d, "made": "%s", "host": "%s", "pin_rt": "%s", "pins": {%s}}\n' "$RT" "$S" "$n" "$(date -Is)" "$H" "${PR:-}" "$PINS" > "$T/.rt_launch_ok"
+printf '{"rt": "%s", "src": "%s", "tree_only_tool_files": %d, "made": "%s", "host": "%s", "pin_rt": "%s", "pins": {%s}}\n' "$RT" "$S" "$n" "$(date -Is)" "$H" "$PR" "$PINS" > "$T/.rt_launch_ok" || exit 97
+stamp_matches "$T" || { echo "KW_RT_TOOLS FAIL: could not verify launch stamp for $L on $H" >&2; exit 97; }
 mv -T "$T" "$L" || exit 97
 echo "KW_RT_TOOLS composed $L (rt $RT; $n tool files only the die tree has kept${PINS:+; pinned from $PR: $PINS})"
