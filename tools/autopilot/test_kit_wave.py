@@ -804,7 +804,9 @@ class Step(unittest.TestCase):
                        {"verdict": "FAIL", "stage": "place", "tail": "FACE_GUARD FAIL 12 bits", "evidence": "intel1:/k"})
                 (Path(r["dir"]) / "result.json").write_text(json.dumps(res))
             ap2 = FakeAP(d, json.dumps(cfg(die_max_inflight=2)))
-            st = KW.step(ap2)
+            with mock.patch.object(KW, "exact_kit_visual_verdict",
+                                   side_effect=lambda r, **kw: "GOOD" if r.get("kit") == "intel1:/k/" + ok_item else None):
+                st = KW.step(ap2)
             items = {}
             for r in st["items"].values():
                 items.setdefault(r["item"], r)
@@ -814,7 +816,7 @@ class Step(unittest.TestCase):
             enq = [c for c in ap2.cmds if any("enqueue.py" in x for x in c)]
             self.assertEqual(len(enq), 1)
             self.assertIn("main@620077f42", enq[0])
-            self.assertTrue(any(a[0] == "lanes/GEOM-REVIEW.md" for a in ap2.appends))   # 1st PASS sampled (1 in 5)
+            self.assertFalse(any(a[0] == "lanes/GEOM-REVIEW.md" for a in ap2.appends))  # already independently viewed
             # WF-1 11-14: take_states default * also takes the KIT-PLACED row kv3_hroot, so with 2 slots free the next picks are
             # kv3_hub_Eo and kv3_hroot (owner #7: take_states = all states); the failed kv3_hg_v1 is still not retried
             # R-MINIMAL (owner 11-13): the failed row gets one automatic retry; the PASS row (ENQUEUED) is never launched again
