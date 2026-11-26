@@ -60,3 +60,32 @@ def test_kit_wave_lists_kit_and_gen_host_before_hub(monkeypatch):
     monkeypatch.delenv("AP_ADMISSION_HUB", raising=False)
     assert KW.admission_sources("epyc7", "epyc7", "intel2") == ["epyc7", "intel2", "hub"]
     assert KW.admission_sources(None, "localhost") == ["hub"]
+
+
+def test_place_uses_only_approved_pool_and_preserves_ordinary_wave():
+    assert KW.place_dispatch_limits({"hosts": ["epyc7"]}, "epyc7", "intel2", True) == []
+    sp = {"place_spill_hosts": ["epyc7", "epyc10"], "hosts": ["epyc7", "epyc8", "intel2"]}
+    assert KW.place_dispatch_limits(sp, "epyc7", "intel2", True) == [
+        "--hosts", "epyc7,epyc10", "--strict-host"
+    ]
+    assert KW.place_dispatch_limits(sp, "epyc7", "intel2", False) == ["--strict-host", "--no-spill"]
+
+
+def test_private_explicit_place_stays_pinned_through_spill_and_normal_admission():
+    for sp in (
+        {"private": {"lane": "probe"}, "roam_hosts": ["epyc7"], "hosts": ["epyc7", "intel2"]},
+        {"private": {"lane": "probe"}, "place_spill_hosts": ["epyc7"], "hosts": ["epyc7", "intel2"]},
+    ):
+        assert KW.place_dispatch_limits(sp, "epyc7", "intel2", True) == [
+            "--hosts", "epyc7", "--strict-host", "--no-spill"
+        ]
+        assert KW.place_dispatch_limits(sp, "epyc7", "intel2", False) == ["--strict-host", "--no-spill"]
+
+
+def test_missing_private_place_pool_fails_closed():
+    import pytest
+
+    with pytest.raises(ValueError, match="approved PLACE host pool"):
+        KW.place_dispatch_limits({"private": {"lane": "probe"}}, "epyc7", "intel2", True)
+    with pytest.raises(ValueError, match="outside the approved pool"):
+        KW.place_dispatch_limits({"place_spill_hosts": ["epyc10"]}, "epyc7", "intel2", False)

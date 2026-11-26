@@ -5461,6 +5461,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "kit_rtl_mem_gb": int(opt(cfg, die, "kit_rtl_mem_gb") or 8),
             "geom_advisory": opt(cfg, die, "geom_advisory") is not False,
             "place_spill": bool(opt(cfg, die, "place_spill") if opt(cfg, die, "place_spill") is not None else True),
+            **({"place_spill_hosts": opt_get(cfg, die, "place_spill_hosts")}
+               if opt_get(cfg, die, "place_spill_hosts") is not None else {}),
             "relay_bay_re": (d["relay_bay_re"] if "relay_bay_re" in d else RELAY_BAY_RE.get(die, "")) if kind == "type" else "",
             "prov_first_re": (d.get("prov_first_re") or "") if kind == "type" else "",
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
@@ -8150,6 +8152,26 @@ def write_redesign(cfg, st, ap_dir):
     return rows
 
 
+def place_dispatch_limits(sp, gen_host, hub, spill):
+    """Honor an explicit pool on every detached PLACE admission and spill."""
+    pool = sp.get("place_spill_hosts")
+    if pool is None:
+        if not sp.get("private"):
+            return []
+        # Legacy private specs captured --host in their one-host roam list.
+        pool = [gen_host] if sp.get("roam_hosts") == [gen_host] else sp.get("hosts")
+    if (not isinstance(pool, (list, tuple)) or not pool
+            or any(not isinstance(h, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", h) for h in pool)):
+        raise ValueError("invalid or empty approved PLACE host pool")
+    if not spill:
+        if gen_host not in pool:
+            raise ValueError(f"PLACE gen host {gen_host} is outside the approved pool")
+        return ["--strict-host", "--no-spill"]
+    hosts = list(dict.fromkeys(target_hosts(pool, hub, allow_hub=True)))
+    guard = ["--hosts", ",".join(hosts), "--strict-host"]
+    return guard if len(hosts) > 1 else guard + ["--no-spill"]
+
+
 def restage_waiters(AP, cfg, st, notices):
     """KW-FIX-4 11-03 (COORD: not-yet-started waiters may be restaged): a RUNNING attempt of a die with gen_hosts whose
     current ot-run stage still WAITS for admission (volume_started False) on a gen host other than the best one is
@@ -8200,7 +8222,9 @@ def restage_waiters(AP, cfg, st, notices):
             # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
             # KW-FIX-40 11-08 (COORD 23:06): a kit under a path only the root disk of the other hosts has (scratch3) cannot spill past
             # their root floors, so restage_place_waiters makes such waiters movable from mkdir like an earlier stage.
-            mobile = (spill and svc0.get("launch") == "launched" and "--hosts" not in (svc0.get("argv") or [])
+            place_args = svc0.get("argv") or []
+            scoped_dispatch = "--strict-host" in place_args
+            mobile = (spill and svc0.get("launch") == "launched" and ("--hosts" not in place_args or scoped_dispatch)
                       and not cfg.get("restage_place_waiters"))
             if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die, item=r.get("item"))       # KW-FIX-35-RD: a target with its inputs
@@ -8211,7 +8235,7 @@ def restage_waiters(AP, cfg, st, notices):
                         - die_score(cfg, die, g, row(g)) * host_share(cfg, g) >= wsize(row(g), mem)):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
-            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
+            if not why and spill and svc0.get("launch") == "launched" and "--hosts" in place_args and not scoped_dispatch:
                 why, best = f"pinned async PLACE waiter on {g} -> spillable PLACE", g
             if counted_now(cfg, st, die, r.get("item"), r.get("block_sha")):
                 why, best = "counted by the sign-off counter", g      # the INFRA path below ends it instead of relaunching
@@ -9864,6 +9888,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         for k in ("hosts", "place_prefer"):
             sp[k] = [host] + [h for h in (sp.get(k) or []) if h != host]
         sp["roam_hosts"] = [host]
+        # The private-spec CLI documents --host as its actual place host.
+        # Do not re-expand the physical pool after generating its exact kit.
+        permitted = sp.get("place_spill_hosts")
+        if permitted is not None and host not in permitted:
+            raise ValueError(f"private --host {host} is outside the configured PLACE pool")
+        sp["place_spill_hosts"] = [host]
     if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
         sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
     landing = None
@@ -11399,7 +11429,9 @@ def run_item(spec_path):
             return place_wait(json.loads(svc_file.read_text()))
         # FLEET-WATCH-R8 11-21 (COORD URGENT, owner 11-12 capped build host): the hub-only target refusal is gone; ot-run HOST_RESERVE (64 thr / 600 GB / 150 GB reserve) bounds the hub
         cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
-        if sp.get("place_spill", True):
+        spill = sp.get("place_spill", True)
+        limits = place_dispatch_limits(sp, G, hub, spill)
+        if spill:
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /
             # RE-PLACE); --stage = the kit dir + its runner, so a waiter the gen host cannot admit (or that would
             # overload it) is copied to a host that admits it NOW (epyc4), runs there and copies every written file
@@ -11408,9 +11440,10 @@ def run_item(spec_path):
             # own files follow at client end and G:K is the one physical /work, so route runs there.  Without a hand-off
             # the receipt appears on G at the client's end (KW_PLACE_RC wins).  Die option place_spill false = the old pin.
             argv = ([sp["ot_run"], "--mem", str(m), "--threads", str(t), "--dir", K, "--stage", K, "--stage", prun]
-                    + heavy_args(sp) + ["--", "bash", "-c", cmd])
+                    + limits + heavy_args(sp) + ["--", "bash", "-c", cmd])
         else:
             argv = otrun(m, t, K, cmd, [G])
+            argv[1:1] = limits
         unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
         svc = {"schema": "opentallas.kw_place_service.v1", "unit": unit, "argv": argv, "kit": K, "host": G,
                "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
