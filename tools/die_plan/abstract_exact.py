@@ -323,6 +323,12 @@ def regrow(lef_in, lef_out, layers, extra=None):
         # PIN-EOL: grown OBS stops EOL_CLEAR short of every signal pin shape; real foreign metal inside that band stays OBS
         # at its exact (signed, DRC-clean) geometry: never exposed, never grown into the pin's line-end keep-out
         zone = _grow(clear, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
+        # PIN-VIA 11-25 (hd_host_e re-route DRT-0073 in_data[127]): the grown halo of two real M6 wires 98 nm apart merged over
+        # an M5 pin and left it no via landing; the halo is also cut over the signal pins of the layers below/above
+        # (real metal there stays exact), so a pin keeps every access the real metal allows
+        n = int(L[1:]) if L[1:].isdigit() else 0
+        adj = [r for M in ("M%d" % (n - 1), "M%d" % (n + 1)) for r in sig_pins.get(M, [])]
+        zone += _grow(adj, _nm(EOL_CLEAR.get(L, 0.048)), Wn, Hn)
         real = list(old)
         # slivers regrow only outside the keep-out band; one that cannot grow is dropped, and the exact foreign metal is put
         # back afterwards so a dropped piece never exposes real metal (overlapping OBS rects are fine in a LEF)
