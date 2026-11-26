@@ -3,6 +3,10 @@ import { h, clear, STATES, STATE_LABEL, stateCls, dieShort, ls, debounce, levelO
 import { store } from '../core/store.js';
 import { api } from '../core/api.js';
 
+const displayState = (n) => n.signoff_display_state || n.status.state;
+const displayLabel = (n) => n.signoff_basis === 'deferred' ? 'Signed off on an earlier plan' :
+  displayState(n) === 'uncredited' ? 'Uncredited' : n.signoff_basis ? 'Signed off' : n.status.label || n.status.state;
+
 export function mountNavigator(host) {
   const S = { die: null, data: null, filter: '', packOnly: false, closed: new Set(ls.get('nav.closed', ['cores'])), node: null, view: null, seq: 0 };
   const q = h('input.field', { type: 'search', placeholder: 'Filter types and cores', 'aria-label': 'Filter the navigator', testid: 'nav-filter', spellcheck: false });
@@ -15,7 +19,7 @@ export function mountNavigator(host) {
   const href = (id) => store.href({ view: S.view === 'overview' ? 'plan' : S.view, node: id });
   function row(n, cls) {
     const pack = !!(n.layout && n.layout.store);
-    return h('a.row' + (cls || '') + '.' + stateCls(n.status.state), { href: href(n.id), 'aria-current': n.id === S.node ? 'true' : null, title: `${n.name} · ${n.status.label || n.status.state}${pack ? ' · routed layout available' : ''}`, dataset: { node: n.id } },
+    return h('a.row' + (cls || '') + '.' + stateCls(displayState(n)), { href: href(n.id), 'aria-current': n.id === S.node ? 'true' : null, title: `${n.name} · ${displayLabel(n)}${pack ? ' · routed layout available' : ''}`, dataset: { node: n.id } },
       h('i.dot'), h('span.nm', n.name), pack ? h('i.pk', { title: 'routed layout pack' }) : null,
       h('small', n.level === 'type' ? (n.plan.instances || 0) + '×' : ''));
   }
@@ -30,7 +34,7 @@ export function mountNavigator(host) {
     clear(tree);
     if (!S.die) {
       tree.append(h('div.grp', 'Dies'));
-      for (const d of S.dies || []) tree.append(h('a.row', { href: store.href({ view: 'plan', node: d.id }), dataset: { node: d.id } }, h('span.nm', d.label), h('small', `${d.counts.type.signed}/${d.types}`)));
+      for (const d of S.dies || []) tree.append(h('a.row', { href: store.href({ view: 'plan', node: d.id }), dataset: { node: d.id } }, h('span.nm', d.label), h('small', `${d.any_plan?.any ?? '–'} signed`)));
       return;
     }
     if (!S.data) { tree.append(h('div.more', 'Loading ' + dieShort(S.die) + '…')); return; }
@@ -40,23 +44,23 @@ export function mountNavigator(host) {
     const cores = all.filter((n) => n.level === 'core' && ok(n)).sort((a, b) => a.name.localeCompare(b.name));
     const die = S.data.die;
     tree.append(h('a.row', { href: href(die.id), 'aria-current': S.node === die.id ? 'true' : null, dataset: { node: die.id } }, h('span.nm', { style: { fontFamily: 'var(--sans)', fontWeight: 600 } }, die.label), h('small', 'die')));
-    for (const st of STATES) {
-      const rows = types.filter((n) => n.status.state === st); if (!rows.length) continue;
+    for (const st of [...STATES, 'uncredited']) {
+      const rows = types.filter((n) => displayState(n) === st); if (!rows.length) continue;
       const body = rows.map((n) => {
         const out = [row(n)];
         if (n.id === S.node) {   // the macros placed inside the selected type: hover highlights on the canvas, click selects and zooms
           const hc = (n.plan.hard_cores || []).slice().sort((a, b) => a[0].localeCompare(b[0], 'en', { numeric: true }));
           if (hc.length) out.push(h('div.more', { dataset: { testid: 'nav-macros-head' } }, `${hc.length} macros in this type`));
           for (const c of hc.slice(0, 300)) { const cn = S.data.nodes[c[1]];
-            out.push(h('a.row.core.' + stateCls(cn ? cn.status.state : 'not built'), { href: store.href({ view: S.view === 'overview' || S.view === 'closure' || S.view === 'token' || S.view === 'dataflow' ? 'element' : S.view, node: n.id, inst: c[0] }), 'aria-current': S.inst === c[0] ? 'true' : null,
-              title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + cn.status.state : ' · generated memory macro'}`, dataset: { macro: c[0] },
+            out.push(h('a.row.core.' + stateCls(cn ? displayState(cn) : 'not built'), { href: store.href({ view: S.view === 'overview' || S.view === 'closure' || S.view === 'token' || S.view === 'dataflow' ? 'element' : S.view, node: n.id, inst: c[0] }), 'aria-current': S.inst === c[0] ? 'true' : null,
+              title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + displayLabel(cn) : ' · generated memory macro'}`, dataset: { macro: c[0] },
               onmouseenter: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: c[0] })), onmouseleave: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: null })) },
               h('i.dot'), h('span.nm', c[0]), h('small', c[2].length > 16 ? '…' + c[2].slice(-14) : c[2]))); }
           if (hc.length > 300) out.push(h('div.more', `${hc.length - 300} more: see the Macros tab of the inspector.`));
         } else if (S.nodeParent === n.id) for (const c of n.children || []) { const cn = S.data.nodes[c]; if (cn) out.push(row(cn, '.core')); }
         return out;
       });
-      tree.append(...group(st, STATE_LABEL[st] + ' types', rows.length, body, st).flat(3).filter(Boolean));
+      tree.append(...group(st, (STATE_LABEL[st] || 'Uncredited') + ' types in plan', rows.length, body, st).flat(3).filter(Boolean));
     }
     if (cores.length) tree.append(...group('cores', 'Hard cores', cores.length, cores.map((n) => row(n))).flat(3).filter(Boolean));
     if (!types.length && !cores.length) tree.append(h('div.more', f ? `Nothing matches “${f}”.` : 'No designs.'));

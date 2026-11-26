@@ -346,6 +346,9 @@ def die(d):
     idx = index()
     if d not in idx['dies']: raise ApiError(404, 'no such die', d)
     r = DS.die(d); r['plan'] = plan_ref(r['die']['plan'])
+    for nid, n in r['nodes'].items():
+        basis = signoff_basis(n)
+        r['nodes'][nid] = dict(n, signoff_basis=basis, signoff_display_state=signoff_display_state(n, basis))
     return r
 
 
@@ -394,7 +397,7 @@ def closure(d):
                          pack=bool(s), pack_verify=s.get('verify'), pack_shapes=s.get('shapes'), pack_made=s.get('made'), layout_stage=lay.get('stage'),
                          layout_source=lay.get('source'), db_cls=db_sources(n)['cls'], db_host=((db_sources(n)['resolved'] or {}).get('where') or (db_sources(n)['recorded'] or {}).get('host')), vis=v.get('verdict'), vis_cls=v.get('cls'), vis_cause=v.get('cause'), hard=bool(p.get('hard'))))
     dn = idx['nodes'][d]
-    sup = [dict(id=r['id'], name=r['name'], level=r['level'], plan=r['plan'], plan_label=r['plan_label'], pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
+    sup = [dict(id=r['id'], name=r['name'], level=r['level'], plan=r['plan'], plan_label=r['plan_label'], tt_wns=None, ff_wns=None, drc=None, pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
                 archived=r['archive']['agi'] or r['archive']['rtx'], index_status=r['archive']['status']) for r in records().values() if r['die'] == d and r['superseded']]
     census = (signoff_census() or {}).get('dies', {}).get(d)
     if census:
@@ -403,7 +406,7 @@ def closure(d):
             if r['die'] != d or r['id'] in ids or (ids.get(r['node']) == r['signoff_basis'] == 'current'):
                 continue
             rows.append(dict(id=r['id'], name=r['name'], level=r['level'], state=None, signoff_basis=r['signoff_basis'],
-                             label=r['plan_label'], pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
+                             label=r['plan_label'], tt_wns=None, ff_wns=None, drc=None, pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
                              db_cls='archive' if r['archive']['agi'] or r['archive']['rtx'] else None))
     return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows,
                 signoff_census=census and census['summary'], superseded_records=sorted(sup, key=lambda x: x['id']))
@@ -450,7 +453,7 @@ def search(q, d=None, limit=40):
         if not all(t in hay for t in terms): continue
         nm = r['name'].lower()
         score = (0 if nm == q else 1 if nm.startswith(q) else 2) + (0 if not d or r['die'] == d else 3) + 0.5
-        out.append((score, len(nm), dict(kind=r['level'], id=rid, name=r['name'], die=r['die'], state='signed', superseded=r['superseded'], plan_label=r['plan_label'], pack=bool(r['pack']))))
+        out.append((score, len(nm), dict(kind=r['level'], id=rid, name=r['name'], die=r['die'], state='signed', superseded=r['superseded'], plan_label=r['plan_label'], tt_wns=None, ff_wns=None, drc=None, pack=bool(r['pack']))))
     out.sort(key=lambda x: (x[0], x[1]))
     return dict(q=q, total=len(out), results=[x[2] for x in out[:limit]])
 

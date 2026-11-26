@@ -20,7 +20,7 @@ export default {
       h('div.card', { style: { marginBottom: '14px' } }, h('div.pair', { style: { gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))' } },
         h('div', { testid: 'ov-signoff-any' }, h('div.big', census ? fmt(census.any) : '–', h('small', 'Signed off on any plan')),
           census ? h('div.muted', `${fmt(census.current)} current · ${fmt(census.deferred)} deferred re-sign · ${fmt(census.retired)} retired`) : h('div.muted', 'Sign-off census unavailable')),
-        h('div', { testid: 'ov-packs' }, h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core - unsg(d), 0)), h('small', `current-plan signed layout packs (+${fmt(r.dies.reduce((a, d) => a + unsg(d), 0))} unsigned build views, not counted)`))),
+        h('div', { testid: 'ov-packs' }, h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core - unsg(d), 0)), h('small', `current-plan signed-off layout packs (+${fmt(r.dies.reduce((a, d) => a + unsg(d), 0))} unsigned build views, not counted)`))),
         h('div', h('div.big', fmt(allT.failed), h('small', 'current-plan types failed')))), h('p.note', 'Current plan type status'), stateBar(allT), stateLegend(allT)));
     const cards = h('div.cards'); page.append(cards);
     const thumbs = [];

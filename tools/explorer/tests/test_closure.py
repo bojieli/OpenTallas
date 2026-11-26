@@ -42,8 +42,12 @@ def test_closure_level_filter_state_chips_gates(page):
     page.get_by_test_id('closure-level-core').click(); assert t.count() == len(rows) - nt
     page.get_by_test_id('closure-level-all').click(); assert t.count() == len(rows)
     page.get_by_test_id('closure-state-signed').click()
-    assert t.count() == sum(1 for r in rows if r['state'] == 'signed')
+    assert t.count() == sum(1 for r in rows if r.get('signoff_basis') or (r.get('display_state') or r['state']) == 'signed')
     expect(page.get_by_test_id('closure-state-signed')).to_have_attribute('aria-pressed', 'true')
+    retired = next((r for r in rows if r.get('signoff_basis') == 'retired'), None)
+    if retired:
+        badge = t.locator('td:first-child').filter(has_text='Retired plan').first
+        expect(badge).to_contain_text('Signed off')
     page.get_by_test_id('closure-state-signed').click(); assert t.count() == len(rows)
     page.get_by_test_id('closure-gates').click()
     expect(page.get_by_test_id('closure-gates')).to_have_attribute('aria-pressed', 'true')

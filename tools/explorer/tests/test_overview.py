@@ -11,7 +11,7 @@ def test_overview_loads_clean_with_freshness(page, die):
     card = page.get_by_test_id('card-' + die)
     expect(card).to_be_visible(); expect(card).to_have_class(re.compile(r'\bon\b'))
     d = next(x for x in api('dies')['dies'] if x['id'] == die)
-    expect(card).to_contain_text(d['plan']['sha']); expect(card).to_contain_text('/ %d types' % d['types'])
+    expect(card).to_contain_text(d['plan']['sha']); expect(card).to_contain_text('of %d types' % d['types'])
     expect(page.get_by_test_id('fresh-chip')).to_contain_text(re.compile(r'Data|Stale'))
     expect(page.get_by_test_id('asof')).to_contain_text('data as of')
     t = page.get_by_test_id('fresh-table')
@@ -24,7 +24,13 @@ def test_overview_five_cards_and_totals(page):
     for d in ALL_DIES: expect(page.get_by_test_id('card-' + d)).to_be_visible()
     r = api('dies')
     n = sum(d['types'] for d in r['dies'])
-    expect(page.get_by_test_id('overview-page')).to_contain_text('%s partition types' % format(n, ','))
+    expect(page.get_by_test_id('overview-page')).to_contain_text('%s current partition types' % format(n, ','))
+    census = r.get('signoff_census')
+    if census:
+        assert census['any'] == census['current'] + census['deferred'] + census['retired']
+        assert census['any'] == sum(d['any_plan']['any'] for d in r['dies'])
+        expect(page.get_by_test_id('ov-signoff-any')).to_contain_text(format(census['any'], ','))
+        expect(page.get_by_test_id('ov-signoff-any')).to_contain_text('Signed off on any plan')
 
 
 @pytest.mark.parametrize('die', DIES)
