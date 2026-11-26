@@ -14,13 +14,14 @@ export default {
     const r = await api.dies(), meta = ctx.meta();
     const tot = (lvl, s) => r.dies.reduce((a, d) => a + (d.counts[lvl][s] || 0), 0);
     const nTypes = r.dies.reduce((a, d) => a + d.types, 0), nCores = r.dies.reduce((a, d) => a + d.cores, 0);
+    const census = r.signoff_census;
     const allT = Object.fromEntries(STATES.map((s) => [s, tot('type', s)]));
-    page.append(h('h1', 'Chip overview'), h('p.lead', `Five dies, ${fmt(nTypes)} partition types and ${fmt(nCores)} hard cores. Every number is read from the design index built ${fmtAge(meta.service.now - r.generated)}; a type counts as signed off only with a signed record in the store.`),
+    page.append(h('h1', 'Chip overview'), h('p.lead', `Five dies, ${fmt(nTypes)} current partition types and ${fmt(nCores)} current hard cores. The design index was built ${fmtAge(meta.service.now - r.generated)}.`),
       h('div.card', { style: { marginBottom: '14px' } }, h('div.pair', { style: { gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))' } },
-        h('div', h('div.big', fmt(allT.signed), h('small', `of ${fmt(nTypes)} types signed off`))),
-        h('div', h('div.big', fmt(tot('core', 'signed')), h('small', `of ${fmt(nCores)} cores signed off`))),
-        h('div', { testid: 'ov-packs' }, h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core - unsg(d), 0)), h('small', `signed-off layout packs (+${fmt(r.dies.reduce((a, d) => a + unsg(d), 0))} unsigned build views, not counted)`))),
-        h('div', h('div.big', fmt(allT.failed), h('small', 'types failed')))), stateBar(allT), stateLegend(allT)));
+        h('div', { testid: 'ov-signoff-any' }, h('div.big', census ? fmt(census.any) : '–', h('small', 'Signed off on any plan')),
+          census ? h('div.muted', `${fmt(census.current)} current · ${fmt(census.deferred)} deferred re-sign · ${fmt(census.retired)} retired`) : h('div.muted', 'Sign-off census unavailable')),
+        h('div', { testid: 'ov-packs' }, h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core - unsg(d), 0)), h('small', `current-plan signed layout packs (+${fmt(r.dies.reduce((a, d) => a + unsg(d), 0))} unsigned build views, not counted)`))),
+        h('div', h('div.big', fmt(allT.failed), h('small', 'current-plan types failed')))), h('p.note', 'Current plan type status'), stateBar(allT), stateLegend(allT)));
     const cards = h('div.cards'); page.append(cards);
     const thumbs = [];
     for (const d of r.dies) {
@@ -29,10 +30,10 @@ export default {
       const signedArea = (d.area_um2.by_state.signed || 0) / d.area_um2.die;
       cards.append(h('article.card', { dataset: { die: d.id, testid: 'card-' + d.id } },
         h('h3', d.label, h('small', d.target || '')), thumb,
-        h('div.pair', h('div', h('div.big', `${d.counts.type.signed || 0}`, h('small', `/ ${d.types} types`))), h('div', h('div.big', fmt(100 * signedArea, 0) + '%', h('small', 'of die area signed')))),
+        h('div.pair', h('div', h('div.big', d.any_plan?.any ?? '–', h('small', 'Signed off on any plan')), d.any_plan ? h('div.muted', `${d.any_plan.current} current · ${d.any_plan.deferred} deferred · ${d.any_plan.retired} retired`) : null), h('div', h('div.big', fmt(100 * signedArea, 0) + '%', h('small', 'of current die area signed')))),
         stateBar(d.counts.type), stateLegend(d.counts.type),
         h('dl.kv', h('dt', 'plan'), h('dd', h('b.mono', d.plan.sha), ' · ', String(d.plan.date || '').slice(0, 10)), h('dt', 'outline'), h('dd', `${fmt(d.outline[0] / 1000, 2)} × ${fmt(d.outline[1] / 1000, 2)} mm · ${d.partitions} partitions`),
-          h('dt', 'cores'), h('dd', `${d.counts.core.signed || 0} of ${d.cores} signed off`), h('dt', 'routed packs'), h('dd', { title: 'packs of signed-off designs; unsigned build views (wave runs, any stage) are shown in the explorer but not counted' }, `${d.packs.type - ((d.packs_unsigned || {}).type || 0)} types, ${d.packs.core - ((d.packs_unsigned || {}).core || 0)} cores signed off`, unsg(d) ? h('span.muted', ` + ${unsg(d)} unsigned views`) : '')),
+          h('dt', 'current layouts'), h('dd', `${d.counts.type.signed || 0} of ${d.types} types, ${d.counts.core.signed || 0} of ${d.cores} cores signed`), h('dt', 'routed packs'), h('dd', { title: 'packs of signed-off designs; unsigned build views (wave runs, any stage) are shown in the explorer but not counted' }, `${d.packs.type - ((d.packs_unsigned || {}).type || 0)} types, ${d.packs.core - ((d.packs_unsigned || {}).core || 0)} cores signed off`, unsg(d) ? h('span.muted', ` + ${unsg(d)} unsigned views`) : '')),
         d.release_header ? h('p.note', { style: { margin: 0 } }, d.release_header) : null,
         h('div.acts', h('a.btn.sm', { href: store.href({ view: 'plan', node: d.id }), dataset: { testid: 'open-plan-' + d.id } }, 'Plan'), h('a.btn.sm', { href: store.href({ view: 'layout', node: d.id }), dataset: { testid: 'open-layout-' + d.id } }, 'Routed die map'),
           h('a.btn.sm', { href: store.href({ view: 'closure', node: d.id }), dataset: { testid: 'open-closure-' + d.id } }, 'Closure'), h('a.btn.sm', { href: store.href({ view: 'dataflow', node: d.id }) }, 'Dataflow'))));

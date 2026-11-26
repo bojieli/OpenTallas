@@ -24,6 +24,7 @@ WEB = HERE / 'web'
 ENGINE = FV / 'explorer' / 'element'            # lv_worker.js, lv_decode.js, vendor/deck.gl (loaded as-is)
 STATE = design_service.STATE
 OWN = pathlib.Path(os.environ.get('EXPLORER_STATE', STATE / 'explorer_v1'))
+CENSUS = OWN / 'signoff_census.json'
 DATAFLOW = pathlib.Path(os.environ.get('DATAFLOW_DATA', FV / 'explorer' / 'dataflow' / 'data'))
 TOKEN = pathlib.Path(os.environ.get('TOKEN_DATA', FV / 'explorer' / 'token' / 'data'))
 REPO = os.environ.get('FLEET_VIZ_REPO', str(HERE.parents[1]))
@@ -31,7 +32,7 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=u
          '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
          '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json'}
 STALE_S = {'design_index': 3 * 3600, 'plan_now': 3 * 3600, 'compose': 3 * 3600, 'token_map': 26 * 3600,
-           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None, 'count': 6 * 3600, 'archive_index': None}
+           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None, 'count': 6 * 3600, 'signoff_census': 6 * 3600, 'archive_index': None}
 LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan', '/explorer/design/': 'plan',
           '/explorer/design/diemap.html': 'layout', '/explorer/element/': 'element', '/explorer/element': 'element',
           '/explorer/dataflow/': 'dataflow', '/explorer/dataflow': 'dataflow', '/explorer/token/': 'token', '/explorer/token': 'token',
@@ -207,8 +208,54 @@ def _json_file(p):
     except (OSError, ValueError): return None
 
 
+_CENSUS = (None, None, {})
+
+
+def signoff_census():
+    global _CENSUS
+    stamp = _mtime(CENSUS)
+    if stamp != _CENSUS[0]:
+        data = _json_file(CENSUS) or {}
+        if data.get('schema') != 'opentallas.signoff_census.v1':
+            data = None
+        names = {}
+        for die, entry in (data or {}).get('dies', {}).items():
+            for bucket in ('current', 'deferred'):
+                for item in entry[bucket]:
+                    for level in census_levels(item):
+                        for name in (item['name'], item.get('module')):
+                            if name:
+                                names.setdefault((die, level, name), bucket)
+        _CENSUS = (stamp, data, names)
+    return _CENSUS[1]
+
+
+def census_levels(item):
+    if 'level' in item:
+        return [item['level']]
+    return ['core' if k in ('c', 'core') else 'type' for k in item['kinds']]
+
+
+def signoff_basis(n):
+    signoff_census()
+    die, level = n.get('die'), n.get('level')
+    matches = [_CENSUS[2].get((die, level, name))
+               for name in (n.get('name'), (n.get('plan') or {}).get('module')) if name]
+    return 'current' if 'current' in matches else 'deferred' if 'deferred' in matches else None
+
+
+def signoff_display_state(n, basis):
+    state = (n.get('status') or {}).get('state')
+    if basis:
+        return 'signed'
+    if state == 'signed' and signoff_census():
+        return 'uncredited'
+    return state
+
+
 def datasets():
     now = time.time(); idx = DS.index(); out = []
+    census = signoff_census()
 
     def add(i, label, generated, source, used_by, note=None, plans=None, missing=False):
         age = None if generated is None else max(0, now - generated)
@@ -237,6 +284,7 @@ def datasets():
         tnote = 'token records are exported from the simulator at a repo head; they describe the die revision named in each record'
     add('token', 'Token path records (simulator export)', tgen, 'tools/token_path_export.py', ['token'], note=tnote, missing=ti is None)
     tm = _json_file(design_service.TOKEN_MAP)
+    add('signoff_census', 'Sign-off census', census and _iso(census.get('generated')), 'count_hourly.py', ['overview', 'closure'], missing=census is None)
     add('token_map', 'Token class to design node map', tm and _iso(tm.get('generated')), 'token_design_map.py', ['token'], missing=tm is None)
     dataflow_refresh()
     own = (_json_file(DF_OWN / 'index.json') or {}).get('records') or []
@@ -269,7 +317,8 @@ def meta():
 
 # ---------------------------------------------------------------------------------------------- design
 def dies():
-    s = DS.summary(); idx = index()
+    s = DS.summary(); idx = index(); census = signoff_census()
+    s['signoff_census'] = census and census['summary']
     for d in s['dies']:
         p = idx['nodes'][d['id']]['plan']
         d['plan'] = plan_ref(p); d['period_ps'] = p.get('period_ps'); d['reach_um'] = p.get('reach_um')
@@ -280,7 +329,7 @@ def dies():
         d['packs_unsigned'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')),
                                    core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')))
         d['cores'] = sum(1 for n in ns if n['level'] == 'core')
-        d['any_plan'] = APR.summary({k: v for k, v in records().items() if v['die'] == d['id']})['dies'].get(d['id'])
+        d['any_plan'] = ((census or {}).get('dies', {}).get(d['id']) or {}).get('summary')
         d['instances'] = dict(total=len(p['partitions']))
         st = {}
         for q in p['partitions']:
@@ -310,6 +359,8 @@ def node(nid):
     idx = index()
     if nid not in idx['nodes']: return record_node(nid)
     r = DS.node(nid); n = r['node']
+    r['signoff_basis'] = signoff_basis(n)
+    r['signoff_display_state'] = signoff_display_state(n, r['signoff_basis'])
     r['record'] = records().get(nid)   # the any-plan record of this node (plan label, archive rows), if any
     r['plan'] = plan_ref(idx['nodes'][n['die']]['plan'])
     r['packs'] = history(nid)
@@ -332,7 +383,10 @@ def closure(d):
     for n in idx['nodes'].values():
         if n['die'] != d or n['level'] == 'die': continue
         st = n.get('status') or {}; m = st.get('metrics') or {}; lay = n.get('layout') or {}; s = lay.get('store') or {}; v = n.get('vis') or {}; p = n.get('plan') or {}
-        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), label=st.get('label'), basis=st.get('basis'), cls=st.get('cls'), stage=st.get('stage'),
+        basis = signoff_basis(n)
+        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), signoff_basis=basis,
+                         display_state=signoff_display_state(n, basis),
+                         label=st.get('label'), basis=st.get('basis'), cls=st.get('cls'), stage=st.get('stage'),
                          attempt=st.get('attempt'), reason=st.get('reason'), tt_wns=m.get('tt_wns'), ff_wns=m.get('ff_wns'),
                          drc=m.get('drt_drc') if m.get('drt_drc') is not None else m.get('drc'), grt_overflow=m.get('grt_overflow'), lec=m.get('lec'),
                          cells=m.get('cells'), verdict=m.get('verdict'), instances=p.get('instances') if n['level'] == 'type' else p.get('placements'),
@@ -342,8 +396,17 @@ def closure(d):
     dn = idx['nodes'][d]
     sup = [dict(id=r['id'], name=r['name'], level=r['level'], plan=r['plan'], plan_label=r['plan_label'], pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
                 archived=r['archive']['agi'] or r['archive']['rtx'], index_status=r['archive']['status']) for r in records().values() if r['die'] == d and r['superseded']]
+    census = (signoff_census() or {}).get('dies', {}).get(d)
+    if census:
+        ids = {r['id']: r['signoff_basis'] for r in rows}
+        for r in records().values():
+            if r['die'] != d or r['id'] in ids or (ids.get(r['node']) == r['signoff_basis'] == 'current'):
+                continue
+            rows.append(dict(id=r['id'], name=r['name'], level=r['level'], state=None, signoff_basis=r['signoff_basis'],
+                             label=r['plan_label'], pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
+                             db_cls='archive' if r['archive']['agi'] or r['archive']['rtx'] else None))
     return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows,
-                superseded_records=sorted(sup, key=lambda x: x['id']))
+                signoff_census=census and census['summary'], superseded_records=sorted(sup, key=lambda x: x['id']))
 
 
 def elements_compat():
@@ -370,7 +433,7 @@ def search(q, d=None, limit=40):
         name = (n.get('name') or n.get('label') or nid).lower(); hay = nid.lower() + ' ' + name + ' ' + str((n.get('plan') or {}).get('module') or '').lower()
         if not all(t in hay for t in terms): continue
         score = (0 if name == q or nid.lower() == q else 1 if name.startswith(q) else 2) + (0 if not d or n['die'] == d else 3) + {'die': 0, 'type': 0.1, 'core': 0.2}[n['level']]
-        out.append((score, len(name), dict(kind=n['level'], id=nid, name=n.get('name') or n.get('label'), die=n['die'], state=(n.get('status') or {}).get('state'),
+        out.append((score, len(name), dict(kind=n['level'], id=nid, name=n.get('name') or n.get('label'), die=n['die'], state=signoff_display_state(n, signoff_basis(n)),
                                            pack=bool((n.get('layout') or {}).get('store')))))
     for dd in idx['dies']:
         if dd not in idx['nodes']: continue
@@ -379,7 +442,7 @@ def search(q, d=None, limit=40):
             if not all(t in nm for t in terms): continue
             score = (0 if nm == q else 1 if nm.startswith(q) else 2) + (0 if not d or dd == d else 3) + 0.3
             tn = idx['nodes'].get(p[1]) or {}
-            out.append((score, len(nm), dict(kind='instance', id=p[1], inst=p[0], name=p[0], die=dd, of=tn.get('name'), state=(tn.get('status') or {}).get('state'),
+            out.append((score, len(nm), dict(kind='instance', id=p[1], inst=p[0], name=p[0], die=dd, of=tn.get('name'), state=signoff_display_state(tn, signoff_basis(tn)),
                                              pack=bool((tn.get('layout') or {}).get('store')))))
     for rid, r in records().items():   # superseded records (no current-plan node): listed with their plan label
         if rid in idx['nodes']: continue
@@ -387,7 +450,7 @@ def search(q, d=None, limit=40):
         if not all(t in hay for t in terms): continue
         nm = r['name'].lower()
         score = (0 if nm == q else 1 if nm.startswith(q) else 2) + (0 if not d or r['die'] == d else 3) + 0.5
-        out.append((score, len(nm), dict(kind=r['level'], id=rid, name=r['name'], die=r['die'], state='signed', superseded=True, plan_label=r['plan_label'], pack=bool(r['pack']))))
+        out.append((score, len(nm), dict(kind=r['level'], id=rid, name=r['name'], die=r['die'], state='signed', superseded=r['superseded'], plan_label=r['plan_label'], pack=bool(r['pack']))))
     out.sort(key=lambda x: (x[0], x[1]))
     return dict(q=q, total=len(out), results=[x[2] for x in out[:limit]])
 
@@ -477,11 +540,47 @@ _REC = dict(key=None, recs={})
 
 def records():
     idx = index()
-    key = (idx.get('generated'), _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120))
+    key = (idx.get('generated'), _mtime(CENSUS), _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120))
     if key != _REC['key']:
         d = _json_file(ARCHIVE_INDEX) or {}
-        _REC.update(key=key, recs=APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry))
+        layouts = APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry)
+        census = signoff_census()
+        recs = census_records(census, idx['nodes'], layouts) if census else layouts
+        _REC.update(key=key, recs=recs)
     return _REC['recs']
+
+
+def census_records(census, nodes, layouts):
+    recs = {}
+    node_names = {}
+    for node in nodes.values():
+        level = node['level']
+        if level not in ('type', 'core'):
+            continue
+        for name in (node['name'], (node.get('plan') or {}).get('module')):
+            if name:
+                node_names.setdefault((node['die'], level, name), node['id'])
+    for die, entry in census['dies'].items():
+        for bucket, label in (('current', 'current'), ('deferred', 'resign'), ('retired', 'retired')):
+            for item in entry[bucket]:
+                name = item['name']
+                levels = census_levels(item)
+                nid = next((node_names[die, level, name] for level in levels if (die, level, name) in node_names), None)
+                level = nodes[nid]['level'] if nid else levels[0]
+                raw_id = '%s.%s.%s' % (die, 'c' if level == 'core' else 't', name)
+                rid = (nid or raw_id) if bucket != 'retired' else raw_id
+                if rid in recs or (bucket == 'retired' and rid in nodes):
+                    suffix = hashlib.sha256((bucket + ':' + item['key']).encode()).hexdigest()[:12]
+                    rid += '--signoff-' + suffix
+                existing = layouts.get(raw_id) or layouts.get(nid) or {}
+                # A build of a current node is layout evidence only for its own plan state.
+                pack = existing.get('pack') if rid in (nid, raw_id) and existing.get('superseded') == (bucket != 'current') else None
+                archive = existing.get('archive') or dict(agi=False, rtx=False, status=None, units=[])
+                recs[rid] = dict(id=rid, die=die, name=name, level=level, node=nid, plan='current' if bucket == 'current' else 'superseded',
+                                 plan_label=APR.LABEL[label], superseded=bucket != 'current', signoff_basis=bucket,
+                                 census_key=item['key'], node_state=((nodes.get(nid) or {}).get('status') or {}).get('state'),
+                                 archive=archive, pack=pack)
+    return recs
 
 
 def records_list(d=None, plan=None):
@@ -489,7 +588,7 @@ def records_list(d=None, plan=None):
     rows = [r for r in R.values() if (not d or r['die'] == d) and (not plan or r['plan'] == plan)]
     rows.sort(key=lambda r: (r['die'], r['superseded'], r['id']))
     return dict(schema='opentallas.explorer.records.v1', rule='every signed-off record on any plan: current-plan sign-offs (index nodes) and archived sign-offs of superseded or retired plan blocks; '
-                'id = <die>.<t|c>.<name> (re-sign suffix dropped); pack = routed-layout pack in the layout store', summary=APR.summary(R), total=len(rows), records=rows)
+                'id = <die>.<t|c>.<name> (re-sign suffix dropped); pack = routed-layout pack in the layout store', summary=APR.summary(R), census=(signoff_census() or {}).get('summary'), total=len(rows), records=rows)
 
 
 def record_node(nid):
@@ -497,13 +596,13 @@ def record_node(nid):
     idx = index(); r = records().get(nid)
     if not r: raise ApiError(404, 'no such node', nid)
     dn = idx['nodes'].get(r['die']) or {}
-    n = dict(id=nid, level=r['level'], die=r['die'], name=r['name'], parent=r['die'], superseded=True, plan_label=r['plan_label'],
+    n = dict(id=nid, level=r['level'], die=r['die'], name=r['name'], parent=r['die'], superseded=r['superseded'], plan_label=r['plan_label'],
              status=dict(state='signed', label='signed off (%s)' % r['plan_label'], archive=r['archive']), layout=dict(stage='6_final', source='archived signed record', store=r['pack']),
              plan=dict(outline=None, hard_cores=[], buses=[], ft_slots=[], stations=[]), children=[])
     arch = [dict(where='AGIdock' if r['archive']['agi'] else 'rtx-pro', kind='opentallas-signed-1114', path=u, odb=True) for u in r['archive']['units']]
     return dict(node=n, die=dict(id=r['die'], label=dn.get('label'), outline=(dn.get('plan') or {}).get('outline'), reach_um=(dn.get('plan') or {}).get('reach_um')),
                 children={}, users={}, placements=[], states=idx['states'], generated=idx['generated'], plan=plan_ref(dn['plan']) if dn.get('plan') else None,
-                packs=history(nid), archive=[], record=r, uses=[],
+                packs=history(nid), archive=[], record=r, signoff_basis=r.get('signoff_basis'), uses=[],
                 sources=dict(recorded=None, archives=arch, resolved=arch[0] if arch else None, on_rtx_pro=r['archive']['rtx'], on_agidock=r['archive']['agi'], cls='archive' if arch else 'none'))
 
 
@@ -787,7 +886,7 @@ class H(BaseHTTPRequestHandler):
 
     def api(self, p, q):
         g = lambda k, d='': (q.get(k, [d])[0] or d)
-        idx = DS.index(); stamp = idx.get('generated') if idx else None
+        idx = DS.index(); stamp = (idx.get('generated') if idx else None, _mtime(CENSUS))
         if p == 'meta': return self.send(200, json.dumps(meta(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p == 'dies': return self.json('dies', (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), dies)
         if p.startswith('die/'): d = p[4:]; return self.json('die:' + d, stamp, lambda: die(d))
@@ -820,7 +919,7 @@ class H(BaseHTTPRequestHandler):
             def count():
                 i = index(); g = (i.get('count_overlay') or {}).get('archive_gate') or {}
                 return dict(schema='opentallas.explorer.count.v1', rule='signed = credited by the sign-off count AND database + view files + signoff.json present (non-empty) in the AGIdock archive; otherwise pending archive, not counted',
-                            generated=i.get('generated'), count_generated=(i.get('count_overlay') or {}).get('count_generated'), archive_listed=g.get('index_listed'), index_tsv=g.get('index_tsv'), error=g.get('error'),
+                            census=(signoff_census() or {}).get('summary'), generated=i.get('generated'), count_generated=(i.get('count_overlay') or {}).get('count_generated'), archive_listed=g.get('index_listed'), index_tsv=g.get('index_tsv'), error=g.get('error'),
                             dies={d: dict(types=i['nodes'][d].get('type_count'), signed_types=v['type']['counted'], pending_archive_types=v['type']['pending'], credited_types=v['type']['before'],
                                           signed_cores=v['core']['counted'], pending_archive_cores=v['core']['pending'], credited_cores=v['core']['before'], pending=v['pending_list']) for d, v in (g.get('dies') or {}).items()})
             return self.json('count', stamp, count)
