@@ -15703,3 +15703,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 12:05 PST FP-S81.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-S81, S81-INT-R2; cc COORD] lanes/FP-S81.tsv last updated 11-25 19:47 (16.3 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 12:05 PST ALERT NO-PROGRESS qwen_compute: 7 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 845 min (last 22:00) and 0 private-spec launches for 60 min (last 09:34 ot-run QC-NOPROG-REQ sle_su_l1__cl5ea486db); 55 hold(s): 0 without eta, 6 overdue, next eta 11-26 21:00; NO-LAUNCH x15
