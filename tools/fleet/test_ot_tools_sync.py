@@ -149,6 +149,14 @@ class Guard(unittest.TestCase):
         for x in names:
             os.chmod(d / x / "tools", 0o755)
 
+    def test_auto_dedupe_is_off_by_default(self):
+        """COORD ruling 11-26: rt snapshots are sealed trees; the post-sync dedupe only runs with OT_RT_AUTO_DEDUPE=1"""
+        m = self.load()
+        self.assertFalse(m.AUTO_DEDUPE)
+        src = pathlib.Path(P).read_text()
+        self.assertIn("if AUTO_DEDUPE:\n            dedupe_build_hosts()", src)
+        self.assertIn("auto dedupe is off", src)
+
     def test_prune_keeps_newest_current_protected_and_named(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 9)]
         m.live_reference_text = lambda *a, **k: ""      # RT-HOST-DATA-1124: isolate from the test host's live refs (6.800000000000001 in a job json names "%012x" % 1)

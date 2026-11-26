@@ -838,6 +838,12 @@ def prune_build_hosts(pins, hosts=None):
         list(pool.map(one, hs))
 
 
+# COORD RULING 11-26 (FLEET-OPS-R4): rt/<sha> snapshots are SEALED runtime trees and the standing rule is never to hardlink into a sealed tree, so the automatic
+# post-sync dedupe is OFF by default.  OT_RT_AUTO_DEDUPE=1 turns it on, and only after the four checks of the ruling have evidence on the hub:
+# (1) no file of a deduped snapshot is writable, (2) the seal verifier passes on a deduped snapshot, (3) nothing in tools/ opens or chmods rt files, (4) a Fable review is GOOD.
+AUTO_DEDUPE = os.environ.get("OT_RT_AUTO_DEDUPE", "0") == "1"
+
+
 def dedupe_build_hosts(hosts=None):
     """P-RT-COPIES: start `ot-tools-sync dedupe --post` detached on every build host (flock: one at a time), so the sync never waits for it"""
     for host in dict.fromkeys(HOSTS if hosts is None else hosts):
@@ -914,13 +920,16 @@ def sync(sha, hosts=True, tests=True):
         notes.append("ALERT installed != rt")
     if all(":ok" in n for n in notes) and KEEP > 0:
         prune_build_hosts(names_in_use_text())
-        dedupe_build_hosts()
+        if AUTO_DEDUPE:
+            dedupe_build_hosts()
     if all(":ok" in n for n in notes):
         try:
             prune_snapshots(RT, protect=(prev or "", name))
         except Exception as e:
             log(f"prune skipped: {type(e).__name__}: {e}")
         try:                                                        # P-RT-COPIES: share inodes between the kept snapshots (detached, never delays or fails the sync)
+            if not AUTO_DEDUPE:
+                raise RuntimeError('auto dedupe is off (OT_RT_AUTO_DEDUPE=1 enables it; COORD ruling 11-26)')
             S.Popen([sys.executable, "-I", os.path.realpath(__file__), "dedupe", "--post"], stdin=S.DEVNULL, stdout=open(os.path.expanduser("~/.local/state/rt-dedupe.log"), "a"),
                     stderr=S.STDOUT, start_new_session=True)
         except Exception as e:
