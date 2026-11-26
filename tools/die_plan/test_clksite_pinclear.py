@@ -128,7 +128,10 @@ def test_landing_pin_escape_corridor_moves_a_cluster_4um_west_of_the_pin(pins):
     led, left = _run(raw0)
     assert left == {} and len(led) == 1 and led[0]["kind"] == "inward", led
     assert sorted(led[0]["pins_cleared"]) == ["cland_up_ready", "fclk_out_cland_up"]
-    assert led[0]["new"][2] <= 861.856 - 8.0 + 1e-6                # obstruction ends >= 8 um from the pin
+    assert led[0]["new"][2] <= 861.856 - 8.0 - PC.LAND_MARGIN_UM + 1e-6   # obstruction ends >= 8 um + stand-off from the pin
+    r = raw0["partition_types"]["T"]["clock"]["reserved_sites_um"][0]
+    assert max(w[2] for w in r["stack_um"]) <= 861.856 - 10.0 + 1e-6      # every M3-M7 window, not just the rect
+    assert not any(w[3] > 761.952 - 0.216 - 2.1 and w[1] < 761.952 + 0.216 + 2.1 and w[2] > 861.856 - 10.0 for w in r["stack_um"])
 
 
 def test_landing_corridor_is_class_wide_and_can_be_switched_off(pins):
