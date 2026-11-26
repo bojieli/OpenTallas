@@ -40,7 +40,37 @@ def validate(t, tn):
     return rows
 
 
-def tcl(P, tn, *, no_core_rows=()):
+def _seat_lines(firm_small):
+    """C-GPL-TD-INFLATION (plan gpl_td.firm_small_clusters): a cluster of at most firm_small movable cells is seated FIRM (packed rows,
+    centred in its rect, listed in ot_face_flops.txt so face_flops_release.tcl returns it to PLACED for DPL) and is no GPL region: timing-driven
+    GPL repair reads the MEAN overflow of every region, and 15 finished tiny regions pulled it under the trigger at iteration 1 (HEAD hd_lep0N
+    fed00).  A cluster above the bound stays a region exactly as before."""
+    return [
+        "set lc_small %d" % firm_small,
+        "proc ot_lc_seat {name x0 y0 x1 y1 cells} {",
+        "  global lc_b lc_u",
+        "  set row [lindex [$lc_b getRows] 0]; set site [$row getSite]; set sw [$site getWidth]; set rh [$site getHeight]",
+        "  set core [$lc_b getCoreArea]; set ox [$core xMin]; set oy [$core yMin]",
+        "  set X0 [expr {round($x0*$lc_u)}]; set X1 [expr {round($x1*$lc_u)}]; set Y0 [expr {round($y0*$lc_u)}]; set Y1 [expr {round($y1*$lc_u)}]",
+        "  set tw 0; foreach i $cells { set tw [expr {$tw + (([[$i getMaster] getWidth] + $sw - 1) / $sw) * $sw}] }",
+        "  set rw [expr {$X1 - $X0}]; set nrow [expr {max(1, int(ceil(double($tw) / $rw)))}]; set lw [expr {min($tw, $rw)}]",
+        "  set xs [expr {$ox + int(ceil(double($X0 + ($rw - $lw) / 2 - $ox) / $sw)) * $sw}]",
+        "  set ys [expr {$oy + int(floor(double(($Y0 + $Y1) / 2 - ($nrow * $rh) / 2 - $oy) / $rh)) * $rh}]",
+        "  if {$ys < $Y0} { set ys [expr {$oy + int(ceil(double($Y0 - $oy) / $rh)) * $rh}] }",
+        "  set x $xs; set y $ys",
+        "  foreach i $cells {",
+        "    set w [expr {(([[$i getMaster] getWidth] + $sw - 1) / $sw) * $sw}]",
+        "    if {$x + $w > $X1 && $x > $xs} { set x $xs; set y [expr {$y + $rh}] }",
+        "    if {$y + $rh > $Y1} { error \"OT_LOGIC_CLUSTER $name: $nrow rows of cells do not fit the rect\" }",
+        "    $i setLocation $x $y; $i setPlacementStatus FIRM",
+        "    set x [expr {$x + $w}]",
+        "  }",
+        "  set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]; foreach i $cells { puts $fh \"[$i getName]\\tCLUSTER\" }; close $fh",
+        "}"]
+
+
+def tcl(P, tn, *, no_core_rows=(), firm_small=0):
+    """firm_small = plan gpl_td.firm_small_clusters (max cells seated FIRM, see _seat_lines); 0 = the unchanged text."""
     rows = validate(P.types[tn], tn)
     if not rows:
         return ""
@@ -123,6 +153,16 @@ def tcl(P, tn, *, no_core_rows=()):
            "    return -options $opts $res",
            "  }",
            "}"]
+    if firm_small:
+        k = out.index("proc ot_logic_cluster {name x0 y0 x1 y1 pats} {")
+        out[k:k] = _seat_lines(firm_small)
+        k = out.index("proc ot_logic_cluster {name x0 y0 x1 y1 pats} {")
+        assert out[k + 1] == "  global lc_post lc_pending" and out[k + 2].startswith("  lassign [ot_lc_members"), "logic_cluster proc layout changed"
+        out[k + 1] = "  global lc_post lc_pending lc_small"
+        out[k + 3:k + 3] = ["  if {[llength $mem] <= $lc_small} {",
+                            "    ot_lc_seat $name $x0 $y0 $x1 $y1 $mem",
+                            "    puts [format \"OT_LOGIC_CLUSTER %s FIRM-SEAT cells=%d skipped_fixed=%d cell_um2=%.1f rect_um2=%.1f util=%.3f\" $name [llength $mem] $skipped $area $ra [expr {$area/$ra}]]",
+                            "    return", "  }"]
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
         for domain, (px0, py0, px1, py1) in no_core_rows:

@@ -8733,11 +8733,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
     # QC-GLUE 11-25 (QC-ALLFIX): opt-in plan key logic_cluster_rects_um -> odb region/group, last in PRE_GLOBAL_PLACE
     import logic_cluster
-    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms])
+    import gpl_td     # C-GPL-TD-INFLATION 11-26 (CLASS-OWNERS-B): opt-in top-level plan key gpl_td (absent = unchanged kit)
+    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms], firm_small=gpl_td.firm_small(P.raw))
     if lc_tcl:
         (kd / "logic_cluster.tcl").write_text(lc_tcl)
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/logic_cluster.tcl\n")
+    gpl_td.apply(kd, P.raw)    # after the cluster hook: timing-driven trigger wrapper + cell growth gate (gpl_td.tcl)
     if t.get("rck_band"):
         # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;
         # face_flops_release.tcl releases them (ot_face_flops.txt rows tagged RCKB) for DPL
