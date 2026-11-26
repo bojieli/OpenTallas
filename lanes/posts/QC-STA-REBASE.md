@@ -1,0 +1,1 @@
+- 2026-11-25 19:56 PST DONE [QC-STA-REBASE] ot-run oth-ubuntu-3923603-1795665205 on ubuntu: rc=0 after 215 s, ended 19:56:56, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/stareb/fork.out, cmd: --crit --priority die --no-spill --mem 8 --threads 2 --disk 120 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/QC-STA-REBASE -- python
