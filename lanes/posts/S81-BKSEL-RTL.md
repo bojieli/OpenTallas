@@ -1,0 +1,1 @@
+- 2026-11-25 20:12 PST DONE [S81-BKSEL-RTL] ot-run oth-ubuntu-269066-1795666052 on tolerant-swine: rc=0 after 294 s, ended 20:12:24, log /home/ubuntu/s81-bksel-rtl-logs/fork.log, cmd: --priority die --hosts epyc12 --mem 8 --threads 4 --dir /srv/opentallas-scratch2/claude -- bash -c mkdir -p /srv/opentallas-scratch2/claude/
