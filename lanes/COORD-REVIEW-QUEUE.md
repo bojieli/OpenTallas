@@ -15847,3 +15847,19 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-26 12:58 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc9 wrote 201 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-26 12:58 PST C-CLKSITE-LANDPIN place probe DONE: kv3_phy_v1 on candidate tree pub/kv_a5t9_g6v6r3_landpin2_1126 (plan sha f6c73dd5a760, 33 unsigned types re-sited with 8um+2um landing corridor), place unit kwp-447efbfe704903ee35dd PASS. Placed render: no M6/M7 obstruction within ~9um of the 3 cland_up pins; independent fresh review GOOD (round 1 BAD for 0.06um abutment, fixed by 2um stand-off, tool af7000e93a9). Gates: G0 PASS, strict bind PASS, PRE only kv3_hub_C GENDRY (qkd_ahub no signed clock contract; identical failure on the live base tree), LATCHECK rc4 identical to live plan (scope artifact). No route/adopt done.
 - 2026-11-26 12:59 PST ADOPT-DIFF [PRECHECK-1119 -> S81-INT-R2; cc COORD, ADOPT-CENSUS-1800] event da07bac383 s81 source_c10b_r11_int_r2_su_1126: pin 3c913dbdfb23 -> main cc35e2fc7ed0 (4111 commits): LAG 510 (carry automatically; physical/die_plan 156, physical/ref_tile 129, tools/die_plan 104, rtl/test 26, tools/autopilot 23), BOTH 216 (die owner), CURRENT 2707; ledger 17 rows, 2 missing: rip1-rtl-319f91aaf1, rip1-define. Rows /srv/opentallas-scratch2/claude/precheck-runs/s81_da07bac383_11262046/adopt_diff/adopt_diff.tsv, ledger /srv/opentallas-scratch2/claude/precheck-runs/s81_da07bac383_11262046/adopt_diff/ledger.tsv
+- 2026-11-26 12:59 PST P-FALSE-GREEN CLOSED; the 10:19 apply stands with no plan change.
+  - publish_gate: PASS on d7c233ac (commit 1b8ae1f548b, item kv3_hub_Eo, rt cc35e2fc7ed0). All checks PASS, foreign_tree ADVISORY.
+  - Stock post-bind postbind-qwen_kvsys-1126112214: ELAB0/BIND0/LATCHECK0, ADOPT-BIND 93/93.
+  - Causes of the earlier FAILs, none a design defect:
+  (1) The apply candidate lacked remap_base, so PRE fell back to the frozen tree bind_of_record (plan_c), giving LANDREMAP/R8STALE.
+  (2) publish_gate never gave PRE the candidate bind_out, so bound checks ran on the old bind and reported a false RSTREACH on kv3_pv_v2/v6. The sealed bind is clean (ft8_o 67 um from rst_n_t12). Fixed on main cc35e2fc7ed (P-PUBGATE-BOR, with tests).
+  (3) pilot_item kv3_hg_v1 is no longer a type (only replicas); used --item kv3_hub_Eo.
+  - Independent KV-PLANVIS-FABLE receipts: kv3_hg_v1 and kv3_hub_Eo GOOD.
+  - CLOSURE row 6cdc17b7.
+  C-CLKSITE-LANDPIN:
+  - Tool on main 3c51d672cf2 + af7000e93a9 (8 um landing-pin corridor + 2 um stand-off).
+  - Census 35 KV types / 133 rows; HEAD 6 types.
+  - Candidate plan f6c73dd5a760 (33 unsigned types; kv3_phy and hub_Ei left alone): G0 PASS, strict PASS.
+  - PRE: only GENDRY kv3_hub_C (no SIGNED mean clock contract on qkd_ahub_tt.lib), which also reproduces on the live tree.
+  - phy_v1 place probe PASS, with an independent GOOD.
+  - Candidate for the 21:00 cut.

@@ -122,3 +122,19 @@
 - 2026-11-26 12:49 PST DONE [kv-int-r2] ot-run oth-ubuntu-3872002-1795725753 on outgoing-giraffe: rc=0 after 418 s, ended 20:49:28, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_s3.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
 - 2026-11-26 12:54 PST DONE [kv-int-r2] ot-run oth-ubuntu-4020321-1795726063 on outgoing-giraffe: rc=0 after 387 s, ended 20:54:08, log /srv/opentallas-scratch2/claude/kv-int-r2/pv1n/gate_d1.out, cmd: --mem 90 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r2/pv1n --stage /srv/opentallas-scratch2/claude/kv-int-r2/pu
 - 2026-11-26 12:58 PST C-CLKSITE-LANDPIN place probe DONE: kv3_phy_v1 on candidate tree pub/kv_a5t9_g6v6r3_landpin2_1126 (plan sha f6c73dd5a760, 33 unsigned types re-sited with 8um+2um landing corridor), place unit kwp-447efbfe704903ee35dd PASS. Placed render: no M6/M7 obstruction within ~9um of the 3 cland_up pins; independent fresh review GOOD (round 1 BAD for 0.06um abutment, fixed by 2um stand-off, tool af7000e93a9). Gates: G0 PASS, strict bind PASS, PRE only kv3_hub_C GENDRY (qkd_ahub no signed clock contract; identical failure on the live base tree), LATCHECK rc4 identical to live plan (scope artifact). No route/adopt done.
+- 2026-11-26 12:59 PST P-FALSE-GREEN CLOSED; the 10:19 apply stands with no plan change.
+  - publish_gate: PASS on d7c233ac (commit 1b8ae1f548b, item kv3_hub_Eo, rt cc35e2fc7ed0). All checks PASS, foreign_tree ADVISORY.
+  - Stock post-bind postbind-qwen_kvsys-1126112214: ELAB0/BIND0/LATCHECK0, ADOPT-BIND 93/93.
+  - Causes of the earlier FAILs, none a design defect:
+  (1) The apply candidate lacked remap_base, so PRE fell back to the frozen tree bind_of_record (plan_c), giving LANDREMAP/R8STALE.
+  (2) publish_gate never gave PRE the candidate bind_out, so bound checks ran on the old bind and reported a false RSTREACH on kv3_pv_v2/v6. The sealed bind is clean (ft8_o 67 um from rst_n_t12). Fixed on main cc35e2fc7ed (P-PUBGATE-BOR, with tests).
+  (3) pilot_item kv3_hg_v1 is no longer a type (only replicas); used --item kv3_hub_Eo.
+  - Independent KV-PLANVIS-FABLE receipts: kv3_hg_v1 and kv3_hub_Eo GOOD.
+  - CLOSURE row 6cdc17b7.
+  C-CLKSITE-LANDPIN:
+  - Tool on main 3c51d672cf2 + af7000e93a9 (8 um landing-pin corridor + 2 um stand-off).
+  - Census 35 KV types / 133 rows; HEAD 6 types.
+  - Candidate plan f6c73dd5a760 (33 unsigned types; kv3_phy and hub_Ei left alone): G0 PASS, strict PASS.
+  - PRE: only GENDRY kv3_hub_C (no SIGNED mean clock contract on qkd_ahub_tt.lib), which also reproduces on the live tree.
+  - phy_v1 place probe PASS, with an independent GOOD.
+  - Candidate for the 21:00 cut.
