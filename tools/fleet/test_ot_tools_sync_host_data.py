@@ -17,6 +17,13 @@ def load(env=None):
     return m
 
 
+def test_follow_and_catchup_default_to_the_merge_queue_payload(monkeypatch):
+    monkeypatch.delenv("OT_RT_HOST_PATHS", raising=False)
+    default = load().HOST_PATHS
+    merge_queue = load({"OT_RT_HOST_PATHS": "tools physical/common_flow rtl/lib rtl/common"}).HOST_PATHS
+    assert default == merge_queue
+
+
 def test_host_data_copy_lands_on_the_data_disk_and_rt_name_is_a_symlink(tmp_path, monkeypatch):
     rt, data = tmp_path / "rt", tmp_path / "data"
     rt.mkdir()

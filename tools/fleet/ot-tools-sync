@@ -36,9 +36,9 @@ MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
 PY = os.environ.get("MQ_PYTHON", str(MQ / "venv/bin/python"))
 REMOTE = os.environ.get("MQ_REMOTE", "origin")
 HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11 epyc12").split()
-# FABLE-FLOW-0600 class D (17 of 32 kit failures: rt incomplete on gen hosts): every host gets what a kit launch tree needs (rt_launch_tree.sh
-# hardlinks tools/ and physical/common_flow), not only tools/fleet, and the flip waits for a smoke of that copy on one gen host.
-HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow").split()
+# Initial rollout, follow and catchup share the runtime payload. This also
+# makes a staged partial reusable when another managed service retries it.
+HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow rtl/lib rtl/common").split()
 # RT-HOST-DATA-1124 (COORD: epyc10 rt follow took 509-641 s per cut on its saturated scratch NVMe, always one cut behind): OT_RT_HOST_DATA="host=/dir ..."
 # puts a host's NEW version dirs on another disk.  The copy lands in <dir>/<sha12>; RT/<sha12> on the host is a read-only symlink to it, so
 # RT/current, RT/<sha12> and RT/<sha12>.manifest.json resolve for every caller unchanged.  Older versions stay where they are; prune removes a
