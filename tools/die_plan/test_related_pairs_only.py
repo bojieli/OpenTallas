@@ -51,3 +51,27 @@ def test_empty_list_drops_every_pair_and_none_is_unchanged(tmp_path):
     assert [p for _, _, p in pairs["intra"]].count("b0") == 2
     base, cov0 = R.build_pairs(PLAN, _taps())
     assert len(base["intra"]) == 12 and "related_pairs" not in cov0
+
+
+def test_declared_forwarded_ports_do_not_reclassify_plain_seams():
+    from clock_landings import declared_landing_ports
+
+    plan = {
+        "ports": [
+            {"id": "plain", "src": {"part": "a"}, "dst": {"part": "b"}},
+            {"id": "landed", "src": {"part": "a"}, "dst": {"part": "b"}},
+            {"id": "plain_return", "src": {"part": "b"}, "dst": {"part": "a"}},
+        ],
+        "clock": {"landing_network": {"edges": [
+            {"id": "cland_clk__landed", "kind": "clock"},
+            {"id": "cland_start__landed", "kind": "ctl"},
+        ]}},
+    }
+    taps = {"ta": {"part": "a", "cppr_node": "a"},
+            "tb": {"part": "b", "cppr_node": "b"}}
+    ports = declared_landing_ports(plan)
+    assert ports == {"landed"}
+    pairs, coverage = R.build_pairs(plan, taps, forwarded_ports=ports)
+    assert pairs["seam"] == [("ta", "tb", "a->b"), ("tb", "ta", "b->a")]
+    assert pairs["landed"] == [("ta", "tb", "a->b")]
+    assert coverage["connected_part_pairs"] == 2

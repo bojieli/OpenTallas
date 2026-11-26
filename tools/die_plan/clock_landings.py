@@ -605,6 +605,16 @@ def ring_taps(plan, tn):
     return [(x, y) for _, x, y in RT._taps(e[1], tn)]
 
 
+def declared_landing_ports(plan):
+    """Return the data-port IDs with a declared forwarded-clock companion."""
+    network = (plan.get("clock") or {}).get("landing_network")
+    if not isinstance(network, dict) or not isinstance(network.get("edges"), list):
+        raise ValueError("physical landings require plan.clock.landing_network.edges")
+    prefix = "cland_clk__"
+    return frozenset(edge["id"][len(prefix):] for edge in network["edges"]
+                     if edge.get("kind") == "clock" and edge.get("id", "").startswith(prefix))
+
+
 def network_lane_cycles(plan):
     """Exact nominal data cycles from source-bound physical forwarded edges.
 

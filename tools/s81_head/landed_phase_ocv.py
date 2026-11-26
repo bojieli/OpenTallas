@@ -84,7 +84,7 @@ def endpoint_taps(P, pr, side, candidates):
     return sorted((t for t in candidates if t['port'] in selected),key=lambda t:t['port'])
 
 
-def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=False, cls="A"):
+def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=False, cls="A", port_ids=None):
     tap_of = {}
     for tap in tree['taps']:
         tap_of.setdefault(tap['part'],[]).append(tap)
@@ -98,6 +98,8 @@ def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=F
     nB = max(1, round(core_lat / B["mu_stage_ps"])) if core_lat > 0 else 0
     rows = []
     for pr in plan["ports"]:
+        if port_ids is not None and pr["id"] not in port_ids:
+            continue
         s, d = pr["src"]["part"], pr["dst"]["part"]
         if s not in tap_of or d not in tap_of:
             continue
@@ -152,6 +154,8 @@ def analyse(plan, tree, arr, CA, T, corner, core_lat, budget, droop, port_taps=F
         anchor['unshared_b_ps'] = max(r['unshared_b_ps'] for r in pair_rows)
         anchor['tap_src'] = [t['port'] for t in selected[0]]
         anchor['tap_dst'] = [t['port'] for t in selected[1]]
+        if port_ids is not None:
+            anchor["src_part"], anchor["dst_part"] = s, d
         anchor['tap_pairs'] = len(pair_rows)
         anchor['lcas'] = sorted({r['lca'] for r in pair_rows})
         rows.append(anchor)
@@ -171,6 +175,8 @@ def main(argv=None):
                          "the declaration in RUN/clk/tree.json meta clock_cell (die_trial); missing -> FAIL closed "
                          "(COORD ruling ba28d3143)")
     ap.add_argument("--port-taps",action="store_true",help="use declared endpoint pins and union all nearest-tap pairs; legacy last tap otherwise")
+    ap.add_argument("--physical-landings", action="store_true",
+                    help="analyse only ports with a declared forwarded clock in the plan")
     a = ap.parse_args(argv)
     sys.path.insert(0, a.tools)
     import clk_aocv as CA
@@ -184,6 +190,15 @@ def main(argv=None):
     cls = DSR.CLOCK_CELL_AOCV_CLASS[cc]
     assert abs(T["systematic"]["g_per_mm"] - 0.21) < 1e-9 or abs(T["systematic"]["g_per_mm"] - 0.0021) < 1e-9, T["systematic"]
     plan = json.loads(Path(a.plan).read_text())
+    port_ids = None
+    if a.physical_landings:
+        import clock_landings
+        try:
+            port_ids = clock_landings.declared_landing_ports(plan)
+        except ValueError as exc:
+            ap.error(str(exc))
+        if not port_ids:
+            ap.error("physical landing network has no forwarded-clock data ports")
     run = Path(a.run)
     tree = json.loads((run / "clk" / "tree.json").read_text())
     cl = dict(kv.split("=") for kv in a.core_lat.split(","))
@@ -198,7 +213,8 @@ def main(argv=None):
         arr = arrivals(f)
         for droop in ("regions", "same"):
             for clat in (float(cl[c]), 0.0):
-                rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop, port_taps=a.port_taps, cls=cls)
+                rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop,
+                               port_taps=a.port_taps, cls=cls, port_ids=port_ids)
                 rows.sort(key=lambda r: r["margin_ps"])
                 key = f"{c}_droop-{droop}_corelat{clat:g}"
                 out["corners"][key] = dict(crossings=len(rows), worst_margin_ps=rows[0]["margin_ps"],
