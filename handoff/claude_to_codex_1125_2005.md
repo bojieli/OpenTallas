@@ -54,3 +54,42 @@ Written ahead of time in case Claude COORD hits a rate limit. Follow ~/coord/COD
 - At each 09:00/21:00 cut, refresh the per-die class counts and append the trend.
 - Convergence means NEW goes to about 0 and the counts fall. Two cuts in a row without that is a LOOP: report it to the owner.
 - Progress answers to the owner give the class trend per die first, then the closure counts, then the signed count as one line.
+
+## Update 20:2x PST: HANDOFF NOW (owner: Claude rate limit)
+
+**Class owners.** OWNER ruling: close each class in the GENERATOR, by construction, across all dies. Each owner calibrates its check against routed results and posts per-cut counts to VIS-REOWN.
+
+| Class | Owner lane | Notes |
+|---|---|---|
+| C-STREET | FP-CONVERGE-S81 (a66e75f3dc9c8f564) | metric is ADV-FP-STREET |
+| C-LEG405 | REF-SITE lane (a6235aed7e541ba95) | |
+| C-TAP-LOAD | S81HEAD-TAPSPLIT (adcd46c71cbf7e3ae) | |
+| C-RST-RELAY-REACH | shift-in-place lane (a40ee3e661fb1394c) | |
+| C-XTAP-HOLD | QC-DRT-ECO (ae50cb7de3567ae22) | steps: C0 census, C1 metric, C2 generator flag (default off), C3 blocking |
+
+- VIS-REOWN (a8d3b2a5bc9130a3e) is building lanes/CLASSES.tsv and CLASS-MAP.tsv.
+- FIX-LANDED audit: OWNERS-SWEEP lane (aebc50e908e14276a) writes lanes/FIX-LANDED.tsv. The first version is report-only, due around 21:00, and may slip.
+
+**Corrections. Do not repeat these.**
+- The serdes hold fix (-391 to -21 ps) applies to c8 only. Row SERDES-CLKT43-STATION-GROUPS is WITHDRAWN. An R11 proxy probe is running on epyc7 (probe_r11).
+- The reset_tree relay_sites overwrite is NARROW: 3 of about 800k seats, mostly hd_serdes R6.
+  - The fix is on main c92ea14ae6b1; rt/current is 194a63c2ad51.
+  - Make it the default only after the R7b probe on epyc10 confirms it.
+  - The census is still missing KV and epyc7.
+- The clock_taps.tcl copy trap (CTS-0114) still stands. FLEET-OPS-R2 (ad2d76f087a78c03e) is fixing the copy step and running a census.
+- KV ESTRIP: 5 types are ready (v2, v2n, v6, v6n, v5ne). v3e, v4 and v7e are in rework.
+
+**21:00 cuts.** Append the results to lanes/CLOSURE.tsv.
+- S81 R11 (INT):
+  - col_h9 pin-EOL views from ABSTRACT-EXACT;
+  - SVC-BANDFOLLOW;
+  - the col_h10 p4 row f01318a7fcc7 (latency +4/+2 needs re-ack);
+  - leaf_grow R6, if ready.
+- QC C1q (QC-ALLFIX).
+- HEAD W10 (HEAD-ALLFIX): spn a26fbca09de0, TAPSPLIT e6ad704d3a29.
+- KV (KV-ALLFIX): the 5 ESTRIP types.
+
+**Pending.**
+- The QC xhead3 merge waits on the sle_hc0 LEC on epyc11.
+- The batch re-LEC of 118 records is in flight (LEC-AUTOFILL ae5f6b068f6cf934e). Two records are already NOT-EQ and need triage.
+- Signed count: 605 any / 487 current.
