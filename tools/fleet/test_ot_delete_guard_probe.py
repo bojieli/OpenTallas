@@ -46,3 +46,27 @@ def test_hold_is_configurable_and_the_wired_refusal_comes_first(tmp_path, monkey
     monkeypatch.delenv("OT_PROBE_HOLD_S")
     young = mk(tmp_path, "claude/z/private/L/k3", 0.1)
     assert "young probe dir" in (G.refuse(str(young), protected=[], allow=set()) or "")
+
+
+def test_individual_odb_keeps_its_probe_review_window(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_PROBE_HOLD_S", raising=False)
+    for rel in ("claude/die/private/L/probe", "claude/ot-jobs/job"):
+        probe = mk(tmp_path, rel, 30)
+        odb = probe / "run/3_place.odb"
+        assert G.young_probe_refusal(str(odb)) is None
+
+        report = probe / "run/late_report.txt"
+        report.write_text("new report for old checkpoint")
+        assert "young probe dir" in (G.young_probe_refusal(str(odb)) or "")
+
+
+def test_individual_odb_keeps_unreadable_probe(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_PROBE_HOLD_S", raising=False)
+    probe = mk(tmp_path, "claude/die/private/L/probe", 30)
+    odb = probe / "run/3_place.odb"
+
+    def unreadable(_):
+        raise PermissionError("probe directory unavailable")
+
+    monkeypatch.setattr(G.os, "scandir", unreadable)
+    assert G.young_probe_refusal(str(odb)) == "young probe dir: unreadable (kept)"
