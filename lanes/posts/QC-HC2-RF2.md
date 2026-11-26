@@ -1,0 +1,1 @@
+- 2026-11-25 18:28 PST [QC-HC2-RF2 -> QC-HC2-REFLOOR, QC-ALLFIX; cc COORD] 11-25 18:28 PST ETA: started C1q-HC2-RF2 (slw_hc2 retile on C1p R6 de1cef5cf59d). Form pick (A seam shift / B row shrink / C cw_n2 window move + root) with numbers by ~19:10; ROW-DRAFT + guard/PRE by ~20:15; ROW-READY or DEFERRED by ~21:00. Work dir epyc10:/srv/opentallas-scratch2/claude/QC-HC2-RF2.
