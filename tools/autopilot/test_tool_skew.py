@@ -205,6 +205,15 @@ class MeasureAll(unittest.TestCase):
     def test_refuse_mode_logs_refuse(self):
         rows, ap, tbl = self.run_all(True)
         self.assertIn("TOOL-SKEW REFUSE qwen_kvsys", "\n".join(ap.logs))
+        self.assertTrue(any("NEEDS-LANE" in msg and "refused launches" in msg for msg in ap.coord))
+
+    def test_pinned_runtime_marks_tree_skew_advisory(self):
+        from unittest.mock import patch
+        with patch.object(KW, "rt_tools_fields", return_value={"tools_rt": "/rt/path"}):
+            _, ap, _ = self.run_all(True)
+        self.assertIn("launch uses pinned runtime", "\n".join(ap.logs))
+        self.assertTrue(any("STATE" in msg and "warning" in msg for msg in ap.coord))
+        self.assertFalse(any("refused launches" in msg for msg in ap.coord))
 
 
 class LaunchGate(unittest.TestCase):
@@ -255,6 +264,8 @@ class LaunchGate(unittest.TestCase):
             rec, _, ap, _ = self.run_launch(self.setup(t, "warn"))
             self.assertIsNotNone(rec)
             self.assertEqual(len(ap.coord), 1)
+            self.assertIn("TOOL-SKEW warning", ap.coord[0][1])
+            self.assertNotIn("refused launches", ap.coord[0][1])
 
 
 if __name__ == "__main__":
