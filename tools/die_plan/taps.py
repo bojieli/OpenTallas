@@ -32,6 +32,7 @@ import math
 import os
 import re
 import sys
+from itertools import islice
 from pathlib import Path
 from threading import RLock
 
@@ -300,17 +301,22 @@ def _median(v):
     return s[n // 2] if n % 2 else 0.5 * (s[n // 2 - 1] + s[n // 2])
 
 
-def _kmedians(pts, k, iters=25):
+def _kmedian_seeds(pts):
+    """Yield the deterministic farthest-first seeds, whose prefix is independent of k."""
     cx = sum(p[0] for p in pts) / len(pts)
     cy = sum(p[1] for p in pts) / len(pts)
     seed = min(pts, key=lambda p: (abs(p[0] - cx) + abs(p[1] - cy), p))
-    cen = [seed]
+    yield seed
     dmin = [abs(p[0] - seed[0]) + abs(p[1] - seed[1]) for p in pts]
-    while len(cen) < k:
+    while True:
         i = max(range(len(pts)), key=lambda j: (dmin[j], -j))
         c = pts[i]
-        cen.append(c)
+        yield c
         dmin = [min(d, abs(p[0] - c[0]) + abs(p[1] - c[1])) for d, p in zip(dmin, pts)]
+
+
+def _kmedians(pts, k, iters=25, *, initial=None):
+    cen = list(islice(_kmedian_seeds(pts), max(1, k))) if initial is None else list(initial)
     xy = None
     if len(pts) >= 128 and all(type(x) is float and math.isfinite(x) and abs(x) < 1e100 for p in pts for x in p):
         try:
@@ -1651,8 +1657,10 @@ def sink_taps(P, tn):
     if not pts:
         raise ValueError(f"type {tn}: clock.tap_mode 'sinks' but no planned sinks (no pins / ft slots)")
     k = max(1, math.ceil(len(pts) / cap))
+    seeds = _kmedian_seeds(pts)
+    initial = list(islice(seeds, k))
     while True:
-        cen, groups = _kmedians(pts, k)
+        cen, groups = _kmedians(pts, k, initial=initial)
         taps = []
         for (x, y), g in zip(cen, groups):
             if not g:
@@ -1664,6 +1672,7 @@ def sink_taps(P, tn):
         if all(tp[3] <= R and tp[2] <= cap for tp in taps) or k >= len(pts) or k >= 256:
             break
         k += 1
+        initial.append(next(seeds))
     # one spine drop per lattice step: merge near-coincident taps
     merged = []
     for tp in sorted(taps, key=lambda q: (round(q[1], 3), round(q[0], 3))):

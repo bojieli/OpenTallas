@@ -55,3 +55,23 @@ def test_grid_sink_kmedians_vector_assignment_preserves_center_and_group_order(m
     vector = T._kmedians(points, 13)
     monkeypatch.setitem(sys.modules, "numpy", None)
     assert T._kmedians(points, 13) == vector
+
+
+def test_sink_tap_seed_prefix_matches_reseeding_each_candidate_count(monkeypatch):
+    points = [(float(x), float(y), 1) for x in (60, 120, 180, 240) for y in (60, 120, 180, 240)]
+    monkeypatch.setattr(T, "planned_sinks", lambda p, tn: points)
+    kmedians = T._kmedians
+    ks = []
+
+    def fresh(pts, k, *, initial):
+        ks.append(k)
+        return kmedians(pts, k)
+
+    a, b = plan(40.), plan(40.)
+    for p in (a, b):
+        p.types["x"]["clock"]["tap_radius_um"] = 35
+    reused = T.sink_taps(a, "x")
+    monkeypatch.setattr(T, "_kmedians", fresh)
+    assert T.sink_taps(b, "x") == reused
+    assert len(ks) > 1
+    assert ks == list(range(ks[0], ks[-1] + 1))
