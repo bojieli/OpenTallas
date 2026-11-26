@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-25 16:30 PST
+# COORD snapshot 2026-11-25 16:45 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -8,77 +8,80 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-25 15:33 PST MERGED [MERGE-QUEUE -> PUBGATE-WAVE-RUNTIME] claude/pubgate-wave-runtime-1125@248c4bc7e8e -> main 4f923957130 -> a3b9291b4c6, no-ff merge, tags flow-20261117-nm-*. Gate: gate record from civil-redfish 2026-11-25 23:32 UTC on main 4f923957130: 6 test file(s) pass; tests: test_apply_reviewed_tree_marker.py test_kit_wave.py test_publish_apply.py test_publish_gate.py test_publish_gate_g0_baseline.p
 - 2026-11-25 16:02 PST MERGED [MERGE-QUEUE -> NATIVE-SOFT-RX-G0-LIB] claude/native-soft-rx-g0-lib-1125@7b29d4448e6 -> main a3b9291b4c6 -> 8bbe6aad888, no-ff merge, tags flow-20261117-nn-*. Gate: gate record from civil-redfish 2026-11-26 00:02 UTC on main a3b9291b4c6: 47 test file(s) pass (+11 source dir(s) the tests name: physical/die_plan/hbm physical/die_plan/hbm/plan_of_record/stationfix_1111 physical/die_plan/hbm
 
-## READY/ASK with no later COORD post naming them (0, heuristic: check each)
+## READY/ASK with no later COORD post naming them (2, heuristic: check each)
+- 2026-11-25 16:32 PST READY [KV-PC-BANK P2] Whole native strict 95 types and LAT 2746/2746 PASS on plan 4209a5132888. Exact emitted ECTL RESPONSE_LAT 26 and QK_ISSUE_AGE 37 stable. K-return L2102/L2160 11 cycles stable; other six shared types unaffected. Ordinary rsp L2105 33→35 and L2163 30→32; model these two +2. No other lane latency changes. Internal pipe digest 831351059a77b86b. E12 kv-pc-bank/p2_latency_neutra
+- 2026-11-25 16:32 PST READY [KV-PC-BANK P2] Whole native strict 95 types and LAT2746/2746, no ECTL contract change. Local P2 4209a5132888 retains 2+4 fixed stations on L2102/L2160 after exact split of ES4/WN6; ordinary rsp two explicit +2 rows. A5t9 R6 as previously published candidate separately pass strict 93 and LAT2746; official pubgate running. P2 geometry-only scope and R6 composition underway.
 
 ## Lane handoff files (age) and last queue post
-- FABLE-FIX-KV-LOCKUP-INERT: handoff 403 min old; last post 2026-11-25 09:46 CLOSE
-- FAM-S81-COL-H9R0: handoff 573 min old; last post 2026-11-25 06:56 C10B-REBASE
-- FIX-TRACE-1720: handoff 1377 min old; last post none in recent queue
-- HEAD-100-unit-table-signedview: handoff 1413 min old; last post none in recent queue
-- HEAD-100-unit-table: handoff 1413 min old; last post none in recent queue
-- HEAD-EAST-REPLAN: handoff 877 min old; last post 2026-11-25 01:53 STAND-DOWN
-- HEAD-WEST: handoff 532 min old; last post 2026-11-25 14:22 DIED
-- KV-ALLFIX: handoff 1212 min old; last post 2026-11-25 14:03 DIED
-- KV-OWN-HG-R3: handoff 406 min old; last post 2026-11-25 09:43 ACK
-- KV-OWN-HUB-R2: handoff 1112 min old; last post 2026-11-25 13:39 DIED
-- KV-OWN-PV-R2: handoff 517 min old; last post 2026-11-24 23:06 DIED
-- KV-PV-FANOUT: handoff 1017 min old; last post 2026-11-24 15:44 DONE
-- KV-SENDER-SKEW: handoff 887 min old; last post 2026-11-25 03:49 RESULT
-- LEC-AUTOFILL: handoff 685 min old; last post 2026-11-25 15:55 DIED
-- PRECHECK-R3: handoff 878 min old; last post 2026-11-24 23:56 DIED
-- QC-ALLFIX-TSV: handoff 1099 min old; last post 2026-11-25 08:34 TSV-UPDATE
-- QC-ALLFIX: handoff 1323 min old; last post 2026-11-25 10:03 RULING
-- QC-BANKRST-OFF1: handoff 490 min old; last post 2026-11-25 08:43 DIED
-- QC-C1O-COMPOSE: handoff 737 min old; last post 2026-11-25 15:46 DIED
-- QC-CB-C1L: handoff 984 min old; last post 2026-11-25 00:57 DIED
-- QC-CB-PIPESEAT: handoff 1241 min old; last post 2026-11-24 15:57 DONE
-- QC-CB-SPREAD-R2: handoff 1180 min old; last post 2026-11-24 20:13 DIED
-- QC-COLLS-LEC: handoff 930 min old; last post 2026-11-24 17:19 ACK
-- QC-FEFW-FAM: handoff 915 min old; last post 2026-11-25 07:58 STATUS
-- QC-FEV1-CL08: handoff 457 min old; last post 2026-11-25 08:51 CORRECTION
-- QC-FWV1-F51: handoff 515 min old; last post 2026-11-25 07:48 DIED
-- QC-GEOM-UNITS: handoff 934 min old; last post 2026-11-25 02:29 DIED
-- QC-GLUE-IMAGES: handoff 914 min old; last post 2026-11-25 02:01 DIED
-- QC-HC0-GROW-options: handoff 388 min old; last post none in recent queue
-- QC-HC0-GROW: handoff 396 min old; last post 2026-11-25 09:48 FINDING
-- QC-NOPROG-REQ: handoff 1285 min old; last post none in recent queue
-- QC-OLDKIT-CANCEL: handoff 523 min old; last post 2026-11-25 07:46 DONE
-- QC-RC97-BT2: handoff 1265 min old; last post 2026-11-24 22:50 DIED
-- QC-RRDRV-FIX: handoff 949 min old; last post 2026-11-25 00:51 STAND-DOWN
-- QC-SLECTL-PILE: handoff 597 min old; last post 2026-11-25 06:41 DIED
-- QC-SRCTAP-C1N: handoff 1014 min old; last post none in recent queue
-- QC-STA-BTLAT3: handoff 789 min old; last post 2026-11-25 01:17 DIED
-- QC-STA-HOP: handoff 395 min old; last post 2026-11-25 08:21 DIED
-- QC-STA-PROBE: handoff 856 min old; last post 2026-11-25 07:56 DIED
-- QC-STACLK-RE: handoff 540 min old; last post 2026-11-25 07:30 STAND-DOWN
-- QC-STAV2-F436: handoff 593 min old; last post 2026-11-25 09:59 BUG
-- QC-STB-SPLIT: handoff 1311 min old; last post 2026-11-25 08:15 DIED
-- QC-STM-FAM: handoff 464 min old; last post none in recent queue
-- QC-SUC-FTSITE: handoff 487 min old; last post 2026-11-25 10:59 DIED
-- QC-SUL1-BAND: handoff 842 min old; last post 2026-11-25 04:05 DIED
-- QC-SUL1-PLACE: handoff 643 min old; last post 2026-11-25 09:10 DIED
-- QC-SUL1-SLW-GROW: handoff 393 min old; last post 2026-11-25 15:47 DIED
-- QC-SUL1-SLW-REFLOOR: handoff 512 min old; last post 2026-11-25 08:56 DIED
-- QC-TTCTLM-DEPTH: handoff 1371 min old; last post none in recent queue
-- QC-TTCTLM-PROBE: handoff 931 min old; last post 2026-11-25 01:35 DIED
-- QC-TTCTLM-S: handoff 493 min old; last post none in recent queue
-- RELEC-R2: handoff 645 min old; last post 2026-11-25 07:02 STAND-DOWN
-- ROM-WEIGHTS-1119: handoff 444 min old; last post 2026-11-25 11:33 DIED
-- S81-C9-ROWS: handoff 958 min old; last post 2026-11-25 06:24 DIED
-- S81-KVLEAF-T2-ARCH: handoff 839 min old; last post 2026-11-25 10:03 STATUS
-- S81-OWN-LEAF: handoff 993 min old; last post 2026-11-24 21:20 T26-CONG
-- S81-SVC-TIED: handoff 1352 min old; last post 2026-11-24 15:18 DONE
-- S81-WREG-PARAM: handoff 973 min old; last post 2026-11-24 22:07 GATE1
-- VIS-REOWN: handoff 413 min old; last post 2026-11-24 17:35 STRUCTURAL
+- FABLE-FIX-KV-LOCKUP-INERT: handoff 418 min old; last post 2026-11-25 09:46 CLOSE
+- FAM-S81-COL-H9R0: handoff 588 min old; last post 2026-11-25 06:56 C10B-REBASE
+- FIX-TRACE-1720: handoff 1392 min old; last post none in recent queue
+- HEAD-100-unit-table-signedview: handoff 1428 min old; last post none in recent queue
+- HEAD-100-unit-table: handoff 1428 min old; last post none in recent queue
+- HEAD-EAST-REPLAN: handoff 892 min old; last post 2026-11-25 01:53 STAND-DOWN
+- HEAD-WEST: handoff 547 min old; last post 2026-11-25 14:22 DIED
+- KV-ALLFIX: handoff 1227 min old; last post 2026-11-25 14:03 DIED
+- KV-OWN-HG-R3: handoff 421 min old; last post 2026-11-25 09:43 ACK
+- KV-OWN-HUB-R2: handoff 1127 min old; last post 2026-11-25 13:39 DIED
+- KV-OWN-PV-R2: handoff 532 min old; last post 2026-11-24 23:06 DIED
+- KV-PV-FANOUT: handoff 1032 min old; last post 2026-11-24 15:44 DONE
+- KV-SENDER-SKEW: handoff 902 min old; last post 2026-11-25 03:49 RESULT
+- LEC-AUTOFILL: handoff 700 min old; last post 2026-11-25 15:55 DIED
+- PRECHECK-R3: handoff 893 min old; last post 2026-11-24 23:56 DIED
+- QC-ALLFIX-TSV: handoff 1114 min old; last post 2026-11-25 08:34 TSV-UPDATE
+- QC-ALLFIX: handoff 1338 min old; last post 2026-11-25 10:03 RULING
+- QC-BANKRST-OFF1: handoff 505 min old; last post 2026-11-25 08:43 DIED
+- QC-C1O-COMPOSE: handoff 752 min old; last post 2026-11-25 15:46 DIED
+- QC-CB-C1L: handoff 999 min old; last post 2026-11-25 00:57 DIED
+- QC-CB-PIPESEAT: handoff 1256 min old; last post 2026-11-24 15:57 DONE
+- QC-CB-SPREAD-R2: handoff 1195 min old; last post 2026-11-24 20:13 DIED
+- QC-COLLS-LEC: handoff 945 min old; last post 2026-11-24 17:19 ACK
+- QC-FEFW-FAM: handoff 930 min old; last post 2026-11-25 07:58 STATUS
+- QC-FEV1-CL08: handoff 472 min old; last post 2026-11-25 08:51 CORRECTION
+- QC-FWV1-F51: handoff 530 min old; last post 2026-11-25 07:48 DIED
+- QC-GEOM-UNITS: handoff 949 min old; last post 2026-11-25 02:29 DIED
+- QC-GLUE-IMAGES: handoff 929 min old; last post 2026-11-25 02:01 DIED
+- QC-HC0-GROW-options: handoff 403 min old; last post none in recent queue
+- QC-HC0-GROW: handoff 411 min old; last post 2026-11-25 09:48 FINDING
+- QC-NOPROG-REQ: handoff 1300 min old; last post none in recent queue
+- QC-OLDKIT-CANCEL: handoff 538 min old; last post 2026-11-25 07:46 DONE
+- QC-RC97-BT2: handoff 1280 min old; last post 2026-11-24 22:50 DIED
+- QC-RRDRV-FIX: handoff 964 min old; last post 2026-11-25 00:51 STAND-DOWN
+- QC-SLECTL-PILE: handoff 612 min old; last post 2026-11-25 06:41 DIED
+- QC-SRCTAP-C1N: handoff 1029 min old; last post none in recent queue
+- QC-STA-BTLAT3: handoff 804 min old; last post 2026-11-25 01:17 DIED
+- QC-STA-HOP: handoff 410 min old; last post 2026-11-25 08:21 DIED
+- QC-STA-PROBE: handoff 871 min old; last post 2026-11-25 07:56 DIED
+- QC-STACLK-RE: handoff 555 min old; last post 2026-11-25 07:30 STAND-DOWN
+- QC-STAV2-F436: handoff 608 min old; last post 2026-11-25 09:59 BUG
+- QC-STB-SPLIT: handoff 1326 min old; last post 2026-11-25 08:15 DIED
+- QC-STM-FAM: handoff 479 min old; last post none in recent queue
+- QC-SUC-FTSITE: handoff 502 min old; last post 2026-11-25 10:59 DIED
+- QC-SUL1-BAND: handoff 857 min old; last post 2026-11-25 04:05 DIED
+- QC-SUL1-PLACE: handoff 658 min old; last post 2026-11-25 09:10 DIED
+- QC-SUL1-SLW-GROW: handoff 408 min old; last post 2026-11-25 15:47 DIED
+- QC-SUL1-SLW-REFLOOR: handoff 527 min old; last post 2026-11-25 08:56 DIED
+- QC-TTCTLM-DEPTH: handoff 1386 min old; last post none in recent queue
+- QC-TTCTLM-PROBE: handoff 946 min old; last post 2026-11-25 01:35 DIED
+- QC-TTCTLM-S: handoff 508 min old; last post none in recent queue
+- RELEC-R2: handoff 660 min old; last post 2026-11-25 07:02 STAND-DOWN
+- ROM-WEIGHTS-1119: handoff 459 min old; last post 2026-11-25 11:33 DIED
+- S81-C9-ROWS: handoff 973 min old; last post 2026-11-25 06:24 DIED
+- S81-KVLEAF-T2-ARCH: handoff 854 min old; last post 2026-11-25 10:03 STATUS
+- S81-OWN-LEAF: handoff 1008 min old; last post 2026-11-24 21:20 T26-CONG
+- S81-SVC-TIED: handoff 1367 min old; last post 2026-11-24 15:18 DONE
+- S81-WREG-PARAM: handoff 988 min old; last post 2026-11-24 22:07 GATE1
+- VIS-REOWN: handoff 428 min old; last post 2026-11-24 17:35 STRUCTURAL
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
-- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 29 live
-- FLEET-OPS-R agent ? last post 2026-11-25 16:25 ALERT
+- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 25 live
+- FLEET-OPS-R agent ? last post 2026-11-25 16:32 ALERT
+- KV-PC-BANK agent ? last post 2026-11-25 16:32 READY
+- SMELL-WATCH agent ? last post 2026-11-25 16:31 PLATEAU-MID
+- NOPROG-WATCHDOG agent ? last post 2026-11-25 16:30 NOTICE
 - NOPROG-FIX-1115 agent ? last post 2026-11-25 16:22 STATE
-- SMELL-WATCH agent ? last post 2026-11-25 16:18 SMELL
 - CBC-RULES-1119 agent ? last post 2026-11-25 16:17 HOURLY
 - FLEET-WATCH-1015 agent ? last post 2026-11-25 16:16 CANCELLED
-- NOPROG-WATCHDOG agent ? last post 2026-11-25 16:15 STATE
 - s81 agent ? last post 2026-11-25 16:13 KIT-WAVE
 - S81-ALLFIX-INT agent ? last post 2026-11-25 16:11 DIED
 - MERGE-QUEUE agent ? last post 2026-11-25 16:02 MERGED
@@ -92,22 +95,17 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - s81_head agent ? last post 2026-11-25 14:52 KIT-WAVE
 - KV-HOLD-STRUCT agent ? last post 2026-11-25 14:44 DIED
 - HEAD-WEST agent ? last post 2026-11-25 14:22 DIED
-- KV-PC-BANK agent ? last post 2026-11-25 14:22 DIED
 - ROM agent ? last post 2026-11-25 14:04 DIED
 - KV-ALLFIX agent ? last post 2026-11-25 14:03 DIED
 - qwen_compute agent ? last post 2026-11-25 13:58 KIT-WAVE
 - PLAN-CONFIG-DRIFT agent ? last post 2026-11-25 13:55 ALERT
 - CODEX agent ? last post 2026-11-25 13:45 BAD
-- KV-OWN-HUB-R2 agent ? last post 2026-11-25 13:39 DIED
-- FLOW-HEALTH-1 agent ? last post 2026-11-25 13:37 NEEDS-ACTION
-- KIT-WAVE agent ? last post 2026-11-25 13:36 NEEDS-LANE
-- PRECHECK-1119 agent ? last post 2026-11-25 13:35 PLACE-PRECHECK
 
 ## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kit
 
 ## Failure breakdown (tools/failure_breakdown.py)
-## FAILURES · unsigned cores and types by class (auto, 2026-11-25 16:30 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-25 16:45 PST)
 count_hourly: signed any plan 605 | current plan 487 | deferred re-sign 21 (hbm 1, head 10, qc 7, s81 3) | retired-plan 97 (head 2, kv 13, qc 53, s81 29)
 - [ ] FAIL.S81.CORES 72/72 signed · open: none
 - [ ] FAIL.S81.TYPES 48/394 signed · kit rows: held by die owner (plan event pending) 296 (bk_sel__t2, +295) · cancelled (superseded) 48 (col_h10_r0_p1__t1__cl911743eb, +47)
@@ -121,14 +119,14 @@ count_hourly: signed any plan 605 | current plan 487 | deferred re-sign 21 (hbm 
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 2 current-event (+4 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.S81 1 (cores 0, types 1) · by owner: FAIL-S81-1 1
-  - type iqf__t1 · CANCELLED  STRUCT-STOP @ 2026-11-22 08:57 (79.6h) · owner FAIL-S81-1
+  - type iqf__t1 · CANCELLED  STRUCT-STOP @ 2026-11-22 08:57 (79.8h) · owner FAIL-S81-1
 - [ ] STALE.QC 3 (cores 0, types 3) · by owner: KIT-WAVE-1 1, FAM-QC-FEFW-R3 1, unowned 1
-  - type slw_fe_v2__clf110fab2 · FAIL kit_topology UNCLASSIFIED @ 2026-11-24 10:33 (30h) · owner FAM-QC-FEFW-R3
-  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (28.8h) · owner unowned
-  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (28.7h) · owner KIT-WAVE-1
+  - type slw_fe_v2__clf110fab2 · FAIL kit_topology UNCLASSIFIED @ 2026-11-24 10:33 (30.2h) · owner FAM-QC-FEFW-R3
+  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (29.1h) · owner unowned
+  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (28.9h) · owner KIT-WAVE-1
 - [ ] STALE.KV 2 (cores 1, types 1) · by owner: OPUS-FIX-KV-PV-R7 1, FAM-KV-HUBC-SYSC-R2 1
   - core kv3_pv_pair#380.16x190.08/c9cb3c7d41ae4f43 · no kit-wave row · owner OPUS-FIX-KV-PV-R7
-  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (43.6h) · owner FAM-KV-HUBC-SYSC-R2
+  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (43.8h) · owner FAM-KV-HUBC-SYSC-R2
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
 - TOOLS-LAG qwen_compute 779 commits / missing none (tree tools by design: tools_from_rt false)
 - TOOLS-LAG qwen_kvsys 289 commits / missing none
@@ -143,58 +141,49 @@ count_hourly: signed any plan 605 | current plan 487 | deferred re-sign 21 (hbm 
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
     HOST-REPORT 2026-11-25 16:05 | tolera L17.92/112 units0 free708G | key-ca L89.96/112 units26 free411G | dear-c L20.92/128 units5 free98G | loved- L62.25/96 units17 free212G | outgoi L51.62/96 units13 free392G | renewe L176.26/96 units35 free923G | civil- L10.63/96 units6 free438G | viable L104.94/96 units26 free1247G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (239.9 h
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  325G  120G  74% /
-    16:30:18 up 32 days, 12:10, 171 users,  load average: 18.57, 15.58, 16.21
+    16:45:18 up 32 days, 12:25, 172 users,  load average: 28.10, 24.68, 21.76
 
 ## ot-run status
-    ot-run status: epyc2 admits 740 GB (avail 793, reserve 0, fresh 0, peak 6.3) load 19/128 run 5 threads 60/128 root 96% scratch 95 GB
-    intel1 admits 228 GB (avail 559, reserve 0, fresh 0, peak 39.3) load 86/112 run 24 threads 228/112 root 55% scratch 403 GB
-    localhost admits 755 GB (avail 885, reserve 0, fresh 0, peak 45.2) load 19/112 run 2 threads 94/112 root 74% scratch 750 GB
-    epyc7 admits 515 GB (avail 649, reserve 0, fresh 0, peak 4.9) load 47/96 run 17 threads 226/96 root 33% scratch 188 GB
-    epyc8 admits 560 GB (avail 654, reserve 0, fresh 0, peak 67.7) load 38/96 run 14 threads 286/96 root 47% scratch 383 GB
-    epyc9 admits 51 GB (avail 289, reserve 0, fresh 0, peak 0) load 170/96 waiters 79:3729 GB oldest 0.1 h run 33 threads 311/96 LOADCAP root 41% scratch 924 GB
-    epyc10 admits 813 GB (avail 905, reserve 0, fresh 0, peak 98.8) load 10/96 run 4 threads 362/96 root 54% scratch 434 GB
-    epyc11 admits 652 GB (avail 766, reserve 0, fresh 0, peak 2.6) load 103/96 run 26 threads 268/96 root 6% scratch 1189 GB
-    epyc12 admits 620 GB (avail 706, reserve 0, fresh 0, peak 238.4) load 49/96 waiters 1:48 GB oldest 0.0 h run 26 threads 149/96 root 34% scratch 3165 GB
+    ot-run status: epyc2 admits 739 GB (avail 793, reserve 0, fresh 0, peak 6.3) load 18/128 run 5 threads 60/128 root 95% scratch 95 GB
+    intel1 admits 208 GB (avail 544, reserve 0, fresh 0, peak 39.2) load 80/112 run 24 threads 228/112 root 55% scratch 403 GB
+    localhost admits 756 GB (avail 884, reserve 0, fresh 0, peak 45.2) load 28/112 run 2 threads 94/112 root 74% scratch 728 GB
+    epyc7 admits 527 GB (avail 645, reserve 0, fresh 0, peak 4.9) load 45/96 run 17 threads 226/96 root 33% scratch 176 GB
+    epyc8 admits 641 GB (avail 779, reserve 0, fresh 0, peak 24.6) load 35/96 run 11 threads 270/96 root 47% scratch 385 GB
+    epyc9 admits 13 GB (avail 274, reserve 0, fresh 0, peak 0) load 185/96 waiters 77:3633 GB oldest 0.1 h run 33 threads 311/96 LOADCAP root 41% scratch 921 GB
+    epyc10 admits 805 GB (avail 902, reserve 0, fresh 0, peak 83.4) load 10/96 run 4 threads 338/96 root 54% scratch 434 GB
+    epyc11 admits 522 GB (avail 760, reserve 0, fresh 0, peak 214.7) load 82/96 run 26 threads 268/96 root 6% scratch 1177 GB
+    epyc12 admits 653 GB (avail 754, reserve 0, fresh 0, peak 60.3) load 60/96 waiters 6:264 GB oldest 0.0 h run 21 threads 129/96 root 34% scratch 3100 GB
     next 16-thread 32 GB job -> epyc2
-    ot-run status: BLOCKED 1364 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1357 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1327 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1310 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1293 min - /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_r0_p1__t1__cl
-    ot-run status: BLOCKED 1282 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1275 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1267 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1267 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1258 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1244 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1232 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
-    ot-run status: BLOCKED 1222 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1199 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl
-    ot-run status: BLOCKED 1190 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_
-    ot-run status: BLOCKED 1180 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1137 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
-    ot-run status: BLOCKED 1123 min - /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl_leaf__t5_112
-    ot-run status: BLOCKED 1070 min KV-OWN-PV-R2 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-OWN-PV-R2/kv3
-    ot-run status: BLOCKED 1054 min QC-NOPROG-REQ /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private
+    ot-run status: BLOCKED 1379 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1372 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1342 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1325 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1308 min - /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_r0_p1__t1__cl
+    ot-run status: BLOCKED 1297 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1290 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1282 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1282 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1273 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1259 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1247 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
+    ot-run status: BLOCKED 1237 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1214 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl
+    ot-run status: BLOCKED 1205 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_
+    ot-run status: BLOCKED 1195 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1152 min S81-ALLFIX-INT /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r
+    ot-run status: BLOCKED 1138 min - /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/ot_s81sl_leaf__t5_112
+    ot-run status: BLOCKED 1085 min KV-OWN-PV-R2 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-OWN-PV-R2/kv3
+    ot-run status: BLOCKED 1069 min QC-NOPROG-REQ /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-25 16:23:15 PST AUTOPILOT: KIT-WAVE PLAN-ROWS s81_head: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
-    2026-11-25 16:23:45 PST AUTOPILOT: KIT-WAVE LAUNCH-REFUSED qwen_compute/slw_hc2__cl6bcaba89: LBL-FAIL: lanes/VIS-COVERAGE.tsv row slw_hc2 (variant sibling) is FAIL: no relaunch / first attempt until i
-    2026-11-25 16:23:45 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/sle_fe_v1__cl8210183c: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for sle_fe_v1__cl8210183c: not held [+5 identical line(s) in the last h
-    2026-11-25 16:23:45 PST AUTOPILOT: KIT-WAVE LAUNCH-REFUSED qwen_compute/sle_fe_v1__cl8210183c: DESIGN-SAME-INPUT: attempt 1 ended ROUTING (drt-nopath: drc 0 DRT-NOPATH net u_bound.x_fw_o_is0_q\[500\]:
-    2026-11-25 16:23:49 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-25 16:24:10 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 9: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 75.5 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 75.2 
+    2026-11-25 16:42:47 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/slw_hc3__clccfc3e6b__pvcca9ff41: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for slw_hc3__clccfc3e6b__pvcca9ff41: not held [+6 identical l
+    2026-11-25 16:42:47 PST AUTOPILOT: KIT-WAVE LAUNCH-HELD qwen_compute/slw_hc3__clccfc3e6b__pvcca9ff41: CAUSE-CAP [owner DIE-QC-103]: attempt 2 failed on INFRA|geom|infra-stopped: exit N, no OOM line in
+    2026-11-25 16:42:47 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/slw_hc3__cld86a7ad4__pv6c2c33ed: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for slw_hc3__cld86a7ad4__pv6c2c33ed: not held [+6 identical l
+    2026-11-25 16:42:47 PST AUTOPILOT: KIT-WAVE LAUNCH-HELD qwen_compute/slw_hc3__cld86a7ad4__pv6c2c33ed: CAUSE-CAP [owner DIE-QC-103]: attempt 1 failed on INFRA|geom|infra-stopped: exit N, no OOM line in
+    2026-11-25 16:42:48 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-25 16:43:09 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 9: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 75.8 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 75.5 
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-25 15:17 PST DIED [QC-SUL1-SLW-GROW] ot-run oth-ubuntu-2195093-1795647465 on civil-redfish: rc=1 after 1189 s, ended 23:17:32, log none, cmd: --hosts epyc10 --mem 60 --threads 8 --disk 8 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/QC-SUL1-SLW-GROW/out2/col | class=NO-PATTERN cause=rc 1 after 1189 s, no log
-- 2026-11-25 15:20 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-3927537-1795646008 on open-snipe: rc=1 after 2827 s, ended 23:20:34, log none, cmd: --hosts epyc12 --mem 152 --threads 20 --disk 22 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/s81-allfix-int/compose | class=NO-PATTERN cause=rc 1 after 2827 s, no log
-- 2026-11-25 15:22 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-760652-1795648928 on open-snipe: rc=1 after 5 s, ended 23:22:11, log /srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/combined_ros_1125/run.otrun.log, cmd: --hosts epyc12 --mem 145 --threads 10 --disk 28 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/s81-allfix-int/compose | class=NO-PATTERN cause=ule': 's81p
-- 2026-11-25 15:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-25 15:22 PST: 141 running jobs, PROGRESSING 122, PLATEAU 4, SLOW 13, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
-- 2026-11-25 15:23 PST CODEX [S81-ALLFIX-INT -> TOKEN; cc TOK-DS] C10b R10 plan 6c46b720132d corrects actual existing ROS3 at unit_i0 on LEP s_7N_LP and s_7S_LP. Exact R9 emitted RTL replay LAT 947/947 with R10 price; actual seqhost unit paths 84->87 and 53->56. No hardware stages changed. Native whole R10 strict replay active. Inherited internal-pipe digest 1449a3bed7eafe7c remains for compiler/token pricing.
-- 2026-11-25 15:23 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 10 event(s): slice_station__t21 AUTO-GEOM PASS, ROUTE held: KPG-PROBE: hand-proven rule(s) FP:REACH (FLOW-0730 F9): place-only probe until the flag clears (place-only probe; routes when the flag clears, the pilot signs, or the fleet idles); slice_station__t22 AUTO-GEOM PASS, ROUTE held: KPG-PROBE: hand-proven rule(s) FP:REACH (FLOW-0730 F9): place-o
-- 2026-11-25 15:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 54 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
-- 2026-11-25 15:25 PST DIED [S81-ALLFIX-INT] ot-run oth-ubuntu-1136364-1795624004 on tolerant-swine: rc=6 after 72880 s, ended 15:24:50, log /home/ubuntu/tmp/s81int/c8s/spec_col_h10_r0_p4__t1__pvd8c0565f/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h10_ | class=DESIGN-FAIL cause=OT_POSTCTS_GATE FF (globa
-- 2026-11-25 15:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-plan-r6 on intel1 wrote 49 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 15:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 60 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 15:26 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on intel1 wrote 66 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
 - 2026-11-25 15:30 PST NOTICE [NOPROG-WATCHDOG -> ABSTRACT-EXACT] NO-PROGRESS on your own kit /srv/opentallas-scratch2/claude/abstract-exact/wt/tools/die_plan (epyc12 oth-ubuntu-3475665-1795605556 run, job 12.2 h): no new non-iteration log line for 12.2 h; last meaningful line 12.2 h ago (1/1 lines). Not cancelled (lane-own kit, COORD 11-22): cancel it yourself with ot-run --cancel <unit> if it cannot sign, or post K
@@ -246,4 +235,13 @@ count_hourly: signed any plan 605 | current plan 487 | deferred re-sign 21 (hbm 
 - 2026-11-25 16:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 52 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 16:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-plan-r6 on intel1 wrote 49 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-25 16:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 35 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-25 16:30 PST NOTICE [NOPROG-WATCHDOG -> QC-GLUE-IMAGES] NO-PROGRESS on your own kit /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-GLUE-IMAGES/native59_1125013719/gen/native59 (epyc12 oth-ubuntu-400403-1795637046 pregrt_ff_hold, job 4.4 h): repair_TNS best 45620.6 vs 45620.6 before window: < 2 % in 2 h; repair_TNS best 45620.6 last 45620
+- 2026-11-25 16:30 PST SMELL [SMELL-WATCH -> FP-CONVERGE-QC, QC-C1O-COMPOSE; cc QC-ALLFIX] 1 kit-class(es): sle_sc_v3 5_2_route [DRT] epyc8: fell < 70 % from iteration 3 to 6: 1278 -> 667; render epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-C1O-COMPOSE/sle_sc_v3_1125084137/gen/sle_sc_v3/smell_review/5_2_route-1126-0030 (rendering). Early t
+- 2026-11-25 16:30 PST SMELL [SMELL-WATCH -> FP-CONVERGE-S81, S81-ALLFIX-INT; cc S81-ALLFIX-INT] 1 kit-class(es): col_h9_r2__t1__clce45cab5__pv8b5a5980 5_2_route [DRT] epyc9: iteration-3 violations 4050 (> 1500); render epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/col_h9_r2__t1__clce45cab5__pv8b5a5980_1124152244/gen/col_h9_r2__t1__clce45cab5__pv8b5a598
+- 2026-11-25 16:31 PST PLATEAU-MID [SMELL-WATCH -> FP-CONVERGE-S81, S81-ALLFIX-INT; cc COORD] 1 kit(s), report-only: col_h9_r2__t1 epyc9 oth-ubuntu-4066423-1795582232: DRT plateau at 392 violations (5 iterations < 2 % change)
+- 2026-11-25 16:30 PST STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: 12 flagged of 118 containers {'UNSIGNABLE': 3, 'NO-PROGRESS': 6, 'GRT-LABEL': 3, 'YOUNG': 77, 'NO-DATA': 13, 'PROGRESS': 16}; full table lanes/NOPROG-TABLE.md; flagged: epyc10 kv3_hg_v1p3__r838481cd7 tt_setup_repair_grt [UNSIGNABLE: tt_setup_repair_grt.log latest setup WNS -903.90 ps (< -300,] UNSIGNABLE (hub: ot-run --ca; epyc12 native59 preg
+- 2026-11-25 16:30 PST NOTICE [NOPROG-WATCHDOG -> QC-GLUE-IMAGES] NO-PROGRESS on your own kit /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-GLUE-IMAGES/native59_1125013719/gen/native59 (epyc12 oth-ubuntu-400403-1795637046 pregrt_ff_hold, job 4.4 h): repair_TNS best 45620.6 vs 45620.6 before window: < 2 % in 2 h; repair_TNS best 45620.6 last 45620
+- 2026-11-25 16:32 PST READY [KV-PC-BANK P2] Whole native strict 95 types and LAT 2746/2746 PASS on plan 4209a5132888. Exact emitted ECTL RESPONSE_LAT 26 and QK_ISSUE_AGE 37 stable. K-return L2102/L2160 11 cycles stable; other six shared types unaffected. Ordinary rsp L2105 33→35 and L2163 30→32; model these two +2. No other lane latency changes. Internal pipe digest 831351059a77b86b. E12 kv-pc-bank/p2_latency_neutra
+- 2026-11-25 16:32 PST READY [KV-PC-BANK P2] Whole native strict 95 types and LAT2746/2746, no ECTL contract change. Local P2 4209a5132888 retains 2+4 fixed stations on L2102/L2160 after exact split of ES4/WN6; ordinary rsp two explicit +2 rows. A5t9 R6 as previously published candidate separately pass strict 93 and LAT2746; official pubgate running. P2 geometry-only scope and R6 composition underway.
+- 2026-11-25 16:32 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: scratch3:kw45 on epyc2 wrote 59 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
 
