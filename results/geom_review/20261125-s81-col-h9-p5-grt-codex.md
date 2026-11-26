@@ -1,0 +1,5 @@
+# S81 COL H9 P5 exact GRT, E11 21:45 checkpoint
+
+**Fix first for new routes.** Viewed the exact floorplan, density and propagated timing overlay from E11 .../col_h9_r0_p5__t1__pvb22875c0/vis_review/grt-1125-2145PST. Two ROM rows create long east-west walls. The path overlay shows a lower-bank loop at the center slot and a separate compact northeast XO lobe against the edge. Actual local density 0.986, largest lobe 109 bins/10,900 µm², 53,490 instances near (1406,1094). GRT reports 23,759 cells above 90% demand.
+
+The old −13,934.2 ps alert used ideal placement RC. Exact snapshot from the same kit contains the 5_1 GRT SDC, 26 loaded Libs, propagated clocks and global-routing parasitics. Worst setup −87.862 ps, mainly local xo_i0 control/wrap. Worst available stage hold −91.677 ps uses the TT libs and is diagnostic. Lower-wall detour and east bank concentration are separate contributors. Keep existing pilot as evidence. Next compare an XO bank inset and the lower center aperture against the current COL owner geometry. No new route authorized.
