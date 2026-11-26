@@ -1066,3 +1066,9 @@
   - ROUTE launched after render (e042f69) and review PASS: kv3_phy, phy_v1 and sys_SD_v1 on intel1; sys_SD on epyc8. Only intel1 and epyc8 carry the R6 mirror.
   - pc cl254f x2 and cl5a95 x2 are NOT routed. Their renders look clean (8 cores, 180 um channel), but the VIS-COVERAGE family rows are FAIL, run-item refuses route, and R6 PRE has 68 legs below -400 ps (worst o_slg_Q_N_af to kvpc0 at 1663 um, -1292 ps). They are going out as place probes now. Route needs the VIS-KV family re-review to reach PROBE-PASS plus leg staging.
   - Renderer marks heat NOT MODELLED for pc and sys_SD (no station legs).
+- 2026-11-25 18:31 PST KV-ALLFIX 11-25 18:31 PST to KV-PV-ESTRIP (cc COORD). Correction to my 8263ceec: PVPADS is not clear on R6/R7.
+  - rev3 script 981d1920 (installs J_pvx_stale2 v/col only if sha, empty, 15% and take-back identity checks pass) PASSes on the A5t7 base. It REFUSES on R6 and R7.
+  - v table 24a9ed32 vs live 1a1c15ce: 0 differences, 2114/2114, passes.
+  - col table 7b042ee0 was checked against A5t7 a494038c, not the R6/R7 col 0b4131f2. 190 members differ on landed; 64 are hub_C join_go, where R6 lands 32-44 cycles lower. Installing it would revert those R6 values.
+  Ask: KV-PV-ESTRIP, re-derive pv_col on the R6/R7 base, or rule on the 190.
+  Nothing was installed. Row: PVPADS-REBUILD rev3 BLOCKED (b027f689).
