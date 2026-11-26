@@ -437,9 +437,10 @@ def _perbit_type(regs, leaf=(430.0, 780.0), n_bits=8):
                                    "regs_um": regs, "to_um": list(leaf)}]}
 
 
-def test_reach_per_bit_ignores_regs_um_like_the_kit():
+def test_reach_per_bit_ignores_regs_um_like_the_kit(monkeypatch):
     """HEAD-INT-R2 F1 (P-FALSE-GREEN): the kit seats per_bit stations from pin / leaf_um / count only.  Re-seating regs_um must not
-    change the verdict (it did: lean 598.5 / 756 false red, then a reseat turned it green with identical placed sites)."""
+    change the verdict (it did: lean 598.5 / 756 false red, then a reseat turned it green with identical placed sites).  Opt-in."""
+    monkeypatch.setenv("OT_PERBIT_REACH", "1")
     far = _perbit_type([[457.5, 760.0]] * 4)
     near = _perbit_type([[1100.0, 1000.0]] * 4)
     a, b = PC.reach_findings(far, 405, margin=1.0), PC.reach_findings(near, 405, margin=1.0)
@@ -451,6 +452,7 @@ def test_reach_per_bit_mutant_old_reading_disagrees_with_kit(monkeypatch):
     """MUTANT: the old regs_um reading (OT_PERBIT_REACH=0) gives a different, kit-blind answer; the default agrees with the kit model
     taps.per_bit_station_sites (placed stations) on the worst hop."""
     import taps
+    monkeypatch.setenv("OT_PERBIT_REACH", "1")                          # opt-in (default OFF, COORD 11-26)
     t = _perbit_type([[457.5, 760.0]], leaf=(100.0, 1000.0))     # 1 station: kit hop = L/2
     pins = [("be_i", b, "be_i[%d]" % b, 1442.88, 504.26 + 72.0 * b, "E") for b in range(8)]
     sites = taps.per_bit_station_sites(t, pins)
@@ -471,3 +473,14 @@ def test_reach_per_bit_other_forms_unchanged():
     t = _perbit_type([[457.5, 760.0]])
     del t["internal_stations"][0]["bit_route"]
     assert PC.reach_findings(t, 405, margin=1.0)                           # no bit_route: regs_um chain, 1442.88-457.5+... > 405
+
+
+def test_reach_per_bit_default_off_keeps_regs_um_reading(monkeypatch):
+    """COORD 11-26: OT_PERBIT_REACH defaults OFF (packed_input_delay and knee-split mismatches with the kit): unset == the old
+    regs_um reading; only OT_PERBIT_REACH=1 opts in to the per_bit model."""
+    monkeypatch.delenv("OT_PERBIT_REACH", raising=False)
+    off = PC.reach_findings(_perbit_type([[0, 0]] * 2), 405, margin=1.0)
+    monkeypatch.setenv("OT_PERBIT_REACH", "0")
+    assert PC.reach_findings(_perbit_type([[0, 0]] * 2), 405, margin=1.0) == off
+    monkeypatch.setenv("OT_PERBIT_REACH", "1")
+    assert PC.reach_findings(_perbit_type([[0, 0]] * 2), 405, margin=1.0) != off

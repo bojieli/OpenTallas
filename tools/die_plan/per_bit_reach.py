@@ -9,7 +9,14 @@ centroids; placed be_i max 332.1 um).  Chosen source of truth = the KIT (placed 
 the checks replace regs_um by the kit rule via per_bit_hops().
 
 per_bit_hops(e, bus, w, h) -> [hop um] (n+1 equal path hops of the worst pin window end <-> leaf_um), or None when the
-entry is not a FIRM per_bit chain (the caller keeps its regs_um chain).  OT_PERBIT_REACH=0 restores the old regs_um reading."""
+entry is not a FIRM per_bit chain (the caller keeps its regs_um chain).
+
+DEFAULT OFF (COORD ruling 11-26, FABLE-INDEP review): the model is not yet the kit model.  (1) packed_input_delay per_bit
+entries are seated at regs_um by kit_istations.py (QC sle_ctl istations.tcl matches the plan regs_um), but applies() has no packed
+exclusion -> QC C9 431.9 read as 299.4 (false green); (2) the kit is_knee_site splits the n+1 edges over the normal and along legs,
+while L/(n+1) is the stale taps.per_bit_station_sites rule (same row: kit 419.2, check 299.4).  OT_PERBIT_REACH=1 opts in.
+Re-enable only with a packed exclusion, a knee rule shared with the kit code, tests on a real istations.tcl, a flip census with
+every placed hop < 405 um and a GOOD independent review."""
 import os
 
 
@@ -19,7 +26,7 @@ def _man(a, b):
 
 def applies(e, bus):
     """True when the kit places this entry per bit (mirrors taps.per_bit_station_sites / kit_istations.is_bits)."""
-    if os.environ.get("OT_PERBIT_REACH", "1") == "0":
+    if os.environ.get("OT_PERBIT_REACH", "0") != "1":
         return False
     return bool(e.get("bit_route") == "per_bit" and str(e.get("conn", "")).startswith("bus:") and e.get("leaf_um")
                 and e.get("regs_um") and not e.get("bit_sites_um") and not e.get("start_core")
