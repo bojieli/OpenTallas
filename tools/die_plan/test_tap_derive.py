@@ -34,3 +34,21 @@ def test_cut_derives_only_geometry_matched_native_bins(tmp_path):
     names = [row["name"] for row in tile["clock"]["taps"]]
     assert names == ["clk"] + [f"clk_t{i}" for i in range(1, len(names))]
     assert tap_derive.derive(*args)[0] == []
+
+
+def test_manifest_builder_feeds_derive(tmp_path):
+    import tap_manifest_build
+    tile = dict(outline_um=[400, 400], buses=[], clock=dict(
+        tap_mode="explicit", taps=[dict(name="clk", xy=[200, 200])]))
+    raw = dict(die=dict(name="test", outline_um=[400, 400], reach_um=405),
+               partition_types={"T": tile}, partitions=[dict(name="p0", type="T")],
+               ports=[], lanes=[])
+    lines = [f"clk\tu_{i}\tDFF\t{125 + (i % 2) * 150}.0\t{125 + (i % 3) * 70}.0" for i in range(7000)]
+    lines += ["clk\tu_station_x\tDFF\t10.0\t10.0"]
+    tsv = tmp_path / "sinks.tsv"
+    tsv.write_text("\n".join(lines) + "\n")
+    manifest = tap_manifest_build.build(raw, tmp_path / "m", {"T": tsv})
+    assert manifest["T"]["footprint_basis"] == "current-plan"
+    selected, report = tap_derive.derive(raw, tmp_path / "plan.json", tmp_path, tmp_path / "m" / "manifest.json")
+    assert selected == ["T"]
+    assert report["T"]["max_sinks_before"] > 5000 >= report["T"]["max_sinks_after"]

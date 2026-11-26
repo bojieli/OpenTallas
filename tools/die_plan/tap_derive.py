@@ -95,7 +95,7 @@ def _plan_type(raw, plan, tn, manifest, entry, bins_dir, tree, cap, target, span
 
     native_sha = hashlib.sha256(bins_bytes).hexdigest()
     native_copy = bins_dir / f"{tn}__native_{native_sha[:16]}.json"
-    doc, composition = compose_bins(raw, tn, native, str(native_copy.relative_to(tree)), native_sha)
+    doc, composition = compose_bins(raw, tn, native, os.path.relpath(native_copy, tree), native_sha)
     sites = schema.tap_grid(plan, tn) if mode == "density" else tap_split.type_taps(
         schema, plan, clock, tn
     )[0]
@@ -130,16 +130,20 @@ def _plan_type(raw, plan, tn, manifest, entry, bins_dir, tree, cap, target, span
         bins_file = bins_dir / f"{tn}__{digest}.json"
         _publish_bins(native_copy, bins_bytes)
         _publish_bins(bins_file, content.encode())
-        proposed["sink_bins_file"] = str(bins_file.relative_to(tree))
+        proposed["sink_bins_file"] = os.path.relpath(bins_file, tree)
     tile["clock"] = proposed
     return dict(report, status="derive", new_taps=len(new_sites) if new_sites is not None else None), True
 
 
-def derive(raw, plan_path, tree, manifest, *, cap=5000, target=1000, span=300.0):
+def derive(raw, plan_path, tree, manifest, *, cap=5000, target=1000, span=300.0, bins_dir=None):
     """Apply eligible tap derivations and return the types and per-type diagnostics."""
     plan_path, tree, manifest = Path(plan_path), Path(tree).resolve(), Path(manifest).resolve()
-    bins_dir = (plan_path.resolve().parent / "sink_bins" / "tap_derive").resolve()
-    bins_dir.relative_to(tree)
+    # a proof run may publish composed bins outside the (shared, read-only) tree; the plan then names them relative to it
+    if bins_dir:
+        bins_dir = Path(bins_dir).resolve()
+    else:
+        bins_dir = (plan_path.resolve().parent / "sink_bins" / "tap_derive").resolve()
+        bins_dir.relative_to(tree)
     entries = json.loads(manifest.read_text())
     if not isinstance(entries, dict):
         raise ValueError("expected a type-to-placed-bins manifest")
