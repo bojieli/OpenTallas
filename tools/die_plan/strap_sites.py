@@ -11,8 +11,12 @@ strap_u_t_<X>_<Y>_tile_id (consumer = hard core u_t<X><Y>, pin tile_id[i]):
 A strap whose current sites are all within NEAR_UM (Manhattan) of the consumer pins is left alone (t22 in the cb family).
 Output rows JSON (type -> strap -> {face, sites_um, before_um, after_um}) + a crossers table: the 2-pin-net macro-crossing count of the
 class before / after by the same bbox test the kit's macro_cross_check.tcl uses (> 300 um, a leg over a macro interior).
-python3 -I tools/die_plan/strap_sites.py PLAN.json --out DIR [--types a,b] [--type-re '^cb']"""
+python3 -I tools/die_plan/strap_sites.py PLAN.json --out DIR [--types a,b] [--type-re '^cb']
+Pass --placed-count-census TSV with one type to price measured CA ring count straps. This mode retains unaffected bits and values.
+"""
 import argparse
+import csv
+import math
 import json
 import re
 import sys
@@ -140,15 +144,134 @@ def site_type(P, tn, plan_dir):
     return rows, before, after, skipped
 
 
+def read_count_census(path):
+    """Native BTerm and first non-buffer sink coordinates for one placed type."""
+    rows = {}
+    with Path(path).open() as stream:
+        for row in csv.DictReader(stream, delimiter="\t"):
+            name = row["port"].replace("\\", "")
+            xy = float(row["port_x"]), float(row["port_y"])
+            placed, sinks = rows.setdefault(name, (xy, []))
+            if placed != xy or not all(map(math.isfinite, xy)):
+                raise ValueError(f"inconsistent placed coordinate for {name}")
+            if row["x"]:
+                target = float(row["x"]), float(row["y"])
+                if not all(map(math.isfinite, target)):
+                    raise ValueError(f"invalid sink coordinate for {name}")
+                sinks.append(target)
+    return rows
+
+
+def _l1(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def _opposite_face(site, sinks, width, height):
+    x, y = site
+    cx = sum(p[0] for p in sinks) / len(sinks)
+    cy = sum(p[1] for p in sinks) / len(sinks)
+    edges = [(y, (cy - y) / height), (height - y, (y - cy) / height),
+             (x, (cx - x) / width), (width - x, (x - cx) / width)]
+    edge, reach = min(edges, key=lambda item: item[0])
+    return edge < 20.0 and reach > 0.60
+
+
+def site_placed_count_straps(P, tn, census):
+    """Re-site only measured opposite-face bits of parent-tied CA ring K straps."""
+    t = P.types[tn]
+    width, height = t["outline_um"]
+    moving = []
+    for strap in t.get("count_straps") or []:
+        if not strap["name"].startswith("strap_ca_k_") or not strap.get("sites_um"):
+            continue
+        bits = []
+        for bit, expected in enumerate(strap["sites_um"]):
+            name = f"{strap['name']}[{bit}]"
+            if name not in census:
+                continue
+            site, sinks = census[name]
+            if not sinks or not _opposite_face(site, sinks, width, height):
+                continue
+            snapped = LC.on_track(P, strap["layer"], *expected)
+            if _l1(site, snapped) > 1.08:
+                raise ValueError(f"{tn}: {name} census does not match the planned strap site")
+            bits.append((bit, site, sinks))
+        if bits:
+            moving.append((strap, bits))
+
+    ck = t.get("clock") or {}
+    taken = [p["xy_um"] for p in (ck.get("landing_contract") or {}).get("pins", []) if p.get("xy_um")]
+    taken += [p["xy"] for p in (ck.get("taps") or []) + (ck.get("added_taps") or []) if p.get("xy")]
+    for sp in (t.get("id_straps") or []) + (t.get("count_straps") or []) + (t.get("reset_spine_pins") or []):
+        taken.extend(sp.get("sites_um") or [])
+    taken.extend((t.get("reset") or {}).get("local_taps_um") or [])
+    hard = [_bbox(c) for c in (t.get("hard_cores") or []) + (t.get("contents") or [])
+            if c.get("origin_um") and c.get("outline_um")]
+    fixed = list(ck.get("keepouts_um") or [])
+    for site in ck.get("reserved_sites_um") or []:
+        if isinstance(site, dict):
+            fixed.extend(filter(None, (site.get("rect_um"), *(site.get("stack_um") or []))))
+    blocked = hard + fixed
+    pitch = LC.SEPARATE_STEP_UM
+
+    def clear(site):
+        x, y = site
+        return (5.0 < x < width - 5.0 and 5.0 < y < height - 5.0
+                and not any(a - 1.08 <= x <= c + 1.08 and b - 1.08 <= y <= d + 1.08
+                            for a, b, c, d in blocked)
+                and all(_l1(site, old) >= 1.8 for old in taken))
+
+    def score(sites, bits):
+        lengths = [_l1(site, target) for site, (_, _, sinks) in zip(sites, bits) for target in sinks]
+        return max(lengths), sum(lengths)
+
+    out, skipped = {}, []
+    for strap, bits in moving:
+        points = [p for _, _, sinks in bits for p in sinks]
+        cx, cy = tuple((min(p[i] for p in points) + max(p[i] for p in points)) / 2 for i in (0, 1))
+        depth = (len(bits) - 1) / 2
+        before, _ = score([xy for _, xy, _ in bits], bits)
+        choices = []
+        for dx in range(-7, 8):
+            for dy in range(-10, 11):
+                sites = [LC.on_track(P, strap["layer"], round(cx + 2 * pitch * dx, 4),
+                                     round(cy + pitch * (dy + i - depth), 4))
+                         for i in range(len(bits))]
+                if len(set(sites)) == len(sites) and all(map(clear, sites)):
+                    choices.append((score(sites, bits), sites))
+        if not choices or min(choices)[0][0] >= before:
+            skipped.append((strap["name"], "no collision-free site column with shorter reach"))
+            continue
+        (after, _), sites = min(choices)
+        proposed = list(strap["sites_um"])
+        for (bit, _, _), site in zip(bits, sites):
+            proposed[bit] = list(site)
+        taken += sites
+        out[strap["name"]] = dict(sites_um=proposed, moved_bits=[bit for bit, _, _ in bits],
+                                 max_before_um=round(before, 3), max_after_um=round(after, 3))
+    return out, skipped
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan")
     ap.add_argument("--out", required=True)
     ap.add_argument("--types", default="")
     ap.add_argument("--type-re", default=r"^cb[nfx]_")
+    ap.add_argument("--placed-count-census", help="exact placed CA strap BTerm/sink TSV for one --types name")
     a = ap.parse_args(argv)
     P = S.Plan(S.load(a.plan))
     plan_dir = Path(a.plan).resolve().parent
+    if a.placed_count_census:
+        if not a.types or a.types not in P.types:
+            ap.error("--placed-count-census requires one exact type name in --types")
+        rows, skipped = site_placed_count_straps(P, a.types, read_count_census(a.placed_count_census))
+        od = Path(a.out)
+        od.mkdir(parents=True, exist_ok=True)
+        (od / "strap_rows_count.json").write_text(
+            json.dumps({a.types: dict(straps=rows, skipped=skipped)}, indent=1) + "\n")
+        print(f"{a.types}: {sum(len(x['moved_bits']) for x in rows.values())} CA strap sites, {len(skipped)} groups held")
+        return
     names = [n for n in P.types if (n in a.types.split(",") if a.types else re.match(a.type_re, n))]
     out, table = {}, []
     for tn in sorted(names):
