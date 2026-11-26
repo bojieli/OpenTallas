@@ -1,0 +1,1 @@
+- 2026-11-26 00:17 PST CODEx exact R6 44 conflict-free rows, E10 private t25__cl431c660f_1125230843 place and cell_check rc0 and actual layout+density viewed. East/top margins open but west leaf-memory lattice still produces concentrated heat at inner L3/L5/L7 side and central data strip. The inherited modeled >405 advisory still requires exact continuation, route held.
