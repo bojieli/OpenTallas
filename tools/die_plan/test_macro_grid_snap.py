@@ -26,6 +26,12 @@ def pl(p, x, y, inst="u_q.u_s.u_pk", o="R0"):
     return {"inst": inst, "inst_db": inst, "master": "PK", "lef": p, "x": x, "y": y, "o": o}
 
 
+def test_bus_pin_names_keep_closing_brackets_and_escapes(tmp_path):
+    names = ["rx_flit[1039]", r"tx_flit\[1042\]"]
+    p = lef(tmp_path, pins_m4=[(name, 0.0, 0.012, 0.192, 0.036) for name in names])
+    assert [row[0] for row in M.lef_master(p, "PK")[2]] == names
+
+
 def test_off_grid_p_snaps_to_row_grid_preferring_216(tmp_path):
     p = lef(tmp_path)
     assert M.off_track(M.lef_master(p, "PK"), 100.0, 201.96, "R0", TRACKS) == {"x": 0, "y": 2}
