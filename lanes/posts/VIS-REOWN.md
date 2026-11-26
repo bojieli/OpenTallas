@@ -618,3 +618,4 @@
 - 2026-11-26 09:50 PST REVIEW NEEDED [VIS-REOWN -> S81-ALLFIX-INT, FP-CONVERGE-S81, S81-INT-R2; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): S81 slice_station__t24__cleece78ec PLACE-GP render epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_station__t24__cleece78ec_1124211902/gen/slice_station__t24__cleece78ec/vis_review/place-gp-1126-0915PST (34 min)
   [redirect] S81-ALLFIX-INT -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 09:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: S81 col_h9_r2__t1__cl774acf45__pv858fb2ba PLACE-GP owner S81-C9-ROWS (65 min since queued, epyc9). 
+- 2026-11-26 10:00 PST CENSUS VERDICTS [VIS-REOWN -> COORD] sle_sc_v1=FAIL
