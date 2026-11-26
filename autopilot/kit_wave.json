@@ -6209,7 +6209,8 @@
    "only_items_regen": false,
    "derive_exclude_hosts": [
     "epyc2"
-   ]
+   ],
+   "launch_plan_review_required": true
   },
   "s81": {
    "enabled": true,
@@ -39740,7 +39741,8 @@
    },
    "derive_exclude_hosts": [
     "epyc2"
-   ]
+   ],
+   "launch_plan_review_required": true
   },
   "s81_head": {
    "enabled": true,
@@ -42068,7 +42070,8 @@
    "note_gen_hosts_w10_epyc2": "W10 exact epyc2 source replica retained. No new HEAD kits while epyc2 root above 90%; measured 93% at 21:39 PST. Existing builds remain.",
    "derive_exclude_hosts": [
     "epyc2"
-   ]
+   ],
+   "launch_plan_review_required": true
   },
   "qwen_compute": {
    "private_retired_specs_qcglue_1125": [
@@ -53129,9 +53132,7 @@
    "derive_exclude_hosts": [
     "epyc2"
    ],
-   "launch_plan_review_required": [
-    "coll_ft__cla4a25d77"
-   ]
+   "launch_plan_review_required": true
   },
   "hbm": {
    "enabled": true,
