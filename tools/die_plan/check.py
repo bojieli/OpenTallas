@@ -2966,7 +2966,8 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None, band_base=None):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None, band_base=None,
+        pre=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -3123,7 +3124,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["known_errors"] = apply_known_errors(R, plan_dir, completeness)
     if png:
         import render
-        render.render(P, geo, R, png)
+        render.render(P, geo, R, png, pre=pre)      # R6-RENDER-LEGEND-STREET: title = G0 counts + PRE/static class counts
         summ["png"] = str(png)
         # ROOT-MERGE-82 (COORD 18:52): the street map renders after the G1 render, so a render failure (e.g. no
         # matplotlib) surfaces from the existing die_plan.png render first, as before the street rule
@@ -3139,6 +3140,7 @@ def main(argv=None):
     ap.add_argument("plan")
     ap.add_argument("--out")
     ap.add_argument("--png", action="store_true")
+    ap.add_argument("--pre", help="plan_gate_pre --json record or log for the render title (PRE / static class FAIL counts)")
     ap.add_argument("--strict", action="store_true", help="WARN counts as failure")
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
@@ -3205,7 +3207,7 @@ def main(argv=None):
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
-    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
+    R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent, pre=a.pre,
                   groups=a.groups, landing=a.landing, r8_strap_pads=a.r8_strap_pads,
                   evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
