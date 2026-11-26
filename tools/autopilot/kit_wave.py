@@ -11631,7 +11631,7 @@ def run_item(spec_path):
             prep = (f"cd {q(tsrc)} && exec 9>{q(sp['root'])}/.bind.lock && flock 9 && "
                     f"if [ ! -f {q(bind)}/.kw_bind_ok ]; then mkdir -p {q(bind)} && {{ {cmd} ; }} > {q(sp['root'])}/bind.log 2>&1 "
                     f"&& {ok} && touch {q(bind)}/.kw_bind_ok || {{ tail -40 {q(sp['root'])}/bind.log; exit 3; }}; fi")
-            rc, txt = run("bind", otrun(sp["bind_mem_gb"], 4, sp["root"], prep, gh))
+            rc, txt = run("bind", otrun(sp["bind_mem_gb"], 48, sp["root"], prep, gh))
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         # BIND-GEN-TOOLSKEW (FLOW-FIX-0400, COORD item 5): a bind of record made with other reset / relay generators than this gen rt fails at gen hours later ("differs from captured bound
