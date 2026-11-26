@@ -606,3 +606,43 @@ def test_postbind_required_problem_and_post_bind_that_does_not_start_is_rc6(tmp_
         posts.append(argv); return types.SimpleNamespace(returncode=0, stdout="", stderr="")
     rc = PA.cmd_apply(a, run=run, apply_fn=lambda *x, **k: {"applied": "qc", "receipt": str(tmp_path / "r.json"), "event": "E1"}, commit_fn=lambda C, r: "ok")
     assert rc == 6 and any("POSTBIND-MISSING" in " ".join(map(str, p)) for p in posts)
+
+
+def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
+    import subprocess
+
+    root = tmp_path / "runtime root"
+    tree = tmp_path / "published tree"
+    pin = "0123456789ab" + "1" * 28
+    runtime = root / pin[:12]
+    tools = runtime / "tools/die_plan"
+    tools.mkdir(parents=True)
+    manifest = root / f"{pin[:12]}.manifest.json"
+    manifest.write_text(json.dumps({"sha": pin}))
+    cand = bind_candidate(tree)
+    cand["marker"]["tools_sha"] = pin
+    cand["marker"]["config"].update(tools_from_rt=True, tools_rt_root=str(root))
+    s = PA.postbind_spec(cand, "1118", live={"tools_sha": "f" * 40})
+    copy = Path(s["copy"])
+    (copy / s["plan"]).parent.mkdir(parents=True)
+    checks = (
+        "import os\n"
+        f"assert os.environ['OT_REPO_ROOT'] == {str(copy)!r}\n"
+        f"assert os.environ['OT_PLAN_ROOT'] == {str((copy / s['plan']).parent)!r}\n"
+        f"assert os.environ['OT_RT_CURRENT'] == {str(runtime)!r}\n"
+    )
+    (tools / "bind.py").write_text(checks + "import sys\nassert sys.argv[1] in ('elab', 'bind')\n")
+    (tools / "lane_asbuilt_latency.py").write_text(checks)
+    sh = PA.postbind_run_sh(s)
+    good = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
+    assert good.returncode == 0, (good.stdout, good.stderr)
+    assert f"POSTBIND_RUNTIME {pin} {runtime}" in good.stdout
+    assert "POSTBIND_DONE elab 0 bind 0 latcheck 0" in good.stdout
+
+    manifest.write_text(json.dumps({"sha": pin[:12] + "2" * 28}))
+    bad = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
+    assert bad.returncode == 6 and "POSTBIND_RUNTIME unavailable" in bad.stderr
+    assert "ELAB_RC" not in bad.stdout
+
+    cand["marker"]["config"]["tools_from_rt"] = False
+    assert "POSTBIND_RUNTIME" not in PA.postbind_run_sh(PA.postbind_spec(cand, "1118"))
