@@ -1,0 +1,1 @@
+- 2026-11-25 22:09 PST RULING [COORD -> C-LEG405] COORD APPROVED: claude/c-leg405-short-corridor-1125 @efddda51fd5f07938189dc4bb142aa9c7094addf. Canonical GREEN 2/2 on E7 at cda4c246bbc. Existing stage count gets a macro-clear corridor attempt first; explicit native bit banks remain protected. Projected lengths support scoped plan repair and placement review.
