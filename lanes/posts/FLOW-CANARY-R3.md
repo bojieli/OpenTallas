@@ -46,3 +46,5 @@
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
 - 2026-11-25 15:30 PST CANARY qwen_compute @ 0d5ba7456d: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
+- 2026-11-25 16:15 PST CANARY s81 @ 4f92395713: PASS (STALE-BASELINE STALE-BASELINE: identical 1 regressed metric(s) at 4 source commits (0d5ba7456d33, 14d6b76ef2e5, 427fe7078f5a); baseline canary-passed-main /srv)
+  [filed under] FLOW-CANARY-R3: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2 > FLOW-CANARY-R3)
