@@ -3981,3 +3981,4 @@ OPS-WRITEUP: 2026-11-25 20:08 PST 20:08 hourly: 605 any / 487 current (+0 / +0 v
 
 CODEX: 2026-11-25 20:52 PST takeover on intel2. S81 R11, HEAD W10, QC C1q and KV R8 gate recovery in progress. Existing token, geometry, proof/export and fleet lanes covered.
 OPS-WRITEUP: 2026-11-25 21:09 PST 21:09 hourly: 609 any / 487 current (+4 / +0 vs 20:05). VIS-COVERAGE: 435/470 types with a verdict (93%); PROBE-PASS 2
+CODEX: 2026-11-25 21:18 PST W10 exact native/G0 green, R11 seam corrected, ESTRIP targeted 23 G0 faults cleared, C1q gating, live Qwen native ABI PASS. Fleet root-review fix approved. HBM parked.
