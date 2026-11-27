@@ -922,12 +922,14 @@ def _moved_type(t, macro_moves):
                                for h in t.get('hard_cores') or []])
 
 
-def _dsel_cone_tcl(c):
+def _dsel_cone_tcl(c, t=None):
     """HEAD-TOOLS-RINGDSEL (ALLFIX-HEAD C5): opt-in band key dsel_cone=true (needs ring_place='ff') -> 'set cland_dsel_cone
     {prefix ..}' so landing_placement.tcl keys and places each chunked-ring u_dsel AND-OR cone cell FIRM right behind its y
     flop; '' (output unchanged) when no band carries the key."""
     names = []
     data_launch = []
+    packed_widths = []
+    local_chunks = ((t or {}).get("clock") or {}).get("landing_ring_wreg") or {}
     for name, band in sorted((c or {}).get('bands', {}).items()):
         v = band.get('dsel_cone')
         launch = band.get('dsel_data_launch')
@@ -943,9 +945,17 @@ def _dsel_cone_tcl(c):
         names.append(instance)
         if launch:
             data_launch.append(instance)
+            # Soft default-width rings use a single 64-bit chunk when the
+            # planned padded width is 64, even when some y bits are optimized
+            # away. Explicit custom read groups keep their native geometry.
+            custom_read = name in (local_chunks.get("buses") or []) and local_chunks.get("read_chunk")
+            if band.get("ring_width") == 64 and not band.get("hard_core") and not custom_read:
+                packed_widths.append(f"{{{instance}}} 64")
     out = ('set cland_dsel_cone {' + ' '.join(names) + '}\n') if names else ''
     if data_launch:
         out += 'set cland_dsel_data_launch {' + ' '.join(data_launch) + '}\n'
+    if packed_widths:
+        out += 'set cland_dsel_data_launch_widths {' + ' '.join(packed_widths) + '}\n'
     return out
 
 
@@ -1059,7 +1069,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+_pinslot_profile_tcl(tn,c,P.types[tn])+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,P.types[tn])+_pinslot_profile_tcl(tn,c,P.types[tn])+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -1081,4 +1091,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c)+_pinslot_profile_tcl(tn,c,t or {})+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,t)+_pinslot_profile_tcl(tn,c,t or {})+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))

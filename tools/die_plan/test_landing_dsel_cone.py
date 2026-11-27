@@ -134,3 +134,21 @@ puts [cland_dsel_cone_reach [list [list k c1 y1] [list k c2 y1]]]
 def test_sizing_and_reach_are_wired_into_place_ff():
     assert "[cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }" in TCL
     assert "OT_CLAND dsel_cone $prefix: $rbad cone cells more than 60 um from their y flop" in TCL
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_padded_dsel_launch_does_not_infer_stride_from_surviving_y_bits():
+    contract = {"bands": {"i": dict(R, ring_width=64, dsel_cone=True, dsel_data_launch=True)}}
+    declaration = LP._dsel_cone_tcl(contract)
+    assert "set cland_dsel_data_launch_widths {{u_cland_i} 64}" in declaration
+    custom = {"clock": {"landing_ring_wreg": {"buses": ["i"], "read_chunk": 32}}}
+    assert "cland_dsel_data_launch_widths" not in LP._dsel_cone_tcl(contract, custom)
+    proc = re.search(r"(?ms)^proc cland_dsel_data_wch .*?^}", TCL).group(0)
+    calls = """
+puts [cland_dsel_data_wch u_cland_i {{u_cland_i/u_ring.dch[0].sd_c[86]$_DFFE_PP_}} 48]
+puts [cland_dsel_data_wch u_cland_i {{u_cland_i/u_ring.s_d[1][22]$_DFFE_PP_}} 48]
+puts [catch {cland_dsel_data_wch u_cland_i {{u_cland_i/u_ring.dch[1].sd_c[86]$_DFFE_PP_}} 48}]
+"""
+    out = subprocess.run(["tclsh"], input=declaration + proc + "\n" + calls, capture_output=True, text=True, check=True)
+    assert not out.stderr
+    assert out.stdout.splitlines() == ["64", "48", "1"]

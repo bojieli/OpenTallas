@@ -1129,6 +1129,21 @@ proc cland_dsel_cone_assign {combs fanout ykeys} {
 }
 # Opt-in mapped data ownership for narrow collector bands. Shared read
 # selector logic and storage write muxes keep their normal placement.
+# A narrow canonical ring may keep only part of the single padded read
+# chunk.  In that form y indices cannot recover the sd_c slot stride.
+proc cland_dsel_data_wch {prefix names observed} {
+ if {![info exists ::cland_dsel_data_launch_widths] || ![dict exists $::cland_dsel_data_launch_widths $prefix]} { return $observed }
+ set packed 0
+ foreach name $names {
+  if {![regexp {[/.]dch\\?\[([0-9]+)\\?\]\.sd_c\\?\[[0-9]+\\?\]} $name -> chunk]} continue
+  if {$chunk != 0} { error "OT_CLAND dsel_data_launch $prefix expected one padded read chunk" }
+  set packed 1
+ }
+ if {!$packed} { return $observed }
+ set width [dict get $::cland_dsel_data_launch_widths $prefix]
+ if {$observed <= 0 || $observed > $width} { error "OT_CLAND dsel_data_launch $prefix contradicts declared packed width $width" }
+ return $width
+}
 proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
  set owners [dict create]
  dict for {y key} $ykeys {
@@ -1149,7 +1164,10 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
  foreach pr $ffs {
   lassign $pr key ff
   set ffname [$ff getName]
-  if {![regexp {^(.*[/.]s_d\\?\[[0-9]+\\?\]\\?\[([0-9]+)\\?\])\$} $ffname -> data bit]} continue
+  if {![regexp {^(.*[/.](s_d\\?\[[0-9]+\\?\]\\?\[[0-9]+\\?\]|dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]))\$} $ffname -> data]} continue
+  set storage_key [split $key |]
+  if {[llength $storage_key] != 4} continue
+  set word_key [lrange $storage_key 0 1]
   set choice {}
   foreach it [$ff getITerms] {
    if {![$it isOutputSignal] || [[$it getMTerm] getName] ne "QN"} continue
@@ -1167,7 +1185,8 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
     if {!$match} continue
     foreach sink [dict get $fanout $iname] {
      if {![dict exists $reads $sink]} continue
-     if {[regexp {/y\\?\[([0-9]+)\\?\]} [dict get $reads $sink] -> ybit] && $ybit == $bit} {
+     set read_key [dict get $ykeys [dict get $reads $sink]]
+     if {[lrange [split $read_key |] 0 1] eq $word_key} {
       lappend choice $inv
       break
      }
@@ -1184,7 +1203,7 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
   lappend result [list $key $inv $ffname]
   incr launches
  }
- if {!$launches} { error "OT_CLAND dsel_data_launch found no canonical s_d storage inverter" }
+ if {!$launches} { error "OT_CLAND dsel_data_launch found no canonical mapped storage launch inverter" }
  puts "OT_CLAND dsel_data_launch: [dict size $reads] uniquely owned read cells and $launches storage launch inverters"
  return [lsort -dictionary -index 0 $result]
 }
@@ -1313,7 +1332,9 @@ proc cland_place_ff {prefix rect tag} {
   set need [expr {$need+int(ceil(double($needw)/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
  }
  if {![llength $ffs]} { return 0 }
- set wch [cland_dsel_wch [lmap pr $ffs {lindex $pr 0}]]
+ set names [lmap pr $ffs {lindex $pr 0}]
+ set wch [cland_dsel_wch $names]
+ if {$dsel_data_launch} { set wch [cland_dsel_data_wch $prefix $names $wch] }
 # BEGIN NATIVE_ROLE_BANKS
  if {[info exists ::cland_role_key_context] && [dict exists $::cland_role_key_context $prefix]} {set wch [dict get $::cland_role_key_context $prefix]}
 # END NATIVE_ROLE_BANKS
