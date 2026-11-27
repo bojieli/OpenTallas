@@ -30,6 +30,36 @@ proc rt_aff_choose {best bd ck_i d_launch reach_dbu d_drv drv_known lim_dbu} {
   if {[rt_aff_accept $d_launch $reach_dbu $d_drv $lim_dbu]} { return [list $ck_i $d_launch ok] }
   return [list $best $bd refused]
 }
+# C-RST-TAP-REPOINT relay (HEAD-PROBE-R3 11-27, COORD 1247 "beyond tap reach use a relay instead of a re-point"; default OFF): with
+# OT_RESET_AFFINITY_MAX_DRIVER_UM set, a flop whose FINAL reset leg (to the driver of the net it ends up on, after the nearest-tap fallback) is still beyond that
+# limit, or unmeasurable, is a relay candidate; with OT_RESET_RELAY=1 a BUFx2 relay is inserted at the midpoint between the driver and the flop, the flop moved
+# to the relay's output net (polarity kept, one buffer delay added on that async reset pin).  Without OT_RESET_RELAY=1 candidates are only reported.
+proc rt_relay_needed {d_drv drv_known lim_dbu} {
+  if {$lim_dbu eq ""} { return 0 }
+  if {!$drv_known} { return 1 }
+  return [expr {$d_drv > $lim_dbu}]
+}
+proc rt_relay_seat {x y dx dy} {
+  return [list [expr {($x + $dx) / 2}] [expr {($y + $dy) / 2}]]
+}
+proc rt_insert_relay {blk it dxy tag} {
+  set ins [$it getInst]; set net [$it getNet]
+  lassign [$ins getLocation] x y
+  lassign [rt_relay_seat $x $y [lindex $dxy 0] [lindex $dxy 1]] mx my
+  set master [[ord::get_db] findMaster BUFx2_ASAP7_75t_R]
+  if {$master eq "NULL"} { return 0 }
+  set safe [string map {/ _ . _ $ _ ~ _} $tag]
+  set b [odb::dbInst_create $blk $master "u_rstrelay_$safe"]
+  set n2 [odb::dbNet_create $blk "rst_relay_net_$safe"]
+  if {$b eq "NULL" || $n2 eq "NULL"} { return 0 }
+  $b setLocation $mx $my
+  $b setPlacementStatus PLACED
+  [$b findITerm A] connect $net
+  [$b findITerm Y] connect $n2
+  $it disconnect
+  $it connect $n2
+  return 1
+}
 proc rt_net_driver_xy {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return [[$it getInst] getLocation] } }
   return {}
@@ -353,7 +383,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   }
   close $rt_out
   # (2) FIRM flops -> nearest tap's synchroniser nets
-  set rt_moved 0; set rt_keep 0; set rt_nopol 0; set rt_aff_refused 0; set rt_aff_l {}
+  set rt_moved 0; set rt_keep 0; set rt_nopol 0; set rt_aff_refused 0; set rt_aff_l {}; set rt_relay_todo {}; set rt_relay_done 0
   set rt_cnt {}; set rt_leaf_n 0; set rt_leaf_max 0; set rt_leaf_bad {}
   foreach ins [$rt_blk getInsts] {
     # rt_repoint_only (landing_placement.tcl, after the landed line moved stations): only those flops
@@ -413,6 +443,18 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       if {[info exists rt_leaf_reach_um] && $bd > $rt_leaf_reach_um * $rt_dbu} {
         lappend rt_leaf_bad "[$ins getName]/[[$it getMTerm] getName]:[format %.3f [expr {$bd/double($rt_dbu)}]]um"
       }
+      if {[info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)] && $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) ne ""} {
+        set tgt ""
+        if {$k == $best} { set tgt $net } elseif {[dict exists $rt_rep "$best,$par"]} { set tgt [dict get $rt_rep "$best,$par"] }
+        if {$tgt ne ""} {
+          set rdxy [rt_net_driver_xy $tgt]
+          set rknown [expr {[llength $rdxy] == 2}]
+          set rd [expr {$rknown ? abs($x - [lindex $rdxy 0]) + abs($y - [lindex $rdxy 1]) : 0}]
+          if {[rt_relay_needed $rd $rknown [expr {$::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) * $rt_dbu}]]} {
+            lappend rt_relay_todo [list $ins $it $tgt $rdxy "[$ins getName]/[[$it getMTerm] getName]" [expr {$rknown ? [format %.1f [expr {$rd/double($rt_dbu)}]] : "unmeasurable"}]]
+          }
+        }
+      }
       if {$k == $best} { incr rt_keep; continue }
       if {![dict exists $rt_rep "$best,$par"]} { incr rt_nopol; continue }
       $it disconnect
@@ -424,6 +466,15 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     set verdict [expr {[llength $rt_leaf_bad] ? "OVER" : "PASS"}]
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks, max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
     if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
+  }
+  if {[llength $rt_relay_todo]} {
+    if {[info exists ::env(OT_RESET_RELAY)] && $::env(OT_RESET_RELAY) eq "1"} {
+      foreach td $rt_relay_todo {
+        lassign $td rins rit rnet rdxy rtag rleg
+        if {[llength $rdxy] == 2 && [rt_insert_relay $rt_blk $rit $rdxy $rtag]} { incr rt_relay_done }
+      }
+    }
+    puts "OT_RESET_RELAY candidates [llength $rt_relay_todo] inserted $rt_relay_done (OT_RESET_RELAY=[expr {[info exists ::env(OT_RESET_RELAY)] ? $::env(OT_RESET_RELAY) : 0}]): [lrange [lmap td $rt_relay_todo {lindex $td 4:[lindex $td 5]um}] 0 19]"
   }
   if {$rt_aff_refused} { puts "OT_RESET_AFFINITY_REFUSED $rt_aff_refused affinity override(s) refused (relay driver beyond or unmeasurable at $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) um), nearest tap used: [lrange $rt_aff_l 0 19]" }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed (nearest tap, or the clock tap under TAP-PAIR AFFINITY), $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
