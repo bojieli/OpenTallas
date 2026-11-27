@@ -6213,7 +6213,7 @@ def memory_geometry(aliases_file):
     return {k: v for k, v in out.items() if v}
 
 
-def memory_layout(g, t, geom):
+def memory_layout(g, t, geom, info=None):
     """exact gate -> gold re-key of one RTL memory from its source geometry (word width W, size S, offset O of the
     pre-techmap gold memory).  Gold (memory_map after optional opt_mem_widen by factor F): key [w][j] =
     address w*F + j//W, bit j%W (wide sub-word k holds address w*F + k at bits k*W: yosys' wide-port convention).
@@ -6241,11 +6241,17 @@ def memory_layout(g, t, geom):
     # l5f: 14 words of 25 bits mapped as 8+6). Recover only a uniquely forced factor.
     min_factor = max(j // W for _, j in g.values()) + 1
     max_factor = min(((S - 1 - j // W) // w for w, j in g.values() if w > 0), default=S)
-    F = S // len(words) if S % len(words) == 0 else min_factor
-    if not min_factor <= F <= max_factor:
-        if min_factor != max_factor:
-            return None
-        F = min_factor
+    # LEC-REVIEW-R1 (11-27): the factor must be UNIQUELY forced, on the dividing and the non-dividing branch alike:
+    # every integer F in [min_factor, max_factor] fits the observed gold indices, so more than one is ambiguous (gold
+    # 200 + 100 bits of a 25-bit, 15-word memory fit F = 8, 9 and 10) and is refused, never guessed.  yosys'
+    # opt_mem_widen only widens by a power of two, so a forced F that is not one is refused as well.
+    if max_factor != min_factor:
+        return None
+    F = min_factor
+    if F & (F - 1):
+        return None
+    if info is not None:
+        info["F"] = F
     gold = {}
     for k, (w, j) in g.items():
         if j >= F * W or w * F + j // W >= S:
@@ -6280,8 +6286,12 @@ def memory_layout(g, t, geom):
                 continue
             mp = place({k: (a // K, (K - 1 - a % K) * w + b) for k, (a, b) in t.items()})
             if mp:
-                fits.append(mp)
-        return fits[0] if len(fits) == 1 else None
+                fits.append((K, mp))
+        if len(fits) != 1:
+            return None
+        if info is not None:
+            info["K"] = fits[0][0]
+        return fits[0][1]
     return place(t) if elem is None else None
 
 
@@ -6453,7 +6463,8 @@ def alias_arrays(L, log, words=4, work=None):
             # The source memory's own geometry places every gate bit exactly, so the size guards below (made for
             # guessed layouts) do not apply: synthesis may keep far fewer bits than the gold memory has (hcp_sys1
             # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
-            gmp = memory_layout(g, t, geom.get(gb))
+            lay = {}
+            gmp = memory_layout(g, t, geom.get(gb), lay)
             if gmp:
                 gmp, deferred = defer_narrow_memory_tail(g, t, geom.get(gb), gmp)
                 apply(gmp)
@@ -6463,7 +6474,9 @@ def alias_arrays(L, log, words=4, work=None):
                                f"correspondence: {deferred}")
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
-                           f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
+                           f"(width, size, offset), widening F={lay.get('F', 1)}"
+                           f"{' K=' + str(lay['K']) if 'K' in lay else ''} "
+                           f"(simulation scoring unnecessary; proof pending)")
                 continue
             cands, common = [], False
             if not (2 * len(t) < len(g) or len(t) > len(g)):
