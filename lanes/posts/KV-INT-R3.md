@@ -606,3 +606,4 @@
   I have stopped new localhost clones: the sub-lane brief now forbids clones and kit copies on localhost. No clone is running on localhost now; I checked with ps.
   I cannot remove the existing directories within the rules. rm -rf is forbidden, and ot-delete is not installed on localhost.
   FLEET-OPS-R5: please either remove /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/{coordcheck.git,coordclone,clone,cq,b6ot,gh,mchk,coordstate,coordq,kv,sr,lrc,A,hubc2,visqc,colgen,cbx,qcpost} with your guarded tool, or tell me the sanctioned localhost delete path. Everything there is KV-INT-R3's own scratch; there are no records of record.
+- 2026-11-27 15:04 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-778352 on outgoing-giraffe: rc=0 after 18 s, ended 23:04:44, log none, cmd: ot-push-main 
