@@ -10316,6 +10316,37 @@ def runitem_bind_landing(sp):
     return rec
 
 
+PRIVATE_RESTART_STAGES = ("floorplan", "place")
+
+
+def private_resume_request(AP, sp, attempt_dir, restart_at="place"):
+    """Resolve a completed prior spec directory to the ordinary stage-resume input."""
+    if (sp.get("kind") or "type") != "type" or restart_at not in PRIVATE_RESTART_STAGES:
+        raise ValueError("private checkpoint restart requires a type kit and floorplan or place")
+    path = Path(attempt_dir).resolve()
+    try:
+        old = json.loads((path / "spec.json").read_text())
+        result = json.loads((path / "result.json").read_text())
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"cannot read the previous attempt at {path}: {exc}") from exc
+    if not isinstance(old, dict) or not isinstance(result, dict):
+        raise ValueError(f"invalid previous attempt records at {path}")
+    if ((old.get("die"), old.get("item"), old.get("kind") or "type")
+            != (sp.get("die"), sp.get("item"), sp.get("kind") or "type")
+            or (result.get("die"), result.get("item")) != (sp.get("die"), sp.get("item"))):
+        raise ValueError(f"previous attempt at {path} is for a different die, item or kind")
+    if result.get("verdict") not in ("PASS", "FAIL"):
+        raise ValueError(f"previous attempt at {path} has no terminal verdict")
+    if not old.get("work") or os.path.normpath(old["work"]) == os.path.normpath(sp["work"]):
+        raise ValueError("previous and new attempts need distinct work directories")
+    prev = dict(old, dir=str(path), kit=result.get("kit"), reason=result.get("reason") or result.get("tail"),
+                **{"class": result.get("class") or result.get("cls")})
+    rf = resume_source(AP, prev)
+    rf["allow_nochange"] |= result.get("verdict") == "PASS"
+    rf["latest_start"] = restart_at
+    return rf
+
+
 def private_spec_cmd(a):
     detach_stdin(getattr(a, "stdin", False))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -10368,6 +10399,16 @@ def private_spec_cmd(a):
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
+    predecessor = getattr(a, "resume_from", None)
+    restart_at = getattr(a, "restart_at", None)
+    if predecessor or restart_at:
+        try:
+            if not predecessor:
+                raise ValueError("--restart-at needs --resume-from")
+            sp["resume_from"] = private_resume_request(AP, sp, predecessor, restart_at or "place")
+        except ValueError as exc:
+            print(f"private-spec: {exc}", file=sys.stderr)
+            return 2
     import rt_floor as RTF                                # FABLE-FLOW-0230 T1: a NEW private launch on an rt below kit_wave.json min_rt is refused
     _fl = RTF.check(sp.get("tools_sha") or "", cfg, exempt=getattr(a, "rt_floor_exempt", "") or "", what=f"private-spec {a.die}/{a.item}")
     sp.setdefault("private", {})["rt_floor"] = _fl
@@ -10391,6 +10432,9 @@ def private_spec_cmd(a):
         if verdict == "UNKNOWN":
             print(f"private-spec: WARN {a.die}/{a.item}: {why} (spec written; kit_topology will check)", file=sys.stderr)
     out = Path(a.out or (AP_DIR / "private_specs" / re.sub(r"[^A-Za-z0-9_.-]", "_", lane or "lane") / f"{a.die}_{a.item}_{time.strftime('%m%d%H%M%S')}"))
+    if predecessor and out.resolve() == Path(sp["resume_from"]["attempt_dir"]):
+        print("private-spec: previous and new attempts need distinct spec directories", file=sys.stderr)
+        return 2
     out.mkdir(parents=True, exist_ok=True)
     (out / "spec.json").write_text(json.dumps(sp, indent=1))
     diff = EP.env_diff(sp["private"]["wave_env"], sp["gen_env"])
@@ -12405,8 +12449,12 @@ def _run_item(spec_path, resume_reviewed=False):
         sk = []
     if sk:
         return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
+    explicit_resume = bool(sp.get("private") and (sp.get("resume_from") or {}).get("latest_start"))
+    explicit_rs = ""
+
     def place_and_geom(K, rs):
         """PLACE (async service or ot-run) + after_place; rs = the stage-resume start step or ''"""
+        nonlocal explicit_rs
         # FLOW-21 11-01 (COORD 08:2x): kits whose runner hands the pre-route LEC to lec_async.sh (phase receipts) PLACE
         # as a detached service on the gen host itself: that kit dir is the one authoritative copy (proof owner, GEOM,
         # enqueue and the route all use G:K), so it is never relayed, pulled or cleaned while its proof runs.
@@ -12431,6 +12479,12 @@ def _run_item(spec_path, resume_reviewed=False):
         _epw = env_provenance_record(K)
         if _epw and sp.get("private"):
             return fail("env_provenance", "ENV-PROVENANCE " + _epw, f"{G}:{K}")
+        if explicit_resume:
+            explicit_rs = resume_prepare(sp, K, prun0, run, remote, res)
+            if explicit_rs == "nochange":
+                (out / "result.json").write_text(json.dumps(res, indent=1))
+                return 1
+            rs = explicit_rs
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(
@@ -12507,14 +12561,14 @@ def _run_item(spec_path, resume_reviewed=False):
         return rc, txt
 
     prun0 = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-    rs = resume_prepare(sp, K, prun0, run, remote, res)
+    rs = "" if explicit_resume else resume_prepare(sp, K, prun0, run, remote, res)
     if rs == "nochange":
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
     try:
         rc = place_and_geom(K, rs)
     finally:
-        if rs:
+        if rs or explicit_rs not in ("", "nochange"):
             resume_release(K)
     return chain_after_geom(rc)
 
@@ -12923,6 +12977,29 @@ def kr_cmd(args):
     return f"python3 - {args} <<'KWRS_EOF'\n{Path(KR.__file__).read_text()}\nKWRS_EOF"
 
 
+def private_resume_saved_manifest(attempt_dir, path):
+    """Reuse the saved input manifest if the previous attempt ran with those inputs."""
+    d = Path(attempt_dir)
+    try:
+        spec = json.loads((d / "spec.json").read_text())
+        result = json.loads((d / "result.json").read_text())
+        m = _kr_json((d / "resume_fp.log").read_text(), "KW_RESUME_MANIFEST")
+        if not result.get("stage_fp_after_place_refresh"):
+            if spec.get("kit_self_contained") in ("copy", "copy-strict"):
+                scan = (d / "selfcontained.log").read_text()
+                if not re.search(r"(?m)^SELFCONT_COUNT 0 BAD 0$", scan):
+                    return None
+            refresh = (d / "flow_refresh.log").read_text()
+            if not re.search(r"(?m)^KIT_FLOW_REFRESH stage place rt [0-9a-f]+ replaced 0:", refresh):
+                return None
+        if (m.get("schema") == KR.SCHEMA and m.get("kit") == path
+                and result.get("stage_fp") == m.get("fingerprints") == KR.fingerprints(m)):
+            return m
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        pass
+    return None
+
+
 def resume_prepare(sp, K, prun, run, remote, res):
     """KW-RESUME-1: fingerprint the new kit (always: res['stage_fp']); on a relaunch decide the resume step against the
     previous attempt's checkpoint and link it into K/run.  -> '' (full build), a step name (resumed from it) or
@@ -12934,6 +13011,12 @@ def resume_prepare(sp, K, prun, run, remote, res):
     if new and not new.get("error"):
         res["stage_fp"] = new.get("fingerprints")
     rf = sp.get("resume_from")
+    latest_start = rf.get("latest_start") if rf and sp.get("private") else None
+    if latest_start:
+        if latest_start not in PRIVATE_RESTART_STAGES:
+            raise ValueError("private restart stage exceeds the placement gate")
+        if new and not new.get("error"):
+            res["stage_fp_after_place_refresh"] = True
     if not rf:
         return ""
     info = {"decision": "full", "source_attempt": rf.get("attempt"), "why": ""}
@@ -12944,10 +13027,19 @@ def resume_prepare(sp, K, prun, run, remote, res):
     best = None
     for h, path in rf.get("candidates") or []:
         cut = f" --cutoff {float(rf['gen_end'])}" if rf.get("gen_end") else ""
-        cmd = kr_cmd(f"manifest {q(path)} --runner {q(os.path.join(os.path.dirname(path), 'run_kit.sh'))}{cut}")
+        saved = private_resume_saved_manifest(rf["attempt_dir"], path) if latest_start else None
+        if saved:
+            extras = " --run-files" if h != G else ""
+            cmd = kr_cmd(f"checkpoint {q(path)}{extras}")
+        else:
+            cmd = kr_cmd(f"manifest {q(path)} --runner {q(os.path.join(os.path.dirname(path), 'run_kit.sh'))}{cut}")
         argv = _ssh(h, hub) + ["bash -c " + q(cmd)] if _ssh(h, hub) else ["bash", "-c", cmd]
         _, t = run(f"resume_old_{h}", argv, idempotent=True)
-        m = _kr_json(t, "KW_RESUME_MANIFEST")
+        if saved:
+            check = _kr_json(t, "KW_RESUME_CHECKPOINT")
+            m = dict(saved, **check) if check and check.get("kit") == path else None
+        else:
+            m = _kr_json(t, "KW_RESUME_MANIFEST")
         if not m or m.get("error"):
             continue
         m["_host"] = h
@@ -12959,7 +13051,8 @@ def resume_prepare(sp, K, prun, run, remote, res):
         info["why"] = "no readable checkpoint of the previous attempt (pruned / host unreachable)"
         return ""
     old = best[1]
-    dec = KR.decide(new, old, allow_nochange=bool(rf.get("allow_nochange")))
+    bounds = {"latest_start": latest_start} if latest_start else {}
+    dec = KR.decide(new, old, allow_nochange=bool(rf.get("allow_nochange")), **bounds)
     info.update(decision=dec["decision"], why=dec["why"], changed=dec["changed"][:40], n_changed=len(dec["changed"]),
                 source_host=old["_host"], source_kit=old["kit"], start=dec.get("start"), reuse=dec.get("reuse"),
                 fingerprints=dec.get("fingerprints"))
@@ -14483,13 +14576,15 @@ def resume_source(AP, prev):
             rh = ""
         if rh and rh != h:
             out["candidates"].append([rh, path])
-        try:
-            j = (json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}).get(prev.get("q_id") or "") or {}
-            ro = j.get("ran_on")
-            if ro and ro != h and j.get("path") == path:
-                out["candidates"].append([ro, path])
-        except (OSError, ValueError, AttributeError):
-            pass
+        q_id = prev.get("q_id")
+        if q_id:
+            try:
+                j = (json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}).get(q_id) or {}
+                ro = j.get("ran_on")
+                if ro and ro != h and j.get("path") == path:
+                    out["candidates"].append([ro, path])
+            except (OSError, ValueError, AttributeError):
+                pass
     return out
 
 
@@ -22865,6 +22960,8 @@ def main(argv=None):
     ps_.add_argument("--lane", default="", help="owner lane (default $OT_LANE)")
     ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
     ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
+    ps_.add_argument("--resume-from", metavar="ATTEMPT_DIR", help="reuse valid synth/floorplan checkpoints from this completed attempt of the same type")
+    ps_.add_argument("--restart-at", choices=PRIVATE_RESTART_STAGES, help="restart no later than this stage (default place when --resume-from is set)")
     ps_.add_argument("--kind", default="type")
     ps_.add_argument("--host", help="gen / place host of the private kit (default: the die gen host with the most headroom now; with --tree the wave pick)")
     ps_.add_argument("--wave-host", action="store_true", help="FLOW-FLEET-R2: keep the wave pick as the home host (no headroom default)")
