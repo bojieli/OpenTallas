@@ -52,3 +52,39 @@ def test_census_tallies_use_per_type_gate(monkeypatch):
     assert res["measured"] == {"samples": 2, "over_cap": 1}                 # A over its 1000 gate, B under 3000
     assert res["gates"] == {1000: 1, 3000: 1}
     assert C.census(plan, {}, meas, cap=5000)["measured"]["over_cap"] == 0   # old constant gate still selectable
+
+
+def _bins_plan(tmp_path, cap, bins, monkeypatch, with_file=True):
+    import json
+    clock = {"tap_mode": "explicit", "tap_max_sinks": cap}
+    if with_file:
+        (tmp_path / "b.json").write_text(json.dumps({"type": "T", "bins": bins}))
+        clock["sink_bins_file"] = str(tmp_path / "b.json")
+    plan = types.SimpleNamespace(name="D", path=str(tmp_path / "p.json"), types={"T": {"outline_um": [100.0, 100.0], "clock": clock}},
+                                 parts={"i": {"type": "T"}})
+    monkeypatch.setattr(C.taps, "explicit_tap_sites", lambda p, tn: [("a", 0, 0), ("b", 99, 99)])
+    monkeypatch.setattr(C.taps, "input_path", lambda f, d, t: f)
+    monkeypatch.setattr(C.stale, "judge_type", lambda tn, tile, doc, types=None: dict(predates=[], frac_in=0.0))
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    return plan
+
+
+def test_no_sink_bins_is_not_checked_never_pass(tmp_path, monkeypatch):
+    plan = _bins_plan(tmp_path, 1000, [], monkeypatch, with_file=False)
+    res = C.census(plan, {}, {})
+    assert res["types"][0]["verdict"] == "NOT-CHECKED"
+    assert res["verdicts"] == {"NOT-CHECKED": 1} and res["not_checked"] == ["T"]
+
+
+def test_sink_bins_judged_per_tap_over_and_ok(tmp_path, monkeypatch):
+    plan = _bins_plan(tmp_path, 1000, [[0, 0, 1500], [99, 99, 100]], monkeypatch)
+    row = C.census(plan, {}, {})["types"][0]
+    assert row["verdict"] == "OVER" and row["bins_max_sinks"] == 1500 and row["bins_over_taps"] == 1 and row["bins_taps"] == 2
+    plan = _bins_plan(tmp_path, 3000, [[0, 0, 1500], [99, 99, 100]], monkeypatch)
+    assert C.census(plan, {}, {})["types"][0]["verdict"] == "OK"
+
+
+def test_measured_only_type_is_checked(tmp_path, monkeypatch):
+    plan = _bins_plan(tmp_path, 1000, [], monkeypatch, with_file=False)
+    assert C.census(plan, {}, {"T": {"max_sinks": 4000}})["types"][0]["verdict"] == "OVER"
+    assert C.census(plan, {}, {"T": {"max_sinks": 400}})["types"][0]["verdict"] == "OK"

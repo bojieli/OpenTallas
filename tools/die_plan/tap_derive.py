@@ -19,7 +19,7 @@ from placement_obstacles import placement_boxes
 import row_normalize
 import schema
 from sink_bins_compose import compose_bins
-from tap_class_census import largest_groups
+from tap_class_census import kit_gate, largest_groups
 import tap_split
 import taps
 
@@ -68,8 +68,11 @@ def _split(plan, tn, points, cap, target, span):
 def _plan_type(raw, plan, tn, manifest, entry, bins_dir, tree, cap, target, span):
     tile = raw["partition_types"][tn]
     clock = tile.get("clock") or {}
+    if cap is None:         # C-TAP-LOAD 11-27: the plan's own per-type tap cap (what the kit applies), never a tool constant
+        cap = kit_gate(tile)[0]
+        target = min(target, cap)
     mode = clock.get("tap_mode", "grid")
-    report = {"mode": mode}
+    report = {"mode": mode, "cap": cap}
     if tile.get("hard") or not clock or mode not in {"grid", "grid+explicit", "explicit", "density"}:
         return dict(report, status="unsupported clock form"), False
     if entry["footprint_sha256"] != footprint_digest(tile):
@@ -135,8 +138,12 @@ def _plan_type(raw, plan, tn, manifest, entry, bins_dir, tree, cap, target, span
     return dict(report, status="derive", new_taps=len(new_sites) if new_sites is not None else None), True
 
 
-def derive(raw, plan_path, tree, manifest, *, cap=5000, target=1000, span=300.0, bins_dir=None):
-    """Apply eligible tap derivations and return the types and per-type diagnostics."""
+def derive(raw, plan_path, tree, manifest, *, cap=None, target=1000, span=300.0, bins_dir=None):
+    """Apply eligible tap derivations and return the types and per-type diagnostics.
+
+    cap=None (default): each type is judged and re-solved against its OWN plan tap cap (kit_gate: OT_TAP_MAX_SINKS, else
+    clock.tap_max_sinks, else 1500 density / 3000 grid; 1000 on the QC types), the target clamped to it.  An int forces one
+    constant for every type (the old default was 5000, which called 3.9-4.6k taps 'within limits' on 1000-cap types)."""
     plan_path, tree, manifest = Path(plan_path), Path(tree).resolve(), Path(manifest).resolve()
     # a proof run may publish composed bins outside the (shared, read-only) tree; the plan then names them relative to it
     if bins_dir:
@@ -147,7 +154,7 @@ def derive(raw, plan_path, tree, manifest, *, cap=5000, target=1000, span=300.0,
     entries = json.loads(manifest.read_text())
     if not isinstance(entries, dict):
         raise ValueError("expected a type-to-placed-bins manifest")
-    if not 0 < target <= cap or span <= 0:
+    if cap is not None and not 0 < target <= cap or span <= 0:
         raise ValueError("target must be positive and within cap, with positive span")
     selected = []
     report = {}
@@ -168,7 +175,7 @@ def derive(raw, plan_path, tree, manifest, *, cap=5000, target=1000, span=300.0,
     return selected, report
 
 
-def density_results(raw, plan_path, tree, selected, *, cap=5000, span=300.0):
+def density_results(raw, plan_path, tree, selected, *, cap=None, span=300.0):
     """Check the final density sites after the standard name/geometry normalize."""
     plan_path = Path(plan_path).resolve()
     report = {}
@@ -181,6 +188,7 @@ def density_results(raw, plan_path, tree, selected, *, cap=5000, span=300.0):
             path = taps.input_path(clock["sink_bins_file"], plan_path.parent, tree)
             bins = json.loads(path.read_text())["bins"]
             _, load, far = _load_max(schema.tap_grid(plan, tn), bins)
-            report[tn] = dict(max_sinks_after=load, max_span_after_um=far,
-                              within_limits=load <= cap and far <= span)
+            tcap = kit_gate(plan.types[tn])[0] if cap is None else cap
+            report[tn] = dict(max_sinks_after=load, max_span_after_um=far, cap=tcap,
+                              within_limits=load <= tcap and far <= span)
     return report

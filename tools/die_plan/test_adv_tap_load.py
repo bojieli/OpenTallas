@@ -107,3 +107,88 @@ def test_with_bins_is_measured():
     out = A.findings(plan(), "j8.json", None, flops_cache=cache(), planned_sinks=planned(), exact=False)
     assert not [ln for ln in out if "ADV-TAP-LOAD UNMEASURED" in ln], out
     assert "0 UNMEASURED" in out[-1]
+
+
+# ---- C-TAP-LOAD 11-27: density types are judged tap by tap against the per-type kit cap; no bins = NOT-CHECKED ----
+import json  # noqa: E402
+import types  # noqa: E402
+
+DT = "qc_dens"
+
+
+def dplan(cap=1000, bins_file="bins.json"):
+    ck = {"tap_mode": "density", "tap_max_sinks": cap}
+    if bins_file:
+        ck["sink_bins_file"] = bins_file
+    return {"die": {"name": "qc"}, "budgets": {},
+            "partition_types": {DT: {"outline_um": [400.0, 400.0], "hard": False, "clock": ck}},
+            "partitions": [{"name": "p", "type": DT}]}
+
+
+def dex(sites):
+    return types.SimpleNamespace(ok=True, why="", taps_of=lambda tn: sites)
+
+
+SITES = [("clk", 100.0, 100.0), ("clk_t1", 300.0, 300.0)]
+
+
+def dline(out):
+    h = [x for x in out if x.startswith(f"WARN ADV-TAP-LOAD {DT}:")]
+    return h[0] if h else None
+
+
+def test_kit_cap_is_the_gen_phys_rule(monkeypatch):
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    assert A.kit_cap({"clock": {"tap_max_sinks": 1000}}) == 1000
+    assert A.kit_cap({"clock": {}}) == 3000 and A.kit_cap({"clock": {"tap_mode": "density"}}) == 1500
+    assert A.kit_cap({"clock": {"tap_max_sinks": 3000, "tap_grid": {"bank_sinks": 800}}}) == 800
+    monkeypatch.setenv("OT_TAP_MAX_SINKS", "1200")
+    assert A.kit_cap({"clock": {"tap_max_sinks": 3000}}) == 1200
+
+
+def test_density_each_tap_over_cap_is_flagged_even_when_total_is_fine(monkeypatch):
+    """total 2,600 sinks on 2 taps (1,300/tap average) is under the 1.3 ratio of any plan model, but one tap holds 1,900 > 1000."""
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    bins = {DT: [(100.0, 100.0, 1900.0), (300.0, 300.0, 700.0)]}
+    out = A.findings(dplan(), "p.json", None, flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES), density_bins=bins)
+    ln = dline(out)
+    assert ln and "1 of 2 taps over the kit cap 1000" in ln and "clk 1,900" in ln, out
+    assert "density per-tap: 1 types judged tap by tap (1 over their kit cap), 0 NOT-CHECKED" in out[-1], out[-1]
+    assert out[-1].startswith("WARN ADV-TAP-LOAD summary:")
+
+
+def test_density_tap_under_cap_passes(monkeypatch):
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    bins = {DT: [(100.0, 100.0, 900.0), (300.0, 300.0, 700.0)]}
+    out = A.findings(dplan(), "p.json", None, flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES), density_bins=bins)
+    assert dline(out) is None and "1 types judged tap by tap (0 over" in out[-1]
+
+
+def test_density_cap_is_per_type_not_constant(monkeypatch):
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    bins = {DT: [(100.0, 100.0, 1900.0), (300.0, 300.0, 700.0)]}
+    out = A.findings(dplan(cap=3000), "p.json", None, flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES), density_bins=bins)
+    assert dline(out) is None            # same loads under a 3000-cap type
+
+
+def test_density_without_bins_is_not_checked_not_pass():
+    out = A.findings(dplan(bins_file=None), "p.json", None, flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES))
+    nc = [x for x in out if "ADV-TAP-LOAD NOT-CHECKED" in x]
+    assert nc and DT in nc[0] and "no clock.sink_bins_file" in nc[0], out
+    assert "1 NOT-CHECKED" in out[-1]
+
+
+def test_density_bins_file_read_and_missing_file(tmp_path):
+    (tmp_path / "bins.json").write_text(json.dumps({"bins": [[100, 100, 1900], [300, 300, 700]]}))
+    plan = tmp_path / "plan.json"
+    out = A.findings(dplan(), str(plan), str(tmp_path), flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES))
+    assert dline(out) and "taps over the kit cap 1000" in dline(out), out
+    out = A.findings(dplan(bins_file="gone.json"), str(plan), str(tmp_path), flops_cache={"flops": {}}, exact=False, density_ex=dex(SITES))
+    assert any("not found" in x and "NOT-CHECKED" in x for x in out), out
+
+
+def test_density_taps_unsolvable_is_not_checked():
+    bins = {DT: [(100.0, 100.0, 1900.0)]}
+    out = A.findings(dplan(), "p.json", None, flops_cache={"flops": {}}, exact=False,
+                     density_ex=types.SimpleNamespace(ok=False, why="no taps.py"), density_bins=bins)
+    assert any("NOT-CHECKED" in x and "no taps.py" in x for x in out), out

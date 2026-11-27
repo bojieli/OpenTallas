@@ -62,15 +62,30 @@ def kit_gate(tile):
         import gen_phys
         cap = int(gen_phys._tap_cap(tile))
     except Exception:  # noqa: BLE001 -- same rule without the generator import
-        ck = tile.get("clock") or {}
-        e = os.environ.get("OT_TAP_MAX_SINKS", "")
-        cap = int(e) if e.isdigit() and int(e) > 0 else int(ck.get("tap_max_sinks", 1500 if ck.get("tap_mode") == "density" else 3000))
-        g = ck.get("tap_grid")
-        if g is not None:
-            cap = min(cap, int(g.get("bank_sinks", 1000)))
+        cap = adv_tap_load.kit_cap(tile)
     ck = tile.get("clock") or {}
     floor = int(ck.get("tap_post_merge_min_sinks") or ck.get("tap_min_sinks") or max(1, cap // 20))
     return cap, floor
+
+
+def tap_sites(plan, tn):
+    mode = (plan.types[tn].get("clock") or {}).get("tap_mode")
+    if mode == "explicit":
+        return taps.explicit_tap_sites(plan, tn)
+    if mode == "grid+explicit":
+        return taps.grid_explicit_sites(plan, tn)
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        return schema.tap_grid(plan, tn)
+
+
+def verdict_of(row):
+    """OVER when any measured/predicted tap load exceeds the type's gate; OK when at least one load was computed and none does;
+    NOT-CHECKED when no load could be computed at all (no usable sink bins, no placed bins on this outline, no measured kit).
+    A type nothing was measured on is never a PASS (C-TAP-LOAD 11-27: S81 / QC types without sink bins)."""
+    loads = [row[k] for k in ("bins_max_sinks", "predicted_max_sinks", "measured_max_sinks") if row.get(k) is not None]
+    if not loads:
+        return "NOT-CHECKED"
+    return "OVER" if max(loads) > row["gate"] else "OK"
 
 
 def placement_load(plan, tn, placed, floor=None):
@@ -80,14 +95,7 @@ def placement_load(plan, tn, placed, floor=None):
         round(x, 2) for x in plan.types[tn]["outline_um"]
     ):
         return {"placement": "different outline"}
-    mode = (plan.types[tn].get("clock") or {}).get("tap_mode")
-    if mode == "explicit":
-        sites = taps.explicit_tap_sites(plan, tn)
-    elif mode == "grid+explicit":
-        sites = taps.grid_explicit_sites(plan, tn)
-    else:
-        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            sites = schema.tap_grid(plan, tn)
+    sites = tap_sites(plan, tn)
     if not sites:
         return {"placement": "missing planned tap sites"}
     counts, spans = loads(sites, placed["bins"])
@@ -128,6 +136,14 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=None):
                     bins_stale=verdict["predates"],
                     bins_inside_fraction=round(verdict["frac_in"], 5),
                 )
+                # C-TAP-LOAD: judge EACH tap of the plan's own sink bins on the type's current taps against its kit gate
+                sites = tap_sites(plan, tn) if doc.get("bins") else None
+                if sites:
+                    counts = adv_tap_load.nearest_loads(     # numpy nearest: same Manhattan / lower-index rule as loads(), fast on 80k bins
+                        sites, [tuple(b) if len(b) == 3 else (*b, 1.0) for b in doc["bins"]])
+                    worst = max(range(len(counts)), key=counts.__getitem__)
+                    row.update(bins_max_sinks=counts[worst], bins_max_tap=sites[worst][0],
+                               bins_over_taps=sum(c > gate for c in counts), bins_taps=len(counts))
             except (OSError, ValueError, TypeError, KeyError) as error:
                 row["bins_error"] = str(error)
         try:
@@ -145,6 +161,7 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=None):
             row.update(largest_groups(sink_lists.get(tn), group.get("re"), group.get("fixed_taps", {})))
         except (OSError, re.error, IndexError) as error:
             row["groups_error"] = str(error)
+        row["verdict"] = verdict_of(row)
         rows.append(row)
 
     def tally(field):
@@ -156,6 +173,8 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=None):
     return dict(
         die=plan.name, plan=plan.path, cap=cap or "per-type kit gate", soft_types=len(rows),
         gates=dict(sorted(Counter(row["gate"] for row in rows).items())),
+        verdicts=dict(sorted(Counter(row["verdict"] for row in rows).items())),
+        not_checked=[row["type"] for row in rows if row["verdict"] == "NOT-CHECKED"],
         under_load=dict(types=len(under), taps=sum(row["predicted_under_taps"] for row in under)),
         predicted=tally("predicted_max_sinks"), measured=tally("measured_max_sinks"),
         bins_inside_over_5pct=sum(row.get("bins_inside_fraction", 0) > .05 for row in rows),
@@ -184,7 +203,7 @@ def main():
         tree=args.tree, sink_lists=dict(value.split("=", 1) for value in args.sinks_tsv), cap=args.cap,
     )
     args.out.write_text(json.dumps(result, indent=2) + "\n")
-    print(json.dumps({key: value for key, value in result.items() if key != "types"}))
+    print(json.dumps({key: value for key, value in result.items() if key not in ("types", "not_checked")}))
 
 
 if __name__ == "__main__":

@@ -48,6 +48,18 @@ def _w(obj, msg):
     return f"WARN ADV-{CHECK} {obj}: {msg}"
 
 
+def kit_cap(tile):
+    """The per-tap sink cap the kit really applies (gen_phys._tap_cap): the gen env OT_TAP_MAX_SINKS (when set) wins, else
+    clock.tap_max_sinks, else 1500 density / 3000 grid, clamped to clock.tap_grid.bank_sinks when tap_grid is on."""
+    ck = (tile or {}).get("clock") or {}
+    e = os.environ.get("OT_TAP_MAX_SINKS", "")
+    cap = int(e) if e.isdigit() and int(e) > 0 else int(ck.get("tap_max_sinks") or (1500 if ck.get("tap_mode") == "density" else 3000))
+    g = ck.get("tap_grid")
+    if isinstance(g, dict):
+        cap = min(cap, int(g.get("bank_sinks", 1000)))
+    return cap
+
+
 def base_type(tn):
     return SUFFIX.sub("", tn)
 
@@ -194,6 +206,17 @@ class Exact:
                         sys.path.pop(0)
         self.why = self.why or "no tools/die_plan (schema.py, taps.py)"
 
+    def taps_of(self, tn):
+        """[(name, x, y)] the type's tap sites exactly as the plan solves them (schema.tap_grid: density taps included)."""
+        sys.path.insert(0, self.dir)
+        try:
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                import schema as S
+                return [(n, float(x), float(y)) for n, x, y in S.tap_grid(self.P, tn)]
+        finally:
+            if sys.path and sys.path[0] == self.dir:
+                sys.path.pop(0)
+
     def sinks(self, tn):
         sys.path.insert(0, self.dir)          # taps.py imports gen_phys / ft_full_stage / reset_tree lazily
         try:
@@ -206,6 +229,69 @@ class Exact:
 
 def _fmt(v):
     return f"{v:,.0f}"
+
+
+DENSITY_BUDGET_S = 80.0
+
+
+def _read_bins(ck, plan_path, tree):
+    """[(x, y, n)] of clock.sink_bins_file, or (None, reason)."""
+    f = ck.get("sink_bins_file")
+    if not f:
+        return None, "no clock.sink_bins_file"
+    import adv_stale_bins as SB       # lazy: adv_stale_bins imports this module
+    p = SB.bins_path(f, plan_path, tree)
+    if p is None:
+        return None, f"sink bins file {f} not found"
+    try:
+        doc = json.loads(Path(p).read_text())
+        pts = [(float(b[0]), float(b[1]), float(b[2]) if len(b) > 2 else 1.0) for b in doc.get("bins") or []]
+    except (OSError, ValueError, TypeError, IndexError) as e:
+        return None, f"sink bins file unreadable ({type(e).__name__})"
+    return (pts, "") if pts else (None, "sink bins file has no bins")
+
+
+def density_per_tap(raw, plan_path, tree=None, ex=None, budget_s=DENSITY_BUDGET_S, bins_override=None):
+    """C-TAP-LOAD (COORD 11-27): judge EACH tap of every placed soft density type, not only the total sink count.
+    Per type: the plan's density taps (schema.tap_grid) x the plan's own sink bins (nearest tap) against the type's kit cap
+    (kit_cap).  Returns (rows, not_checked): rows = [dict(tn, cap, taps, over=[(load, tap)], max, max_tap)] for the types
+    judged; not_checked = [(tn, reason)] -- a density type with no usable sink bins / taps is NOT-CHECKED, never a pass."""
+    t_start = time.time()
+    P = raw.get("partition_types") or {}
+    placed = {p.get("type") for p in raw.get("partitions") or [] if isinstance(p, dict)}
+    rows, nc = [], []
+    for tn in sorted(P):
+        t = P[tn]
+        ck = t.get("clock") if isinstance(t, dict) else None
+        if not ck or ck.get("tap_mode") != "density" or t.get("hard") or (placed and tn not in placed):
+            continue
+        if bins_override is not None and tn in bins_override:
+            pts, why = bins_override[tn], ""
+        else:
+            pts, why = _read_bins(ck, plan_path, tree)
+        if pts is None:
+            nc.append((tn, why))
+            continue
+        if ex is None or not ex.ok:
+            nc.append((tn, "density taps not solvable: " + (getattr(ex, "why", "") or "no tools/die_plan (schema.py, taps.py)")))
+            continue
+        if time.time() - t_start > budget_s:
+            nc.append((tn, f"density budget {budget_s:.0f} s spent"))
+            continue
+        try:
+            tp = ex.taps_of(tn)
+        except Exception as e:  # noqa: BLE001
+            nc.append((tn, f"density taps not solvable: {type(e).__name__}: {str(e)[:80]}"))
+            continue
+        if not tp:
+            nc.append((tn, "no taps"))
+            continue
+        cap = kit_cap(t)
+        ld = nearest_loads(tp, pts)
+        over = sorted(((ld[i], tp[i][0]) for i in range(len(tp)) if ld[i] > cap), reverse=True)
+        j = max(range(len(ld)), key=ld.__getitem__)
+        rows.append(dict(tn=tn, cap=cap, taps=len(tp), over=over, max=ld[j], max_tap=tp[j][0], bins_n=sum(p[2] for p in pts)))
+    return rows, nc
 
 
 def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_max=PLACED_MAX, budget_s=BUDGET_S,
@@ -267,7 +353,7 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
     for r in rows:
         tn, t, taps = r["tn"], r["t"], r["taps"]
         ck = t.get("clock") or {}
-        cap = int(ck.get("tap_max_sinks") or 1500)
+        cap = kit_cap(t)
         radius = float(ck.get("tap_radius_um") or 200.0)
         flops = r["flops"] or 0
         planned = r.get("planned", r["cheap"])
@@ -351,6 +437,16 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
         msg += ("; fix: size the taps on the netlist register inventory (clock.sink_bins_file from the placed kit, "
                 "taps.py bins) and re-run tap_split (TAP-SOFTFLOP, TAP-GRID-R5)")
         hits.append((score, _w(tn, msg)))
+    dens_rows, dens_nc = [], []
+    if _kw.get("density", True):
+        dex = _kw.get("density_ex") or ex or (Exact(raw, plan_path, tree) if exact else None)
+        dens_rows, dens_nc = density_per_tap(raw, plan_path, tree, dex, bins_override=_kw.get("density_bins"),
+                                             budget_s=float(os.environ.get("OT_ADV_TAPLOAD_DENSITY_BUDGET_S", DENSITY_BUDGET_S)))
+    dens_over = [d for d in dens_rows if d["over"]]
+    for d in dens_over:
+        hits.append((d["max"] / d["cap"], _w(d["tn"], f"density per-tap: {len(d['over'])} of {d['taps']} taps over the kit cap {d['cap']} "
+                     f"on the plan's own sink bins ({_fmt(d['bins_n'])} sinks): " + ", ".join(f"{n} {_fmt(v)}" for v, n in d["over"][:5])
+                     + "; fix: re-solve the density taps (tap_derive, cap = the type's tap_max_sinks) on bins from the current placement")))
     hits.sort(key=lambda h: -h[0])
     if dump:
         with open(dump, "w") as f:
@@ -370,7 +466,10 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                                         f"{n_notap} without a static tap table); give the FULL composed plan and a --tree whose tools/die_plan "
                                         f"carries taps.py, not a row/delta file"))
     if unmeasured:
-        out.append(_w("UNMEASURED", f"{len(unmeasured)} of {n_cmp} types have no placed sink bins on the current outline: the 1500-sink tap gate is UNMEASURED (not passed) on them: " + ", ".join(unmeasured[:20]) + (" ..." if len(unmeasured) > 20 else "")))
+        out.append(_w("UNMEASURED", f"{len(unmeasured)} of {n_cmp} types have no placed sink bins on the current outline: the 1500-sink tap gate is UNMEASURED = NOT-CHECKED (not passed) on them: " + ", ".join(unmeasured[:20]) + (" ..." if len(unmeasured) > 20 else "")))
+    if dens_nc:
+        out.append(_w("NOT-CHECKED", f"{len(dens_nc)} density types have no usable sink bins / taps: the per-tap cap rule did NOT run on them "
+                                     f"(not passed): " + ", ".join(f"{n} ({w})" for n, w in dens_nc[:6]) + (" ..." if len(dens_nc) > 6 else "")))
     out.append(_w("summary", f"{len(hits)} of {n_cmp} types with netlist data flagged (per-tap x{ratio}, taps x cap, placed "
                              f"tap > {placed_max} after the kit split; by rule {nr}); {len(unmeasured)} UNMEASURED on the placed gate (no placed bins); total-sink rule (netlist > {ratio} x planned) alone: "
                              f"{n_total} types (listed only where the plan model is a sink_bins_file inventory; otherwise it is boundary/station "
@@ -379,7 +478,8 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                              f"{f' (their flops/tap <= {left[-1]:,.0f})' if left else ''}"
                              f"{'' if not ex or ex.ok else ' (exact off: ' + ex.why + ')'}; {n_unmeas} types without a kit "
                              f"netlist, {n_notap} without a static tap table (density/sink taps: inventory rule only); cache {Path(src).name if src else '-'} "
-                             f"{cache.get('made', '')}; {time.time() - t_start:.0f} s"))
+                             f"{cache.get('made', '')}; density per-tap: {len(dens_rows)} types judged tap by tap ({len(dens_over)} over "
+                             f"their kit cap), {len(dens_nc)} NOT-CHECKED; {time.time() - t_start:.0f} s"))
     return out
 
 
