@@ -84,6 +84,9 @@ def native_contract(raw,asbuilt=None,plan_path=None):
         import bind_leaf_reset
         leaf_rules=bind_leaf_reset.selected(ab.get('reset_gate_bindings'),name,typ.get('hard_cores',[]))
         if leaf_rules:type_contract['reset_gate_bindings']=leaf_rules
+        kreg_branches = [spec for spec in typ.get("reset_replicate", ()) if spec.get("form") == "kreg_branch"]
+        if kreg_branches:
+            type_contract["kreg_reset_branches"] = kreg_branches
         types[name]=digest(type_contract)
         reset_context[name]=dict(reset=typ.get('reset'),hard=typ.get('hard'),
             clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
