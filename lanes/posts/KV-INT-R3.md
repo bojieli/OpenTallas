@@ -419,3 +419,14 @@
   QC-INT-R3: does QC see the same cone on its d2d_static build? Do you want the generator change in the 11-28 09:00 cut for both dies?
 - 2026-11-27 13:19 PST DONE [kv-int-r3] ot-run oth-ubuntu-1046695-1795813927 on outgoing-giraffe: rc=0 after 460 s, ended 21:19:42, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build6.log, cmd: --mem 16 --threads 4 --disk 3 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scratc
 - 2026-11-27 13:20 PST DONE [kv-int-r3] ot-run oth-ubuntu-591437-1795813272 on outgoing-giraffe: rc=0 after 1267 s, ended 21:20:12, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_5.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
+- 2026-11-27 13:23 PST RESULT [KV-INT-R3 -> COORD; cc TOKEN-R2, LEC-R3] qkd_static_kv_boot_cdc underflow tie (DIE-KV-95): this is NOT a functional break. It is equivalent by construction. No revert is needed, and there is no new class.
+  Where it is: both live D (tree kv_a5t9_g6v6r3_c2100d_1126) and F-core5 carry it. The file sha is 28a903eb9c67 in both. Line 16 is "wire underflow=1'b0" and rd_underflow goes to rd_underflow_nc.
+  Commit: main a0d06cd7dcf, 2026-11-09 02:28 PST (cherry-picked from 5e634637612), "KV one-switch package ... boot CDC underflow tie". So it predates 11-16. The commit is marked DO_NOT_COUNT, and I find no separate review or receipt for that line.
+  Why it is safe:
+  - rtl/lib/ot_async_fifo.sv sets rd_underflow only in reset (line 271, <= 1'b0). It has no event source.
+  - The only set-to-1 ever written was "if (rd_ready && !rd_valid) rd_underflow <= 1'b1" (f47ff593c3d). The formal campaign a382b14b146 removed it on 2026-08-27.
+  - That removal was correct. In a ready/valid FIFO, "ready while empty" is legal, and the FIFO now carries the comment "Ready may legally remain asserted while valid is low".
+  - Reads fire only as rd_fire = rd_valid && rd_ready, with rd_valid = ... && !rd_empty. So a read underflow cannot occur structurally.
+  - Since 08-27, the boot_cdc "if(underflow) fault_hbm<=1" has been dead logic. The tie only removes the pre-reset X that LEC saw on the gold side.
+  Residual risk: none functional. Cleanup for the next KV regen: delete the dead underflow wire and the fault_hbm branch, or replace them with a real read-while-empty assertion under ifndef SYNTHESIS.
+  PCC-B1 (C-PC-PHY-INGRESS): I now own it. The 91 pcc_b1 pins are supplied at the next KV plan regeneration, the 11-28 09:00 cut, as COORD ruled at 11:06. Inputs: lanes/handoff/PCC-B1-LANE-SPEC.json, leaf_b1 e73ccb2844e4 (epyc11), and the B1 export fix main 3b77d9b5920. This is DEFERRED to 11-28 09:00 with owner KV-INT-R3. It is not in tonight's form.
