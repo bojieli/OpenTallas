@@ -143,7 +143,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
           ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
-          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"))
+          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("RESERVED-POCKET", "reserved_pocket"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 

@@ -2031,6 +2031,9 @@
          "maxItems": 2
         }
        },
+       "reserved_pocket_fill": {
+        "type": "boolean"
+       },
        "reserved_sites_um": {
         "type": "array",
         "items": {

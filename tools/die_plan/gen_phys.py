@@ -5553,6 +5553,7 @@ def reserved_sites_tcl(P, tn):
     rings are FIRM in it (other logic stays out of the bank), released before DPL (DPL counts fixed cells
     under a blockage as not placed in rows). Returns (pre_tcl, post_landing_tcl, release_tcl); empty strings
     when the key is absent, so a plan without it emits a byte-identical kit.
+    clock.reserved_pocket_fill adds protected, capped gaps as hard blockages and M1-M4 obstructions.
     """
     t = P.types[tn]
     rows = t.get("clock", {}).get("reserved_sites_um", [])
@@ -5582,12 +5583,23 @@ def reserved_sites_tcl(P, tn):
             padded.add((x0, y0, x1, y1))
         (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
     tap_rects = interior_tap_pin_rects(P, tn) if any(it[2] for it in hard_route) else {}
+    fill = []
+    if t.get("clock", {}).get("reserved_pocket_fill"):
+        import reserved_pocket as RP
+        groups = RP.candidates(RP.wall_rows(t), (w, h))
+        if groups:
+            if not tap_rects:
+                tap_rects = interior_tap_pin_rects(P, tn)
+            protected = RP.protected_rects(t, tap_rects, [r["rect_um"] for r in rows])
+            fill = RP.clear_fill(groups, protected)
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
+    precise = padded | set(fill)
+
     def create(rects, var):
         out = []
         for x0, y0, x1, y1 in rects:
-            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in padded else f"{v:g}" for v in (x0, y0, x1, y1))
+            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in precise else f"{v:g}" for v in (x0, y0, x1, y1))
             q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
             out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
         return out
@@ -5596,9 +5608,11 @@ def reserved_sites_tcl(P, tn):
     pre = post = rel = ""
     if hard:
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
-                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
+                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard + fill, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
                           *route_obstruction_lines(hard_route, tap_rects, snap=os.environ.get("OT_RESERVED_SNAP", "1") != "0"),
+                          *route_obstruction_lines([(r, ("M1", "M2", "M3", "M4"), False) for r in fill]),
+                          *([f'puts "OT_RESERVED_POCKET rects={len(fill)}"'] if fill else []),
                           *([f'puts "OT_RESERVED_SITES edge_pad_sites: {npad} route-obstructed sites padded E/W in placement"'] if npad else []),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
