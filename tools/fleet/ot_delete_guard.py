@@ -6,7 +6,7 @@ impossible.  refuse(target) -> None (may delete) or the reason string.  A target
   1. it is a symlink or its realpath differs (no aliases: the epyc4 loss),
   2. it IS, CONTAINS or lies INSIDE a protected path: kit_wave.json dies[*].src / item_inputs[*].src / plan dirs, any tree_switch_*.json
      marker tree, a bind of record (kit_rtl bind_out/asbuilt/script + dirs), prov_view_sources dirs,
-  3. a live process has its cwd, an open file or its command line under it (or its cwd is a parent of it),
+  3. a live process names it by cwd, open file or command line, or it overlaps a live Explorer service dataset,
   4. it is a STRICT DESCENDANT of a source tree root (<lane>/kw45/<tree>/x, <lane>/src_*/x): trees are deleted WHOLE or not at all.
 The protected list is built on the hub (build_protected) and pushed to every host as protected.txt (header '# built <epoch>'); a missing
 or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_guard.py build COORD_DIR OUT | check PATH [LIST]"""
@@ -150,6 +150,62 @@ def self_alias():
 
 _CACHE = {"t": 0, "v": ""}
 
+# These managed Explorer/fleet-viz settings each name one absolute local path.
+# Other environment values are never retained or searched.
+EXPLORER_DATA_KEYS = {b"LV_STORE", b"FLEET_VIZ_REPO", b"FLEET_VIZ_STATE", b"DESIGN_INDEX",
+                      b"TOKEN_DESIGN_MAP", b"EXPLORER_STATE"}
+EXPLORER_CODE_DIRS = ("/tools/explorer", "/tools/fleet_viz", "/.local/share/fleet-viz")
+SCRATCH_DATASET = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[^/]+(?:/[^/].*)?")
+
+
+class LiveText(str):
+    """The usual process text plus separate canonical service datasets for overlap checks."""
+
+    def __new__(cls, text, datasets):
+        entry = super().__new__(cls, text)
+        entry.datasets = frozenset(datasets)
+        return entry
+
+
+def explorer_process(cmdline, cwd):
+    for arg in cmdline.split(b"\0", 6)[:6]:
+        name = os.fsdecode(arg)
+        if os.path.basename(name) == "design_dev_server.py":
+            return True
+        if os.path.basename(name) == "server.py":
+            folder = os.path.dirname(os.path.normpath(os.path.join(cwd, name)))
+            if folder.endswith(EXPLORER_CODE_DIRS):
+                return True
+    return False
+
+
+def explorer_datasets(proc):
+    try:
+        with open(proc + "/environ", "rb") as f:
+            env = f.read()
+    except OSError:
+        return set()
+    paths = set()
+    for field in env.split(b"\0"):
+        key, _, value = field.partition(b"=")
+        if key not in EXPLORER_DATA_KEYS:
+            continue
+        path = os.fsdecode(value)
+        if SCRATCH_DATASET.fullmatch(path):
+            path = os.path.realpath(path)
+            if SCRATCH_DATASET.fullmatch(path):
+                paths.add(path)
+    return paths
+
+
+def service_dataset_refusal(target, process_text):
+    paths = getattr(process_text, "datasets", ())
+    if paths:
+        target = os.path.realpath(target)
+        if any(path == target or path.startswith(target + "/") or target.startswith(path + "/") for path in paths):
+            return "live Explorer service dataset"
+    return None
+
 
 def live_text(skip=(), ttl=20):
     if time.time() - _CACHE["t"] < ttl and not skip:
@@ -172,15 +228,22 @@ def ancestor_pids(pid=None, proc="/proc"):
 
 
 def _live_text(skip=()):
-    t, me = [], {os.getpid(), os.getppid(), *skip}
+    t, datasets, me = [], set(), {os.getpid(), os.getppid(), *skip}
     anc = ancestor_pids()
     for p in glob.glob("/proc/[0-9]*"):
-        if int(p[6:]) in me:
+        pid = int(p[6:])
+        if pid in me:
             continue
         try:
-            if int(p[6:]) not in anc:      # an ancestor's cmdline is the delete request itself; its cwd / open files still count
-                t.append(open(p + "/cmdline", "rb").read().decode("latin1"))
-            t.append(os.readlink(p + "/cwd"))
+            cmdline = b""
+            if pid not in anc:            # an ancestor's cmdline is the delete request itself; its cwd / open files still count
+                with open(p + "/cmdline", "rb") as f:
+                    cmdline = f.read()
+                t.append(cmdline.decode("latin1"))
+            cwd = os.readlink(p + "/cwd")
+            t.append(cwd)
+            if b".py" in cmdline and explorer_process(cmdline, cwd):
+                datasets.update(explorer_datasets(p))
         except OSError:
             continue
         try:
@@ -191,7 +254,7 @@ def _live_text(skip=()):
                     pass
         except OSError:
             pass
-    return "\n".join(t).replace("opentallas-scratch3", "opentallas-scratch2")
+    return LiveText("\n".join(t).replace("opentallas-scratch3", "opentallas-scratch2"), datasets)
 
 
 def load_allow_exact(path=None, now=None):
@@ -622,7 +685,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     if protected is None:
         protected, err = load_list()
         if protected is None:
-            return err if m else None            # fail closed for tree roots; other targets keep the other guards
+            if m:
+                return err                     # a source tree needs the normal protected list
+            return service_dataset_refusal(target, live_text() if ptext is None else ptext)
     allow = load_allow_exact() if allow is None else allow
     # FLOW-OPS-1300 item 13 (FLEET-WATCH-R7: ~97 % of 4,400 idle failed / superseded attempt dirs per host refused): a die's work_root (the rows container
     # .../runs/<die>/kit-wave) is protected as a whole, so every old attempt_N inside it was refused.  Owner rule 11-12 (keep only live jobs, live / queued refs, signed until
@@ -652,6 +717,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     if lr:
         return lr
     pt = live_text() if ptext is None else ptext
+    sr = service_dataset_refusal(target, pt)
+    if sr:
+        return sr
     if names_path(pt, t):
         return "live process cwd/open file/cmdline under it"
     if ad and ad != t and names_path(pt, ad):
