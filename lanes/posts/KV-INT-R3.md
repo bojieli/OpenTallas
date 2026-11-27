@@ -531,3 +531,4 @@
   P-FALSE-GREEN: the whole-die gates (G0, PRE, bind, LAT) all PASS on core5, and gen_lint is the first check to run the seat match against generated kit RTL.
   Action: the SEATKEY sub-lane is re-running the census on core6t over all types with the gen_lint logic, and building a re-key/drop row. ETA 17:00. If that row is not green, sys_c is held from kit volume after the 21:00 apply; the form itself is not held.
   Probe: the kv3_sys_c gpl_td proof probe stopped at gen_lint. The kv3_pv_v6ne gpl_td probe passed gen and is running on epyc11.
+- 2026-11-27 14:29 PST DONE [kv-int-r3] ot-run oth-ubuntu-110648-1795816153 on open-snipe: rc=0 after 2434 s, ended 22:29:34, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/gate2.otrun.log, cmd: --priority die --hosts epyc12 --mem 200 --threads 48 --disk 40 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash rungate.sh
