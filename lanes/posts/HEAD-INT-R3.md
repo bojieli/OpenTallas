@@ -51,3 +51,4 @@
   - hd_lep0N writer_start 427.7/435.3 um (hold HEAD-W12F-EAST-WSTART-REACH, EAST).
   - hd_spn_end be_i/bw_i 472.5/718.5 um (hold HEAD-W12F-SPN-END-STATUS-REACH). The PARTITIONS 256dd row clears it: trial1 4fca0de51ee0 flags 2 types and hd_spn_end is gone.
   - So no route release is affected, apart from those three held types.
+- 2026-11-27 10:56 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-3854978-1795805624 on outgoing-giraffe: rc=0 after 139 s, ended 18:56:00, log none, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/part-r3 --hosts epyc8 -- docker run --rm -v /srv/opentallas-scratch2/c
