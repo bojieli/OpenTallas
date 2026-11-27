@@ -80,15 +80,17 @@ def read_entry(p):
         return json.load(fh)
 
 
-def read_manifest(store=None):
-    """every store entry (one file per sign-off record; a removed file is a removed manifest row)"""
-    out = []
-    root = records_dir(store)
-    for dp, _, fns in os.walk(root):
+def iter_entries(store=None):
+    """Read each manifest entry independently in filesystem traversal order."""
+    for dp, _, fns in os.walk(records_dir(store)):
         for fn in sorted(fns):
             if fn.endswith(".json.gz"):
-                out.append(read_entry(os.path.join(dp, fn)))
-    return sorted(out, key=lambda e: e["id"])
+                yield read_entry(os.path.join(dp, fn))
+
+
+def read_manifest(store=None):
+    """Every store entry sorted by ID. A removed file is a removed manifest row."""
+    return sorted(iter_entries(store), key=lambda e: e["id"])
 
 
 def write_entry(e, store=None):

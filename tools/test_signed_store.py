@@ -196,3 +196,56 @@ if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
             v(); print("ok", k)
+
+
+def test_ingest_identity_and_backfill_project_exact_manifest(tmp_path, monkeypatch):
+    import signed_store_ingest as si
+    import signed_store as ss
+
+    base = dict(scan=dict(name='scan_name', top='scan_top', generated=42), name='different_top_level',
+                origin='epyc8:/run/signoff.json', pins=None)
+    for e in (dict(base, id='b0'), dict(base, id='a0'),
+              dict(base, id='c0', pins={}, aliases=['epyc7:/alias/signoff.json']),
+              dict(base, id='d0', scan={'name': 'git-only'}, origin='origin/main:git/signoff.json'),
+              dict(base, id='e0', scan={}, origin='retired:/run/signoff.json')):
+        ss.write_entry(e, str(tmp_path))
+    assert si.stored_identities(str(tmp_path)) == {si.identity(r) for r in ss.load_records(str(tmp_path))[0]}
+    monkeypatch.setattr(si, 'LIVE', ('epyc8',))
+    assert si.pin_backfill_manifest(str(tmp_path)) == [
+        dict(id=eid, origin=base['origin'], scan=base['scan']) for eid in ('a0', 'b0')]
+
+
+def test_ingest_late_projection_keeps_file_guards_and_lowest_id(tmp_path):
+    import signed_store_ingest as si
+    import signed_store as ss
+
+    alias = 'epyc7:/alias/signoff.json'
+    r = dict(name='n', top='t', generated=42, scan_host='epyc7', path='/alias/signoff.json',
+             prov_file='/alias/PROVENANCE.json', flow_tag='signed', src_commit='commit')
+    e = dict(name='n', top='t', generated=42, origin='epyc8:/real/signoff.json', aliases=[alias],
+             files=[['real/file.odb', 7, 'hash']], pins={'large': [1, 2, 3]})
+    for item in (dict(e, id='z0'), dict(e, id='a0'),
+                 dict(e, id='00', flow_tag='signed', src_commit='commit'),
+                 dict(e, id='b0', name='different')):
+        ss.write_entry(item, str(tmp_path))
+    original = si.select_late([r], ss.read_manifest(str(tmp_path)))
+    got = si.select_late([r], si.late_manifest([r, dict(r, prov_file=None)], str(tmp_path)))
+    assert original[0][0]['id'] == got[0][0]['id'] == 'a0'
+    assert len(original) == len(got) == 1
+    assert got[0][0]['files'] == original[0][0]['files']
+    assert got[0][0]['pins'] is True
+    assert si.select_late([dict(r, prov_file=None)], si.late_manifest([r], str(tmp_path))) == []
+
+
+def test_ingest_marker_keeps_sorted_alias_precedence_and_own_dirs():
+    import signed_store_ingest as si
+
+    match = 'epyc7:/alias/signoff.json'
+    excluded = 'epyc8:/git/signoff.json'
+    entries = [dict(id='z0', origin='epyc8:/new/signoff/signoff.json', aliases=[match],
+                    scan=dict(routed_db='/data/run/6_final.odb')),
+               dict(id='a0', origin='epyc7:/old/signoff.json', aliases=[match]),
+               dict(id='b0', origin='origin/main:git/signoff.json', aliases=[excluded]),
+               dict(id='c0', origin='epyc8:/unreferenced/signoff.json')]
+    plans = {'die': {'signed_types': {'t': [match + ' (label)', excluded, None]}}}
+    assert si.marker_dirs(plans, iter(entries)) == {'epyc8': {'/new/signoff', '/new', '/data/run', '/data'}}

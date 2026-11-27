@@ -70,6 +70,15 @@ def identity(r):
     return r.get('name'), r.get('top'), str(r.get('generated'))
 
 
+def stored_identities(store=None):
+    """Identity keys of the scan records without retaining aliases, file lists, or pins."""
+    out = set()
+    for e in ss.iter_entries(store):
+        if not str(e.get('origin', '')).startswith('origin/main:'):
+            out.add(identity(e.get('scan') or {}))
+    return out
+
+
 def select(recs, have, now, window_h=WINDOW_H):
     """-> {identity: [records]} not in the store and generated inside the window.  A record with no readable time is left
     to a backfill: 'recent' cannot be decided for it."""
@@ -128,6 +137,7 @@ def strap_sweep(fails, cache=None, runner=None):
     for r in recs:
         k = rtp.strap_kit(r)
         if k and r.get('scan_host') in (globals().get('LIVE') or ORDER): need[r['scan_host']].add(k)
+    del recs
     rows, skipped = [], set()
     for h, ds in sorted(need.items()):
         try:
@@ -151,25 +161,38 @@ def strap_sweep(fails, cache=None, runner=None):
     return rows
 
 
+def marker_dirs(plans, entries):
+    """Own sign-off and DB directories for the exact counted references."""
+    refs = set()
+    for v in plans.values():
+        for kind in ('signed_designs', 'signed_types', 'signed_cores'):
+            for group in (v.get(kind) or {}).values():
+                for ref in group:
+                    m = re.match(r'(\S+?):(\S+signoff\.json)', ref if isinstance(ref, str) else '')
+                    if m:
+                        refs.add('%s:%s' % m.groups())
+    by_alias = {}
+    for e in entries:
+        eid, origin = e['id'], e.get('origin')
+        for alias in [origin] + (e.get('aliases') or []):
+            if alias in refs and (alias not in by_alias or eid >= by_alias[alias][0]):
+                by_alias[alias] = eid, origin, (e.get('scan') or {}).get('routed_db')
+    need = collections.defaultdict(set)
+    for _, origin, db in by_alias.values():
+        if str(origin or '').startswith('origin/'):
+            continue
+        h, p = origin.split(':', 1)
+        need[h].update(ancestors(p))
+        if db:
+            need[h].update(ancestors(db))
+    return need
+
+
 def marker_sweep(fails, cache=None):
     """-> new HOLD rows written.  Own dirs only: a marker on another copy of the view says nothing about this record."""
-    cache = json.load(open(cache or rtp.CACHE))
-    by_alias = {}
-    for e in ss.read_manifest():
-        for a in [e.get('origin')] + (e.get('aliases') or []):
-            if a: by_alias[a] = e
-    need = collections.defaultdict(set)
-    for v in cache['plans'].values():
-        for kind in ('signed_designs', 'signed_types', 'signed_cores'):
-            for refs in (v.get(kind) or {}).values():
-                for ref in refs:
-                    m = re.match(r'(\S+?):(\S+signoff\.json)', ref if isinstance(ref, str) else '')
-                    e = by_alias.get('%s:%s' % m.groups()) if m else None
-                    if not e or str(e.get('origin', '')).startswith('origin/'): continue
-                    h, p = e['origin'].split(':', 1)
-                    need[h].update(ancestors(p))
-                    db = (e.get('scan') or {}).get('routed_db')
-                    if db: need[h].update(ancestors(db))
+    with open(cache or rtp.CACHE) as fh:
+        plans = json.load(fh)['plans']
+    need = marker_dirs(plans, ss.iter_entries())
     known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
     add = []
     for h, ds in sorted(need.items()):
@@ -317,7 +340,7 @@ def archive_host(h, cands, fails, max_bytes=None):
         diff_ = [p for p in have_ if H0.get(p) is not None and H0.get(p) != a0.get(p)]
         if diff_:
             ref = set()
-            for e in ss.read_manifest():
+            for e in ss.iter_entries():
                 if e.get('archive') == ss.ARCHIVE_ROOT + '/' + h:
                     ref.update((f[0], f[2]) for f in e.get('files', []) if len(f) > 2)
             free = [p for p in diff_ if (p.lstrip('/'), a0[p][1]) not in ref and (p, a0[p][1]) not in ref]
@@ -395,6 +418,32 @@ def from_archive(local_dir, host, archive_base, fails, runner=None, ingest=None,
     return new
 
 
+def late_aliases(e):
+    origin = str(e.get('origin'))
+    yield origin
+    yield from (str(alias) for alias in e.get('aliases') or [] if str(alias) != origin)
+
+
+def late_record_key(r):
+    if r.get('prov_file') and r.get('flow_tag') and r.get('src_commit'):
+        return '%s:%s' % (r.get('scan_host'), r.get('path')), identity(r)
+    return None
+
+
+def late_manifest(recs, store=None):
+    """Keep the exact unit file list only when an unversioned entry has a matching scan row."""
+    keys = {key for r in recs if (key := late_record_key(r)) is not None}
+    fields = ('id', 'name', 'top', 'generated', 'origin', 'aliases', 'files')
+    entries = []
+    for e in ss.iter_entries(store):
+        if e.get('flow_tag') and e.get('src_commit'):
+            continue
+        k = identity(e)
+        if any((alias, k) in keys for alias in late_aliases(e)):
+            entries.append(dict({key: e.get(key) for key in fields}, pins=True if e.get('pins') is not None else None))
+    return sorted(entries, key=lambda e: e['id'])
+
+
 def select_late(recs, manifest):
     """-> [(entry, fresh record)]: a stored record that is not versioned whose origin copy now has a versioned provenance (a re-sign that wrote
     PROVENANCE.json after an ingest had already taken its signoff.json).  Origin copy, or (11-09 16:5x, HBM smk so_ho) an alias copy of the same
@@ -404,12 +453,11 @@ def select_late(recs, manifest):
     for e in manifest:
         if e.get('flow_tag') and e.get('src_commit'): continue        # versioned already (11-09: not 'has any provenance')
         k = (e.get('name'), e.get('top'), str(e.get('generated')))
-        for o in [str(e.get('origin'))] + [str(x) for x in e.get('aliases') or [] if str(x) != str(e.get('origin'))]:
+        for o in late_aliases(e):
             by.setdefault((o, k), e)
     out = []
     for r in recs:
-        if not (r.get('prov_file') and r.get('flow_tag') and r.get('src_commit')): continue
-        e = by.get(('%s:%s' % (r.get('scan_host'), r.get('path')), identity(r)))
+        e = by.get(late_record_key(r))
         if e: out.append((e, r))
     return out
 
@@ -453,12 +501,18 @@ def pins_backfill(manifest, pinf=None, setter=None, limit=int(os.environ.get("OT
 PINS_TRIED = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_pins_tried.json'
 
 
+def pin_backfill_manifest(store=None):
+    """Entries eligible by pins/origin, in the original ID order for budgeting and retries."""
+    return sorted(({key: e.get(key) for key in ('id', 'origin', 'scan')} for e in ss.iter_entries(store)
+                   if e.get('pins') is None and str(e.get('origin') or '').partition(':')[0] in LIVE),
+                  key=lambda e: e['id'])
+
+
 def backfill_cli(dry=False):
     try: tried = json.loads(PINS_TRIED.read_text())
     except (OSError, ValueError): tried = {}
-    manifest = ss.read_manifest()
-    todo = [e for e in manifest if e.get('pins') is None and str(e.get('origin') or '').partition(':')[0] in LIVE]
-    say('pins backfill: entries without pins on live hosts', len(todo))
+    manifest = pin_backfill_manifest()
+    say('pins backfill: entries without pins on live hosts', len(manifest))
     if dry: return 0
     done = pins_backfill(manifest, tried=tried)
     try: PINS_TRIED.write_text(json.dumps(tried))
@@ -553,10 +607,12 @@ def main():
     with cf.ThreadPoolExecutor(len(ORDER)) as ex:
         futs = {ex.submit(rtp.scan_host, h): h for h in ORDER}
         for f in cf.as_completed(futs):
+            h = futs.pop(f)
             try: recs += f.result()
             except Exception as e:
-                unreachable.append(futs[f]); say('SCAN FAILED', futs[f], str(e)[:200])
-    have = {identity(r) for r in ss.load_records()[0]}
+                unreachable.append(h); say('SCAN FAILED', h, str(e)[:200])
+        del f
+    have = stored_identities()
     sel = select(recs, have, time.time())
     say('scanned', len(recs), 'records, store has', len(have), 'identities, new inside %.0f h:' % WINDOW_H, len(sel))
     byh = collections.defaultdict(list)
@@ -591,7 +647,9 @@ def main():
                 if c.returncode: fails.append(['coord', h, 'store commit rc %d' % c.returncode])
                 else: committed = len(new)
             say(h, 'ingested so far', len(new), 'fails', len(fails))
-    late = select_late(recs, ss.read_manifest())
+    scanned = len(recs)
+    late = select_late(recs, late_manifest(recs))
+    del recs
     say('late provenance candidates', len(late), [e['id'][:12] for e, r in late])
     lated = []
     if not dry:
@@ -607,7 +665,7 @@ def main():
     if not dry:
         try: strap_sweep(fails)
         except Exception as x: fails.append(['*', '*', 'strap sweep: %s: %s' % (type(x).__name__, str(x)[:160])])
-    res = dict(holds=holds, late=lated, late_candidates=[e['id'] for e, r in late], time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
+    res = dict(holds=holds, late=lated, late_candidates=[e['id'] for e, r in late], time=time.ctime(), secs=int(time.time() - t0), scanned=scanned, selected=len(sel), new=new, fails=fails,
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
     say('DONE new', len(new), 'fails', len(fails), 'unreachable', unreachable, 'commit rc', commit, '%d s' % res['secs'])
