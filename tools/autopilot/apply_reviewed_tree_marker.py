@@ -231,7 +231,7 @@ def _free_gb(host):
         return None
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None, free_probe=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None, free_probe=None, check_bind_config=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
     plan launches at once) unless --pilot-item names one.  Strict bind + LATCHECK, run in parallel by the lane, are the only blocking plan checks: a failure
@@ -399,6 +399,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
                 d["queue_src"] = "main@" + main
         HR._deep_set(d.setdefault("die_gen_env", {}), marker.get("die_gen_env") or {})
         repoint_gen_env(d, old["src"], tree)
+        if check_bind_config:
+            check_bind_config(d)
         additions = list(obj.get("hold_records_add") or [])
         if obj.get("hold_record"):
             additions.append(obj["hold_record"])
