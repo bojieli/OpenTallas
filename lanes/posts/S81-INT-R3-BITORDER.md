@@ -1,0 +1,1 @@
+- 2026-11-27 09:58 PST DIED [S81-INT-R3-BITORDER] ot-push-main otpush-viable-ram-1682114 on viable-ram: rc=1 after 917 s, ended 17:58:44, log /srv/opentallas-scratch2/claude/S81-INT-R3-BITORDER/push1.log, cmd: ot-push-main  | class=NO-PATTERN cause=rc 1 after 917 s, no log
