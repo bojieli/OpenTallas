@@ -92,3 +92,32 @@ def test_legality_covers_solver_taps_not_only_rows():
     lines = ST.findings(raw, ts, legal=lambda tn, x, y, n: n != "clk_t50")
     tl = [x for x in lines if "STALETABLE-TAPLEGAL" in x]
     assert len(tl) == 1 and "clk_t50=[5.0, 5.0]" in tl[0] and "C-MACRO-TAP-LEGAL" in tl[0]
+
+
+def test_level_fails_only_against_a_pre_diff_base(monkeypatch):
+    monkeypatch.delenv(ST.LEVEL_ENV, raising=False)
+    monkeypatch.delenv("OT_PRE_BASE_CHILD", raising=False)
+    monkeypatch.setattr(sys, "argv", ["plan_gate_pre.py", "check", "--plan", "p.json"])
+    assert ST.level() == "WARN"                                                       # standalone census stays advisory
+    monkeypatch.setattr(sys, "argv", ["plan_gate_pre.py", "check", "--plan", "p.json", "--base", "b.json"])
+    assert ST.level() == "FAIL"                                                       # row gate: new / changed lines block
+    raw, ts = _raw()
+    assert all(x.startswith("FAIL ") for x in ST.findings(raw, ts) if "STALETABLE-TAPTABLE" in x)
+    monkeypatch.setattr(sys, "argv", ["plan_gate_pre.py", "check"])
+    monkeypatch.setenv("OT_PRE_BASE_CHILD", "1")
+    assert ST.level() == "FAIL"                                                       # the base child is judged at the same level
+    monkeypatch.setenv(ST.LEVEL_ENV, "0")
+    assert ST.level() == "WARN"                                                       # explicit opt-out wins
+    monkeypatch.setenv(ST.LEVEL_ENV, "1")
+    monkeypatch.delenv("OT_PRE_BASE_CHILD")
+    assert ST.level() == "FAIL"
+
+
+def test_window_row_shadowed_by_offsets_row_is_not_judged():
+    raw, ts = _raw()
+    ports = list(ts["cA4"][0])
+    raw["clock"]["tap_offset"] = {"per_port_ps": {"cA4": {p: [0.0, 1.0] for p in ports}}}       # offsets row complete; window row (9 of 20) is shadow
+    assert not [x for x in ST.findings(raw, ts) if "STALETABLE-TAPTABLE" in x]
+    del raw["clock"]["tap_offset"]["per_port_ps"]["cA4"][ports[3]]                                # the effective row loses a port -> judged
+    tl = [x for x in ST.findings(raw, ts) if "STALETABLE-TAPTABLE" in x]
+    assert len(tl) == 1 and "clock.tap_offset" in tl[0] and "1 missing" in tl[0]

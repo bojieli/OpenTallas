@@ -233,6 +233,13 @@ def _reset_sig(P, tn):
     return rows, (tuple(round(float(v), 3) for v in root) if root else None)
 
 
+def density_added(ck):
+    """QC-R3-TAPS 11-27: a density type that already stores added_taps.  Its added names follow the density count (clk_t<base>..), so
+    growing the sink inventory renumbers them (TAP-NAMEDRIFT); but appending MORE added_taps behind the stored ones leaves every name and
+    every density tap where it is.  Such a type takes the append path with tap_mode kept 'density' and the sink inventory untouched."""
+    return ck.get("tap_mode") == "density" and bool(ck.get("added_taps"))
+
+
 def _table(ck, mode):
     return ck.get("taps") if mode == "explicit" else ck.get("added_taps")
 
@@ -331,14 +338,10 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
         return rec
     sig0 = _reset_sig(P0, tn)
     mode = ck.get("tap_mode", "grid")
-    if mode == "density":
+    dens_add = density_added(ck)
+    if mode == "density" and not dens_add:
         if not base["over"]:
             rec["status"] = "density: span stage not supported (taps follow the sink inventory)"
-            return rec
-        if ck.get("added_taps"):
-            # stored added_taps are named after the density count (clk_t<base>..): growing the sink inventory would renumber
-            # them (TAP-NAMEDRIFT, KV kv3_hgi "density added tap names/order must be clk_t59..clk_t69"); a different fix
-            rec["status"] = "density with stored added_taps: names follow the density count, not derived (report only)"
             return rec
         far = [(x, y, w) for x, y, w, k in _far_groups_flat(A, radius) if k != "plan"]
         if not far:
@@ -347,10 +350,10 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
         add = [[round(x, 4), round(y, 4), max(1.0, round(w, 3))] for x, y, w in far]
         rec["added_sinks"] = len(RF._add_reach_sinks(ck, add))
     else:
-        if mode not in EXPLICIT_MODES:
+        if mode not in EXPLICIT_MODES and not dens_add:
             rec["status"] = "tap_mode %s not handled" % mode
             return rec
-        if mode != "explicit":
+        if mode != "explicit" and not dens_add:
             ck["tap_mode"] = "grid+explicit"
             ck.setdefault("added_taps", [])
         mode = ck["tap_mode"]
@@ -370,7 +373,7 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
                 break
             farx = [s for s, d, k in zip(A["sinks"], A["dist"], A["kinds"])
                     if d > radius + 1e-6 and re.split(r"[:(]", k)[0] != "plan"]
-            if farx:
+            if farx and not dens_add:
                 RF._add_reach_sinks(ck, [[round(x, 4), round(y, 4), max(1.0, round(w, 3))] for x, y, w in farx])
             _append_taps(ck, mode, new, PQ, tn)
             rec["added"].extend([list(q) for q in new])
@@ -394,7 +397,7 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
             if err:
                 rec["span_unfixed"] = err
                 break
-    if mode != "density":
+    if mode != "density" or dens_add:
         own_rows = [r for r in _table(ck, mode) or [] if r.get("kind") != "core"]
         rec["added"] = [list(r["xy"]) for r in own_rows[orig_n:]]
     PA = RF.plan_obj(raw, plan_path)

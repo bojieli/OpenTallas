@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """stale_tables.py -- PRE class STALETABLE (class P-STALE-TABLE, QC-INT-R2-TOOLS 11-26, COORD FABLE-FLOW-0847 item 11).  ADVISORY (WARN) on
-existing plans; $OT_PRE_STALETABLE_BLOCK=1 makes the lines FAIL.
+existing plans standalone; FAIL against a PRE-DIFF --base (block_against_base) or with $OT_PRE_STALETABLE_BLOCK=1.
 
 Class: a plan row edit moves a station / tap / macro and a DEPENDENT table is not re-derived.  Static equality checks ("table == re-derived"):
-  TAPTABLE   clock.tap_window.per_port_ps / clock.tap_offset.per_port_ps keys must equal the type's tap ports (tap grid + core taps):
+  TAPTABLE   the EFFECTIVE tap table of a type (clock.tap_offset.per_port_ps row, else clock.tap_window.per_port_ps) must have exactly the type's tap ports (tap grid + core taps):
              missing ports (QC cA4 lists 9 of 20) and stale ports (name no longer a tap).  Overlaps TAPOFF-MISSING (FAIL, missing only);
              this adds the stale keys and the census per die.
   ORGROUP    internal_stations entry with or_groups: or_groups[0].regs_um must equal the row's regs_um (QC coll_core 624.645 vs 626.454;
@@ -33,7 +33,16 @@ FORMS = ("TAPTABLE", "ORGROUP", "TAPLEGAL", "RELAYBIT")
 
 
 def level():
-    return "FAIL" if os.environ.get(LEVEL_ENV) == "1" else "WARN"
+    """FAIL with $OT_PRE_STALETABLE_BLOCK=1, WARN with 0.  QC-R3-TAPS 11-27 (P-STALE-TABLE, blocking): unset, it is FAIL in a PRE-DIFF run
+    (`plan_gate_pre.py check ... --base BASE`, which every row gate passes, and its base child, OT_PRE_BASE_CHILD) and WARN standalone.
+    PRE-DIFF fails only on NEW or CHANGED lines, so a row that makes a type's effective tap table differ from the re-derived one (or changes
+    the count of an already stale one) is refused while findings the base already has stay INHERITED.  Row and base are judged at the same
+    level (same argv rule / child env)."""
+    v = os.environ.get(LEVEL_ENV)
+    if v is not None:
+        return "FAIL" if v == "1" else "WARN"
+    diff = os.environ.get("OT_PRE_BASE_CHILD") == "1" or any(a == "--base" or a.startswith("--base=") for a in sys.argv[1:])
+    return "FAIL" if diff else "WARN"
 
 
 def _fl(p):
@@ -47,7 +56,10 @@ def tap_table(raw, tn, grid, core):
     off = ((ck.get("tap_offset") or {}).get("per_port_ps") or {}).get(tn)
     win = ((ck.get("tap_window") or {}).get("per_port_ps") or {}).get(tn)
     out = []
-    for key, tab in (("tap_offset", off), ("tap_window", win)):
+    # the effective table only (tap_offset_cover.tables / gen_phys): the offsets row wins, a window row counts only for a type without one.
+    # QC 77f2 (QC-R3-TAPS 11-27): all 138 types carry both rows, the offsets rows cover their ports and 110 shadow window rows are short, so
+    # judging the shadow row put 110 findings on timing that no kit reads (and would have blocked rows on a table nobody consumes).
+    for key, tab in (("tap_offset", off), ("tap_window", None if off else win)):
         if not tab:
             continue
         miss = sorted(p for p in grid if p not in tab)

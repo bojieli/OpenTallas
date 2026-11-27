@@ -168,3 +168,10 @@ def test_row_form_only_sets_the_flag_and_is_idempotent(tmp_path):
     out2 = tmp_path / "out2.json"
     assert TR.main(["--row", str(out), str(out2), str(rep), "--span", "300"]) == 0
     assert json.loads(out2.read_text())[TR.FLAG] == {"enable": 1, "types": "^mid$", "jobs": 2, "span_um": 300.0}
+
+
+def test_density_with_stored_added_taps_takes_the_append_path():
+    assert TR.density_added({"tap_mode": "density", "added_taps": [{"name": "clk_t65", "xy": [1, 1]}]})
+    assert not TR.density_added({"tap_mode": "density", "added_taps": []})
+    assert not TR.density_added({"tap_mode": "density"})
+    assert not TR.density_added({"tap_mode": "grid+explicit", "added_taps": [{"name": "clk_t5", "xy": [1, 1]}]})
