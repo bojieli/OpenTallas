@@ -17,6 +17,8 @@ classify(rc, cmd, log_tail, secs) -> (CLASS, cause).  Classes, first match wins:
   BIND-FAIL    a die/core bind stopped on an EMIT / compare error (EMIT ..., compare FAIL)
   ROUTE-FAIL   the kit's own make flow stopped at a stage (FAIL_route / make: *** [...] Error N)
   VERDICT-FAIL a checker wrote "verdict": "FAIL" (json) and exited nonzero
+  CRASH-SEGV   rc 139 (SIGSEGV);  TIMEOUT rc 124;  STATE-NOT-DEATH a gate state (ROW-GATE NOT-READY, WAIT-PLAN-VISUAL) posted as a death
+  NO-LOG-RC<n> rc 1 or 2 after more than 10 s with no log at all
   NO-PATTERN   nothing matched; the cause is the last non-ot-run log line (was UNCLASSIFIED; every DIED post carries class=)
 stdlib only; pure function (tests need no host)."""
 import os
@@ -83,6 +85,8 @@ def classify(rc, cmd="", log_tail="", secs=0):
     preflight = _last_line(t, r"^NOT-RUN PREFLIGHT\b")
     if rc and preflight:
         return _c("NOT-RUN", preflight)
+    if re.search(r"ROW-GATE NOT-READY|WAIT-PLAN-VISUAL", t):
+        return _c("STATE-NOT-DEATH", _last_line(t, r"ROW-GATE NOT-READY|WAIT-PLAN-VISUAL") or "gate state posted as a death")
     if rc != 0 and re.search(r"AUTO-GEOM FAIL\b", t):
         return _c("GEOM-FAIL", _last_line(t, r"AUTO-GEOM FAIL"))
     if re.search(r"NOT-RUN no host qualifies \((?!.*resolve)[^)]*\b(mem|admi)|exceeds physical RAM|memory admission (refus|wait)", t):
@@ -104,6 +108,10 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("ROUTE-FAIL", drt_stop)
     if rc == 137 or re.search(r"\bKilled\b|Out of memory|oom-kill|MemoryError|Cannot allocate memory", t):
         return _c("OOM", _last_line(t, r"Killed|memory|oom") or "SIGKILL (rc 137), memory limit")
+    if rc == 139:
+        return _c("CRASH-SEGV", _last_line(t, r"Segmentation|SIGSEGV|segfault") or "SIGSEGV (rc 139)")
+    if rc == 124:
+        return _c("TIMEOUT", _last_line(t, r"timed? ?out|timeout") or "timeout (rc 124)")
     if re.search(r"stopped by [\w./-]+:|disk floor|DISK-RAIL|memory admission|guard kill|reaper|ot-guard|rail kill", t, re.I):
         return _c("RAIL-KILL", _last_line(t, r"stopped by|floor|admission|guard|reaper|rail"))
     if rc in (143, 130, 129) or re.search(r"\bcancel(l)?ed\b|--cancel|SIGTERM|Terminated\b", t):
@@ -126,6 +134,8 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("CHECKER-RC", _last_line(t, r"_DONE|VERDICT|PASS") + " (finished, exit rc %s: findings or verdict)" % rc)
     if not t.strip() and rc in (1, 2) and secs <= 10:
         return _c("SETUP", "died after %s s with no log: the command failed at start (rc %s)" % (secs, rc))
+    if not t.strip() and rc in (1, 2):
+        return _c("NO-LOG-RC%s" % rc, "rc %s after %s s, no log" % (rc, secs))
     if not _last_line(t) and t.strip():
         return _c("NO-PATTERN", "rc %s after %s s; the log holds only ot-run lines (the command wrote its output to its own files)" % (rc, secs))
     return _c("NO-PATTERN", _last_line(t) or ("rc %s after %s s, no log" % (rc, secs)))

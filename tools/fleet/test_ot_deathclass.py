@@ -21,7 +21,12 @@ def test_classes():
     assert cls(11, "G0 errors 35 inherited 30 new 5") == "DESIGN-FAIL"
     assert cls(1, "ot-run: DRAIN: epyc8 DRAINING (75 of 9999 GB scratch free)") == "RAIL-KILL"
     assert dc.classify(1, "", "", 3)[0] == "SETUP"
-    assert dc.classify(1, "", "", 300)[0] == "NO-PATTERN"
+    assert dc.classify(1, "", "", 300)[0] == "NO-LOG-RC1"
+    assert dc.classify(2, "", "", 300)[0] == "NO-LOG-RC2"
+    assert dc.classify(5, "", "", 300)[0] == "NO-PATTERN"
+    assert cls(139, "") == "CRASH-SEGV" and cls(124, "") == "TIMEOUT" and cls(137, "") == "OOM"
+    assert cls(1, "ROW-GATE NOT-READY row x") == "STATE-NOT-DEATH"
+    assert cls(1, "WAIT-PLAN-VISUAL") == "STATE-NOT-DEATH"
     assert cls(1, "T2_PREP_DONE") == "CHECKER-RC"
     assert cls(5, "all fine\nbye") == "NO-PATTERN"
 
@@ -59,8 +64,8 @@ def test_label_reads_log_and_survives_missing():
         assert dc.label(137, "", f.name).startswith(" | class=OOM cause=")
     finally:
         os.unlink(f.name)
-    assert dc.label(1, "", "/nonexistent/x.log", 300).startswith(" | class=NO-PATTERN")
-    assert dc.label(1, "", "none", 300).startswith(" | class=NO-PATTERN")
+    assert dc.label(1, "", "/nonexistent/x.log", 300).startswith(" | class=NO-LOG-RC1")
+    assert dc.label(1, "", "none", 300).startswith(" | class=NO-LOG-RC1")
 
 
 def test_post_text_died_has_class_done_does_not():
