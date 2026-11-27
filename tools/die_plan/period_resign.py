@@ -166,6 +166,8 @@ def check(rec):
     j = SP.judge(rec)
     drc, tt, ff = j["drc"], j["tt_wns_ps"], j["ff_hold_wns_ps"]
     base = dict(tt_wns_ps=tt, ff_hold_wns_ps=ff, drc=drc, gates=j["gates"])
+    if j["gates"].get("probe_through") == "FAIL":
+        return dict(base, verdict="NOT_ELIGIBLE", why="diagnostic probe receipt")
     if SP.signed_period_ps(rec) is not None:
         return dict(base, verdict="NOT_ELIGIBLE", why="already a period record (signed_period_ps %g)" % SP.signed_period_ps(rec))
     if j["period_problem"]:

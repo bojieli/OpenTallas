@@ -8,7 +8,7 @@ tools = Path(__file__).resolve().parent
 sys.path[:0] = [str(tools), str(tools.parent / 'autopilot')]
 from archive_gate import Gate
 from count_hourly import index_rows
-from count_signoff import counts_signed
+from count_signoff import archive_record_counts, counts_signed
 from release_tree_plan import PROV_PY
 import signed_store
 
@@ -30,6 +30,8 @@ def signoff(wns=0.0, nviol=0, truncated=0, local='NOT SIGNED'):
 
 @pytest.mark.parametrize('record,want', [
     (signoff(), True),
+    (dict(signoff(local='SIGNED'), profile='legacy', verdict='LOCAL_PASS_NEEDS_PARENT',
+          reasons=['io_hold_parent: boundary hold deferred to die STA'], probe=False), True),
     (signoff(truncated=1, local='SIGNED'), False),
     (signoff(wns=-2.5, nviol=1, local='SIGNED'), False),
     ({'profile': 'minimal', 'verdict': 'SIGNED'}, False),
@@ -40,6 +42,23 @@ def test_local_and_remote_counter_measurement(record, want):
     exec(PROV_PY, remote)
     assert counts_signed(record) is want
     assert remote['counts_signed'](record) is want
+
+
+@pytest.mark.parametrize('marker', [
+    {'probe': True},
+    {'checks': {'probe_through': {'verdict': 'FAIL'}}},
+    {'reasons': ['probe_through: FAIL probe kit']},
+])
+def test_probe_cannot_count_even_with_passing_measurements(marker):
+    record = signoff()
+    record['checks'].update(marker.get('checks', {}))
+    record.update({k: v for k, v in marker.items() if k != 'checks'})
+    assert not counts_signed(record)
+    assert not archive_record_counts(record, declared_minimal=True)
+    assert not counts_signed(dict(record, profile='legacy'))
+    remote = {}
+    exec(PROV_PY, remote)
+    assert not remote['counts_signed'](record)
 
 
 def test_archive_counts_only_matching_measured_record(tmp_path, monkeypatch):
