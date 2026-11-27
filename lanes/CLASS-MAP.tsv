@@ -758,3 +758,7 @@ QC	RC-QC-29 tt_ctlm depth/bcast	C-CONE-DEPTH	/srv/opentallas-scratch2/claude/CLA
 QC	C-RELAYBAY-QNALT sle_fw_v2 cl6740750e	C-FACE-SHARED-LOAD	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/FABLE-FLOW-1447-dde71b7e5975.md sha12 dde71b7e5975	folded (same mechanism as the dead keep-inverter)
 HEAD	C-LEG405 HEAD 0 -> 6	C-LEG405	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/head-int-r2-a9ff160adb04.md:105 sha12 a9ff160adb04 (HEAD-INT-R2 12:57)	reconciled with the lane post
 HEAD	C-STRAP-REACH HEAD 5 -> 25 types (83/119 groups)	C-STRAP-REACH	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/head-int-r2-a9ff160adb04.md:105 sha12 a9ff160adb04 (HEAD-INT-R2 12:57)	reconciled
+HEAD	hd_tile W11	C-RESERVED-POCKET	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/COORD-bd8df6375fe5.md:1769 sha12 bd8df6375fe5	COORD 15:39: exact 48 pocket walls, DRT-0255; default-off shared producer in development
+S81	dsfd_node_LLd	C-RST-PINREG-DROPPED	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/COORD-bd8df6375fe5.md:1723 sha12 bd8df6375fe5	Exact revoked reset rn register loss; S81-INT-R2 fix / LEC-R2 census
+S81	dsfd_node_LLfd	C-RST-PINREG-DROPPED	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/COORD-bd8df6375fe5.md:1723 sha12 bd8df6375fe5	Exact revoked reset rn register loss; S81-INT-R2 fix / LEC-R2 census
+S81	dsfd_node_LLfu	C-RST-PINREG-DROPPED	/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/COORD-bd8df6375fe5.md:1723 sha12 bd8df6375fe5	Exact revoked reset rn register loss; S81-INT-R2 fix / LEC-R2 census
