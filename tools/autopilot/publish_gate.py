@@ -573,18 +573,39 @@ def project_cfg(C, obj, expect_source, expect_event, item=None, TC=None):
     return text, die, pick
 
 
-def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, want=""):
+def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, want="", prepare_place=False):
     """build the item spec from the projected cfg, run kit_wave run-item with dry_gen, -> check dict"""
     sys.path.insert(0, str(HERE))
     import kit_wave as KW
+    if prepare_place:
+        import flow_health as FH
+        if FH.is_local_host(hub):
+            hub = "localhost"
     cfg = KW.load_config(cfg_text)
     cfg["_hub"] = hub
-    cfg["dies"][die]["event"] = "pg" + str(want)[:10]
-    sp = KW.spec_for(dict(cfg, _otrun_status={}), die, item, hub, kind=kind)
-    if not sp.get("gen_tools_manifest_sha"):
-        sp.update(KW.rt_tools_fields(cfg, die))
-    sp.update(dry_gen=True, gen_host=gen_host)
+    if not prepare_place:
+        cfg["dies"][die]["event"] = "pg" + str(want)[:10]
+    cfg["_otrun_status"] = {}
     jd = Path(work_root) / die / str(want)[:12] / item
+    if prepare_place:
+        if kind != "type" or not HEX64.fullmatch(str(want)):
+            raise ValueError("publication preparation requires one exact manifest-bound partition type")
+        stamp = str(time.time_ns())
+        jd = jd / ("prepared_" + stamp)
+        prospective = KW.spec_for(cfg, die, item, hub, kind=kind)
+        directory = str(Path(prospective["work"]) / ("prepared_" + stamp))
+        sp = KW.private_spec(cfg, die, item, hub, kind=kind, goal="place", host=gen_host,
+                             work=directory, lane="PUBLISH-PREPARE", src_manifest="on")
+        if sp.get("src_manifest_hash") != want:
+            raise ValueError("publication preparation requires the immutable verified source of the adopted plan")
+        sp["src_manifest"] = "require"
+        sp["launch_plan_review_required"] = True
+        sp["publish_place_prepare"] = {"plan_sha256": cfg["dies"][die]["plan_sha256"], "scheduler": KW.scheduler_code_id()}
+    else:
+        sp = KW.spec_for(cfg, die, item, hub, kind=kind)
+        if not sp.get("gen_tools_manifest_sha"):
+            sp.update(KW.rt_tools_fields(cfg, die))
+    sp.update(dry_gen=True, gen_host=gen_host)
     jd.mkdir(parents=True, exist_ok=True)
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     out = {"verdict": "FAIL", "item": item, "kind": kind, "gen_host": gen_host, "dir": str(jd), "spec_src": sp.get("src")}
@@ -609,6 +630,11 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
     if res.get("verdict") == "DRY-PASS" and p.returncode == 0:
         out["verdict"] = "PASS"
         out["preflight_fail_advisory"] = res.get("preflight_fail_advisory")
+        if prepare_place:
+            if out.get("proof_kind") == "published-gen" and res.get("published_place_ready"):
+                out["published_place_ready"] = res["published_place_ready"]
+            elif res.get("published_place_declined"):
+                out["published_place_declined"] = res["published_place_declined"]
     else:
         out["why"] = ("stage %s: %s" % (res.get("stage"), "; ".join([res["errors"]] if isinstance(res.get("errors"), str) else (res.get("errors") or [])) or str(res.get("tail") or "")[-600:]))[:1500]
     return out
@@ -629,7 +655,7 @@ def write_record(C, rec, commit=False, runner=subprocess.run):
 
 
 def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=None, hub=None, commit=False, run_unit=True, 
-             static_fn=None, dry_fn=None, TC=None, gen_host=None, static_host=None):
+             static_fn=None, dry_fn=None, TC=None, gen_host=None, static_host=None, prepare_place=False):
     marker = dict(obj.get("marker", obj))
     die, tree = marker["die"], marker["tree"]
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
@@ -689,7 +715,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
 
         def _dry():
             try:
-                return (dry_fn or (lambda t, d, i, k, h, w: dry_gen(t, d, i, k, work, hub, h, run_unit, w)))(text, die, pick, kind, hosts[0], want)
+                if dry_fn is not None:
+                    return dry_fn(text, die, pick, kind, hosts[0], want)
+                if prepare_place:
+                    return dry_gen(text, die, pick, kind, work, hub, hosts[0], run_unit, want, prepare_place=True)
+                return dry_gen(text, die, pick, kind, work, hub, hosts[0], run_unit, want)
             except Exception as e:                 # a dry gen that cannot run is a FAIL of that check, never a pass
                 return {"verdict": "FAIL", "why": f"dry gen did not run: {type(e).__name__}: {e}"[:600]}
         with CF.ThreadPoolExecutor(max_workers=1) as ex:
@@ -731,6 +761,7 @@ def main(argv=None):
     r.add_argument("--commit", action="store_true", help="commit the record with bin/coord-commit.sh")
     r.add_argument("--work")
     r.add_argument("--hub")
+    r.add_argument("--prepare-place", action="store_true", help="prepare the exact private placement kit during publication GEN")
     r.add_argument("--static-host", help="host for the static checks when the plan sidecars live only there (DEBUGGING only: a gate that needs it is a FAIL on `contained`; default: the gen host)")
     r.add_argument("--gen-host", help="run the static checks and the dry gen on this gen host of the die")
     s = sub.add_parser("static")
@@ -768,11 +799,15 @@ def main(argv=None):
         print(why or "PASS")
         return 1 if why else 0
     obj = json.loads(Path(a.candidate).read_text())
-    rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit, gen_host=a.gen_host, static_host=a.static_host)
+    rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit, gen_host=a.gen_host, static_host=a.static_host, prepare_place=a.prepare_place)
     summary = dict(rec, checks={c: (x or {}).get("verdict") for c, x in rec["checks"].items()})
     pre_failure = (rec["checks"].get("pre_g0") or {}).get("pre_failure")
     if pre_failure:
         summary["pre_failure"] = pre_failure
+    if rec["verdict"] == "PASS":
+        prepared = (rec["checks"].get("dry_gen") or {}).get("published_place_ready")
+        if prepared:
+            summary["published_place_ready"] = prepared
     print(json.dumps(summary))
     return 0 if rec["verdict"] == "PASS" else 1
 

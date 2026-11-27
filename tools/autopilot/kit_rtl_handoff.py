@@ -124,19 +124,30 @@ def publish(rtl, expected, runtime_directory=None):
     files = {name: record["sha256"] for name, record in stage["files"].items()}
     files.update({name: closure.digest(regular(rtl, name)) for name in CONTROL
                   if (rtl / name).exists()})
+    if "native_sink_censuses.json" in files:
+        censuses = read(regular(rtl, "native_sink_censuses.json"))
+        for record in censuses.values():
+            name = str(Path(record["path"]).relative_to(runtime_directory))
+            if not relative(name).is_relative_to("assets"):
+                raise ValueError("native sink census is outside the retained staged assets")
+            files[name] = record["sha256"]
     return {"schema": SCHEMA, "identity": expected, "files": files,
             "bytes": sum(regular(rtl, name).stat().st_size for name in files)}
 
 
-def checked(path, receipt):
+def checked(path, receipt, portable_from=None):
     if receipt.get("schema") != SCHEMA or not isinstance(receipt.get("files"), dict):
         raise ValueError("invalid KIT_RTL handoff receipt")
     total = 0
     for name, digest in receipt["files"].items():
         file = regular(path, name)
         total += file.stat().st_size
-        if closure.digest(file) != digest:
+        data = file.read_bytes()
+        if hashlib.sha256(data).hexdigest() != digest:
             raise ValueError(f"prepared RTL differs from receipt: {name}")
+        if (portable_from and file.suffix.lower() in {".sv", ".v", ".svh", ".vh"}
+                and portable_from in data):
+            raise ValueError(f"prepared RTL embeds the producer work directory: {name}")
     if total != receipt["bytes"]:
         raise ValueError("prepared RTL transfer length differs from receipt")
 
@@ -162,7 +173,7 @@ def restore(rtl, receipt, donor, host):
         subprocess.run(["rsync", "-a", "--files-from=-", "-e",
                         "ssh -o BatchMode=yes -o ControlPath=none", source, str(incoming) + "/"],
                        input="".join(name + "\n" for name in receipt["files"]), text=True, check=True)
-        checked(incoming, receipt)
+        checked(incoming, receipt, portable_from=(str(donor.parent) + "/").encode())
         (incoming / "closure" / "bind").mkdir(parents=True, exist_ok=True)
         closure.relocate(incoming, runtime_directory=rtl)
         installed = publish(incoming, receipt["identity"], runtime_directory=rtl)

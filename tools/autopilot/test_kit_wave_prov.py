@@ -2,6 +2,7 @@
 """KW-PROV-1 (COORD 2026-11-03 17:50 (C)): WAIT-DEP types launch on PROVISIONAL child views (latest routed DRC-clean
 abstract, else the plan-contract abstract), the kit is marked PROVISIONAL and never counted until an STA-only re-sign
 on the signed child libs.  Default ON for every die (die option prov_view false = the old WAIT-DEP hold)."""
+import inspect
 import json
 import os
 import subprocess
@@ -402,8 +403,7 @@ if __name__ == "__main__":
 
 def test_prov_first_builds_overlay_before_kit_rtl():
     """DIE-KV-69 11-04: a prov_first_re type runs prov_stage before kit-rtl, on the overlay; other types keep the order"""
-    src = Path(KW.__file__).read_text()
-    body = src[src.index("def _run_item(spec_path, resume_reviewed=False):"):]
+    body = inspect.getsource(KW._run_item)
     first = body.index('plan, prc = prov_stage(sp, run, remote, fail, res, jobdir=out)')
     kitrtl = body.index('run("kit_rtl", otrun(int(sp.get("kit_rtl_mem_gb") or 8), 2, W, krb_cmd(kbind,')
     later = body.index('if sp.get("prov_views") and not core and not prov_first:')
