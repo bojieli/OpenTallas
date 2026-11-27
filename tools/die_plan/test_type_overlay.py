@@ -417,3 +417,18 @@ def test_reuse_checked_overlay_in_same_kit_wave_launch(plan, tmp_path, monkeypat
     assert TO.read_prepared(plan, {**OV, "type": "src"}, base, overlay, receipt, tmp_path) is None
     overlay.write_text(json.dumps(OV) + "\n")
     assert TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path) is None
+
+
+def test_fixed_regions_overlay_only_changes_place_inputs(plan, tmp_path):
+    fixed = [{"name": "one", "kind": "fixed", "box_um": [15, 15, 20, 20],
+              "fixed_sites": [{"instance": "u_c/q[0]", "master": "DFF", "reserve_rect_um": [16, 16, 18.16, 16.27]}]}]
+    ov = {"format": TO.FORMAT, "type": "mid", "base_plan_sha256": TO.plan_sha(plan), "place_regions": fixed}
+    original = kit(plan, tmp_path / "original")
+    candidate = kit(plan, tmp_path / "candidate", type_overlay=ov)
+
+    assert set(candidate) - set(original) == {
+        "mid/place_fixed_sites_data.tcl", "mid/place_fixed_sites.tcl", "mid/type_overlay.json",
+    }
+    changes = {name for name in original if original[name] != candidate[name]}
+    assert changes == {"mid/face_flops.tcl", "mid/face_flops_release.tcl"}
+    assert b"{u_c/q[0]} {DFF}" in candidate["mid/place_fixed_sites_data.tcl"]

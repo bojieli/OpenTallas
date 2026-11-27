@@ -1896,19 +1896,34 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 # named logic cone of the type, sized for a target utilisation (place_regions.tcl).  centre_um or near_re (centroid of the
 # matching instances) sites it; with neither it sits at the cone's own macros, else the core centre.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"] = {
-    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["name", "inst_re"],
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["name"],
     "properties": {"name": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"}, "inst_re": {"type": "string", "minLength": 1},
                    "util": {"type": "number", "minimum": 0.1, "maximum": 0.9},
                    "centre_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
                    "near_re": {"type": "string", "minLength": 1}, "note": {"type": "string"},
                    # PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): fence (default, kept through DPL) | soft (GPL only, released before DPL);
                    # box_um explicit box, radius_um box of side 2r around the centre (both grow to fit the cells at util)
-                   "kind": {"enum": ["fence", "soft"]},
+                   "kind": {"enum": ["fence", "soft", "fixed"]},
                    "box_um": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
                    "radius_um": {"type": "number", "exclusiveMinimum": 0},
                    # cone auto (default: both-way cone, joined under 0.5 coverage, DROP when > 8 x members) | between (only the cells on
                    # member -> member paths join, always; LOCAL-CONE-SCATTER counters / decode cones)
                    "cone": {"enum": ["auto", "between", "exact"]}}}}
+# Fixed seats name exact native members and their reviewed reservations.
+_place_region = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"]["items"]
+_place_region["properties"]["fixed_sites"] = {"type": "array", "minItems": 1, "items": {
+    "type": "object", "additionalProperties": False, "required": ["instance", "master", "reserve_rect_um"],
+    "properties": {
+        "instance": {"type": "string", "minLength": 1},
+        "master": {"type": "string", "minLength": 1},
+        "reserve_rect_um": _place_region["properties"]["box_um"],
+    },
+}}
+_place_region["if"] = {"required": ["kind"], "properties": {"kind": {"const": "fixed"}}}
+_place_region["then"] = {"required": ["box_um", "fixed_sites"], "not": {"anyOf": [
+    {"required": [key]} for key in ("inst_re", "util", "near_re", "centre_um", "radius_um", "cone")
+]}}
+_place_region["else"] = {"required": ["inst_re"], "not": {"required": ["fixed_sites"]}}
 # PLAN-LEAF-PARAMS (S81-WREG-PARAM 11-24; bind.plan_leaf_params): per-instance RTL parameters on the leaves of one master inside
 # every partition of this type (e.g. S81 ot_s81sl_vpw WREG 1 instead of the shared-file define OT_S81SL_VP_WREG); absent = as built.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["leaf_params"] = {

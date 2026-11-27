@@ -9188,6 +9188,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import region_guide as RG
         RG.install(kd, json.loads(Path(region_guide).read_text()), outline=(w, h),
                    src=dict(file=str(region_guide), sha256=_hashlib.sha256(Path(region_guide).read_bytes()).hexdigest()))
+    if any(row.get("kind") == "fixed" for row in t.get("place_regions", [])):
+        import place_fixed_sites
+        place_fixed_sites.install(kd, t["place_regions"])
     if rc_cal:
         import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
         core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
@@ -9685,6 +9688,7 @@ def place_regions_tcl(regions):
 
 def install_place_regions(kd, regions):
     """write place_regions_data.tcl + copy place_regions.tcl into the kit; absent key = nothing written, kit unchanged"""
+    regions = [row for row in (regions or []) if row.get("kind") != "fixed"]
     text = place_regions_tcl(regions)
     if not text:
         return []

@@ -652,6 +652,8 @@ class TypeSplit:
             self._shift_piece_window(local, "face", "window_um", piece)
             T[piece]["buses"].append(local)
         for region in t.get("place_regions", []):
+            if region.get("kind") == "fixed":
+                raise SplitError(f"{self.tn}: fixed placement sites require native members of the new pieces")
             rect = region["box_um"]
             piece = cut.piece(rect[cut.ax], rect[cut.ax + 2], f"{self.tn} place region {region['name']}")
             local = copy.deepcopy(region)
