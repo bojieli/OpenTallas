@@ -4591,6 +4591,17 @@ class Binder:
         errs.append(str(msg))
 
     def emit_type(self, tn, p):
+        native = getattr(self, "_native_glue", None)
+        if native is None:
+            return Binder._emit_type_with_gaps(self, tn, p)
+        import bind_native_glue
+        try:
+            with native.batch():
+                return Binder._emit_type_with_gaps(self, tn, p)
+        except bind_native_glue.NativeGlueError as exc:
+            raise BindError(str(exc)) from exc
+
+    def _emit_type_with_gaps(self, tn, p):
         """_emit_type; BIND-ALL-ERRORS: with collect_gaps every in-loop refusal of this type is collected and raised together
         as BindErrors (one gap each); an exception after collected errors is added as the last entry.  Default: unchanged."""
         if not getattr(self, "collect_gaps", False):
