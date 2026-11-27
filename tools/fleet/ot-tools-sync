@@ -855,13 +855,78 @@ def dedupe_build_hosts(hosts=None):
             log(f"{host} dedupe skipped: {type(exc).__name__}: {exc}")
 
 
-def sync(sha, hosts=True, tests=True):
-    if not sha:
-        git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
-        sha = "origin/main"
-    full = git("rev-parse", f"{sha}^{{commit}}").strip()
+def rollout_lock(blocking=True):
+    """Serialize activation and catch-up independently of the Git merge queue."""
+    import fcntl
+    RT.mkdir(parents=True, exist_ok=True)
+    lock = (RT / ".rollout.lock").open("a")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX if blocking else fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        lock.close()
+        return None
+    except BaseException:
+        lock.close()
+        raise
+    return lock
+
+
+def fetch_runtime_main():
+    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+    return git("rev-parse", "origin/main^{commit}").strip()
+
+
+def runtime_ancestor(before, after):
+    result = S.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", before, after],
+                   capture_output=True, text=True, timeout=60)
+    if result.returncode not in (0, 1):
+        raise RuntimeError(f"could not verify runtime ancestry: {result.stderr.strip()[:250]}")
+    return result.returncode == 0
+
+
+def rollout_receipt(full, hosts):
+    return {"sha": full, "hosts": sorted(set(HOSTS if hosts else []))}
+
+
+def complete_rollout(full, hosts):
+    try:
+        return json.loads((RT / ".rollout-complete.json").read_text()) == rollout_receipt(full, hosts)
+    except (OSError, ValueError):
+        return False
+
+
+def sync(sha, hosts=True, tests=True, latest=False):
+    with rollout_lock():
+        if latest or not sha:
+            full = fetch_runtime_main()
+            if latest and sha:
+                requested = git("rev-parse", f"{sha}^{{commit}}").strip()
+                if not runtime_ancestor(requested, full):
+                    raise RuntimeError(f"runtime request {sha12(requested)} is not on current main {sha12(full)}")
+        else:
+            full = git("rev-parse", f"{sha}^{{commit}}").strip()
+        return sync_locked(full, hosts=hosts, tests=tests, coalesce=latest)
+
+
+def sync_locked(full, hosts=True, tests=True, coalesce=False):
     prev = current()
     name = sha12(full)
+    if prev and prev != name:
+        previous = git("rev-parse", f"{prev}^{{commit}}").strip()
+        if runtime_ancestor(full, previous):
+            note = f"rt/current -> {prev} already newer than requested {name}; no delivery started"
+            log(note)
+            print(note)
+            return None
+        if not runtime_ancestor(previous, full):
+            raise RuntimeError(f"runtime {name} is not a descendant of active {prev}")
+    if coalesce and prev == name and complete_rollout(full, hosts):
+        note = f"rt/current -> {name} already fully delivered; no new smoke or copy"
+        log(note)
+        print(note)
+        return None
+    receipt = RT / ".rollout-complete.json"
+    receipt.unlink(missing_ok=True)
     d = materialize(full)
     if prev != name:
         bad = smoke(d, tests=tests)
@@ -934,6 +999,10 @@ def sync(sha, hosts=True, tests=True):
                     stderr=S.STDOUT, start_new_session=True)
         except Exception as e:
             log(f"dedupe skipped: {type(e).__name__}: {e}")
+    if len(notes) == len(rollout_receipt(full, hosts)["hosts"]) and all(note.endswith(":ok") for note in notes):
+        temporary = receipt.with_suffix(".tmp")
+        temporary.write_text(json.dumps(rollout_receipt(full, hosts)) + "\n")
+        temporary.replace(receipt)
     log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     # FLOW-0800 (COORD 11-18): a host skipped for low disk is a WARNING (the follower retries it on the next change), not exit 4 for the whole sync
@@ -1164,10 +1233,12 @@ def sync_alert(ok, reason, state_file=None, poster=None, now=None):
     return line
 
 
-def sync_guarded(sha, hosts, tests):
+def sync_guarded(sha, hosts, tests, operation=None):
     """sync() with the alert: an exception or a non-zero result (smoke failed, a host did not flip, no disk) posts"""
     try:
-        rc = sync(sha, hosts=hosts, tests=tests)
+        rc = (operation or sync)(sha, hosts=hosts, tests=tests)
+        if rc is None:
+            return 0  # No rollout attempted: retain any outstanding delivery alert.
         reason = "exit %s (see %s)" % (rc, MQ / "log")
     except Exception as e:
         rc, reason = 1, "%s: %s" % (type(e).__name__, str(e)[:500])
@@ -1180,6 +1251,14 @@ def sync_guarded(sha, hosts, tests):
 
 
 def catchup(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
+    lock = rollout_lock(blocking=False)
+    if lock is None:
+        return []
+    with lock:
+        return catchup_locked(hosts, state, now_fn, host_cur, fn)
+
+
+def catchup_locked(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
     """CATCHUP-1119 (COORD, FABLE-FLOW-1150: epyc7 sat 11 promotions behind because a sync that failed was never retried until main moved again): every host whose rt/current differs from the hub's
     is pushed again, all in parallel, one result line per host.  A host whose ssh fails is retried with a backoff (5, 10, 20, 30 min) kept in RT/.catchup.json, so a dead host is not hammered every
     minute.  -> list of [host, ok, note]"""
@@ -1236,9 +1315,18 @@ def follow(hosts=True):
     try:
         fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
+        lockf.close()
         return 0
-    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
-    full = git("rev-parse", "origin/main^{commit}").strip()
+    with lockf:
+        rollout = rollout_lock(blocking=False)
+        if rollout is None:
+            return 0
+        with rollout:
+            return follow_locked(hosts)
+
+
+def follow_locked(hosts):
+    full = fetch_runtime_main()
     cur = current()
     if cur == sha12(full):
         return 0
@@ -1251,8 +1339,11 @@ def follow(hosts=True):
         if not cur_full or S.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", cur_full, full]).returncode != 0:
             log(f"follow: origin/main {sha12(full)} does not contain rt/current {cur}; not fast-forward, skipped")
             return 0
-    rc = sync_guarded(full, hosts, False)
+    rc = sync_guarded(full, hosts, False, operation=sync_locked)
     if rc == 3 and not (RT / f".reverted-{sha12(full)}").exists():
+        if fetch_runtime_main() != full:
+            log(f"auto-revert: tested {sha12(full)} is no longer current main; defer to follow")
+            return rc
         (RT / f".reverted-{sha12(full)}").write_text("")
         try:
             auto_revert(cur_full, full, hosts)
@@ -1288,8 +1379,10 @@ def auto_revert(cur_full, full, hosts=True):
         log(f"auto-revert: smoke of {sha12(full)} failed but no single commit of {len(commits)} fails alone; not reverting")
         return []
     wt = RT / f".revert-wt-{os.getpid()}"
-    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
-    git("worktree", "add", "-q", "--detach", str(wt), "origin/main", timeout=900)
+    if fetch_runtime_main() != full:
+        log(f"auto-revert: main advanced while diagnosing {sha12(full)}; defer to follow")
+        return []
+    git("worktree", "add", "-q", "--detach", str(wt), full, timeout=900)
     done = []
     try:
         for c in reversed(bad):                            # newest first
@@ -1303,15 +1396,9 @@ def auto_revert(cur_full, full, hosts=True):
             msg = run(["git", "log", "-1", "--format=%B"], cwd=wt).stdout.rstrip() + \
                 "\n\nAuto-revert: the tools smoke of this commit failed (ot-tools-sync follow).\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
             run(["git", "-c", "user.name=OT-TOOLS-SYNC", "-c", "user.email=tools-sync@opentallas.invalid", "commit", "-q", "--amend", "-m", msg], cwd=wt)
-            ok = False
-            for _ in range(3):
-                if run(["git", "push", "-q", REMOTE, "HEAD:refs/heads/main"], cwd=wt, timeout=900).returncode == 0:
-                    ok = True
-                    break
-                run(["git", "fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main"], cwd=wt, timeout=300)
-                if run(["git", "rebase", "origin/main"], cwd=wt, timeout=300).returncode:
-                    run(["git", "rebase", "--abort"], cwd=wt)
-                    break
+            # A non-fast-forward publish means main changed after the diagnostic.
+            # Let the next follower smoke that exact revision before any revert.
+            ok = run(["git", "push", "-q", REMOTE, "HEAD:refs/heads/main"], cwd=wt, timeout=900).returncode == 0
             lane = commit_lane(c)
             line = (f"STATE [OT-TOOLS-SYNC -> {lane}] AUTO-REVERT main commit {c[:11]} ('{git('log', '-1', '--format=%s', c).strip()[:80]}'): tools smoke failed on it; "
                     + (f"revert pushed to main @{git('-C', str(wt), 'rev-parse', 'HEAD').strip()[:11]}" if ok else "revert could NOT be pushed")
@@ -1329,11 +1416,16 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow", "catchup", "dedupe"])
     ap.add_argument("--sha", default="")
+    ap.add_argument("--coalesce-latest", action="store_true",
+                    help="merge hook: request current main containing --sha, skipping a completed rollout")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
     ap.add_argument("--post", action="store_true")
     a = ap.parse_args()
     if a.cmd == "sync":
+        if a.coalesce_latest:
+            from functools import partial
+            return sync_guarded(a.sha, not a.no_hosts, not a.no_tests, operation=partial(sync, latest=True))
         return sync_guarded(a.sha, not a.no_hosts, not a.no_tests)
     if a.cmd == "catchup":
         for h, ok, note in catchup():
