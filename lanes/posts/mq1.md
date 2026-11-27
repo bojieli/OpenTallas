@@ -23,3 +23,12 @@
 - 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316722 on tolerant-swine: rc=0 after 1 s, ended 00:32:13, log none, cmd: ot-push-main 
 - 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3316002 on tolerant-swine: rc=0 after 2 s, ended 00:32:13, log none, cmd: ot-push-main --dry-run
 - 2026-11-21 00:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-3318716 on tolerant-swine: rc=0 after 2 s, ended 00:32:16, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1236099 on tolerant-swine: rc=2 after 0 s, ended 23:33:41, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1236761 on tolerant-swine: rc=0 after 0 s, ended 23:33:41, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1236112 on tolerant-swine: rc=0 after 0 s, ended 23:33:41, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1236105 on tolerant-swine: rc=0 after 0 s, ended 23:33:41, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1238423 on tolerant-swine: rc=0 after 0 s, ended 23:33:41, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1238426 on tolerant-swine: rc=3 after 0 s, ended 23:33:41, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1237238 on tolerant-swine: rc=0 after 1 s, ended 23:33:42, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1237263 on tolerant-swine: rc=4 after 1 s, ended 23:33:42, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1239547 on tolerant-swine: rc=0 after 0 s, ended 23:33:42, log none, cmd: ot-push-main 
