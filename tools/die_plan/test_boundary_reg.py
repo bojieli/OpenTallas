@@ -1,5 +1,6 @@
 """BOUNDARY-REG-50 (COORD 19:25 FABLE-RC-KV item 3): every ft out pin gets a station within 50 um; report-only advisory
 and an apply_ops planner that MOVEs the slot's last station to the out face (hop <= reach) or ADDs one."""
+import json
 import sys
 import types
 from pathlib import Path
@@ -94,6 +95,33 @@ def test_covered_by_any_planned_register_is_not_reported(monkeypatch):
     _patch(monkeypatch, t, _pins(), regs=[(398.0, 151.0)])
     assert "0 type(s)" in B.findings({}, "p.json")[-1]
     assert B.plan_ops({}, "p.json") == ([], [])
+
+
+def test_scoped_pre_resolves_geometry_from_out_of_scope_peer(monkeypatch, tmp_path):
+    import plan_advisory as PA
+    import plan_gate_pre as PRE
+
+    raw = json.loads((Path(__file__).with_name("examples") / "tiny_plan.json").read_text())
+    incoming = next(port for port in raw["ports"] if port["id"] == "x0")
+    supplier = next(bus for bus in raw["partition_types"]["src"]["buses"] if bus["name"] == "x_o")
+    supplier.update({key: incoming.pop(key) for key in ("face", "layers", "window_um")})
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    monkeypatch.setattr(PA, "CHECKS", (("BOUNDARY-REG-50", "boundary_reg"),))
+    monkeypatch.delenv("OT_PRE_ADV_SCOPE", raising=False)
+    monkeypatch.delenv("OT_PLAN_ADVISORY", raising=False)
+    read_types = []
+    out_pins = B.out_pins
+
+    def record_read(P, tn):
+        read_types.append(tn)
+        return out_pins(P, tn)
+
+    monkeypatch.setattr(B, "out_pins", record_read)
+    findings = PRE.advisory_lines(None, str(plan), scope={"mid"})
+    assert read_types == ["mid"]
+    assert not any("not checked" in line for line in findings)
+    assert any(" mid:" in line and "within 50 um" in line for line in findings)
 
 
 def test_unseatable_slot_is_skipped_whole(monkeypatch):
