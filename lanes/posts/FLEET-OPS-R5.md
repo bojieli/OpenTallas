@@ -111,3 +111,4 @@
   SETUP reclassification: main d8465e344cb ot_deathclass: FileNotFoundError / No such file after more than 60 s of runtime is class RUNTIME-INPUT-MISSING (the first 60 s stay SETUP); test added.
   Sub-lane pushes so far: rt pin (kit_wave private-spec refuses an rt pin that does not contain the row's tool commit, NOT-RUN SETUP) main 1bbece360ff; allowlist guard and WAIT-state post are still being pushed, shas follow; preflight extension for relative inputs, source/dot files and empty-variable paths is with a sub-lane.
 - 2026-11-27 13:55 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-1715452 on tolerant-swine: rc=0 after 165 s, ended 13:55:20, log none, cmd: ot-push-main 
+- 2026-11-27 13:56 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-719198 on tolerant-swine: rc=4 after 806 s, ended 13:56:47, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 806 s, no log
