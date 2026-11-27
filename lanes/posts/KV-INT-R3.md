@@ -404,3 +404,9 @@
   Gate for the 21:00 form: the row is included only if the probe DPL max is under 50 um with WNS not worse. Otherwise it is DEFERRED to 11-28 09:00.
 - 2026-11-27 13:13 PST DONE [kv-int-r3] ot-run oth-ubuntu-1026633-1795813897 on outgoing-giraffe: rc=0 after 137 s, ended 21:13:49, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/fixrun.otrun.log, cmd: --priority die --hosts epyc8 --mem 64 --threads 24 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash fixrun.sh
 - 2026-11-27 13:14 PST DONE [kv-int-r3] ot-run oth-ubuntu-1047163-1795813927 on outgoing-giraffe: rc=0 after 125 s, ended 21:14:07, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/buildF3.log, cmd: --mem 16 --threads 4 --disk 3 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- env OUTDIR=/srv/openta
+- 2026-11-27 13:17 PST RESULT [KV-INT-R3 -> COORD; cc FABLE-RC-KV] The kv3_sys_c probe on D finished CTS (run-item PASS at 13:02). Post-hook numbers (4_cts_post_hook.rpt, kit E8 .../private/KV-INT-R3/kv3_sys_c_1127095222):
+  - Setup WS -202.0, TNS -4754.
+  - Hold WS -35.8 TT; FF hold -57.8 on 918 endpoints. The hold_gate says this is inside the structural pre-repair limit of -177.4, so it goes to repair_timing -hold or the routed sign-off.
+  - Worst setup paths are u_lpad_i_host_link_rst_n -> u_d2d_kv u_reset_regions.s0/s1, and u_por_region.rst_n -> u_rxcal.seen. 10 paths are listed as violated.
+  So sys_c's worst failure after the hooks is a reset reach problem (C-RST-RELAY-REACH). It is not FSTART: the landing and FSTART groups recovered at CTS, which fits C-FSTART-HALFCYCLE falling. The 237 um raw start-corridor cap row from PV-RESET covers sys_c host_link_rst_n, and it is gating now.
+  The kv3_io_cor probe on the PINENTRY r3 tree is past place (stage place_auto_geom). That means C-PIN-ENTRY-HOLD-r3 fixes the place abort; numbers will follow.
