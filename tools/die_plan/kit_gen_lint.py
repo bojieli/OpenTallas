@@ -463,12 +463,14 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
             else (["not measured: yosys elaboration failed (see rtl_check)"], True))
     else:
         checks["rtl_check"] = checks["memory_bits"] = checks["macro_site_count"] = dict(verdict="NA", errors=[], n_errors=0)
-    bad = [f"{n}: {e}" for n, row in checks.items() for e in row["errors"]]
-    try:                                  # SEAT-MATCH 11-24: plan seats no register of this kit's RTL can hold (warning, never an issue)
+    try:                                  # SEAT-MATCH 11-24; BLOCKING since KV-INT-R3 11-27 (C-RELAY-SEAT-KEYMISS): a plan seat key no register can hold fails the kit
         import seat_match
         seat = seat_match.kit_lines(kd)
     except Exception as error:            # noqa: BLE001
         seat = [f"SEAT-MISS WARN not checked: {type(error).__name__}: {error}"]
+    miss = [w.replace("SEAT-MISS WARN", "SEAT-MISS", 1) for w in seat if "not checked" not in w]
+    checks["seat_miss"] = dict(verdict="FAIL" if miss else ("PASS" if any((kd / f).is_file() for f in ("istations.tcl", "istations_post.tcl")) else "NA"), errors=miss, n_errors=len(miss))
+    bad = [f"{n}: {e}" for n, row in checks.items() for e in row["errors"]]
     return dict(schema="opentallas.kit_gen_lint.v1", kit=str(kd), verdict="FAIL" if bad else "PASS",
                 checks=checks, issues=bad, seat_miss=seat, note="BUILD check (OWNER 12.27 d), not a sign-off check")
 
@@ -487,7 +489,7 @@ def main(argv=None):
           " ".join(f"{n}={r['verdict']}" for n, r in rec["checks"].items()))
     for i in rec["issues"][:30]:
         print("  - GEN_LINT FAIL", i)          # FAIL on every issue line: kit_wave.error_lines/classify read them
-    for w in rec.get("seat_miss") or []:
+    for w in [w for w in rec.get("seat_miss") or [] if "not checked" in w]:
         print("  - GEN_LINT WARN", w)
     return int(rec["verdict"] != "PASS")
 
