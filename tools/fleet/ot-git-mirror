@@ -12,12 +12,13 @@ Build hosts have no GitHub key; only intel2 has one.  Lanes therefore cloned the
     - claude/* is fetched WITHOUT force: a GitHub fetch never rewinds a lane push that is not forwarded yet
     - daily `git gc` (gc.auto=0 so a push never pays for it)
 
-usage: ot-git-mirror sync | fetch | fetch-all | install | status
+usage: ot-git-mirror sync | fetch | fetch-ref claude/BRANCH@SHA | fetch-all | install | status
 Clones: tools/fleet/ot-lane-clone (never ~/OpenTallas).
 """
 import fcntl
 import json
 import os
+import re
 import subprocess as S
 import sys
 import time
@@ -258,6 +259,55 @@ def fetch_main():
     return f.returncode
 
 
+def fetch_ref(spec):
+    """Register one current gate tip without rewinding a mirror-only lane push."""
+    branch, _, sha = spec.partition("@")
+    ref = "refs/heads/" + branch
+    if (not re.fullmatch(r"claude/[A-Za-z0-9._/-]+", branch)
+            or not re.fullmatch(r"[0-9a-f]{7,40}", sha)
+            or git("check-ref-format", ref, check=False).returncode):
+        print(f"REFUSED invalid gate ref: {spec}")
+        return 2
+
+    def mirror_tip():
+        return git("rev-parse", "--verify", "-q", ref, check=False).stdout.strip()
+
+    advertised = git("ls-remote", "--refs", "--exit-code", "origin", ref, check=False, timeout=20)
+    rows = [line.split() for line in advertised.stdout.splitlines() if line.strip()]
+    if advertised.returncode == 2 and not rows:
+        upstream = ""
+    elif (advertised.returncode == 0 and len(rows) == 1 and len(rows[0]) == 2
+          and rows[0][1] == ref and re.fullmatch(r"[0-9a-f]{40}", rows[0][0])):
+        upstream = rows[0][0]
+    else:
+        print(f"INFRA cannot read upstream {branch}: {advertised.stderr.strip()[-300:]}")
+        return 3
+
+    local = mirror_tip()
+    # A lane push may be ahead of GitHub or not forwarded yet. When both
+    # advertise different tips, only a proven fast-forward can be accepted.
+    if local.startswith(sha) and (not upstream or local == upstream or is_ancestor(upstream, local)):
+        print(f"GATE-REF {branch}@{local}")
+        return 0
+    if not upstream.startswith(sha):
+        print(f"REFUSED gate tip {spec}: mirror {local or '-'}, upstream {upstream or '-'}")
+        return 2
+
+    # Explicit refspec and no refmap prevent unrelated refs and FETCH_HEAD
+    # from being updated. No force: a concurrent lane push is never rewound.
+    result = git("fetch", "-q", "--no-tags", "--no-write-fetch-head", "--refmap=",
+                 "origin", f"{ref}:{ref}", check=False, timeout=90)
+    local = mirror_tip()
+    if local.startswith(sha):
+        print(f"GATE-REF {branch}@{local}")
+        return 0
+    if result.returncode:
+        print(f"INFRA could not register {spec}: mirror {local or '-'}; {result.stderr.strip()[-300:]}")
+        return 3
+    print(f"REFUSED gate tip {spec}: mirror moved to {local or '-'} during registration")
+    return 2
+
+
 def status():
     h = mirror_heads()
     main = git("rev-parse", "-q", "--verify", "refs/heads/main", check=False).stdout.strip()
@@ -278,6 +328,12 @@ def main():
         return sync()
     if cmd == "fetch":                                     # own 30 s timer: main only (0.5 s), never blocked by a slow sync
         return fetch_main()
+    if cmd == "fetch-ref" and len(sys.argv) == 3:
+        try:
+            return fetch_ref(sys.argv[2])
+        except S.TimeoutExpired:
+            print(f"INFRA gate ref refresh timed out: {sys.argv[2]}")
+            return 3
     if cmd == "fetch-all":
         return sync(fetch_only=True)
     if cmd == "status":

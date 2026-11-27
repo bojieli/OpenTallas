@@ -83,6 +83,52 @@ class MainPush(unittest.TestCase):
             self.assertNotEqual(p.returncode, 0, spec)
 
 
+def test_gate_ref_refreshes_only_exact_named_branch():
+    f = Fixture()
+    branch = "claude/gate"
+    ref = "refs/heads/" + branch
+    old = sh("git", "rev-parse", "HEAD", cwd=f.w)
+    sh("git", "push", "-q", str(f.up), f"HEAD:{ref}", "HEAD:refs/heads/claude/unrelated", cwd=f.w)
+    fetch_head = f.mirror / "FETCH_HEAD"
+    before = fetch_head.read_bytes()
+    assert f.m.fetch_ref(f"{branch}@{old}") == 0
+    assert sh("git", "-C", str(f.mirror), "rev-parse", ref) == old
+    assert f.m.git("show-ref", "--verify", "--quiet", "refs/heads/claude/unrelated", check=False).returncode
+    assert fetch_head.read_bytes() == before
+
+    (f.w / "f").write_text("2")
+    sh("git", "commit", "-qam", "c2", cwd=f.w)
+    new = sh("git", "rev-parse", "HEAD", cwd=f.w)
+    sh("git", "push", "-q", str(f.up), f"HEAD:{ref}", cwd=f.w)
+    assert f.m.fetch_ref(f"{branch}@{old}") == 2
+    assert sh("git", "-C", str(f.mirror), "rev-parse", ref) == old
+    assert f.m.fetch_ref(f"{branch}@{new}") == 0
+    assert sh("git", "-C", str(f.mirror), "rev-parse", ref) == new
+
+
+def test_gate_ref_accepts_mirror_only_or_ahead_and_never_rewinds():
+    f = Fixture()
+    branch = "claude/good-1"
+    ref = "refs/heads/" + branch
+    old = sh("git", "rev-parse", "HEAD", cwd=f.w)
+    assert f.m.fetch_ref(f"{branch}@{old[:12]}") == 0
+    sh("git", "push", "-q", str(f.up), f"HEAD:{ref}", cwd=f.w)
+
+    (f.w / "f").write_text("2")
+    sh("git", "commit", "-qam", "c2", cwd=f.w)
+    new = sh("git", "rev-parse", "HEAD", cwd=f.w)
+    sh("git", "-C", str(f.mirror), "fetch", "-q", str(f.w), f"HEAD:{ref}")
+    assert f.m.fetch_ref(f"{branch}@{new}") == 0
+    assert f.m.fetch_ref(f"{branch}@{old}") != 0
+    assert sh("git", "-C", str(f.mirror), "rev-parse", ref) == new
+
+
+def test_gate_ref_rejects_non_lane_and_bad_sha():
+    f = Fixture()
+    for spec in ("main@abcdef1", "claude/../x@abcdef1", "claude/good-1@missing"):
+        assert f.m.fetch_ref(spec) == 2
+
+
 class MirrorSync(unittest.TestCase):
     def test_rejected_twice_is_skipped_then_retried_when_the_ref_moves(self):
         f = Fixture()

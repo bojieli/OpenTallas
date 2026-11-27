@@ -29,3 +29,16 @@ def test_missing_or_bad_branch_sha_is_rejected():
 def test_good_arguments_pass_the_check_on_a_build_host():
     assert run("dear-crayfish", "claude/fleet-ops-r-x-1117@efd13f60fdb", "16").returncode == 0
     assert run("epyc2", "claude/a/b@0123456789abcdef0123456789abcdef01234567").returncode == 0
+
+
+def test_obsolete_gate_ref_refuses_before_slot_setup(tmp_path):
+    ssh = tmp_path / "ssh"
+    ssh.write_text("#!/bin/sh\nprintf 'REFUSED obsolete exact tip\n'\nexit 2\n")
+    ssh.chmod(0o755)
+    env = dict(os.environ, OT_GATE_HOSTNAME="key-cardinal", OT_GATE_CHECK_ONLY="0",
+               PATH=str(tmp_path) + os.pathsep + os.environ["PATH"])
+    result = subprocess.run(["bash", G, "claude/x@abcdef1"], env=env,
+                            text=True, capture_output=True, timeout=10)
+    assert result.returncode == 2
+    assert "INFRA gate ref claude/x@abcdef1 (rc 2): REFUSED obsolete exact tip" in result.stdout
+    assert "slot" not in result.stdout

@@ -1104,6 +1104,25 @@ class TickStall(unittest.TestCase):
         self.assertNotIn("posts", st)
 
 
+class GateRefPreflight(unittest.TestCase):
+    def test_missing_stock_gate_ref_never_books_an_admission(self):
+        from unittest.mock import patch
+
+        with tempfile.TemporaryDirectory() as directory:
+            m = load({"MQ_GATE_REMOTE": "ot-run -- ot-gate-remote {key}", "MQ_HOME": directory})
+            sha = "a" * 40
+            branch = "claude/gate"
+            refusal = subprocess.CompletedProcess([], 2, "REFUSED obsolete exact tip", "")
+            with patch.object(m.S, "run", return_value=refusal) as probe, \
+                    patch.object(m, "run_group") as admission, patch.object(m.S, "Popen") as pregate:
+                self.assertEqual(m.gate_remote({"branch": branch}, sha, "b" * 40),
+                                 ("INFRA", f"gate ref {branch}@{sha}: REFUSED obsolete exact tip"))
+                self.assertIn("remote gate deferred", m.pregate(branch, sha))
+                self.assertEqual(probe.call_args.args[0][-2:], ["fetch-ref", f"{branch}@{sha}"])
+                admission.assert_not_called()
+                pregate.assert_not_called()
+
+
 class MainFetchFreshness(unittest.TestCase):
     def _run(self, advertisement, rc=0, object_rc=0):
         from unittest.mock import patch
