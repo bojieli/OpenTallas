@@ -27,6 +27,9 @@ import shlex
 import subprocess as S
 import sys
 import time
+import uuid
+from contextlib import ExitStack, contextmanager, nullcontext
+from contextvars import ContextVar
 from pathlib import Path
 
 HOME = Path.home()
@@ -666,7 +669,7 @@ def gen_red(name):
 HOST_LOCK_WAIT_S = float(os.environ.get("OT_SYNC_HOST_LOCK_WAIT_S", "900"))
 
 
-def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _inner=None):
+def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _inner=None, *, only_current=False):
     """HOST-LOCK-1119 (COORD, FABLE-FLOW-0035: three failed syncs in 45 min and epyc10 one revision behind: the follower, the catch-up timer and manual syncs pushed the same host's .partial dir at the
     same time): ONE push per host at a time, under a flock on RT/.hostsync.<host>.lock; a second pusher waits up to HOST_LOCK_WAIT_S (a push that finished meanwhile is then a no-op because the
     manifest is already there) and gives up with a 'busy' note instead of colliding."""
@@ -687,6 +690,10 @@ def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _
                 return False, f"busy: another sync has been pushing {host} for over {HOST_LOCK_WAIT_S:.0f} s"
             time.sleep(1.0)
     try:
+        if only_current:
+            if current() != name:
+                return False, "SUPERSEDED"
+            return _host_sync_unlocked(host, name, prev, do_flip, smoke_here, only_current=True)
         return (_inner or _host_sync_unlocked)(host, name, prev, do_flip, smoke_here)
     finally:
         lf.close()
@@ -700,7 +707,7 @@ def host_links(D, name, rt=None):
             f"ln -sfn {D}/{name}.manifest.json {rt}/.{name}.ml && mv -T {rt}/.{name}.ml {rt}/{name}.manifest.json")
 
 
-def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False):
+def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False, *, only_current=False):
     """copy RT/<name> (HOST_PATHS) to host, check it there (manifest + parse; with smoke_here also gen_smoke), flip host RT/current -> (ok, note).
     A note starting 'RED ' means the content is wrong (not the host)."""
     D = HOST_DATA.get(host) or str(RT)                    # RT-HOST-DATA-1124: where this host's version dirs are written
@@ -776,7 +783,26 @@ print(json.dumps(bad[:20]))
             return False, ("RED gen smoke: " if v == "red" else "gen smoke not run: ") + note
     if not do_flip:
         return True, "smoked"
-    r = run(SSH + [host, f"cd {RT} && ln -sfn {name} .current.$$ && mv -T .current.$$ current && readlink current"], input="")
+    flip_cmd = f"ln -sfn {name} .current.$$ && mv -T .current.$$ current && readlink current"
+    if only_current:
+        if current() != name:
+            return False, "SUPERSEDED"
+        r = run(SSH + [host, f"cd {RT} && (readlink current || {{ test ! -e current && test ! -L current; }})"], input="", timeout=60)
+        if r.returncode:
+            return False, f"read current: {(r.stderr or r.stdout).strip()[:200]}"
+        there = r.stdout.strip()
+        if there and (not re.fullmatch(r"[0-9a-f]{12}", there) or
+                      (there != name and not runtime_ancestor(there, name))):
+            return False, f"refused non-fast-forward host runtime {there} -> {name}"
+        if current() != name:
+            return False, "SUPERSEDED"
+        # The hub host lock serializes managed pushers. Recheck the observed
+        # host pointer and snapshot under the remote prune lock as well.
+        observed_current = (f'test "$(readlink current)" = {shlex.quote(there)}' if there
+                            else "test ! -e current && test ! -L current")
+        check = f"{observed_current} && test -d {name} && test -f {name}.manifest.json"
+        flip_cmd = f"flock -w 30 .prune.lock sh -c {shlex.quote(check + ' && ' + flip_cmd)}"
+    r = run(SSH + [host, f"cd {RT} && {flip_cmd}"], input="")
     if r.returncode or r.stdout.strip() != name:
         return False, f"flip: {(r.stderr or r.stdout).strip()[:200]}"
     return True, "ok"
@@ -855,11 +881,12 @@ def dedupe_build_hosts(hosts=None):
             log(f"{host} dedupe skipped: {type(exc).__name__}: {exc}")
 
 
-def rollout_lock(blocking=True):
-    """Serialize activation and catch-up independently of the Git merge queue."""
+def rollout_lock(blocking=True, name=None, root=None):
+    """Serialize hub activation, named delivery or alert publication."""
     import fcntl
-    RT.mkdir(parents=True, exist_ok=True)
-    lock = (RT / ".rollout.lock").open("a")
+    root = root or RT
+    root.mkdir(parents=True, exist_ok=True)
+    lock = (root / (f".rollout.{name}.lock" if name else ".rollout.lock")).open("a")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX if blocking else fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
@@ -896,37 +923,66 @@ def complete_rollout(full, hosts):
 
 
 def sync(sha, hosts=True, tests=True, latest=False):
-    with rollout_lock():
-        if latest or not sha:
-            full = fetch_runtime_main()
-            if latest and sha:
-                requested = git("rev-parse", f"{sha}^{{commit}}").strip()
-                if not runtime_ancestor(requested, full):
-                    raise RuntimeError(f"runtime request {sha12(requested)} is not on current main {sha12(full)}")
-        else:
-            full = git("rev-parse", f"{sha}^{{commit}}").strip()
-        return sync_locked(full, hosts=hosts, tests=tests, coalesce=latest)
+    with ExitStack() as delivery:
+        with rollout_lock():
+            with rollout_resolution():
+                if latest or not sha:
+                    full = fetch_runtime_main()
+                    if latest and sha:
+                        requested = git("rev-parse", f"{sha}^{{commit}}").strip()
+                        if not runtime_ancestor(requested, full):
+                            raise RuntimeError(f"runtime request {sha12(requested)} is not on current main {sha12(full)}")
+                else:
+                    full = git("rev-parse", f"{sha}^{{commit}}").strip()
+            if not latest or not hosts:
+                return sync_locked(full, hosts=hosts, tests=tests, coalesce=latest)
+            claim = rollout_lock(blocking=False, name=sha12(full))
+            if claim is None:
+                log(f"runtime {sha12(full)} delivery is already in flight")
+                return None
+            delivery.enter_context(claim)
+            prev = prepare_rollout(full, hosts, tests, coalesce=True)
+            if not isinstance(prev, str):
+                return prev
+            # Stock pruning recognizes paths held open by local processes and
+            # passes those pins to the fleet. Keep source and link-dest until
+            # this delivery is over, even if several newer runtimes activate.
+            for name in {prev, sha12(full)} - {""}:
+                path = RT / name
+                if path.is_dir():
+                    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+                    delivery.callback(os.close, fd)
+        return deliver_rollout(full, prev, hosts, supersedable=True)
 
 
 def sync_locked(full, hosts=True, tests=True, coalesce=False):
+    prev = prepare_rollout(full, hosts, tests, coalesce=coalesce)
+    if isinstance(prev, str):
+        return deliver_rollout(full, prev, hosts)
+    return prev
+
+
+def prepare_rollout(full, hosts, tests, coalesce):
+    """Validate and activate a new hub runtime under the global lock."""
     prev = current()
     name = sha12(full)
-    if prev and prev != name:
-        previous = git("rev-parse", f"{prev}^{{commit}}").strip()
-        if runtime_ancestor(full, previous):
-            note = f"rt/current -> {prev} already newer than requested {name}; no delivery started"
-            log(note)
-            print(note)
-            return None
-        if not runtime_ancestor(previous, full):
-            raise RuntimeError(f"runtime {name} is not a descendant of active {prev}")
+    with rollout_resolution():
+        if prev and prev != name:
+            previous = git("rev-parse", f"{prev}^{{commit}}").strip()
+            if runtime_ancestor(full, previous):
+                note = f"rt/current -> {prev} already newer than requested {name}; no delivery started"
+                log(note)
+                print(note)
+                return None
+            if not runtime_ancestor(previous, full):
+                raise RuntimeError(f"runtime {name} is not a descendant of active {prev}")
     if coalesce and prev == name and complete_rollout(full, hosts):
         note = f"rt/current -> {name} already fully delivered; no new smoke or copy"
         log(note)
         print(note)
         return None
-    receipt = RT / ".rollout-complete.json"
-    receipt.unlink(missing_ok=True)
+    mark_rollout_attempt()
+    (RT / ".rollout-complete.json").unlink(missing_ok=True)
     d = materialize(full)
     if prev != name:
         bad = smoke(d, tests=tests)
@@ -963,15 +1019,26 @@ def sync_locked(full, hosts=True, tests=True, coalesce=False):
         flip(RT, name)
         with open(RT / "history.log", "a") as f:
             f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")
+    return prev
+
+
+def deliver_rollout(full, prev, hosts, *, supersedable=False):
+    name = sha12(full)
     notes = []
     updated_hosts = []
     if hosts:
         def _rec(h, ok, skipped, note):
+            if note == "SUPERSEDED":
+                return
             if ok:
                 updated_hosts.append(h)
             with open(RT / "history.log", "a") as f:
                 f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else ('SKIPPED (low disk) ' + note[5:] if skipped else 'FAILED ' + note)}\n")
-        notes = sync_hosts(name, prev if prev and prev != name else "", record=_rec)
+        options = {"fn": lambda h, n, p: host_sync(h, n, p, only_current=True)} if supersedable else {}
+        notes = sync_hosts(name, prev if prev and prev != name else "", record=_rec, **options)
+    if supersedable and current() != name:
+        log(f"runtime {name} delivery superseded by {current()}")
+        return None
     try:
         man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
         # A deliberately skipped host keeps its previous runtime. Compare only
@@ -979,10 +1046,19 @@ def sync_locked(full, hosts=True, tests=True, coalesce=False):
         diffs = installed_diffs(man_now, hosts=updated_hosts) if hosts else []
     except Exception as e:
         diffs = [f"installed-tools check failed: {type(e).__name__}: {e}"]
-    if diffs:
-        msg = "ALERT installed tools differ from rt/%s: %s" % (name, " ; ".join(diffs)[:1500])
-        log(msg); print(msg)
-        notes.append("ALERT installed != rt")
+    with (rollout_lock() if supersedable else nullcontext()):
+        if supersedable and current() != name:
+            log(f"runtime {name} delivery superseded by {current()}")
+            return None
+        if diffs:
+            msg = "ALERT installed tools differ from rt/%s: %s" % (name, " ; ".join(diffs)[:1500])
+            log(msg); print(msg)
+            notes.append("ALERT installed != rt")
+        if len(notes) == len(rollout_receipt(full, hosts)["hosts"]) and all(note.endswith(":ok") for note in notes):
+            receipt = RT / ".rollout-complete.json"
+            temporary = receipt.with_suffix(".tmp")
+            temporary.write_text(json.dumps(rollout_receipt(full, hosts)) + "\n")
+            temporary.replace(receipt)
     if all(":ok" in n for n in notes) and KEEP > 0:
         prune_build_hosts(names_in_use_text())
         if AUTO_DEDUPE:
@@ -999,10 +1075,9 @@ def sync_locked(full, hosts=True, tests=True, coalesce=False):
                     stderr=S.STDOUT, start_new_session=True)
         except Exception as e:
             log(f"dedupe skipped: {type(e).__name__}: {e}")
-    if len(notes) == len(rollout_receipt(full, hosts)["hosts"]) and all(note.endswith(":ok") for note in notes):
-        temporary = receipt.with_suffix(".tmp")
-        temporary.write_text(json.dumps(rollout_receipt(full, hosts)) + "\n")
-        temporary.replace(receipt)
+    if supersedable and current() != name:
+        log(f"runtime {name} delivery superseded by {current()}")
+        return None
     log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     # FLOW-0800 (COORD 11-18): a host skipped for low disk is a WARNING (the follower retries it on the next change), not exit 4 for the whole sync
@@ -1233,21 +1308,62 @@ def sync_alert(ok, reason, state_file=None, poster=None, now=None):
     return line
 
 
-def sync_guarded(sha, hosts, tests, operation=None):
-    """sync() with the alert: an exception or a non-zero result (smoke failed, a host did not flip, no disk) posts"""
+ATTEMPT = ContextVar("rollout_attempt", default="")
+
+
+def rollout_attempt():
     try:
-        rc = (operation or sync)(sha, hosts=hosts, tests=tests)
-        if rc is None:
-            return 0  # No rollout attempted: retain any outstanding delivery alert.
-        reason = "exit %s (see %s)" % (rc, MQ / "log")
-    except Exception as e:
-        rc, reason = 1, "%s: %s" % (type(e).__name__, str(e)[:500])
-    if rc != 0:
-        log(f"FAILED {reason}")            # stdout: ot-merge-queue's note shows the real reason (the hub free-GB floor) instead of "state not reported"
-    sync_alert(rc == 0, reason)
-    if rc != 0 and not isinstance(rc, int):
-        rc = 1
-    return rc
+        return (RT / ".rollout-attempt").read_text().strip()
+    except OSError:
+        return ""
+
+
+def mark_rollout_attempt():
+    # The caller holds the global activation lock. Attempts that no-op have
+    # already returned. A later failed smoke still owns the next alert.
+    token = uuid.uuid4().hex
+    temporary = RT / ".rollout-attempt.tmp"
+    temporary.write_text(token + "\n")
+    temporary.replace(RT / ".rollout-attempt")
+    ATTEMPT.set(token)
+
+
+@contextmanager
+def rollout_resolution():
+    """Make a pre-activation resolution failure the latest reportable attempt."""
+    try:
+        yield
+    except Exception:
+        mark_rollout_attempt()
+        raise
+
+
+def sync_guarded(sha, hosts, tests, operation=None):
+    """Post the latest rollout's result to the shared alert state."""
+    previous = ATTEMPT.set(rollout_attempt())
+    try:
+        try:
+            rc = (operation or sync)(sha, hosts=hosts, tests=tests)
+            if rc is None:
+                return 0  # No rollout attempted or this rollout was superseded.
+            reason = "exit %s (see %s)" % (rc, MQ / "log")
+        except Exception as e:
+            rc, reason = 1, "%s: %s" % (type(e).__name__, str(e)[:500])
+        # Serialize alert writers, independently of activation and delivery.
+        # The current attempt may advance while posting, but no newer alert
+        # can post before an older writer that already passed this check.
+        with rollout_lock(name="alert", root=MQ):
+            if ATTEMPT.get() != rollout_attempt():
+                log(f"superseded rollout result: {reason}")
+                return 0
+            if rc != 0:
+                log(f"FAILED {reason}")  # Preserve exact diagnostics in the merge hook.
+            sync_alert(rc == 0, reason)
+        if rc != 0 and not isinstance(rc, int):
+            rc = 1
+        return rc
+    finally:
+        ATTEMPT.reset(previous)
 
 
 def catchup(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
@@ -1255,7 +1371,14 @@ def catchup(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
     if lock is None:
         return []
     with lock:
-        return catchup_locked(hosts, state, now_fn, host_cur, fn)
+        name = current()
+        if not name:
+            return []
+        claim = rollout_lock(blocking=False, name=name)
+        if claim is None:
+            return []  # The accepted version is already being pushed.
+        with claim:
+            return catchup_locked(hosts, state, now_fn, host_cur, fn)
 
 
 def catchup_locked(hosts=None, state=None, now_fn=time.time, host_cur=None, fn=None):
