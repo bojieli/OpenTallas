@@ -463,6 +463,7 @@ def manifest_paths(ab, manifest_dir, tree):
 
 def check_bind_assets(raw, tree, plan, types=None):
     """Bind reads clock inventory. Physical kit generation checks guides separately."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     import plan_file_inputs
     return [f"FAIL INPUT-MISSING plan asset {issue}"
             for issue in plan_file_inputs.missing(raw, plan, Path(tree), guide_types=set(), bin_types=types)]
