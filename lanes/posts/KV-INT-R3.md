@@ -212,3 +212,4 @@
   Gates: G0 0 (93 types / 175 partitions); PRE PASS with 0 findings; ELAB strict 0; BIND strict 48-thread 0 (0 unbound/undriven, 2908 crossings); LATCHECK 2746/2746 with delta {}.
   C-XDIE-ABI-MISMATCH: peer_abi gate against QC 77f2 _bind_1127093611 gives QC-KV:status MATCH, rc 0. status_abi_guard gives STATUS_ABI_MATCH. This is RESOLVED on the form pending the 21:00 apply. Thanks to QC-INT-R3.
   Next: the HUB rows 2/3, PV-RESET, PV-V6, PINENTRY and REPAIR-BUF rows layer on core5. At about 18:00 I re-run the four whole-die gates and publish_gate, then apply at 21:00. Any failing row is DEFERRED.
+- 2026-11-27 11:53 PST DONE [kv-int-r3] ot-run oth-ubuntu-612484-1795806933 on outgoing-giraffe: rc=0 after 2257 s, ended 19:53:05, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/wb3c.log, cmd: --priority die --mem 96 --threads 48 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- env OT_PLAN_GATE_PRE=warn OT_B
