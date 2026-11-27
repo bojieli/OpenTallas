@@ -17379,3 +17379,4 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] QC-SLECTL-PILE -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 23:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc11: rt/current 40ccb3724f07 != hub b1a1ada21ac2. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-26 23:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc11: rt/current 39a9ba663c57 != hub 5ce9f5606b11 ; epyc7: rt/current 39a9ba663c57 != hub 5ce9f5606b11
+- 2026-11-26 23:08 PST DONE 23:08 hourly: 605 any / 484 current (+0 / +0 vs 22:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
