@@ -184,33 +184,39 @@ def snap_group(root):
         return ""
 
 
-def verified_parent(root):
-    """SNAP-RO-1119 (COORD: re-hashing 58 GB on every loaded host for a one-file change): a snapshot derived from a verified parent.  -> (parent tree, set of changed paths) when ROOT has a .snap-delta,
-    a sibling snapshot carries the manifest hash it names, and that sibling has a COMPLETED verification receipt that still matches (cached_receipt: stat-only, read-only and unshared checked now);
-    else ('', set()).  The caller hashes only the changed files and accepts every other file that is the SAME INODE as the parent's file (same inode = same verified bytes)."""
+def verified_parent(root, lbase):
+    """Find a sibling parent with an exact, immutable on-host receipt."""
+    parent_dir = os.path.dirname(root)
+    if lbase:
+        base = os.path.realpath(lbase)
+        if base != root and os.path.dirname(base) == parent_dir:
+            pm = load_manifest(base)
+            if (isinstance(pm, dict) and isinstance(pm.get("files"), dict)
+                    and pm.get("manifest_hash") and not cached_receipt(base, pm["manifest_hash"])[0]):
+                return base, pm["files"], set()
+    # Live snapshots can identify an earlier parent independently of the delta link base.
     try:
         with open(os.path.join(root, SNAPDELTA)) as f:
             dl = json.load(f)
         want = dl["parent_manifest_hash"]
         changed = set(dl.get("changed") or [])
     except (OSError, ValueError, KeyError, TypeError):
-        return "", set()
-    parent_dir = os.path.dirname(root.rstrip("/"))
+        return "", {}, set()
     try:
         sibs = sorted(os.listdir(parent_dir))
     except OSError:
-        return "", set()
+        return "", {}, set()
     for n in sibs:
         sib = os.path.join(parent_dir, n)
-        if sib == root or not os.path.isdir(sib):
+        if sib == root or sib == lbase or not os.path.isdir(sib):
             continue
         pm = load_manifest(sib)
-        if not pm or pm.get("manifest_hash") != want:
+        if not isinstance(pm, dict) or not isinstance(pm.get("files"), dict) or pm.get("manifest_hash") != want:
             continue
         errs, _info = cached_receipt(sib, want)
         if not errs:
-            return sib, changed
-    return "", set()
+            return sib, pm["files"], changed
+    return "", {}, set()
 
 
 def load_manifest(root):
@@ -225,15 +231,18 @@ def writable(p):
     return bool(os.lstat(p).st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)) and not os.path.islink(p)
 
 
-def _same_as_parent(parent, changed, p, rel):
-    """an unchanged file that is the very inode of the verified parent's file (stat only)"""
-    if not parent or rel in changed or os.path.islink(p):
+def _same_as_parent(parent, parent_files, changed, p, rel, digest):
+    """The expected digest and immutable regular inode both match the verified parent."""
+    if (not parent or rel in changed or not isinstance(digest, str) or len(digest) != 64
+            or parent_files.get(rel) != digest or skipped(rel)):
         return False
     try:
         a, b = os.lstat(p), os.lstat(os.path.join(parent, rel))
     except OSError:
         return False
-    return a.st_ino == b.st_ino and a.st_dev == b.st_dev
+    return (stat.S_ISREG(a.st_mode)
+            and not a.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+            and a.st_ino == b.st_ino and a.st_dev == b.st_dev)
 
 
 def verify(root, expect="", ro=False, full=False):
@@ -265,7 +274,7 @@ def verify(root, expect="", ro=False, full=False):
     lbase = link_base(root)
     kids = linked_children(root)
     snap = bool(snap_group(root))
-    parent, changed = verified_parent(root)
+    parent, parent_files, changed = verified_parent(root, lbase)
     if parent:
         info["inherited_from"] = parent
     for rel in sorted(want):
@@ -274,7 +283,7 @@ def verify(root, expect="", ro=False, full=False):
             p = os.path.join(root, rel)          # SNAP-RO-1119: listed by a delta pack although walk_tree skips its name (tools/_s81ph_gen.py.orig): check it where it is
         if p is None:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (missing)")
-        elif not _same_as_parent(parent, changed, p, rel) and tree_hash(p) != want[rel]:
+        elif not _same_as_parent(parent, parent_files, changed, p, rel, want[rel]) and tree_hash(p) != want[rel]:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
@@ -345,6 +354,7 @@ def cached_receipt(root, expect=""):
     paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
     snap = bool(snap_group(root))
     lbase = link_base(root)                                     # a link-published tree: inodes shared with exactly its declared base are intended (as verify)
+    kids = linked_children(root) if not snap else []
     for dp, dn, _fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
         paths.extend(os.path.join(dp, d) for d in dn)
@@ -353,15 +363,17 @@ def cached_receipt(root, expect=""):
             st = os.lstat(q)
             if not stat.S_ISLNK(st.st_mode) and st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
                 errs.append(f"SRC_MANIFEST CACHE MISS writable {os.path.relpath(q, root)}")
-            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not snap and not shares_with_base(q, os.path.relpath(q, root), lbase):
-                errs.append(f"SRC_MANIFEST CACHE MISS shared inode {os.path.relpath(q, root)} nlink={st.st_nlink}")
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not snap:
+                rel = os.path.relpath(q, root)
+                if not shares_with_base(q, rel, lbase) and not links_accounted(q, rel, st, lbase, kids):
+                    errs.append(f"SRC_MANIFEST CACHE MISS shared inode {rel} nlink={st.st_nlink}")
         except OSError as e:
             errs.append(f"SRC_MANIFEST CACHE MISS stat {q}: {e}")
     info = dict(schema="opentallas.src_manifest.cached_receipt.v1", verdict="PASS" if not errs else "MISS",
                 source=root, manifest_hash=h, main_sha=m.get("main_sha"), files=len(want),
                 signature=sig, cache_path=cf, cache_mtime_ns=cache_mtime,
                 cache_sha256=hashlib.sha256(cb).hexdigest(),
-                basis="completed content verification cache plus current read-only unshared inventory" + (f" (inodes shared only with link base {lbase})" if lbase else ""))
+                basis="completed content verification cache plus current read-only inventory and published-link checks")
     return errs, info
 
 def host_receipt(root, expect=""):
