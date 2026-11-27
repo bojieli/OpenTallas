@@ -1092,3 +1092,36 @@ class MissingModuleInventory(unittest.TestCase):
         d = self.repo(["tools/helper.py"])
         for name in ["not_a_repo_module", "helper"]:
             self.assertEqual(M.missing_modules(d, "ModuleNotFoundError: No module named '" + name + "'"), [])
+
+
+def test_stock_runtime_hook_releases_merge_lock_before_waiting(tmp_path):
+    import fcntl
+
+    m = load({"MQ_HOME": str(tmp_path)})
+    m.DRY = False
+    m.SRC_HOOK = ""
+    m.SYNC_HOOK = m.DEFAULT_SYNC_HOOK
+    sha = "a" * 40
+    calls = []
+
+    def sync(cmd, timeout):
+        with (tmp_path / "lock").open("a") as next_merge:
+            fcntl.flock(next_merge, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        calls.append((cmd, timeout))
+        return subprocess.CompletedProcess(cmd, 0, "runtime delivered", "")
+
+    m.run = sync
+    m.log = lambda _line: None
+    with (tmp_path / "lock").open("a") as current_merge:
+        fcntl.flock(current_merge, fcntl.LOCK_EX)
+        m.run_default_runtime_hook(sha, current_merge)
+        assert current_merge.closed
+    assert calls == [([str(Path(P).with_name("ot-tools-sync")), "sync", "--sha", sha, "--coalesce-latest"], 1800)]
+
+    for custom, source in (("custom-hook", ""), (m.DEFAULT_SYNC_HOOK, "source-hook")):
+        m.SYNC_HOOK, m.SRC_HOOK = custom, source
+        with (tmp_path / "lock").open("a") as current_merge:
+            fcntl.flock(current_merge, fcntl.LOCK_EX)
+            m.run_default_runtime_hook(sha, current_merge)
+            assert not current_merge.closed
+    assert len(calls) == 1

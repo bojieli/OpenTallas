@@ -466,3 +466,110 @@ class DiskReclaimWindows(unittest.TestCase):
         t = m.names_in_use_text()
         self.assertIn("aaaaaaaaaaaa", t); self.assertIn("dddddddddddd", t)
         self.assertNotIn("bbbbbbbbbbbb", t); self.assertNotIn("cccccccccccc", t)
+
+
+def test_rollout_serializes_two_merges_follow_and_catchup(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    m = Guard.load(Guard())
+    older, newer = "a" * 40, "b" * 40
+    main, active, worker = [older], [""], [""]
+    delivered, smoked = [], []
+    first_sync_entered, let_first_sync_finish = Event(), Event()
+    m.RT = tmp_path
+    m.HOSTS = ["worker"]
+    m.GEN_SMOKE_HOSTS = []
+    m.KEEP = 0
+    m.AUTO_DEDUPE = False
+    m.log = lambda note: None
+    m.fetch_runtime_main = lambda: main[0]
+    shas = {sha[:12]: sha for sha in (older, newer)}
+    m.git = lambda _, rev: shas[rev.split("^")[0][:12]]
+    m.runtime_ancestor = lambda a, b: a == b or (a, b) == (older, newer)
+    m.current = lambda: active[0]
+    m.flip = lambda root, name: active.__setitem__(0, name)
+    m.spec_smoke = lambda *_: ("ok", "")
+    m.installed_diffs = lambda files, hosts: []
+    m.prune_snapshots = lambda *_a, **_kw: None
+
+    def materialize(full):
+        name = full[:12]
+        (tmp_path / f"{name}.manifest.json").write_text('{"files": {}}')
+        return tmp_path / name
+
+    def smoke(path, tests):
+        smoked.append(path.name)
+        return []
+
+    def sync_hosts(name, previous, record):
+        if name == older[:12]:
+            first_sync_entered.set()
+            assert let_first_sync_finish.wait(10)
+        worker[0] = name
+        delivered.append(name)
+        record("worker", True, False, "ok")
+        return ["worker:ok"]
+
+    real_sync_hosts = m.sync_hosts
+    m.materialize, m.smoke, m.sync_hosts = materialize, smoke, sync_hosts
+
+    def unexpected_catchup(*_a, **_kw):
+        raise AssertionError("catchup ran while direct rollout still owns the host flip")
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        first = executor.submit(m.sync, older, latest=True)
+        try:
+            assert first_sync_entered.wait(10)
+            main[0] = newer
+            queued = executor.submit(m.sync, older, latest=True)
+            assert m.follow() == 0
+            assert m.catchup(host_cur=unexpected_catchup) == []
+            assert active[0] == older[:12] and worker[0] == ""
+        finally:
+            let_first_sync_finish.set()
+        assert first.result(timeout=10) == queued.result(timeout=10) == 0
+    assert active[0] == worker[0] == newer[:12]
+    assert m.sync(newer, latest=True) is None
+    assert m.sync(older) is None
+    assert m.follow() == 0
+    assert smoked == delivered == [older[:12], newer[:12]]
+
+    # A failed explicit repair invalidates the completion receipt. Interruption
+    # or partial delivery will therefore make the next merge-hook call retry.
+    m.sync_hosts = lambda *a, **kw: ["worker:FAIL lost connection"]
+    assert m.sync(newer) == 4
+    assert not m.complete_rollout(newer, True)
+    worker[0] = older[:12]
+    m.sync_hosts = real_sync_hosts
+
+    def catchup_host(host, name, previous):
+        assert host == "worker" and previous == older[:12] and name == newer[:12]
+        worker[0] = name
+        return True, "ok"
+
+    assert m.catchup(host_cur=lambda host: worker[0], fn=catchup_host) == [["worker", True, "ok"]]
+    assert worker[0] == newer[:12]
+    m.sync_hosts = sync_hosts
+    assert m.sync(newer, latest=True) == 0
+    assert delivered == [older[:12], newer[:12], newer[:12]]
+    assert smoked == [older[:12], newer[:12]]
+
+
+def test_follower_does_not_revert_a_newer_main_for_an_older_red(tmp_path):
+    m = Guard.load(Guard())
+    older, newer = "a" * 40, "b" * 40
+    revisions = iter((older, newer))
+    m.RT = tmp_path
+    m.fetch_runtime_main = lambda: next(revisions)
+    m.current = lambda: ""
+    m.sync_locked = lambda *_a, **_kw: 3
+    m.sync_alert = lambda *_a: None
+    m.log = lambda _line: None
+
+    def unexpected_revert(*_a):
+        raise AssertionError("RED for the older revision cannot revert newer main")
+
+    m.auto_revert = unexpected_revert
+    assert m.follow() == 3
+    assert not list(tmp_path.glob(".reverted-*"))

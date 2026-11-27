@@ -71,7 +71,8 @@ class SyncGate(unittest.TestCase):
         self.M.MQ.mkdir()
         self.M.HOSTS = ["h1", "h2"]
         self.M.GEN_SMOKE_HOSTS = ["g1", "g2"]
-        self.M.git = lambda *a, **k: "b" * 40
+        self.M.git = lambda _, ref: ("a" if ref.startswith("aaaa") else "b") * 40
+        self.M.runtime_ancestor = lambda before, after: (before, after) == ("a" * 40, "b" * 40)
         self.M.materialize = lambda full: self.M.RT / "bbbbbbbbbbbb"
         self.M.smoke = lambda d, tests=True: []
         self.calls = []

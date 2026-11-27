@@ -70,7 +70,8 @@ FLEET_TIMEOUT = int(os.environ.get("MQ_FLEET_TIMEOUT", "600"))
 WAIT_TICKS = int(os.environ.get("MQ_WAIT_TICKS", "6"))
 INFRA_TRIES = int(os.environ.get("MQ_INFRA_TRIES", "3"))
 REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
-SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
+DEFAULT_SYNC_HOOK = str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}"
+SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", DEFAULT_SYNC_HOOK)
 # rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
 # (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
 # Die source trees are NOT refreshed per merge (OWNER/COORD 11-15 after the 00:26 gen breakage): ot-src-refresh daily runs once a
@@ -1653,6 +1654,21 @@ def sync_hook_note(result):
     return note
 
 
+def default_runtime_hook():
+    return SYNC_HOOK == DEFAULT_SYNC_HOOK and not SRC_HOOK
+
+
+def run_default_runtime_hook(landed, git_lock):
+    """The exact commit and queue state are settled before runtime delivery starts."""
+    if not landed or not default_runtime_hook() or DRY:
+        return
+    git_lock.close()
+    cmd = shlex.split(SYNC_HOOK.format(sha=landed)) + ["--coalesce-latest"]
+    result = run(cmd, timeout=1800)
+    note = sync_hook_note(result)
+    log(f"sync hook rc={result.returncode}: {note}")
+
+
 def tick(args):
     MQ.mkdir(parents=True, exist_ok=True)
     lockf = open(MQ / "lock", "w")
@@ -1721,11 +1737,12 @@ def tick(args):
         log(f"tick: {len(apps)} approval(s) in queue, none new")
         return 0
     st.setdefault("pending_since_ts", time.time())
-    process_todo(st, todo, text, args)
+    landed = process_todo(st, todo, text, args)
     if not args.only and not any(it["key"] in items and it.get("status") not in TERMINAL for it in todo):
         stall_alert(st, 0)
     auto_digest(st)
     save_state(st)
+    run_default_runtime_hook(landed, lockf)
     return 0
 
 
@@ -1780,7 +1797,7 @@ def process_todo(st, todo, text, args):
         if name != keep:
             wt_drop(name)
     sync_note = ""
-    if landed and SYNC_HOOK and not DRY:
+    if landed and SYNC_HOOK and not DRY and not default_runtime_hook():
         cmd = SYNC_HOOK.format(sha=landed)
         r = run(shlex.split(cmd), timeout=1800)
         sync_note = sync_hook_note(r)
@@ -1799,6 +1816,7 @@ def process_todo(st, todo, text, args):
                                              f"rows ~/merge-queue/src-refresh.tsv)")
     flush_posts(st)
     save_state(st)
+    return landed
 
 
 def commit_lane(c):
@@ -1984,9 +2002,10 @@ def merge_now(branch, sha):
     if not it:
         it = items[key] = {"key": key, "branch": branch, "sha": sha, "status": "NEW", "first_seen": stamp(), "tries": 0, "line": 0}
     it.update(auto=True, id=re.sub(r"[^\w.-]", "_", sha[:12]), high=True, lane=lane_for(text, branch, sha))
-    process_todo(st, [it], text, argparse.Namespace(only="", keep=False))
+    landed = process_todo(st, [it], text, argparse.Namespace(only="", keep=False))
     auto_digest(st)
     save_state(st)
+    run_default_runtime_hook(landed, lockf)
     s = items.get(key) or it
     if s.get("skip"):
         print(f"SKIP {key}: {s['skip']}"); return 6
