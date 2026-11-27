@@ -1182,3 +1182,5 @@
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 08:05 PST FP-S81.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-S81, S81-INT-R2; cc COORD] lanes/FP-S81.tsv last updated 11-25 19:47 (36.3 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 08:06 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> KV-ALLFIX, KV-INT-R2; cc FP-CONVERGE-KV] 1 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): KV kv3_hgi_v2__cle0015330 PLACE-GP 42h50m epyc12:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t6/private/KV-ALLFIX/kv3_hgi_v2__cle0015330_1125121015/gen/kv3_hgi_v2__cle0015330/vis_review/place-gp-1125-2115
+  [redirect] KV-ALLFIX -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
