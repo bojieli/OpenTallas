@@ -141,3 +141,40 @@ def test_cli_runs_under_isolated_mode():
     for script, args in (("ref_site.py", ["reindex", "--help"]), ("ref_site.py", ["--help"]), ("tap_site.py", ["--help"])):
         r = subprocess.run([sys.executable, "-I", os.path.join(here, script)] + args, cwd="/", capture_output=True, text=True, timeout=120)
         assert r.returncode == 0, (script, r.stderr[-400:])
+
+
+def test_alias_resolves_collector_node_to_the_published_landing_relay(monkeypatch):
+    # in-type solved relay rst_n_t4 sits 1500 um from the monitors; the landing publishes its own rst_n_t4 at the monitors, fed 120 um away
+    raw = _plan()
+    ct = raw["partition_types"]["A"]["clock"]["landing_contract"]["collector_tree"]
+    ct["relays"] = [{"q": "rst_rl_9", "xy": [-115.0, 0.0], "d": "rst_rl_8"}, {"q": "rst_n_t4", "xy": [5.0, 0.0], "d": "rst_rl_9"}]
+    _with_grid(monkeypatch, 8)
+    k = ".clock.landing_contract.collector_children[c0].node"
+    monkeypatch.setattr(RS, "_tree", lambda P, tn: RS.tree_sites({"taps": ["a"] * 8, "relays": [{"q": "rst_n_t4", "xy": [1500.0, 0.0]}], "outs": []}))
+    refs, _n = RS.type_refs(None, raw, "A")
+    assert refs[k][0] == "reset-pub" and refs[k][2] == (5.0, 0.0)
+    assert RS.reach_rows(refs, 405.0) == []                      # real legs: 1 um to the monitors, 120 um from the published driver
+    # the same name measured on the in-type relay (the old measure) is the 1,495 um false positive
+    old = {k: ("reset", "rst_n_t4", (1500.0, 0.0), [(5.0, 0.0), (6.0, 0.0)])}
+    assert RS.reach_rows(old, 405.0)[0][2] == 1495.0
+    # a published driver 500 um away is a real over-reach and stays reported
+    ct["relays"][0]["xy"] = [-495.0, 0.0]
+    refs, _n = RS.type_refs(None, raw, "A")
+    assert [round(d) for *_x, d in RS.reach_rows(refs, 405.0)] == [500]
+
+
+def test_name_the_published_tree_does_not_carry_stays_judged_on_the_solved_tree(monkeypatch):
+    raw = _plan("rst_n_t4")       # published tree carries only rst_n_t1
+    _with_grid(monkeypatch, 8)
+    monkeypatch.setattr(RS, "_tree", lambda P, tn: RS.tree_sites({"taps": ["a"] * 8, "relays": [{"q": "rst_n_t4", "xy": [1500.0, 0.0]}], "outs": []}))
+    refs, _n = RS.type_refs(None, raw, "A")
+    k = ".clock.landing_contract.collector_children[c0].node"
+    assert refs[k][0] == "reset" and len(RS.reach_rows(refs, 405.0)) == 1
+
+
+def test_alias_refs_counts_aliases_that_differ_from_the_in_type_relay():
+    pub = {"rst_n_t4": ((5.0, 0.0), None)}
+    refs = {".clock.landing_contract.collector_children[c0].node": ("reset", "rst_n_t4", (1500.0, 0.0), [(5.0, 0.0)]),
+            ".clock.landing_raw_branches[b].stages[0].original": ("reset", "rst_n_t4", (1500.0, 0.0), [(5.0, 0.0)])}
+    out, n, nd = RS.alias_refs(refs, pub)
+    assert (n, nd) == (1, 1) and out[".clock.landing_raw_branches[b].stages[0].original"][0] == "reset"

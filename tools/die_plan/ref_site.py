@@ -9,6 +9,13 @@ clock tap or reset-tree node is resolved to xy on the plan's CURRENT tap grid, t
                        site moved > TOL_UM (9 um): name-keyed tap tables (tap_offset / tap_window per_port_ps, tap_pin_heights_um,
                        tap_group.fixed_taps, tap_site.type_tables) and the index-keyed reset references above.
   KIND    (vs baseline) an index reference that crossed the tap count: a seam output (i >= n_taps) became a clock tap's relay or back.
+ALIAS (R3-RSTREACH2 11-27) a LOCAL reset reference names a node of the type's PUBLISHED landing tree (clock.landing_contract.collector_tree).  The bound
+                       RTL does not wire the collector to the in-type relay of that name: it emits a landing-local relay u_cland_reset_<node> whose
+                       data comes from the published relay chain, so the physical source of rst_n_t<i> is the published relay (at its published xy,
+                       fed by the published relay of its 'd'), NOT the same-named relay of the solved in-type tree.  Such a reference is kind
+                       'reset-pub': REACH measures max(published relay -> consumer pin, published driver -> published relay).  S81 c085: 165 REACH
+                       refs / 122 types (worst 3,096 um) measured against the in-type relay are the alias false positives (real worst hop 393 um).
+                       A name the published tree does not carry stays judged against the solved tree (QC sle_sc_v3 rst_n_t69 stays REACH).
 Index i >= n_taps names a reset-tree OUTPUT (seam), which has no tap site: counted, not sited.  Bit sites (internal_stations
 bit_sites_um) are explicit xy, checked by ADV-BITSITE-SEAT in the same PRE run.  The published collector_tree is skipped (G0
 collector_reach checks its own edges).
@@ -158,11 +165,43 @@ def type_refs(P, raw, tn, tree=True):
             base = f"rst_n_t{i}"
             kind = "unemitted" if site is None else ("seam" if base in ts["seams"] else "reset")
             refs[path] = (kind, v, site, pts)
-        return refs, ts["n"]
+        return alias_refs(refs, pub_relays(raw["partition_types"][tn]))[0], ts["n"]
     n_taps = len(idx)
     for path, v, i, pts in irefs:
         refs[path] = ("reset-clk", v, idx.get(i), pts) if i < n_taps else ("seam-clk", v, None, pts)
-    return refs, n_taps
+    return alias_refs(refs, pub_relays(raw["partition_types"][tn]))[0], n_taps
+
+
+def pub_relays(t):
+    """{q: (xy, d)} of the type's published landing tree (clock.landing_contract.collector_tree.relays) -- the relays the landing-local
+    u_cland_reset_<node> chain is built from; {} when the type publishes none"""
+    out = {}
+    lc = ((t.get("clock") or {}).get("landing_contract")) or {}
+    ct = lc.get("collector_tree") if isinstance(lc, dict) else None
+    for r in ((ct or {}).get("relays") or []) if isinstance(ct, dict) else []:
+        xy = r.get("xy")
+        if isinstance(r.get("q"), str) and isinstance(xy, (list, tuple)) and len(xy) == 2:
+            out[r["q"]] = ((float(xy[0]), float(xy[1])), r.get("d"))
+    return out
+
+
+def alias_refs(refs, pub, solved=None):
+    """resolve every LOCAL index reference whose node the published landing tree carries to its physical source (kind 'reset-pub': site =
+    published relay xy, consumer pts + the published driver xy so REACH sees the driver -> relay hop too).  -> (refs, n_alias, n_differs)
+    n_differs = aliased refs whose same-named in-type solved relay sits elsewhere (> TOL_UM): the false positive of the old measure"""
+    out, n, nd = dict(refs), 0, 0
+    for k, (kind, v, site, pts) in refs.items():
+        if kind not in ("reset", "reset-clk", "unemitted", "seam", "seam-clk") or family(k) not in LOCAL_FAMILIES:
+            continue
+        name = v if v in pub else (f"rst_n_t{REF.match(v).group(2)}" if REF.match(v) and REF.match(v).group(1) == "rr_t" and f"rst_n_t{REF.match(v).group(2)}" in pub else None)
+        if name is None:
+            continue
+        xy, dq = pub[name]
+        extra = [pub[dq][0]] if dq in pub else []
+        out[k] = ("reset-pub", v, xy, list(pts) + extra)
+        n += 1
+        nd += 1 if site is not None and _d(site, xy) > TOL_UM else 0
+    return out, n, nd
 
 
 def _d(a, b):
@@ -172,7 +211,7 @@ def _d(a, b):
 def reach_rows(refs, reach):
     rows = []
     for k, (kind, v, site, pts) in refs.items():
-        if kind in ("reset", "reset-clk") and site and pts and family(k) in LOCAL_FAMILIES:
+        if kind in ("reset", "reset-clk", "reset-pub") and site and pts and family(k) in LOCAL_FAMILIES:
             d = max(_d(site, p) for p in pts)
             if d > reach:
                 rows.append((k, v, d))
@@ -183,7 +222,7 @@ def moved_rows(refs, brefs, tol=TOL_UM):
     mv, kind = [], []
     for k in sorted(set(refs) & set(brefs)):
         a, b = refs[k], brefs[k]
-        if a[0] != b[0] and {a[0], b[0]} <= {"reset", "seam", "reset-clk", "seam-clk"} and (a[0] in ("seam", "seam-clk")) != (b[0] in ("seam", "seam-clk")):
+        if a[0] != b[0] and {a[0], b[0]} <= {"reset", "seam", "reset-clk", "seam-clk", "reset-pub"} and (a[0] in ("seam", "seam-clk")) != (b[0] in ("seam", "seam-clk")):
             site = a[2] or b[2]
             kind.append((k, b[1], a[1], a[0], max((_d(site, q) for q in (a[3] or b[3])), default=None)))
         elif a[2] and b[2] and _d(a[2], b[2]) > tol:
@@ -222,6 +261,7 @@ def _type_rows(tn):
         if une:
             lines.append((len(une), f"NOT-EMITTED\t{tn}\t{len(une)} reset refs name a relay the solved reset tree does not emit: "
                                     + " ".join(f"{k}={v}" for k, v in une[:5])))
+        tot["alias"] += sum(1 for r in refs.values() if r[0] == "reset-pub")
         tot["clkfb"] += sum(1 for r in refs.values() if r[0] in ("reset-clk", "seam-clk"))
         rr = reach_rows(refs, reach)
         for k, _v, _d2 in rr:
@@ -302,7 +342,7 @@ def run(raw, plan_path, braw=None, base_path=None, types=None, log=print, jobs=N
     for _n, ln in lines:
         log(ln)
     log(f"SUMMARY\t{tot['types']} types, {tot['refs']} name/index refs resolved ({tot['seam']} seam-output indices, unsited), {tot['unev']} not evaluable; "
-        f"NOT-EMITTED {sum(fam_une.values())} {dict(fam_une)}; {tot['clkfb']} refs resolved on the clock table (tree not solvable); "
+        f"ALIAS {tot['alias']} local refs resolved to the published landing relay (R3-RSTREACH2); NOT-EMITTED {sum(fam_une.values())} {dict(fam_une)}; {tot['clkfb']} refs resolved on the clock table (tree not solvable); "
         f"REACH {sum(fam_reach.values())} {dict(fam_reach)}"
         + (f"; vs baseline: {tot['common']} common refs, MOVED {sum(fam_moved.values())} {dict(fam_moved)}, KIND {sum(fam_kind.values())} {dict(fam_kind)}, "
            f"{tot['bunev']} baseline types not evaluable" if PB is not None else "; no baseline: MOVED/KIND not run"))
