@@ -133,3 +133,23 @@ def test_collector_alias_does_not_authorize_modified_native_plan(tmp_path, monke
     plan.write_text(json.dumps(current))
     producer.write_bytes(producer.read_bytes()+b" ")
     assert KW.bind_plan_refusal(sp).startswith("BIND-PLAN-MISMATCH")
+
+
+def test_alias_probe_timeout_preserves_known_mismatch(tmp_path, monkeypatch):
+    import subprocess
+    from types import SimpleNamespace
+
+    sp, _, _ = _collector_alias_spec(tmp_path, monkeypatch)
+    sp["kit_rtl"]["bind_out"] = str(tmp_path / "remote-bind-only")
+    old_sha, new_sha = "a"*64, "b"*64
+    calls = []
+
+    def run(argv, **_kwargs):
+        calls.append(argv)
+        if len(calls) == 2:
+            raise subprocess.TimeoutExpired(argv, 120)
+        return SimpleNamespace(stdout="KW_BIND_PLAN " + json.dumps({
+            "bind_sha": old_sha, "spec_sha": new_sha, "how": "provenance plan_sha256"}))
+
+    assert KW.bind_plan_refusal(sp, run=run).startswith("BIND-PLAN-MISMATCH")
+    assert len(calls) == 2

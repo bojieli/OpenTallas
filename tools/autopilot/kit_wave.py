@@ -10226,29 +10226,34 @@ def bind_plan_refusal(sp, run=subprocess.run):
         if all((sp.get("tools_rt"), sp.get("tools_sha"), sp.get("item"), kr.get("asbuilt"))):
             alias_context = {"runtime": sp["tools_rt"], "runtime_sha": sp["tools_sha"],
                              "asbuilt": kr["asbuilt"], "item": sp["item"]}
-    if BIND_PLAN_REMOTE is not None:
-        got = BIND_PLAN_REMOTE(host, hub, str(bind_out), src, str(plan))
-    elif (Path(bind_out) / "provenance_bind.json").is_file():
-        got = bind_plan_probe(str(bind_out), src, str(plan), alias_context)
-    else:
+    def probe(context=None):
+        if (Path(bind_out) / "provenance_bind.json").is_file():
+            return bind_plan_probe(str(bind_out), src, str(plan), context)
         import inspect
-        args = json.dumps([str(bind_out), src, str(plan), alias_context])
+        args = json.dumps([str(bind_out), src, str(plan), context])
         py = ("import json, sys\n" + inspect.getsource(bind_plan_probe)
               + "\nprint('KW_BIND_PLAN ' + json.dumps(bind_plan_probe(*json.loads(sys.argv[1]))))\n")
-        argv = _ssh(host, hub) + ["python3 -I -c " + shlex.quote(py) + " " + shlex.quote(args)]
-        if not _ssh(host, hub):
-            argv = [sys.executable, "-I", "-c", py, args]
+        ssh = _ssh(host, hub)
+        argv = (ssh + ["python3 -I -c " + shlex.quote(py) + " " + shlex.quote(args)]
+                if ssh else [sys.executable, "-I", "-c", py, args])
         try:
             p = run(argv, capture_output=True, text=True, timeout=120)
             line = [x for x in (p.stdout or "").splitlines() if x.startswith("KW_BIND_PLAN ")]
-            got = json.loads(line[-1][len("KW_BIND_PLAN "):]) if line else {}
+            return json.loads(line[-1][len("KW_BIND_PLAN "):]) if line else {}
         except (OSError, ValueError, subprocess.SubprocessError):
-            got = {}
+            return {}
+
+    got = (BIND_PLAN_REMOTE(host, hub, str(bind_out), src, str(plan))
+           if BIND_PLAN_REMOTE is not None else probe())
     b, s = str((got or {}).get("bind_sha") or ""), str((got or {}).get("spec_sha") or "")
     if b and s and b != s:
-        if alias_context and (got or {}).get("collector_alias_only") is True:
-            print(f"KW_BIND_PLAN compatible collector band copies {b[:12]} -> {s[:12]}", flush=True)
-            return None
+        # A failed or timed-out compatibility probe must preserve the mismatch.
+        if alias_context and BIND_PLAN_REMOTE is None:
+            reviewed = probe(alias_context)
+            if (reviewed.get("collector_alias_only") is True
+                    and (reviewed.get("bind_sha"), reviewed.get("spec_sha")) == (b, s)):
+                print(f"KW_BIND_PLAN compatible collector band copies {b[:12]} -> {s[:12]}", flush=True)
+                return None
         return (f"BIND-PLAN-MISMATCH: kit_rtl.bind_out {bind_out} was bound from plan sha {b[:12]} ({got.get('how')}) but the spec plan {plan} is "
                 f"{s[:12]}; bind that plan strictly and use it as bind_out (a kit built on another plan's bind carries its reset tree / stations)")
     return None
