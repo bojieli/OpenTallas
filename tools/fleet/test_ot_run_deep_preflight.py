@@ -60,3 +60,22 @@ def test_unreachable_host_proves_nothing():
         raise OSError("ssh down")
     assert M.deep_preflight("h", "/d", ["python3", "x.py"], run=boom) == []
     assert M.deep_rows("garbage") == []
+
+
+def test_abs_missing_shell_script_refuses(tmp_path):
+    r = run_local(tmp_path, ["bash", str(tmp_path / "nope.sh")], str(tmp_path))
+    assert r and r[0][0] == "refuse" and "NOT-RUN SETUP missing script" in r[0][1]
+    r = run_local(tmp_path, ["bash", "-lc", "cd /x; bash /srv/zz_no_such/run.sh a"], str(tmp_path))
+    assert r and "missing script /srv/zz_no_such/run.sh" in r[0][1]
+    r = run_local(tmp_path, ["python3", str(tmp_path / "nope.txt")], str(tmp_path))
+    assert r and "missing script" in r[0][1]
+
+
+def test_abs_script_false_positives_stay_quiet(tmp_path):
+    (tmp_path / "ok.sh").write_text("true\n")
+    assert run_local(tmp_path, ["bash", str(tmp_path / "ok.sh")], str(tmp_path)) == []
+    assert run_local(tmp_path, ["bash", "/etc/zz_not_under_dir.sh"], str(tmp_path)) == []
+    assert run_local(tmp_path, ["bash", "rel.sh"], str(tmp_path)) == []
+    f = str(tmp_path / "gen.sh")
+    assert run_local(tmp_path, ["bash", "-c", "echo hi > %s; bash %s" % (f, f)], str(tmp_path)) == []
+    assert run_local(tmp_path, ["bash", "-c", "cp /a/b.sh %s && bash %s" % (f, f)], str(tmp_path)) == []
