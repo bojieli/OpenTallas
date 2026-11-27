@@ -52,3 +52,12 @@ def test_default_log_path_and_dirty_clone(tmp_path):
     lp = Path(first.split("log ", 1)[1])
     assert lp.is_file() and "rc 2: uncommitted changes" in lp.read_text()
     lp.unlink()
+
+
+def test_reason_skips_restore_housekeeping_line():
+    st = {}
+    import importlib.machinery as im
+    m = im.SourceFileLoader("opm_t", PUSH).load_module()
+    t = m._Tee(open(os.devnull, "w"), open(os.devnull, "w"), st)
+    t.write("ot-push-main: TESTS FAILED rc=1; nothing pushed\not-push-main: restored the original sparse cone (x)\n")
+    assert st["reason"] == "TESTS FAILED rc=1; nothing pushed"

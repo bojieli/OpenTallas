@@ -388,7 +388,7 @@ class _Tee:
                 self.st["reason"] = "usage error: " + ln[len("ot-push-main: error:"):].strip()
             elif ln.startswith("ot-push-main: rc "):
                 self.st["rcline"] = True
-            elif ln.startswith("ot-push-main:"):
+            elif ln.startswith("ot-push-main:") and not ln.startswith(("ot-push-main: WARN", "ot-push-main: restored", "ot-push-main: widened", "ot-push-main: log ")):
                 self.st["reason"] = ln[len("ot-push-main:"):].strip()
         return len(text)
 
