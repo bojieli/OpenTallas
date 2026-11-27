@@ -82,3 +82,36 @@ def test_plan_without_mesh_still_builds_island_geometry():
     report = IS.run(p, mesh_dir=None, with_reset=False)
     assert report["island_instances"]
     assert report["summary"]["checks"]["htree_snap"] == "NOT RUN"
+
+def test_internal_station_width_tracks_live_epoch_and_declared_actual_width():
+    from schema import Plan, load
+
+    raw = load(Path(__file__).parent / "examples/tiny_plan.json")
+    plan = Plan(raw)
+    port = next(p for p in plan.ports.values() if p["src"]["part"] in plan.parts)
+    part, bus = port["src"]["part"], port["src"]["bus"]
+    typename = plan.parts[part]["type"]
+    buses = plan.buses(part)
+    row = {"conn": "bus:" + bus}
+    modes = IS.station_epoch_modes(plan.parts, plan.ports.values())
+    assert IS.station_bits(row, buses, modes, typename) == buses[bus]["width"] + int(IS.has_epoch(port))
+    assert IS.station_bits(dict(row, bits=3), buses, modes, typename) == 3
+    assert IS.station_bits(dict(row, native_width=1), buses, {(typename, bus): {True}}, typename) == 2
+    assert IS.station_bits(row, buses, {(typename, bus): {False}}, typename) == buses[bus]["width"]
+    assert IS.station_bits(row, buses, {(typename, bus): {False, True}}, typename) is None
+
+
+def test_unresolved_typed_station_is_visible_without_relaxing_cut_verdict():
+    from schema import Plan, load
+
+    plan = Plan(load(Path(__file__).parent / "examples/tiny_plan.json"))
+    part = next(iter(plan.parts))
+    typename = plan.parts[part]["type"]
+    plan.types[typename]["internal_stations"] = [
+        {"conn": "bus:missing", "from_um": [30, 50], "regs_um": [[70, 50]], "to_um": [110, 50]},
+    ]
+    result = IS.run(plan, mesh_dir=None, with_reset=False)["summary"]
+    assert result["unresolved_station_widths"] == [
+        {"part": part, "type": typename, "station": "istn0:bus:missing", "typed_bus": True},
+    ]
+    assert result["checks"]["b_cut_use"].startswith("NOT RUN (1 unresolved bus station widths")

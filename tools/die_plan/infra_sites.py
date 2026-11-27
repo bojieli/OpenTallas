@@ -40,6 +40,8 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+from schema import has_epoch
+
 ROW = 0.27
 A_BUF24 = 1.620 * ROW
 A_REP = 0.378 * ROW
@@ -260,7 +262,46 @@ def route_leg(a, b, box, blockers, bays, reach, detour):
                 straight_mid=straight[1], straight_route=straight[2], manhattan=seg_len(a, b))
 
 
-def corridors(P):
+def station_epoch_modes(parts, ports):
+    """The epoch modes of each typed bus across its real port incidences."""
+    modes = defaultdict(set)
+    for port in ports:
+        if not isinstance(port, dict) or not all(isinstance(port.get(side), dict) and "part" in port[side]
+                                               for side in ("src", "dst")):
+            continue
+        epoch = has_epoch(port)
+        for side in ("src", "dst"):
+            end = port[side]
+            part = parts.get(end["part"])
+            if part and part.get("type") and end.get("bus"):
+                modes[(part["type"], end["bus"])].add(epoch)
+    return modes
+
+
+def station_bits(station, buses, epochs, typename):
+    """Resolve a planned station's transported width; None means no count is known."""
+    if "bits" in station:
+        # Existing explicit rows already state the entire charged width.
+        return int(station["bits"])
+    conn = station.get("conn") or ""
+    bus_name = conn.removeprefix("bus:")
+    bus = buses.get(bus_name) if conn.startswith("bus:") else None
+    width = bus.get("width") if bus else None
+    if type(width) is not int or width <= 0:
+        return None
+    selected = station.get("native_width", width)
+    if type(selected) is not int or not 0 < selected <= width:
+        return None
+    modes = epochs.get((typename, bus_name), ())
+    if len(modes) > 1:
+        return None
+    # Match generated type ports: an unconnected data/control bus has the epoch
+    # unless a real lane incidence says otherwise.
+    epoch = next(iter(modes), bus.get("kind", "data") in ("data", "ctl"))
+    return selected + int(epoch)
+
+
+def corridors(P, unresolved=None):
     """[(part, name, kind, bits, [die points incl. registers], layers)] for every ft slot crossing + internal station."""
     out, seen = [], set()
     for lid in P.lanes:
@@ -281,12 +322,23 @@ def corridors(P):
                 continue
             regs = [P.to_die(part, tuple(r)) for r in s.get("regs_um", [])]
             out.append((part, slot, "ft_slot", int(s["width"]), [a] + regs + [b], s.get("layers", [])))
+    epochs = station_epoch_modes(P.parts, P.ports.values())
     for part, p in P.parts.items():
-        t = P.types[p["type"]]
-        for k, st in enumerate(t.get("internal_stations", [])):
+        tn = p["type"]
+        stations = P.types[tn].get("internal_stations") or []
+        if not stations:
+            continue
+        buses = P.buses(part)
+        for k, st in enumerate(stations):
             pts = [st["from_um"]] + st.get("regs_um", []) + [st["to_um"]]
-            out.append((part, f"istn{k}:{st.get('conn', '')}", "internal_station", int(st.get("bits", 1)),
-                        [P.to_die(part, tuple(q)) for q in pts], []))
+            name = f"istn{k}:{st.get('conn', '')}"
+            bits = station_bits(st, buses, epochs, tn)
+            if bits is None:
+                if unresolved is not None:
+                    unresolved.append(dict(part=part, type=tn, station=name,
+                                           typed_bus=(st.get("conn") or "").startswith("bus:")))
+                bits = 1                 # retain the historic scalar/lower-bound fallback
+            out.append((part, name, "internal_station", bits, [P.to_die(part, tuple(q)) for q in pts], []))
     return out
 
 
@@ -553,7 +605,8 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
     rows = []
     crossings = defaultdict(lambda: dict(max_run=0.0, bits=0, corridors=0, forced=0))
     cut_bits = defaultdict(list)                        # part -> [(segment a, b, bits)]
-    for part, name, kind, bits, pts, layers in corridors(P):
+    unresolved = []
+    for part, name, kind, bits, pts, layers in corridors(P, unresolved):
         box = rects[part]
         blk, bay = blockers(part)
         worst = None
@@ -708,6 +761,11 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
     checks["d_bay_fill"] = "PASS" if fill_rows and fill_rows[0]["fill"] <= fill_max else "FAIL"
     checks["d_island"] = "PASS" if not isl_fail else "FAIL"
     checks["c_porosity"] = "PASS" if all(r["stacks_per_gcell"] <= lim for r in islands.values()) else "FAIL"
+    unknown_buses = sum(row["typed_bus"] for row in unresolved)
+    if unknown_buses:
+        for name in ("b_cut_use", "d_bay_fill"):
+            if checks[name] == "PASS":
+                checks[name] = f"NOT RUN ({unknown_buses} unresolved bus station widths; numeric results are lower bounds)"
     if not mesh_dir:
         checks["d_island"] = "NOT RUN (no --mesh: island clock demand unknown)"
         checks["c_porosity"] = "NOT RUN (no --mesh)"
@@ -757,7 +815,7 @@ def run(P, mesh_dir=None, tracks_file=None, pg_file=None, m89=False, bays=None, 
         cores_over_reach=len(core_rows), cores_needing_in_core_bay=len(need),
         core_types_needing_bay=sorted({(c["module"], tuple(c["outline_um"])) for c in need}),
         worst_cut=cut_rows[0] if cut_rows else None, cuts_over=sum(r["use"] > cut_max for r in cut_rows),
-        cut_max=cut_max, worst_bay_fill=fill_rows[0] if fill_rows else None,
+        cut_max=cut_max, unresolved_station_widths=unresolved, worst_bay_fill=fill_rows[0] if fill_rows else None,
         bay_fill_parts_without_fill_note=no_note,
         stack_limit_per_gcell=lim, stack_limit_layer=lim_layer, free_tracks_per_gcell=free_tracks,
         island_worst={k: max(islands.values(), key=lambda r: r[k] or 0)[k] for k in (
