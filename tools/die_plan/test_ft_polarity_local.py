@@ -130,7 +130,9 @@ set ::env(RESULTS_DIR) {{{tmp_path}}}
 set ::env(OT_FT_POLARITY_LOCAL) 1
 set ::env(OT_FT_POLARITY_LOCAL_GROUP) u_bound.u_ft_test_o_0
 set ::env(OT_FT_POLARITY_LOCAL_SITES) {{{sites}}}
-if {{[catch {{source {{{TCL}}}}} problem]}} {{ puts "reject $problem"; puts "moves $moves"; exit 1 }}
+# ORFS sources the hook inside a procedure; the face grid lives at Tcl global scope.
+proc run_pre_global_hook {{}} {{source {{{TCL}}}}}
+if {{[catch {{run_pre_global_hook}} problem]}} {{ puts "reject $problem"; puts "moves $moves"; exit 1 }}
 puts "moves $moves"
 """)
     sites.write_text("0\t8.64\t4.59\n1\t8.64\t4.86\n")

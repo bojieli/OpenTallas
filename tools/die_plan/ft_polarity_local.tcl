@@ -79,6 +79,9 @@ set fpl_occupied {}
 if {[info exists ::env(OT_FT_POLARITY_LOCAL_SITES)]} {
   if {$fpl_only_group eq ""} {error "authored FT polarity sites require one exact native group"}
   set fpl_sites [fpl_load_exact_sites $::env(OT_FT_POLARITY_LOCAL_SITES)]
+  # face_flops.tcl initializes this state globally, but ORFS sources this
+  # hook from its placement procedure's local frame.
+  set fpl_dbu $::ff_dbu
 }
 set fpl_blk [ord::get_db_block]
 set fpl_core [$fpl_blk getCoreArea]
@@ -160,9 +163,9 @@ foreach fpl_ff [$fpl_blk getInsts] {
     set fpl_w [[$fpl_inv getMaster] getWidth]
     if {[dict size $fpl_sites]} {
       lassign [dict get $fpl_sites $fpl_bit] fpl_x_um fpl_y_um
-      set fpl_x [expr {round($fpl_x_um*$ff_dbu)}]
-      set fpl_y [expr {round($fpl_y_um*$ff_dbu)}]
-      if {abs($fpl_x_um*$ff_dbu-$fpl_x)>1e-6 || abs($fpl_y_um*$ff_dbu-$fpl_y)>1e-6} {
+      set fpl_x [expr {round($fpl_x_um*$fpl_dbu)}]
+      set fpl_y [expr {round($fpl_y_um*$fpl_dbu)}]
+      if {abs($fpl_x_um*$fpl_dbu-$fpl_x)>1e-6 || abs($fpl_y_um*$fpl_dbu-$fpl_y)>1e-6} {
         error "authored FT polarity site is not on the database grid: $fpl_name"
       }
       fpl_check_site $fpl_name $fpl_x $fpl_y $fpl_w [[$fpl_inv getMaster] getHeight] \
@@ -201,7 +204,7 @@ if {[dict size $fpl_sites]} {
   }
   dict for {bit move} $fpl_moves {
     lassign $move inv x y launch
-    $inv setOrient [dict get $ff_orient $y]
+    $inv setOrient [dict get $::ff_orient $y]
     $inv setLocation $x $y
     $inv setPlacementStatus FIRM
     puts $fpl_out "[$inv getName]\tPOLARITY\t$x\t$y\t$launch"
