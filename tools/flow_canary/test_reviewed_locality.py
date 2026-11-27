@@ -32,7 +32,12 @@ def test_place_prepares_one_worker_and_checks_returned_exact_receipt(tmp_path, m
     monkeypatch.setattr(locality, "stage_worker_source", lambda *args: seeded.append(args))
     monkeypatch.setattr(pre, "ledger", lambda: "exact approved fixture")
     monkeypatch.setattr(pre, "hold", lambda *args, **kwargs: plan_approval.append((args, kwargs)) or "")
-    monkeypatch.setattr(locality, "run_on_worker", lambda *args: placed.append(args) or 0)
+    def worker(*args, verify_copyback):
+        placed.append(args)
+        verify_copyback(0)
+        return 0
+
+    monkeypatch.setattr(locality, "run_on_worker", worker)
     monkeypatch.setattr(locality.review, "read_receipt", lambda _: {"checkpoint": "exact"})
     monkeypatch.setattr(locality.review, "validate_placement", lambda *args: validated.append(args))
 
@@ -49,3 +54,10 @@ def test_place_prepares_one_worker_and_checks_returned_exact_receipt(tmp_path, m
     with pytest.raises(ValueError, match="route approval is absent"):
         locality.run_stage(run, "route")
     assert len(placed) == 1
+
+
+def test_corrupted_returned_receipt_keeps_worker_stage(tmp_path, monkeypatch):
+    monkeypatch.setattr(locality.review, "read_receipt",
+                        lambda _: (_ for _ in ()).throw(ValueError("changed checkpoint")))
+    with pytest.raises(locality.PlacementReceiptError, match="changed checkpoint"):
+        locality.check_placement_copyback(tmp_path, tmp_path / "kit", 0)

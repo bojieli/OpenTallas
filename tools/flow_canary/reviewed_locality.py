@@ -93,7 +93,7 @@ def stage_worker_source(worker, run, sha):
         raise ValueError(f"source setup on {worker} exited {result.returncode} (see {log})")
 
 
-def run_on_worker(run, worker, spec, command, max_wait=None):
+def run_on_worker(run, worker, spec, command, max_wait=None, verify_copyback=None):
     """Use the stock transfer, admission and output-copyback path on one allowed host."""
     if worker not in review.ADMISSION_HOSTS.split(","):
         raise ValueError("canary worker is outside the permitted pool")
@@ -110,10 +110,28 @@ def run_on_worker(run, worker, spec, command, max_wait=None):
                                     stock.held_hosts(), print)
     if not plan or plan[0] != worker or set(plan[1]) != {str(run)}:
         raise ValueError(f"stock worker staging refused: {why}")
-    status = stock.spill_run("localhost", *plan, mem, command, str(run), max_wait, print, disk=WORK_DISK_GB)
+    hub_lease = run / ".keep"
+    if hub_lease.is_symlink() or hub_lease.read_text() != review.keep_text(run):
+        raise ValueError("canary-owned hub lease is missing or changed")
+    status = stock.spill_run("localhost", *plan, mem, command, str(run), max_wait, print, disk=WORK_DISK_GB,
+                             source_only_paths=(str(hub_lease),), verify_copyback=verify_copyback)
     if status is None:
         raise ValueError("stock stage or admission did not start a worker")
     return status
+
+
+class PlacementReceiptError(ValueError):
+    pass
+
+
+def check_placement_copyback(run, kit, status):
+    if status != 0:
+        return
+    try:
+        document = review.read_receipt(run)
+        review.validate_placement(kit, review.receipt_path(run), document)
+    except (KeyError, OSError, ValueError) as error:
+        raise PlacementReceiptError(str(error)) from error
 
 
 def run_stage(run, stage):
@@ -137,15 +155,12 @@ def run_stage(run, stage):
         meta["placement_host"] = worker
         write_metadata(meta_path, meta)
         command = ["bash", "-c", "set -e; bash ./job.sh; test -f GENERATED; bash ./harness/place.sh"]
-        status = run_on_worker(run, worker, spec, command)
-        if status == 0:
-            try:
-                document = review.read_receipt(run)
-                review.validate_placement(Path(meta["kit"]), review.receipt_path(run), document)
-            except (KeyError, OSError, ValueError) as error:
-                print(f"CANARY PLACEMENT RECEIPT FAILED after worker return: {error}", file=sys.stderr)
-                return 3
-        return status
+        try:
+            return run_on_worker(run, worker, spec, command,
+                                 verify_copyback=lambda status: check_placement_copyback(run, Path(meta["kit"]), status))
+        except PlacementReceiptError as error:
+            print(f"CANARY PLACEMENT RECEIPT FAILED after worker return: {error}", file=sys.stderr)
+            return 3
     if not (run / "harness/route_approval.json").is_file():
         raise ValueError("exact route approval is absent")
     return run_on_worker(run, meta["placement_host"], spec, ["bash", "./harness/route_canary.sh"],

@@ -4480,12 +4480,15 @@ def spill_delta(srcm, dstm):
     return sorted(send)
 
 
-def spill_copy_fwd(src, dst, roots, stamp, metadata_scope=None):
+def spill_copy_fwd(src, dst, roots, stamp, metadata_scope=None, source_only_paths=()):
     """-> subprocess.CompletedProcess-like (returncode, stderr, sent).  v10: only the delta travels (a die lane re-spilled
     to a host that holds its copy sends what changed), through the same marked/locked dst extraction as spill_fwd_cmd."""
     import tempfile
     try:
-        delta = spill_delta(spill_manifest(src, roots), spill_manifest(dst, roots))
+        source = spill_manifest(src, roots)
+        for path in source_only_paths:
+            source.pop(os.fsencode(path.lstrip("/")), None)
+        delta = spill_delta(source, spill_manifest(dst, roots))
     except (RuntimeError, subprocess.SubprocessError, ValueError) as e:
         return subprocess.CompletedProcess([], 97, "", f"OT_SPILL_MANIFEST {str(e)[-200:]}")
     with tempfile.NamedTemporaryFile("wb", prefix="ot-run-spill-list.", delete=False) as f:
@@ -4866,11 +4869,15 @@ def admit_first_ok(dst, mem, cmd, say=lambda m: None, run_ssh=None):
     return True
 
 
-def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
-    """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
-    when the copy failed or (QUEUE-BAL-1) dst did not admit it within REQUEUE_S (nothing ran; the caller places again).  v10: the forward copy is marked first, serialised per lane and retried; a
-    pending record (~/.local/state/ot-run/spill_pending) survives a killed client, and `ot-run --spill-sweep` copies the
-    outputs back once the unit has ended; a back-copy that keeps failing is retried and logged to spill_stuck.log."""
+def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None, *,
+              source_only_paths=(), verify_copyback=None):
+    """Stage inputs, run on the worker, and copy its outputs back before guarded release.
+
+    None means staging failed or the worker did not admit the command. The
+    persistent record lets the stock sweeper retry interrupted output copies.
+    Callers may keep exact source-only files local and verify the copied outputs
+    before releasing the stage copy.
+    """
     tag = "%d-%d" % (os.getpid(), int(time.time()))
     stamp = f"/tmp/ot-run-spill.{tag}"
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
@@ -4883,7 +4890,8 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
         return None
     try:
         for k in range(SPILL_COPY_TRIES):
-            r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d)
+            r = spill_copy_fwd(src, dst, roots, stamp, metadata_scope=d,
+                               source_only_paths=source_only_paths)
             if not r.returncode or "OT_SPILL_REAL" in r.stderr:
                 break
             if k + 1 < SPILL_COPY_TRIES:
@@ -4948,6 +4956,8 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     except OSError:
         pass
     say(f"ot-run: SPILL: outputs copied back {dst} -> {src}; RAN on {dst}: exit {rc}")
+    if verify_copyback is not None:
+        verify_copyback(rc)
     spill_drop_stage(dst, roots, say)
     return rc
 
