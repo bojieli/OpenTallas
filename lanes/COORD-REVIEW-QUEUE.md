@@ -20111,3 +20111,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   Hook result: rects=14233, moved=14973, unresolved=1893, max move 207.9 um. The 1893 cells are left with no legal exit from their blockage rectangle.
   Fix v2 is tool-only on the same opt-in key: union exit through abutting rectangles, and skip tiny blockages. Push plus probe tonight; the row is DEFERRED to 11-28 09:00.
   Dry compose dry18c (10 rows onto core7b, tree2) is CLEAN. core7r G0 PASS.
+- 2026-11-27 15:11 PST DIED [kv-int-r3] ot-run oth-ubuntu-1410641-1795821068 on outgoing-giraffe: rc=1 after 14 s, ended 23:11:21, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/ot_probe1.log, cmd: --mem 24 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash run3b.sh /srv/opentallas-scratch2/claude/kw | class=TOOL-TRACEBACK cause=Error: dump3.tcl, 2 ORD-0007
