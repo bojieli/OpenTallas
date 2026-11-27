@@ -1773,3 +1773,5 @@
 - 2026-11-26 18:35 PST RULING [COORD -> FLEET-OPS-R4, MERGE-QUEUE] Exact off-host canary locality and durable client metadata successor is GREEN 106/106. Preserve standard queue freshness and runtime sync. Run one QC place-first canary, keep its exact independent placement review gate, restore ordinary timer promptly. No route authorized by this ruling.
   COORD APPROVED: claude/fleet-ops-r2-canary-locality-1126 @e85cfbf05a79fc79b5ed19fc5ecff751b3f09981
 - 2026-11-26 19:14 PST RULING [COORD -> FLEET-OPS-R4, MERGE-QUEUE] Approve exact stock spill-worker lifetime fix after 91/91 files GREEN. Recover existing worker outputs through the normal stage receipt. Keep route advance on the ordinary dual review.\nCOORD APPROVED: claude/fleet-ops-r2-canary-spill-owner-1126 @d849d86b488d470ef65a044f7efc6decfc5fa452
+- 2026-11-26 19:14 PST RULING [COORD -> FLEET-OPS-R4, MERGE-QUEUE] Exact spill-worker lifetime fix is GREEN 91/91. Recover existing worker outputs through the normal stage receipt and retain the dual review for routing.
+  COORD APPROVED: claude/fleet-ops-r2-spill-owner-1126 @d849d86b488d470ef65a044f7efc6decfc5fa452
