@@ -1,4 +1,4 @@
-"""Prototype producer receipt for a publication-prepared, same-path place attempt."""
+"""Producer receipt for a prepared, same-path place attempt."""
 
 import hashlib
 import json
@@ -93,11 +93,14 @@ def capture(spec, result, stages, form_sha, plan_sha, preflight):
 
 def verify(receipt, spec, accepted_publication, current_review):
     """Validate a same-host prepared kit after exact publication and ordinary plan review."""
-    root, kit = path_layout(spec)
-    source = {"manifest": receipt["manifest"], "plan": receipt["plan"], "form": receipt["form"]}
-    if accepted_publication != {"verdict": "PASS", "manifest": source["manifest"], "plan": source["plan"]}:
+    if accepted_publication != {"verdict": "PASS", "manifest": receipt["manifest"], "plan": receipt["plan"]}:
         raise ValueError("current publication does not authorize the prepared source")
-    if current_review != {"verdict": "GOOD", "form": source["form"]}:
+    return _verify_prepared(receipt, spec, current_review)
+
+
+def _verify_prepared(receipt, spec, current_review):
+    root, kit = path_layout(spec)
+    if current_review != {"verdict": "GOOD", "form": receipt["form"]}:
         raise ValueError("current committed review does not authorize this source form")
     if (receipt.get("schema") != SCHEMA or receipt["generation_identity"] != generation_identity(spec)
             or receipt["producer"] != spec["gen_host"] or receipt["work"] != str(root) or receipt["kit"] != str(kit)
@@ -113,12 +116,15 @@ def verify(receipt, spec, accepted_publication, current_review):
     return kit
 
 
-
 def claim(receipt, spec, accepted_publication, current_review, attempt):
     """Claim the producer directory once so two controllers cannot place the same kit."""
+    kit = verify(receipt, spec, accepted_publication, current_review)
+    return _claim(receipt, kit, attempt)
+
+
+def _claim(receipt, kit, attempt):
     if not attempt or not isinstance(attempt, str):
         raise ValueError("normal controller attempt identity is required")
-    kit = verify(receipt, spec, accepted_publication, current_review)
     work = Path(receipt["work"])
     path = work / ".published_place_claim.json"
     with tempfile.NamedTemporaryFile("w", dir=work, delete=False) as handle:
@@ -132,6 +138,52 @@ def claim(receipt, spec, accepted_publication, current_review, attempt):
     finally:
         staged.unlink()
     return kit
+
+
+def _private_spec(spec):
+    """The reviewed station controller is the only supported private producer."""
+    if (not spec.get("private") or spec.get("die") != "s81" or spec.get("kind") != "type"
+            or spec.get("goal") != "place" or not spec.get("dry_gen")
+            or not spec.get("launch_plan_review_required") or not spec.get("reviewed_station_prepare")
+            or spec.get("src_manifest") != "require" or not spec.get("publish_place_prepare")
+            or spec.get("place_spill") is not False or spec.get("roam_hosts") != [spec.get("gen_host")]
+            or spec.get("place_spill_hosts") != [spec.get("gen_host")]
+            or spec.get("gen_host") not in (spec.get("hosts") or ())):
+        raise ValueError("expected a same-host reviewed station private place producer")
+
+
+def read_private_prepared(spec_path):
+    """Read the genuine dry controller state without treating it as an adopted publication."""
+    spec_path = Path(spec_path)
+    raw = spec_path.read_bytes()
+    spec = json.loads(raw)
+    _private_spec(spec)
+    work, kit = path_layout(spec)
+    result = json.loads((spec_path.parent / "result.json").read_bytes())
+    source = result.get("src_manifest") or {}
+    ref = result.get("published_place_ready") or {}
+    identity = {"manifest": spec["src_manifest_hash"], "plan": spec["publish_place_prepare"]["plan_sha256"]}
+    if (not all(re.fullmatch(r"[0-9a-f]{64}", v) for v in identity.values())
+            or result.get("stage") != "preflight" or result.get("verdict") != "DRY-PASS"
+            or result.get("preflight_fail_advisory") or result.get("evidence") != f"{spec['gen_host']}:{kit}"
+            or source.get("manifest_hash") != identity["manifest"] or source.get("host") != spec["gen_host"]
+            or source.get("tree") != spec["src"] or source.get("tree_read_only") is not True
+            or ref.get("path") != str(work / READY_NAME) or ref.get("kit") != str(kit)
+            or not re.fullmatch(r"[0-9a-f]{64}", ref.get("sha256", ""))):
+        raise ValueError("exact reviewed private dry preparation did not finish")
+    return raw, {"ref": ref, "private_prepared": identity}
+
+
+def claim_private(receipt, spec, current_review, attempt):
+    _private_spec(spec)
+    if (receipt["manifest"] != spec["src_manifest_hash"]
+            or receipt["plan"] != spec["publish_place_prepare"]["plan_sha256"]):
+        raise ValueError("reviewed private source identity changed")
+    kit = _verify_prepared(receipt, spec, current_review)
+    preflight = json.loads(Path(receipt["preflight"]).read_bytes())
+    if preflight.get("macro_geometry", {}).get("verdict") != "PASS":
+        raise ValueError("reviewed private kit has known macro geometry findings")
+    return _claim(receipt, kit, attempt)
 
 
 def read_publication(coord, spec_path, publication, current):
@@ -206,7 +258,7 @@ def producer(operation, payload):
         encoded = (json.dumps(receipt, sort_keys=True) + "\n").encode()
         write_once(target, encoded)
         return {"path": str(target), "sha256": hashlib.sha256(encoded).hexdigest(), "kit": str(kit)}
-    if operation != "claim":
+    if operation not in ("claim", "claim-private"):
         raise ValueError("unknown producer operation")
     ref = payload["ref"]
     if target != Path(ref["path"]) or target.resolve() != target:
@@ -215,7 +267,10 @@ def producer(operation, payload):
     if hashlib.sha256(blob).hexdigest() != ref["sha256"]:
         raise ValueError("prepared receipt changed")
     receipt = json.loads(blob)
-    resolved = claim(receipt, spec, payload["publication"], payload["review"], payload["attempt"])
+    if operation == "claim-private":
+        resolved = claim_private(receipt, spec, payload["review"], payload["attempt"])
+    else:
+        resolved = claim(receipt, spec, payload["publication"], payload["review"], payload["attempt"])
     return {"path": str(target), "sha256": ref["sha256"], "kit": str(resolved)}
 
 
