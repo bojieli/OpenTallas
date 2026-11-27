@@ -413,7 +413,7 @@ def cone_regions(kit, cells, nets, limit=8):
     if not pr.exists():
         return out
     # PLACE-GROUP 11-22: a row may carry kind / box / radius after near_re (gen_phys.place_regions_tcl)
-    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}(?: \S+ \{[^}]*\} \S+( between| auto)?)?\}", pr.read_text(), re.M)
+    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}(?: \S+ \{[^}]*\} \S+( between| auto| exact)?)?\}", pr.read_text(), re.M)
     macro = {n for n, (m, _) in cells.items() if not _STD.search(m)}
     seq = {n for n, (m, _) in cells.items() if _SEQ.match(m)}
     for name, inst_re, util, cx, cy, near, cone in rows:
@@ -421,6 +421,8 @@ def cone_regions(kit, cells, nets, limit=8):
         members = [n for n in cells if n not in macro and rx.search(n)]
         if not members:
             out.append(F("CONE", name, f"OT_PLACE_REGION {name}: inst_re '{inst_re}' matches no movable standard cell"))
+            continue
+        if cone.strip() == "exact":
             continue
         seen, extra, queue = set(members), 0, collections.deque(members)
         cap = limit * len(members)
