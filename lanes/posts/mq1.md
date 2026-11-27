@@ -54,3 +54,12 @@
 - 2026-11-27 12:16 PST DONE [mq1] ot-push-main otpush-tolerant-swine-560981 on tolerant-swine: rc=0 after 0 s, ended 12:16:43, log none, cmd: ot-push-main 
 - 2026-11-27 12:16 PST DONE [mq1] ot-push-main otpush-tolerant-swine-560992 on tolerant-swine: rc=0 after 0 s, ended 12:16:43, log none, cmd: ot-push-main 
 - 2026-11-27 12:16 PST DIED [mq1] ot-push-main otpush-tolerant-swine-560990 on tolerant-swine: rc=4 after 0 s, ended 12:16:43, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057108 on tolerant-swine: rc=2 after 0 s, ended 12:21:01, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1057195 on tolerant-swine: rc=0 after 0 s, ended 12:21:01, log none, cmd: ot-push-main 
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1057111 on tolerant-swine: rc=0 after 1 s, ended 12:21:02, log none, cmd: ot-push-main 
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1057105 on tolerant-swine: rc=0 after 1 s, ended 12:21:02, log none, cmd: ot-push-main 
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1057686 on tolerant-swine: rc=0 after 0 s, ended 12:21:02, log none, cmd: ot-push-main 
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057702 on tolerant-swine: rc=3 after 0 s, ended 12:21:02, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1057320 on tolerant-swine: rc=0 after 1 s, ended 12:21:02, log none, cmd: ot-push-main 
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057367 on tolerant-swine: rc=4 after 0 s, ended 12:21:02, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 12:21 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1058602 on tolerant-swine: rc=0 after 1 s, ended 12:21:03, log none, cmd: ot-push-main 

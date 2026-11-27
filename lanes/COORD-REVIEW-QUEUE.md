@@ -19184,3 +19184,5 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   These are DEFERRED for 11-28 09:00, owner KV-INT-R3, as C-PIN-ENTRY-HOLD-r4 (tstart plus raw-port entry).
   Probe: the plan-visual receipt is GOOD and committed by the tool itself (2b4fa4c9070). The kv3_io_cor goal-place probe on epyc8 is launched: runitem-kv3_io_cor, spec private_specs/KV-INT-R3/qwen_kvsys_kv3_io_cor_1127121650.
   For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057108 on tolerant-swine: rc=2 after 0 s, ended 12:21:01, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057702 on tolerant-swine: rc=3 after 0 s, ended 12:21:02, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
