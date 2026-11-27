@@ -8810,6 +8810,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         (kd / "reserved_sites.tcl").write_text(rs_pre)
         hook = kd / "face_flops.tcl"
         hook.write_text("source /work/reserved_sites.tcl\n" + hook.read_text())
+    selector_check_path = kd / "native_stage_selector_check.tcl"
+    selector_check_path.unlink(missing_ok=True)
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         (kd / "landing_contract.json").write_text(json.dumps(landing_contract_metadata(P, tn), indent=1) + "\n")
@@ -8832,6 +8834,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP
         (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn, macro_moves))
+        selector_check = LP.native_stage_selector_check_tcl(P.types[tn])
+        if selector_check:
+            checker = Path(__file__).with_name("native_stage_selector_check.tcl").read_text()
+            selector_check_path.write_text(
+                checker + "\nif {[catch {\n" + selector_check + "} msg]} {puts stderr $msg; exit 16}\n")
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + LANDING_PLACEMENT_HOOK + "\n")
         # The new cells are packed to actual nonoverlapping rows/sites. Keep
@@ -10188,8 +10195,11 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (KIT-OPS-4 11-14 COORD: register > 64 data loads or NOT RUN, see reg_fanout.json; not a gate)'; rc=0; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/merge_census.on ] && [ -f /work/merged_replica_census.py ]; then python3 -I /work/merged_replica_census.py /work --gate \$(head -1 /work/merge_census.on) --json /work/merge_census.json > /work/merge_census.log 2>&1; mc=\$?; grep -h -E '^OT_MERGE_CENSUS|^MRG' /work/merge_census.log | head -8; if [ \$mc != 0 ]; then echo 'FAIL_PREFLOOR merge_census (GENBUG-5: flops merged away by Yosys in short sibling instances, see merge_census.log)' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
-    if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR synth_odb_v (openroad write_verilog)' | tee -a /work/FAIL_PREFLOOR; fi; \
+  if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; \
+    if [ -f /work/native_stage_selector_check.tcl ]; then printf 'source /work/native_stage_selector_check.tcl\\n' >> /work/synth_odb_v.tcl; fi; \
+    openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
+    if [ \$rc = 16 ]; then tail -14 /work/synth_odb_v.log; echo 'FAIL_PREFLOOR native_stage_selector (see synth_odb_v.log)' | tee -a /work/FAIL_PREFLOOR; \
+    elif [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR synth_odb_v (openroad write_verilog)' | tee -a /work/FAIL_PREFLOOR; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; fg=\$?; \
       if [ \$fg != 0 ]; then if [ \$FG != 0 ]; then echo 'FAIL_PREFLOOR face_guard_odb' | tee -a /work/FAIL_PREFLOOR; rc=\$fg; else echo 'WARN face_guard_odb ADVISORY (R-MINIMAL; export OT_FACE_GUARD_GATE = 1 restores the stop)'; fi; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -s /work/1_synth_odb.v ] && [ \"\${OT_FLOORPLAN_REPAIR:-auto}\" = auto ]; then FPN=\$(grep -cE '^ +[^ ]+ +[^ ]+ +[(]' /work/1_synth_odb.v); FPC=\${OT_FLOORPLAN_REPAIR_MAX_INST:-1500000}; \

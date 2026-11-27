@@ -104,3 +104,44 @@ def test_density_requires_a_bounded_explicit_leaf_group(mode, value):
     t['clock']['landing_contract']['native_stage_groups']['groups'][0]['density'] = value
     with pytest.raises(ValueError, match='density requires'):
         L._native_stage_groups(t, [])
+
+
+def test_post_synth_native_selector_gate_fails_only_wholly_shadowed_rows():
+    t = typ()
+    groups = t['clock']['landing_contract']['native_stage_groups']['groups']
+    groups[0].update(prefix=RID.replace('[0-9]+', '(?:1|9)'), density=0.55)
+    groups += [
+        dict(groups[0], prefix=RID, tag='stage:fallback'),
+        dict(groups[0], prefix=r'u_core[.]u[.]u_lep[.]u[.]rid.*', tag='stage:shadowed'),
+        dict(groups[0], prefix=r'u_core[.]missing', tag='stage:missing'),
+    ]
+    source = Path(L.__file__).with_name('native_stage_selector_check.tcl').read_text()
+    inventory = r'''
+proc cland_native_selector_check {rows} {
+ set flops {{u_core.u.u_lep.u.rid\[1\]$_DFF_P_} {u_core.u.u_lep.u.rid\[2\]$_DFF_P_}}
+ set cells [concat $flops {{u_core.u.u_lep.u.rid\[3\]$_DFF_P_}}]
+ cland_native_selector_ownership $rows $cells $flops
+}
+'''
+    def run():
+        script = source + inventory + '\nif {[catch {\n' + L.native_stage_selector_check_tcl(t)
+        script += '} why]} {puts stderr $why; exit 16}\n'
+        return subprocess.run(['tclsh'], input=script, capture_output=True, text=True)
+
+    failed = run()
+    assert failed.returncode == 16, failed.stdout + failed.stderr
+    assert 'PARTIAL stage:fallback matched=2 available=1' in failed.stdout
+    assert 'SHADOWED stage:shadowed matched=2 owners={stage:hub_rid 1 stage:fallback 1}' in failed.stdout
+    assert 'claimed=2 shadowed=1 partial=1 missing_at_synth=1' in failed.stdout
+    groups.pop(2)
+    passed = run()
+    assert passed.returncode == 0, passed.stdout + passed.stderr
+    assert 'claimed=2 shadowed=0 partial=1 missing_at_synth=1' in passed.stdout
+    assert L.native_stage_selector_check_tcl({}) == ''
+
+
+def test_post_synth_selector_prefilters_only_provable_literal_stems():
+    assert L._native_cell_stem(r'u_core\.q(?:[0-9]+|x)') == r'^u_core\.q'
+    assert L._native_cell_stem(r'u_core\.q(?:[0-9]+|x)|u_core\.r') == ''
+    assert L._native_cell_stem(r'u_core\.q(?:[]|]x)') == ''
+    assert L._native_cell_stem(r'u_core\.q+(?:x|y)') == ''
