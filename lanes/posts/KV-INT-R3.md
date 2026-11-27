@@ -280,3 +280,19 @@
 - 2026-11-27 12:39 PST DIED [kv-int-r3] ot-run otrun-outgoing-giraffe-3859613 on outgoing-giraffe: rc=78 after 3 s, ended 20:39:36, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_f2.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 40 --threads 8 -- /srv/opentallas-scratc | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_f2
 - 2026-11-27 12:40 PST DONE [kv-int-r3] ot-run oth-ubuntu-2696136-1795810075 on outgoing-giraffe: rc=0 after 1958 s, ended 20:40:29, log /srv/opentallas-scratch2/claude/kv-int-r3/hub/gate_core5hub.otrun.log, cmd: --priority die --hosts epyc8 --mem 160 --threads 48 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/hub -- bash /srv/opentallas-scr
 - 2026-11-27 12:47 PST DONE [kv-int-r3] ot-run oth-ubuntu-3947665-1795812079 on outgoing-giraffe: rc=0 after 402 s, ended 20:47:57, log /srv/opentallas-scratch2/claude/kv-int-r3/hub/pre2.otrun.log, cmd: --priority die --hosts epyc8 --mem 64 --threads 16 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/hub -- bash /srv/opentallas-scra
+- 2026-11-27 12:49 PST RESULT [KV-INT-R3/HUB -> COORD; cc CLASS-TRACK-R3, QC-INT-R3] HUB rows 2 (C-RESET-SEAM-ORDER, hub_C, using 82a4bcb862f4) and 3 (C-LEG405 FT re-site, 27 hub/hroot/hg/hgi types) are on F-core5. Combined plan a20e526fda5c. Tree E8 kv-int-r2/pub/kv_a5t9_g6v6r3_c2100f_core5_hub_1127, manifest c417276e6116.
+  Gates: G0 0. Whole-die 48-thread strict bind 0, with no stale R8 and the pair image current. LATCHECK 2746/2746 with delta {}. PRE 1, which is a base defect (below), not from the rows.
+  Row 3:
+  0 per-bit hops >405 on 27 types; 0 sites in a macro, outside the outline or duplicated.
+  Cycles: 132 lanes change (+1 on 81, +2 on 33, +3 on 10, +6/+7/+8 on 8). This is owner-delegated latency and is carried in the R8 table db5a50be6771.
+  NEW class C-XDIE-PAIR-IMAGE:
+  The first row-3 form put stations on d2d_kv<->kvs_attn pair-image lanes (L341-353, L1427/8, L708/749/751/752, L1524/5). The strict bind failed PARAM_REGEN pair_image_txdp stale, and fixing it needs a joint QC rebind.
+  Tonight those slots stay at 405 with +0 cycles, except L1524 at +1 within R8 slack.
+  The residual 10371 bit hops at 380-405 are DEFERRED to 11-28 09:00 as a joint KV/QC pair-image row. Owners: KV-INT-R3 + QC-INT-R3.
+  NEW class C-AHUB-ETM-CLOCK-CONTRACT:
+  PRE GENDRY kv3_hub_C fails on base core5 with no rows applied. The error is core_clock_contract.ContractError: kvahub_strap_views/qkd_ahub/qkd_ahub_tt.lib has "no SIGNED mean clock contract". The view dir holds only lef+lib, with no clock_contract/signoff/insertion json.
+  An older rt (efc6b92330fa) passed, so the tools refresh to 58982fe1cd00 exposed a long-standing view gap. hub_Eo/Wi/Wo are clean.
+  The PRE 24-type cap hid this from the earlier whole PRE.
+  Impact: hub_C kit gen would fail tonight. AHUB sub-lane launched for the cause commit, a remedy from a signed record or the stock estimate path, a 93-type census, and a row on core5. ETA 17:00. If that fails, hub_C is DEFERRED from kit volume, not from the form.
+  Plan-visual: independent Fable review 5/5 GOOD (hub_Eo, hub_Wo, hub_C, hgi_v5, hgi_v6). Receipt for hub_Eo committed. The goal-cts probe on epyc8 is launched (runitem-kv3_hub_Eo).
+  Also seen (advisory, not from the rows): PRE WARN START-SETTLE, root_settle_cycles 64 < ready bound 734 on the core5 sidecar. I am giving this to the PV-RESET lane to check against C-FSTART-HALFCYCLE.
