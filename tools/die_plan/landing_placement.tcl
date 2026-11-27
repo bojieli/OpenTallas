@@ -898,6 +898,22 @@ proc cland_pinslot_guard {ordered guards edge rect tag {reserve_resize 0}} {
  return $skipped
 }
 
+# Keep an exhausted vertical pin-slot window local instead of wrapping to the band floor.
+proc cland_pinslot_nearest_row {i rect tag spread target_y} {
+ global ff_dbu ff_y0 ff_rh
+ lassign $rect ax ay bx by
+ set h [[$i getMaster] getHeight]
+ set ymin [expr {$ff_y0+int(ceil(double(round($ay*$ff_dbu)-$ff_y0)/$ff_rh))*$ff_rh}]
+ set ymax [expr {$ff_y0+int(floor(double(round($by*$ff_dbu)-$h-$ff_y0)/$ff_rh))*$ff_rh}]
+ set ymin [expr {max($ymin,$ff_y0)}]
+ set first [expr {min($ymax,max($ymin,$target_y))}]
+ for {set y $first} {$y>=$ymin} {incr y -$ff_rh} {
+  set row [list $ax [expr {$y/double($ff_dbu)}] $bx [expr {($y+$h)/double($ff_dbu)}]]
+  if {![catch {cland_put $i $row $tag $spread 0} why options]} {return}
+  if {![string match {OT_CLAND no legal*} $why]} {return -options $options $why}
+ }
+ error "OT_CLAND no legal nearest pin-side row in $tag"
+}
 proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
  global ff_dbu ff_y0 ff_rh cland_cursor
  lassign $rect ax ay bx by
@@ -943,10 +959,10 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
   if {[dict exists $skip $i]} {continue}
   set ry [expr {$ff_y0+int(round(($ty-$ff_rh/2.0-$ff_y0)/$ff_rh))*$ff_rh}]
   set w [list $ax [expr {max($ay,double($ry)/$ff_dbu)}] $bx $by]
-  # target row to band top all taken: the whole band, first fit (fails closed with the usual error)
-  if {[catch {cland_put $i $w $tag $psp 1} err]} {
-   if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
-   cland_put $i $rect $tag $psp 0
+  # An exhausted high end falls back from the nearest legal row, never the low corner.
+  if {[catch {cland_put $i $w $tag $psp 1} err options]} {
+   if {![string match {OT_CLAND no legal*} $err]} {return -options $options $err}
+   cland_pinslot_nearest_row $i $rect $tag $psp $ry
   }
  }
  set cland_cursor {}
