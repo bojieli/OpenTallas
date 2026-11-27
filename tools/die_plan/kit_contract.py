@@ -282,6 +282,21 @@ def partition_budget(kd):
     return b if "partition_budget" in str(b.get("schema", "")) else None
 
 
+def _physical_clock_layer(bud):
+    """The declared physical on-ramp defaults to the old signal layer."""
+    signal = bud.get("signal_max")
+    clk = bud.get("clock") or {}
+    physical = clk.get("pin_layer", signal)
+    if "pin_layer" in clk and (not _metal_layer(physical) or not _metal_layer(signal)
+                               or int(physical[1:]) > int(signal[1:])):
+        return signal, "budget.json: invalid clock.pin_layer"
+    return physical, None
+
+
+def _metal_layer(value):
+    return isinstance(value, str) and re.fullmatch(r"M[1-9]\d*", value)
+
+
 def _partition_clock_pin_geometry(kd, bud):
     """COORD 10-27 ruling 2: GEOM-21 is a CORE rule; a partition die-clock pin is the M7 mesh drop / on-ramp of 12.7,
     placed exactly at its plan tap."""
@@ -305,14 +320,10 @@ def _partition_clock_pin_geometry(kd, bud):
             continue
         taps[name] = want
     top = bud.get("signal_max")
-    # Physical clock pins remain on their planned layer when a signal grant
-    # raises the route ceiling. Old budgets retain their original interpretation.
-    physical = clk.get("pin_layer", top)
-    if ("pin_layer" in clk and (not isinstance(physical, str) or not re.fullmatch(r"M[1-9]\d*", physical)
-            or not isinstance(top, str) or not re.fullmatch(r"M[1-9]\d*", top)
-            or int(physical[1:]) > int(top[1:]))):
-        err.append("budget.json: invalid clock.pin_layer")
-        physical = top
+    physical, layer_error = _physical_clock_layer(bud)
+    if layer_error:
+        err.append(layer_error)
+    entry_layers = []
     declared_layers = {}
     landing_file = Path(kd) / "landing_contract.json"
     if landing_file.is_file():
@@ -389,6 +400,7 @@ def _partition_clock_pin_geometry(kd, bud):
                 continue
             x, y = float(xm.group(1)), float(xm.group(2))
             entries.append((src, n, x, y))
+            entry_layers.append((src, n, layer, want_layer))
             want = taps.get(n) or taps.get(_base(n))
             if want is None:
                 err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / edge_clocks / landing_contract.json clock pins)")
@@ -404,7 +416,8 @@ def _partition_clock_pin_geometry(kd, bud):
         if _base(p) not in seen:
             err.append(f"clock {p}: no static placement found in any kit file")
     return list(dict.fromkeys(err)), dict(applies=True, kind="partition", clock_ports=sorted(ports), placements=seen,
-                                          entries=[list(e) for e in entries], rule="12.7 M7 on-ramp at plan tap")
+                                          entries=[list(e) for e in entries], entry_layers=entry_layers,
+                                          rule="12.7 M7 on-ramp at plan tap")
 
 
 def clock_pin_geometry(kd):
@@ -1264,9 +1277,9 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
         return [], dict(applies=False, reason="no macros")
     if prob:
         return [prob], dict(applies=True)
-    if entries is None:
-        entries = clock_pin_geometry(kd)[1].get("entries", [])
-    pts = list(entries)
+    bud = partition_budget(kd) or {}
+    geometry = clock_pin_geometry(kd)[1] if entries is None or bud else {}
+    pts = list(geometry.get("entries", []) if entries is None else entries)
     ms = Path(kd) / "master_slice.json"
     if ms.is_file():
         for isl in json.loads(ms.read_text()).get("islands", []) or []:
@@ -1280,25 +1293,37 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
     # metal on the partition entry layer (budget signal_max, M7) nor the via layer below it (M6), the entry is a
     # plain via stack through free metal (S81 vsw: M5 interior pin, OBS M1-M5) -> legal, recorded in info.  Any
     # other entry over a macro, or a core tap over a macro that obstructs M6/M7, still FAILs.
-    bud = partition_budget(kd) or {}
-    core_ports = {d.get("port") for d in ((bud.get("clock") or {}).get("core_taps") or []) if isinstance(d, dict)}
-    top = str(bud.get("signal_max") or "")
-    tops = _lef_metal_tops(kd, _mk(kd)) if core_ports and re.fullmatch(r"M\d+", top) else {}
-    access_rows = {r["port"]:r for r in ((bud.get("clock") or {}).get("core_taps") or [])
-                   if r.get("clock_entry_access")}
-    err, through = [], []
+    core_taps = [row for row in ((bud.get("clock") or {}).get("core_taps") or []) if isinstance(row, dict)]
+    core_ports = {row.get("port") for row in core_taps}
+    fallback, layer_error = _physical_clock_layer(bud)
+    tops = _lef_metal_tops(kd, _mk(kd)) if core_ports else {}
+    access_rows = {row["port"]: row for row in core_taps if row.get("clock_entry_access")}
+    layers, layer_mismatch = {}, {}
+    for source, port, actual, declared in geometry.get("entry_layers", []):
+        identity = source, port
+        if not _metal_layer(actual) or actual != declared:
+            layer_mismatch[identity] = f"{source}: clock entry {port} emits {actual}, expected {declared}"
+        else:
+            layers[identity] = actual
+    err, through = ([layer_error] if layer_error else []), []
     for src, name, x, y in pts:
+        identity = src, name
+        if identity in layer_mismatch:
+            err.append(layer_mismatch[identity])
+            continue
+        top = layers.get(identity, fallback)
         for index, b in enumerate(boxes):
             if b[1] - 1e-6 <= x <= b[3] + 1e-6 and b[2] - 1e-6 <= y <= b[4] + 1e-6:
                 master = b[0].rsplit("#", 1)[0]
-                if name in access_rows:
+                if name in access_rows and not layer_error and _metal_layer(top):
                     try:
                         if _clock_entry_access(kd, plan_dir, access_rows[name], sites[index], src, name, x, y, top):
                             through.append(f"{name} over {b[0]} (explicit actual LEF entry geometry; route/DRC still required)")
                             continue
                     except (ValueError, OSError, KeyError, TypeError, AttributeError, IndexError) as exc:
                         err.append(f"{src}: clock entry {name} actual-LEF access rejected: {exc}")
-                if name in core_ports and master in tops and tops[master] < int(top[1:]) - 1:
+                if (not layer_error and name in core_ports and master in tops and _metal_layer(top)
+                        and tops[master] < int(top[1:]) - 1):
                     through.append(f"{name} over {b[0]} (macro metal <= M{tops[master]}, entry {top})")
                     continue
                 err.append(f"{src}: clock entry {name} ({x:g}, {y:g}) over macro {b[0]} {[round(v, 3) for v in b[1:]]}")
