@@ -124,6 +124,11 @@ def nearest(points, taps):
     return dist, idx
 
 
+def seat_owner(cat, name):
+    """tap_group owner key of a plan seat: landing reset 'k7' -> u_cland_lrst_k7, relay site 'u_rrl_15/q' -> u_rrl_15"""
+    return "u_cland_lrst_" + str(name) if cat == "landing reset" else str(name).split("/")[0]
+
+
 def type_reach(t, taps, radius=None):
     """-> dict(radius, taps, seats, over, far, worst, by_cat {cat: (n, over, worst)}, offenders [(d, cat, name, x, y, tap)] worst first) or None (no taps / no seats)"""
     ss = seats(t)
@@ -131,6 +136,15 @@ def type_reach(t, taps, radius=None):
         return None
     r = float(radius if radius is not None else (t.get("clock") or {}).get("tap_radius_um") or DEFAULT_RADIUS_UM)
     dist, idx = nearest([(s[2], s[3]) for s in ss], taps)
+    # P-FALSE-GREEN (HEAD-PART-R3 11-27): a seat whose owner is pinned by clock.tap_group.fixed_taps times on THAT tap, not the nearest one
+    fx = ((t.get("clock") or {}).get("tap_group") or {}).get("fixed_taps") or {}
+    pos = {tp[0]: j for j, tp in enumerate(taps)}
+    for i, s in enumerate(ss):
+        a = fx.get(seat_owner(s[0], s[1]))
+        if a in pos:
+            j = pos[a]
+            idx[i] = j
+            dist[i] = abs(s[2] - taps[j][1]) + abs(s[3] - taps[j][2])
     bad, by = [], {}
     for s, d, j in zip(ss, dist, idx):
         n, o, w = by.get(s[0], (0, 0, 0.0))

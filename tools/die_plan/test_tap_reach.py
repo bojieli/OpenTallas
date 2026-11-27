@@ -90,3 +90,14 @@ def test_nearest_python_matches_numpy(monkeypatch):
     monkeypatch.setitem(sys.modules, "numpy", None)
     d2, i2 = TR.nearest(pts, taps)
     assert (d1, i1) == (d2, i2) == ([20.0, 130.0, 20.0], [0, 0, 1])
+
+
+def test_assigned_tap_overrides_nearest():
+    """HEAD ctl_n: fixed_taps pins u_rrl_15 to a tap 526 um away; the nearest tap is 40 um away -> must be flagged by assigned tap"""
+    taps = {"clk_t3": (100.0, 100.0), "clk_t13": (900.0, 400.0)}
+    t = {"outline_um": [1000.0, 500.0],
+         "clock": {"tap_mode": "explicit", "tap_radius_um": 250.0, "tap_group": {"re": "x", "fixed_taps": {"u_rrl_15": "clk_t13"}}},
+         "relay_sites": {"u_rrl_15/q": [140.0, 100.0], "u_rrl_16/q": [140.0, 100.0]}}
+    res = TR.census(_raw(t), {"coll_ft__cla4a25d77": (taps, set(), None)})
+    r = res["coll_ft__cla4a25d77"]
+    assert r["over"] == 1 and [o[2] for o in r["offenders"]] == ["u_rrl_15/q"] and r["offenders"][0][5] == "clk_t13"
