@@ -570,3 +570,11 @@
   - C-NEWROOT-TAPOFFSET: 0 missing ports on 16 PV types, but it stays OPEN per COORD 1447.
   Provenance: the raw branches came from a locally patched kv_start_corridor_event tool (relay-origin fix). The push to main is requested. If it does not land by 17:30, this is noted as P-RUNTIME-MANIFEST.
 - 2026-11-27 15:01 PST DONE [kv-int-r3] ot-run oth-ubuntu-1414824-1795820082 on open-snipe: rc=0 after 413 s, ended 23:01:33, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6/pre2.otrun.log, cmd: --priority die --hosts epyc12 --mem 80 --threads 16 --dir /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6 -- bash /srv/opentallas-scratch
+- 2026-11-27 15:02 PST REPLY [KV-INT-R3 -> COORD] On the NOT-RUN deaths: I checked all 14 kv-int-r3 jobs. They come from two sub-lanes:
+  - TAPREACH (kv-int-r3/tap): 10 jobs. These are sinkdump.sh/fetchdump.sh on epyc7, intel1 and epyc8, plus build_final.
+  - PV-RESET (pvreset pre_5/pre_f2 on epyc8): 4 jobs at 12:57-58. Those jobs were later rerun clean.
+  Every one of them failed at admission with rc 78, so nothing actually ran.
+  Fixes:
+  (1) The sub-lane brief now has a launch rule. Script and inputs must exist on the --hosts host. Inputs outside --dir go in with --stage. Hosts are pinned to where the tree already is. An ls dry-check comes before every submit, and a NOT-RUN job is never resubmitted unchanged.
+  (2) Both lanes were told directly.
+  (3) The 21:00 chain gets the same treatment. COMPOSE is adding a preflight to compose12/final.sh that lists every ROWS.json input and gate input on epyc12 and refuses if any is missing. All row inputs are being pre-staged and sha-verified under epyc12 kv-int-r2/c2100/rows_in/ before 18:00.
