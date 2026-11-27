@@ -505,6 +505,8 @@ def _cands(seq):
             continue
         isout = prev == ">" or bool(flag and _OUTFLAG.search(flag.lstrip("-"))) or bool(prev.startswith("-") and _OUTFLAG.search(prev.lstrip("-"))) or cmd in _OUTCMD
         w = word.strip("\"',;")
+        if w.startswith(_ROOTS) and ":" in w:
+            w = w.split(":", 1)[0]       # docker -v SRC:DST[:ro] volume spec: only the host side is an input path
         if w.startswith(_ROOTS) and not _re.search(r"[*?\[\]{}$`~]|://", w):
             (made if isout else cand).append(w.rstrip("/"))
         prev = "arg"
@@ -738,8 +740,8 @@ def _rl_pass():
             else:
                 adds += [p for p in pos if _rl_pathy(p)]
             adds += [v for f, v in fv if _OUTFLAG.search(f.lstrip("-"))]
-        for t in cc:
-            empty(t)
+        for t in ([] if base in ("docker", "podman", "apptainer", "singularity", "ssh", "scp", "rsync") else cc):
+            empty(t)    # container / remote paths (docker run ... ls /r) are not host paths
         for t in adds:
             ap = absof(t) if not _rl_special(t) else None
             if ap:

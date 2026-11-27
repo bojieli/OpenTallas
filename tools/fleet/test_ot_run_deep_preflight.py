@@ -198,3 +198,12 @@ def test_empty_variable_root_path(tmp_path):
     assert q("sed -n '/foo/p' there.txt; grep /foo/bar there.txt; awk '/x/ {print}' there.txt") == []
     assert q("mkdir -p /zz_pf_made; cp a /zz_pf_made/f") != []                  # the mkdir target itself is the empty-variable symptom
     assert run_local(tmp_path, ["python3", "-c", "pass", "$X/a", "/"], here) == []
+
+
+def test_docker_volume_spec_checks_only_the_host_side(tmp_path):
+    """HEAD-INT-R3 12:xx: -v /srv/.../HEAD-INT-R3:/r:ro was reported as missing input '<path>:/r:ro'; only the host side is an input path"""
+    r = run_local(tmp_path, ["docker", "run", "--rm", "-v", "/srv/opentallas-scratch2/claude/zz-missing-r5/x:/r:ro", "img", "ls", "/r"], str(tmp_path))
+    msgs = [x[1] for x in r]
+    assert any("missing input /srv/opentallas-scratch2/claude/zz-missing-r5/x" in m for m in msgs)
+    assert not any(":/r:ro" in m for m in msgs)
+    assert run_local(tmp_path, ["docker", "run", "--rm", "-v", str(tmp_path) + ":/r:ro", "img", "ls", "/r"], str(tmp_path)) == []
