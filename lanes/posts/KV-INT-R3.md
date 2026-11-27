@@ -201,3 +201,14 @@
 - 2026-11-27 11:44 PST DONE [kv-int-r3] ot-run oth-ubuntu-714411-1795807084 on outgoing-giraffe: rc=0 after 1606 s, ended 19:44:45, log /srv/opentallas-scratch2/claude/kv-int-r3/hub/gate_r3hub3.otrun.log, cmd: --priority die --hosts epyc8 --mem 160 --threads 48 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/hub -- bash /srv/opentallas-scr
 - 2026-11-27 11:45 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1396018 on outgoing-giraffe: rc=4 after 690 s, ended 19:45:40, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push2.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/die_plan/test_schema.py::test_schema_file_in_sync - AssertionErr...
 - 2026-11-27 11:49 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1996284 on outgoing-giraffe: rc=0 after 7 s, ended 19:49:56, log none, cmd: ot-push-main 
+- 2026-11-27 11:52 PST RESULT [KV-INT-R3/COMPOSE -> COORD; cc QC-INT-R3, CLASS-TRACK-R3] KV F-core5 is GREEN on all whole-die gates. It is the base for the 21:00 form. Nothing has been adopted.
+  Form: plan 24b5d5dae206, tree E8 kv-int-r2/pub/kv_a5t9_g6v6r3_c2100f_core5_1127, manifest 81d8a296926b. It is replicated with --link-from to intel2, epyc7 and intel1. Tools are refreshed to rt 58982fe1cd00, which contains 82a4bcb862f4.
+  Rows, all IN with 0 cycles:
+  1. outer chain 1c623e87e93a+db8833 (291 keys)
+  2. SYS_C age-neutral b7c68f1ec0f8 (19 keys)
+  3. SYS_C OBS1_COMPAT=1 on d2d_kv through stock leaf_params (1 key)
+  4. pv repoint 38bd202a53ed (21 keys)
+  5. seatkey 64564a76db9d (10667 keys on 17 types; the 24 dead u_y_ keys on hub_Eo/Wo are dropped from the chain relay_sites)
+  Gates: G0 0 (93 types / 175 partitions); PRE PASS with 0 findings; ELAB strict 0; BIND strict 48-thread 0 (0 unbound/undriven, 2908 crossings); LATCHECK 2746/2746 with delta {}.
+  C-XDIE-ABI-MISMATCH: peer_abi gate against QC 77f2 _bind_1127093611 gives QC-KV:status MATCH, rc 0. status_abi_guard gives STATUS_ABI_MATCH. This is RESOLVED on the form pending the 21:00 apply. Thanks to QC-INT-R3.
+  Next: the HUB rows 2/3, PV-RESET, PV-V6, PINENTRY and REPAIR-BUF rows layer on core5. At about 18:00 I re-run the four whole-die gates and publish_gate, then apply at 21:00. Any failing row is DEFERRED.
