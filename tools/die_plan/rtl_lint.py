@@ -83,7 +83,8 @@ def script(kit, mount='/work', flatten=None):
                                            # retain unassigned legacy wires after proc (safe4 PIPE=2); live
                                            # undriven nets still survive opt_clean and fail check -assert.
                                            'opt_clean'] +
-                     ([f'write_json {mount}/kit_assembly_elaborated.json'] if (kit / 'kit_assembly.json').is_file() else []) +
+                     ([f'write_json {mount}/kit_assembly_elaborated.json']
+                      if (kit / 'kit_assembly.json').is_file() or cfg.get('OT_NATIVE_SRAM_PATHS') == ['1'] else []) +
                      ([f'write_json {mount}/rtl_lint_elaborated.json'] if cfg.get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1'] else []) + ['check -assert']) + '\n'
 
 
@@ -373,8 +374,11 @@ def dead_undriven_only(log):
 def run(kit, yosys='yosys'):
     out = kit / 'rtl_lint.json'
     try:
-        if (kit / 'kit_assembly.json').is_file():
+        macro_authority = config(kit).get('OT_NATIVE_SRAM_PATHS') == ['1']
+        if (kit / 'kit_assembly.json').is_file() or macro_authority:
             (kit / 'kit_assembly_elaborated.json').unlink(missing_ok=True)
+        if macro_authority:
+            (kit / 'native_sram_paths.json').unlink(missing_ok=True)
         private_mesh = config(kit).get('OT_PRIVATE_HHP_CLOCK_MESH') == ['1']
         if private_mesh:
             import hhp_clock_mesh_role
@@ -412,6 +416,7 @@ def run(kit, yosys='yosys'):
                 clock_mesh = hhp_clock_mesh_role.classify_native_clock_conflict(kit, log, native_rc,
                     json.loads((kit / "rtl_lint_elaborated.json").read_text()))
         assembly_inventory = None
+        assembly_elaboration = None
         manifest = kit / 'kit_assembly.json'
         if manifest.is_file():
             # Reuse this frontend's actual elaboration. This is an assembly
@@ -423,8 +428,8 @@ def run(kit, yosys='yosys'):
                 module.loader.exec_module(helper)
                 binding = json.loads(manifest.read_text())
                 children = [dict(inst=b['instance'], master=b['master']) for b in binding['bindings']]
-                elaborated = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
-                assembly_inventory = helper.hierarchy_inventory(elaborated, config(kit)['DESIGN_NAME'][0], children,
+                assembly_elaboration = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
+                assembly_inventory = helper.hierarchy_inventory(assembly_elaboration, config(kit)['DESIGN_NAME'][0], children,
                                                                 binding.get('parent_profile'),binding.get('required_instances'))
                 declared = binding.get('parent_profile', {}).get('parameters', {})
                 actual = config(kit).get('VERILOG_TOP_PARAMS', [])
@@ -436,6 +441,15 @@ def run(kit, yosys='yosys'):
                 assembly_inventory = dict(status='NOT RUN', reason=str(error))
             (kit / 'kit_hierarchy.json').write_text(json.dumps(assembly_inventory, indent=1) + '\n')
         effective_rc = 0 if clock_mesh is not None else native_rc
+        native_macros = None
+        if macro_authority and not effective_rc:
+            import importlib.util
+            module = importlib.util.spec_from_file_location('_native_sram_paths', kit / 'native_sram_paths.py')
+            helper = importlib.util.module_from_spec(module)
+            module.loader.exec_module(helper)
+            if assembly_elaboration is None:
+                assembly_elaboration = json.loads((kit / 'kit_assembly_elaborated.json').read_text())
+            native_macros = helper.apply(kit, assembly_elaboration, config(kit)['DESIGN_NAME'][0])
         cast = yosys_cast_scan(_kit_sources(kit))
         cast_errors = [f'{p}:{ln}: ERROR: {rule} yosys read_verilog -sv mis-elaborates this cast form '
                        f'(put the cast in its own named sized wire): {sn}' for p, hs in sorted(cast.items()) for ln, rule, sn in hs]
@@ -445,6 +459,7 @@ def run(kit, yosys='yosys'):
                       mapped_cell_types=len(mapped_cells(_kit_sources(kit))),
                       top_params=config(kit).get('VERILOG_TOP_PARAMS', []),
                       **({'kit_assembly': assembly_inventory} if assembly_inventory is not None else {}),
+                      **({'native_sram_paths': native_macros} if native_macros is not None else {}),
                       errors=([] if clock_mesh is not None else re.findall(r'^.*\bERROR:.*$', log, re.M)) + cast_errors, yosys_cast=len(cast_errors),
                       **({'private_clock_mesh': clock_mesh, 'native_check_rc': native_rc,
                           'native_errors': re.findall(r'^.*\bERROR:.*$', log, re.M)} if clock_mesh is not None else {}),
