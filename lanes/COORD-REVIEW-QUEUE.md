@@ -18055,3 +18055,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 33.2 h job 36.6 h: no new meaningful log line for 8.7 h; last: [INFO GRT-0102] Start extra iteration 5/5
 - 2026-11-27 07:30 PST PLATEAU-MID [SMELL-WATCH -> FP-CONVERGE-QC, QC-ALLFIX, QC-INT-R2; cc COORD] 1 kit(s), report-only: slw_sc_v1 epyc7 oth-ubuntu-798441-1795732865: DRT plateau at 420 violations (5 iterations < 2 % change)
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 07:35 PST ALERT NO-PROGRESS qwen_compute: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 2015 min (last 22:00) and 0 private-spec launches for 60 min (last 15:37 ot-run QC-INT-R2-FEFW slw_fe_v1__clfe325744__cldb4efe33_1126135735); 56 hold(s): 0 without eta, 28 overdue, next eta 11-27 09:00; NO-LAUNCH x15
