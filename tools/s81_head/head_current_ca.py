@@ -43,6 +43,20 @@ def region_rows(ocv, table, mapping):
     return out
 
 
+def apply_freg(doc, ports):
+    """CA-FREG-1: carry the declared landing_ring_wreg face-register cycle into a fresh CA plan.  count_align_plan has no
+    freg input, so count_align_bind refuses (FREG-DECL-1) every port whose landing carries freg.  `ports` = the plan-of-record
+    sidecar count_aligned.ports: each port with freg=1 gets freg=1 and lat_cycles+1 (once; already-declared rows are kept).
+    Returns (new doc, ports changed).  Ports not in the plan are ignored."""
+    doc = json.loads(json.dumps(doc)); n = 0
+    for r in doc['crossings']:
+        if int((ports.get(r['port']) or {}).get('freg', 0)) and not int(r.get('freg', 0)):
+            r['freg'] = 1; r['lat_cycles'] = int(r['lat_cycles']) + 1; n += 1
+            if 'lat_cycles_edge' in r:
+                r['lat_cycles_edge'] = int(r['lat_cycles_edge']) + 1   # clock.spine.feed frame (count_align_plan.py:1568)
+    return doc, n
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--plan', required=True, type=Path)
@@ -53,6 +67,8 @@ def main():
     p.add_argument('--core-tt', type=float, default=450)
     p.add_argument('--core-ff', type=float, default=380)
     p.add_argument('--clock-cell', choices=['auto', 'buf', 'inv', 'inv2'], default='auto')
+    p.add_argument('--freg-from', type=Path, default=None,
+                   help='CA-FREG-1 (default off): plan-of-record sidecar whose count_aligned.ports freg flags are carried into the fresh plan (plan_freg.json) before the bind')
     p.add_argument('--start-max-hop-um', type=float, default=405)
     a = p.parse_args()
     out = a.out.resolve(); out.mkdir(parents=True, exist_ok=False)
@@ -78,7 +94,11 @@ def main():
     assert summary['crossings'] == len(table['ports']) and iv['rows'] == len(table['ports'])
     assert not any(iv.get(k, 0) for k in ['missing', 'unbound', 'rows_without_measured_fall']), iv
     assert summary['fail'] == 0 and summary['below_100ps'] == 0, summary
-    step('bind', [T/'count_align_bind.py', out/'plan.json', '--parts', 'table', '--table', out/'table.json', '--table-out', out/'regions_ca.json', '--out', out/'bind.json', '--strap-form', '--plan-die', a.plan, '--straps-out', out/'straps.json'])
+    bind_in = out/'plan.json'
+    if a.freg_from:
+        doc, nf = apply_freg(json.loads(bind_in.read_text()), json.loads(a.freg_from.read_text())['count_aligned']['ports'])
+        bind_in = out/'plan_freg.json'; bind_in.write_text(json.dumps(doc, indent=1)); print('freg carried on', nf, 'ports', flush=True)
+    step('bind', [T/'count_align_bind.py', bind_in, '--parts', 'table', '--table', out/'table.json', '--table-out', out/'regions_ca.json', '--out', out/'bind.json', '--strap-form', '--plan-die', a.plan, '--straps-out', out/'straps.json'])
     step('emit_start', [T/'start_stage_emit.py', 'emit', out/'bind.json', out/'proof', '--ctree', a.run/'clk', '--plan', a.plan, '--out', out/'start_stages'])
     scope = {'plan': str(a.plan), 'regions': len(table['regions']), 'crossings': len(table['ports']),
              'core_budget_ps': {'TT': a.core_tt, 'FF': a.core_ff},
