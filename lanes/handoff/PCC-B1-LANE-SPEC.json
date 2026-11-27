@@ -1,0 +1,111 @@
+{
+ "id": "C-PC-PHY-INGRESS-B1-LANE-SPEC",
+ "class_id": "C-PC-PHY-INGRESS",
+ "owner_next": "KV-INT-R3",
+ "status": "GENERATOR-INPUT, default-off, single-context; NO windows/ft_slots/bit_sites (CBC assigns by construction in the next KV plan regeneration; COORD ruling 11-27)",
+ "base_plan_ref": "kv_a5t9_g6v6r3_c2100d_1126 (read-only; 2840 lanes, lane schema {id,fixed_cycles,note:'p2p <inst.port>',ports[]} + latency.lanes{id:{cycles,natural,fixed,faces,stations,boundary,clock_landing,pad,param LAT_<id>}})",
+ "lanes": [
+  {
+   "id_hint": "B1_EN",
+   "width": 91,
+   "note": "p2p u_kvpc3.pcc_b1_commit",
+   "src": {
+    "partition": "pc_EN_2",
+    "type": "kv3_pc_v1__cl7f648944__r8422a4b86",
+    "instance": "u_kvpc3",
+    "leaf": "qkd_kvs_pcc",
+    "port": "pcc_b1_commit[90:0]"
+   },
+   "route": [
+    "pc_EN_2",
+    "pc_EN_3",
+    "pc_EN_4",
+    "pc_EN_5",
+    "pc_EN_6",
+    "pc_EN_7",
+    "hroot_EN",
+    "hub_Eo",
+    "hub_Ei",
+    "hub_C",
+    "hub_Wi"
+   ],
+   "dst": {
+    "partition": "hub_Wi",
+    "bus": "host.rec_tx kind11 aggregate in"
+   },
+   "fixed_cycles": 1,
+   "est_cycles": 80
+  },
+  {
+   "id_hint": "B1_ES",
+   "width": 91,
+   "note": "p2p u_kvpc3.pcc_b1_commit",
+   "src": {
+    "partition": "pc_ES_2",
+    "type": "kv3_pc_v1__cl7f648944__r8422a4b86",
+    "instance": "u_kvpc3",
+    "leaf": "qkd_kvs_pcc",
+    "port": "pcc_b1_commit[90:0]"
+   },
+   "route": [
+    "pc_ES_2",
+    "pc_ES_3",
+    "pc_ES_4",
+    "pc_ES_5",
+    "pc_ES_6",
+    "pc_ES_7",
+    "hroot_ES",
+    "hub_Eo",
+    "hub_Ei",
+    "hub_C",
+    "hub_Wi"
+   ],
+   "dst": {
+    "partition": "hub_Wi",
+    "bus": "host.rec_tx kind11 aggregate in"
+   },
+   "fixed_cycles": 1,
+   "est_cycles": 77
+  }
+ ],
+ "then_stock_lane": {
+  "id": "L751",
+  "note": "p2p host.rec_tx",
+  "path": "hub_Wi -> hgi_WN_7..0 -> io_W3 -> sys_c",
+  "bits": 549,
+  "cycles": 68,
+  "carries": "kind11 record unchanged (no new ports)"
+ },
+ "latency_budget": {
+  "edges_max": 103,
+  "from": "last PCC commit D+226",
+  "to": "HOST receipt D+329",
+  "then": "L751 68-70 edges -> K SFM port1 capture D+402 (TXDP162)",
+  "approved_by": "COORD 11-27",
+  "accounting": "est 77-80 PC->hub_Wi incl 1 pin edge + aggregation/pending record; margin ~20 edges"
+ },
+ "generator_requirements": [
+  "register B1 lanes in the generator case (rtl6) so lane ports, LAT_<id> params, latency.lanes rows, face_budget and ft_slots (bit_sites_um, regs_um) are emitted by CBC; no hand-written windows",
+  "types gaining a bus/ft slot: kv3_pc_v1__cl7f648944__r8422a4b86 (out), pc_EN_3..6 / pc_ES_3..6 types and kv3_pc_v3 (through), kv3_hroot, kv3_hub_Eo, kv3_hub_Ei, kv3_hub_C (through), kv3_hub_Wi (in, 2x91)",
+  "single-context: lane carries one 91b record per group; MCTX refused downstream"
+ ],
+ "rtl_dependencies": [
+  "qkd_kvs_pcc leaf with pcc_b1_commit[90:0] ({valid,identity[60:0],address[28:0]}), valid reset by hrst_n: rf_kv3_split.py --b1-commit-export (native_pcc_leaf_export.patch, sha1 85171b80ea6e patched copy, applies cleanly to stock 4efdace5c164); new hard-leaf view needing own sign-off",
+  "pin table delta: 91 new PCC-face output pins (PLAN_RF1 qkd_kvs_pc_pins_rfkv1.json, path requested from KV-INT-R3) plus the PCC->PCF split pin table",
+  "owner aggregation: qkd_pc11_writer_owner_set (dual K/V owner sets, local grouping) before the hub_Wi in-bus",
+  "HOST kind11 send handler in hub_Wi host rec_tx + C kind11 decoder (default-off): token-r2/kind11/qkd_pc11_b1_kind11.sv sha12 77e9ccff5166, sim tb_k11/tb_off exit0 (ot-run oth-ubuntu-1409017-1795806748)",
+  "K SFM port1 mux: native_k_port1.patch (E8 b1_production); C landing: native_result_owner/landing patches (single-context)"
+ ],
+ "gates_after_regeneration": [
+  "G0",
+  "PRE",
+  "strict bind (parallel ~48)",
+  "LATCHECK",
+  "P-HOOK-RTL-NET hook_rtl_net (pcc_b1_commit exists in kit RTL)",
+  "visual reviews before route"
+ ],
+ "evidence": [
+  "E8 b1_production/PACKET.md and pc11_pair_receipt/PRODUCTION-SEAMS.md",
+  "token-r2/pcc_b1_row_v2.json sha12 b83a9770a799 (geometry intent, superseded by this spec)"
+ ]
+}
