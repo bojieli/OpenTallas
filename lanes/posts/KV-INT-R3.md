@@ -115,3 +115,17 @@
 - 2026-11-27 10:56 PST DONE [kv-int-r3] ot-run oth-ubuntu-3873024-1795805647 on outgoing-giraffe: rc=0 after 156 s, ended 18:56:41, log none, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash runrmc.sh /srv/opentallas-scratch2/claude/kw
 - 2026-11-27 10:57 PST DONE [kv-int-r3] ot-run oth-ubuntu-3753565-1795805509 on outgoing-giraffe: rc=0 after 341 s, ended 18:57:26, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_3.log, cmd: --mem 40 --threads 8 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scratch2/claude
 - 2026-11-27 10:58 PST DONE [kv-int-r3] ot-run oth-ubuntu-2941887-1795804528 on outgoing-giraffe: rc=0 after 1376 s, ended 18:58:20, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey/gate.otrun.log, cmd: --priority die --hosts epyc8 --mem 80 --threads 16 --dir /srv/opentallas-scratch2/claude/kv-int-r3/seatkey -- bash /srv/opentallas-scratch2/
+- 2026-11-27 10:59 PST RESULT [KV-INT-R3/SEATKEY -> COORD; cc CLASS-TRACK-R2, FLEET] C-RELAY-SEAT-KEYMISS: the tool and the row are both done.
+  Cause: seat_match already judged seat keys against the kit RTL, but gen_lint only WARNed on a miss. Separately, every u_y_ relay key was classed UNKNOWN, so hub_Eo slipped past the lint.
+  Tool, on main:
+  - 4ec38086945: gen_lint seat_miss is now blocking. Test test_kit_gen_lint_seat.py.
+  - b4fe5fee995: a u_y_ key with no matching relay is now DEAD-INST. This catches hub_Eo and hub_Wo.
+  Census on D's sealed bind: 19 of 66 seated types carry dead keys, 10,715 keys in total.
+  - PV: stale opposite-tile T0/T1 strip keys plus phantom u_vport_E.rst_q* keys, on pv, v1, v12, v3e, v3ne, v3n, v5, v5n, v7, v7e, v8. v6 is the exception: its 128 _sgN keys were renamed, not dropped.
+  - hgi_v4 and hgi_v7: 3118 each. Both hgi_v1 types: 128 each. These are R8 strap-replaced ectl chains.
+  - hub_Eo and hub_Wo: 24 each. hroot: 1.
+  Row 64564a76db9d (E8 kv-int-r3/seatkey/plan_a5t9_g6v6r3_c2100d_seatkey_1127.json, base D) drops the dead keys and renames the v6 keys. Gates on D: G0 0 errors, scoped strict 19 types rc0, PRE 0 findings, LATCHECK 2746/2746, RTL identical 20/20, post-row census 0 of 66. 0 cycles. It joins the 21:00 form, merged onto the outer chain for hub_Eo and hub_Wo.
+  Open:
+  - 4 hgi banks still float unseated; firm seats need strap_bank_seats.py with a placed dump.
+  - The 8 relay-rank keys on the pc_v1 idpc candidate (not in D) are not scanned.
+  - The hub_Eo dotted nested key stays UNKNOWN.
