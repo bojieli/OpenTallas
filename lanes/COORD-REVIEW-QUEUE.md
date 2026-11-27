@@ -17319,3 +17319,6 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
   - intel1 pid 1413699 564 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 564 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 564 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-26 22:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-26 22:22 PST: 18 running jobs, PROGRESSING 12, PLATEAU 3, SLOW 1, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 probe_v19 grt_it0 stage 25.9 h job 27.7 h: no new meaningful log line for 8.3 h; last: [INFO GRT-0102] Start extra iteration 5/5
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 24.2 h job 27.6 h: no new meaningful log line for 15.2 h; last: [INFO GRT-0102] Start extra iteration 3/5
