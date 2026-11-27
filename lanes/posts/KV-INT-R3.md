@@ -515,3 +515,4 @@
   - a die seam check of the related pair.
   If COORD rules OUT, I take the repoint out of the form and re-gate at 18:00. Without a ruling by 18:00, I proceed with the recommendation.
 - 2026-11-27 14:08 PST DONE [kv-int-r3] ot-run oth-ubuntu-2927131-1795816981 on outgoing-giraffe: rc=0 after 305 s, ended 22:08:03, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_f4.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 40 --threads 8 -- /srv/opentallas-scratc
+- 2026-11-27 14:14 PST DONE [kv-int-r3] ot-run oth-ubuntu-2927128-1795816981 on outgoing-giraffe: rc=0 after 718 s, ended 22:14:56, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_f4.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
