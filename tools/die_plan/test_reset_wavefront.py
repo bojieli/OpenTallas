@@ -550,3 +550,87 @@ def test_slew_safe_relay_rule_is_the_die_default_and_types_only_tighten():
         if not raw["partition_types"][t].get("hard"):
             T = RT.for_type(schema.Plan(wave(PAIR, relay_rule="slew_safe")), t)
             assert T["max_hop_um"] <= 130.0 + 1e-6
+
+
+def _named_boundary_fixture():
+    raw = wave(TINY, root_part="pa", attach_order="nearest")
+    P = schema.Plan(raw)
+    solved = RT.wf_solve(P)
+    base = RT.wf_plan(P)
+    child = "pm2"
+    parent, site, _ = solved["parent"][child]
+    assert parent == "pm1"
+    t = P.parts[parent]["type"]
+    outputs = [
+        {"port": f"rst_o_{i}", "site": index, "xy_um": list(RT.face_sites(P, t)[index]["xy"])}
+        for i, index in enumerate(reversed(solved["outs"][t]))
+    ]
+    row = base["parts"][child]
+    chosen = next(r for r in outputs if r["site"] == site)
+    # pm1 is recovered through the ordinary fallback. pm2 already has an exact
+    # typed parent and must retain it with the explicitly named output order.
+    raw["reset"]["parent_pins"] = {"pm1": "pb", child: [parent, site]}
+    raw["reset"]["in_sites"] = {tn: list(xy) for tn, xy in solved["choice"].items()}
+    raw["reset"]["boundary_roles"] = dict(outputs={t: outputs}, parents={
+        child: {**{k: row[k] for k in ("type", "entry_stages", "depth_K", "release")},
+                "source": f"{parent}.{chosen['port']}", "output_um": chosen["xy_um"],
+                "input_um": list(solved["choice"][row["type"]])}
+    })
+    return raw, child, t
+
+
+def test_named_reset_boundary_preserves_explicit_parent_on_fallback():
+    raw, child, t = _named_boundary_fixture()
+    assert schema.validate(raw) == []
+    P = schema.Plan(raw)
+    assert child in RT.wf_solve(P)["unreachable"]  # before physical reach qualification
+    W = RT.wf_plan(P)
+    role = raw["reset"]["boundary_roles"]["parents"][child]
+    assert W["unreachable"] == []
+    assert {k: W["parts"][child][k] for k in ("source", "release", "depth_K")} == {
+        k: role[k] for k in ("source", "release", "depth_K")
+    }
+    assert W["types"][t]["outs"] == [[r["port"], *r["xy_um"]] for r in
+                                    raw["reset"]["boundary_roles"]["outputs"][t]]
+
+
+@pytest.mark.parametrize("mutation,reason", [
+    ("parent", "parent or input identity drift"),
+    ("source_port", "source BTerm differs"),
+    ("coordinate", "off the pin lattice"),
+    ("release", "fresh wavefront reach, phase or release differs"),
+])
+def test_named_reset_boundary_refuses_role_drift(mutation, reason):
+    raw, child, t = _named_boundary_fixture()
+    role = raw["reset"]["boundary_roles"]["parents"][child]
+    if mutation == "parent":
+        raw["reset"]["parent_pins"][child][0] = "pa"
+    elif mutation == "source_port":
+        role["source"] = "pm1.rst_o_99"
+    elif mutation == "coordinate":
+        raw["reset"]["boundary_roles"]["outputs"][t][0]["xy_um"][0] += 0.003
+    else:
+        role["release"] += 1
+    with pytest.raises(RT.ResetError, match=reason):
+        RT.wf_plan(schema.Plan(raw))
+
+
+def test_named_native_boundary_requires_the_same_verified_export():
+    raw, child, t = _named_boundary_fixture()
+    P = schema.Plan(raw)
+    tree = RT.for_type(P, t)
+    rows = {r["q"]: r["name"] for r in tree["relays"]}
+    physical_nodes = [{"q": f"rst_o_{index}", "name": rows[q]}
+                      for q, index in RT.out_relays(tree).items()]
+    native = {"tree": tree, "physical_nodes": physical_nodes}
+    P._bound_native_reset_contracts = {t: native}
+    expect = raw["reset"]["boundary_roles"]["outputs"][t]
+    assert RT.out_pins(P, t) == [(r["port"], *r["xy_um"]) for r in expect]
+    assert RT.in_pin(P, t) == tuple(raw["reset"]["boundary_roles"]["parents"][child]["input_um"])
+    native["physical_nodes"] = physical_nodes[:-1]
+    with pytest.raises(RT.ResetError, match="immutable native reset topology"):
+        RT.out_pins(P, t)
+    native["physical_nodes"] = physical_nodes
+    native["placement_sites"] = {physical_nodes[0]["name"]: [0, 0]}
+    with pytest.raises(RT.ResetError, match="verified export FF seat"):
+        RT.out_pins(P, t)

@@ -1873,6 +1873,12 @@ def _column_sites(P, tn, cs):
     return [dict(face=f, j=j, mid=True, xy=_snap(P, x, y)) for j, (f, x, y) in enumerate(raw)]
 
 
+def boundary_roles(P):
+    """Opt-in named output sites and exact instance roles, checked by the fresh wavefront."""
+    spec = P.reset.get("boundary_roles") or {}
+    return spec.get("outputs", {}), spec.get("parents", {})
+
+
 def face_sites(P, tn):
     """candidate reset pin sites of a soft type (type frame): along every face, INSET_UM inside, spaced so that every
     point of the face is within (hop - margin) / 2 of one; pushed off hard cores / macro leaves and off the clock tap
@@ -1905,6 +1911,25 @@ def face_sites(P, tn):
                 x, y = _snap(P, x + (8.64 if face in "SN" else 0.0), y + (8.64 if face in "EW" else 0.0))
             taken.append((x, y))
             out.append(dict(face=face, j=j, mid=(j == m // 2) and not line, xy=(x, y)))
+    locked, _ = boundary_roles(P)
+    if tn in locked:
+        for k, record in enumerate(locked[tn]):
+            j, xy = record["site"], tuple(record["xy_um"])
+            if record["port"] != f"rst_o_{k}" or not 0 <= j < len(out):
+                raise ResetError(f"type {tn}: invalid named reset output {record}")
+            if j in {v["site"] for v in locked[tn][:k]}:
+                raise ResetError(f"type {tn}: reused named reset output site {j}")
+            if any(abs(x-y) > 1e-6 for x, y in zip(_snap(P, *xy), xy)):
+                raise ResetError(f"type {tn}: reset output site {xy} is off the pin lattice")
+            axis = 1 if out[j]["face"] in ("N", "S") else 0
+            if abs(xy[axis]-out[j]["xy"][axis]) > 1e-6 or not _free(xy, boxes, box_out):
+                raise ResetError(f"type {tn}: reset output site {xy} leaves its legal face")
+            # A custom site cannot displace a clock tap or another named output.
+            peers = [tuple(v["xy_um"]) for v in locked[tn] if v["site"] != j]
+            peers += [(x, y) for _, x, y in _plan_taps(P, tn)]
+            if any(abs(xy[0]-x) < 1.0 and abs(xy[1]-y) < 1.0 for x, y in peers):
+                raise ResetError(f"type {tn}: reset output site {xy} collides with another named site")
+            out[j] = dict(out[j], xy=xy)
     cache[key] = out
     return out
 
@@ -2093,8 +2118,26 @@ def _wf_solve_once(P):
     # every soft partition's out sites in the die frame, bucketed
     cell = max(hp, 1.0)
     grid = {}
+    locked, strict = boundary_roles(P)
+    for child, role in strict.items():
+        pin = (P.reset.get("parent_pins") or {}).get(child)
+        if child not in soft or P.parts[child]["type"] != role["type"] or (
+                not isinstance(pin, list) or len(pin) != 2 or pin[0] not in soft):
+            raise ResetError(f"reset boundary role {child}: needs exact soft child and typed parent pin")
+        expected_parent, _ = role["source"].rsplit(".", 1)
+        if pin[0] != expected_parent or tuple(over.get(role["type"], ())) != tuple(role["input_um"]):
+            raise ResetError(f"reset boundary role {child}: parent or input identity drift")
+
+    output_order = {tn: [r["site"] for r in rs] for tn, rs in locked.items()}
+    allowed = {tn: set(jj) for tn, jj in output_order.items()}
+
+    def output_sites(q):
+        tn = P.parts[q]["type"]
+        return [(j, site) for j, site in enumerate(face_sites(P, tn))
+                if tn not in allowed or j in allowed[tn]]
+
     for q in soft:
-        for j, s in enumerate(face_sites(P, P.parts[q]["type"])):
+        for j, s in output_sites(q):
             X, Y = P.to_die(q, s["xy"])
             grid.setdefault((int(X // cell), int(Y // cell)), []).append((q, j, X, Y))
 
@@ -2209,12 +2252,18 @@ def _wf_solve_once(P):
     # nearer unreachable part (svc_1_rs, 1.7 mm) would have been reached a step later.  Each round attaches the unreachable
     # part with the smallest distance to ANY reached non-hard site (tie: part name, then site), then offers its own sites to
     # the rest.  Candidate sites, the in-site skip, rel and the tie order inside one part are unchanged.
+    def fallback_eligible(p, q, j, span):
+        # Strict roles may be descendants of declared die-relay bridges.
+        # Preserve only the exact eligible direct edge here; wf_plan still
+        # qualifies the physical bridge, root reachability and release ages.
+        return p not in strict or (pins[p] == [q, j] and span <= hp + 1e-6)
+
     if P.reset.get("attach_order", "alphabetical") == "nearest":
         _sd = {}
 
         def _sites_die(q):
             if q not in _sd:
-                _sd[q] = [(j, P.to_die(q, s_["xy"])) for j, s_ in enumerate(face_sites(P, P.parts[q]["type"]))
+                _sd[q] = [(j, P.to_die(q, s_["xy"])) for j, s_ in output_sites(q)
                           if not _is_in_site(P, q, j, choice)]
             return _sd[q]
         _pxy = {p: (part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])) for p in unr}
@@ -2225,7 +2274,7 @@ def _wf_solve_once(P):
                 return
             for j, c in _sites_die(q):
                 d = _man(c, _pxy[p])
-                if p not in _best or (d, q, j) < _best[p]:
+                if fallback_eligible(p, q, j, d) and (p not in _best or (d, q, j) < _best[p]):
                     _best[p] = (d, q, j)
         _todo = sorted(unr)
         for q in sorted(rel):
@@ -2250,11 +2299,11 @@ def _wf_solve_once(P):
             for q in sorted(rel):
                 if q in hard:
                     continue
-                for j, s_ in enumerate(face_sites(P, P.parts[q]["type"])):
+                for j, s_ in output_sites(q):
                     if _is_in_site(P, q, j, choice):
                         continue
                     d = _man(P.to_die(q, s_["xy"]), xy)
-                    if b is None or d < b[0]:
+                    if fallback_eligible(p, q, j, d) and (b is None or d < b[0]):
                         b = (d, q, j)
             if b is not None:
                 q = b[1]
@@ -2267,8 +2316,23 @@ def _wf_solve_once(P):
             outs[P.parts[pr[0]]["type"]].add(pr[1])
     for tn, kept in (P.reset.get("keep_outs") or {}).items():
         outs[tn].update(kept)
+    for tn, indexes in output_order.items():
+        if tn not in outs or outs[tn] - allowed[tn] or any(
+                _is_in_site(P, p, j, choice) for p in soft if P.parts[p]["type"] == tn for j in indexes):
+            raise ResetError(f"type {tn}: conflicting use of named reset outputs")
+        outs[tn] = indexes
+    for p, role in strict.items():
+        pr = par.get(p)
+        if pr is None or list(pr[:2]) != pins[p]:
+            raise ResetError(f"reset boundary role {p}: exact parent edge is not feasible")
+        q, j, _ = pr
+        tn = P.parts[q]["type"]
+        name = f"{q}.rst_o_{list(outs[tn] if tn in output_order else sorted(outs[tn])).index(j)}"
+        if name != role["source"] or tuple(face_sites(P, tn)[j]["xy"]) != tuple(role["output_um"]):
+            raise ResetError(f"reset boundary role {p}: source BTerm differs ({name})")
     res = dict(root=root, root_type=rtype, choice=choice, parent=par, unreachable=unr, est_rel=rel,
-               outs={tn: sorted(v) for tn, v in outs.items()}, hard=sorted(hard), hard_depth=hdep)
+               outs={tn: list(v) if tn in output_order else sorted(v) for tn, v in outs.items()},
+               hard=sorted(hard), hard_depth=hdep)
     cache["wf_solve"] = res
     return res
 
@@ -2294,11 +2358,48 @@ def pinned_out_of_reach(P):
     return out
 
 
+def _native_boundary(P, tn, native):
+    outputs, parents = boundary_roles(P)
+    rows = outputs.get(tn)
+    rec = [r for r in parents.values() if r["type"] == tn]
+    if not rows and not rec:
+        return None
+    tree = native["tree"]
+    sites = native.get("placement_sites") or {}
+    if tree.get("start"):
+        raise ResetError(f"type {tn}: START-broadcast boundary relocation needs paired START pin authority")
+    root = "u_rst_in" if tree["entry"] == "relayed" else "u_rst_root"
+    xy = tuple(tree["root"])
+    if rec:
+        fixed = {tuple(r["input_um"]) for r in rec}
+        if len(fixed) != 1 or tree["entry"] != "relayed":
+            raise ResetError(f"type {tn}: captured reset entry differs from the named boundary role")
+        xy, = fixed
+        if tuple(sites.get(root, tree["root"])) != xy:
+            raise ResetError(f"type {tn}: named input lacks a matching verified entry FF seat")
+    outs = [(f"rst_o_{k}", *point) for k, point in enumerate(tree.get("outs", []))]
+    if rows:
+        nodes = {r["q"]: r["name"] for r in native["physical_nodes"]
+                 if not r.get("optional") and r["q"].startswith("rst_o_")}
+        actual = {r[0] for r in outs}
+        if actual != set(nodes) or actual != {r["port"] for r in rows}:
+            raise ResetError(f"type {tn}: named outputs differ from immutable native reset topology")
+        for r in rows:
+            k = int(r["port"].removeprefix("rst_o_"))
+            xy_out = tuple(r["xy_um"])
+            if tuple(face_sites(P, tn)[r["site"]]["xy"]) != xy_out or (
+                    tuple(sites.get(nodes[r["port"]], tree["outs"][k])) != xy_out):
+                raise ResetError(f"type {tn}: named output lacks a matching verified export FF seat")
+            outs[k] = (r["port"], *xy_out)
+    return xy, outs
+
+
 def in_pin(P, tn):
     """the wavefront reset IN pin (arst_n) of a soft type (type frame)."""
     native = bound_native_contract(P, tn)
     if native:
-        return tuple(native["tree"]["root"])
+        boundary = _native_boundary(P, tn, native)
+        return boundary[0] if boundary else tuple(native["tree"]["root"])
     return tuple(wf_solve(P)["choice"][tn])
 
 
@@ -2308,7 +2409,9 @@ def out_pins(P, tn):
     if native:
         # These are the actual emitted native wrapper's registered outputs.
         # Their captured tree sites must survive in io.tcl and the exact pin ABI.
-        return [(f"rst_o_{k}",) + tuple(xy) for k, xy in enumerate(native["tree"].get("outs", []))]
+        boundary = _native_boundary(P, tn, native)
+        return boundary[1] if boundary else [
+            (f"rst_o_{k}",) + tuple(xy) for k, xy in enumerate(native["tree"].get("outs", []))]
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
@@ -2822,6 +2925,12 @@ def wf_plan(P):
                 reachable.add(p)
         parts[p] = row
         st += sorted(kids.get(p, []))
+    _, strict = boundary_roles(P)
+    for p, role in strict.items():
+        row = parts.get(p)
+        if p not in reachable or not row or any(row[k] != role[k] for k in
+                                               ("source", "type", "entry_stages", "depth_K", "release")):
+            raise ResetError(f"reset boundary role {p}: fresh wavefront reach, phase or release differs")
     out = dict(release="wavefront", sync_stages=N, root=sol["root"], root_type=sol["root_type"],
                hop_um=max_hop, relay_um=relay_um(P), unreachable=sorted(set(P.parts) - reachable),
                **({"die_relays": dict(parts=len(drl), relays=sum(len(v[0]) for v in drl.values()),
