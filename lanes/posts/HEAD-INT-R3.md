@@ -168,3 +168,4 @@
 - 2026-11-27 14:35 PST DONE [HEAD-INT-R3] ot-push-main otpush-open-snipe-1093127 on open-snipe: rc=0 after 29 s, ended 22:35:35, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/strap/push8.log, cmd: ot-push-main 
 - 2026-11-27 14:38 PST DONE [HEAD-INT-R3] ot-push-main otpush-open-snipe-1133742 on open-snipe: rc=0 after 24 s, ended 22:38:26, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/strap/push9.log, cmd: ot-push-main 
 - 2026-11-27 14:43 PST DONE [HEAD-INT-R3] ot-push-main otpush-open-snipe-1104845 on open-snipe: rc=0 after 434 s, ended 22:43:23, log none, cmd: ot-push-main 
+- 2026-11-27 14:45 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-1181080-1795819274 on open-snipe: rc=0 after 239 s, ended 22:45:09, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/run_f7b.out, cmd: --priority die --hosts epyc12 --mem 64 --threads 8 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3 -- bash /srv/ope
