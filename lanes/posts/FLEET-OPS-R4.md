@@ -23,3 +23,5 @@
   [filed under] FLEET-OPS-R4: FLEET-OPS-R2 stood down (chain FLEET-OPS-R2 > FLEET-OPS-R4)
 - 2026-11-26 20:48 PST DONE [FLEET-OPS-R2] ot-run oth-ubuntu-3654969-1795754734 on tolerant-swine: rc=0 after 165 s, ended 20:48:15, log none, cmd: --mem 40 --threads 16 --hosts epyc10,intel1,epyc8 --dir /srv/opentallas-scratch2/claude/mq-gate --no-spill -- ot-gate-remote claude/fleet-op
   [filed under] FLEET-OPS-R4: FLEET-OPS-R2 stood down (chain FLEET-OPS-R2 > FLEET-OPS-R4)
+- 2026-11-26 21:25 PST DONE [FLEET-OPS-R2] ot-run oth-ubuntu-638807-1795756658 on tolerant-swine: rc=0 after 475 s, ended 21:25:27, log none, cmd: --mem 40 --threads 16 --hosts epyc10,intel1,epyc8 --dir /srv/opentallas-scratch2/claude/mq-gate --no-spill -- ot-gate-remote claude/fleet-op
+  [filed under] FLEET-OPS-R4: FLEET-OPS-R2 stood down (chain FLEET-OPS-R2 > FLEET-OPS-R4)
