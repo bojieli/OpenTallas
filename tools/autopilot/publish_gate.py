@@ -464,7 +464,12 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     band_base_ready = band_base and os.path.isfile(band_base)
     pre_base = remap_base if remap_base and os.path.isfile(remap_base) else (band_base if band_base_ready else None)
     pre_tool = Path(dp, "plan_gate_pre.py")
-    if pre_base and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
+    pre_options = pre_tool.read_text(errors="replace") if pre_tool.is_file() else ""
+    # ROWS compares consumer localization with the adopted live plan. The explicit remap
+    # base is a separate parent for LANDREMAP and ISTCYC.
+    if band_base_ready and "--baseline-plan" in pre_options:
+        pre += ["--baseline-plan", str(band_base)]
+    if pre_base and "--remap-base" in pre_options:
         pre += ["--remap-base", str(pre_base)]
     # P-PUBGATE-BOR (KV-INT-R2 11-26): the bound checks (RSTREACH / MACROGHOST / SEATMATCH / GENDRY-KITRTL) read --elab-dir, else the tree's
     # <plan dir>/bind_of_record, which a published tree carries frozen from an older cut (KV d7c233ac: plan_c bind -> false RSTREACH on

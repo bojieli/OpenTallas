@@ -490,7 +490,13 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
     def test_remap_base_overrides_band_base_for_pre_only(self):
         pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
         self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
+        self.assertEqual(pre[pre.index("--baseline-plan") + 1], str(self.band))
         self.assertEqual(g0[g0.index("--band-base") + 1], str(self.band))
+
+    def test_remap_base_alone_cannot_grandfather_consumer_rows(self):
+        pre, _g0 = self.calls(remap_base=str(self.remap))
+        self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
+        self.assertNotIn("--baseline-plan", pre)
 
     def test_without_remap_base_pre_keeps_band_base(self):
         pre, _g0 = self.calls(band_base=str(self.band))
