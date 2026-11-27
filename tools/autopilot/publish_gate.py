@@ -19,6 +19,11 @@ PRE/G0 accept them.  This gate runs, on the gen host that holds the tree and bef
            injected manifest that lies in ANOTHER published tree or in a missing sibling of the candidate tree (QC N1B pre-rename
            tree 11-17; KV D22 11-18: asbuilt base + land_r8 still named the composer's scratch mirror, one gate run lost)
 
+  peer_abi (BLOCKING, P-PEER-ABI 11-27, COORD functional-safety exception to report-only) every cross-die interface pair the candidate
+           belongs to (tools/die_plan/peer_abi.py: QC-KV status codec vs OBS1_COMPAT, S81-HEAD serdes/KP4 wire contract) must MATCH
+           against the die's LIVE peer in the coord config; MISMATCH = FAIL with the pair and the side to change; a peer whose files
+           this host cannot read is UNKNOWN (recorded, never blocks).  No per-pair ack: fix the end.
+
 and writes autopilot/publish_gate/<die>/<tree manifest sha>.json = verdict PASS | FAIL with the four check results.  The apply
 script refuses without a PASS record whose die, tree, manifest sha and plan sha256 match the candidate (require_pass()).
 
@@ -50,6 +55,7 @@ if "__file__" in globals() and str(HERE) not in sys.path:      # python3 -I does
     sys.path.insert(0, str(HERE))
 SCHEMA_ID = "opentallas.publish_gate.v1"
 CHECKS = ("schema", "pre_g0", "hashes", "contained", "dry_gen")
+PEER_DIES = ("qwen_compute", "qwen_kvsys", "s81", "s81_head")      # dies with a cross-die ABI pair (peer_abi.DIE_ROLE)
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -94,6 +100,8 @@ def require_pass(C, die, tree, want, plan_sha256):
         if r.get(k) != v:
             return f"publish gate: record {p.name} {k} {str(r.get(k))[:80]!r} != candidate {str(v)[:80]!r}"
     bad = [c for c in CHECKS if ((r.get("checks") or {}).get(c) or {}).get("verdict") != "PASS"]
+    if ((r.get("checks") or {}).get("peer_abi") or {}).get("verdict") == "FAIL":
+        bad.append("peer_abi")
     if r.get("verdict") != "PASS" or bad:
         return f"publish gate: record {p.name} is {r.get('verdict')}, checks not PASS: {','.join(bad) or '-'}"
     return ""
@@ -431,8 +439,33 @@ def run_static(tree, plan, *args, tool_root=None, **kw):
                 os.environ["OT_REPO_ROOT"] = old
 
 
+def peer_abi_check(tree, plan, bind_out, peers, tool_root=None, die=None):
+    """P-PEER-ABI: the candidate's cross-die pairs against the live peers (peers = {die: (tree, bind_out)}) -> check record.
+    FAIL only on a proven MISMATCH (or, with an rt checkout, a guard that cannot load); UNKNOWN pairs are recorded."""
+    die = die or (re.search(r"/die_plan/([^/]+)/", str(plan)) or [None, None])[1]
+    cands = [os.path.join(str(tool_root), "tools", "die_plan")] if tool_root else []
+    cands.append(os.path.join(str(tree), "tools", "die_plan"))
+    mod = next((d for d in cands if os.path.isfile(os.path.join(d, "peer_abi.py"))), None)
+    if mod is None:
+        return {"verdict": "FAIL" if tool_root else "ADVISORY", "why": "tools/die_plan/peer_abi.py not found in the rt checkout or the tree"}
+    try:
+        sys.path.insert(0, mod)
+        try:
+            import peer_abi as PA
+        finally:
+            sys.path.remove(mod)
+        rec = PA.gate(die, str(tree), bind_out, {d: tuple(v) for d, v in (peers or {}).items()})
+    except Exception as e:                        # a guard that cannot run is a FAIL, never a pass
+        return {"verdict": "FAIL", "why": f"peer_abi did not run: {type(e).__name__}: {e}"[:600]}
+    rec["die"] = die
+    bad = [r for r in rec.get("pairs", []) if r["state"] == "MISMATCH"]
+    if bad:
+        rec["why"] = "PEER-ABI-MISMATCH: " + " | ".join(f"{r['pair']}: {r['detail']} [change: {r['fix_side']}]" for r in bad)[:900]
+    return rec
+
+
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
     it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
@@ -518,6 +551,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     res["foreign_tree"] = {"verdict": "PASS" if not ft else "ADVISORY", "advisory": True, "n": len(ft), "findings": ft[:40]}
     bp = check_bound_params(tree, bind_out)
     res["bound_params"] = {"verdict": "PASS" if not bp else "ADVISORY", "advisory": True, "n": len(bp), "findings": bp[:40]}
+    res["peer_abi"] = peer_abi_check(tree, plan, bind_out, peers, tool_root, die)
     return res
 
 
@@ -560,7 +594,7 @@ def _admit_static_host(source, work, requested, wait, *args):
 
 
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None):
     """Run the exact static checker with local admission on the host holding its prepared inputs."""
     q = shlex.quote
     _rs = str(os.environ.get("OT_RESETPUB_SOLVE", "")).strip()     # an explicit caller value (1 or 0) is forwarded; unset = the PRE default
@@ -580,7 +614,9 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --pre-baseline {q(str(pre_baseline))}" if pre_baseline else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
-           + (f" --tool-root {q(str(tool_root))}" if tool_root else ""))
+           + (f" --tool-root {q(str(tool_root))}" if tool_root else "")
+           + (f" --die {q(str(die))}" if die else "")
+           + "".join(f" --peer {q(d + '=' + str(t) + (':' + str(b) if b else ''))}" for d, (t, b) in sorted((peers or {}).items())))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=4 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -721,9 +757,10 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
         # LANDING-BAND-CORE (COORD 11-22): base plan of record = candidate.band_base, else the die's LIVE plan in the coord config (pre-apply)
         try:
-            live = (json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {}
+            live_dies = json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}
         except (OSError, ValueError):
-            live = {}
+            live_dies = {}
+        live = live_dies.get(die) or {}
         band_base = marker.get("band_base") or obj.get("band_base") or (live.get("plan") if live.get("plan") != plan else None)
         rec["band_base"] = band_base
         # A candidate-supplied G0/remap comparator cannot authorize inherited rows.
@@ -748,6 +785,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             inj = os.path.join(bind_out, "asbuilt_manifest_injected.json")
             scan += [os.path.join(bind_out, "bind.f"), inj]
             scan_ab.append(inj)
+        peers = {}
+        for pd, pv in live_dies.items():
+            if pd in PEER_DIES and pd != die and pv.get("src"):
+                peers[pd] = (pv["src"], ((pv.get("kit_rtl") or {}).get("bind_out")))
+        rec["peer_abi_peers"] = {d: list(v) for d, v in peers.items()}
         rec["foreign_tree_scan"] = {"bind_out": bind_out, "files": scan, "asbuilts": scan_ab}
         # LATENCY-R 11-18: the static checks (PRE + G0: 13-39 min) and the dry gen (13-53 min) ran one after the other (QC M5 gate 92 min, S81 D7w 34 min).
         # They read the same published tree and write separate dirs, so they now run at the same time; the gate takes the longer of the two.  A failed
@@ -771,7 +813,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
                                                                        native_reset_receipt=native_reset_receipt, tool_root=rt_root(),
-                                                                       pre_baseline=pre_baseline)))(
+                                                                       pre_baseline=pre_baseline, peers=peers, die=die)))(
                 pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
             pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
             if pre_failure:
@@ -782,7 +824,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             rec["gate_s"] = round(time.time() - t0, 1)
     except Exception as e:                         # a gate that cannot run is a FAIL, never a pass
         rec["checks"].setdefault("gate", {"verdict": "FAIL", "why": f"{type(e).__name__}: {e}"[:600]})
-    rec["verdict"] = "PASS" if all((rec["checks"].get(c) or {}).get("verdict") == "PASS" for c in CHECKS) else "FAIL"
+    rec["verdict"] = ("PASS" if all((rec["checks"].get(c) or {}).get("verdict") == "PASS" for c in CHECKS)
+                      and (rec["checks"].get("peer_abi") or {}).get("verdict") != "FAIL" else "FAIL")
     # COORD 11-18 (optimistic launch): the gate is advisory for an optimistic apply; the record lists what a reader should look at
     rec["advisory"] = sorted(c for c, v in rec["checks"].items() if (v or {}).get("verdict") != "PASS")
     write_record(C, rec, commit)
@@ -819,6 +862,8 @@ def main(argv=None):
     s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
     s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
     s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
+    s.add_argument("--die", help="candidate die name (default: from the plan path)")
+    s.add_argument("--peer", action="append", default=[], help="live peer DIE=TREE[:BIND_OUT] for the P-PEER-ABI check (normally shipped by run from the coord config)")
     s.add_argument("--pre-baseline", help="adopted plan for PRE baseline checks (normally shipped by run from the incumbent config)")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
@@ -833,7 +878,8 @@ def main(argv=None):
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
                                                    band_base=a.band_base, remap_base=a.remap_base,
                                                    native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root,
-                                                   pre_baseline=a.pre_baseline)))
+                                                   pre_baseline=a.pre_baseline, die=a.die,
+                                                   peers={d: tuple((v.partition(":")[0], v.partition(":")[2] or None)) for d, _, v in (x.partition("=") for x in a.peer)})))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
