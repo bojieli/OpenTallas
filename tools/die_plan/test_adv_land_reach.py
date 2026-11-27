@@ -94,10 +94,10 @@ def test_ft_reg0_beside_fclk_pin_is_judged(tmp_path):
 def test_uncalibrated_die_prints_one_summary_line(tmp_path, monkeypatch):
     _lef(tmp_path / "v/m.lef", 90.0, 50.0, 10, 49.9)
     raw = _plan((300.0, 1000.0))
-    raw["die"]["name"] = "qwen_kvsys"
+    raw["die"]["name"] = "qwen_hbm"
     monkeypatch.delenv("OT_ADV_LANDREACH_ALL", raising=False)
     ln = A.findings(raw, "p.json", str(tmp_path))
-    assert len(ln) == 1 and "not calibrated for this die (qwen_kvsys): 1 landings, 1 would be flagged" in ln[0]
+    assert len(ln) == 1 and "not calibrated for this die (qwen_hbm): 1 landings, 1 would be flagged" in ln[0]
     monkeypatch.setenv("OT_ADV_LANDREACH_ALL", "1")
     assert any("hard landing x_i" in x for x in A.findings(raw, "p.json", str(tmp_path)))
 
@@ -106,3 +106,52 @@ def test_qc_die_flags_and_prints_calibration(tmp_path):
     _lef(tmp_path / "v/m.lef", 90.0, 50.0, 10, 49.9)
     ln = A.findings(_plan((300.0, 1000.0)), "p.json", str(tmp_path))
     assert any("hard landing x_i" in x for x in ln) and any("calibration static-vs-measured" in x for x in ln)
+
+
+def _kv(core_xy, outline=(165.0, 57.0), n=10, fclk=(455.0, 2.7)):
+    """KV style: die qwen_kvsys, big hard cland, no bus window, no ft port register near the contract fclk pin (placed evidence 11-27:
+    the fclk pin is the data port reference, i_slg_E_N_rsp_d1 core 455 um from it failed placed at -252 ps)."""
+    raw = _plan(core_xy)
+    raw["die"]["name"] = "qwen_kvsys"
+    t = raw["partition_types"]["t"]
+    t["hard_cores"][0]["outline_um"] = list(outline)
+    t["hard_cores"][0]["lef"] = None
+    t["ft_slots"] = []
+    t["clock"]["landing_contract"]["pins"] = [{"name": "fclk_in_x_i", "xy_um": list(fclk)}]
+    return raw
+
+
+def test_kv_far_fclk_pin_is_judged_and_flagged():
+    raw = _kv((406.0, 458.0))                                   # core rect 455 um from the fclk pin (KV i_slg_E_N_rsp_d1)
+    r = A.rows(raw)[0]
+    assert r["verdict"] == "FAIL" and r["basis"] == "fclk-pin" and r["dmax"] > 400
+    qc = _kv((406.0, 458.0))
+    qc["die"]["name"] = "qwen_compute"
+    assert A.rows(qc)[0]["verdict"] == "INFO"                   # QC behaviour unchanged: far fclk pin not judged
+    ln = A.findings(raw)
+    assert ln[0].startswith("WARN ADV-LAND-REACH t: hard landing x_i") and "not calibrated" not in ln[0]
+    assert any("KV placed slack" in x for x in ln)
+
+
+def test_kv_threshold_is_minus_10_not_minus_100():
+    near = _kv((300.0, 150.0), outline=(165.0, 57.0))           # rect ~100 um from the pin: static margin ~ -24
+    r = A.rows(near)[0]
+    assert -100 < r["mmax"] < -10 and r["verdict"] == "FAIL"    # KV calibrated: flagged (placed slack = 18 - 0.7 x 100 = -52 < -42)
+    qc = _kv((300.0, 150.0))
+    qc["die"]["name"] = "qwen_compute"
+    qc["partition_types"]["t"]["hard_cores"][0]["outline_um"] = [90.0, 50.0]
+    assert A.rows(qc)[0]["verdict"] in ("WATCH", "FAIL")
+    seated = _kv((440.0, 5.0), outline=(165.0, 57.0))           # rect touches the fclk pin: placed pass
+    assert A.rows(seated)[0]["verdict"] in ("OK", "WATCH") and A.rows(seated)[0]["mmax"] > -10
+
+
+def test_env_margin_overrides_die_calibration(monkeypatch):
+    near = _kv((300.0, 150.0))
+    assert A.rows(near)[0]["verdict"] == "FAIL"
+    monkeypatch.setenv("OT_ADV_LANDREACH_MARGIN_PS", "-100")
+    A.MARGIN_FLAG_PS = -100.0
+    try:
+        assert A.rows(near)[0]["verdict"] == "WATCH"
+    finally:
+        A.MARGIN_FLAG_PS = float(os.environ.get("OT_ADV_LANDREACH_MARGIN_PS", "-100"))
+    assert A.rows(near, margin_ps=-5)[0]["verdict"] == "FAIL"

@@ -14,7 +14,7 @@ For every band with a hard_core:
   distance  = Manhattan port -> pin per bit; delay = distance x PS_PER_UM;
   allowance = DATA_ALLOWANCE_PS for a fall writer; for a rise writer T - input max - DEFAULT_SETUP_PS (input max: IO budget 0.2 T,
               ft slots ring_hold.ft_ring_max_ps or (1 - ft_hop_in_share) T).
-FAIL (flag) = static worst-bit margin < MARGIN_FLAG_PS (-100 ps default, calibrated, configurable), WATCH = margin < 0 only, OK otherwise.  Half-cycle (fall) landings are listed first.
+FAIL (flag) = static worst-bit margin < the die threshold (DIE_CAL: QC -100 ps, KV -10 ps; OT_ADV_LANDREACH_MARGIN_PS overrides), WATCH = margin < 0 only, OK otherwise.  Half-cycle (fall) landings are listed first.
 
     rows(raw, tree=None) -> [dict]      findings(raw, plan_path, tree=None, **kw) -> ["WARN ADV-LAND-REACH ..."]
 """
@@ -34,8 +34,20 @@ CORE_SMALL_UM = 150.0     # fclk pin stands in for the data port only for a core
 # Calibration (FABLE-RC-QC 11-23 21:01, hub 207fb235): static worst-bit margin vs measured slack on the three measured landings.
 # The static number is 30-115 ps pessimistic (the 45 ps allowance is not the whole eye), so the advisory flag sits at -100 ps.
 MARGIN_FLAG_PS = float(os.environ.get("OT_ADV_LANDREACH_MARGIN_PS", "-100"))
-CALIBRATED_DIES = ("qwen_compute",)   # measured slack exists only for QC; other dies print one summary line (PRECHECK ruling 11-23)
+# Per-die calibration.  flag = static worst-bit margin (ps) below which a landing is FAIL; far = judge a big core whose only port
+# reference is the contract fclk pin even when that pin is > FCLK_CAP_UM away (KV-LAND-REACH-CAL 11-27: on KV the fclk pin IS the data
+# port reference: 116 of 116 "not judged" landings failed placed, -92..-1054 ps).
+DIE_CAL = {
+    "qwen_compute": {"flag": -100.0, "far": False},
+    "qwen_kvsys": {"flag": -10.0, "far": True},
+}
+CALIBRATED_DIES = tuple(DIE_CAL)      # measured slack exists for QC and KV; other dies print one summary line (PRECHECK ruling 11-23)
 CALIBRATION = (("sle_ctl x_hc1_st_b_i", -160, -55.8), ("sle_ctl cws2_i", -154, -40.4), ("st_a b_hw_ctl_hc0_i", -44, -11.97))
+# KV (KV-INT-R3/LANDREACH 11-27): 3_detailed_place.rpt worst setup path of every fclk_in_<landing> group (endpoint = the cland core d pin)
+# of 77 placed kits, joined to this check on each kit's own plan form (463 plan/type/landing, 52 types): placed slack = 18.2 - 0.70 *
+# worst-bit Manhattan um (r = -0.83; the model is 0.6845 ps/um with a 45 ps allowance, so the static margin is ~27 ps optimistic).
+# Flag at static margin < -10 ps (worst bit > ~80 um) against the placed -42 ps setup gate: TP 447 FP 1 FN 0 TN 15.
+CALIBRATION_KV = "placed slack = 18.2 - 0.70 x worst-bit um (n=463, r=-0.83); flag margin < -10: TP 447 FP 1 FN 0 TN 15 vs placed -42 ps"
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
@@ -85,10 +97,24 @@ def _core_pins(c, tree):
     return {}, (ox, oy, ox + ow, oy + oh)
 
 
+def _cal(raw):
+    return DIE_CAL.get(str((raw.get("die") or {}).get("name") or ""), {})
+
+
+def _thr(raw, margin_ps=None):
+    """margin_ps argument > OT_ADV_LANDREACH_MARGIN_PS > the die calibration > -100"""
+    if margin_ps is not None:
+        return float(margin_ps)
+    if "OT_ADV_LANDREACH_MARGIN_PS" in os.environ:
+        return MARGIN_FLAG_PS
+    return float(_cal(raw).get("flag", MARGIN_FLAG_PS))
+
+
 def rows(raw, tree=None, margin_ps=None, detail=None):
     """detail: optional list; one dict per judged-or-not landing {type, landing, core, ports, pins, rect, basis, face} for the
     generator fix (land_reach.py).  Off (None) the output is unchanged."""
-    thr = MARGIN_FLAG_PS if margin_ps is None else float(margin_ps)
+    thr = _thr(raw, margin_ps)
+    far = bool(_cal(raw).get("far"))
     out = []
     T = float((raw.get("die") or {}).get("period_ps") or 833.0)
     clk = raw.get("clock") or {}
@@ -125,7 +151,7 @@ def rows(raw, tree=None, margin_ps=None, detail=None):
                 f = fpin["fclk_in_" + bn]
                 if r0 and abs(r0[0] - f[0]) + abs(r0[1] - f[1]) < PORT_NEAR_UM:
                     ports, basis, face = [tuple(r0)], "ft-reg0", (ftr[bn].get("in_face") or "ft")
-                elif max(c["outline_um"]) <= CORE_SMALL_UM:
+                elif far or max(c["outline_um"]) <= CORE_SMALL_UM:
                     ports, basis, face = [tuple(f)], "fclk-pin", (ftr[bn].get("in_face") if bn in ftr else None) or "ft"
                 else:
                     out.append(dict(type=tn, landing=bn, core=c["inst"], edge="half" if fall else "full", verdict="INFO",
@@ -156,7 +182,7 @@ def rows(raw, tree=None, margin_ps=None, detail=None):
                              or (1 - float(clk.get("ft_hop_in_share", 0.08))) * T) if bn in fts else 0.2 * T
                 allow = T - imax - DEFAULT_SETUP_PS
             d50, dmx = _pct(ds, 0.5), max(ds)
-            if basis == "fclk-pin" and dmx > FCLK_CAP_UM:
+            if basis == "fclk-pin" and dmx > FCLK_CAP_UM and not far:
                 out.append(dict(type=tn, landing=bn, core=c["inst"], edge="half" if fall else "full", verdict="INFO",
                                 basis="fclk-pin", m50=0.0, note="port position unknown, not judged"))
                 continue
@@ -175,7 +201,7 @@ def findings(raw, plan_path=None, tree=None, margin_ps=None, **kw):
         if not isinstance(raw, dict) or not raw.get("partition_types"):
             return [f"WARN ADV-{CHECK} not checked: plan has no partition_types"]
         rs = rows(raw, tree, margin_ps)
-        thr = MARGIN_FLAG_PS if margin_ps is None else float(margin_ps)
+        thr = _thr(raw, margin_ps)
         if not rs:
             return [f"WARN ADV-{CHECK} not checked: no hard landing cores in clock.landing_contract.bands"]
         if not any(r["verdict"] != "INFO" for r in rs):
@@ -202,8 +228,10 @@ def findings(raw, plan_path=None, tree=None, margin_ps=None, **kw):
                      + (f"; {len(unj)} not judged (port position unknown)" if unj else "")
                      + ("; top: " + ", ".join(f"{r['type']}/{r['landing']} {r['m50']:.0f}" for r in bad[:5]) if bad else ""))
         lines.append(f"WARN ADV-{CHECK} calibration static-vs-measured slack (ps): "
-                     + "; ".join(f"{n} {a} vs {m}" for n, a, m in CALIBRATION)
-                     + "; static is 30-115 ps pessimistic; advisory only, threshold OT_ADV_LANDREACH_MARGIN_PS")
+                     + ("KV " + CALIBRATION_KV if die == "qwen_kvsys" else
+                        "; ".join(f"{n} {a} vs {m}" for n, a, m in CALIBRATION)
+                        + "; static is 30-115 ps pessimistic")
+                     + "; advisory only, threshold OT_ADV_LANDREACH_MARGIN_PS")
         return lines
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV-{CHECK} not checked: {type(e).__name__}: {str(e)[:200]}"]
