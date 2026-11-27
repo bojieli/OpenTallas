@@ -16,7 +16,8 @@ from test_auto_geom import dump  # noqa: E402
 
 
 def ctype(W=100.0, H=100.0, band=(40, 40, 60, 60), **kw):
-    t = dict(outline_um=[W, H], contents=[], _die="qwen_compute", _type="x", _plan_sha256="ab" * 32, ft_slots=[dict(name="s", in_face="E", out_face="W", width=1, stations=1)],
+    t = dict(outline_um=[W, H], contents=[], _die="qwen_compute", _type="x", _plan_sha256="ab" * 32,
+             _kit_content=dict(expected=0, required=0, errors=[]), ft_slots=[dict(name="s", in_face="E", out_face="W", width=1, stations=1)],
              clock=dict(landing_contract=dict(collector_tree={"root": [0, 0]}, bands={"b": dict(rect_um=list(band))})))
     t.update(kw)
     return t
@@ -91,6 +92,47 @@ class Eligibility(unittest.TestCase):
         e = GC.eligibility(ctype(), pins=None)
         self.assertFalse(e["eligible"] or e["pin_hull_bound"])
         self.assertIn("pin hull not measurable", e["reasons"])
+
+    def test_kit_content_declaration_is_required(self):
+        """COORD flow review 1247 item 1: slw_fw_v2 (required_expected 74) is out, the five QC collectors (0 / 0) are in"""
+        HIER = dict(schema="opentallas.kit_hierarchy.v1", expected=0, matched=0, problems=[], hard_instances=[],
+                    required_matched=0, required_instances=[])
+        kits = {"slw_fw_v2__cl8537f156": 74, "sle_fe_v3": 10, "coll_ftc": 0, "coll_ftn": 0, "coll_ftm": 0,
+                "coll_ft__cl78c7b300": 0, "coll_ft__cla4a25d77": 0}               # required_expected read from the retained kits
+        with tempfile.TemporaryDirectory() as d:
+            got = {}
+            for name, req in kits.items():
+                kd = Path(d) / name
+                kd.mkdir()
+                (kd / "kit_hierarchy.json").write_text(json.dumps(dict(HIER, top=name, required_expected=req)))
+                (kd / "corridor_type.json").write_text(json.dumps(ctype(_type=name)))
+                t = GC.load_type(type_json=str(kd / "corridor_type.json"), kit_hierarchy=str(kd / "kit_hierarchy.json"))
+                e = GC.eligibility(t, pins=PINS)
+                got[name] = e["eligible"]
+                self.assertEqual(e["content_free"], req == 0, name)
+                self.assertEqual(e["collector"], True, name)             # the plan-side test alone would admit all seven
+            self.assertEqual(sorted(k for k, v in got.items() if v), ["coll_ft__cl78c7b300", "coll_ft__cla4a25d77", "coll_ftc",
+                                                                      "coll_ftm", "coll_ftn"])
+            self.assertFalse(got["slw_fw_v2__cl8537f156"])
+            self.assertIn("content-free", " ".join(GC.eligibility(GC.load_type(
+                type_json=str(Path(d) / "slw_fw_v2__cl8537f156" / "corridor_type.json"),
+                kit_hierarchy=str(Path(d) / "slw_fw_v2__cl8537f156" / "kit_hierarchy.json")), pins=PINS)["reasons"]))
+            # a record cannot declare itself: without the kit file the declaration is dropped
+            rec = str(Path(d) / "coll_ftc" / "corridor_type.json")
+            self.assertNotIn("_kit_content", GC.load_type(type_json=rec))
+            self.assertFalse(GC.eligibility(GC.load_type(type_json=rec), pins=PINS)["eligible"])
+            # missing / invalid / hard-instance / problem declarations grant nothing
+            self.assertTrue(GC.kit_content(str(Path(d) / "none.json"))["errors"])
+            bad = Path(d) / "bad.json"
+            for doc in ({}, dict(HIER, required_expected="0"), dict(HIER, required_expected=0, expected=True)):
+                bad.write_text(json.dumps(doc))
+                self.assertTrue(GC.kit_content(str(bad))["errors"], doc)
+            for doc in (dict(HIER, required_expected=0, hard_instances=["u_m"]), dict(HIER, required_expected=0, required_instances=["u_a"]),
+                        dict(HIER, required_expected=0, problems=["x"])):
+                bad.write_text(json.dumps(doc))
+                self.assertFalse(GC.eligibility(ctype(_kit_content=GC.kit_content(str(bad))), pins=PINS)["content_free"], doc)
+        for kc in (None, {}, dict(expected=0, required=None, errors=[]), dict(expected=False, required=0, errors=[])):
+            self.assertFalse(GC.eligibility(ctype(_kit_content=kc), pins=PINS)["eligible"], kc)
 
     def test_names_are_never_read(self):
         t = ctype(module="qfd_qc_coll_ftc_part", note="coll_ftc collector", _type="coll_ftc")
@@ -192,8 +234,11 @@ class Integration(unittest.TestCase):
         tj.write_text(json.dumps(self.t))
         pj = self.d / "p.json"
         pj.write_text(json.dumps(dict(die=dict(name="qwen_compute"), partition_types=dict(x=self.t))))
+        kh = self.d / "kit_hierarchy.json"                 # beside t.json: picked up for the kit record form
+        kh.write_text(json.dumps(dict(schema="opentallas.kit_hierarchy.v1", expected=0, required_expected=0)))
         outs = []
-        for extra in ([], ["--corridor-type-json", str(tj)], ["--corridor-plan", str(pj), "--corridor-type", "x"]):
+        for extra in ([], ["--corridor-type-json", str(tj)],
+                      ["--corridor-plan", str(pj), "--corridor-type", "x", "--kit-hierarchy", str(kh)]):
             o = self.d / f"o{len(outs)}.json"
             with contextlib.redirect_stdout(io.StringIO()):
                 rc = G.main([str(self.dump), "--json", str(o), "--outline", "200x200"] + extra)
@@ -206,6 +251,19 @@ class Integration(unittest.TestCase):
         self.assertIsNotNone(a["value"])
         self.assertEqual(a["value"], b["value"])
         self.assertEqual(a["status"], "INFO")
+        # no kit declaration (plan form without --kit-hierarchy), or a kit with content instances: reported n/a, verdict unchanged
+        kh2 = self.d / "content.json"
+        kh2.write_text(json.dumps(dict(schema="opentallas.kit_hierarchy.v1", expected=0, required_expected=74)))
+        for extra in (["--corridor-plan", str(pj), "--corridor-type", "x"],
+                      ["--corridor-type-json", str(tj), "--kit-hierarchy", str(kh2)]):
+            o = self.d / "on.json"
+            with contextlib.redirect_stdout(io.StringIO()):
+                rc = G.main([str(self.dump), "--json", str(o), "--outline", "200x200"] + extra)
+            doc = json.loads(o.read_text())
+            self.assertEqual((rc, doc["verdict"]), (outs[0][0], outs[0][1]["verdict"]))
+            self.assertFalse(doc["metrics"]["fill_corridor"]["eligible"])
+            self.assertIsNone(doc["metrics"]["fill_corridor"]["fill_corridor"])
+            self.assertIn("content-free", doc["metrics"]["fill_corridor"]["detail"])
 
 
 if __name__ == "__main__":

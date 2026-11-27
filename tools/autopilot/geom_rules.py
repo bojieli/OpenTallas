@@ -1846,7 +1846,10 @@ def load_corridor_type(a):
         spec = importlib.util.spec_from_file_location("geom_corridor", Path(__file__).with_name("geom_corridor.py"))
         gc = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(gc)
-        return gc.load_type(a.corridor_plan, a.corridor_type, a.corridor_type_json)
+        kh = a.kit_hierarchy                             # the kit's content declaration; default: beside the kit's record
+        if not kh and a.corridor_type_json and Path(a.corridor_type_json).with_name("kit_hierarchy.json").is_file():
+            kh = str(Path(a.corridor_type_json).with_name("kit_hierarchy.json"))
+        return gc.load_type(a.corridor_plan, a.corridor_type, a.corridor_type_json, kh)
     except Exception as e:
         print(f"AP_AUTO_GEOM_NOTE fill_corridor skipped: {type(e).__name__}: {e}", file=sys.stderr)
         return None
@@ -1881,6 +1884,8 @@ def main(argv=None):
     ap.add_argument("--corridor-type-json", help="REPORT-ONLY: plan partition-type record (json) -> fill_corridor beside the raw fill")
     ap.add_argument("--corridor-plan", help="REPORT-ONLY: plan json (with --corridor-type NAME) instead of --corridor-type-json")
     ap.add_argument("--corridor-type", help="partition type name inside --corridor-plan")
+    ap.add_argument("--kit-hierarchy", help="REPORT-ONLY: the kit's kit_hierarchy.json (default: beside --corridor-type-json); fill_corridor "
+                    "is eligible only when it declares no content instance")
     ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
     ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)

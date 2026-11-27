@@ -30,6 +30,11 @@ Eligibility (all three from plan / measured data, never from names; all must hol
                   is a non-empty dict, ft_slots is non-empty AND `contents` is empty (the type declares no logic of its own:
                   it only lands, relays and feeds clock/reset/data through).  collector_tree alone does not discriminate
                   (it is on nearly every type); on S81 the same shape is a slice station, hence the die scope (FABLE review M1)
+  content_free  : the KIT declares no content instance: kit_hierarchy.json (generator) has expected 0 and required_expected 0,
+                  no hard / required instance and no hierarchy problem; carried on the record as `_kit_content`, set by
+                  load_type from the kit the checkpoint was built from.  The plan `contents` test alone admits a tile whose
+                  logic is bound through required instances (QC slw_fw_v2: required_expected 74); a missing or invalid
+                  declaration grants nothing (COORD flow review 1247 item 1, QC-R3-FTC)
   macro_free    : no hard_cores, no `hard` block, no `macro_under_ft`, and (when measured) zero hard macros in the dump
   pin_hull_bound: >= PIN_HULL_MIN_PINS (100) signal pins whose full extent (min..max: fixed pins cannot move, so the
                   outline cannot shrink below the farthest pin) spans >= PIN_HULL_SPAN (0.98) of the measured outline width
@@ -58,6 +63,7 @@ PIN_STRIP_UM = 30.0     # == geom_rules.PINREG_P90 (asserted in the test): every
 PIN_HULL_MIN_PINS = 100
 OUTLINE_TOL = 0.01      # == geom_rules.OUTLINE_TOL
 COLLECTOR_DIES = ("qwen_compute",)
+HIER_SCHEMA = "opentallas.kit_hierarchy.v1"
 FACE_TOL_UM = 2.0       # == geom_rules.face_of default tolerance
 
 
@@ -179,8 +185,25 @@ def _span(v, total, trim=False):
     return (v[-1] - v[0]) / total
 
 
+def kit_content(path):
+    """kit_hierarchy.json -> dict(expected, required, errors): the content instances the kit must contain.  A missing,
+    unreadable or invalid file is an error entry (never raised) and makes the type ineligible."""
+    try:
+        d = json.loads(Path(path).read_text())
+        if not isinstance(d, dict) or d.get("schema") != HIER_SCHEMA:
+            raise ValueError("want schema %s" % HIER_SCHEMA)
+        exp, req = d.get("expected"), d.get("required_expected")
+        if not all(isinstance(v, int) and not isinstance(v, bool) for v in (exp, req)):
+            raise ValueError("expected / required_expected must be integers")
+        errs = ["%d hierarchy problem(s)" % len(d["problems"])] if d.get("problems") else []
+        return dict(expected=max(exp, len(d.get("hard_instances") or [])),
+                    required=max(req, len(d.get("required_instances") or [])), errors=errs)
+    except (OSError, ValueError, TypeError) as e:
+        return dict(expected=None, required=None, errors=["kit_hierarchy: %s: %s" % (type(e).__name__, e)])
+
+
 def eligibility(t, outline=None, pins=None, macros=None):
-    """dict(eligible, collector, macro_free, pin_hull_bound, pin_hull_frac, frame_ok, reasons[]); pins = [(x, y)] in the
+    """dict(eligible, collector, content_free, macro_free, pin_hull_bound, pin_hull_frac, frame_ok, reasons[]); pins = [(x, y)] in the
     measured type frame (None = not measurable -> pin_hull_bound False), macros = measured hard-macro count (None = not measured)"""
     lc = (t.get("clock") or {}).get("landing_contract") or {}
     reasons = []
@@ -190,6 +213,11 @@ def eligibility(t, outline=None, pins=None, macros=None):
     if not collector:
         reasons.append("not a QC pure feed-through collector (needs _die in %s, collector_tree, ft_slots, empty contents)"
                        % (COLLECTOR_DIES,))
+    kc = t.get("_kit_content")
+    content_free = (isinstance(kc, dict) and not kc.get("errors") and kc.get("expected") == 0 and kc.get("required") == 0
+                    and not isinstance(kc.get("expected"), bool) and not isinstance(kc.get("required"), bool))
+    if not content_free:
+        reasons.append("kit does not declare a content-free collector (kit_hierarchy.json expected 0, required_expected 0): %s" % (kc,))
     macro_free = not t.get("hard_cores") and not t.get("hard") and not t.get("macro_under_ft") and not macros
     if not macro_free:
         reasons.append("not macro-free (hard_cores / hard / macro_under_ft / measured macros)")
@@ -207,14 +235,15 @@ def eligibility(t, outline=None, pins=None, macros=None):
         hull = sx >= PIN_HULL_SPAN and sy >= PIN_HULL_SPAN
     if not hull:
         reasons.append("not pin-hull-bound" if pins and len(pins) >= PIN_HULL_MIN_PINS else "pin hull not measurable")
-    return dict(eligible=collector and macro_free and hull and frame_ok, collector=collector, macro_free=macro_free,
+    return dict(eligible=collector and content_free and macro_free and hull and frame_ok, collector=collector,
+                content_free=content_free, macro_free=macro_free,
                 pin_hull_bound=hull, pin_hull_frac=frac, pin_hull_frac_robust=robust, frame_ok=frame_ok, reasons=reasons)
 
 
 def fill_corridor(t, cells, pins, outline=None, macros=0, raw_fill=None):
     """cells = [(x0, y0, x1, y1)] std cells in the measured type frame; pins = [(x, y)] signal pins in that frame.
     Returns the report dict (fill_corridor None unless eligible); never raises: a malformed record is reported."""
-    prov = {k: t.get(k) for k in ("_die", "_type", "_plan_sha256")} if isinstance(t, dict) else {}
+    prov = {k: t.get(k) for k in ("_die", "_type", "_plan_sha256", "_kit_content")} if isinstance(t, dict) else {}
     try:
         return _fill_corridor(t, cells, pins, outline, macros, raw_fill, prov)
     except Exception as e:
@@ -252,16 +281,27 @@ def _fill_corridor(t, cells, pins, outline, macros, raw_fill, prov):
     return res
 
 
-def load_type(plan_path=None, type_name=None, type_json=None):
+def with_kit_content(t, kit_hierarchy):
+    """the record with `_kit_content` taken ONLY from the given kit_hierarchy.json (a value already in the record is dropped:
+    the declaration belongs to the measured kit, not to the plan record); no file given -> no declaration -> ineligible"""
+    t = dict(t)
+    t.pop("_kit_content", None)
+    if kit_hierarchy:
+        t["_kit_content"] = kit_content(kit_hierarchy)
+    return t
+
+
+def load_type(plan_path=None, type_name=None, type_json=None, kit_hierarchy=None):
     """a plan partition type, from PLAN.json + name or from a file holding the record; the record carries its provenance
-    (_die, _type, _plan_sha256 -- sha of the plan file when read from a plan) which fill_corridor echoes"""
+    (_die, _type, _plan_sha256 -- sha of the plan file when read from a plan) which fill_corridor echoes, and the kit's
+    content declaration (_kit_content, from kit_hierarchy)"""
     if type_json:
-        return json.loads(Path(type_json).read_text())
+        return with_kit_content(json.loads(Path(type_json).read_text()), kit_hierarchy)
     raw = Path(plan_path).read_bytes()
     plan = json.loads(raw)
     t = dict(plan["partition_types"][type_name])
     t.update(_die=(plan.get("die") or {}).get("name"), _type=type_name, _plan_sha256=hashlib.sha256(raw).hexdigest())
-    return t
+    return with_kit_content(t, kit_hierarchy)
 
 
 def detail(res):
