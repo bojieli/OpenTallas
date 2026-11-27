@@ -4194,7 +4194,7 @@
            "uniqueItems": true,
            "items": {
             "type": "string",
-            "pattern": "^u_cland_\\w+$"
+            "pattern": "^u_(?:cland|bin)_\\w+$"
            }
           }
          }

@@ -2313,7 +2313,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                        "raw": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
                        "xy_um": _XY2,
                        "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
-                                     "items": {"type": "string", "pattern": "^u_cland_\\w+$"}}}}}
+                                     "items": {"type": "string", "pattern": "^u_(?:cland|bin)_\\w+$"}}}}}
 # FE3 source-only START transport: reuse its existing registered relay Q as the first
 # writer phase; literal raw branches preserve every original reset equation/depth.
 _CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]

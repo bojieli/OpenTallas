@@ -2694,7 +2694,7 @@ class Landings:
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
-        logic[:] = self._local_resets(tn, key, body, logic)
+        body, logic = self._local_resets_with_body(tn, key, body, logic)
         # A branch feeding only a local copy does not replace the existing
         # ring-reset fanout implementation or any of its physical sites.
         if raw_graph is None or all(role.startswith("local_reset:") for role in raw_graph.roles):
@@ -3204,18 +3204,26 @@ class Landings:
         return pins[0].group(2) if len(pins) == 1 else None
 
     def _local_resets(self, tn, key, body, logic):
+        """Legacy landing-only interface for reset proofs and source tools."""
+        new_body, new_logic = self._local_resets_with_body(tn, key, body, logic)
+        if new_body != body:
+            raise LandingError(f"{tn}: bound input reset copies require the complete type emitter")
+        return new_logic
+
+    def _local_resets_with_body(self, tn, key, body, logic):
         """DIE-HEAD-38 R1 (plan clock.landing_local_resets, opt-in): each listed copy is a kept ot_dp_rrelay
-        u_cland_lrst_<name> (d = a registered wavefront raw relay Q) and the listed landing consumers take its Q
+        u_cland_lrst_<name> (d = a registered wavefront raw relay Q) and the listed landing consumers or native EQ input banks take its Q
         on their reset pin instead of the shared reset.  Same cycle: depth(raw)+1 must equal the depth of the
         reset each consumer had, so every release edge is unchanged; anything unverifiable fails closed."""
         cfg = self.types[key].get("clock", {}).get("landing_local_resets")
         if cfg is None:
-            return logic
+            return body, logic
         if not isinstance(cfg, list) or not cfg:
             raise LandingError(f"{tn}: landing_local_resets must be a non-empty list")
         text = "\n".join(logic)
         allrtl = body + "\n" + text
         memo = {}
+        native_banks = any(c.startswith("u_bin_") for row in cfg for c in row.get("consumers", []))
 
         def depth(net, seen=()):
             if net in memo:
@@ -3232,7 +3240,8 @@ class Landings:
                     raise LandingError(f"{tn}: landing_local_resets: relay of {net} has no D")
                 d = depth(pm.group(1), seen + (net,)) + 1
             else:
-                a = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", allrtl)
+                alias = r"\b(?:assign|wire)\s+" if native_banks else r"\bassign\s+"
+                a = re.search(alias + re.escape(net) + r"\s*=\s*(\w+)\s*;", allrtl)
                 # ROLE-STRAP: a static strap select of two raw resets is one depth only when both arms agree
                 mx = None if a else re.search(r"\bassign\s+" + re.escape(net) +
                                               r"\s*=\s*\w+\s*\?\s*(\w+)\s*:\s*(\w+)\s*;", allrtl)
@@ -3267,7 +3276,11 @@ class Landings:
             # depth and within reach of the leaf site stays (kits are byte-identical); otherwise the nearest non-ported relay of
             # the needed depth within reach is taken, and the receipt says so.  Nothing in reach: the error below / G0 R-REACH-5.
             was = None
-            first_old = self._local_reset_old(r.get("consumers"), text) if isinstance(r.get("consumers"), list) and r.get("consumers") and r["consumers"][0] not in used else None
+            cons = r.get("consumers")
+            if not isinstance(cons, list) or not cons:
+                raise LandingError(f"{tn}: landing_local_resets.{name} needs consumers")
+            first_text = body if cons[0].startswith("u_bin_") else text
+            first_old = self._local_reset_old(cons, first_text) if cons[0] not in used else None
             if first_old is not None:
                 raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
                 if was is not None:
@@ -3279,15 +3292,14 @@ class Landings:
                                   LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver"))
                 continue
             net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"
-            cons = r.get("consumers")
-            if not isinstance(cons, list) or not cons:
-                raise LandingError(f"{tn}: landing_local_resets.{name} needs consumers")
             olds = {}
             for c in cons:
                 if c in used:
                     raise LandingError(f"{tn}: landing_local_resets: consumer {c} listed twice")
                 used.add(c)
-                ms = list(re.finditer(r"(\b\w[\w#().,\s]*?\s)(" + re.escape(c) + r")(\s*\()([^;]*?)(\);)", text, re.S))
+                native_bank = c.startswith("u_bin_")
+                consumer_body = body if native_bank else text
+                ms = list(re.finditer(r"(\b\w[\w#().,\s]*?\s)(" + re.escape(c) + r")(\s*\()([^;]*?)(\);)", consumer_body, re.S))
                 ms = [m for m in ms if not re.search(r"\.\s*$", m.group(1))]
                 if len(ms) != 1:
                     raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} is not one emitted landing instance")
@@ -3295,12 +3307,19 @@ class Landings:
                 pins = list(re.finditer(r"\.(rst_n|rst_raw_n)\(\s*(\w+)\s*\)", m.group(4)))
                 if len(pins) != 1:
                     raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} has {len(pins)} reset pins")
+                if native_bank and (pins[0].group(1) != "rst_n" or
+                                    not re.search(r"\bot_dp_st\s+#\(\.W\(\d+\)\)\s*$", m.group(1))):
+                    raise LandingError(f"{tn}: landing_local_resets.{name}: {c} is not an emitted native EQ input bank")
                 old = pins[0].group(2)
                 if depth(raw) + 1 != depth(old):
                     raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} reset {old} depth {depth(old)} != "
                                        f"copy depth {depth(raw) + 1} (raw {raw}): release edge would move")
                 conn = m.group(4)[:pins[0].start()] + f".{pins[0].group(1)}({net})" + m.group(4)[pins[0].end():]
-                text = text[:m.start(4)] + conn + text[m.end(4):]
+                consumer_body = consumer_body[:m.start(4)] + conn + consumer_body[m.end(4):]
+                if native_bank:
+                    body = consumer_body
+                else:
+                    text = consumer_body
                 olds[c] = old
             decl += [f"    wire {net};",
                      f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({raw}), .q({net}));  '
@@ -3308,7 +3327,7 @@ class Landings:
             rec.append(dict(name=name, instance=inst, net=net, raw=raw, depth=depth(raw) + 1, xy_um=list(xy),
                             replaced=olds, added_flops=1, added_cycles=0, **({"raw_rederived_from": was} if was else {})))
         self.reset_placements.setdefault(tn, {}).setdefault("local_resets", []).extend(rec)
-        return decl + [text]
+        return body, decl + [text]
 
     def _ring_reset_fan(self, tn, key, logic, body=""):
         """RING-RSTFAN-1 (see RING_RESET_FAN_UM): split the loads of each generated ring reset relay u_cland_rst_<bus>
