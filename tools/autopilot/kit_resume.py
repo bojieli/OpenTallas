@@ -89,7 +89,7 @@ RUNNER_ROOTS = {"orfs_hold_mm.py": "synth", "native_bb.py": "synth", "partition_
                 "adder_map_dontuse.py": "synth", "signed_parent_source.json": "synth",
                 "signed_parent_synth_prep.sh": "synth", "tapbal_grt.tcl": "cts", "macro_ff_repair.mk": "grt"}
 # Gates / proofs / sign-off: re-run by run_kit.sh on every invocation (their verdicts are never reused).
-GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
+GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "type_overlay.json", "LEC_TOOL.json", "kit_preflight.py", "sdc_lint.py", "rtl_lint.py", "rtl_lint.ys", "selrange_gate.py", "port_bind_gate.py",
               "face_guard.py", "reg_fanout_gate.py", "hold_gate.tcl", "postcts_gate.tcl", "legacy_gate.py",
               "grt_policy.json", "pin_audit.py", "native_pin_contract.py", "audit_pins.json", "lec.py", "lec_async.sh", "lec_completed_transfer.py", "lec_options.json",
               "lec_async.on", "lec_async.identity", "signoff.py", "lec_options.json", "straps.json",
@@ -297,6 +297,9 @@ def classify(texts, files, config, *, early_readers=None):
         vs = VAR_STAGE.get(var, "synth")
         for m in re.finditer(r"/work/([^\s'\"]+)", var + " " + val):
             rel = os.path.normpath(m.group(1))
+            if var == "OT_FT_POLARITY_LOCAL_SITES" and rel == "ft_polarity_local_sites.tsv" and val == f"/work/{rel}":
+                # Below, infer the first reader from the executable hook, as with a literal path.
+                continue
             if rel in files and not is_gate_root(rel):
                 cur = stage.get(rel)
                 stage[rel] = vs if cur in (None, GATE) else minstage(cur, vs)
@@ -328,6 +331,11 @@ def classify(texts, files, config, *, early_readers=None):
             txt = "\n".join(HDL_STR_RE.findall(txt))
         if txt and big is not None:
             named[src] = set().union(*[by_name[n] for n in set(big.findall(txt))]) if txt else set()
+    ft_sites = "ft_polarity_local_sites.tsv"
+    ft_hook = "ft_polarity_local.tcl"
+    if (config.get("OT_FT_POLARITY_LOCAL_SITES") == f"/work/{ft_sites}" and ft_sites in files
+            and re.search(r"(?m)^[^#\n]*\$::env\(OT_FT_POLARITY_LOCAL_SITES\)", texts.get(ft_hook, ""))):
+        named.setdefault(ft_hook, set()).add(ft_sites)
     gate_named = set()
     changed = True
     while changed:
@@ -667,13 +675,15 @@ def write_inputs(K):
 # ------------------------------------------------------------------------------------------------ hub side (pure)
 def saved_stage_semantics_usable(new, saved):
     """Older cached manifests need normal inspection only for changed, newly modeled inputs."""
-    for rel in ("budget.json", FLOW_REFRESH_LOG, LANDING_CONTRACT):
+    for rel in ("budget.json", FLOW_REFRESH_LOG, LANDING_CONTRACT, "ft_polarity_local_sites.tsv"):
         a, b = new["files"].get(rel), saved["files"].get(rel)
         if not a or not b or a["sha256"] == b["sha256"]:
             continue
         if any(a.get(key) and not b.get(key) for key in ("physical_sha256", "landing_place_sha256")):
             return False
         if rel == FLOW_REFRESH_LOG and a["stage"] == GATE and b["stage"] != GATE:
+            return False
+        if rel == "ft_polarity_local_sites.tsv" and a["stage"] != b["stage"]:
             return False
     return True
 

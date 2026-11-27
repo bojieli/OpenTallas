@@ -17,12 +17,16 @@ Overlay file (format type-overlay-1), every key but "format"/"type" optional:
      "internal_stations": {"<index>": {"conn": "<guard, optional>", "regs_um": [[x, y], ...],
                                        "bit_sites_um": [[[x, y], ...], ...], "leaf_um": [x, y]}}}
 
+The optional "ft_polarity_sites" key takes {"group": "<existing native group>", "sites": [[bit, x, y], ...]}.
+It requires the base plan digest and preserves every bound bit selector and its order.
+
 What a positions-only delta may touch (and nothing else; every other key is REJECTED):
     partition_types[T].hard_cores[*].{origin_um, orient, track_offset_um}
     partition_types[T].contents[*].{origin_um, orient}
     partition_types[T].internal_stations[i].{regs_um, bit_sites_um, leaf_um}   (same number of stations and banks)
     partition_types[T] clock.tap_um, reset.tap_um, clock.taps[i].xy, clock.edge_clocks[i].tap_um, collector relay xy,
       count_straps[i].sites_um, ft_slots[i].regs_um / bit_sites_um (key "type_positions": {dotted path: value}; same shape, inside the outline)
+    budgets.ft_polarity_local_sites_by_type[T] coordinate columns of existing bits
 These feed only physical code (gen_phys placement/pins/clock taps, kit_istations FIRM sites, G0 geometry, the reset
 relay SITES).  bind.py / gen_rtl.py read hard_cores[].origin_um in one place (the CORE_SPLIT reset gate picks the
 wavefront tap nearest the core centre) and reset_tree.for_type reads core boxes as obstacles; `rtl_projection` therefore
@@ -46,7 +50,8 @@ if str(HERE) not in sys.path:
 import schema as S  # noqa: E402
 
 FORMAT = "type-overlay-1"
-TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "type_positions", "note", "place_regions"}
+TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "type_positions", "note", "place_regions",
+            "ft_polarity_sites"}
 # Type-local site coordinates (dotted path inside partition_types[T]); every one is physical only, and the rtl_projection
 # check proves the bind inputs derived from them (reset tree incl. relay names, tap names, gate taps) did not move.
 import re  # noqa: E402
@@ -58,6 +63,8 @@ HC_KEYS = ("origin_um", "orient", "track_offset_um")
 CONTENT_KEYS = ("origin_um", "orient")
 STATION_KEYS = ("regs_um", "bit_sites_um", "leaf_um")
 EPS = 1e-6
+FT_SITE_TABLE = "ft_polarity_local_sites_by_type"
+FT_GROUP_TABLE = "ft_polarity_local_group_by_type"
 
 
 class OverlayError(Exception):
@@ -111,6 +118,50 @@ def _rows(t, key, inst_key="inst"):
     return rows
 
 
+def _ft_sites(rows, outline):
+    if not isinstance(rows, list) or not rows:
+        raise OverlayError("ft_polarity_sites: expected a nonempty list of [bit, x, y] rows")
+    indexed = {}
+    width, height = outline
+    for row in rows:
+        if not isinstance(row, list) or len(row) != 3 or type(row[0]) is not int or row[0] < 0:
+            raise OverlayError(f"ft_polarity_sites: invalid [bit, x, y] row {row!r}")
+        bit, x, y = row
+        if bit in indexed:
+            raise OverlayError(f"ft_polarity_sites: duplicate bit {bit}")
+        errors = []
+        if not _xy([x, y], f"ft_polarity_sites bit {bit}", errors):
+            raise OverlayError(errors)
+        if not (0 <= x <= width and 0 <= y <= height):
+            raise OverlayError(f"ft_polarity_sites: bit {bit} outside the type outline")
+        indexed[bit] = row
+    return indexed
+
+
+def _ft_source(raw, tn):
+    budgets = raw.get("budgets", {})
+    groups, sites = budgets.get(FT_GROUP_TABLE), budgets.get(FT_SITE_TABLE)
+    if not isinstance(groups, dict) or not isinstance(sites, dict):
+        raise OverlayError("ft_polarity_sites: existing group and site tables are required")
+    group = groups.get(tn)
+    if not isinstance(group, str) or re.fullmatch(S.FT_POLARITY_GROUP_PATTERN, group) is None:
+        raise OverlayError("ft_polarity_sites: an existing exact native group is required")
+    return group, _ft_sites(sites.get(tn), raw["partition_types"][tn]["outline_um"])
+
+
+def _apply_ft_sites(new, tn, edits):
+    if not isinstance(edits, dict) or set(edits) != {"group", "sites"}:
+        raise OverlayError("ft_polarity_sites: expected only group and sites")
+    group, rows = _ft_source(new, tn)
+    if edits["group"] != group:
+        raise OverlayError("ft_polarity_sites: group does not match the bound plan selector")
+    replacement = _ft_sites(edits["sites"], new["partition_types"][tn]["outline_um"])
+    if replacement.keys() - rows.keys():
+        raise OverlayError("ft_polarity_sites: edit names a bit absent from the bound plan")
+    for bit, row in replacement.items():
+        rows[bit][1:] = row[1:]
+
+
 def apply_overlay(raw, ov):
     """Deep copy of `raw` with the overlay applied.  Raises OverlayError on any key outside the positions-only allowlist,
     an unknown instance, a changed station count, a point outside the outline or an invalid orient."""
@@ -130,6 +181,8 @@ def apply_overlay(raw, ov):
     if errs:
         raise OverlayError(errs)
     base_sha = ov.get("base_plan_sha256")
+    if "ft_polarity_sites" in ov and base_sha is None:
+        raise OverlayError("ft_polarity_sites: exact base_plan_sha256 is required")
     if base_sha is not None and base_sha != plan_sha(raw):
         raise OverlayError(f"base_plan_sha256 {str(base_sha)[:12]} != the loaded plan {plan_sha(raw)[:12]} "
                            "(overlay was made against another bound plan)")
@@ -255,6 +308,8 @@ def apply_overlay(raw, ov):
             row[k] = copy.deepcopy(e[k])
     if errs:
         raise OverlayError(errs)
+    if "ft_polarity_sites" in ov:
+        _apply_ft_sites(new, tn, ov["ft_polarity_sites"])
     return new
 
 
@@ -310,6 +365,20 @@ def pos_key(path, tn):
     return None
 
 
+def _is_ft_site_position(path, tn):
+    return (len(path) == 5 and path[:3] == ("budgets", FT_SITE_TABLE, tn)
+            and isinstance(path[3], int) and path[4] in (1, 2))
+
+
+def _ft_site_delta(base, new, tn, indices):
+    old_group, old_rows = _ft_source(base, tn)
+    group, rows = _ft_source(new, tn)
+    if old_group != group or list(old_rows) != list(rows):
+        raise OverlayError("ft_polarity_sites: group and ordered bit selectors must match the bound plan")
+    ordered = list(rows.values())
+    return {"group": group, "sites": [ordered[i] for i in sorted(indices)]}
+
+
 def _category(path):
     if not path:
         return "plan"
@@ -324,12 +393,16 @@ def overlay_from_plans(base, new, tn):
     """The overlay equivalent to `new` against `base`; OverlayError listing every changed path outside the allowlist."""
     errs, hc, ct, st, tp = [], {}, {}, {}, {}
     prx = None
+    ft_indices = set()
     for path in _diff(base, new):
         ok = False
         if _is_note(path, tn):           # the plan's free-text note: documentation, no kit input
             continue
         if _is_place_regions(path, tn):  # PLACE-GROUP: the whole row list rides in the overlay
             prx = copy.deepcopy(new["partition_types"][tn].get("place_regions") or [])
+            continue
+        if _is_ft_site_position(path, tn):
+            ft_indices.add(path[3])
             continue
         pk = pos_key(path, tn)
         if pk:
@@ -357,6 +430,8 @@ def overlay_from_plans(base, new, tn):
             ov[k] = v
     if prx is not None:
         ov["place_regions"] = prx
+    if ft_indices:
+        ov["ft_polarity_sites"] = _ft_site_delta(base, new, tn, ft_indices)
     return ov
 
 
@@ -509,9 +584,19 @@ def _skip(skipped, check, why):
 
 def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None, drift=None):
     """All type-scoped checks of the overlaid plan `new` against the bound plan `base`; list of error strings."""
-    errs = [f"changed outside the allowlist: {'.'.join(map(str, p))}" for p in _diff(base, new)
-            if not _is_note(p, tn) and not pos_key(p, tn) and not _is_place_regions(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
-                    and p[4] in HC_KEYS + CONTENT_KEYS + STATION_KEYS)]
+    errs, ft_indices = [], set()
+    for path in _diff(base, new):
+        if _is_ft_site_position(path, tn):
+            ft_indices.add(path[3])
+        elif not (_is_note(path, tn) or pos_key(path, tn) or _is_place_regions(path, tn)
+                  or (len(path) >= 5 and path[:2] == ("partition_types", tn) and isinstance(path[3], int)
+                      and path[4] in HC_KEYS + CONTENT_KEYS + STATION_KEYS)):
+            errs.append(f"changed outside the allowlist: {'.'.join(map(str, path))}")
+    if ft_indices and not errs:
+        try:
+            _ft_site_delta(base, new, tn, ft_indices)
+        except OverlayError as exc:
+            errs.extend(exc.errors)
     if errs:
         return errs
     # CORE-SHAPE FREEZE: no outline of the type or of any core/content may differ (rotation keeps the footprint)
@@ -576,6 +661,8 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
     if errs:
         raise OverlayError(errs)
     changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations", "type_positions") if ov.get(k)}
+    if "ft_polarity_sites" in ov:
+        changed["ft_polarity_sites"] = sorted(row[0] for row in ov["ft_polarity_sites"]["sites"])
     if "place_regions" in ov:
         changed["place_regions"] = sorted(r.get("name", "?") for r in ov["place_regions"])
     return new, {"format": FORMAT, "type": tn, "base_plan_sha256": plan_sha(raw), "overlaid_plan_sha256": plan_sha(new),
