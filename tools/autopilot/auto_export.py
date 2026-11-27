@@ -74,6 +74,8 @@ def enqueue(signoff, rec=None, die=None, element=None, kind=None, spool=None):
     if os.environ.get('OT_AUTO_EXPORT', '1') == '0':
         return None
     signoff = os.path.realpath(signoff)
+    if os.path.basename(signoff) == 'diagnostic_signoff.json':
+        return None
     raw = open(signoff, 'rb').read()
     rec = rec if rec is not None else json.loads(raw)
     if not r_minimal_pass(rec):
@@ -111,6 +113,22 @@ def top_of(rec, so):
                 if m: return m.group(1)
             except OSError: pass
     return None
+def diagnostic_signoff(so, record, odb_sha=None):
+    sod = os.path.dirname(so)
+    try:
+        with open(os.path.join(sod, "SIGNOFF-DIAGNOSTIC-REF.json"), "rb") as fh:
+            ref = json.load(fh)
+        if (ref.get("schema") != "opentallas.auto_export.diagnostic_signoff.v1"
+                or ref.get("record") != record
+                or not re.fullmatch("[a-f0-9]{64}", ref.get("odb_sha256", ""))
+                or (odb_sha is not None and ref["odb_sha256"] != odb_sha)):
+            return False
+        with open(os.path.join(sod, "diagnostic_signoff.json"), "rb") as fh:
+            return hashlib.sha256(fh.read()).hexdigest() == record
+    except (OSError, ValueError, TypeError, AttributeError):
+        return False
+
+
 def unit(so, hint=None):
     try:
         raw = open(so, "rb").read(); rec = json.loads(raw)
@@ -118,6 +136,8 @@ def unit(so, hint=None):
         return dict(signoff=so, err="unreadable: %%s" %% str(e)[:120])
     o = dict(signoff=so, record=hashlib.sha256(raw).hexdigest(), name=rec.get("name"), generated=rec.get("generated"),
              rec_host=rec.get("host"), profile=rec.get("profile"), verdict=rec.get("verdict"), hint=hint or {})
+    if os.path.basename(so) == "diagnostic_signoff.json" or diagnostic_signoff(so, o["record"]):
+        o["err"] = "diagnostic sign-off receipt"; return o
     if not (rec.get("profile") == "minimal" and rec.get("verdict") == "SIGNED"):
         o["err"] = "not R-MINIMAL SIGNED"; return o
     if rec.get("host") and rec.get("host") != HN:
@@ -309,6 +329,17 @@ elif mode == "late-lec":
             continue
         if evidence:
             print(json.dumps(evidence), flush=True)
+elif mode == "signoff-source":
+    so = arg["signoff"]
+    if os.path.isfile(so):
+        with open(so, "rb") as fh:
+            actual_record = hashlib.sha256(fh.read()).hexdigest()
+        state = "ready" if actual_record == arg["record"] else "changed"
+    else:
+        state = "missing"
+    if state != "changed" and diagnostic_signoff(so, arg["record"], arg["odb_sha256"]):
+        state = "diagnostic"
+    print(json.dumps(dict(state=state)))
 elif mode == "evidence":
     u = unit(arg["signoff"])
     print(json.dumps(dict(files=[x for x in u.get("files", []) if x[1] in ("land_slots.json", "face_guard.json", "1_synth.v") or "/" in x[1]], err=u.get("err"))))
@@ -1192,12 +1223,26 @@ def rtx_pull(a):
         if any(c[7] == u['odb_sha'] for c in parse_index(open(idx).read())):
             reports.append(dict(key=u['key'], ok=True, note='already in rtx INDEX'))
             continue
-        if not os.path.exists(dest):
+        needs_copy = not os.path.exists(dest)
+        if needs_copy:
             st = os.statvfs(RTX_ROOT)
             free = st.f_bavail * st.f_frsize
             if free - u.get('bytes', 0) < RESERVE_GB * 1e9:
                 say('DISK HOLD %s: %.0f GB free, unit %.1f GB, reserve %d GB; stays pending' % (k, free / 1e9, u.get('bytes', 0) / 1e9, RESERVE_GB))
                 continue
+        if needs_copy and u.get('mode') == 'host':
+            signoff = next((os.path.join(d, f) for d, f in u['files'] if f == 'signoff.json'), None)
+            if signoff:
+                try:
+                    state = probe(u['host'], 'signoff-source',
+                                  dict(signoff=signoff, record=u['record'], odb_sha256=u['odb_sha']), timeout=30)
+                    if len(state) != 1 or state[0].get('state') != 'ready':
+                        say('SIGNOFF SOURCE HOLD', k, state)
+                        continue
+                except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
+                    say('SIGNOFF SOURCE HOLD', k, str(exc))
+                    continue
+        if needs_copy:
             os.makedirs(part, exist_ok=True)
             if u.get('mode') == 'host':     # OWNER split 11-18: the full record comes straight from the build host
                 err = None
