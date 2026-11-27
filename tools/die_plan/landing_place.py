@@ -287,6 +287,51 @@ def _spread(band,order='lsb_low'):
     return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+('+x' if axis=='x' else '')+ff
 
 
+
+def vertical_bands_with_x_fill(typ, pins):
+    """Find explicitly horizontal soft FF bands with complete vertical pin banks."""
+    from collections import defaultdict
+    import clock_landings as CL
+
+    bands = typ.get("clock", {}).get("landing_contract", {}).get("bands", {})
+    if not bands:
+        return []
+    sizes = {
+        bus["name"]: bus["width"] + bool(bus.get("epoch", bus.get("kind", "data") in ("data", "ctl")))
+        for bus in typ.get("buses", ())
+    }
+    sizes.update({slot["name"] + "_i": slot["width"] + 1 for slot in typ.get("ft_slots", ())})
+    by_bus = defaultdict(list)
+    for row in pins:
+        by_bus[row[0]].append(row)
+
+    name = typ.get("module", "_landing_")
+    shape = {"partition_types": {name: typ}}
+    conflicts = []
+    for bus, band in bands.items():
+        if (
+            band.get("fill_axis") != "x"
+            or band.get("ring_place") != "ff"
+            or band.get("hard_core")
+            or band.get("native_role_banks")
+            or "rects_um" in band
+            or CL.hard_ring_params(shape, name, bus) is not None
+        ):
+            continue
+        rows = by_bus[bus]
+        bits = sizes.get(bus, 0)
+        if bits < 2 or len(rows) != bits or {row[1] for row in rows} != set(range(bits)):
+            continue
+        faces = {row[5] for row in rows}
+        if faces not in ({"E"}, {"W"}):
+            continue
+        xs = [row[3] for row in rows]
+        ys = [row[4] for row in rows]
+        if max(xs) - min(xs) < max(ys) - min(ys):
+            conflicts.append((bus, next(iter(faces)), bits))
+    return conflicts
+
+
 def _native_role_banks(tn, name, band, typ):
     """Explicit opt-in native FF banks; no inferred clock roots or member counts."""
     cfg = band.get('native_role_banks')
