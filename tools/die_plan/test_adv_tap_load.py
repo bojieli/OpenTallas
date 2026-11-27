@@ -92,3 +92,18 @@ def test_no_taps_no_crash_and_loud():
     out = A.findings(pl, "p", "/nonexistent-tree", flops_cache={"flops": {T5: {"flops": 5000}}})
     assert out and not any("ZeroDivision" in x for x in out)
     assert out[-1].startswith("WARN ADV-TAP-LOAD summary")
+
+
+def test_no_bins_is_unmeasured_not_pass():
+    c = cache()
+    c["placed_bins"] = {}
+    out = A.findings(plan(), "j8.json", None, flops_cache=c, planned_sinks=planned(), exact=False)
+    um = [ln for ln in out if "ADV-TAP-LOAD UNMEASURED" in ln]
+    assert um and T5 in um[0], out
+    assert "1 UNMEASURED" in out[-1], out[-1]
+
+
+def test_with_bins_is_measured():
+    out = A.findings(plan(), "j8.json", None, flops_cache=cache(), planned_sinks=planned(), exact=False)
+    assert not [ln for ln in out if "ADV-TAP-LOAD UNMEASURED" in ln], out
+    assert "0 UNMEASURED" in out[-1]

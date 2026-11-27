@@ -262,7 +262,7 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
         r["sinks"] = binned(s)
         r["planned"] = sum(w for *_, w in s)
         n_exact += 1
-    hits, n_total = [], 0
+    hits, n_total, unmeasured = [], 0, []
     nr = {'inventory': 0, 'per-tap': 0, 'cap': 0, 'placed': 0}
     for r in rows:
         tn, t, taps = r["tn"], r["t"], r["taps"]
@@ -308,6 +308,7 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                         and abs(float(pr["die_um"][1]) - oh) < 0.05)
         except (TypeError, ValueError, IndexError):
             same = False
+        measured = bool(same and taps)
         if same and taps:
             pts = [(float(x), float(y), float(n)) for x, y, n in pr["bins"]]
             how = "nearest"
@@ -330,6 +331,7 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                 nr['placed'] += 1
         elif not same:
             prk, _ = lookup(pl, tn, by_base)
+            measured = bool(prk and prk.get("max_load") is not None)
             r["placed_kit"] = (prk or {}).get("max_load")
             if prk and prk.get("over1500"):
                 o = prk["over1500"]
@@ -337,6 +339,8 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                                f"{len(o)} taps over 1500: " + ", ".join(f"{n} {_fmt(v)}" for n, v in o[:4]))
                 score = max(score, o[0][1] / placed_max)
                 nr['placed'] += 1
+        if not measured:        # C-TAP-LOAD 11-27: no placed bins = UNMEASURED on the 1500 gate, never a pass
+            unmeasured.append(tn)
         if not why and not placed_note:
             continue
         if not why and not _kw.get("list_placed", os.environ.get("OT_ADV_TAPLOAD_PLACED_LIST", "0") == "1"):
@@ -365,8 +369,10 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
         out.insert(0, _w("not checked", f"NO TAP DATA: 0 types had a kit netlist AND a tap table ({n_unmeas} without a kit netlist, "
                                         f"{n_notap} without a static tap table); give the FULL composed plan and a --tree whose tools/die_plan "
                                         f"carries taps.py, not a row/delta file"))
+    if unmeasured:
+        out.append(_w("UNMEASURED", f"{len(unmeasured)} of {n_cmp} types have no placed sink bins on the current outline: the 1500-sink tap gate is UNMEASURED (not passed) on them: " + ", ".join(unmeasured[:20]) + (" ..." if len(unmeasured) > 20 else "")))
     out.append(_w("summary", f"{len(hits)} of {n_cmp} types with netlist data flagged (per-tap x{ratio}, taps x cap, placed "
-                             f"tap > {placed_max} after the kit split; by rule {nr}); total-sink rule (netlist > {ratio} x planned) alone: "
+                             f"tap > {placed_max} after the kit split; by rule {nr}); {len(unmeasured)} UNMEASURED on the placed gate (no placed bins); total-sink rule (netlist > {ratio} x planned) alone: "
                              f"{n_total} types (listed only where the plan model is a sink_bins_file inventory; otherwise it is boundary/station "
                              f"registers by design); planned "
                              f"sinks exact on {n_exact}, cheap count (~) on {n_cmp - n_exact}"
