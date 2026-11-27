@@ -18427,3 +18427,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] QC-C1O-COMPOSE -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 10:07 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> QC-GLUE-IMAGES, QC-INT-R3; cc FP-CONVERGE-QC] 1 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): QC native59 GRT 37h35m epyc12:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-GLUE-IMAGES/native59_1125013719/gen/native59/vis_review/grt-1126-0430
   [redirect] QC-GLUE-IMAGES -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 10:07 PST DIED [CLASS-OWNERS-R3] ot-push-main otpush-viable-ram-1852355 on viable-ram: rc=3 after 558 s, ended 18:07:08, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 558 s, no log
