@@ -557,6 +557,40 @@ def test_clock_entry_core_tap_via_stack_exemption(kit, top_b, port, ok):
     assert KC.clock_entry_clear(kit, entries=[("io.tcl", port, 50.0, 20.0)])[0]
 
 
+@pytest.mark.parametrize("macro_layer,pin_layer,emitted,blocked", [
+    (6, "M7", "M7", True),   # Exact P2 layer relationship under an M8 grant.
+    (5, "M7", "M7", False),  # Matching port through clear M6 metal.
+    (6, "M7", None, True),   # Typed fallback when only a location is available.
+    (5, "M7", "M8", True),   # An explicit pin-layer mismatch is never exempt.
+    (6, None, "M8", False),  # A genuinely M8 clock in a legacy budget.
+])
+def test_clock_entry_uses_physical_layer_under_signal_grant(kit, macro_layer, pin_layer, emitted, blocked):
+    _two_lefs(kit, macro_layer)
+    (kit / "macro_place.tcl").write_text("foreach {master sites} {n {{40 10 R0}}} {\n}\n")
+    _core_tap_budget(kit)
+    budget_path = kit / "budget.json"
+    budget = json.loads(budget_path.read_text())
+    budget["signal_max"] = "M8"
+    budget["clock"]["taps_snapped"] = [{"name": "clk_c0", "xy": [50.0, 20.0]}]
+    (kit / "constraint.sdc").write_text("create_clock -name early -period 833 [get_ports clk_c0]\n")
+    if pin_layer is not None:
+        budget["clock"]["pin_layer"] = pin_layer
+    budget_path.write_text(json.dumps(budget))
+    entries = None
+    if emitted is None:
+        entries = [("io.tcl", "clk_c0", 50.0, 20.0)]
+        (kit / "io.tcl").write_text("")
+    else:
+        (kit / "io.tcl").write_text(
+            f"place_pin -pin_name clk_c0 -layer {emitted} -location {{50.0 20.0}} -pin_size {{0.032 0.768}}\n")
+    errors, info = KC.clock_entry_clear(kit, entries=entries)
+    assert bool(errors) is blocked, (errors, info)
+    if emitted == "M8" and pin_layer == "M7":
+        assert any("emits M8, expected M7" in item for item in errors)
+    if not blocked:
+        assert info["core_tap_via_stack_over_macro"]
+
+
 def test_gen_core_tap_pin_moves_off_obstructing_macro_edge(monkeypatch):
     """gen_phys.core_tap_pins: a tap snapped 0.06 um inside an M7-obstructing macro edge moves to the nearest snapped
     point whose M7 pin clears the macro (<= ENTRY_CLEAR_MAX_UM); a tap clear of every block is unchanged; a tap deep
