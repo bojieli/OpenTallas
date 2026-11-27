@@ -48,7 +48,7 @@ DBU = 4000                      # ASAP7 db units per um (face_flops ff_dbu)
 SITE_W, ROW_H = 0.054, 0.27     # kit site / row grid (um)
 CELL = (1.404, 0.27)            # ft_spread.CELL (bit-site footprint)
 KNEE_NEAR_UM = 6.0              # advisory band below the 403 um limit: the kit measures real BTerms, the plan the planned pins
-CLASSES = ("OVERLAP", "KNEE", "MACRO", "STATIONCORE", "MPL0020", "CONE")
+CLASSES = ("OVERLAP", "KNEE", "MACRO", "STATIONCORE", "FIRMREACH", "MPL0020", "CONE")
 
 
 def F(cls, key, msg, **kw):
@@ -277,6 +277,17 @@ def _load(plan_path):
     return _CACHE["raw"], _CACHE["P"]
 
 
+def firm_reach_plan(t, bound_rtl=None):
+    from adv_fpconv import direct_status_firm_lower_bounds, writer_start_firm_lower_bounds
+
+    out = [F("FIRMREACH", bus, f"writer START {bus}: minimum {minimum:.2f} um between emitted FIRM windows (>405 um)")
+           for bus, minimum in writer_start_firm_lower_bounds(t)]
+    if bound_rtl:
+        for pin, minimum in direct_status_firm_lower_bounds(t, Path(bound_rtl).read_text()):
+            out.append(F("FIRMREACH", pin, f"{pin} to first status collector: minimum {minimum:.2f} um with a face register <=50 um from its pin (>405 um)"))
+    return out
+
+
 def check_type(args):
     plan_path, tn, *bound = args
     try:
@@ -289,6 +300,10 @@ def check_type(args):
                 out += fn(P, tn, t, packed) if fn in (knee_plan, station_core_plan) else fn(P, tn, t)
             except Exception as ex:
                 out.append(F("ERROR", fn.__name__, f"{type(ex).__name__}: {ex}"[:300]))
+        try:
+            out += firm_reach_plan(t, bound[0] if bound else None)
+        except Exception as ex:
+            out.append(F("ERROR", "firm_reach_plan", f"{type(ex).__name__}: {ex}"[:300]))
         return tn, out
     except Exception as ex:
         return tn, [F("ERROR", "load", f"{type(ex).__name__}: {ex}"[:300], tb=traceback.format_exc()[-400:])]

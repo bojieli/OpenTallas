@@ -13,6 +13,13 @@ LEG405-ZERO     relay_depth entry with path_um > 405 and stages_existing == 0 (S
                 route setup -1117 ps on u_cland_origin -> u_cland_reader_start_ft42).  Fix: kv_start_corridor_event.py start.
 LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stages_existing + D < ceil(path_um / 405) - 1 (the stations
                 that make every hop <= 405 um), plus the cland legs above.  LEG405-ZERO stays as the legacy scan.
+                C-LEG405 cover (P-FALSE-GREEN; HEAD hd_host_w 11-26: landing_reader_start + no relay_depth passed vacuously over 1,511
+                placed hops > 405 um): also every hop of the landing reader/writer start chains, raw-reset branches, landing_status_input_stages
+                (face pin -> stages -> first collector anchor / sink pin; unstaged status rings too) and internal_stations chains (a reg pair
+                'a|b' is a macro-pin pair; > 810 um with <= 1 stage is IMPOSSIBLE with one flop).  The summary counts legs measured per
+                kind, and 'WARN LEG405-STAGED-UNCHECKED <type>: <kinds>' names every leg kind the plan carries but the check cannot see
+                (macro pin-to-pin nets, relay_sites without relay_depth, reset relay -> sink, ft_slots, clock sinks).  WARN not FAIL: a
+                missing coordinate is missing evidence, not a measured violation (PRE promotes only UNCHECKED lines naming an exception).
                 (C-LEG405-R3 11-26) plus the per-bit station-chain census of leg405_perbit.py: every bit from its true source pin through
                 its own seats to the out pin, planned hop + 3 um placed drift > 405 (calibrated on the retained KV 3_place OT_FT_LANE
                 lines; the relay_depth rows alone read 0 of 65 placed KV pairs).
@@ -155,12 +162,219 @@ def staged_short(r, limit=LEG_UM):
     return max(0, need - int(r.get("stages_existing") or 0) - int(r.get("D") or 0))
 
 
+def _xy(v):
+    return (float(v[0]), float(v[1])) if isinstance(v, (list, tuple)) and len(v) >= 2 and _num(v[0]) and _num(v[1]) else None
+
+
+def _md(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def _short_hop(d, limit=LEG_UM):
+    """stations a hop of d um still lacks between its two ends (a bare hop carries none): ceil(d / limit) - 1"""
+    return int(-(-d // limit)) - 1 if d > limit + TOL else 0
+
+
+def _pin_xy(t):
+    c = (t.get("clock") or {}).get("landing_contract") or {}
+    return {p["name"]: _xy(p.get("xy_um")) for p in c.get("pins") or [] if isinstance(p, dict) and p.get("name") and _xy(p.get("xy_um"))}
+
+
+def _origin_xy(t):
+    """cland origin seat: landing_reader_start.origin_rect_um centre, else the raw-branch origin stage"""
+    r = ((t.get("clock") or {}).get("landing_reader_start") or {}).get("origin_rect_um")
+    if isinstance(r, (list, tuple)) and len(r) == 4 and all(_num(v) for v in r):
+        return (r[0] + r[2]) / 2.0, (r[1] + r[3]) / 2.0
+    return cland_origin_xy(t)
+
+
+def _chain(kind, tag, start, stages, end, end_tag, limit=LEG_UM):
+    """hops of start -> stages -> end ((None ends are skipped), each > limit flagged; -> (findings, legs measured)"""
+    pts_ = [("start", start)] + [(f"s{k}", _xy(s.get("xy_um")) if isinstance(s, dict) else None) for k, s in enumerate(stages)] + [(end_tag, end)]
+    out, n = [], 0
+    for (an, a), (bn, b) in zip(pts_, pts_[1:]):
+        if a is None or b is None:
+            continue
+        n += 1
+        d = round(_md(a, b), 1)
+        if d > limit + TOL:
+            out.append((f"{kind}:{tag}.{an}", bn, d, 0, _short_hop(d, limit)))
+    return out, n
+
+
+def leg405_measure(t):
+    """C-LEG405 cover: -> (findings, {kind: legs measured}).  Findings are (inst, port, um, D, stations short) like leg405_staged rows."""
+    ck = t.get("clock") or {}
+    fnd, cnt = [], {}
+
+    def add(kind, res):
+        f, n = res
+        fnd.extend(f)
+        if n:
+            cnt[kind] = cnt.get(kind, 0) + n
+
+    rows = [r for r in t.get("relay_depth") or [] if isinstance(r, dict) and _num(r.get("path_um"))]
+    if rows:
+        cnt["relay_depth"] = len(rows)
+    fnd += [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D"), staged_short(r)) for r in rows if staged_short(r)]
+    cl = cland_reader_legs(t)
+    fnd += [h + (1,) for h in cl]
+    pins = _pin_xy(t)
+    origin = _origin_xy(t)
+    if ck.get("landing_contract") and ck.get("landing_reader_start") is None and origin is not None:
+        cnt["cland_origin"] = sum(1 for n in pins if n.startswith("cland_fstart_in_"))
+    for key, pfx, kind in (("landing_reader_start", "cland_fstart_in_", "reader_start"), ("landing_writer_start", "cland_fstart_out_", "writer_start")):
+        d = ck.get(key)
+        for b, v in sorted(((d or {}).get("branches") or {}).items()) if isinstance(d, dict) else ():
+            if isinstance(v, dict):
+                add(kind, _chain(kind, b, origin, v.get("stages") or [], pins.get(pfx + b), pfx + b))
+    for br in ck.get("landing_raw_branches") or []:
+        if isinstance(br, dict) and br.get("stages"):
+            st = br["stages"]
+            add("raw_branch", _chain("raw_branch", str(br.get("name")), _xy(st[0].get("xy_um")), st[1:], None, "end"))
+    anchors = ck.get("landing_status_anchors") or {}
+    aggregate_first = _xy(anchors.get("u_cland_agg_1"))
+    staged = ck.get("landing_status_input_stages") if isinstance(ck.get("landing_status_input_stages"), dict) else {}
+    seen_agg = set()
+    for tgt, rings in sorted(staged.items()):
+        out_pin = pins.get("cland_up_ready_" + tgt)
+        if tgt == "agg":
+            end = aggregate_first
+        else:
+            prefix = f"u_cland_loc_{tgt}_"
+            local = {}
+            for name, xy in anchors.items():
+                if name.startswith(prefix) and (index := name[len(prefix):]).isdecimal():
+                    local[int(index)] = _xy(xy)
+            end = local.get(1) if local else out_pin
+            if local:
+                # The bound collector sends each input branch into stage 1.
+                # Its common tail is measured once. A missing stage site
+                # leaves the adjacent legs unmeasured.
+                tail = [{"xy_um": local.get(i)} for i in range(2, max(local) + 1)]
+                add("status_stage", _chain("status", f"{tgt}/local", end, tail, out_pin, tgt))
+        for ring, st in sorted((rings or {}).items()) if isinstance(rings, dict) else ():
+            if not isinstance(st, list):
+                continue
+            src = pins.get("cland_dn_ready_" + ring) or pins.get("cland_up_ready_" + ring)
+            if tgt == "agg":
+                seen_agg.add(ring)
+            add("status_stage", _chain("status", f"{tgt}/{ring}", src, st, end, tgt))
+    # Unstaged face status enters collector stage 1.  A later, closer
+    # collector cannot substitute for that registered endpoint.
+    for ch in ((ck.get("landing_contract") or {}).get("collector_children") or []):
+        if isinstance(ch, dict) and ch.get("bus") not in seen_agg and aggregate_first:
+            src = pins.get("cland_dn_ready_" + str(ch.get("bus"))) or _xy(ch.get("xy"))
+            if src and not ch.get("seam"):
+                add("status_stage", _chain("status", f"agg/{ch.get('bus')}(unstaged)", src, [], aggregate_first, "agg"))
+    for i, s in enumerate(t.get("internal_stations") or []):
+        if not isinstance(s, dict):
+            continue
+        a, b = _xy(s.get("from_um")), _xy(s.get("to_um"))
+        regs = [_xy(r) for r in s.get("regs_um") or [] if isinstance(r, (list, tuple)) and _xy(r)]
+        conn = str(s.get("conn") or i)
+        pair = "|" in conn
+        kind = "macro_pair" if pair else "station"
+        f, n = _chain(kind, conn, a, [{"xy_um": r} for r in regs], b, "to")
+        if pair and a and b and len(regs) <= 1 and _md(a, b) > 2 * LEG_UM + TOL:
+            f = [(x[0] + "[IMPOSSIBLE >810 um with <=1 stage]",) + x[1:] for x in f] or [(f"{kind}:{conn}[IMPOSSIBLE >810 um with <=1 stage]", "to", round(_md(a, b), 1), 0, _short_hop(_md(a, b)) - len(regs))]
+        add(kind, (f, n))
+    return fnd, cnt
+
+
+def _rect_l1_min(a, b):
+    return sum(max(a[i] - b[i + 2], b[i] - a[i + 2], 0) for i in range(2))
+
+
+def direct_status_firm_lower_bounds(t, bound_rtl):
+    """Proven direct status face arcs with no legal 50um/405um placement."""
+    import re
+
+    from boundary_reg import RADIUS_UM
+    from clock_landings import ident
+    from landing_place import _status_reset_groups
+
+    clock = t.get("clock") or {}
+    if not (clock.get("landing_status_anchors") or {}).get("u_cland_agg_1"):
+        return []
+    agg = re.search(r"\bot_dp_landing_collect\s*#\([^;]+?\)\s+u_cland_agg_1\s*\(([^;]+)\);", bound_rtl)
+    if not agg:
+        return []
+    agg_window = next(rect for name, rect, _ in _status_reset_groups(t) if name == "u_cland_agg_1")
+    pins = _pin_xy(t)
+    out = []
+    for child in (clock.get("landing_contract") or {}).get("collector_children") or []:
+        if child.get("seam") or not child.get("bus"):
+            continue
+        for role in ("ready", "fault"):
+            pin = child.get(role)
+            if pin not in pins:
+                continue
+            face = f"u_cland_face_{role}_{ident(str(child['bus']))}"
+            form = re.search(r"\bot_dp_landing_face\s+" + re.escape(face) + r"\s*\(([^;]+)\);", bound_rtl)
+            if not form or not re.search(r"\.d\s*\(\s*" + re.escape(pin) + r"\s*\)", form[1]):
+                continue
+            q = re.search(r"\.q\s*\(\s*(\w+)\s*\)", form[1])
+            if not q or not re.search(r"\b" + re.escape(q[1]) + r"\b", agg[1]):
+                continue
+            minimum = _rect_l1_min(pins[pin] * 2, agg_window) - RADIUS_UM
+            if minimum > LEG_UM + TOL:
+                out.append((pin, round(minimum, 2)))
+    return out
+
+
+def writer_start_firm_lower_bounds(t):
+    """First writer START hops between emitted, bounded FIRM packing windows."""
+    ck = t.get("clock") or {}
+    writer = ck.get("landing_writer_start") or {}
+    reader = ck.get("landing_reader_start") or {}
+    if (not writer.get("branches") or writer.get("share_trunk")
+            or t.get("landing_relay_start_copy")
+            or not (reader.get("origin_rect_um") or ck.get("landing_origin_rect_um"))):
+        return []
+    import landing_place as lp
+
+    origin_groups = lp._reader_start_groups(t) if reader.get("origin_rect_um") else lp._origin_home_groups(t)
+    origin = next((rect for name, rect, _ in origin_groups if name == "u_cland_origin"), None)
+    if origin is None:
+        return []
+    out = []
+    for name, target, tag in lp._writer_start_groups(t):
+        if not tag.startswith("writer-start:") or not name.endswith("_0"):
+            continue
+        l1 = _rect_l1_min(origin, target)
+        if l1 > LEG_UM + TOL:
+            out.append((tag.removeprefix("writer-start:"), round(l1, 2)))
+    return out
+
+
+def leg405_unchecked(t, cnt):
+    """leg kinds this type carries that the check cannot measure (plan holds no coordinates for the far end): [description]"""
+    ck = t.get("clock") or {}
+    out = []
+    hc = [h for h in t.get("hard_cores") or [] if isinstance(h, dict)]
+    if hc:
+        out.append(f"macro-pin-to-pin data legs ({len(hc)} hard cores; the plan has no pin-level netlist, only reg-pair stations {cnt.get('macro_pair', 0)} are measured)")
+    if t.get("relay_sites") and not t.get("relay_depth"):
+        out.append(f"relay_sites legs ({len(t['relay_sites'])} sites, no relay_depth rows)")
+    rta = (ck.get("reset_tree_anchor") or {}).get("relays")
+    if isinstance(rta, dict) and rta:
+        out.append(f"reset relay -> sink legs ({len(rta)} relays, no sink coordinates)")
+    for k, nm in (("ft_slots", "ft_slots"),):
+        if t.get(k):
+            out.append(f"{nm} hops ({len(t[k])})")
+    sk = [x for key in ("sink_sites_um", "reach_fix_sinks") for x in (ck.get(key) or [])]
+    if sk:
+        out.append(f"clock sink legs ({len(sk)})")
+    return out
+
+
 def leg405_staged(t):
-    """C-LEG405-R2: staged-aware LEG405-ZERO.  LEG405-ZERO ignores D, so every relay_depth row the generator already staged is a false
-    positive (S81 plan_t14_b8_coll0_1125: 1638 of 1644 flagged legs carry stations_existing + D >= ceil(path / 405) - 1).  Flags only
-    entries still short of that count, plus the cland origin -> reader_start legs (no stage count to credit)."""
-    return [(r.get("inst"), r.get("port"), r.get("path_um"), r.get("D"), staged_short(r)) for r in t.get("relay_depth") or []
-            if isinstance(r, dict) and staged_short(r)] + [h + (1,) for h in cland_reader_legs(t)]
+    """C-LEG405-R2 + cover: staged-aware LEG405-ZERO.  LEG405-ZERO ignores D, so every relay_depth row the generator already staged is a false
+    positive (S81 plan_t14_b8_coll0_1125: 1638 of 1644 flagged legs carry stations_existing + D >= ceil(path / 405) - 1).  Flags relay_depth
+    entries still short of that count, the cland origin -> reader_start legs, and (cover) every measurable hop of the landing start chains,
+    status input stages and station chains: see leg405_measure."""
+    return leg405_measure(t)[0]
 
 
 def relay_seats(t):
@@ -483,12 +697,24 @@ def leg405_perbit_types(raw, plan_path, budget_s=None):
 
 
 def _f_leg_staged(raw, plan_path, tree=None, **_k):
-    """ADV-LEG405-STAGED = relay_depth rows still short of ceil(path/405)-1 stations (C-LEG405-R2) + the per-bit chain census from the true
-    source with the calibrated placed-drift margin (C-LEG405-R3).  The relay_depth form alone read 0 on QC / KV: 0 of 65 placed KV pairs."""
-    rows = _run("LEG405-STAGED", lambda t, tn, r: leg405_staged(t),
-                lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)", raw)
-    rows = rows[:-1]
-    flagged = {x.split()[2] for x in rows}
+    rows, unchecked, kinds = [], [], {}
+    flagged = set()
+    for tn, t in _types(raw):
+        v, cnt = leg405_measure(t)
+        for k, c in cnt.items():
+            kinds[k] = kinds.get(k, 0) + c
+        if v:
+            flagged.add(tn)
+            rows.append(_w("LEG405-STAGED", tn, f"{len(v)} finding(s):",
+                            "; ".join(f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)" for h in v[:MAX_EX]) + (" ..." if len(v) > MAX_EX else "")))
+        windows = writer_start_firm_lower_bounds(t)
+        if windows:
+            parts = ", ".join(f"{bus} {minimum:.2f} um" for bus, minimum in windows)
+            flagged.add(tn)
+            rows.append(_w("LEG405-STAGED", tn, f"writer START minimum between emitted FIRM windows: {parts}"))
+        u = leg405_unchecked(t, cnt)
+        if u:
+            unchecked.append(f"WARN LEG405-STAGED-UNCHECKED {tn}: " + "; ".join(u))
     pb, note = {}, ""
     if plan_path and os.path.exists(str(plan_path)):
         try:
@@ -507,7 +733,9 @@ def _f_leg_staged(raw, plan_path, tree=None, **_k):
     total = len(flagged | {tn for tn, v in pb.items() if v[0]})
     summ = _w("LEG405-STAGED", f"summary {total} types flagged ({len(flagged)} relay_depth / cland rows, {n_over} per-bit chain, {len(both)} both; "
                                f"drift {LB.DRIFT_UM:g} um){(' [' + note + ']') if note else ''} (report only)")
-    return rows + lines + [summ]
+    coverage = ", ".join(f"{name}={count}" for name, count in sorted(kinds.items())) or "none"
+    summ += f"; legs measured {coverage}; {len(unchecked)} type(s) carry legs the staged check cannot see"
+    return rows + lines + unchecked + [summ]
 
 
 def relay_stack_hurt(t):

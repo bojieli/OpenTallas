@@ -39,7 +39,9 @@ def mut(fn):
 def test_base_is_clean_for_every_check():
     r = base()
     for k in F.F:
-        assert lines(k, r) == [], k
+        # LEG405-STAGED additionally prints WARN LEG405-STAGED-UNCHECKED for the leg kinds it cannot see (base has hard cores / ft_slots / sinks)
+        assert [x for x in lines(k, r) if "-UNCHECKED " not in x] == [], k
+    assert len([x for x in lines("LEG405-STAGED", r) if x.startswith("WARN LEG405-STAGED-UNCHECKED T:")]) == 1
 
 
 def test_in_outline():
