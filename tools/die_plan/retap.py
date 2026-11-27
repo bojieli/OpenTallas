@@ -174,11 +174,24 @@ def _plan_taps(raw, path):
     return lambda tn: [(n, float(x), float(y)) for n, x, y in schema.tap_grid(P, tn)]
 
 
-def _plan_tree(raw, path):
+def _plan_tree(raw, path, warm_types=()):
     sys.path.insert(0, str(HERE))
     import schema
     import reset_tree as RT
     P = schema.Plan(json.loads(json.dumps(raw)), path)
+    if len(warm_types) > 1:
+        import multiprocessing
+        from threading import active_count
+        from bind_emit_par import allocated_cpus
+
+        if ("fork" in multiprocessing.get_all_start_methods()
+                and multiprocessing.parent_process() is None and active_count() == 1):
+            jobs = min(allocated_cpus(), RT.pool_size(len(warm_types)))
+            if jobs > 1:
+                try:
+                    RT.prewarm(P, warm_types, jobs=jobs)
+                except (OSError, RuntimeError):
+                    pass  # Ordinary reads retain the canonical failure and order.
     return lambda tn: json.loads(json.dumps(RT.for_type(P, tn)))
 
 
@@ -351,7 +364,7 @@ def repick_start_raws(raw, path=None, types=None, far_um=FAR_UM, ctaps_fn=None):
 
 
 def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False,
-            tapoff=True, far_um=FAR_UM, ctaps_fn=None):
+            tapoff=True, far_um=FAR_UM, ctaps_fn=None, prepare_tree_fn=None):
     """Re-point new_raw (in place) against old_raw, then re-solve and republish the collector_tree of every type whose
     tap set changed.  taps_fn(raw, path) -> (tn -> [(n, x, y)]) (default schema.tap_grid); tree_fn(raw, path) ->
     (tn -> tree) (default reset_tree.for_type on the re-pointed plan).
@@ -374,9 +387,14 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
         if key(a) == key(b):
             continue
         todo.append((tn, a, b))
+    def trees(raw, path, names):
+        if prepare_tree_fn is not None:
+            return prepare_tree_fn(raw, path, names)
+        return (tree_fn or _plan_tree)(raw, path)
+
     tr_old = tr = None
     if any(_published(new_raw["partition_types"][tn]) is not None for tn, _, _ in todo):
-        tr_old = (tree_fn or _plan_tree)(old_raw, old_path)
+        tr_old = trees(old_raw, old_path, [tn for tn, _, _ in todo if _published(old_raw["partition_types"][tn]) is not None])
     for tn, a, b in todo:
         t = new_raw["partition_types"][tn]
         pub = _published(old_raw["partition_types"][tn])
@@ -403,7 +421,7 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
         elif _reset_inputs(t) != _reset_inputs(old_raw["partition_types"][tn]):
             extra.append(tn)
     if extra:
-        tr_old = tr_old or (tree_fn or _plan_tree)(old_raw, old_path)
+        tr_old = tr_old or trees(old_raw, old_path, extra)
         for tn in extra:
             pub = _published(old_raw["partition_types"][tn])
             if _norm(pub) == _norm(tr_old(tn)):
@@ -412,7 +430,7 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
                 rep.setdefault(tn, []).append(["landing_contract.collector_tree", "tree_not_own", 0, 0, 0])
     moved += forced
     if moved:
-        tr = (tree_fn or _plan_tree)(new_raw, new_path)
+        tr = trees(new_raw, new_path, moved)
         for tn in moved:
             ch = republish_tree(new_raw["partition_types"][tn], tr(tn))
             if ch:
