@@ -6215,7 +6215,7 @@ def memory_geometry(aliases_file):
 
 def memory_layout(g, t, geom):
     """exact gate -> gold re-key of one RTL memory from its source geometry (word width W, size S, offset O of the
-    pre-techmap gold memory).  Gold (memory_map after an optional opt_mem_widen by F = S / words): key [w][j] =
+    pre-techmap gold memory).  Gold (memory_map after optional opt_mem_widen by factor F): key [w][j] =
     address w*F + j//W, bit j%W (wide sub-word k holds address w*F + k at bits k*W: yosys' wide-port convention).
     Gate (synthesised netlist, one flop vector per element): [a][b] = address a, bit b.  When the gate has K = W/w
     times more elements than the gold memory has words (slang folds the inner unpacked dimension of
@@ -6235,16 +6235,17 @@ def memory_layout(g, t, geom):
     elif any(len(v) != 2 for v in t.values()):
         return None
     words = {v[0] for v in g.values()}
-    # widening factor F: wide word w holds addresses w*F .. w*F+F-1.  When the present words do not divide S, F is
-    # read off the widest bit present: the LAST wide word may be partial (hcp_sys1 u_div r_rem [0:26] x 25 b ->
-    # r_rem[0][0..399] = addresses 0..15, r_rem[1][0..274] = 16..26), or trailing words may be absent altogether
-    # (HBM argmax tk / tvl [0:3]: the last tree level is unused, F = 1).  Every bit must land at an address < S.
-    if S % len(words) == 0:
-        F = S // len(words)
-    else:
-        F = max(j for _, j in g.values()) // W + 1
-        if max(words) >= -(-S // F):
+    # A wide word w holds addresses w*F .. w*F+F-1. A bit j requires F > j//W and
+    # w*F + j//W < S. Keep the existing equal-word inference whenever it satisfies these
+    # bounds. A partial final word can occur even when the word count divides S (S81
+    # l5f: 14 words of 25 bits mapped as 8+6). Recover only a uniquely forced factor.
+    min_factor = max(j // W for _, j in g.values()) + 1
+    max_factor = min(((S - 1 - j // W) // w for w, j in g.values() if w > 0), default=S)
+    F = S // len(words) if S % len(words) == 0 else min_factor
+    if not min_factor <= F <= max_factor:
+        if min_factor != max_factor:
             return None
+        F = min_factor
     gold = {}
     for k, (w, j) in g.items():
         if j >= F * W or w * F + j // W >= S:

@@ -48,6 +48,17 @@ def test_widened_gold_narrowed_gate_uses_source_stride():
     assert mp["ff:u.a_pr#t[9][16]"] != "ff:u.a_pr[0][169]"
 
 
+@pytest.mark.parametrize("word_bits, expected", [
+    ((200, 150), {"first": "g0:0", "second": "g1:0", "last": "g1:149"}),
+    ((200, 100), None),  # multiple widening factors fit the observed gold indices
+    ((225, 150), None),  # no factor fits both gold words
+])
+def test_partial_final_word_requires_unique_widening(word_bits, expected):
+    g = {f"g{word}:{bit}": (word, bit) for word, size in enumerate(word_bits) for bit in range(size)}
+    t = {"first": (0, 0), "second": (8, 0), "last": (13, 24)} if expected else {"first": (0, 0)}
+    assert lec.memory_layout(g, t, (25, 14, 0)) == expected
+
+
 def test_slang_packed_inner_dimension_is_msb_first():
     # slw_hc0 e_W: reg [17:0] e_W [0:1][0:15]; slang memory 2 x 288 (inner elements folded, element 0 at the MSB)
     g = {f"ff:u.e_W[{e}][{j}]": (e, j) for e in range(2) for j in range(288)}
