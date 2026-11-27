@@ -31,6 +31,7 @@ fleet host (python3 - <args> < kit_resume.py).
 import errno
 import hashlib
 import json
+from math import isfinite
 import os
 import re
 import shutil
@@ -249,9 +250,15 @@ def input_files(K, cutoff=None):
     return sorted(out), ("mtime<=gen_end" if cutoff is not None else "all")
 
 
+LANDING_CONTRACT = "landing_contract.json"
+
+
 def _names(rel):
     b = os.path.basename(rel)
     out = {b}
+    # SDC annotations use the landing_contract namespace without reading the JSON file.
+    if rel == LANDING_CONTRACT:
+        return out
     stem, ext = os.path.splitext(b)
     if ext in (".py", ".tcl", ".sh", ".mk", ".json", ".v", ".sv", ".svh", ".lef", ".lib", ".txt") and \
             (len(stem) >= 6 or "_" in stem):
@@ -272,7 +279,7 @@ def flow_refresh_audit_only(text):
                               and not row.get("runner_override") and not row.get("partial") for row in rows)
 
 
-def classify(texts, files, config):
+def classify(texts, files, config, *, early_readers=None):
     """{rel: step | GATE} -- the earliest make step that reads each kit input file.
 
     Roots: config.mk hook variables (VAR_STAGE; any other variable whose value names a file -> synth), the files
@@ -346,6 +353,8 @@ def classify(texts, files, config):
             if rel not in stage:
                 stage[rel] = GATE
                 changed = True
+    if early_readers is not None:
+        early_readers.update(rel for rel, step in stage.items() if step in ("synth", "floorplan"))
     for rel in files:
         stage.setdefault(rel, "synth")
     return stage
@@ -500,6 +509,81 @@ def sender_budget_fingerprints(text):
     return {"physical_sha256": H(budget), "parent_plan_sha256": plan}
 
 
+def landing_contract_fingerprints(text):
+    """Split only generated native seat rows and single fixed-flop band rectangles.
+
+    All other metadata, including the presence of the typed keys, remains in the
+    earlier-stage identity. The emitted placement Tcl has its own fingerprint.
+    """
+    try:
+        contract = json.loads(text)
+    except (ValueError, TypeError):
+        return {}
+    if not isinstance(contract, dict):
+        return {}
+
+    def rectangle(rect):
+        return (isinstance(rect, list) and len(rect) == 4
+                and all(type(v) is int or (type(v) is float and isfinite(v)) for v in rect)
+                and rect[0] < rect[2] and rect[1] < rect[3])
+
+    def nonempty(value):
+        return isinstance(value, str) and bool(value)
+
+    placement = {}
+    if "native_stage_groups" in contract:
+        native = contract["native_stage_groups"]
+        if not isinstance(native, dict):
+            return {}
+        version = native.get("schema")
+        if version == "opentallas.native_stage_groups.v1" and set(native) == {"schema", "content", "module", "params", "groups"}:
+            owners = [{key: native[key] for key in ("content", "module", "params")}]
+        elif version == "opentallas.native_stage_groups.v2" and set(native) == {"schema", "contents", "groups"}:
+            owners = native["contents"]
+        else:
+            return {}
+        if not isinstance(owners, list) or not owners or any(
+            not isinstance(owner, dict) or set(owner) != {"content", "module", "params"}
+            or not nonempty(owner["content"]) or not nonempty(owner["module"]) or not isinstance(owner["params"], dict)
+            for owner in owners
+        ):
+            return {}
+        rows = native["groups"]
+        if not isinstance(rows, list) or not rows or any(
+            not isinstance(row, dict) or not {"prefix", "rect_um", "tag"} <= row.keys()
+            or row.keys() - {"prefix", "rect_um", "tag", "density", "match"}
+            or not nonempty(row["prefix"]) or not nonempty(row["tag"]) or not rectangle(row["rect_um"])
+            or row.get("match", "prefix") not in ("prefix", "cell")
+            or ("density" in row and (row.get("match") != "cell" or type(row["density"]) not in (int, float)
+                                      or not 0.4 <= row["density"] <= 0.6))
+            for row in rows
+        ):
+            return {}
+        placement["native_stage_groups"] = rows
+        native["groups"] = None
+
+    bands = contract.get("bands", {})
+    if not isinstance(bands, dict):
+        return {}
+    band_rects = {}
+    for name, band in bands.items():
+        if not isinstance(band, dict):
+            return {}
+        if ("rect_um" not in band or "rects_um" in band or band.get("ring_place") != "ff"
+                or type(band.get("width")) is not int or band["width"] <= 0
+                or not isinstance(band.get("instance"), str) or not band["instance"].startswith("u_cland_")):
+            continue
+        if not rectangle(band["rect_um"]):
+            return {}
+        band_rects[name] = band["rect_um"]
+        band["rect_um"] = None
+    if band_rects:
+        placement["bands"] = band_rects
+    if not placement:
+        return {}
+    return {"landing_early_sha256": H(contract), "landing_place_sha256": H(placement)}
+
+
 def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_checkpoint=True):
     """everything decide() needs about one kit, computed on its host"""
     K = os.path.abspath(K)
@@ -526,7 +610,8 @@ def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_
         texts["<runner>"] = rtext
     config = parse_config(texts.get("config.mk", ""))
     kit_texts = {k: v for k, v in texts.items() if k not in ("<runner>", "config.mk")}   # hooks / RUNNER_* tables
-    stage = classify(kit_texts, files, config)
+    early_readers = set()
+    stage = classify(kit_texts, files, config, early_readers=early_readers)
     vstage = config_var_stages(config, kit_texts, stage)
     m = {"schema": SCHEMA, "kit": K, "host": os.uname().nodename, "basis": basis, "cutoff": cutoff,
          "files": {rel: {"sha256": sha[rel], "stage": stage[rel]} for rel in files},
@@ -537,6 +622,11 @@ def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_
          "image": image_info(image)}
     if "budget.json" in m["files"]:
         m["files"]["budget.json"].update(sender_budget_fingerprints(texts.get("budget.json", "")))
+    if LANDING_CONTRACT in m["files"]:
+        landing = m["files"][LANDING_CONTRACT]
+        landing["stage"] = "synth"  # earlier metadata stays a full-rebuild input
+        if LANDING_CONTRACT not in early_readers:
+            landing.update(landing_contract_fingerprints(texts.get(LANDING_CONTRACT, "")))
     m["fingerprints"] = fingerprints(m)
     if with_checkpoint:
         m["checkpoint"] = checkpoint(K)
@@ -551,7 +641,10 @@ def fingerprints(m):
     for rel, f in m["files"].items():
         if rel == "config.mk":
             continue                                    # its variables are items of their own steps
-        items[f["stage"]].append(["file", rel, f.get("physical_sha256", f["sha256"])])
+        early = f.get("landing_early_sha256", f.get("physical_sha256", f["sha256"]))
+        items[f["stage"]].append(["file", rel, early])
+        if "landing_place_sha256" in f:
+            items["place"].append(["landing-seats", rel, f["landing_place_sha256"]])
         if "parent_plan_sha256" in f:
             items[GATE].append(["parent-plan", rel, f["parent_plan_sha256"]])
     for k, v in m["config"].items():
@@ -574,11 +667,11 @@ def write_inputs(K):
 # ------------------------------------------------------------------------------------------------ hub side (pure)
 def saved_stage_semantics_usable(new, saved):
     """Older cached manifests need normal inspection only for changed, newly modeled inputs."""
-    for rel in ("budget.json", FLOW_REFRESH_LOG):
+    for rel in ("budget.json", FLOW_REFRESH_LOG, LANDING_CONTRACT):
         a, b = new["files"].get(rel), saved["files"].get(rel)
         if not a or not b or a["sha256"] == b["sha256"]:
             continue
-        if a.get("physical_sha256") and not b.get("physical_sha256"):
+        if any(a.get(key) and not b.get(key) for key in ("physical_sha256", "landing_place_sha256")):
             return False
         if rel == FLOW_REFRESH_LOG and a["stage"] == GATE and b["stage"] != GATE:
             return False
@@ -593,6 +686,12 @@ def changed_items(new, old):
             continue                                    # compared per variable below
         a, b = new["files"].get(rel), old["files"].get(rel)
         if a and b and a["sha256"] == b["sha256"] and a["sha256"] is not None:
+            continue
+        if rel == LANDING_CONTRACT:
+            place_only = (a and b and a.get("landing_early_sha256") and a["landing_early_sha256"] == b.get("landing_early_sha256")
+                          and a.get("landing_place_sha256") and b.get("landing_place_sha256")
+                          and a["landing_place_sha256"] != b["landing_place_sha256"])
+            out.append(("place" if place_only else "synth", "file", rel))
             continue
         if a and b and a.get("physical_sha256") and a["physical_sha256"] == b.get("physical_sha256"):
             out.append((GATE, "file", rel))
