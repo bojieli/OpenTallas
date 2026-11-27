@@ -12592,10 +12592,10 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
             if sp.get("bind_stream_launch"):
                 # BIND-STREAM-LAUNCH: same bind_report check for a finished bind; a running bind passes per type on its own final
                 # record + kit_topology match (tools/die_plan/bind_stream.py check); an rt without the checker keeps the old check
-                _bsc = f"{tsrc}/tools/die_plan/bind_stream.py"
-                bind_plan = reviewed_station["producer_plan"]["path"] if reviewed_station else plan
-                chk = (f"if [ -f {q(_bsc)} ]; then python3 -I {q(_bsc)} check --bind-out {q(bind)} --type {q(T)} --plan {q(bind_plan)}"
-                       + (f" --asbuilt {q(a)}" if a else "") + f"; else {chk}; fi")
+                if not reviewed_station:
+                    _bsc = f"{tsrc}/tools/die_plan/bind_stream.py"
+                    chk = (f"if [ -f {q(_bsc)} ]; then python3 -I {q(_bsc)} check --bind-out {q(bind)} --type {q(T)} --plan {q(plan)}"
+                           + (f" --asbuilt {q(a)}" if a else "") + f"; else {chk}; fi")
             rc, txt = run("bind", remote(chk))
             if rc:
                 return fail("bind", "bind of record not clean / unreadable (plan not fully bound)\n" + txt, f"{G}:{bind}")
