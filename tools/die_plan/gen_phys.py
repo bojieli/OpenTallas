@@ -3238,10 +3238,13 @@ def gen_knobs():
     `set ::env(OT_X)`).  The kit runner's docker run forwards only a fixed -e list, so a gen-env value that was recorded but not
     exported to config.mk never reached the tcl (OT_TAP_GRT_PRE_ITERS=5 ran the tapbal GRT with -congestion_iterations 30).
     One rule: set in the gen env -> config.mk export (make exports it to the flow) + kit_effective_env.json.  Unset = byte-equal kit."""
-    import re
+    from itertools import chain
+    import kit_istations as KI
+
     rd, st = set(), set()
-    for f in sorted(Path(__file__).parent.glob("*.tcl")):
-        t = f.read_text(errors="ignore")
+    files = sorted(Path(__file__).parent.glob("*.tcl"))
+    # Explicit relay seats run from generated Tcl inside istations.tcl.
+    for t in chain((f.read_text(errors="ignore") for f in files), (KI.RELAY_TCL,)):
         rd |= set(re.findall(r"::env\((OT_\w+)\)", t))
         st |= set(re.findall(r"set\s+::env\((OT_\w+)\)", t))
     # a name this generator already decides itself (quoted or `export NAME` anywhere in gen_phys.py) keeps its own decision

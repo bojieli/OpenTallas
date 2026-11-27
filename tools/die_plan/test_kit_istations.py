@@ -868,3 +868,41 @@ def test_relay_sites_unmatched_key_warns_by_default_and_stops_only_on_request(tm
     assert r.returncode == 0 and "SEAT-MISS WARNING 2 of 3" in r.stdout and "stop on, limit 2" in r.stdout
     r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_plain.q} {9 9}]", OT_RELAY_SITES_UNMATCHED_STOP="1")
     assert r.returncode == 0 and "SEAT-MISS" not in r.stdout and "OT_RELAY_SITES BANK" not in r.stdout
+
+
+def test_relay_seat_stop_gen_env_reaches_tcl_through_make(tmp_path, monkeypatch):
+    import shutil
+    import gen_phys as GP
+    import kit_istations as KI
+
+    if shutil.which("make") is None or shutil.which("tclsh") is None:
+        pytest.skip("make and tclsh")
+
+    stop = "OT_RELAY_SITES_UNMATCHED_STOP"
+    limit = "OT_RELAY_SITES_UNMATCHED_MAX"
+    for key in (stop, limit):
+        monkeypatch.delenv(key, raising=False)
+    flow_env = dict(os.environ)
+    flow_env.pop("RESULTS_DIR", None)
+    callback = tmp_path / "relay.tcl"
+    callback.write_text(RELAY_NORM_MOCK + KI.RELAY_TCL
+                        + "\nrs_place_all [dict create {u_u_plain.q} {9 9} {u_gone.q} {1 1}]\n")
+    makefile = tmp_path / "Makefile"
+    config = tmp_path / "config.mk"
+    makefile.write_text("include config.mk\nall:\n\ttclsh relay.tcl\n")
+
+    def run():
+        config.write_text("\n".join(GP.gen_knob_cfg([])) + "\n")
+        return subprocess.run(["make", "-s"], cwd=tmp_path, env=flow_env, capture_output=True, text=True)
+
+    default = run()
+    assert stop not in config.read_text() and limit not in config.read_text()
+    assert default.returncode == 0 and "stop off" in default.stdout
+    monkeypatch.setenv(stop, "1")
+    strict = run()
+    assert strict.returncode != 0 and "SEAT-MISS: 1 of 2" in strict.stderr
+    assert GP.kit_effective_env()[stop] == "1"
+    monkeypatch.setenv(limit, "1")
+    tolerated = run()
+    assert tolerated.returncode == 0 and "stop on, limit 1" in tolerated.stdout
+    assert GP.kit_effective_env()[limit] == "1"
