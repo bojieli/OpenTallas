@@ -207,6 +207,13 @@ SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,20
   origins (origin + track_offset) off the manufacturing grid are WARN SITEGRID-MACRO; off the site column / row and plan cell
   hints the kit legalises are counted in WARN SITEGRID-SUMMARY only (adopted kits place with them).  Seconds.
 
+FENCEGEOM-1127 (C-FENCE-GEOM-ILLEGAL, FABLE-FLOW-0910 a8; QC TT compact GPL-0304 at iteration 0 on six singleton-FF fences, HEAD East
+  nine-flop zero-area band, S81 shares the generators): every plan fence / region box (place_regions[].box_um, logic_cluster_rects_um,
+  rck_island) that is zero-area, under one row / one site, or outside the type outline, and every fence / soft place_region with cone
+  between / exact whose inst_re names ONE instance, is FAIL FENCEGEOM <type>: <region> <reason> box [..] snapped [..] before place
+  (kind fixed reservations: zero-area and outline only).  Off-grid edges are WARN FENCEGEOM-UNSNAPPED: the generators snap outward.
+  adv_fence_geom.pre_findings; seconds.
+
 SEATMATCH-1124 (SEAT-MATCH-AUDIT): with a finished bind OUT of this plan (--elab-dir), every relay_sites key is judged against the bound
   RTL text (seat_match.py: instance present, stage / bit inside the primitive's W, D / DMAX, no '/' vs '.' twin at another site).  A key that
   seats nothing leaves its live register in free placement (QC sle_ctl 16,442 of 70,623 keys).  WARN only (REPORT-ONLY until the re-keys
@@ -260,7 +267,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE", "VIEWOBS", "PHASE-BIND", "LEAFPARAM")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE", "VIEWOBS", "PHASE-BIND", "LEAFPARAM", "FENCEGEOM")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -3037,6 +3044,11 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import site_grid as SG
         findings += SG.findings(_load(plan) or {})
+    _pt.mark("FENCEGEOM")
+    if "FENCEGEOM" not in skip:                          # FENCEGEOM-1127: zero-area / sub-row / outside / singleton fences, seconds
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import adv_fence_geom as FG
+        findings += FG.pre_findings(_load(plan) or {})
     _pt.mark("DEPTH")
     if "DEPTH" not in skip:                              # DEPTH-PRE-1123: generated constructor netlists within the logic-depth budget
         findings += check_depth(tree, plan, asbuilt)

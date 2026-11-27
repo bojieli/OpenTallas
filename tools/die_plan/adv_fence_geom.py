@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""adv_fence_geom.py -- PRECHECK-R2 static advisory ADV-FENCE-GEOM (C-FENCE-GEOM-ILLEGAL, R3-FENCE 11-27; REPORT-ONLY, never a gate).
+r"""adv_fence_geom.py -- PRECHECK-R2 static advisory ADV-FENCE-GEOM (C-FENCE-GEOM-ILLEGAL, R3-FENCE 11-27; REPORT-ONLY, never a gate; the plan part also feeds the blocking PRE class FENCEGEOM below).
 
 Rejects (reports), before place, the fence / region shapes that ended runs in the OpenROAD placers:
   ZERO      zero-area or inverted rect                      (HEAD East 23:15 nine-flop zero-area band; GPL-0304 NaN)
@@ -10,12 +10,23 @@ Rejects (reports), before place, the fence / region shapes that ended runs in th
   UNSNAPPED an edge off the site grid (x from the core origin in 0.054 um, y in 0.27 um) (HEAD East DPL-0033: six cells 0.016-0.034 um
             outside unsnapped fence bounds).  The generators (ot_fence_snap, logic_cluster ot_lc_box, place_regions.tcl) now snap every
             emitted box OUTWARD, so this is informational for kits built after that fix.
+  OUTSIDE   rect not inside the type outline [0, 0, W, H]
 Sources (static data only; regions a hook derives at run time, e.g. pin_reg_face_fence bands, are not visible here):
-  plan   partition_types[].logic_cluster_rects_um[].rect_um, partition_types[].rck_island.rect_um
+  plan   partition_types[].logic_cluster_rects_um[].rect_um, partition_types[].rck_island.rect_um,
+         partition_types[].place_regions[].box_um (all kinds; a SINGLETON is a fence / soft region with cone between or exact whose
+         inst_re statically resolves to ONE instance: an anchored ^...$ literal or one-literal alternation, e.g. the QC TT compact
+         ^(?:u_bound\.u_core\.u_91236/Q\$_DFF_P_)$ fences; kind fixed (fixed_sites reservations) is exempt from SINGLETON)
   kit    under --tree: logic_cluster.tcl "ot_logic_cluster name x0 y0 x1 y1 ..." rows, region_guide.tsv "R/I/G" rows
 
+FENCEGEOM (plan_gate_pre.py blocking class, C-FENCE-GEOM-ILLEGAL / FABLE-FLOW-0910 a8, 11-27): pre_findings(raw) on the plan sources:
+  FAIL FENCEGEOM for ZERO / SUBROW / SUBSITE / OUTSIDE / SINGLETON (PRE-DIFF blocks only NEW ones); UNSNAPPED stays a WARN
+  FENCEGEOM-UNSNAPPED (place_regions.tcl, ot_fence_snap and ot_lc_box snap every emitted box OUTWARD, so it cannot reach the placer).
+  Each FAIL names type, region, reason and the outward-snapped box.
+
     findings(raw, plan_path, tree=None, **kw) -> ["WARN ADV-FENCE-GEOM ..."]
+    pre_findings(raw) -> ["FAIL FENCEGEOM ...", "WARN FENCEGEOM-UNSNAPPED ..."]
 """
+import math
 import os
 import re
 import sys
@@ -94,7 +105,111 @@ def plan_regions(raw):
         r = _rect(isl.get("rect_um")) if isinstance(isl, dict) else None
         if r:
             out.append((tn, "rck_island", r, o))
+        for row in t.get("place_regions") or []:
+            r = _rect(row.get("box_um")) if isinstance(row, dict) else None
+            if r:
+                out.append((tn, f"place_regions {row.get('name', '')}".strip(), r, o))
     return out
+
+
+_META = set(".^$*+?{}[]|()")
+
+
+def _members(s, i=0, top=True):
+    """static member count of an alternation of anchored literal terms starting at s[i] -> (count | None, next index).
+    A term is ^ literal [ (?:alt|alt) ] literal $ at the top level (anchors required: an unanchored or prefix pattern matches many);
+    inside a group the alternatives are literals or nested groups.  Anything else (classes, quantifiers, wildcards) -> None."""
+    total, n = 0, len(s)
+    while True:
+        mult, start = 1, i
+        if top:
+            if i >= n or s[i] != "^":
+                return None, i
+            i += 1
+        while i < n and s[i] not in "|)":
+            c = s[i]
+            if c == "\\":
+                if i + 1 >= n or s[i + 1].isalnum():
+                    return None, i
+                i += 2
+            elif c == "(":
+                i += 3 if s.startswith("(?:", i) else 1
+                k, i = _members(s, i, top=False)
+                if k is None or i >= n or s[i] != ")":
+                    return None, i
+                mult *= k
+                i += 1
+            elif top and c == "$" and (i + 1 == n or s[i + 1] == "|"):
+                i += 1
+                break
+            elif c in _META:
+                return None, i
+            else:
+                i += 1
+            if i < n and s[i] in "*+?{":
+                return None, i
+        else:
+            if top:
+                return None, i                    # no closing $: a prefix match
+        if top and s[i - 1] != "$":
+            return None, i
+        total += mult
+        if i < n and s[i] == "|":
+            i += 1
+            continue
+        return total, i
+
+
+def place_region_members(inst_re):
+    """-> number of instances an exact-alternation inst_re names, None when it is a pattern (many / unknown)"""
+    if not isinstance(inst_re, str) or not inst_re:
+        return None
+    k, i = _members(inst_re)
+    return k if k is not None and i == len(inst_re) else None
+
+
+def _snap_out(r, o):
+    def dn(v, org, p):
+        return org + math.floor(round((v - org) * DBU) / round(p * DBU)) * p
+    def up(v, org, p):
+        return org + math.ceil(round((v - org) * DBU) / round(p * DBU)) * p
+    return [round(dn(r[0], o[0], SITE_W), 4), round(dn(r[1], o[1], ROW_H), 4), round(up(r[2], o[0], SITE_W), 4), round(up(r[3], o[1], ROW_H), 4)]
+
+
+def pre_findings(raw):
+    """FENCEGEOM (blocking PRE class): -> ["FAIL FENCEGEOM <type>: <region> <reason> box [...] snapped [...]", "WARN FENCEGEOM-UNSNAPPED ..."]"""
+    fails, unsnapped = [], {}
+    pt = (raw.get("partition_types") if isinstance(raw, dict) else None) or {}
+    for tn, t in sorted(pt.items()):
+        if not isinstance(t, dict):
+            continue
+        o = _origin(t)
+        ol = t.get("outline_um")
+        shapes = [(lab, r, None) for owner, lab, r, _o in plan_regions({"partition_types": {tn: t}})]
+        kinds = {f"place_regions {row.get('name', '')}".strip(): row for row in (t.get("place_regions") or []) if isinstance(row, dict)}
+        for lab, r, _ in shapes:
+            row = kinds.get(lab) if lab.startswith("place_regions") else None
+            why = [c for c in shape_problems(r, o) if c != "UNSNAPPED"]
+            if row is not None and row.get("kind") == "fixed":
+                why = [c for c in why if c == "ZERO"]          # a reservation rect may be one site / one row; only a zero box is illegal
+            if isinstance(ol, (list, tuple)) and len(ol) == 2 and (min(r) < -EPS or r[2] > ol[0] + EPS or r[3] > ol[1] + EPS):
+                why.append("OUTSIDE")
+            if "UNSNAPPED" in shape_problems(r, o) and not why:
+                unsnapped.setdefault(tn, []).append(lab)
+            if why:
+                fails.append(f"FAIL FENCEGEOM {tn}: {lab} {','.join(why)} box {[round(v, 4) for v in r]} snapped {_snap_out(r, o)}"
+                             + (f" outline {list(ol)}" if "OUTSIDE" in why else ""))
+        for row in t.get("place_regions") or []:
+            if not isinstance(row, dict) or row.get("kind") == "fixed" or row.get("cone", "auto") not in ("between", "exact"):
+                continue
+            if place_region_members(row.get("inst_re")) == 1:
+                b = _rect(row.get("box_um"))
+                fails.append(f"FAIL FENCEGEOM {tn}: place_regions {row.get('name')} SINGLETON (cone {row.get('cone')}, inst_re names one "
+                             f"instance: GPL-0304 zero-gradient region; pin the cell FIRM or fold it into its neighbour's region)"
+                             + (f" box {[round(v, 4) for v in b]} snapped {_snap_out(b, o)}" if b else ""))
+    warns = [f"WARN FENCEGEOM-UNSNAPPED {tn}: {len(v)} region box(es) off the site/row grid, snapped outward by the generator: "
+             + ", ".join(v[:MAX_EX]) + (" ..." if len(v) > MAX_EX else "") for tn, v in sorted(unsnapped.items())]
+    return fails + warns
 
 
 def kit_regions(tree):
