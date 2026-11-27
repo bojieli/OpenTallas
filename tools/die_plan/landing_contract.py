@@ -675,7 +675,20 @@ def export_form(P,tn):
     return form
 
 
-def _relay_chain_tcl(n,rel):
+def _relay_firm_snap_tcl():
+    """C-LEG405-FIRM (opt-in pin["export_relay_status"] = "FIRM"): seat the relay on the row / site grid (lower-left snapped
+    to the site width and row pitch, row orientation) so DPL, which never moves a FIRM cell, keeps the plan site.  The plan sites
+    are cell CENTRES: an even-CPP relay (BUFx6f, 6 CPP) then sits half a site off the grid and legalisation moved it 27 nm."""
+    return ["set cland_site [[lindex [$cland_block getRows] 0] getSite]",
+            "set cland_sw [$cland_site getWidth]; set cland_sh [$cland_site getHeight]",
+            "set cland_rx [expr {[$cland_ca xMin] + int(round(double($cland_rx - [$cland_ca xMin]) / $cland_sw)) * $cland_sw}]",
+            "set cland_ry [expr {[$cland_ca yMin] + int(round(double($cland_ry - [$cland_ca yMin]) / $cland_sh)) * $cland_sh}]",
+            "set cland_rx [expr {min(max($cland_rx, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_rm getWidth])}]",
+            "set cland_ry [expr {min(max($cland_ry, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_rm getHeight])}]",
+            "foreach cland_row [$cland_block getRows] { set cland_rb [$cland_row getBBox]; if {[$cland_rb yMin] == $cland_ry} { $cland_ri setOrient [$cland_row getOrient]; break } }"]
+
+
+def _relay_chain_tcl(n,rel,firm=False):
     """Tcl lines that hang BUFx6f relays (sites in um, clamped into the core like the export buffer) between the export
     buffer net $cland_fn and the port, one net per segment; leaves $cland_dst connected to the last segment."""
     out=["set cland_prev $cland_fn"]
@@ -684,7 +697,8 @@ def _relay_chain_tcl(n,rel):
         out+=[f"set cland_ri [odb::dbInst_create $cland_block $cland_rm {{{rn}}}]",
               f"set cland_rx [expr {{min(max(int(round({x!r} * $cland_dbu)) - [$cland_rm getWidth] / 2, [$cland_ca xMin]), [$cland_ca xMax] - [$cland_rm getWidth])}}]",
               f"set cland_ry [expr {{min(max(int(round({y!r} * $cland_dbu)) - [$cland_rm getHeight] / 2, [$cland_ca yMin]), [$cland_ca yMax] - [$cland_rm getHeight])}}]",
-              "$cland_ri setLocation $cland_rx $cland_ry; $cland_ri setPlacementStatus PLACED",
+              *(_relay_firm_snap_tcl() if firm else []),
+              "$cland_ri setLocation $cland_rx $cland_ry; $cland_ri setPlacementStatus "+("FIRM" if firm else "PLACED"),
               "[$cland_ri findITerm A] connect $cland_prev",
               f"set cland_rnet [odb::dbNet_create $cland_block {{{rnet}}}]",
               "[$cland_ri findITerm Y] connect $cland_rnet", "$cland_rnet setSigType CLOCK",
@@ -709,6 +723,8 @@ def check_export_relays(P):
             if not isinstance(rel,list) or not rel or any(not isinstance(r,list) or len(r)!=2 or not all(
                     isinstance(v,(int,float)) and math.isfinite(v) for v in r) for r in rel):
                 errors.append(f"{nm}: export_relay_xy_um needs a non-empty list of finite [x,y]");continue
+            if p.get("export_relay_status") not in (None,"PLACED","FIRM"):
+                errors.append(f"{nm}: export_relay_status {p.get('export_relay_status')!r} (PLACED | FIRM)");continue
             if any(not(0<=r[0]<=w and 0<=r[1]<=h) for r in rel):
                 errors.append(f"{nm}: export relay outside the type outline");continue
             if taps is None:
@@ -845,7 +861,7 @@ proc ot_cland_existing_relay {inst master src dst net_name rnames rmaster} {
                 "[$cland_i findITerm A] connect $cland_net",
                 f"set cland_fn [odb::dbNet_create $cland_block {{{fw_net}}}]",
                 "[$cland_i findITerm Y] connect $cland_fn",
-                *(_relay_chain_tcl(n,rel) if rel else ["$cland_dst connect $cland_fn"]),
+                *(_relay_chain_tcl(n,rel,p.get("export_relay_status")=="FIRM") if rel else ["$cland_dst connect $cland_fn"]),
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",
                 f"puts {{OT_CLAND_EXPORT {n} <- {s} via {fw} ({FWD_BUFFER_MASTER} at the source)"+(f" + {len(rel)} {FWD_RELAY_MASTER} relay(s)" if rel else "")+"}", "}"]
     return "\n".join(out)+"\n"
