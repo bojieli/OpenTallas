@@ -4002,3 +4002,4 @@ OPS-WRITEUP: 2026-11-26 13:09 PST 13:09 hourly: 608 any / 482 current (+0 / +0 v
 OPS-WRITEUP: 2026-11-26 14:09 PST 14:09 hourly: 608 any / 482 current (+0 / +0 vs 13:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-26 15:08 PST 15:08 hourly: 604 any / 482 current (-4 / +0 vs 14:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-26 16:08 PST 16:08 hourly: 605 any / 483 current (+1 / +1 vs 15:05). VIS-COVERAGE: 435/474 types with a verdict (92%); PROBE-PASS 2
+CODEX: 2026-11-26 16:12 PST took over all active lane groups through existing paths, including token/ROM, class fixes, review, and exports. HBM remains parked. See lanes/CODEX.md for owners and immediate independent steps.

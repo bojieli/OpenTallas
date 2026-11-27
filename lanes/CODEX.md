@@ -10679,3 +10679,17 @@ Current handoff: handoff/claude_to_codex_1125_2005.md. Latest live paths, job ID
 | Fable hw_r13 reviewer | HEAD | running | verdict to MESH-REFLOOR | See lane handoff |
 
 - Token, ROM and software handoffs continue through TOKEN, TOK-DS, TOK-QK and ROM-WEIGHTS-1119. See CODEX-LOG.md for milestones and FOR-CLAUDE items.
+
+## 2026-11-26 16:12 PST takeover
+
+| Scope | Current work and next action |
+| --- | --- |
+| S81-INT-R2 and S81 source/physical classes | Live da07 North held; next v6 0f01689c91a7 PRE/strict403/LAT947/G0 ready with signed norm_finish. Prepare exact 21:00 release; replace stale model price through existing token owner. C-LEG405, RSTREACH/XTAP, COL/P2 and revoked registers remain separately owned. |
+| HEAD-INT-R2, Host W, HEAD-SERDES-R2 | W11 live; W12f 607dd5dd5c82 passes 10/10 and seal938ce0d90793 is resident across five hosts; prepare cut. Exclude clk9 exact ISSUES; resolve current Host W structural legs. Preserve existing SerDes parent-measurement route and qualify actual seams. |
+| QC-INT-R2 and independent QC lanes | C9 live; Form E a44c93739c79 strict/LAT1922, G0 native E8 unit966132. Repair FWLEAF2 eight-type bit47 reach before source adoption. CollCore/CollFT, DRT ECO, LEC and stale HC successors have independent owners. |
+| KV-INT-R2 | Live G6v6r3 4c5a163e9a21. Private D all source gates PASS but exact Hub Eo visual hold. E c9037cde source strict93/LAT2746/G0, PRE E8 kv-cut2100-pre-e-codex-1126 active. Await combined preflight and review. |
+| HBM | Owner parked. Old B fabric exit143 and native token source11/12 OOM recorded, no exact later whole-source result. No HBM launch. |
+| TOKEN / ROM | DS EN7 strict PC fault and S81 exact v6 price already owned. Separate R080-083 real ROM work on E10 and Qwen AUTH8 compiler/consumer discrepancy being diagnosed on exact current lanes. |
+| Fleet, classes and visual | Current E7–E12 substantial scratch headroom. Old root-dir tickets no longer active, inputs gone, scratch fallback deployed. Class owners use live registry. QC tt_ctlm exact completed placement is waiting on image rendering. Existing active wave and canary route guards required. |
+| Closure and export | Revoked reset/synth drop classes assigned to S81 and all-die census to LEC-R2. Native checker batch infrastructure failures being grouped. Exact HEAD Mesh EQUIVALENT retained; RTX sidecar export separate from bulk disk-held work. Official 16:08 count 605 any/483 current. |
+
