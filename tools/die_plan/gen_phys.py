@@ -11043,7 +11043,8 @@ def ft_hop_maxwire_um(t):
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=(), bound_native_reset=(), private_clock_mesh=None,
-               region_guide=None, dpl_diamond=(), native_cell_cap=None, type_overlay=None):
+               region_guide=None, dpl_diamond=(), native_cell_cap=None, type_overlay=None,
+               prepared_type_overlay=None):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain).
     dpl_diamond: types whose kit legalizes with the diamond DPL (--dpl-diamond; FIRM landing-band DPL stall)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
@@ -11065,7 +11066,13 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if not types or list(types) != [ov.get("type")]:
             raise gen_rtl.GenError(f"type overlay for {ov.get('type')!r} requires exactly --types {ov.get('type')}")
         try:
-            raw, overlay_receipt = TO.apply_validated(raw, ov, plan_path=plan_path)
+            prepared = (TO.read_prepared(raw, ov, plan_path, type_overlay, prepared_type_overlay, Path(out).parent)
+                        if prepared_type_overlay else None)
+            if prepared is not None:
+                raw, overlay_receipt = prepared
+                print("TYPE_OVERLAY REUSED prepared validation")
+            else:
+                raw, overlay_receipt = TO.apply_validated(raw, ov, plan_path=plan_path)
         except TO.OverlayError as exc:
             raise gen_rtl.GenError(str(exc)) from exc
     if private_clock_mesh:

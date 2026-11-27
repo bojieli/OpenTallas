@@ -376,3 +376,44 @@ def test_ft_polarity_overlay_rejects_other_type_budget_and_bad_direct_delta(auth
     del new["budgets"][TO.FT_SITE_TABLE]["src"]
     new["budgets"][TO.FT_SITE_TABLE]["mid"][1][2] = 1e12
     assert "outside the type outline" in TO.validate_overlay(base, new, "mid")[0]
+
+
+def test_reuse_checked_overlay_in_same_kit_wave_launch(plan, tmp_path, monkeypatch):
+    base = tmp_path / "base.json"
+    overlay = tmp_path / "overlay.json"
+    prepared = tmp_path / "plan_overlaid.json"
+    receipt = tmp_path / "type_overlay_prepared.json"
+    base.write_text(json.dumps(plan))
+    overlay.write_text(json.dumps(OV))
+    monkeypatch.setenv("OT_KIT_WAVE", "1")
+
+    assert TO.main(["apply", str(base), str(overlay), "--out", str(prepared),
+                    "--prepared-receipt", str(receipt)]) == 0
+    ordinary = kit(plan, tmp_path / "direct", type_overlay=overlay, plan_path=base)
+    checked = TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path)
+    assert checked is not None
+    assert checked[1] == json.loads(ordinary["mid/type_overlay.json"])
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("gen repeated exact prepared validation")
+
+    monkeypatch.setattr(TO, "apply_validated", unexpected)
+    reused = kit(plan, tmp_path / "gen", type_overlay=overlay, plan_path=base,
+                 prepared_type_overlay=receipt)
+    assert reused == ordinary
+
+    with monkeypatch.context() as env:
+        env.delenv("OT_KIT_WAVE")
+        assert TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path) is None
+    with monkeypatch.context() as other:
+        other.setenv("OT_RESET_HOP_CAP_UM", "1234")
+        assert TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path) is None
+    with monkeypatch.context() as other:
+        other.setattr(TO, "_PREPARED_TOOLS", TO._PREPARED_TOOLS + ("seam_hop.py",))
+        assert TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path) is None
+    other_plan = tmp_path / "same_content_other_file.json"
+    other_plan.write_bytes(base.read_bytes())
+    assert TO.read_prepared(plan, OV, other_plan, overlay, receipt, tmp_path) is None
+    assert TO.read_prepared(plan, {**OV, "type": "src"}, base, overlay, receipt, tmp_path) is None
+    overlay.write_text(json.dumps(OV) + "\n")
+    assert TO.read_prepared(plan, OV, base, overlay, receipt, tmp_path) is None

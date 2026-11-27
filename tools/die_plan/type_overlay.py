@@ -40,6 +40,7 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 from pathlib import Path
@@ -672,6 +673,72 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
                  "skipped_checks": skipped, "g0_metric_drift": drift}
 
 
+# The controller's prepare-stations and generator consume the same validated
+# overlay on one pinned launch tree. Keep this receipt beside their work so
+# individual gen invocations still validate their own overlay by default.
+_PREPARED_TYPE_OVERLAY = "kit-wave-prepared-type-overlay.v1"
+_PREPARED_TOOLS = ("type_overlay.py", "gen.py", "gen_phys.py", "schema.py",
+                   "reset_tree.py", "check.py", "cbc_rules.py")
+_PREPARED_ENV = ("OT_REPO_ROOT", "OT_PLAN_ROOT", "OT_CBC_REACH_UM",
+                 "OT_RESET_HOP_CAP_UM", "OT_FT_IN_BUDGET", "OT_RESETPUB_SOLVE")
+
+
+def _file_stamp(path):
+    p = Path(path).resolve(strict=True)
+    st = p.stat()
+    return [str(p), st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns]
+
+
+def _prepared_context(plan, overlay):
+    return {"plan": _file_stamp(plan), "overlay": _file_stamp(overlay),
+            "tools": [_file_stamp(HERE / name) for name in _PREPARED_TOOLS],
+            "launch_tree": str(Path.cwd().resolve()),
+            "env": {k: os.environ.get(k) for k in _PREPARED_ENV}}
+
+
+def _write_preparation(path, before, plan, overlay, prepared, receipt):
+    after = _prepared_context(plan, overlay)
+    if before != after:
+        return False
+    doc = {"format": _PREPARED_TYPE_OVERLAY, "inputs": after,
+           "prepared": _file_stamp(prepared), "receipt": receipt}
+    path = Path(path)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    tmp.write_text(json.dumps(doc, sort_keys=True) + "\n")
+    tmp.replace(path)
+    return True
+
+
+def read_prepared(raw, ov, plan, overlay, path, work):
+    """Reuse one exact authenticated kit-wave preparation, or validate normally."""
+    if os.environ.get("OT_KIT_WAVE") != "1" or not plan or not isinstance(overlay, (str, Path)):
+        return None
+    try:
+        proof = Path(path).resolve(strict=True)
+        if proof.parent != Path(work).resolve():
+            return None
+        prepared = proof.with_name("plan_overlaid.json")
+        context = _prepared_context(plan, overlay)
+        stamp = _file_stamp(prepared)
+        value = load_json(proof)
+        receipt = value["receipt"]
+        required = {"allowlist", "schema(type-scoped)", "rtl_projection", "g0_subset"}
+        if (value["format"] != _PREPARED_TYPE_OVERLAY or value["inputs"] != context
+                or value["prepared"] != stamp or receipt["format"] != FORMAT
+                or receipt["type"] != ov["type"] or not required.issubset(receipt["checks"])):
+            return None
+        new = load_json(prepared)
+        # The cheap semantic application also binds the prepared result to the
+        # precise raw input already loaded by gen. No additional file hashing.
+        if new != apply_overlay(raw, ov):
+            return None
+        if _file_stamp(prepared) != stamp or _prepared_context(plan, overlay) != context:
+            return None
+        return new, receipt
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, OverlayError):
+        return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -687,8 +754,11 @@ def main(argv=None):
         c.add_argument("--g0-full", action="store_true")
         if n == "apply":
             c.add_argument("--out", required=True)
+            c.add_argument("--prepared-receipt", help="record kit-wave reuse of this validated application")
     a = ap.parse_args(argv)
     try:
+        prepare = getattr(a, "prepared_receipt", None)
+        before = _prepared_context(a.base, a.overlay) if prepare else None
         base = load_json(a.base)
         if a.cmd == "diff":
             ov = overlay_from_plans(base, load_json(a.new), a.type)
@@ -696,9 +766,18 @@ def main(argv=None):
             Path(a.out).write_text(json.dumps(ov, indent=1, sort_keys=True) + "\n")
             print("TYPE_OVERLAY OK", json.dumps(rec["changed"]))
             return 0
-        new, rec = apply_validated(base, load_json(a.overlay), a.g0_full, plan_path=a.base)
+        ov = load_json(a.overlay)
+        if prepare:
+            # Match gen's plan-addressed reset cap during the checked preparation.
+            import cbc_rules
+            with cbc_rules.bound_reset_hop_cap(cbc_rules.plan_reset_hop_cap(a.base)):
+                new, rec = apply_validated(base, ov, a.g0_full, plan_path=a.base)
+        else:
+            new, rec = apply_validated(base, ov, a.g0_full, plan_path=a.base)
         if a.cmd == "apply":
             Path(a.out).write_text(json.dumps(new, indent=1) + "\n")
+            if prepare and _write_preparation(prepare, before, a.base, a.overlay, a.out, rec):
+                print("TYPE_OVERLAY PREPARED")
         print("TYPE_OVERLAY OK", json.dumps(rec))
         return 0
     except OverlayError as e:
