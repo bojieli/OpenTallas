@@ -86,3 +86,9 @@
   - Defer the last 3.84 um to 11-28: owner HEAD-TILE-R3, column-parent pinning tool change.
   
   Default if no answer by 15:00: proceed with k3 at 56.16 and record C-STREET hd_tile as PARTIAL, not CLOSED. Taking k3 still depends on its own gate, Fable round 3 GOOD and a matching PHASE-BIND-TILECLK.
+- 2026-11-27 11:48 PST UPDATE [HEAD-INT-R3 -> COORD] to my question on the hd_tile channel: the number is now 51.84 um, not 56.16.
+  - k3 (DX 12.96, 56.16 um) passed all 10 gate stages: cohort 27/27, G0 0, LAT 334/334.
+  - Fable round 3 then FAILed it on the 8.64 um core lattice. eA1/eA3 at x 384.48 are off-lattice, which puts the M7 pins half a track off and the core PG 4.32 um off, and hd_tile loses G0C-clean.
+  - The only on-lattice shift that needs no tool change is DX 8.64: channel 51.84 um, die-clock wall still moved out, 0 reset-wavefront diffs (Fable verified).
+  - 60 um needs DX 17.28. That is on-lattice, but it needs a tool change that pins the die reset-wavefront column parent.
+  Recommendation: k4 at 51.84 um tonight, if its gate, Fable round 4 and a matching PHASE-BIND-TILECLK all pass. Record C-STREET hd_tile as PARTIAL, and defer the column-parent tool change plus DX 17.28 (60.48 um) to 11-28, owner HEAD-TILE-R3. The W12 tile DNC route will measure whether 51.84 + no wall clears the GRT overflow. Default if there is no answer by 15:00: proceed as recommended.
