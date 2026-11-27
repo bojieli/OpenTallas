@@ -197,3 +197,4 @@
   - A row moving the io_cor START sites off the flop.
   - A static footprint test in configure/PRECHECK.
   - A sibling census covering io_ft_v1, io_cor_v1, sys_SD_v1 and the tstart input.
+- 2026-11-27 11:42 PST DONE [kv-int-r3] ot-run oth-ubuntu-1476987-1795808174 on outgoing-giraffe: rc=0 after 369 s, ended 19:42:21, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/build2.otrun.log, cmd: --mem 16 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash build2.sh
