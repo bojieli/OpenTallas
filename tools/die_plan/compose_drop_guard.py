@@ -319,6 +319,8 @@ def reanchored_types(prev, new):
     """types whose reset_tree_anchor was re-derived (its inputs hashes changed) and still carries relays: a different relay set under the
     new inputs is a re-solve, not a loss (QC 77f2: sle_ctl / slw_st_a_v2 / coll_ft relays renamed or re-picked by the new sink bins)"""
     out = {}
+    if not isinstance(new, dict) or not isinstance(prev, dict):
+        return out
     for tn, t in ((new or {}).get("partition_types") or {}).items():
         a = (((prev or {}).get("partition_types") or {}).get(tn) or {}).get("clock", {}).get("reset_tree_anchor") if isinstance(t, dict) else None
         b = (t.get("clock") or {}).get("reset_tree_anchor") if isinstance(t, dict) else None
