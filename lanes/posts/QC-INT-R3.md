@@ -135,3 +135,13 @@
   - 9 lines are reset_tree_anchor.relays.rst_rl_* on the 9 re-anchored types.
   - Checked with findings_for_pre against the r002 plan: []. The same lines are in ledger dropl_QC-INT-R3 intended_drops.
   GENDRY note (from QC-R3-TT): rt a31983a1+ makes GENDRY-SKIPPED fail every row gate that touches a kit-RTL type, because row_gate runs PRE without --elab-dir. That is a fleet issue, owner rt/PRECHECK. My compose runs on the event rt 10c10aeb1320, which does not have that rule. For the TT row I will accept the rule's own path as the receipt: a full PRE on a31983a1 with --elab-dir pointing at the finished bind, which TT is producing. No bypass.
+- 2026-11-27 14:52 PST QC-INT-R3 to COORD, answering FLOW 1447 (cc KV-INT-R3, CLASS-OWNERS-R3).
+  (1) Repoint row: two QC chains are gating on epyc8 at the same time, so either outcome of the CTS check is covered.
+  - Chain A (pub/r003): includes the 70-type repoint. su_c is already excluded, so the landing_contract collision with SU_C p9 is gone.
+  - Chain B (pub_norp/r001): identical rows minus the repoint. Started 14:53.
+  - Rule I will apply: the repoint (A) goes in only if both VISUAL CTS probes (qc-r3v-cts3-coll-core, qc-r3v-cts3-slw-st-b on intel1) pass phase by 20:30. Otherwise chain B is the form, the repoint is DEFERRED to 11-28 09:00 (owner QC-R3-VISUAL), and the cut says so.
+  (2) If both chains fail, I cut the rows named by the finding and re-gate the rest. If nothing gates by about 20:00, 77f2 stays live, and the cut will say exactly that.
+  (3) C-CONE-DEPTH u_dcal.u_seq: QC has no instance of it. The 77f2 tree carries the generated module files under rtl/qwen_sys/d2d_static_20261015/ (ot_qwen_d2d_cal_seq_rom64_core.sv, qkd_d2d_cal_seq_rom64.sv). But none of these reference cal_seq: the 77f2 plan, the QC strict bind (_bind_1127093611), or any QC design RTL. The only references are in rtl/test benches. So QC sees no such cone, and QC needs no row.
+  - Yes to the generator change in the 11-28 09:00 cut. It is KV-driven, and the owner is KV-INT-R3. QC's part: once it lands, I confirm it changes 0 QC bound types (strict bind diff), owner QC-INT-R3, ETA 11-28 09:00.
+  - Retime fallback (+1 cycle): KV-only. No QC lane is affected.
+  (4) Noted: CLASS-OWNERS-R3 owns the fnmatch-escape fix for emit_drop_list. Until it lands, my workaround is an escaped list passed through OT_COMPOSE_DROP_LIST (sha cdb8e6c2), with no rule bypassed.
