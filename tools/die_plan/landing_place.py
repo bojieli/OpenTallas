@@ -950,6 +950,45 @@ def collector_event(c):
                 local_sources=c.get('collector_local_sources',[]),children=c.get('collector_children',[]))
 
 
+def _soft_status_site(tn, type_row, source, published, band):
+    """Recover an impossible stale sidecar seat from its exact current physical alias.
+
+    The sidecar still owns the collector node and the reset-source identity.
+    Only the physical ready/fault seat can follow a matched current band alias.
+    """
+    xy = source['xy_um']
+    w, h = type_row['outline_um']
+
+    def on_outline(point):
+        x, y = point
+        return isfinite(x) and isfinite(y) and 0 <= x <= w and 0 <= y <= h
+
+    if on_outline(xy):
+        return xy
+    name = source['name']
+    matches = [
+        row for row in published
+        if row['name'] == name and row.get('band') == band
+        and all(row.get(role) == source.get(role) == f'landing_{role}_{name}'
+                for role in ('ready', 'fault'))
+        and row.get('xy_um') is not None and row['xy_um'] == row.get('pin_xy_um')
+        and on_outline(row['xy_um'])
+    ]
+    if len(matches) == 1:
+        return matches[0]['xy_um']
+
+    # The native status hook can reach inward from a slightly inset face
+    # reference. A point outside even its 17.28 um entry window is stale.
+    x, y = xy
+    reach = 17.28
+    if isfinite(x) and isfinite(y) and -reach < x < w + reach and -reach < y < h + reach:
+        return xy
+    raise ValueError(
+        f'CLAND-STATUS-SITE {tn}.{name}: ready/fault point {xy} outside the '
+        f'{w:g}x{h:g} outline with no matching current landing-band alias'
+    )
+
+
 def collector_nodes(ev):
     """Active tree nodes of a collector event: root plus every node on a source's path to it, the set
     landing_collector.build_local emits an u_cland_collect_<node> for.  -> (active nodes, {node: xy})"""
@@ -1182,6 +1221,7 @@ def tcl(P,tn,macro_moves=None):
         return cwin[k]
     if c.get('monitor')=='dataflow' or (root and tree is None):
         return _dataflow_tcl(tn,c,P.types[tn])
+    soft_bands = {}
     for name,band in c.get('bands',{}).items():
         if band.get('hard_core'):continue   # QC-SLECTL-B: the ring is a hard child placed on this band (hard_cores[])
         # HARD-RING-BAND-1 (OPUS-FIX-KV-HUB-R6 11-22): a ring the plan realises as a signed hard child through hard_cores[]
@@ -1191,9 +1231,15 @@ def tcl(P,tn,macro_moves=None):
         import clock_landings as CL
         if CL.hard_ring_params({"partition_types": {tn: P.types[tn]}}, tn, name) is not None:continue
         groups += _band_groups(tn, name, band, P.types[tn])
+        soft_bands[name] = band
     for s in ev.get('local_sources',[]):
-        x,y=s['xy_um']
-        for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
+        name = s['name']
+        xy = s['xy_um']
+        if name in soft_bands:
+            xy = _soft_status_site(tn, P.types[tn], s, c.get('collector_local_sources', []), soft_bands[name])
+        x, y = xy
+        for kind in ('ready', 'fault'):
+            status.append((f'landing_{kind}_{name}', x, y))
         groups.append(('u_cland_rst_'+s['name'],near(_source_relay(tn,tree,s,c)['xy'],_source_node(s)),'raw-copy-optional'))
     stale={}
     if root:

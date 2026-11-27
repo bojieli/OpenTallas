@@ -119,3 +119,33 @@ def test_rtl_matching_neither_tree_stops(tmp_path):
     with pytest.raises(gen_rtl.GenError, match="plan collector_tree checked too"):
         gen_phys.install_collector_event(plan(contract()), "T", lands(), rtl(tmp_path, PLAN_NAMES - {"u_cland_collect_rst_rl_57"}),
                                          plan_tree=PLAN_TREE)
+
+
+def compact_status_plan():
+    band = dict(rect_um=[70, 11, 99, 31], width=1, ring_width=64, ring_place="ff")
+    source = dict(SRC, ready="landing_ready_b", fault="landing_fault_b", node="rst_n_t0",
+                  xy_um=[325, 25], pin_xy_um=[325, 25])
+    c = contract()
+    c["bands"] = {"b": band}
+    c["collector_local_sources"] = [
+        dict(source, node="rst_n_t44", xy_um=[100, 25], pin_xy_um=[100, 25], band=band)
+    ]
+    c["collector_event"] = dict(EVENT, local_sources=[source])
+    return c
+
+
+def test_soft_status_uses_current_alias_but_keeps_event_reset_topology():
+    c = compact_status_plan()
+    text = LP.tcl(plan(c), "T")
+    assert "{landing_ready_b 100.00000 25.00000}" in text
+    assert "{landing_fault_b 100.00000 25.00000}" in text
+    assert "u_cland_collect_rst_rl_38 " in text and "u_cland_rst_b " in text
+    assert c["collector_event"]["local_sources"][0]["xy_um"] == [325, 25]
+    assert c["collector_event"]["local_sources"][0]["node"] == "rst_n_t0"
+
+
+def test_status_without_an_exact_current_alias_fails_at_gen():
+    c = compact_status_plan()
+    c["collector_local_sources"][0]["fault"] = "other_fault"
+    with pytest.raises(ValueError, match=r"CLAND-STATUS-SITE T\.b:.*outside"):
+        LP.tcl(plan(c), "T")
