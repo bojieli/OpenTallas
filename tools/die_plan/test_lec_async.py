@@ -63,6 +63,30 @@ def test_equivalent_keeps_flow_rc(tmp_path):
     assert not (k / "FAIL_PREFLOOR").exists() and (k / "lec_async.on").exists()
 
 
+def test_r_minimal_marker_does_not_start_proof_unit(tmp_path):
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "lec_preplace.off").write_text("R-MINIMAL: pre-place LEC dropped\n")
+    (kit / "lec_async.ready").write_text("1\necho LEC_PREPLACE_DROPPED R-MINIMAL\n")
+    (kit / "lec_async.mode").write_text("unit\n")
+
+    heavy = tmp_path / "ot-heavy"
+    heavy.write_text('#!/bin/sh\nprintf called > "$FAKE_K/ot-heavy.called"\nexit 70\n')
+    heavy.chmod(0o755)
+    env = dict(os.environ, PATH=f"{tmp_path}:{os.environ['PATH']}", FAKE_K=str(kit))
+    result = subprocess.run(
+        ["bash", str(TOOL), "watch", str(kit), "flowc", "img", "48", "2", "false"],
+        check=True, capture_output=True, text=True, timeout=15, env=env,
+    )
+
+    assert "LEC_PREPLACE_DROPPED R-MINIMAL" in result.stdout.splitlines()
+    assert (kit / "lec_async.done").exists()
+    assert not (kit / "ot-heavy.called").exists()
+    assert not (kit / "lec_async.rc").exists()
+    assert not (kit / "lec_async.aborted").exists()
+    assert not (kit / "lec_async.stop").exists()
+
+
 def test_not_equivalent_stops_the_route(tmp_path):
     k, env = _kit(tmp_path, 1)
     _ready(k, "1", 1)

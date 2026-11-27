@@ -366,6 +366,13 @@ watch)
   POL=$(sed -n 1p "$K/lec_async.ready"); RUN=$(sed -n '2,$p' "$K/lec_async.ready")
   write_identity "$K"
   echo "LEC_ASYNC $(date '+%F %T') start ($POL): $RUN"
+  if [ "$POL" = 1 ] && [ "$RUN" = 'echo LEC_PREPLACE_DROPPED R-MINIMAL' ] \
+      && [ -f "$K/lec_preplace.off" ]; then
+    # The generated command is a policy marker. The EXIT trap closes the
+    # watcher, and the ready command lets readers report SKIPPED.
+    echo "LEC_PREPLACE_DROPPED R-MINIMAL"
+    exit 0
+  fi
   LOG0=$(stat -c %s "$K/lec_async.log" 2>/dev/null || echo 0)
   OOMC=$NAME; NOV=
   if [ "$MODE" = unit ]; then
