@@ -164,6 +164,54 @@ class LaunchTree(unittest.TestCase):
         self.assertEqual((r.returncode, r.stdout), (0, "main"))
         (self.rt / "tools/die_plan").mkdir(parents=True)
 
+    def test_verified_pinned_runtime_composes_without_a_mirror(self):
+        import hashlib
+        import shutil
+
+        paths = (KW.RT_LOCAL_LAUNCH, "physical/common_flow/abc_kit.script")
+        w(self.rt / paths[1], "flow")
+        (self.rt / paths[0]).parent.mkdir(parents=True)
+        shutil.copy(SH, self.rt / paths[0])
+        for rel in (*paths, "tools", "physical/common_flow"):
+            (self.rt / rel).chmod(0o555)
+        receipt = self.rt.with_name(self.rt.name + ".manifest.json")
+        files = {rel: hashlib.sha256((self.rt / rel).read_bytes()).hexdigest() for rel in paths}
+        receipt.write_text(json.dumps({"sha": SHA, "files": files}))
+        sp = dict(src=str(self.src), tools_rt=str(self.rt), tools_sha=SHA, private=True, kind="type",
+                  place_spill=False, roam_hosts=["epyc7"], hosts=["epyc7", "intel1"],
+                  place_spill_hosts=["epyc7"], work=str(Path(self.t.name) / "attempt"))
+
+        with mock.patch.object(KW, "RT_CURRENT", str(self.rt.with_name("current"))):
+            cmd = KW.rt_local_launch_cmd(sp, "epyc7")
+            self.assertTrue(cmd)
+            self.assertFalse(KW.rt_local_launch_cmd(dict(sp, place_spill=True), "epyc7"))
+            self.assertFalse(KW.rt_local_launch_cmd(dict(sp, roam_hosts=["epyc7", "intel1"]), "epyc7"))
+            self.assertFalse(KW.rt_local_launch_cmd(dict(sp, gen_pins={"files": {"x": "sha"}}), "epyc7"))
+        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=20)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(json.loads(r.stdout.splitlines()[-1])["rt"], str(self.rt))
+        mirror = KW.rt_mirror_path(sp["src"], sp["tools_rt"])
+        self.assertFalse(Path(mirror).exists())
+        command = KW.rt_tree_cmd(sp) + "true"
+        seal = {"manifest_hash": "c" * 64}
+        normal = KW.wave_stage_args(sp, sp["work"], command, (), event_env="", source_seal=seal)
+        local_command = KW.rt_tree_cmd(sp, local_runtime=True) + "true"
+        local = KW.wave_stage_args(sp, sp["work"], local_command, (), event_env="", source_seal=seal)
+        self.assertNotIn(mirror, local_command)
+        self.assertIn(mirror, normal)
+        self.assertNotIn(mirror, local)
+        self.assertIn(KW.sp_launch_path(sp), local)
+        self.assertIn(str(self.rt), local)
+        self.assertIn("--no-spill", local)
+
+        receipt.write_text(json.dumps({"sha": "0" * 40, "files": files}))
+        self.assertNotEqual(subprocess.run(["bash", "-c", cmd], timeout=20).returncode, 0)
+        receipt.write_text(json.dumps({"sha": SHA, "files": files}))
+        (self.rt / paths[1]).chmod(0o755)
+        self.assertNotEqual(subprocess.run(["bash", "-c", cmd], timeout=20).returncode, 0)
+        receipt.unlink()
+        self.assertNotEqual(subprocess.run(["bash", "-c", cmd], timeout=20).returncode, 0)
+
     def test_mirror_push_and_compose(self):
         """fleet hosts carry only tools/fleet of rt: the hub-side mirror copy (local rsync here) feeds the launch tree"""
         sp = {"src": str(self.src), "tools_rt": str(self.rt)}
