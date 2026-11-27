@@ -10598,6 +10598,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     """
     import copy
     import math
+    from functools import cache
     import gen_rtl
     import reset_tree as RT
     import bound_reset_contract as BRC
@@ -10717,7 +10718,34 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         except ValueError as exc:
             raise gen_rtl.GenError(f"type {tn}: native reset selected hierarchy: {exc}") from exc
     clean = re.sub(r"//[^\n]*|/\*.*?\*/", "", scoped_text, flags=re.S)
-    modules = list(re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", clean, re.S | re.M))
+    modules = re.findall(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", clean, re.S | re.M)
+    # A forest can have thousands of relays but only a few cell classes. Index the headers once per
+    # class and memoize the owner path. Inspect the exact statement and its pins only for each hit.
+    statement_end = re.compile(r"([^;]*?)\)\s*;")
+
+    @cache
+    def instance_headers(module):
+        pattern = re.compile(rf"\b{re.escape(module)}\s*(?:#\(([^;]*?)\))?\s*(\w+)\s*\(")
+        headers = {}
+        for module_name, body in modules:
+            for match in pattern.finditer(body):
+                headers.setdefault(match[2], []).append((module_name, body, match[1], match.end()))
+        return headers
+
+    @cache
+    def owner_prefix(module):
+        path = []
+        for _ in modules:
+            parents = [(name, parent) for name, rows in instance_headers(module).items()
+                       for parent, _, _, _ in rows if parent != module]
+            if not parents:
+                return ".".join(reversed(path))
+            if len(parents) != 1:
+                break
+            name, module = parents[0]
+            path.append(name)
+        return None
+
     paths, owner = {}, None
     verified_cell_classes = set()
     reset_cells = gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", "")
@@ -10754,20 +10782,18 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
             if actual_cell is None or actual_cell != canonical_cell(reset_cells, module):
                 raise gen_rtl.GenError(f"type {tn}: native reset cell {module} source differs from canonical stage/gate behavior")
             verified_cell_classes.add(module)
-        path = _kit_inst_path(scoped_text, name, re.escape(module),
-                              owner_module=owner[0] if owner else None)
-        if path is None:
+        hits = [row for row in instance_headers(module).get(name, ()) if owner is None or row[0] == owner[0]]
+        owners = {row[0] for row in hits}
+        prefix = owner_prefix(next(iter(owners))) if len(owners) == 1 else None
+        if prefix is None:
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: missing/duplicate/wrong-module hierarchy")
-        hits = []
-        for m in modules:
-            if owner is not None and m.group(1) != owner[0]:
-                continue
-            for c in re.finditer(rf"\b{re.escape(module)}\s*(?:#\(([^;]*?)\))?\s*{re.escape(name)}\s*\((.*?)\)\s*;",
-                                 m.group(2), re.S):
-                hits.append((m.group(1), m.group(2), c.group(1), c.group(2)))
         if len(hits) != 1:
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: ambiguous instance")
-        parameter_text, connection_text = hits[0][2:]
+        module_name, body, parameter_text, offset = hits[0]
+        statement = statement_end.match(body, offset)
+        if statement is None:
+            raise gen_rtl.GenError(f"type {tn}: native reset {name}: ambiguous instance")
+        connection_text = statement[1]
         pin_pattern = r"\.(\w+)\s*\(\s*([^()]*)\s*\)"
         connections = re.findall(pin_pattern, connection_text)
         actual = dict(connections)
@@ -10780,12 +10806,11 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
                 raise gen_rtl.GenError(f"type {tn}: native reset {name}: clock/data/reset topology differs")
         if any(re.sub(r"\s+", "", actual.get(k, "")) != re.sub(r"\s+", "", v) for k, v in ports.items()):
             raise gen_rtl.GenError(f"type {tn}: native reset {name}: clock/data/reset topology differs")
-        prefix = path.rsplit(".", 1)[0] if "." in path else ""
-        if owner is not None and owner != (hits[0][0], prefix):
+        if owner is not None and owner != (module_name, prefix):
             raise gen_rtl.GenError(f"type {tn}: native reset instances do not share the declared wrapper hierarchy")
-        owner = hits[0][0], prefix
-        paths[name] = path
-        return hits[0][1]
+        owner = module_name, prefix
+        paths[name] = f"{prefix}.{name}" if prefix else name
+        return body
 
     sync = tree["entry"] == "sync"
     ent = "u_rst_root" if sync else "u_rst_in"
@@ -10840,16 +10865,22 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     # The verified entry must reach the physical kit ports through the exact
     # native wrapper, never a tied or privately substituted reset/clock input.
     child = owner[0]
-    while True:
+    checked_wrappers = set()
+    while child not in checked_wrappers:
+        checked_wrappers.add(child)
         parents = []
-        for m in modules:
-            for call in re.finditer(rf"\b{re.escape(child)}\s*(?:#\([^;]*?\))?\s*(\w+)\s*\((.*?)\)\s*;", m.group(2), re.S):
-                parents.append((m.group(1), dict(re.findall(r"\.(\w+)\s*\(\s*([^()]*)\s*\)", call.group(2)))))
+        for rows in instance_headers(child).values():
+            for module_name, parent_body, _, offset in rows:
+                statement = statement_end.match(parent_body, offset)
+                pins = re.findall(r"\.(\w+)\s*\(\s*([^()]*)\s*\)", statement[1]) if statement else []
+                parents.append((module_name, dict(pins)))
         if not parents:
             break
         if len(parents) != 1 or any(re.sub(r"\s+", "", parents[0][1].get(port, "")) != port for port in ("clk", "arst_n")):
             raise gen_rtl.GenError(f"type {tn}: native reset wrapper clock/reset entry is not an exact passthrough")
         child = parents[0][0]
+    else:
+        raise gen_rtl.GenError(f"type {tn}: native reset wrapper hierarchy contains a cycle")
     expected_outs = {f"rst_o_{k}" for k in range(len(tree.get("outs", [])))}
     actual_outs = set(re.findall(r"\boutput\s+(?:wire\s+)?(rst_o_\d+)\b", body))
     if actual_outs != expected_outs:
@@ -10875,7 +10906,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
             ports["q"] = f"rst_o_{output}"
         cell = RT.relay_cell(tree, r, gated=gated)
         if (cell == "ot_dp_rrelay" and r.get("role") == "raw" and r["q"] in out_raw
-                and re.search(rf"\b{PAIR}\s*(?:#\([^;]*?\))?\s*{re.escape(r['name'])}\s*\(", clean)):
+                and r["name"] in instance_headers(PAIR)):
             cell = PAIR
             ports["export_q"] = f"{r['q']}_reader_raw"
         check(r["name"], cell, ports)
