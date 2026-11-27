@@ -19,7 +19,9 @@ import json
 import os
 import re
 import shutil
+import shlex
 import subprocess
+import tempfile
 from pathlib import Path
 
 # REPO-ROOT-1123 (COORD 17:25, FABLE flow review; S81 J9 B1 main-tools gate died after 2191 s reading a
@@ -628,20 +630,55 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     return "\n".join(x for x in lines if x) + "\n"
 
 
+def _docker_yosys(mounts, workdir, mem_gb):
+    if not shutil.which("docker"):
+        raise ElabError("no yosys: set OT_BIND_YOSYS or install docker with the ORFS image")
+    args = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g",
+            "-u", f"{os.getuid()}:{os.getgid()}"]
+    for mount in sorted({str(Path(x).resolve()) for x in mounts}):
+        args.extend(("-v", f"{mount}:{mount}"))
+    return args + ["-w", str(workdir)]
+
+
+def yosys_image_id():
+    """Resolve the configured container image once before emit workers fork."""
+    try:
+        result = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", YOSYS_IMAGE],
+                                capture_output=True, text=True, timeout=15)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    image = result.stdout.strip()
+    return image if result.returncode == 0 and re.fullmatch(r"sha256:[0-9a-f]{64}", image) else None
+
+
+def run_yosys_batch(jobs, mounts, image, mem_gb=2):
+    """Run each helper in its own Yosys process with one pinned container startup."""
+    workdir = Path(jobs[0][0]).parent
+    cmd = _docker_yosys(mounts, workdir, mem_gb)
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", dir=workdir) as launcher:
+        launcher.write("set -e\n")
+        for script, log in jobs:
+            launcher.write(shlex.join([YOSYS_IN_IMAGE, "-q", "-l", str(log), "-s", str(script)]) + "\n")
+        launcher.flush()
+        launcher_path = launcher.name
+        # The container runs as this user. The explicit shell keeps each Yosys invocation isolated.
+        result = subprocess.run(cmd + ["--entrypoint", "/bin/sh", image, launcher_path],
+                                capture_output=True, text=True)
+    if result.returncode:
+        failed_log = next((p for _, p in reversed(jobs) if p.is_file()), None)
+        detail = failed_log.read_text(errors="replace")[-3000:] if failed_log else ""
+        raise ElabError(f"yosys native glue batch failed (rc {result.returncode}):\n"
+                        f"{(result.stderr or '')[-3000:]}{detail}")
+
+
 def run_yosys(script_path, log_path, mounts, mem_gb=32):
     """Yosys >= 0.40: $OT_BIND_YOSYS, else the ORFS image in docker (memory capped, no swap)."""
     exe = os.environ.get("OT_BIND_YOSYS")
     if exe:
         cmd = [exe, "-q", "-l", str(log_path), "-s", str(script_path)]
     else:
-        if not shutil.which("docker"):
-            raise ElabError("no yosys: set OT_BIND_YOSYS or install docker with the ORFS image")
-        vs = []
-        for m in sorted({str(Path(x).resolve()) for x in mounts}):
-            vs += ["-v", f"{m}:{m}"]
-        cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-u",
-               f"{os.getuid()}:{os.getgid()}"] + vs + ["-w", str(Path(script_path).parent), YOSYS_IMAGE,
-                                                        YOSYS_IN_IMAGE, "-q", "-l", str(log_path), "-s", str(script_path)]
+        cmd = _docker_yosys(mounts, Path(script_path).parent, mem_gb) + [
+            YOSYS_IMAGE, YOSYS_IN_IMAGE, "-q", "-l", str(log_path), "-s", str(script_path)]
     cache = ElabCache.open(script_path)
     if cache is not None and cache.fetch(log_path):
         return

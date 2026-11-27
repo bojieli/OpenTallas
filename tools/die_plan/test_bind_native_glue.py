@@ -130,3 +130,62 @@ def test_collect_memories_is_explicit_and_does_not_map_state():
         E.yosys_script({"top": "top", "collect_memories": "true"}, [], [], [], "out.json")
     with pytest.raises(bind.BindError, match="not supported"):
         bind._glue(NS(ytype="$mem_v2", yparams={}, src="memory", path="private_ram"), {}, "private_ram")
+
+
+def test_native_batch_fork_reuse_and_failed_emit_isolation(tmp_path, monkeypatch):
+    from copy import deepcopy
+
+    image = "sha256:" + "a" * 64
+    monkeypatch.setenv("OT_BIND_NATIVE_GLUE_BATCH", "1")
+    monkeypatch.delenv("OT_BIND_YOSYS", raising=False)
+    monkeypatch.setattr(E, "yosys_image_id", lambda: image)
+    primitive = NS(ytype="$shift", yparams={}, dirs={"A": "input", "Y": "output"},
+                   ports={"A": [2], "Y": [3]})
+    second = NS(**{**vars(primitive), "yparams": {"A_WIDTH": "1"}})
+    connections = {"A": "a", "Y": "y"}
+    launches = []
+
+    def run_batch(jobs, mounts, selected, mem_gb=2):
+        assert selected == image
+        launches.append(len(jobs))
+        for script, log in jobs:
+            inp, sv = [Path(command.split('"')[1]) for command in script.read_text().splitlines()]
+            module, = json.loads(inp.read_text())["modules"]
+            sv.write_text(f"module {module}; endmodule\n")
+            log.write_text("done\n")
+
+    monkeypatch.setattr(E, "run_yosys_batch", run_batch)
+    glue = NativeGlue(tmp_path, ["$shift"])
+    worker = deepcopy(glue)
+    with glue.batch():
+        first = glue.emit(primitive, connections, "a")
+        assert glue.emit(primitive, connections, "a") == first
+        glue.emit(second, connections, "b")
+        assert not glue.files
+    assert launches == [2]
+    assert len(glue.files) == 2
+    with worker.batch():
+        assert worker.emit(primitive, connections, "a") == first
+    assert launches == [2]
+    assert worker.files == glue.files[:1]
+
+    fresh = NativeGlue(tmp_path, ["$shift"])
+    with pytest.raises(ValueError, match="stop"):
+        with fresh.batch():
+            fresh.emit(primitive, connections, "a")
+            raise ValueError("stop")
+    assert not fresh.files
+    assert launches == [2]
+
+    def fail(jobs, mounts, selected):
+        script, log = jobs[0]
+        Path(script.read_text().split('"')[-2]).write_text("incomplete")
+        raise E.ElabError("failed helper")
+
+    original = glue.files[0].read_bytes()
+    monkeypatch.setattr(E, "run_yosys_batch", fail)
+    with pytest.raises(NativeGlueError, match="failed helper"):
+        with fresh.batch():
+            fresh.emit(primitive, connections, "a")
+    assert not fresh.files
+    assert glue.files[0].read_bytes() == original

@@ -4,15 +4,18 @@ Retain inferred memories as arrays. Never run memory_map, async2sync, opt,
 or clock rewrites here. These helpers remove an RTL emission gap; they do
 not qualify reset timing, physical memories, or a plan boundary.
 """
+from contextlib import contextmanager, ExitStack
 import fcntl
 import hashlib
 import json
+import os
 import re
+import tempfile
+import uuid
 from pathlib import Path
 import bind_elab as E
 from native_mem2reg import mark_mem2reg
 from native_memwr_merge import merge_memwr
-import os
 
 # $mem_v2 / $shiftx (Codex 861); TOK-SCHED 10-25 adds the remaining combinational word-level primitives that the
 # current S81 dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry and _glue does not
@@ -23,6 +26,12 @@ class NativeGlueError(RuntimeError):
     pass
 
 class NativeGlue:
+    """Collect one type per pinned container with OT_BIND_NATIVE_GLUE_BATCH=1.
+
+    Explicit native Yosys and ordinary immediate emission keep their existing
+    paths. Helper receipts can be shared only by workers of this binder.
+    """
+
     def __init__(self, directory, enabled):
         if not isinstance(enabled, list) or any(t not in SUPPORTED for t in enabled):
             raise NativeGlueError("native_glue_types must name only " + ", ".join(sorted(SUPPORTED)))
@@ -30,6 +39,97 @@ class NativeGlue:
         self.directory = Path(directory).resolve()
         self.files = []
         self.cache = {}
+        self._pending = None
+        self._batch_image = (E.yosys_image_id() if os.environ.get("OT_BIND_NATIVE_GLUE_BATCH") == "1"
+                             and not os.environ.get("OT_BIND_YOSYS") else None)
+        self._batch_id = uuid.uuid4().hex if self._batch_image else None
+        self._merge_memwr = os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0"
+
+    @contextmanager
+    def batch(self):
+        if not self._batch_image:
+            yield
+            return
+        self._pending = {}
+        try:
+            yield
+            self._flush()
+        finally:
+            self._pending = None
+
+    @staticmethod
+    def _script(inp, sv, primitive):
+        lower = {"$bwmux": "bwmuxmap\n", "$demux": "demuxmap\n", "$bmux": "bmuxmap\n"}.get(primitive, "")
+        return f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n'
+
+    def _postprocess(self, sv, primitive):
+        if primitive != "$mem_v2":
+            return
+        # Decide mem2reg from the original per-bit writes, then merge the runs.
+        text, marked = mark_mem2reg(sv.read_text())
+        merged = []
+        merge = (self._merge_memwr if self._batch_image else os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0")
+        if merge:
+            text, merged = merge_memwr(text)
+        if merged:
+            sv.with_suffix(".memwr_merge.txt").write_text("".join(f"{m} {b} -> {a}\n" for m, b, a in merged))
+        if marked or merged:
+            sv.write_text(text)
+
+    @staticmethod
+    def _write_input(handle, text):
+        handle.truncate(0)
+        handle.write(text)
+        handle.flush()
+
+    def _flush(self):
+        if not self._pending:
+            return
+        with ExitStack() as stack:
+            tmp = Path(stack.enter_context(tempfile.TemporaryDirectory(prefix=".batch-", dir=self.directory)))
+            pending = []
+            for module, (primitive, data) in sorted(self._pending.items()):
+                inp = self.directory / (module + ".json")
+                lock = stack.enter_context(inp.open("a"))
+                fcntl.flock(lock, fcntl.LOCK_EX)
+                sv = inp.with_suffix(".sv")
+                # Only a successful sibling in this forked binder may satisfy a helper.
+                marker = inp.with_suffix(".batch")
+                text = json.dumps(data)
+                key = self._batch_id + " " + hashlib.sha256(text.encode()).hexdigest() + " "
+                if marker.is_file() and sv.is_file() and marker.read_bytes() == (
+                        key + hashlib.sha256(sv.read_bytes()).hexdigest()).encode():
+                    continue
+                self._write_input(lock, text)
+                script, log = tmp / (module + ".ys"), tmp / (module + ".log")
+                script.write_text(self._script(inp, tmp / sv.name, primitive))
+                pending.append((inp, sv, script, log, marker, primitive, key))
+            if pending:
+                try:
+                    E.run_yosys_batch([(s, l) for _, _, s, l, _, _, _ in pending],
+                                      [self.directory], self._batch_image)
+                except E.ElabError as exc:
+                    raise NativeGlueError(str(exc)) from exc
+            for _, sv, _, log, _, primitive, _ in pending:
+                staged = tmp / sv.name
+                if not staged.is_file() or not staged.stat().st_size or not log.is_file():
+                    raise NativeGlueError(f"native glue batch did not emit {sv.name} and its log")
+                self._postprocess(staged, primitive)
+            for inp, sv, _, log, marker, primitive, key in pending:
+                staged = tmp / sv.name
+                inp.with_suffix(".ys").write_text(self._script(inp, sv, primitive))
+                os.replace(log, sv.with_suffix(".log"))
+                detail = staged.with_suffix(".memwr_merge.txt")
+                if detail.is_file():
+                    os.replace(detail, sv.with_suffix(".memwr_merge.txt"))
+                digest = hashlib.sha256(staged.read_bytes()).hexdigest()
+                os.replace(staged, sv)
+                stamp = tmp / marker.name
+                stamp.write_text(key + digest)
+                os.replace(stamp, marker)
+        for module in self._pending:
+            self.cache[module.removeprefix("ot_bind_native_")] = module
+            self.files.append(self.directory / (module + ".sv"))
 
     def emit(self, cell, connections, instance):
         if cell.ytype not in self.enabled:
@@ -65,7 +165,7 @@ class NativeGlue:
                                 sorted([list(k) + list(v) for k, v in share.items()])], sort_keys=True)
         key = hashlib.sha256(signature.encode()).hexdigest()[:24]
         module = "ot_bind_native_" + key
-        if key not in self.cache:
+        if key not in self.cache and (self._pending is None or module not in self._pending):
             self.directory.mkdir(parents=True, exist_ok=True)
             ports, conns, next_bit, allbits = {}, {}, 2, {}
             for p, width in widths.items():
@@ -94,40 +194,21 @@ class NativeGlue:
             # that cannot be represented by Yosys's quoted filename syntax.
             if any('"' in str(p) or "\n" in str(p) for p in (inp, sv)):
                 raise NativeGlueError("invalid native glue output path")
-            # write_verilog has no expression for $bwmux / $demux / $bmux: lower only that one cell with its own
-            # Yosys map pass (bit-exact by construction: and/or, shift/compare), nothing else
-            lower = {"$bwmux": "bwmuxmap\n", "$demux": "demuxmap\n", "$bmux": "bmuxmap\n"}.get(cell.ytype, "")
-            # Forked type workers have separate caches but share these paths.
-            # Keep the same input inode and lock it before truncating it or
-            # updating any of the helper's Yosys inputs, outputs and logs.
-            with inp.open("a") as input_file:
-                fcntl.flock(input_file, fcntl.LOCK_EX)
-                input_file.truncate(0)
-                input_file.write(json.dumps(data))
-                input_file.flush()
-                ys.write_text(f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n')
-                try:
-                    E.run_yosys(ys, self.directory / (module + ".log"),
-                                [self.directory], mem_gb=2)
-                except E.ElabError as exc:
-                    raise NativeGlueError(str(exc)) from exc
-                merged = []
-                if cell.ytype == "$mem_v2":
-                    # write_verilog expands every per-bit write enable into its own statement (S81 svc hi: 4096 $memwr on one
-                    # 256 x 40 memory); register-ise such arrays before Yosys's superlinear memory passes (exact, see native_mem2reg)
-                    text, marked = mark_mem2reg(sv.read_text())
-                    # S81-SVC-SYNTH 11-15: the same per-bit statements stall canonicalize (PROC_PRUNE/PROC_DFF, hours) even as
-                    # registers; merge each run of one port into chunk-wide read-modify-write statements (exact, see native_memwr_merge).
-                    # mem2reg is decided on the per-bit count BEFORE the merge: a 262144-bit memory left as $mem fails ORFS
-                    # SYNTH_MEMORY_MAX_BITS (svc_hi t3, 37 min into 1_2_yosys), the register form is what the kits have always had.
-                    if os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0":
-                        text, merged = merge_memwr(text)
-                        if merged:
-                            (self.directory / (module + ".memwr_merge.txt")).write_text(
-                                "".join(f"{m} {b} -> {a}\n" for m, b, a in merged))
-                    if marked or merged:
-                        sv.write_text(text)
-            self.cache[key] = module
-            self.files.append(sv)
+            if self._pending is not None:
+                self._pending[module] = cell.ytype, data
+            else:
+                # Keep the original input inode locked across generation and memory postprocessing.
+                with inp.open("a") as input_file:
+                    fcntl.flock(input_file, fcntl.LOCK_EX)
+                    self._write_input(input_file, json.dumps(data))
+                    ys.write_text(self._script(inp, sv, cell.ytype))
+                    try:
+                        E.run_yosys(ys, self.directory / (module + ".log"),
+                                    [self.directory], mem_gb=2)
+                    except E.ElabError as exc:
+                        raise NativeGlueError(str(exc)) from exc
+                    self._postprocess(sv, cell.ytype)
+                self.cache[key] = module
+                self.files.append(sv)
         actual = [f".{p}({connections[p]})" for p, width in widths.items() if width and p in exposed]
         return f"    {module} {instance} (" + ", ".join(actual) + ");"
