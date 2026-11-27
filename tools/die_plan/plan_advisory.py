@@ -113,6 +113,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    col_h10_r2 rst_n_t30 950 um); budgeted solve, never reports unchecked types as clean (adv_pub_stale.py)
   FENCE-GEOM       (C-FENCE-GEOM-ILLEGAL 11-27) zero-area / sub-row / sub-site / singleton / off-grid fence + region shapes in plan logic_cluster_rects_um,
                    rck_island and the kit tree logic_cluster.tcl / region_guide.tsv (adv_fence_geom.py; report-only)
+  PARAM-NOT-IN-RTL (P-PLAN-AHEAD-OF-RTL 11-27) a partition_types[T].leaf_params parameter the bound leaf RTL / as-built netlist / param_regen.declare does not
+                   declare (S81 WREG row d44304a8a2c5: 6 types PARAM_REGEN in a 35 min whole bind); adv_param_not_in_rtl.py
   PHASE-BIND       (DIECLOCK-PHASE-BIND-CHECK, C-DIECLOCK-PHASE-BIND 11-26) plan reset_entry_phase / strap_rst_ph / START edge_fall
                    vs the choices phase_bind.py derived from a die STA on the ROUTED die clock (<plan dir>/phase_bind.json or
                    $OT_PHASE_BIND); NO-BIND when a phase-using plan has none (HEAD W10: 33/358 entry phases below 60 ps)
@@ -146,7 +148,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
           ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
-          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("RESERVED-POCKET", "reserved_pocket"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"), ("FENCE-GEOM", "adv_fence_geom"))
+          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("RESERVED-POCKET", "reserved_pocket"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"), ("FENCE-GEOM", "adv_fence_geom"), ("PARAM-NOT-IN-RTL", "adv_param_not_in_rtl"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
