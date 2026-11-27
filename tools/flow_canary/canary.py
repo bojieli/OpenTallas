@@ -258,7 +258,7 @@ def chk_signoff(so, golden, tol):
 def configured_clock_ports(sdc):
     """Only literal ports named by create_clock are additional clock inputs, never arbitrary skip regexes."""
     out = set()
-    text = sdc.replace("\\\n", " ")
+    text = sdc.replace("\\n", " ")
     for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(?:\{([^}]+)\}|([A-Za-z_][A-Za-z0-9_$]*(?:\[\d+\])?))\]", text):
         for word in (m.group(1) or m.group(2)).split():
             # a literal vector bit (clk[0]) names its bus; a wildcard / range never does
@@ -662,6 +662,7 @@ echo "CANARY_START $(date '+%F %T %Z') host=$(hostname)"
 echo "CANARY_GEN rc=$G"
 if [ $G != 0 ] || [ ! -d $K ]; then echo "CANARY_GEN FAIL (see $R/gen.log)"; tail -n 20 $R/gen.log
   python3 -I $R/canary.py check --run $R; exit 3; fi
+{capture_placement_inputs}
 python3 -I $R/canary.py lint --kit $K --top {top} --image {image} --out $R/lint.json
 touch $R/GENERATED
 """
@@ -795,10 +796,13 @@ def cmd_submit(a):
         if worker:
             meta.update(placement_host=worker, worker_runtime_sha=runtime_sha)
         (run / meta_name).write_text(json.dumps(meta, indent=1) + "\n")
+        harness = run / "harness"
+        input_script = [sys.executable, "-I", str(harness / "placement_inputs.py")]
+        capture_inputs = shlex.join([*input_script, "capture", str(run)]) + " || true" if locality else ""
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
                          prep="\n".join(fmt(c.get("prep", []), **kv)), gen_cwd=fmt(c.get("gen_cwd", "{src}"), **kv),
-                         genenv=genenv, gen=fmt(c["gen"], **kv))
+                         genenv=genenv, gen=fmt(c["gen"], **kv), capture_placement_inputs=capture_inputs)
         (run / "job.sh").write_text(job)
         # Generation may read git-pinned recipe files and input snapshots on the hub.
         # Once generated, the expensive physical run needs only its self-contained gen/
@@ -807,7 +811,6 @@ def cmd_submit(a):
         # CANARY-SPILL-1122 (COORD 21:0x/22:0x): a spilled gen job's copy-back can leave run/gen root-owned; the harness then failed to write
         # route_canary.sh / canary.py / runtime_source into it (Permission denied) and the route job ran 'No such file' (exit 127) on 3 dies.
         # Harness files live in run/harness (written by this user, staged with the route job), never inside gen/.
-        harness = run / "harness"
         runtime_src = harness / "runtime_source"
         runtime_kv = dict(kv, src=str(runtime_src))
         route = fmt(c["run"], **runtime_kv)
@@ -844,11 +847,17 @@ def cmd_submit(a):
             (harness / "route_canary.sh").write_text(route_script)
             (harness / "canary.py").write_bytes((run / "canary.py").read_bytes())
             place = shlex.join(["bash", str(runner), kit, "place", str(kv["mem"]), str(kv["cpus"])])
-            render = shlex.join(cmd_prefix + ["render", "--kit", kit, "--out", str(review.receipt_path(run).parent),
+            render = cmd_prefix + ["render", "--kit", kit, "--out", str(review.receipt_path(run).parent),
                 "--tools", str(tools), "--die", die, "--item", c["item"], "--src-commit", sha,
-                "--host", os.environ.get("OT_HUB_NAME", "intel2"), "--image", a.image])
-            (harness / "place.sh").write_text(f"#!/bin/bash\n{place}\nrc=$?\necho CANARY_PLACE_RC $rc\n"
-                                               f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{render}\n")
+                "--host", os.environ.get("OT_HUB_NAME", "intel2"), "--image", a.image]
+            reuse = ""
+            if locality:
+                (harness / "placement_inputs.py").write_bytes((HERE / "placement_inputs.py").read_bytes())
+                render += ["--input-certificate", str(harness / "placement-inputs.json")]
+                proposal = shlex.join([*input_script, "propose", str(run)])
+                reuse = f"if {proposal}; then echo CANARY_PLACEMENT_REUSE_PROPOSED; exit 0; fi\n"
+            (harness / "place.sh").write_text(f"#!/bin/bash\n{reuse}{place}\nrc=$?\necho CANARY_PLACE_RC $rc\n"
+                                               f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{shlex.join(render)}\n")
             if not a.dry:
                 (run / ".keep").write_text(review.keep_text(run))
         (run / "route.sh").write_text(route_script)
