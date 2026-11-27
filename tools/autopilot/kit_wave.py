@@ -9875,6 +9875,9 @@ def private_prov_views(cfg, die, item, hub, sp, kind="type", plan_view=None):
     return prov_spec(AP, d, die, item, hub)
 
 
+from private_rt_default import event_rt, uses_tree_tools, tree_tools_refusal    # P-RUNTIME-MANIFEST 11-27
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
                  host=None, bind_out=None, src_manifest=None, rt=None, goal=None, probe=None, rt_root=None, fork_of=None, plan_view=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
@@ -9953,6 +9956,16 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
                 sp["gen_pins"] = u["gen_pins"]
             else:
                 sp.pop("gen_pins", None)
+    if not rt_pick and uses_tree_tools(sp):             # P-RUNTIME-MANIFEST 11-27: no --rt and no bind stamp rt -> the event's rt, never silently the tree's tools
+        _ert = event_rt(cfg, die)
+        if _ert:
+            try:
+                sp.update(private_rt_fields(_ert, rt_root=rt_root))
+                rt_decl = {"sha": sp["tools_sha"], "rt": sp["tools_rt"], "wave_tools_rt": "", "wave_tools_sha": "",
+                           "wave_gen_tools_manifest_sha": "", "from": f"event config tools_sha {_ert[:12]} (private-spec default)"}
+                sp.pop("gen_pins", None)
+            except ValueError as _e:
+                sp["private_rt_default_unavailable"] = str(_e)[:300]
     if rt_pick:
         sp.pop("gen_pins", None)                         # an explicit --rt / the bind's whole rt: no overlay
         _cp = ((ti or {}).get("update") or {}).get("_rt_carry") if not rt else None
@@ -10623,6 +10636,10 @@ def private_spec_cmd(a):
         except ValueError as exc:
             print(f"private-spec: {exc}", file=sys.stderr)
             return 2
+    _ttr = tree_tools_refusal(sp, sp.get("plan"), getattr(a, "rt_floor_exempt", "") or "")     # P-RUNTIME-MANIFEST 11-27
+    if _ttr:
+        print(_ttr, file=sys.stderr)
+        return 2
     import rt_floor as RTF                                # FABLE-FLOW-0230 T1: a NEW private launch on an rt below kit_wave.json min_rt is refused
     _fl = RTF.check(sp.get("tools_sha") or "", cfg, exempt=getattr(a, "rt_floor_exempt", "") or "", what=f"private-spec {a.die}/{a.item}")
     sp.setdefault("private", {})["rt_floor"] = _fl
