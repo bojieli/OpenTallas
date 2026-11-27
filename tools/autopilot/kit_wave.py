@@ -11212,19 +11212,37 @@ def placed_geom_check(sp, odb, outline, goal=None):
 
 
 
-def event_wave_stages(sp, directory, command, extra_inputs=()):
-    """Declare the driver inputs named by an opted-in wave stage."""
+def event_wave_stages(sp, directory, command, extra_inputs=(), *, private_scope=False):
+    """Declare known inputs named by the wave-stage command."""
     src = sp["src"]
     runtime = sp.get("tools_rt")
     runtime_inputs = [runtime, rt_mirror_path(src, runtime), sp_launch_path(sp)] if runtime else []
     kit_rtl = {key: value for key, value in (sp.get("kit_rtl") or {}).items() if not key.startswith("note")}
-    paths = abs_paths([src, os.path.dirname(sp.get("plan") or ""), sp.get("root"), runtime_inputs,
+    roots = [sp.get("root")]
+    if private_scope:
+        # Do not declare the whole wave event merely because it is an ancestor of this job's work path.
+        pin_rt = (sp.get("gen_pins") or {}).get("rt")
+        if pin_rt:
+            runtime_inputs.extend((pin_rt, rt_mirror_path(src, pin_rt)))
+        roots = [f"{sp['root']}/bind" if sp.get("root") else None, f"{sp['work']}/gen/run_kit.sh"]
+    paths = abs_paths([src, os.path.dirname(sp.get("plan") or ""), roots, runtime_inputs,
                        kit_rtl, sp.get("gen_args"), sp.get("gen_env"), sp.get("preflight_args"), extra_inputs])
     declared = []
     for path in dict.fromkeys(path.rstrip("/") for path in paths):
         if path and path in command and not any(path == root or path.startswith(root + "/") for root in [directory, *declared]):
             declared.append(path)
     return [arg for path in declared for arg in ("--stage", path)]
+
+
+def wave_stage_args(sp, directory, command, extra_inputs, *, event_env, source_seal):
+    """Supply stock stage declarations for an event or a verified private partition."""
+    sealed_private = (sp.get("private") and sp.get("kind") == "type"
+                      and PPV.sha256((source_seal or {}).get("manifest_hash")))
+    if not event_env and not sealed_private:
+        return []
+    paths = event_wave_stages(sp, directory, command, extra_inputs, private_scope=not event_env)
+    # Snapshot stages need a verified holder. Preserve the stage's existing host scope.
+    return paths + ["--no-spill"] if paths else []
 
 
 def run_item(spec_path, resume_reviewed=False):
@@ -11434,6 +11452,7 @@ def _run_item(spec_path, resume_reviewed=False):
         return write_env_provenance(K, b64, remote, run, T)
 
     _drc = {}
+    _seal = {}
 
     def stage_drain(fresh=False):
         """FLOW-OPS-0900 fix 4: draining hosts now (ot-run status + the spec's host_caps + fleet caps).  FLOW-OPS-1300 (FABLE-FLOW-1240 d): was read ONCE per run, so a
@@ -11467,11 +11486,8 @@ def _run_item(spec_path, resume_reviewed=False):
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         command = rt_tree_cmd(sp) + cmd
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)]
-        if os.environ.get("OT_RUN_EVENT_ENV"):
-            stages = event_wave_stages(sp, d, command, extra_inputs)
-            if stages:
-                # Stage declarations identify existing holders. Roaming still uses verified snapshots.
-                argv += stages + ["--no-spill"]
+        argv += wave_stage_args(sp, d, command, extra_inputs, event_env=os.environ.get("OT_RUN_EVENT_ENV"),
+                                source_seal=_seal)
         argv += heavy_args(sp, stage_disk_gb=stage_disk_gb) + ["--", "bash", "-c", command]
         if roam and d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
             return ROAM.RoamArgv(argv)
@@ -11906,7 +11922,6 @@ def _run_item(spec_path, resume_reviewed=False):
         rc, txt = run("mkdir", idempotent=True, argv=remote(mkdir))
         if rc:
             return fail("mkdir", txt)
-    _seal = {}
     _smc = src_manifest_cmd(sp)                          # SRC-TREE-1115: refuse a src tree that drifted from its manifest, before any gen
     if _smc:
         _mrc, _mtxt = run("src_manifest", remote(_smc), idempotent=True)
@@ -13028,6 +13043,8 @@ def resume_prepare(sp, K, prun, run, remote, res):
     for h, path in rf.get("candidates") or []:
         cut = f" --cutoff {float(rf['gen_end'])}" if rf.get("gen_end") else ""
         saved = private_resume_saved_manifest(rf["attempt_dir"], path) if latest_start else None
+        if saved and not KR.saved_stage_semantics_usable(new, saved):
+            saved = None
         if saved:
             extras = " --run-files" if h != G else ""
             cmd = kr_cmd(f"checkpoint {q(path)}{extras}")

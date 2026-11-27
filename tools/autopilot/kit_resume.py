@@ -259,6 +259,19 @@ def _names(rel):
     return out
 
 
+FLOW_REFRESH_LOG = "flow_refresh.jsonl"
+
+
+def flow_refresh_audit_only(text):
+    """A normal refresh audit changes no stage inputs itself; runner overrides can."""
+    try:
+        rows = [json.loads(line) for line in text.splitlines() if line.strip()]
+    except (ValueError, AttributeError):
+        return False
+    return bool(rows) and all(isinstance(row, dict) and row.get("stage") and isinstance(row.get("replaced"), list)
+                              and not row.get("runner_override") and not row.get("partial") for row in rows)
+
+
 def classify(texts, files, config):
     """{rel: step | GATE} -- the earliest make step that reads each kit input file.
 
@@ -271,7 +284,7 @@ def classify(texts, files, config):
     for rel in files:
         if rel in RUNNER_ROOTS:
             stage[rel] = RUNNER_ROOTS[rel]
-        elif is_gate_root(rel):
+        elif is_gate_root(rel) or (rel == FLOW_REFRESH_LOG and flow_refresh_audit_only(texts.get(rel, ""))):
             stage[rel] = GATE
     for var, val in config.items():
         vs = VAR_STAGE.get(var, "synth")
@@ -295,6 +308,8 @@ def classify(texts, files, config):
         if by_name else None
     named = {}                                          # src -> {rel named in its text}
     for src, txt in texts.items():
+        if src == FLOW_REFRESH_LOG:
+            continue  # the audit names observed kit files; it does not consume them
         # QC-HC-KWRS 11-08: full-line Tcl comments describe other stages (e.g. face_keep's reset_taps note).
         # They are not reads. Keep executable lines, inline comments and unknown files conservative.
         if src.endswith(".tcl"):
@@ -467,6 +482,24 @@ def image_info(image):
     return {"image": image, "id": None, "created": None}
 
 
+def sender_budget_fingerprints(text):
+    """Keep the exact parent release identity separate from physical inputs."""
+    try:
+        budget = json.loads(text)
+    except ValueError:
+        return {}
+    if not isinstance(budget, dict) or budget.get("schema") != "opentallas.die_plan.partition_budget.v1":
+        return {}
+    hold = budget.get("io_hold")
+    if not isinstance(hold, dict) or hold.get("mode") != "sender_min" or hold.get("requires_parent") is not True:
+        return {}
+    plan = hold.get("plan_sha256")
+    if not isinstance(plan, str) or re.fullmatch(r"[0-9a-f]{64}", plan) is None:
+        return {}
+    del hold["plan_sha256"]
+    return {"physical_sha256": H(budget), "parent_plan_sha256": plan}
+
+
 def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_checkpoint=True):
     """everything decide() needs about one kit, computed on its host"""
     K = os.path.abspath(K)
@@ -502,6 +535,8 @@ def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_
                     "sha256": hashlib.sha256(runner_norm(rtext).encode()).hexdigest() if rtext else None,
                     "resume_capable": MARKER in rtext},
          "image": image_info(image)}
+    if "budget.json" in m["files"]:
+        m["files"]["budget.json"].update(sender_budget_fingerprints(texts.get("budget.json", "")))
     m["fingerprints"] = fingerprints(m)
     if with_checkpoint:
         m["checkpoint"] = checkpoint(K)
@@ -516,7 +551,9 @@ def fingerprints(m):
     for rel, f in m["files"].items():
         if rel == "config.mk":
             continue                                    # its variables are items of their own steps
-        items[f["stage"]].append(["file", rel, f["sha256"]])
+        items[f["stage"]].append(["file", rel, f.get("physical_sha256", f["sha256"])])
+        if "parent_plan_sha256" in f:
+            items[GATE].append(["parent-plan", rel, f["parent_plan_sha256"]])
     for k, v in m["config"].items():
         items[v["stage"]].append(["var", k, v["value"]])
     items["synth"] += [["runner", m["runner"]["sha256"]], ["image", (m.get("image") or {}).get("id")]]
@@ -535,6 +572,19 @@ def write_inputs(K):
 
 
 # ------------------------------------------------------------------------------------------------ hub side (pure)
+def saved_stage_semantics_usable(new, saved):
+    """Older cached manifests need normal inspection only for changed, newly modeled inputs."""
+    for rel in ("budget.json", FLOW_REFRESH_LOG):
+        a, b = new["files"].get(rel), saved["files"].get(rel)
+        if not a or not b or a["sha256"] == b["sha256"]:
+            continue
+        if a.get("physical_sha256") and not b.get("physical_sha256"):
+            return False
+        if rel == FLOW_REFRESH_LOG and a["stage"] == GATE and b["stage"] != GATE:
+            return False
+    return True
+
+
 def changed_items(new, old):
     """[(category, kind, name)] of every input that differs between the two kit manifests"""
     out = []
@@ -543,6 +593,9 @@ def changed_items(new, old):
             continue                                    # compared per variable below
         a, b = new["files"].get(rel), old["files"].get(rel)
         if a and b and a["sha256"] == b["sha256"] and a["sha256"] is not None:
+            continue
+        if a and b and a.get("physical_sha256") and a["physical_sha256"] == b.get("physical_sha256"):
+            out.append((GATE, "file", rel))
             continue
         out.append((minstage(a and a["stage"], b and b["stage"]), "file", rel))
     for k in sorted(set(new["config"]) | set(old["config"])):

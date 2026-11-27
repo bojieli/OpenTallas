@@ -89,7 +89,11 @@ def test_run_kit_calls_it_first_and_honours_the_opt_out():
     import gen_phys
     t = gen_phys.RUN_KIT
     i = t.index("AUTO-RESUME block")
-    assert i < t.index("RESYNTH-GUARD block") and "OT_RESUME:-1}\" != 0" in t[i:i + 900] and ".no_auto_resume" in t[i:i + 900] and 'kit_resume.py" auto "$K" "$GOAL"' in t[i:i + 900]
+    j = t.index("RESYNTH-GUARD block", i)
+    block = t[i:j]
+    assert "OT_RESUME:-1}\" != 0" in block
+    assert ".no_auto_resume" in block
+    assert 'kit_resume.py" auto "$K" "$GOAL"' in block
     assert 'shutil.copyfile(Path(__file__).resolve().parents[1] / "autopilot" / "kit_resume.py", kd / "kit_resume.py")' in (Path(gen_phys.__file__)).read_text()
 
 
