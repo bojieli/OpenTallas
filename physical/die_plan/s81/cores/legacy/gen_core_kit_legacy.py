@@ -2512,6 +2512,9 @@ def main():
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
                       gpl_hook=kd / "face_flops.tcl",
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
+    if rec.get("place_regions"):
+        from gen_phys import install_place_regions
+        cfg.extend(install_place_regions(kd, rec["place_regions"]))
     if modern:
         stage_core_pg(kd, cfg)
     planned_tree_cts(kd, cfg)
