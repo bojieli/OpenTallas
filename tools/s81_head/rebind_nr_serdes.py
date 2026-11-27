@@ -114,11 +114,43 @@ def check_changed_binding(old_parts, new_parts, new_receipt, new_digest, receipt
     return ["partitions[%s].%s" % (n, k) for n, k, _a, _b in leaves]
 
 
+def rerun_bench_evidence(old_plan, new_plan, tools):
+    """re-run entry_phase_bench from the two plans (iverilog + the real ot_dp_rrelay_ph) into a scratch dir -> the evidence dict it produces.
+    The receipt's own evidence is never trusted on its own: its rows / cases / verdict must equal this re-run."""
+    import importlib.util
+    import tempfile
+    spec = importlib.util.spec_from_file_location("entry_phase_bench", Path(__file__).resolve().parent / "entry_phase_bench.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    with tempfile.TemporaryDirectory() as d:
+        rc = mod.main(old_plan, new_plan, d, tools)
+        ev = json.loads((Path(d) / "entry_phase_evidence.json").read_text())
+    if rc != 0 or ev.get("verdict") != "PASS":
+        raise ValueError("HEAD native reset instance bindings changed: the re-run entry-phase bench does not pass")
+    return ev
+
+
+def check_rerun(receipt_ev, rerun_ev):
+    """the receipt evidence must equal the guard's own bench re-run on rows, simulated cases and cell hash (log text and paths are not compared)"""
+    def case_key(c):
+        return (c.get("partition"), c.get("version"), c.get("h"), c.get("strap"), c.get("release_delta"), c.get("expect_cycles"), c.get("sim_cycles"))
+    same = (receipt_ev.get("rows") == rerun_ev.get("rows")
+            and sorted(map(case_key, receipt_ev.get("cases") or [])) == sorted(map(case_key, rerun_ev.get("cases") or []))
+            and receipt_ev.get("cell_sha256") == rerun_ev.get("cell_sha256") and receipt_ev.get("plan_digest") == rerun_ev.get("plan_digest"))
+    if not same or not rerun_ev.get("cases"):
+        raise ValueError("HEAD native reset instance bindings changed: receipt evidence differs from the guard's own bench re-run")
+
+
 def check_release_consistency(old_wf, new_wf, old_parts, new_parts, release_delta):
     """CONSUMER CHECK (reset_tree.wf_plan): for every hd_serdes partition whose reset_entry_phase changed, the published wavefront release must move by exactly
     release_delta(new h) - release_delta(old h); every other partition's release and entry_stages must be unchanged.  -> {partition: [old, new]} of the moved
     releases; ValueError otherwise.  (HEAD-PROBE-R3 11-27: lk_WN1 76 -> 77; the lane table and LATCHECK do not observe reset release, wf_plan does.)"""
     op, np_ = old_wf.get("parts") or {}, new_wf.get("parts") or {}
+    if not op or not np_:
+        raise ValueError("release consistency: wf_plan has no parts")
+    for name in set(old_parts) | set(new_parts):
+        if name not in op or name not in np_:
+            raise ValueError("release consistency: hd_serdes partition %s is not in wf_plan parts" % name)
     moved = {}
     for name in sorted(set(op) | set(np_)):
         a, b = op.get(name), np_.get(name)
@@ -197,6 +229,7 @@ def main():
         cell_sha = hashlib.sha256(pin_entry_phase.CELL_RTL.encode()).hexdigest()
         diff = check_changed_binding(serdes_parts(old), serdes_parts(new), nr, head_native_release.digest(new),
                                      args.new_receipt.parent if args.new_receipt else None, cell_sha)
+        check_rerun(json.loads((args.new_receipt.parent / nr["proof"]["entry_phase_evidence"]).read_text()), rerun_bench_evidence(args.old_plan, args.new_plan, args.tools))
         old_plan = schema.Plan(old, args.old_plan)
         head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)     # anchor the old side as the old path does
         new_plan0 = schema.Plan(new, args.new_plan)
@@ -214,15 +247,20 @@ def main():
             else:
                 files[os.path.relpath(src, args.out.resolve())] = fsha
         nr["files"] = files
+        nr["limits"] = list(nr.get("limits") or []) + ["entry-phase seam timing, whole-cycle label, START entry and strap tie: PENDING die STA on this plan digest"]
+        candidate = args.out / "candidate_receipt.json"
+        candidate.write_text(json.dumps(nr, indent=1) + "\n")
         accepted = args.out / "native_release_receipt.json"
-        accepted.write_text(json.dumps(nr, indent=1) + "\n")
         new_plan = schema.Plan(new, args.new_plan)
-        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), accepted)       # re-qualify the artifact actually written
+        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), candidate)      # re-qualify the artifact actually written, then publish it
+        candidate.replace(accepted)
         cover = dict(old_plan_sha256=hexdigest(args.old_plan), new_plan_sha256=hexdigest(args.new_plan), old_receipt_sha256=hexdigest(args.old_receipt),
-                     new_receipt_sha256=hexdigest(args.new_receipt), covered=diff, wf_plan_release_moved=moved)
+                     new_receipt_sha256=hexdigest(args.new_receipt), covered=diff, wf_plan_release_moved=moved,
+                     pending="PENDING die STA on the new plan digest: seam setup/hold at the new capture edge, whole-cycle label, START entry, strap tie in the generated top")
         (args.out / "changed_binding_cover.json").write_text(json.dumps(cover, indent=1) + "\n")
         print("CHANGED_BINDING_COVERED", len(diff), "paths", diff[:8])
         print("WF_PLAN_RELEASE_MOVED", moved)
+        print("PENDING_DIE_STA entry-phase seam timing and whole-cycle label are not proven by this receipt")
         print("NATIVE_RELEASE", result["release_qualification"]["verdict"], len(result["release_qualification"]["native_targets"]), "targets", accepted)
         print("ORIGINAL_PROOF", args.old_receipt, hexdigest(args.old_receipt))
         print("PLAN", args.new_plan, hexdigest(args.new_plan))

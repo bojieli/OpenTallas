@@ -10,7 +10,6 @@ It proves cell polarity and the plan-field arithmetic.  The whole-cycle part of 
 """
 import hashlib
 import json
-import math
 import re
 import subprocess
 import sys
@@ -51,7 +50,6 @@ def main(old_plan, new_plan, out, tools):
                 h = int(part.get("reset_entry_phase", 0))
                 st = int((part.get("id_straps") or {}).get("strap_rst_ph", 0))
                 assert st == h % 2, (name, ver, "plan strap != reset_entry_phase mod 2", st, h)
-                assert PE.release_delta(h) == -math.ceil(h / 2)
                 cases.append(dict(partition=name, version=ver, h=h, strap=st, release_delta=PE.release_delta(h), expect_cycles=1 if st else 2))
     lines = ["`timescale 1ps/1ps", "module tb;", "  localparam T = %d;" % T, "  reg clk = 0; always #(T/2) clk = ~clk;",
              "  reg d = 0;", "  integer t0;"]

@@ -23,9 +23,13 @@ def main():
     ap.add_argument('--plan', required=True)
     ap.add_argument('--proof-dir', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--root', default=None, help='repository tree whose production sources are hashed (default: this script\'s tree)')
     ap.add_argument('--evidence', action='append', default=[], help='bench / log file copied into the receipt directory and hashed in files')
     ap.add_argument('--entry-phase-evidence', default=None, help='file name (one of --evidence) of the entry_phase_evidence.json recorded in proof.entry_phase_evidence')
     a = ap.parse_args()
+    global ROOT
+    if a.root:
+        ROOT = Path(a.root).resolve()
     plan = Path(a.plan)
     raw = json.loads(gzip.decompress(plan.read_bytes())) if plan.suffix == '.gz' else S.load(plan)
     P = S.Plan(raw, Path(a.plan))

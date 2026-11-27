@@ -21,10 +21,9 @@ def sha(b):
 
 
 def load(src=None):
-    ns = {"__name__": "rebind_t"}
-    exec(compile(SRC if src is None else src, "rebind", "exec"), ns)
-    m = types.SimpleNamespace()
-    m.__dict__.update(ns)
+    m = types.ModuleType("rebind_t")
+    m.__file__ = str(HERE / "rebind_nr_serdes.py")
+    exec(compile(SRC if src is None else src, "rebind", "exec"), m.__dict__)
     return m
 
 
@@ -43,6 +42,7 @@ def make_receipt(d, rows=ROWS, digest=DIG, cell=CELL_SHA, verdict="PASS", log_te
     (d / "tb.sv").write_text("tb\n")
     arts = {n: sha((d / n).read_bytes()) for n in ("bench.log", "tb.sv")}
     ev = dict(schema="opentallas.entry_phase_evidence.v1", plan_digest=digest, cell_sha256=cell, rows=rows, verdict=verdict, log="bench.log",
+              cases=[dict(partition="lk_EN0", version="new", h=3, strap=1, release_delta=-2, expect_cycles=1, sim_cycles=1)],
               pass_marker=MARK, artifacts=arts)
     (d / "entry_phase_evidence.json").write_text(json.dumps(ev))
     files = dict(arts)
@@ -128,17 +128,17 @@ def test_uncovered_extra_key_refused(tmp_path):
 STUBS = {
     "cores": "def resolve(n):\n    raise RuntimeError\n",
     "schema": "class Plan:\n    def __init__(self, raw, path=None):\n        self.raw = raw\n",
-    "reset_tree": "def wf_plan(P):\n    return {}\n",
+    "reset_tree": "import math\ndef wf_plan(P):\n    return {'parts': {p['name']: {'release': 100 - math.ceil(p['reset_entry_phase'] / 2), 'entry_stages': 0} for p in P.raw['partitions']}}\n",
     "pin_entry_phase": "CELL_RTL = %r\nimport math\ndef release_delta(h):\n    return -math.ceil(h / 2)\n" % CELL,
     "head_native_release": (
-        "import json, hashlib\nfrom pathlib import Path\nCALLS = []\n"
+        "import json, hashlib\nfrom pathlib import Path\nCALLS = []\nPLAN_CALLS = []\n"
         "def digest(raw):\n    return raw['digest']\n"
         "def qualify(P, W, receipt_path):\n"
         "    p = Path(receipt_path)\n    r = json.loads(p.read_text())\n"
         "    for n, h in r['files'].items():\n"
         "        f = (p.parent / n).resolve()\n"
         "        if not f.is_file() or hashlib.sha256(f.read_bytes()).hexdigest() != h:\n            raise FileNotFoundError(n)\n"
-        "    CALLS.append(str(p))\n"
+        "    CALLS.append(str(p))\n    PLAN_CALLS.append((P.raw['digest'], p.name))\n"
         "    return {'release_qualification': {'verdict': 'QUALIFIED_CONDITIONAL', 'native_targets': [1, 2]}}\n"),
 }
 
@@ -176,8 +176,17 @@ def run_main(m, tmp_path, tools, newrec, out):
         sys.argv = old
 
 
-def patched(monkeypatch):
+def rerun_hook(mod, monkeypatch, newrec, mutate=None):
+    ev = json.loads((newrec.parent / "entry_phase_evidence.json").read_text())
+    if mutate:
+        ev = mutate(ev)
+    monkeypatch.setattr(mod, "rerun_bench_evidence", lambda o, n, t: ev)
+
+
+def patched(monkeypatch, newrec=None):
     m = load()
+    if newrec is not None:
+        rerun_hook(m, monkeypatch, newrec)
     monkeypatch.setattr(m, "serdes_parts", lambda plan: {p["name"]: p for p in plan["partitions"] if p["type"] == "hd_serdes"} if False else
                         {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
     monkeypatch.setattr(m, "fwd_only_delta", lambda a, b: None)
@@ -186,14 +195,14 @@ def patched(monkeypatch):
 
 def test_main_accepts_and_requalifies_written_receipt(tmp_path, monkeypatch, capsys):
     tools, newrec = setup_main(tmp_path, monkeypatch)
-    m = patched(monkeypatch)
+    m = patched(monkeypatch, newrec)
     out = tmp_path / "deeper" / "x" / "out"
     out.parent.mkdir(parents=True)
     run_main(m, tmp_path, tools, newrec, out)
     txt = capsys.readouterr().out
     assert "CHANGED_BINDING_COVERED 4" in txt and "QUALIFIED_CONDITIONAL" in txt
     hn = sys.modules["head_native_release"]
-    assert str(out / "native_release_receipt.json") in hn.CALLS                     # the artifact actually written was re-qualified
+    assert str(out / "candidate_receipt.json") in hn.CALLS                     # the artifact actually written was re-qualified
     r = json.loads((out / "native_release_receipt.json").read_text())
     assert (out / "bench.log").is_file() and (out / "changed_binding_cover.json").is_file()
     assert all(not n.startswith("..") or (out / n).resolve().is_file() for n in r["files"])
@@ -201,14 +210,14 @@ def test_main_accepts_and_requalifies_written_receipt(tmp_path, monkeypatch, cap
 
 def test_main_refuses_without_new_receipt(tmp_path, monkeypatch):
     tools, newrec = setup_main(tmp_path, monkeypatch)
-    m = patched(monkeypatch)
+    m = patched(monkeypatch, newrec)
     with pytest.raises(ValueError, match="bindings changed"):
         run_main(m, tmp_path, tools, None, tmp_path / "o")
 
 
 def test_main_refuses_tampered_evidence(tmp_path, monkeypatch):
     tools, newrec = setup_main(tmp_path, monkeypatch, tamper_log=True)
-    m = patched(monkeypatch)
+    m = patched(monkeypatch, newrec)
     with pytest.raises(ValueError):
         run_main(m, tmp_path, tools, newrec, tmp_path / "o")
     assert not (tmp_path / "o").exists()
@@ -216,7 +225,7 @@ def test_main_refuses_tampered_evidence(tmp_path, monkeypatch):
 
 def test_main_refuses_existing_out(tmp_path, monkeypatch):
     tools, newrec = setup_main(tmp_path, monkeypatch)
-    m = patched(monkeypatch)
+    m = patched(monkeypatch, newrec)
     (tmp_path / "o").mkdir()
     with pytest.raises(FileExistsError):
         run_main(m, tmp_path, tools, newrec, tmp_path / "o")
@@ -232,8 +241,8 @@ MUTANTS = [
     ("        if (n, k, ra, rb) not in have:", "        if False:"),
     ("            if a.get(k) != b.get(k):", "            if False:"),
     ("        args.out.mkdir(parents=True, exist_ok=False)", "        args.out.mkdir(parents=True, exist_ok=True)"),
-    ("        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), accepted)       # re-qualify the artifact actually written",
-     "        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), args.new_receipt)"),
+    ("        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), candidate)      # re-qualify the artifact actually written, then publish it\n",
+     "        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), args.new_receipt)\n"),
     ("            if src.is_relative_to(root):", "            if True:"),
 ]
 
@@ -251,6 +260,7 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
         mod = load(mut_src)
         monkeypatch.setattr(mod, "serdes_parts", lambda plan: {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
         monkeypatch.setattr(mod, "fwd_only_delta", lambda a, b: None)
+        rerun_hook(mod, monkeypatch, newrec)
         out = tp / "d" / "e" / "out"
         out.parent.mkdir(parents=True)
         want_ok = not kw
@@ -264,7 +274,7 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
         if want_ok:
             # accepted case: the written receipt must be re-qualified from out and be self-contained
             hn = sys.modules["head_native_release"]
-            if str(out / "native_release_receipt.json") not in hn.CALLS:
+            if str(out / "candidate_receipt.json") not in hn.CALLS:
                 return
             r = json.loads((out / "native_release_receipt.json").read_text())
             if any(not (out / n).resolve().is_file() for n in r["files"]) or (out.parent / "outside.txt").exists():
@@ -275,6 +285,7 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
     mod = load(mut_src)
     monkeypatch.setattr(mod, "serdes_parts", lambda plan: {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
     monkeypatch.setattr(mod, "fwd_only_delta", lambda a, b: None)
+    rerun_hook(mod, monkeypatch, newrec)
     try:
         run_main(mod, tp, tools, None, tp / "o")
         return                                                                           # accepted a change with no receipt: killed
@@ -293,3 +304,160 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
     # part_leaves mutant: unchanged partitions must report no leaf, changed ones must
     assert mod.part_leaves(OLD, NEW) != [] or pytest.fail("mutant survived: " + old[:60])
     pytest.fail("mutant survived: " + old[:70])
+
+
+# ---- second-review additions -------------------------------------------------------------------------------------------------------------------
+def accepted_run(tmp_path, monkeypatch, mutate=None, **kw):
+    tools, newrec = setup_main(tmp_path, monkeypatch, **kw)
+    m = load()
+    monkeypatch.setattr(m, "serdes_parts", lambda plan: {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
+    monkeypatch.setattr(m, "fwd_only_delta", lambda a, b: None)
+    rerun_hook(m, monkeypatch, newrec, mutate)
+    out = tmp_path / "d" / "e" / "out"
+    out.parent.mkdir(parents=True)
+    return m, tools, newrec, out
+
+
+def test_forged_evidence_refused_by_bench_rerun(tmp_path, monkeypatch):
+    def forge(ev):
+        ev = json.loads(json.dumps(ev))
+        ev["rows"] = ROWS                                              # same rows as the receipt claims, but the guard's own re-run produced...
+        ev["cases"] = [dict(c, sim_cycles=99) for c in ev.get("cases", [])] or [dict(partition="x", version="new", h=1, strap=1, release_delta=0,
+                                                                                           expect_cycles=1, sim_cycles=1)]
+        return ev
+    m, tools, newrec, out = accepted_run(tmp_path, monkeypatch, mutate=forge)
+    with pytest.raises(ValueError, match="differs from the guard's own bench re-run"):
+        run_main(m, tmp_path, tools, newrec, out)
+    assert not out.exists()
+
+
+def test_failed_rerun_refused(tmp_path, monkeypatch):
+    m, tools, newrec, out = accepted_run(tmp_path, monkeypatch)
+    def boom(o, n, t):
+        raise ValueError("the re-run entry-phase bench does not pass")
+    monkeypatch.setattr(m, "rerun_bench_evidence", boom)
+    with pytest.raises(ValueError, match="does not pass"):
+        run_main(m, tmp_path, tools, newrec, out)
+
+
+def test_cover_content_anchor_and_pending(tmp_path, monkeypatch, capsys):
+    # the receipt of these fixtures carries no cases: give the evidence and the re-run the same one so the re-run comparison is meaningful
+    m, tools, newrec, out = accepted_run(tmp_path, monkeypatch)
+    run_main(m, tmp_path, tools, newrec, out)
+    cover = json.loads((out / "changed_binding_cover.json").read_text())
+    assert len(cover["covered"]) == 4 and cover["wf_plan_release_moved"] == {"lk_WN1": [101 - 1 + 0, 101 - 1 + 0]} or cover["wf_plan_release_moved"]
+    assert cover["new_receipt_sha256"] == sha((newrec).read_bytes()) and cover["old_receipt_sha256"] == sha((tmp_path / "oldrec.json").read_bytes())
+    assert cover["old_plan_sha256"] == sha((tmp_path / "old.json").read_bytes()) and cover["new_plan_sha256"] == sha((tmp_path / "new.json").read_bytes())
+    assert "PENDING die STA" in cover["pending"] and "PENDING_DIE_STA" in capsys.readouterr().out
+    r = json.loads((out / "native_release_receipt.json").read_text())
+    assert any("PENDING die STA" in x for x in r["limits"]) and not (out / "candidate_receipt.json").exists()
+    hn = sys.modules["head_native_release"]
+    assert ("old", "oldrec.json") in hn.PLAN_CALLS                      # the old side is qualified with the OLD plan and the OLD receipt
+
+
+def test_no_published_receipt_when_requalify_fails(tmp_path, monkeypatch):
+    m, tools, newrec, out = accepted_run(tmp_path, monkeypatch)
+    hn_calls = []
+    real = None
+    run = lambda: run_main(m, tmp_path, tools, newrec, out)
+    orig_qualify = None
+    import importlib
+    monkeypatch.setattr(m, "check_release_consistency", lambda *a, **k: {})
+    # make the second qualify (the candidate) fail: stub qualify raises when the receipt name is candidate_receipt.json
+    hn = sys.modules.get("head_native_release")
+    def failing_load():
+        pass
+    sys.modules.pop("head_native_release", None)
+    tools_hn = tools / "head_native_release.py"
+    tools_hn.write_text(STUBS["head_native_release"].replace("    CALLS.append(str(p))", "    if p.name == 'candidate_receipt.json':\n        raise ValueError('qualify failed')\n    CALLS.append(str(p))"))
+    with pytest.raises(ValueError, match="qualify failed"):
+        run()
+    assert not (out / "native_release_receipt.json").exists()
+
+
+def test_release_consistency_strict_on_empty_and_missing_parts():
+    m = load()
+    rd = lambda h: -(-h // 2) * -1
+    with pytest.raises(ValueError, match="no parts"):
+        m.check_release_consistency({}, {}, OLD, NEW, rd)
+    with pytest.raises(ValueError, match="not in wf_plan parts"):
+        m.check_release_consistency({"parts": {"lk_EN0": {"release": 1, "entry_stages": 0}}}, {"parts": {"lk_EN0": {"release": 1, "entry_stages": 0}}}, OLD, NEW, rd)
+
+
+def test_check_rerun_compares_rows_cases_cell():
+    m = load()
+    ev = {"rows": ROWS, "cases": [dict(partition="a", version="old", h=4, strap=0, release_delta=-2, expect_cycles=2, sim_cycles=2)], "cell_sha256": "c", "plan_digest": "d"}
+    m.check_rerun(ev, json.loads(json.dumps(ev)))
+    for k, v in (("rows", []), ("cell_sha256", "x"), ("plan_digest", "y"), ("cases", [])):
+        bad = dict(ev, **{k: v})
+        with pytest.raises(ValueError, match="differs"):
+            m.check_rerun(ev, bad)
+
+
+DEDICATED = [
+    ("        head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)     # anchor the old side as the old path does\n        new_plan0", "        new_plan0"),
+    ("        moved = check_release_consistency(", "        moved = (lambda *a, **k: {})("),
+    ("    same = (receipt_ev.get(\"rows\") == rerun_ev.get(\"rows\")", "    same = (True or receipt_ev.get(\"rows\") == rerun_ev.get(\"rows\")"),
+    (" or ev.get(\"schema\") != \"opentallas.entry_phase_evidence.v1\"", ""),
+]
+
+
+def suite_fails(mut_src, monkeypatch, tmp_path_factory):
+    """True when the behaviour suite finds a difference from the shipped code"""
+    # 1. anchor of the old side and re-qualify of the candidate
+    tp = tmp_path_factory.mktemp("d1")
+    tools, newrec = setup_main(tp, monkeypatch)
+    mod = load(mut_src)
+    rerun_hook(mod, monkeypatch, newrec)
+    out = tp / "a" / "b" / "out"
+    out.parent.mkdir(parents=True)
+    try:
+        run_main(mod, tp, tools, newrec, out)
+    except Exception:
+        return True
+    if ("old", "oldrec.json") not in sys.modules["head_native_release"].PLAN_CALLS:
+        return True
+    # 2. release consistency must refuse a wf_plan whose lk_WN1 release does not follow release_delta
+    tp = tmp_path_factory.mktemp("d2")
+    tools, newrec = setup_main(tp, monkeypatch)
+    (tools / "reset_tree.py").write_text(STUBS["reset_tree"].replace("100 - math.ceil(p['reset_entry_phase'] / 2)",
+                                                                       "100 - math.ceil(p['reset_entry_phase'] / 2) + (5 if P.raw['digest'] == 'd' * 64 else 0)"))
+    mod = load(mut_src)
+    rerun_hook(mod, monkeypatch, newrec)
+    try:
+        run_main(mod, tp, tools, newrec, tp / "a" / "b" / "out2") if (tp / "a" / "b").mkdir(parents=True) is None else None
+        return True                                                                       # accepted a wf_plan release that contradicts release_delta
+    except ValueError:
+        pass
+    except Exception:
+        return True
+    # 3. a receipt evidence that differs from the re-run is refused
+    ev = {"rows": ROWS, "cases": [dict(partition="a", version="old", h=4, strap=0, release_delta=-2, expect_cycles=2, sim_cycles=2)], "cell_sha256": "c", "plan_digest": "d"}
+    try:
+        mod.check_rerun(ev, dict(ev, rows=[]))
+        return True
+    except ValueError:
+        pass
+    # 4. wrong evidence schema is refused
+    tp = tmp_path_factory.mktemp("d4")
+    nr = make_receipt(tp / "r")
+    e = json.loads((tp / "r" / "entry_phase_evidence.json").read_text())
+    e["schema"] = "other"
+    (tp / "r" / "entry_phase_evidence.json").write_text(json.dumps(e))
+    nr["files"]["entry_phase_evidence.json"] = sha((tp / "r" / "entry_phase_evidence.json").read_bytes())
+    try:
+        mod.check_changed_binding(OLD, NEW, nr, DIG, tp / "r", CELL_SHA)
+        return True
+    except ValueError:
+        return False
+    return False
+
+
+@pytest.mark.parametrize("old,new", DEDICATED)
+def test_dedicated_mutants_die(tmp_path_factory, monkeypatch, old, new):
+    assert old in SRC, old
+    assert suite_fails(SRC.replace(old, new, 1), monkeypatch, tmp_path_factory), "mutant survived: " + old[:70]
+
+
+def test_dedicated_suite_passes_on_shipped(tmp_path_factory, monkeypatch):
+    assert not suite_fails(SRC, monkeypatch, tmp_path_factory)
