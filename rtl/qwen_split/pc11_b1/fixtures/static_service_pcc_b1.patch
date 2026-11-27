@@ -1,0 +1,84 @@
+--- a/rtl/qwen_split/qfd_native59_static_service_obs1.sv
++++ b/rtl/qwen_split/qfd_native59_static_service_obs1.sv
+@@ -10,12 +10,15 @@
+ // This module contains no arithmetic and cannot fabricate Q or result words.
+ // TAG59={epoch16,stage6,token18,position13,segment6}; stages1..36.
+ module qfd_native59_static_service_obs1 #(
+- parameter integer MUT_EARLY_COMPLETE=0,LOCAL32=0
++ parameter integer MUT_EARLY_COMPLETE=0,LOCAL32=0,PCC_B1=0
+ )(
+  input wire ck,rst_n,input wire source_fault,
+  input wire begin_slot,input wire [58:0] begin_tag,
+  input wire request_slot,input wire [58:0] request_tag,input wire [19:0] result_base_word,
+  input wire qr_committed,input wire [58:0] qr_tag,
++ // Same-service-clock B1 from actual C transports and the typed remote PCC receipt.
++ input wire pcc_b1_ready,input wire [60:0] pcc_b1_identity,input wire [1:0] request_generation,
++ output wire pcc_b1_result_accepted,
+  output reg kernel_request_v,output reg [58:0] kernel_request_tag,
+  input wire q_slot,input wire[75:0]q_slot_pub,input wire [4:0] q_slot_beat,
+  input wire q_v,input wire [4:0] q_beat,input wire [58:0] q_tag,input wire [511:0] q_data,
+@@ -79,7 +82,37 @@
+  // R3c (QW-CB16A0 10-20): Q capture holds use the parent's same-edge kept q_slot publications ([63:0] data bytes,
+  // [71:64] tag bytes, [72] beat, [73]/[74] q_seen low/high, [75] count/checks); the kernel-request and VM-write valids
+  // publish kept same-D copies (each copy = the original register on every edge).  LOCAL32 0: aliases, no added flops.
+- wire kreq_d=request_slot&&!fault&&!source_fault,vmw_d=result_slot&&!fault&&!source_fault;
++ reg [58:0] tag;
++ reg [19:0] base;
++ reg requested,done_seen,context_valid;reg [5:0] q_count,result_count,commit_count;
++ reg [31:0] q_seen,result_seen,committed;
++ wire b1_permit,b1_fault,b1_claimed;
++ generate if(PCC_B1)begin:g_pcc_b1
++  reg claimed;
++  reg [1:0] generation;
++  wire first_result=result_slot&&result_v&&result_beat==5'd0&&result_slot_beat==5'd0&&
++                    active&&requested&&result_tag==tag;
++  assign pcc_b1_result_accepted=first_result&&!claimed&&pcc_b1_ready&&
++                   pcc_b1_identity=={tag,generation}&&!fault&&!source_fault;
++  assign b1_claimed=claimed;
++  assign b1_permit=claimed||pcc_b1_result_accepted;
++  assign b1_fault=(result_slot&&!b1_permit)||(complete_slot&&!claimed);
++  always @(posedge ck or negedge rst_n)begin
++   if(!rst_n)begin claimed<=0;generation<=0;end
++   else begin
++    if(begin_slot&&!active)claimed<=0;
++    if(request_slot)generation<=request_generation;
++    if(pcc_b1_result_accepted)claimed<=1;
++   end
++  end
++ end else begin:g_legacy_b1
++  assign pcc_b1_result_accepted=1'b0;
++  assign b1_claimed=1'b1;
++  assign b1_permit=1'b1;
++  assign b1_fault=1'b0;
++ end endgenerate
++ wire kreq_d=request_slot&&!fault&&!source_fault;
++ wire vmw_d=result_slot&&!fault&&!source_fault&&b1_permit;
+  generate if(LOCAL32)begin:g_q_payload32
+   for(genvar qg=0;qg<64;qg=qg+1)begin:g_data
+    always @(posedge ck or negedge rst_n)
+@@ -108,15 +141,11 @@
+  end else begin:g_pub_alias
+   assign kernel_request_pub={24{kernel_request_v}};assign vm_write_pub={25{vm_write_v}};
+  end endgenerate
+- reg [58:0] tag;
+- reg [19:0] base;
+- reg requested,done_seen,context_valid;reg [5:0] q_count,result_count,commit_count;
+- reg [31:0] q_seen,result_seen,committed;
+  wire legal_tag=begin_tag[42:37]>=1&&begin_tag[42:37]<=36&&begin_tag[36:19]<151936&&begin_tag[5:0]==0;
+  // NativePC11 guard proves argmax and weight-ROM accesses inactive. Status
+  // reports actual single-operation availability even after completion, when
+  // the head still selects this face before the next ordinary-ROM command.
+- wire complete_ok=requested&&done_seen&&(&q_seen)&&(&result_seen)&&(&committed);
++ wire complete_ok=requested&&done_seen&&(&q_seen)&&(&result_seen)&&(&committed)&&b1_claimed;
+  // Observe the exact accepted-completion predicate, at the existing edge.
+  assign completing=rst_n && complete_slot && active && (complete_ok || MUT_EARLY_COMPLETE!=0) && !fault && !source_fault;
+  for(genvar oc=0;oc<4;oc=oc+1) begin:g_obs_tag
+@@ -137,7 +166,7 @@
+    kernel_q_v<=q_slot&&!fault&&!source_fault;
+    vm_write_v<=vmw_d;
+    completed<=0;
+-   if(source_fault)fault<=1;
++   if(source_fault||b1_fault)fault<=1;
+    // R3e: the accepted begin / request clears and captures are grouped per kept publication (<= 32 loads each); same
+    // statements, same order, same conditions (bp[k] == begin_slot, rp[k] == request_slot).
+    if(begin_slot&&(active||!legal_tag))fault<=1;
