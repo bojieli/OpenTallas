@@ -327,7 +327,11 @@ elif mode == "late-lec":
                 n = os.path.join(kit, n.removeprefix("/work/")) if n.startswith("/work/") else n
                 if os.path.realpath(n) != os.path.realpath(gate):
                     continue
-                if sha(gate, {})[0] != row["gate_sha"] or sha(odb, {})[0] != row["odb_sha"]:
+                gate_sha = sha(gate, {})[0]
+                # identity="sha256" is true only when the proof itself recorded the sha256 of the netlist it read.
+                if j.get("netlist_sha256") != gate_sha:
+                    continue
+                if gate_sha != row["gate_sha"] or sha(odb, {})[0] != row["odb_sha"]:
                     return
                 return dict(key=row["key"], size=len(evidence), sha=hashlib.sha256(evidence).hexdigest(),
                             lec=dict(src=q, verdict="EQUIVALENT", counts=counts, identity="sha256"))
@@ -1179,7 +1183,8 @@ def rtx_pull(a):
         if u.get('mode') == 'host' and not u.get('lec') and not os.path.lexists(dest) and not os.path.lexists(dest + '.partial'):
             refresh.append(u['key'])
     if refresh:
-        hub_tool = '/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/auto_export.py'
+        hub_tool = os.environ.get('OT_AUTO_EXPORT_HUB_TOOL',
+                                  '/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/auto_export.py')
         try:
             refreshed = subprocess.run(
                 SSH + [a.hub, 'python3 -I %s refresh-pending-lec' % shlex.quote(hub_tool)],

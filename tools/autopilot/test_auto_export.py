@@ -205,7 +205,7 @@ def test_pending_late_lec_probe_checks_exact_routed_identity(tmp_path):
     proof = kit / 'lec_routed_exact' / 'lec.json'
     proof.parent.mkdir()
     row = dict(key='exact', signoff=str(so), record=sha(so), odb=str(odb), odb_sha=sha(odb), gate_sha=sha(gate))
-    receipt = dict(netlist='/work/' + str(gate.relative_to(kit)), verdict='EQUIVALENT',
+    receipt = dict(netlist='/work/' + str(gate.relative_to(kit)), netlist_sha256=sha(gate), verdict='EQUIVALENT',
                    counts=dict(compare_points=4, proved=4, differs=0, undecided=0))
 
     def probe(overrides):
@@ -330,3 +330,94 @@ def test_private_marker_blocks_canonical_report_at_every_export_entry(tmp_path, 
     for report, state in ((marked_output, 'diagnostic'), (ordinary_output, 'ready')):
         assert run('signoff-source', dict(signoff=str(report), record=hashlib.sha256(report.read_bytes()).hexdigest(),
                                          odb_sha256='f' * 64)) == [{'state': state}]
+
+
+def _late_lec_fixture(tmp_path):
+    import hashlib
+
+    def sha(path):
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    kit = tmp_path / 'kit'
+    base = kit / 'run' / 'results' / 'asap7' / 'test' / 'base'
+    base.mkdir(parents=True)
+    gate, odb = base / '6_final.v', base / '6_final.odb'
+    gate.write_text('module test; endmodule')
+    odb.write_bytes(b'routed DB')
+    so = kit / 'signoff.json'
+    so.write_text(json.dumps(dict(profile='minimal', verdict='SIGNED', inputs=dict(kit=str(kit)))))
+    proof = kit / 'lec_routed_x' / 'lec.json'
+    proof.parent.mkdir()
+    row = dict(key='k', signoff=str(so), record=sha(so), odb=str(odb), odb_sha=sha(odb), gate_sha=sha(gate))
+    receipt = dict(netlist='/work/' + str(gate.relative_to(kit)), netlist_sha256=sha(gate), verdict='EQUIVALENT',
+                   counts=dict(compare_points=4, proved=4, differs=0, undecided=0))
+
+    def probe(overrides=None, drop=(), row_over=None, mtime=None):
+        r = dict(receipt, **(overrides or {}))
+        for k in drop:
+            r.pop(k)
+        proof.write_text(json.dumps(r))
+        if mtime is not None:
+            os.utime(proof, (mtime, mtime))
+        completed = subprocess.run([sys.executable, '-I', '-', 'late-lec', json.dumps(dict(rows=[dict(row, **(row_over or {}))]))],
+                                   input=AE.PROBE, text=True, capture_output=True, check=True)
+        return [json.loads(line) for line in completed.stdout.splitlines()]
+    return probe, gate
+
+
+def test_late_lec_not_attached_on_stale_mtime(tmp_path):
+    probe, gate = _late_lec_fixture(tmp_path)
+    assert len(probe()) == 1
+    assert probe(mtime=os.path.getmtime(gate) - 100) == []
+
+
+def test_late_lec_not_attached_on_non_equivalent(tmp_path):
+    probe, _ = _late_lec_fixture(tmp_path)
+    assert probe(dict(verdict='NOT EQUIVALENT')) == []
+    assert probe(dict(verdict='UNPROVEN')) == []
+    assert probe(dict(counts=dict(compare_points=4, proved=3, differs=1, undecided=0))) == []
+    assert probe(dict(counts=dict(compare_points=4, proved=3, differs=0, undecided=1))) == []
+
+
+def test_late_lec_not_attached_on_record_sha_mismatch(tmp_path):
+    probe, _ = _late_lec_fixture(tmp_path)
+    assert probe(row_over=dict(record='0' * 64)) == []
+    assert probe(row_over=dict(gate_sha='0' * 64)) == []
+    assert probe(row_over=dict(odb_sha='0' * 64)) == []
+
+
+def test_late_lec_requires_recorded_netlist_sha256(tmp_path):
+    probe, _ = _late_lec_fixture(tmp_path)
+    assert len(probe()) == 1
+    assert probe(drop=('netlist_sha256',)) == []
+    assert probe(dict(netlist_sha256='0' * 64)) == []
+    assert probe(dict(netlist_sha256=None)) == []
+
+
+def test_rtx_pull_refresh_uses_configurable_hub_tool(tmp_path, monkeypatch):
+    import argparse, stat
+
+    home = tmp_path / 'home'
+    state = home / '.local/state/ot-auto-export'
+    state.mkdir(parents=True)
+    pend = state / 'pending_rtx.json'
+    unit = dict(key='k1', die='s81', unit='u1', record='r' * 64, mode='host', lec=None)
+    pend.write_text(json.dumps([unit]))
+    fake_ssh = tmp_path / 'fakessh'
+    fake_ssh.write_text('#!/bin/bash\nshift\ncd "$HOME"\nexec bash -c "$1"\n')
+    fake_ssh.chmod(fake_ssh.stat().st_mode | stat.S_IEXEC)
+    seen = tmp_path / 'seen.json'
+    tool = tmp_path / 'fake_tool.py'
+    tool.write_text('import sys, json, pathlib\n'
+                    'assert sys.argv[1] == "refresh-pending-lec"\n'
+                    'pathlib.Path(%r).write_text(sys.stdin.read())\n'
+                    'p = pathlib.Path(%r); d = json.loads(p.read_text()); d[0]["lec"] = dict(identity="sha256"); p.write_text(json.dumps(d))\n'
+                    'print(1)\n' % (str(seen), str(pend)))
+    monkeypatch.setenv('HOME', str(home))
+    monkeypatch.setenv('OT_AUTO_EXPORT_HUB_TOOL', str(tool))
+    monkeypatch.setattr(AE, 'SSH', [str(fake_ssh), '-o', 'x'][:1])
+    monkeypatch.setattr(AE, 'RTX_ROOT', str(tmp_path / 'rtx'))
+    args = argparse.Namespace(hub='hub', refresh_lec_only=True, record=None)
+    assert AE.rtx_pull(args) == 0
+    assert json.loads(seen.read_text()) == ['k1']
+    assert json.loads(pend.read_text())[0]['lec'] == dict(identity='sha256')

@@ -8807,6 +8807,15 @@ def output_compare_gate(cpg, cpt, rec):
                        f"(first: {(gold_po + gate_po)[:6]}); an EQUIVALENT over the other points would be vacuous on these outputs")
 
 
+def netlist_sha256(path):
+    """sha256 of the netlist file bytes (what the late-LEC export reader compares with the routed 6_final.v sha)."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for b in iter(lambda: f.read(1 << 22), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -8826,6 +8835,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         gate_fe = env.get("SYNTH_HDL_FRONTEND", "") or "verilog"
         gold_fe = gold_frontend or ("verilog" if gate_fe == "slang" else "slang")
         rec.update(top=top, netlist=netlist, synth_frontend=gate_fe, gold_frontend=gold_fe)
+        if os.path.isfile(netlist):
+            rec["netlist_sha256"] = netlist_sha256(netlist)
         if gold_fe == gate_fe:
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
         netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
