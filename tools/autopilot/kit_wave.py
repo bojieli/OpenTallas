@@ -388,16 +388,33 @@ def infra_retry_sweep(AP, cfg, st, now=None, write=True):
     return out
 
 
+PLACE_TERMINAL_UNIT_STATES = {"inactive", "failed"}
+
+
 def unit_probe(unit, timeouts=(60, 120, 240), pause_s=15):
-    """PROBE-TIMEOUT-1124: `systemctl --user is-active UNIT` -> its state word, retried with growing timeouts and a pause between tries
-    (a host with hundreds of user units answers slowly); None when every try timed out (unknown: the caller keeps waiting)"""
+    """Return a confirmed systemd unit state, or None to keep the existing PLACE lease."""
     for k, t in enumerate(timeouts):
         try:
-            return (subprocess.run(["systemctl", "--user", "is-active", unit], capture_output=True, text=True, timeout=t).stdout or "").strip()
+            result = subprocess.run(["systemctl", "--user", "is-active", unit],
+                                    capture_output=True, text=True, timeout=t)
         except subprocess.TimeoutExpired:
             print(f"KW_PROBE_TIMEOUT systemctl is-active {unit} after {t} s (try {k + 1}/{len(timeouts)})", flush=True)
-            if k + 1 < len(timeouts):
-                time.sleep(pause_s * (k + 1))
+        except OSError as err:
+            print(f"KW_PROBE_UNKNOWN systemctl is-active {unit}: {err} (try {k + 1}/{len(timeouts)})", flush=True)
+        else:
+            state = (result.stdout or "").strip()
+            diagnostic = (result.stderr or "").strip()
+            expected = {
+                0: {"active", "reloading", "refreshing"},
+                3: PLACE_TERMINAL_UNIT_STATES | {"activating", "deactivating"},
+                4: {"inactive"},  # systemd 259 reports a collected/missing unit as inactive with rc=4
+            }
+            if not diagnostic and state in expected.get(result.returncode, ()):
+                return state
+            print(f"KW_PROBE_UNKNOWN systemctl is-active {unit}: rc={result.returncode} "
+                  f"state={state[:80]!r} stderr={diagnostic[:240]!r} (try {k + 1}/{len(timeouts)})", flush=True)
+        if k + 1 < len(timeouts):
+            time.sleep(pause_s * (k + 1))
     return None
 
 
@@ -11789,7 +11806,7 @@ def _run_item(spec_path, resume_reviewed=False):
                 (out / "place.log").write_text(txt)
                 print(f"KW_STAGE_RC place {rcs[-1]} (client ended)", flush=True)
                 return int(rcs[-1]), txt, None
-            if act is not None and act not in ("active", "activating", "reloading"):
+            if act in PLACE_TERMINAL_UNIT_STATES:
                 # PLACE-LOST-1125 (QC-PLACELOST census: 26 KW_PLACE_LOST rows, none a design result): before booking a lost client read
                 # (1) its rc from the journal (log redirect failed), (2) a fresh PLACE receipt (the kit placed), (3) a stop from outside
                 jrc, jtxt = journal_place_rc(svc["unit"], svc.get("started"))
@@ -11837,9 +11854,7 @@ def _run_item(spec_path, resume_reviewed=False):
             _lg = Path(_svc.get("log", ""))
             _txt = _lg.read_text(errors="replace") if _lg.exists() else ""
             _rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", _txt)
-            _act = subprocess.run(["systemctl", "--user", "is-active", _svc["unit"]], capture_output=True, text=True,
-                                  timeout=60).stdout.strip()
-            if not _rcs or _act in ("active", "activating", "reloading"):
+            if not _rcs or unit_probe(_svc["unit"], timeouts=(60,)) not in PLACE_TERMINAL_UNIT_STATES:
                 return False
             for _kh in copy_back_hosts(_txt, G, hub):
                 _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K or _svc.get('kit', ''))}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; echo KW_PROBE_OK"),
