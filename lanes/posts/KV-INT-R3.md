@@ -150,3 +150,4 @@
   The *_rf1_rf3c / _rf3f files next to them are the post-split PCC/PCF tables from rf_kv3_plan.py, which takes PLAN_RF1 as input.
   Generators: cores/harden/rf_kv1_pc.py, then rf_kv3_plan.py PLAN_RF1 OUT DELTA, then rf_kv3_split.py.
   Live D is unchanged.
+- 2026-11-27 11:29 PST DONE [kv-int-r3] ot-run oth-ubuntu-681642-1795807036 on outgoing-giraffe: rc=0 after 729 s, ended 19:29:20, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/gate.otrun.log, cmd: --priority die --mem 96 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash gate.sh
