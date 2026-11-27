@@ -43145,8 +43145,8 @@
      ],
      "route": true,
      "cause": "C-LEG405 East writer START branches have over-limit exact FIRM-window lower bounds",
-     "owner": "HEAD-INT-R2",
-     "reason": "fault_o0 and lw_o first START legs have exact legal-window minima 406.14 / 413.71 um. Keep exact W12f held through a corrected placed successor and independent actual review.",
+     "owner": "HEAD-INT-R3",
+     "reason": "fault_o0 and lw_o first START legs have exact legal-window minima 406.14 / 413.71 um. Keep exact W12f held through a corrected placed successor and independent actual review. owner=HEAD-EAST-R4 eta=2026-11-28 09:00 (re-owned by HEAD-INT-R3 11-27)",
      "release": []
     },
     {
@@ -43157,8 +43157,176 @@
      ],
      "route": true,
      "cause": "C-LEG405 SPN_END measured opposite-edge status convergence and reset endpoint reaches",
-     "owner": "HEAD-INT-R2",
-     "reason": "Exact Intel1 place 3ec2b864b431 confirms four status face-to-agg arcs 465.993\u2013711.477 um. Keep W12f held until a corrected, freshly viewed placement and measured native reach.",
+     "owner": "HEAD-INT-R3",
+     "reason": "Exact Intel1 place 3ec2b864b431 confirms four status face-to-agg arcs 465.993-711.477 um. Keep W12f held until a corrected, freshly viewed placement and measured native reach. owner=HEAD-PART-R3 eta=2026-11-27 21:00 (re-owned by HEAD-INT-R3 11-27)",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-CTL-E",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_ctl_e"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-HOST-N",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_host_n"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-SPN-WSHIM-TX",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_spn_wshim_tx"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-K5",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_k5"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-M",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_m"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-N3-TRANSIT",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_n3_transit"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-N3-TURN",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_n3_turn"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-STR",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_str"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-ST-TURN",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_st_turn"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-TURN-A",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_turn_a"
+     ],
+     "route": true,
+     "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-SPN-ESHIM-RX",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_spn_eshim_rx"
+     ],
+     "route": true,
+     "cause": "C-SPARSE-PIN-HULL / changed form required",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place visual BAD; needs a changed form and both reviews. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-SPN-ESHIM-TX",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_spn_eshim_tx"
+     ],
+     "route": true,
+     "cause": "C-SPARSE-PIN-HULL / changed form required",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES + C-TAP-REACH clock leg 777-812 um; needs a changed form and both reviews. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-TURN-B",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_turn_b"
+     ],
+     "route": true,
+     "cause": "C-SPARSE-PIN-HULL / changed form required",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES + C-SPARSE-PIN-HULL corridor form (COORD YES 00:24); needs a changed form and both reviews. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+     "release": []
+    },
+    {
+     "id": "HEAD-W12F-ROUTE-HD-CTL-N",
+     "plan_sha": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+     "items": [
+      "hd_ctl_n"
+     ],
+     "route": true,
+     "cause": "C-SPARSE-PIN-HULL / changed form required",
+     "owner": "HEAD-INT-R3",
+     "reason": "W12f post-place ISSUES + C-SPARSE-PIN-HULL corridor form + tap load 2546; needs a changed form and both reviews. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
      "release": []
     }
    ],
