@@ -18053,3 +18053,5 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 07:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 07:22 PST: 8 running jobs, PROGRESSING 3, PLATEAU 3, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc8 slw_fe_v1__cl95cd1d0c 5_2_route stage 59.5 h job 71.2 h: drt_violations best 8 last 8 rows 62 window-gain 0.0%; stagnant 8.7 h; last event 2.1 h ago, log write 2.1 h ago (3703 lines)
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 33.2 h job 36.6 h: no new meaningful log line for 8.7 h; last: [INFO GRT-0102] Start extra iteration 5/5
+- 2026-11-27 07:30 PST PLATEAU-MID [SMELL-WATCH -> FP-CONVERGE-QC, QC-ALLFIX, QC-INT-R2; cc COORD] 1 kit(s), report-only: slw_sc_v1 epyc7 oth-ubuntu-798441-1795732865: DRT plateau at 420 violations (5 iterations < 2 % change)
+  [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
