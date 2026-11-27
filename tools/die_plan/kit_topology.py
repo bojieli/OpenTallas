@@ -178,6 +178,31 @@ def _collector_band_alias_matches(raw, tn, out, old, new, asbuilt):
         return False
 
 
+def collector_band_alias_plan_matches(plan_path, out, asbuilt, item, producer_sha):
+    """Check the completed bind for one private item when only band copies changed."""
+    directory = Path(out)
+    try:
+        old = json.loads((directory / "native_topology.json").read_bytes())
+        report = json.loads((directory / "bind_report.json").read_bytes())
+        if (old.get("partial") or report["n_errors"] != 0 or report["plan_sha256"] != producer_sha
+                or item not in report["types"] or _refused(old, item)):
+            return False
+        probe = report.get("probe_only")
+        if probe and item not in probe["emitted"]:
+            return False
+        if hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest() != old["asbuilt_sha256"]:
+            return False
+        raw = json.loads(Path(plan_path).read_bytes())
+        new = native_contract(raw, asbuilt, plan_path)
+        if new["transport"] != old["transport"] or new["types"].keys() != old["types"].keys():
+            return False
+        changed = [tn for tn, fingerprint in new["types"].items() if old["types"][tn] != fingerprint]
+        return (len(changed) == 1 and item in old["types"]
+                and _collector_band_alias_matches(raw, changed[0], out, old, new, asbuilt))
+    except (OSError, KeyError, TypeError, ValueError):
+        return False
+
+
 def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     path=Path(out)/'native_topology.json'
     if path.is_file():
