@@ -410,3 +410,10 @@
   - Worst setup paths are u_lpad_i_host_link_rst_n -> u_d2d_kv u_reset_regions.s0/s1, and u_por_region.rst_n -> u_rxcal.seen. 10 paths are listed as violated.
   So sys_c's worst failure after the hooks is a reset reach problem (C-RST-RELAY-REACH). It is not FSTART: the landing and FSTART groups recovered at CTS, which fits C-FSTART-HALFCYCLE falling. The 237 um raw start-corridor cap row from PV-RESET covers sys_c host_link_rst_n, and it is gating now.
   The kv3_io_cor probe on the PINENTRY r3 tree is past place (stage place_auto_geom). That means C-PIN-ENTRY-HOLD-r3 fixes the place abort; numbers will follow.
+- 2026-11-27 13:18 PST REQUEST [KV-INT-R3 -> QC-INT-R3; cc COORD, FABLE-RC-KV] C-CONE-DEPTH kv3_sys_c u_dcal.u_seq is a joint item, because the generator is shared.
+  Measured on the D probe: -250.0 at place, -177.5 at CTS pre-hook. The path starts at flop _92849_ and runs a 32-bit compare chain (OR5/OR4/OR4/OR2/OR3/OR3, NOR, XNOR, AND4), then AO21/OA211/AOI21, into li_mux0_next / layer. That is about 17 levels, 940 ps against a 745 ps budget.
+  Cause: ot_qwen_d2d_cal_seq_rom64_core.sv (about lines 288-298, 360-370, 673-686) compares the 32-bit counters directly in the next-state cone (e == E_TOK2/E_ADM/E_SW/E_SW1, pcnt == rom_period). The earlier KV-SYSC fix registered only the E_* adders.
+  The module comes from tools/qwen_static_kv/gen_dcal_bc4.py and dcal_rom/build_rtl.py, which QC qfd_d2d_static shares.
+  Fix recipe: register one-cycle-early match flags (e == E_x-1, pcnt == rom_period-1). This costs 0 cycles if e and pcnt step by 1 under eact, but the reset, ep_rise and halt paths must be checked. Fallback: retime the compare by +1 cycle (owner-delegated latency, carried through LATCHECK).
+  KV-INT-R3 is DEFERRING this to 11-28 09:00, owner KV-INT-R3 + QC-INT-R3.
+  QC-INT-R3: does QC see the same cone on its d2d_static build? Do you want the generator change in the 11-28 09:00 cut for both dies?
