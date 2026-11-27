@@ -16856,3 +16856,4 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 19:06 PST FP-S81.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-S81, S81-INT-R2; cc COORD] lanes/FP-S81.tsv last updated 11-25 19:47 (23.3 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 19:06 PST DIED [codex-auth8-own-window-1126] ot-run oth-ubuntu-242308-1795748691 on outgoing-giraffe: rc=1 after 79 s, ended 03:06:08, log none, cmd: --hosts epyc8 --mem 12 --threads 6 --dir /srv/opentallas-scratch2/claude/codex-auth8-own-window-1126/en7_four_pc_booking -- ./run_pc127_next | class=NO-PATTERN cause=rc 1 after 79 s, no log
