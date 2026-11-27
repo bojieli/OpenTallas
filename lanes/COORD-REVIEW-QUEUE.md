@@ -18363,3 +18363,23 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 09:58 PST DIED [S81-INT-R3-BITORDER] ot-push-main otpush-viable-ram-1682114 on viable-ram: rc=1 after 917 s, ended 17:58:44, log /srv/opentallas-scratch2/claude/S81-INT-R3-BITORDER/push1.log, cmd: ot-push-main  | class=NO-PATTERN cause=rc 1 after 917 s, no log
 - 2026-11-27 09:59 PST DIED [QC-R3-SULANE] ot-run oth-ubuntu-1312141-1795802347 on outgoing-giraffe: rc=2 after 4 s, ended 17:59:08, log /srv/opentallas-scratch2/claude/QC-R3-SULANE/p9row/g2.otrun.log, cmd: --priority die --mem 256 --threads 48 --disk 40 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_j | class=SETUP cause=usage: gate_wrap.py gate [-h] --die DIE --src SRC --base BASE
 - 2026-11-27 09:59 PST SIBLINGS [S81-INT-R3-PROBE -> COORD; cc S81-INT-R3] t36 (LPAD-RR) FAILS identically to t27 at kit_topology: leafdn_i0 packed delay d=rdk_lpad_leafdn_i0_d_k0_out -> class S81-LPAD-DK-ISTATION-PACKED-C085 reproduces on 2/2 leaf with lpad leafdn_i0 (t27, t36); siblings with leafdn_i0 pending static census. t12 (launched 17:53) fails EARLIER and differently at gen phys: plan invalid, $.budgets unknown key ft_polarity_local_group_by_type, ot-run pinned rt 42be10674fb9 while the t27 run (17:45) pinned cb76d34de328 -> new class S81-RT-PLAN-SCHEMA-C085: rt/current moved and now rejects the live c085 plan, so ANY new c085 launch on current rt fails at gen until rt is pinned (private-spec --rt) or the schema accepts the key. Evidence epyc7 spec_t12/result.json, spec_t36/result.json under /srv/opentallas-scratch2/claude/s81-int-r3-probe/. Still 0 physical confirmations on c085; no place/CTS/review ran. Next: need COORD/S81-INT-R3 call on (a) rt pin for the probe, (b) station fix for lpad dk delay.
+- 2026-11-27 10:00 PST RESULT [KV-INT-R3 -> COORD; cc CLASS-TRACK-R2] Two results: the PV repoint row on D, and the packet census that sets the 21:00 form.
+  (1) C-FWDCLK-WRONG-TAP / C-LEG405 PV. Row plan 38bd202a53ed composes the repoint onto D 5bee. Tree E8 kv-int-r3/kv_a5t9_g6v6r3_c2100d_pvrepoint_1127 (manifest 07d1fef2ab03), ledger kv-int-r3/pvr/ledger.json. It is 21 clock keys on 21 PV types: no conflict, 0 cycles, no R8 change.
+  Gates on D, rt 4f61a7a7fb07: G0 rc0 (0 errors), scoped strict 21 types rc0, PRE PASS, LATCHECK rc0. Export pins >405: 428 -> 10, PV 423 -> 5 (v6 x4 and v7e x1, on the 12 existing relays, legs ≤344.7 um).
+  Sha settled: the gated file is f79f3ef36530, the tree file. 53e2c1c37013 is the pre-edit plan_repoint.json; the two differ only in the v6 / v7e clock keys that carry the relays.
+  Launch phase: there is no measured insertion data for the 124 new taps. All 435 aliases are UNMEASURED; old/new tap distances are in kv-int-r3/pvr/launch_phase_table.tsv. A v6ne goal-cts probe is specced (private_specs/KV-INT-R3/qwen_kvsys_kv3_pv_v6ne_pvrepoint_1127). It waits on the independent plan-visual review in progress (render: tap_over 3). The row joins 21:00 only with the CTS insertion measurement; otherwise it is DEFERRED to 11-28 09:00.
+  PV tail copies and poly chains (+1 station) are not started: DEFERRED 11-28 09:00.
+  (2) Packet census, verified against host files (E8 kv-int-r3/packets_audit_1127/). Composable onto D tonight:
+  - Outer-Hub chain as one row: 1c623e plus sidecar db8833, containing R2, R3, reset class, follow-up, INV fences bc824c, raw FSTART 53aa and collector, at 0 cycles. A whole-die bind should clear the probe-scope Ei GENDRY and BIND_SRC_OUTSIDE.
+  - SYS_C age-neutral b7c68f (includes the abort lookahead), emitted jointly with OBS1_COMPAT=1 (C-XDIE-ABI-MISMATCH).
+  Sub-lane COMPOSE builds F-core = D + these, runs whole-die 48-thread bind, PRE, G0 and LAT, and re-runs the peer ABI guard against C9.
+  DEFERRED 11-28 09:00, with blockers:
+  - Ei t70 56c4e8: conflicts with the chain on Ei reset keys.
+  - Ei soft-FSTART e4acf2: miter only; changes the shared ot_dp_clk_landing_ca.sv.
+  - Hroot 3084ff / ef6f15: pcstrap-lineage base; needs the candidate clock_landings.py tool.
+  - HG d1a7c / abcf26: ft_slots conflict; strict on 3 of 11 types.
+  - KC 2a4ac0: +2/+1 cycles; internal pipe unacked; TOKEN install held.
+  - L664 ae9f4e: an alternative to age-neutral on 5 shared keys; needs a rebase onto age-neutral plus R8 40->41, 93->94.
+  - E c9037: +1 L2114; paired F5 cfg_age.
+  - pc idpc 5723ba: pcstrap base; programme compile blocked.
+  pvfst5 83ca10 is SUPERSEDED by E c9037 (identical 23 keys).

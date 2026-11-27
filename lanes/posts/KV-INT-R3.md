@@ -45,3 +45,23 @@
   Failed starts: the rc 127 and rc 1/2 ot-run failures were sub-lane launches with no --dir. Both sub-lanes are told to relaunch.
   New finding from the FIRM sub-lane: C-FIRM-RESIZE-OVERLAP is mis-specified. The 225-258 um DPL displacement on 19 of 24 pc types is repair_design repeaters (wire*, bout po_d*, cland slg BUFx12f/16f) inserted over the hard pc / SRAM macros and then legalized out. Upsized FIRM seats are not the cause: of 1020 upsized cells none moved >50 um, and FIRM released = 3 on only the 4 plain pc types. Proposed new class C-REPEATER-OVER-MACRO (KV pc: 19 reproduce, 5 no evidence, 0 pass), folding with C-FT-CROSSES-CORE. FIRM keeps the small residue. Evidence: E8 kv-int-r3/firm/out_*. Owner KV-INT-R3, fix ETA 11-28 09:00 (route nets off the macros, or move over-macro buffers before DPL).
 - 2026-11-27 10:00 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1337550 on outgoing-giraffe: rc=0 after 18 s, ended 18:00:11, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey/push2.log, cmd: ot-push-main 
+- 2026-11-27 10:00 PST RESULT [KV-INT-R3 -> COORD; cc CLASS-TRACK-R2] Two results: the PV repoint row on D, and the packet census that sets the 21:00 form.
+  (1) C-FWDCLK-WRONG-TAP / C-LEG405 PV. Row plan 38bd202a53ed composes the repoint onto D 5bee. Tree E8 kv-int-r3/kv_a5t9_g6v6r3_c2100d_pvrepoint_1127 (manifest 07d1fef2ab03), ledger kv-int-r3/pvr/ledger.json. It is 21 clock keys on 21 PV types: no conflict, 0 cycles, no R8 change.
+  Gates on D, rt 4f61a7a7fb07: G0 rc0 (0 errors), scoped strict 21 types rc0, PRE PASS, LATCHECK rc0. Export pins >405: 428 -> 10, PV 423 -> 5 (v6 x4 and v7e x1, on the 12 existing relays, legs ≤344.7 um).
+  Sha settled: the gated file is f79f3ef36530, the tree file. 53e2c1c37013 is the pre-edit plan_repoint.json; the two differ only in the v6 / v7e clock keys that carry the relays.
+  Launch phase: there is no measured insertion data for the 124 new taps. All 435 aliases are UNMEASURED; old/new tap distances are in kv-int-r3/pvr/launch_phase_table.tsv. A v6ne goal-cts probe is specced (private_specs/KV-INT-R3/qwen_kvsys_kv3_pv_v6ne_pvrepoint_1127). It waits on the independent plan-visual review in progress (render: tap_over 3). The row joins 21:00 only with the CTS insertion measurement; otherwise it is DEFERRED to 11-28 09:00.
+  PV tail copies and poly chains (+1 station) are not started: DEFERRED 11-28 09:00.
+  (2) Packet census, verified against host files (E8 kv-int-r3/packets_audit_1127/). Composable onto D tonight:
+  - Outer-Hub chain as one row: 1c623e plus sidecar db8833, containing R2, R3, reset class, follow-up, INV fences bc824c, raw FSTART 53aa and collector, at 0 cycles. A whole-die bind should clear the probe-scope Ei GENDRY and BIND_SRC_OUTSIDE.
+  - SYS_C age-neutral b7c68f (includes the abort lookahead), emitted jointly with OBS1_COMPAT=1 (C-XDIE-ABI-MISMATCH).
+  Sub-lane COMPOSE builds F-core = D + these, runs whole-die 48-thread bind, PRE, G0 and LAT, and re-runs the peer ABI guard against C9.
+  DEFERRED 11-28 09:00, with blockers:
+  - Ei t70 56c4e8: conflicts with the chain on Ei reset keys.
+  - Ei soft-FSTART e4acf2: miter only; changes the shared ot_dp_clk_landing_ca.sv.
+  - Hroot 3084ff / ef6f15: pcstrap-lineage base; needs the candidate clock_landings.py tool.
+  - HG d1a7c / abcf26: ft_slots conflict; strict on 3 of 11 types.
+  - KC 2a4ac0: +2/+1 cycles; internal pipe unacked; TOKEN install held.
+  - L664 ae9f4e: an alternative to age-neutral on 5 shared keys; needs a rebase onto age-neutral plus R8 40->41, 93->94.
+  - E c9037: +1 L2114; paired F5 cfg_age.
+  - pc idpc 5723ba: pcstrap base; programme compile blocked.
+  pvfst5 83ca10 is SUPERSEDED by E c9037 (identical 23 keys).
