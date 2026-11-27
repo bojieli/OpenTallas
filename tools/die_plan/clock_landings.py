@@ -382,6 +382,11 @@ def ring_write_reg(plan, tn, bus):
     cfg = (t.get("clock") or {}).get("landing_ring_wreg")
     if cfg and (not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list)):
         raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    # A wide ring selected for a face register keeps its stock reach-derived
+    # DSREP and write chunk. Explicit WREG settings apply only to listed buses.
+    authored_freg_buses = cfg.get("freg_buses") if cfg else None
+    if authored_freg_buses is not None and (cfg.get("freg") or cfg.get("freg_numeric_order")):
+        raise ValueError(f"{tn}: landing_ring_wreg.freg_buses excludes freg and freg_numeric_order")
     _listed = bool(cfg) and bus in cfg["buses"]
     if not cfg or bus not in cfg["buses"]:
         # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12, COORD-approved family rule): a wide soft ring gets the registered
@@ -406,13 +411,11 @@ def ring_write_reg(plan, tn, bus):
     # sidecar exactly as for freg) on those buses only, so a half-cycle port -> landing D class (QC sle_ctl cws1_i / cws2_i /
     # x_hc1_st_b_i, TT -92..-111 ps) is registered at the pin face without paying the cycle on the other buses.  Exclusive with
     # "freg" and "freg_numeric_order".
-    fb = cfg.get("freg_buses")
+    fb = authored_freg_buses
     if fb is not None:
         if (not isinstance(fb, list) or not fb or len(fb) != len(set(fb))
                 or any(not isinstance(b, str) or not re.fullmatch(r"[A-Za-z_]\w*", b) for b in fb)):
             raise ValueError(f"{tn}: landing_ring_wreg.freg_buses must list unique bus names")
-        if cfg.get("freg") or cfg.get("freg_numeric_order"):
-            raise ValueError(f"{tn}: landing_ring_wreg.freg_buses excludes freg and freg_numeric_order")
         cfg = {k2: v for k2, v in cfg.items() if k2 != "freg_buses"}
         cfg["freg"] = bus in fb
     dsrep = cfg.get("dsrep", 1)
