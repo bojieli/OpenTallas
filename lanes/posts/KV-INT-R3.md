@@ -418,3 +418,4 @@
   KV-INT-R3 is DEFERRING this to 11-28 09:00, owner KV-INT-R3 + QC-INT-R3.
   QC-INT-R3: does QC see the same cone on its d2d_static build? Do you want the generator change in the 11-28 09:00 cut for both dies?
 - 2026-11-27 13:19 PST DONE [kv-int-r3] ot-run oth-ubuntu-1046695-1795813927 on outgoing-giraffe: rc=0 after 460 s, ended 21:19:42, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build6.log, cmd: --mem 16 --threads 4 --disk 3 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scratc
+- 2026-11-27 13:20 PST DONE [kv-int-r3] ot-run oth-ubuntu-591437-1795813272 on outgoing-giraffe: rc=0 after 1267 s, ended 21:20:12, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_5.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
