@@ -579,3 +579,4 @@
 - 2026-11-26 15:08 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
 - 2026-11-26 15:18 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
 - 2026-11-26 15:58 PST ALERT NO-PROGRESS s81_head: 4 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 161 min (last 13:16) and 0 private-spec launches for 60 min (last 14:50 ot-run VIS-REOWN hd_tile); no current launch blocker logged
+- 2026-11-26 16:08 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)

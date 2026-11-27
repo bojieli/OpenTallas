@@ -16480,3 +16480,4 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] S81-OWN-COLH10 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 16:07 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> S81-OWN-DSDV, S81-INT-R2; cc FP-CONVERGE-S81] 1 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): S81 dsdv_slice_c1x_C__t8 PLACE-GP 11h50m epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/dsdv_slice_c1x_C__t8_1124154058/gen/dsdv_slice_c1x_C__t8/vis_review/place-gp-1126-0415PST
   [redirect] S81-OWN-DSDV -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 16:08 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304, 2026-11-25 19:34)
