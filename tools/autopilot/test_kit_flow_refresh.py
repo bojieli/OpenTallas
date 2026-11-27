@@ -170,3 +170,26 @@ def test_source_line_kept_only_when_the_file_is_in_the_kit(tmp_path):
     p.write_bytes(b"source /work/gone.tcl\nputs a\n")
     K._put(str(p), b"puts b\n")
     assert p.read_bytes() == b"puts b\n"
+
+
+def test_authored_polarity_table_blocks_incompatible_hook_downgrade(tmp_path):
+    rt, kit = setup(tmp_path)
+    sidecar = kit / "ft_polarity_local_sites.tsv"
+    sidecar.write_text("0\t8.64\t4.59\n")
+    hook = kit / "ft_polarity_local.tcl"
+    compatible = b"proc fpl_load_exact_sites {path} {}\n"
+    hook.write_bytes(compatible)
+    older = rt / "tools/die_plan/ft_polarity_local.tcl"
+    older.write_text("puts legacy\n")
+    index = rt / "tools/.flow_blobs.json"
+    data = json.loads(index.read_text())
+    data["blobs"]["tools/die_plan/ft_polarity_local.tcl"] = [K.blob_id(compatible)]
+    index.write_text(json.dumps(data))
+    args = ["--kit", str(kit), "--stage", "place", "--rt", str(rt)]
+    assert K.main(args) == K.PARTIAL_RC
+    assert hook.read_bytes() == compatible
+    assert (kit / "vclk_measured_hold.tcl").read_bytes() == b"puts old\n"
+    older.write_bytes(compatible + b"# refreshed hook\n")
+    assert K.main(args) == 0
+    assert hook.read_bytes() == older.read_bytes()
+    assert sidecar.read_text() == "0\t8.64\t4.59\n"

@@ -454,15 +454,40 @@ def _ft_polarity_local(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
-def _ft_polarity_local_exports(budgets, tn):
-    """Enable the placement hook for one exact native launch station when selected."""
+def _ft_polarity_local_exports(budgets, tn, kd=None):
+    """Emit the optional native group selector and its authored data table."""
     groups = budgets.get("ft_polarity_local_group_by_type") or {}
-    if tn in groups:
-        group = groups[tn]
-        if not isinstance(group, str) or not re.fullmatch(S.FT_POLARITY_GROUP_PATTERN, group):
-            raise ValueError(f"{tn}: invalid native FT polarity station group {group!r}")
-        return ["export OT_FT_POLARITY_LOCAL = 1", f"export OT_FT_POLARITY_LOCAL_GROUP = {group}"]
-    return ["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(budgets, tn) else []
+    authored = budgets.get("ft_polarity_local_sites_by_type") or {}
+    table = Path(kd) / "ft_polarity_local_sites.tsv" if kd is not None else None
+    if tn not in authored and table is not None:
+        table.unlink(missing_ok=True)
+    if tn not in groups:
+        if tn in authored:
+            raise ValueError(f"{tn}: authored FT polarity sites require an exact group selector")
+        return ["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(budgets, tn) else []
+
+    group = groups[tn]
+    if not isinstance(group, str) or not re.fullmatch(S.FT_POLARITY_GROUP_PATTERN, group):
+        raise ValueError(f"{tn}: invalid native FT polarity station group {group!r}")
+    exports = ["export OT_FT_POLARITY_LOCAL = 1", f"export OT_FT_POLARITY_LOCAL_GROUP = {group}"]
+    if tn in authored:
+        rows = authored[tn]
+        if not isinstance(rows, (list, tuple)) or not rows:
+            raise ValueError(f"{tn}: authored FT polarity sites need a nonempty bit/site table")
+        if table is None:
+            raise ValueError(f"{tn}: authored FT polarity sites require a kit directory")
+        sites = {}
+        for row in rows:
+            if (not isinstance(row, (list, tuple)) or len(row) != 3 or type(row[0]) is not int or row[0] < 0
+                    or not all(type(v) in (int, float) and math.isfinite(v) and v >= 0 for v in row[1:])):
+                raise ValueError(f"{tn}: invalid authored FT polarity bit/site {row!r}")
+            bit, x, y = row
+            if bit in sites:
+                raise ValueError(f"{tn}: duplicate authored FT polarity bit {bit}")
+            sites[bit] = (x, y)
+        table.write_text("".join(f"{bit}\t{x:.12g}\t{y:.12g}\n" for bit, (x, y) in sorted(sites.items())))
+        exports.append(f"export OT_FT_POLARITY_LOCAL_SITES = /work/{table.name}")
+    return exports
 
 
 def _relay_polylines(P, tn):
@@ -8564,7 +8589,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_RELAY_MID_FIT = 1"] if macros and (_relay_mid_fit(P.budgets, tn) or _core_pin_relay(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and (_relay_mid_fit_chain(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_MID_STAGGER = 1"] if macros and _relay_mid_stagger(P.budgets, tn) else []),
-           *_ft_polarity_local_exports(P.budgets, tn),
+           *_ft_polarity_local_exports(P.budgets, tn, kd),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
