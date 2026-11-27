@@ -129,7 +129,7 @@ STUBS = {
     "cores": "def resolve(n):\n    raise RuntimeError\n",
     "schema": "class Plan:\n    def __init__(self, raw, path=None):\n        self.raw = raw\n",
     "reset_tree": "def wf_plan(P):\n    return {}\n",
-    "pin_entry_phase": "CELL_RTL = %r\n" % CELL,
+    "pin_entry_phase": "CELL_RTL = %r\nimport math\ndef release_delta(h):\n    return -math.ceil(h / 2)\n" % CELL,
     "head_native_release": (
         "import json, hashlib\nfrom pathlib import Path\nCALLS = []\n"
         "def digest(raw):\n    return raw['digest']\n"

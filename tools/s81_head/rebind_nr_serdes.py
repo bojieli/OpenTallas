@@ -114,6 +114,28 @@ def check_changed_binding(old_parts, new_parts, new_receipt, new_digest, receipt
     return ["partitions[%s].%s" % (n, k) for n, k, _a, _b in leaves]
 
 
+def check_release_consistency(old_wf, new_wf, old_parts, new_parts, release_delta):
+    """CONSUMER CHECK (reset_tree.wf_plan): for every hd_serdes partition whose reset_entry_phase changed, the published wavefront release must move by exactly
+    release_delta(new h) - release_delta(old h); every other partition's release and entry_stages must be unchanged.  -> {partition: [old, new]} of the moved
+    releases; ValueError otherwise.  (HEAD-PROBE-R3 11-27: lk_WN1 76 -> 77; the lane table and LATCHECK do not observe reset release, wf_plan does.)"""
+    op, np_ = old_wf.get("parts") or {}, new_wf.get("parts") or {}
+    moved = {}
+    for name in sorted(set(op) | set(np_)):
+        a, b = op.get(name), np_.get(name)
+        if a is None or b is None:
+            raise ValueError("release consistency: partition %s missing on one side" % name)
+        want = 0
+        if name in old_parts and name in new_parts:
+            want = release_delta(int(new_parts[name].get("reset_entry_phase", 0))) - release_delta(int(old_parts[name].get("reset_entry_phase", 0)))
+        if b["release"] - a["release"] != want:
+            raise ValueError("release consistency: %s release moved %+d, release_delta says %+d" % (name, b["release"] - a["release"], want))
+        if want:
+            moved[name] = [a["release"], b["release"]]
+        elif a.get("entry_stages") != b.get("entry_stages"):
+            raise ValueError("release consistency: %s entry_stages changed without a release change" % name)
+    return moved
+
+
 def fwd_only_delta(a, b):
     """FWDTAP-1 serdes requal: the hd_serdes type may differ ONLY by the reach_rules fix_fwd form on forwarded clock
     exports (pins[i].source_clock_port of an out clock pin fclk_out_*, and landing_contract.forwarded_clock_only_inputs
@@ -177,6 +199,8 @@ def main():
                                      args.new_receipt.parent if args.new_receipt else None, cell_sha)
         old_plan = schema.Plan(old, args.old_plan)
         head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)     # anchor the old side as the old path does
+        new_plan0 = schema.Plan(new, args.new_plan)
+        moved = check_release_consistency(reset_tree.wf_plan(old_plan), reset_tree.wf_plan(new_plan0), serdes_parts(old), serdes_parts(new), pin_entry_phase.release_delta)
         args.out.mkdir(parents=True, exist_ok=False)
         root = args.new_receipt.parent.resolve()
         files = {}
@@ -195,9 +219,10 @@ def main():
         new_plan = schema.Plan(new, args.new_plan)
         result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), accepted)       # re-qualify the artifact actually written
         cover = dict(old_plan_sha256=hexdigest(args.old_plan), new_plan_sha256=hexdigest(args.new_plan), old_receipt_sha256=hexdigest(args.old_receipt),
-                     new_receipt_sha256=hexdigest(args.new_receipt), covered=diff)
+                     new_receipt_sha256=hexdigest(args.new_receipt), covered=diff, wf_plan_release_moved=moved)
         (args.out / "changed_binding_cover.json").write_text(json.dumps(cover, indent=1) + "\n")
         print("CHANGED_BINDING_COVERED", len(diff), "paths", diff[:8])
+        print("WF_PLAN_RELEASE_MOVED", moved)
         print("NATIVE_RELEASE", result["release_qualification"]["verdict"], len(result["release_qualification"]["native_targets"]), "targets", accepted)
         print("ORIGINAL_PROOF", args.old_receipt, hexdigest(args.old_receipt))
         print("PLAN", args.new_plan, hexdigest(args.new_plan))
