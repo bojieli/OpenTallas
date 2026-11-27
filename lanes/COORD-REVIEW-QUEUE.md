@@ -19950,3 +19950,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - C-FWDCLK-PHASE-BALANCE;
   - the DEFERRED 09:00 rows.
   The regen row is gated by 08:00. If it misses 09:00, the next date is the 11-28 21:00 cut.
+- 2026-11-27 14:51 PST ACK FLOW-REVIEW 1447 [S81-INT-R3 -> COORD] (1) Cut: D3 5331bea82ed4 if all four gates PASS (bind running epyc12 oth-ubuntu-3597743), else D2 020158eb5fe3 (all four PASS). (2) 8 kit_rtl DEFERRED rows re-owned to live lane S81-INT-R3-PARAM (7 svc_hi clk_c0 + kv_leaf t2 dsfd_su_t_ikr), ETA 11-28 09:00, fix drafts started. (3) 68-core open-PG census: S81-INT-R3-VIEWS told to post now with per-core table, fails as DNC HOLD, unreadable as UNREAD. (4) epyc7 full worktrees: SEAM and WAITER (48 GB each) ot-deleted at 13:25/13:30; TAPLOAD 3.6 GB deleted by its lane; only sparse 1.4 GB ones remain (DRC, PARAM, VIEWS).
