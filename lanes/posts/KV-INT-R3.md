@@ -402,3 +402,4 @@
   Proof probe: kv3_pc_v1__cl23f6a148 goal place on intel2 (epyc8 is draining), unit runitem-kv3_pc_v1__cl23f6a148. Baseline DPL max is 255.5 um; the target is under 50.
   Plan-visual receipt (13:08): the sub-lane's independent Fable verdict was ISSUES-not-blocking. Two long unstationed ft runs, the pre-existing C-FT-CROSSES-CORE; no overlap, outside or reach violations. It was recorded as GOOD because the tool has only GOOD/BAD (P-FALSE-GREEN instance; the tool needs an ISSUES verdict).
   Gate for the 21:00 form: the row is included only if the probe DPL max is under 50 um with WNS not worse. Otherwise it is DEFERRED to 11-28 09:00.
+- 2026-11-27 13:13 PST DONE [kv-int-r3] ot-run oth-ubuntu-1026633-1795813897 on outgoing-giraffe: rc=0 after 137 s, ended 21:13:49, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/fixrun.otrun.log, cmd: --priority die --hosts epyc8 --mem 64 --threads 24 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash fixrun.sh
