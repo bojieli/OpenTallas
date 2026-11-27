@@ -1,33 +1,86 @@
-"""C-RST-TAP-REPOINT: reset_taps.tcl keeps the original reset net when a FIRM-flop re-point would exceed OT_RESET_REPOINT_MAX_UM (default off).
-Source-contract test with mutants (the flow itself is proved by the hd_st_n3_turn CTS-only replay)."""
+"""C-RST-TAP-REPOINT: behavioural test of the TAP-PAIR AFFINITY acceptance in reset_taps.tcl.  The two procs are cut out of the shipped file and run in tclsh
+on fixtures (no OpenROAD needed); the call site is pinned by source checks and mutants."""
 import re
+import shutil
+import subprocess
 from pathlib import Path
+
 import pytest
 
 SRC = (Path(__file__).parent / "reset_taps.tcl").read_text()
+TCL = shutil.which("tclsh")
+pytestmark = pytest.mark.skipif(TCL is None, reason="tclsh not installed")
 
 
-def _ok(s):
-    m = re.search(r"if \{\$k == \$best\} \{ incr rt_keep; continue \}(.*?)\$it disconnect", s, re.S)
-    assert m, "re-point block not found"
-    blk = m.group(1)
-    assert "OT_RESET_REPOINT_MAX_UM" in blk
-    assert "info exists ::env(OT_RESET_REPOINT_MAX_UM)" in blk              # default off: unset = no change
-    assert "$bd > $::env(OT_RESET_REPOINT_MAX_UM) * $rt_dbu" in blk     # Manhattan leg vs limit, in dbu
-    assert re.search(r"incr rt_far;.*?\n\s*continue", blk, re.S)           # refused: continue before disconnect = original net kept
-    assert "OT_RESET_REPOINT_KEPT" in s
+def procs(src):
+    out = []
+    for name in ("rt_aff_accept", "rt_net_driver_xy"):
+        m = re.search(r"^proc %s \{.*?\n\}\n" % name, src, re.S | re.M)
+        assert m, name
+        out.append(m.group(0))
+    return "\n".join(out)
 
 
-def test_contract():
-    _ok(SRC)
+def run(script, src=SRC):
+    r = subprocess.run([TCL], input=procs(src) + "\n" + script, capture_output=True, text=True, timeout=30)
+    assert r.returncode == 0, r.stderr
+    return r.stdout.split()
+
+
+def test_accept_table():
+    # d_launch reach d_drv lim : reach and driver limit both apply, "" = off
+    cases = [("100 400 150 180", 1), ("100 400 205 180", 0), ("500 400 10 180", 0), ("100 400 205 {}", 1), ("500 {} 10 {}", 1), ("100 {} 205 180", 0),
+             ("100 400 180 180", 1)]
+    script = "".join('puts [rt_aff_accept %s]\n' % c for c, _ in cases)
+    assert run(script) == [str(w) for _, w in cases]
+
+
+def test_default_off_changes_nothing():
+    """with no driver limit the decision equals the pre-change rule (launch flop within reach)"""
+    for d in (0, 100, 400, 401, 900):
+        want = "1" if d <= 400 else "0"
+        assert run("puts [rt_aff_accept %d 400 99999 {}]" % d) == [want]
+
+
+def test_driver_locator_uses_the_output_iterm():
+    script = """
+proc fakenet {} { return NET }
+proc NET {sub} { if {$sub eq "getITerms"} { return {IT_A IT_B} } }
+proc IT_A {sub} { if {$sub eq "isOutputSignal"} { return 0 } ; if {$sub eq "getInst"} { return INST_A } }
+proc IT_B {sub} { if {$sub eq "isOutputSignal"} { return 1 } ; if {$sub eq "getInst"} { return INST_B } }
+proc INST_A {sub} { return {1 1} }
+proc INST_B {sub} { return {656700 576700} }
+puts [rt_net_driver_xy NET]
+puts [llength [rt_net_driver_xy NET2]]
+proc NET2 {sub} { return {} }
+puts [llength [rt_net_driver_xy NET2]]
+"""
+    out = run(script)
+    assert out[:2] == ["656700", "576700"] and out[-1] == "0"
+
+
+def test_call_site_pinned():
+    m = re.search(r"if \{\[rt_aff_accept .*?\n.*?\n\s*\}\n", SRC, re.S)
+    assert m
+    blk = SRC[SRC.index("rt_aff_accept $d"):SRC.index("rt_aff_accept $d") + 700]
+    assert "set best $ck_i; set bd $d" in blk and "incr rt_aff_refused" in blk
+    assert "OT_RESET_AFFINITY_REFUSED" in SRC
+    assert "OT_RESET_REPOINT_MAX_UM" not in SRC             # the first guard is gone: nearest-tap re-points are never refused
 
 
 @pytest.mark.parametrize("old,new", [
-    ("[info exists ::env(OT_RESET_REPOINT_MAX_UM)] && ", ""),
-    ("$bd > $::env(OT_RESET_REPOINT_MAX_UM)", "$bd < $::env(OT_RESET_REPOINT_MAX_UM)"),
-    ("        continue\n      }\n      $it disconnect", "      }\n      $it disconnect"),
+    ("if {$lim_dbu ne \"\" && $d_drv > $lim_dbu} { return 0 }", ""),
+    ("if {$reach_dbu ne \"\" && $d_launch > $reach_dbu} { return 0 }", ""),
+    ("if {$lim_dbu ne \"\" && $d_drv > $lim_dbu}", "if {$lim_dbu ne \"\" && $d_drv < $lim_dbu}"),
 ])
-def test_mutant_killed(old, new):
+def test_mutants_killed(old, new):
     assert old in SRC
+    mut = SRC.replace(old, new, 1)
     with pytest.raises(AssertionError):
-        _ok(SRC.replace(old, new, 1))
+        _table_src(mut)
+
+
+def _table_src(src):
+    cases = [("100 400 150 180", 1), ("100 400 205 180", 0), ("500 400 10 180", 0), ("100 {} 205 180", 0)]
+    script = "".join('puts [rt_aff_accept %s]\n' % c for c, _ in cases)
+    assert run(script, src) == [str(w) for _, w in cases]

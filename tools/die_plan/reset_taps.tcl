@@ -12,6 +12,19 @@
 # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): rst_n_t<i> is the last synchronous relay at tap i (equal depth
 # to every tap) instead of a per-tap synchroniser; (1) then finds no u_rsync_t<i> (reset_tree.tcl places the entry
 # stage and the relays); (2) re-points FIRM flops the same way and leaves u_rst_root / u_rst_in / u_rrl_<k> alone.
+# C-RST-TAP-REPOINT (HEAD-PROBE-R3 11-27, rework after independent review): TAP-PAIR AFFINITY may pull a flop's reset onto its CLOCK tap's relay
+# instead of its nearest tap's.  rt_aff_accept decides that override: the clock-tap relay launch flop must be within the leaf reach (as before) and,
+# when OT_RESET_AFFINITY_MAX_DRIVER_UM is set (default off), the relay DRIVER of that net must be within that Manhattan distance of the flop.
+# A refused override leaves the NEAREST tap's relay (the ordinary rule); nothing else changes.  d_launch / d_drv / reach_dbu / lim_dbu in dbu; "" = no limit.
+proc rt_aff_accept {d_launch reach_dbu d_drv lim_dbu} {
+  if {$reach_dbu ne "" && $d_launch > $reach_dbu} { return 0 }
+  if {$lim_dbu ne "" && $d_drv > $lim_dbu} { return 0 }
+  return 1
+}
+proc rt_net_driver_xy {net} {
+  foreach it [$net getITerms] { if {[$it isOutputSignal]} { return [[$it getInst] getLocation] } }
+  return {}
+}
 set rt_blk [ord::get_db_block]
 set rt_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rt_taps {}
@@ -331,7 +344,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   }
   close $rt_out
   # (2) FIRM flops -> nearest tap's synchroniser nets
-  set rt_moved 0; set rt_keep 0; set rt_nopol 0; set rt_far 0; set rt_far_l {}
+  set rt_moved 0; set rt_keep 0; set rt_nopol 0; set rt_aff_refused 0; set rt_aff_l {}
   set rt_cnt {}; set rt_leaf_n 0; set rt_leaf_max 0; set rt_leaf_bad {}
   foreach ins [$rt_blk getInsts] {
     # rt_repoint_only (landing_placement.tcl, after the landed line moved stations): only those flops
@@ -369,7 +382,15 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       if {$ck_i ne "" && $ck_i ne $best && $ck_i ni $rt_bad && [dict exists $rt_rep "$ck_i,$par"] && [dict exists $rt_launch $ck_i]} {
         lassign [dict get $rt_launch $ck_i] lx ly
         set d [expr {abs($x - $lx) + abs($y - $ly)}]
-        if {![info exists rt_leaf_reach_um] || $d <= $rt_leaf_reach_um * $rt_dbu} { set best $ck_i; set bd $d }
+        set reach_dbu [expr {[info exists rt_leaf_reach_um] ? $rt_leaf_reach_um * $rt_dbu : ""}]
+        set lim_dbu ""
+        if {[info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)] && $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) ne ""} { set lim_dbu [expr {$::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) * $rt_dbu}] }
+        set d_drv 0
+        set dxy [rt_net_driver_xy [dict get $rt_rep "$ck_i,$par"]]
+        if {[llength $dxy] == 2} { set d_drv [expr {abs($x - [lindex $dxy 0]) + abs($y - [lindex $dxy 1])}] }
+        if {[rt_aff_accept $d $reach_dbu $d_drv $lim_dbu]} { set best $ck_i; set bd $d } elseif {$d <= [expr {$reach_dbu eq "" ? $d : $reach_dbu}]} {
+          incr rt_aff_refused; lappend rt_aff_l "[$ins getName]/[[$it getMTerm] getName]:clk_t$ck_i driver [format %.1f [expr {$d_drv/double($rt_dbu)}]]um"
+        }
       }
     }
       if {$best eq ""} { error "OT_RESET_LEAF no equal-polarity reset terminal for [$ins getName]" }
@@ -384,13 +405,6 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       }
       if {$k == $best} { incr rt_keep; continue }
       if {![dict exists $rt_rep "$best,$par"]} { incr rt_nopol; continue }
-      # C-RST-TAP-REPOINT (HEAD-PROBE-R3 11-27): OT_RESET_REPOINT_MAX_UM=<um> keeps the ORIGINAL reset net when the re-point would put the
-      # sink farther than that (Manhattan, to the tap relay launch flop) from the synchroniser it moves to.  hd_st_n3_turn: u_ft_u1_s1 moved
-      # rst_n_t24 -> rst_n_t21, a 205.5 um leg on an INVx1 (slew 378.9 ps vs 320).  Unset = no change (default off).
-      if {[info exists ::env(OT_RESET_REPOINT_MAX_UM)] && $::env(OT_RESET_REPOINT_MAX_UM) ne "" && $bd > $::env(OT_RESET_REPOINT_MAX_UM) * $rt_dbu} {
-        incr rt_far; lappend rt_far_l "[$ins getName]/[[$it getMTerm] getName]:[format %.1f [expr {$bd/double($rt_dbu)}]]um"
-        continue
-      }
       $it disconnect
       $it connect [dict get $rt_rep "$best,$par"]
       incr rt_moved
@@ -401,7 +415,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks, max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
     if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
   }
-  if {$rt_far} { puts "OT_RESET_REPOINT_KEPT $rt_far re-point(s) refused beyond $::env(OT_RESET_REPOINT_MAX_UM) um, original reset net kept: [lrange $rt_far_l 0 19]" }
+  if {$rt_aff_refused} { puts "OT_RESET_AFFINITY_REFUSED $rt_aff_refused affinity override(s) refused (relay driver beyond $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) um), nearest tap used: [lrange $rt_aff_l 0 19]" }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }
 }

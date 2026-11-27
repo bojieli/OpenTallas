@@ -175,6 +175,8 @@ def type_legs(tn, t, tree, sv, bind_type, positions, cap, plan_raw, cache, kit_r
                    n_points=len(pts), leg_um=round(man(d["xy"], far), 1), pos_src=src, **(extra or {}))
         row["leg_rtl_um"] = row["leg_um"]
         if repoint and cons_taps and net.startswith("rst_n"):
+            # C-RST-TAP-REPOINT: the TAP-PAIR AFFINITY override (post-place only) is not modelled here; with OT_RESET_AFFINITY_MAX_DRIVER_UM set a refused
+            # override falls back to the nearest tap, which is this model, so the guard moves the placed leg toward this estimate, never away.
             # the kit's reset_taps.tcl (pre-GPL) re-points every FIRM-placed flop on a tap net to its NEAREST tap
             # (seen on fp3: u_bout_bc_o01.eq D rst_n (t45) -> rst_n_t97): the placed leg is the nearest-tap one
             kn, kd = min(cons_taps, key=lambda c: max(man(c[1]["xy"], p) for p in pts))
