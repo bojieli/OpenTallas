@@ -1,0 +1,17 @@
+# S81 retained non-COL visual review
+
+Codex opened floorplan, density, and available path overlays for the 17 exact rendered queue entries listed alongside this review on November 26. These are stage-specific observations. The visual evidence and terminal reports support the holds below. No route release follows from this review.
+
+| Exact type and stage | Finding | Disposition |
+| --- | --- | --- |
+| E9 `dsdv_slice_c1x_C__t8` PLACE-GP, exact kit `1124154058` | Density reaches 0.995 with 71,436 cells in the 23,800 µm² cluster around (492,382). GP setup is −415.212 ps and CTS setup remains −436.653 ps. Negedge XR macro `u_u_s_6S_u_lp_u_xr` to posedge `u_ist_leafdn_o1_0/q[394]` spends 631 ps in the last two buffer legs alone. Existing native scan has 471 XR bits over 405 µm and 33 CAP-derived bits over the cycle reach. The first ordered seat bank is still west of both actual launch neighborhoods. | Hold. Price a guarded seven-stage re-seat on current source with the face, bits and ages preserved. |
+| E9 `ot_s81sl_leaf__t1` PLACE-GP, exact kit `1124203606` | Buffer chains around central WR1 logic and 0.837 peak density. The same kit’s native GRT reduces GP setup from −301.059 to −15.633 ps, with −31.657 ps hold. | Residual endpoint debt. A structural WR1 rewrite does not follow from the placement proxy. |
+| E9 `bk_sel__t2`, exact kit `1124220235`, two PLACE-GP renders and GRT | A long five-macro array and center pair concentrate cells in the southern corridor. Peak density increases from 0.892 at placement to 0.963 at GRT, with 8,836 cells >90% at a 100% congestion peak and native setup −111.656 ps. The two GP renders show different timing overlays for the same retained kit. | Hold. Compare the existing improved BKSEL profile and address south corridor capacity if it persists there. |
+| E12 `ot_s81sl_leaf__t35` DP, private plan `d5f8f538f897` | The slot-clear placement still has `strap_ca_efall[0]` and `strap_ca_pad[0]` entering near south x622 and sinking near north x111–125, y1176–1219. The reset t47 branch is a separate 1,755.3 µm spread. Local density peaks at 0.799 near (549,419). | Hold. Hand exact strap endpoints to the count-strap face class. Preserve reset as its own work item. |
+| E12 `ot_s81sl_leaf__t70` DP, private plan `abdc96c7cb4f` | Collector-local placement still has seven east-side strap inputs with far-west sinks, including `strap_ca_k_ft5_i[0:4]`. A separate 58-sink `u_lpad_leafdn_i0.q[0]` branch spans 2,369.9 µm. East density peaks at 0.742. | Hold. Hand the strap scope to the same face class and keep the leafdown fanout a separate class. |
+
+The remaining renders cover canary t12, two t50 variants, t21, t28, t45, t29 GP and GRT, t40, t24, and t38 GP and GRT. The exact queue records identify checkpoints and residual hot spots. The canary, t21, t28 and both t50 variants have geometry-only coverage because their retained render bundle contains no stage timing paths. t29 and t38 GRT have positive setup and still carry hold debt.
+
+Three indexed GP attempts lack reviewable images under the recorded render paths. E9 leaf t54 and station t52 are FAILED and E8 station t30 is GONE. The retained t52 GRT already has a separate structural verdict. These records do not count as positive reviews.
+
+The local inspection sheets and reports are under `/srv/opentallas-scratch/claude/codex-visual-s81-1126/noncol_restart_1612`. The canonical queue entries retain each host, kit and render path.
