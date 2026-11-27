@@ -11487,14 +11487,45 @@ def publication_place_consumer(spec_path, publication):
     return spec, prepared
 
 
-def run_item(spec_path, resume_reviewed=False, from_publication=None):
+def private_prepared_consumer(spec_path):
+    """Continue one unchanged named private dry attempt using the standard place stages."""
+    import autopilot as AP
+
+    raw, prepared = PPR.read_private_prepared(spec_path)
+    original = json.loads(raw)
+    cfg = load_config(private_config_text(AP, original.get("hub")))
+    die, item, host = original["die"], original["item"], original["gen_host"]
+    why = private_spec_stale(original, cfg=cfg)
+    if why or launch_held(cfg, original):
+        raise ValueError(why or "the committed place hold still applies to this partition")
+    if (host not in cfg["dies"][die].get("hosts", ()) or host not in gen_hosts(cfg, die, item)
+            or host in (cfg.get("retired_hosts") or ())):
+        raise ValueError("the exact private producer is ineligible for placement")
+    p = subprocess.run([original["ot_run"], "--status"], capture_output=True, text=True, check=True, timeout=60)
+    if host in draining_hosts(cfg["dies"][die].get("gen_host_min_free_gb") or {},
+                              parse_otrun_status(p.stdout), original.get("hub"), cfg, die):
+        raise ValueError("the exact private producer is draining")
+    if live_attempt_elsewhere(load_state(AP_DIR), die, item, None):
+        raise ValueError("an ordinary attempt already owns this partition")
+    out = AP_DIR / "private_specs" / "REVIEWED-STATION-PLACE" / (die + "_" + prepared["ref"]["sha256"])
+    out.mkdir(parents=True, exist_ok=True)
+    spec = out / "spec.json"
+    PPR.write_once(spec, raw)
+    return spec, prepared
+
+
+def run_item(spec_path, resume_reviewed=False, from_publication=None, from_private_prepared=False):
     """Keep one standard private controller per exact spec directory."""
     prepared = None
-    if from_publication:
+    if from_publication or from_private_prepared:
         try:
-            spec_path, prepared = publication_place_consumer(spec_path, from_publication)
+            if from_private_prepared:
+                spec_path, prepared = private_prepared_consumer(spec_path)
+            else:
+                spec_path, prepared = publication_place_consumer(spec_path, from_publication)
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
-            print(f"KW_PUBLISHED_PLACE refused: {exc}", flush=True)
+            label = "KW_PRIVATE_PREPARED_PLACE" if from_private_prepared else "KW_PUBLISHED_PLACE"
+            print(f"{label} refused: {exc}", flush=True)
             return 2
     out = Path(spec_path).absolute().parent
     if not PPV.applies(PPV.load(Path(spec_path))):
@@ -12362,18 +12393,22 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         source_spec = json.loads(spec_bytes)
         if chain_goal != "place" or not PPV.applies(sp) or G != source_spec["gen_host"]:
             return fail("published_place", "prepared source requires its exact private place-only producer")
-        plan_sha = prepared["publication"]["plan"]
+        private_proof = prepared.get("private_prepared")
+        authority = private_proof or prepared["publication"]
+        plan_sha = authority["plan"]
         plan_shas = {(G, sp["plan"]): plan_sha}
         review = plan_visual_refusal(sp, out, hub, plan_shas=plan_shas)
         if review:
             return fail("plan_visual", review)
         form = PVR.request(sp, plan_sha=plan_sha, producer=G)["form_sha256"]
-        payload = dict(spec=source_spec, ref=prepared["ref"], publication=prepared["publication"],
-                       review={"verdict": "GOOD", "form": form}, attempt=str(out))
-        rc, txt = run("published_place_claim", remote(PPR.producer_command("claim", payload)), idempotent=True)
+        payload = dict(spec=source_spec, ref=prepared["ref"], review={"verdict": "GOOD", "form": form}, attempt=str(out))
+        operation = "claim-private" if private_proof else "claim"
+        if not private_proof:
+            payload["publication"] = authority
+        rc, txt = run("published_place_claim", remote(PPR.producer_command(operation, payload)), idempotent=True)
         if rc:
             return fail("published_place", txt, f"{G}:{K}")
-        _seal["manifest_hash"] = prepared["publication"]["manifest"]
+        _seal["manifest_hash"] = authority["manifest"]
         res["src_manifest"] = {**_seal, "host": G, "mode": "require"}
         res["published_place_ready"] = prepared["ref"]
         refused = route_preflight(None, False, strict=True)
@@ -23458,6 +23493,8 @@ def main(argv=None):
     r.add_argument("spec")
     r.add_argument("--resume-reviewed", action="store_true", help="continue an exact held private placement without rebuilding it")
     r.add_argument("--from-publication", help="resume a prepared publication spec from its canonical PASS record")
+    r.add_argument("--from-private-prepared", action="store_true",
+                   help="continue a completed same-host reviewed station private spec to place only")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
@@ -23572,7 +23609,9 @@ def main(argv=None):
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
-            if (a.resume_reviewed and a.goal) or (a.from_publication and (a.goal or a.resume_reviewed)):
+            prepared = bool(a.from_publication or a.from_private_prepared)
+            if ((a.resume_reviewed and a.goal) or (prepared and (a.goal or a.resume_reviewed))
+                    or (a.from_publication and a.from_private_prepared)):
                 print("KW_PRIVATE_VISUAL refused: the prepared or held goal cannot be overridden", flush=True)
                 return 2
             RUN_ITEM_GOAL = a.goal
@@ -23582,16 +23621,19 @@ def main(argv=None):
                 argv.append("--resume-reviewed")
             if a.from_publication:
                 argv += ["--from-publication", a.from_publication]
+            if a.from_private_prepared:
+                argv.append("--from-private-prepared")
             runitem_reexec(a.spec, argv)
             if drv != Path(__file__).resolve():
                 print(f"KW_DRIVER_REEXEC {Path(__file__).resolve()} -> {drv} (private run-item drives from rt/current; result tools stay pinned)", flush=True)
                 os.environ["KW_DRIVER_FROM"] = str(Path(__file__).resolve())
                 os.execvp(argv[0], argv)
-            if a.from_publication:
-                return run_item(a.spec, from_publication=a.from_publication)
+            if prepared:
+                return run_item(a.spec, from_publication=a.from_publication,
+                                from_private_prepared=a.from_private_prepared)
             return run_item(a.spec, resume_reviewed=True) if a.resume_reviewed else run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
-            if a.from_publication:
+            if a.from_publication or a.from_private_prepared:
                 raise  # The publisher paths are immutable evidence, not this attempt's result.
             out = Path(a.spec).parent / "result.json"
             out.write_text(json.dumps({"verdict": "FAIL", "stage": "pipeline", "tail": f"Traceback (most recent call "

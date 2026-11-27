@@ -85,6 +85,45 @@ def test_exact_publisher_and_private_consumer_share_one_native_work_path(tmp_pat
         ready.producer("claim",claim)
 
 
+@pytest.mark.parametrize("macro_geometry", ["PASS", "FINDINGS"])
+def test_private_place_uses_the_existing_prepared_receipt(tmp_path, macro_geometry):
+    kit, spec, result, payload = producer_fixture(tmp_path)
+    spec.update(src_manifest="require", launch_plan_review_required=True, place_spill=False,
+                roam_hosts=["epyc7"], place_spill_hosts=["epyc7"], hosts=["epyc7"],
+                reviewed_station_prepare={"path": "/exact/recipe", "sha256": "c" * 64})
+    payload["form"] = review.request(spec, plan_sha=PLAN)["form_sha256"]
+    put(Path(payload["preflight"]), {"kit": str(kit), "verdict": "PASS",
+                                    "macro_geometry": {"verdict": macro_geometry}})
+    ref = ready.producer("capture", payload)
+    original = tmp_path / "dry" / "spec.json"
+    put(original, spec)
+    source = {"host": "epyc7", "manifest_hash": MANIFEST, "from": "verify", "mode": "require"}
+    dry_result = dict(result, src_manifest=source, published_place_ready=ref)
+    result_path = original.parent / "result.json"
+    put(result_path, dict(dry_result, src_manifest=dict(source, **{"from": "peek"})))
+    with pytest.raises(ValueError, match="private dry preparation"):
+        ready.read_private_prepared(original)
+    put(result_path, dry_result)
+    raw, verified = ready.read_private_prepared(original)
+    assert raw == original.read_bytes()
+    assert verified == {"ref": ref, "private_prepared": {"manifest": MANIFEST, "plan": PLAN}}
+    claim = dict(spec=spec, ref=ref, review={"verdict": "GOOD", "form": payload["form"]}, attempt="one-controller")
+    with pytest.raises(ValueError, match="review"):
+        ready.producer("claim-private", dict(claim, review=dict(claim["review"], verdict="BAD")))
+    with pytest.raises(ValueError, match="private place producer"):
+        ready.producer("claim-private", dict(claim, spec=dict(spec, goal="grt")))
+    if macro_geometry == "FINDINGS":
+        with pytest.raises(ValueError, match="macro geometry"):
+            ready.producer("claim-private", claim)
+        return
+    assert ready.producer("claim-private", claim)["kit"] == str(kit)
+    assert ready.producer("claim-private", claim)["kit"] == str(kit)
+    with pytest.raises(ValueError, match="already claimed"):
+        ready.producer("claim-private", dict(claim, attempt="duplicate"))
+    with pytest.raises(ValueError, match="recipe"):
+        ready.producer("claim-private", dict(claim, spec=dict(spec, gen_env={"OT_CHANGED": "1"})))
+
+
 def test_opted_in_publisher_freezes_real_event_and_distinct_work(tmp_path, monkeypatch):
     die,item,host = "qwen_kvsys","kv3_pc","epyc7"
     raw = cfg()
@@ -108,7 +147,8 @@ def test_opted_in_publisher_freezes_real_event_and_distinct_work(tmp_path, monke
 
 
 @pytest.mark.parametrize("route_ok", [False, True])
-def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneration(tmp_path, monkeypatch, route_ok):
+@pytest.mark.parametrize("private_mode", [False, True])
+def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneration(tmp_path, monkeypatch, route_ok, private_mode):
     raw = cfg()
     die,item = "qwen_kvsys","kv3_pc"
     spec = wave.spec_for(raw,die,item,"localhost",kind="type")
@@ -131,7 +171,11 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
         assert k["plan_shas"] == {("epyc7",spec["plan"]):PLAN}
         return ""
     monkeypatch.setattr(wave,"plan_visual_refusal",check_review)
-    monkeypatch.setattr(ready,"producer_command",lambda *a:"prepared_claim_only")
+    def claim_command(operation, payload):
+        assert operation == ("claim-private" if private_mode else "claim")
+        assert ("publication" in payload) is not private_mode
+        return "prepared_claim_only"
+    monkeypatch.setattr(ready,"producer_command",claim_command)
     monkeypatch.setattr(wave,"route_preflight_on",lambda:True)
     monkeypatch.setattr(wave,"route_preflight_cmd",lambda *a,**k:"real_route_preflight")
     monkeypatch.setattr(wave,"src_skew_check",lambda *a:"")
@@ -156,7 +200,10 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
             raise EnteredPlace()
         raise AssertionError(f"unexpected stage {argv[:180]}")
     monkeypatch.setattr(wave.subprocess,"run",fake_run)
-    proof={"publication":{"verdict":"PASS","manifest":MANIFEST,"plan":PLAN},"ref":{"sha256":"c"*64}}
+    authority = {"manifest": MANIFEST, "plan": PLAN}
+    if not private_mode:
+        authority["verdict"] = "PASS"
+    proof = {"private_prepared" if private_mode else "publication": authority, "ref": {"sha256": "c" * 64}}
     if route_ok:
         with pytest.raises(EnteredPlace):
             wave._run_item(spec_path,prepared=proof)
