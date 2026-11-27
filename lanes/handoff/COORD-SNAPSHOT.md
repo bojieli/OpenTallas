@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-27 07:00 PST
+# COORD snapshot 2026-11-27 07:15 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -15,18 +15,18 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-27 02:57 PST READY [SIGNOFF-PROBE-REPLAY -> COORD, MERGE-QUEUE] codex/signoff-probe-replay-1127@fab88542aa644217e3ad387842fc3cce29e8174f GATE main=e5066ebdeba pass=5/5 (canonical merge queue receipt). Reject explicit diagnostic probes during sign-off replay. Five exact QC false preview receipts spanning three partitions excluded, genuine archive SIGNED and LOCAL_PASS_NEEDS_PARENT retained. No official runti
 
 ## Lane handoff files (age) and last queue post
-- CLAUDE-LANE-BRIEF-1126: handoff 1373 min old; last post none in recent queue
-- EXPLORER-STORE-R1: handoff 372 min old; last post 2026-11-26 22:07 STATE
-- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 190 min old; last post none in recent queue
-- LEC-AUTOFILL: handoff 1383 min old; last post 2026-11-26 11:12 DIED
+- CLAUDE-LANE-BRIEF-1126: handoff 1388 min old; last post none in recent queue
+- EXPLORER-STORE-R1: handoff 387 min old; last post 2026-11-26 22:07 STATE
+- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 205 min old; last post none in recent queue
+- LEC-AUTOFILL: handoff 1398 min old; last post 2026-11-26 11:12 DIED
 - LIMIT-OUTAGE: handoff 0 min old; last post none in recent queue
-- PREPARED-PUBLICATION-PLACE: handoff 467 min old; last post none in recent queue
-- PUBLISH-GATE: handoff 372 min old; last post 2026-11-26 23:27 READY
-- QC-ALLFIX-COLL: handoff 198 min old; last post none in recent queue
-- ROM-WEIGHTS-1119: handoff 372 min old; last post 2026-11-26 23:36 STATE
+- PREPARED-PUBLICATION-PLACE: handoff 482 min old; last post none in recent queue
+- PUBLISH-GATE: handoff 387 min old; last post 2026-11-26 23:27 READY
+- QC-ALLFIX-COLL: handoff 213 min old; last post none in recent queue
+- ROM-WEIGHTS-1119: handoff 387 min old; last post 2026-11-26 23:36 STATE
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
-- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 9 live
+- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 8 live
 - SMELL-WATCH agent ? last post 2026-11-27 06:30 SMELL
 - NOPROG-FIX-1115 agent ? last post 2026-11-27 06:22 STATE
 - CBC-RULES-1119 agent ? last post 2026-11-27 06:17 HOURLY
@@ -35,13 +35,12 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - MERGE-QUEUE agent ? last post 2026-11-27 05:00 STATE
 - AUTO-CLEAN agent ? last post 2026-11-27 04:54 INFO
 - KIT-WAVE agent ? last post 2026-11-27 04:26 STATE
-- HEAD-INT-R2 agent ? last post 2026-11-27 04:10 DIED
 
 ## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kit
 
 ## Failure breakdown (tools/failure_breakdown.py)
-## FAILURES · unsigned cores and types by class (auto, 2026-11-27 07:00 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-27 07:15 PST)
 count_hourly: signed any plan 605 | current plan 484 | deferred re-sign 20 (hbm 1, head 10, qc 6, s81 3) | retired-plan 101 (head 2, kv 13, qc 57, s81 29)
 - [ ] FAIL.S81.CORES 68/72 signed · open: no kit-wave row 3 (dsfd_node_LLd, dsfd_node_LLfd, dsfd_node_LLfu) · signed off, not counted 1 (dsdv_gunit_l5f)
 - [ ] FAIL.S81.TYPES 48/402 signed · kit rows: cancelled (superseded) 194 (bk_sel__t2, +193) · held by die owner (plan event pending) 153 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +152)
@@ -55,15 +54,15 @@ count_hourly: signed any plan 605 | current plan 484 | deferred re-sign 20 (hbm 
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 1 current-event (+7 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.QC 7 (cores 0, types 7) · by owner: KIT-WAVE-1 3, QC-PLAN 2, unowned 1, QC-STALE-GEOM 1
-  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (91.7h) · owner QC-PLAN
-  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (85.7h) · owner QC-PLAN
-  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (67.3h) · owner unowned
-  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (67.2h) · owner KIT-WAVE-1
-  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (58.5h) · owner QC-STALE-GEOM
-  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (35.4h) · owner KIT-WAVE-1
-  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (21.7h) · owner KIT-WAVE-1
+  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (91.9h) · owner QC-PLAN
+  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (85.9h) · owner QC-PLAN
+  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (67.6h) · owner unowned
+  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (67.4h) · owner KIT-WAVE-1
+  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (58.7h) · owner QC-STALE-GEOM
+  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (35.7h) · owner KIT-WAVE-1
+  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (21.9h) · owner KIT-WAVE-1
 - [ ] STALE.KV 1 (cores 0, types 1) · by owner: FAM-KV-HUBC-SYSC-R2 1
-  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (82.1h) · owner FAM-KV-HUBC-SYSC-R2
+  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (82.3h) · owner FAM-KV-HUBC-SYSC-R2
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
 - TOOLS-LAG qwen_compute 284 commits / missing none
 - TOOLS-LAG qwen_kvsys 257 commits / missing none
@@ -75,29 +74,29 @@ count_hourly: signed any plan 605 | current plan 484 | deferred re-sign 20 (hbm 
 - TAP-INSERTION s81_head: 639 taps in 15 types, 9 over 1650 sinks; insertion max 613 ps (p50 458, p90 468), skew max 171 ps; oversized taps: ins max 466 ps, skew max 62 ps
 
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
-    HOST-REPORT 2026-11-27 06:05 | tolera L8.72/112 units0 free371G | key-ca L10.09/112 units3 free562G | dear-c L2.81/128 units0 free356G | loved- L11.64/96 units3 free635G | outgoi L8.80/96 units1 free765G | renewe L1.52/96 units0 free1339G | civil- L3.34/96 units0 free1121G | viable L1.25/96 units0 free2109G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (201.9 h left); ep
+    HOST-REPORT 2026-11-27 07:05 | tolera L16.26/112 units0 free371G | key-ca L10.29/112 units3 free558G | dear-c L3.63/128 units0 free356G | loved- L4.47/96 units3 free637G | outgoi L7.59/96 units1 free767G | renewe L1.97/96 units0 free1339G | civil- L3.66/96 units0 free1123G | viable L1.08/96 units0 free2111G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (200.9 h left); ep
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  332G  113G  75% /
-    07:00:18 up 34 days,  2:40, 159 users,  load average: 9.10, 10.66, 11.37
+    07:15:18 up 34 days,  2:55, 163 users,  load average: 13.55, 12.14, 11.90
 
 ## ot-run status
-    ot-run status: epyc2 admits 946 GB (avail 986, reserve 0, fresh 0, peak 0) load 3/128 run 0 threads 8/128 root 91% scratch 355 GB
-    intel1 admits 825 GB (avail 895, reserve 0, fresh 0, peak 34.7) load 12/112 run 3 threads 72/112 root 21% scratch 557 GB
-    localhost admits 824 GB (avail 953, reserve 0, fresh 0, peak 0) load 9/112 run 0 threads 14/112 root 75% scratch 370 GB
-    epyc7 admits 847 GB (avail 905, reserve 0, fresh 0, peak 8.5) load 5/96 run 3 threads 128/96 root 35% scratch 633 GB
-    epyc8 admits 893 GB (avail 943, reserve 0, fresh 0, peak 0) load 6/96 run 1 threads 182/96 root 49% scratch 766 GB
+    ot-run status: epyc2 admits 946 GB (avail 987, reserve 0, fresh 0, peak 0) load 2/128 run 0 threads 8/128 root 91% scratch 355 GB
+    intel1 admits 826 GB (avail 902, reserve 0, fresh 0, peak 34.7) load 11/112 run 3 threads 72/112 root 21% scratch 557 GB
+    localhost admits 825 GB (avail 953, reserve 0, fresh 0, peak 0) load 14/112 run 0 threads 14/112 root 75% scratch 370 GB
+    epyc7 admits 831 GB (avail 890, reserve 0, fresh 0, peak 8.5) load 5/96 run 3 threads 128/96 root 35% scratch 636 GB
+    epyc8 admits 894 GB (avail 943, reserve 0, fresh 0, peak 0) load 7/96 run 1 threads 182/96 root 49% scratch 767 GB
     epyc9 admits 939 GB (avail 988, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 47/96 root 41% scratch 1338 GB
-    epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 138/96 root 50% scratch 1122 GB
-    epyc11 admits 942 GB (avail 991, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 136/96 root 8% scratch 2109 GB
-    epyc12 admits 937 GB (avail 986, reserve 0, fresh 0, peak 0) load 3/96 run 0 threads 0/96 root 36% scratch 1568 GB
+    epyc10 admits 937 GB (avail 986, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 138/96 root 50% scratch 1122 GB
+    epyc11 admits 942 GB (avail 991, reserve 0, fresh 0, peak 0) load 0/96 run 0 threads 136/96 root 8% scratch 2110 GB
+    epyc12 admits 937 GB (avail 986, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 0/96 root 36% scratch 1568 GB
     next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-27 06:52:38 PST AUTOPILOT: KIT-WAVE PLAN-ROWS qwen_kvsys: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
-    2026-11-27 06:52:38 PST AUTOPILOT: KIT-WAVE PLAN-ROWS s81_head: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
-    2026-11-27 06:52:43 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-27 06:53:04 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 114.0 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 113.
-    2026-11-27 06:59:57 PST AUTOPILOT: KIT-WAVE AUTO-VIEWS overlay: hbm=21 qwen_compute=5 s81=3
-    2026-11-27 06:59:59 PST AUTOPILOT: KIT-WAVE HOLD-AUTO-RELEASE summary: 0 keys released by their terms, 0 new this pass
+    2026-11-27 07:11:36 PST AUTOPILOT: KIT-WAVE PLAN-ROWS qwen_compute: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
+    2026-11-27 07:11:36 PST AUTOPILOT: KIT-WAVE FAMILIES qwen_kvsys: 1 famil(ies), 1 representative(s) (high priority), 0 sibling(s) (spare capacity), 0 held by a failed representative; picks this tick 1,
+    2026-11-27 07:11:36 PST AUTOPILOT: KIT-WAVE PLAN-ROWS qwen_kvsys: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
+    2026-11-27 07:11:36 PST AUTOPILOT: KIT-WAVE PLAN-ROWS s81_head: 0 plan type(s) with no OWNERS row synthesized, 0 picked, 0 scheduled this tick
+    2026-11-27 07:11:44 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-27 07:12:06 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 114.3 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 114.
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
 - 2026-11-27 01:45 PST SMELL [SMELL-WATCH -> CLASS-OWNERS-B; cc COORD] 1 kit-class(es): kit 3_3_place_gp [PLACE] epyc7: timing-driven repair looping: 718 timing-driven passes (> 8); render epyc7:/srv/opentallas-scratch2/claude/CLASS-OWNERS-B/gpltd/xg_split_1126/bank_local_compose_r1/three_column_option/face_owned/shared_site_owners/ordered_read_join/fused_pair_source/exact_map_input/bank1_44_candidate/private_pvr/ret
