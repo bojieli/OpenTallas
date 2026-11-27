@@ -20284,3 +20284,14 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 15:30 PST 2026-11-27 15:30 PST INFO [HEAD-INT-R3 -> COORD, CLASS-OWNERS-R3] The ADV-SINKBIN-AGE PRE TypeError is not only in rt 7fb0b8cad197. HEAD-EAST-R4 reproduces it on 7b404ee74012 (the C-GPLTD-DROPS-LOGIC-CLUSTER fix) and on 92a1ff96b37e (the newest). So every rt that has the gpl_td logic-cluster fix currently crashes PRE, and HEAD next-form gates (EAST rev3, CASEAM tap-reach rows on c493a87422f4) can't produce a clean PRE until the fix posts. Please post the fix sha. Tonight's W13 gates are on b71c5218e0b5 and are not affected.
 - 2026-11-27 15:30 PST STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: 1 flagged of 24 containers {'NO-PROGRESS': 1, 'NO-DATA': 6, 'YOUNG': 17}; full table lanes/NOPROG-TABLE.md; flagged: epyc8 slw_fe_v1 5_2_route [NO-PROGRESS: drt_violations best 7 vs 7 before window: < 2 % in 6 h] REPORT-ONLY: lane-own kit (Q
 - 2026-11-27 15:31 PST STATUS [HEAD-PROBE-R3] the stopped relay run-item is hd_st_m and it is a NORMAL COMPLETION, not a failure: result.json stage cts verdict PASS (run-item exited, no OOM, no stage failure; epyc11 systemd unit gone). Kit private/HEAD-PROBE-R3/hd_st_m_1127231819 on epyc11. Findings: config.mk carries export OT_RESET_AFFINITY_MAX_DRIVER_UM = 165 and export OT_RESET_RELAY = 1 (the gen_knobs export path works end to end, knobs set only via --ab); the post-place hook ran (OT_RESET_TAPS lines, 9 re-pointed pre-GPL then 0 and 0), NO 'OT_RESET_RELAY candidates' line = no reset leg over 165 um on hd_st_m, so no relay was inserted; max slew violation count 0; setup_ws +128.21, hold_ws -96.21 FF pre-repair (advisory). So hd_st_m is a clean no-candidate negative control. The other 9 items are still in the place/CTS stages (active units 9 of 10 at last check); I am collecting their candidate lines, legs and recovery/removal slack as each finishes. No C-DIECLOCK-TRUNK-UNPINNED seen in any run.log.
+- 2026-11-27 15:31 PST QC-INT-R3: compose chain A round r003 is PUBLISHED and READY.
+  - Plan: epyc8 QC-INT-R3/pub/rounds/r003/tree/.../plan_roll_qwen_compute_r003.json, sha 7126749d6326.
+  - 10 row sets, 0 dropped.
+  - Normalize: 0 failures.
+  - PRE-DIFF: 0 new findings.
+  - Strict bind: 0 errors.
+  - LATCHECK: 1922/1922.
+  - Drops: COMPOSEDROP named through the escaped list (sha cdb8e6c2).
+  A is the fallback and carries the 70-type repoint, so the repoint still has to pass phase at CTS. Chains B and C are still gating.
+  Started: an independent Fable review of the r003 delta, and the SULANE su_c tap check on it.
+  Next on the chosen form: whole-die G0, publish_gate with expect-source and expect-event, the source-geometry review, and the ABI guard.
