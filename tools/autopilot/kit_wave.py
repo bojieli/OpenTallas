@@ -11457,9 +11457,7 @@ def _run_item(spec_path, resume_reviewed=False):
     if resume_reviewed:
         return reviewed_chain()
 
-    def request_private_view(kh, K, odb):
-        if not PPV.applies(sp):
-            return
+    def private_view_checkpoint(kh, K, odb):
         if not PPV.sha256((res.get("stage_fp") or {}).get("place")):
             # A recovered async controller can reach the existing 3_place without running resume_prepare.
             runner = str(Path(K).parent / "run_kit.sh")
@@ -11472,7 +11470,17 @@ def _run_item(spec_path, resume_reviewed=False):
         _, receipt = run("visual_checkpoint", remote_argv(kh, hub, cmd), idempotent=True)
         doc = next((ln.split(" ", 1)[1] for ln in receipt.splitlines() if ln.startswith("KW_VISUAL_CHECKPOINT ")), None)
         try:
-            req = PPV.request(out, res, spec_sha256, json.loads(doc), hub=hub, spec_path=spec_path) if doc else {}
+            return json.loads(doc) if doc else {}
+        except ValueError:
+            return {}
+
+    def request_private_view(kh, K, odb, checkpoint=None):
+        if not PPV.applies(sp):
+            return
+        if checkpoint is None:
+            checkpoint = private_view_checkpoint(kh, K, odb)
+        try:
+            req = PPV.request(out, res, spec_sha256, checkpoint, hub=hub, spec_path=spec_path)
         except (OSError, ValueError) as exc:
             print(f"KW_PRIVATE_VISUAL request unavailable for {kh}:{odb}: {exc}", flush=True)
             req = {}
@@ -11483,12 +11491,42 @@ def _run_item(spec_path, resume_reviewed=False):
 
     def chain_after_geom(rc):
         """FLOW-PRIVSPEC-R1 (item 7c): a private spec whose goal is past geom continues through the wave stage chain after AUTO-GEOM PASS"""
-        if rc != 0 or chain_goal == "geom" or res.get("stage") != "geom" or res.get("verdict") != "PASS":
+        if rc != 0 or chain_goal in ("place", "geom") or res.get("stage") != "geom" or res.get("verdict") != "PASS":
             return rc
         try:
             return reviewed_chain()
         except Exception as e:                           # noqa: BLE001 - recorded, never a silent stop
             return fail("chain", f"KW_CHAIN pipeline error {type(e).__name__}: {e}", res.get("kit") or f"{G}:{W}")
+
+    def placed_geometry(K, kh, odb, gd, stamp=None):
+        rem = lambda cmd: remote_argv(kh, hub, cmd)
+        _, ol = run("outline", rem(outline_cmd(K)), idempotent=True)
+        ol = ol.strip().splitlines()[-1] if ol.strip() else ""
+        chk = placed_geom_check(sp, odb, ol, chain_goal)
+        config = f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"
+        if stamp is not None:
+            # The controller's read-only observation must never use the GRT probe.
+            chk["grt"] = False
+            config = (f"mkdir -p {q(gd)} && tmp=$(mktemp {q(gd + '/.check.XXXXXX')}) && "
+                      f"printf '%s\\n' {q(json.dumps(chk))} > \"$tmp\" && mv \"$tmp\" {q(gd + '/check.json')}")
+        rc, text = run("geom_cfg", rem(config), idempotent=True)
+        if rc:
+            return "geom_cfg", rc, text
+        try:
+            geom_tools = stage_geom_tools(out, gd, kh, hub, run, control=control_root())
+        except OSError as exc:
+            return "geom_tools", 1, f"KW_GEOM_TOOLS {kh}: {exc}"
+        checker = f"{geom_tools}/geom_check.sh"
+        command = f"bash {q(checker)} {q(gd)}"
+        step = "geom"
+        if stamp is not None:
+            step = "place_auto_geom"
+            command = shlex.join(["python3", "-I", "-c", PPV.GEOMETRY_ONCE, gd, checker, odb, json.dumps(stamp)])
+        argv = otrun(sp["geom_mem_gb"], 4, W, command, [kh], roam=False, extra_inputs=(geom_tools,))
+        if stamp is not None:
+            argv[1:1] = [arg for arg in ("--strict-host", "--no-spill") if arg not in argv]
+        rc, text = run(step, argv)
+        return "geom_run", rc, text
 
     def after_place(K, rc, txt):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
@@ -11573,25 +11611,35 @@ def _run_item(spec_path, resume_reviewed=False):
             print(f"KW_CELLS_INFO {T}: {res['cells']} cells above {SPLIT_CELLS} (advisory; plan-time SPLIT-NEEDED is the only cell check)", flush=True)
         if chain_goal == "place":
             res.update(evidence=f"{kh}:{odb}", odb=odb, kit=f"{kh}:{K}")
-            request_private_view(kh, K, odb)
+            if PPV.applies(sp):
+                checkpoint = private_view_checkpoint(kh, K, odb)
+
+                def observe(key, stamp):
+                    gd = f"{W}/geom/place-{key[:24]}"
+                    try:
+                        stage, rc, text = placed_geometry(K, kh, odb, gd, stamp)
+                    except (OSError, RuntimeError) as exc:
+                        return {"verdict": "ERROR", "reason": str(exc)}
+                    prefix = "KW_EXACT_PLACE_GEOM "
+                    line = next((ln[len(prefix):] for ln in text.splitlines() if ln.startswith(prefix)), "")
+                    verdict = geom_json_verdict(line)
+                    if rc or not verdict:
+                        return {"verdict": "ERROR", "reason": f"{stage}: {text[-500:]}"}
+                    return {"verdict": verdict, "geom_dir": f"{kh}:{gd}", "line": line[:600]}
+
+                review = PPV.place_geometry(out, res, checkpoint, observe)
+                res["place_auto_geom"] = review
+                print(f"KW_PLACE_AUTO_GEOM {review['verdict']} {T} {review.get('geom_dir') or review.get('reason', '')}", flush=True)
+                if review.get("geom_dir"):
+                    res["geom_dir"] = review["geom_dir"]
+                request_private_view(kh, K, odb, checkpoint)
             res.update(stage="place", verdict="PASS")
             PPV.write(out / "result.json", res)
             return 0
-        olc = outline_cmd(K)
-        _, ol = run("outline", rem(olc), idempotent=True)
-        ol = ol.strip().splitlines()[-1] if ol.strip() else ""
-        chk = placed_geom_check(sp, odb, ol, chain_goal)
         gd = f"{W}/geom"
-        rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
-        if rc:
-            return fail("geom_cfg", txt)
-        # The physical checkpoint decides the host.  A missing old source tree
-        # requires staging tools there, never falling back to a host without the DB.
-        try:
-            geom_tools = stage_geom_tools(out, gd, kh, hub, run, control=control_root())
-        except OSError as e:
-            return fail("geom_tools", f"KW_GEOM_TOOLS {kh}: {e}", f"{kh}:{gd}")
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False, extra_inputs=(geom_tools,)))
+        stage, rc, txt = placed_geometry(K, kh, odb, gd)
+        if stage != "geom_run":
+            return fail(stage, txt, f"{kh}:{gd}") if stage == "geom_tools" else fail(stage, txt)
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         request_private_view(kh, K, odb)

@@ -18,6 +18,7 @@ REVIEW_SCHEMA = "placement-visual-review.v1"
 IDENTITY = ("die", "item", "attempt", "kit", "stage_fingerprint", "odb_sha256")
 REQUEST = "visual_request.json"
 REVIEW = "visual_review.json"
+PLACE_GEOMETRY = "place_auto_geom.json"
 
 # Read on the placement host. Require one actual detailed placement, not GP or a stale alternate base.
 CHECKPOINT = """
@@ -35,9 +36,51 @@ after=odb.stat()
 if (before.st_ino,before.st_size,before.st_mtime_ns) != (after.st_ino,after.st_size,after.st_mtime_ns):
     raise ValueError('placement changed while recording review request')
 print('KW_VISUAL_CHECKPOINT '+json.dumps({'odb':str(odb.relative_to(kit)),'odb_sha256':digest,
-      'size':after.st_size,'mtime_ns':after.st_mtime_ns}))
+      'size':after.st_size,'mtime_ns':after.st_mtime_ns,'inode':after.st_ino}))
 """
 
+# Run on the placement host. Serialize the actual geometry check even if the
+# controller disconnected after admission and is recovering the same checkpoint.
+GEOMETRY_ONCE = r"""
+import fcntl,json,os,subprocess,sys,tempfile
+from pathlib import Path
+directory,checker,checkpoint=map(Path,sys.argv[1:4])
+identity=json.loads(sys.argv[4])
+def unchanged():
+    st=checkpoint.stat()
+    return [st.st_ino,st.st_size,st.st_mtime_ns]==identity
+with (directory/'.place-geometry.lock').open('a') as lock:
+    fcntl.flock(lock,fcntl.LOCK_EX)
+    if not unchanged():
+        sys.exit('AP_AUTO_GEOM_ERROR exact placement changed before check')
+    completed=directory/'place-geometry.log'
+    report=directory/'auto_geom.json'
+    if completed.is_file() and report.is_file():
+        print(completed.read_text(errors='replace'),end='')
+        sys.exit(0)
+    with tempfile.TemporaryFile() as output:
+        run=subprocess.run(['bash',str(checker),str(directory)],stdout=output,stderr=subprocess.STDOUT,
+                           env=dict(os.environ,OT_KIT_GOAL='place'))
+        output.seek(0)
+        text=output.read().decode(errors='replace')
+    if not unchanged():
+        sys.exit('AP_AUTO_GEOM_ERROR exact placement changed during check')
+    print(text,end='')
+    try:
+        record=json.loads(report.read_text())
+        line=record['line']
+        verdict=record['verdict']
+    except (OSError,KeyError,TypeError,ValueError):
+        sys.exit('AP_AUTO_GEOM_ERROR no readable placement geometry report')
+    if (verdict not in ('PASS','FAIL') or not isinstance(line,str) or not line.startswith('AUTO-GEOM '+verdict+' ') or
+            'AP_AUTO_GEOM '+line not in text.splitlines() or run.returncode not in (0,1)):
+        sys.exit('AP_AUTO_GEOM_ERROR placement report and checker disagree')
+    receipt='KW_EXACT_PLACE_GEOM '+line+'\n'
+    temp=completed.with_suffix('.new')
+    temp.write_text(receipt)
+    os.replace(temp,completed)
+    print(receipt,end='')
+"""
 
 def applies(spec):
     return bool(spec.get("private") and (spec.get("kind") or "type") == "type" and spec.get("die") in ACTIVE_DIES)
@@ -64,6 +107,23 @@ def write(path, value):
 
 def sha256(value):
     return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+
+
+def place_geometry(out, result, checkpoint, observe):
+    """Record one rule observation per placed checkpoint under the private controller lease."""
+    fp = (result.get("stage_fp") or {}).get("place")
+    odb = checkpoint.get("odb_sha256")
+    stamp = [checkpoint.get(k) for k in ("inode", "size", "mtime_ns")]
+    if not sha256(fp) or not sha256(odb) or not all(type(k) is int and k > 0 for k in stamp):
+        return {"verdict": "ERROR", "reason": "exact placement identity unavailable"}
+    key = hashlib.sha256(json.dumps([result["kit"], fp, odb]).encode()).hexdigest()
+    destination = out / PLACE_GEOMETRY
+    prior = load(destination)
+    if prior.get("key") == key:
+        return prior
+    receipt = dict(observe(key, stamp), key=key, stage_fingerprint=fp, odb_sha256=odb)
+    write(destination, receipt)
+    return receipt
 
 
 # Canonical requests are immutable. stdout is a single JSON document on a successful read.
@@ -124,7 +184,8 @@ def request(out, res, spec_sha256, checkpoint, hub="", spec_path=None):
         return {}
     geom = res.get("geom_dir")
     doc = {"schema": REQUEST_SCHEMA, "die": res["die"], "item": res["item"], "attempt": out.name,
-           "kit": res["kit"], "stage_fingerprint": fp, "spec_sha256": spec_sha256, **checkpoint,
+           "kit": res["kit"], "stage_fingerprint": fp, "spec_sha256": spec_sha256,
+           **{k: v for k, v in checkpoint.items() if k != "inode"},
            "render_dir": f"{res['kit']}/run/layout_review", "auto_geom": f"{geom}/auto_geom.png" if geom else ""}
     doc.update(request_dir=str(out), spec_path=str(Path(spec_path or out / "spec.json").absolute()),
                controller=socket.gethostname(), review_hub=hub)
