@@ -49,7 +49,7 @@ count_hourly: signed any plan 605 | current plan 483 | deferred re-sign 21 (hbm 
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## DIE s81 · S81 · rev plan_h2_2249 + RF1 · FROZEN (one-block fixes) · count 47/57 + 4/205 types at 06:05
+## DIE s81 · S81 · da07bac383 (da07bac383e9) · 68/72 cores + 48/402 types signed at 16:08 PST
 - [ ] S81.PROUTE Station safe form (OWNER 11-02 pilot + 11-03 safe forms) · S81 / S81-PROUTE-2 (DIE-S81-65) · RUNNING · MAIN = FIXED-BAY: relay flop + negative-level lockup latch + repeater bays pre-placed <=405 um, local leaf per bay, per-hop delay/slew/hold computed before route; parent-route kit p7S_x11 (GEN_LINT + PREFLIGHT PASS) kept only as comparison; result applies to QC stations as one class
 - [ ] S81.BIND Strict native bind · S81 / DIE-S81-65 · PASS · event2 completed 11:40:42; 398 partitions / 204 types / 873 crossings / 606281 bits, connectivity errors 0; this is not a routing pass
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kits sign; hold gate now >= 0 (OWNER 11-02) → S81.TILES
@@ -60,7 +60,7 @@ count_hourly: signed any plan 605 | current plan 483 | deferred re-sign 21 (hbm 
 - [ ] S81.T41 Forwarded data/K timing witness · S81 / GEOM · WAITS · corrected A/B only placed; default-OFF observer ready4b96673bc; one baseline-A CTS+witness needs review, old GRT4750 remains FAIL → INFRA.REVIEW
 - [ ] S81.RESET SerDes warm-reset sequencer implementation · S81+HEAD / DIE-S81-65 + DIE-HEAD-71 · RUNNING · OWNER 11-02 17:55 closed the choice: local sequencer holds reset >=64 rck edges after PMA clock restart, no running-clock promise; shared module adoption on S81 in progress (helper reset) → READY
 
-## DIE s81_head · HEAD · rev W8b head_rp21z20NF15f_r18w8b (plan 6b2c670d0ae4, applied 07:30 PST) · count 5/5 cores + 25/26 types (last AGIdock read, unchanged by W8b) · HEAD section refreshed 09:45 PST by HEAD-ALLFIX
+## DIE s81_head · HEAD · head_rp21z20NF15f_r18w11_1126 (4bd6164aeb1e) · 5/5 cores + 25/27 types signed at 16:08 PST
 - [ ] HEAD.W9 W9 plan cut 2026-11-25 13:30 PST · HEAD-ALLFIX · TODO · integrates C1+C2 bank seat/East taps, C5 ring dsel, C20-C22 (HEAD-WEST), head nr RTL regen, hd_tile split (C23, W9 not W10), C3 die-clock tap re-site with fallback (not proven by 12:30 -> cut on measured r13 die GRT+STA); wave prepare re-run, provenance_bind.json written; ledger lanes/ALLFIX-HEAD.tsv → HEAD.W9FP
 - [ ] HEAD.W9FP W9 floorplan gap rows C17-C19, C24-C29 (hd_host_e LEF, y145 re-site, clock walls, mesh_e ft, lep0N rstart, FT-CROSSES-CORE, st_n4 reset root, ctl bands, SRAM pitch) · HEAD-W9-FP · TODO · drafts handed off in lanes/handoff/HEAD-W9-FP-from-ALLFIX-w9gap-1125.txt, none gated
 - [ ] HEAD.W8BPROBE W8b private probes · HEAD-ALLFIX · RUNNING · hd_tile CTS PASS (72.8k inst, 69%); hd_mesh place PASS, CTS running (epyc7); hd_spn/hd_spn_end/hd_serdes at preflight (intel1); hd_lep0N FAIL @place C5 dsel_cone (held to W9); hd_lep0N_w C7 gen fix on main adb32e3c82c; hd_host_w held (H-02)
@@ -74,7 +74,7 @@ count_hourly: signed any plan 605 | current plan 483 | deferred re-sign 21 (hbm 
 - [ ] HEAD.HOSTLEC Current routed HOST qualification · HEAD · WAITS · retained component136216EQ complete; newer routedb2 is a different subject and still needs its own proof+physical closure → HEAD.TILES
 - [ ] HEAD.SEAM Mesh sender/receiver timing contract · HEAD · BLOCKED · finite hold repair hits setup-versus-hold feasibility; any seam rebudget needs actual peer and parent TT/FF qualification, no constraint relaxation → HEAD.STA
 
-## DIE qwen_compute · QC · rev plan_qc52 + CA+1 + y-shrink2 · count 14/19 at 06:05
+## DIE qwen_compute · QC · qc_c9_integrated_1126 (c9eb8883ad40) · 69/69 cores + 80/127 types signed at 16:08 PST
 - [ ] QC.BIND Strict native bind · QC / DIE-QC-81 · PASS · 119 types / 377 parts,0 errors; G0C completeness remains FAIL11
 - [ ] QC.CLK Native die clock implementation · QC / DIE-QC-81 · BLOCKED · 51596 planned cells / 10929 taps sourcegeometryPASS; native prefix is unexecuted, no parent PG/GRT/RC/STA or START-freeze credit → QC.CLOCKPREFIX → QC.TILES
 - [ ] QC.CLOCKPREFIX Bounded native clock import/access diagnostic · QC · WAITS · exact current homes/aliases reviewed; staged64GB8T geometry-only import, no legalization/GRT/STA; awaits root scoped release → INFRA.REVIEW
@@ -87,7 +87,7 @@ count_hourly: signed any plan 605 | current plan 483 | deferred re-sign 21 (hbm 
 - [ ] QC.GLUE Joint parent/interface geometry event · QC / DIE-QC-81 · RUNNING · OWNER 11-02 ADOPTED (EQ-gated; pipeline stages for 1838>1110 um reach); coordinate coupon legal but5306long reaches remain; fixedSTART1838um exceeds1110um reach budget; compact proposal leaves1088.64um parent gap and missing west peers → OWNER.SOURCE
 - [ ] QC.NL Corrected clock-inclusive GRT probe · QC · WAITS · prior attempt failed MM context before FF; same-byte4_cts alias+configuredmargin10 fixture passes, one bounded retry awaits root → INFRA.REVIEW
 
-## DIE qwen_kvsys · KV · rev plan_c (32) + RF-KV1, event on main · count 24/32 at 06:05
+## DIE qwen_kvsys · KV · KV-A5t9-g6v6r3-1126 (4c5a163e9a21) · 84/84 cores + 10/93 types signed at 16:08 PST
 - [ ] KV.BIND Current strict native bind · KV / DIE-KV-79 · PASS · source connectivity passes; no physical die credit
 - [ ] KV.CLK Complete current real-view clock timing · KV / DIE-KV-79 · BLOCKED(kits) · clock proof stands (older pass counts): mix TT+595.71/CA0of3595 has7coreviews,0kits plus budgets; FF37674pairs NULL/unmeasured → KV.TILES
 - [ ] KV.GRT Current whole-die global routing · KV / DIE-KV-79 · NOT RUN · latest parent macro-fit vehicle explicitly dieGRT/route NOTRUN; reported zero-overflow successes are partition/core probes → KV.TILES → KV.HROOT → KV.HG
@@ -99,7 +99,7 @@ count_hourly: signed any plan 605 | current plan 483 | deferred re-sign 21 (hbm 
 - [ ] KV.RECIP Compact RECIP and ZH physical qualification · KV · WAITS · RECIP GRT TT+161.66 FF+9.67 but actualfill15.27/empty68.78 FAIL; ZH actualfill45.589 and independentLOOK supports one PLACE diagnostic → INFRA.REVIEW
 - [ ] KV.FN Production token execution · KV / TOK · RUNNING · sole correctGEN1 probe fault0, nofirstcal; observed~2.3cycles/s implies~35h for290307-cycle window at that rate, not measured token throughput → TOK.QW
 
-## DIE hbm · HBM · rev d44v_por (parts 1-7) · count 37/95 at 06:05
+## DIE hbm · HBM · pEv11c (c9ac33aeb09c) · PARKED · 90/119 cores + 4/81 types signed at 16:08 PST
 - [ ] HBM.BIND Qualified current native production composition · HBM / DIE-HBM-76 · BLOCKED · native source/pin/profile and clock/START joins incomplete; historical wrapped bindings do not qualify current production → HBM.CLK → HBM.TILES
 - [ ] HBM.HUBMESH Hub mesh / production clock integration · HBM / DIE-HBM-76 · STRUCTURAL PASS, BLOCKED(kits) · hub mesh a3e6s, NE_v2, die TT +93.69, CA 773/773 (hold margin 0); next: plan event d44v (q3_edge single-column slot, pslice_c5 2.6-um macro channels, xload ctlx, hnx fused) -> kits -> real-view hold
 - [ ] HBM.CLK Native clock/source/PG composition · HBM / DIE-HBM-76 · BLOCKED · 21 station types planned3077ports pass consumer/S0parity;283plannedhomes,260sourcehomes(16mismatch),23missing; active-role/native pin/net/START joins remain unqualified
