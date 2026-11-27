@@ -131,3 +131,4 @@
   - The hub_Eo dotted nested key stays UNKNOWN.
 - 2026-11-27 10:59 PST DONE [KV-INT-R3] ot-run oth-ubuntu-4069511-1795805615 on tolerant-swine: rc=0 after 377 s, ended 10:59:43, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_io_ft_1127095245/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/pri
 - 2026-11-27 11:02 PST DONE [kv-int-r3] ot-run oth-ubuntu-4028635-1795805845 on outgoing-giraffe: rc=0 after 291 s, ended 19:02:13, log none, cmd: --mem 40 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3 -- python3 -I evalplans.py want.json eval_out.json
+- 2026-11-27 11:05 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-92193 on outgoing-giraffe: rc=6 after 89 s, ended 19:05:19, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 6 after 89 s, no log
