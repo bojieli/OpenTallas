@@ -10,12 +10,31 @@ import re
 
 MAX_UTIL = 0.70
 
-REGION_TCL = [
+# C-FENCE-GEOM-ILLEGAL (R3-FENCE 11-27): the region box goes OUTWARD onto the placement grid (site width / row height from the
+# core origin) so DPL cannot seat a member a fraction of a site outside the fence (DPL-0033); an edge already on the grid is
+# unchanged.  ot_lc_box returns the snapped box in DBU; the member snap below uses the same box.
+SNAP_TCL = [
+    "proc ot_lc_box {x0 y0 x1 y1} {",
+    "  global lc_u",
+    "  set b [ord::get_db_block]; set rows [$b getRows]",
+    "  set X0 [expr {round($x0*$lc_u)}]; set Y0 [expr {round($y0*$lc_u)}]; set X1 [expr {round($x1*$lc_u)}]; set Y1 [expr {round($y1*$lc_u)}]",
+    "  if {![llength $rows]} { return [list $X0 $Y0 $X1 $Y1] }",
+    "  set c [$b getCoreArea]; set s [[lindex $rows 0] getSite]; set sw [$s getWidth]; set rh [$s getHeight]",
+    "  set ox [$c xMin]; set oy [$c yMin]",
+    "  set nx0 [expr {$ox + int(floor(double($X0 - $ox) / $sw)) * $sw}]; set ny0 [expr {$oy + int(floor(double($Y0 - $oy) / $rh)) * $rh}]",
+    "  set nx1 [expr {$ox + int(ceil(double($X1 - $ox) / $sw)) * $sw}]; set ny1 [expr {$oy + int(ceil(double($Y1 - $oy) / $rh)) * $rh}]",
+    "  if {$X1 <= [$c xMax] && $nx1 > [$c xMax]} { set nx1 [$c xMax] }",
+    "  if {$Y1 <= [$c yMax] && $ny1 > [$c yMax]} { set ny1 [$c yMax] }",
+    "  return [list $nx0 $ny0 $nx1 $ny1]",
+    "}",
+]
+
+REGION_TCL = SNAP_TCL + [
     "proc ot_lc_region {name x0 y0 x1 y1 mem} {",
     "  global lc_b lc_u",
     "  set reg [odb::dbRegion_create $lc_b $name]",
     "  $reg setRegionType INCLUSIVE",
-    "  odb::dbBox_create $reg [expr {round($x0*$lc_u)}] [expr {round($y0*$lc_u)}] [expr {round($x1*$lc_u)}] [expr {round($y1*$lc_u)}]",
+    "  odb::dbBox_create $reg {*}[ot_lc_box $x0 $y0 $x1 $y1]",
     "  set grp [odb::dbGroup_create $reg $name]",
     "  foreach i $mem { $grp addInst $i }",
     "}",
@@ -134,7 +153,7 @@ def tcl(P, tn, *, no_core_rows=(), firm_small=0):
            "    lassign $p name x0 y0 x1 y1 pats",
            "    lassign [ot_lc_members $name $x0 $y0 $x1 $y1 $pats] mem skipped area ra",
            "    ot_lc_region $name $x0 $y0 $x1 $y1 $mem",
-           "    set X0 [expr {round($x0*$lc_u)}]; set Y0 [expr {round($y0*$lc_u)}]; set X1 [expr {round($x1*$lc_u)}]; set Y1 [expr {round($y1*$lc_u)}]",
+           "    lassign [ot_lc_box $x0 $y0 $x1 $y1] X0 Y0 X1 Y1",
            "    set snapped 0; set maxd 0.0",
            "    foreach i $mem {",
            "      set bb [$i getBBox]",

@@ -9,6 +9,21 @@
 # a region over 0.80 movable+fixed fill is skipped with a warning; no instance matched at all is an error (the option
 # was requested but would do nothing).
 set ::rg_dir [file dirname [file normalize [info script]]]
+# C-FENCE-GEOM-ILLEGAL (R3-FENCE 11-27): every fence / region box edge goes OUTWARD onto the placement grid (site width in x,
+# row height in y, counted from the core origin), as place_regions.tcl does; an off-grid edge lets DPL seat a member a fraction of a
+# site outside the box (DPL-0033 on HEAD East).  Outward keeps every member that was inside inside; an edge already on the grid
+# is returned unchanged (byte-identical box); an edge inside the core is never pushed past the core edge.
+proc ot_fence_snap {X0 Y0 X1 Y1} {
+  set b [ord::get_db_block]; set rows [$b getRows]
+  if {![llength $rows]} { return [list $X0 $Y0 $X1 $Y1] }
+  set c [$b getCoreArea]; set s [[lindex $rows 0] getSite]; set sw [$s getWidth]; set rh [$s getHeight]
+  set ox [$c xMin]; set oy [$c yMin]
+  set nx0 [expr {$ox + int(floor(double($X0 - $ox) / $sw)) * $sw}]; set ny0 [expr {$oy + int(floor(double($Y0 - $oy) / $rh)) * $rh}]
+  set nx1 [expr {$ox + int(ceil(double($X1 - $ox) / $sw)) * $sw}]; set ny1 [expr {$oy + int(ceil(double($Y1 - $oy) / $rh)) * $rh}]
+  if {$X1 <= [$c xMax] && $nx1 > [$c xMax]} { set nx1 [$c xMax] }
+  if {$Y1 <= [$c yMax] && $ny1 > [$c yMax]} { set ny1 [$c yMax] }
+  return [list $nx0 $ny0 $nx1 $ny1]
+}
 uplevel #0 {
 set rg_blk [ord::get_db_block]
 set rg_u [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -63,7 +78,7 @@ foreach rg_nm $rg_order {
   if {$rg_fill >= 0.80} { puts "OT_REGION_GUIDE_WARN $rg_nm: movable+fixed fill $rg_fill >= 0.80 (skipped)"; continue }
   set reg [odb::dbRegion_create $rg_blk $rg_nm]
   $reg setRegionType INCLUSIVE
-  odb::dbBox_create $reg [expr {round($zx0*$rg_u)}] [expr {round($zy0*$rg_u)}] [expr {round($zx1*$rg_u)}] [expr {round($zy1*$rg_u)}]
+  odb::dbBox_create $reg {*}[ot_fence_snap [expr {round($zx0*$rg_u)}] [expr {round($zy0*$rg_u)}] [expr {round($zx1*$rg_u)}] [expr {round($zy1*$rg_u)}]]
   set g [odb::dbGroup_create $reg $rg_nm]
   $g setType VOLTAGE_DOMAIN
   foreach i $rg_insts { $g addInst $i }

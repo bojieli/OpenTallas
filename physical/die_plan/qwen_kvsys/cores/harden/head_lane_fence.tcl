@@ -8,6 +8,21 @@
 # OT_LANE_FILL (0.65), centred, so the corridors between regions keep the front / stin / stk / ctl logic.  The regions
 # are GPL guides only: head_lane_fence_release.tcl removes them before detailed placement (DPL / repair buffers free).
 # Env: OT_LANE_RE (regexp, capture 1 = lane key), OT_LANE_FILL (0.65)
+# C-FENCE-GEOM-ILLEGAL (R3-FENCE 11-27): every fence / region box edge goes OUTWARD onto the placement grid (site width in x,
+# row height in y, counted from the core origin), as place_regions.tcl does; an off-grid edge lets DPL seat a member a fraction of a
+# site outside the box (DPL-0033 on HEAD East).  Outward keeps every member that was inside inside; an edge already on the grid
+# is returned unchanged (byte-identical box); an edge inside the core is never pushed past the core edge.
+proc ot_fence_snap {X0 Y0 X1 Y1} {
+  set b [ord::get_db_block]; set rows [$b getRows]
+  if {![llength $rows]} { return [list $X0 $Y0 $X1 $Y1] }
+  set c [$b getCoreArea]; set s [[lindex $rows 0] getSite]; set sw [$s getWidth]; set rh [$s getHeight]
+  set ox [$c xMin]; set oy [$c yMin]
+  set nx0 [expr {$ox + int(floor(double($X0 - $ox) / $sw)) * $sw}]; set ny0 [expr {$oy + int(floor(double($Y0 - $oy) / $rh)) * $rh}]
+  set nx1 [expr {$ox + int(ceil(double($X1 - $ox) / $sw)) * $sw}]; set ny1 [expr {$oy + int(ceil(double($Y1 - $oy) / $rh)) * $rh}]
+  if {$X1 <= [$c xMax] && $nx1 > [$c xMax]} { set nx1 [$c xMax] }
+  if {$Y1 <= [$c yMax] && $ny1 > [$c yMax]} { set ny1 [$c yMax] }
+  return [list $nx0 $ny0 $nx1 $ny1]
+}
 uplevel #0 {
 set lf_re [expr {[info exists ::env(OT_LANE_RE)] && $::env(OT_LANE_RE) ne "" ? $::env(OT_LANE_RE) : {^(u_g_t_[0-9a-z]+_u_l8\.g_d\\?\[[0-9]+\\?\])[./]}}]
 set lf_fill [expr {[info exists ::env(OT_LANE_FILL)] ? $::env(OT_LANE_FILL) : 0.65}]
@@ -48,7 +63,7 @@ if {$lf_n < 2} {
     set nm "ot_lane_fence_$j"
     set reg [odb::dbRegion_create $lf_blk $nm]
     $reg setRegionType INCLUSIVE
-    odb::dbBox_create $reg [expr {round($cx - $bw / 2)}] [expr {round($cy - $bh / 2)}] [expr {round($cx + $bw / 2)}] [expr {round($cy + $bh / 2)}]
+    odb::dbBox_create $reg {*}[ot_fence_snap [expr {round($cx - $bw / 2)}] [expr {round($cy - $bh / 2)}] [expr {round($cx + $bw / 2)}] [expr {round($cy + $bh / 2)}]]
     set g [odb::dbGroup_create $reg $nm]
     $g setType VOLTAGE_DOMAIN
     foreach i [dict get $lf_mem $k] { $g addInst $i }

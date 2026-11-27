@@ -27,6 +27,21 @@
 #
 # Env: OT_FENCE_HOPS (4) OT_FENCE_MAX_UM (14.04) OT_FENCE_MIN_UM (4.32) OT_FENCE_FILL (0.5) OT_FENCE_MULTI_MAX (4)
 #      OT_FENCE_STRICT (1) OT_FENCE_UNREG_OK (regexp on the port base name, "" = none) OT_FENCE_CLOCKS (comma list)
+# C-FENCE-GEOM-ILLEGAL (R3-FENCE 11-27): every fence / region box edge goes OUTWARD onto the placement grid (site width in x,
+# row height in y, counted from the core origin), as place_regions.tcl does; an off-grid edge lets DPL seat a member a fraction of a
+# site outside the box (DPL-0033 on HEAD East).  Outward keeps every member that was inside inside; an edge already on the grid
+# is returned unchanged (byte-identical box); an edge inside the core is never pushed past the core edge.
+proc ot_fence_snap {X0 Y0 X1 Y1} {
+  set b [ord::get_db_block]; set rows [$b getRows]
+  if {![llength $rows]} { return [list $X0 $Y0 $X1 $Y1] }
+  set c [$b getCoreArea]; set s [[lindex $rows 0] getSite]; set sw [$s getWidth]; set rh [$s getHeight]
+  set ox [$c xMin]; set oy [$c yMin]
+  set nx0 [expr {$ox + int(floor(double($X0 - $ox) / $sw)) * $sw}]; set ny0 [expr {$oy + int(floor(double($Y0 - $oy) / $rh)) * $rh}]
+  set nx1 [expr {$ox + int(ceil(double($X1 - $ox) / $sw)) * $sw}]; set ny1 [expr {$oy + int(ceil(double($Y1 - $oy) / $rh)) * $rh}]
+  if {$X1 <= [$c xMax] && $nx1 > [$c xMax]} { set nx1 [$c xMax] }
+  if {$Y1 <= [$c yMax] && $ny1 > [$c yMax]} { set ny1 [$c yMax] }
+  return [list $nx0 $ny0 $nx1 $ny1]
+}
 set ot_ff_blk [ord::get_db_block]
 set ot_ff_u [[ord::get_db_tech] getDbUnitsPerMicron]
 proc ot_ff_env {k d} { if {[info exists ::env($k)] && $::env($k) ne ""} { return $::env($k) }; return $d }
@@ -196,7 +211,7 @@ foreach f {N S E W} {
   set nm "ot_face_fence_$f"
   set r [odb::dbRegion_create $ot_ff_blk $nm]
   $r setRegionType EXCLUSIVE
-  odb::dbBox_create $r [expr {round($x0 * $ot_ff_u)}] [expr {round($y0 * $ot_ff_u)}] [expr {round($x1 * $ot_ff_u)}] [expr {round($y1 * $ot_ff_u)}]
+  odb::dbBox_create $r {*}[ot_fence_snap [expr {round($x0 * $ot_ff_u)}] [expr {round($y0 * $ot_ff_u)}] [expr {round($x1 * $ot_ff_u)}] [expr {round($y1 * $ot_ff_u)}]]
   set g [odb::dbGroup_create $r $nm]
   $g setType VOLTAGE_DOMAIN
   # a FIRM pin flop (io_flop_at_pins) sits AT its pin already and stays FIRM (releasing it lets GPL slide it along the

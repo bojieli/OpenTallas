@@ -13,6 +13,21 @@
 uplevel #0 {
 set sl_blk [ord::get_db_block]; set sl_dbu [$sl_blk getDbUnitsPerMicron]
 source /work/serdes_lanes_cfg.tcl
+# C-FENCE-GEOM-ILLEGAL (R3-FENCE 11-27): every fence / region box edge goes OUTWARD onto the placement grid (site width in x,
+# row height in y, counted from the core origin), as place_regions.tcl does; an off-grid edge lets DPL seat a member a fraction of a
+# site outside the box (DPL-0033 on HEAD East).  Outward keeps every member that was inside inside; an edge already on the grid
+# is returned unchanged (byte-identical box); an edge inside the core is never pushed past the core edge.
+proc ot_fence_snap {X0 Y0 X1 Y1} {
+  set b [ord::get_db_block]; set rows [$b getRows]
+  if {![llength $rows]} { return [list $X0 $Y0 $X1 $Y1] }
+  set c [$b getCoreArea]; set s [[lindex $rows 0] getSite]; set sw [$s getWidth]; set rh [$s getHeight]
+  set ox [$c xMin]; set oy [$c yMin]
+  set nx0 [expr {$ox + int(floor(double($X0 - $ox) / $sw)) * $sw}]; set ny0 [expr {$oy + int(floor(double($Y0 - $oy) / $rh)) * $rh}]
+  set nx1 [expr {$ox + int(ceil(double($X1 - $ox) / $sw)) * $sw}]; set ny1 [expr {$oy + int(ceil(double($Y1 - $oy) / $rh)) * $rh}]
+  if {$X1 <= [$c xMax] && $nx1 > [$c xMax]} { set nx1 [$c xMax] }
+  if {$Y1 <= [$c yMax] && $ny1 > [$c yMax]} { set ny1 [$c yMax] }
+  return [list $nx0 $ny0 $nx1 $ny1]
+}
 proc sl_u {v} { global sl_dbu; return [expr {int(round($v * $sl_dbu))}] }
 proc sl_is_ff {i} { return [string match "*DFF*" [[$i getMaster] getName]] }
 proc sl_is_buf {i} { return [regexp {^(BUF|INV|HB|CKINV)} [[$i getMaster] getName]] }
@@ -190,7 +205,7 @@ if {[dict exists $sl_cfg regions] && [file exists /work/serdes_groups.txt]} {
     set h [expr {sqrt($area / $util / $asp)}]; set w [expr {$h * $asp}]
     set x0 [expr {int([sl_u $cx] - $w / 2)}]; set y0 [expr {int([sl_u $cy] - $h / 2)}]
     set rg [odb::dbRegion_create $sl_blk "sl_$rn"]
-    odb::dbBox_create $rg $x0 $y0 [expr {int($x0 + $w)}] [expr {int($y0 + $h)}]
+    odb::dbBox_create $rg {*}[ot_fence_snap $x0 $y0 [expr {int($x0 + $w)}] [expr {int($y0 + $h)}]]
     set g [odb::dbGroup_create $rg "sl_g_$rn"]
     foreach i $members { $g addInst $i }
     puts [format "OT_SERDES_LANES region %s: %d cells, %.0f um2, box %.1f x %.1f um at (%.1f %.1f), util %.2f" $rn $nm [expr {$area / double($sl_dbu) / $sl_dbu}] [expr {$w / $sl_dbu}] [expr {$h / $sl_dbu}] [expr {$x0 / double($sl_dbu)}] [expr {$y0 / double($sl_dbu)}] $util]
@@ -233,7 +248,7 @@ if {[dict exists $sl_cfg islands]} {
     }
     if {$nff == 0} { error "OT_SERDES_LANES island $in: no register of $clk matches /$ire/ (RTL form / names changed?)" }
     set rg [odb::dbRegion_create $sl_blk "sl_isl_$in"]
-    odb::dbBox_create $rg [sl_u $x0] [sl_u $y0] [sl_u $x1] [sl_u $y1]
+    odb::dbBox_create $rg {*}[ot_fence_snap [sl_u $x0] [sl_u $y0] [sl_u $x1] [sl_u $y1]]
     set g [odb::dbGroup_create $rg "sl_g_isl_$in"]
     foreach i $members { $g addInst $i }
     puts [format "OT_SERDES_LANES island %s: %d registers + %d comb cells of %s in (%.1f %.1f %.1f %.1f)" $in $nff $ncomb $clk $x0 $y0 $x1 $y1]
