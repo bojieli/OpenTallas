@@ -9014,6 +9014,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
     install_reset_chain_spread(kd, t)
+    if "frame_data_reseat" in t:
+        import frame_reseat
+        frame_reseat.install(kd, tn, t)
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
