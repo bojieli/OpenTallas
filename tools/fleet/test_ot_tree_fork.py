@@ -4,6 +4,7 @@ event tree and --fork makes the tree with the fork tool."""
 import hashlib
 import json
 import os
+import re
 import stat
 import sys
 import types
@@ -115,6 +116,42 @@ def test_fork_refuses_symlink_into_event_tree(tmp_path):
     assert not os.path.islink(tmp_path / "claude/lane/fork2/evlink")
     assert os.lstat(ev / "tools/a.py").st_nlink == 1                 # the event tree's link count is untouched
     assert rec["materialized"]
+
+
+def test_materialize_copies_external_scratch_sources(tmp_path, monkeypatch):
+    scratch = tmp_path / "scratch/claude"
+    monkeypatch.setattr(TF, "SCRATCH_TREE_RE", re.compile(re.escape(str(scratch)) + "/"))
+    monkeypatch.delenv("OT_TREE_FORK_ALLOW_EXTERNAL", raising=False)
+    src = scratch / "carrier"
+    donor = scratch / "donor"
+    original = mk(donor / "rtl/leaf.sv", "module leaf; endmodule")
+    src.mkdir()
+    (src / "leaf.sv").symlink_to(original)
+    (src / "rtl").symlink_to(donor / "rtl")
+    dst = scratch / "fork"
+    with pytest.raises(TF.Refused, match="another scratch tree"):
+        TF.fork(str(src), str(dst), out=lambda *_: None)
+    assert not dst.exists()
+
+    rec = TF.fork(str(src), str(dst), materialize=True, out=lambda *_: None)
+    assert len(rec["materialized"]) == 2
+    assert rec["external_links_n"] == 0
+    assert TF.seal_check(str(dst)) == []
+    for copied in (dst / "leaf.sv", dst / "rtl/leaf.sv"):
+        assert not copied.is_symlink()
+        assert copied.read_bytes() == original.read_bytes()
+        assert copied.stat().st_ino != original.stat().st_ino
+    assert original.stat().st_nlink == 1
+
+
+def test_materialize_refuses_dangling_scratch_source(tmp_path, monkeypatch):
+    scratch = tmp_path / "scratch/claude"
+    monkeypatch.setattr(TF, "SCRATCH_TREE_RE", re.compile(re.escape(str(scratch)) + "/"))
+    src = scratch / "carrier"
+    src.mkdir(parents=True)
+    (src / "leaf.sv").symlink_to(scratch / "missing/leaf.sv")
+    with pytest.raises(TF.Refused, match="another scratch tree"):
+        TF.fork(str(src), str(scratch / "fork"), materialize=True, out=lambda *_: None)
 
 
 def test_fork_of_a_symlinked_src_copies_the_tree_and_never_writes_into_it(tmp_path):
