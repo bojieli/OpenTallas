@@ -184,6 +184,7 @@ class Guard(unittest.TestCase):
 
     def test_prune_off_and_in_use_untouched(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 6)]
+        m.live_reference_text = lambda: ""
         d = self.mk(names)
         self.assertEqual(m.prune_snapshots(d, keep=0, text=""), [])
         m.in_use = lambda p: [1] if pathlib.Path(p).name == names[0] else []
@@ -263,7 +264,10 @@ class InstalledDiff(unittest.TestCase):
 
 class HostPrune(unittest.TestCase):
     def test_prune_subcommand_prunes_the_local_rt_and_reads_pins_from_stdin(self):
-        d = pathlib.Path(tempfile.mkdtemp()); names = ["%012x" % i for i in range(1, 8)]
+        import hashlib
+
+        d = pathlib.Path(tempfile.mkdtemp())
+        names = [hashlib.sha256(f"{d}/{i}".encode()).hexdigest()[:12] for i in range(7)]
         for i, n in enumerate(names):
             (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i))
         os.symlink(names[-1], d / "current")
@@ -468,15 +472,16 @@ class DiskReclaimWindows(unittest.TestCase):
         self.assertNotIn("bbbbbbbbbbbb", t); self.assertNotIn("cccccccccccc", t)
 
 
-def test_rollout_serializes_two_merges_follow_and_catchup(tmp_path):
+def test_latest_rollout_releases_hub_during_old_host_fanout(tmp_path):
     from concurrent.futures import ThreadPoolExecutor
     from threading import Event
 
     m = Guard.load(Guard())
     older, newer = "a" * 40, "b" * 40
     main, active, worker = [older], [""], [""]
-    delivered, smoked = [], []
-    first_sync_entered, let_first_sync_finish = Event(), Event()
+    smoked = []
+    old_delivery_started, release_old_delivery = Event(), Event()
+    new_delivery_started = Event()
     m.RT = tmp_path
     m.HOSTS = ["worker"]
     m.GEN_SMOKE_HOSTS = []
@@ -496,47 +501,61 @@ def test_rollout_serializes_two_merges_follow_and_catchup(tmp_path):
     def materialize(full):
         name = full[:12]
         (tmp_path / f"{name}.manifest.json").write_text('{"files": {}}')
-        return tmp_path / name
+        path = tmp_path / name
+        path.mkdir(exist_ok=True)
+        return path
 
     def smoke(path, tests):
         smoked.append(path.name)
         return []
 
-    def sync_hosts(name, previous, record):
+    def host_sync(host, name, previous, do_flip, smoke_here, *, only_current):
+        assert only_current
         if name == older[:12]:
-            first_sync_entered.set()
-            assert let_first_sync_finish.wait(10)
+            old_delivery_started.set()
+            assert release_old_delivery.wait(10)
+        if name != active[0]:
+            return False, "SUPERSEDED"
         worker[0] = name
-        delivered.append(name)
-        record("worker", True, False, "ok")
-        return ["worker:ok"]
+        return True, "ok"
+
+    def sync_hosts(name, previous, record, fn=None):
+        assert fn
+        if name == newer[:12]:
+            new_delivery_started.set()
+        ok, note = fn("worker", name, previous)
+        record("worker", ok, False, note)
+        return [f"worker:{'ok' if ok else note}"]
 
     real_sync_hosts = m.sync_hosts
     m.materialize, m.smoke, m.sync_hosts = materialize, smoke, sync_hosts
-
-    def unexpected_catchup(*_a, **_kw):
-        raise AssertionError("catchup ran while direct rollout still owns the host flip")
+    m._host_sync_unlocked = host_sync
 
     with ThreadPoolExecutor(max_workers=2) as executor:
         first = executor.submit(m.sync, older, latest=True)
         try:
-            assert first_sync_entered.wait(10)
-            main[0] = newer
-            queued = executor.submit(m.sync, older, latest=True)
-            assert m.follow() == 0
+            assert old_delivery_started.wait(10)
+            assert m.sync(older, latest=True) is None
+
+            def unexpected_catchup(_host):
+                raise AssertionError("catch-up raced the current version's fanout")
+
             assert m.catchup(host_cur=unexpected_catchup) == []
-            assert active[0] == older[:12] and worker[0] == ""
+            assert str(tmp_path / older[:12]) in m.live_reference_text()
+            main[0] = newer
+            queued = executor.submit(m.sync, newer, latest=True)
+            assert new_delivery_started.wait(10)
+            assert active[0] == newer[:12] and worker[0] == ""
         finally:
-            let_first_sync_finish.set()
-        assert first.result(timeout=10) == queued.result(timeout=10) == 0
+            release_old_delivery.set()
+        assert first.result(timeout=10) is None
+        assert queued.result(timeout=10) == 0
     assert active[0] == worker[0] == newer[:12]
     assert m.sync(newer, latest=True) is None
     assert m.sync(older) is None
     assert m.follow() == 0
-    assert smoked == delivered == [older[:12], newer[:12]]
+    assert smoked == [older[:12], newer[:12]]
 
-    # A failed explicit repair invalidates the completion receipt. Interruption
-    # or partial delivery will therefore make the next merge-hook call retry.
     m.sync_hosts = lambda *a, **kw: ["worker:FAIL lost connection"]
     assert m.sync(newer) == 4
     assert not m.complete_rollout(newer, True)
@@ -552,8 +571,140 @@ def test_rollout_serializes_two_merges_follow_and_catchup(tmp_path):
     assert worker[0] == newer[:12]
     m.sync_hosts = sync_hosts
     assert m.sync(newer, latest=True) == 0
-    assert delivered == [older[:12], newer[:12], newer[:12]]
     assert smoked == [older[:12], newer[:12]]
+
+
+def test_current_delivery_refuses_host_downgrade_and_pin_loss(tmp_path):
+    from subprocess import run
+
+    m = Guard.load(Guard())
+    m.RT = tmp_path
+    older, wanted, newer = ("a" * 12, "b" * 12, "c" * 12)
+    active = [wanted]
+    calls = []
+    m.HOST_DATA = {}
+    m.current = lambda: active[0]
+    m.runtime_ancestor = lambda before, after: (before, after) in ((older, wanted), (wanted, newer))
+    current_link = tmp_path / "current"
+    new_manifest = tmp_path / f"{wanted}.manifest.json"
+    (tmp_path / wanted).mkdir()
+    new_manifest.touch()
+
+    def repoint(name):
+        current_link.unlink(missing_ok=True)
+        current_link.symlink_to(name)
+
+    before_flip = None
+
+    def run_remote(args, **kwargs):
+        command = args[-1]
+        calls.append(command)
+        if "flock" in command and before_flip:
+            before_flip()
+        return run(["bash", "-c", command], text=True, capture_output=True, **kwargs)
+
+    m.run = run_remote
+    repoint(newer)
+    ok, note = m.host_sync("host", wanted, "", only_current=True)
+    assert not ok and "non-fast-forward" in note
+    assert not any("flock" in line for line in calls)
+    assert str(current_link.readlink()) == newer
+
+    repoint(older)
+    before_flip = lambda: repoint(newer)
+    ok, note = m.host_sync("host", wanted, "", only_current=True)
+    assert not ok and note.startswith("flip:")
+    assert str(current_link.readlink()) == newer
+
+    repoint(older)
+    before_flip = new_manifest.unlink
+    ok, note = m.host_sync("host", wanted, "", only_current=True)
+    assert not ok and note.startswith("flip:")
+    assert str(current_link.readlink()) == older
+
+    before_flip = None
+    new_manifest.touch()
+    current_link.unlink()
+    assert m.host_sync("host", wanted, "", only_current=True) == (True, "ok")
+    assert str(current_link.readlink()) == wanted
+
+    calls.clear()
+    active[0] = newer
+    assert m.host_sync("host", wanted, "", only_current=True) == (False, "SUPERSEDED")
+    assert not calls
+
+
+def test_superseded_success_and_failure_do_not_touch_newer_alert(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    m = Guard.load(Guard())
+    m.RT = tmp_path
+    m.MQ = tmp_path / "mq"
+    m.log = lambda _: None
+    for stale_rc, current_rc in ((0, 3), (4, 0)):
+        entered, finish = Event(), Event()
+        alerts = []
+        m.sync_alert = lambda ok, reason: alerts.append((ok, reason))
+
+        def stale(*_a, **_kw):
+            with m.rollout_lock():
+                m.mark_rollout_attempt()
+            entered.set()
+            assert finish.wait(10)
+            return stale_rc
+
+        def current(*_a, **_kw):
+            with m.rollout_lock():
+                m.mark_rollout_attempt()
+            return current_rc
+
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            first = executor.submit(m.sync_guarded, "older", True, True, stale)
+            try:
+                assert entered.wait(10)
+                assert m.sync_guarded("newer", True, True, current) == current_rc
+            finally:
+                finish.set()
+            assert first.result(timeout=10) == 0
+        assert [(ok, reason.split(" ", 2)[1]) for ok, reason in alerts] == [
+            (current_rc == 0, str(current_rc)),
+        ]
+
+
+def test_later_resolution_failure_supersedes_old_alert_result(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    from functools import partial
+    from threading import Event
+
+    m = Guard.load(Guard())
+    m.RT = tmp_path
+    m.MQ = tmp_path / "mq"
+    m.log = lambda _: None
+    entered, finish = Event(), Event()
+    alerts = []
+    m.sync_alert = lambda ok, reason: alerts.append((ok, reason))
+
+    def earlier(*_a, **_kw):
+        with m.rollout_lock():
+            m.mark_rollout_attempt()
+        entered.set()
+        assert finish.wait(10)
+        return 0
+
+    def fetch_fails():
+        raise RuntimeError("mirror unavailable")
+
+    m.fetch_runtime_main = fetch_fails
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        first = executor.submit(m.sync_guarded, "older", True, True, earlier)
+        try:
+            assert entered.wait(10)
+            assert m.sync_guarded("newer", True, True, partial(m.sync, latest=True)) == 1
+        finally:
+            finish.set()
+        assert first.result(timeout=10) == 0
+    assert alerts == [(False, "RuntimeError: mirror unavailable")]
 
 
 def test_follower_does_not_revert_a_newer_main_for_an_older_red(tmp_path):
