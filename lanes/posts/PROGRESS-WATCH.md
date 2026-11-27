@@ -587,3 +587,4 @@
 - 2026-11-26 18:29 PST ALERT NO-PROGRESS s81_head: 4 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 313 min (last 13:16) and 0 private-spec launches for 60 min (last 17:27 ot-run HEAD-INT-R2 hd_host_w); no current launch blocker logged
 - 2026-11-26 19:20 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
 - 2026-11-26 20:23 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_w, 2026-11-25 23:05)
+- 2026-11-26 21:03 PST ALERT NO-PROGRESS s81_head: 4 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 466 min (last 13:16) and 0 private-spec launches for 60 min (last 19:55 ot-run HEAD-EAST-R3 hd_lep0N); no current launch blocker logged

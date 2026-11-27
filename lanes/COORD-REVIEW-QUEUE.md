@@ -17123,3 +17123,4 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-26 21:03 PST PLACE-PRECHECK [PRECHECK-1119 -> head-int-r2; cc COORD, ADOPT-CENSUS-1800] s81_head event head_rp21z20NF15f_r18w12_1126: 27 types checked, 2 with findings. Advisory, not a gate (kit place guards decided statically).
   STATIONCORE 1 type(s): hd_ctl (type hd_ctl: bus_chain bus:h_tx_o: 0 of 278 station sites inside hard )
   FIRMREACH 1 type(s): hd_lep0N (writer START fault_o0: minimum 406.14 um between emitted FIRM windows ) Rows /srv/opentallas-scratch2/claude/precheck-runs/s81_head_head_rp21z20NF15f_r18w12_1126_11270500/place_precheck/place_precheck.tsv
+- 2026-11-26 21:03 PST ALERT NO-PROGRESS s81_head: 4 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 466 min (last 13:16) and 0 private-spec launches for 60 min (last 19:55 ot-run HEAD-EAST-R3 hd_lep0N); no current launch blocker logged
