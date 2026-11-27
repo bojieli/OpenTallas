@@ -277,6 +277,32 @@ def leg405_measure(t):
     return fnd, cnt
 
 
+def writer_start_firm_lower_bounds(t):
+    """First writer START hops between emitted, bounded FIRM packing windows."""
+    ck = t.get("clock") or {}
+    writer = ck.get("landing_writer_start") or {}
+    reader = ck.get("landing_reader_start") or {}
+    if (not writer.get("branches") or writer.get("share_trunk")
+            or t.get("landing_relay_start_copy")
+            or not (reader.get("origin_rect_um") or ck.get("landing_origin_rect_um"))):
+        return []
+    import landing_place as lp
+
+    origin_groups = lp._reader_start_groups(t) if reader.get("origin_rect_um") else lp._origin_home_groups(t)
+    origin = next((rect for name, rect, _ in origin_groups if name == "u_cland_origin"), None)
+    if origin is None:
+        return []
+    out = []
+    for name, target, tag in lp._writer_start_groups(t):
+        if not tag.startswith("writer-start:") or not name.endswith("_0"):
+            continue
+        l1 = sum(max(origin[i] - target[i + 2], target[i] - origin[i + 2], 0)
+                 for i in range(2))
+        if l1 > LEG_UM + TOL:
+            out.append((tag.removeprefix("writer-start:"), round(l1, 2)))
+    return out
+
+
 def leg405_unchecked(t, cnt):
     """leg kinds this type carries that the check cannot measure (plan holds no coordinates for the far end): [description]"""
     ck = t.get("clock") or {}
@@ -587,6 +613,10 @@ def _f_leg_staged(raw, plan_path, tree=None, **_k):
             n += 1
             lines.append(_w("LEG405-STAGED", tn, f"{len(v)} finding(s):",
                             "; ".join(f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)" for h in v[:MAX_EX]) + (" ..." if len(v) > MAX_EX else "")))
+        windows = writer_start_firm_lower_bounds(t)
+        if windows:
+            parts = ", ".join(f"{bus} {minimum:.2f} um" for bus, minimum in windows)
+            lines.append(_w("LEG405-STAGED", tn, f"writer START minimum between emitted FIRM windows: {parts}"))
         u = leg405_unchecked(t, cnt)
         if u:
             unchecked.append(f"WARN LEG405-STAGED-UNCHECKED {tn}: " + "; ".join(u))

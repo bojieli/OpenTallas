@@ -110,3 +110,16 @@ def test_aggregate_face_uses_first_stage_even_if_second_stage_is_closer():
     ck = raw["partition_types"]["hd_host_w"]["clock"]
     ck["landing_status_anchors"]["u_cland_agg_2"] = [700, 280]
     assert reports_status_leg(raw)
+
+
+def test_writer_first_leg_lower_bound_uses_both_window_edges():
+    t = {"outline_um": [1071.36, 1408.32], "clock": {
+        "landing_reader_start": {"origin_rect_um": [221.36, 591.36, 238.64, 608.64], "branches": {}},
+        "landing_writer_start": {"branches": {
+            "fault_o0": {"stages": [{"xy_um": [639.08, 618.66]}]},
+            "lw_o": {"stages": [{"xy_um": [646.65, 618.66]}]},
+        }},
+    }}
+    assert F.writer_start_firm_lower_bounds(t) == [("fault_o0", 406.14), ("lw_o", 413.71)]
+    t["clock"]["landing_writer_start"]["branches"]["fault_o0"]["stages"][0]["xy_um"][0] -= 10
+    assert F.writer_start_firm_lower_bounds(t) == [("lw_o", 413.71)]
