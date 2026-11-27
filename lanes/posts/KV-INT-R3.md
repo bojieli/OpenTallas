@@ -601,3 +601,4 @@
   - Stock tap_reach_fix on the 52 types with explicit taps.
   DEFERRED 11-28 09:00: phy and phy_v1 (hard wrappers, TAPREACH 404.9 um), the density types (no span stage) and hgi_v6 (new taps would move reset relays).
   Export relay FIRM: no stock key exists, because landing_contract.py:687 hardcodes PLACED. An opt-in tool patch, export_relay_status=FIRM, is going to main with tests, and row candB2 (2ae79858687e) gets gated after it. It joins 21:00 only if it is pushed and green by 17:30; otherwise it is DEFERRED. The 27 nm snap comes from a half-site offset (centre sites with even-width relays). The leg basis needs no fix: the plan already uses clk site 1819.808, which is the built port.
+- 2026-11-27 15:02 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-731268 on outgoing-giraffe: rc=0 after 0 s, ended 23:02:48, log none, cmd: ot-push-main --help
