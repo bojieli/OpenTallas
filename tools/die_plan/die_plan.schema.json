@@ -1988,6 +1988,17 @@
          "maxItems": 4
         }
        },
+       "tap_sites_um": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       },
        "band_keepout_um": {
         "type": "array",
         "items": {

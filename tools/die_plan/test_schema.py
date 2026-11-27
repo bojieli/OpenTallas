@@ -38,6 +38,15 @@ def test_jsonschema_agrees():
     jsonschema.Draft202012Validator(schema.SCHEMA).validate(EX)
 
 
+def test_named_tap_site_stamp_schema():
+    p = copy.deepcopy(EX)
+    clock = next(iter(p["partition_types"].values())).setdefault("clock", {})
+    clock["tap_sites_um"] = {"clk_t1": [12.96, 25.92]}
+    assert schema.validate(p) == []
+    clock["tap_sites_um"]["clk_t1"] = [12.96]
+    assert any("tap_sites_um" in error for error in schema.validate(p))
+
+
 def test_structure_errors():
     assert any("missing 'die'" in e for e in errs_of(lambda p: p.pop("die")))
     assert any("unknown key" in e for e in errs_of(lambda p: p.update(extra=1)))
