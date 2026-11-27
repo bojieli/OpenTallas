@@ -611,3 +611,13 @@
 - 2026-11-27 15:08 PST KV-INT-R3 15:08 STATUS. The 21:00 row list (as it will actually run) dry-composes CLEAN onto core7b 78b8be878d92: 0 conflict, 0 base!=live, 0 type add/del. Report: epyc12 kv-int-r2/c2100/compose12/dry18b_report.json.
   Order: PVREPOINT-REVERT 989c61555342, OUTER-SEAT 0aa4c9470af8, AHUB pack, SEATKEY6 9f871e948104, HUB r23f a20e526fda5c + pack_r8only, PINENTRY r3 721956765d53, PV-RESET a724b904ad3f, PV-SEAM 113077a88b72, TAPREACH tree1 af9d51a9a122, FIRM rmc a32ce74fb55c (conditional).
   Gates for core7r, core7s and core7a are running on epyc12, now in G0. FIRM pc_v1 probe is in DPL; the hook left 1893 cells unresolved (max move 207.9), so FIRM is likely DEFERRED unless DPL comes in under 50 um. The final.sh run stays at 18:00.
+- 2026-11-27 15:09 PST KV-INT-R3 C-TAP-REACH (TAP-SPAN merged in). Cause has two parts.
+  (a) io_ft: taps are too sparse for its sink clusters (333 um).
+  (b) sys_SD_v1: clock.tap_span_um is unset, so the cap and affinity passes stretch the span to 375 um.
+  Row A, tree2, plan 2de709a23794, manifest 89b9c38fd708: tap_reach_fix taps on 52 types plus tap_span_um=300 on all 91 non-hard types. G0, elab, strict bind 93/93, PRE and LATCHECK 2746/2746 pass with 0 cycles. Static census after the fix: seats over radius 36->4, over-span types 89->39. This becomes 21:00 row 10, replacing tree1 af9d51a9a122.
+  DEFERRED 11-28 09:00:
+  - tap_span holding at CTS on sys_SD_v1/io_ft (needs a post-apply CTS probe)
+  - phy/phy_v1 (hard, 404.9 um)
+  - about 36 density types (span stage unsupported; rely on tap_span only)
+  - hgi_v6 (new taps would move reset relays)
+  - FIRM export-relay row candB2 2ae79858687e (patch on main 23fbdb507adb, not in any rt yet)
