@@ -516,14 +516,16 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     chain = chain[::-1]
     obs = corridor_obstacles(t, margin, min_um)
     bands = [b["rect_um"] for b in lc["bands"].values()]
-    cons = {"origin": (pins["cland_tstart_in"][0], EDGE_Y)}
+    # a relay piece of a split (intra-region relay role) has no cland_tstart_in: its START origin is the rx flop on cland_rstart_in
+    spin = "cland_tstart_in" if "cland_tstart_in" in pins else "cland_rstart_in"
+    cons = {"origin": (pins[spin][0], EDGE_Y)}
     for n, xy in sorted(pins.items()):
         if n.startswith("cland_fstart_out_"):
             cons["fstart:" + n[len("cland_fstart_out_"):]] = tuple(xy)
     # KV-RAWFIX 11-15 (rule part 2): the origin row (pin x, EDGE_Y) can lie under a macro that corridor_obstacles closes to
     # the core edge (kv3_hgi*: head cores 12.96 um from the S edge, cland_tstart_in an interior pin): fall back to the pin.
     if _core_free_point(cons["origin"], obs, W, H, margin) != tuple(cons["origin"]):
-        cons["origin"] = tuple(pins["cland_tstart_in"])
+        cons["origin"] = tuple(pins[spin])
     branches, rep, fails = [], {}, []
     for role, pin_xy in cons.items():
         # rule part 3: a target inside a keepout or outside the core area moves to the nearest free point inside it
