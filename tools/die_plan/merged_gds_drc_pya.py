@@ -6,6 +6,13 @@
 #               macros_only.gds only the hard-core instances (baseline 2)
 #               Cells matching allow_empty (generated memory macros without GDS) stay empty in all three; their outlines
 #               are written to empty_cells.json so the compare step can report markers there as UNCHECKED.
+# mode=window : (P-DRC-DECK-BASELINE, flattened windows) clip one of the three GDS to every hard-core instance bbox + margin_um (default 5), flatten each window and write
+#               <out_prefix>_<i>.gds; windows.json lists them.  The deck runs on these flat windows; hierarchical full-chip runs no longer gate.
+# mode=shorts : (geometric short check, COORD 11-26) per window: on every metal and via layer, parent shapes (win/parent_only_<i>.gds) that overlap core shapes (win/macros_only_<i>.gds)
+#               are written to win/shorts_<i>.json as bbox lists per layer, minus the overlap inside the core's own PIN-purpose shapes (datatype 251 of the same layer, written by
+#               mode=core from the routed DEF pins: the legal landing of a parent route on a pin; the pin purpose is orientation-correct where a LEF rect would need the placement).
+# mode=selftest: build D/{clean,seeded}/{merged,parent_only,macros_only}.gds + parent_cells.json from one real core GDS placed in an empty parent; seeded merged/parent_only get
+#               a parent M4 wire overlapping a core M4 wire (bend, M4.AUX.3) and a parent V6 via pair 30 nm apart next to a core shape (V6.S), both only where core metal is.
 # mode=compare: merged.lyrdb minus (parent_only.lyrdb + macros_only.lyrdb), matched by (category, marker bbox at 1 dbu);
 #               -> compare.json: per category counts, every NEW marker (bbox, category, nearest hard-core instance).
 import json
@@ -197,5 +204,134 @@ elif mode == "compare":
                new_parent=sum(x["count"] for x in new if x["zone"] == "PARENT"),
                per_category=per, new=new[:2000], halo_um=halo)
     json.dump(res, open(out_file, "w"), indent=1)  # noqa: F821
+elif mode == "window":
+    margin = float(g.get("margin_um", "5"))
+    cells = json.load(open(cells_json))  # noqa: F821
+    ly = pya.Layout()
+    ly.read(in_gds)  # noqa: F821
+    top = [ly.cell(i) for i in ly.each_top_cell()][0]
+    wins = []
+    for n, rec in enumerate(cells["hard_core_insts"]):
+        x0, y0, x1, y1 = rec["bbox"]
+        w = [round(x0 - margin, 10), round(y0 - margin, 10), round(x1 + margin, 10), round(y1 + margin, 10)]
+        box = pya.Box(int(round(w[0] / ly.dbu)), int(round(w[1] / ly.dbu)), int(round(w[2] / ly.dbu)), int(round(w[3] / ly.dbu)))
+        ci = ly.clip(top.cell_index(), box)
+        c = ly.cell(ci)
+        c.name = "WIN%d" % n
+        c.flatten(-1, True)
+        o = pya.SaveLayoutOptions()
+        o.format = "GDS2"
+        o.select_all_cells = False
+        o.add_this_cell(ci)
+        ly.write("%s_%d.gds" % (out_prefix, n), o)  # noqa: F821
+        ly.delete_cell_rec(ci)
+        wins.append(dict(i=n, master=rec["master"], bbox=w))
+    json.dump(wins, open(out_prefix + "_windows.json", "w"), indent=1)  # noqa: F821
+elif mode == "shorts":
+    LAYERS = dict(M1=19, V1=21, M2=20, V2=25, M3=30, V3=35, M4=40, V4=45, M5=50, V5=55, M6=60, V6=65, M7=70)
+    wins = json.load(open(win_dir + "/merged_windows.json"))  # noqa: F821
+    for w in wins:
+        i = w["i"]
+        regs = {}
+        for kind in ("parent_only", "macros_only"):
+            ly = pya.Layout()
+            ly.read("%s/%s_%d.gds" % (win_dir, kind, i))  # noqa: F821
+            top = [ly.cell(j) for j in ly.each_top_cell()][0]
+            regs[kind] = (ly, {n: (pya.Region(top.begin_shapes_rec(ly.layer(l, 0))), pya.Region(top.begin_shapes_rec(ly.layer(l, 251)))) for n, l in LAYERS.items()})
+        dbu = regs["parent_only"][0].dbu
+        out = {}
+        for n in LAYERS:
+            par = regs["parent_only"][1][n][0].merged()
+            core, pins = regs["macros_only"][1][n]
+            core = core.merged()
+            pins = pins.merged()
+            ov = ((par & core) - pins)
+            boxes = [[round(p.bbox().left * dbu, 10), round(p.bbox().bottom * dbu, 10), round(p.bbox().right * dbu, 10), round(p.bbox().top * dbu, 10)] for p in ov.each()]
+            if boxes:
+                out[n] = boxes
+        json.dump(out, open("%s/shorts_%d.json" % (win_dir, i), "w"))  # noqa: F821
+elif mode == "selftest":
+    import os
+    core = pya.Layout()
+    core.read(core_gds)  # noqa: F821
+    ctop = [core.cell(i) for i in core.each_top_cell()][0]
+    dbu = core.dbu
+    cb = ctop.bbox()
+    off = pya.Trans(int(round(50 / dbu)), int(round(50 / dbu)))
+    # a long core M4 wire (layer 40/0) to overlap, and any core shape on 40 for the V6 seed position
+    m4 = pya.Region(ctop.begin_shapes_rec(core.layer(40, 0)))
+    m4.merge()
+    m4pins = pya.Region(ctop.begin_shapes_rec(core.layer(40, 251))).merged()
+    target = None
+    for p_ in m4.each():
+        b = p_.bbox()
+        if max(b.width(), b.height()) >= 800 and min(b.width(), b.height()) >= 40 and (pya.Region(b) & m4pins.sized(2000)).is_empty():
+            target = b
+            break
+    if target is None:
+        for p_ in m4.each():
+            b = p_.bbox()
+            if max(b.width(), b.height()) >= 800 and (pya.Region(b) & m4pins).is_empty():
+                target = b
+                break
+    if target is None:
+        raise RuntimeError("selftest: no core M4 wire away from the pins")
+    # collinear sub-box in the middle of the wire (stays inside it: no bend, no new edge on the layer)
+    if target.width() >= target.height():
+        short_box = pya.Box(target.left + target.width() // 2 - 200, target.bottom, target.left + target.width() // 2 + 200, target.top)
+    else:
+        short_box = pya.Box(target.left, target.bottom + target.height() // 2 - 200, target.right, target.bottom + target.height() // 2 + 200)
+    pl, pad = None, None
+    for l_ in (50, 40, 30):
+        pr = pya.Region(ctop.begin_shapes_rec(core.layer(l_, 251))).merged()
+        for p_ in pr.each():
+            b = p_.bbox()
+            if b.width() >= 16 and b.height() >= 16:
+                pl, pad = l_, pya.Box(b.left + 4, b.bottom + 4, b.right - 4, b.top - 4)
+                break
+        if pl:
+            break
+    if pl is None:
+        raise RuntimeError("selftest: the core GDS has no PIN-purpose (datatype 251) shape")
+    short_box = short_box.moved(off.disp)
+    # One 32 nm via in each constituent. Only the assembled geometry has a 30 nm gap.
+    cx = target.left + off.disp.x + int(round(1 / dbu))
+    cy = target.bottom + off.disp.y + int(round(1 / dbu))
+    via_width = int(round(0.032 / dbu))
+    via_gap = int(round(0.030 / dbu))
+    core_via = pya.Box(cx, cy, cx + via_width, cy + via_width)
+    parent_via = core_via.moved(via_width + via_gap, 0)
+    for variant in ("clean", "seeded"):
+        d = os.path.join(out_dir, variant)  # noqa: F821
+        os.makedirs(d, exist_ok=True)
+        if variant == "seeded":
+            seeds = {"SHORT.M4": [short_box.left, short_box.bottom, short_box.right, short_box.top],
+                     "V6.S.1-2-3": [core_via.right, cy, parent_via.left, cy + via_width]}
+            with open(os.path.join(d, "seed_targets.json"), "w") as stream:
+                json.dump(seeds, stream)
+        for kind in ("merged", "parent_only", "macros_only"):
+            ly = pya.Layout()
+            ly.dbu = dbu
+            top = ly.create_cell("PARENT")
+            if kind != "parent_only":
+                cc = ly.create_cell(ctop.name)
+                cc.copy_tree(ctop)
+                top.insert(pya.CellInstArray(cc.cell_index(), off))
+            if kind != "macros_only":
+                # legal landing: a parent M5 pad inside a core PIN-purpose shape (50/251, else 40/251): overlaps core metal, must NOT flag
+                top.shapes(ly.layer(pl, 0)).insert(pad.moved(off.disp))
+            if variant == "seeded" and kind != "macros_only":
+                top.shapes(ly.layer(40, 0)).insert(short_box)
+            if variant == "seeded":
+                if kind != "parent_only":
+                    top.shapes(ly.layer(65, 0)).insert(core_via)
+                if kind != "macros_only":
+                    top.shapes(ly.layer(65, 0)).insert(parent_via)
+            ly.write(os.path.join(d, kind + ".gds"))
+        bb = ctop.bbox()
+        x0, y0 = (bb.left + off.disp.x) * dbu, (bb.bottom + off.disp.y) * dbu
+        x1, y1 = (bb.right + off.disp.x) * dbu, (bb.top + off.disp.y) * dbu
+        json.dump(dict(filled={ctop.name: "core"}, hard_core_insts=[dict(inst="", master=ctop.name, bbox=[x0, y0, x1, y1])], empty_allowed=[], missing=[],
+                       dbu=dbu), open(os.path.join(d, "parent_cells.json"), "w"))
 else:
-    raise RuntimeError("mode must be core, parent or compare")
+    raise RuntimeError("mode must be core, parent, compare, window or selftest")

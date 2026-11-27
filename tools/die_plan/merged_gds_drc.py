@@ -26,6 +26,7 @@ import re
 import shlex
 import subprocess
 import sys
+from xml.etree import ElementTree
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -51,47 +52,162 @@ BEOL_AWK = ('{sub(/\\r$/, "")}\n'            # the deck has CRLF line ends
 GATING_ZONE = "HARDCORE"
 
 
-# P-DRC-DECK-BASELINE (S81-COL-EOL 11-26, FABLE-INDEP 15:12 review of 4390177b0284).  Every NEW marker in the HARDCORE zone gates, whatever its category (M4.AUX.3,
-# M5.AUX.3, Vn.AUX.1, V3.M4.AUX.2 are 0 in the baselines and appear only where parent and core geometry merge: they can be the only trace of a parent-to-core short).
-# The one explicit exclusion is V4.M5.AUX.2 OUTSIDE the hard-core zone (PARENT markers: 1,669,570 on the H10 R2 ECO merged run, 2 on parent_only; the count follows the
-# layout structure, hierarchical window 2 vs flattened 39072 on identical shapes, so it is not trusted either way until the run mode is settled).  The gate never counted
-# PARENT markers; the exclusion is reported, and while a category is excluded a passing run is PASS-PROVISIONAL, which signoff.gate_check reads as NOT RUN: no kit passes
-# on this deck until it reads 0 on a signed clean core (FLEET-OPS-R4 staged core, calib/) and the zone behaviour is proven.
-EXCLUDED_OUTSIDE_HARDCORE = ("V4.M5.AUX.2",)
+# P-DRC-DECK-BASELINE (S81-COL-EOL 11-26, COORD ruling after FABLE-INDEP reviews of 4390177b0284 / 6e153c0fc444).  The deck gates on FLATTENED WINDOWS only: every hard-core
+# instance bbox + WINDOW_MARGIN_UM of merged.gds, parent_only.gds and macros_only.gds is clipped, flattened and run through the unchanged deck.  The hierarchical (deep mode)
+# full-chip run under-reports (a V6.S spacing rule reads 0 hierarchical and 1,440 flattened on identical shapes), so it never gates: --hier keeps it as a report only.
+# A merged marker is NEW unless a marker of the SAME CATEGORY sits at the same LOCATION in the parent_only or macros_only window (all four bbox corners within one GDS database unit; never a
+# count).  Nothing is excluded by category: V4.M5.AUX.2 and the other AUX rules gate like every other category; a baseline-equal PG via cancels by location.
+# A parent shape overlapping core metal merges into one polygon and gives no deck marker, so a geometric SHORT check runs on the same windows (mode=shorts): on every metal and
+# via layer, parent_only shapes AND macros_only shapes overlap = NEW SHORT.<layer>, minus the overlap inside the core's own pin-purpose shapes (datatype 251: the legal landing of a
+# parent route on a pin).  It sees geometry only, not nets: a parent pad on a pin of the wrong net is a connectivity question for LVS, not for this gate.
+FLAT_MODE = "flat-windows-location-v1"
+WINDOW_MARGIN_UM = 5.0
+_NUM = re.compile(r"-?\d+(?:\.\d+)?(?:e-?\d+)?")
+
+
+def parse_lyrdb(path, dbu):
+    """Yield each report marker's category and full bounding box in GDS grid units."""
+    items = None
+    events = iter(ElementTree.iterparse(path, events=("start", "end")))
+    _, root = next(events)
+    if root.tag != "report-database":
+        raise ValueError(f"Expected a KLayout report database in {path}")
+    for event, element in events:
+        if event == "start" and element.tag == "items":
+            items = element
+        if event != "end" or element.tag != "item":
+            continue
+        category = element.findtext("category", "").strip("'")
+        if not category:
+            raise ValueError(f"Marker without category in {path}")
+        found_geometry = False
+        for value in element.findall("./values/value"):
+            kind, sep, coordinates = (value.text or "").partition(":")
+            if not sep or kind not in {"box", "polygon", "edge", "edge-pair", "path"}:
+                continue
+            points = [round(float(number) / dbu) for number in _NUM.findall(coordinates)]
+            if len(points) < 2 or len(points) % 2:
+                raise ValueError(f"Invalid {kind} marker in {path}: {value.text}")
+            xs, ys = points[::2], points[1::2]
+            found_geometry = True
+            yield category, (min(xs), min(ys), max(xs), max(ys))
+        if not found_geometry or items is None:
+            raise ValueError(f"Marker {category} without geometry inside items in {path}")
+        items.remove(element)
+    if items is None:
+        raise ValueError(f"Missing report items in {path}")
+
+
+def subtract(markers, baselines):
+    """Yield markers without a same-category baseline match within one DBU on every edge."""
+    grid = {}
+    for category, box in baselines:
+        grid.setdefault((category, box[0] // 2, box[1] // 2), set()).add(box)
+    for category, box in markers:
+        gx, gy = box[0] // 2, box[1] // 2
+        candidates = (candidate for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                      for candidate in grid.get((category, gx + dx, gy + dy), ()))
+        if not any(all(abs(a - b) <= 1 for a, b in zip(box, candidate)) for candidate in candidates):
+            yield category, box
+
+
+def zone_of(b, cells, halo):
+    for rec in cells.get("hard_core_insts", []):
+        x0, y0, x1, y1 = rec["bbox"]
+        if b[0] < x1 + halo and b[2] > x0 - halo and b[1] < y1 + halo and b[3] > y0 - halo:
+            return "HARDCORE", rec["master"]
+    for rec in cells.get("empty_allowed", []):
+        x0, y0, x1, y1 = rec["bbox"]
+        if b[0] < x1 and b[2] > x0 and b[1] < y1 and b[3] > y0:
+            return "UNCHECKED", rec["master"]
+    return "PARENT", None
+
+
+def window_compare(out, cells, halo=1.0):
+    """Compare matching flat windows, retaining every unique new marker's location."""
+    win_dir = Path(out) / "win"
+    kinds = ("merged", "parent_only", "macros_only")
+    windows = [json.loads((win_dir / f"{kind}_windows.json").read_text()) for kind in kinds]
+    dbu = cells["dbu"]
+    if dbu <= 0:
+        raise ValueError("A positive GDS DBU is required")
+    expected = []
+    for index, core in enumerate(cells["hard_core_insts"]):
+        x0, y0, x1, y1 = core["bbox"]
+        box = [x0 - WINDOW_MARGIN_UM, y0 - WINDOW_MARGIN_UM,
+               x1 + WINDOW_MARGIN_UM, y1 + WINDOW_MARGIN_UM]
+        expected.append((index, core["master"], tuple(round(value / dbu) for value in box)))
+    if not expected or any([
+        (window["i"], window["master"], tuple(round(value / dbu) for value in window["bbox"]))
+        for window in group
+    ] != expected for group in windows):
+        raise ValueError("Merged and baseline windows must match every hard-core instance in order")
+    counts = dict.fromkeys(kinds, 0)
+    zones = dict.fromkeys(("HARDCORE", "UNCHECKED", "PARENT"), 0)
+    seen, sample, per_category = set(), [], {}
+    locations = Path(out) / "new_markers.jsonl"
+    pending = locations.with_suffix(".tmp")
+
+    with pending.open("w") as stream:
+        for window in windows[0]:
+            index = window["i"]
+            reports = [list(parse_lyrdb(win_dir / f"{kind}_{index}.lyrdb", dbu)) for kind in kinds]
+            for kind, report in zip(kinds, reports):
+                counts[kind] += len(report)
+            shorts = json.loads((win_dir / f"shorts_{index}.json").read_text())
+            markers = list(subtract(reports[0], reports[1] + reports[2]))
+            markers.extend((f"SHORT.{layer}", tuple(round(v / dbu) for v in box))
+                           for layer, boxes in shorts.items() for box in boxes)
+            for category, box in markers:
+                key = category, box
+                if key in seen:
+                    continue
+                seen.add(key)
+                bbox = [round(value * dbu, 10) for value in box]
+                zone, master = zone_of(bbox, cells, halo)
+                marker = dict(category=category, bbox=bbox, bbox_dbu=box, count=1, zone=zone,
+                              master=master, window=index)
+                stream.write(json.dumps(marker, separators=(",", ":")) + "\n")
+                if len(sample) < 2000:
+                    sample.append(marker)
+                category_counts = per_category.setdefault(category, {})
+                category_counts[zone] = category_counts.get(zone, 0) + 1
+                zones[zone] += 1
+    pending.replace(locations)
+    return dict(mode=FLAT_MODE, windows=len(windows[0]), dbu=dbu, tolerance_dbu=1,
+                margin_um=WINDOW_MARGIN_UM, halo_um=halo, merged_markers=counts["merged"],
+                parent_only_markers=counts["parent_only"], macros_only_markers=counts["macros_only"],
+                new_markers=len(seen), new_hardcore=zones["HARDCORE"],
+                new_unchecked=zones["UNCHECKED"], new_parent=zones["PARENT"],
+                per_category=per_category, new=sample, locations=locations.name)
 
 
 def gating_counts(cmp):
-    """-> (gating HARDCORE markers (all categories), {category: n} gating, {excluded category: n outside the hard-core zone})"""
+    """-> (gating HARDCORE markers, {category: n}); nothing is excluded"""
     per = cmp.get("per_category")
     if not isinstance(per, dict):
-        return cmp.get("new_hardcore", 0), {}, {}
-    cats, excl = {}, {}
-    for cat, z in per.items():
-        name = cat.strip("'")
-        n = (z or {}).get(GATING_ZONE, 0)
-        if n:
-            cats[name] = n
-        if name in EXCLUDED_OUTSIDE_HARDCORE:
-            out = sum(v for k, v in (z or {}).items() if k != GATING_ZONE)
-            if out:
-                excl[name] = out
-    return sum(cats.values()), cats, excl
+        return cmp.get("new_hardcore", 0), {}
+    cats = {c.strip("'"): (z or {}).get(GATING_ZONE, 0) for c, z in per.items() if (z or {}).get(GATING_ZONE, 0)}
+    return sum(cats.values()), cats
 
 
-def judge(cmp, cells):
-    """-> verdict dict from compare.json + parent_cells.json"""
+def judge(cmp, cells, hier=None):
+    """-> verdict dict from compare.json (flat windows) + parent_cells.json; hier = the report-only hierarchical compare, if it was run"""
     problems = []
     if cells.get("missing"):
         problems.append("cells without GDS (not --allow-empty): %s" % cells["missing"][:10])
-    gate, cats, excl = gating_counts(cmp)
+    gate, cats = gating_counts(cmp)
     if gate:
-        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract)" % gate)
-    verdict = "FAIL" if problems else ("PASS-PROVISIONAL" if excl else "PASS")
-    return dict(verdict=verdict, problems=problems, provisional=bool(excl), excluded_outside_hardcore=excl,
-                new_hardcore=gate, gating_categories=cats, new_parent=cmp.get("new_parent", 0),
-                new_unchecked=cmp.get("new_unchecked", 0), merged_markers=cmp.get("merged_markers"),
-                hard_cores=sorted(cells.get("filled", {})), empty_allowed=sorted({r["master"] for r in
-                                                                                  cells.get("empty_allowed", [])}))
+        problems.append("%d NEW DRC markers at hard cores (real GDS vs abstract; flat windows, by category+location)" % gate)
+    v = dict(verdict="FAIL" if problems else "PASS", problems=problems, mode=cmp.get("mode", "legacy"), new_hardcore=gate, gating_categories=cats,
+             new_parent=cmp.get("new_parent", 0), new_unchecked=cmp.get("new_unchecked", 0), merged_markers=cmp.get("merged_markers"),
+             hard_cores=sorted(cells.get("filled", {})),
+             empty_allowed=sorted({r["master"] for r in cells.get("empty_allowed", [])}))
+    if cmp.get("mode") != FLAT_MODE:
+        v["verdict"] = "FAIL" if problems else "NOT-FLAT"      # a hierarchical-only compare never passes
+    if hier:
+        v["hierarchical_report_only"] = dict(new_hardcore=hier.get("new_hardcore"), new_parent=hier.get("new_parent"))
+    return v
 
 
 def needs_gate(lef_path):
@@ -143,16 +259,32 @@ def build_script(a, cores, P):
         Path(a.out, "beol.awk").write_text(BEOL_AWK)
         lines.append("awk -f %s/beol.awk %s > %s/beol.lydrc" % (O, DECK, O))
         deck = "%s/beol.lydrc" % O
-    for g in ("merged", "parent_only", "macros_only"):
-        lines.append("( klayout -b -r %s -rd in_gds=%s/%s.gds -rd report_file=%s/%s.lyrdb > %s/drc_%s.log 2>&1"
-                     " && echo 0 > %s/drc_%s.rc || echo 1 > %s/drc_%s.rc ) &" % (deck, O, g, O, g, O, g, O, g, O, g))
-    lines += ["wait", "for g in merged parent_only macros_only; do [ \"$(cat %s/drc_$g.rc)\" = 0 ] || "
-              "{ echo DRC_FAIL $g; exit 4; }; done" % O,
-              "$K -rd mode=compare -rd merged=%s/merged.lyrdb -rd parent_only=%s/parent_only.lyrdb "
-              "-rd macros_only=%s/macros_only.lyrdb -rd cells_json=%s/parent_cells.json -rd halo_um=%s "
-              "-rd out_file=%s/compare.json > %s/compare.log 2>&1" % (O, O, O, O, a.halo_um, O, O),
-              "echo OT_MGD_DONE"]
+    lines += window_lines(O, P["tool"], deck)
+    if getattr(a, "hier", False):          # report only: the deep-mode full-chip run under-reports and never gates
+        for g in ("merged", "parent_only", "macros_only"):
+            lines.append("( klayout -b -r %s -rd in_gds=%s/%s.gds -rd report_file=%s/%s.lyrdb > %s/drc_%s.log 2>&1"
+                         " && echo 0 > %s/drc_%s.rc || echo 1 > %s/drc_%s.rc ) &" % (deck, O, g, O, g, O, g, O, g, O, g))
+        lines += ["wait", "for g in merged parent_only macros_only; do [ \"$(cat %s/drc_$g.rc)\" = 0 ] || "
+                  "{ echo DRC_FAIL $g; exit 4; }; done" % O,
+                  "$K -rd mode=compare -rd merged=%s/merged.lyrdb -rd parent_only=%s/parent_only.lyrdb "
+                  "-rd macros_only=%s/macros_only.lyrdb -rd cells_json=%s/parent_cells.json -rd halo_um=%s "
+                  "-rd out_file=%s/compare.json > %s/compare.log 2>&1" % (O, O, O, O, a.halo_um, O, O)]
+    lines.append("echo OT_MGD_DONE")
     return "\n".join(lines) + "\n"
+
+
+def window_lines(O, tool, deck, jobs=6):
+    """bash lines: clip + flatten the three GDS to the hard-core windows, then the deck on every window (xargs -P)"""
+    L = ["mkdir -p %s/win" % O]
+    for g in ("merged", "parent_only", "macros_only"):
+        L.append("klayout -b -r %s/merged_gds_drc_pya.py -rd mode=window -rd in_gds=%s/%s.gds -rd cells_json=%s/parent_cells.json -rd margin_um=%g "
+                 "-rd out_prefix=%s/win/%s > %s/win/%s.clip.log 2>&1" % (tool, O, g, O, WINDOW_MARGIN_UM, O, g, O, g))
+    L.append("ls %s/win/merged_*.gds %s/win/parent_only_*.gds %s/win/macros_only_*.gds > %s/win/jobs.txt" % (O, O, O, O))
+    L.append("cat %s/win/jobs.txt | xargs -P %d -I{} bash -c 'f={}; klayout -b -r %s -rd in_gds=$f -rd report_file=${f%%.gds}.lyrdb > ${f%%.gds}.log 2>&1'"
+             % (O, jobs, deck))
+    L.append("klayout -b -r %s/merged_gds_drc_pya.py -rd mode=shorts -rd win_dir=%s/win > %s/win/shorts.log 2>&1" % (tool, O, O))
+    L.append("echo OT_MGD_WIN_DONE")
+    return L
 
 
 def run(a):
@@ -198,10 +330,81 @@ def run(a):
 
 def verdict(a):
     out = Path(a.out)
-    v = judge(json.loads((out / "compare.json").read_text()), json.loads((out / "parent_cells.json").read_text()))
+    cells = json.loads((out / "parent_cells.json").read_text())
+    hier = json.loads((out / "compare.json").read_text()) if (out / "compare.json").is_file() else None
+    if (out / "win" / "merged_windows.json").is_file():
+        try:
+            cmp = window_compare(out, cells, getattr(a, "halo_um", 1.0))
+        except (OSError, ValueError, KeyError, ElementTree.ParseError) as exc:
+            v = dict(verdict="ERROR", problems=[f"Incomplete flat-window evidence: {exc}"])
+        else:
+            (out / "compare_windows.json").write_text(json.dumps(cmp, indent=1))
+            v = judge(cmp, cells, hier)
+    else:
+        v = judge(hier or {}, cells)
     (out / "verdict.json").write_text(json.dumps(v, indent=1))
     print(json.dumps(v))
     return 0 if v["verdict"] == "PASS" else 1
+
+
+def selftest(a):
+    """Run the signed-core control and cross-boundary M4 overlap / V6 spacing seeds."""
+    out = Path(a.out).resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    core = os.path.realpath(a.core_gds)
+    if a.local:
+        P = dict(out=str(out), tool=str(HERE), core=os.path.dirname(core))
+    else:
+        P = dict(out="/out", tool="/tool", core="/core")
+    deck_dir = out / "deck"
+    deck_dir.mkdir(exist_ok=True)
+    (deck_dir / "beol.awk").write_text(BEOL_AWK)
+    O = P["out"]
+    lines = ["set -e", "cd %s" % O,
+             "klayout -b -r %s/merged_gds_drc_pya.py -rd mode=selftest -rd core_gds=%s/%s -rd out_dir=%s > %s/selftest.log 2>&1"
+             % (P["tool"], P["core"], os.path.basename(core), O, O),
+             "awk -f %s/deck/beol.awk %s > %s/deck/beol.lydrc" % (O, DECK, O)]
+    for v in ("clean", "seeded"):
+        lines += window_lines("%s/%s" % (O, v), P["tool"], "%s/deck/beol.lydrc" % O)
+    lines.append("echo OT_MGD_SELFTEST_DONE")
+    (out / "run.sh").write_text("\n".join(lines) + "\n")
+    if a.local:
+        cmd = ["bash", str(out / "run.sh")]
+    else:
+        cmd = ["docker", "run", "--rm", "--memory", "%dg" % a.mem_gb, "--user", "%d:%d" % (os.getuid(), os.getgid()), "-v", "%s:/out" % out,
+               "-v", "%s:/tool:ro" % HERE, "-v", "%s:/core:ro" % os.path.dirname(core), a.image, "bash", "/out/run.sh"]
+    with open(out / "run.log", "w") as fh:
+        rc = subprocess.call(cmd, stdout=fh, stderr=subprocess.STDOUT)
+    if rc or "OT_MGD_SELFTEST_DONE" not in (out / "run.log").read_text():
+        print(json.dumps(dict(verdict="ERROR", problems=["selftest run rc %d (see %s/run.log)" % (rc, out)])))
+        return 2
+    res = {}
+    for v in ("clean", "seeded"):
+        cells = json.loads((out / v / "parent_cells.json").read_text())
+        cmp = window_compare(out / v, cells, 1.0)
+        res[v] = dict(new_hardcore=cmp["new_hardcore"], per_category=cmp["per_category"], merged=cmp["merged_markers"],
+                      parent_only=cmp["parent_only_markers"], macros_only=cmp["macros_only_markers"])
+    seeded_dir = out / "seeded"
+    targets = json.loads((seeded_dir / "seed_targets.json").read_text())
+    if set(targets) != {"SHORT.M4", "V6.S.1-2-3"}:
+        raise ValueError("Calibration requires both cross-boundary seed targets")
+    detected = dict.fromkeys(targets, False)
+    with (seeded_dir / "new_markers.jsonl").open() as markers:
+        for line in markers:
+            marker = json.loads(line)
+            category = marker["category"]
+            if marker["zone"] != GATING_ZONE or category not in targets:
+                continue
+            a, b, c, d = marker["bbox_dbu"]
+            x0, y0, x1, y1 = targets[category]
+            if a <= x1 + 1 and c >= x0 - 1 and b <= y1 + 1 and d >= y0 - 1:
+                detected[category] = True
+    ok = res["clean"]["new_hardcore"] == 0 and all(detected.values())
+    res["seeded"]["detected_at_seed"] = detected
+    res["verdict"] = "PASS" if ok else "FAIL"
+    (out / "selftest.json").write_text(json.dumps(res, indent=1))
+    print(json.dumps(res))
+    return 0 if ok else 1
 
 
 def kit_plan(kit):
@@ -252,7 +455,7 @@ def kit_run(a):
         print(json.dumps(v)[:400])
         return 2
     ns = argparse.Namespace(parent_def=kp["parent_def"], design=kp["design"], core=["%s=%s" % c for c in kp["cores"]],
-                            lef=kp["lefs"], allow_empty=kp["allow_empty"], halo_um=a.halo_um, out=str(out),
+                            lef=kp["lefs"], allow_empty=kp["allow_empty"], halo_um=a.halo_um, out=str(out), hier=getattr(a, "hier", False),
                             image=a.image, mem_gb=a.mem_gb, local=a.local, deck=a.deck)
     return run(ns)
 
@@ -309,7 +512,10 @@ def gate_check(kit):
     except (OSError, ValueError):
         return dict(verdict="NOT RUN", reason="exact-abstract views %s bound; no merged-GDS DRC verdict at %s"
                     % ([Path(g).name for g in kp["gated"]], p))
-    return dict(verdict=v.get("verdict") if v.get("verdict") in ("PASS", "FAIL") else "NOT RUN",
+    verdict = v.get("verdict")
+    if verdict != "FAIL" and (verdict != "PASS" or v.get("mode") != FLAT_MODE):
+        verdict = "NOT RUN"
+    return dict(verdict=verdict,
                 problems=v.get("problems"), new_hardcore=v.get("new_hardcore"), new_parent=v.get("new_parent"),
                 new_unchecked=v.get("new_unchecked"), gated=[Path(g).name for g in kp["gated"]], source=str(p))
 
@@ -322,6 +528,7 @@ def main(argv=None):
     r.add_argument("--design", required=True)
     r.add_argument("--core", action="append", default=[], help="MASTER=signed 6_final.odb or .def (repeat)")
     r.add_argument("--lef", action="append", default=[], help="every non-std-cell LEF the parent DEF uses (repeat)")
+    r.add_argument("--hier", action="store_true", help="also run the hierarchical full-chip deck (report only, never gates)")
     r.add_argument("--allow-empty", default="", help="regex of generated macros without GDS (UNCHECKED, not gating)")
     r.add_argument("--halo-um", type=float, default=1.0)
     r.add_argument("--deck", choices=("beol", "full"), default="beol")
@@ -344,10 +551,17 @@ def main(argv=None):
     k.add_argument("--image", default="openroad/orfs:asap7lock")
     k.add_argument("--mem-gb", type=int, default=64)
     k.add_argument("--local", action="store_true")
+    k.add_argument("--hier", action="store_true")
+    t = sub.add_parser("selftest")
+    t.add_argument("--core-gds", required=True)
+    t.add_argument("--out", required=True)
+    t.add_argument("--image", default="openroad/orfs:asap7lock")
+    t.add_argument("--mem-gb", type=int, default=32)
+    t.add_argument("--local", action="store_true")
     v = sub.add_parser("verdict")
     v.add_argument("--out", required=True)
     a = ap.parse_args(argv)
-    return {"run": run, "kit": kit_run, "core-gds": core_gds}.get(a.cmd, verdict)(a)
+    return {"run": run, "kit": kit_run, "core-gds": core_gds, "selftest": selftest}.get(a.cmd, verdict)(a)
 
 
 if __name__ == "__main__":
