@@ -249,7 +249,7 @@ def _count_own(ck, mode):
     return sum(1 for p in _table(ck, mode) or [] if p.get("kind") != "core")
 
 
-def _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec):
+def _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec, name_base=None):
     """the export validator (taps.explicit_taps / grid_explicit_taps) is stricter than tap_clear on some sites (outline /
     halo / spacing to the taps before it in table order): a tap THIS tool appended that it names is dropped and the
     appended names re-packed; anything else (a stored tap, another error) is left to the caller's revert."""
@@ -278,14 +278,14 @@ def _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec):
                     r["name"] = "clk" if n == 0 else "clk_t%d" % n
                 n += 1
             if mode != "explicit":
-                n0 = len(S._grid_taps(PQ, tn))
+                n0 = len(S._grid_taps(PQ, tn)) if name_base is None else name_base
                 for i, r in enumerate(tbl):
                     r["name"] = "clk_t%d" % (n0 + i)
             rec.setdefault("dropped_illegal", []).append(m.group(1))
     return "too many illegal taps"
 
 
-def _append_taps(ck, mode, new, PQ, tn):
+def _append_taps(ck, mode, new, PQ, tn, name_base=None):
     import schema as S
     if mode == "explicit":
         tbl = ck.setdefault("taps", [])
@@ -295,7 +295,7 @@ def _append_taps(ck, mode, new, PQ, tn):
             n += 1
     else:
         tbl = ck.setdefault("added_taps", [])
-        n0 = len(S._grid_taps(PQ, tn))
+        n0 = len(S._grid_taps(PQ, tn)) if name_base is None else name_base      # density: the density tap count, not the R4 grid
         for q in new:
             tbl.append(dict(name="clk_t%d" % (n0 + len(tbl)), xy=list(q)))
 
@@ -357,6 +357,8 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
             ck["tap_mode"] = "grid+explicit"
             ck.setdefault("added_taps", [])
         mode = ck["tap_mode"]
+        # density names follow the density count (clk_t<count>..): stored added_taps come first, new ones are appended behind them
+        name_base = (len(S.tap_grid(P0, tn)) - len(ck["added_taps"])) if dens_add else None
         own_lim = {k: ck.get(k) for k in ("tap_radius_um", "tap_max_sinks")}
         RF._freeze_reset_consumers(P0, tn, t, rec)
         orig_n = _count_own(ck, mode)
@@ -375,9 +377,9 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
                     if d > radius + 1e-6 and re.split(r"[:(]", k)[0] != "plan"]
             if farx and not dens_add:
                 RF._add_reach_sinks(ck, [[round(x, 4), round(y, 4), max(1.0, round(w, 3))] for x, y, w in farx])
-            _append_taps(ck, mode, new, PQ, tn)
+            _append_taps(ck, mode, new, PQ, tn, name_base)
             rec["added"].extend([list(q) for q in new])
-            err = _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec)
+            err = _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec, name_base)
             if err:
                 rec["unfixed"] = err
                 break
@@ -391,9 +393,9 @@ def _solve_type(raw, plan_path, tn, radius=None, rounds=ROUNDS, RF=None, span=No
             if not new:
                 rec["span_unfixed"] = "no legal split site for %d taps over the span" % m["span_taps_over_300"]
                 break
-            _append_taps(ck, mode, new, PQ, tn)
+            _append_taps(ck, mode, new, PQ, tn, name_base)
             rec["added"].extend([list(q) for q in new])
-            err = _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec)
+            err = _drop_illegal(raw, plan_path, tn, ck, mode, orig_n, RF, rec, name_base)
             if err:
                 rec["span_unfixed"] = err
                 break
