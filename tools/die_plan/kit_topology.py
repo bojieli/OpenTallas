@@ -123,6 +123,61 @@ def receipt_type_clean(out,key,tn):
     return True,f'bind errors are all attributed to other types ({len(old["refused"])} refused); {key} is clean in the receipt'
 
 
+def _collector_band_alias_update(producer, current, tn):
+    """Allow only a refresh of existing collector band copies from the same canonical band."""
+    parts = current["partition_types"]
+    typ = parts[tn]
+    clock = typ["clock"]
+    contract = clock["landing_contract"]
+    source_rows = producer["partition_types"][tn]["clock"]["landing_contract"]["collector_local_sources"]
+    rows = contract["collector_local_sources"]
+    if len(rows) != len(source_rows):
+        return False
+    changed = False
+    for before, after in zip(source_rows, rows):
+        if before == after:
+            continue
+        name = before["name"]
+        old_band = before["band"]
+        band = contract["bands"][name]
+        if not isinstance(old_band, dict) or not isinstance(band, dict):
+            return False
+        if after != dict(before, band=band):
+            return False
+        if any(old_band.get(k) != band.get(k) for k in ("instance", "width", "ring_width", "clock_roles")):
+            return False
+        changed = True
+    restored_contract = dict(contract, collector_local_sources=source_rows)
+    restored_type = dict(typ, clock=dict(clock, landing_contract=restored_contract))
+    restored = dict(current, partition_types={**parts, tn: restored_type})
+    return changed and digest(restored) == digest(producer)
+
+
+def _collector_band_alias_matches(raw, tn, out, old, new, asbuilt):
+    # No stream receipt or override can vouch for this projection. Reproduce the
+    # completed producer's native contract from the exact plan its bind recorded.
+    if (not asbuilt or not new.get("clock_table_sha256")
+            or any(old.get(k) != new.get(k) for k in ("reset", "clock_table_sha256", "ownership"))):
+        return False
+    try:
+        provenance = json.loads((Path(out) / "provenance_bind.json").read_bytes())["provenance"]
+        if provenance.get("step") != "bind":
+            return False
+        path = Path(provenance["plan"])
+        if not path.is_absolute():
+            return False
+        payload = path.read_bytes()
+        if hashlib.sha256(payload).hexdigest() != provenance["plan_sha256"]:
+            return False
+        producer = json.loads(payload)
+        if not _collector_band_alias_update(producer, raw, tn):
+            return False
+        reference = native_contract(producer, asbuilt, path)
+        return all(old.get(key) == value for key, value in reference.items())
+    except (OSError, KeyError, TypeError, ValueError):
+        return False
+
+
 def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     path=Path(out)/'native_topology.json'
     if path.is_file():
@@ -136,8 +191,10 @@ def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     if _refused(old,tn):return False         # BIND-TYPE-RECEIPT: a type the bind's errors are attributed to
     new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
-    if old.get('transport') != new['transport'] or old.get('types',{}).get(tn) != new['types'][tn]:
+    if old.get('transport') != new['transport']:
         return False
+    if old.get('types',{}).get(tn) != new['types'][tn]:
+        return path.is_file() and _collector_band_alias_matches(raw, tn, out, old, new, asbuilt)
     if old.get('reset') == new['reset']:
         return True
     if os.environ.get('OT_NATIVE_RESET_SCOPE') != 'selected':
