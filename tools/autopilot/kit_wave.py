@@ -10577,7 +10577,12 @@ def private_spec_cmd(a):
                           work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
                           rt=None if getattr(a, "reviewed_station_prepare", None) else a.rt,
                           goal=a.goal, fork_of=fork_src)
+        station_stop = getattr(a, "reviewed_station_stop", None)
+        if station_stop and not getattr(a, "reviewed_station_prepare", None):
+            raise ValueError("--reviewed-station-stop requires --reviewed-station-prepare")
         if getattr(a, "reviewed_station_prepare", None):
+            if station_stop and a.goal != "place":
+                raise ValueError("reviewed station floorplan requires the private place-only spec")
             if not a.rt or not a.host or not a.reviewed_station_manifest:
                 raise ValueError("reviewed station preparation requires --rt, --host and --reviewed-station-manifest")
             if a.resume_from or a.reuse_kit_rtl_from or a.allow_bind_stale or fork_src:
@@ -10594,6 +10599,8 @@ def private_spec_cmd(a):
             set_reviewed_station_landing(sp, reviewed)
             sp["publish_place_prepare"] = {"plan_sha256": reviewed["plan"]["sha256"],
                                            "scheduler": scheduler_code_id()}
+            if station_stop:
+                sp["reviewed_station_stop"] = station_stop
         elif getattr(a, "reviewed_station_manifest", None):
             raise ValueError("--reviewed-station-manifest requires --reviewed-station-prepare")
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
@@ -11487,8 +11494,21 @@ def publication_place_consumer(spec_path, publication):
     return spec, prepared
 
 
+def reviewed_floorplan_allowed(cfg, spec, plan_sha):
+    """An exact committed floorplan permit never releases the partition's place or route hold."""
+    die_cfg = cfg["dies"][spec["die"]]
+    if (spec.get("reviewed_station_stop") != "floorplan" or not spec.get("reviewed_station_prepare")
+            or spec.get("event") != die_cfg.get("event")):
+        return False
+    permit = (die_cfg.get("reviewed_station_floorplan") or {}).get(spec["item"])
+    if not permit:
+        return False
+    form = PVR.request(spec, plan_sha=plan_sha, producer=spec["gen_host"])["form_sha256"]
+    return permit == {"event": die_cfg["event"], "form_sha256": form, "producer": spec["gen_host"]}
+
+
 def private_prepared_consumer(spec_path):
-    """Continue one unchanged named private dry attempt using the standard place stages."""
+    """Continue one unchanged named private dry attempt using its reviewed stop."""
     import autopilot as AP
 
     raw, prepared = PPR.read_private_prepared(spec_path)
@@ -11496,8 +11516,12 @@ def private_prepared_consumer(spec_path):
     cfg = load_config(private_config_text(AP, original.get("hub")))
     die, item, host = original["die"], original["item"], original["gen_host"]
     why = private_spec_stale(original, cfg=cfg)
-    if why or launch_held(cfg, original):
-        raise ValueError(why or "the committed place hold still applies to this partition")
+    if why:
+        raise ValueError(why)
+    if launch_held(cfg, original):
+        if not reviewed_floorplan_allowed(cfg, original, prepared["private_prepared"]["plan"]):
+            raise ValueError("the committed place hold still applies to this partition")
+        prepared["held_floorplan"] = True
     if (host not in cfg["dies"][die].get("hosts", ()) or host not in gen_hosts(cfg, die, item)
             or host in (cfg.get("retired_hosts") or ())):
         raise ValueError("the exact private producer is ineligible for placement")
@@ -11541,7 +11565,8 @@ def run_item(spec_path, resume_reviewed=False, from_publication=None, from_priva
             return 75
         prior = PPV.load(out / "result.json")
         if prepared:
-            if prior.get("verdict") == "PASS" and prior.get("stage") == "place":
+            stop = PPV.load(Path(spec_path)).get("reviewed_station_stop") or "place"
+            if prior.get("verdict") == "PASS" and prior.get("stage") == stop:
                 return 0
             try:
                 return _run_item(spec_path, prepared=prepared)
@@ -11573,6 +11598,12 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
             print("KW_PRIVATE_VISUAL refused: no unchanged private spec with an exact held placement", flush=True)
             return 2
     reviewed_station = None
+    station_stop = sp.get("reviewed_station_stop")
+    if station_stop and (station_stop != "floorplan" or not sp.get("reviewed_station_prepare")
+                         or not (prepare_publication or (prepared or {}).get("private_prepared"))):
+        PPV.write(out / "result.json", {"verdict": "FAIL", "stage": "bound_station_source",
+                                        "tail": "floorplan stop requires the exact reviewed private preparation"})
+        return 1
     if sp.get("reviewed_station_prepare"):
         try:
             if resume_reviewed or RUN_ITEM_GOAL not in (None, "", "place"):
@@ -12387,6 +12418,43 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
                 resume_release(K)
         return chain_after_geom(rc)
 
+    def floorplan_prepared_kit():
+        """Run one same-host stock floorplan and retain its native checkpoint."""
+        if prepared.get("held_floorplan"):
+            import autopilot as AP
+
+            current_cfg = load_config(private_config_text(AP, hub))
+            if not reviewed_floorplan_allowed(current_cfg, sp, prepared["private_prepared"]["plan"]):
+                return fail("floorplan", "exact committed held floorplan permit changed", f"{G}:{K}")
+        runtime = f"{W}/gen/run_kit.sh"
+        checkpoint = f"{K}/run/results/asap7/dp_{T}/base/2_floorplan.odb"
+        receipt = f"{W}/.reviewed_station_floorplan.done"
+        memory, threads = sp["place_mem_gb"], sp["place_threads"]
+        why = env_provenance_record(K)
+        if why:
+            return fail("env_provenance", "ENV-PROVENANCE " + why, f"{G}:{K}")
+        # The producer-side start guard also covers an interrupted controller.
+        marker = f"{W}/.reviewed_station_floorplan.started"
+        runner = shlex.join(["bash", runtime, K, "floorplan", str(memory), str(threads)])
+        command = (f"if [ ! -f {q(receipt)} ]; then mkdir {q(marker)} && {runner} && "
+                   f"test -s {q(checkpoint)} && touch {q(receipt)} || exit $?; fi")
+        argv = otrun(memory, threads, K, command, [G], roam=False, extra_inputs=(runtime,))
+        argv[1:1] = place_dispatch_limits(sp, G, hub, False)
+        rc, txt = run("floorplan", argv)
+        if rc:
+            return fail("floorplan", txt, f"{G}:{K}")
+        probe = (f"test -s {q(checkpoint)} && test -f {q(receipt)} && "
+                 f"! find {q(K + '/run/results')} -type f -name '[3456]_*.odb' -print -quit | grep -q . "
+                 f"&& sha256sum {q(checkpoint)}")
+        rc, txt = run("floorplan_probe", remote(probe), idempotent=True)
+        digest = re.search(r"(?m)^([a-f0-9]{64})  ", txt)
+        if rc or not digest:
+            return fail("floorplan", "expected exact floorplan-only native checkpoint\n" + txt, f"{G}:{K}")
+        res.update(stage="floorplan", verdict="PASS", goal="floorplan", ran_on=G,
+                   evidence=f"{G}:{checkpoint}", floorplan_sha256=digest[1])
+        PPV.write(out / "result.json", res)
+        return 0
+
     if prepared:
         # The producer is the only holder of these generated absolute paths.
         # Claim before touching W. Never run fresh-gen cleanup on this branch.
@@ -12414,6 +12482,8 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         refused = route_preflight(None, False, strict=True)
         if refused is not None:
             return refused
+        if station_stop == "floorplan":
+            return floorplan_prepared_kit()
         return place_prepared_kit(None, False)
 
     def pre_gen_check(plan_, kr_, tools):
@@ -23494,7 +23564,7 @@ def main(argv=None):
     r.add_argument("--resume-reviewed", action="store_true", help="continue an exact held private placement without rebuilding it")
     r.add_argument("--from-publication", help="resume a prepared publication spec from its canonical PASS record")
     r.add_argument("--from-private-prepared", action="store_true",
-                   help="continue a completed same-host reviewed station private spec to place only")
+                   help="continue a completed same-host reviewed station spec to its locked private stop")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
@@ -23515,6 +23585,8 @@ def main(argv=None):
                      help="prepare one verified P2/H10 native station source for a place-only publication")
     ps_.add_argument("--reviewed-station-manifest", metavar="SHA256",
                      help="verified read-only physical source used by the named station preparation")
+    ps_.add_argument("--reviewed-station-stop", choices=("floorplan",),
+                     help="reviewed private station placement diagnostic stops at native floorplan")
     ps_.add_argument("--reuse-kit-rtl-from", metavar="ATTEMPT_DIR",
                      help="reuse the exact sealed early RTL output of a completed supported private type attempt")
     ps_.add_argument("--resume-from", metavar="ATTEMPT_DIR", help="reuse valid synth/floorplan checkpoints from this completed attempt of the same type")

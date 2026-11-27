@@ -116,6 +116,8 @@ def request(spec, plan_sha="", producer=None, overlay_sha=None):
             raise ValueError("invalid named station preparation digest")
         recipe["reviewed_station_prepare_sha256"] = station["sha256"]
         recipe["reviewed_station_tools"] = spec["tools_sha"]
+        if spec.get("reviewed_station_stop"):
+            recipe["reviewed_station_stop"] = spec["reviewed_station_stop"]
     form = {"plan_sha256": plan_sha, "overlay_sha256": overlay_sha, "recipe": recipe,
             "source": source_manifest or spec.get("src_sha") or ""}
     fingerprint = hashlib.sha256(json.dumps(form, sort_keys=True, separators=(",", ":")).encode()).hexdigest()

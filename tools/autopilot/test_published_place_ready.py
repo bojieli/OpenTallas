@@ -86,12 +86,17 @@ def test_exact_publisher_and_private_consumer_share_one_native_work_path(tmp_pat
 
 
 @pytest.mark.parametrize("macro_geometry", ["PASS", "FINDINGS"])
-def test_private_place_uses_the_existing_prepared_receipt(tmp_path, macro_geometry):
+@pytest.mark.parametrize("stop", [None, "floorplan"])
+def test_private_place_uses_the_existing_prepared_receipt(tmp_path, macro_geometry, stop):
     kit, spec, result, payload = producer_fixture(tmp_path)
     spec.update(src_manifest="require", launch_plan_review_required=True, place_spill=False,
                 roam_hosts=["epyc7"], place_spill_hosts=["epyc7"], hosts=["epyc7"],
                 reviewed_station_prepare={"path": "/exact/recipe", "sha256": "c" * 64})
+    default_form = review.request(spec, plan_sha=PLAN)["form_sha256"]
+    if stop:
+        spec["reviewed_station_stop"] = stop
     payload["form"] = review.request(spec, plan_sha=PLAN)["form_sha256"]
+    assert (default_form != payload["form"]) is bool(stop)
     put(Path(payload["preflight"]), {"kit": str(kit), "verdict": "PASS",
                                     "macro_geometry": {"verdict": macro_geometry}})
     ref = ready.producer("capture", payload)
@@ -112,6 +117,10 @@ def test_private_place_uses_the_existing_prepared_receipt(tmp_path, macro_geomet
         ready.producer("claim-private", dict(claim, review=dict(claim["review"], verdict="BAD")))
     with pytest.raises(ValueError, match="private place producer"):
         ready.producer("claim-private", dict(claim, spec=dict(spec, goal="grt")))
+    if stop:
+        modified = {key:value for key,value in spec.items() if key != "reviewed_station_stop"}
+        with pytest.raises(ValueError, match="recipe"):
+            ready.producer("claim-private", dict(claim, spec=modified))
     if macro_geometry == "FINDINGS":
         with pytest.raises(ValueError, match="macro geometry"):
             ready.producer("claim-private", claim)
@@ -147,8 +156,10 @@ def test_opted_in_publisher_freezes_real_event_and_distinct_work(tmp_path, monke
 
 
 @pytest.mark.parametrize("route_ok", [False, True])
-@pytest.mark.parametrize("private_mode", [False, True])
-def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneration(tmp_path, monkeypatch, route_ok, private_mode):
+@pytest.mark.parametrize("private_mode, floorplan", [(False, False), (True, False), (True, True)])
+def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneration(
+    tmp_path, monkeypatch, route_ok, private_mode, floorplan
+):
     raw = cfg()
     die,item = "qwen_kvsys","kv3_pc"
     spec = wave.spec_for(raw,die,item,"localhost",kind="type")
@@ -156,6 +167,11 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
                 private={"of":"qwen_kvsys/kv3_pc"},dry_gen=True,goal="place",
                 launch_plan_review_required=True,gen_host="epyc7",src_manifest_hash=MANIFEST,
                 start_delay_s=0,hosts=["epyc7"],roam_hosts=[],place_async=False,kit_self_contained="off")
+    if floorplan:
+        spec.update(reviewed_station_stop="floorplan", reviewed_station_prepare={"sha256": "d" * 64},
+                    tools_sha="e" * 40, place_spill=False, place_spill_hosts=["epyc7"], roam_hosts=["epyc7"])
+        monkeypatch.setattr(wave, "reviewed_station_prepare", lambda _s: {})
+        monkeypatch.setattr(wave, "set_reviewed_station_landing", lambda *a: None)
     folder = tmp_path/"consumer"
     spec_path = folder/"spec.json"
     put(spec_path,spec)
@@ -194,7 +210,18 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
             called.append("sync_hub")
             return subprocess.CompletedProcess(argv,0,stdout="")
         if "env_provenance.py" in argv:
+            if floorplan:
+                called.append("env_provenance")
             return subprocess.CompletedProcess(argv,0,stdout="")
+        if "run_kit.sh" in argv and " floorplan " in argv:
+            called.append("stock_floorplan")
+            assert "--hosts epyc7" in argv and "--strict-host" in argv and "--no-spill" in argv
+            assert ".reviewed_station_floorplan.started" in argv
+            return subprocess.CompletedProcess(argv,0,stdout="")
+        if "sha256sum" in argv and "2_floorplan.odb" in argv:
+            called.append("native_checkpoint")
+            assert "[3456]_*.odb" in argv
+            return subprocess.CompletedProcess(argv,0,stdout=f"{'f' * 64}  checkpoint\n")
         if "run_kit.sh" in argv and " place " in argv:
             called.append("ordinary_place")
             raise EnteredPlace()
@@ -204,7 +231,13 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
     if not private_mode:
         authority["verdict"] = "PASS"
     proof = {"private_prepared" if private_mode else "publication": authority, "ref": {"sha256": "c" * 64}}
-    if route_ok:
+    if route_ok and floorplan:
+        assert wave._run_item(spec_path, prepared=proof) == 0
+        assert called == ["visual", "claim", "route_preflight", "env_provenance", "stock_floorplan", "native_checkpoint"]
+        result = json.loads((folder / "result.json").read_bytes())
+        assert result["stage"] == result["goal"] == "floorplan"
+        assert result["floorplan_sha256"] == "f" * 64
+    elif route_ok:
         with pytest.raises(EnteredPlace):
             wave._run_item(spec_path,prepared=proof)
         assert called == ["visual","claim","route_preflight","sync_hub","ordinary_place"]
@@ -212,6 +245,23 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
         assert wave._run_item(spec_path,prepared=proof) == 1
         assert called == ["visual","claim","route_preflight"]
         assert json.loads((folder/"result.json").read_text())["stage"] == "preflight"
+
+
+def test_only_exact_current_floorplan_permit_honors_the_place_hold(tmp_path):
+    _, spec, _, _ = producer_fixture(tmp_path)
+    spec.update(reviewed_station_stop="floorplan", reviewed_station_prepare={"sha256": "c" * 64})
+    form = review.request(spec, plan_sha=PLAN)["form_sha256"]
+    permit = {"event": spec["event"], "form_sha256": form, "producer": spec["gen_host"]}
+    die = {"event": spec["event"], "hold_items": {spec["item"]: "exact macro PDN"},
+           "reviewed_station_floorplan": {spec["item"]: permit}}
+    config = {"dies": {spec["die"]: die}}
+    assert wave.launch_held(config, spec)
+    assert wave.reviewed_floorplan_allowed(config, spec, PLAN)
+    assert not wave.reviewed_floorplan_allowed(config, dict(spec, reviewed_station_stop=None), PLAN)
+    assert not wave.reviewed_floorplan_allowed(config, dict(spec, gen_host="epyc8"), PLAN)
+    assert not wave.reviewed_floorplan_allowed(config, spec, "1" * 64)
+    die["event"] = "later_event"
+    assert not wave.reviewed_floorplan_allowed(config, spec, PLAN)
 
 
 def test_a_changed_prepared_kit_keeps_fresh_preparation_available(tmp_path):
