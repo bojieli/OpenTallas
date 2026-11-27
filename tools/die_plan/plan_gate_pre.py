@@ -260,7 +260,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE", "VIEWOBS")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP", "FTSITE", "R8BOUND", "HALOCORNER", "MONLEG", "STRAPREACH", "CABIND", "INOUTLINE", "SITE-OFF-OUTLINE", "TAPREACH", "STALETABLE", "VIEWOBS", "PHASE-BIND")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -3104,6 +3104,9 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
     _pt.mark("VIEWOBS")
     if "VIEWOBS" not in skip:                            # C-VIEW-NO-OBS 11-26: a hard-macro LEF with no OBS / no PG pins is a FAIL
         findings += view_obs_findings(plan)
+    _pt.mark("PHASE-BIND")
+    if "PHASE-BIND" not in skip:                         # C-DIECLOCK-PHASE-BIND 1127: unbound / stale / misbound phase rows are a FAIL
+        findings += phase_bind_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline, scope=_SCOPE,
@@ -3608,6 +3611,20 @@ def site_off_outline_findings(plan):
         return SM.off_outline_findings(_load(plan))
     except Exception as e:  # noqa: BLE001 -- an unreadable plan cannot be judged: refuse, never a silent pass
         return [f"FAIL ADV-SITE-OFF-OUTLINE not checked: {type(e).__name__}: {str(e)[:160]}"]
+
+
+def phase_bind_findings(plan):
+    """C-DIECLOCK-PHASE-BIND (COORD FABLE-RC-HEAD 1127): BLOCKING.  FAIL ADV-PHASE-BIND NO-BIND / STALE-CLOCK / STALE-INSTANCE / MISBOUND
+    (adv_phase_bind.blocking); OT_PHASE_BIND_BLOCK=0 or --skip PHASE-BIND turns it off."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import adv_phase_bind as APB
+    except ImportError as e:
+        return [f"FAIL ADV-PHASE-BIND not checked: {e}"]
+    try:
+        return APB.blocking(_load(plan) or {}, str(plan))
+    except Exception as e:  # noqa: BLE001 -- an unreadable bind cannot be judged: refuse
+        return [f"FAIL ADV-PHASE-BIND not checked: {type(e).__name__}: {str(e)[:160]}"]
 
 
 # PRE-SPEED-1125 (S-04): a scoped PRE ran every advisory on the whole die (S81 v3 2 types: 1038 s, REF-SITE alone 1022 s) and then dropped

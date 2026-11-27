@@ -125,3 +125,53 @@ def test_cli_derive_check(tmp_path, capsys):
     assert json.loads((tmp_path / "r.json").read_text())["base_plan_sha256_12"] == b["key"]["plan_sha12"]
     assert PB.main(["check", "--plan", str(tmp_path / "p.json"), "--bind", str(o)]) == 0
     assert "PHASE-BIND RESET-ENTRY MISBOUND a" in capsys.readouterr().out
+
+
+def _bound(tmp_path, h):
+    end = "a/u_rst_in/cap_r$_DFF_P_/D"
+    sta = _sta({"p->a/arst_n": {"TT": (600.0, 20.0, end), "FF": (650.0, 10.0, end)}})
+    plan = _plan([("a", h)])
+    bind, _ = PB.derive(plan, sta)
+    bind["key"]["ctree_spef_sha12"] = "aaaaaaaaaaaa"
+    pp = tmp_path / "plan.json"
+    pp.write_text(json.dumps(plan))
+    return plan, bind, pp
+
+
+def test_blocking_no_bind_misbound_stale(tmp_path, monkeypatch):
+    for k in ("OT_PHASE_BIND", "OT_PHASE_BIND_SIDECAR", "OT_PHASE_BIND_CTREE_SHA12", "OT_PHASE_BIND_STRICT", "OT_PHASE_BIND_BLOCK"):
+        monkeypatch.delenv(k, raising=False)
+    plan, bind, pp = _bound(tmp_path, 0)
+    nob = ADV.blocking(plan, str(pp))
+    assert len(nob) == 1 and nob[0].startswith("FAIL ADV-PHASE-BIND NO-BIND 1 ")
+    assert ADV.blocking({"partition_types": {}, "partitions": []}, str(pp)) == []
+    sc = tmp_path / "source_sidecar.json"
+    sc.write_text(json.dumps({"count_aligned": {"regions": {}}}))
+    assert ADV.blocking({"partition_types": {}, "partitions": []}, str(pp)) == []        # count-align only stays a WARN
+    (tmp_path / "phase_bind.json").write_text(json.dumps(bind))
+    got = ADV.blocking(plan, str(pp))
+    assert any(x.startswith("FAIL ADV-PHASE-BIND RESET-ENTRY MISBOUND a ") for x in got)
+    assert not any("COUNT-ALIGN-UNBOUND" in x for x in got)                            # strict only
+    monkeypatch.setenv("OT_PHASE_BIND_STRICT", "1")
+    assert any("COUNT-ALIGN-UNBOUND" in x for x in ADV.blocking(plan, str(pp)))
+    monkeypatch.delenv("OT_PHASE_BIND_STRICT")
+    monkeypatch.setenv("OT_PHASE_BIND_CTREE_SHA12", "bbbbbbbbbbbb")
+    assert any("STALE-CLOCK bind derived on ctree.spef aaaaaaaaaaaa" in x for x in ADV.blocking(plan, str(pp)))
+    monkeypatch.setenv("OT_PHASE_BIND_CTREE_SHA12", "aaaaaaaaaaaa")
+    assert not any("STALE-CLOCK" in x for x in ADV.blocking(plan, str(pp)))
+    plan["partitions"][0]["reset_entry_phase"] = 1                                      # the derived choice: clean
+    plan["partitions"].append(dict(name="b", type="ty", reset_entry_phase=0, id_straps={}))
+    got = ADV.blocking(plan, str(pp))
+    assert [x.split()[2] for x in got] == ["STALE-INSTANCE"]
+    monkeypatch.setenv("OT_PHASE_BIND_BLOCK", "0")
+    assert ADV.blocking(plan, str(pp)) == []
+
+
+def test_pre_class_is_registered_and_blocks(tmp_path, monkeypatch):
+    import plan_gate_pre as G
+    assert "PHASE-BIND" in G.CLASSES
+    plan, bind, pp = _bound(tmp_path, 0)
+    monkeypatch.delenv("OT_PHASE_BIND", raising=False)
+    monkeypatch.delenv("OT_PHASE_BIND_BLOCK", raising=False)
+    got = G.phase_bind_findings(str(pp))
+    assert got and all(x.startswith("FAIL ADV-PHASE-BIND ") for x in got)

@@ -259,6 +259,9 @@ SCHEMA = {
                 "grid_um": _pos,                     # the die lattice: partition origins + outlines (8.64)
                 # HOLD-MARGIN-FAMILY 11-17 (hold_margin_family.py): die-wide reg-to-reg FF hold repair TARGET (ps, 0..100) for
                 # every type kit of this die (a type hold_ff_margin_ps wins; per-item OT_HOLD_FF_MARGIN_PS wins over both)
+                # P-FLAG-SCHEMA-UNREGISTERED 11-27: die_clock.py reads die.clock.face_pin_keepout_um (default 0 = no rect)
+                "clock": {"type": "object", "additionalProperties": False,
+                          "properties": {"face_pin_keepout_um": {"type": "number", "minimum": 0}}},
                 "hold_ff_margin_ps": {"type": "number", "minimum": 0, "maximum": 100},
                 "rows": {"type": "object", "additionalProperties": False,
                          "properties": {"site": _name, "height_um": _pos, "site_w_um": _pos}},

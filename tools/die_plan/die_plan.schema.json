@@ -222,6 +222,16 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "clock": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "face_pin_keepout_um": {
+       "type": "number",
+       "minimum": 0
+      }
+     }
+    },
     "hold_ff_margin_ps": {
      "type": "number",
      "minimum": 0,
