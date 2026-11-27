@@ -26,3 +26,4 @@
   hd_st_m: 0/0 +128.2; hold -82.54 4 ep; max tap 229; span 2/7 max 387; 0 viol. CLEAN (minor span).
   hd_host_n: 0/0 +127.0; hold -100.13 47 ep; max tap 912; span 7/9 max 750; 0 viol. defect = tap span only.
   Summary: 0 of 9 exceed the 1500 tap cap; setup clean on 7, setup defect on 1 (transit), slew defect on 1 (n3_turn); OT_TAP_SPAN over 300 um on 8 of 9 (class C-TAP-LOAD span metric). No ISSUES verdict was a pure false alarm on span; ctl_e and st_m measure clean. Place probes (9) still running; results follow.
+- 2026-11-27 10:25 PST DONE [HEAD-PROBE-R3] ot-run oth-ubuntu-2857668-1795803095 on loved-redfish: rc=0 after 833 s, ended 18:25:25, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_st_n3_turn/cts.otrun.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_st_n3_turn/gen --hosts epyc7 -- ./run_kit.sh hd_st_n3_turn cts
