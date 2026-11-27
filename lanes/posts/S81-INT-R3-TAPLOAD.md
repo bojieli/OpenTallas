@@ -12,3 +12,4 @@
 - 2026-11-27 13:16 PST DONE [S81-INT-R3-TAPLOAD] ot-push-main otpush-open-snipe-3705641 on open-snipe: rc=0 after 0 s, ended 21:16:04, log none, cmd: ot-push-main --help
 - 2026-11-27 13:17 PST DONE [S81-INT-R3-TAPLOAD] ot-push-main otpush-open-snipe-3709314 on open-snipe: rc=0 after 72 s, ended 21:17:26, log none, cmd: ot-push-main 
 - 2026-11-27 13:24 PST DONE [S81-INT-R3-TAPLOAD] ot-run oth-ubuntu-3231847-1795814522 on loved-redfish: rc=0 after 138 s, ended 21:24:18, log none, cmd: --mem 90 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/S81-INT-R3-TAPLOAD -- bash -c . ./env.sh; export OT_PLAN_ROOT=$W/la
+- 2026-11-27 13:34 PST DONE [S81-INT-R3-TAPLOAD] ot-run oth-ubuntu-3287467-1795814670 on loved-redfish: rc=0 after 588 s, ended 21:34:16, log none, cmd: --mem 60 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/S81-INT-R3-TAPLOAD -- bash pre3.sh
