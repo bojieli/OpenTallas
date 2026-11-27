@@ -550,3 +550,4 @@
   - the DEFERRED 09:00 rows.
   The regen row is gated by 08:00. If it misses 09:00, the next date is the 11-28 21:00 cut.
 - 2026-11-27 14:53 PST DONE [kv-int-r3] ot-run oth-ubuntu-1140755-1795819105 on open-snipe: rc=0 after 912 s, ended 22:53:30, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6/gate6.otrun.log, cmd: --priority die --hosts epyc12 --mem 80 --threads 16 --dir /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6 -- bash /srv/opentallas-scratch
+- 2026-11-27 14:54 PST DONE [kv-int-r3] ot-run oth-ubuntu-4123367-1795819073 on outgoing-giraffe: rc=0 after 990 s, ended 22:54:20, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_7.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
