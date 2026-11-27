@@ -185,3 +185,72 @@ def test_unit_carries_kit_routed_lec_and_sidecar_row(tmp_path, monkeypatch):
     assert AE.lec_index_row(dict(u, lec=None)) == ''
     os.utime(bad, (1, 1))                                                                       # older than 6_final.v: not picked up
     assert scan()['lec'] is None
+
+
+def test_pending_late_lec_probe_checks_exact_routed_identity(tmp_path):
+    import hashlib
+
+    def sha(path):
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+
+    kit = tmp_path / 'kit'
+    base = kit / 'run' / 'results' / 'asap7' / 'test' / 'base'
+    base.mkdir(parents=True)
+    gate = base / '6_final.v'
+    odb = base / '6_final.odb'
+    gate.write_text('module test; endmodule')
+    odb.write_bytes(b'original routed DB')
+    so = kit / 'signoff.json'
+    so.write_text(json.dumps(dict(profile='minimal', verdict='SIGNED', inputs=dict(kit=str(kit)))))
+    proof = kit / 'lec_routed_exact' / 'lec.json'
+    proof.parent.mkdir()
+    row = dict(key='exact', signoff=str(so), record=sha(so), odb=str(odb), odb_sha=sha(odb), gate_sha=sha(gate))
+    receipt = dict(netlist='/work/' + str(gate.relative_to(kit)), verdict='EQUIVALENT',
+                   counts=dict(compare_points=4, proved=4, differs=0, undecided=0))
+
+    def probe(overrides):
+        proof.write_text(json.dumps(dict(receipt, **overrides)))
+        completed = subprocess.run([sys.executable, '-I', '-', 'late-lec', json.dumps(dict(rows=[row]))],
+                                   input=AE.PROBE, text=True, capture_output=True, check=True)
+        return [json.loads(line) for line in completed.stdout.splitlines()]
+
+    evidence, = probe({})
+    assert evidence['sha'] == sha(proof)
+    assert evidence['lec'] == dict(src=str(proof), verdict='EQUIVALENT', counts=receipt['counts'], identity='sha256')
+    assert probe(dict(netlist='/work/other/6_final.v')) == []
+    assert probe(dict(partition=dict(selected_points=4))) == []
+    odb.write_bytes(b'changed routed DB')
+    assert probe({}) == []
+
+
+def test_pending_late_lec_refresh_preserves_archive_queue_identity(tmp_path, monkeypatch):
+    import fcntl
+
+    monkeypatch.setattr(AE, 'STATE', str(tmp_path))
+    u = dict(state='meta', die='s81', unit='dsfd_node_LLd__ax_1234', element='dsfd_node_LLd', kind='c',
+             host='epyc7', signoff='/kit/signoff.json', record='r', odb='/kit/base/6_final.odb',
+             odb_sha='odb', bytes=25, files=[['/kit/base', '6_final.v']], shas={'6_final.v': 'gate'})
+    unrelated = dict(u, record='untouched', state='done')
+    AE.save_ledger(dict(units={'exact': u, 'unrelated': unrelated}))
+    late = dict(key='exact', size=7, sha='proof',
+                lec=dict(src='/kit/lec_routed_exact/lec.json', verdict='EQUIVALENT', counts={'compare_points': 4},
+                         identity='sha256'))
+
+    def probe(host, mode, argument, timeout):
+        assert (host, mode) == ('epyc7', 'late-lec')
+        assert argument['rows'] == [dict(key='exact', signoff=u['signoff'], record='r',
+                                         odb=u['odb'], odb_sha='odb', gate_sha='gate')]
+        return [late]
+
+    monkeypatch.setattr(AE, 'probe', probe)
+    with (tmp_path / 'drain.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        assert AE.refresh_pending_lec(['exact']) == 0
+    assert AE.refresh_pending_lec(['exact', 'unrelated']) == 1
+    assert AE.refresh_pending_lec(['exact']) == 0
+    pending, = json.loads((tmp_path / 'pending_rtx.json').read_text())
+    assert pending['key'] == 'exact' and pending['record'] == 'r' and pending['odb_sha'] == 'odb'
+    assert pending['files'] == [['/kit/base', '6_final.v'], ['/kit/lec_routed_exact', 'lec.json']]
+    assert pending['bytes'] == 32 and pending['shas']['lec.json'] == 'proof'
+    assert pending['lec'] == late['lec']
+    assert AE.load_ledger()['units']['unrelated'] == unrelated
