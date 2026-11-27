@@ -4193,6 +4193,37 @@
          }
         }
        },
+       "scalar_hold_pads": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "port",
+          "capture",
+          "count"
+         ],
+         "properties": {
+          "port": {
+           "type": "string",
+           "minLength": 1
+          },
+          "capture": {
+           "type": "string",
+           "minLength": 1
+          },
+          "count": {
+           "type": "integer",
+           "minimum": 1,
+           "maximum": 4
+          },
+          "through_logic": {
+           "type": "boolean"
+          }
+         }
+        }
+       },
        "landing_origin_rect_um": {
         "type": "array",
         "minItems": 4,
