@@ -8756,6 +8756,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     install_head_post_gpl_reseat(cfg, kd, P.name, tn, P.raw)
     cfg += post_dpl_hook_lines(cfg, kd, type_name=tn)
+    reviewed_station_recipe = os.environ.get("OT_REVIEWED_STATION_PREPARE")
+    if reviewed_station_recipe and os.environ.get("OT_S81_P2_CROP_REVIEW_GUIDES") == "1":
+        import p2_review_guides
+        cfg += p2_review_guides.install(cfg, kd, tn, t, stage_hook_lines, reviewed_station_recipe,
+                                       os.environ["OT_REVIEWED_STATION_PREPARE_SHA256"])
     import gen_rtl as _GRL
     cfg += hop_latch_leaf_lines(kd, zlk_spec, ft=_GRL.ft_hop_lockup(getattr(P, "raw", None), tn))
     cfg += latch_restore_hook_lines(cfg, kd)

@@ -64,6 +64,8 @@ def test_private_fresh_place_uses_live_policy_and_actual_seal(spec, tmp_path, mo
     monkeypatch.setattr(K, "private_spec_stale", lambda _sp: "")
     monkeypatch.setattr(K, "private_lbl_refusal", lambda *_a: "")
     monkeypatch.setattr(K, "pre_gen_inputs", lambda *_a: [])
+    monkeypatch.setattr(K, "pre_gen_probe_cmd", lambda *_a: "read-only-input-probe")
+    monkeypatch.setattr(K, "pre_gen_plan_probe_cmd", lambda *_a: "true")
     monkeypatch.setattr(K, "src_manifest_cmd", lambda _sp: "seal-exact-tree")
     monkeypatch.setattr(K, "private_config_text", lambda *_a, **_kw:
                         '{"dies": {"s81": {"launch_plan_review_required": ["t1"]}}}')
@@ -73,6 +75,8 @@ def test_private_fresh_place_uses_live_policy_and_actual_seal(spec, tmp_path, mo
     actual_source = "c" * 64
 
     def run(argv, **kwargs):
+        if argv[-1] == "read-only-input-probe; true":
+            return CompletedProcess(argv, 0, "")
         probe.append(argv[-1])
         if argv[-1].startswith("mkdir"):
             return CompletedProcess(argv, 1, "test stops before generation")
