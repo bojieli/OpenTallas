@@ -35,6 +35,12 @@ class RepairMacroClearKit(unittest.TestCase):
         self.assertIn("isSoft", body)                      # soft blockages are not clearance
         self.assertIn('ne "PLACED"', body)                 # FIRM / LOCKED / FIXED cells never move
 
+    def test_tcl_v2_union_exit_and_tiny_blockage_skip(self):
+        body = "\n".join(l for l in TCL.read_text().splitlines() if not l.lstrip().startswith("#"))
+        self.assertIn("OT_RMC_MIN_BLOCKAGE_UM", body)      # tiny hard blockages are not macro-sized rectangles
+        self.assertIn("for {set it 0} {$it < 64} {incr it}", body)   # exit walks through abutting rectangles
+        self.assertIn("switch $dir", body)
+
     def test_check_flags_displacement_not_firm_release(self):
         v, mx, mc, rel = C.check(LOG_BAD)
         self.assertEqual((v, mx, mc, rel), ("FAIL", 255.5, "off", 0))      # FIRM released = 0 and still FAIL

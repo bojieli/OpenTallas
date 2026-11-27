@@ -5,7 +5,8 @@
 # hard placement blockage, 0 FIRM seats).  Here, right before DPL, every repair cell (default masters ^(BUF|INV|HB), status PLACED) whose
 # centre lies in a hard macro box or hard placement blockage is moved to the exit of that rectangle that costs least: its own move plus the
 # distance to the centroid of the instances on its nets.  DPL then only has to settle it (displacement of a few sites).
-# Env: OT_RMC_HALO_UM (default 0.5, margin outside the rectangle), OT_RMC_MASTERS (regexp), OT_RMC_CENTROID_W (default 1.0).
+# v2 (11-27): an exit that lands inside an abutting rectangle walks on through it to its far edge; hard blockages with both sides < OT_RMC_MIN_BLOCKAGE_UM (default 10) are not rectangles.
+# Env: OT_RMC_HALO_UM (default 0.5, margin outside the rectangle), OT_RMC_MASTERS (regexp), OT_RMC_CENTROID_W (default 1.0), OT_RMC_MIN_BLOCKAGE_UM.
 # Report: OT_REPAIR_MACRO_CLEAR rects=R cells=N moved=M unresolved=U max_move_um=D (cells = repair cells found inside a rectangle).
 proc ot_repair_macro_clear {} {
  set blk [ord::get_db_block]
@@ -13,6 +14,7 @@ proc ot_repair_macro_clear {} {
  set halo [expr {int(round((([info exists ::env(OT_RMC_HALO_UM)] && $::env(OT_RMC_HALO_UM) ne "") ? double($::env(OT_RMC_HALO_UM)) : 0.5) * $dbu))}]
  set pat [expr {[info exists ::env(OT_RMC_MASTERS)] && $::env(OT_RMC_MASTERS) ne "" ? $::env(OT_RMC_MASTERS) : {^(BUF|INV|HB)}}]
  set cw [expr {([info exists ::env(OT_RMC_CENTROID_W)] && $::env(OT_RMC_CENTROID_W) ne "") ? double($::env(OT_RMC_CENTROID_W)) : 1.0}]
+ set minb [expr {int(round((([info exists ::env(OT_RMC_MIN_BLOCKAGE_UM)] && $::env(OT_RMC_MIN_BLOCKAGE_UM) ne "") ? double($::env(OT_RMC_MIN_BLOCKAGE_UM)) : 10.0) * $dbu))}]
  set core [$blk getCoreArea]
  set cx0 [$core xMin]; set cx1 [$core xMax]; set cy0 [$core yMin]; set cy1 [$core yMax]
  set rects {}
@@ -24,6 +26,7 @@ proc ot_repair_macro_clear {} {
  foreach o [$blk getBlockages] {
   if {[$o isSoft]} continue
   set b [$o getBBox]
+  if {max([$b xMax]-[$b xMin], [$b yMax]-[$b yMin]) < $minb} continue
   lappend rects [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
  }
  set g [expr {int(50*$dbu)}]
@@ -76,10 +79,18 @@ proc ot_repair_macro_clear {} {
   # candidates: exit left / right / below / above; the free coordinate follows the centroid clamped to the rectangle span
   set py [expr {max($y0, min($y1-$h, int($ty-$h/2)))}]
   set px [expr {max($x0, min($x1-$w, int($tx-$w/2)))}]
-  set cand [list [list [expr {$x0-$w}] $py] [list $x1 $py] [list $px [expr {$y0-$h}]] [list $px $y1]]
+  set cand [list [list [expr {$x0-$w}] $py 0] [list $x1 $py 1] [list $px [expr {$y0-$h}] 2] [list $px $y1 3]]
   set best {}; set bc 1e30
   foreach c $cand {
-   lassign $c nx ny
+   lassign $c nx ny dir
+   # union exit: a candidate that lands inside an abutting rectangle walks on through it, in the same direction, to its far edge
+   for {set it 0} {$it < 64} {incr it} {
+    set k2 [ot_rmc_in $grid $rects $g [expr {$nx+$w/2}] [expr {$ny+$h/2}]]
+    if {$k2 < 0} break
+    lassign [lindex $rects $k2] ex0 ey0 ex1 ey1
+    switch $dir { 0 {set nx [expr {$ex0-$w}]} 1 {set nx $ex1} 2 {set ny [expr {$ey0-$h}]} default {set ny $ey1} }
+    if {$nx < $cx0 || $ny < $cy0 || $nx+$w > $cx1 || $ny+$h > $cy1} break
+   }
    if {$nx < $cx0 || $ny < $cy0 || $nx+$w > $cx1 || $ny+$h > $cy1} continue
    if {[ot_rmc_in $grid $rects $g [expr {$nx+$w/2}] [expr {$ny+$h/2}]] >= 0} continue
    set mv [expr {abs($nx-$ox)+abs($ny-$oy)}]
