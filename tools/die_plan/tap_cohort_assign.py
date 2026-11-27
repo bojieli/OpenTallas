@@ -15,6 +15,7 @@ that would capture such a descendant of a key is REFUSED (exit 4: the tool is fo
 [A-Za-z0-9_./-]+, not a u_rrl_<n> reset relay, which must keep following its sinks) can be pinned; the rest are singles.  The group regex is
 ^(k1|k2|..)[/.] with the keys longest-first; EVERY instance is assigned to its cohort by that very regex (so model == what CTS sees);
 a key with fewer than --min-cohort members after that is dropped, repeated until stable.
+With --split-oversize (default off) a cohort whose own box W+H exceeds --span (not pinned by the plan) is SPLIT: demoted to singles on their nearest taps (reported as split_cohorts); no tap site can hold it whole.
 Model, in order: (1) singles (ungrouped sinks) go to their TRUE nearest tap, as CTS does, no feasibility test; (2) pinned cohorts of the plan
 (tap_group.fixed_taps) keep their tap and are only CHECKED; (3) the other cohorts, largest first, take the nearest feasible tap to their
 centroid: every sink within --reach, tap box W+H <= --span, load <= --cap.  A cohort with no feasible tap is UNASSIGNED; with --add-taps
@@ -58,12 +59,12 @@ def group_re(keys):
     return "^(" + "|".join(re.escape(k) for k in sorted(keys, key=lambda k: (-len(k), k))) + ")[/.]"
 
 
-def cohorts_of(sinks, min_cohort=2, forced=()):
+def cohorts_of(sinks, min_cohort=2, forced=(), exclude=()):
     """-> {key: [(x, y, inst)]} by the final regex (longest key first) + the list of singles [(x, y, inst)]."""
     keys = set(forced)
     for inst, _, _ in sinks:
         k = raw_key(inst)
-        if "/" in inst and SAFE.fullmatch(k) and not RELAY.fullmatch(k):
+        if "/" in inst and SAFE.fullmatch(k) and not RELAY.fullmatch(k) and k not in exclude:
             keys.add(k)
     for _ in range(4):
         rx = re.compile(group_re(keys)) if keys else None
@@ -86,11 +87,23 @@ def box_wh(pts):
     return (max(x for x, _ in pts) - min(x for x, _ in pts)) + (max(y for _, y in pts) - min(y for _, y in pts)) if pts else 0.0
 
 
-def assign(sinks, taps, reach=250.0, span=300.0, cap=1200, min_cohort=2, pinned=None, re_keys=()):
+def assign(sinks, taps, reach=250.0, span=300.0, cap=1200, min_cohort=2, pinned=None, re_keys=(), split_oversize=False):
     """-> dict(fixed, singles, per_tap, unassigned, pinned_bad, single_far).  taps [(name, x, y)], pinned {key: tap}."""
     pinned = dict(pinned or {})
     forced_keys = list(pinned) + list(re_keys or ())
     coh, singles, swallowed = cohorts_of(sinks, min_cohort, forced=[k for k in forced_keys if SAFE.fullmatch(k)])
+    split = []                                   # (only with split_oversize) an unpinned cohort whose OWN box W+H exceeds span cannot sit on one tap: demote it
+    if split_oversize:
+        excl = set()
+        forced_set = set(forced_keys)
+        for _ in range(4):                       # re-run the regex membership after every demotion: a shorter key may now capture the sinks
+            bad = sorted(k for k in coh if k not in forced_set and k not in excl and box_wh([(x, y) for x, y, _ in coh[k]]) > span)
+            if not bad:
+                break
+            for key in bad:
+                split.append(dict(cohort=key, sinks=len(coh[key]), box_wh=round(box_wh([(x, y) for x, y, _ in coh[key]]), 1), insts=sorted(i for _, _, i in coh[key])))
+            excl |= set(bad)
+            coh, singles, swallowed = cohorts_of(sinks, min_cohort, forced=[k for k in forced_keys if SAFE.fullmatch(k)], exclude=excl)
     tapxy = {n: (x, y) for n, x, y in taps}
     box = {n: None for n in tapxy}
 
@@ -116,7 +129,7 @@ def assign(sinks, taps, reach=250.0, span=300.0, cap=1200, min_cohort=2, pinned=
 
     fixed, unassigned, pinned_bad, single_far, single_tap = {}, [], [], [], {}
     for x, y, inst in sorted(singles, key=lambda s: s[2]):          # (1) singles on their true nearest tap
-        n = min(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), t))
+        n = min(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), tap_order(t)))
         put(n, [(x, y, inst)])
         single_tap[inst] = n
         if far(n, [(x, y, inst)]):
@@ -135,7 +148,7 @@ def assign(sinks, taps, reach=250.0, span=300.0, cap=1200, min_cohort=2, pinned=
     for key in todo:                                                 # (3) the rest, largest first
         m = coh[key]
         cx, cy = sum(x for x, _, _ in m) / len(m), sum(y for _, y, _ in m) / len(m)
-        order = sorted(tapxy, key=lambda n: (abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy), n))
+        order = sorted(tapxy, key=lambda n: (abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy), tap_order(n)))
         pick = next((n for n in order if feasible(n, m)), None)
         if pick is None:
             unassigned.append(dict(cohort=key, sinks=len(m), box_wh=round(box_wh([(x, y) for x, y, _ in m]), 1)))
@@ -145,7 +158,7 @@ def assign(sinks, taps, reach=250.0, span=300.0, cap=1200, min_cohort=2, pinned=
     over = {n: round((b[1] - b[0]) + (b[3] - b[2]), 1) for n, b in box.items() if b and (b[1] - b[0]) + (b[3] - b[2]) > span}
     per_tap = {n: dict(load=b[4], box_wh=round((b[1] - b[0]) + (b[3] - b[2]), 1)) for n, b in box.items() if b}
     over_cap = {n: b[4] for n, b in box.items() if b and b[4] > cap}
-    return dict(fixed=fixed, singles=single_tap, members={k: v for k, v in coh.items()}, swallowed=swallowed, over_cap=over_cap, per_tap=per_tap, unassigned=unassigned, pinned_bad=pinned_bad,
+    return dict(fixed=fixed, singles=single_tap, split_cohorts=split, members={k: v for k, v in coh.items()}, swallowed=swallowed, over_cap=over_cap, per_tap=per_tap, unassigned=unassigned, pinned_bad=pinned_bad,
                 single_far=single_far, over_span=over, cohorts=len(coh), unpinnable=sum(1 for i, _, _ in sinks if not SAFE.fullmatch(raw_key(i))))
 
 
@@ -179,6 +192,28 @@ def overspan_items(sinks, taps, res):
                       key=lambda i: -(abs(pos[i][0] - xy[tap][0]) + abs(pos[i][1] - xy[tap][1])))
         out += [dict(cohort=i, sinks=1) for i in mine[:8]]
     return out
+
+
+def split_report(split, singles):
+    """per split cohort: the taps its sinks ended on, the share on the majority tap, and a PROXY for related launch/capture pairs cut by the
+    split: name-adjacent instances (sorted order, e.g. consecutive bit/stage flops) that sit on different taps.  The real related pairs need the
+    netlist (UNMEASURED here); a cohort exists because its flops are related, so any cut pair trades span for related-pair skew."""
+    out = []
+    for e in split:
+        taps = [singles.get(i) for i in e["insts"]]
+        cnt = collections.Counter(t for t in taps if t)
+        cut = sum(1 for a, b in zip(taps, taps[1:]) if a != b)
+        out.append(dict(cohort=e["cohort"], sinks=e["sinks"], box_wh=e["box_wh"], taps_used=len(cnt),
+                        majority_tap_share=round(max(cnt.values()) / max(1, e["sinks"]), 3) if cnt else 0.0,
+                        adjacent_pairs_on_different_taps_PROXY=cut, adjacent_pairs=max(0, len(taps) - 1), related_pairs="UNMEASURED (needs netlist)",
+                        alternative="reshape the cohort's seat so its own box W+H <= span (plan side: PART for u_cland_*, CASEAM for stations/rings/bins); not done by this tool"))
+    return out
+
+
+def tap_order(name):
+    """tie-break key: 'clk' = 0, clk_t<n> = n (numeric, so a renumbering across a digit boundary cannot flip a tie), others last by name"""
+    m = re.fullmatch(r"clk(?:_t(\d+))?", name)
+    return (0, int(m.group(1) or 0), name) if m else (1, 0, name)
 
 
 def next_tap_index(taps):
@@ -222,6 +257,9 @@ def main(argv=None):
     ap.add_argument("plan"); ap.add_argument("type"); ap.add_argument("sinks")
     ap.add_argument("--reach", type=float, default=250.0); ap.add_argument("--span", type=float, default=300.0)
     ap.add_argument("--cap", type=int, default=None, help="per-tap load cap (default: the type's clock.tap_max_sinks, else 1200)"); ap.add_argument("--min-cohort", type=int, default=2)
+    ap.add_argument("--split-oversize", action="store_true",
+                    help="default OFF: an unpinned cohort whose own box W+H exceeds --span is demoted to singles on their nearest taps; this cuts related pairs "
+                         "(see split_cohorts in the report) - the alternative is reshaping the cohort's seat")
     ap.add_argument("--out"); ap.add_argument("--report")
     ap.add_argument("--tools", help="tools/die_plan dir to import schema / tap_split from (default: beside this file); density types read their sink bins relative to that tree")
     ap.add_argument("--density-radii", metavar="R1,R2,...",
@@ -265,7 +303,7 @@ def main(argv=None):
     a.cap = cap
     unmodelled = sorted(k for k in ("pinreg_taps", "tap_chain_affinity", "tap_landing_seam", "tap_relay_cohort", "tap_reset_split",
                                      "tap_reset_affinity", "tap_pair_affinity") if clock.get(k))
-    kw = dict(reach=a.reach, span=a.span, cap=cap, min_cohort=a.min_cohort, pinned=pinned, re_keys=re_keys)
+    kw = dict(reach=a.reach, span=a.span, cap=cap, min_cohort=a.min_cohort, pinned=pinned, re_keys=re_keys, split_oversize=a.split_oversize)
     res = assign(sinks, taps, **kw)
     radius, added = None, []
     if a.density_radii and mode == "density" and res["unassigned"]:
@@ -318,7 +356,7 @@ def main(argv=None):
     rep = dict(type=a.type, mode=mode, reach_used=(min(a.reach, radius + 50) if radius is not None else a.reach),
                unmodelled_always=["tap_relay_cohort (default on for s81), r_dly_lockup chain affinity, tap_post_merge_min_sinks / tap_cap_cascade / tap_spill_um, hop-latch capture, "
                                   "follower pass of an existing group without follow_re, macro clock pins under a pinned key (the sink dump skips isBlock masters)"], taps=len(taps), added_taps=added, tap_radius_um=radius, sinks=len(sinks), cohorts=res["cohorts"],
-               pinned=len(res["fixed"]), singles=len(res["singles"]), unpinnable_sinks=res["unpinnable"], unassigned=res["unassigned"],
+               pinned=len(res["fixed"]), singles=len(res["singles"]), split_cohorts=split_report(res["split_cohorts"], res["singles"]), unpinnable_sinks=res["unpinnable"], unassigned=res["unassigned"],
                pinned_bad=res["pinned_bad"], over_cap=res["over_cap"], swallowed_sinks=len(res["swallowed"]), unmodelled_passes=unmodelled, single_beyond_reach=len(res["single_far"]), over_span=res["over_span"],
                max_box_wh=max((v["box_wh"] for v in res["per_tap"].values()), default=0.0), per_tap=res["per_tap"],
                caps=dict(reach=a.reach, span=a.span, cap=a.cap))

@@ -95,7 +95,7 @@ MUTANTS = [
     ("        return any(abs(x - tx) + abs(y - ty) > reach for x, y, _ in members)", "        return False"),
     ("return b[4] <= cap and (b[1] - b[0]) + (b[3] - b[2]) <= span", "return (b[1] - b[0]) + (b[3] - b[2]) <= span"),
     ("return b[4] <= cap and (b[1] - b[0]) + (b[3] - b[2]) <= span", "return b[4] <= cap"),
-    ("n = min(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), t))", "n = max(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), t))"),
+    ("n = min(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), tap_order(t)))", "n = max(tapxy, key=lambda t: (abs(tapxy[t][0] - x) + abs(tapxy[t][1] - y), tap_order(t)))"),
     ("        if far(tap, coh[key]):\n            pinned_bad.append(dict(cohort=key, tap=tap, reason=\"a sink is beyond reach of its pinned tap\"))\n", ""),
     ("    swallowed = [i for k, v in coh.items() for _, _, i in v if raw_key(i) != k]", "    swallowed = []"),
     ("not RELAY.fullmatch(k)", "True"),
@@ -103,13 +103,17 @@ MUTANTS = [
     ("    over_cap = {n: b[4] for n, b in box.items() if b and b[4] > cap}", "    over_cap = {}"),
     ('if a.add_taps and (res["unassigned"] or res["over_span"] or res["single_far"]) and mode != "density":', 'if a.add_taps and res["unassigned"] and mode != "density":'),
     ("        if len(keep) != len(added):", "        if False:"),
+    ("tap_order(t)))", "t))"),
+    ("    if split_oversize:\n        excl = set()", "    if False:\n        excl = set()"),
+    ("k not in forced_set and k not in excl and box_wh(", "k not in excl and box_wh("),
+    ("coh, singles, swallowed = cohorts_of(sinks, min_cohort, forced=[k for k in forced_keys if SAFE.fullmatch(k)], exclude=excl)", "pass"),
     ("        if any(not LITERAL.fullmatch(k) for k in alts):", "        if False:"),
     ("sorted(keys, key=lambda k: (-len(k), k))", "sorted(keys, key=lambda k: (len(k), k))"),
-    ("order = sorted(tapxy, key=lambda n: (abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy), n))", "order = sorted(tapxy, key=lambda n: (-(abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy)), n))"),
+    ("order = sorted(tapxy, key=lambda n: (abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy), tap_order(n)))", "order = sorted(tapxy, key=lambda n: (-(abs(tapxy[n][0] - cx) + abs(tapxy[n][1] - cy)), tap_order(n)))"),
     ("        group = {\"follow_re\": \"\"}", "        group = {}"),
     ("        merged.update(old.get(\"fixed_taps\") or {})", "        pass"),
     ("    return (max(n) + 1) if n else len(taps)", "    return len(taps)"),
-    ("if \"/\" in inst and SAFE.fullmatch(k) and not RELAY.fullmatch(k):", "if \"/\" in inst and not RELAY.fullmatch(k):"),
+    ("if \"/\" in inst and SAFE.fullmatch(k) and not RELAY.fullmatch(k) and k not in exclude:", "if \"/\" in inst and not RELAY.fullmatch(k) and k not in exclude:"),
 ]
 
 
@@ -124,7 +128,7 @@ def test_mutants_are_killed():
         mod = type(sys)("mut")
         exec(compile(src.replace(old, new, 1), "mut", "exec"), mod.__dict__)
         killed = False
-        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m)):
+        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m), lambda m: _split_on(m), lambda m: _split2_on(m)):
             try:
                 fn(mod)
             except Exception:
@@ -298,6 +302,53 @@ def _renum_on(m):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             test_main_renumbers_added_taps_after_dropping_an_empty_one(Path(d))
+    finally:
+        T = keep
+    return True
+
+
+def test_oversize_cohort_is_split_and_tie_order_numeric():
+    big = [(f"u_big/q{i}", 10.0 + 40 * i, 0.0) for i in range(10)]          # own box 360 > span 300
+    taps2 = [("clk", 0.0, 0.0), ("clk_t1", 400.0, 0.0)]
+    off = T.assign(big, taps2, reach=250, span=300, cap=100)                 # default off: the cohort stays whole and is unassigned
+    assert off["split_cohorts"] == [] and off["unassigned"]
+    r = T.assign(big, taps2, reach=250, span=300, cap=100, split_oversize=True)
+    assert [c["cohort"] for c in r["split_cohorts"]] == ["u_big"] and "u_big" not in r["fixed"] and len(r["singles"]) == 10
+    assert not r["unassigned"]
+    rp = T.split_report(r["split_cohorts"], r["singles"])[0]
+    assert rp["taps_used"] == 2 and rp["adjacent_pairs_on_different_taps_PROXY"] == 1 and rp["adjacent_pairs"] == 9 and "UNMEASURED" in rp["related_pairs"]
+    assert T.assign(big, [("clk", 0.0, 0.0)], 1000, 300, 100, pinned={"u_big": "clk"}, split_oversize=True)["split_cohorts"] == []
+    taps = [("clk_t10", 100.0, 0.0), ("clk_t5", -100.0, 0.0)]
+    assert T.assign([("s", 0.0, 0.0)], taps, 1000, 300, 100)["singles"] == {"s": "clk_t5"}
+
+
+def _split_on(m):
+    global T
+    keep, T = T, m
+    try:
+        test_oversize_cohort_is_split_and_tie_order_numeric()
+    finally:
+        T = keep
+    return True
+
+
+def test_split_respects_plan_re_keys_and_recomputes_membership():
+    big = [(f"big/q{i}", 10.0 + 40 * i, 0.0) for i in range(10)]
+    taps2 = [("clk", 0.0, 0.0), ("clk_t1", 400.0, 0.0)]
+    # a key of the plan's own re is never split (CTS would still capture it whole)
+    r = T.assign(big, taps2, 250, 300, 100, re_keys=["big"], split_oversize=True)
+    assert r["split_cohorts"] == [] and r["unassigned"], r
+    # a demoted key whose sinks a shorter key would now capture is refused through `swallowed`, not silently modelled as singles
+    sinks = [("a/q0", 10.0, 0.0), ("a/q1", 12.0, 0.0), ("a.b/x", 0.0, 0.0), ("a.b/y", 400.0, 0.0), ("a.b/z", 200.0, 200.0)]
+    r = T.assign(sinks, [("clk", 0.0, 0.0), ("clk_t1", 400.0, 0.0)], 1000, 300, 100, pinned={"a": "clk"}, min_cohort=2, split_oversize=True)
+    assert sorted(r["swallowed"]) == ["a.b/x", "a.b/y", "a.b/z"], r["swallowed"]
+
+
+def _split2_on(m):
+    global T
+    keep, T = T, m
+    try:
+        test_split_respects_plan_re_keys_and_recomputes_membership()
     finally:
         T = keep
     return True
