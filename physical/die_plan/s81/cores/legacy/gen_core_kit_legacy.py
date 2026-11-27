@@ -1823,6 +1823,9 @@ def main():
     ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
     ap.add_argument("--post-grt-drv", action="store_true",
                     help="KW-FIX-17 opt-in: chain the generated post_grt_drv.tcl repair pass after GRT (old form; default off: the GRT stage already repairs, DIE-QC-80 stall class)")
+    ap.add_argument("--seam-pad", default=None, metavar="SPEC.json",
+                    help="SEAM-PAD-R3 11-27 opt-in (recipe key seam_pad), default off: per-pin PORT-INGRESS HB4 pad chain sized from the "
+                         "measured parent seam slack (tools/die_plan/seam_pad_per_pin.py size); PRE_CTS hook, one chain per input port")
     ap.add_argument("--face-hold-pad", default=None, metavar="SPEC.json",
                     help="S81-CORES-1 11-11 opt-in (recipe key face_hold_pad): port-scope hold pad for forwarded-clock capture flops; "
                          "per-endpoint HB4 counts from the measured FF hold (tools/die_plan/face_hold_pad.py size); PRE_CTS hook")
@@ -2235,6 +2238,11 @@ def main():
     if _fhp:                                    # S81-CORES-1 11-11: port-start hold the nonport GRT repair never fixes
         import face_hold_pad
         print("face_hold_pad: " + json.dumps(face_hold_pad.stage(kd, REPO / _fhp if not Path(str(_fhp)).is_absolute() else _fhp)),
+              file=sys.stderr)
+    _sp = a.seam_pad or rec.get("seam_pad")
+    if _sp:                                     # SEAM-PAD-R3: per-pin parent-seam hold (LOCAL_PASS_NEEDS_PARENT cores)
+        import seam_pad_per_pin
+        print("seam_pad: " + json.dumps(seam_pad_per_pin.stage(kd, REPO / _sp if not Path(str(_sp)).is_absolute() else _sp)),
               file=sys.stderr)
     land = rec.get("land_slots") or {}
     if land:
