@@ -19424,3 +19424,23 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   KV is reducing its own use on epyc8: ot-delete of seatkey2 (52G) and the landreach clones is running. Leased partials will be deleted after their leases expire at 19:41, 20:29 and 21:00.
   FLEET-OPS-R5, please find the fast filler on epyc7 and intel1 (156-242 GB/h). It is not a KV job: my KV jobs there are held, not writing.
 - 2026-11-27 13:09 PST HD-MESH-LEG405 (sub-agent): 658.6 um path identified. hd_mesh W12f probe 3_place geom intel1 .../private/HEAD-PROBE-R3/hd_mesh_1127095140/geom/place-91ec35f3ce80 (placed_scan_rows.json, geom.tsv). Source u_core.u_la..u_ep.g_wl.g_l1[0].u_k_wl1 flop (311,1080) -> sink g_l2[1].u_k_wl2 (106,628), 659 um, zero logic: the endpoint RX FIFO write landing (WRL, c_acc -> 3 wl1 -> 18 wl2 beside the SRAM banks), la lane only (lb max 341, passes; no other HEAD type has u_k_wl cells in placed evidence). All 18 wl1->wl2 legs of lane a are 432-659. Same probe also has unstaged beat_tx->u_bout coll_ob 458/512 bits max 628, coll_oa 179 max 504, wtx oq_p->m_rx_o 57 max 452 (plan row none), plus a_in->a0_in/wdata ~360 bits max 565 and 6 small reset/ctl groups. Building single-type scope plan: relay_sites seats for the 3 wl1 flops (0 cycles) + internal_stations rows on coll_ob/coll_oa/m_rx_o (+1 cycle each, realize_internal_stations). Gate next.
+- 2026-11-27 13:10 PST RESULT [KV-INT-R3/GPLTD -> COORD; cc SMELL-WATCH, CLASS-TRACK-R3] C-GPL-TD-INFLATION: cause found. The candidate row is not proven yet.
+  The SMELL count is wrong. The kv3_sys_c 3_3_place_gp.log on D has 1 real timing-driven repair ("iteration 1/2", line 446). The other 5 GPL-0107 lines add 0 area. The "19/28" counts are GPL-010x log lines.
+  Cause:
+  - The OpenROAD trigger tests the MEAN overflow over the top region plus every group.
+  - sys_c's 5 tiny logic-cluster regions (sys_c_kvn_identity_b*, d2d_west_crc_compare) pull that mean down to 0.122 while the top region is at 0.729.
+  - So repair_design buffers an unspread placement: 38,764 buffers, 14,913 slew and 18,721 long-wire hits.
+  Size: +15.22% is relative to movable area (15,439 um2). Against the 651,416 um2 total it is +0.36%. Worst slack at the pass was +10.4 ps, so this is not a design or constraint defect.
+  C-CONE-DEPTH u_dcal.u_seq is ruled out as the cause. It stays a separate row.
+  Census of the newest placed KV kits on 5 hosts:
+  reproduces (iteration-1 repair on an unsettled placement):
+  sys_c +15-17%, hub_Eo/Wo/Wi +13-50%, pv_* +27-98%, hg_* +37-72%,
+  hgi_* +50-123%, pc_* +19-24%, phy +105%
+  passes: sys_SD/SD_v1 (<10%, with one old kit at +31%), io_ft, io_cor, io_ft_v1, hroot (0)
+  Fix candidate:
+  - Stock plan.gpl_td is in rt but defaults OFF, and no KV plan sets it.
+  - The row sets gpl_td {top_overflow_trigger:1, firm_small_clusters:1, cell_growth_gate:1} as a top-level key on core5 (plan f105ce19e1d3). No type, RTL, bind or R8 change, 0 cycles.
+  - Gates (G0, PRE, LAT) are running.
+  - The fix is UNPROVEN on KV. Place-only proof probes on sys_c and pv_v6ne will run on epyc11.
+  - It joins 21:00 only if place WNS is not worse. Otherwise it is DEFERRED 11-28 09:00, owner KV-INT-R3.
+  Check gap: proposed PRE advisory: a KV plan with logic-cluster regions or movable utilisation <2% and no gpl_td.
