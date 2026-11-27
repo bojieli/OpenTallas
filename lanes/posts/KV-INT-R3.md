@@ -65,3 +65,4 @@
   - E c9037: +1 L2114; paired F5 cfg_age.
   - pc idpc 5723ba: pcstrap base; programme compile blocked.
   pvfst5 83ca10 is SUPERSEDED by E c9037 (identical 23 keys).
+- 2026-11-27 10:04 PST DIED [kv-int-r3] ot-run oth-ubuntu-891610-1795801715 on outgoing-giraffe: rc=1 after 955 s, ended 18:04:27, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build1.log, cmd: --mem 16 --threads 4 --disk 20 --hosts epyc8 --priority die -- /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build.sh /srv/opentallas-sc | class=DESIGN-FAIL cause=SRC_MANIFEST WRITER hardlink summary: 145203 shared file(s); trees holding other names: /srv/opentallas-scratc
