@@ -74,3 +74,26 @@ def test_legacy_capture_bank_uses_explicit_legacy_bus_selection():
     t['clock']['landing_input_freg'] = ['other_i']
     with pytest.raises(ValueError, match='requires this bus FREG'):
         L._band_groups('T', 'ft2_i', b, t)
+
+
+def test_reach_face_bank_keeps_auto_writer_shape_and_pin_order():
+    from clock_landings import ring_write_reg
+
+    typ, band = fixture()
+    band.update(width=522, freg_rect_um=[6.48, 1211.76, 117.72, 1221.48])
+    peer = dict(band)
+    peer.pop('freg_rect_um')
+    typ['clock'] = {
+        'landing_ring_wreg': {'buses': ['narrow_i'], 'dsrep': 1, 'freg_buses': ['ft2_i']},
+        'landing_contract': {'bands': {'ft2_i': band, 'ft3_i': peer}},
+    }
+    plan = {'partition_types': {'T': typ}}
+    chosen = ring_write_reg(plan, 'T', 'ft2_i')
+    unchosen = ring_write_reg(plan, 'T', 'ft3_i')
+    assert (chosen['dsrep'], chosen['write_chunk'], chosen['depth'], chosen['reach']) == (8, 16, 2, True)
+    assert chosen['freg'] and not unchosen['freg'] and unchosen['depth'] == 1
+    assert L._band_groups('T', 'ft2_i', band, typ)[0][0] == 'u_cland_ft2_i.g_freg.u_face'
+    tcl = L._local_chunk_config(typ)
+    assert 'dict set ::cland_local_chunks {u_cland_ft2_i} {write 16 read 8}' in tcl
+    assert 'dict set ::cland_numeric_freg_banks {u_cland_ft2_i.g_freg.u_face} 1' in tcl
+    assert 'dict set ::cland_numeric_freg_banks {u_cland_ft3_i' not in tcl

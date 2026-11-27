@@ -571,6 +571,14 @@ def _local_chunk_config(typ, die_clock=None):
         if ds > 1:
             prefix = band.get('instance', 'u_cland_' + bus)
             rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(0 if wr == 64 else wr) + ' read ' + str(64 // ds) + '}')
+    # A separate face bank must keep pin bit order even on a reach-derived WREG.
+    for bus, band in sorted(bands.items()):
+        if not band.get('freg_rect_um'):
+            continue
+        wreg = CL.ring_write_reg(hard_plan, '_', bus)
+        if wreg and wreg.get('freg') and not (numeric and bus in cfg.get('buses', [])):
+            prefix = band.get('instance', 'u_cland_' + bus)
+            rows.append('dict set ::cland_numeric_freg_banks {' + prefix + '.g_freg.u_face} 1')
     if not rows and wc == 64 and not numeric:
         return ''
     return 'set ::cland_local_chunks {}\nset ::cland_numeric_freg_banks {}\n' + '\n'.join(rows) + '\n'
@@ -597,10 +605,10 @@ def _band_groups(tn, name, band, typ):
     if face is not None:
         # Optional first capture at the physical pin face. FREG otherwise shares
         # the storage band; adding the register alone does not shorten pin reach.
-        wreg = (typ or {}).get('clock', {}).get('landing_ring_wreg') or {}
+        import clock_landings as CL
+        wreg = CL.ring_write_reg({'partition_types': {tn: typ or {}}}, tn, name)
         legacy = (typ or {}).get('clock', {}).get('landing_input_freg') or []
-        ca_freg = (wreg.get('freg') or name in (wreg.get('freg_buses') or [])) and name in wreg.get('buses', [])
-        if not ca_freg and name not in legacy:
+        if not (wreg and wreg.get('freg')) and name not in legacy:
             raise ValueError(f'{tn}.{name}: freg_rect_um requires this bus FREG')
         if cfg or len(rects) != 1:
             raise ValueError(f'{tn}.{name}: separate FREG bank requires one ordinary storage band')
