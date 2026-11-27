@@ -737,7 +737,7 @@ def test_postbind_required_problem_and_post_bind_that_does_not_start_is_rc6(tmp_
 
 
 def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
-    import subprocess
+    import shutil
 
     root = tmp_path / "runtime root"
     tree = tmp_path / "published tree"
@@ -745,6 +745,10 @@ def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
     runtime = root / pin[:12]
     tools = runtime / "tools/die_plan"
     tools.mkdir(parents=True)
+    composer = runtime / "tools/autopilot/rt_launch_tree.sh"
+    composer.parent.mkdir()
+    shutil.copyfile(HERE / composer.name, composer)
+    (tools / "schema.py").write_text("schema from the pinned runtime\n")
     manifest = root / f"{pin[:12]}.manifest.json"
     manifest.write_text(json.dumps({"sha": pin}))
     cand = bind_candidate(tree)
@@ -753,9 +757,18 @@ def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
     s = PA.postbind_spec(cand, "1118", live={"tools_sha": "f" * 40})
     copy = Path(s["copy"])
     (copy / s["plan"]).parent.mkdir(parents=True)
+    (copy / s["plan"]).write_text("plan from the published source\n")
+    stale_tools = copy / "tools/die_plan"
+    stale_tools.mkdir(parents=True)
+    (stale_tools / "schema.py").write_text("schema from the frozen design\n")
+    launch = copy / "_postbind/launch"
     checks = (
         "import os\n"
-        f"assert os.environ['OT_REPO_ROOT'] == {str(copy)!r}\n"
+        "from pathlib import Path\n"
+        f"root = Path(os.environ['OT_REPO_ROOT'])\n"
+        f"assert root == Path({str(launch)!r})\n"
+        "assert (root / 'tools/die_plan/schema.py').read_text() == 'schema from the pinned runtime\\n'\n"
+        f"assert (root / {s['plan']!r}).read_text() == 'plan from the published source\\n'\n"
         f"assert os.environ['OT_PLAN_ROOT'] == {str((copy / s['plan']).parent)!r}\n"
         f"assert os.environ['OT_RT_CURRENT'] == {str(runtime)!r}\n"
     )
@@ -766,6 +779,7 @@ def test_postbind_runs_named_tools_against_the_copied_design(tmp_path):
     assert good.returncode == 0, (good.stdout, good.stderr)
     assert f"POSTBIND_RUNTIME {pin} {runtime}" in good.stdout
     assert "POSTBIND_DONE elab 0 bind 0 latcheck 0" in good.stdout
+    assert (stale_tools / "schema.py").read_text() == "schema from the frozen design\n"
 
     manifest.write_text(json.dumps({"sha": pin[:12] + "2" * 28}))
     bad = subprocess.run(["bash", "-c", sh], capture_output=True, text=True)
