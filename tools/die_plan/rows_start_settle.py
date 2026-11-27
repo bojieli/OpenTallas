@@ -12,6 +12,7 @@ import os
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path.cwd() / "tools" / "die_plan"))   # stock tools of the launch tree
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
@@ -63,9 +64,12 @@ def main(argv=None):
     new, rep = derive(raw, a.plan_in, side)
     rep["plan_updated"] = apply_plan(raw, rep["new"]["settle"])
     rep["sidecar"] = str(sc)
-    if os.path.islink(sc):
-        raise SystemExit(f"{sc} is a symlink; refusing to write through it")
-    sc.write_text(json.dumps(new, separators=(",", ":")) + "\n")
+    real = sc.resolve()                         # the launch tree links design data into the private fork: write the fork's own file
+    if real.stat().st_nlink != 1:
+        raise SystemExit(f"{real} is shared (nlink {real.stat().st_nlink}); the gate must run on a private fork")
+    tmp = real.with_name(real.name + f".{os.getpid()}.tmp")
+    tmp.write_text(json.dumps(new, separators=(",", ":")) + "\n")
+    os.replace(tmp, real)
     Path(a.plan_out).write_text(json.dumps(raw, separators=(",", ":")) + "\n")
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"rows_start_settle: release {rep['old']['release']} -> {rep['new']['release']}, ready {rep['old']['ready']} -> "

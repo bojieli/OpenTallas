@@ -308,22 +308,38 @@ def plan_drop_pats(new, plan_path=None):
     if isinstance(v, (list, tuple)):
         pats += load_drop_list_lines([str(x) for x in v])
     if plan_path:
-        for suf in (".drop_list", ".drop_list.txt"):
-            fp = str(plan_path) + suf
+        cands = [str(plan_path) + s for s in (".drop_list", ".drop_list.txt")] + [os.path.join(os.path.dirname(str(plan_path)), "compose_drop_list.txt")]
+        for fp in cands:
             if os.path.isfile(fp):
                 pats += load_drop_list(fp)
     return pats
+
+
+def reanchored_types(prev, new):
+    """types whose reset_tree_anchor was re-derived (its inputs hashes changed) and still carries relays: a different relay set under the
+    new inputs is a re-solve, not a loss (QC 77f2: sle_ctl / slw_st_a_v2 / coll_ft relays renamed or re-picked by the new sink bins)"""
+    out = {}
+    for tn, t in ((new or {}).get("partition_types") or {}).items():
+        a = (((prev or {}).get("partition_types") or {}).get(tn) or {}).get("clock", {}).get("reset_tree_anchor") if isinstance(t, dict) else None
+        b = (t.get("clock") or {}).get("reset_tree_anchor") if isinstance(t, dict) else None
+        if isinstance(a, dict) and isinstance(b, dict) and a.get("inputs") != b.get("inputs") and b.get("relays"):
+            out[tn] = {k: (a.get("inputs") or {}).get(k) for k in ("sink_bins", "ft_slots", "taps") if (a.get("inputs") or {}).get(k) != (b.get("inputs") or {}).get(k)}
+    return out
 
 
 def emit_drop_list(prev, new, intended_pats=()):
     """-> (text, intended paths, unnamed paths): the explicit drop list of composing NEW from PREV.  Intended drops are drop-list lines
     ('DROP <path>  # intended'); an unnamed drop is written as a comment ('#UNNAMED DROP <path>') so the list never names it and
     COMPOSEDROP keeps failing until a row or a person names it"""
-    named, unnamed = [], []
+    named, unnamed, why = [], [], {}
+    re_t = reanchored_types(prev, new)
     for k, p, _x, ok in guard(prev, new, drop_pats=list(intended_pats)):
         if k in ("DROP", "ROW-DROP"):
+            seg = p.split(".")
+            if not ok and len(seg) > 4 and seg[0] == "partition_types" and seg[1] in re_t and ".clock.reset_tree_anchor.relays." in p:
+                ok, why[p] = True, "re-anchored: inputs " + "/".join(sorted(re_t[seg[1]])) + " changed"
             (named if ok else unnamed).append(p)
-    text = "".join(f"DROP {p}  # intended\n" for p in sorted(named)) + "".join(f"#UNNAMED DROP {p}\n" for p in sorted(unnamed))
+    text = "".join(f"DROP {p}  # {why.get(p, 'intended')}\n" for p in sorted(named)) + "".join(f"#UNNAMED DROP {p}\n" for p in sorted(unnamed))
     return text, sorted(named), sorted(unnamed)
 
 
