@@ -158,6 +158,30 @@ def private_spec_text(roots=None, now=None, max_age_h=None):
     return "\n".join(t)
 
 
+PERMIT_MAX_AGE_H = float(os.environ.get("OT_RT_PERMIT_MAX_AGE_H", "72"))
+
+
+def permit_text(roots=None, now=None, max_age_h=None):
+    """P-RUNTIME-MANIFEST b10 (prune removed rt 7a4ba2b79cff while a staged W12f permit named it): staged permit files
+    (autopilot/*/permit*/ dirs, autopilot/*/*permit*.json|sh|py, lanes/handoff/*permit*) modified within OT_RT_PERMIT_MAX_AGE_H name the rt their apply will run"""
+    now = time.time() if now is None else now
+    max_age_h = PERMIT_MAX_AGE_H if max_age_h is None else max_age_h
+    t = []
+    for r in (roots if roots is not None else (COORD, HUB_COORD)):
+        r = Path(r)
+        fs = []
+        for pat in ("autopilot/*/permit*/**/*", "autopilot/*/*permit*", "lanes/handoff/*permit*"):
+            fs.extend(r.glob(pat))
+        for f in fs:
+            try:
+                st = f.stat()
+                if f.is_file() and now - st.st_mtime <= max_age_h * 3600 and st.st_size <= 4_000_000:
+                    t.append(f.read_text(errors="replace"))
+            except OSError:
+                pass
+    return "\n".join(t)
+
+
 def named_in(name, text):
     """a snapshot is named when its 12-hex name occurs in text, or an rt/<hex> / tools_sha / gen_tools_pin value of 8..40 hex is a prefix of it or
     starts with it (kit_wave tools_sha / gen_tools_pin may be a full 40-hex sha or a short one)"""
@@ -188,6 +212,8 @@ def names_in_use_text():
         try: t += S.run(cmd, capture_output=True, text=True, timeout=30).stdout
         except Exception: pass
     try: t += "\n" + private_spec_text()
+    except Exception: pass
+    try: t += "\n" + permit_text()
     except Exception: pass
     try: t += "\n" + live_reference_text()       # the hub's own queued / armed ot-run clients name the rt/<sha> a build host will run: sent to the hosts with the pins
     except Exception: pass

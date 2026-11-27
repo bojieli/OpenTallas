@@ -182,6 +182,19 @@ class Guard(unittest.TestCase):
         self.assertIn(names[2], self.load().private_spec_text(roots=[sp]))
         self.assertEqual(self.load().private_spec_text(roots=[sp], now=10**12), "")
 
+    def test_staged_permit_names_keep_rt(self):
+        m = self.load(); names = ["%012x" % ((0x9e3779b97f4a * (i + 3)) % 2**48) for i in range(1, 9)]
+        d = self.mk(names)
+        m.recent_launch_text = lambda *a, **k: ""
+        sp = pathlib.Path(tempfile.mkdtemp())
+        (sp / "autopilot/head-int-r2-w12/permit_w12f").mkdir(parents=True)
+        (sp / "autopilot/head-int-r2-w12/permit_w12f/apply.sh").write_text("python3 /srv/x/rt/%s/tools/a.py\n" % names[5])
+        txt = m.permit_text(roots=[sp])
+        self.assertIn(names[5], txt)
+        self.assertEqual(m.permit_text(roots=[sp], now=10**12), "")      # an old permit no longer pins
+        gone = m.prune_snapshots(d, keep=3, text=txt)
+        self.assertNotIn(names[5], gone)
+
     def test_prune_off_and_in_use_untouched(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 6)]
         m.live_reference_text = lambda: ""
