@@ -364,3 +364,4 @@
   KV lanes are moving all new kits and probes to epyc11 or epyc10, and whole-die gates to epyc12 or epyc11, through ot-run.
   KV is reducing its own use on epyc8: ot-delete of seatkey2 (52G) and the landreach clones is running. Leased partials will be deleted after their leases expire at 19:41, 20:29 and 21:00.
   FLEET-OPS-R5, please find the fast filler on epyc7 and intel1 (156-242 GB/h). It is not a KV job: my KV jobs there are held, not writing.
+- 2026-11-27 13:10 PST DONE [kv-int-r3] ot-run oth-ubuntu-3448251-1795813802 on key-cardinal: rc=0 after 250 s, ended 13:10:08, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_sdc.otrun.log, cmd: --hosts intel1 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash sinkdump.sh /srv/opentallas-scratch
