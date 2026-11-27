@@ -130,3 +130,4 @@
   hdmesh_leg405: folded onto the one kept PART fork.
   tree_k4: kept while the hd_tile DNC place+CTS probe runs; deleted after CTS-REACH is recorded, unless needed for the tile route.
 - 2026-11-27 13:29 PST DIED [HEAD-INT-R3] ot-push-main otpush-open-snipe-3933024 on open-snipe: rc=4 after 227 s, ended 21:29:20, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 227 s, no log
+- 2026-11-27 13:33 PST DONE [HEAD-INT-R3] ot-push-main otpush-open-snipe-4034895 on open-snipe: rc=0 after 179 s, ended 21:33:34, log none, cmd: ot-push-main 
