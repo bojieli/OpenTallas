@@ -70,6 +70,10 @@ DEFAULT_HALO_UM = 1.0          # F5: the only halo the gate accepts (verdicts re
 MAX_HALO_UM = WINDOW_MARGIN_UM  # no marker exists outside the window, so a larger halo is meaningless and a negative one empties the HARDCORE zone
 
 
+def tool_sha256():
+    return hashlib.sha256(Path(__file__).read_bytes() + PYA.read_bytes()).hexdigest()
+
+
 def sha256_file(path):
     h = hashlib.sha256()
     with open(path, "rb") as fh:
@@ -329,7 +333,7 @@ def run(a):
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     a.out = str(out)
-    for stale in ("verdict.json", "run_meta.json", "compare_windows.json", "new_markers.jsonl", "beol.lydrc", "deck_pin.log"):
+    for stale in ("verdict.json", "run_meta.json", "compare_windows.json", "new_markers.jsonl", "beol.lydrc", "deck_pin.log", "run_complete"):
         (out / stale).unlink(missing_ok=True)          # F4: a crashed run can never leave a previous verdict behind
     cores = []
     for c in a.core:
@@ -340,7 +344,7 @@ def run(a):
     validate_run_args(a, [m for m, _ in cores])
     meta = dict(parent_def=os.path.realpath(a.parent_def), parent_def_sha256=sha256_file(a.parent_def), allow_empty=a.allow_empty or "",
                 halo_um=float(a.halo_um), deck=getattr(a, "deck", "beol"), cores=sorted(m for m, _ in cores),
-                tool_sha256=hashlib.sha256(Path(__file__).read_bytes() + PYA.read_bytes()).hexdigest())
+                tool_sha256=tool_sha256(), core_sha256={m: sha256_file(src) for m, src in cores})
     (out / "run_meta.json").write_text(json.dumps(meta, indent=1))
     try:
         return _run(a, out, cores)
@@ -382,6 +386,7 @@ def _run(a, out, cores):
         (out / "verdict.json").write_text(json.dumps(v, indent=1))
         print(json.dumps(v))
         return 2
+    (out / "run_complete").write_text("OT_MGD_DONE\n")        # N3: _verdict judges only a run that finished
     return verdict(a)
 
 
@@ -408,6 +413,8 @@ def _bind(v, out):
 
 def _verdict(a, out):
     (out / "verdict.json").unlink(missing_ok=True)
+    if (out / "run_meta.json").is_file() and not (out / "run_complete").is_file():
+        raise ValueError("run did not complete (no run_complete sentinel): window evidence may be stale")
     cells = json.loads((out / "parent_cells.json").read_text())
     hier = json.loads((out / "compare.json").read_text()) if (out / "compare.json").is_file() else None
     if (out / "win" / "merged_windows.json").is_file():
@@ -421,6 +428,9 @@ def _verdict(a, out):
     else:
         v = judge(hier or {}, cells)
     _bind(v, out)
+    if v["verdict"] == "PASS" and not (out / "run_meta.json").is_file():
+        v["verdict"] = "NOT-BOUND"        # N4: a re-judged legacy dir has no parent-DEF/core/deck binding: evidence only, never a PASS
+        v["problems"] = list(v.get("problems") or []) + ["no run_meta.json: verdict is not bound to a parent DEF / core GDS"]
     if v["verdict"] == "PASS" and v.get("deck_sha256") != PINNED_BEOL_DECK_SHA256:
         v["verdict"] = "FAIL"
         v["problems"] = list(v.get("problems") or []) + ["BEOL deck is not the pinned calibration deck (sha256 %s)" % v.get("deck_sha256")]
@@ -590,7 +600,9 @@ def _binding_ok(v, kp):
     try:
         return (kp.get("parent_def") is not None and v.get("parent_def_sha256") == sha256_file(kp["parent_def"])
                 and v.get("deck_sha256") == PINNED_BEOL_DECK_SHA256 and v.get("deck") == "beol"
-                and v.get("halo_um") == DEFAULT_HALO_UM and v.get("allow_empty") == (kp.get("allow_empty") or ""))
+                and v.get("halo_um") == DEFAULT_HALO_UM and v.get("allow_empty") == (kp.get("allow_empty") or "")
+                and v.get("tool_sha256") == tool_sha256()                                   # N2: tool and core GDS content bound too
+                and v.get("core_sha256") == {m: sha256_file(g) for m, g in kp.get("cores", [])})
     except OSError:
         return False
 

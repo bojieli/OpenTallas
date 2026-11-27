@@ -145,6 +145,14 @@ def test_merged_gds_gate_required_only_for_exact_views(tmp_path):
     verdict.write_text(json.dumps({"verdict": "PASS", "new_hardcore": 0}))
     assert MG.gate_check(kit)["verdict"] == "NOT RUN"
     verdict.write_text(json.dumps({"verdict": "PASS", "mode": MG.FLAT_MODE, "new_hardcore": 0}))
+    assert MG.gate_check(kit)["verdict"] == "NOT RUN"                # FABLE-INDEP: an unbound PASS (no parent DEF/deck/tool/core binding) never counts
+    import hashlib
+    pdef = kit / "run" / "results" / "asap7" / "x" / "base" / "6_final.def"
+    pdef.parent.mkdir(parents=True)
+    pdef.write_text("DEF")
+    verdict.write_text(json.dumps({"verdict": "PASS", "mode": MG.FLAT_MODE, "new_hardcore": 0, "parent_def_sha256": hashlib.sha256(b"DEF").hexdigest(),
+                                   "deck_sha256": MG.PINNED_BEOL_DECK_SHA256, "deck": "beol", "halo_um": 1.0, "allow_empty": "core",
+                                   "tool_sha256": MG.tool_sha256(), "core_sha256": {}}))
     assert MG.gate_check(kit)["verdict"] == "PASS"
     verdict.write_text(json.dumps({"verdict": "ERROR"}))
     assert MG.gate_check(kit)["verdict"] == "NOT RUN"

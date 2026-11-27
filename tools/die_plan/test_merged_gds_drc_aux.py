@@ -147,11 +147,13 @@ def _verdict_dir(tmp_path, **over):
     kit = tmp_path / "kit"
     directory = kit / "merged_gds_drc"
     directory.mkdir(parents=True)
+    core = tmp_path / "core.gds"
+    core.write_bytes(b"GDS")
     v = dict(verdict="PASS", mode=M.FLAT_MODE, parent_def_sha256=hashlib.sha256(b"DEF").hexdigest(), deck_sha256=M.PINNED_BEOL_DECK_SHA256,
-             deck="beol", halo_um=1.0, allow_empty="ROM")
+             deck="beol", halo_um=1.0, allow_empty="ROM", tool_sha256=M.tool_sha256(), core_sha256={"core": hashlib.sha256(b"GDS").hexdigest()})
     v.update(over)
     (directory / "verdict.json").write_text(json.dumps(v))
-    return kit, dict(required=True, gated=["x.lef"], parent_def=str(parent), allow_empty="ROM")
+    return kit, dict(required=True, gated=["x.lef"], parent_def=str(parent), allow_empty="ROM", cores=[("core", str(core))])
 
 
 @pytest.mark.parametrize("over,expected", [
@@ -163,6 +165,10 @@ def _verdict_dir(tmp_path, **over):
     ({"deck": "full"}, "NOT RUN"),
     ({"halo_um": -100.0}, "NOT RUN"),                      # F5
     ({"allow_empty": ".*"}, "NOT RUN"),
+    ({"tool_sha256": "0" * 64}, "NOT RUN"),                # N2: tool changed since the run
+    ({"tool_sha256": None}, "NOT RUN"),
+    ({"core_sha256": {"core": "0" * 64}}, "NOT RUN"),      # N2: core re-signed since the run
+    ({"core_sha256": {}}, "NOT RUN"),
     ({"verdict": "FAIL"}, "FAIL"),
 ])
 def test_f4_f5_f6_gate_binds_verdict_to_inputs(tmp_path, monkeypatch, over, expected):
@@ -228,3 +234,23 @@ def test_f6_deck_pin_in_script_and_verdict(tmp_path):
 def test_f7_unchecked_bbox_comes_from_lef_outline():
     text = PYA.read_text()
     assert "LEF_BBOX" in text and "inst.dtrans * LEF_BBOX[nm]" in text
+
+
+def test_n3_n4_verdict_needs_complete_run_and_binding(tmp_path):
+    (tmp_path / "run_meta.json").write_text("{}")
+    (tmp_path / "parent_cells.json").write_text("{}")
+    assert M.verdict(argparse.Namespace(out=str(tmp_path))) == 2           # run_meta without run_complete: stale-evidence risk
+    assert "did not complete" in json.loads((tmp_path / "verdict.json").read_text())["problems"][0]
+
+
+def test_n4_legacy_dir_pass_is_not_bound(tmp_path):
+    win = tmp_path / "win"
+    win.mkdir()
+    meta = [{"i": 0, "master": "core", "bbox": [-5, -5, 15, 15]}]
+    for kind in ("merged", "parent_only", "macros_only"):
+        (win / f"{kind}_windows.json").write_text(json.dumps(meta))
+        (win / f"{kind}_0.lyrdb").write_text("<report-database><items/></report-database>")
+    (win / "shorts_0.json").write_text("{}")
+    (tmp_path / "parent_cells.json").write_text(json.dumps({"hard_core_insts": [{"master": "core", "bbox": [0, 0, 10, 10]}], "dbu": 0.00025}))
+    M.verdict(argparse.Namespace(out=str(tmp_path)))
+    assert json.loads((tmp_path / "verdict.json").read_text())["verdict"] == "NOT-BOUND"
