@@ -1830,8 +1830,10 @@ def verdict_line(verdict, rules, title=""):
     parts = [f"{r['rule']}={short[r['status']]}({r['value'] if not isinstance(r['value'], dict) else max(r['value'].values() or [0])})"
              for r in sorted((r for r in rules if r["status"] != "INFO"), key=lambda r: order[r["status"]])]
     warn = "; ".join(f"{r['rule']} {r['value']}: {r['detail']}" for r in rules if r["status"] == "WARN")
+    fc = [r for r in rules if r["rule"] == "fill_corridor" and r["value"] is not None]
+    rep = f" fill_corridor(report-only)={fc[0]['value']}" if fc else ""      # beside the raw fill=; never judged
     return (f"AUTO-GEOM {verdict}" + (f" {title}" if title else "") + (f" WARN[{warn}]" if warn else "") + " "
-            + " ".join(parts))
+            + " ".join(parts) + rep)
 
 
 def load_corridor_type(a):

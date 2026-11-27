@@ -135,7 +135,10 @@ class Integration(unittest.TestCase):
         self.assertEqual(by["fill_corridor"]["status"], "INFO")
         self.assertIn("raw fill", by["fill_corridor"]["detail"])
         self.assertEqual([r for r in R1 if r["rule"] != "fill_corridor"], R0)
-        self.assertNotIn("fill_corridor=", G.verdict_line(v1, R1))
+        line = G.verdict_line(v1, R1)
+        self.assertIn("fill=FAIL(", line)
+        self.assertTrue(line.endswith(f" fill_corridor(report-only)={fc['fill_corridor']}"))
+        self.assertEqual(G.verdict_line(v0, R0), line.rsplit(" fill_corridor", 1)[0])    # rest of the line identical
 
     def test_malformed_type_is_recorded_never_raised(self):
         t = dict(self.t)
