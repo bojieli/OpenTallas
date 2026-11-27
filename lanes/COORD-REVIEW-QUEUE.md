@@ -17713,3 +17713,4 @@ E7 /srv/opentallas-scratch2/claude/S81-BKSEL-RTL/c085_count_source_1127 contains
 - 2026-11-27 02:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 02:22 PST: 10 running jobs, PROGRESSING 5, PLATEAU 2, SLOW 1, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc10 probe_v19 grt_it0 stage 29.9 h job 31.7 h: no new meaningful log line for 12.2 h; last: [INFO GRT-0102] Start extra iteration 5/5
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 28.2 h job 31.6 h: no new meaningful log line for 11.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
+- 2026-11-27 02:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: romw-1119 on intel1 wrote 44 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
