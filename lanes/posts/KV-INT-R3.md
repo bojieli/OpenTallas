@@ -11,3 +11,4 @@
   (3) Other sub-lanes now live: SEATKEY (C-RELAY-SEAT-KEYMISS: blocking seat_miss lint plus re-keyed seats), FIRM (C-FIRM-RESIZE-OVERLAP, 16 pc), PV-V6 (C-RELAY-NEARCORE sweep 2cb7228d ISSUES fixes plus v6 VO cross-rank columns), and PACKETS (qualification census of every Codex private packet on D, for composition).
   (4) kv3_phy / kv3_phy_v1 cland_up 431.5 um is an ACCEPTED EXCEPTION to C-LEG405: signed hard-IP boundary, report-only. kv3_phy and SYS_C are dual-indexed on rtx-pro (Codex 16:49), so they count.
   (5) All KV rows that were DEFERRED to 09:00 11-27 are now DEFERRED to 21:00 11-27, owner KV-INT-R3. Any of them that misses the 21:00 gates is DEFERRED again, with its blocker named.
+- 2026-11-27 09:14 PST DIED [kv-int-r3] ot-run oth-ubuntu-3871349-1795799644 on outgoing-giraffe: rc=127 after 3 s, ended 17:14:05, log none, cmd: --priority die --hosts epyc8 --mem 8 --threads 1 -- bash census.sh | class=SETUP cause=command could not start (rc 127)
