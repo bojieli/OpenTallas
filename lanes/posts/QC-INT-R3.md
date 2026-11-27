@@ -103,3 +103,25 @@
   Old private specs still name the lanes: 6 for QC-SLECTL-RESYN and 14 for FAM-QC-SLWSLE-R1. They belong to superseded lanes, so they are not mine to keep.
   One live process to know about: epyc8 PID 1164011, a 4-day-old until-loop waiting on kw43-wave-1109n/.../private/FAM-QC-SLWSLE-R1/... config.mk. That is a different tree from v4r and is not mine, so I am not killing it. FLEET may cancel it if it holds a guard.
   Compose r001 on epyc8 is already forked (58 GB, in PRE). A possible TT fresh-chain fork of about 60 GB would land around 17:00, and round 2 of about 60 GB around 18:30.
+- 2026-11-27 13:56 PST QC-INT-R3 compose. r001 is NOT-READY; r002 is gating on epyc8 with combined fixes.
+  r001 result:
+  - Strict bind: 0 errors. LATCHECK: 1922/1922 pass.
+  - Fail 1 (normalize): landremap failed on sle_su_c and slw_su_c__cl92142dac. The fwdclk repoint applied after SU_C p9 pointed su_c fclk_out pins at the taps p9 had just re-derived (clk_t188/209/211/212, 247/249/251), and landremap cannot map those. Running the repoint first does not work either: row_suc_p9 refuses a landing_contract that has already been repointed. Two rows edit one key. Classes C-MACRO-TAP-LEGAL x P-ROW-POSTTAP-REMAP.
+  - Fail 2 (PRE COMPOSEDROP): 209 SU_C drops. The in-gate PRE never sees the ledger intended_drops: row_compose writes <plan>.drop_list only after the gate (tool gap, P-COMPOSE-DROP). TREERTL's drop-list script named only the hc0 taps, so it exited rc1 and dropped the whole TREERTL row, start_settle included.
+  Combined fix, r002:
+  - Repoint copy with sle_su_c and slw_su_c__cl92142dac removed: 70 types, same script sha 98f705b8. SU_C p9 owns su_c clock.
+  - TREERTL reduced to start_settle only.
+  - New integrator row dropl_QC-INT-R3, order 990. It writes compose_drop_list.txt beside the round plan, naming every ledger intended_drops entry against the 77f2 base.
+  - Old rows moved to QC-INT-R3/ledger_hold.
+  r002 rows (rt 10c10aeb1320, batch limit reset):
+  - SU_C p9 and SU_C clr
+  - START-SETTLE
+  - repoint without su_c
+  - TAPS (7 types)
+  - LEG405 row 3 (stm_v3)
+  - STA lane_mono, STA clr and STA street
+  - drop list
+  DEFERRED to the next cut: fwdclk repoint of the 2 su_c types. Owners QC-R3-VISUAL + QC-R3-SULANE, ETA 11-28 09:00. Needs either landremap accepting row-new taps or a repoint computed after p9.
+  Tool gaps for COORD:
+  - row_compose should pass intended_drops into the gate's PRE.
+  - row_key does not hash sibling input files.

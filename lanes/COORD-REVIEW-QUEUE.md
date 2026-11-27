@@ -19696,3 +19696,25 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 13:55 PST 2026-11-27 13:55 PST NOTE [HEAD-INT-R3 -> COORD, FLEET-OPS-R5] scratch2 use measured by HEAD-FORM-R3: epyc7 97% (7.0/7.3T), epyc8 93%, intel1 92%, epyc12 88%, intel2 75%. HEAD side: the W13 snapshot replicates as a --link-from delta (<1 GB/host), the staged fallback goes only to epyc12+intel2, one 55 GB HEAD fork (hdmesh_leg405) is already deleted on intel1, and ctln_dens (55 GB, intel1) waits on FLEET-OPS-R5 retiring private spec HEAD-PART-R3/ctln_v5_sparse025_1127. epyc7 at 97% needs a fleet cleanup pass (P-POSTPUBLISH-DISK).
 - 2026-11-27 13:56 PST CTS-REACH recorded as FAIL from the DNC probe hd_tile_1127131147 (form k4f2 5d79c534ac9b, cts log 623b771ca0d9). Span PASS (0/65 taps over 300 um, max 262). Load FAIL: 3 taps over the 1200 cap (t18 1576, t23 1477, t19 1225); 12 taps under 50 sinks. Classes C-TAP-LOAD and C-TAP-REACH. Fix k4f3x 1c785b28590d: bins re-derived from the W12 placed sinks, 71 taps, plan max 935, PRE PASS, wfchk 0/0/0. Gate k4f3g running on epyc12 (unit oth-ubuntu-238220-1795816496); this form goes to the combined die-clock regen. TILE README STATUS unchanged: DEFERRED (eta 11-28 09:00). README bf615fbddbbc, MANIFEST a649cb3965c7.
 - 2026-11-27 13:56 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-719198 on tolerant-swine: rc=4 after 806 s, ended 13:56:47, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 806 s, no log
+- 2026-11-27 13:56 PST QC-INT-R3 compose. r001 is NOT-READY; r002 is gating on epyc8 with combined fixes.
+  r001 result:
+  - Strict bind: 0 errors. LATCHECK: 1922/1922 pass.
+  - Fail 1 (normalize): landremap failed on sle_su_c and slw_su_c__cl92142dac. The fwdclk repoint applied after SU_C p9 pointed su_c fclk_out pins at the taps p9 had just re-derived (clk_t188/209/211/212, 247/249/251), and landremap cannot map those. Running the repoint first does not work either: row_suc_p9 refuses a landing_contract that has already been repointed. Two rows edit one key. Classes C-MACRO-TAP-LEGAL x P-ROW-POSTTAP-REMAP.
+  - Fail 2 (PRE COMPOSEDROP): 209 SU_C drops. The in-gate PRE never sees the ledger intended_drops: row_compose writes <plan>.drop_list only after the gate (tool gap, P-COMPOSE-DROP). TREERTL's drop-list script named only the hc0 taps, so it exited rc1 and dropped the whole TREERTL row, start_settle included.
+  Combined fix, r002:
+  - Repoint copy with sle_su_c and slw_su_c__cl92142dac removed: 70 types, same script sha 98f705b8. SU_C p9 owns su_c clock.
+  - TREERTL reduced to start_settle only.
+  - New integrator row dropl_QC-INT-R3, order 990. It writes compose_drop_list.txt beside the round plan, naming every ledger intended_drops entry against the 77f2 base.
+  - Old rows moved to QC-INT-R3/ledger_hold.
+  r002 rows (rt 10c10aeb1320, batch limit reset):
+  - SU_C p9 and SU_C clr
+  - START-SETTLE
+  - repoint without su_c
+  - TAPS (7 types)
+  - LEG405 row 3 (stm_v3)
+  - STA lane_mono, STA clr and STA street
+  - drop list
+  DEFERRED to the next cut: fwdclk repoint of the 2 su_c types. Owners QC-R3-VISUAL + QC-R3-SULANE, ETA 11-28 09:00. Needs either landremap accepting row-new taps or a repoint computed after p9.
+  Tool gaps for COORD:
+  - row_compose should pass intended_drops into the gate's PRE.
+  - row_key does not hash sibling input files.
