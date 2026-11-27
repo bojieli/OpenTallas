@@ -1260,6 +1260,37 @@ DIE_LEVEL_RE = re.compile(r"(?i)(plan_gate_pre\.py|bind_phases|die_plan/bind\.py
                           r"(?:^|[/\s])bind[A-Za-z0-9_]*\.sh\b)")
 
 
+def pipe_lint(cmd, d=None):
+    """P-FALSE-GREEN (FLEET-OPS-R5): ot-run returns the exit status of the command's own shell, so a command whose last
+    pipeline stage is tee/tail/cat/head without pipefail/PIPESTATUS, or whose last command is `echo ...` after `;`, exits 0 although the
+    real step failed (unit oth-ubuntu-3140261-1795812984: gen.sh ended `echo GEN_RC=$?`, ot-run reported exit 0).  Returns a list of
+    reasons; main posts WARN lines, and OT_RUN_STRICT_PIPE=1 refuses (exit 2)."""
+    text = " ".join(cmd)
+    if re.search(r"pipefail|PIPESTATUS", text):
+        return []
+    why = []
+    if re.search(r"(?<![|])\|(?![|])\s*(tee|tail|cat|head)\b", text):
+        why.append("a pipe into tee/tail/cat/head without `set -o pipefail` or PIPESTATUS hides the status of the left side")
+    if re.search(r";\s*(echo|printf|true)\b[^;|&]*$", text) and not re.search(r"\bexit\b", text.rsplit(";", 1)[-1]):
+        why.append("the command ends with `; echo ...` / `; true`, so its exit status is the echo's (0)")
+    # `bash FILE` / `sh FILE`: the script is read when it is visible to the client
+    if len(cmd) >= 2 and os.path.basename(cmd[0]) in ("bash", "sh") and not cmd[1].startswith("-"):
+        for base in (d, os.getcwd()):
+            f = os.path.join(base or "", cmd[1])
+            try:
+                with open(f) as fh:
+                    body = fh.read()
+            except OSError:
+                continue
+            if re.search(r"pipefail|PIPESTATUS|^\s*set\s+-\w*e", body, re.M):
+                break
+            lines = [x.strip() for x in body.splitlines() if x.strip() and not x.strip().startswith("#")]
+            if lines and re.match(r"(echo|printf|true)\b", lines[-1]) and "exit" not in lines[-1]:
+                why.append(f"script {cmd[1]} ends with `{lines[-1][:40]}` and has no set -e / pipefail: its exit status is 0 whatever failed before")
+            break
+    return why
+
+
 def die_like(cmd, d):
     """die-level by name: die STA / GEN / GRT / chain scripts (owner 2026-10-18: die jobs go ahead of tile gates), and the DIECLASS_1125
     die-level tools (compose, PRE / gate, bind, bind-check, R8, census) by command"""
@@ -3353,6 +3384,13 @@ def main():
                 CC.check_leases(copy_job, _owner, ot_lease.leases())
             except (ImportError, CC.Refused) as e:
                 not_run(f"COPY CLASS REFUSED: {e}")
+    if cmd and not pick:
+        for w in pipe_lint(cmd, d):
+            print(f"ot-run: WARN P-FALSE-GREEN: {w}; a failure inside may be reported as exit 0 "
+                  "(use set -o pipefail / `|| exit $?`; OT_RUN_STRICT_PIPE=1 refuses)", file=sys.stderr)
+            if os.environ.get("OT_RUN_STRICT_PIPE") == "1":
+                print("ot-run: NOT RUN: OT_RUN_STRICT_PIPE=1", file=sys.stderr)
+                sys.exit(2)
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
