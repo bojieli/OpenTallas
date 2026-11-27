@@ -4,6 +4,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import row_normalize as RN  # noqa: E402
 
@@ -191,7 +193,8 @@ def test_retap_reuses_only_the_prepared_base_tree(monkeypatch):
     assert calls == [(True, "/base/plan.json", "missing"), (False, "/candidate/plan.json", "old")]
 
 
-def test_retap_repicks_after_protected_landing_refs_are_restored(monkeypatch):
+@pytest.mark.parametrize("published_elsewhere", [False, True])
+def test_retap_repicks_after_protected_landing_refs_are_restored(monkeypatch, published_elsewhere):
     import retap
 
     clock = {
@@ -204,6 +207,9 @@ def test_retap_repicks_after_protected_landing_refs_are_restored(monkeypatch):
         ]}}},
         "landing_raw_branches": [{"consumers": ["writer:ft_o:0"]}],
     }
+    if published_elsewhere:
+        clock["landing_contract"] = {"collector_tree": {"relays": [{"q": "other_owner"}]}}
+        monkeypatch.setattr(retap, "_plan_tree", lambda raw, path, names=(): lambda tn: {"relays": []})
     base = {"partition_types": {"ft": {"clock": clock}}}
     candidate = copy.deepcopy(base)
     protect = {"ft": RN._protect(candidate["partition_types"]["ft"])}
@@ -221,6 +227,8 @@ def test_retap_repicks_after_protected_landing_refs_are_restored(monkeypatch):
     assert [stage["raw_reset"] for stage in reader] == ["rr_t0", "rst_rl_5"]
     assert writer[0]["raw_reset"] == "rr_t0"
     assert original[0]["raw_reset"] == "rr_t2"
+    if published_elsewhere:
+        assert actual["landing_contract"] == clock["landing_contract"]
 
 
 def _lr_plan(flag=None):
