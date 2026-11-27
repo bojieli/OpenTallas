@@ -20033,3 +20033,26 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   (1) The sub-lane brief now has a launch rule. Script and inputs must exist on the --hosts host. Inputs outside --dir go in with --stage. Hosts are pinned to where the tree already is. An ls dry-check comes before every submit, and a NOT-RUN job is never resubmitted unchanged.
   (2) Both lanes were told directly.
   (3) The 21:00 chain gets the same treatment. COMPOSE is adding a preflight to compose12/final.sh that lists every ROWS.json input and gate input on epyc12 and refuses if any is missing. All row inputs are being pre-staged and sha-verified under epyc12 kv-int-r2/c2100/rows_in/ before 18:00.
+- 2026-11-27 15:02 PST RESULT [KV-INT-R3 -> COORD; cc CLASS-TRACK-R3] Two class rows are ready for the 18:00 compose.
+  (1) C-RELAY-SEAT-KEYMISS, sys_c re-key, row 9f871e948104, base core6 2239c8632684.
+  Cause: the SYS_C row wrote 13 sys_c relay_sites keys with a "u_bound." prefix. The bound sys_c RTL instantiates u_d2d_kv directly, and the type's other 15 keys use the unprefixed spelling and seat. "u_bound." appears in no other type.
+  Fix: re-key all 13 by removing the prefix. No keys are dropped and no names collide. This is 26 relay_sites keys on kv3_sys_c only.
+  Gates on epyc12:
+  - G0 0.
+  - Scoped strict bind 0, with RTL identical to core6t's bind.
+  - LATCHECK 2746/2746.
+  - Seat census 0 of 66 types with dead keys.
+  - PRE PASS with 0 findings on its own bind.
+  P-FALSE-GREEN: the whole-die static seat census cannot see this case, because the sys_c bind RTL has no file of its own. Only gen_lint against the generated kit RTL found it.
+  sys_c stays HELD from kit volume until the first sys_c kit on the applied form passes gen_lint seat_miss.
+  (2) C-TAP-REACH, row on core5, 52 types.
+  Tree 1 is plan af9d51a9a122. Its gates on epyc12 are G0 0, fresh elab 0, 48-thread strict bind 0 on 93/93, PRE 0, and LATCHECK 2746/2746 with no cycle change. Tree 2, plan 2de709a23794 with a second pass, is finishing PRE and LAT.
+  Cause:
+  - io_ft: the nearest-tap regions are too wide, at 332.7/332.8 um, which matches the CTS 333.
+  - sys_SD_v1: statically at most 249 um. The kit's pair-affinity and cap passes stretch it to 375/369 because clock.tap_span_um is unset.
+  Fix:
+  - io_ft gets +2 taps (333 -> 272 um).
+  - tap_span_um=300 on all 91 non-hard clock types. This is kit-side and unproven at CTS; io_ft and sys_SD_v1 CTS probes follow after the apply.
+  - Stock tap_reach_fix on the 52 types with explicit taps.
+  DEFERRED 11-28 09:00: phy and phy_v1 (hard wrappers, TAPREACH 404.9 um), the density types (no span stage) and hgi_v6 (new taps would move reset relays).
+  Export relay FIRM: no stock key exists, because landing_contract.py:687 hardcodes PLACED. An opt-in tool patch, export_relay_status=FIRM, is going to main with tests, and row candB2 (2ae79858687e) gets gated after it. It joins 21:00 only if it is pushed and green by 17:30; otherwise it is DEFERRED. The 27 nm snap comes from a half-site offset (centre sites with even-width relays). The leg basis needs no fix: the plan already uses clk site 1819.808, which is the built port.
