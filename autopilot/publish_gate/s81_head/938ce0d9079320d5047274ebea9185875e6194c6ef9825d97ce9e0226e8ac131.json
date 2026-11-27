@@ -1,87 +1,25 @@
 {
- "advisory": [],
- "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+ "advisory": [
+  "gate"
+ ],
  "checks": {
-  "bound_params": {
-   "advisory": true,
-   "findings": [],
-   "n": 0,
-   "verdict": "PASS"
-  },
-  "contained": {
-   "findings": [],
-   "verdict": "PASS"
-  },
-  "dry_gen": {
-   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/938ce0d90793/hd_turn_a",
-   "gen_host": "epyc7",
-   "item": "hd_turn_a",
-   "kind": "type",
-   "origin_capture_error": "spec changed before origin capture",
-   "preflight_fail_advisory": null,
-   "published_gen_import_declined": "[Errno 2] No such file or directory: '/home/ubuntu/.local/state/publish-gate/s81_head/938ce0d90793/hd_turn_a/published_gen_origin.json'",
-   "rc": 0,
-   "result": "DRY-PASS",
-   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126",
-   "stage": "preflight",
-   "verdict": "PASS"
-  },
-  "foreign_tree": {
-   "advisory": true,
-   "findings": [],
-   "n": 0,
-   "verdict": "PASS"
-  },
-  "hashes": {
-   "findings": [],
-   "verdict": "PASS",
-   "views": 31
-  },
-  "pre_g0": {
-   "baseline": {
-    "inherited": false,
-    "verdict": "PASS"
-   },
-   "g0_rc": 0,
-   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-nji7q8u9/g0_report.json",
-   "pre_rc": 0,
-   "reset_solved": false,
-   "tail": "PRE: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n\nG0: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
-   "tools": "rt",
-   "tools_dir": "/srv/opentallas-scratch2/claude/rt/ec0da8a29ef3/tools/die_plan",
-   "verdict": "PASS"
-  },
-  "schema": {
-   "rc": 0,
-   "tail": " (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t48 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t49 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t54 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t55 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t56 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
-   "verdict": "PASS"
+  "gate": {
+   "verdict": "FAIL",
+   "why": "AssertionError: duplicate approved hold id"
   }
  },
  "die": "s81_head",
- "foreign_tree_scan": {
-  "asbuilts": [],
-  "bind_out": null,
-  "files": [
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_sidecar.json"
-  ]
- },
- "gate_s": 253.4,
  "hosts": [
   "epyc7",
   "epyc8",
   "intel2",
   "intel1"
  ],
- "item": "hd_turn_a",
  "manifest_hash": "938ce0d9079320d5047274ebea9185875e6194c6ef9825d97ce9e0226e8ac131",
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/results/head_native_release_nf15f_r18w12_1126/native_release_receipt.json",
  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_plan.json",
  "plan_sha256": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
- "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w11_int_r5_1126/source_plan.json",
- "rows_proofs": [],
  "schema": "opentallas.publish_gate.v1",
- "static_s": 89.8,
- "t": 1795736213.0268488,
+ "t": 1795755646.0768929,
  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126",
- "verdict": "PASS"
+ "verdict": "FAIL"
 }
