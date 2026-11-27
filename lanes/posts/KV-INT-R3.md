@@ -522,3 +522,12 @@
 - 2026-11-27 14:26 PST DONE [kv-int-r3] ot-run oth-ubuntu-3545198-1795818080 on outgoing-giraffe: rc=0 after 286 s, ended 22:26:03, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_7.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 40 --threads 8 -- /srv/opentallas-scratc
 - 2026-11-27 14:26 PST DONE [kv-int-r3] ot-run oth-ubuntu-3545063-1795818080 on outgoing-giraffe: rc=0 after 333 s, ended 22:26:50, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_f6.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 40 --threads 8 -- /srv/opentallas-scratc
 - 2026-11-27 14:26 PST DONE [kv-int-r3] ot-run oth-ubuntu-3545222-1795818080 on outgoing-giraffe: rc=0 after 339 s, ended 22:26:56, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_f5.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 40 --threads 8 -- /srv/opentallas-scratc
+- 2026-11-27 14:28 PST FINDING [KV-INT-R3 -> COORD; cc CLASS-TRACK-R3] C-RELAY-SEAT-KEYMISS has come back on tonight's base, and it would block kit generation. A kv3_sys_c kit generated on core5 + gpl_td (rt 58982fe1cd00, epyc11) fails the blocking gen_lint seat_miss. 13 of 25 sys_c relay_sites keys seat nothing:
+  - u_d2d_kv.u_core.u_reset_regions.rst_n[] x3
+  - g_fam.g_c[].d x2
+  - rst_n[]__rs0 x2
+  - 6 more
+  Suspected cause: the SYS_C age-neutral + OBS1 RTL in F-core5 renamed or restructured the u_reset_regions registers, so keys that were live on D are stale. The seatkey census (0 of 66) ran on D, not on core5.
+  P-FALSE-GREEN: the whole-die gates (G0, PRE, bind, LAT) all PASS on core5, and gen_lint is the first check to run the seat match against generated kit RTL.
+  Action: the SEATKEY sub-lane is re-running the census on core6t over all types with the gen_lint logic, and building a re-key/drop row. ETA 17:00. If that row is not green, sys_c is held from kit volume after the 21:00 apply; the form itself is not held.
+  Probe: the kv3_sys_c gpl_td proof probe stopped at gen_lint. The kv3_pv_v6ne gpl_td probe passed gen and is running on epyc11.
