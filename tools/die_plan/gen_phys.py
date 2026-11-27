@@ -7714,6 +7714,95 @@ def stage_hook_lines(cfg, kd, var, scripts, chain):
     return [f"export {var} = /work/{chain}"]
 
 
+def p5_xo_spread_hook(cfg, kd, tn, typ):
+    """Preserve the widened P5 XO aperture through ordinary detailed placement."""
+    clock = typ.get("clock") or {}
+    source = ((clock.get("landing_contract") or {}).get("bands") or {}).get("xo_i0") or {}
+    profile = source.get("placement_xo_spread")
+    if profile is None:
+        return []
+    if (
+        tn != "col_h9_r0_p5__t1__pvb22875c0"
+        or profile != {"rect_um": [1373, 970, 1426, 1227], "stretch": 1.35, "halo_um": 4.32, "seating_limit_um": 10.8}
+        or source.get("freg_rect_um") != [1427.76, 978.48, 1436.4, 1226.88]
+        or (source.get("dsel_data_scope") or {}).get("word_bits") != [1098]
+        or (source.get("dsel_data_scope") or {}).get("slots") != 8
+    ):
+        raise ValueError(f"{tn}: P5 XO aperture does not match the reviewed eight-slot source")
+
+    kd = Path(kd)
+    script = "p5_xo_spread.tcl"
+    entry = "p5_xo_spread_apply.tcl"
+    shutil.copyfile(Path(__file__).with_name(script), kd / script)
+    box = " ".join(map(str, profile["rect_um"]))
+    (kd / entry).write_text(
+        f"source /work/{script}\n"
+        "set p5_xo_keep_file [open /work/p5_xo_inner_anchors.tcl]\n"
+        "set p5_xo_keep [read $p5_xo_keep_file]\n"
+        "close $p5_xo_keep_file\n"
+        'if {[llength $p5_xo_keep] != 34} {error "OT_P5_XO_SPREAD expected 34 scoped landing anchors"}\n'
+        f"::ot_p5_xo_spread::run [ord::get_db_block] u_bound.u_cland_xo_i0 {{{box}}} "
+        f"{profile['stretch']} {profile['halo_um']} {profile['seating_limit_um']} $p5_xo_keep apply\n"
+        "unset p5_xo_keep p5_xo_keep_file\n"
+    )
+    return stage_hook_lines(cfg, kd, "PRE_DETAIL_PLACE_TCL", [entry], "p5_xo_spread_chain.tcl")
+
+def p5_xo_d4_row_shift_hook(cfg, kd, tn, typ):
+    """Apply an exact-row D4 XO placement repair after detailed placement."""
+    band = ((typ.get("clock") or {}).get("landing_contract") or {}).get("bands", {}).get("xo_i0", {})
+    profile = band.get("placement_xo_d4_row_shift")
+    if profile is None:
+        return []
+    cohort = ("pvc1b82625", "pvc6e5797f", "pvc93af856", "pveda1ecc9")
+    if (tn not in {"col_h9_r0_p5__t1__" + suffix for suffix in cohort}
+            or profile != {"rect_um": [1356.48, 972, 1438.56, 1226.88], "xmin_um": 1400, "shift_um": 10.8,
+                           "epoch_xy_um": [1397.412, 1024.38]}
+            or band.get("rect_um") != [1386.72, 978.276, 1425.6, 1218.24]
+            or band.get("width") != 1104 or band.get("ring_width") != 1152 or band.get("ring_place") != "ff"
+            or any(key in band for key in ("freg_rect_um", "rects_um", "dsel_cone", "dsel_data_scope"))):
+        raise ValueError(f"{tn}: does not match the reviewed four-slot XO row repair")
+    kd = Path(kd)
+    script = "p5_xo_spread.tcl"
+    entry = "p5_xo_d4_row_shift_apply.tcl"
+    shutil.copyfile(Path(__file__).with_name(script), kd / script)
+    rect = " ".join(map(str, profile["rect_um"]))
+    ex, ey = profile["epoch_xy_um"]
+    (kd / entry).write_text(
+        f"source /work/{script}\n"
+        f"::ot_p5_xo_d4::run [ord::get_db_block] {{{rect}}} "
+        f"{profile['xmin_um']} {profile['shift_um']} {{{ex} {ey}}} apply\n"
+    )
+    return stage_hook_lines(cfg, kd, "POST_DETAIL_PLACE_TCL", [entry], "p5_xo_d4_row_shift_chain.tcl")
+
+def p5_xo_d4_select_spread_hook(cfg, kd, tn, typ):
+    """Add the reviewed four-slot XO read-selector profile after detailed placement."""
+    contract = (typ.get("clock") or {}).get("landing_contract") or {}
+    band = contract.get("bands", {}).get("xo_i0", {})
+    key = "placement_xo_d4_select_spread"
+    profile = band.get(key)
+    mirrors = [item.get("band") or {} for item in contract.get("collector_local_sources", [])
+               if item.get("name") == "xo_i0"]
+    if profile is None and all(key not in mirror for mirror in mirrors):
+        return []
+    cohort = ("pvee6f8140", "pvf71da13a", "pvf731e6ec")
+    if (tn not in {"col_h9_r0_p5__t1__" + suffix for suffix in cohort}
+            or profile != {"profile": "four_slot_own_read_channel"} or mirrors != [band]
+            or band.get("rect_um") != [1386.72, 978.276, 1425.6, 1218.24]
+            or band.get("width") != 1104 or band.get("ring_width") != 1152 or band.get("ring_place") != "ff"
+            or any(field in band for field in ("freg_rect_um", "rects_um", "dsel_cone", "dsel_data_scope",
+                                                "placement_xo_d4_row_shift"))):
+        raise ValueError(f"{tn}: does not match the reviewed four-slot XO read-selector profile")
+    kd = Path(kd)
+    script = "p5_xo_spread.tcl"
+    entry = "p5_xo_d4_select_spread_apply.tcl"
+    shutil.copyfile(Path(__file__).with_name(script), kd / script)
+    (kd / entry).write_text(
+        f"source /work/{script}\n"
+        "::ot_p5_xo_d4::run_select_profile [ord::get_db_block] apply\n"
+    )
+    return stage_hook_lines(cfg, kd, "POST_DETAIL_PLACE_TCL", [entry], "p5_xo_d4_select_spread_chain.tcl")
+
+
 def post_dpl_hook_lines(cfg, kd, env=None, type_name=None):
     """Gen env OT_POST_DPL_SCRIPTS = comma list of kit-local script names (already staged in the kit) -> POST_DETAIL_PLACE_TCL chain.
     Unset/empty = no-op."""
@@ -8755,7 +8844,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     install_head_post_gpl_reseat(cfg, kd, P.name, tn, P.raw)
+    cfg += p5_xo_spread_hook(cfg, kd, tn, P.types[tn])
     cfg += post_dpl_hook_lines(cfg, kd, type_name=tn)
+    cfg += p5_xo_d4_row_shift_hook(cfg, kd, tn, P.types[tn])
+    cfg += p5_xo_d4_select_spread_hook(cfg, kd, tn, P.types[tn])
     reviewed_station_recipe = os.environ.get("OT_REVIEWED_STATION_PREPARE")
     if reviewed_station_recipe and os.environ.get("OT_S81_P2_CROP_REVIEW_GUIDES") == "1":
         import p2_review_guides

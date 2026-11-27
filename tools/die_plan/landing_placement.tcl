@@ -1207,7 +1207,58 @@ proc cland_dsel_data_wch {prefix names observed} {
  if {$observed <= 0 || $observed > $width} { error "OT_CLAND dsel_data_launch $prefix contradicts declared packed width $width" }
  return $width
 }
-proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
+proc cland_dsel_scope_bit {key rev} {
+ if {![regexp {^[^|]+\|([0-9]+)\|} $key -> bit]} { return -1 }
+ return [cland_kbit $bit $rev]
+}
+proc cland_dsel_scope_keys {ykeys bits rev} {
+ set targets [dict create]
+ set chunks [dict create]
+ dict for {y key} $ykeys {
+  set bit [cland_dsel_scope_bit $key $rev]
+  if {$bit ni $bits} continue
+  if {[dict exists $targets $bit]} { error "OT_CLAND dsel_data_scope duplicate read word $bit" }
+  dict set targets $bit $y
+  dict set chunks [file dirname $y] 1
+ }
+ if {[dict size $targets] != [llength $bits]} {
+  error "OT_CLAND dsel_data_scope missing keyed read word from $bits"
+ }
+ set ownership_keys [dict create]
+ dict for {y key} $ykeys {
+  if {[dict exists $chunks [file dirname $y]]} { dict set ownership_keys $y $key }
+ }
+ return [list $targets $ownership_keys]
+}
+proc cland_dsel_scope_writer {ff} {
+ foreach t [$ff getITerms] {
+  if {![$t isInputSignal] || [[$t getMTerm] getName] ne "D"} continue
+  set n [$t getNet]
+  if {$n eq "NULL"} continue
+  set sinks {}
+  set drivers {}
+  foreach snk [$n getITerms] {
+   if {[$snk isInputSignal]} { lappend sinks $snk }
+   if {[$snk isOutputSignal]} { lappend drivers [$snk getInst] }
+  }
+  if {$sinks ne [list $t] || [llength $drivers] != 1 || [llength [$n getBTerms]]} continue
+  set inst [lindex $drivers 0]
+  set master [$inst getMaster]
+  if {[file dirname [$inst getName]] eq [file dirname [$ff getName]]
+      && ![$master isBlock] && ![regexp {DFF|DHL|DLL|SDF} [$master getName]]} {
+   return $inst
+  }
+ }
+ error "OT_CLAND dsel_data_scope [$ff getName]: missing exclusive local write D gate"
+}
+proc cland_dsel_data_cells {names fanout ykeys byname ffs {scope {}} {rev 0}} {
+ lassign $scope bits slots
+ set targets {}
+ set reads_by_bit {}
+ set launch_by_bit {}
+ if {[llength $bits]} {
+  lassign [cland_dsel_scope_keys $ykeys $bits $rev] targets ykeys
+ }
  set owners [dict create]
  dict for {y key} $ykeys {
   foreach e [cland_dsel_cone_assign $names $fanout [dict create $y $key]] {
@@ -1219,6 +1270,11 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
  dict for {name hits} $owners {
   if {[llength $hits] != 1} continue
   lassign [lindex $hits 0] _ key y
+  if {[llength $bits]} {
+   set bit [cland_dsel_scope_bit [dict get $ykeys $y] $rev]
+   if {![dict exists $targets $bit]} continue
+   dict incr reads_by_bit $bit
+  }
   dict set reads $name $y
   lappend result [list $key [dict get $byname $name] $y]
  }
@@ -1230,6 +1286,10 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
   if {![regexp {^(.*[/.](s_d\\?\[[0-9]+\\?\]\\?\[[0-9]+\\?\]|dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]))\$} $ffname -> data]} continue
   set storage_key [split $key |]
   if {[llength $storage_key] != 4} continue
+  if {[llength $bits]} {
+   set bit [cland_dsel_scope_bit $key $rev]
+   if {![dict exists $targets $bit]} continue
+  }
   set word_key [lrange $storage_key 0 1]
   set choice {}
   foreach it [$ff getITerms] {
@@ -1263,14 +1323,29 @@ proc cland_dsel_data_cells {names fanout ykeys byname ffs} {
   set iname [$inv getName]
   if {[dict exists $used $iname]} { error "OT_CLAND dsel_data_launch shared inverter $iname" }
   dict set used $iname 1
+  if {[llength $bits]} {
+   dict incr launch_by_bit $bit
+   set write [cland_dsel_scope_writer $ff]
+   set wname [$write getName]
+   if {[dict exists $used $wname] || [dict exists $reads $wname]} {
+    error "OT_CLAND dsel_data_scope shared writer $wname"
+   }
+   dict set used $wname 1
+   lappend result [list $key $write $ffname]
+  }
   lappend result [list $key $inv $ffname]
   incr launches
  }
  if {!$launches} { error "OT_CLAND dsel_data_launch found no canonical mapped storage launch inverter" }
+ foreach bit $bits {
+  if {![dict exists $reads_by_bit $bit] || ![dict exists $launch_by_bit $bit] || [dict get $launch_by_bit $bit] != $slots} {
+   error "OT_CLAND dsel_data_scope word $bit: expected a unique cone and $slots canonical launch slots"
+  }
+ }
  puts "OT_CLAND dsel_data_launch: [dict size $reads] uniquely owned read cells and $launches storage launch inverters"
  return [lsort -dictionary -index 0 $result]
 }
-proc cland_dsel_cone_cells {combinsts ffs {data_launch 0}} {
+proc cland_dsel_cone_cells {combinsts ffs {data_launch 0} {scope {}} {rev 0}} {
  set ykeys [dict create]
  foreach pr $ffs {
   set k [lindex $pr 0]
@@ -1292,7 +1367,7 @@ proc cland_dsel_cone_cells {combinsts ffs {data_launch 0}} {
   }
   dict set fanout $nm $fo
  }
- if {$data_launch} { return [cland_dsel_data_cells $names $fanout $ykeys $byname $ffs] }
+ if {$data_launch} { return [cland_dsel_data_cells $names $fanout $ykeys $byname $ffs $scope $rev] }
  return [lmap e [cland_dsel_cone_assign $names $fanout $ykeys] { list [lindex $e 1] [dict get $byname [lindex $e 0]] [lindex $e 2] }]
 }
 # C5 second half: the storage flops that drive the chunk wire dch[c].sd_c[k] into the u_dsel cone are DFF*QNx1 cells; the
@@ -1375,18 +1450,63 @@ proc cland_place_dsel_near {cone rects tag {radii {8.0 14.0 20.0 28.0}}} {
   if {$saved} { set ::cland_pinslot_fit $old } else { unset -nocomplain ::cland_pinslot_fit }
  }
 }
+proc cland_dsel_word_seat {prefix tag ordered scope rev} {
+ lassign $scope bits slots rects
+ set members {}
+ set stores {}
+ set reads {}
+ set remaining {}
+ foreach item $ordered {
+  lassign $item key i
+  set bit [cland_dsel_scope_bit $key $rev]
+  set n [$i getName]
+  if {$bit ni $bits} {
+   lappend remaining $item
+  } elseif {[regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]\$} $n]} {
+   dict lappend members $bit $i
+   dict incr stores $bit
+  } elseif {[regexp {[/.]dch\\?\[[0-9]+\\?\]\.u_dsel/y\\?\[[0-9]+\\?\]\$} $n]} {
+   dict lappend members $bit $i
+   dict incr reads $bit
+  } else {
+   lappend remaining $item
+  }
+ }
+ foreach bit $bits {
+  if {![dict exists $stores $bit] || [dict get $stores $bit] != $slots
+      || ![dict exists $reads $bit] || [dict get $reads $bit] != 1} {
+   error "OT_CLAND dsel_data_scope $prefix word $bit: expected $slots storage FFs and one read FF"
+  }
+ }
+ set saved [info exists ::cland_pinslot_fit]
+ if {$saved} { set old $::cland_pinslot_fit }
+ set ::cland_pinslot_fit 1
+ try {
+  foreach bit $bits {
+   foreach i [dict get $members $bit] { cland_put $i [dict get $rects $bit] $tag 0.4 0 }
+  }
+ } finally {
+  if {$saved} { set ::cland_pinslot_fit $old } else { unset ::cland_pinslot_fit }
+ }
+ puts "OT_CLAND dsel_data_scope $prefix: locally seated storage and read words $bits"
+ return $remaining
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0;set combinsts {};set nsized 0
  set dsel_enabled [expr {[info exists ::cland_dsel_cone] && [lsearch -exact $::cland_dsel_cone $prefix] >= 0}]
  set dsel_data_launch [expr {[info exists ::cland_dsel_data_launch] && [lsearch -exact $::cland_dsel_data_launch $prefix] >= 0}]
+ set dsel_scope {}
+ if {[info exists ::cland_dsel_word_scope] && [dict exists $::cland_dsel_word_scope $prefix]} {
+  set dsel_scope [dict get $::cland_dsel_word_scope $prefix]
+ }
  foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb; lappend combinsts $i; continue }
-  if {$dsel_enabled && [regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]} $nm] && [cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }
+  if {$dsel_enabled && ![llength $dsel_scope] && [regexp {[/.]dch\\?\[[0-9]+\\?\]\.sd_c\\?\[[0-9]+\\?\]} $nm] && [cland_sdc_size $i]} { incr nsized; set m [$i getMaster] }
   lappend ffs [list $nm $i]
   set needw [$m getWidth]
   if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
@@ -1459,7 +1579,7 @@ proc cland_place_ff {prefix rect tag} {
   }
  }
  if {$dsel_enabled} {
-  set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs $dsel_data_launch] : {}}]
+  set cone [expr {$wch > 0 ? [cland_dsel_cone_cells $combinsts $ffs $dsel_data_launch $dsel_scope $rev] : {}}]
   if {![llength $cone]} { error "OT_CLAND dsel_cone requested for $prefix but no u_dsel AND-OR cone cell reaches a keyed y flop (chunk width $wch)" }
   foreach pr $cone {
    set m [[lindex $pr 1] getMaster]
@@ -1476,6 +1596,28 @@ proc cland_place_ff {prefix rect tag} {
  set sp [expr {max(1.0,$cland_ff_fill*$barea*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
+ if {[llength $dsel_scope]} {
+  set ordered [cland_dsel_word_seat $prefix $tag $ordered $dsel_scope $rev]
+  # Reserve the selected cone sites before the ordinary pin-slot fill can
+  # consume the only local rows adjacent to the selected word.
+  if {![info exists ::cland_fill_dry]} {
+   cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag {2.0 4.0 8.0}}
+   lassign [cland_dsel_cone_reach $cone 16.0] rn rmax rbad
+   puts "OT_CLAND dsel_data_scope $prefix: $rn cone cells max [format %.2f $rmax] um from their anchor"
+   if {$rbad || $rn != [llength $cone]} {
+    error "OT_CLAND dsel_data_scope $prefix: $rbad cone cells beyond 16 um or missing anchors"
+   }
+   if {[info exists ::cland_export_dsel_anchors] && $prefix eq "u_cland_xo_i0"} {
+    set keep {}
+    foreach pr $cone {
+     lappend keep [[lindex $pr 1] getName] [lindex $pr 2]
+    }
+    set out [open /work/p5_xo_inner_anchors.tcl w]
+    puts $out [lsort -unique $keep]
+    close $out
+   }
+  }
+ }
  if {[llength [info commands cland_group_prepare]]} { cland_group_prepare $ordered }
  set pinx {}; set profile {}
  if {[info exists ::cland_pinslot_profiles] && [dict exists $::cland_pinslot_profiles $prefix]} {
@@ -1546,7 +1688,7 @@ proc cland_place_ff {prefix rect tag} {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
  set cland_cursor {};set cland_col_cursor {}
- if {![info exists ::cland_fill_dry]} { if {[info exists cone] && [llength $cone]} {
+ if {![info exists ::cland_fill_dry]} { if {[info exists cone] && [llength $cone] && ![llength $dsel_scope]} {
   if {$dsel_data_launch} {
    cland_avoid_rings $prefix {cland_place_dsel_near $cone $brects $tag {2.0 4.0 8.0}}
    lassign [cland_dsel_cone_reach $cone 16.0] rn rmax rbad
