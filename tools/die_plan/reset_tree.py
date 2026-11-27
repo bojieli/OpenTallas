@@ -1875,7 +1875,7 @@ def _column_sites(P, tn, cs):
 
 def boundary_roles(P):
     """Opt-in named output sites and exact instance roles, checked by the fresh wavefront."""
-    spec = P.reset.get("boundary_roles") or {}
+    spec = (getattr(P, "reset", None) or {}).get("boundary_roles") or {}
     return spec.get("outputs", {}), spec.get("parents", {})
 
 
