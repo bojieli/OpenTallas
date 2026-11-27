@@ -3104,7 +3104,7 @@ def smell_tsv_append(recs, path=None):
 # P-DEAD-LANE-ROUTING (FABLE-FLOW-1247, COORD 11-27): timer posts must reach LIVE lanes.  Dead lane -> its live successor.
 DEAD_TO_LIVE = {"FP-CONVERGE-QC": "QC-INT-R3", "FP-CONVERGE-KV": "KV-INT-R3", "FP-CONVERGE-S81": "S81-INT-R3", "FP-CONVERGE-HEAD": "HEAD-INT-R3",
                 "KV-ALLFIX": "KV-INT-R3", "QC-ALLFIX": "QC-INT-R3", "S81-ALLFIX-INT": "S81-INT-R3", "HEAD-ALLFIX": "HEAD-INT-R3",
-                "S81-DIE-R3": "S81-INT-R3"}
+                "S81-DIE-R3": "S81-INT-R3", "KV-OWN-PV-R2": "KV-INT-R3", "KV-OWN-RSTREACH": "KV-INT-R3"}
 INT_R3 = {"QC": "QC-INT-R3", "KV": "KV-INT-R3", "S81": "S81-INT-R3", "HEAD": "HEAD-INT-R3"}
 
 

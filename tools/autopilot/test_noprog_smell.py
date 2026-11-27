@@ -548,3 +548,9 @@ def test_smell_recipients_route_to_live_successors():
     assert w.smell_recipients("QC", "SOME-LIVE-LANE") == "QC-INT-R3, SOME-LIVE-LANE"
     assert w.smell_recipients("XX", "") == "COORD"
     assert "FP-CONVERGE" not in w.smell_recipients("KV", "FP-CONVERGE-KV")
+
+
+def test_kv_own_lanes_route_to_kv_int_r3():
+    import noprog_watchdog as w
+    assert w.smell_recipients("KV", "KV-OWN-PV-R2") == "KV-INT-R3"
+    assert w.smell_recipients("KV", "KV-OWN-RSTREACH") == "KV-INT-R3"
