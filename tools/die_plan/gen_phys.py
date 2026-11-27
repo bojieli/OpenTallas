@@ -1432,6 +1432,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
 
 
 PORT_BUF_AT_PIN_LINE = "\n# PORT-BUF-AT-PIN: output-port drivers onto their pin face, then DPL\nsource /work/port_buf_at_pin.tcl\n"
+REPAIR_MACRO_CLEAR_LINE = "\n# REPAIR-MACRO-CLEAR (C-REPAIR-BUF-OVER-MACRO): repair repeaters over hard macros / blockages onto the nearest exit, then DPL\nsource /work/repair_macro_clear.tcl\n"
 
 
 CORE_INPUT_PLACE_ANCHOR = "\n# QC-NK-HOLD A+P: core-input lockup latches + pipe registers FIRM at their hard-core pin\nsource /work/core_input_anchor.tcl\n"
@@ -8979,6 +8980,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                         kd / "port_buf_at_pin.tcl")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write(PORT_BUF_AT_PIN_LINE)
+    if t.get("repair_macro_clear", False) is True:
+        # C-REPAIR-BUF-OVER-MACRO (KV-INT-R3/FIRM 11-27): repair_design repeaters inside hard macros / hard placement blockages go to the
+        # cheapest exit of that rectangle right before DPL (placement only, 0 cycles, no cells added or edited).  KV pc / pc_v1 / pc_v3: DPL
+        # max displacement 225-258 um from those repeaters.  OPT-IN per plan type ("repair_macro_clear": true); absent = kit byte-identical.
+        shutil.copyfile(Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "repair_macro_clear.tcl",
+                        kd / "repair_macro_clear.tcl")
+        with (kd / "face_flops_release.tcl").open("a") as f:
+            f.write(REPAIR_MACRO_CLEAR_LINE)
     islands = die_islands_tcl(P, tn)
     if islands:
         (kd / "die_islands.tcl").write_text(islands)

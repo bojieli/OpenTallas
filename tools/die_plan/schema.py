@@ -490,6 +490,8 @@ SCHEMA = {
                     # S81-SVCRS-3 11-10 (COORD): gen_phys opt-in -- output-port BUF/INV/HB drivers placed on their pin
                     # face before DPL (physical/common_flow/port_buf_at_pin.tcl); absent = off
                     "port_buf_at_pin": {"type": "boolean"},
+                    # C-REPAIR-BUF-OVER-MACRO (KV-INT-R3/FIRM 11-27) opt-in: repair repeaters over hard macros / blockages move to the nearest exit before DPL
+                    "repair_macro_clear": {"type": "boolean"},
                     # estimated std cells of one instance (synth / census); COORD 10-23 CORE-KS: a type over
                     # CORE_CELLS_MAX (400k) must list hard_cores[] (G0 ERROR).  Else the sum of contents[].cells.
                     "cells": {"type": "integer", "minimum": 0},

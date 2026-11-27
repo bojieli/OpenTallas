@@ -1311,6 +1311,9 @@
      "port_buf_at_pin": {
       "type": "boolean"
      },
+     "repair_macro_clear": {
+      "type": "boolean"
+     },
      "cells": {
       "type": "integer",
       "minimum": 0
