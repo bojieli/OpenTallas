@@ -843,6 +843,11 @@ def cmd_submit(a):
             for path in review.REVIEW_FILES:
                 source = HERE.parent / path
                 (tools / source.name).write_bytes(source.read_bytes())
+            gtools = harness / "geom_tools"
+            gtools.mkdir(exist_ok=True)
+            for path in review.GEOM_FILES:
+                source = HERE.parent / path
+                (gtools / source.name).write_bytes(source.read_bytes())
             (harness / "placement_review.py").write_bytes((HERE / "placement_review.py").read_bytes())
             (harness / "route_canary.sh").write_text(route_script)
             (harness / "canary.py").write_bytes((run / "canary.py").read_bytes())
@@ -850,6 +855,8 @@ def cmd_submit(a):
             render = cmd_prefix + ["render", "--kit", kit, "--out", str(review.receipt_path(run).parent),
                 "--tools", str(tools), "--die", die, "--item", c["item"], "--src-commit", sha,
                 "--host", os.environ.get("OT_HUB_NAME", "intel2"), "--image", a.image]
+            geom = shlex.join(cmd_prefix + ["geom", "--kit", kit, "--out", str(review.receipt_path(run).parent / "geom"),
+                "--tools", str(gtools), "--die", die, "--item", c["item"], "--image", a.image, "--mem", str(kv["mem"])])
             reuse = ""
             if locality:
                 (harness / "placement_inputs.py").write_bytes((HERE / "placement_inputs.py").read_bytes())
@@ -857,7 +864,8 @@ def cmd_submit(a):
                 proposal = shlex.join([*input_script, "propose", str(run)])
                 reuse = f"if {proposal}; then echo CANARY_PLACEMENT_REUSE_PROPOSED; exit 0; fi\n"
             (harness / "place.sh").write_text(f"#!/bin/bash\n{reuse}{place}\nrc=$?\necho CANARY_PLACE_RC $rc\n"
-                                               f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{shlex.join(render)}\n")
+                                               f"[ \"$rc\" = 0 ] || exit \"$rc\"\n{shlex.join(render)} || exit $?\n"
+                                               f"{geom} || echo CANARY_AUTO_GEOM_UNAVAILABLE\n")
             if not a.dry:
                 (run / ".keep").write_text(review.keep_text(run))
         (run / "route.sh").write_text(route_script)
@@ -867,17 +875,20 @@ def cmd_submit(a):
         generate = f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh"
         physical = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} "
                     f"--dir {run}/gen --stage {run}/gen --stage {harness} -- bash ")
+        # hub side, after the worker returned: RUN/geom is where the automated review reads auto_geom.json (production layout)
+        publish = ("python3 -I " + shlex.quote(str(harness / "placement_review.py")) + " publish-geom --run " + shlex.quote(str(run))
+                   + " || true") if review else ""
         if pre_review:
             # The hub keeps policy and receipts. The exact worker stages its source, generates,
             # places, and returns the retained checkpoint without a hub compute fallback.
             place_cmd = shlex.join([sys.executable, "-I", str(src / "tools/flow_canary/reviewed_locality.py"),
                                    "place", str(run)])
             launch = (f"{place_cmd}; "
-                      f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
+                      f'rc=$?; {publish}; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
                       f'python3 -I {run}/canary.py check --run {run}; fi; exit "$rc"')
         elif review:
             launch = (f"{generate}; if [ -f {run}/GENERATED ]; then {physical}{harness}/place.sh; "
-                      f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
+                      f'rc=$?; {publish}; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
                       f"python3 -I {run}/canary.py check --run {run}; fi; fi")
         else:
             launch = (f"{generate}; if [ -f {run}/GENERATED ]; then mkdir -p {harness}; {prepare_runtime}"

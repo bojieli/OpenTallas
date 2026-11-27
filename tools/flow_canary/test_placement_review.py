@@ -121,6 +121,8 @@ def test_unattended_submit_defers_route_and_holds_core(tmp_path, monkeypatch):
     place = (run / "harness/place.sh").read_text()
     route = (run / "harness/route_canary.sh").read_text()
     assert " place 20 8" in place and " render " in place
+    assert place.index(" render ") < place.index(" geom ") and "CANARY_AUTO_GEOM_UNAVAILABLE" in place
+    assert (run / "harness/geom_tools/geom_check.sh").is_file() and (run / "harness/geom_tools/geom_rules.py").is_file()
     assert route.index("prepare-route") < route.index(" route 20 8")
     assert "export OT_RESUME=0" in route
     for script in (place, route):
@@ -257,3 +259,44 @@ def test_trigger_releases_only_superseded_rejected_aged_canary_lease(placement, 
     R.write_json(R.receipt_path(newer), dict(doc, src_commit="abcdef123456"))
     T.release_review_leases(run.parent)
     assert not lease.exists() and R.receipt_path(run).is_file()
+
+
+def fake_tools(tmp_path):
+    tools = tmp_path / "gt"
+    tools.mkdir()
+    (tools / "geom_check.sh").write_text(
+        "#!/bin/bash\ncp \"$1/check.json\" \"$1/seen.json\"\n"
+        "echo '{\"verdict\": \"PASS\", \"line\": \"AUTO-GEOM PASS cells_on_macros=ok(0)\", \"rules\": []}' > \"$1/auto_geom.json\"\n"
+        "echo '{\"groups\": []}' > \"$1/placed_scan.json\"\n")
+    return tools
+
+
+def test_geom_writes_auto_geom_for_exact_kit_and_publishes_to_run_geom(placement, tmp_path):
+    run, _, doc = placement
+    kit = Path(doc["kit"])
+    (kit / "budget.json").write_text('{"outline_um": [300, 200]}')
+    before = R.digest(doc["odb"])
+    out = R.receipt_path(run).parent / "geom"
+    a = SimpleNamespace(kit=str(kit), out=str(out), tools=str(fake_tools(tmp_path)), die="s81", item="t1", image="orfs", mem="16")
+    assert R.geom(a) == 0
+    check = json.loads((out / "check.json").read_text())
+    assert check["odb"] == doc["odb"] and check["grt"] is False and check["mem_gb"] == 16
+    assert check["rules_args"][:3] == ["--all-kits", "--outline", "300x200"] and "--grt-deferred" in check["rules_args"]
+    assert R.digest(doc["odb"]) == before
+    R.publish_geom(SimpleNamespace(run=str(run)))
+    published = json.loads((run / "geom/auto_geom.json").read_text())
+    assert published["line"].startswith("AUTO-GEOM PASS") and (run / "geom/placed_scan.json").is_file()
+    assert not (run / "geom/seen.json").exists()
+
+
+def test_geom_without_result_or_after_checkpoint_change_refuses(placement, tmp_path):
+    run, _, doc = placement
+    tools = fake_tools(tmp_path)
+    (tools / "geom_check.sh").write_text("#!/bin/bash\nexit 1\n")
+    out = R.receipt_path(run).parent / "geom"
+    a = SimpleNamespace(kit=doc["kit"], out=str(out), tools=str(tools), die="s81", item="t1", image="orfs", mem="8")
+    with pytest.raises(ValueError, match="no auto_geom.json"):
+        R.geom(a)
+    with pytest.raises(ValueError, match="no returned"):
+        R.publish_geom(SimpleNamespace(run=str(run)))
+    assert not (run / "geom").exists()

@@ -23,6 +23,10 @@ REVIEW_FILES = (
     "autopilot/render_review.sh", "autopilot/render_review.py",
     "ref_tile/layout_dump.tcl", "ref_tile/layout_png.py", "ref_tile/layout_review.tcl",
 )
+GEOM_FILES = tuple("autopilot/" + n for n in (
+    "geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py",
+    "geom_corridor.py"))
+GEOM_PUBLISH = ("auto_geom.json", "placed_scan.json", "geom.tsv", "check.json")
 HEAD = re.compile(r"GEOM VERDICT \[([^\]]*)\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b")
 STAMP = re.compile(r"^-\s+(\d{4}-\d\d-\d\d \d\d:\d\d)")
 KIT = re.compile(r"(?:^|\s)kit=([^\s`]+)")
@@ -95,6 +99,69 @@ def render(a):
     write_json(out / "placed.json", doc)
     print(f"CANARY WAIT-VISUAL {a.die}/{a.item} attempt_1 kit={doc['kit_location']} "
           f"odb_sha256={placed_sha} views={out}/{','.join(IMAGES)}")
+
+
+def kit_outline(kit):
+    """'WxH' (um) from the kit's budget.json / freeze.json outline_um (as kit_wave.outline_cmd), '' when absent."""
+    for name in ("budget.json", "freeze.json"):
+        try:
+            o = json.loads((Path(kit) / name).read_text()).get("outline_um")
+        except (OSError, ValueError, AttributeError):
+            continue
+        if o:
+            return f"{o[0]}x{o[1]}"
+    return ""
+
+
+def geom_rules_args(kit, die, item):
+    """Same AUTO-GEOM rule arguments production uses at 3_place with the GRT probe deferred (kit_wave.placed_geom_check)."""
+    rules = ["--all-kits"]
+    outline = kit_outline(kit)
+    if re.fullmatch(r"[\d.]+x[\d.]+", outline):
+        rules += ["--outline", outline]
+    return rules + ["--title", f"{item} CANARY {die} 3_place", "--grt-deferred"]
+
+
+def geom(a):
+    """AUTO-GEOM of the exact placed checkpoint, read-only on the kit: writes auto_geom.json (+ placed_scan.json, geom.tsv) under
+    OUT through the production geom_check.sh (no GRT probe: native GRT follows the reviewed placement)."""
+    kit, out = Path(a.kit), Path(a.out)
+    odb = checkpoint(kit)
+    placed_sha = digest(odb)
+    out.mkdir(parents=True, exist_ok=True)
+    for name in GEOM_FILES:
+        src = Path(a.tools) / Path(name).name
+        if src.is_file():
+            (out / src.name).write_bytes(src.read_bytes())
+    if not (out / "geom_check.sh").is_file():
+        raise ValueError("geom_check.sh missing from the geom tools")
+    for name in GEOM_PUBLISH:
+        (out / name).unlink(missing_ok=True)
+    write_json(out / "check.json", {"id": ("canary-" + kit.name).replace("_", "-")[:60], "odb": str(odb), "image": a.image,
+                                    "mem_gb": int(a.mem), "grt": False, "rules_args": geom_rules_args(kit, a.die, a.item)})
+    result = subprocess.run(["bash", str(out / "geom_check.sh"), str(out)], check=False)
+    if digest(checkpoint(kit)) != placed_sha:
+        raise ValueError("placement checkpoint changed during AUTO-GEOM")
+    if not (out / "auto_geom.json").is_file():
+        raise ValueError(f"AUTO-GEOM produced no auto_geom.json (rc {result.returncode})")
+    print(f"CANARY AUTO-GEOM {a.die}/{a.item} rc={result.returncode} {out}/auto_geom.json")
+    return result.returncode
+
+
+def publish_geom(a):
+    """Hub side: copy the returned AUTO-GEOM files to RUN/geom, where auto_visual_review.remote_info reads them (production layout)."""
+    run = Path(a.run)
+    src = run / "gen" / "placement_review" / "geom"
+    names = [n for n in GEOM_PUBLISH if (src / n).is_file()]
+    if "auto_geom.json" not in names:
+        raise ValueError("no returned auto_geom.json to publish")
+    dest = run / "geom"
+    dest.mkdir(exist_ok=True)
+    for name in names:
+        temp = dest / f".{name}.tmp"
+        temp.write_bytes((src / name).read_bytes())
+        temp.replace(dest / name)
+    print(f"CANARY GEOM PUBLISHED {dest}/auto_geom.json")
 
 
 def line_verdict(tail):
@@ -231,16 +298,21 @@ def main():
     for name in ("kit", "out", "tools", "die", "item", "src-commit", "host", "image"):
         placement.add_argument(f"--{name}", required=True)
     placement.add_argument("--input-certificate")
+    g = sub.add_parser("geom")
+    for name in ("kit", "out", "tools", "die", "item", "image", "mem"):
+        g.add_argument(f"--{name}", required=True)
+    pg = sub.add_parser("publish-geom")
+    pg.add_argument("--run", required=True)
     route = sub.add_parser("prepare-route")
     for name in ("kit", "runner", "receipt", "approval"):
         route.add_argument(f"--{name}", required=True)
     a = cli.parse_args()
     try:
-        (render if a.command == "render" else prepare_route)(a)
+        return {"render": render, "geom": geom, "publish-geom": publish_geom, "prepare-route": prepare_route}[a.command](a) or 0
     except (OSError, TypeError, ValueError, KeyError, subprocess.SubprocessError) as exc:
         print(f"CANARY {a.command.upper()} REFUSED [{exc}]")
         return 3
-    return 0
+
 
 
 if __name__ == "__main__":
