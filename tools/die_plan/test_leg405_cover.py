@@ -85,3 +85,28 @@ def test_mutant_old_vacuous_code_fails_the_new_check():
     assert reports_status_leg(raw)                                   # new code sees the 771 um status leg
     assert old_staged(raw["partition_types"]["hd_host_w"]) == []     # old code: vacuous pass ...
     assert not reports_status_leg(copy.deepcopy(raw), staged=old_staged)   # ... so this very assertion fails on the mutant
+
+
+def test_transit_local_status_follows_emitted_collector_stages():
+    t = {"clock": {
+        "landing_contract": {"pins": [{"name": "cland_up_ready_d_o", "xy_um": [2.144, 354.016]}]},
+        "landing_status_input_stages": {"d_o": {"d_i": [{"xy_um": [1215, 320]}, {"xy_um": [1050, 275]}]}},
+        "landing_status_anchors": {
+            "u_cland_loc_d_o_1": [720, 300],
+            "u_cland_loc_d_o_2": [490, 320],
+            "u_cland_loc_d_o_3": [250, 340],
+        },
+    }}
+    findings, count = F.leg405_measure(t)
+    assert findings == []
+    assert count["status_stage"] == 5
+
+    t["clock"]["landing_status_anchors"]["u_cland_loc_d_o_1"] = [600, 300]
+    assert ("status:d_o/d_i.s1", "d_o", 475, 0, 1) in F.leg405_staged(t)
+
+
+def test_aggregate_face_uses_first_stage_even_if_second_stage_is_closer():
+    raw = host_w()
+    ck = raw["partition_types"]["hd_host_w"]["clock"]
+    ck["landing_status_anchors"]["u_cland_agg_2"] = [700, 280]
+    assert reports_status_leg(raw)

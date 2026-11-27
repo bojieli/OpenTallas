@@ -15,7 +15,7 @@ LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stag
                 that make every hop <= 405 um), plus the cland legs above.  LEG405-ZERO stays as the legacy scan.
                 C-LEG405 cover (P-FALSE-GREEN; HEAD hd_host_w 11-26: landing_reader_start + no relay_depth passed vacuously over 1,511
                 placed hops > 405 um): also every hop of the landing reader/writer start chains, raw-reset branches, landing_status_input_stages
-                (face pin -> stages -> nearest agg anchor / sink pin; unstaged status rings too) and internal_stations chains (a reg pair
+                (face pin -> stages -> first collector anchor / sink pin; unstaged status rings too) and internal_stations chains (a reg pair
                 'a|b' is a macro-pin pair; > 810 um with <= 1 stage is IMPOSSIBLE with one flop).  The summary counts legs measured per
                 kind, and 'WARN LEG405-STAGED-UNCHECKED <type>: <kinds>' names every leg kind the plan carries but the check cannot see
                 (macro pin-to-pin nets, relay_sites without relay_depth, reset relay -> sink, ft_slots, clock sinks).  WARN not FAIL: a
@@ -227,28 +227,41 @@ def leg405_measure(t):
         if isinstance(br, dict) and br.get("stages"):
             st = br["stages"]
             add("raw_branch", _chain("raw_branch", str(br.get("name")), _xy(st[0].get("xy_um")), st[1:], None, "end"))
-    anchors = [_xy(v) for v in (ck.get("landing_status_anchors") or {}).values() if _xy(v)]
+    anchors = ck.get("landing_status_anchors") or {}
+    aggregate_first = _xy(anchors.get("u_cland_agg_1"))
     staged = ck.get("landing_status_input_stages") if isinstance(ck.get("landing_status_input_stages"), dict) else {}
     seen_agg = set()
     for tgt, rings in sorted(staged.items()):
+        out_pin = pins.get("cland_up_ready_" + tgt)
+        if tgt == "agg":
+            end = aggregate_first
+        else:
+            prefix = f"u_cland_loc_{tgt}_"
+            local = {}
+            for name, xy in anchors.items():
+                if name.startswith(prefix) and (index := name[len(prefix):]).isdecimal():
+                    local[int(index)] = _xy(xy)
+            end = local.get(1) if local else out_pin
+            if local:
+                # The bound collector sends each input branch into stage 1.
+                # Its common tail is measured once. A missing stage site
+                # leaves the adjacent legs unmeasured.
+                tail = [{"xy_um": local.get(i)} for i in range(2, max(local) + 1)]
+                add("status_stage", _chain("status", f"{tgt}/local", end, tail, out_pin, tgt))
         for ring, st in sorted((rings or {}).items()) if isinstance(rings, dict) else ():
             if not isinstance(st, list):
                 continue
             src = pins.get("cland_dn_ready_" + ring) or pins.get("cland_up_ready_" + ring)
             if tgt == "agg":
                 seen_agg.add(ring)
-                last = _xy(st[-1].get("xy_um")) if st and isinstance(st[-1], dict) else src
-                end = min(anchors, key=lambda a: _md(a, last)) if anchors and last else None
-            else:
-                end = pins.get("cland_up_ready_" + tgt)
-            add("status_stage", _chain("status", f"{tgt}/{ring}", src, st, end, "agg" if tgt == "agg" else tgt))
-    # status rings (collector children) with no input stages: the face pin reaches the nearest agg anchor in one hop
+            add("status_stage", _chain("status", f"{tgt}/{ring}", src, st, end, tgt))
+    # Unstaged face status enters collector stage 1.  A later, closer
+    # collector cannot substitute for that registered endpoint.
     for ch in ((ck.get("landing_contract") or {}).get("collector_children") or []):
-        if isinstance(ch, dict) and ch.get("bus") not in seen_agg and anchors:
+        if isinstance(ch, dict) and ch.get("bus") not in seen_agg and aggregate_first:
             src = pins.get("cland_dn_ready_" + str(ch.get("bus"))) or _xy(ch.get("xy"))
             if src and not ch.get("seam"):
-                end = min(anchors, key=lambda a: _md(a, src))
-                add("status_stage", _chain("status", f"agg/{ch.get('bus')}(unstaged)", src, [], end, "agg"))
+                add("status_stage", _chain("status", f"agg/{ch.get('bus')}(unstaged)", src, [], aggregate_first, "agg"))
     for i, s in enumerate(t.get("internal_stations") or []):
         if not isinstance(s, dict):
             continue
