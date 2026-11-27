@@ -51,7 +51,9 @@ foreach pr_row $::ot_place_regions {
   # FLOW-NOADV-R3 11-20 (FABLE-PD-S81-1840): members must cover at least half of the cells of their logic cone.  S81 serdes_tx_encoder: 5,926 member
   # flops against 5,975 gates of the same cone outside the group = DPL-0033 on every J5 serdes.  Under half: the cone's combinational cells join the group
   # (OT_PLACE_REGION_EXTEND); a cone more than 8 x the members is not separable: that region is dropped (OT_PLACE_REGION_DROP).
-  if {[file exists /work/place_regions_cone.tcl]} {
+  # Exact mapped selectors already include their complete planned membership.
+  # Adding transit cells can grow a reviewed box into an adjacent owner.
+  if {$pr_cone ne "exact" && [file exists /work/place_regions_cone.tcl]} {
     source /work/place_regions_cone.tcl
     if {![llength [info procs ot_pr_nbrs_in]]} {
       proc ot_pr_nbrs_in {i} { set o {}; foreach it [$i getITerms] { if {![$it isInputSignal]} continue; set n [$it getNet]; if {$n eq "NULL" || [$n getSigType] ne "SIGNAL" || [llength [$n getITerms]] > 256} continue; foreach t [$n getITerms] { if {[$t isOutputSignal]} { lappend o [$t getInst] } } }; return $o }
@@ -106,7 +108,10 @@ foreach pr_row $::ot_place_regions {
   set pr_need [expr {$pr_a/$pr_util}]; set pr_area $pr_need; set pr_ar 1.0
   # PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): box_um keeps its aspect and starts at its own area, radius_um starts at (2r)^2; both grow
   # (same 5 % steps) only when the cells at the target utilisation do not fit
-  if {$pr_box ne ""} { set pr_ar [expr {($pr_b3-$pr_b1)/double($pr_b2-$pr_b0)}]; set pr_area [expr {max($pr_need, ($pr_b2-$pr_b0)*($pr_b3-$pr_b1))}]
+  if {$pr_box ne ""} {
+    set pr_ar [expr {($pr_b3-$pr_b1)/double($pr_b2-$pr_b0)}]
+    set pr_explicit_area [expr {($pr_b2-$pr_b0)*($pr_b3-$pr_b1)}]
+    set pr_area [expr {$pr_cone eq "exact" ? $pr_explicit_area : max($pr_need,$pr_explicit_area)}]
   } elseif {$pr_rad ne ""} { set pr_area [expr {max($pr_need, 4.0*$pr_rad*$pr_rad)}] }
   for {set pr_it 0} {$pr_it < 400} {incr pr_it} {
     set pr_w [expr {sqrt($pr_area/$pr_ar)}]; set pr_h [expr {$pr_w*$pr_ar}]
@@ -120,7 +125,7 @@ foreach pr_row $::ot_place_regions {
       if {$ox > 0 && $oy > 0} { set pr_blk_a [expr {$pr_blk_a + $ox*$oy}] }
     }
     set pr_free [expr {$pr_w*$pr_h - $pr_blk_a}]
-    if {$pr_free >= $pr_need || ($pr_w >= $pr_cx1-$pr_cx0 && $pr_h >= $pr_cy1-$pr_cy0)} break
+    if {$pr_cone eq "exact" || $pr_free >= $pr_need || ($pr_w >= $pr_cx1-$pr_cx0 && $pr_h >= $pr_cy1-$pr_cy0)} break
     set pr_area [expr {$pr_area*1.05}]
   }
   if {$pr_free < $pr_need} { error "OT_PLACE_REGION $pr_name: the core has $pr_free um2 free of macros, the region needs $pr_need" }
@@ -129,10 +134,13 @@ foreach pr_row $::ot_place_regions {
   # width in x, row height in y, from the core origin).  An off-grid edge lets the legaliser put a member in the last
   # site column / row with its edge a fraction of a site outside the box, and check_placement fails the region check
   # (kit H: 41 straddling members = "Region placement check failed (41)", none outside, utilisation unchanged).
-  set pr_bx0 [expr {[$pr_core xMin] + ((int($pr_x0*$pr_dbu) - [$pr_core xMin]) / $pr_sw) * $pr_sw}]
-  set pr_by0 [expr {[$pr_core yMin] + ((int($pr_y0*$pr_dbu) - [$pr_core yMin]) / $pr_rh) * $pr_rh}]
-  set pr_bx1 [expr {min([$pr_core xMax], [$pr_core xMin] + ((int(($pr_x0+$pr_w)*$pr_dbu) - [$pr_core xMin] + $pr_sw - 1) / $pr_sw) * $pr_sw)}]
-  set pr_by1 [expr {min([$pr_core yMax], [$pr_core yMin] + ((int(($pr_y0+$pr_h)*$pr_dbu) - [$pr_core yMin] + $pr_rh - 1) / $pr_rh) * $pr_rh)}]
+  # Multiplying a reported native-grid decimal can end a fraction of
+  # a DBU below that grid line. Keep exact boxes on their declared line.
+  set pr_epsilon [expr {$pr_cone eq "exact" ? 1.e-6 : 0.0}]
+  set pr_bx0 [expr {[$pr_core xMin] + ((int($pr_x0*$pr_dbu+$pr_epsilon) - [$pr_core xMin]) / $pr_sw) * $pr_sw}]
+  set pr_by0 [expr {[$pr_core yMin] + ((int($pr_y0*$pr_dbu+$pr_epsilon) - [$pr_core yMin]) / $pr_rh) * $pr_rh}]
+  set pr_bx1 [expr {min([$pr_core xMax], [$pr_core xMin] + ((int(($pr_x0+$pr_w)*$pr_dbu+$pr_epsilon) - [$pr_core xMin] + $pr_sw - 1) / $pr_sw) * $pr_sw)}]
+  set pr_by1 [expr {min([$pr_core yMax], [$pr_core yMin] + ((int(($pr_y0+$pr_h)*$pr_dbu+$pr_epsilon) - [$pr_core yMin] + $pr_rh - 1) / $pr_rh) * $pr_rh)}]
   odb::dbBox_create $pr_r $pr_bx0 $pr_by0 $pr_bx1 $pr_by1
   set pr_g [odb::dbGroup_create $pr_r ot_region_${pr_name}_grp]
   $pr_g setType PHYSICAL_CLUSTER

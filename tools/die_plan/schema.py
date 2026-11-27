@@ -1906,7 +1906,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
                    "radius_um": {"type": "number", "exclusiveMinimum": 0},
                    # cone auto (default: both-way cone, joined under 0.5 coverage, DROP when > 8 x members) | between (only the cells on
                    # member -> member paths join, always; LOCAL-CONE-SCATTER counters / decode cones)
-                   "cone": {"enum": ["auto", "between"]}}}}
+                   "cone": {"enum": ["auto", "between", "exact"]}}}}
 # PLAN-LEAF-PARAMS (S81-WREG-PARAM 11-24; bind.plan_leaf_params): per-instance RTL parameters on the leaves of one master inside
 # every partition of this type (e.g. S81 ot_s81sl_vpw WREG 1 instead of the shared-file define OT_S81SL_VP_WREG); absent = as built.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["leaf_params"] = {

@@ -177,3 +177,14 @@ proc cand {i} { return [expr {[string index $i 0] eq "g"}] }
     assert _tcl(net + "puts [lsort [ot_pr_cone_between {f0 f1} nin nout cand 64]]") == "g0 g1"
     # the walk caps at LIMIT x members and never errors
     assert _tcl(net + "puts [llength [ot_pr_cone_between {f0 f1} nin nout cand 1]]") in ("0", "1", "2")
+
+def test_exact_regions_require_a_box_and_precheck_checks_the_named_members(tmp_path):
+    import place_precheck
+    with pytest.raises(ValueError, match="explicit box_um"):
+        gen_phys.place_regions_tcl([{"name": "word", "inst_re": "sram_mask", "cone": "exact"}])
+    row = {"name": "word", "inst_re": "sram_mask", "cone": "exact", "box_um": [24, 25, 32, 34]}
+    gen_phys.install_place_regions(tmp_path, [row])
+    text = (tmp_path / "place_regions_data.tcl").read_text()
+    assert "{word {sram_mask} 0.55 {} {} {} fence {24 25 32 34} {} exact}" in text
+    missing = place_precheck.cone_regions(tmp_path, {}, {})
+    assert len(missing) == 1 and "matches no movable" in missing[0]["msg"]

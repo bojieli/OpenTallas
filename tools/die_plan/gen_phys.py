@@ -9501,7 +9501,7 @@ def install_reset_chain_spread(kd, t):
 def place_regions_tcl(regions):
     """"region before cycle" (FABLE-CLOSURE-STRATEGY lever 5, FABLE-FIX-S81-GLUE 11-19): the Tcl data of the plan key
     partition_types.<type>.place_regions = [{name, inst_re, util (default 0.55), centre_um [x, y] | near_re | box_um [x0, y0, x1, y1],
-    radius_um, kind fence (default) | soft, cone auto (default) | between}] for
+    radius_um, kind fence (default) | soft, cone auto (default) | between | exact}] for
     place_regions.tcl (one placement region per named logic cone, sized for the target utilisation).  -> text, '' when absent.
     Regexes are Tcl braces-quoted, so a brace or a backslash-newline in one is refused here."""
     if not regions:
@@ -9529,8 +9529,10 @@ def place_regions_tcl(regions):
         # global placement only and is released before DPL (place_regions_release.tcl).  box_um = an explicit box (um, die coords);
         # radius_um = a box of side 2r around the centre (centre_um / near_re / cone macros / core centre); both grow to fit the cells.
         kind, box, rad, cone = r.get("kind", "fence"), r.get("box_um"), r.get("radius_um"), r.get("cone", "auto")
-        if cone not in ("auto", "between"):
-            raise ValueError(f"place_regions {name}: cone {cone!r} is not auto or between")
+        if cone not in ("auto", "between", "exact"):
+            raise ValueError(f"place_regions {name}: cone {cone!r} is not auto, between, or exact")
+        if cone == "exact" and box is None:
+            raise ValueError(f"place_regions {name}: exact membership requires an explicit box_um")
         if kind not in ("fence", "soft"):
             raise ValueError(f"place_regions {name}: kind {kind!r} is not fence or soft")
         if box is not None and rad is not None:
