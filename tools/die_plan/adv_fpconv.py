@@ -277,6 +277,47 @@ def leg405_measure(t):
     return fnd, cnt
 
 
+def _rect_l1_min(a, b):
+    return sum(max(a[i] - b[i + 2], b[i] - a[i + 2], 0) for i in range(2))
+
+
+def direct_status_firm_lower_bounds(t, bound_rtl):
+    """Proven direct status face arcs with no legal 50um/405um placement."""
+    import re
+
+    from boundary_reg import RADIUS_UM
+    from clock_landings import ident
+    from landing_place import _status_reset_groups
+
+    clock = t.get("clock") or {}
+    if not (clock.get("landing_status_anchors") or {}).get("u_cland_agg_1"):
+        return []
+    agg = re.search(r"\bot_dp_landing_collect\s*#\([^;]+?\)\s+u_cland_agg_1\s*\(([^;]+)\);", bound_rtl)
+    if not agg:
+        return []
+    agg_window = next(rect for name, rect, _ in _status_reset_groups(t) if name == "u_cland_agg_1")
+    pins = _pin_xy(t)
+    out = []
+    for child in (clock.get("landing_contract") or {}).get("collector_children") or []:
+        if child.get("seam") or not child.get("bus"):
+            continue
+        for role in ("ready", "fault"):
+            pin = child.get(role)
+            if pin not in pins:
+                continue
+            face = f"u_cland_face_{role}_{ident(str(child['bus']))}"
+            form = re.search(r"\bot_dp_landing_face\s+" + re.escape(face) + r"\s*\(([^;]+)\);", bound_rtl)
+            if not form or not re.search(r"\.d\s*\(\s*" + re.escape(pin) + r"\s*\)", form[1]):
+                continue
+            q = re.search(r"\.q\s*\(\s*(\w+)\s*\)", form[1])
+            if not q or not re.search(r"\b" + re.escape(q[1]) + r"\b", agg[1]):
+                continue
+            minimum = _rect_l1_min(pins[pin] * 2, agg_window) - RADIUS_UM
+            if minimum > LEG_UM + TOL:
+                out.append((pin, round(minimum, 2)))
+    return out
+
+
 def writer_start_firm_lower_bounds(t):
     """First writer START hops between emitted, bounded FIRM packing windows."""
     ck = t.get("clock") or {}
@@ -296,8 +337,7 @@ def writer_start_firm_lower_bounds(t):
     for name, target, tag in lp._writer_start_groups(t):
         if not tag.startswith("writer-start:") or not name.endswith("_0"):
             continue
-        l1 = sum(max(origin[i] - target[i + 2], target[i] - origin[i + 2], 0)
-                 for i in range(2))
+        l1 = _rect_l1_min(origin, target)
         if l1 > LEG_UM + TOL:
             out.append((tag.removeprefix("writer-start:"), round(l1, 2)))
     return out

@@ -123,3 +123,21 @@ def test_writer_first_leg_lower_bound_uses_both_window_edges():
     assert F.writer_start_firm_lower_bounds(t) == [("fault_o0", 406.14), ("lw_o", 413.71)]
     t["clock"]["landing_writer_start"]["branches"]["fault_o0"]["stages"][0]["xy_um"][0] -= 10
     assert F.writer_start_firm_lower_bounds(t) == [("lw_o", 413.71)]
+
+
+def test_status_exact_direct_face_lower_bound_does_not_skip_intermediate_register():
+    t = {"outline_um": [600, 2000], "clock": {
+        "landing_status_anchors": {"u_cland_agg_1": [420, 1150]},
+        "landing_contract": {
+            "pins": [{"name": "cland_dn_ready_bw_i", "xy_um": [2, 860]}],
+            "collector_children": [{"bus": "bw_i", "ready": "cland_dn_ready_bw_i", "seam": False}],
+        },
+    }}
+    rtl = """
+    ot_dp_landing_face u_cland_face_ready_bw_i (.clk(clk), .d(cland_dn_ready_bw_i), .q(cland_dn_fq_ready_bw_i));
+    ot_dp_landing_collect #(.N(2)) u_cland_agg_1 (.clk(clk), .ready_i({other, cland_dn_fq_ready_bw_i}), .ready_o(q));
+    """
+    assert F.direct_status_firm_lower_bounds(t, rtl) == [("cland_dn_ready_bw_i", 653.68)]
+    assert F.direct_status_firm_lower_bounds(t, rtl.replace("other, cland_dn_fq_ready_bw_i", "other, real_stage")) == []
+    t["clock"]["landing_status_anchors"]["u_cland_agg_1"] = [300, 940]
+    assert F.direct_status_firm_lower_bounds(t, rtl) == []
