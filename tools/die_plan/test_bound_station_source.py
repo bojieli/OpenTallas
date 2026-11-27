@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from bound_station_source import SCHEMA, _type_logic, verify
+from bound_station_source import FAMILY_SCHEMA, SCHEMA, _family_type_logic, _type_logic, verify
 
 
 def test_crop_keeps_station_and_landing_logic():
@@ -41,17 +41,35 @@ def test_crop_keeps_station_and_landing_logic():
     assert _type_logic(original) != _type_logic(crop)
 
 
-def test_stale_producer_rejected_before_station_work(tmp_path):
+@pytest.mark.parametrize("receipt_schema", (SCHEMA, FAMILY_SCHEMA))
+def test_stale_producer_rejected_before_station_work(tmp_path, receipt_schema):
     producer = tmp_path / "producer.json"
     prepared = tmp_path / "prepared.json"
     producer.write_text("old producer")
     prepared.write_text("new plan")
     receipt = tmp_path / "scope.json"
     receipt.write_text(json.dumps({
-        "schema": SCHEMA,
+        "schema": receipt_schema,
         "type": "receiver",
         "producer_plan_sha256": "stale",
         "prepared_plan_sha256": hashlib.sha256(prepared.read_bytes()).hexdigest(),
     }))
     with pytest.raises(ValueError, match="stale plan or producer"):
         verify(receipt, prepared, producer, "receiver", tmp_path, "asbuilt.json")
+
+
+def test_family_geometry_keeps_edge_and_collector_role():
+    old = {
+        "outline_um": [100, 100],
+        "buses": [],
+        "ft_slots": [],
+        "hard_cores": [],
+        "internal_stations": [],
+        "clock": {"edge_clocks": [{"name": "source_clk", "tap_um": [12, 4]}]},
+    }
+    prepared = deepcopy(old)
+    prepared["clock"]["edge_clocks"][0]["tap_um"] = [12, 5]
+    prepared["clock"]["landing_contract"] = {"collector_tree": {"capture": True}}
+    assert _family_type_logic(old) == _family_type_logic(prepared)
+    prepared["clock"]["edge_clocks"][0]["name"] = "other_clk"
+    assert _family_type_logic(old) != _family_type_logic(prepared)
