@@ -212,3 +212,9 @@ def test_new_relay_mutants_die(old, new):
     script = ('puts [rt_relay_report {{i it n {1 2} a:b 7.5}} 1 1]\nset ::EXIST {u_rstrelay_t}\nputs [rt_insert_relay BLK FIT {300 400} t SEATMX]\n'
               'set ::EXIST {}\nputs [rt_insert_relay BLK FIT {300 400} t SEATMX]\nputs $::LOG')
     assert run(script, mut) != run(script)
+
+
+def test_relay_candidates_only_on_the_post_place_run():
+    i = SRC.index("lappend rt_relay_todo")
+    blk = SRC[SRC.rfind("set tgt", 0, i) - 400:i]
+    assert "[info exists rt_postplace] && $rt_postplace && [info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)]" in blk

@@ -493,7 +493,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       if {[info exists rt_leaf_reach_um] && $bd > $rt_leaf_reach_um * $rt_dbu} {
         lappend rt_leaf_bad "[$ins getName]/[[$it getMTerm] getName]:[format %.3f [expr {$bd/double($rt_dbu)}]]um"
       }
-      if {[info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)] && $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) ne ""} {
+      if {[info exists rt_postplace] && $rt_postplace && [info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)] && $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) ne ""} {   ;# relay candidates only on the post-place run: pre-GPL coordinates mean nothing
         set tgt ""
         if {$k == $best} { set tgt $net } elseif {[dict exists $rt_rep "$best,$par"]} { set tgt [dict get $rt_rep "$best,$par"] }
         if {$tgt ne ""} {
