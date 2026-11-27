@@ -66,7 +66,8 @@ def test_sync_red_spec_smoke_does_not_flip(tmp_path, monkeypatch):
     M.RT = tmp_path / "rt"
     M.MQ = tmp_path / "mq"
     M.HOSTS, M.GEN_SMOKE_HOSTS = ["h1"], ["g1"]
-    M.git = lambda *a, **k: "b" * 40
+    M.git = lambda _, ref: ("a" if ref.startswith("aaaa") else "b") * 40
+    M.runtime_ancestor = lambda before, after: (before, after) == ("a" * 40, "b" * 40)
     M.current = lambda root=None: "aaaaaaaaaaaa"
     M.materialize = lambda full: M.RT / "bbbbbbbbbbbb"
     M.smoke = lambda d, tests=True: []
