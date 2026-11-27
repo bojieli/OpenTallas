@@ -1090,3 +1090,5 @@
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 04:05 PST FP-KV.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-KV, KV-INT-R2; cc COORD] lanes/FP-KV.tsv last updated 11-25 17:56 (34.1 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-KV -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 04:05 PST FP-QC.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-QC, QC-INT-R2; cc COORD] lanes/FP-QC.tsv last updated 11-25 09:10 (42.9 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
