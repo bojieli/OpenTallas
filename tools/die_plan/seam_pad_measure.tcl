@@ -2,7 +2,7 @@
 # optionally after an IN-MEMORY per-port HB4 pad (nothing is written back to the ODB).
 #   env: OT_CORNER TT|FF  ODB (6_final.odb)  SPEF (6_final.spef)  OUT (tsv)  [PAD_SPEC (tsv: port<TAB>n_hb4)]  [OT_SPM_REPORT_ONLY_NEG]
 # Kit mounted at /work (constraint.sdc, config.mk, libraries by the kit's own ORFS selector, taken from postcts_gate.tcl).
-# Row: port  endpoint  endpoint_pin_kind  hold_slack_ps  setup_slack_ps  n_hb4_inserted
+# Row: port  hold_endpoint  hold_slack_ps  setup_slack_ps   (worst over every path group)
 set C $::env(OT_CORNER)
 set fh [open /work/config.mk]
 foreach ln [split [read $fh] "\n"] {
@@ -34,12 +34,21 @@ if {[info exists ::env(SPEF)] && $::env(SPEF) ne ""} {
 }
 proc ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.3f $t]   ;# get_property slack is already in the library time unit (ps) }
 proc seam_paths {pp mode} {
-  # async reset ports (rst*) crash STA when queried with a plain -from (OpenROAD 11-27 image); the group form is the one
-  # the gunit witness (child_required.tcl) uses
+  # all path groups, worst slack first (a find_timing_paths list is freed by the next find call: callers read it at once)
+  # async reset ports (rst*) crash STA with a plain -from (OpenROAD 11-27 image): the group form is the one the gunit witness
+  # (child_required.tcl) uses; a reset that also feeds synchronous logic is NOT seen by this query (listed in the evidence)
   if {[regexp {^rst} [get_full_name $pp]]} {
     return [find_timing_paths -path_delay $mode -rise_from $pp -path_group asynchronous -group_path_count 1 -endpoint_path_count 1]
   }
   return [find_timing_paths -from $pp -path_delay $mode -group_path_count 1 -endpoint_path_count 1]
+}
+proc seam_worst_row {paths} {
+  set best nan; set ep ""
+  foreach pe $paths {
+    set v [get_property $pe slack]
+    if {$best eq "nan" || $v < $best} {set best $v; set ep [get_full_name [get_property $pe endpoint]]}
+  }
+  return [list $best $ep]
 }
 proc ports_in {} {
   set r {}
@@ -71,32 +80,28 @@ if {[info exists ::env(PAD_SPEC)] && $::env(PAD_SPEC) ne ""} {
   puts "SEAM_PAD inserted $npad HB4 cells in memory (hook seam_pad_port.tcl)"
   # the pad nets carry no SPEF/estimate: zero wire RC on them (disclosed), cell delay only
 }
-# ---- per input port seam table ------------------------------------------------------------------------------------
+# ---- per input port seam table: worst over every path group ---------------------------------------------------------
 set out [open $::env(OUT) w]
 foreach port [ports_in] {
   if {$port in $clkports} continue
   set pp [get_ports $port]
-  set hold nan; set setup nan; set ep ""
-  set ph [seam_paths $pp min]
-  if {[llength $ph]} { set hold [ps [get_property [lindex $ph 0] slack]]; set ep [get_full_name [get_property [lindex $ph 0] endpoint]] }
-  set pm [seam_paths $pp max]
-  if {[llength $pm]} { set setup [ps [get_property [lindex $pm 0] slack]] }
-  set k 0
-  puts $out "$port\t$ep\t$hold\t$setup\t$k"
+  lassign [seam_worst_row [seam_paths $pp min]] hold ep
+  lassign [seam_worst_row [seam_paths $pp max]] setup ep2
+  puts $out "$port\t$ep\t[ps $hold]\t[ps $setup]"
 }
 close $out
-# whole-core context: worst setup / hold over everything (internal damage check).  A find_timing_paths result is freed
-# by the next find call: read each one before the next query.
 proc seam_worst {mode} {
-  set best nan
+  set best nan; set sp ""; set ep ""
   foreach pe [find_timing_paths -path_delay $mode -group_path_count 1] {
     set v [get_property $pe slack]
-    if {$best eq "nan" || $v < $best} {set best $v}
+    if {$best eq "nan" || $v < $best} {set best $v; set ep [get_full_name [get_property $pe endpoint]]; set sp [get_full_name [get_property $pe startpoint]]}
   }
-  return [ps $best]
+  return [list [ps $best] $sp $ep]
 }
-puts "SEAM_WNS corner=$C setup=[seam_worst max] hold=[seam_worst min]"
-set ri [find_timing_paths -path_delay min -from [all_registers -clock_pins] -to [all_registers -data_pins] -group_path_count 1]
-if {[llength $ri]} { puts "SEAM_INTERNAL_HOLD corner=$C [ps [get_property [lindex $ri 0] slack]]" }
+lassign [seam_worst max] sw ssp sep
+lassign [seam_worst min] hw hsp hep
+puts "SEAM_WNS corner=$C setup=$sw hold=$hw"
+puts "SEAM_WNS_PATH corner=$C setup_from=$ssp setup_to=$sep hold_from=$hsp hold_to=$hep"
+# (a reg-to-reg 'internal' summary is NOT printed: a single find call returns one path per group; the WNS paths above name the worst path)
 puts "SEAM_DONE corner=$C pads=$npad"
 exit

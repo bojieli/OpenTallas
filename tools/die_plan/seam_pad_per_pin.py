@@ -14,8 +14,10 @@ every pin whatever the parent really delivers.  This tool sizes one pad per INPU
   TT cost    = n_hb4 x per_cell_tt ; the pin must keep tt_slack - cost >= tt_floor (setup is judged at the real seam)
 
 No pin is padded to a silent cap: a pin that exceeds n_max or whose TT slack cannot pay is listed under 'refused'.
-Reads only; the pads are installed by face_hold_pad.stage / the kit recipe key `face_hold_pad` (default off), or proven
-in memory by seam_pad_measure.tcl (PAD_SPEC).
+Reads only; the pads are installed by stage() below (gen_core_kit_legacy --seam-pad / recipe key `seam_pad`, default off;
+the hook is seam_pad_port.tcl, one chain per input PORT net), or proven in memory by seam_pad_measure.tcl (PAD_SPEC).
+MEASURED-basis sizing is an estimate for a provisional parent: the kit SDC still carries the -40 contract, so a kit verdict
+only changes when the matched parent receipt (io_hold_parent) passes; the contract basis is what removes NEEDS_PARENT at the kit.
 
   seam_pad_per_pin.py size --child CHILD.tsv [--parent-ff FF.tsv --parent-tt TT.tsv] --out SPEC.json [--audit AUDIT.tsv]
      CHILD.tsv  port<TAB>endpoint<TAB>ff_hold_slack_ps<TAB>tt_setup_slack_ps [...]  (seam_pad_measure.tcl row, contract frame)
@@ -32,13 +34,14 @@ sys.path.insert(0, str(HERE))
 import face_hold_pad as F
 
 SCHEMA = "opentallas.seam_pad_per_pin.v1"
-GUARD_PS = 10.0
+GUARD_PS = 10.0                  # contract basis (the kit gate itself is FF slack >= 0)
+MEASURED_GUARD_PS = 30.0         # measured-parent basis: one cell of margin over a provisional / single-instance parent read
 # MEASURED in memory on the retained routed LLfd / LLfu final ODBs and the l5f GRT ODB (seam_pad_measure.tcl, port-ingress chain of
 # 2-3 HB4 on 128 + 128 + 67 input pins): FF hold gain per HB4 min 35.46 / med 40.6-42.4 / max 44.1 ps; TT setup cost per HB4 max 64.76 ps.
 # (The earlier 23.8 ps/cell "2 x HB4 = +47.6" figure was an estimate; the measured gain is 1.5-1.8x that.)
 HB4_FF_PS = 35.0                 # conservative: below the measured minimum 35.46
 HB4_TT_PS = 65.0                 # conservative: above the measured maximum 64.76
-TT_FLOOR_PS = -42.0
+TT_FLOOR_PS = 0.0                # a padded PORT path must keep nonnegative TT setup (the -42 gate is for the whole core)
 N_MAX = 6
 HOOK_TCL = HERE / "seam_pad_port.tcl"
 
@@ -115,7 +118,7 @@ def read_parent(text, kind):
 
 
 def size(child, parent_ff=None, parent_tt=None, guard=GUARD_PS, per_ff=HB4_FF_PS, per_tt=HB4_TT_PS,
-         tt_floor=TT_FLOOR_PS, n_max=N_MAX, extra_ff=None):
+         tt_floor=TT_FLOOR_PS, n_max=N_MAX, extra_ff=None, measured_guard=MEASURED_GUARD_PS):
     """extra_ff: {port: ff_slack} measured on a parent for pins the table does not cover (e.g. reset removal)."""
     parent_ff, parent_tt, extra_ff = parent_ff or {}, parent_tt or {}, extra_ff or {}
     rows, refused = [], []
@@ -133,8 +136,9 @@ def size(child, parent_ff=None, parent_tt=None, guard=GUARD_PS, per_ff=HB4_FF_PS
         if ff is None:
             refused.append(dict(port=port, why="no FF slack"))
             continue
-        n = F.cells_for(ff, per_ff, guard, 10 ** 6)
-        row = dict(port=port, endpoint=c["endpoint"], basis=basis, ff_slack_ps=round(ff, 3), need_ps=round(max(0.0, guard - ff), 3),
+        g = guard if basis == "contract" else measured_guard
+        n = F.cells_for(ff, per_ff, g, 10 ** 6)
+        row = dict(port=port, endpoint=c["endpoint"], basis=basis, guard_ps=g, ff_slack_ps=round(ff, 3), need_ps=round(max(0.0, g - ff), 3),
                    n_hb4=n, tt_basis=tt_basis, tt_slack_ps=None if tt is None else round(tt, 3))
         if n:
             cost = n * per_tt
@@ -155,10 +159,10 @@ def size(child, parent_ff=None, parent_tt=None, guard=GUARD_PS, per_ff=HB4_FF_PS
         b["pins"] += 1
         b["padded"] += 1 if r["n_hb4"] else 0
         b["cells"] += r["n_hb4"]
-    spec = dict(schema=F.SCHEMA, by="port", match="", per_cell_ps=per_ff, guard_ps=guard, n_max=n_max, default_n=0,
+    spec = dict(schema=F.SCHEMA, by="port", match="", per_cell_ps=per_ff, guard_ps=guard, measured_guard_ps=measured_guard, n_max=n_max, default_n=0,
                 endpoints=len(rows), padded=len(per), cells=sum(per.values()), per_endpoint=per,
                 source="seam_pad_per_pin", seam_pad_schema=SCHEMA)
-    audit = dict(schema=SCHEMA, guard_ps=guard, per_cell_ff_ps=per_ff, per_cell_tt_ps=per_tt, tt_floor_ps=tt_floor,
+    audit = dict(schema=SCHEMA, guard_ps=guard, measured_guard_ps=measured_guard, per_cell_ff_ps=per_ff, per_cell_tt_ps=per_tt, tt_floor_ps=tt_floor,
                  pins=len(rows), padded=len(per), cells=sum(per.values()), by_basis=by_basis, refused=refused, rows=rows)
     return spec, audit
 
@@ -175,6 +179,7 @@ def main(argv=None):
     z.add_argument("--audit")
     z.add_argument("--pad-tsv", help="port<TAB>n rows for seam_pad_measure.tcl PAD_SPEC")
     z.add_argument("--guard", type=float, default=GUARD_PS)
+    z.add_argument("--measured-guard", type=float, default=MEASURED_GUARD_PS)
     z.add_argument("--per-cell-ff", type=float, default=HB4_FF_PS)
     z.add_argument("--per-cell-tt", type=float, default=HB4_TT_PS)
     z.add_argument("--tt-floor", type=float, default=TT_FLOOR_PS)
@@ -187,7 +192,7 @@ def main(argv=None):
     pff = read_parent(Path(a.parent_ff).read_text(), "B") if a.parent_ff else None
     ptt = read_parent(Path(a.parent_tt).read_text(), "A") if a.parent_tt else None
     extra = json.loads(Path(a.extra_ff).read_text()) if a.extra_ff else None
-    spec, audit = size(child, pff, ptt, a.guard, a.per_cell_ff, a.per_cell_tt, a.tt_floor, a.n_max, extra)
+    spec, audit = size(child, pff, ptt, a.guard, a.per_cell_ff, a.per_cell_tt, a.tt_floor, a.n_max, extra, a.measured_guard)
     Path(a.out).write_text(json.dumps(spec, indent=1) + "\n")
     if a.audit:
         Path(a.audit).write_text(json.dumps(audit, indent=1) + "\n")
