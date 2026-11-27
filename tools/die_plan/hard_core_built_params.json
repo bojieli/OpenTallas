@@ -1042,6 +1042,33 @@
     "RD_EXTRA": 1
    },
    "source": "FABLE-FIX-S81-COLROM-R3 signed cfg7 RD_EXTRA=1 + go-guard view (physical/die_plan/s81/cores/views/ot_s81_cfg7_seq_rdxg_1121/receipt.json); supersedes ot_s81_cfg7_seq_rdx_1121 for J7"
+  },
+  {
+   "module": "dsfd_node_LLd",
+   "die": "s81",
+   "records": [
+    "932488f00d60758bae20087894806a0b2467d3c4c4c8331c74d16704c33aec3a"
+   ],
+   "params": {},
+   "source": "signed n6 kit config.mk (no VERILOG_TOP_PARAMS = built with the module defaults), epyc7:/srv/opentallas-scratch2/claude/S81-REGDROP/lld_native_kits/dsfd_node_LLd_rn_pg1126/dsfd_node_LLd_rn/config.mk; signoff /srv/opentallas-scratch2/claude/S81-REGDROP/lld_native_kits/dsfd_node_LLd_rn_pg1126/dsfd_node_LLd_rn/signoff/signoff.json verdict SIGNED; routed ODB sha256 in records (S81-INT-R3-VIEWS 11-27, class P-RUNTIME-MANIFEST, E2 HARD_CORE_PARAM_ALL NO_RECORD)"
+  },
+  {
+   "module": "dsfd_node_LLfd",
+   "die": "s81",
+   "records": [
+    "576f0b774b63fd9fe6e7a2d0ee81c210894a90f51e9e10f6982f407efad3792b"
+   ],
+   "params": {},
+   "source": "signed n6 kit config.mk (no VERILOG_TOP_PARAMS = built with the module defaults), epyc7:/srv/opentallas-scratch2/claude/S81-REGDROP/llf_pg_1126/LLfd/grt_hb4_1126/dsfd_node_LLfd_rn/config.mk; signoff /srv/opentallas-scratch2/claude/S81-REGDROP/llf_pg_1126/LLfd/grt_hb4_1126/dsfd_node_LLfd_rn/signoff/signoff.json verdict SIGNED; routed ODB sha256 in records (S81-INT-R3-VIEWS 11-27, class P-RUNTIME-MANIFEST, E2 HARD_CORE_PARAM_ALL NO_RECORD)"
+  },
+  {
+   "module": "dsfd_node_LLfu",
+   "die": "s81",
+   "records": [
+    "a1c11fa41d1fd9c733a5522788736ecab36b4cd36df17f4eccd2b7350c04f9d3"
+   ],
+   "params": {},
+   "source": "signed n6 kit config.mk (no VERILOG_TOP_PARAMS = built with the module defaults), epyc7:/srv/opentallas-scratch2/claude/S81-REGDROP/llf_pg_1126/LLfu/grt_hb4_1126/dsfd_node_LLfu_rn/config.mk; signoff /srv/opentallas-scratch2/claude/S81-REGDROP/llf_pg_1126/LLfu/grt_hb4_1126/dsfd_node_LLfu_rn/signoff/signoff.json verdict SIGNED; routed ODB sha256 in records (S81-INT-R3-VIEWS 11-27, class P-RUNTIME-MANIFEST, E2 HARD_CORE_PARAM_ALL NO_RECORD)"
   }
  ]
 }
