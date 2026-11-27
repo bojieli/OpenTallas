@@ -331,7 +331,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   }
   close $rt_out
   # (2) FIRM flops -> nearest tap's synchroniser nets
-  set rt_moved 0; set rt_keep 0; set rt_nopol 0
+  set rt_moved 0; set rt_keep 0; set rt_nopol 0; set rt_far 0; set rt_far_l {}
   set rt_cnt {}; set rt_leaf_n 0; set rt_leaf_max 0; set rt_leaf_bad {}
   foreach ins [$rt_blk getInsts] {
     # rt_repoint_only (landing_placement.tcl, after the landed line moved stations): only those flops
@@ -384,6 +384,13 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       }
       if {$k == $best} { incr rt_keep; continue }
       if {![dict exists $rt_rep "$best,$par"]} { incr rt_nopol; continue }
+      # C-RST-TAP-REPOINT (HEAD-PROBE-R3 11-27): OT_RESET_REPOINT_MAX_UM=<um> keeps the ORIGINAL reset net when the re-point would put the
+      # sink farther than that (Manhattan, to the tap relay launch flop) from the synchroniser it moves to.  hd_st_n3_turn: u_ft_u1_s1 moved
+      # rst_n_t24 -> rst_n_t21, a 205.5 um leg on an INVx1 (slew 378.9 ps vs 320).  Unset = no change (default off).
+      if {[info exists ::env(OT_RESET_REPOINT_MAX_UM)] && $::env(OT_RESET_REPOINT_MAX_UM) ne "" && $bd > $::env(OT_RESET_REPOINT_MAX_UM) * $rt_dbu} {
+        incr rt_far; lappend rt_far_l "[$ins getName]/[[$it getMTerm] getName]:[format %.1f [expr {$bd/double($rt_dbu)}]]um"
+        continue
+      }
       $it disconnect
       $it connect [dict get $rt_rep "$best,$par"]
       incr rt_moved
@@ -394,6 +401,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks, max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
     if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
   }
+  if {$rt_far} { puts "OT_RESET_REPOINT_KEPT $rt_far re-point(s) refused beyond $::env(OT_RESET_REPOINT_MAX_UM) um, original reset net kept: [lrange $rt_far_l 0 19]" }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }
 }
