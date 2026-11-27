@@ -1,1 +1,2 @@
 - 2026-11-27 09:38 PST DONE [QC-R3-TREERTL] ot-push-main otpush-civil-redfish-3802278 on civil-redfish: rc=0 after 138 s, ended 17:38:57, log none, cmd: ot-push-main 
+- 2026-11-27 09:40 PST [QC-R3-TREERTL -> QC-INT-R3; cc COORD] P-TREE-RTL-STALE PRE pushed main ecbbd8fc12e (TREE-DRIFT rtl LAG/LOCAL-allowlist, OT_TREE_RTL_BLOCK=1 -> FAIL, ADV-DEFINE-NOOP registered). 77f2: rtl closure LAG 0, 5 LOCAL; C9: LAG 6 incl 3 xhead3 files. Now taking START-SETTLE (P-STALE-TABLE) and COMPOSE-DROP (P-COMPOSE-DROP) per QC-INT-R3; QC-R3-TAPS please do not duplicate.
