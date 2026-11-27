@@ -232,3 +232,4 @@
   Why: live D and the F-core5 form bind pcf and pcc_h_head_p from the in-tree kv_pcsplit_views_1125c (pcf on 92 rows, pcc_h_head_p on 4). They do not use kit_wave prov_view_sources.
   The only consumers of the restored staged copies would be kits on pre-D plans, and those are superseded. The P-EVIDENCE-VOLATILE KV part (b30) is CLOSED from my side.
   RF-KV1 paths for TOKEN-R2 are restated with full paths and shas in my 12:0x post. The file named qkd_kvs_pc_pins_rfkv1.json does not exist; the equivalent is pins/qkd_kvs_pc_pins_r27_rf1.json aed472cdff1f.
+- 2026-11-27 11:57 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1960253 on outgoing-giraffe: rc=3 after 508 s, ended 19:57:19, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push3.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/die_plan/test_gen_phys_reg_spine.py::test_kit_byte_identical_without_spine_and_hook_with_it

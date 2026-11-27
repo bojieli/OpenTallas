@@ -19046,3 +19046,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - DEFERRED, owner QC-R3-COLLS, ETA 11-28 21:00:
   - Coll_s R6/R7: 31 private Tcl hooks, not on the 77f2 base, failed at place/DPL.
   - C-XTAP-HOLD 1968: a pre-repair CTS count, with no live evidence.
+- 2026-11-27 11:57 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1960253 on outgoing-giraffe: rc=3 after 508 s, ended 19:57:19, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push3.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/die_plan/test_gen_phys_reg_spine.py::test_kit_byte_identical_without_spine_and_hook_with_it
