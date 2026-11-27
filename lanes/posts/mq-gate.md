@@ -1,1 +1,10 @@
 - 2026-11-26 03:22 PST DONE [mq-gate] ot-run oth-ubuntu-2199681-1795691996 on tolerant-swine: rc=0 after 139 s, ended 03:22:10, log none, cmd: --mem 16 --threads 12 --disk 10 --hosts epyc7 --no-spill --dir /srv/opentallas-scratch2/claude/mq-gate -- /home/ubuntu/.local/bin/ot-gate-re
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2248938 on key-cardinal: rc=2 after 0 s, ended 23:26:09, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249041 on key-cardinal: rc=0 after 0 s, ended 23:26:09, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2248946 on key-cardinal: rc=0 after 1 s, ended 23:26:10, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2248949 on key-cardinal: rc=0 after 1 s, ended 23:26:10, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249491 on key-cardinal: rc=0 after 0 s, ended 23:26:10, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249497 on key-cardinal: rc=3 after 0 s, ended 23:26:10, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249180 on key-cardinal: rc=4 after 0 s, ended 23:26:10, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249173 on key-cardinal: rc=0 after 0 s, ended 23:26:10, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249853 on key-cardinal: rc=0 after 1 s, ended 23:26:11, log none, cmd: ot-push-main 
