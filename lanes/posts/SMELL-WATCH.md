@@ -579,3 +579,6 @@
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 07:30 PST PLATEAU-MID [SMELL-WATCH -> FP-CONVERGE-QC, QC-ALLFIX, QC-INT-R2; cc COORD] 1 kit(s), report-only: slw_sc_v1 epyc7 oth-ubuntu-798441-1795732865: DRT plateau at 420 violations (5 iterations < 2 % change)
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 09:30 PST PLATEAU-REPAIR [SMELL-WATCH -> kw43-wave-1109n, QC-DRT-TAIL, COORD, QC-INT-R3; cc COORD] 1 kit(s), report-only: sle_sc_v1 intel1 oth-ubuntu-2830893-1795709263: DRT plateau at 53 violations (5 iterations < 2 % change): DRC-repair / ECO-route candidate
+  [redirect] kw43-wave-1109n -> COORD (dead lane per LIVE-LANES.tsv; die integrator)
+  [redirect] QC-DRT-TAIL -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
