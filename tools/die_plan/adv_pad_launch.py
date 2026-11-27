@@ -18,6 +18,9 @@ Fix owner: seat the last pad stage next to the first station (relay_sites) or ad
 findings(raw, plan_path, tree=None, **kw) -> WARN lines; hits(raw, ...) -> structured rows.
 """
 import math
+import re
+from collections import defaultdict
+from pathlib import Path
 
 CHECK = "ADV-PAD-LAUNCH"
 MAX_LINES = 20
@@ -71,15 +74,148 @@ def hits(raw, hop=None, measured=None, rep=None):
     return rows
 
 
+_LPAD_STAGE = re.compile(r"u_lpad_(\w+)\.r\[(\d+)\]\[(\d+)\]")
+
+
+def _relay_key(name):
+    return name.replace("/", ".").removeprefix("u_bound.")
+
+
+def _per_bit_overrides(t):
+    # rs_place_all matches a native full name and then its local or slash
+    # equivalent. Without bound cell names, conflicting aliases are unknown.
+    points = defaultdict(set)
+    for key, xy in (t.get("relay_sites") or {}).items():
+        name = _relay_key(key)
+        if name.startswith(("u_lpad_", "u_bin_")) and isinstance(xy, (list, tuple)) and len(xy) == 2:
+            points[name].add(tuple(xy))
+    return points
+
+
+def packed_override_hits(raw, plan_path):
+    """Report over-reach legs involving at least one effective packed point override."""
+    used = {p["type"] for p in raw.get("partitions") or []}
+    rows = []
+    plan = None
+    for tn, t in (raw.get("partition_types") or {}).items():
+        if tn not in used or not t.get("internal_stations") or not t.get("relay_sites"):
+            continue
+        points = _per_bit_overrides(t)
+        stages = defaultdict(set)
+        for key in points:
+            m = _LPAD_STAGE.fullmatch(key)
+            if m:
+                bus, stage, bit = m.groups()
+                stages[bus].add((int(stage), int(bit)))
+        if not stages:
+            continue
+        from die_hop_scan import input_site, md, pin_table
+        from gen_rtl import sv_id
+        from kit_istations import bus_entries, chain_floats
+        from schema import Plan, SIGNAL_REACH_UM
+
+        reach = min(float(raw["die"]["reach_um"]), SIGNAL_REACH_UM)
+        rank_lines = {_relay_key(key) for key in t.get("relay_rank_sites") or {}}
+        bands = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
+        buses = {b["name"]: b for b in t.get("buses") or [] if b.get("dir") == "in"}
+        pins = None
+        for e in bus_entries(t):
+            bus = e["conn"][4:]
+            key = sv_id(bus)
+            if bus not in buses or key not in stages or e.get("core") or chain_floats(t, e["conn"]):
+                continue
+            regs = e.get("regs_um") or []
+            if not regs:
+                continue
+            # A full, explicit per-bit bank may supply the other endpoint of
+            # a leg. Nominal regs_um centers cannot stand in for packed bits.
+            banks = e.get("bit_sites_um")
+            if banks and (len(banks) != len(regs) or e.get("bit_route") or e.get("face_bit_sites_um")):
+                banks = None
+            width = int(buses[bus]["width"])
+
+            def site(rank, bit):
+                name = f"u_lpad_{key}.r[{rank}]"
+                if name in rank_lines:
+                    return None
+                candidates = points.get(f"{name}[{bit}]")
+                if candidates is not None:
+                    return next(iter(candidates)) if len(candidates) == 1 else None
+                # The last bank can map to a physical q bit for a fixed delay.
+                qrank = f"u_lpad_{key}.q"
+                if rank == len(regs) - 1 and (qrank in rank_lines or f"{qrank}[{bit}]" in points):
+                    return None
+                if banks and bit < len(banks[rank]):
+                    return banks[rank][bit]
+                return None
+
+            legs = {}
+            # A bound LPAD .q may be a counted-delay mux output or a
+            # different actual depth. Check only explicit consecutive r
+            # ranks that can be identified before the bound RTL is available.
+            for stage, bit in stages[key]:
+                if stage >= len(regs) or bit > width:
+                    continue
+                point = site(stage, bit)
+                if point is None:
+                    continue
+                if stage == 0 and bus not in bands and str(e.get("launch", "")).startswith("face"):
+                    binkey = f"u_bin_{key}"
+                    rank = binkey + (".eq" if bit == width else ".q")
+                    alias = rank if bit == width else f"{rank}[{bit}]"
+                    if rank not in rank_lines:
+                        override = points.get(alias)
+                        if override is not None:
+                            face = next(iter(override)) if len(override) == 1 else None
+                        else:
+                            if pins is None:
+                                if plan is None:
+                                    plan = Plan(raw, Path(plan_path))
+                                pins = pin_table(plan, tn)
+                            pin = pins.get(bus, {}).get(bit)
+                            face = input_site(pin) if pin else None
+                        legs[bit, 0] = face, point
+                if stage > 0:
+                    legs[bit, stage] = site(stage - 1, bit), point
+                if stage + 1 < len(regs):
+                    legs[bit, stage + 1] = point, site(stage + 1, bit)
+
+            for (bit, stage), (a, b) in legs.items():
+                if a is None or b is None:
+                    continue
+                distance = md(a, b)
+                if distance > reach + 1e-6:
+                    rows.append(dict(type=tn, conn=e["conn"], bit=bit, stage=stage,
+                                     distance=distance, reach=reach))
+    return sorted(rows, key=lambda r: (-r["distance"], r["type"], r["conn"], r["stage"], r["bit"]))
+
+
 def findings(raw, plan_path, tree=None, **kw):
     try:
         rows = hits(raw, kw.get("hop"), kw.get("measured"))
+        overrides = packed_override_hits(raw, plan_path)
     except Exception as e:  # noqa: BLE001
         return [_w("not checked", f"{type(e).__name__}: {str(e)[:200]}")]
-    out = [_w(f"{r['type']} {r['conn']}:", f"priced launch {r['launch']} {r['priced_from']} hop0 {r['priced_hop']} um, "
+
+    grouped = defaultdict(list)
+    for r in overrides:
+        grouped[(r["type"], r["conn"])].append(r)
+    out = []
+    for (tn, conn), bits in grouped.items():
+        worst = bits[0]
+        first = sum(r["stage"] == 0 for r in bits)
+        target = f"r[{worst['stage']}]"
+        launch = f"r[{worst['stage']-1}]" if worst["stage"] else "face launch"
+        out.append(_w(f"{tn} {conn}: packed point overrides exceed {worst['reach']:g} um reach, "
+                      f"{first} first leg(s) and {len(bits)-first} consecutive rank leg(s); "
+                      f"worst bit {worst['bit']} {launch} -> {target} {worst['distance']:.2f} um; "
+                      "re-seat the per-bit overrides before placement"))
+    out += [_w(f"{r['type']} {r['conn']}:", f"priced launch {r['launch']} {r['priced_from']} hop0 {r['priced_hop']} um, "
               f"real launch {r['basis']} {r['real_from']} hop0 {r['real_hop']} um (gap {r['gap']} um) > station reach; "
               "fix: seat the pad stage at the first station or add a stage-0 station") for r in rows[:MAX_LINES]]
-    out.append(_w("summary", f"{len(rows)} station chain(s) priced from a launch point that differs from the real launching register"))
+    out = out[:MAX_LINES]
+    out.append(_w("summary", f"{len(rows)} station chain(s) priced from a launch point that differs from the real launching register"
+                  + (f"; {len(overrides)} over-reach packed legs in {len(grouped)} chain(s)" if overrides else "")))
     return out
 
 
