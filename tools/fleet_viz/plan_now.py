@@ -167,15 +167,21 @@ def scan_plans(cached):
         row = dict(die=die, label=LABEL.get(die, die), target=TARGET.get(die, 'Other'), plan_path=rel, plans_source=src,
                    release_header=heads.get(die))
         try:
-            c = git('log', '-1', '--format=%H|%cI|%s', 'origin/main', '--', rel).split('|', 2)
-            row.update(plan_commit=c[0], plan_date=c[1], plan_subject=c[2][:200] if len(c) > 2 else '')
-            blob = git('rev-parse', 'origin/main:' + rel)
+            raw = None
+            if rel.startswith('physical/die_plan/_wave/'):
+                raw = (REPO / rel).read_bytes()
+                blob = 'sha256:' + hashlib.sha256(raw).hexdigest()
+            else:
+                c = git('log', '-1', '--format=%H|%cI|%s', 'origin/main', '--', rel).split('|', 2)
+                row.update(plan_commit=c[0], plan_date=c[1], plan_subject=c[2][:200] if len(c) > 2 else '')
+                blob = git('rev-parse', 'origin/main:' + rel)
             row['plan_blob'] = blob
             prev = cached.get(die)
             if prev and prev.get('plan_blob') == blob and prev.get('summary'):
                 row.update(summary=prev['summary'], plan_sha256=prev.get('plan_sha256'), types=prev.get('types'), hard=prev.get('hard'))
             else:
-                raw = read_plan_bytes(rel)
+                if raw is None:
+                    raw = read_plan_bytes(rel)
                 row['plan_sha256'] = hashlib.sha256(raw).hexdigest()[:12]
                 d = json.loads(gzip.decompress(raw) if raw[:2] == b'\x1f\x8b' else raw)
                 pt = d.get('partition_types') or {}; di = d.get('die') or {}

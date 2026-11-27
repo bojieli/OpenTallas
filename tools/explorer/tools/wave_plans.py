@@ -9,7 +9,7 @@ count's.  A die without plan_counted keeps the pinned plan of record.  Writes <s
 
     python3 -I wave_plans.py        # env as refresh.sh: FLEET_VIZ_STATE, FLEET_VIZ_REPO, OT_RELEASE_TREE_DIR, ...
 """
-import hashlib, json, os, pathlib, subprocess, sys, time
+import hashlib, json, os, pathlib, shutil, subprocess, sys, time
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / 'fleet_viz'))
@@ -30,8 +30,12 @@ def stage():
             try:
                 if not dst.is_file():
                     dst.parent.mkdir(parents=True, exist_ok=True); tmp = dst.with_suffix('.part')
-                    r = subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ControlPath=none', '%s:%s' % (pc['host'], pc['path']), str(tmp)], capture_output=True, text=True, timeout=300)
-                    if r.returncode: raise RuntimeError('scp: ' + r.stderr.strip()[-160:])
+                    if pc['host'] == 'local' and pathlib.Path(pc['path']).is_file():
+                        shutil.copyfile(pc['path'], tmp)
+                    else:
+                        host = plan_now.HUB if pc['host'] == 'local' else pc['host']
+                        r = subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ControlPath=none', '%s:%s' % (host, pc['path']), str(tmp)], capture_output=True, text=True, timeout=300)
+                        if r.returncode: raise RuntimeError('scp: ' + r.stderr.strip()[-160:])
                     got = hashlib.sha256(tmp.read_bytes()).hexdigest()
                     if not got.startswith(pc['sha']): tmp.unlink(); raise RuntimeError('sha256 %s is not the counted %s (the wave plan changed since the count)' % (got[:12], pc['sha']))
                     os.replace(tmp, dst)
