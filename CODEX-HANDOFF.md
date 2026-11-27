@@ -32,6 +32,8 @@ The owner directed this workflow during the 11-25/26 takeover. Use it for new wo
 
 - **Check the layer and the physical supply path used by the design.** P2 clearance had accepted M6 obstructions by reasoning from the general M8 signal limit even though the clock pins were on M7. Use the actual clock entry layer. The same signed macro's M5 supplies were logically assigned and physically open in the retained layout. Use exact same-net wire and via continuity on the actual power grid. For explicitly isolated private sign-off, disable the stock enqueue with OT_AUTO_EXPORT=0 and preserve the DO_NOT_COUNT marker.
 
+- **Check ownership against live plan membership and current workers.** Superseded launches hid current GUNIT, bk_sel, seqhost and PHY work under old or empty owners. Staff the actionable failure class against its actual current source, record the external dependencies separately, and keep the owners working in parallel. The native reset audit also found that names in an advisory can be aliases for distinct emitted reset copies. Trace the selected endpoint and physical source before rewriting reset topology. Cycle-count equality alone does not preserve the edge and order of reset relays.
+
 ## 0. Read order (15 min, then act)
 1. This file.
 2. ~/coord/CODEX-ROLE.md, the method part only. Section 1 below overrides its scope lines.
