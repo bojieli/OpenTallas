@@ -15,6 +15,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import env_provenance as EP      # noqa: E402
+import flow_health as FH         # noqa: E402
 import kit_wave as KW            # noqa: E402
 from test_kit_wave import cfg    # noqa: E402
 
@@ -526,6 +527,44 @@ def test_custom_place_request_is_indexed_and_uses_only_canonical_verdict(tmp_pat
     assert KW.PPV.verdict(out, req) == "GOOD"
     KW.PPV.write(index / KW.PPV.REVIEW, dict(good, verdict="BAD"))
     assert KW.PPV.verdict(out, req) == "BAD"
+
+
+def test_central_resolves_hub_alias_only_on_the_hub(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    fleet = tmp_path / "fleet_hosts.tsv"
+    fleet.write_text("intel2\ttolerant-swine\t1.2.3.4\tno\nepyc7\tloved-redfish\t1.2.3.5\tyes\n")
+    is_local_host = FH.is_local_host
+    real_run = subprocess.run
+    node = "tolerant-swine"
+    remote = []
+
+    def run(argv, **kwargs):
+        if argv[0] == "ssh":
+            remote.append(argv)
+            return subprocess.CompletedProcess(argv, 0, stdout='{"remote": true}')
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(FH, "is_local_host", lambda host: is_local_host(host, str(fleet), node))
+    monkeypatch.setattr(subprocess, "run", run)
+    ident = "a" * 64
+    doc = {"request_id": ident, "ready_at": 1}
+    index = tmp_path / "coord" / "autopilot" / "private_visual_requests" / ident
+
+    assert KW.PPV.central("intel2", "write", ident, doc) == doc
+    assert KW.PPV.load(index / KW.PPV.REQUEST) == doc
+    review = {"verdict": "GOOD", "request_id": ident}
+    KW.PPV.write(index / KW.PPV.REVIEW, review)
+    assert KW.PPV.central("intel2", "read", ident) == review
+    assert not remote
+
+    node = "loved-redfish"
+    assert KW.PPV.central("intel2", "write", ident, doc) == {"remote": True}
+    assert KW.PPV.central("intel2", "read", ident) == {"remote": True}
+    assert len(remote) == 2
+    for argv, operation in zip(remote, ("write", "read")):
+        assert argv[:-1] == ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none",
+                             "-o", "ConnectTimeout=5", "intel2"]
+        assert f" {operation} {ident}" in argv[-1]
 
 
 def test_place_only_observation_keeps_the_physical_chain_closed(tmp_path):
