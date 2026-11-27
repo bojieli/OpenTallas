@@ -526,3 +526,63 @@ def test_custom_place_request_is_indexed_and_uses_only_canonical_verdict(tmp_pat
     assert KW.PPV.verdict(out, req) == "GOOD"
     KW.PPV.write(index / KW.PPV.REVIEW, dict(good, verdict="BAD"))
     assert KW.PPV.verdict(out, req) == "BAD"
+
+
+def test_place_only_observation_keeps_the_physical_chain_closed(tmp_path):
+    sp = {"die": "s81_head", "kind": "type", "private": True, "goal": "place",
+          "item": "east", "event": "test", "geom_mem_gb": 4}
+    spec = KW.placed_geom_check(sp, "/kit/3_place.odb", "12x8", "place")
+    assert spec["grt"] is False and "--grt-deferred" in spec["rules_args"]
+    assert "place" not in KW.PPV.ROUTING_GOALS and "place" not in KW.CHAIN_STAGES
+    result = {"kit": "epyc8:/kit", "stage_fp": {"place": "1" * 64}}
+    checkpoint = {"odb_sha256": "2" * 64, "inode": 10, "size": 33, "mtime_ns": 13}
+    calls = []
+
+    def observe(key, stamp):
+        calls.append((key, stamp))
+        return {"verdict": "FAIL", "geom_dir": "epyc8:/checks"}
+
+    assert KW.PPV.place_geometry(tmp_path, result, checkpoint, observe)["verdict"] == "FAIL"
+    assert KW.PPV.place_geometry(tmp_path, result, checkpoint, observe)["verdict"] == "FAIL"
+    assert len(calls) == 1 and calls[0][1] == [10, 33, 13]
+    new = dict(checkpoint, odb_sha256="3" * 64)
+    assert KW.PPV.place_geometry(tmp_path, result, new, observe)["verdict"] == "FAIL"
+    assert len(calls) == 2 and calls[0][0] != calls[1][0]
+
+
+def test_historical_visual_request_alone_cannot_launch_geometry(tmp_path):
+    result = {"kit": "epyc8:/kit", "stage_fp": {"place": "1" * 64}}
+    checkpoint = {"odb_sha256": "2" * 64, "size": 33, "mtime_ns": 13}
+
+    def unexpected(*args):
+        pytest.fail("a stored visual request is not a live checkpoint observation")
+
+    assert KW.PPV.place_geometry(tmp_path, result, checkpoint, unexpected)["verdict"] == "ERROR"
+    assert not (tmp_path / KW.PPV.PLACE_GEOMETRY).exists()
+
+
+def test_remote_geometry_lease_serializes_and_refuses_a_stale_checkpoint(tmp_path):
+    odb = tmp_path / "3_place.odb"
+    odb.write_bytes(b"placed")
+    checker = tmp_path / "geom_check.sh"
+    checker.write_text(
+        'test "$OT_KIT_GOAL" = place || exit 98\n'
+        'echo run >> "$1/count"\n'
+        'sleep 0.08\n'
+        'echo \'{"verdict":"FAIL","line":"AUTO-GEOM FAIL checked"}\' > "$1/auto_geom.json"\n'
+        'echo "AP_AUTO_GEOM AUTO-GEOM FAIL checked"\n'
+        'exit 1\n'
+    )
+    stamp = odb.stat()
+    cmd = [sys.executable, "-I", "-c", KW.PPV.GEOMETRY_ONCE, str(tmp_path), str(checker), str(odb),
+           json.dumps([stamp.st_ino, stamp.st_size, stamp.st_mtime_ns])]
+    first, second = [subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                     for _ in range(2)]
+    for process in (first, second):
+        out, err = process.communicate(timeout=5)
+        assert process.returncode == 0 and not err and "KW_EXACT_PLACE_GEOM AUTO-GEOM FAIL checked" in out
+    assert (tmp_path / "count").read_text() == "run\n"
+    odb.write_bytes(b"replacement")
+    stale = subprocess.run(cmd, capture_output=True, text=True)
+    assert stale.returncode and "exact placement changed" in stale.stderr
+    assert (tmp_path / "count").read_text() == "run\n"

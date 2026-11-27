@@ -7,7 +7,7 @@ GOALS = {
     "auto":   (True,  None,                          "the runner's own sign-off goal (autopilot.default_goal: run_kit.sh -> route)"),
     "route":  (True,  ("cts", "grt", "route"),       "sign-off: CTS, GRT, route, finish, abstract"),
     "finish": (True,  ("cts", "grt", "route", "finish"), "sign-off; on a stage resume run_kit.sh runs it as route"),
-    "place":  (False, (),                            "stops at the placed checkpoint (no AUTO-GEOM chain)"),
+    "place":  (False, (),                            "stops at the placed checkpoint, with read-only automatic geometry for eligible private kits"),
     "geom":   (False, (),                            "stops after AUTO-GEOM"),
     "cts":    (False, ("cts",),                      "diagnostic: stops after CTS, never a sign-off"),
     "grt":    (False, ("cts", "grt"),                "diagnostic: stops after GRT, never a sign-off"),
