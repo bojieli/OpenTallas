@@ -551,3 +551,21 @@
   The regen row is gated by 08:00. If it misses 09:00, the next date is the 11-28 21:00 cut.
 - 2026-11-27 14:53 PST DONE [kv-int-r3] ot-run oth-ubuntu-1140755-1795819105 on open-snipe: rc=0 after 912 s, ended 22:53:30, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6/gate6.otrun.log, cmd: --priority die --hosts epyc12 --mem 80 --threads 16 --dir /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6 -- bash /srv/opentallas-scratch
 - 2026-11-27 14:54 PST DONE [kv-int-r3] ot-run oth-ubuntu-4123367-1795819073 on outgoing-giraffe: rc=0 after 990 s, ended 22:54:20, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_7.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
+- 2026-11-27 14:56 PST RESULT [KV-INT-R3/PV-RESET -> COORD; cc FABLE-RC-KV, CLASS-TRACK-R3] PV-RESET rows are ready and gated on the core5 form and on D. They join the 18:00 list.
+  Main row a724b904ad3f: 48 keys on 14 PV types, 0 cycles.
+  - C-RST-RELAY-REACH / C-FSTART-HALFCYCLE start-fan: the start-copy and reach fix covers the 9 relay types (v12e, v1e, v2ne, v3e, v4ne, v5e, v5ne, v6ne, v7e) that failed static START reach at 1.26-1.83 mm. Each gets a pinned rx and reader/writer start trunks, depth 6-8, hop <=405. v6ne is confirmed against placed data (69 sinks); the other 8 are static-only.
+  - Reset margin: plan_margin_um 63 (237 um hop) on 7 types.
+  - landing_raw_branches re-derived at the 237 um cap on 14 types. v6 uses 245 because 237 has no corridor for o_vport_E_N_vo_d3. This includes COORD 1247 item 3 (raw start-corridor consumers).
+  Seam row 113077a88b72: tap_landing_seam + tap_landing_seam_before_reset on all 31 PV types (COORD 1247 item 7, using 82a4bcb862f4). It is kit-time only and not physically validated. The only measured target is v6ne u_srl_3 -> u_srl_4, -140 TT post-hook.
+  Gates:
+  - core5 + main (pvr5): G0 0; ELAB, BIND and LATCHECK 0 (2746/2746, delta {}); PRE PASS with 0 findings on its own bind.
+  - core5 + main + seam (pvr6): G0 0; PRE PASS 0.
+  - D + main (pvreset7): G0 0; bind 0; LAT 2746; PRE PASS 0.
+  P-FALSE-GREEN closure:
+  - The 13 RSTREACH failures from the pvreset3 era are gone (0 on this form).
+  - The pv_v2/v6 RSTREACH that plan-only PRE prints on core5 is an artifact: plan-only PRE models the raw relay as rst_n_t1. With the exact bind it is 0. Cut gates must run PRE with --elab-dir on the form's own bind, and final.sh does.
+  Open, not in tonight's rows:
+  - 5 core-crossing ring lanes (v1e W, v1n W, v3n E, v5/v5n E_d1) need pin or street moves. DEFERRED to 11-28 09:00.
+  - No placed proof yet for the 8 static-only start-fan types.
+  - C-NEWROOT-TAPOFFSET: 0 missing ports on 16 PV types, but it stays OPEN per COORD 1447.
+  Provenance: the raw branches came from a locally patched kv_start_corridor_event tool (relay-origin fix). The push to main is requested. If it does not land by 17:30, this is noted as P-RUNTIME-MANIFEST.
