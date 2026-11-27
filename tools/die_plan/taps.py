@@ -32,6 +32,7 @@ import math
 import os
 import re
 import sys
+from functools import lru_cache
 from itertools import islice
 from pathlib import Path
 from threading import RLock
@@ -1637,6 +1638,98 @@ def bins_from_dump(dump, bin_um=10.8, origin=(0.0, 0.0), tap_net=False):
     return out
 
 
+def _sink_trial(pts, w, h, radius, cap, seeds):
+    cen, groups = _kmedians(pts, len(seeds), initial=seeds)
+    taps = []
+    for (x, y), g in zip(cen, groups):
+        if not g:
+            continue
+        x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
+        y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
+        r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+        taps.append([x, y, len(g), r])
+    fits = all(q[3] <= radius and q[2] <= cap for q in taps)
+    return fits, taps
+
+
+def _init_sink_trials(args):
+    global _sink_trial_args
+    _sink_trial_args = args
+
+
+def _read_sink_trial(seeds):
+    return _sink_trial(*_sink_trial_args, seeds)
+
+
+def _sink_trials(pts, w, h, radius, cap, parallel):
+    from concurrent.futures import ProcessPoolExecutor
+    import multiprocessing
+    from threading import active_count
+
+    k = max(1, math.ceil(len(pts) / cap))
+    last = max(k, min(len(pts), 256))
+    seeds = _kmedian_seeds(pts)
+    initial = list(islice(seeds, k))
+    args = pts, w, h, radius, cap
+    fits, taps = _sink_trial(*args, initial)
+    if fits or k == last:
+        return taps
+
+    jobs = 1
+    if (parallel and len(pts) >= 128 and multiprocessing.parent_process() is None
+            and active_count() == 1 and "fork" in multiprocessing.get_all_start_methods()):
+        from bind_emit_par import allocated_cpus
+        import reset_tree
+        jobs = min(allocated_cpus(), reset_tree.pool_size(last - k))
+    if jobs > 1:
+        # Farthest-first seeds have an invariant prefix. Trials do not share
+        # centers, so consuming results in k order preserves the first fit.
+        try:
+            with ProcessPoolExecutor(max_workers=jobs, mp_context=multiprocessing.get_context("fork"),
+                                     initializer=_init_sink_trials, initargs=(args,)) as pool:
+                while len(initial) < last:
+                    batch = []
+                    for _ in range(min(jobs, last - len(initial))):
+                        initial.append(next(seeds))
+                        batch.append(tuple(initial))
+                    for fits, taps in pool.map(_read_sink_trial, batch):
+                        if fits:
+                            return taps
+            return taps
+        except (OSError, RuntimeError):
+            return _sink_trials(pts, w, h, radius, cap, False)
+    for _ in range(k + 1, last + 1):
+        initial.append(next(seeds))
+        fits, taps = _sink_trial(*args, initial)
+        if fits:
+            break
+    return taps
+
+
+def _solve_sink_grid(pts, w, h, R, cap, root, parallel=False):
+    taps = _sink_trials(pts, w, h, R, cap, parallel)
+    # one spine drop per lattice step: merge near-coincident taps
+    merged = []
+    for tp in sorted(taps, key=lambda q: (round(q[1], 3), round(q[0], 3))):
+        m = next((q for q in merged if abs(q[0] - tp[0]) + abs(q[1] - tp[1]) < SEP_UM), None)
+        if m:
+            m[2] += tp[2]
+            m[3] = max(m[3], tp[3])
+        else:
+            merged.append(tp)
+    i0 = min(range(len(merged)), key=lambda i: (abs(merged[i][0] - root[0]) + abs(merged[i][1] - root[1]), i))
+    order = [merged[i0]] + [q for i, q in enumerate(merged) if i != i0]
+    return tuple(("clk" if i == 0 else f"clk_t{i}", round(q[0], 4), round(q[1], 4), q[2], round(q[3], 1))
+                 for i, q in enumerate(order))
+
+
+
+@lru_cache(maxsize=32)
+def _shared_sink_grid(pts, w, h, R, cap, root):
+    """Repeat immutable legacy tap inputs can share the exact ordered result."""
+    return _solve_sink_grid(pts, w, h, R, cap, root, parallel=True)
+
+
 def sink_taps(P, tn):
     """[(port, x, y, n_sinks, radius_um)] sink-anchored taps of type tn (cached per plan object and type)."""
     if P.types[tn].get("clock", {}).get("tap_mode") == "density":
@@ -1653,37 +1746,11 @@ def sink_taps(P, tn):
     pts = [(x, y) for x, y, _ in planned_sinks(P, tn)]
     if not pts:
         raise ValueError(f"type {tn}: clock.tap_mode 'sinks' but no planned sinks (no pins / ft slots)")
-    k = max(1, math.ceil(len(pts) / cap))
-    seeds = _kmedian_seeds(pts)
-    initial = list(islice(seeds, k))
-    while True:
-        cen, groups = _kmedians(pts, k, initial=initial)
-        taps = []
-        for (x, y), g in zip(cen, groups):
-            if not g:
-                continue
-            x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
-            y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
-            r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
-            taps.append([x, y, len(g), r])
-        if all(tp[3] <= R and tp[2] <= cap for tp in taps) or k >= len(pts) or k >= 256:
-            break
-        k += 1
-        initial.append(next(seeds))
-    # one spine drop per lattice step: merge near-coincident taps
-    merged = []
-    for tp in sorted(taps, key=lambda q: (round(q[1], 3), round(q[0], 3))):
-        m = next((q for q in merged if abs(q[0] - tp[0]) + abs(q[1] - tp[1]) < SEP_UM), None)
-        if m:
-            m[2] += tp[2]
-            m[3] = max(m[3], tp[3])
-        else:
-            merged.append(tp)
-    root = ck.get("tap_um", [w / 2, h / 2])
-    i0 = min(range(len(merged)), key=lambda i: (abs(merged[i][0] - root[0]) + abs(merged[i][1] - root[1]), i))
-    order = [merged[i0]] + [q for i, q in enumerate(merged) if i != i0]
-    out = [("clk" if i == 0 else f"clk_t{i}", round(q[0], 4), round(q[1], 4), q[2], round(q[3], 1))
-           for i, q in enumerate(order)]
+    root = tuple(ck.get("tap_um", [w / 2, h / 2]))
+    if os.environ.get("OT_NORMALIZE_POOL") == "1":
+        out = list(_shared_sink_grid(tuple(pts), w, h, R, cap, root))
+    else:
+        out = list(_solve_sink_grid(pts, w, h, R, cap, root))
     _CACHE[key] = (P, out)
     return out
 

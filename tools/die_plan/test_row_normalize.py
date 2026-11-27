@@ -217,3 +217,31 @@ def test_land_reach_flag_off_changes_nothing_and_on_reseats(tmp_path):
     assert rep["steps"]["landreach"] and rep["changed"]["landreach"] == 1 and on["partition_types"]["t"]["hard_cores"][0]["origin_um"] != [300.0, 1000.0]
     assert rep["touched_types"] == ["t"]               # the later steps (legal / tapname / landremap / retap) see the re-seated type
     assert RN.normalize_plan(base, _lr_plan({"enable": 1}), tree=str(tmp_path), skip=["landreach"], hooks=NOHOOK)["steps"].get("landreach") is None
+
+
+
+def test_legacy_sink_trials_keep_first_feasible_result(monkeypatch):
+    import reset_tree
+    import taps
+
+    monkeypatch.setattr(reset_tree, "pool_size", lambda n: min(n, 4))
+    points = tuple((float(x + 2), float(y + 2)) for x in range(12) for y in range(12))
+    args = points, 16.0, 16.0, 2.5, 16, (8.0, 8.0)
+    serial = taps._solve_sink_grid(*args)
+    assert taps._solve_sink_grid(*args, parallel=True) == serial
+    taps._shared_sink_grid.cache_clear()
+    try:
+        assert taps._shared_sink_grid(*args) == serial
+        assert taps._shared_sink_grid(*args) == serial
+        assert taps._shared_sink_grid.cache_info().hits == 1
+    finally:
+        taps._shared_sink_grid.cache_clear()
+
+    import threading
+
+    monkeypatch.setattr(threading, "active_count", lambda: 2)
+    def unsafe_pool(_):
+        raise AssertionError("must leave the trial in the serial reader")
+
+    monkeypatch.setattr(reset_tree, "pool_size", unsafe_pool)
+    assert taps._solve_sink_grid(*args, parallel=True) == serial

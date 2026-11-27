@@ -215,10 +215,64 @@ def step_tapname(raw, types, plan_path=None, base_count=None, legal_for=None):
 LANDREMAP_KEYS = ("landing_raw_branches", "landing_reader_start", "landing_writer_start", "landing_local_resets")
 
 
-def tapset_changed(braw, raw, base_path, plan_path, types):
-    """the touched types whose tap set (names, sites) differs from BASE (the retap rule)"""
+def _init_tap_readers(readers):
+    global _tap_readers
+    _tap_readers = readers
+
+
+def _solve_tap_row(task):
+    side, tn = task
+    try:
+        return side, tn, _tap_readers[side](tn)
+    except Exception:  # Let the original call raise in canonical row order.
+        return side, tn, None
+
+
+def tap_readers(braw, raw, base_path, plan_path, types):
     import retap as RT
-    to, tn_ = RT._plan_taps(braw, str(base_path)), RT._plan_taps(raw, str(plan_path))
+    from functools import cache
+
+    stock = (RT._plan_taps(braw, str(base_path)), RT._plan_taps(raw, str(plan_path)))
+    maps = [{}, {}]
+    if os.environ.get("OT_NORMALIZE_POOL") == "1" and len(types) > 1:
+        import multiprocessing
+        from concurrent.futures import ProcessPoolExecutor
+        from threading import active_count
+        from bind_emit_par import allocated_cpus
+        import reset_tree
+
+        # These modes can start a common wavefront solve from a tap read.
+        # Leave them on the stock shared Plan readers instead of duplicating it.
+        def local(typ):
+            clock = (typ or {}).get("clock") or {}
+            return not clock.get("control_sinks") and clock.get("tap_mode") not in ("grid+explicit", "grid+sinks", "sinks")
+
+        names = [tn for tn in types if tn in _pt(braw)
+                 and local(_pt(braw)[tn]) and local(_pt(raw)[tn])]
+        jobs = min(allocated_cpus(), reset_tree.pool_size(len(names) * 2))
+        if (jobs > 1 and "fork" in multiprocessing.get_all_start_methods()
+                and multiprocessing.parent_process() is None and active_count() == 1):
+            try:
+                tasks = [(side, tn) for side in range(2) for tn in names]
+                with ProcessPoolExecutor(max_workers=jobs, mp_context=multiprocessing.get_context("fork"),
+                                         initializer=_init_tap_readers, initargs=(stock,)) as pool:
+                    for side, tn, result in pool.map(_solve_tap_row, tasks):
+                        if result is not None:
+                            maps[side][tn] = result
+            except (OSError, RuntimeError):
+                pass
+
+    def reader(side):
+        @cache
+        def read(tn):
+            return maps[side][tn] if tn in maps[side] else stock[side](tn)
+        return read
+    return reader(0), reader(1)
+
+
+def tapset_changed(braw, raw, base_path, plan_path, types, *, readers=None):
+    """the touched types whose tap set (names, sites) differs from BASE (the retap rule)"""
+    to, tn_ = readers or tap_readers(braw, raw, base_path, plan_path, types)
     key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
     out = []
     for tn in types:
@@ -326,15 +380,24 @@ def _prepare_base_reset_trees(stack, braw, raw, base_path, changed):
     return dict.fromkeys(eligible, future)
 
 
-def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_trees=None):
+def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_trees=None, old_taps=None, close_base=None):
     """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
     from functools import cache
     import retap as RT
 
-    def tree_factory(context, path):
+    parallel = os.environ.get("OT_NORMALIZE_POOL") == "1"
+
+    def plan_tree(context, path, names):
+        return RT._plan_tree(context, path, names) if names else RT._plan_tree(context, path)
+
+    def tree_factory(context, path, names=()):
         if context is not braw:
-            return RT._plan_tree(context, path)
-        fallback = cache(lambda: RT._plan_tree(context, path))
+            # All old ownership reads are complete before REPUBLISH builds
+            # the candidate tree, so its pool need not coexist with ours.
+            if close_base is not None:
+                close_base()
+            return plan_tree(context, path, names)
+        fallback = cache(lambda: plan_tree(context, path, [tn for tn in names if tn not in base_trees]))
 
         def read(tn):
             if tn in base_trees:
@@ -347,8 +410,14 @@ def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_tre
             return fallback()(tn)
         return read
 
-    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types),
-                     tree_fn=tree_factory if base_trees else None)
+    def tap_factory(context, path):
+        return old_taps if context is braw else RT._plan_taps(context, path)
+
+    base_trees = base_trees or {}
+    kwargs = {"prepare_tree_fn": tree_factory} if parallel else {"tree_fn": tree_factory if base_trees else None}
+    if old_taps:
+        kwargs.update(taps_fn=tap_factory, ctaps_fn=RT._plan_consumer_taps)
+    rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types), **kwargs)
     for tn, keep in (protect or {}).items():
         _restore(_pt(raw)[tn], keep)
     return {tn: len(ch) for tn, ch in rep.items()}
@@ -363,7 +432,14 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
     rep["touched_types"] = types
     prot = {}
     base_trees = {}
+    old_taps = None
     with in_tree(tree), contextlib.ExitStack() as workers:
+        # Scope the solver policy to normalized plans. Standalone readers keep
+        # their existing behavior, and zero is the serial control for this path.
+        if "OT_NORMALIZE_POOL" not in os.environ:
+            os.environ["OT_NORMALIZE_POOL"] = "1"
+            workers.callback(os.environ.pop, "OT_NORMALIZE_POOL", None)
+        base_workers = workers.enter_context(contextlib.ExitStack())
         if isinstance(raw.get("land_reach"), dict) and raw["land_reach"].get("enable") and "landreach" not in skip:
             # C-LAND-REACH (default off, plan flag land_reach.enable): re-seat flagged hard cland cores before the steps that read seats
             import land_reach as LR
@@ -390,9 +466,13 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                 if "landremap" in hooks:
                     r, prot = hooks["landremap"](braw, raw, types)
                 else:
-                    ch = tapset_changed(braw, raw, base_path, plan_path, types) if types else []
+                    readers = None
+                    if types and os.environ.get("OT_NORMALIZE_POOL") == "1":
+                        readers = tap_readers(braw, raw, base_path, plan_path, types)
+                        old_taps = readers[0]
+                    ch = tapset_changed(braw, raw, base_path, plan_path, types, readers=readers) if types else []
                     if "retap" not in skip and "retap" not in hooks:
-                        base_trees = _prepare_base_reset_trees(workers, braw, raw, base_path, ch)
+                        base_trees = _prepare_base_reset_trees(base_workers, braw, raw, base_path, ch)
                     r, prot = step_landremap(braw, raw, tree, plan_path, ch)
             else:
                 if "retap" in hooks:
@@ -400,7 +480,9 @@ def normalize_plan(braw, raw, tree=None, base_path=None, plan_path=None, skip=()
                     for tn, keep in prot.items():
                         _restore(_pt(raw)[tn], keep)
                 else:
-                    r = step_retap(braw, raw, base_path, plan_path, types, prot, base_trees=base_trees) if types else {}
+                    r = (step_retap(braw, raw, base_path, plan_path, types, prot,
+                                    base_trees=base_trees, old_taps=old_taps,
+                                    close_base=base_workers.close if old_taps else None) if types else {})
             rep["steps"][name] = r
             rep["seconds"][name] = round(time.time() - t0, 1)
     rep["changed"] = {k: len(v) for k, v in rep["steps"].items() if isinstance(v, dict) and v}
