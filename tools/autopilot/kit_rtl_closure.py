@@ -18,26 +18,27 @@ def _files(kd):
     return [Path(s) for s in (kd/'kit_rtl.f').read_text().splitlines() if s.strip()]
 
 
-def relocate(directory):
+def relocate(directory, runtime_directory=None):
     """Only runtime package prefixes change; original roots/origins remain immutable."""
     kd=Path(directory).absolute(); mf=kd/'kit_rtl.json'
     if not mf.is_file():return {}
     meta=json.loads(mf.read_text());c=meta.get('input_closure')
     if not c:return {}
-    old=c['runtime_directory'];new=str(kd)
+    old=c['runtime_directory'];new=str(Path(runtime_directory).absolute() if runtime_directory else kd)
     if old==new:return {}
-    oldroot=str(Path(old).parent);newroot=str(kd.parent)
+    oldroot=str(Path(old).parent);newroot=str(Path(new).parent)
     def rewrite(x):
         if isinstance(x,dict):
             return {k:(dict(v,runtime_directory=new) if k=='input_closure' else rewrite(v)) for k,v in x.items()}
         if isinstance(x,list):return [rewrite(v) for v in x]
         if isinstance(x,str) and x.startswith(oldroot+'/'):return newroot+x[len(oldroot):]
         return x
-    for p in (mf,kd/'kit_topology.json',kd/'kit_topology_prepared.json'):
+    for p in (mf,kd/'kit_topology.json',kd/'kit_topology_prepared.json',kd/'native_sink_censuses.json'):
         if p.is_file():p.write_text(json.dumps(rewrite(json.loads(p.read_text())),indent=1)+'\n')
     for p in kd.glob('kit_rtl*.f'):
         p.write_text('\n'.join(str(rewrite(s)) for s in p.read_text().splitlines())+'\n')
-    for p in (kd.parent/'gen').glob('*/kit_rtl_paths.json'):
+    gen_paths = (kd.parent/'gen').glob('*/kit_rtl_paths.json') if runtime_directory is None else ()
+    for p in gen_paths:
         p.write_text(json.dumps(rewrite(json.loads(p.read_text())),indent=1)+'\n')
     return dict(old_runtime_directory=old,runtime_directory=new)
 
