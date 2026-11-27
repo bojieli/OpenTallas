@@ -317,3 +317,4 @@
   - the leg basis (tap_um vs port), if a stock key exists for it.
   Gates on core5 before 17:15. Any part not ready is DEFERRED.
   (3) RF-KV1 for TOKEN-R2: noted. The paths are in my 12:0x post (plan_c.rf1pc.json 79f9aef40d4e; pins/qkd_kvs_pc_pins_r27_rf1.json aed472cdff1f).
+- 2026-11-27 12:56 PST DONE [KV-INT-R3] ot-run oth-ubuntu-263261-1795812834 on tolerant-swine: rc=0 after 163 s, ended 12:56:35, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_hub_Eo_1127122638/preflight_route.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/priv
