@@ -1761,6 +1761,53 @@ def rearm_candidates(state, cfg, die, d, log=None):
 # watcher, the run_kit.sh whose goal finish skipped the FF GRT step).  (where, name, source): where = "kit" (<kit>/<name>) or "runner" (<work>/gen/<name>, the generated run_kit.sh);
 # source = a path under rt/current/tools (verbatim copy) or "gen_phys.RUN_KIT" (the generated runner text).  kit_flow_refresh.py (TOOLS-DECOUPLE) keeps handling the other verbatim kit scripts.
 RT_CURRENT = "/srv/opentallas-scratch2/claude/rt/current"       # FLOW-FIX-2045: where the stage refresh takes the flow scripts from (never the launch-pinned tree)
+# CONFOUND-CTL 11-27 (HEAD-INT-R3): private-spec --pin-flow-refresh (spec flow_refresh_pin) keeps an A/B probe off the moving rt/current:
+# the stage flow refresh reads the spec's launch tree, the run-item driver is not re-executed from rt/current (runitem_driver), and the
+# S1 control code (control_root) stays the driver's own; the driver must be the pinned rt's kit_wave.py (pin_driver_refusal), so the
+# FLOW_REFRESH_FILES / pregrt sources (the driver's tree) are the pinned rt too.  Place-only (PIN_GOALS): signoff_chain.py reads
+# rt/current.  A bind-stamp refit is refused (declare the bind's rt).  Not pinned (gates, not result tools): run_kit.sh's
+# env_provenance.py (${OT_RT_TOOLS:-rt/current}) and the bind probe's tools/die_plan + kit_topology.py (OT_BIND_PROBE_RT).
+_PIN_CONTROL = []
+
+
+def flow_refresh_root(sp, tsrc):
+    """-> (root the stage flow refresh reads, pinned?): the launch tree tsrc for a flow_refresh_pin spec, else RT_CURRENT (FLOW-FIX-2045)"""
+    if sp.get("flow_refresh_pin") and tsrc:
+        return str(tsrc), True
+    return RT_CURRENT, False
+
+
+def pin_refuse(spec_path, sp, why):
+    """CONFOUND-CTL: a flow_refresh_pin spec that cannot run pinned -> result.json FAIL (stage pin) and rc 2, before anything is built"""
+    print(f"KW_STAGE pin {now_s()} :: REFUSED {why}", flush=True)
+    rp = Path(spec_path).parent / "result.json"
+    try:
+        if json.loads(rp.read_text()).get("verdict") == "PASS":
+            return 2                                     # a finished probe keeps its PASS record
+    except (OSError, ValueError, AttributeError):
+        pass
+    rp.write_text(json.dumps({"stage": "pin", "verdict": "FAIL", "cls": "FLOW", "die": sp.get("die"),
+                                                                "item": sp.get("item"), "tail": f"KW_PIN: {why}"}, indent=1))
+    return 2
+
+
+PIN_GOALS = ("place", "geom")       # signoff_chain.py (route / finish) still reads rt/current: a pinned A/B is place-only
+
+
+def pin_driver_refusal(sp, own=None):
+    """'' or why a flow_refresh_pin spec cannot run under this driver (it must be <tools_rt>/tools/autopilot/kit_wave.py)"""
+    if not sp.get("flow_refresh_pin"):
+        return ""
+    rt = sp.get("tools_rt")
+    if not rt:
+        return "spec flow_refresh_pin without tools_rt"
+    try:
+        mine = Path(own or __file__).resolve().parents[2]
+        if mine != Path(rt).resolve():
+            return f"spec flow_refresh_pin: run it with {rt}/tools/autopilot/kit_wave.py, not {mine}"
+    except (OSError, IndexError) as e:
+        return f"spec flow_refresh_pin: {e}"
+    return ""
 FLOW_REFRESH_FILES = (
     ("kit", "stage_odb_cap.py", "die_plan/stage_odb_cap.py"),
     ("kit", "tt_setup_repair.tcl", "die_plan/tt_setup_repair.tcl"),                          # lever 8: stall / wall-time bound of the TT setup repair
@@ -7377,7 +7424,8 @@ INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", 
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "kit_rtl_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "kit_rtl_reuse", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
-              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins"}
+              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins",
+              "flow_refresh_pin"}                       # CONFOUND-CTL: a tools choice like tools_rt, not a design input
 
 
 def input_hash(sp, prov_key=None):
@@ -9108,7 +9156,7 @@ def control_root(env=None, own=None):
     dir, is missing, or OT_CONTROL_ROOT=0.  OT_CONTROL_ROOT=<dir> names it explicitly (tests, a pinned control rt).  Result-shaping tools stay pinned."""
     env = os.environ if env is None else env
     v = env.get("OT_CONTROL_ROOT", "")
-    if v == "0":
+    if v == "0" or _PIN_CONTROL:                     # CONFOUND-CTL: a flow_refresh_pin run keeps its own control code
         return None
     if not v and env is os.environ and (env.get("PYTEST_CURRENT_TEST") or env.get("OT_UNDER_TEST")):
         return None                                  # a test of the driver never reaches out to the host's rt/current unless it names one
@@ -10650,6 +10698,14 @@ def private_spec_cmd(a):
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
+    if getattr(a, "pin_flow_refresh", False):            # CONFOUND-CTL 11-27
+        if not a.rt:
+            print("private-spec: --pin-flow-refresh needs a declared tools runtime (--rt SHA)", file=sys.stderr)
+            return 2
+        if not sp.get("tools_rt"):
+            print("private-spec: --pin-flow-refresh: the tree uses its own tools (no tools_rt); nothing to pin", file=sys.stderr)
+            return 2
+        sp["flow_refresh_pin"] = True
     predecessor = getattr(a, "resume_from", None)
     restart_at = getattr(a, "restart_at", None)
     reuse_early = getattr(a, "reuse_kit_rtl_from", None)
@@ -11307,7 +11363,7 @@ def runitem_driver(spec_path, env=None):
         sp = json.loads(Path(spec_path).read_bytes())
     except (OSError, ValueError):
         return own
-    if not sp.get("private"):
+    if not sp.get("private") or sp.get("flow_refresh_pin"):
         return own
     root = control_root(env)
     return (root / "kit_wave.py").resolve() if root else own
@@ -11662,6 +11718,12 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
     spec_bytes = Path(spec_path).read_bytes()
     sp = json.loads(spec_bytes)
+    _PIN_CONTROL[:] = [True] if sp.get("flow_refresh_pin") else []
+    _pin_why = pin_driver_refusal(sp)
+    if _pin_why:
+        return pin_refuse(spec_path, sp, _pin_why)
+    if sp.get("flow_refresh_pin"):
+        print(f"KW_PIN driver {Path(__file__).resolve()} tools_rt {sp.get('tools_rt')}: flow refresh, driver and control code pinned", flush=True)
     prepare_publication = sp.get("publish_place_prepare") if sp.get("dry_gen") and not prepared else None
     out = Path(spec_path).absolute().parent
     prior = PPV.load(out / "result.json") if resume_reviewed else {}
@@ -11717,6 +11779,8 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
     if goal and not sp.get("private"):
         print(f"run-item: --goal applies to private specs only (a wave spec stops at AUTO-GEOM and the tick enqueues it); ignored", flush=True)
     chain_goal = prior["goal"] if resume_reviewed else chain_goal_of(sp, goal)
+    if sp.get("flow_refresh_pin") and chain_goal not in PIN_GOALS:
+        return pin_refuse(spec_path, sp, f"goal {chain_goal}: a pinned probe is place-only ({'/'.join(PIN_GOALS)}; pass --goal place); signoff_chain reads rt/current")
     if sp.get("private") and chain_goal in ("route", "finish", "auto"):     # KNOWN-PROBLEM gate (launch_gate.py, OWNER 11-25 05:0x): known problems -> place probe
         try:
             import launch_gate as KPG
@@ -11847,7 +11911,9 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         # FLOW-FIX-2045 (FABLE-FLOW-0245: the stage refresh ran from the kit's launch-pinned tools_rt: 0 of 251 refreshed kits got the subtree patch, 240 QC kits kept the pre-fix tools of fd0e65ccdd36):
         # the refresher AND the flow scripts it patches come from rt/current on the host that holds the kit; the pin stays for the design inputs (plan, src, snapshot) only.  The pinned launch tree
         # is the fallback when rt/current is not there.
-        _rtc = RT_CURRENT
+        _rtc, _pinned = flow_refresh_root(sp, tsrc)         # CONFOUND-CTL 11-27: a pinned probe refreshes from its own launch tree
+        if _pinned:
+            print(f"KIT_FLOW_REFRESH PINNED stage {stage}: {_rtc} (spec flow_refresh_pin; rt/current not used)", flush=True)
         _kfr = f"{_rtc}/tools/autopilot/kit_flow_refresh.py"
         _kfp = f"{tsrc}/tools/autopilot/kit_flow_refresh.py"
         # FLOW-REFRESH-ALL-1124: the gen-time tools tree (launch tree) lets the refresher carry gen's appended / prefixed edits onto rt's flow scripts
@@ -12879,6 +12945,9 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
             # SEMANTIC-TOOLSKEW-1122: a checker that can replay gets the bind's plan + this kit's type (hash rule otherwise)
             _sem = f"$(grep -q semantic_replay {q(_tsk)} && echo --plan {q(plan)} --type {q(T)})"
             rc, txt = run("bind_toolskew", remote(f"if [ -f {q(_tsk)} ]; then python3 -I {q(_tsk)} check --bind-out {q(bind)} --tools {q(tsrc)} {_sem}; else echo 'BIND-GEN-TOOLSKEW skipped: no checker in this rt'; fi"), idempotent=True)
+            if rc and os.environ.get("OT_BIND_RT", "1") != "0" and sp.get("flow_refresh_pin"):
+                return fail("pin", f"KW_PIN: the bind needs another tools rt (BIND-GEN-TOOLSKEW) but the spec is pinned to {sp.get('tools_rt')}: "
+                                   f"declare --rt <the bind's rt> instead of a silent refit\n{txt}")
             if rc and os.environ.get("OT_BIND_RT", "1") != "0":
                 # T1 (FABLE-FLOW-0800: rt/current moved 16x in 108 min; 18 S81 BIND-GEN-TOOLSKEW FAILs): gen runs the generators of the
                 # bind's OWN rt.  The rt snapshot on G whose reset / relay generators fit the bind stamp (the stamp's tools_sha first) becomes
@@ -23727,6 +23796,10 @@ def main(argv=None):
     ps_.add_argument("--rt", metavar="SHA", help="FLOW-CLKGRT-1121: declared tools runtime = rt/<sha12> snapshot for gen / kit_rtl / the launch tree (e.g. the "
                                                "runtime the bind was made on), recorded in spec private.rt + kit_env_provenance.json; flow scripts are still "
                                                "refreshed from rt/current at each stage (FLOW-FIX-2045), so new flow tcl reach the kit; env and ENV-PROVENANCE unchanged")
+    ps_.add_argument("--pin-flow-refresh", action="store_true", help="CONFOUND-CTL 11-27 (HEAD-INT-R3): an A/B probe stays on the declared --rt: the stage "
+                                                                    "flow refresh reads the launch tree, run-item is not re-executed from rt/current and keeps "
+                                                                    "its control code (spec flow_refresh_pin; run it with rt/<sha>/tools/autopilot/kit_wave.py). "
+                                                                    "Place / geom goals only; a bind-stamp rt refit is refused. Default off (FLOW-FIX-2045 behaviour)")
     pp_ = sub.add_parser("private-provenance", help="FLOW-FLEET-R1: write PROVENANCE (kind private) for a private kit that signed off outside run-item "
                                                     "(seal the tree now; counts when sealed + routed LEC EQUIVALENT + flow tag)")
     pp_.add_argument("spec", help="private spec dir or its spec.json")

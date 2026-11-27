@@ -332,7 +332,8 @@ def test_the_wave_stage_refresh_runs_from_rt_current_not_the_launch_pin():
     src = open(KW.__file__).read()
     i = src.index("def flow_refresh(stage):")
     body = src[i:i + 3200]
-    assert "_rtc = RT_CURRENT" in body and "--rt {q(_rtc)}" in body and body.index("--rt {q(_rtc)}") < body.index("--rt {q(tsrc)}")
+    assert "_rtc, _pinned = flow_refresh_root(sp, tsrc)" in body and "--rt {q(_rtc)}" in body and body.index("--rt {q(_rtc)}") < body.index("--rt {q(tsrc)}")
+    assert KW.flow_refresh_root({}, "/launch") == (KW.RT_CURRENT, False)          # CONFOUND-CTL: unpinned specs keep rt/current
     assert KW.RT_CURRENT == "/srv/opentallas-scratch2/claude/rt/current"
     bundle = open(os.path.join(os.path.dirname(KW.__file__), "signoff_chain.py")).read()
     assert '"--src", f"tools/autopilot={fl}"' in bundle
