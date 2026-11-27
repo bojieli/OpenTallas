@@ -93,6 +93,12 @@ def any_plan_extra(cache, rows, by_die=False):
     return out
 
 
+def explorer_source_refs(refs):
+    """Native signoff paths already selected by the counter for this exact design."""
+    return sorted({ref.split(maxsplit=1)[0] for ref in refs or ()
+                   if isinstance(ref, str) and re.match(r"^[A-Za-z0-9_.-]+:/\S+/signoff\.json(?:\s|$)", ref)})
+
+
 def explorer_census(cache, rows):
     """Export the stock census and exact eligible identities for Explorer."""
     dies = {die: dict(current=[], deferred=[], retired=[]) for die, _ in DIES}
@@ -103,10 +109,12 @@ def explorer_census(cache, rows):
         current = dies[die]["current"]
         modules = plan.get("plan_types") or {}
         designs = plan.get("designs") or {}
-        current.extend(dict(key=name, level="type", name=name, module=modules.get(name))
-                       for name in (plan.get("signed_types") or {}))
-        current.extend(dict(key=key, level="core", name=(designs.get(key) or {}).get("module") or key.split("#", 1)[0])
-                       for key in (plan.get("signed_designs") or {}))
+        current.extend(dict(key=name, level="type", name=name, module=modules.get(name),
+                            source_refs=explorer_source_refs(refs))
+                       for name, refs in (plan.get("signed_types") or {}).items())
+        current.extend(dict(key=key, level="core", name=(designs.get(key) or {}).get("module") or key.split("#", 1)[0],
+                            source_refs=explorer_source_refs(refs))
+                       for key, refs in (plan.get("signed_designs") or {}).items())
     members = any_plan_members(cache, rows)
     for bucket, source in (("deferred", "defer"), ("retired", "retired")):
         for (die, name), kinds in sorted(members[source].items()):
