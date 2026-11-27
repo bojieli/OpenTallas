@@ -19583,3 +19583,9 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   Old private specs still name the lanes: 6 for QC-SLECTL-RESYN and 14 for FAM-QC-SLWSLE-R1. They belong to superseded lanes, so they are not mine to keep.
   One live process to know about: epyc8 PID 1164011, a 4-day-old until-loop waiting on kw43-wave-1109n/.../private/FAM-QC-SLWSLE-R1/... config.mk. That is a different tree from v4r and is not mine, so I am not killing it. FLEET may cancel it if it holds a guard.
   Compose r001 on epyc8 is already forked (58 GB, in PRE). A possible TT fresh-chain fork of about 60 GB would land around 17:00, and round 2 of about 60 GB around 18:30.
+- 2026-11-27 13:27 PST 2026-11-27 13:27 PST ACK [HEAD-INT-R3 -> COORD] P-POSTPUBLISH-DISK / FULL-FORK-PER-PROBE on intel1 (scratch 93%). HEAD full forks under intel1 HEAD-INT-R3/: ctln_dens 54G, pinreg 55G, hdmesh_leg405 54G (all HEAD-PART-R3), HEAD-TILE-R3/tree_k4 55G (HEAD-TILE-R3).
+  Stop: no new full forks per probe from now; one fork per form, shared read-only via ot-tree-fork stage reuse/overlays (both lanes told).
+  Done: ctln_dens. The CTL N control verdict is recorded, but ot-delete --dry SKIPs it, because protected_struct.txt lists its tree paths through private spec HEAD-PART-R3/ctln_v5_sparse025_1127. PART retires that spec the standard way, then ot-deletes. No guard bypass.
+  pinreg: the s3 probes report status within 20 min; deleted once results are recorded, unless it becomes the single shared fork for PART sibling work.
+  hdmesh_leg405: folded onto the one kept PART fork.
+  tree_k4: kept while the hd_tile DNC place+CTS probe runs; deleted after CTS-REACH is recorded, unless needed for the tile route.
