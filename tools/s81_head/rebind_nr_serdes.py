@@ -125,13 +125,34 @@ def rerun_bench_evidence(old_plan, new_plan, tools):
     with tempfile.TemporaryDirectory() as d:
         rc = mod.main(old_plan, new_plan, d, tools)
         ev = json.loads((Path(d) / "entry_phase_evidence.json").read_text())
+        files = {"tb.sv": (Path(d) / "tb.sv").read_bytes(), "ot_dp_rrelay_ph.sv": (Path(d) / "ot_dp_rrelay_ph.sv").read_bytes(),
+                 "cases": [l for l in (Path(d) / "bench.log").read_text().splitlines() if l.startswith("CASE ")]}
     if rc != 0 or ev.get("verdict") != "PASS":
         raise ValueError("HEAD native reset instance bindings changed: the re-run entry-phase bench does not pass")
+    ev["_rerun_files"] = files
     return ev
+
+
+def check_rerun_files(receipt_dir, rerun_ev):
+    """tb.sv, the cell file and the CASE lines of the receipt's bench.log must be byte/line equal to what the guard's own re-run produced"""
+    files = rerun_ev.get("_rerun_files")
+    if files is None:
+        return
+    root = Path(receipt_dir)
+    for name in ("tb.sv", "ot_dp_rrelay_ph.sv"):
+        f = root / name
+        if not f.is_file() or f.read_bytes() != files[name]:
+            raise ValueError("HEAD native reset instance bindings changed: receipt %s differs from the guard's own bench re-run (or is missing)" % name)
+    log = root / "bench.log"
+    got = [l for l in log.read_text(errors="replace").splitlines() if l.startswith("CASE ")] if log.is_file() else []
+    if got != files["cases"]:
+        raise ValueError("HEAD native reset instance bindings changed: receipt bench.log CASE lines differ from the guard's own bench re-run")
 
 
 def check_rerun(receipt_ev, rerun_ev):
     """the receipt evidence must equal the guard's own bench re-run on rows, simulated cases and cell hash (log text and paths are not compared)"""
+    rerun_ev = {k: v for k, v in rerun_ev.items() if k != "_rerun_files"}
+
     def case_key(c):
         return (c.get("partition"), c.get("version"), c.get("h"), c.get("strap"), c.get("release_delta"), c.get("expect_cycles"), c.get("sim_cycles"))
     same = (receipt_ev.get("rows") == rerun_ev.get("rows")
@@ -229,7 +250,9 @@ def main():
         cell_sha = hashlib.sha256(pin_entry_phase.CELL_RTL.encode()).hexdigest()
         diff = check_changed_binding(serdes_parts(old), serdes_parts(new), nr, head_native_release.digest(new),
                                      args.new_receipt.parent if args.new_receipt else None, cell_sha)
-        check_rerun(json.loads((args.new_receipt.parent / nr["proof"]["entry_phase_evidence"]).read_text()), rerun_bench_evidence(args.old_plan, args.new_plan, args.tools))
+        _rr = rerun_bench_evidence(args.old_plan, args.new_plan, args.tools)
+        check_rerun(json.loads((args.new_receipt.parent / nr["proof"]["entry_phase_evidence"]).read_text()), _rr)
+        check_rerun_files(args.new_receipt.parent, _rr)
         old_plan = schema.Plan(old, args.old_plan)
         head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)     # anchor the old side as the old path does
         new_plan0 = schema.Plan(new, args.new_plan)
@@ -247,7 +270,7 @@ def main():
             else:
                 files[os.path.relpath(src, args.out.resolve())] = fsha
         nr["files"] = files
-        nr["limits"] = list(nr.get("limits") or []) + ["entry-phase seam timing, whole-cycle label, START entry and strap tie: PENDING die STA on this plan digest"]
+        nr["limits"] = list(nr.get("limits") or []) + ["entry-phase seam timing, whole-cycle label, START entry and strap tie: PENDING die STA on this plan digest; die STA proxy_first_flop (u_rst_in); cap_r/cap_f not resolved in serdes view"]
         candidate = args.out / "candidate_receipt.json"
         candidate.write_text(json.dumps(nr, indent=1) + "\n")
         accepted = args.out / "native_release_receipt.json"
@@ -256,7 +279,7 @@ def main():
         candidate.replace(accepted)
         cover = dict(old_plan_sha256=hexdigest(args.old_plan), new_plan_sha256=hexdigest(args.new_plan), old_receipt_sha256=hexdigest(args.old_receipt),
                      new_receipt_sha256=hexdigest(args.new_receipt), covered=diff, wf_plan_release_moved=moved,
-                     pending="PENDING die STA on the new plan digest: seam setup/hold at the new capture edge, whole-cycle label, START entry, strap tie in the generated top")
+                     pending="PENDING die STA on the new plan digest (die STA proxy_first_flop (u_rst_in); cap_r/cap_f not resolved in serdes view): seam setup/hold at the new capture edge, whole-cycle label, START entry, strap tie in the generated top")
         (args.out / "changed_binding_cover.json").write_text(json.dumps(cover, indent=1) + "\n")
         print("CHANGED_BINDING_COVERED", len(diff), "paths", diff[:8])
         print("WF_PLAN_RELEASE_MOVED", moved)

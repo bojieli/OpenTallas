@@ -18,6 +18,11 @@ proc TECH {sub} { return 4000 }
 proc MASTER {sub} { if {$sub eq "getWidth"} { return 300 } ; if {$sub eq "getHeight"} { return 270 } }
 proc FAKESEAT {blk mx my w h halo} { return [list $mx $my] }
 proc NOSEAT {blk mx my w h halo} { return {} }
+proc SEATMX {blk mx my w h halo} { return [list $mx $my MX] }
+set ::EXIST {}
+proc BLK {sub args} {
+  if {$sub eq "findInst" || $sub eq "findNet"} { return [expr {[lsearch -exact $::EXIST [lindex $args 0]] >= 0 ? "EXISTING" : "NULL"}] }
+}
 proc DB {sub args} { if {$sub eq "findMaster"} { return [expr {[lindex $args 0] eq "BUFx2_ASAP7_75t_R" ? "MASTER" : "NULL"}] } }
 namespace eval odb {
   proc dbInst_create {blk m n} { lappend ::LOG [list inst $n]; return BINS }
@@ -40,7 +45,7 @@ proc FINS {sub args} { if {$sub eq "getLocation"} { return {100 200} } }
 
 def procs(src):
     out = []
-    for name in ("rt_relay_needed", "rt_relay_seat", "rt_overlap", "rt_snap_site", "rt_site_offsets", "rt_legal_seat", "rt_insert_relay"):
+    for name in ("rt_relay_report", "rt_relay_needed", "rt_relay_seat", "rt_overlap", "rt_snap_site", "rt_site_offsets", "rt_legal_seat", "rt_insert_relay"):
         m = re.search(r"^proc %s \{.*?\n\}\n" % name, src, re.S | re.M)
         assert m, name
         out.append(m.group(0))
@@ -137,7 +142,7 @@ proc BLK {sub args} {
   if {$sub eq "getRows"} { return {ROW1} }
   if {$sub eq "getInsts"} { return {I1 BIG} }
 }
-proc ROW1 {sub} { if {$sub eq "getBBox"} { return RB } ; if {$sub eq "getSite"} { return SITE } }
+proc ROW1 {sub} { if {$sub eq "getBBox"} { return RB } ; if {$sub eq "getSite"} { return SITE } ; if {$sub eq "getOrient"} { return MX } }
 proc RB {sub} { switch $sub { xMin {return 0} yMin {return 0} xMax {return 1000} yMax {return 20} } }
 proc SITE {sub} { if {$sub eq "getWidth"} { return 10 } ; if {$sub eq "getHeight"} { return 20 } }
 proc I1 {sub} { if {$sub eq "getBBox"} { return B1 } ; if {$sub eq "getMaster"} { return M1 } }
@@ -151,11 +156,11 @@ proc MB {sub} { return 1 }
 
 def test_legal_seat_is_nearest_free_site_clear_of_instances_and_macro_halo():
     pre = LEGAL
-    assert run(pre + "puts [rt_legal_seat BLK 100 5 30 20 0]") == ["130 0"]                      # nearest free site beside the instance (90-130)
+    assert run(pre + "puts [rt_legal_seat BLK 100 5 30 20 0]") == ["130 0 MX"]                      # nearest free site beside the instance (90-130)
     near_macro = run(pre + "puts [rt_legal_seat BLK 380 5 30 20 50]")
     x = int(near_macro[0].split()[0])
     assert not (x < 500 + 50 and x + 30 > 400 - 50)                                             # macro halo 50 respected
-    assert run(pre + "puts [rt_legal_seat BLK 1050 5 30 20 0]") == ["970 0"]                     # beyond the row end snaps back inside
+    assert run(pre + "puts [rt_legal_seat BLK 1050 5 30 20 0]") == ["970 0 MX"]                     # beyond the row end snaps back inside
 
 
 @pytest.mark.parametrize("old,new", [
@@ -168,4 +173,41 @@ def test_legal_mutants_die(old, new):
     assert old in SRC, old
     mut = SRC.replace(old, new, 1)
     script = LEGAL + "puts [rt_legal_seat BLK 100 5 30 20 0]\nputs [rt_legal_seat BLK 380 5 30 20 50]\nputs [rt_legal_seat BLK 1050 5 30 20 0]\nputs [rt_overlap 0 0 10 10 10 0 20 10]\nputs [rt_snap_site 107 100 10]"
+    assert run(script, mut) != run(script)
+
+
+def test_relay_report_with_candidates_does_not_crash():
+    out = run('puts [rt_relay_report {{i it n {1 2} u_ft/eq:RESETN 78.1} {i2 it2 n2 {} u2/x unmeasurable}} 1 1]\nputs [rt_relay_report {} 0 0]')
+    assert out[0] == "OT_RESET_RELAY candidates 2 inserted 1 (OT_RESET_RELAY=1): u_ft/eq:RESETN:78.1um u2/x:unmeasurableum"
+    assert out[1] == "OT_RESET_RELAY candidates 0 inserted 0 (OT_RESET_RELAY=0):"
+
+
+def test_repeated_pass_does_not_create_orphans():
+    out = run("set ::EXIST {u_rstrelay_t}\nputs [rt_insert_relay BLK FIT {300 400} t FAKESEAT]\nputs $::LOG")
+    assert out[0] == "0" and (len(out) == 1 or "inst" not in out[1])
+    out = run("set ::EXIST {rst_relay_net_t}\nputs [rt_insert_relay BLK FIT {300 400} t FAKESEAT]\nputs $::LOG")
+    assert out[0] == "0" and (len(out) == 1 or "inst" not in out[1])
+
+
+def test_relay_takes_the_row_orientation():
+    out = run("puts [rt_insert_relay BLK FIT {300 400} t SEATMX]\nputs $::LOG")
+    assert out[0] == "1" and "buf setOrient MX" in out[1]
+    out = run("puts [rt_insert_relay BLK FIT {300 400} t FAKESEAT]\nputs $::LOG")
+    assert "setOrient" not in out[1]
+
+
+def test_call_site_uses_the_report_proc_not_an_index_expression():
+    assert "puts [rt_relay_report $rt_relay_todo $rt_relay_done" in SRC and "lmap td $rt_relay_todo" not in SRC
+
+
+@pytest.mark.parametrize("old,new", [
+    ("  foreach td $todo { lappend items \"[lindex $td 4]:[lindex $td 5]um\" }\n", "  foreach td $todo { lappend items \"[lindex $td 4]\" }\n"),
+    ("  if {[$blk findInst \"u_rstrelay_$safe\"] ne \"NULL\" || [$blk findNet \"rst_relay_net_$safe\"] ne \"NULL\"} { return 0 }   ;# already relayed (earlier pass): nothing created\n", ""),
+    ("  if {[info exists orient] && $orient ne \"\"} { $b setOrient $orient }\n", ""),
+])
+def test_new_relay_mutants_die(old, new):
+    assert old in SRC, old
+    mut = SRC.replace(old, new, 1)
+    script = ('puts [rt_relay_report {{i it n {1 2} a:b 7.5}} 1 1]\nset ::EXIST {u_rstrelay_t}\nputs [rt_insert_relay BLK FIT {300 400} t SEATMX]\n'
+              'set ::EXIST {}\nputs [rt_insert_relay BLK FIT {300 400} t SEATMX]\nputs $::LOG')
     assert run(script, mut) != run(script)

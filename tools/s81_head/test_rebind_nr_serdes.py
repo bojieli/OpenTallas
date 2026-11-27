@@ -461,3 +461,32 @@ def test_dedicated_mutants_die(tmp_path_factory, monkeypatch, old, new):
 
 def test_dedicated_suite_passes_on_shipped(tmp_path_factory, monkeypatch):
     assert not suite_fails(SRC, monkeypatch, tmp_path_factory)
+
+
+def test_forged_dir_without_tb_refused_by_own_rerun_files(tmp_path, monkeypatch):
+    tp = tmp_path
+    tools, newrec = setup_main(tp, monkeypatch)
+    m = load()
+    monkeypatch.setattr(m, "serdes_parts", lambda plan: {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
+    monkeypatch.setattr(m, "fwd_only_delta", lambda a, b: None)
+    ev = json.loads((newrec.parent / "entry_phase_evidence.json").read_text())
+    ev["_rerun_files"] = {"tb.sv": b"tb\n", "ot_dp_rrelay_ph.sv": b"cell\n", "cases": []}
+    monkeypatch.setattr(m, "rerun_bench_evidence", lambda o, n, t: ev)
+    with pytest.raises(ValueError, match="ot_dp_rrelay_ph.sv differs|CASE lines differ"):
+        run_main(m, tp, tools, newrec, tp / "o")
+    assert not (tp / "o").exists()
+
+
+def test_check_rerun_files_unit(tmp_path):
+    m = load()
+    (tmp_path / "tb.sv").write_bytes(b"tb")
+    (tmp_path / "ot_dp_rrelay_ph.sv").write_bytes(b"cell")
+    (tmp_path / "bench.log").write_text("x\nCASE a old ph=0 cycles=2\ny\n")
+    good = {"_rerun_files": {"tb.sv": b"tb", "ot_dp_rrelay_ph.sv": b"cell", "cases": ["CASE a old ph=0 cycles=2"]}}
+    m.check_rerun_files(tmp_path, good)
+    for bad in ({"tb.sv": b"X"}, {"ot_dp_rrelay_ph.sv": b"X"}, {"cases": []}):
+        with pytest.raises(ValueError, match="differ"):
+            m.check_rerun_files(tmp_path, {"_rerun_files": dict(good["_rerun_files"], **bad)})
+    (tmp_path / "tb.sv").unlink()
+    with pytest.raises(ValueError, match="differ"):
+        m.check_rerun_files(tmp_path, good)

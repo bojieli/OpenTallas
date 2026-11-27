@@ -1,4 +1,4 @@
-"""G0 requires changed_binding_cover.json when hd_serdes partitions differ from the band base (OT_NATIVE_COVER_REQUIRED=1, default off)."""
+"""G0 requires changed_binding_cover.json when hd_serdes partitions differ from the band base (blocking by default, opt-out OT_NATIVE_COVER_REQUIRED=0 is an advisory)."""
 import json
 from pathlib import Path
 
@@ -32,10 +32,23 @@ def on(monkeypatch):
     monkeypatch.setenv("OT_NATIVE_COVER_REQUIRED", "1")
 
 
-def test_default_off_never_errors(tmp_path, monkeypatch):
+def test_default_is_blocking(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_NATIVE_COVER_REQUIRED", raising=False)
+    assert "is missing" in C.native_cover_error(NEW, BASE, rec(tmp_path, write=False))
+    assert "no native reset receipt" in C.native_cover_error(NEW, BASE, None)
+    (tmp_path / "ok").mkdir()
+    assert C.native_cover_error(NEW, BASE, rec(tmp_path / "ok")) is None
+    assert C.native_cover_optout_advisory(NEW, BASE) is None                       # no advisory unless the opt-out is set
+
+
+def test_opt_out_is_logged_as_an_advisory(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_NATIVE_COVER_REQUIRED", "0")
     assert C.native_cover_error(NEW, BASE, rec(tmp_path, write=False)) is None
     assert C.native_cover_error(NEW, BASE, None) is None
+    adv = C.native_cover_optout_advisory(NEW, BASE)
+    assert "OT_NATIVE_COVER_REQUIRED=0" in adv and "lk_EN0" in adv
+    assert C.native_cover_optout_advisory(BASE, BASE) is None                      # nothing differs: nothing to report
+    assert C.native_cover_optout_advisory(NEW, None) is None
 
 
 def test_no_band_base_or_no_difference(tmp_path, on):
@@ -66,7 +79,7 @@ def test_no_receipt_with_difference_errors(on):
 
 
 @pytest.mark.parametrize("old,new", [
-    ("    if _os.environ.get(\"OT_NATIVE_COVER_REQUIRED\") != \"1\" or band_raw is None:\n        return None\n", "    if band_raw is None:\n        return None\n"),
+    ("    if _os.environ.get(\"OT_NATIVE_COVER_REQUIRED\") == \"0\" or band_raw is None:\n        return None\n", "    if band_raw is None:\n        return None\n"),
     ("    if not differing:\n        return None\n", ""),
     ("    if not cover.is_file():\n", "    if False:\n"),
     ("    missing = [n for n in differing if n not in covered]\n    if missing:\n", "    missing = []\n    if missing:\n"),
@@ -90,7 +103,7 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
         if env:
             monkeypatch.setenv("OT_NATIVE_COVER_REQUIRED", "1")
         else:
-            monkeypatch.delenv("OT_NATIVE_COVER_REQUIRED", raising=False)
+            monkeypatch.setenv("OT_NATIVE_COVER_REQUIRED", "0")
         mk = lambda **kw: rec(tmp_path_factory.mktemp("c"), **kw)
         return [call(f, NEW, BASE, mk(write=False)), call(f, NEW, BASE, mk(covered=("partitions[lk_EN0].reset_entry_phase",))),
                 call(f, NEW, BASE, mk()), call(f, BASE, BASE, mk(write=False)), call(f, NEW, BASE, None)]
@@ -99,4 +112,5 @@ def test_mutants_die(tmp_path_factory, monkeypatch, old, new):
 
 
 def test_run_wires_the_check():
+    assert "_ca = native_cover_optout_advisory(raw, band_base)" in SRC and "R.warn(\"native_reset_cover\", _ca)" in SRC
     assert "_ce = native_cover_error(raw, band_base, native_reset_receipt)" in SRC and 'R.err("native_reset_cover", _ce)' in SRC

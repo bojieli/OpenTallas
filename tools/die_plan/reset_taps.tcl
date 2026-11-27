@@ -34,6 +34,11 @@ proc rt_aff_choose {best bd ck_i d_launch reach_dbu d_drv drv_known lim_dbu} {
 # OT_RESET_AFFINITY_MAX_DRIVER_UM set, a flop whose FINAL reset leg (to the driver of the net it ends up on, after the nearest-tap fallback) is still beyond that
 # limit, or unmeasurable, is a relay candidate; with OT_RESET_RELAY=1 a BUFx2 relay is inserted at the midpoint between the driver and the flop, the flop moved
 # to the relay's output net (polarity kept, one buffer delay added on that async reset pin).  Without OT_RESET_RELAY=1 candidates are only reported.
+proc rt_relay_report {todo done flag} {
+  set items {}
+  foreach td $todo { lappend items "[lindex $td 4]:[lindex $td 5]um" }
+  return "OT_RESET_RELAY candidates [llength $todo] inserted $done (OT_RESET_RELAY=$flag): [lrange $items 0 19]"
+}
 proc rt_relay_needed {d_drv drv_known lim_dbu} {
   if {$lim_dbu eq ""} { return 0 }
   if {!$drv_known} { return 1 }
@@ -59,7 +64,7 @@ proc rt_legal_seat {blk mx my w h halo} {
   set rows {}
   foreach row [$blk getRows] {
     set bb [$row getBBox]; set site [$row getSite]
-    lappend rows [list [expr {abs([$bb yMin] - $my)}] [$bb xMin] [$bb yMin] [$bb xMax] [$site getWidth] [$site getHeight]]
+    lappend rows [list [expr {abs([$bb yMin] - $my)}] [$bb xMin] [$bb yMin] [$bb xMax] [$site getWidth] [$site getHeight] [$row getOrient]]
   }
   set boxes {}
   foreach i [$blk getInsts] {
@@ -68,7 +73,7 @@ proc rt_legal_seat {blk mx my w h halo} {
     lappend boxes [list [expr {[$bb xMin] - $hh}] [expr {[$bb yMin] - $hh}] [expr {[$bb xMax] + $hh}] [expr {[$bb yMax] + $hh}]]
   }
   foreach r [lrange [lsort -integer -index 0 $rows] 0 5] {
-    lassign $r dy x0 y0 x1 sw sh
+    lassign $r dy x0 y0 x1 sw sh orient
     set sx0 [rt_snap_site $mx $x0 $sw]
     foreach k [rt_site_offsets 80] {
       set sx [expr {$sx0 + $k * $sw}]
@@ -77,7 +82,7 @@ proc rt_legal_seat {blk mx my w h halo} {
       foreach b $boxes {
         if {[rt_overlap $sx $y0 [expr {$sx + $w}] [expr {$y0 + $h}] {*}$b]} { set free 0; break }
       }
-      if {$free} { return [list $sx $y0] }
+      if {$free} { return [list $sx $y0 $orient] }
     }
   }
   return {}
@@ -89,13 +94,15 @@ proc rt_insert_relay {blk it dxy tag {seat_fn rt_legal_seat}} {
   set master [[ord::get_db] findMaster BUFx2_ASAP7_75t_R]
   if {$master eq "NULL"} { return 0 }
   set seat [$seat_fn $blk $mx $my [$master getWidth] [$master getHeight] [expr {int(5.4 * [[ord::get_db_tech] getDbUnitsPerMicron])}]]
-  if {[llength $seat] != 2} { return 0 }
-  lassign $seat mx my
+  if {[llength $seat] < 2} { return 0 }
+  lassign $seat mx my orient
   set safe [string map {/ _ . _ $ _ ~ _} $tag]
+  if {[$blk findInst "u_rstrelay_$safe"] ne "NULL" || [$blk findNet "rst_relay_net_$safe"] ne "NULL"} { return 0 }   ;# already relayed (earlier pass): nothing created
   set b [odb::dbInst_create $blk $master "u_rstrelay_$safe"]
   set n2 [odb::dbNet_create $blk "rst_relay_net_$safe"]
   if {$b eq "NULL" || $n2 eq "NULL"} { return 0 }
   $b setLocation $mx $my
+  if {[info exists orient] && $orient ne ""} { $b setOrient $orient }
   $b setPlacementStatus PLACED
   [$b findITerm A] connect $net
   [$b findITerm Y] connect $n2
@@ -517,7 +524,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
         if {[llength $rdxy] == 2 && [rt_insert_relay $rt_blk $rit $rdxy $rtag]} { incr rt_relay_done }
       }
     }
-    puts "OT_RESET_RELAY candidates [llength $rt_relay_todo] inserted $rt_relay_done (OT_RESET_RELAY=[expr {[info exists ::env(OT_RESET_RELAY)] ? $::env(OT_RESET_RELAY) : 0}]): [lrange [lmap td $rt_relay_todo {lindex $td 4:[lindex $td 5]um}] 0 19]"
+    puts [rt_relay_report $rt_relay_todo $rt_relay_done [expr {[info exists ::env(OT_RESET_RELAY)] ? $::env(OT_RESET_RELAY) : 0}]]
   }
   if {$rt_aff_refused} { puts "OT_RESET_AFFINITY_REFUSED $rt_aff_refused affinity override(s) refused (relay driver beyond or unmeasurable at $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) um), nearest tap used: [lrange $rt_aff_l 0 19]" }
   puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed (nearest tap, or the clock tap under TAP-PAIR AFFINITY), $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"

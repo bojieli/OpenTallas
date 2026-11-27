@@ -2990,12 +2990,12 @@ def _plan_geom_default():
 
 
 def native_cover_error(raw, band_raw, receipt_path):
-    """P-RESET-RECEIPT item 8 (HEAD-PROBE-R3 11-27, default off: OT_NATIVE_COVER_REQUIRED=1): when the hd_serdes partitions of this plan differ from the event's
+    """P-RESET-RECEIPT item 8 (HEAD-PROBE-R3 11-27; BLOCKING by default since COORD 1447, opt-out OT_NATIVE_COVER_REQUIRED=0 is only an advisory): when the hd_serdes partitions of this plan differ from the event's
     base plan (--band-base), the native reset receipt must come with changed_binding_cover.json (written by rebind_nr_serdes --new-receipt) that lists every
     differing partition.  -> None when fine / not applicable, else the error text."""
     import json as _json
     import os as _os
-    if _os.environ.get("OT_NATIVE_COVER_REQUIRED") != "1" or band_raw is None:
+    if _os.environ.get("OT_NATIVE_COVER_REQUIRED") == "0" or band_raw is None:
         return None
 
     def parts(r):
@@ -3019,6 +3019,22 @@ def native_cover_error(raw, band_raw, receipt_path):
     if missing:
         return "changed_binding_cover.json does not cover differing partition(s) %s" % ", ".join(missing[:4])
     return None
+
+
+def native_cover_optout_advisory(raw, band_raw):
+    """OT_NATIVE_COVER_REQUIRED=0 skips the cover requirement; when the hd_serdes partitions differ that is reported as an advisory"""
+    import os as _os
+    if _os.environ.get("OT_NATIVE_COVER_REQUIRED") != "0" or band_raw is None:
+        return None
+
+    def parts(r):
+        ts = {n for n, t in (r.get("partition_types") or {}).items() if n == "hd_serdes" or t.get("module") == "ot_s81hd_serdes"} or {"hd_serdes"}
+        return {q["name"]: q for q in (r.get("partitions") or []) if q.get("type") in ts}
+    a, b = parts(band_raw), parts(raw)
+    differing = sorted(n for n in set(a) | set(b) if a.get(n) != b.get(n))
+    if not differing:
+        return None
+    return "OT_NATIVE_COVER_REQUIRED=0: hd_serdes partitions differ from the band base (%s) and the changed-binding cover is NOT required" % ", ".join(differing[:4])
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
@@ -3046,6 +3062,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     _ce = native_cover_error(raw, band_base, native_reset_receipt)
     if _ce:
         R.err("native_reset_cover", _ce)
+    _ca = native_cover_optout_advisory(raw, band_base)
+    if _ca:
+        R.warn("native_reset_cover", _ca)
     if native_reset_receipt is not None:
         P._native_reset_release_receipt = native_reset_receipt
         summ_receipt = str(native_reset_receipt)
