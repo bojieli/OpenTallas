@@ -23,8 +23,8 @@ def main():
     ap.add_argument('--plan', required=True)
     ap.add_argument('--proof-dir', required=True)
     ap.add_argument('--out', required=True)
-    ap.add_argument('--exercised-field', action='append', default=[], help='plan field path (partitions[*].key) the attached proof bench exercises; recorded in proof.exercised_plan_fields')
     ap.add_argument('--evidence', action='append', default=[], help='bench / log file copied into the receipt directory and hashed in files')
+    ap.add_argument('--entry-phase-evidence', default=None, help='file name (one of --evidence) of the entry_phase_evidence.json recorded in proof.entry_phase_evidence')
     a = ap.parse_args()
     plan = Path(a.plan)
     raw = json.loads(gzip.decompress(plan.read_bytes())) if plan.suffix == '.gz' else S.load(plan)
@@ -69,12 +69,13 @@ def main():
             production_sources={n: sha(ROOT / n) for n in sources}),
         limits=['conditional local PHY release only', 'no finite core-cycle deadline with a stopped PMA clock',
                 'no CDC or clock-period exception', 'zero mission cycles; 66 guard and 68 native reset boot edges'])
-    if a.exercised_field:
-        receipt['proof']['exercised_plan_fields'] = sorted(set(a.exercised_field))
     for ev in a.evidence:
         src = Path(ev)
         shutil.copyfile(src, out / src.name)
         receipt['files'][src.name] = sha(out / src.name)
+    if a.entry_phase_evidence:
+        assert a.entry_phase_evidence in receipt['files'], 'entry-phase evidence must be one of --evidence'
+        receipt['proof']['entry_phase_evidence'] = a.entry_phase_evidence
     # Fail before writing any acceptance artifact on failed or incomplete runs.
     for n, run in runs.items():
         if (run['returncode'] == 0) != (n == 'positive'):

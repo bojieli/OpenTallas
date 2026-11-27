@@ -21,19 +21,21 @@ def serdes_parts(plan):
     return {part["name"]: part for part in plan["partitions"] if part["type"] == "hd_serdes"}
 
 
-# P-RESET-RECEIPT guard change (HEAD-PROBE-R3 11-27): a CHANGED hd_serdes partition (reset_entry_phase, id_straps, ...) used to be refused outright,
-# even when a receipt qualified on the new plan existed.  It is accepted only with --new-receipt: a receipt produced on the NEW plan digest by the
-# stock producer (head_native_release_receipt.py) whose proof.exercised_plan_fields cover EVERY partition key that differs, and that qualifies.
+# P-RESET-RECEIPT guard change (HEAD-PROBE-R3 11-27, review-hardened): a CHANGED hd_serdes partition (reset_entry_phase, id_straps, ...) used to be
+# refused outright.  It is accepted only with --new-receipt: a receipt produced on the NEW plan digest whose proof.entry_phase_evidence names an evidence file
+# (inside receipt files, hash-verified) that (1) is for the new digest and the shipped ot_dp_rrelay_ph cell hash, (2) carries verdict PASS with the pass marker
+# present in the hash-verified bench log, and (3) lists a (partition, field, old, new) row for EVERY leaf that differs between the two plans: coverage compares
+# VALUES, not key names.  Anything else, and any malformed receipt, is a ValueError (fail closed).
 def _flat(prefix, v, out):
-    if isinstance(v, dict):
-        for k in sorted(v):
-            _flat(prefix + "." + str(k) if prefix else str(k), v[k], out)
+    if isinstance(v, dict) and v:
+        for k in sorted(v, key=str):
+            _flat(prefix + "\x1f" + str(k) if prefix else str(k), v[k], out)
     else:
         out[prefix] = json.dumps(v, sort_keys=True)
 
 
-def part_diff(old_parts, new_parts):
-    """sorted leaf paths 'partitions[NAME].key.sub' that differ between two {name: part} maps (added / removed / changed)"""
+def part_leaves(old_parts, new_parts):
+    """[(partition, key path 'a.b', old json or None, new json or None)] for every differing leaf (added, removed, changed; {} is a leaf)"""
     out = []
     for name in sorted(set(old_parts) | set(new_parts)):
         a, b = {}, {}
@@ -43,33 +45,73 @@ def part_diff(old_parts, new_parts):
             _flat("", new_parts[name], b)
         for k in sorted(set(a) | set(b)):
             if a.get(k) != b.get(k):
-                out.append("partitions[%s].%s" % (name, k))
+                out.append((name, k.replace("\x1f", "."), a.get(k), b.get(k)))
     return out
 
 
-def norm_field(path):
-    """partitions[lk_EN0].reset_entry_phase -> partitions[*].reset_entry_phase"""
-    import re
-    return re.sub(r"^partitions\[[^\]]*\]", "partitions[*]", path)
+def part_diff(old_parts, new_parts):
+    return ["partitions[%s].%s" % (n, k) for n, k, _a, _b in part_leaves(old_parts, new_parts)]
 
 
-def check_changed_binding(old_parts, new_parts, new_receipt, new_digest):
-    """-> sorted diff paths when the receipt covers the whole partition diff; raises ValueError otherwise (fail closed)"""
-    diff = part_diff(old_parts, new_parts)
-    if not diff:
-        return diff
+def _sha_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def check_changed_binding(old_parts, new_parts, new_receipt, new_digest, receipt_dir=None, cell_sha=None):
+    """-> sorted diff paths when the receipt's hash-verified entry-phase evidence covers every differing leaf by value; ValueError otherwise"""
     if new_receipt is None:
-        raise ValueError("HEAD native reset instance bindings changed")
+        if part_leaves(old_parts, new_parts):
+            raise ValueError("HEAD native reset instance bindings changed")
+        return []
+    if not isinstance(new_receipt, dict) or not isinstance(new_receipt.get("proof"), dict) or not isinstance(new_receipt.get("files"), dict):
+        raise ValueError("HEAD native reset instance bindings changed: receipt is malformed")
+    leaves = part_leaves(old_parts, new_parts)
+    if not leaves:
+        return []
     if new_receipt.get("plan_sha256") != new_digest:
         raise ValueError("HEAD native reset instance bindings changed: receipt is not for the new plan digest")
-    fields = (new_receipt.get("proof") or {}).get("exercised_plan_fields")
-    if not fields:
-        raise ValueError("HEAD native reset instance bindings changed: receipt lists no exercised plan fields")
-    covered = set(fields)
-    bad = sorted({norm_field(p) for p in diff} - covered)
-    if bad:
-        raise ValueError("HEAD native reset instance bindings changed: receipt does not cover " + ", ".join(bad[:6]))
-    return diff
+    name = new_receipt["proof"].get("entry_phase_evidence")
+    if not isinstance(name, str) or not name or name not in new_receipt["files"]:
+        raise ValueError("HEAD native reset instance bindings changed: receipt names no entry-phase evidence file in files")
+    if receipt_dir is None or cell_sha is None:
+        raise ValueError("HEAD native reset instance bindings changed: evidence cannot be verified (no receipt dir / cell hash)")
+    root = Path(receipt_dir)
+    ev_path = root / name
+    if not ev_path.is_file() or _sha_file(ev_path) != new_receipt["files"][name]:
+        raise ValueError("HEAD native reset instance bindings changed: evidence file missing or hash differs")
+    try:
+        ev = json.loads(ev_path.read_text())
+    except ValueError as e:
+        raise ValueError("HEAD native reset instance bindings changed: evidence is not JSON") from e
+    if not isinstance(ev, dict) or ev.get("schema") != "opentallas.entry_phase_evidence.v1":
+        raise ValueError("HEAD native reset instance bindings changed: evidence schema")
+    if ev.get("plan_digest") != new_digest or ev.get("cell_sha256") != cell_sha:
+        raise ValueError("HEAD native reset instance bindings changed: evidence is for another plan or another cell")
+    if ev.get("verdict") != "PASS" or not isinstance(ev.get("artifacts"), dict) or not isinstance(ev.get("log"), str):
+        raise ValueError("HEAD native reset instance bindings changed: evidence verdict is not PASS")
+    for fn, h in ev["artifacts"].items():
+        f = root / fn
+        if fn not in new_receipt["files"] or new_receipt["files"][fn] != h or not f.is_file() or _sha_file(f) != h:
+            raise ValueError("HEAD native reset instance bindings changed: evidence artifact %s missing or hash differs" % fn)
+    log = root / ev["log"]
+    marker = ev.get("pass_marker")
+    if ev["log"] not in ev["artifacts"] or not isinstance(marker, str) or not marker or marker not in log.read_text(errors="replace"):
+        raise ValueError("HEAD native reset instance bindings changed: bench log lacks the pass marker")
+    rows = ev.get("rows")
+    if not isinstance(rows, list):
+        raise ValueError("HEAD native reset instance bindings changed: evidence rows")
+    have = {(r.get("partition"), r.get("field"), json.dumps(r.get("old"), sort_keys=True), json.dumps(r.get("new"), sort_keys=True))
+            for r in rows if isinstance(r, dict)}
+    missing = []
+    for n, k, a, b in leaves:
+        # the plan value of a leaf is json text; the row stores the plain value, so compare after normalising both through json
+        ra = json.dumps(json.loads(a), sort_keys=True) if a is not None else json.dumps(None)
+        rb = json.dumps(json.loads(b), sort_keys=True) if b is not None else json.dumps(None)
+        if (n, k, ra, rb) not in have:
+            missing.append("partitions[%s].%s %s->%s" % (n, k, ra, rb))
+    if missing:
+        raise ValueError("HEAD native reset instance bindings changed: evidence does not cover " + ", ".join(missing[:6]))
+    return ["partitions[%s].%s" % (n, k) for n, k, _a, _b in leaves]
 
 
 def fwd_only_delta(a, b):
@@ -128,19 +170,36 @@ def main():
     receipt = json_load(args.old_receipt)
     fwd_only_delta(old["partition_types"]["hd_serdes"], new["partition_types"]["hd_serdes"])
     if serdes_parts(old) != serdes_parts(new):
+        import pin_entry_phase
         nr = json_load(args.new_receipt) if args.new_receipt else None
-        diff = check_changed_binding(serdes_parts(old), serdes_parts(new), nr, head_native_release.digest(new))
-        new_plan = schema.Plan(new, args.new_plan)
-        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), args.new_receipt)
+        cell_sha = hashlib.sha256(pin_entry_phase.CELL_RTL.encode()).hexdigest()
+        diff = check_changed_binding(serdes_parts(old), serdes_parts(new), nr, head_native_release.digest(new),
+                                     args.new_receipt.parent if args.new_receipt else None, cell_sha)
+        old_plan = schema.Plan(old, args.old_plan)
+        head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)     # anchor the old side as the old path does
         args.out.mkdir(parents=True, exist_ok=False)
-        root = args.new_receipt.parent
-        for item in root.iterdir():
-            if item.is_file() and item.name != "native_release_receipt.json":
-                shutil.copyfile(item, args.out / item.name)
+        root = args.new_receipt.parent.resolve()
+        files = {}
+        for fname, fsha in nr["files"].items():
+            src = (root / fname).resolve()
+            if src.is_relative_to(root):
+                dst = args.out / fname
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src, dst)
+                files[fname] = fsha
+            else:
+                files[os.path.relpath(src, args.out.resolve())] = fsha
+        nr["files"] = files
         accepted = args.out / "native_release_receipt.json"
-        shutil.copyfile(args.new_receipt, accepted)
+        accepted.write_text(json.dumps(nr, indent=1) + "\n")
+        new_plan = schema.Plan(new, args.new_plan)
+        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), accepted)       # re-qualify the artifact actually written
+        cover = dict(old_plan_sha256=hexdigest(args.old_plan), new_plan_sha256=hexdigest(args.new_plan), old_receipt_sha256=hexdigest(args.old_receipt),
+                     new_receipt_sha256=hexdigest(args.new_receipt), covered=diff)
+        (args.out / "changed_binding_cover.json").write_text(json.dumps(cover, indent=1) + "\n")
         print("CHANGED_BINDING_COVERED", len(diff), "paths", diff[:8])
         print("NATIVE_RELEASE", result["release_qualification"]["verdict"], len(result["release_qualification"]["native_targets"]), "targets", accepted)
+        print("ORIGINAL_PROOF", args.old_receipt, hexdigest(args.old_receipt))
         print("PLAN", args.new_plan, hexdigest(args.new_plan))
         return
     old_plan = schema.Plan(old, args.old_plan)
