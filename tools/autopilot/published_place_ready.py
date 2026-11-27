@@ -228,7 +228,9 @@ def read_private_floorplan(spec_path, ap_dir):
             or result.get("ran_on") != spec["gen_host"] or result.get("evidence") != f"{spec['gen_host']}:{odb}"
             or result.get("published_place_ready") != ref or not re.fullmatch(r"[0-9a-f]{64}", sha)):
         raise ValueError("exact stock floorplan completion required")
-    prepared["floorplan_resume"] = {"attempt": str(attempt.resolve()), "sha256": sha}
+    # run_item claims its absolute controller path without resolving the
+    # hub's coordination symlink. Preserve the spelling in that receipt.
+    prepared["floorplan_resume"] = {"attempt": str(attempt.absolute()), "sha256": sha}
     return raw, prepared
 
 
