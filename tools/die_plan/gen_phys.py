@@ -8977,6 +8977,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if rc_cal:
         import core_flow   # FLOW-RC-1: fail-closed per-class (signal + clock) RC calibration guard
         core_flow.install_rc(kd, Path(__file__).with_name(RC_CAL_FILE))
+    if t.get("clock", {}).get("scalar_hold_pads"):
+        import scalar_hold_pads
+        with (kd / "config.mk").open("a") as config:
+            if any("POST_DETAIL_PLACE_TCL" in line for line in (kd / "config.mk").read_text().splitlines()):
+                raise ValueError(f"{tn}: scalar hold pads conflict with the post-detail-place hook")
+            for line in scalar_hold_pads.install(P, tn, kd):
+                config.write(line + "\n")
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
                                                            insertion_tol_ps=ib["tol"], basis=ib["basis"],
                                                            parent_early_tap_ps=ib["early_tap_ps"],
