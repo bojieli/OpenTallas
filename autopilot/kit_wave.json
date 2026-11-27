@@ -44460,7 +44460,6 @@
     "epyc11"
    ],
    "cancel_superseded": false,
-   "only_items": [],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
     "coll_ftm": {
@@ -54801,7 +54800,8 @@
     "epyc2"
    ],
    "launch_plan_review_required": true,
-   "tools_sha_prev_r3": "7c67033baee21d9f2328dc5be4db9dfde6ed5bcb"
+   "tools_sha_prev_r3": "7c67033baee21d9f2328dc5be4db9dfde6ed5bcb",
+   "only_items_prev_r3": []
   },
   "hbm": {
    "enabled": true,
