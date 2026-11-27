@@ -6958,8 +6958,97 @@
         },
         "form": {
          "enum": [
-          "rsync"
+          "rsync",
+          "kreg_branch"
          ]
+        },
+        "expected_reset_input": {
+         "type": "string"
+        },
+        "branches": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "name",
+           "parent"
+          ],
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "parent": {
+            "type": "string"
+           }
+          }
+         }
+        },
+        "local_drivers": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "name",
+           "branch"
+          ],
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "branch": {
+            "type": "string"
+           }
+          }
+         }
+        },
+        "replicas": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "name",
+           "old_driver",
+           "branch",
+           "sinks"
+          ],
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "old_driver": {
+            "type": "string"
+           },
+           "branch": {
+            "type": "string"
+           },
+           "sinks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+             "type": "object",
+             "additionalProperties": false,
+             "required": [
+              "inst",
+              "module"
+             ],
+             "properties": {
+              "inst": {
+               "type": "string"
+              },
+              "module": {
+               "type": "string"
+              }
+             }
+            }
+           }
+          }
+         }
         },
         "tail_clear": {
          "enum": [

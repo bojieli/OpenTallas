@@ -125,6 +125,16 @@ def apply(text, specs, positions=None):
     lines = text.split("\n")
     report = []
     for spec in specs:
+        if spec.get("form") == "kreg_branch":
+            import kreg_reset_branch
+
+            try:
+                updated, row = kreg_reset_branch.apply("\n".join(lines), spec)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise ReplicateError(str(exc)) from exc
+            lines = updated.split("\n")
+            report.append(row)
+            continue
         drv, drv_re = spec.get("driver"), spec.get("driver_re")
         if spec.get("form") not in (None, "rsync"):
             raise ReplicateError(f"reset_replicate form {spec.get('form')!r}: expected \"rsync\" or no form")

@@ -437,7 +437,8 @@ def test_rtail_cell_schema_and_plan_switch():
     assert "module ot_dp_rtail" in RR.TAIL_CELL and "(* keep *) reg [D-1:0] r;" in RR.TAIL_CELL
     assert "posedge clk or negedge a" in RR.TAIL_CELL
     props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"]["items"]["properties"]
-    assert props["form"] == {"enum": ["rsync"]}
+    assert props["form"] == {"enum": ["rsync", "kreg_branch"]}
+    assert not RR.uses_rtail({"partition_types": {"a": {"reset_replicate": [{"form": "kreg_branch"}]}}})
     assert RR.uses_rtail({"partition_types": {"a": {"reset_replicate": RS_SPEC}}})
     assert not RR.uses_rtail({"partition_types": {"a": {"reset_replicate": SPEC}, "b": {}}})
     import bind_verify

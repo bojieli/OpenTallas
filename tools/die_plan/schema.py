@@ -1821,7 +1821,22 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
                        "copy_depth": {"type": "integer", "minimum": 1},
                        # KV-D23-REACH 11-18: the driver is a reset spine landing (ot_dp_rsync); copies only from the stages after the 2 sync flops
-                       "form": {"enum": ["rsync"]},
+                       "form": {"enum": ["rsync", "kreg_branch"]},
+                       # Opt-in kept asynchronous KREG copies, fed by declared transparent branches.
+                       "expected_reset_input": {"type": "string"},
+                       "branches": {"type": "array", "minItems": 1, "items": {
+                           "type": "object", "additionalProperties": False, "required": ["name", "parent"],
+                           "properties": {"name": {"type": "string"}, "parent": {"type": "string"}}}},
+                       "local_drivers": {"type": "array", "minItems": 1, "items": {
+                           "type": "object", "additionalProperties": False, "required": ["name", "branch"],
+                           "properties": {"name": {"type": "string"}, "branch": {"type": "string"}}}},
+                       "replicas": {"type": "array", "minItems": 1, "items": {
+                           "type": "object", "additionalProperties": False,
+                           "required": ["name", "old_driver", "branch", "sinks"],
+                           "properties": {"name": {"type": "string"}, "old_driver": {"type": "string"},
+                                          "branch": {"type": "string"}, "sinks": {"type": "array", "minItems": 1, "items": {
+                                              "type": "object", "additionalProperties": False, "required": ["inst", "module"],
+                                              "properties": {"inst": {"type": "string"}, "module": {"type": "string"}}}}}}},
                        # FABLE-FIX-KV-PV 11-20: rsync copies as synchronous shift relays (no spine on their clear pins)
                        "tail_clear": {"enum": ["async", "sync", "sync_output"]},
                        "lockup_regions": {"type": "boolean"}}}}
