@@ -4,7 +4,8 @@ import json
 
 import pytest
 
-from bound_station_source import FAMILY_SCHEMA, SCHEMA, _family_type_logic, _type_logic, verify
+from bound_station_source import (FAMILY_SCHEMA, SCHEMA, _bf_col3_c_pg_predecessor, _family_type_logic,
+                                  _m5_grid_change, _type_logic, verify)
 
 
 def test_crop_keeps_station_and_landing_logic():
@@ -73,3 +74,39 @@ def test_family_geometry_keeps_edge_and_collector_role():
     assert _family_type_logic(old) == _family_type_logic(prepared)
     prepared["clock"]["edge_clocks"][0]["name"] = "other_clk"
     assert _family_type_logic(old) != _family_type_logic(prepared)
+
+
+
+def test_reviewed_pg_predecessor_accepts_one_literal_selected_type_change(tmp_path):
+    prior = {"partition_types": {"receiver": {}, "peer": {}}}
+    path = tmp_path / "individual-predecessor.json"
+    path.write_text(json.dumps(prior))
+    proof = {"prior_plan": {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}}
+    current = deepcopy(prior)
+    current["partition_types"]["receiver"]["core_pg_connect"] = True
+    assert _bf_col3_c_pg_predecessor(current, "receiver", proof) == (path, prior)
+    current["partition_types"]["peer"]["core_pg_connect"] = True
+    with pytest.raises(ValueError, match="only the selected type"):
+        _bf_col3_c_pg_predecessor(current, "receiver", proof)
+    current["partition_types"]["peer"].clear()
+    current["partition_types"]["receiver"]["core_pg_connect"] = 1
+    with pytest.raises(ValueError, match="explicit grid"):
+        _bf_col3_c_pg_predecessor(current, "receiver", proof)
+
+
+def test_reviewed_pg_grid_preserves_named_M5_M6_membership_and_all_other_code():
+    first, second = r"{^u_bound\.left$}", r"{^u_bound\.right$}"
+    targets = first + " " + second
+    grid = "define_pdn_grid -macro -name {core_pg_M5} -instances "
+    tail = " -voltage_domains {CORE} -halo {0}\nadd_pdn_connect -grid {core_pg_M5} -layers {M5 M6}\n"
+    before = grid + "{{^old$}}" + tail + "global_connect\n"
+    after = grid + "{" + first + " {^old$} " + second + "}" + tail + "global_connect\n"
+    assert _m5_grid_change(before, after, targets)[1:] == (1, 3)
+    with pytest.raises(ValueError, match="M5 to M6"):
+        _m5_grid_change(before.replace("M5 M6", "M5 M7"), after.replace("M5 M6", "M5 M7"), targets)
+    with pytest.raises(ValueError, match="outside the two approved"):
+        _m5_grid_change(before, after.replace("^old$", "^foreign$"), targets)
+    with pytest.raises(ValueError, match="grid options"):
+        _m5_grid_change(before, after.replace("-halo {0}", "-halo {1}"), targets)
+    with pytest.raises(ValueError, match="unrelated executable PDN"):
+        _m5_grid_change(before, after + "add_pdn_connect -grid {core_pg_M7} -layers {M7 M8}\n", targets)
