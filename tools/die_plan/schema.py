@@ -1060,6 +1060,8 @@ SCHEMA = {
                                             "items": {"type": "string", "pattern": "^rst_n_t[0-9]+$"}}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # FACE-SITE-KEEP-1127: {"<S|E|N|W><j>": [x, y]} pins face site j (reset_tree._kept_site; key checked there)
+                        "face_sites_um": {"type": "object", "additionalProperties": _xy},
                         # LEAF-CLUSTERS (FAM-KV-HROOT-R1 11-23): per-bus-group reset leaf: the bin/bout/ft flops of the listed buses take
                         # the rst_n_t<k> of the consumer tap nearest leaf_um instead of the type's single leaf (reset_tree.pick_cluster_taps)
                         "leaf_clusters": {"type": "array", "items": {"type": "object", "additionalProperties": False,

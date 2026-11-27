@@ -1896,9 +1896,15 @@ def face_sites(P, tn):
     box_out = (CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM)
     taken = [(x, y) for _, x, y in _plan_taps(P, tn)] + [tuple(c["xy"]) for c in line]
     out = list(line)
+    keep = dict((t.get("reset") or {}).get("face_sites_um") or {})
     for face, L in (("S", w), ("E", h), ("N", w), ("W", h)):
         m = max(1, math.ceil(L / sp))
         for j in range(m):
+            if f"{face}{j}" in keep:
+                x, y = _kept_site(P, tn, f"{face}{j}", keep.pop(f"{face}{j}"), taken)
+                taken.append((x, y))
+                out.append(dict(face=face, j=j, mid=(j == m // 2) and not line, xy=(x, y)))
+                continue
             s = (j + 0.5) * L / m
             x, y = {"S": (s, INSET_UM), "N": (s, h - INSET_UM), "W": (INSET_UM, s), "E": (w - INSET_UM, s)}[face]
             if boxes:
@@ -1911,6 +1917,8 @@ def face_sites(P, tn):
                 x, y = _snap(P, x + (8.64 if face in "SN" else 0.0), y + (8.64 if face in "EW" else 0.0))
             taken.append((x, y))
             out.append(dict(face=face, j=j, mid=(j == m // 2) and not line, xy=(x, y)))
+    if keep:
+        raise ResetError(f"{tn}: reset.face_sites_um names no face site: {sorted(keep)}")
     locked, _ = boundary_roles(P)
     if tn in locked:
         for k, record in enumerate(locked[tn]):
@@ -1932,6 +1940,30 @@ def face_sites(P, tn):
             out[j] = dict(out[j], xy=xy)
     cache[key] = out
     return out
+
+
+def _kept_site(P, tn, key, xy, taken):
+    """FACE-SITE-KEEP-1127 (HEAD-TILE-R3): partition_types[T].reset.face_sites_um {"<face><j>": [x, y]} pins face site j of
+    that face at a published xy (type frame) instead of the INSET / push_off / snap search, so a local re-form of T (hd_tile
+    60.48 um channel: eA1 / eA3 to 8.64 um off the E face) keeps the die wavefront and every other type's reset tree as
+    signed.  Opt-in; absent = unchanged.  The kept site must be on the snap grid, within 2 * INSET_UM of its own face, outside
+    every hard core's REAL outline (blockages at zero halo; the CLEAR_UM halo binds relay cells, not the top-layer pin) and
+    off every other pin site; else ResetError."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    x0, y0 = float(xy[0]), float(xy[1])
+    x, y = _snap(P, x0, y0)
+    if abs(x - x0) > 1e-6 or abs(y - y0) > 1e-6:
+        raise ResetError(f"{tn}: reset.face_sites_um {key} {xy} is off the tap grid (snaps to {(x, y)})")
+    d = {"S": y, "N": h - y, "W": x, "E": w - x}[key[0]]
+    if not (0.0 < x < w and 0.0 < y < h and d <= 2 * INSET_UM + 1e-6):
+        raise ResetError(f"{tn}: reset.face_sites_um {key} {xy} is not within {2 * INSET_UM} um of the {key[0]} face")
+    for a, b, c, e in blockages(t, clear=0.0):
+        if a < x < c and b < y < e:
+            raise ResetError(f"{tn}: reset.face_sites_um {key} {xy} lies inside hard core / keepout {(a, b, c, e)}")
+    if any(abs(x - a) < 1.0 and abs(y - b) < 1.0 for a, b in taken):
+        raise ResetError(f"{tn}: reset.face_sites_um {key} {xy} collides with another pin site (GRT-0080)")
+    return x, y
 
 
 def corner_sites(P, tn):
