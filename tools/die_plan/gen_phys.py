@@ -8095,6 +8095,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                     stations=[Path(f).parent / n for f in rtl_files[:1]
                                               for n in (str(t.get("module", "")) + ".istations.tcl", "istations.tcl")])
     pins = type_pins(P, tn)
+    if landing_ff and _cland_pinslot(P.budgets, tn, cland_pinslot):
+        from landing_place import vertical_bands_with_x_fill
+        mismatches = vertical_bands_with_x_fill(t, pins)
+        if mismatches:
+            description = ", ".join(f"{bus} ({face}, {bits} bits)" for bus, face, bits in mismatches)
+            print(
+                f"OT_CLAND_AXIS WARNING {tn}: fill_axis='x' bypasses vertical pin-slot placement for {description}",
+                file=sys.stderr,
+            )
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
     io_text = io_tcl(P, tn, pins)
