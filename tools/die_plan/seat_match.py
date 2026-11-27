@@ -39,6 +39,18 @@ KITPASS = re.compile(r"^(u_y_|u_pd\d+_ram_|u_rg\d|u_ring\b)")
 IST = re.compile(r"^u_ist_(.+)_(\d+)$")        # kit_istations inserts u_ist_<bus>_<j> for the plan's internal_stations (not in the bind RTL)
 
 
+KRD_STAGE = re.compile(r"(u_(?:y|lk)_xd_.+)_(\d+)_(\d+)")
+
+
+def krd_alias(base, ident):
+    """C-LPAD-LEAFDN-SEAT-MISS-C085: kit_relay_depth (KIT-RD-1) names row k stage s `u_y_xd_<sid>_<port>_k<k>_<s>` (lockup latch u_lk_xd_...); plan
+    relay_sites keys written before it say `u_y_xd_<sid>_<port>_<k>_<s>`.  The renamed instance of the SAME row and stage replaces it, only when that
+    exact name is an identifier of the bound text (a stage past the chain, a wrong row, or any other u_y_ name stays dead).  -> name or None"""
+    m = KRD_STAGE.fullmatch(base)
+    cand = f"{m.group(1)}_k{m.group(2)}_{m.group(3)}" if m else None
+    return cand if cand in ident else None
+
+
 def bound_instances(text):
     """{instance: (module, {param: int})} of every module body of the bound file"""
     out = {}
@@ -90,6 +102,8 @@ def judge(relay_sites, text, ist_buses=None):
         c = re.split(r"[./]", k, maxsplit=1)
         base = re.sub(r"\[\d+\]", "", c[0])
         rest = c[1] if len(c) > 1 else ""
+        if base not in inst and base not in ident:
+            base = krd_alias(base, ident) or base
         tw = twin[k.replace("/", ".")]
         if len(tw) > 1 and any(relay_sites[t] != v for t in tw):
             out[k] = "CONFLICT"

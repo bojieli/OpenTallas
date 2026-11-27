@@ -366,6 +366,7 @@ proc rs_dff_succ {i} {
 }
 proc rs_norm {n} {
   set n [string map {/ .} $n]
+  regsub {^(u_(?:y|lk)_xd_.*)_k([0-9]+)_([0-9]+)([.]|$)} $n {\\1_\\2_\\3\\4} n
   regsub {^(u_u_)lf[0-9]+_u_} $n {\\1} n
   regsub -all {[.]g_[A-Za-z0-9_]*(\\[[0-9]+\\])?(?=[.])} $n {} n
   return $n
