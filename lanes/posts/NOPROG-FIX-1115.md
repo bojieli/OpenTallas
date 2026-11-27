@@ -822,3 +822,6 @@
 - 2026-11-26 16:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-26 16:22 PST: 21 running jobs, PROGRESSING 16, PLATEAU 3, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc10 probe_v19 grt_it0 stage 19.9 h job 21.7 h: no new meaningful log line for 8.0 h; last: [INFO GRT-0102] Start extra iteration 4/5
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 18.2 h job 21.6 h: no new meaningful log line for 9.3 h; last: [INFO GRT-0102] Start extra iteration 3/5
+- 2026-11-26 17:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-26 17:22 PST: 18 running jobs, PROGRESSING 13, PLATEAU 3, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 probe_v19 grt_it0 stage 20.9 h job 22.7 h: no new meaningful log line for 9.0 h; last: [INFO GRT-0102] Start extra iteration 4/5
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 19.2 h job 22.6 h: no new meaningful log line for 10.2 h; last: [INFO GRT-0102] Start extra iteration 3/5
