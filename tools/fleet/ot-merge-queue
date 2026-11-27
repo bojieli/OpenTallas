@@ -34,6 +34,7 @@ OWNER 11-18 (later): lanes commit straight to main (ot-push-main); `redwatch` (o
 makes the tests of its touched files fail.  tick / approvals / auto / merge-now stay for the old branch path and are not needed.
 """
 import argparse
+import ast
 import concurrent.futures as CF
 import datetime
 import fcntl
@@ -47,6 +48,7 @@ import subprocess as S
 import sys
 import threading
 import time
+from collections import Counter
 from pathlib import Path
 
 HOME = Path.home()
@@ -751,8 +753,138 @@ def _tree_types(rev_, paths, cwd=REPO):
     return out
 
 
+def _temporary_fixture_literals(text):
+    """Return source positions of relative joins into a statically known fresh test directory."""
+    if "TemporaryDirectory" not in text:
+        return set()
+    try:
+        mod = ast.parse(text)
+    except SyntaxError:
+        return set()
+    names = {"Path", "tempfile"}
+    imports = [n for n in ast.walk(mod) if isinstance(n, ast.alias)
+               and (n.asname or n.name.split(".")[0]) in names]
+    if len(imports) != 2 or any(n.name == "*" for n in ast.walk(mod) if isinstance(n, ast.alias)):
+        return set()
+    if not (any(isinstance(n, ast.Import) and any(a.name == "tempfile" and not a.asname for a in n.names)
+                for n in mod.body)
+            and any(isinstance(n, ast.ImportFrom) and n.level == 0 and n.module == "pathlib"
+                    and any(a.name == "Path" and not a.asname for a in n.names) for n in mod.body)):
+        return set()
+    if any((isinstance(n, ast.Name) and n.id in names and not isinstance(n.ctx, ast.Load))
+           or (isinstance(n, ast.arg) and n.arg in names)
+           or (isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.ExceptHandler))
+               and n.name in names)
+           or (isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name) and n.value.id == "tempfile"
+               and not isinstance(n.ctx, ast.Load)) for n in ast.walk(mod)):
+        return set()
+
+    spans = set()
+    for block in ast.walk(mod):
+        if not isinstance(block, ast.With) or len(block.items) != 1:
+            continue
+        item = block.items[0]
+        call = item.context_expr
+        if not (isinstance(item.optional_vars, ast.Name) and isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Attribute) and call.func.attr == "TemporaryDirectory"
+                and isinstance(call.func.value, ast.Name) and call.func.value.id == "tempfile"):
+            continue
+        roots = Counter(n.id for n in ast.walk(block)
+                        if isinstance(n, ast.Name) and not isinstance(n.ctx, ast.Load))
+        tmp = item.optional_vars.id
+        if roots[tmp] != 1:
+            continue
+        fixture_paths = set()
+
+        def joins(n):
+            if isinstance(n, ast.Name) and n.id in fixture_paths:
+                return ()
+            if (isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "Path"
+                    and len(n.args) == 1 and not n.keywords and isinstance(n.args[0], ast.Name)
+                    and n.args[0].id == tmp):
+                return ()
+            if not (isinstance(n, ast.BinOp) and isinstance(n.op, ast.Div) and isinstance(n.right, ast.Constant)
+                    and isinstance(n.right.value, str)):
+                return None
+            part = n.right
+            if part.value.startswith("/") or "\\" in part.value or ".." in part.value.split("/"):
+                return None
+            left = joins(n.left)
+            return None if left is None else (*left, part)
+
+        for stmt in block.body:
+            if not (isinstance(stmt, ast.Assign) and len(stmt.targets) == 1 and isinstance(stmt.targets[0], ast.Name)):
+                continue
+            target = stmt.targets[0].id
+            parts = joins(stmt.value)
+            if parts is None or roots[target] != 1:
+                continue
+            fixture_paths.add(target)
+            spans.update((part.lineno, part.col_offset) for part in parts
+                         if part.lineno == part.end_lineno)
+    return spans
+
+
+def _test_path_literals(text, lit):
+    """Keep ambiguous uses and repository paths even when the same text also appears in a temp fixture."""
+    temp = _temporary_fixture_literals(text)
+    if not temp:
+        return {m.group(1) for m in lit.finditer(text)}
+    return {m.group(1) for lineno, line in enumerate(text.splitlines(), 1) for m in lit.finditer(line)
+            if (lineno, len(line[:m.start()].encode("utf-8"))) not in temp}
+
+
+
+S81_LEGACY = "physical/die_plan/s81/cores/legacy"
+
+
+def _legacy_recipe_inputs(wt, text_by_test):
+    """Resolve named legacy core fixtures through the same recipe table as the kit generator."""
+    names = set()
+    for path, text in text_by_test.items():
+        if not (path.startswith(S81_LEGACY + "/") or "gen_core_kit_legacy.py" in text):
+            continue
+        try:
+            tree = ast.parse(text)
+        except SyntaxError:
+            continue
+        words = {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+        if "--module" in words:
+            names.update(words)
+    if not names:
+        return set()
+    # The recipe may itself be outside the sparse projection. Reading a tracked
+    # JSON blob is sufficient and does not stage a working tree or execute a generator.
+    try:
+        recipes_path = f"{S81_LEGACY}/recipes.json"
+        path = wt / recipes_path
+        recipes = json.loads(path.read_text() if path.is_file() else git("show", f"HEAD:{recipes_path}", cwd=wt).stdout)
+    except (OSError, ValueError, GitError):
+        return set()
+    if not isinstance(recipes, dict):
+        return set()
+    pending = set(recipes) & names
+    seen, files = set(), set()
+    while pending:
+        name = pending.pop()
+        if name in seen:
+            continue
+        seen.add(name)
+        row = recipes.get(name)
+        if not isinstance(row, dict):
+            continue
+        parent, ref_tile, lef = (row.get(k) for k in ("child_of", "ref_tile", "lef_contract"))
+        if isinstance(parent, str):
+            pending.add(parent)
+        if not row.get("spec_git") and isinstance(ref_tile, str) and ref_tile.startswith("physical/ref_tile/"):
+            files.add(ref_tile.rstrip("/") + "/spec.json")
+        if isinstance(lef, str) and lef.startswith("physical/ref_tile/"):
+            files.add(lef)
+    return files
+
+
 def test_deps(wt, base, tests):
-    """dirs the selected tests need beyond the sparse set: repo paths named as string literals in each test, its conftest.py
+    """Source checkout entries needed beyond the sparse set: repo paths named as string literals in each test, its conftest.py
     files and the local modules it imports (11-15 kv-pvgen: test_pvgen_vport_selrep compiles rtl/test/kv_bootage_1019/*.sv
     and rtl/qwen_sys/... that the branch does not touch; the sparse gate tree lacked them and the sims timed out at 2400 s)"""
     files = set(tests)
@@ -772,12 +904,15 @@ def test_deps(wt, base, tests):
             for c in (f"{os.path.dirname(t)}/{mod}.py", f"tools/die_plan/{mod}.py", f"tools/{mod}.py"):
                 files.add(c)
     lit, paths, directory_inputs = _path_lit_re(base), set(), set()
+    text_by_test = {}
     for f in files:
         try:
             txt = (wt / f).read_text(errors="replace")
         except OSError:
             continue
-        named = {m.group(1) for m in lit.finditer(txt)}
+        if f in tests:
+            text_by_test[f] = txt
+        named = _test_path_literals(txt, lit) if f in explicit else {m.group(1) for m in lit.finditer(txt)}
         paths |= named
         if f in explicit:
             directory_inputs |= named
@@ -789,10 +924,17 @@ def test_deps(wt, base, tests):
             # Imported implementations also name output roots and unrelated defaults.
             # Real dynamic input misses still use fail-closed runtime discovery.
             dirs.add(x)
-    return {d for d in dirs if d}
+    fixture_files = _legacy_recipe_inputs(wt, text_by_test)
+    exact = {f"file:{p}" for p, kind in _tree_types(base, fixture_files).items() if kind == "blob"}
+    return {d for d in dirs if d} | exact
 
 
 def _covered(d, pats):
+    if d.startswith("file:"):
+        file = "/" + d[5:].strip("/")
+        if file in pats:
+            return True
+        d = os.path.dirname(file)
     d = "/" + d.strip("/") + "/"
     return any(not p.startswith("!") and p.endswith("/") and p != "/" and d.startswith(p) for p in pats)
 
@@ -877,8 +1019,8 @@ def gate(it, wt, base):
     pats = list(SPARSE) + extra_sparse_patterns(it.get("extra", ()))
     need = sorted(d for d in test_deps(wt, base, tests) if not _covered(d, pats))
     if need:
-        git("sparse-checkout", "add", *["/" + d + "/" for d in need], cwd=wt, timeout=1800)
-        it["extra"] = sorted(set(it.get("extra", ())) | set(need))      # the main baseline tree gets the same dirs
+        git("sparse-checkout", "add", *extra_sparse_patterns(need), cwd=wt, timeout=1800)
+        it["extra"] = sorted(set(it.get("extra", ())) | set(need))      # the main baseline tree gets the same sources
         it["deps"] = need
     fails, infra, tails = run_tests(wt, tests, it["id"])
     miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
@@ -893,7 +1035,7 @@ def gate(it, wt, base):
             got = widen_dirs(wt, paths)
         else:
             got = sorted({x.split("/")[0] for x in paths} & set(WHOLE_TOPS))
-        got = [d for d in got if not _covered(d, pats + ["/" + x + "/" for x in need])]
+        got = [d for d in got if not _covered(d, pats + extra_sparse_patterns(need))]
         if not got:
             break
         git("sparse-checkout", "add", *["/" + d + "/" for d in got], cwd=wt, timeout=1800)
@@ -944,9 +1086,18 @@ def gate(it, wt, base):
     if new:
         return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
                        f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
-    note = f"{len(tests)} test file(s) pass" + (f" (+{len(it['deps'])} source dir(s) the tests name: {' '.join(it['deps'][:4])})"
-                                                if it.get("deps") else "") + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
-        (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
+    deps = it.get("deps", ())
+    dirs = [d for d in deps if not d.startswith("file:")]
+    files = [d[5:] for d in deps if d.startswith("file:")]
+    note = f"{len(tests)} test file(s) pass"
+    if dirs:
+        note += f" (+{len(dirs)} source dir(s) the tests name: {' '.join(dirs[:4])})"
+    if files:
+        note += f" (+{len(files)} exact source file(s): {' '.join(files[:4])})"
+    if base_f:
+        note += f" ({len(base_f)} failure(s) also fail on main: baseline)"
+    if flaky:
+        note += f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})"
     return "GREEN", note
 
 

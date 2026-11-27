@@ -808,6 +808,65 @@ class ImportedDirectoryInputs(unittest.TestCase):
             with patch.object(M, '_tops', return_value=['tools', 'unused_outputs', 'data']), patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: kinds[p] for p in paths if p in kinds}):
                 self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']), {'data/fix', 'data/static'})
 
+    def test_temp_fixture_assignment_does_not_request_real_repo_directory(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / 'tools').mkdir()
+            source = root / 'tools/test_case.py'
+            text = (
+                "import tempfile\nfrom pathlib import Path\n"
+                "ROOT = Path(__file__).resolve().parents[1]\n"
+                "def test_snapshot():\n"
+                "    with tempfile.TemporaryDirectory() as d:\n"
+                "        src = Path(d) / 'src'\n"
+                "        local = src / 'physical/test_archive'\n"
+                "        local.mkdir(parents=True)\n"
+                "    assert (ROOT / 'data/fix/input.txt').is_file()\n"
+            )
+            kinds = {'physical/test_archive': 'tree', 'data/fix/input.txt': 'blob'}
+            with patch.object(M, '_tops', return_value=['tools', 'physical', 'data']), \
+                 patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: kinds[p] for p in paths if p in kinds}):
+                source.write_text(text)
+                self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']), {'data/fix'})
+                for use in (
+                    "    assert (ROOT / 'physical/test_archive').is_dir()\n",
+                    "        src = ROOT; local = src / 'physical/test_archive'\n",
+                    "        local = src / '/physical/test_archive'\n",
+                ):
+                    with self.subTest(use=use):
+                        original = "        local = src / 'physical/test_archive'\n"
+                        source.write_text(text.replace(original, use) if use.startswith("        ") else text + use)
+                        self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']),
+                                         {'data/fix', 'physical/test_archive'})
+
+    def test_named_legacy_recipe_stages_exact_spec_and_lef(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            legacy = root / M.S81_LEGACY
+            legacy.mkdir(parents=True)
+            (legacy / 'recipes.json').write_text(json.dumps({
+                'parent': {'ref_tile': 'physical/ref_tile/parent'},
+                'child': {'child_of': 'parent', 'ref_tile': 'physical/ref_tile/child',
+                          'spec_git': 'abc:spec.json', 'lef_contract': 'physical/ref_tile/child/child.lef'},
+                'unselected': {'ref_tile': 'physical/ref_tile/large_unrelated'}
+            }))
+            test = str(Path(M.S81_LEGACY) / 'test_case.py')
+            (root / test).write_text("def test_child():\n    run(['--module', 'child'])\n")
+            tracked = {'physical/ref_tile/parent/spec.json', 'physical/ref_tile/child/child.lef'}
+            with patch.object(M, '_tops', return_value=['physical']), \
+                 patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: 'blob' for p in paths & tracked}):
+                entries = M.test_deps(root, 'main', [test])
+            self.assertEqual(entries, {f'file:{p}' for p in tracked})
+            pats = M.extra_sparse_patterns(entries)
+            self.assertEqual(pats, ['/physical/ref_tile/child/child.lef', '/physical/ref_tile/parent/spec.json'])
+            self.assertTrue(M._covered('file:physical/ref_tile/parent/spec.json', pats))
+            self.assertTrue(M._covered('file:physical/ref_tile/parent/spec.json', ['/physical/ref_tile/parent/']))
+            self.assertFalse(M._covered('physical/ref_tile/parent', pats))
+            self.assertFalse(M._covered('file:physical/ref_tile/parent/unrelated.odb', pats))
+
+
     def test_incomplete_baseline_cannot_mask_candidate_failure(self):
         from unittest.mock import patch
         with tempfile.TemporaryDirectory() as td:
