@@ -75,26 +75,38 @@ def parse_index(tsv):
     return [dict(zip(head, l.split('\t'))) for l in lines[1:]]
 
 
+def indexed_archive_bodies(index_tsv, nodes=None):
+    """Exact body identities of normal signed INDEX rows."""
+    levels = {'c': 'core', 'core': 'core', 't': 'type', 'type': 'type'}
+    for row in parse_index(index_tsv):
+        level = levels.get(row.get('kind'))
+        if level is None or not row.get('status', '').startswith(('ARCHIVED', 'RTX-FULL')):
+            continue
+        record, odb_sha = row.get('record', ''), row.get('sha256', '')
+        db = row.get('rtx_db') or row.get('db')
+        if ((db or '').endswith('/6_final.odb') and re.fullmatch(r'[a-f0-9]{64}', odb_sha)
+                and (not record or re.fullmatch(r'[a-f0-9]{64}', record))):
+            if nodes is not None:
+                rid = record_id(row['die'], row['kind'], row['element'], nodes)
+                level = 'core' if rid.split('.', 2)[1] == 'c' else 'type'
+            yield row, level, db.rsplit('/', 2)[-2], record, odb_sha
+
+
 def source_archives(index_tsv, refs):
     """Resolve uniquely recorded native signoffs without joining by module name."""
     if not refs:
         return {}
     result = {}
     ambiguous = set()
-    for row in parse_index(index_tsv):
-        if not row.get('status', '').startswith(('ARCHIVED', 'RTX-FULL')):
+    for row, level, unit, record, odb_sha in indexed_archive_bodies(index_tsv):
+        if not record:
             continue
         source = re.match(r'^AUTO-EXPORT-1118 ([A-Za-z0-9_.-]+:/\S+/signoff\.json)(?:\s|$)',
                           row.get('src', ''))
-        level = {'c': 'core', 'core': 'core', 't': 'type', 'type': 'type'}.get(row.get('kind'))
-        if source is None or level is None:
+        if source is None:
             continue
         key = row.get('die'), level, source[1]
         if key not in refs or key in ambiguous:
-            continue
-        record, odb_sha = row.get('record', ''), row.get('sha256', '')
-        db = row.get('rtx_db') or row.get('db')
-        if not (db or '').endswith('/6_final.odb') or not all(re.fullmatch(r'[a-f0-9]{64}', h) for h in (record, odb_sha)):
             continue
         prev = result.get(key)
         if prev and (prev['record'], prev['odb_sha256']) != (record, odb_sha):
@@ -102,7 +114,7 @@ def source_archives(index_tsv, refs):
             ambiguous.add(key)
             continue
         result[key] = dict(agi=True, rtx=bool(row.get('rtx_db') or (prev or {}).get('rtx')),
-                           status=row['status'], units=[db.rsplit('/', 2)[-2]],
+                           status=row['status'], units=[unit],
                            record=record, odb_sha256=odb_sha)
     return result
 
