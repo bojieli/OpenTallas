@@ -615,16 +615,17 @@ def records():
                               for ref in set(item.get('source_refs') or ()))
         source_archives = APR.source_archives(d.get('agidock_index_tsv'),
                                               {key for key, n in source_refs.items() if n == 1})
+        recovery_ids = {p.stem for p in (layout_service.LS.STORE / 'recovery-identities').glob('*.json')}
         bodies_by_unit = defaultdict(set)
-        if (layout_service.LS.STORE / 'recovery-identities').is_dir():
+        if recovery_ids:
             for row, level, unit, record, odb_sha in APR.indexed_archive_bodies(d.get('agidock_index_tsv'), idx['nodes']):
                 bodies_by_unit[row['die'], level, unit].add((record, odb_sha))
-        recs = census_records(census, idx['nodes'], layouts, source_archives, bodies_by_unit) if census else layouts
+        recs = census_records(census, idx['nodes'], layouts, source_archives, bodies_by_unit, recovery_ids) if census else layouts
         _REC.update(key=key, recs=recs)
     return _REC['recs']
 
 
-def census_records(census, nodes, layouts, source_archives=None, bodies_by_unit=None):
+def census_records(census, nodes, layouts, source_archives=None, bodies_by_unit=None, recovery_ids=()):
     recs = {}
     node_names = {}
     for node in nodes.values():
@@ -658,13 +659,13 @@ def census_records(census, nodes, layouts, source_archives=None, bodies_by_unit=
                             matches[match['record'], match['odb_sha256']] = match
                     if len(matches) == 1:
                         archive = next(iter(matches.values()))
-                if pack is None and bodies_by_unit:
-                    bodies = set().union(*(bodies_by_unit.get((die, level, unit), ())
+                if pack is None and rid in recovery_ids:
+                    bodies = set().union(*((bodies_by_unit or {}).get((die, level, unit), ())
                                            for unit in archive['units']))
                     if archive.get('record') and archive.get('odb_sha256'):
                         bodies.intersection_update({(archive['record'], archive['odb_sha256'])})
-                    if bodies:
-                        pack = design_index.recovered_store_entry(rid, item['key'], bodies)
+                    sources = (item.get('source_refs') or ()) if level == 'core' and bucket == 'current' else ()
+                    pack = design_index.recovered_store_entry(rid, item['key'], bodies, sources)
                 recs[rid] = dict(id=rid, die=die, name=name, level=level, node=nid, plan='current' if bucket == 'current' else 'superseded',
                                  plan_label=APR.LABEL[label], superseded=bucket != 'current', signoff_basis=bucket,
                                  census_key=item['key'], node_state=((nodes.get(nid) or {}).get('status') or {}).get('state'),

@@ -28,6 +28,7 @@ the die plan files ($FLEET_VIZ_REPO), the signed store (~/coord/signed-store rec
 """
 import argparse, collections, gzip, hashlib, json, os, pathlib, re, sys, time
 from functools import lru_cache
+from zlib import error as ZlibError
 
 HERE = pathlib.Path(__file__).resolve().parent
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
@@ -142,9 +143,58 @@ def _verified_pack_metadata(path, identity):
     return hashlib.sha256(raw).hexdigest(), manifest['element'], manifest.get('db'), _pack_summary(job, manifest)
 
 
-def recovered_store_entry(nid, census_key, bodies):
+def _file_identity(path):
+    stat = path.stat()
+    return stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+
+
+@lru_cache(maxsize=128)
+def _signed_core_identity(path, identity, record):
+    with gzip.open(path, 'rt') as f:
+        entry = json.load(f)
+    if (entry.get('schema') != 'opentallas.signed_store.v1'
+            or entry.get('id') != record or entry.get('verdict') != 'SIGNED'):
+        return None
+    files = entry.get('files') or []
+    if not any(len(row) >= 3 and pathlib.PurePosixPath(row[0]).name == 'signoff.json' and row[2] == record
+               for row in files):
+        return None
+    odbs = frozenset(row[2] for row in files
+                     if len(row) >= 3 and pathlib.PurePosixPath(row[0]).name == '6_final.odb')
+    pins = entry['pins']
+    rows = pins['rows']
+    if not rows:
+        return None
+    # Same canonical pin-table fingerprint used by release_tree_plan.pins_sha.
+    digest = hashlib.sha256(json.dumps(sorted([k] + list(v) for k, v in rows.items())).encode()).hexdigest()[:16]
+    sources = frozenset([entry.get('origin'), *(entry.get('aliases') or ())])
+    return entry['top'], tuple(pins['outline_nm']), digest, odbs, sources
+
+
+def _signed_core_matches(census_key, record, odb, expected_sources):
+    store = os.environ.get('OT_SIGNED_STORE')
+    if not store or not expected_sources:
+        return False
+    match = re.fullmatch(r'([A-Za-z0-9_.+-]+)#([0-9]+(?:\.[0-9]+)?)x([0-9]+(?:\.[0-9]+)?)/([a-f0-9]{16})',
+                         census_key)
+    if not match:
+        return False
+    top, width, height, digest = match.groups()
+    path = pathlib.Path(store) / 'records' / record[:2] / (record + '.json.gz')
+    try:
+        shape = _signed_core_identity(path, _file_identity(path), record)
+        if shape is None:
+            return False
+        actual_top, outline, actual_digest, odbs, sources = shape
+        return (actual_top == top and outline == tuple(round(float(v) * 1000) for v in (width, height))
+                and actual_digest == digest and odbs == {odb} and not sources.isdisjoint(expected_sources))
+    except (OSError, EOFError, ZlibError, ValueError, KeyError, TypeError, AttributeError, OverflowError):
+        return False
+
+
+def recovered_store_entry(nid, census_key, bodies, expected_sources=()):
     """A direct canonical pack bound to one exact signoff key and a verified archive body."""
-    if not bodies or not re.fullmatch(r'[A-Za-z0-9_.+-]+', nid):
+    if not (bodies or expected_sources) or not re.fullmatch(r'[A-Za-z0-9_.+-]+', nid):
         return None
     try:
         proof = json.loads((STORE / 'recovery-identities' / (nid + '.json')).read_text())
@@ -157,6 +207,9 @@ def recovered_store_entry(nid, census_key, bodies):
         if indexed_records:
             if record not in indexed_records:
                 return None
+        elif proof.get('record_basis') == 'signed-store-exact-shape':
+            if not _signed_core_matches(census_key, record, odb, expected_sources):
+                return None
         elif ('', odb) not in bodies or proof.get('record_basis') != 'signed-store':
             return None
         d = STORE / 'elements' / nid
@@ -165,9 +218,7 @@ def recovered_store_entry(nid, census_key, bodies):
         if index.get('element') != nid or job != proof['job'] or not re.fullmatch(r'[A-Za-z0-9_.+-]+', job):
             return None
         path = d / (job + '.json')
-        stat = path.stat()
-        identity = stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
-        digest, element, db, pack = _verified_pack_metadata(path, identity)
+        digest, element, db, pack = _verified_pack_metadata(path, _file_identity(path))
         legacy_final = (pack['stage'] is None and isinstance(db, str) and db.endswith('/6_final.odb')
                         and job == '6_final_' + odb[:10])
         if (element == nid and pack['job'] == job and pack['verify'] == 'IDENTICAL'

@@ -1,5 +1,5 @@
 """EXPLORER-2: the design node index service (name resolution) and the memory-macro rule of design_index.py."""
-import hashlib, json, os, pathlib, sys, tempfile, unittest
+import gzip, hashlib, json, os, pathlib, sys, tempfile, unittest
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -127,3 +127,49 @@ def test_recovered_pack_preserves_exact_separate_suffix_bodies(tmp_path, monkeyp
 
     second[3].write_text(first[3].read_text())
     assert design_index.recovered_store_entry(*second[:2], {second[2]}) is None
+
+
+def test_nonindexed_pack_needs_current_signed_store_shape(tmp_path, monkeypatch):
+    monkeypatch.setattr(design_index, 'STORE', tmp_path / 'layout')
+    signed_store = tmp_path / 'signed'
+    monkeypatch.setenv('OT_SIGNED_STORE', str(signed_store))
+    element = 'qwen_kvsys.c.kv_core--signoff-shape'
+    source = 'epyc2:/scratch/kit/signoff/signoff.json'
+    record, odb = '1' * 64, '2' * 64
+    rows = {'a[0]': ['M4', 19, 22], 'clock': ['M5', 200, 0]}
+    digest = hashlib.sha256(json.dumps(sorted([k] + v for k, v in rows.items())).encode()).hexdigest()[:16]
+    key = f'kv_core#216x216/{digest}'
+    entry = dict(schema='opentallas.signed_store.v1', id=record, verdict='SIGNED', top='kv_core',
+                 origin=source, pins=dict(outline_nm=[216000, 216000], rows=rows),
+                 files=[['scratch/kit/signoff/signoff.json', 10, record], ['scratch/kit/6_final.odb', 20, odb]])
+    record_path = signed_store / 'records' / record[:2] / (record + '.json.gz')
+    record_path.parent.mkdir(parents=True)
+    record_path.write_bytes(gzip.compress(json.dumps(entry).encode()))
+    job = '6_final_verified'
+    target = design_index.STORE / 'elements' / element
+    target.mkdir(parents=True)
+    (target / 'index.json').write_text(json.dumps(dict(element=element, latest=job)))
+    manifest = json.dumps(dict(id='exact-pack', element=element, job=job,
+                               design={'stage': '6_final'}, verify={'verdict': 'IDENTICAL'})).encode()
+    (target / (job + '.json')).write_bytes(manifest)
+    proof = dict(schema='opentallas.explorer.recovery_identity.v1', element=element, census_key=key,
+                 job=job, manifest_sha256=hashlib.sha256(manifest).hexdigest(),
+                 record_sha256=record, odb_sha256=odb, record_basis='signed-store-exact-shape')
+    receipt = design_index.STORE / 'recovery-identities' / (element + '.json')
+    receipt.parent.mkdir()
+    receipt.write_text(json.dumps(proof))
+
+    assert design_index.recovered_store_entry(element, key, set(), [source])['id'] == 'exact-pack'
+    assert design_index.recovered_store_entry(element, key, set(), []) is None
+    assert design_index.recovered_store_entry(element, key, set(), [source + 'x']) is None
+    assert design_index.recovered_store_entry(element, key, {('3' * 64, odb)}, [source]) is None
+
+    proof['odb_sha256'] = '3' * 64
+    receipt.write_text(json.dumps(proof))
+    assert design_index.recovered_store_entry(element, key, set(), [source]) is None
+
+    proof['odb_sha256'] = odb
+    wrong_shape = key.replace('216x216', '212x216')
+    proof['census_key'] = wrong_shape
+    receipt.write_text(json.dumps(proof))
+    assert design_index.recovered_store_entry(element, wrong_shape, set(), [source]) is None
