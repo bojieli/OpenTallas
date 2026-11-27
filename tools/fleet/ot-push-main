@@ -30,8 +30,10 @@ import argparse
 import os
 import re
 import shlex
+import shutil
 import subprocess as S
 import sys
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -243,16 +245,29 @@ def run_tests(tests, timeout, rounds=4):
     widen_for(test_sources(tests))
     nw = xdist_workers(py, len(tests))
     par = ["-n", str(nw), "--dist", "loadfile"] if nw else []
-    cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *par, *tests]
-    for n in range(1, rounds + 1):
-        print("ot-push-main: " + shlex.join(cmd[2:]))
-        rc, o = run_tests_once(cmd, timeout)
-        if rc == 0 or rc == 124 or n == rounds:
-            return rc
-        if not widen_for(o):
-            return rc
-        print(f"ot-push-main: cone widened after failure; re-running (round {n + 1}/{rounds})")
-    return rc
+    # P-PUSH-GATE-FLAKE (FLEET-OPS-R5, COORD 11-27): overlapping gate runs shared /tmp/pytest-of-<user>: pytest prunes the older numbered dirs of the OTHER
+    # live session ("garbage-<uuid>" dirs, "Directory not empty" warnings), so tests that passed alone failed in a gate (kit_rtl_post, guard_kill, prov,
+    # source, future_lec).  Each gate run gets its own pytest basetemp and TMPDIR, removed when the run ends.
+    bt = tempfile.mkdtemp(prefix="ot-push-pytest-", dir=os.environ.get("OT_PUSH_TMPROOT") or None)
+    old_tmp = os.environ.get("TMPDIR")
+    os.environ["TMPDIR"] = bt
+    cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", "--basetemp", os.path.join(bt, "pt"), *par, *tests]
+    try:
+        for n in range(1, rounds + 1):
+            print("ot-push-main: " + shlex.join(cmd[2:]))
+            rc, o = run_tests_once(cmd, timeout)
+            if rc == 0 or rc == 124 or n == rounds:
+                return rc
+            if not widen_for(o):
+                return rc
+            print(f"ot-push-main: cone widened after failure; re-running (round {n + 1}/{rounds})")
+        return rc
+    finally:
+        if old_tmp is None:
+            os.environ.pop("TMPDIR", None)
+        else:
+            os.environ["TMPDIR"] = old_tmp
+        shutil.rmtree(bt, ignore_errors=True)       # this run's own temp dir
 
 
 def affected_tests(tests, files, moved):
