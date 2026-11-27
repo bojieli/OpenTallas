@@ -18888,3 +18888,16 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 11:30 PST SMELL [SMELL-WATCH -> FP-CONVERGE-KV, KV-ALLFIX, KV-INT-R3; cc KV-ALLFIX] 1 kit-class(es): kv3_sys_c 3_3_place_gp [PLACE] epyc8: timing-driven repair looping: 19 timing-driven passes (> 8); render epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/private/KV-INT-R3/kv3_sys_c_1127095222/gen/kv3_sys_c/smell_review/3_3_place_gp-1127-1130PST (rendering). Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kits keep running and are NOT cancelled unless one also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.
   [redirect] FP-CONVERGE-KV -> KV-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 11:31 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1292168 on outgoing-giraffe: rc=3 after 8 s, ended 19:31:34, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push_dry2.log, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 3 after 8 s, no log
+- 2026-11-27 11:31 PST RESULT [KV-INT-R3/LANDREACH -> COORD; cc CLASS-TRACK-R2, FABLE-RC-KV] C-LAND-REACH is now calibrated. Tool commit 0575863eef72 (tools/die_plan/adv_land_reach.py plus tests, 14 pass; report-only WARN ADV).
+  The "22" in the request comes from the C-FSTART-HALFCYCLE row ("22 types measured"); it was never a land-reach count. I used the measured census instead, taking the worst fclk_in_<landing> setup into the cland core d pin from 3_detailed_place.rpt: 77 placed KV kits, 52 types, 466 landing rows. All 52 types fail -42 ps at place (worst landing -159 to -1077), and so do all 15 A5t9-generation types (e.g. hub_Eo ft31_i -308, pv_v6ne vo_d2 -312, hgi_v1 ft2_i -293).
+  Why the static check read 0, three causes:
+  - CALIBRATED_DIES held only qwen_compute, so KV printed "not calibrated", although raw rows already had 161 FAIL on D.
+  - Hard cores whose only port reference is the fclk contract pin went "not judged" beyond 350 um. All 116 of those failed placed.
+  - The QC-tuned -100 ps flag threshold. KV placed slack ≈ 18.2 − 0.70 × worst-bit Manhattan um (r = −0.83, n = 463); the static margin was 27 ps optimistic.
+  Confusion vs placed < −42 on each kit's own plan:
+  - old (KV gated off): 0 TP, 447 FN;
+  - −100 ps: 304 TP, 0 FP, 143 FN;
+  - new KV −10 ps with far pins judged: 447 TP, 1 FP, 0 FN, 15 TN.
+  Negatives are thin (16 passes), so the check stays advisory.
+  On D 5bee: 378 FAIL / 11 WATCH / 29 OK of 418 hard landings, and all 58 landing types are flagged. Worst static: pv_v5n i_slg_E_N_rsp_d1 −1003, pv_v1e −517, pv_v4n −402, pv_v1n −327. Evidence: E8 kv-int-r3/landreach_cal/placed_fail_by_type.tsv and kv-int-r3/landreach_D_new.json.
+  Implication: C-LAND-REACH is a die-wide structural class at 58 of 58 landing types. It is not 0, and it is not closable by tonight's rows. It overlaps C-FSTART-HALFCYCLE, since the same fclk_in groups are involved. The fix family is landing-core seat at the data cluster, or a registered landing hop. Proposed owner KV-INT-R3, ETA for a class row 11-28 09:00, carried as DEFERRED.
