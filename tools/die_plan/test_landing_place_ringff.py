@@ -248,3 +248,78 @@ def test_profile_emits_only_one_scoped_native_directive():
     with pytest.raises(ValueError, match="invalid writer guard"):
         LP._pinslot_profile_tcl("t", {"bands": {"lepk_i0": dict(lepk, pinslot_profile=dict(
             profile, guard_seats_um={guard: [1054.08, 400]}))}}, candidate.types["t"])
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_actual_pin_y_checks_plan_and_native_identity_before_using_physical_rows():
+    guard = "u_ring.g_wreg.sl[3].ch[0].u_wen/q$_DFF_P_"
+    members = [[f"u_cland_lepk_i0/u_ring.q[{i}]$_DFF_P_", bit] for i, bit in enumerate([0, 1, 1, 2])]
+    pins = [["M4", 19.9, 3.1], ["M6", 19.9, 4.1], ["M4", 19.9, 7.1]]
+    profile = {"inset_um": [4, 6, 12], "guard_east_um": 18,
+               "guard_seats_um": {guard: [16, 2]},
+               "actual_pin_y": {"pins": pins, "members": members}}
+    band = {"rect_um": [1, 1, 16, 8], "ring_place": "ff", "pinslot_profile": profile}
+    c = {"bands": {"lepk_i0": band}}
+    t = {"outline_um": [20, 10], "buses": [{"name": "lepk_i0", "dir": "in", "face": "E", "layers": ["M4", "M6"]}],
+         "clock": {"landing_contract": c}}
+    declared = [{"name": f"lepk_i0[{i}]", "layer": layer, "x": x, "y": y}
+                for i, (layer, x, y) in enumerate(pins)]
+    LP.validate_pinslot_plan_pins("hd_lep0N", t, declared)
+    with pytest.raises(ValueError, match="differs from current plan pin records"):
+        LP.validate_pinslot_plan_pins("hd_lep0N", t, [dict(declared[0], y=3.2), *declared[1:]])
+    with pytest.raises(ValueError, match="invalid or duplicate native member"):
+        LP._actual_pin_y_manifest("hd_lep0N", "lepk_i0",
+                                  dict(profile["actual_pin_y"], members=[*members[:-1], members[0]]), t, 16)
+    with pytest.raises(ValueError, match="requires one existing soft FF y-slot band"):
+        LP._pinslot_profile_tcl("hd_lep0N", {"bands": {"lepk_i0": dict(band, dsel_cone=True)}}, t)
+
+    procs = "".join(re.search(rf"^proc {proc} .*?\n\}}\n", TCL, re.M | re.S).group()
+                    for proc in ("cland_kbit", "cland_check_actual_pin_y", "cland_place_pinslot"))
+    fixture = r"""
+set ff_dbu 1000
+set ff_y0 0
+set ff_rh 100
+set ff_blk block
+proc block {method} {return {bt0 bt1 bt2}}
+foreach i {0 1 2} {
+ proc bt$i {method} [format {
+  switch $method {
+   getName {return {lepk_i0[%d]}}
+   getIoType {return INPUT}
+   getBPins {return bp%d}
+  }
+ } $i $i]
+ proc bp$i {method} [format {return box%d} $i]
+}
+proc box0 {method} {return m4}
+proc box1 {method} {return m6}
+proc box2 {method} {return m4}
+proc m4 {method} {return M4}
+proc m6 {method} {return M6}
+proc cland_pinslot_guard {args} {return {}}
+proc cland_put {inst rect args} {puts [lindex $rect 1]}
+set ordered {}
+foreach i {0 1 2 3} bit {0 1 1 2} {
+ proc ff$i {method} [format {return {u_cland_lepk_i0/u_ring.q\[%d\]$_DFF_P_}} $i]
+ lappend ordered [list [format {data|%09d|0|key} $bit] ff$i]
+}
+set pins {0 {19900 3100} 1 {19900 4100} 2 {19900 7100}}
+set profile [dict get $::cland_pinslot_profiles u_cland_lepk_i0]
+"""
+    generated = LP._pinslot_profile_tcl("hd_lep0N", c, t)
+    command = "cland_place_pinslot $ordered {1 1 16 8} ring:lepk_i0+ff 1 $pins 0 1"
+    body = procs + generated + fixture
+    def run(change="", suffix=" $profile"):
+        return subprocess.run(["tclsh", "/dev/stdin"], input=body + change + "\n" + command + suffix + "\n",
+                              capture_output=True, text=True)
+    assert run().stdout.split() == ["3.1", "4.1", "4.1", "7.1"]
+    assert run(suffix=" [lrange $profile 0 3]").stdout.split() == ["3.1", "4.4", "5.7", "7.1"]
+    for change, error in [
+        ("dict set pins 1 {19900 4101}", "stale native BTerm"),
+        ("proc box1 {method} {return m4}", "stale native BTerm"),
+        ("set ordered [lreplace $ordered 1 2 [lindex $ordered 2] [lindex $ordered 1]]", "stale ordered native member"),
+        ("dict unset pins 1", "incomplete native pin or key set"),
+    ]:
+        rejected = run(change)
+        assert rejected.returncode and error in rejected.stderr
+        assert not rejected.stdout

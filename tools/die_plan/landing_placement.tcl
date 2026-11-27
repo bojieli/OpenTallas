@@ -842,6 +842,46 @@ proc cland_bus_pins {bus} {
  }
  return $out
 }
+# Verify the frozen plan pins and stock ordered key list before moving any cell.
+proc cland_check_actual_pin_y {tag pins keyed rest manifest} {
+ global ff_blk ff_dbu
+ lassign $manifest expected_pins expected_members
+ if {![regexp {^ring:([^@+]+)} $tag -> bus] || [dict size $pins] != [llength $expected_pins]
+     || [llength $keyed] != [llength $expected_members] || [llength $rest]} {
+  error "OT_CLAND actual_pin_y incomplete native pin or key set for $tag"
+ }
+ set expected [dict create]
+ set bit 0
+ foreach p $expected_pins {
+  dict set expected "${bus}\[$bit\]" $p
+  incr bit
+ }
+ foreach bt [$ff_blk getBTerms] {
+  set name [$bt getName]
+  if {![dict exists $expected $name]} continue
+  regexp {\[([0-9]+)\]$} $name -> bit
+  lassign [dict get $expected $name] layer x y
+  set bps [$bt getBPins]
+  if {[$bt getIoType] ne "INPUT" || [llength $bps] != 1
+      || [llength [set boxes [[lindex $bps 0] getBoxes]]] != 1
+      || [[[lindex $boxes 0] getTechLayer] getName] ne $layer
+      || ![dict exists $pins $bit]
+      || [dict get $pins $bit] ne [list [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}]]} {
+   error "OT_CLAND actual_pin_y stale native BTerm $name"
+  }
+  dict unset expected $name
+ }
+ if {[dict size $expected]} {
+  error "OT_CLAND actual_pin_y missing native BTerms for $tag"
+ }
+ foreach observed $keyed frozen $expected_members {
+  lassign $observed inst xy bit
+  lassign $frozen name expected_bit
+  if {$bit != $expected_bit || [string map [list "\\" ""] [$inst getName]] ne $name} {
+   error "OT_CLAND actual_pin_y stale ordered native member $name for $tag"
+  }
+ }
+}
 # Ring flops with a bus-bit key keep their key (bit-major) order and are stretched over the span of their pins: flop j
 # of n starts the band cursor at the row of lo + (hi-lo)*j/(n-1) (lo/hi = pin y of the first/last flop's bit), so each
 # bit's flops sit next to its pin row, never before it, and rows are filled left to right as before.  Aiming each flop
@@ -921,7 +961,7 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
  foreach pr $ordered {
   set k [lindex $pr 0]
   if {![regexp {^[^|]+\|([0-9]+)\|} $k -> kf] || ![dict exists $pins [set bit [cland_kbit $kf $rev]]]} { lappend rest $pr; continue }
-  lappend al [list [lindex $pr 1] [dict get $pins $bit]]
+  lappend al [list [lindex $pr 1] [dict get $pins $bit] $bit]
  }
  set n [llength $al]; set cland_cursor {}
  if {$n} {
@@ -946,16 +986,23 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0} {profile {}}} {
  if {$xdesc} { set ::cland_xdesc 1 }
  try {
  set skip {}
+ set actual_pin_y {}
  if {[llength $profile]} {
   if {!$xdesc} {error "OT_CLAND pinslot_profile must face east ($tag)"}
-  lassign $profile inset edge guards reserve_resize
+  lassign $profile inset edge guards reserve_resize actual_pin_y
+  if {[llength $actual_pin_y]} {cland_check_actual_pin_y $tag $pins $al $rest $actual_pin_y}
   set skip [cland_pinslot_guard $ordered $guards $edge $rect $tag $reserve_resize]
   set ::cland_pinslot_row_cap [lmap q $inset {expr {round($q*$ff_dbu)}}]
  }
  set j 0
  foreach e $al {
   set i [lindex $e 0]
-  set ty [expr {$lo+($hi-$lo)*double($j)/($n-1)}]; incr j
+  if {[llength $actual_pin_y]} {
+   set ty [lindex $e 1 1]
+  } else {
+   set ty [expr {$lo+($hi-$lo)*double($j)/($n-1)}]
+  }
+  incr j
   if {[dict exists $skip $i]} {continue}
   set ry [expr {$ff_y0+int(round(($ty-$ff_rh/2.0-$ff_y0)/$ff_rh))*$ff_rh}]
   set w [list $ax [expr {max($ay,double($ry)/$ff_dbu)}] $bx $by]

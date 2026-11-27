@@ -9402,6 +9402,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))
     pregrt_ff_hold.install(t, kd)
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
+    from landing_place import validate_pinslot_plan_pins
+    validate_pinslot_plan_pins(tn, t, planned_pins)
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
