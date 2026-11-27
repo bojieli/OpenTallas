@@ -8433,7 +8433,17 @@ def cmd_kit_rtl(a):
     else:
         rep = json.loads((out / "bind_report.json").read_text())
     component_report = None
-    if getattr(a, "component_proof", None):
+    source_postcheck = getattr(a, "source_postcheck", None)
+    if source_postcheck:
+        if not a.asbuilt or not a.src_tree or a.variant or stream_rep is not None:
+            raise BindError("kit-rtl: source postcheck requires exact explicit asbuilt and source tree of a finished typed probe")
+        import bind_source_postcheck
+        try:
+            source_postcheck_sha = bind_source_postcheck.verify(
+                source_postcheck, plan=a.plan, asbuilt=a.asbuilt, bind_out=out, type_name=tn, source_root=a.src_tree)
+        except (OSError, ValueError, KeyError) as exc:
+            raise BindError(f"kit-rtl {tn}: retained source postcheck: {exc}") from exc
+    elif getattr(a, "component_proof", None):
         import bind_component
         proof = json.loads(Path(a.component_proof).read_text())
         try:
@@ -8913,6 +8923,11 @@ def cmd_kit_rtl(a):
         man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
                    source_scope="LOCAL_COMPONENT", source_preparation_only=True,
                    global_bind=component_report["global_bind"])
+    if source_postcheck:
+        source_receipt = Path(source_postcheck).resolve()
+        man["source_postcheck"] = {"path": str(source_receipt),
+                                   "sha256": source_postcheck_sha,
+                                   "original_bind_result": "FAIL"}
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     # Physical provider specialization follows the declared plan in normal bind
     # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
@@ -9340,7 +9355,9 @@ def _main(argv=None):
     k.add_argument("--asbuilt")
     k.add_argument("--svc-lane-abi", default=os.environ.get("OT_SVC_LANE_ABI"),
                    help="approved ordered S81 SVC lane ABI for independently reused kit inputs")
-    k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    local_proof = k.add_mutually_exclusive_group()
+    local_proof.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    local_proof.add_argument("--source-postcheck", help="verified correction of the sole late source-root error of a retained scoped native bind")
     k.add_argument("--src-tree", help="the kit's own source tree (src_rel2 copy): every kit source resolves against it, not the "
                                       "plan's baked asbuilt.base; the filelist must lie inside it (env OT_KIT_SRC_TREE)")
     k.add_argument("--library-profile", help="explicit hash-pinned candidate library (kit_library_profile.v1): replaces "
