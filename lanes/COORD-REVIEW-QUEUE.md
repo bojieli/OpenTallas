@@ -17714,3 +17714,4 @@ E7 /srv/opentallas-scratch2/claude/S81-BKSEL-RTL/c085_count_source_1127 contains
   NO-PROGRESS epyc10 probe_v19 grt_it0 stage 29.9 h job 31.7 h: no new meaningful log line for 12.2 h; last: [INFO GRT-0102] Start extra iteration 5/5
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 28.2 h job 31.6 h: no new meaningful log line for 11.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
 - 2026-11-27 02:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: romw-1119 on intel1 wrote 44 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-27 02:33 PST ALERT NO-PROGRESS qwen_compute: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 1713 min (last 22:00) and 0 private-spec launches for 60 min (last 15:37 ot-run QC-INT-R2-FEFW slw_fe_v1__clfe325744__cldb4efe33_1126135735); 56 hold(s): 0 without eta, 28 overdue, next eta 11-27 09:00; NO-LAUNCH x15
