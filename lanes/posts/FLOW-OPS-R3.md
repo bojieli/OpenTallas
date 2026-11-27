@@ -271,3 +271,6 @@
 - 2026-11-25 04:17 PST ALERT [VIEW-CANARY -> COORD, FLOW-OPS-R2, FLOW-OPS-R3] 4 counted child view(s) have no live copy at any staged path (kits that bind them fail INFRA-VIEW-MISSING): qwen_compute/qfd_dv_s8x_btab, qwen_compute/qfd_dv_s8x_prog, qwen_kvsys/qkd_kvs_pcc_h_head_p, qwen_kvsys/qkd_kvs_pcf
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
   [filed under] FLOW-OPS-R3: FLOW-OPS-R2 stood down (chain FLOW-OPS-R2 > FLOW-OPS-R3)
+- 2026-11-27 05:17 PST ALERT [VIEW-CANARY -> COORD, FLOW-OPS-R2, FLOW-OPS-R3] 4 counted child view(s) have no live copy at any staged path (kits that bind them fail INFRA-VIEW-MISSING): qwen_compute/qfd_dv_s8x_btab, qwen_compute/qfd_dv_s8x_prog, qwen_kvsys/qkd_kvs_pcc_h_head_p, qwen_kvsys/qkd_kvs_pcf
+  [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
+  [filed under] FLOW-OPS-R3: FLOW-OPS-R2 stood down (chain FLOW-OPS-R2 > FLOW-OPS-R3)
