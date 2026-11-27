@@ -1079,8 +1079,8 @@ puts "SO_PATH_END"
   # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
   # this, since port-start hold is the parent's.  Each find_timing_paths result is read before the next call: a later
   # call frees the earlier PathEnds, and reading them crashes OpenROAD, which no catch stops.
-  # KW-FIX-36 11-08 (COORD R4): core_n / core_wns = the same census without output-port endpoints, which sign-off
-  # assigns to the parent (oport above).  eco_loop.near_miss scores core_*; n / wns stay what the ECO's nonport scope repairs.
+  # The core census excludes parent-facing ports and includes explicitly declared, recovered-clock native pad inputs.
+  # The nonport fields retain the ECO's existing nonport scope.
   catch {
     set so_np [dict create]; set so_np_core [dict create]; set so_np_all 0; set so_np_reg 0
     foreach so_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
@@ -1104,6 +1104,7 @@ puts "SO_PATH_END"
         if {![$so_eo is_top_level_port] && (![dict exists $so_np_core $so_ep] || $so_sl < [dict get $so_np_core $so_ep])} { dict set so_np_core $so_ep $so_sl }
       }
     }
+@NATIVE_HOLD@
     if {$so_np_all < 100000 && $so_np_reg < 100000} {
       set so_np_w 0.0; set so_np_cw 0.0
       dict for {so_ep so_sl} $so_np { if {$so_sl < $so_np_w} { set so_np_w $so_sl } }
@@ -1401,6 +1402,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                              if k not in {sel.split("[")[0] for _ck, sels in fwd_ring for sel in sels}}
     if native_pad_inputs:
         t = _native_pad_tcl(t, native_pad_inputs)
+    t = t.replace("@NATIVE_HOLD@", NATIVE_HOLD_TCL if native_pad_inputs and corner == "ff" else "")
     t = t.replace("@DROOP665@", "" if not droop else (
         "# ---- 12.4a b2 0.665 V data droop re-time (INFORMATION only, never a reason) ----\n" + droop +
         "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
@@ -1608,12 +1610,15 @@ def _native_pad_tcl(t, contracts):
     overlay = "@IN_MIN_PORTS@\n"
     if t.count(anchor) != 1 or t.count(overlay) != 1:
         raise ValueError('signoff: native pad overlay anchors changed')
-    lines = ['set so_native_in {}\n']
+    lines = ['set so_native_in {}\n', 'set so_native_clocks {}\n']
     restore = []
     for ck, sel, mn, mx in contracts:
-        lines += [f'if {{[llength [get_clocks -quiet {{{ck}}}]] != 1}} {{error "missing native pad clock {ck}"}}\n',
+        lines += [f'set so_native_ck [get_clocks -quiet {{{ck}}}]\n',
+                  f'if {{[llength $so_native_ck] != 1 || ![llength [get_property [lindex $so_native_ck 0] sources]]}} '
+                  f'{{error "missing physical native pad clock {ck}"}}\n',
                   f'set so_native_ports [get_ports -quiet {{{sel}}}]\n',
                   f'if {{![llength $so_native_ports]}} {{error "empty native pad selector {sel}"}}\n',
+                  'dict lappend so_native_clocks [lindex $so_native_ck 0] {*}$so_native_ports\n',
                   'foreach p $so_native_ports {\n'
                   '  if {$p ni [all_inputs] || [get_full_name $p] in $so_ck_ports || [get_full_name $p] in $so_native_in} {error "ambiguous native pad input"}\n'
                   '  lappend so_native_in [get_full_name $p]\n' ' }\n']
@@ -1622,6 +1627,32 @@ def _native_pad_tcl(t, contracts):
     lines += ['set so_din [lmap p $so_din {if {[get_full_name $p] in $so_native_in} continue; set p}]\n',
               'so NATIVE_PAD_INPUTS [llength $so_native_in] golden_delays_preserved\n']
     return t.replace(anchor, anchor + ''.join(lines)).replace(overlay, overlay + ''.join(restore))
+
+
+NATIVE_HOLD_TCL = r"""    # A worse parent input may hide a local native path to the same capture.
+    set so_native_hold {}
+    dict for {so_ck so_ports} $so_native_clocks {
+      set so_paths [find_timing_paths -path_delay min -from $so_ports -to $so_ck -group_path_count 100000 -endpoint_path_count 1 -slack_max 0]
+      if {[llength $so_paths] >= 100000} {error "truncated native pad hold census"}
+      foreach so_pe $so_paths {
+        set so_sl [get_property $so_pe slack]
+        set so_eo [get_property $so_pe endpoint]
+        if {$so_sl >= 0 || [$so_eo is_top_level_port]} continue
+        set so_ep [get_full_name $so_eo]
+        if {![dict exists $so_native_hold $so_ep] || $so_sl < [dict get $so_native_hold $so_ep]} {
+          dict set so_native_hold $so_ep $so_sl
+        }
+      }
+    }
+    set so_native_wns 0.0
+    dict for {so_ep so_sl} $so_native_hold {
+      if {$so_sl < $so_native_wns} {set so_native_wns $so_sl}
+      if {![dict exists $so_np_core $so_ep] || $so_sl < [dict get $so_np_core $so_ep]} {
+        dict set so_np_core $so_ep $so_sl
+      }
+    }
+    so STD_MIN_NATIVE n [dict size $so_native_hold] wns [format %.2f $so_native_wns]
+"""
 
 
 FWD_RING_TAG = "# OT_FWD_RING_INPUTS"
@@ -1981,6 +2012,9 @@ def corner_result(parsed, hard_signed=()):
             out["std_min_start"].update(nonport_n=_f(d.get("n")), nonport_wns=_f(d.get("wns")))
             if d.get("core_n") is not None:         # KW-FIX-36 R4: the census without output-port endpoints
                 out["std_min_start"].update(core_n=_f(d.get("core_n")), core_wns=_f(d.get("core_wns")))
+        if "NATIVE_PAD_INPUTS" in kv:
+            d = _kvlist(kv.get("STD_MIN_NATIVE") or "")
+            out["std_min_start"].update(native_n=_f(d.get("n")), native_wns=_f(d.get("wns")))
     out["slew_viol"] = _f(kv.get("SLEW_VIOL"))
     out["cap_viol"] = _f(kv.get("CAP_VIOL"))
     fo = (kv.get("FANOUT_MAX") or "").split()
@@ -2978,6 +3012,8 @@ def port_only_hold(ff):
     if not s or n is None or n <= 0:
         return False
     if any(s.get(k) is None for k in ("port", "other", "reg", "trunc", "err")):
+        return False
+    if s.get("native_n", 0) != 0:
         return False
     # S81-TYPES-5 11-07: output-port endpoints (census field oport, absent on older sessions = 0) count as port hold
     op = s.get("oport") or 0
