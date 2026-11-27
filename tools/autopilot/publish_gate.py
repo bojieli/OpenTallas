@@ -19,6 +19,9 @@ PRE/G0 accept them.  This gate runs, on the gen host that holds the tree and bef
            injected manifest that lies in ANOTHER published tree or in a missing sibling of the candidate tree (QC N1B pre-rename
            tree 11-17; KV D22 11-18: asbuilt base + land_r8 still named the composer's scratch mirror, one gate run lost)
 
+  topology (BLOCKING on FAIL, C-ISTATION-PACKED-DELAY 11-27) kit_rtl + kit_topology run on EVERY bound type of the candidate against its own bind
+           (tools/die_plan/kit_topology_dry.py, cached per unchanged type); FAIL names the types; no finished bind = UNKNOWN (recorded).
+
   peer_abi (BLOCKING, P-PEER-ABI 11-27, COORD functional-safety exception to report-only) every cross-die interface pair the candidate
            belongs to (tools/die_plan/peer_abi.py: QC-KV status codec vs OBS1_COMPAT, S81-HEAD serdes/KP4 wire contract) must MATCH
            against the die's LIVE peer in the coord config; MISMATCH = FAIL with the pair and the side to change; a peer whose files
@@ -102,6 +105,8 @@ def require_pass(C, die, tree, want, plan_sha256):
     bad = [c for c in CHECKS if ((r.get("checks") or {}).get(c) or {}).get("verdict") != "PASS"]
     if ((r.get("checks") or {}).get("peer_abi") or {}).get("verdict") == "FAIL":
         bad.append("peer_abi")
+    if ((r.get("checks") or {}).get("topology") or {}).get("verdict") == "FAIL":
+        bad.append("topology")
     if r.get("verdict") != "PASS" or bad:
         return f"publish gate: record {p.name} is {r.get('verdict')}, checks not PASS: {','.join(bad) or '-'}"
     return ""
@@ -464,6 +469,33 @@ def peer_abi_check(tree, plan, bind_out, peers, tool_root=None, die=None):
     return rec
 
 
+def topology_check(tree, plan, asbuilt, bind_out, work, dp):
+    """C-ISTATION-PACKED-DELAY (COORD FLOW-1047 item 1, BLOCKING): kit_rtl + kit_topology on EVERY bound type of the candidate (tools/die_plan/
+    kit_topology_dry.py, rt tools), so an adopted plan cannot hold a type whose kit chain dies before synthesis.  FAIL lists the types; UNKNOWN
+    (never blocks) when the candidate has no finished bind or the tool dir has no checker (a tree older than the check)."""
+    tool = os.path.join(dp, "kit_topology_dry.py")
+    if not bind_out or not os.path.isfile(os.path.join(str(bind_out), "bind_report.json")):
+        return {"verdict": "UNKNOWN", "why": "no finished bind (bind_report.json) for the candidate: kit_topology not run per type"}
+    if not os.path.isfile(tool):
+        return {"verdict": "UNKNOWN", "why": f"{tool} missing: tools older than C-ISTATION-PACKED-DELAY"}
+    out = os.path.join(work, "topology_dry.json")
+    argv = [sys.executable, "-I", tool, "run", "--plan", plan, "--bind-out", str(bind_out), "--tree", tree,
+            "--work", os.path.join(work, "topology_dry"), "--out", out]
+    if asbuilt:
+        argv += ["--asbuilt", str(asbuilt)]
+    jobs = os.environ.get("OT_PUBGATE_TOPOLOGY_JOBS")
+    if jobs:
+        argv += ["--jobs", jobs]
+    rc, txt = _sub(argv, tree)
+    try:
+        r = json.loads(Path(out).read_text())
+    except (OSError, ValueError):
+        return {"verdict": "FAIL", "why": f"topology check did not produce a result (rc {rc}): {txt[-400:]}"}
+    return {"verdict": r.get("verdict", "FAIL"), "n_types": r.get("n_types"), "n_pass": r.get("n_pass"), "n_cached": r.get("n_cached"),
+            "seconds": r.get("seconds"), "failed": (r.get("failed") or [])[:60], "n_failed": len(r.get("failed") or []),
+            "types_failed": sorted(f["type"] for f in r.get("failed") or []), "why": r.get("why", ""), "result": out}
+
+
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
                bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
@@ -552,6 +584,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     bp = check_bound_params(tree, bind_out)
     res["bound_params"] = {"verdict": "PASS" if not bp else "ADVISORY", "advisory": True, "n": len(bp), "findings": bp[:40]}
     res["peer_abi"] = peer_abi_check(tree, plan, bind_out, peers, tool_root, die)
+    res["topology"] = topology_check(tree, plan, asbuilt, bind_out, work, dp)
     return res
 
 
@@ -825,7 +858,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
     except Exception as e:                         # a gate that cannot run is a FAIL, never a pass
         rec["checks"].setdefault("gate", {"verdict": "FAIL", "why": f"{type(e).__name__}: {e}"[:600]})
     rec["verdict"] = ("PASS" if all((rec["checks"].get(c) or {}).get("verdict") == "PASS" for c in CHECKS)
-                      and (rec["checks"].get("peer_abi") or {}).get("verdict") != "FAIL" else "FAIL")
+                      and (rec["checks"].get("peer_abi") or {}).get("verdict") != "FAIL"
+                      and (rec["checks"].get("topology") or {}).get("verdict") != "FAIL" else "FAIL")
     # COORD 11-18 (optimistic launch): the gate is advisory for an optimistic apply; the record lists what a reader should look at
     rec["advisory"] = sorted(c for c, v in rec["checks"].items() if (v or {}).get("verdict") != "PASS")
     write_record(C, rec, commit)
