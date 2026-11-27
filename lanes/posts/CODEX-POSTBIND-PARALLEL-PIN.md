@@ -1,0 +1,1 @@
+- 2026-11-26 19:37 PST DONE [CODEX-POSTBIND-PARALLEL-PIN] ot-run oth-ubuntu-2443011-1795750261 on ubuntu: rc=0 after 411 s, ended 19:37:43, log none, cmd: --mem 12 --threads 8 --hosts epyc7,epyc8,epyc10,intel1 --needs /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote --dir /srv/opentallas-
