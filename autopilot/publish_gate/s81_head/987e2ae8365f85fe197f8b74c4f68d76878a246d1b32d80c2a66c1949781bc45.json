@@ -1,0 +1,175 @@
+{
+ "advisory": [
+  "dry_gen",
+  "topology"
+ ],
+ "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/987e2ae8365f/hd_lep0N",
+   "gen_host": "epyc7",
+   "item": "hd_lep0N",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/987e2ae8365f/hd_lep0N/published_gen_origin.json",
+   "origin_sha256": "f49e31dd2743ed496dff45b6bb2831de18b81da4f07bc9783db6c78bd6aaebe2",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "5fd0306ef60a8bd0ef9429ddebc48e839263860525227ae67fcef95fa89e6265",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127",
+   "stage": "plan_visual",
+   "verdict": "FAIL",
+   "why": "stage plan_visual: WAIT-PLAN-VISUAL: missing fresh plan image verdict for s81_head/hd_lep0N form 1dcf5b9e89152247f4330690b3cc9feb6d2b514b3b4ff0811ba20071693e8bb1; request /home/ubuntu/.local/state/publish-gate/s81_head/987e2ae8365f/hd_lep0N/plan_visual_request.json"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "peer_abi": {
+   "descriptors": {
+    "head": {
+     "hdr_ot_pdie_serdes": "10b8a9f1c22e",
+     "hdr_ot_s81_kp4_dec": "112c03d7bab8",
+     "hdr_ot_s81_kp4_enc": "88591fc41677",
+     "known": true,
+     "kp4_common": "261a00d6db06",
+     "link_dir": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/rtl/dsrom_sys/s81_link",
+     "role": "head",
+     "serdes_header": "module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0, parameter integer DNGB = 4,"
+    },
+    "kv": {
+     "OBS1_COMPAT": 0,
+     "file": "kv3_sys_c_part.sv",
+     "known": true,
+     "module": "qkd_d2d_static_sfm",
+     "params": {
+      "FEG": "1",
+      "NL": "2",
+      "NTX": "3",
+      "SAFE_RC": "1",
+      "SRAMV": "2",
+      "TXDP": "32'h039ba2ae"
+     },
+     "role": "kv",
+     "status_rx_accepts": [
+      "legacy"
+     ]
+    },
+    "qc": {
+     "file": "qfd_qc_glue_part.sv",
+     "known": true,
+     "module": "qfd_d2d_static_ovl_sf7_obs1",
+     "params": {
+      "HEAD_CONTEXT": "1",
+      "TXDP": "32'h15011213"
+     },
+     "role": "qc",
+     "status_tx": "v1"
+    },
+    "s81": {
+     "hdr_ot_pdie_serdes": "10b8a9f1c22e",
+     "hdr_ot_s81_kp4_dec": "112c03d7bab8",
+     "hdr_ot_s81_kp4_enc": "88591fc41677",
+     "known": true,
+     "kp4_common": "261a00d6db06",
+     "link_dir": "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_cut2100_v6_1126_sixbins/rtl/dsrom_sys/s81_link",
+     "role": "s81",
+     "serdes_header": "module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0, parameter integer DNGB = 4,"
+    }
+   },
+   "die": "s81_head",
+   "n": 1,
+   "pairs": [
+    {
+     "detail": "serdes header, KP4 enc/dec headers and kp4_common identical",
+     "fix_side": "",
+     "pair": "S81-HEAD:link",
+     "state": "MATCH"
+    }
+   ],
+   "verdict": "PASS"
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-_exavhzg/g0_report.json",
+   "pre_rc": 0,
+   "reset_solved": false,
+   "tail": "PRE: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n\nG0: empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/b71c5218e0b5/tools/die_plan",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": " (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t48 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t49 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t54 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t55 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t56 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t58 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t59 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t63 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t64 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t66 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t67 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t70 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "topology": {
+   "verdict": "UNKNOWN",
+   "why": "no finished bind (bind_report.json) for the candidate: kit_topology not run per type"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w13_int_1127/source_sidecar.json"
+  ]
+ },
+ "gate_s": 98.8,
+ "hosts": [
+  "epyc7",
+  "epyc8",
+  "intel2",
+  "intel1"
+ ],
+ "item": "hd_lep0N",
+ "manifest_hash": "987e2ae8365f85fe197f8b74c4f68d76878a246d1b32d80c2a66c1949781bc45",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/results/head_native_release_nf15f_r18w13_1127/native_release_receipt.json",
+ "peer_abi_peers": {
+  "qwen_compute": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126_bind_1127093611"
+  ],
+  "qwen_kvsys": [
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126",
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300"
+  ],
+  "s81": [
+   "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_cut2100_v6_1126_sixbins",
+   "/srv/opentallas-scratch2/claude/s81-allfix-int/compose/c10b_r7_lpad_1125/r11_pineol_die_bind_1125/cut2100/source_c10b_r11_int_r2_cut2100_v6_1126_sixbins_bind_11261825sixbins"
+  ]
+ },
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w13_int_1127/source_plan.json",
+ "plan_sha256": "28884620dadad49c1c989ead7ca7f6cfa4454934c395cc0847e1c0fcf3f1aa05",
+ "pre_baseline": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_plan.json",
+ "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_plan.json",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 98.8,
+ "t": 1795820506.8712296,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13_1127",
+ "verdict": "FAIL"
+}
