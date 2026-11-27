@@ -18125,3 +18125,6 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - intel1 pid 1413699 574 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 574 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 574 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-27 08:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 08:22 PST: 6 running jobs, PROGRESSING 2, PLATEAU 2, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 slw_fe_v1__cl95cd1d0c 5_2_route stage 60.5 h job 72.2 h: drt_violations best 8 last 8 rows 62 window-gain 0.0%; stagnant 9.7 h; last event 3.1 h ago, log write 3.1 h ago (3703 lines)
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 34.2 h job 37.6 h: no new meaningful log line for 9.7 h; last: [INFO GRT-0102] Start extra iteration 5/5
