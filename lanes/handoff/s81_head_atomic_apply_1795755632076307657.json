@@ -1,0 +1,101 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w11_r5_1126",
+  "event": "head_rp21z20NF15f_r18w11_1126",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w11_r5_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w11_int_r5_1126/source_plan.json",
+  "plan_sha256": "4bd6164aeb1ebb6137052e53e97be65926fdd33a16641b6c604c092f274103d7",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126",
+  "manifest_hash": "938ce0d9079320d5047274ebea9185875e6194c6ef9825d97ce9e0226e8ac131",
+  "src_manifest_sha": "938ce0d9079320d5047274ebea9185875e6194c6ef9825d97ce9e0226e8ac131",
+  "tools_sha": "7a4ba2b79cffa74a220ba47006895232093b7d80",
+  "hosts": [
+   "epyc7",
+   "epyc8",
+   "intel2",
+   "intel1"
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_plan.json",
+  "plan_sha256": "607dd5dd5c828825dbd3b44d6acd679828cd39337263a0166a0b7d531108fefd",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_sidecar.json",
+  "sidecar_sha256": "b9272a9184e7eae540fbda1aea28d6bcb9439cbf9f908d7bf7ec184bf15cfeff",
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/results/head_native_release_nf15f_r18w12_1126/native_release_receipt.json",
+  "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+  "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w11_int_r5_1126/source_plan.json",
+  "frozen_kit_tree": "",
+  "physical_qualified": false,
+  "most_recent_fable_verdict": "",
+  "smoke": "PASS",
+  "smoke_detail": "HEAD-INT-R2 W12 21:00 cut (non-seam rows only, COORD rulings 12:52/13:47/14:52) on epyc12 head-int-r2/w12cut_1126/gate_w12f with rt 7a4ba2b79cff (>= eb5eb7471ef4; falsegreen/ADV-XTAP/MONLEG fixes; per-bit reach default OFF, OT_PERBIT_REACH=0): W11 4bd6164aeb1e + P-CLOCK-TAPS-COPY tapcopy + C-STRAP-REACH (25 types; hd_host_w strap_ca_k_coll_i0 415.5->14.2) + C-XTAP-HOLD pairs (hd_spn/hd_st_str/hd_st_n3_turn macro_follow) + SPN b2cd8582212e/sideA + clkland clk6 (host_w taps) + F2 clk_t44 at legal site (86.4,1913.12) with hd_spn reset relay remap -> plan 607dd5dd5c82, sidecar b9272a9184e7. summary.json PASS on the exact plan sha: PRE 0 findings, strict bind PASS (parallel 48), cohort 27/27, LATCHECK 334/334 delta {}, native release 12 QUALIFIED_CONDITIONAL, G0 0 errors (246 warn vs W11 252), LEG405-STAGED 0. HELD/DEFERRED to 11-27 09:00: seam + START-EFALL + PHASE-BIND rows (HEAD-SERDES-R2 corrected-phase rows + W11 tile route), CA-ROUTED-W11 STA-proof replan, host_w clk9/clk10 (indep review ISSUES: hard fences), West ffbe77 (GPL-TD now PASS under relaxed rule; re-place probe), East f797 (HEAD-EAST-R3). hd_spn_end probe on this tree. All type holds and review_before_route preserved.",
+  "config": {
+   "event": "head_rp21z20NF15f_r18w12_1126",
+   "tools_sha": "7a4ba2b79cffa74a220ba47006895232093b7d80",
+   "gen_host": "epyc7",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "intel2",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ],
+   "review_before_route": {
+    "event": "head_rp21z20NF15f_r18w12_1126",
+    "all_items": true,
+    "required": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ],
+   "tools_from_rt": true,
+   "only_items": [
+    "hd_ctl_e",
+    "hd_ctl_n",
+    "hd_host_n",
+    "hd_spn_eshim_rx",
+    "hd_spn_eshim_tx",
+    "hd_spn_wshim_tx",
+    "hd_st_k5",
+    "hd_st_m",
+    "hd_st_n3_transit",
+    "hd_st_n3_turn",
+    "hd_st_str",
+    "hd_st_turn",
+    "hd_turn_a",
+    "hd_turn_b"
+   ]
+  },
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  },
+  "records": {},
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/68f65c9927001d1b7f381592a518468c18d5645b164154f78da2e77fd5139e91/result.json",
+ "candidate": "/srv/opentallas-scratch2/claude/hub-coord/autopilot/head-int-r2-w12/permit_w12f/candidate_w12f.json",
+ "optimistic": true,
+ "warnings": [
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}
