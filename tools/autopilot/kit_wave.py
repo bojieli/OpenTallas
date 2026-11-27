@@ -10640,6 +10640,13 @@ def private_spec_cmd(a):
     if _ttr:
         print(_ttr, file=sys.stderr)
         return 2
+    import rt_tool_commit as RTC                      # FLEET-OPS-R5: the pinned rt must contain the row's tool commit
+    _tv, _tt = RTC.check(RTC.tool_commit_of(sp, cfg, a.die, getattr(a, "tool_commit", "") or ""), sp.get("tools_sha") or "", what=f"private-spec {a.die}/{a.item}")
+    if _tv == "REFUSE":
+        print(_tt, file=sys.stderr)
+        return 2
+    if _tv == "WARN":
+        print(_tt, file=sys.stderr)
     import rt_floor as RTF                                # FABLE-FLOW-0230 T1: a NEW private launch on an rt below kit_wave.json min_rt is refused
     _fl = RTF.check(sp.get("tools_sha") or "", cfg, exempt=getattr(a, "rt_floor_exempt", "") or "", what=f"private-spec {a.die}/{a.item}")
     sp.setdefault("private", {})["rt_floor"] = _fl
@@ -23677,6 +23684,7 @@ def main(argv=None):
                                                                        "on: the wave's read-only verify.  off: no check and the sign-off never counts")
     ps_.add_argument("--rt-floor-exempt", default="", metavar="WHY", help="FABLE-FLOW-0230 T1: keep an rt below kit_wave.json min_rt (a sealed / pinned "
                                                                           "plan tree); recorded in spec private.rt_floor")
+    ps_.add_argument("--tool-commit", default="", metavar="SHA", help="FLEET-OPS-R5: the commit whose tools the row needs (default spec tool_commit / kit_wave.json dies.<die>.tool_commit); the pinned rt must contain it, else NOT-RUN SETUP")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     ps_.add_argument("--goal", default="auto", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: how far run-item drives the kit: auto (default: the runner's "
