@@ -504,7 +504,7 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp):
 
 
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
     it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
@@ -564,6 +564,10 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     # without it G0 leaves the HEAD native release PENDING (ERROR).  A missing or stale receipt is re-verified and refused by check.py itself.
     if native_reset_receipt and g0_tool.is_file() and "--native-reset-receipt" in g0_tool.read_text(errors="replace"):
         g0 += ["--native-reset-receipt", str(native_reset_receipt)]
+    # C-START-TAP-PORT-MISSING (P-FALSE-GREEN): the die clock Verilog the cut was built with (marker.die_ctree: path string or {path, sha256}) reaches G0,
+    # so every START stage tap port is checked on the real cut; a recorded clock that cannot be read FAILS in check.py.
+    if die_ctree and g0_tool.is_file() and "--die-ctree" in g0_tool.read_text(errors="replace"):
+        g0 += ["--die-ctree", str(die_ctree)]
     if tools_src == "rt" and g0_tool.is_file() and "--repo-root" in g0_tool.read_text(errors="replace"):
         g0 += ["--repo-root", tree]
     rc2, t2 = _sub(g0, tree)
@@ -634,7 +638,7 @@ def _admit_static_host(source, work, requested, wait, *args):
 
 
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None):
     """Run the exact static checker with local admission on the host holding its prepared inputs."""
     q = shlex.quote
     _rs = str(os.environ.get("OT_RESETPUB_SOLVE", "")).strip()     # an explicit caller value (1 or 0) is forwarded; unset = the PRE default
@@ -654,6 +658,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --pre-baseline {q(str(pre_baseline))}" if pre_baseline else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
+           + (f" --die-ctree {q(str(die_ctree))}" if die_ctree else "")
            + (f" --tool-root {q(str(tool_root))}" if tool_root else "")
            + (f" --die {q(str(die))}" if die else "")
            + "".join(f" --peer {q(d + '=' + str(t) + (':' + str(b) if b else ''))}" for d, (t, b) in sorted((peers or {}).items())))
@@ -810,6 +815,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         rec["pre_baseline"] = pre_baseline
         remap_base = marker.get("remap_base") or obj.get("remap_base")
         native_reset_receipt = marker.get("native_reset_receipt") or obj.get("native_reset_receipt")
+        die_ctree = marker.get("die_ctree") or obj.get("die_ctree")
+        if isinstance(die_ctree, dict):
+            die_ctree = die_ctree.get("path")
+        if die_ctree:
+            rec["die_ctree"] = die_ctree
         if remap_base:
             rec["remap_base"] = remap_base
         if native_reset_receipt:
@@ -853,7 +863,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
                                                                        native_reset_receipt=native_reset_receipt, tool_root=rt_root(),
-                                                                       pre_baseline=pre_baseline, peers=peers, die=die)))(
+                                                                       pre_baseline=pre_baseline, peers=peers, die=die, die_ctree=die_ctree)))(
                 pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
             pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
             if pre_failure:
@@ -902,6 +912,7 @@ def main(argv=None):
     s.add_argument("--bind-out", help="kit_rtl.bind_out of the candidate; outside the tree = advisory FOREIGN-TREE finding")
     s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
     s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
+    s.add_argument("--die-ctree", help="die clock Verilog of the cut for the G0 START tap port check (candidate.die_ctree)")
     s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
     s.add_argument("--die", help="candidate die name (default: from the plan path)")
     s.add_argument("--peer", action="append", default=[], help="live peer DIE=TREE[:BIND_OUT] for the P-PEER-ABI check (normally shipped by run from the coord config)")
@@ -919,7 +930,7 @@ def main(argv=None):
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
                                                    band_base=a.band_base, remap_base=a.remap_base,
                                                    native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root,
-                                                   pre_baseline=a.pre_baseline, die=a.die,
+                                                   pre_baseline=a.pre_baseline, die=a.die, die_ctree=a.die_ctree,
                                                    peers={d: tuple((v.partition(":")[0], v.partition(":")[2] or None)) for d, _, v in (x.partition("=") for x in a.peer)})))
         return 0
     if a.cmd == "check":

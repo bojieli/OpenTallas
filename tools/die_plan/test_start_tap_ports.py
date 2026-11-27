@@ -78,3 +78,20 @@ def test_no_start_stages_no_finding(tmp_path):
     R = C.Report()
     rec = T.check({}, R, plan_dir=str(tmp_path))
     assert R.items == [] and rec["required"] == 0
+
+
+def test_recorded_unreadable_ctree_fails_not_warns(tmp_path):
+    ss = _stages(tmp_path, ["b0"])
+    R = C.Report()
+    T.check({}, R, start_stages=str(ss), die_ctree=str(tmp_path / "gone.v"))
+    assert len(R.errors()) == 1 and "cannot be read" in R.errors()[0]["msg"]
+    bad = tmp_path / "bad.v"
+    bad.write_text("not verilog")
+    R2 = C.Report()
+    T.check({}, R2, start_stages=str(ss), die_ctree=str(bad))
+    assert len(R2.errors()) == 1
+
+
+def test_publish_gate_forwards_die_ctree_to_g0():
+    src = (Path(__file__).resolve().parents[1] / "autopilot" / "publish_gate.py").read_text()
+    assert src.count("die_ctree") >= 8 and "\"--die-ctree\"" in src and "marker.get(\"die_ctree\")" in src

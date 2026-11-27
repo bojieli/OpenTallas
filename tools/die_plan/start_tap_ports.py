@@ -93,7 +93,11 @@ def census(raw, plan_dir=None, start_stages=None, die_ctree=None):
     ct = find_ctree(plan_dir, die_ctree)
     rec = dict(required=len(req), required_source=src, die_ctree=ct, missing=[])
     if req and ct:
-        have = ctree_ports(ct)
+        try:
+            have = ctree_ports(ct)
+        except (OSError, ValueError) as ex:
+            rec["unreadable"] = f"{type(ex).__name__}: {ex}"
+            return rec
         rec["missing"] = [r for r in req if r[1] not in have]
     return rec
 
@@ -103,6 +107,10 @@ def check(raw, R, plan_dir=None, start_stages=None, die_ctree=None, max_msgs=20)
     rec = census(raw, plan_dir, start_stages, die_ctree)
     miss = rec.pop("missing")
     rec["missing_count"] = len(miss)
+    if rec.get("unreadable"):
+        # a recorded die clock that cannot be read is a FAIL (no START tap port can be proven); WARN is only for a die with no clock record
+        R.err(CHECK, f"{rec['required']} START stage tap ports required ({rec['required_source']}) but the recorded die clock "
+                     f"{rec['die_ctree']} cannot be read: {rec['unreadable']}")
     if rec["required"] and not rec["die_ctree"]:
         R.warn(CHECK, f"{rec['required']} START stage tap ports required ({rec['required_source']}) but no die clock Verilog to "
                       "verify them against (pass check.py --die-ctree or OT_DIE_CTREE); START tap ports UNVERIFIED")
