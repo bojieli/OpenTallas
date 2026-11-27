@@ -381,7 +381,7 @@ def _prepare_base_reset_trees(stack, braw, raw, base_path, changed):
 
 
 def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_trees=None, old_taps=None, close_base=None):
-    """retap.repoint; the sections landing_remap already re-named are restored after it (both rename taps: no double map)"""
+    """Repoint taps while preserving landing-remapped refs for the final START reach pass."""
     from functools import cache
     import retap as RT
 
@@ -413,13 +413,17 @@ def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_tre
     def tap_factory(context, path):
         return old_taps if context is braw else RT._plan_taps(context, path)
 
+    def restore_landing_refs():
+        for tn, keep in protect.items():
+            _restore(_pt(raw)[tn], keep)
+
     base_trees = base_trees or {}
     kwargs = {"prepare_tree_fn": tree_factory} if parallel else {"tree_fn": tree_factory if base_trees else None}
     if old_taps:
         kwargs.update(taps_fn=tap_factory, ctaps_fn=RT._plan_consumer_taps)
+    if protect:
+        kwargs["before_repick"] = restore_landing_refs
     rep = RT.repoint(braw, raw, str(base_path), str(plan_path), types=set(types), **kwargs)
-    for tn, keep in (protect or {}).items():
-        _restore(_pt(raw)[tn], keep)
     return {tn: len(ch) for tn, ch in rep.items()}
 
 

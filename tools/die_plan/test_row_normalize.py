@@ -191,6 +191,38 @@ def test_retap_reuses_only_the_prepared_base_tree(monkeypatch):
     assert calls == [(True, "/base/plan.json", "missing"), (False, "/candidate/plan.json", "old")]
 
 
+def test_retap_repicks_after_protected_landing_refs_are_restored(monkeypatch):
+    import retap
+
+    clock = {
+        "landing_reader_start": {"branches": {"ft_i": {"stages": [
+            {"xy_um": [105.0, 100.0], "raw_reset": "rr_t2"},
+            {"xy_um": [105.0, 100.0], "raw_reset": "rst_rl_5"},
+        ]}}},
+        "landing_writer_start": {"branches": {"ft_o": {"stages": [
+            {"xy_um": [900.0, 100.0], "raw_reset": "rr_t0"},
+        ]}}},
+        "landing_raw_branches": [{"consumers": ["writer:ft_o:0"]}],
+    }
+    base = {"partition_types": {"ft": {"clock": clock}}}
+    candidate = copy.deepcopy(base)
+    protect = {"ft": RN._protect(candidate["partition_types"]["ft"])}
+    taps = [("clk", 100.0, 100.0), ("clk_t1", 500.0, 100.0), ("clk_t2", 900.0, 100.0)]
+    monkeypatch.setattr(retap, "_plan_taps",
+                        lambda raw, path: lambda tn: taps if raw is base else taps[:-1] + [("clk_t2", 910.0, 100.0)])
+    monkeypatch.setattr(retap, "_plan_consumer_taps", lambda raw, path: lambda tn: taps)
+
+    RN.step_retap(base, candidate, "/base/plan.json", "/candidate/plan.json", ["ft"], protect)
+
+    actual = candidate["partition_types"]["ft"]["clock"]
+    reader = actual["landing_reader_start"]["branches"]["ft_i"]["stages"]
+    writer = actual["landing_writer_start"]["branches"]["ft_o"]["stages"]
+    original = clock["landing_reader_start"]["branches"]["ft_i"]["stages"]
+    assert [stage["raw_reset"] for stage in reader] == ["rr_t0", "rst_rl_5"]
+    assert writer[0]["raw_reset"] == "rr_t0"
+    assert original[0]["raw_reset"] == "rr_t2"
+
+
 def _lr_plan(flag=None):
     core = {"inst": "cl_x", "origin_um": [300.0, 1000.0], "outline_um": [90.0, 50.0], "orient": "R0", "lef": "v/m.lef",
             "param_wrap": {"params": {"WFALL": 1}}}
