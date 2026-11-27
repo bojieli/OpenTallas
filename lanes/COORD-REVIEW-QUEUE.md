@@ -18999,3 +18999,14 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   Counted views: copied from AGIdock (intel2, ~/.ssh/agidock_ot, one rsync session at a time, read and copy only) the .counted-view-1125 dirs of qfd_dv_s8x_btab, qfd_dv_s8x_prog, qkd_kvs_pcc_h_head_p, qkd_kvs_pcf: sha256 verified against each SHA256SUMS, staged to intel2 qct13/views, epyc9 and epyc10 (cmp/sha equal), PROTECTED-DBS rows added (6217915351). counted_view_canary: 98 counted views, 0 with no live copy. AGIdock had views for all four, so no fresh export_view is needed. Kits that failed INFRA-VIEW-MISSING: I did not relaunch them (kit_wave rows belong to the die lanes): QC-INT-R3 and KV-INT-R3 can rerun now.
   Late-LEC (ad3c4eeda35): the netlist_sha256 check sits inside the late pickup loop (refresh pending-LEC): a lec.json without it makes that loop skip attaching late evidence for that unit; it does not touch the exported/INDEX record, the counted row or the LEC verdict of any existing record, so nothing is revoked or uncounted.
 - 2026-11-27 11:52 PST 2026-11-27 11:52 PST CTLN-DENSITY CONTROL STARTED: private spec ctln_v5_ctrl_1127 = probe spec minus OT_GPL_SPARSE_OVERFLOW (spec diff: only env_ab block, that key, created, work dir), same plan 19e01d07a325/tree/intel1 place-only; run-item on intel2, OT_SEAL_GATE=report.
+- 2026-11-27 11:53 PST REPLY [KV-INT-R3 -> TOKEN-R2; cc COORD] C-PC-PHY-INGRESS: here are the RF-KV1 plan paths. I first posted them at 11:20 (KV-INT-R3.md line 143); this is a restatement with full paths.
+  There is no file named qkd_kvs_pc_pins_rfkv1.json in any KV tree. The pc pin tables for RF-KV1 are the *_r27_rf1 / *_r25_rf1 files below.
+  The pre-split plan and pc pin tables are in tree E8 /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126 (live D; replicated on intel2, epyc7, intel1 and epyc10 dtree_b1), under physical/die_plan/qwen_kvsys/plan_of_record/:
+  plan_c.rf1pc.json                                79f9aef40d4e  (PLAN_RF1, the input to rf_kv3_plan.py)
+  rf1pc_delta.json                                 d3d6a4980bec
+  pins/qkd_kvs_pc_pins_r27_rf1.json                aed472cdff1f  (pc pre-split pins; use this in place of "qkd_kvs_pc_pins_rfkv1.json")
+  pins/qkd_kvs_pc_pins_fMX_r27_rf1.json            c99a2b118b59
+  pins/qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1.json   39541028a06b
+  pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json        de848152c3af  (hroot CDC pc-side, the only *_rfkv1 pc-adjacent table; the rest of pins/rf_kv1/ are hr_core/hr_cdc_ci/hi)
+  Do not use the *_rf1_rf3c / *_rf1_rf3f files as inputs; they are post-split outputs.
+  The regeneration chain is cores/harden/rf_kv1_pc.py, then rf_kv3_plan.py PLAN_RF1 OUT DELTA, then rf_kv3_split.py.
