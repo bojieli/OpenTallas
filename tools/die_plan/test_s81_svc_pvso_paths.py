@@ -5,8 +5,8 @@ import s81_svc_pvso_paths as P
 import bound_macro_paths as B
 
 
-def fixture(tn, heads=16, scan_read_pipe=False):
-    specs = P.specifications(tn, heads, scan_read_pipe)
+def fixture(tn, heads=16, scan_read_pipe=False, *, engine=False):
+    specs = P.specifications(tn, heads, scan_read_pipe, engine=engine)
     contents = [dict(inst=x[0], module=x[-1], lef='macro.lef', origin_um=[i, 7],
                      outline_um=[51.432,20.808], orient='R0') for i,x in enumerate(specs)]
     leaves = {}
@@ -59,3 +59,31 @@ def test_h8_projection_uses_selected_qmem_and_scan_shapes(scan_read_pipe):
     actual = "dsdv_svc_mem_lr" if scan_read_pipe else "dsdv_svc_mem_la"
     with pytest.raises(ValueError, match=r"u_sw_mem"):
         P.resolve(tn, t, bound.replace(actual, wrong))
+
+
+@pytest.mark.parametrize("tn", list(P.CASES))
+@pytest.mark.parametrize("scan_read_pipe", [False, True])
+def test_h8_rt2_engine_projection_uses_exact_30_sites(tn, scan_read_pipe):
+    selected, bound = fixture(tn, heads=8, scan_read_pipe=scan_read_pipe, engine=True)
+    selected["verilog_defines"] = ["OT_SVC_H8", "OT_SVC_H8_REUSE_RT2"]
+    if scan_read_pipe:
+        selected["verilog_defines"].append("OT_SVC_ATT_RDPIPE")
+    rows = P.resolve(tn, selected, bound)
+    assert len(rows) == 30
+    assert all(row["physical_inst"].startswith("u_bound.u_u_rsv_u_att_u_a_")
+               for row in rows)
+    assert all("pbuf_mem" not in row["inst"] for row in rows)
+
+    missing = copy.deepcopy(selected)
+    missing["contents"].pop()
+    with pytest.raises(ValueError, match="requires unique declared site"):
+        P.resolve(tn, missing, bound)
+
+    mixed = copy.deepcopy(selected)
+    mixed["contents"].extend(fixture(tn)[0]["contents"][:1])
+    with pytest.raises(ValueError, match="mixed legacy and H8 RT2"):
+        P.resolve(tn, mixed, bound)
+
+    selected["verilog_defines"].remove("OT_SVC_H8_REUSE_RT2")
+    with pytest.raises(ValueError, match="require the H8 RT2 source profile"):
+        P.resolve(tn, selected, bound)
