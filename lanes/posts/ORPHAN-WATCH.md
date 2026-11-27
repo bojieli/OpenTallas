@@ -613,3 +613,44 @@
   - epyc7 pid 3288124 256 h lane fable-fix-s81-cong (last post 200 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
   - intel1 pid 578664 256 h lane fable-fix-s81-cong (last post 200 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
   - epyc7 pid 1409990 254 h lane fable-fix-s81-coltap (last post 200 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+- 2026-11-27 15:17 PST ORPHAN-WATCH 81 process(es) older than the age limit, ppid 1, lane silent > 12 h on the hub (REPORT ONLY, nothing killed):
+  - epyc2 pid 994076 735 h lane die-hbm-4-probe* (last post never) [HBM/skyhum: parked, never touch]: bash -c until grep -q "KIT rc" /srv/opentallas-scratch2/claude/die-hbm-4-probe*/probe_*/../*.log 2>/dev/null |
+  - intel1 pid 1798299 735 h lane die-hbm-4-probe* (last post never) [HBM/skyhum: parked, never touch]: bash -c until grep -q "KIT rc" /srv/opentallas-scratch2/claude/die-hbm-4-probe*/probe_*/../*.log 2>/dev/null |
+  - intel1 pid 332817 677 h lane die-hbm-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/die-hbm-36/g2 && until grep -q "OT_DONE\|ERROR" base/part_q_b010/gr
+  - intel1 pid 2995645 651 h lane hbm-cores-kits-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c R=/srv/opentallas-scratch2/claude/hbm-cores-kits-36/query_k; until ls /run_k36mt.log /run_k36mtb.log >
+  - intel1 pid 3021629 651 h lane hbm-cores-kits-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c E=/srv/opentallas-scratch2/claude/hbm-cores-kits-36/hcol_equiv; until grep -q "^rc=" $E/cmp_h1_d1.log;
+  - intel1 pid 3080135 619 h lane tok-qk-2-hbmsrc-1101 (last post never) [HBM/skyhum: parked, never touch]: bash /srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/sample13.sh /srv/opentallas-scratch2/claude
+  - intel1 pid 3119320 619 h lane die-hbm-57 (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/die-hbm-57/lat_fix; until ! pgrep -f lat_fix/lat_fix.py >/dev/null;
+  - epyc2 pid 1301219 508 h lane hbm-form-timing-11-vp4 (last post never) [HBM/skyhum: parked, never touch]: bash -c until ! pgrep -f "git clone -q --filter=blob:none hub:/home/ubuntu/OpenTallas repo" >/dev/null; do sle
+  - intel1 pid 3941450 447 h lane hbm-sm-kids (last post never) [HBM/skyhum: parked, never touch]: bash -c until ! pgrep -f "git clone -q --filter=blob:none --sparse --no-checkout hub:OpenTallas repo" >/dev/nu
+  - epyc7 pid 3529193 401 h lane die-hbm-97-channels (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/die-hbm-97-channels/repo; while pgrep -f "git fetch -q --depth 1 hu
+  - intel1 pid 3988475 398 h lane die-hbm-97-dma (last post never) [HBM/skyhum: parked, never touch]: bash -c while ! grep -q "identity rc" r2/rc.txt 2>/dev/null; do sleep 30; done; ./run_eq_c.sh $PWD/kit_banks.s
+  - epyc9 pid 864212 378 h lane tap-site-1 (last post never) [HBM/skyhum: parked, never touch]: bash -c K=/srv/opentallas-scratch2/claude/tap-site-1/kw/hbm/items/q_su30__physical_v1/attempt_1/gen/q_su30__ph
+  - epyc9 pid 915827 378 h lane tap-site-1 (last post never) [HBM/skyhum: parked, never touch]: bash -c K=/srv/opentallas-scratch2/claude/tap-site-1/kw/hbm/items/q_su30__physical_v1/attempt_1/gen/q_su30__ph
+  - epyc8 pid 430363 377 h lane explorer-2 (last post never): /srv/opentallas-scratch2/claude/explorer-2-work/rt/venv/bin/python -I design_dev_server.py --port 8767
+  - epyc9 pid 3423811 375 h lane vislayout2-hbm (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/vislayout2-hbm/subF && until [ -f g0B.done ] && [ -f rs_base.done ]
+  - epyc9 pid 69644 375 h lane vislayout2-hbm (last post never) [HBM/skyhum: parked, never touch]: bash -c until [ -s /srv/opentallas-scratch2/claude/vislayout2-hbm/vt3c/g0_comb/g0_report.json ] && ! pgrep -f 
+  - epyc7 pid 2698658 370 h lane vl3s (last post never): bash -c V=/srv/opentallas-scratch2/claude/vl3s; cd $V; bash -n tools/status_loop2.sh && setsid nohup bash tool
+  - epyc7 pid 2766979 370 h lane vl3s (last post never): bash -c V=/srv/opentallas-scratch2/claude/vl3s; cd $V; bash -n tools/status_loop2.sh && setsid nohup bash tool
+  - epyc7 pid 2845821 370 h lane vl3s (last post never): bash -c V=/srv/opentallas-scratch2/claude/vl3s; cd $V; bash -n tools/status_loop2.sh && setsid nohup bash tool
+  - epyc7 pid 2946650 370 h lane vl3s (last post never): bash -c V=/srv/opentallas-scratch2/claude/vl3s; cd $V; bash -n tools/status_loop2.sh && setsid nohup bash tool
+  - epyc7 pid 3021696 370 h lane hbm-halfwidth-1 (last post never) [HBM/skyhum: parked, never touch]: bash -c while ! grep -q "BENCH" /srv/opentallas-scratch2/claude/hbm-halfwidth-1/src/bench.log; do sleep 10; do
+  - epyc7 pid 3028464 370 h lane hbm-halfwidth-1 (last post never) [HBM/skyhum: parked, never touch]: bash -c while ! grep -q "BENCH" /srv/opentallas-scratch2/claude/hbm-halfwidth-1/src/bench.log; do sleep 10; do
+  - epyc8 pid 2939396 370 h lane die-proto-3 (last post never) [HBM/skyhum: parked, never touch]: bash -c B=/srv/opentallas-scratch2/claude/die-proto-3/hbm/hp1lane; until grep -q TRIAGE_DONE $B/tri_hp1/TRIAGE
+  - epyc8 pid 2521826 369 h lane vl3-svcstn (last post never): bash -c mkdir -p /srv/opentallas-scratch2/claude/s88 && scp -q -o ControlPath=none epyc2:/srv/opentallas-scrat
+  - epyc8 pid 501642 326 h lane explorer-2-work (last post never): /srv/opentallas-scratch2/claude/explorer-2-work/rt/venv/bin/python -I design_dev_server.py --port 8791 --bind 
+  - intel2 pid 3852421 263 h lane tools-converge (last post never): python3 -u /srv/opentallas-scratch2/claude/tools-converge/failure_context_1116/watch_HG1A_PGR1_D3_gen_review_h
+  - epyc7 pid 1702461 260 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - intel1 pid 3031562 260 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - epyc7 pid 1760191 260 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - epyc7 pid 1785962 260 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - intel1 pid 3082769 260 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - intel1 pid 3100116 260 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - intel2 pid 2929757 259 h lane kv-hub-wo (last post 201 h ago): bash -c until grep -q "RAN on" ~/tmp/kv-hub-wo-proof.out && ssh epyc10 "test -s /srv/opentallas-scratch2/claud
+  - epyc7 pid 2665419 258 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - epyc7 pid 2665422 258 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - intel1 pid 4059021 258 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - intel1 pid 4059023 258 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+  - epyc7 pid 3288124 257 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - intel1 pid 578664 257 h lane fable-fix-s81-cong (last post 201 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
+  - epyc7 pid 1409990 255 h lane fable-fix-s81-coltap (last post 201 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
