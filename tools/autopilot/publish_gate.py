@@ -549,7 +549,10 @@ def _admit_static_host(source, work, requested, wait, *args):
     with tempfile.TemporaryDirectory(prefix="pre-admission-", dir=work) as tmp:
         script = Path(tmp, "publish_gate.py")
         script.write_text(source)
-        command = [sys.executable, "-I", str(script), "static", *args]
+        # Preserve the shipped checker's inline context so inherited candidate tool lookup stays exact.
+        inline = ('import sys; path = sys.argv.pop(1); '
+                  'exec(compile(open(path, "rb").read(), path, "exec"), {"__name__": "__main__"})')
+        command = [sys.executable, "-I", "-c", inline, str(script), "static", *args]
         if not live:
             # The PRE pool budgets 4 GiB per worker. Leave headroom for the parent process.
             command = ["/usr/local/bin/ot-heavy", "--mem", str(8 + 4 * threads), "--max-wait", wait, "--", *command]
