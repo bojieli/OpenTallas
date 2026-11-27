@@ -132,7 +132,27 @@ def child_ok(mod, rest, modules, depth=0):
     return None
 
 
-def judge(relay_sites, text, ist_buses=None, modules=None):
+CLONE = re.compile(r"(.+)__rs\d+")
+
+
+def plan_clones(t):
+    """names of the register copies a plan type's relay_split rows make: {flop key + '__rs<n>'}"""
+    return {c["name"] for r in (t.get("relay_split") or []) if isinstance(r, dict) for c in (r.get("clones") or []) if isinstance(c, dict) and c.get("name")}
+
+
+def kit_clones(kit):
+    """clone names of a generated kit, read from the rs_split_all call of istations.tcl"""
+    out = set()
+    for n in ("istations.tcl", "istations_post.tcl"):
+        f = Path(kit) / n
+        if f.is_file():
+            for ln in f.read_text(errors="replace").splitlines():
+                if ln.startswith("rs_split_all "):
+                    out.update(re.findall(r"\{\{([^{}\s]+__rs\d+)\} \{\{", ln))
+    return out
+
+
+def judge(relay_sites, text, ist_buses=None, modules=None, clones=None):
     """{key: verdict} of one type.  text = the bound module file; ist_buses {bus: stations} = the plan stations the kit adds later (None: the
     text is the kit's own RTL, which has them)"""
     inst = bound_instances(text)
@@ -143,6 +163,13 @@ def judge(relay_sites, text, ist_buses=None, modules=None):
         twin.setdefault(k.replace("/", "."), []).append(k)
     out = {}
     for k, v in relay_sites.items():
+        cm = CLONE.fullmatch(k)
+        if clones and cm and k in clones:
+            # C-LPAD-LEAFDN-SEAT-MISS-C085: K__rs<n> is a register copy the kit's relay_split row makes (rs_split_all) at place, not an RTL
+            # name; it seats exactly when its flop K does (and the row names exactly this clone)
+            sub = judge({cm.group(1): v}, text, ist_buses, modules)[cm.group(1)]
+            out[k] = "OK-CLONE" if sub in ("OK", "OK-CNT") else sub
+            continue
         c = re.split(r"[./]", k, maxsplit=1)
         base = re.sub(r"\[\d+\]", "", c[0])
         rest = c[1] if len(c) > 1 else ""
@@ -235,7 +262,7 @@ def kit_scan(kit):
     if not rs or f is None:
         return None
     text = f.read_text(errors="replace")
-    v = judge(rs, text, modules=module_index(kit / "rtl"))
+    v = judge(rs, text, modules=module_index(kit / "rtl"), clones=kit_clones(kit))
     dead = [k for k, x in v.items() if x in ("DEAD-INST", "DEAD-REG")]
     return {"n": len(rs), "counts": dict(Counter(v.values())), "dead": dict(group(dead)),
             "conflict": dict(group([k for k, x in v.items() if x == "CONFLICT"])), "hint": hint(dead, text), "keys": v}
@@ -267,7 +294,7 @@ def scan(plan_raw, rtl, types=None):
         if not rs or f is None:
             continue
         text = f.read_text(errors="replace")
-        v = judge(rs, text, ist_buses(t), module_index(rtl))
+        v = judge(rs, text, ist_buses(t), module_index(rtl), clones=plan_clones(t))
         dead = [k for k, x in v.items() if x in ("DEAD-INST", "DEAD-REG")]
         out[tn] = {"n": len(rs), "counts": dict(Counter(v.values())), "dead": dict(group(dead)),
                    "conflict": dict(group([k for k, x in v.items() if x == "CONFLICT"])), "hint": hint(dead, text), "keys": v}

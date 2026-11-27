@@ -42,3 +42,14 @@ def test_place_time_seating_tcl_normalises_the_same_rename():
 def test_relay_split_flop_keys_normalise_the_same_rename():
     """the 16 __rs clones of t27 were never made: rs_key (flop names of rs_split_all) must read u_y_xd_..._k0_3.q as the plan's ..._0_3.q"""
     assert r"regsub {^(u_(?:y|lk)_xd_.*)_k([0-9]+)_([0-9]+)([.]|$)} $k {\1_\2_\3\4} k" in KI.RELAY_SPLIT_TCL
+
+
+def test_relay_split_clone_keys_seat_when_their_flop_does_and_the_row_names_them():
+    keys = ["u_y_xd_lpad_a_d_0_1.q", "u_y_xd_lpad_a_d_0_1.q__rs1", "u_y_xd_lpad_a_d_0_1.q__rs2", "u_y_xd_lpad_a_d_0_2.q__rs1", "u_y_xd_lpad_a_d_0_2.q"]
+    rs = {k: [1.0, 2.0] for k in keys}
+    clones = {"u_y_xd_lpad_a_d_0_1.q__rs1", "u_y_xd_lpad_a_d_0_2.q__rs1"}
+    v = SM.judge(rs, PKT, clones=clones)
+    assert v["u_y_xd_lpad_a_d_0_1.q__rs1"] == "OK-CLONE"                 # its flop stage 1 exists, the row names this clone
+    assert v["u_y_xd_lpad_a_d_0_1.q__rs2"] == "UNKNOWN"                  # no relay_split row makes rs2: still not judged (fails the lint)
+    assert v["u_y_xd_lpad_a_d_0_2.q__rs1"] == "DEAD-INST" and v["u_y_xd_lpad_a_d_0_2.q"] == "DEAD-INST"   # flop of the clone is past the chain
+    assert SM.plan_clones({"relay_split": [{"flop": "f", "clones": [{"name": "f__rs1", "sinks": ["s"]}]}]}) == {"f__rs1"}
