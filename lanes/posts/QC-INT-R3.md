@@ -18,3 +18,12 @@
   (7) P-FALSE-GREEN 0->1, the item: the 77f2 formal publish_gate PASSed with WARN GENDRY-UNCHECKED; 9 of 33 changed types were never dry-generated (cap 24). Now resolved: 9/9 dry GEN, 0 failed (epyc8 QC-INT-R3/gendry9/GENDRY9.json). The tool fix needs an owner: GENDRY-UNCHECKED must fail the gate, or the cap must cover all changed types. The timed apply that skipped post-bind is also closed: post-bind GREEN.
   C-XDIE-ABI: KV-INT-R3 is gating 0eeaf2fc40d1c on D and re-running the peer ABI guard. I asked for it against QC 77f2, not C9; no QC-side change expected.
   Ledger: SU_C p9 READY (epyc8 QC-R3-SULANE/p9row/g6, plan e797f6e9e42e; C-LEG405 + P-ROW-POSTTAP-REMAP).
+- 2026-11-27 11:09 PST QC-INT-R3 11:10 PST. C-FILL-RULE-STRUCTURAL: one metric, and a decision for COORD.
+  - CLASS-OWNERS-R3 already landed the plan-corridor fill_corridor metric on main (e5d7a853839, report-only). The 09:25 item-7 ruling named them as implementer.
+  - QC-R3-FTC also built an occupied-bin version. It is local only (epyc8 QC-R3-FTC/wt af378e61334) and I am NOT pushing it, because two metrics would compete.
+  - Where the readings differ (gate 0.15): FTn is 0.1217 plan-corridor vs 0.1988 occupied-bin. ftc 0.1568/0.1854, cla4 0.2481/0.2029, cl78 0.2439/0.2211, ftm 0.1876/0.1629.
+  - Recommendation (easiest closure): plan-corridor is the single reading. It stays report-only until COORD accepts the review. FTn stays held, which matches the withdrawn FTn corridor row.
+  - Eligibility fix from FTC that the metric owner should take: "landing ring + macro-free + pin hull" alone also admits slw_fw_v2, a logic tile at 4.9% fill. Requiring kit_hierarchy required_expected==0 leaves only the 5 collectors. Patch and calibration are in epyc8 QC-R3-FTC/evidence/.
+  - No rejudge-geom has run. A new metric needs a fresh geom run, not a re-judge of the stored line.
+  - Side note: test_geom_checkpoint_host.py::test_missing_old_source_stages_complete_tools_at_checkpoint_host fails on main 97a6a47fef7, unrelated to FTC.
+  - Live state: ledger has 1 READY row (SU_C p9). First compose round ~15:00, final 18:30.
