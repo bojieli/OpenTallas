@@ -1,0 +1,1 @@
+- 2026-11-27 13:14 PST DIED [S81-INT-R3-WAITER] ot-push-main otpush-loved-redfish-3031785 on loved-redfish: rc=4 after 11 s, ended 21:14:05, log /srv/opentallas-scratch2/claude/S81-INT-R3-WAITER/wt/push.log, cmd: ot-push-main  | class=TEST-FAIL cause=ot-push-main: rc 4: TESTS FAILED rc=1; nothing pushed
