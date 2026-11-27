@@ -1,5 +1,5 @@
 """EXPLORER-2: the design node index service (name resolution) and the memory-macro rule of design_index.py."""
-import json, os, pathlib, sys, tempfile, unittest
+import hashlib, json, os, pathlib, sys, tempfile, unittest
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -89,3 +89,41 @@ class TokenMapTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+def test_recovered_pack_preserves_exact_separate_suffix_bodies(tmp_path, monkeypatch):
+    monkeypatch.setattr(design_index, 'STORE', tmp_path)
+    receipts = tmp_path / 'recovery-identities'
+    receipts.mkdir()
+    job = '6_final_verified'
+    entries = []
+    for bit in (1, 2):
+        element = f's81.c.core--signoff-variant{bit}'
+        key = f'core#10x10/pins{bit}'
+        body = (str(bit) * 64, str(bit + 2) * 64)
+        folder = tmp_path / 'elements' / element
+        folder.mkdir(parents=True)
+        (folder / 'index.json').write_text(json.dumps(dict(element=element, latest=job)))
+        manifest = folder / (job + '.json')
+        manifest.write_text(json.dumps(dict(element=element, job=job, id=f'pack{bit}',
+                                            design={'stage': '6_final'}, verify={'verdict': 'IDENTICAL'})))
+        receipt = receipts / (element + '.json')
+        proof = dict(schema='opentallas.explorer.recovery_identity.v1', element=element, census_key=key,
+                     job=job, manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),
+                     record_sha256=body[0], odb_sha256=body[1])
+        receipt.write_text(json.dumps(proof))
+        entries.append((element, key, body, manifest, receipt, proof))
+
+    first, second = entries
+    assert design_index.recovered_store_entry(*first[:2], {first[2]})['id'] == 'pack1'
+    assert design_index.recovered_store_entry(*second[:2], {second[2]})['id'] == 'pack2'
+    assert design_index.recovered_store_entry(first[0], second[1], {first[2]}) is None
+    assert design_index.recovered_store_entry(*first[:2], {second[2]}) is None
+    assert design_index.recovered_store_entry(*first[:2], {('', first[2][1])}) is None
+
+    first[5]['record_basis'] = 'signed-store'
+    first[4].write_text(json.dumps(first[5]))
+    assert design_index.recovered_store_entry(*first[:2], {('', first[2][1])})['id'] == 'pack1'
+    assert design_index.recovered_store_entry(*first[:2], {('', first[2][1]), ('f' * 64, first[2][1])}) is None
+
+    second[3].write_text(first[3].read_text())
+    assert design_index.recovered_store_entry(*second[:2], {second[2]}) is None

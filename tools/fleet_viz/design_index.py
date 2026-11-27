@@ -26,7 +26,8 @@ Sources (read-only): <state>/plan_now.json (die list, plan path, plan_now catego
 the die plan files ($FLEET_VIZ_REPO), the signed store (~/coord/signed-store records: rows die/key/kind, archived
 6_final.odb), ~/coord/lanes/VIS-SWEEP-1111.tsv visual verdicts (optional copy), the layout store manifests.
 """
-import argparse, collections, gzip, json, os, pathlib, re, sys, time
+import argparse, collections, gzip, hashlib, json, os, pathlib, re, sys, time
+from functools import lru_cache
 
 HERE = pathlib.Path(__file__).resolve().parent
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
@@ -112,15 +113,69 @@ def vis_verdicts():
     return out
 
 
+def _pack_summary(job, manifest):
+    verified = manifest.get('verify') or {}
+    return dict(id=manifest['id'], job=job, bytes=manifest.get('bytes'), verify=verified.get('verdict'),
+                shapes=verified.get('shapes'), stage=(manifest.get('design') or {}).get('stage'),
+                made=manifest.get('made'),
+                timing={k: v for k, v in (manifest.get('timing') or {}).items()
+                        if k in ('object', 'sta', 'corners', 'setup', 'hold', 'clock_leaves', 'errors')} or None)
+
+
 def store_entry(nid):
     try:
-        i = json.loads((STORE / 'elements' / nid / 'index.json').read_text())
-        m = json.loads((STORE / 'elements' / nid / (i['latest'] + '.json')).read_text())
-        return dict(id=m['id'], job=i['latest'], bytes=m.get('bytes'), verify=(m.get('verify') or {}).get('verdict'),
-                    shapes=(m.get('verify') or {}).get('shapes'), stage=(m.get('design') or {}).get('stage'), made=m.get('made'),
-                    timing={k: v for k, v in (m.get('timing') or {}).items() if k in ('object', 'sta', 'corners', 'setup', 'hold', 'clock_leaves', 'errors')} or None)
+        d = STORE / 'elements' / nid
+        index = json.loads((d / 'index.json').read_text())
+        job = index['latest']
+        manifest = json.loads((d / (job + '.json')).read_text())
+        return _pack_summary(job, manifest)
     except Exception:
         return None
+
+
+@lru_cache(maxsize=512)
+def _verified_pack_metadata(path, identity):
+    """Hash the small manifest at most once per filesystem identity, never its layout blobs."""
+    raw = path.read_bytes()
+    manifest = json.loads(raw)
+    job = manifest['job']
+    return hashlib.sha256(raw).hexdigest(), manifest['element'], manifest.get('db'), _pack_summary(job, manifest)
+
+
+def recovered_store_entry(nid, census_key, bodies):
+    """A direct canonical pack bound to one exact signoff key and a verified archive body."""
+    if not bodies or not re.fullmatch(r'[A-Za-z0-9_.+-]+', nid):
+        return None
+    try:
+        proof = json.loads((STORE / 'recovery-identities' / (nid + '.json')).read_text())
+        record, odb = proof['record_sha256'], proof['odb_sha256']
+        if (proof['schema'] != 'opentallas.explorer.recovery_identity.v1'
+                or proof['element'] != nid or proof['census_key'] != census_key
+                or not re.fullmatch(r'[a-f0-9]{64}', record)):
+            return None
+        indexed_records = {rec for rec, sha in bodies if sha == odb and rec}
+        if indexed_records:
+            if record not in indexed_records:
+                return None
+        elif ('', odb) not in bodies or proof.get('record_basis') != 'signed-store':
+            return None
+        d = STORE / 'elements' / nid
+        index = json.loads((d / 'index.json').read_text())
+        job = index['latest']
+        if index.get('element') != nid or job != proof['job'] or not re.fullmatch(r'[A-Za-z0-9_.+-]+', job):
+            return None
+        path = d / (job + '.json')
+        stat = path.stat()
+        identity = stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+        digest, element, db, pack = _verified_pack_metadata(path, identity)
+        legacy_final = (pack['stage'] is None and isinstance(db, str) and db.endswith('/6_final.odb')
+                        and job == '6_final_' + odb[:10])
+        if (element == nid and pack['job'] == job and pack['verify'] == 'IDENTICAL'
+                and (pack['stage'] == '6_final' or legacy_final) and digest == proof['manifest_sha256']):
+            return dict(pack, stage='6_final')
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return None
+
 
 
 def hard_ip_types(T):
