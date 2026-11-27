@@ -14,7 +14,11 @@ iteration 1 and repair_design buffers an unsettled placement (HEAD hd_lep0N fed0
                         rect (logic_cluster.py), released for DPL, and are no GPL region.
   cell_growth_gate      0 / 1 / 2 ("report" / "fail"): non-tap cell count after GPL and after the place resize against
                         min(400k cap, pre-GPL count x 1.35), one OT_GPL_TD_GROWTH line per stage.
+  types                 optional regex (re.search on the partition type name, as tap_reach.types): the flag applies only to the
+                        matching types; every other type gets the unchanged kit.  Absent = every type (the 11-26 behaviour,
+                        byte-identical).  FLAG-SCOPE 11-27 (HEAD-INT-R3 W13 ruling: no die-wide keys; HEAD-EAST-R4).
 """
+import re
 import shutil
 from pathlib import Path
 
@@ -23,15 +27,36 @@ SETTLE_DEFAULT = 0.25          # == gen_phys.RFLOW["gpl_keep_overflow"] (test_gp
 SMALL_MIN, SMALL_MAX = 3, 20   # OWNER: seat 3-20 cell clusters FIRM
 GROWTH_REL = 0.35
 TCL = "gpl_td.tcl"
+SCOPE = "types"
 
 
-def spec(raw):
-    """Normalised flag dict {top: settle overflow | 0, firm_small: max cells | 0, growth: 0|1|2}; {} when the plan has no gpl_td."""
+def in_scope(raw, tn):
+    """True when the plan gpl_td applies to type tn: no scope (absent types = every type) or gpl_td.types matches tn (re.search)."""
+    d = (raw or {}).get("gpl_td")
+    if not isinstance(d, dict) or SCOPE not in d:
+        return True
+    rx = d[SCOPE]
+    if not isinstance(rx, str) or not rx:
+        raise ValueError(f"gpl_td.types must be a non-empty regex string, got {rx!r}")
+    try:
+        return re.search(rx, tn or "") is not None
+    except re.error as e:
+        raise ValueError(f"gpl_td.types is not a valid regex {rx!r}: {e}") from None
+
+
+def spec(raw, tn=None):
+    """Normalised flag dict {top: settle overflow | 0, firm_small: max cells | 0, growth: 0|1|2}; {} when the plan has no gpl_td, or
+    when tn is given and gpl_td.types does not match it (tn None = the die-wide reading: scope validated, not applied)."""
     d = (raw or {}).get("gpl_td")
     if d is None:
         return {}
     if not isinstance(d, dict) or not d:
         raise ValueError("gpl_td must be a non-empty dict")
+    hit = in_scope(raw, "" if tn is None else tn)          # validates gpl_td.types in every reading
+    scoped = True if tn is None else hit
+    d = {k: v for k, v in d.items() if k != SCOPE}
+    if not d:
+        raise ValueError("gpl_td must set at least one of " + ", ".join(KEYS))
     bad = sorted(set(d) - set(KEYS))
     if bad:
         raise ValueError(f"gpl_td: unknown keys {bad}")
@@ -49,23 +74,38 @@ def spec(raw):
     g = {"report": 1, "fail": 2}.get(g, g) if isinstance(g, str) else g
     if g not in (0, 1, 2):
         raise ValueError(f"gpl_td.cell_growth_gate must be 0, 1 (report) or 2 (fail), got {d.get('cell_growth_gate')!r}")
+    if not scoped:
+        return {}
     return {"top": float(top), "firm_small": int(fs), "growth": int(g)}
 
 
-def firm_small(raw):
-    return spec(raw).get("firm_small", 0)
+def firm_small(raw, tn):
+    """FIRM small-cluster bound of type tn (0 without the flag or outside gpl_td.types).  tn is required: a per-type caller that
+    forgets it must fail, never read the flag die-wide."""
+    return spec(raw, _need(tn)).get("firm_small", 0)
 
 
-def post_gpl_regions(raw):
+def _need(tn):
+    if not isinstance(tn, str) or not tn:
+        raise ValueError(f"gpl_td: a per-type reading needs the partition type name, got {tn!r}")
+    return tn
+
+
+def post_gpl_regions(raw, tn):
     """C-TDREPAIR-REGION-MEAN 11-27: True when top_overflow_trigger is on.  OpenROAD tests the timing-driven trigger on the MEAN overflow of
     the top-level region and every odb region/group; the threshold wrapper alone still reads that mean when logic clusters larger than
     firm_small_clusters stay GPL regions.  gen_phys then exports OT_LOGIC_CLUSTER_POST_GPL=1 (regions created after global_placement)."""
-    return bool(spec(raw).get("top"))
+    return bool(spec(raw, _need(tn)).get("top"))
 
 
-def cfg_lines(raw):
-    """config.mk lines of the flag (empty without it)."""
-    s = spec(raw)
+def cell_growth_gate(raw, tn):
+    """0 / 1 (report) / 2 (fail) cell growth gate of type tn; 0 without the flag or outside gpl_td.types."""
+    return spec(raw, _need(tn)).get("growth", 0)
+
+
+def cfg_lines(raw, tn):
+    """config.mk lines of the flag (empty without it, or for a type tn outside gpl_td.types)."""
+    s = spec(raw, _need(tn))
     out = []
     if s.get("top"):
         out += ["# C-GPL-TD-INFLATION (plan gpl_td.top_overflow_trigger): timing-driven repair only at a settled top-level overflow",
@@ -76,10 +116,11 @@ def cfg_lines(raw):
     return out
 
 
-def apply(kd, raw):
-    """Install the Tcl hook and the config lines in kit dir ``kd`` (no-op without top_overflow_trigger / cell_growth_gate)."""
-    s = spec(raw)
-    lines = cfg_lines(raw)
+def apply(kd, raw, tn):
+    """Install the Tcl hook and the config lines in kit dir ``kd`` (no-op without top_overflow_trigger / cell_growth_gate, or for a
+    type tn outside gpl_td.types)."""
+    s = spec(raw, _need(tn))
+    lines = cfg_lines(raw, tn)
     if not lines:
         return False
     kd = Path(kd)

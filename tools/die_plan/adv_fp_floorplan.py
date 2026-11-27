@@ -36,6 +36,7 @@ findings(raw, plan_path, tree=None, **kw) -> lines, never raises.
 """
 import collections
 import math
+import os
 
 from schema import placed_macro_boxes
 import street_pg as SP
@@ -189,11 +190,26 @@ def bus_lanes(t):
     return out
 
 
-def pg_enabled(raw):
-    """C-STREET-R2 opt-in: plan top-level street_sizing.pg (or OT_STREET_PG=1) derates street capacity by the PG stripe bands."""
-    import os
+def pg_enabled(raw, name=None):
+    """C-STREET-R2 opt-in: plan top-level street_sizing.pg (or OT_STREET_PG=1) derates street capacity by the PG stripe bands.
+    FLAG-SCOPE 11-27: with street_sizing.types and a type name, only a matching type (re.search) is derated by the plan flag."""
+    import re
     f = (raw or {}).get("street_sizing") if isinstance(raw, dict) else None
-    return bool((isinstance(f, dict) and f.get("pg")) or os.environ.get("OT_STREET_PG") == "1")
+    rx = f.get("types") if isinstance(f, dict) else None
+    if isinstance(f, dict) and "types" in f:                 # validated in every reading (as street_rule.street_types)
+        if not isinstance(rx, str) or not rx:
+            raise ValueError(f"street_sizing.types must be a non-empty regex string, got {rx!r}")
+        try:
+            re.compile(rx)
+        except re.error as e:
+            raise ValueError(f"street_sizing.types is not a valid regex {rx!r}: {e}") from None
+    if os.environ.get("OT_STREET_PG") == "1":
+        return True
+    if not (isinstance(f, dict) and f.get("pg")):
+        return False
+    if rx is None or name is None:
+        return True
+    return re.search(rx, name) is not None
 
 
 PILE_BIN_UM = 25.92            # coreless lane band: 3 x 8.64 (the HEAD SPN hotspot lane was x222-250, 28 um wide)
@@ -423,12 +439,18 @@ def findings(raw, plan_path=None, tree=None, **kw):
     except AttributeError:
         return out
     n_street = n_big = n_ovl = n_bus = 0
-    pg = pg_enabled(raw)
+    try:
+        pg_enabled(raw, "")                            # FLAG-SCOPE 11-27: validate street_sizing.types once
+        pg_bad = None
+    except ValueError as e:
+        pg_bad = str(e)
+        out.append(f"FAIL ADV-FP-STREET street_sizing: {pg_bad}; PG sizing off for every type until fixed")
     bus_on = buslane_enabled()
     parts = {part["name"]: part for part in (raw.get("partitions") or [])
              if isinstance(part, dict) and "name" in part and str(part.get("type")).startswith(ALIGNED_RANK_FAMILY)}
     epochs = station_epoch_modes(parts, raw.get("ports") or []) if parts else {}
     for name, t in sorted(pt.items()):
+        pg = pg_enabled(raw, name) if pg_bad is None else os.environ.get("OT_STREET_PG") == "1"   # FLAG-SCOPE 11-27
         try:
             w = street_worst(t, pg)
             street_over = bool(w and w[0] > STREET_MAX)

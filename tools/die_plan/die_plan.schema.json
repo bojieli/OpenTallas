@@ -11689,6 +11689,10 @@
       "integer",
       "boolean"
      ]
+    },
+    "types": {
+     "type": "string",
+     "minLength": 1
     }
    }
   },
@@ -11744,6 +11748,10 @@
     "pg_track_loss": {
      "type": "number",
      "minimum": 0
+    },
+    "types": {
+     "type": "string",
+     "minLength": 1
     }
    }
   },

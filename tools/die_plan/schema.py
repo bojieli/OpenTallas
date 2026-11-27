@@ -2200,7 +2200,8 @@ SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": F
 # 11-26: the flag-ready probes used private plan copies and never met the schema check).  Value rules stay in gpl_td.spec.
 SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": False, "properties": {
     "top_overflow_trigger": {"type": ["integer", "number", "boolean"]}, "firm_small_clusters": {"type": ["integer", "boolean"]},
-    "cell_growth_gate": {"type": ["integer", "boolean"]}}}
+    "cell_growth_gate": {"type": ["integer", "boolean"]},
+    "types": {"type": "string", "minLength": 1}}}   # FLAG-SCOPE 11-27: optional type-name regex (absent = every type)
 SCHEMA["properties"]["pin_track_pg"] = {"type": "object", "additionalProperties": False, "properties": {
     "pg": {"anyOf": [{"type": "boolean"}, {"type": "integer", "enum": [0, 1]}]},
 }}
@@ -2209,7 +2210,8 @@ SCHEMA["properties"]["rtl_local_allow"] = {"type": ["array", "object"]}      # a
 SCHEMA["properties"]["census_fork_modules"] = {"type": "string", "minLength": 1}   # census_cov: regex of broadcast fork / relaunch leaf modules
 SCHEMA["properties"]["plan_root"] = {"type": ["string", "array"], "items": {"type": "string"}}   # plan_inputs / pin_track_pg / reset_tree: extra input roots
 SCHEMA["properties"]["street_sizing"] = {"type": "object", "additionalProperties": False, "properties": {
-    "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0}}}
+    "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0},
+    "types": {"type": "string", "minLength": 1}}}   # FLAG-SCOPE 11-27: optional type-name regex (absent = every type)
 
 # Exact native launch group for a slot-local polarity inverter placement hook.
 FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)"

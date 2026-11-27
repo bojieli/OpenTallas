@@ -16,10 +16,10 @@ needs_tcl = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not 
 
 
 def test_absent_flag_is_empty_everywhere(tmp_path):
-    assert GT.spec({}) == {} and GT.spec(None) == {} and GT.cfg_lines({}) == [] and GT.firm_small({}) == 0
+    assert GT.spec({}) == {} and GT.spec(None) == {} and GT.cfg_lines({}, "T") == [] and GT.firm_small({}, "T") == 0
     for name in ("face_flops.tcl", "face_flops_release.tcl", "config.mk"):
         (tmp_path / name).write_text("orig\n")
-    assert GT.apply(tmp_path, {}) is False
+    assert GT.apply(tmp_path, {}, "T") is False
     assert sorted(p.name for p in tmp_path.iterdir()) == ["config.mk", "face_flops.tcl", "face_flops_release.tcl"]
     assert all((tmp_path / n).read_text() == "orig\n" for n in ("face_flops.tcl", "config.mk"))
 
@@ -58,7 +58,7 @@ def test_apply_installs_hook_config_and_release(tmp_path):
     for name in ("face_flops.tcl", "face_flops_release.tcl", "config.mk"):
         (tmp_path / name).write_text("orig\n")
     raw = {"gpl_td": {"top_overflow_trigger": 1, "cell_growth_gate": 2}}
-    assert GT.apply(tmp_path, raw) is True
+    assert GT.apply(tmp_path, raw, "T") is True
     assert (tmp_path / "gpl_td.tcl").read_text() == (HERE / "gpl_td.tcl").read_text()
     assert (tmp_path / "face_flops.tcl").read_text() == "orig\n\nsource /work/gpl_td.tcl\n"
     assert "ot_gpl_td_growth_gate post_resize" in (tmp_path / "face_flops_release.tcl").read_text()
@@ -68,13 +68,13 @@ def test_apply_installs_hook_config_and_release(tmp_path):
 
 def test_firm_small_only_installs_no_tcl(tmp_path):
     (tmp_path / "config.mk").write_text("orig\n")
-    assert GT.apply(tmp_path, {"gpl_td": {"firm_small_clusters": 1}}) is False
+    assert GT.apply(tmp_path, {"gpl_td": {"firm_small_clusters": 1}}, "T") is False
     assert not (tmp_path / "gpl_td.tcl").exists()
 
 
 def test_gen_phys_wiring():
     src = (HERE / "gen_phys.py").read_text()
-    assert "firm_small=gpl_td.firm_small(P.raw)" in src and "gpl_td.apply(kd, P.raw)" in src
+    assert "firm_small=gpl_td.firm_small(P.raw, tn)" in src and "gpl_td.apply(kd, P.raw, tn)" in src
 
 
 def test_firm_small_text_seats_small_clusters_and_keeps_regions_for_big_ones():
@@ -280,14 +280,14 @@ def test_cluster_above_the_bound_is_not_seated(tmp_path):
 ])
 def test_post_gpl_regions_follows_top_overflow_trigger(d, want):
     raw = {} if d is None else {"gpl_td": d}
-    assert GT.post_gpl_regions(raw) is want
+    assert GT.post_gpl_regions(raw, "T") is want
 
 
 def test_gen_phys_exports_post_gpl_regions_from_the_plan_flag():
     import gen_phys as GP
     src = Path(GP.__file__).read_text()
     line = next(ln for ln in src.splitlines() if '"export OT_LOGIC_CLUSTER_POST_GPL = 1"' in ln)
-    assert '_gpl_td_mod.post_gpl_regions(P.raw)' in line and 'os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1"' in line
+    assert '_gpl_td_mod.post_gpl_regions(P.raw, tn)' in line and 'os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1"' in line
     assert 't.get("logic_cluster_rects_um")' in line          # still only for a type that has clusters
     k = src.index('"export OT_LOGIC_CLUSTER_POST_GPL = 1"')
     assert src.rfind("import gpl_td as _gpl_td_mod", 0, k) > src.rfind("\ndef ", 0, k)   # imported inside the same function, before use

@@ -149,14 +149,49 @@ def need_um(pins, cfg):
 
 
 def plan_street_cfg(raw):
-    """opt-in plan flag: top-level `street_sizing` {pg: 1, pg_track_loss: x} (C-STREET-R2).  Absent / falsy pg -> {} (default off)."""
+    """opt-in plan flag: top-level `street_sizing` {pg: 1, pg_track_loss: x, types: REGEX} (C-STREET-R2).  Absent / falsy pg -> {}
+    (default off).  FLAG-SCOPE 11-27: optional types (re.search on the type name) -> _pg_types; type_cfg / content_only then size the
+    streets of a non-matching type without PG (street_pg 0).  Absent types = every type (unchanged)."""
     f = (raw or {}).get("street_sizing") if isinstance(raw, dict) else None
+    rx = street_types(f)
     if not isinstance(f, dict) or not f.get("pg"):
         return {}
     out = dict(street_pg=1)
     if isinstance(f.get("pg_track_loss"), (int, float)):
         out["pg_track_loss"] = float(f["pg_track_loss"])
+    if rx is not None:
+        out["_pg_types"] = rx
     return out
+
+
+def street_types(f):
+    """street_sizing.types (None when absent); ValueError on an empty / non-string / invalid regex, in every reading."""
+    if not isinstance(f, dict) or "types" not in f:
+        return None
+    rx = f["types"]
+    if not isinstance(rx, str) or not rx:
+        raise ValueError(f"street_sizing.types must be a non-empty regex string, got {rx!r}")
+    try:
+        re.compile(rx)
+    except re.error as e:
+        raise ValueError(f"street_sizing.types is not a valid regex {rx!r}: {e}") from None
+    return rx
+
+
+def public_cfg(cfg):
+    """the cfg as a record writes it: private keys dropped, the PG scope as street_pg_types (FLAG-SCOPE 11-27)."""
+    out = {k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames", "_pg_types")}
+    if cfg.get("_pg_types"):
+        out["street_pg_types"] = cfg["_pg_types"]
+    return out
+
+
+def scope_cfg(cfg, name):
+    """cfg for type name under the street_sizing.types scope: street_pg 0 outside it; cfg itself when unscoped (byte-identical)."""
+    rx = cfg.get("_pg_types")
+    if not rx or not cfg.get("street_pg") or name is None or re.search(rx, name):
+        return cfg
+    return dict(cfg, street_pg=0)
 
 
 def up(v, q=G):
@@ -909,6 +944,7 @@ def type_cfg(cfg, t, name=None, cores=None):
     """per-type cfg for analyze() and station_alleys(): the type pin windows (type buses / ft slots, else the plan
     port pins in cfg _planwins), the fixed LEF content boxes of the face rule, the pin registers of the cores
     (_pinregs, pin_registers) and the column points without them (_cols)."""
+    cfg = scope_cfg(cfg, name)                        # FLAG-SCOPE 11-27: street_sizing.types
     pr = pin_registers(t, cores, cfg)
     cols = [p[:2] for p in column_points(t, pr)]       # sparse tier: a strip holding a column is never sparse
     occupancy = column_boxes(t, pr)
@@ -924,6 +960,7 @@ def content_only(t, cfg, name=None):
     xb = extra_boxes(t)
     if not cfg.get("face_rule") or not xb:
         return []
+    cfg = scope_cfg(cfg, name)                        # FLAG-SCOPE 11-27: street_sizing.types
     W, H = map(float, t["outline_um"][:2])
     c = type_cfg(cfg, t, name)
     return face_shadow_rule(W, H, xb, c.get("_fwins") or {}, cfg) + station_alleys(t, cfg, xb)
@@ -3015,8 +3052,11 @@ def setup(a):
             cfg[k] = v
         else:
             cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
+    sets = {kv.partition("=")[0] for kv in a.set or []}
     for k, v in plan_street_cfg(P).items():
-        if not any(kv.partition("=")[0] == k for kv in a.set or []):
+        if k == "_pg_types" and "street_pg" in sets:
+            continue                                   # FLAG-SCOPE 11-27: --set street_pg applies to every type
+        if k not in sets:
             cfg[k] = v
     if cfg.get("face_rule"):
         xn = [n for n, t in P["partition_types"].items() if not t.get("hard_cores") and extra_boxes(t)]
@@ -3053,7 +3093,7 @@ def cmd_check(a):
         rows.append(dict(type=n, cores=0, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8], face=V))
         print("%s\t%d\t%s" % (n, 0, json.dumps(c, sort_keys=True)), flush=True)
     rec = dict(schema=SCHEMA, mode="check", plan=str(plan), plan_sha256=sha, die=die,
-               cfg={k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames")}, rows=rows,
+               cfg=public_cfg(cfg), rows=rows,
                types_with_violations=sum(1 for r in rows if any(k in HARD for k in r["counts"])))
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
@@ -3217,7 +3257,7 @@ def cmd_legalize(a):
     rec = dict(schema=SCHEMA, mode="legalize", tool="tools/die_plan/street_rule.py", lane="STREET-RULE-1",
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
                plan_output_sha256=out_sha, die=die,
-               cfg={k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames")}, die_estimate=die_est,
+               cfg=public_cfg(cfg), die_estimate=die_est,
                summary=dict(types=len(rows), violating=sum(1 for r in rows if r.get("changed")),
                             applied=len(grown),
                             cycles_added=sum((r.get("cycles_added") or {}).get("total", 0) for r in rows if r.get("applied")),

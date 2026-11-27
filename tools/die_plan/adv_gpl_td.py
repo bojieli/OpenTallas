@@ -18,6 +18,9 @@ import re
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import gpl_td  # noqa: E402
+
 TINY = 20
 CAP = 400000
 G_INFLATED = 0.5
@@ -217,8 +220,13 @@ def plan_check(plan, types_re=None):
         lc = t.get("logic_cluster_rects_um") or []
         pr = t.get("place_regions") or []
         if lc or pr:
-            out.append({"type": tn, "logic_cluster_regions": len(lc), "place_regions": len(pr), "gpl_td": json.dumps(flag, sort_keys=True) if flag else "",
-                        "exposed": "yes" if not flag.get("top_overflow_trigger") else "no (top_overflow_trigger)"})
+            try:
+                sp = gpl_td.spec(plan, tn)    # FLAG-SCOPE 11-27: a type outside gpl_td.types is exposed like an unflagged plan
+                fl = flag if sp else {}
+            except ValueError as e:           # a malformed flag is reported in the row, never aborts the report
+                sp, fl = {}, {"invalid": str(e)}
+            out.append({"type": tn, "logic_cluster_regions": len(lc), "place_regions": len(pr), "gpl_td": json.dumps(fl, sort_keys=True) if fl else "",
+                        "exposed": "yes" if not sp.get("top") else "no (top_overflow_trigger)"})
     return out
 
 

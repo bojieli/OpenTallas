@@ -3263,7 +3263,8 @@ def install_head_post_gpl_reseat(cfg, kd, die, type_name, raw):
     """Keep the East LEP post-GPL electrical repair on its final source geometry."""
     if os.environ.get("OT_HEAD_POST_GPL_RESEAT") != "1" or (die, type_name) != ("s81_head", "hd_lep0N"):
         return
-    if (raw.get("gpl_td") or {}).get("cell_growth_gate") not in (2, "fail"):
+    import gpl_td as _gpl_td_gate   # FLAG-SCOPE 11-27: the gate of THIS type (gpl_td.types scope)
+    if _gpl_td_gate.cell_growth_gate(raw, type_name) != 2:
         raise ValueError(f"{type_name}: post_gpl_wire_reseat requires the existing hard cell growth gate")
     hook = "export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"
     hooks = [line for line in cfg if re.match(r"(?:override\s+)?export\s+POST_GLOBAL_PLACE_TCL\b", line)]
@@ -8592,7 +8593,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # global_placement (logic_cluster.py), so the timing-driven trigger reads the top-level overflow, not the mean over the tiny regions.
            # C-TDREPAIR-REGION-MEAN 11-27 (HEAD-EAST-R4): plan gpl_td.top_overflow_trigger implies it (gpl_td.post_gpl_regions), so the
            # plan flag alone keys the trigger on the top-level overflow (clusters above firm_small_clusters were still GPL regions without the env).
-           *(["export OT_LOGIC_CLUSTER_POST_GPL = 1"] if (os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1" or _gpl_td_mod.post_gpl_regions(P.raw)) and t.get("logic_cluster_rects_um") else []),
+           *(["export OT_LOGIC_CLUSTER_POST_GPL = 1"] if (os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1" or _gpl_td_mod.post_gpl_regions(P.raw, tn)) and t.get("logic_cluster_rects_um") else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
@@ -9068,7 +9069,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # QC-GLUE 11-25 (QC-ALLFIX): opt-in plan key logic_cluster_rects_um -> odb region/group, last in PRE_GLOBAL_PLACE
     import logic_cluster
     import gpl_td     # C-GPL-TD-INFLATION 11-26 (CLASS-OWNERS-B): opt-in top-level plan key gpl_td (absent = unchanged kit)
-    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms], firm_small=gpl_td.firm_small(P.raw))
+    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms], firm_small=gpl_td.firm_small(P.raw, tn))
     if lc_tcl:
         (kd / "logic_cluster.tcl").write_text(lc_tcl)
         hook = kd / "face_flops.tcl"
@@ -9079,7 +9080,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "receive_ring_depth.tcl").write_text(rx_tcl)
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/receive_ring_depth.tcl\n")
-    gpl_td.apply(kd, P.raw)    # after the cluster hook: timing-driven trigger wrapper + cell growth gate (gpl_td.tcl)
+    gpl_td.apply(kd, P.raw, tn)    # after the cluster hook: timing-driven trigger wrapper + cell growth gate (gpl_td.tcl)
     if t.get("rck_band"):
         # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;
         # face_flops_release.tcl releases them (ot_face_flops.txt rows tagged RCKB) for DPL
