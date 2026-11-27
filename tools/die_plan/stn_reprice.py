@@ -85,11 +85,11 @@ def check_stnprice(plan, max_list=5, baseline=None):
     lines = [f"LIST STNPRICE {len(bad)} of {n} lanes have station depth != priced fixed_cycles (report-only; ISTCYC/ISTPRICE judge the touched / bound ones)"
              + (f": {ex}" if bad else "")]
     missing = list(unpriced_depth_growth(raw, G._load(baseline))) if baseline else []
-    lines += [f"WARN ISTPRICE STATION-DELTA lane {lid}: lane-end stations {before} -> {after}, "
+    lines += [f"WARN ADV-IST-PRICE STATION-DELTA lane {lid}: lane-end stations {before} -> {after}, "
               f"fixed_cycles {old} -> {new}; {after - before - (new - old)} added cycle(s) lack a fixed price"
               for lid, before, after, old, new in missing[:max_list]]
     if len(missing) > max_list:
-        lines.append(f"WARN ISTPRICE STATION-DELTA ... {len(missing) - max_list} more lane(s)")
+        lines.append(f"WARN ADV-IST-PRICE STATION-DELTA ... {len(missing) - max_list} more lane(s)")
     return lines
 
 

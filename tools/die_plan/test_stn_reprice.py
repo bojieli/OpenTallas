@@ -100,7 +100,7 @@ def test_baseline_station_growth_without_fixed_delta_is_reported(tmp_path):
 
     assert SR.G.istcyc_lanes(json.loads(candidate.read_text()), json.loads(base.read_text())) == []
     assert SR.check_stnprice(candidate, baseline=base)[1] == (
-        "WARN ISTPRICE STATION-DELTA lane L1: lane-end stations 12 -> 13, "
+        "WARN ADV-IST-PRICE STATION-DELTA lane L1: lane-end stations 12 -> 13, "
         "fixed_cycles 21 -> 21; 1 added cycle(s) lack a fixed price"
     )
 
