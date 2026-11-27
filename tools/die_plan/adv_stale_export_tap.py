@@ -61,6 +61,21 @@ def classify(pins, grid, limit=LIMIT_UM):
     return out
 
 
+def tap_positions(S, P, tn):
+    """{tap: (x, y)} of one type.  PERF (R3-STALETAP 11-27): schema.tap_grid for tap_mode explicit / grid+explicit runs the full kit-split
+    VALIDATION (taps.assign over every sink + a reset-tree solve for the relay registers: 90% of the 218 s S81 / 2313 s QC run) only to
+    return the SAME (name, x, y) its geometry-only site function already gave; this reads that function (taps.explicit_tap_sites /
+    grid_explicit_sites, the sites reset siting itself uses) and falls back to schema.tap_grid for every other mode or an older tree."""
+    ck = (getattr(P, "types", None) or {}).get(tn, {}).get("clock", {}) or {}
+    mode = ck.get("tap_mode")
+    fn = None
+    if mode in ("explicit", "grid+explicit") and not S.bare_hard_single_tap(P.types[tn]):
+        import taps
+        fn = getattr(taps, "explicit_tap_sites" if mode == "explicit" else "grid_explicit_sites", None)
+    rows = fn(P, tn) if fn else S.tap_grid(P, tn)
+    return {r[0]: (r[1], r[2]) for r in rows}
+
+
 def _fmt(tn, c, uses, limit):
     st, dg, nf = sorted(c["stale"], reverse=True), c["dangling"], sorted(c["nofix"], reverse=True)
     parts = [f"{len(st)} stale"]
@@ -73,6 +88,73 @@ def _fmt(tn, c, uses, limit):
     worst = max([x[0] for x in st + nf] or [0.0])
     return (f"{tn}: {len(st) + len(dg) + len(nf)} of {c['n']} forwarded-clock exports over {limit:g} um from their source tap "
             f"({', '.join(parts)}; worst {worst:.0f} um; x{uses} placed): " + "; ".join(ex))
+
+
+def _solve_types(S, P, types, names, limit, budget, t0):
+    """{type: ("ok", classify-dict) | ("err", msg) | ("left", None)} for the given types, serial."""
+    out = {}
+    for tn in names:
+        if budget > 0 and time.time() - t0 > budget:
+            out[tn] = ("left", None)
+            continue
+        try:
+            out[tn] = ("ok", classify(export_pins(types[tn]), tap_positions(S, P, tn), limit))
+        except Exception as e:  # noqa: BLE001
+            out[tn] = ("err", f"{type(e).__name__}: {str(e)[:80]}")
+    return out
+
+
+def _jobs(n):
+    try:
+        j = int(os.environ.get("OT_ADV_STALE_TAP_JOBS", "") or min(16, len(os.sched_getaffinity(0))))
+    except (ValueError, AttributeError, OSError):
+        j = 1
+    return max(1, min(j, n))
+
+
+def _solve_all(S, P, types, todo, limit, budget, t0):
+    """PERF (R3-STALETAP follow-up): a COLD density tap solve is ~2-4 s per QC type (329 s over 127 types), independent per type, so the
+    types are split round-robin over OT_ADV_STALE_TAP_JOBS forked workers (default min(16, cpus)); plain os.fork + pipe because
+    plan_advisory already runs this check inside a daemonic pool worker, which may not start a multiprocessing pool.  Any fork or
+    pipe failure falls back to the serial loop; the results are the same dicts, so the counts do not depend on the job count."""
+    j = _jobs(len(todo))
+    if j <= 1 or len(todo) < 4 or not hasattr(os, "fork"):
+        return _solve_types(S, P, types, todo, limit, budget, t0)
+    import pickle
+    kids = []
+    try:
+        for w in range(j):
+            r, wfd = os.pipe()
+            pid = os.fork()
+            if pid == 0:                                   # child: solve its slice, pickle to the pipe, leave without cleanup
+                code = 1
+                try:
+                    os.close(r)
+                    data = pickle.dumps(_solve_types(S, P, types, todo[w::j], limit, budget, t0))
+                    with os.fdopen(wfd, "wb") as f:
+                        f.write(data)
+                    code = 0
+                finally:
+                    os._exit(code)
+            os.close(wfd)
+            kids.append((pid, r, todo[w::j]))
+    except Exception:  # noqa: BLE001
+        for pid, r, _n in kids:
+            os.close(r)
+            os.waitpid(pid, 0)
+        return _solve_types(S, P, types, todo, limit, budget, t0)
+    out, bad = {}, []
+    for pid, r, names in kids:
+        with os.fdopen(r, "rb") as f:
+            data = f.read()
+        os.waitpid(pid, 0)
+        try:
+            out.update(pickle.loads(data))
+        except Exception:  # noqa: BLE001 worker died: redo its slice here
+            bad += names
+    if bad:
+        out.update(_solve_types(S, P, types, bad, limit, budget, t0))
+    return out
 
 
 def _findings(raw, plan_path, tree=None, **kw):
@@ -94,18 +176,17 @@ def _findings(raw, plan_path, tree=None, **kw):
             uses[p["type"]] = uses.get(p["type"], 0) + 1
     t0, hit, errs, left, tot = time.time(), [], [], [], dict(types=0, pins=0, ipins=0)
     cnt = dict(over=0, iover=0, stale=0, dang=0, nofix=0)
-    for tn, t in sorted(types.items()):
-        if not isinstance(t, dict) or not export_pins(t):
-            continue
-        if budget > 0 and time.time() - t0 > budget:
+    todo = [tn for tn, t in sorted(types.items()) if isinstance(t, dict) and export_pins(t)]
+    res = _solve_all(S, P, types, todo, limit, budget, t0)
+    for tn in todo:
+        r = res.get(tn)
+        if r is None or r[0] == "left":
             left.append(tn)
             continue
-        pins, k = export_pins(t), uses.get(tn, 1)
-        try:
-            c = classify(pins, {n: (x, y) for n, x, y in S.tap_grid(P, tn)}, limit)
-        except Exception as e:  # noqa: BLE001
-            errs.append(f"{tn} ({type(e).__name__}: {str(e)[:80]})")
+        if r[0] == "err":
+            errs.append(f"{tn} ({r[1]})")
             continue
+        c, k = r[1], uses.get(tn, 1)
         tot["types"] += 1
         tot["pins"] += c["n"]
         tot["ipins"] += c["n"] * k

@@ -56,3 +56,62 @@ def test_findings_end_to_end(monkeypatch, tmp_path):
 
 def test_never_raises():
     assert A.findings(None, "p")[0].startswith("WARN ADV-STALE-EXPORT-TAP")
+
+
+# ---- PERF (R3-STALETAP follow-up): geometry-only tap positions, same numbers as schema.tap_grid, plus the calibration pin ----
+def _plan(mode, hard=False):
+    import types
+    return types.SimpleNamespace(types={"t": {"clock": {"tap_mode": mode}, "hard": hard}})
+
+
+def test_tap_positions_skips_kit_split_validation_for_explicit_modes(monkeypatch):
+    import schema as S
+    import taps
+    rows = [("clk", 1.0, 2.0), ("clk_t1", 3.0, 4.0)]
+    monkeypatch.setattr(S, "bare_hard_single_tap", lambda t: False)
+    monkeypatch.setattr(S, "tap_grid", lambda P, tn: (_ for _ in ()).throw(AssertionError("full tap_grid must not run")))
+    monkeypatch.setattr(taps, "explicit_tap_sites", lambda P, tn: rows, raising=False)
+    monkeypatch.setattr(taps, "grid_explicit_sites", lambda P, tn: rows, raising=False)
+    for mode in ("explicit", "grid+explicit"):
+        assert A.tap_positions(S, _plan(mode), "t") == {"clk": (1.0, 2.0), "clk_t1": (3.0, 4.0)}
+
+
+def test_tap_positions_other_modes_use_tap_grid(monkeypatch):
+    import schema as S
+    monkeypatch.setattr(S, "tap_grid", lambda P, tn: [("clk", 5.0, 6.0), ("clk_t1", 7.0, 8.0, 9, 9)][:1] + [("clk_t1", 7.0, 8.0)])
+    for mode in ("density", "grid+sinks", None):
+        assert A.tap_positions(S, _plan(mode), "t") == {"clk": (5.0, 6.0), "clk_t1": (7.0, 8.0)}
+
+
+# Calibration pin: (types hit, pins over, per placed instance) of the live plans of 11-27 (sha-verified against the seal trees).
+CAL = {"qc_77f2cc98f662": (72, 174, 315), "kv_5bee15cebae2": (72, 534, 688), "s81_c085ccb76d2e": (23, 72, 73), "head_607dd5dd5c82": (0, 0, 0)}
+
+
+def test_calibration_pin_on_live_plans():
+    """OT_STALE_TAP_CAL=<plan.json>:<tree>:<key>[,...] (key in CAL); skipped where the live plans are not on disk."""
+    import json
+    import re
+    spec = os.environ.get("OT_STALE_TAP_CAL")
+    if not spec:
+        import pytest
+        pytest.skip("OT_STALE_TAP_CAL not set")
+    for item in spec.split(","):
+        plan, tree, key = item.split(":")
+        out = A.findings(json.load(open(plan)), plan, tree or None)
+        m = re.search(r"(\d+) of \d+ export types hit; (\d+) of \d+ forwarded-clock export pins .*?; (\d+) of \d+ per placed", out[-1])
+        assert m, out[-1]
+        assert tuple(int(x) for x in m.groups()) == CAL[key], (key, out[-1])
+
+
+def test_forked_workers_give_the_serial_result(monkeypatch, tmp_path):
+    import schema as S
+    monkeypatch.setattr(S, "Plan", lambda raw, p: object())
+    monkeypatch.setattr(S, "tap_grid", lambda P, tn: [(n, x, y) for n, (x, y) in GRID.items()])
+    names = [f"t{i}" for i in range(9)]
+    raw = {"partition_types": {n: {"clock": {"landing_contract": {"pins": [pin("f", "clk_t82" if i % 2 else "clk_t1", [150.0, 120.0])]}}}
+                               for i, n in enumerate(names)}, "partitions": [{"type": "t1"}, {"type": "t1"}]}
+    monkeypatch.setenv("OT_ADV_STALE_TAP_JOBS", "1")
+    serial = A.findings(raw, str(tmp_path / "p.json"))
+    monkeypatch.setenv("OT_ADV_STALE_TAP_JOBS", "4")
+    assert A.findings(raw, str(tmp_path / "p.json")) == serial
+    assert "4 of 9 export types hit; 4 of 9 forwarded-clock export pins" in serial[-1]
