@@ -3183,6 +3183,27 @@ def scope_lines(lines, scope, names):
     return out
 
 
+OUTLINE_PREFIXES = ("FAIL ADV-SITE-OFF-OUTLINE ", "WARN INOUTLINE ", "FAIL INOUTLINE ")
+
+
+def offscope_outline_lines(lines, scope, names):
+    """C-STATION-OUTSIDE-OUTLINE (R3-FENCE 11-27, COORD): the outline classes (INOUTLINE, ADV-SITE-OFF-OUTLINE) run on the whole plan and
+    scope_lines then drops every line of a type outside the scope, so a station / bit footprint outside the outline on a type the
+    scoped row did not name was invisible (KV hroot ft2_i, hg_v3 FT2).  Report-only: ONE WARN line naming the dropped types."""
+    off = []
+    for x in lines:
+        for pre in OUTLINE_PREFIXES:
+            if x.startswith(pre):
+                parts = x.split()
+                tn = parts[2].rstrip(":") if len(parts) > 2 else ""
+                if tn in names and tn not in scope and tn not in off:
+                    off.append(tn)
+    if not off:
+        return []
+    return [f"WARN OUTLINE-OFFSCOPE {len(off)} type(s) outside the PRE scope have planned coordinates outside their outline "
+            f"(not blocking this scope; run the unscoped PRE or name them): " + ", ".join(sorted(off)[:12]) + (" ..." if len(off) > 12 else "")]
+
+
 _EXC_RE = re.compile(r"\b[A-Za-z_]*(?:Error|Exception|Exit|Interrupt)\b")
 
 
@@ -3227,7 +3248,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                             require_asbuilt, strict_cores, halo, elab_dir, ref_tools, toolstale_level, abspath_level, remap, gendry)
     finally:
         _SCOPE = None
-    return scope_lines(f, scope, names) + [f"LIST PRE-SCOPE {len(scope)} of {len(names)} types"]
+    return scope_lines(f, scope, names) + offscope_outline_lines(f, scope, names) + [f"LIST PRE-SCOPE {len(scope)} of {len(names)} types"]
 
 
 def netlist_roots(ab, base, raw, idx):
