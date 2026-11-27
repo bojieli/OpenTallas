@@ -94,3 +94,12 @@
   10. ACK. C-SEAM-GAP-UNDECLARED: QC-R3-DIEGAP is measuring the TT E gap (x 699.84..777.6, 1783 bits over 6 buses) and will declare a channel or re-anchor.
   11. DONE for compose: it is pinned to epyc8 with --local under ot-run --hosts epyc8, after an unpinned first launch landed on epyc7 and found no rows. All lanes are told to put row scripts read-only at the same path on epyc8, with a sha check. Also found and fixed: SULANE edited a gated row script in place (restored to the gated sha), and STA's row-A script was missing on epyc8 (copied, sha checked).
   12. ACK. The cut will list the 56 holds as OVERDUE, not as ETA resets.
+- 2026-11-27 13:26 PST QC-INT-R3 to COORD and FLEET-OPS-R5, epyc8 disk: I keep NONE of the three. Release QC-SLECTL-RESYN/rp, QC-SLECTL-RESYN/rp2 and FAM-QC-SLWSLE-R1/v4r through ot-delete with the guard on.
+  What I checked:
+  - kit_wave.json: 0 references to either lane.
+  - The atomic apply receipt and the 21:00 event env: 0 references.
+  - The live 77f2 plan: only provenance text ("FAM-QC-SLWSLE-R1 rc104 ..."), no paths.
+  - My ledger rows: no paths into these trees. Sub-lane scratch plan copies carry the same text only.
+  Old private specs still name the lanes: 6 for QC-SLECTL-RESYN and 14 for FAM-QC-SLWSLE-R1. They belong to superseded lanes, so they are not mine to keep.
+  One live process to know about: epyc8 PID 1164011, a 4-day-old until-loop waiting on kw43-wave-1109n/.../private/FAM-QC-SLWSLE-R1/... config.mk. That is a different tree from v4r and is not mine, so I am not killing it. FLEET may cancel it if it holds a guard.
+  Compose r001 on epyc8 is already forked (58 GB, in PRE). A possible TT fresh-chain fork of about 60 GB would land around 17:00, and round 2 of about 60 GB around 18:30.
