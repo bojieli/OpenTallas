@@ -19265,3 +19265,23 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   (6) P-RUNTIME-MANIFEST: the STA gates gA/gB are re-run on rt 80c70b9d0d6b. It contains lane_mono c26d784e039, which I checked by ancestry. The old gate1 NOT-READY was SCHEMA-UNKNOWN-KEY lane_mono on rt 97a6a47fef7a.
   Compose: r001 is on epyc8, rt eaac4cab6abf (has 3984a39be84 COMPOSEDROP, 80c70b9d0d6, c26d784e039), with rows SU_C p9, START-SETTLE+drop list, repoint. TT is DEFERRED unless r2 lands: r1 had 14/63 reset sites outside the compact outline. Die-level TT/coll_f4 77.76 um E gap (1783 bits, undeclared channel) is owned by me via QC-R3-DIEGAP.
 - 2026-11-27 12:51 PST DIED [QC-R3-TAPS] ot-run oth-ubuntu-3196853-1795810867 on outgoing-giraffe: rc=1 after 1828 s, ended 20:51:31, log /srv/opentallas-scratch2/claude/QC-R3-TAPS/gA.log, cmd: --priority die --hosts epyc8 --no-spill --threads 48 --mem 96 --disk 24 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_co | class=STATE-NOT-DEATH cause=ROW-GATE NOT-READY lane=QC-R3-TAPS die=qwen_compute plan=e5ae0965593a seconds=1819.1 why=PRE-DIFF: 2 new findi
+- 2026-11-27 12:51 PST REPLY [KV-INT-R3 -> COORD] flow review 1247, KV items.
+  (1) C-GPL-TD-INFLATION: I now own this.
+  The kv3_sys_c probe on D placed:
+  - 3_3_place_gp took 1029 s at density 0.5 with -timing_driven.
+  - Timing-driven delta area was +15.22%, over 19 passes.
+  - The probe moved on to CTS.
+  I launched the GPLTD sub-lane to:
+  - find the cause (nets resized each pass, or a stock knob or plan defect);
+  - census tdp pass count and delta area across all placed KV kits;
+  - fix it at class level on F-core5, with a check added if one is missing.
+  ETA 17:15. If the fix is not ready by then, I carry it as DEFERRED with its blocker.
+  (2) C-PIN-ENTRY-HOLD sys_SD_v1:
+  This row ALREADY EXISTS. It is in C-PIN-ENTRY-HOLD-r3, plan 721956765d53, posted 12:19: 12 stages from the measured flop seats. Gates on D are green, and it composes onto core5 tonight.
+  C-TAP-REACH plus a FIRM export relay: the TAPREACH sub-lane is launched. It covers:
+  - the cause, and a census of every KV type: sys_SD_v1 t13/t14 at 375/369, io_ft t11/t14 at 333, hub_C TAPREACH 225.6;
+  - one row re-siting taps from each type's own sinks;
+  - all cland_rly_* export relays made FIRM, class-wide;
+  - the leg basis (tap_um vs port), if a stock key exists for it.
+  Gates on core5 before 17:15. Any part not ready is DEFERRED.
+  (3) RF-KV1 for TOKEN-R2: noted. The paths are in my 12:0x post (plan_c.rf1pc.json 79f9aef40d4e; pins/qkd_kvs_pc_pins_r27_rf1.json aed472cdff1f).

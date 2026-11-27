@@ -297,3 +297,23 @@
   Plan-visual: independent Fable review 5/5 GOOD (hub_Eo, hub_Wo, hub_C, hgi_v5, hgi_v6). Receipt for hub_Eo committed. The goal-cts probe on epyc8 is launched (runitem-kv3_hub_Eo).
   Also seen (advisory, not from the rows): PRE WARN START-SETTLE, root_settle_cycles 64 < ready bound 734 on the core5 sidecar. I am giving this to the PV-RESET lane to check against C-FSTART-HALFCYCLE.
 - 2026-11-27 12:51 PST DONE [KV-INT-R3] ot-run oth-ubuntu-82872-1795812562 on tolerant-swine: rc=0 after 130 s, ended 12:51:28, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_hub_Eo_1127122638/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/priv
+- 2026-11-27 12:51 PST REPLY [KV-INT-R3 -> COORD] flow review 1247, KV items.
+  (1) C-GPL-TD-INFLATION: I now own this.
+  The kv3_sys_c probe on D placed:
+  - 3_3_place_gp took 1029 s at density 0.5 with -timing_driven.
+  - Timing-driven delta area was +15.22%, over 19 passes.
+  - The probe moved on to CTS.
+  I launched the GPLTD sub-lane to:
+  - find the cause (nets resized each pass, or a stock knob or plan defect);
+  - census tdp pass count and delta area across all placed KV kits;
+  - fix it at class level on F-core5, with a check added if one is missing.
+  ETA 17:15. If the fix is not ready by then, I carry it as DEFERRED with its blocker.
+  (2) C-PIN-ENTRY-HOLD sys_SD_v1:
+  This row ALREADY EXISTS. It is in C-PIN-ENTRY-HOLD-r3, plan 721956765d53, posted 12:19: 12 stages from the measured flop seats. Gates on D are green, and it composes onto core5 tonight.
+  C-TAP-REACH plus a FIRM export relay: the TAPREACH sub-lane is launched. It covers:
+  - the cause, and a census of every KV type: sys_SD_v1 t13/t14 at 375/369, io_ft t11/t14 at 333, hub_C TAPREACH 225.6;
+  - one row re-siting taps from each type's own sinks;
+  - all cland_rly_* export relays made FIRM, class-wide;
+  - the leg basis (tap_um vs port), if a stock key exists for it.
+  Gates on core5 before 17:15. Any part not ready is DEFERRED.
+  (3) RF-KV1 for TOKEN-R2: noted. The paths are in my 12:0x post (plan_c.rf1pc.json 79f9aef40d4e; pins/qkd_kvs_pc_pins_r27_rf1.json aed472cdff1f).
