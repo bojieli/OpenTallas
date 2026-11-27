@@ -20,6 +20,7 @@ n3_turn / str / transit d-side, efall and pad).  Anchors here are derived from t
 """
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -99,7 +100,8 @@ def pub_text(plan_path, t, pub=None):
     return f.read_text() if f.is_file() else None
 
 
-def census(raw, plan_path, pub=None, types=None, limit=LIMIT_UM):
+def census(raw, plan_path, pub=None, types=None, limit=None):
+    limit = float(limit if limit is not None else os.environ.get("OT_STRAP_REACH_LIMIT_UM") or LIMIT_UM)
     out = {}
     for tn, t in sorted(raw["partition_types"].items()):
         if types and tn not in types:
@@ -135,9 +137,10 @@ def main(argv=None):
     ap.add_argument("--pub", type=Path)
     ap.add_argument("--types", default="")
     ap.add_argument("--json", type=Path)
+    ap.add_argument("--limit-um", type=float, default=None, help="REPRODUCE beyond this Manhattan seat-to-load distance (default 405 or OT_STRAP_REACH_LIMIT_UM; tight seating uses 100)")
     a = ap.parse_args(argv)
     raw = json.loads(a.plan.read_text())
-    res = census(raw, a.plan, a.pub, set(filter(None, a.types.split(","))) or None)
+    res = census(raw, a.plan, a.pub, set(filter(None, a.types.split(","))) or None, a.limit_um)
     n_rep = 0
     for tn, rows in res.items():
         if rows is None:

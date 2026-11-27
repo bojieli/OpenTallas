@@ -142,3 +142,21 @@ def test_seat_mutant_killed(name, old, new, monkeypatch):
     monkeypatch.setitem(sys.modules, "head_count_strap_sites", mod)
     with pytest.raises((AssertionError, ValueError, TypeError)):
         test_seat_groups_rules()
+
+
+def test_tight_limit_flags_pass_at_405(tmp_path, monkeypatch):
+    """C-CA-FARSTRAP-UNSEEN: a strap seated 200 um from its only load passes the 405 hop limit but is FAR under a tight limit,
+    on both axes (Manhattan), for the d-side group, efall and pad alike."""
+    t = plan_type([[2.0 + 150.0, 104.0 + 50.0], [2.0 + 150.0, 108.0 + 50.0]], [[998.0 - 100.0, 506.0 - 100.0], [998.0 - 100.0, 510.0 - 100.0]],
+                  [[500.0, 300.0 + 200.0]], [[500.0 + 200.0, 300.0]])
+    an = R.group_anchors(t, SV)
+    assert {r["strap"]: r["status"] for r in R.group_findings(t, an)} == {k: "PASS" for k in an}
+    tight = {r["strap"]: r["status"] for r in R.group_findings(t, an, 100.0)}
+    assert tight == {k: "REPRODUCE" for k in an}
+    (tmp_path / "published").mkdir()
+    (tmp_path / "published" / "ot_s81hd_syn.sv").write_text(SV)
+    (tmp_path / "plan.json").write_text(json.dumps({"partition_types": {"hd_syn": t}}))
+    assert R.main(["check", str(tmp_path / "plan.json")]) == 0
+    assert R.main(["check", str(tmp_path / "plan.json"), "--limit-um", "100"]) == 1
+    monkeypatch.setenv("OT_STRAP_REACH_LIMIT_UM", "100")
+    assert R.main(["check", str(tmp_path / "plan.json")]) == 1

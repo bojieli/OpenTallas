@@ -50,7 +50,7 @@ def seat_groups(groups, w, h, blocked, occupied, pitch=PITCH_UM):
     return out
 
 
-def apply(raw, plan_path, repo, types=None, reach=False, pub=None):
+def apply(raw, plan_path, repo, types=None, reach=False, pub=None, limit=None):
     raw=copy.deepcopy(raw)
     P=S.Plan(raw, path=plan_path)
     report={}
@@ -64,7 +64,7 @@ def apply(raw, plan_path, repo, types=None, reach=False, pub=None):
             txt=R.pub_text(plan_path,t,pub)
             if txt is None:raise ValueError(f'{tn}: no published RTL for reach anchors')
             anch=R.group_anchors(t,txt)
-            rows={r['strap']:r for r in R.group_findings(t,anch)}
+            rows={r['strap']:r for r in R.group_findings(t,anch,limit if limit is not None else R.LIMIT_UM)}
             move=[s for s in straps if rows[s['name']]['status'] in ('REPRODUCE','NOSEAT')]
             if not move:continue
             for s in move:s.pop('sites_um',None);s.pop('layer',None)
@@ -120,9 +120,10 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('plan',type=Path);ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--reach',action='store_true',help='C-STRAP-REACH: reseat every REPRODUCE/NOSEAT group at its own load cluster (default off)')
+    ap.add_argument('--limit-um',type=float,default=None,help='with --reach: reseat every group whose seat is farther than this (default 405 um; 100 = tight)')
     ap.add_argument('--pub',type=Path);ap.add_argument('--types',default='')
     ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2])
-    a=ap.parse_args();raw,report=apply(json.loads(a.plan.read_text()),a.plan,a.repo,set(filter(None,a.types.split(','))) or None,a.reach,a.pub)
+    a=ap.parse_args();raw,report=apply(json.loads(a.plan.read_text()),a.plan,a.repo,set(filter(None,a.types.split(','))) or None,a.reach,a.pub,a.limit_um)
     errors=S.validate(raw)
     if errors:raise ValueError(errors[:10])
     a.out.write_text(json.dumps(raw,indent=1)+'\n')
