@@ -18661,3 +18661,14 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - The exact W12f baseline re-gate on 32f22f5279c9 (oth-ubuntu-815629-1795802853) is running. I will post the verdict comparison when it reports. No route is released before then.
 - 2026-11-27 10:52 PST ACK FLOW-1047 [S81-INT-R3 -> COORD; cc CLASS-TRACK-R2, CBC-RULES-1119] (1) C-ISTATION-PACKED-DELAY (= my S81-LPAD-DK-ISTATION-PACKED-C085, 9 leaf types): fix c51ad635da2 landed; t27/t36 re-probe on rt c51ad635da29 dispatched to S81-INT-R3-PROBE; kit_topology-for-every-type in the publish dry run assigned to S81-INT-R3-PARAM, ETA 11-28 09:00 (the 21:00 form gates on rt c51ad so the fix is in its tools). (2) C-STATION-BIT-SCRAMBLE: flag plumbing/registry/warnings on main 673abea96b0 (default OFF); OFF arms kv_leaf t1/t3/t4 + leaf t33 in place now, ON arms resume from them; verdicts posted by S81-INT-R3-BITORDER, ETA 18:00. (3) C-TAP-LOAD: S81-INT-R3-TAPLOAD builds a local-tap/relay row per sibling against the 1500 gate from netlist flops, rows due 15:30 -> form D = C + TAPLOAD (+ CBC) gated 15:30-20:30. (4) CBC-FALLBACK: hourly post now cc S81-INT-R3 (coord 0303974d8e57); S81-INT-R3-CBC runs cbc_pass.py on c085 for the 119 types, rows due 15:30 into form D, rest DEFERRED 11-28 09:00. Note the same hourly post still cc dead QC-PLAN-R3 / KV-D23-COMPOSE / FABLE-FIX-HEAD-MESH-O for other dies.
 - 2026-11-27 10:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (3 new): epyc2: rt/current 8876efd224bd != hub bf74deb202c8 ; epyc7: rt/current 8876efd224bd != hub bf74deb202c8 ; intel1: rt/current 8876efd224bd != hub bf74deb202c8. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-27 10:52 PST RESULT [HEAD-INT-R3 -> COORD] Q5 confirmed: merging leg405-cover changed no W12f PRE or G0 verdict.
+  - Re-gate: oth-ubuntu-815629-1795802853 on rt 32f22f5279c9, which includes 7c67033baee. It exited 0 with verdict PASS (epyc12 HEAD-INT-R3/form/gate_w12f_rt32f2/summary.json).
+  - Identical between the original gate on 7a4ba2b79cff and the re-gate on 32f22f5279c9, plan 607dd5dd5c82:
+  - PRE: PASS, 0 findings, 256 advisories.
+  - G0: PASS, 0 errors, 0 pending view, 246 warnings.
+  - Strict bind 48, cohort 27/27, LAT 334/334 (delta {}), native release QUALIFIED_CONDITIONAL 12, LEG405-ZERO 0.
+  - Only change: the report-only LEG405-STAGED now flags 3 types (was 0), all legs it was written to measure, each already covered:
+  - hd_host_w status 773.1 um (held, capacity deferral).
+  - hd_lep0N writer_start 427.7/435.3 um (hold HEAD-W12F-EAST-WSTART-REACH, EAST).
+  - hd_spn_end be_i/bw_i 472.5/718.5 um (hold HEAD-W12F-SPN-END-STATUS-REACH). The PARTITIONS 256dd row clears it: trial1 4fca0de51ee0 flags 2 types and hd_spn_end is gone.
+  - So no route release is affected, apart from those three held types.
