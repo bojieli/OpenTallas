@@ -14,6 +14,12 @@ Late bind failures of 11-17/18 that a bind found only after its full run, and th
              matched as the leaf path's tail, as bind's rel_of inside a partition) that has the row's port.  Rows on bind-generated
              stations (u_bout_*) or inbound lane-pad inputs are checked during bind because they only exist in emitted RTL.
   MODULES    (rows naming missing modules)  every module named by asbuilt.substitute_inst / substitute / sub_core_leaf exists as RTL (module_index) or in the elaborated netlist.
+  LEAFPARAM  (P-PLAN-AHEAD-OF-RTL, S81 cut-2100 v3/v4: 6 types refused, two ~35 min whole binds lost: "PARAM_REGEN u_s_*.u_lf*.u_vp.g_wr1.u_w.WREG:
+             not a parameter of the leaf")  every parameter a plan row sets per instance (partition_types[T].leaf_params[].params) is a
+             parameter of the RTL master `module` in the elaborated die (OUT/asbuilt.json: the module's parameter_default_values,
+             the cells' own parameters, or asbuilt.param_regen.declare[module]) -- bind.regen_params' rule, 6 s instead of 35 min.
+             The row is ahead of the RTL when the master lacks the parameter; a master absent from the elab is FAIL too (WARN when
+             it is a substitute / substitute_inst target, undecidable before the bind).
   TOOLSTALE  (S81 D8e: tools older than rt/current without b8f543dd448)  a tools/die_plan file of the bind tree that differs from the
              live reference tree's (OT_RT_CURRENT, --ref-tools, or <scratch>/claude/rt/current) and is OLDER than it.
 
@@ -385,6 +391,66 @@ def check_modules(plan_path, plan, ab, ab_path, elab_dir, yjs=None):
                        len(miss), "modules") if miss else [])
 
 
+def master_params(yjs, masters):
+    """{master: set of parameter names known to the elaboration} for every requested RTL master (hdlname or module key);
+    a master with no module / cell in the elab is absent from the result."""
+    mods = yjs["modules"]
+    keys = {}
+    for k, m in mods.items():
+        h = m.get("attributes", {}).get("hdlname", k)
+        for nm in (h, k):
+            if nm in masters:
+                keys.setdefault(nm, set()).add(k)
+    out = {}
+    for nm, ks in keys.items():
+        ps = out.setdefault(nm, set())
+        for k in ks:
+            ps.update(mods[k].get("parameter_default_values", {}) or {})
+    want = {k: nm for nm, ks in keys.items() for k in ks}
+    for m in mods.values():
+        for c in m.get("cells", {}).values():
+            nm = want.get(c.get("type"))
+            if nm is not None and c.get("parameters"):
+                out[nm].update(c["parameters"])
+    return out
+
+
+def check_leafparams(plan, ab, yjs):
+    """FAIL LEAFPARAM <type>[j] <module>.<PARAM>: a plan row sets a parameter the elaborated RTL master does not declare
+    (the plan is ahead of the RTL; bind.regen_params would refuse it as PARAM_REGEN ... not a parameter of the leaf)."""
+    rules = []
+    for tn, t in sorted((plan.get("partition_types") or {}).items()):
+        lp = t.get("leaf_params") if isinstance(t, dict) else None
+        for j, r in enumerate(lp if isinstance(lp, list) else []):
+            if isinstance(r, dict) and r.get("module") and isinstance(r.get("params"), dict):
+                rules.append((tn, j, r["module"], list(r["params"])))
+    if not rules:
+        return []
+    known = master_params(yjs, {m for _, _, m, _ in rules})
+    decl = (ab.get("param_regen") or {}).get("declare") or {}
+    subst = set()
+    for r in ab.get("substitute_inst") or []:
+        if isinstance(r, dict) and r.get("module"):
+            subst.add(r["module"])
+    for v in (ab.get("substitute") or {}).values() if isinstance(ab.get("substitute"), dict) else []:
+        subst.update(x for x in (v if isinstance(v, list) else [v]) if isinstance(x, str))
+    out, n_bad = [], 0
+    for tn, j, mod, names in rules:
+        if mod not in known:
+            if mod in subst or mod in decl:
+                out.append(f"WARN LEAFPARAM {tn}[{j}] {mod}: substitute / declared master, parameters not decidable from the elab")
+            else:
+                n_bad += 1
+                out.append(f"FAIL LEAFPARAM {tn}[{j}] {mod}: no such RTL master in the elaborated die (leaf_params {names})")
+            continue
+        for k in names:
+            if k not in known[mod] and k not in (decl.get(mod) or {}):
+                n_bad += 1
+                out.append(f"FAIL LEAFPARAM {tn}[{j}] {mod}.{k}: not a parameter of the elaborated RTL master "
+                           f"(P-PLAN-AHEAD-OF-RTL: the plan row is ahead of the RTL; bind would stop with PARAM_REGEN after the elab)")
+    return _cap(out, n_bad, "rows") if n_bad else out
+
+
 def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=None, skip=(), toolstale_level="FAIL"):
     skip = {s.upper() for s in skip}
     out = []
@@ -396,7 +462,7 @@ def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=
     ab = json.loads(Path(asbuilt).read_text()) if asbuilt else plan_raw.get("asbuilt")
     if ab and elab_dir and (Path(elab_dir) / "asbuilt.json").is_file():
         yjs = None
-        if "ROWSINK" not in skip or "MODULES" not in skip or "RELAYSINK" not in skip:
+        if "ROWSINK" not in skip or "MODULES" not in skip or "RELAYSINK" not in skip or "LEAFPARAM" not in skip:
             yjs = json.loads((Path(elab_dir) / "asbuilt.json").read_text())
         if "RELAYSINK" not in skip:                     # B1 (FABLE-FLOW-0230): relay_depth rows vs the elaborated leaves
             try:
@@ -404,6 +470,8 @@ def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=
             except (KeyError, TypeError, ValueError) as e:
                 out.append(f"FAIL RELAYSINK-UNCHECKED relay_depth rows NOT checked ({type(e).__name__}: {str(e)[:160]}); "
                            f"fix the as-built / elab input or --skip RELAYSINK (LANDREMAP-TREE-FAIL-1123: never a silent skip)")
+        if "LEAFPARAM" not in skip:
+            out += check_leafparams(plan_raw, ab, yjs)
         if "ROWSINK" not in skip:
             out += check_rowsink(plan_path, plan_raw, ab, ab_path, elab_dir, yjs)
         if "MODULES" not in skip:
