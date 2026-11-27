@@ -20,6 +20,7 @@ them is reported UNCHECKED (not gating; their LEF is the only model).  Gate use:
 whose plan binds an exact-abstract view (abstract_obs.exact_view_bound) and refuses SIGNED unless verdict PASS.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -62,6 +63,36 @@ GATING_ZONE = "HARDCORE"
 # parent route on a pin).  It sees geometry only, not nets: a parent pad on a pin of the wrong net is a connectivity question for LVS, not for this gate.
 FLAT_MODE = "flat-windows-location-v1"
 WINDOW_MARGIN_UM = 5.0
+# F6 (FABLE-INDEP re-review 11-27): the gate is only valid on the calibrated BEOL deck.  A deck whose awk cut stops matching section headers has zero rules, every report is empty and the
+# run would PASS; so the generated beol.lydrc is pinned by sha256 (calibration deck d8b963c69872, H10 R2 windows #16/#26/#32 + su_smr seeded fixture) and a mismatch aborts the run.
+PINNED_BEOL_DECK_SHA256 = "d8b963c69872510159604162dd0c0585d97ea58e51940b2cabffed20fdd50ea9"
+DEFAULT_HALO_UM = 1.0          # F5: the only halo the gate accepts (verdicts record it; gate_check compares)
+MAX_HALO_UM = WINDOW_MARGIN_UM  # no marker exists outside the window, so a larger halo is meaningless and a negative one empties the HARDCORE zone
+
+
+def sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def validate_run_args(a, masters):
+    """F5: refuse parameters that can turn the gate into a vacuous PASS."""
+    halo = float(a.halo_um)
+    if not (0.0 <= halo <= MAX_HALO_UM):
+        raise SystemExit("--halo-um must be within 0..%g (got %g)" % (MAX_HALO_UM, halo))
+    if a.allow_empty:
+        try:
+            rx = re.compile(a.allow_empty)
+        except re.error as exc:
+            raise SystemExit("--allow-empty is not a valid regex: %s" % exc)
+        hit = sorted(m for m in masters if rx.match(m))
+        if hit:
+            raise SystemExit("--allow-empty matches hard-core master(s) %s: a core with GDS can never be allowed empty" % hit)
+    if getattr(a, "deck", "beol") not in ("beol", "full"):
+        raise SystemExit("--deck must be beol or full")
 _NUM = re.compile(r"-?\d+(?:\.\d+)?(?:e-?\d+)?")
 
 
@@ -218,7 +249,7 @@ def needs_gate(lef_path):
     try:
         cov = AE.coverage(lef_path, ("M1", "M4", "M5", "M6"))
     except Exception:  # noqa: BLE001
-        return False
+        return True      # F5: an unreadable view must not turn the gate into NOT-REQUIRED
     m1, m1n = cov["M1"]
     return m1 >= AE.BLANKET_OBS_PCT and m1n <= 4 and any(cov[L][1] > 4 and cov[L][0] < AE.BLANKET_OBS_PCT
                                                        for L in ("M4", "M5", "M6"))
@@ -258,6 +289,7 @@ def build_script(a, cores, P):
     if getattr(a, "deck", "beol") == "beol":
         Path(a.out, "beol.awk").write_text(BEOL_AWK)
         lines.append("awk -f %s/beol.awk %s > %s/beol.lydrc" % (O, DECK, O))
+        lines.append(deck_pin_line(O))
         deck = "%s/beol.lydrc" % O
     lines += window_lines(O, P["tool"], deck)
     if getattr(a, "hier", False):          # report only: the deep-mode full-chip run under-reports and never gates
@@ -271,6 +303,12 @@ def build_script(a, cores, P):
                   "-rd out_file=%s/compare.json > %s/compare.log 2>&1" % (O, O, O, O, a.halo_um, O, O)]
     lines.append("echo OT_MGD_DONE")
     return "\n".join(lines) + "\n"
+
+
+def deck_pin_line(O):
+    """bash: abort (rc 5) unless the generated BEOL deck is the pinned calibration deck"""
+    return ("echo '%s  %s/beol.lydrc' | sha256sum -c - > %s/deck_pin.log 2>&1 || { echo DECK_SHA_MISMATCH; exit 5; }"
+            % (PINNED_BEOL_DECK_SHA256, O, O))
 
 
 def window_lines(O, tool, deck, jobs=6):
@@ -291,12 +329,31 @@ def run(a):
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     a.out = str(out)
+    for stale in ("verdict.json", "run_meta.json", "compare_windows.json", "new_markers.jsonl", "beol.lydrc", "deck_pin.log"):
+        (out / stale).unlink(missing_ok=True)          # F4: a crashed run can never leave a previous verdict behind
     cores = []
     for c in a.core:
         m, _, src = c.partition("=")
         if not m or not src:
             raise SystemExit("--core MASTER=PATH")
         cores.append((m, os.path.realpath(src)))
+    validate_run_args(a, [m for m, _ in cores])
+    meta = dict(parent_def=os.path.realpath(a.parent_def), parent_def_sha256=sha256_file(a.parent_def), allow_empty=a.allow_empty or "",
+                halo_um=float(a.halo_um), deck=getattr(a, "deck", "beol"), cores=sorted(m for m, _ in cores),
+                tool_sha256=hashlib.sha256(Path(__file__).read_bytes() + PYA.read_bytes()).hexdigest())
+    (out / "run_meta.json").write_text(json.dumps(meta, indent=1))
+    try:
+        return _run(a, out, cores)
+    except SystemExit:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        v = dict(verdict="ERROR", problems=["merged-GDS DRC run crashed: %r" % (exc,)])
+        (out / "verdict.json").write_text(json.dumps(v, indent=1))
+        print(json.dumps(v))
+        return 2
+
+
+def _run(a, out, cores):
     lefdir = out / "lefs"
     lefdir.mkdir(exist_ok=True)
     for i, l in enumerate(a.lef):
@@ -330,6 +387,27 @@ def run(a):
 
 def verdict(a):
     out = Path(a.out)
+    try:
+        return _verdict(a, out)
+    except Exception as exc:  # noqa: BLE001   F4: any crash is ERROR, never a surviving old verdict
+        v = dict(verdict="ERROR", problems=["verdict crashed: %r" % (exc,)])
+        (out / "verdict.json").write_text(json.dumps(v, indent=1))
+        print(json.dumps(v))
+        return 2
+
+
+def _bind(v, out):
+    """F4/F6: bind the verdict to the inputs it was computed from (parent DEF sha, halo, allow-empty, deck sha); gate_check refuses a verdict whose binding is absent or stale"""
+    meta_path = out / "run_meta.json"
+    if meta_path.is_file():
+        v.update(json.loads(meta_path.read_text()))
+    deck = out / "beol.lydrc"
+    v["deck_sha256"] = sha256_file(deck) if deck.is_file() else None
+    return v
+
+
+def _verdict(a, out):
+    (out / "verdict.json").unlink(missing_ok=True)
     cells = json.loads((out / "parent_cells.json").read_text())
     hier = json.loads((out / "compare.json").read_text()) if (out / "compare.json").is_file() else None
     if (out / "win" / "merged_windows.json").is_file():
@@ -342,6 +420,10 @@ def verdict(a):
             v = judge(cmp, cells, hier)
     else:
         v = judge(hier or {}, cells)
+    _bind(v, out)
+    if v["verdict"] == "PASS" and v.get("deck_sha256") != PINNED_BEOL_DECK_SHA256:
+        v["verdict"] = "FAIL"
+        v["problems"] = list(v.get("problems") or []) + ["BEOL deck is not the pinned calibration deck (sha256 %s)" % v.get("deck_sha256")]
     (out / "verdict.json").write_text(json.dumps(v, indent=1))
     print(json.dumps(v))
     return 0 if v["verdict"] == "PASS" else 1
@@ -363,7 +445,8 @@ def selftest(a):
     lines = ["set -e", "cd %s" % O,
              "klayout -b -r %s/merged_gds_drc_pya.py -rd mode=selftest -rd core_gds=%s/%s -rd out_dir=%s > %s/selftest.log 2>&1"
              % (P["tool"], P["core"], os.path.basename(core), O, O),
-             "awk -f %s/deck/beol.awk %s > %s/deck/beol.lydrc" % (O, DECK, O)]
+             "awk -f %s/deck/beol.awk %s > %s/deck/beol.lydrc" % (O, DECK, O),
+             deck_pin_line("%s/deck" % O)]
     for v in ("clean", "seeded"):
         lines += window_lines("%s/%s" % (O, v), P["tool"], "%s/deck/beol.lydrc" % O)
     lines.append("echo OT_MGD_SELFTEST_DONE")
@@ -386,9 +469,10 @@ def selftest(a):
                       parent_only=cmp["parent_only_markers"], macros_only=cmp["macros_only_markers"])
     seeded_dir = out / "seeded"
     targets = json.loads((seeded_dir / "seed_targets.json").read_text())
-    if set(targets) != {"SHORT.M4", "V6.S.1-2-3"}:
-        raise ValueError("Calibration requires both cross-boundary seed targets")
-    detected = dict.fromkeys(targets, False)
+    if set(targets) != {"SHORT.M4", "V6.S.1-2-3", "SHORT.M8"}:
+        raise ValueError("Calibration requires every cross-boundary seed target (M4 overlap + zero-gap abutment, V6.S, M8 overlap)")
+    targets = {c: (v if isinstance(v[0], list) else [v]) for c, v in targets.items()}     # old fixtures: one box per category
+    detected = {"%s#%d" % (c, i): False for c, boxes in targets.items() for i in range(len(boxes))}
     with (seeded_dir / "new_markers.jsonl").open() as markers:
         for line in markers:
             marker = json.loads(line)
@@ -396,9 +480,9 @@ def selftest(a):
             if marker["zone"] != GATING_ZONE or category not in targets:
                 continue
             a, b, c, d = marker["bbox_dbu"]
-            x0, y0, x1, y1 = targets[category]
-            if a <= x1 + 1 and c >= x0 - 1 and b <= y1 + 1 and d >= y0 - 1:
-                detected[category] = True
+            for i, (x0, y0, x1, y1) in enumerate(targets[category]):
+                if a <= x1 + 1 and c >= x0 - 1 and b <= y1 + 1 and d >= y0 - 1:
+                    detected["%s#%d" % (category, i)] = True
     ok = res["clean"]["new_hardcore"] == 0 and all(detected.values())
     res["seeded"]["detected_at_seed"] = detected
     res["verdict"] = "PASS" if ok else "FAIL"
@@ -501,6 +585,16 @@ def core_gds(a):
     return 0
 
 
+def _binding_ok(v, kp):
+    """F4/F5/F6: a PASS counts only for THIS parent DEF, the pinned deck, the fixed halo and the kit-derived allow-empty regex"""
+    try:
+        return (kp.get("parent_def") is not None and v.get("parent_def_sha256") == sha256_file(kp["parent_def"])
+                and v.get("deck_sha256") == PINNED_BEOL_DECK_SHA256 and v.get("deck") == "beol"
+                and v.get("halo_um") == DEFAULT_HALO_UM and v.get("allow_empty") == (kp.get("allow_empty") or ""))
+    except OSError:
+        return False
+
+
 def gate_check(kit):
     """signoff.py: None when the kit binds no exact-abstract view, else dict(verdict PASS/FAIL/NOT RUN, ...)"""
     kp = kit_plan(kit)
@@ -513,7 +607,7 @@ def gate_check(kit):
         return dict(verdict="NOT RUN", reason="exact-abstract views %s bound; no merged-GDS DRC verdict at %s"
                     % ([Path(g).name for g in kp["gated"]], p))
     verdict = v.get("verdict")
-    if verdict != "FAIL" and (verdict != "PASS" or v.get("mode") != FLAT_MODE):
+    if verdict != "FAIL" and (verdict != "PASS" or v.get("mode") != FLAT_MODE or not _binding_ok(v, kp)):
         verdict = "NOT RUN"
     return dict(verdict=verdict,
                 problems=v.get("problems"), new_hardcore=v.get("new_hardcore"), new_parent=v.get("new_parent"),

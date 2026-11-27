@@ -12,7 +12,7 @@
 #               are written to win/shorts_<i>.json as bbox lists per layer, minus the overlap inside the core's own PIN-purpose shapes (datatype 251 of the same layer, written by
 #               mode=core from the routed DEF pins: the legal landing of a parent route on a pin; the pin purpose is orientation-correct where a LEF rect would need the placement).
 # mode=selftest: build D/{clean,seeded}/{merged,parent_only,macros_only}.gds + parent_cells.json from one real core GDS placed in an empty parent; seeded merged/parent_only get
-#               a parent M4 wire overlapping a core M4 wire (bend, M4.AUX.3) and a parent V6 via pair 30 nm apart next to a core shape (V6.S), both only where core metal is.
+#               a parent M4 wire overlapping a core M4 wire, a parent M4 box abutting its end with zero gap, a parent M8 shape overlapping a core M8 shape, and a parent V6 via pair 30 nm apart next to a core shape (V6.S).
 # mode=compare: merged.lyrdb minus (parent_only.lyrdb + macros_only.lyrdb), matched by (category, marker bbox at 1 dbu);
 #               -> compare.json: per category counts, every NEW marker (bbox, category, nearest hard-core instance).
 import json
@@ -55,6 +55,24 @@ def write_top(ly, top, path):
     out.write(path)
 
 
+SHORT_GROW_DBU = 1     # P-DRC-DECK-BASELINE F1: parent metal within 1 dbu of core metal (zero-gap abutment included) is a short: it merges into one polygon and gives no deck marker
+
+
+def short_overlap(par, core, pins):
+    """Regions (merged): parent shapes grown by SHORT_GROW_DBU that touch or overlap core metal, minus the core's own pin-purpose landing."""
+    return (par.merged().sized(SHORT_GROW_DBU) & core.merged()) - pins.merged().sized(SHORT_GROW_DBU)
+
+
+def nested_empty_cells(cell, allow=None):
+    """-> sorted names of cells below `cell` (a filled hard core) with no shapes and no children that are neither VIA_/DEF_FILL nor matched by allow: silently unchecked geometry"""
+    out = set()
+    for ci in cell.called_cells():
+        c = cell.layout().cell(ci)
+        if c.is_empty() and not c.name.startswith("VIA_") and not c.name.endswith("_DEF_FILL") and not (allow is not None and allow.match(c.name)):
+            out.add(c.name)
+    return sorted(out)
+
+
 PIN_DATATYPE = 251   # the ASAP7 KLayout tech maps DEF PINS (BTerm shapes) to <layer>/251; the deck reads <layer>/0 only
 
 
@@ -75,10 +93,15 @@ def pins_to_drawing(ly):
     return n
 
 
+LEF_BBOX = {}     # P-DRC F7: LEF-abstract outline of every cell before it is cleared (an allow-empty macro has no GDS shapes, so its instance bbox would be empty)
+
+
 def fill_std(ly, top, gds_files):
     """clear every LEF-abstract child cell (keep VIA_ and DEF fill), then read the platform GDS (same names fill them)"""
     for c in ly.each_cell():
         if c.cell_index() != top.cell_index() and not c.name.startswith("VIA_") and not c.name.endswith("_DEF_FILL"):
+            if not c.dbbox().empty():
+                LEF_BBOX[c.name] = c.dbbox()
             c.clear()
     for f in gds_files:
         ly.read(f)
@@ -116,6 +139,11 @@ elif mode == "parent":
         cell.clear()
         cell.copy_tree(sc)           # children are created anew in ly: no name clash with the parent's own cells
         filled[m] = gds
+    nested = {}                      # P-DRC F3: empty cells inside a filled core are real unchecked geometry: they need --allow-empty like top-level ones
+    for m in filled:
+        ne = nested_empty_cells(ly.cell(m), allow)
+        if ne:
+            nested[m] = ne
     pins_to_drawing(ly)              # parent BTerms + core pins (also core GDS written before this fix); idempotent overlap
     # instances of the hard cores and of empty cells
     insts, empties, missing = [], [], set()
@@ -127,10 +155,15 @@ elif mode == "parent":
             insts.append(rec)
         elif inst.cell.is_empty() and not nm.startswith("VIA_"):
             if allow is not None and allow.match(nm):
+                if bb.empty() and nm in LEF_BBOX:
+                    lb = inst.dtrans * LEF_BBOX[nm]
+                    rec["bbox"] = [lb.left, lb.bottom, lb.right, lb.top]
                 empties.append(rec)
             else:
                 missing.add(nm)
-    json.dump(dict(filled=filled, hard_core_insts=insts, empty_allowed=empties, missing=sorted(missing), dbu=ly.dbu),
+    for m, ne in nested.items():
+        missing.update("%s>%s" % (m, n) for n in ne)
+    json.dump(dict(filled=filled, hard_core_insts=insts, empty_allowed=empties, missing=sorted(missing), nested_empty=nested, dbu=ly.dbu),
               open(out_dir + "/parent_cells.json", "w"), indent=1)  # noqa: F821
     if missing:
         raise RuntimeError("cells with neither GDS nor allow_empty: %s" % sorted(missing))
@@ -228,7 +261,7 @@ elif mode == "window":
         wins.append(dict(i=n, master=rec["master"], bbox=w))
     json.dump(wins, open(out_prefix + "_windows.json", "w"), indent=1)  # noqa: F821
 elif mode == "shorts":
-    LAYERS = dict(M1=19, V1=21, M2=20, V2=25, M3=30, V3=35, M4=40, V4=45, M5=50, V5=55, M6=60, V6=65, M7=70)
+    LAYERS = dict(M1=19, V1=21, M2=20, V2=25, M3=30, V3=35, M4=40, V4=45, M5=50, V5=55, M6=60, V6=65, M7=70, V7=75, M8=80, V8=85, M9=90, V9=95)
     wins = json.load(open(win_dir + "/merged_windows.json"))  # noqa: F821
     for w in wins:
         i = w["i"]
@@ -241,11 +274,9 @@ elif mode == "shorts":
         dbu = regs["parent_only"][0].dbu
         out = {}
         for n in LAYERS:
-            par = regs["parent_only"][1][n][0].merged()
+            par = regs["parent_only"][1][n][0]
             core, pins = regs["macros_only"][1][n]
-            core = core.merged()
-            pins = pins.merged()
-            ov = ((par & core) - pins)
+            ov = short_overlap(par, core, pins)
             boxes = [[round(p.bbox().left * dbu, 10), round(p.bbox().bottom * dbu, 10), round(p.bbox().right * dbu, 10), round(p.bbox().top * dbu, 10)] for p in ov.each()]
             if boxes:
                 out[n] = boxes
@@ -293,6 +324,12 @@ elif mode == "selftest":
             break
     if pl is None:
         raise RuntimeError("selftest: the core GDS has no PIN-purpose (datatype 251) shape")
+    # F1 seed: a parent M4 box that ABUTS the end of the core wire with zero gap (merges into one polygon, no deck marker, no area overlap)
+    if target.width() >= target.height():
+        abut_box = pya.Box(target.right, target.bottom, target.right + 200, target.top)
+    else:
+        abut_box = pya.Box(target.left, target.top, target.right, target.top + 200)
+    abut_box = abut_box.moved(off.disp)
     short_box = short_box.moved(off.disp)
     # One 32 nm via in each constituent. Only the assembled geometry has a 30 nm gap.
     cx = target.left + off.disp.x + int(round(1 / dbu))
@@ -301,12 +338,18 @@ elif mode == "selftest":
     via_gap = int(round(0.030 / dbu))
     core_via = pya.Box(cx, cy, cx + via_width, cy + via_width)
     parent_via = core_via.moved(via_width + via_gap, 0)
+    # F2 seed: core M8 shape and an overlapping parent M8 shape (above the BEOL deck's M7 limit: only the geometric check sees it)
+    m8y = cy + int(round(2 / dbu))
+    core_m8 = pya.Box(cx, m8y, cx + 800, m8y + 800)
+    parent_m8 = pya.Box(cx + 400, m8y, cx + 1200, m8y + 800)
     for variant in ("clean", "seeded"):
         d = os.path.join(out_dir, variant)  # noqa: F821
         os.makedirs(d, exist_ok=True)
         if variant == "seeded":
-            seeds = {"SHORT.M4": [short_box.left, short_box.bottom, short_box.right, short_box.top],
-                     "V6.S.1-2-3": [core_via.right, cy, parent_via.left, cy + via_width]}
+            seeds = {"SHORT.M4": [[short_box.left, short_box.bottom, short_box.right, short_box.top],
+                                  [abut_box.left, abut_box.bottom, abut_box.right, abut_box.top]],
+                     "V6.S.1-2-3": [[core_via.right, cy, parent_via.left, cy + via_width]],
+                     "SHORT.M8": [[parent_m8.left, m8y, core_m8.right, m8y + 800]]}
             with open(os.path.join(d, "seed_targets.json"), "w") as stream:
                 json.dump(seeds, stream)
         for kind in ("merged", "parent_only", "macros_only"):
@@ -322,7 +365,12 @@ elif mode == "selftest":
                 top.shapes(ly.layer(pl, 0)).insert(pad.moved(off.disp))
             if variant == "seeded" and kind != "macros_only":
                 top.shapes(ly.layer(40, 0)).insert(short_box)
+                top.shapes(ly.layer(40, 0)).insert(abut_box)
             if variant == "seeded":
+                if kind != "parent_only":
+                    top.shapes(ly.layer(80, 0)).insert(core_m8)
+                if kind != "macros_only":
+                    top.shapes(ly.layer(80, 0)).insert(parent_m8)
                 if kind != "parent_only":
                     top.shapes(ly.layer(65, 0)).insert(core_via)
                 if kind != "macros_only":
