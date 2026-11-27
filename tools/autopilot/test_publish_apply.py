@@ -23,6 +23,32 @@ def coord(tmp_path, die_extra=None):
     return c
 
 
+@pytest.mark.parametrize("field", ["hold_record", "hold_records_add"])
+def test_advisory_gate_replays_only_exact_installed_hold(field):
+    old, tree = "/x/old", "/x/new"
+    record = {
+        "id": "east", "plan_sha": "s1", "items": ["east"], "route": True,
+        "release": [f"tree_ready:qc:{old}"],
+    }
+    marker = {"die": "qc", "tree": tree, "plan_sha256": "s1", "manifest_hash": "m1"}
+    candidate = {"marker": marker, field: record if field == "hold_record" else [record]}
+    installed = dict(record, release=[f"tree_ready:qc:{tree}"])
+    live = {
+        "src": tree, "event": "E1", "plan_sha256": "s1", "src_manifest_hash": "m1",
+        "hold_records": [installed],
+    }
+
+    replay = PA.advisory_gate_candidate(candidate, live, old, "E1")
+    assert not replay.get(field)
+    assert candidate[field]
+    assert live["hold_records"] == [installed]
+
+    live["hold_records"] = [dict(installed, route=1)]
+    assert PA.advisory_gate_candidate(candidate, live, old, "E1")[field] == candidate[field]
+    live["hold_records"] = [installed]
+    assert PA.advisory_gate_candidate(candidate, live, old, "E2")[field] == candidate[field]
+
+
 def test_bind_probe_reuses_candidate_contract_without_caching_producer(tmp_path):
     tools = tmp_path / "tools" / "die_plan"
     tools.mkdir(parents=True)

@@ -231,6 +231,12 @@ def _free_gb(host):
         return None
 
 
+def repoint_hold_releases(record, die, old_tree, tree):
+    old = f"tree_ready:{die}:{old_tree}"
+    new = f"tree_ready:{die}:{tree}"
+    return [new if term == old else term for term in record.get("release") or []]
+
+
 def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None, host_verify=None, verify_retained_bind=None, free_probe=None, check_bind_config=None):
     """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
     the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
@@ -408,7 +414,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             assert not any(r.get("id") == rec["id"] for r in d.get("hold_records") or []), "duplicate approved hold id"
             HR.add_record(cfg, die, rec)
         for rec in d.get("hold_records") or []:
-            rec["release"] = [("tree_ready:" + die + ":" + tree) if x == "tree_ready:" + die + ":" + expect_source else x for x in rec.get("release") or []]
+            rec["release"] = repoint_hold_releases(rec, die, expect_source, tree)
         pilot_added = False
         prior_pilots = [r for r in d.get("hold_records") or [] if r.get("auto_pilot")]
         if pilot:

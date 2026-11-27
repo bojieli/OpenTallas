@@ -54,6 +54,36 @@ def gate_argv(C, cand_path, tree, event):
     return [sys.executable, "-I", str(HERE / "publish_gate.py"), "run", "--candidate", str(cand_path), "--expect-source", tree,
             "--expect-event", str(event), "--coord", str(C), "--commit"]
 
+def advisory_gate_candidate(obj, live, previous_source, event):
+    """An exact post-apply projection already contains the holds the apply installed."""
+    candidate = {k: v for k, v in obj.items() if k != "_path"}
+    candidate["optimistic"] = True
+    marker = candidate.get("marker", candidate)
+    want = marker.get("manifest_hash") or marker.get("src_manifest_sha")
+    if (live.get("src"), live.get("event"), live.get("plan_sha256"), live.get("src_manifest_hash")) != (
+            marker.get("tree"), event, marker.get("plan_sha256"), want):
+        return candidate
+
+    installed = live.get("hold_records") or []
+
+    def already_installed(record):
+        matches = [row for row in installed if row.get("id") == record.get("id")]
+        if len(matches) != 1:
+            return False
+        expected = dict(record, release=A.repoint_hold_releases(
+            record, marker["die"], previous_source, marker["tree"]))
+        expected.pop("die", None)
+        return json.dumps(expected, sort_keys=True) == json.dumps(matches[0], sort_keys=True)
+
+    if candidate.get("hold_records_add"):
+        candidate["hold_records_add"] = [
+            record for record in candidate["hold_records_add"] if not already_installed(record)
+        ]
+    if candidate.get("hold_record") and already_installed(candidate["hold_record"]):
+        candidate.pop("hold_record")
+    return candidate
+
+
 # FABLE-FLOW-1400 (1): QC sat 3.2 h on 56 BIND-STALE rows because the candidate's kit_rtl.asbuilt named the N2BBR clock table while its bind was made
 # on N4DBQ.  apply now runs kit_topology.bind_matches (the wave's own bind preflight) on the candidate, on a host that holds the tree, BEFORE the switch.
 PROBE_CAND = r"""
@@ -974,7 +1004,8 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     if not a.no_gate:
         # the gate's projection must see the candidate as optimistic too (guard/smoke advisory); written next to the receipt
         gc = Path(res["receipt"]).with_suffix(".gate_candidate.json")
-        gc.write_text(json.dumps(dict({k: v for k, v in obj.items() if k != "_path"}, optimistic=True), indent=1))
+        candidate = advisory_gate_candidate(obj, live_new, a.expect_source, res.get("event"))
+        gc.write_text(json.dumps(candidate, indent=1))
         unit = "pubgate-%s-%d" % (res["applied"], int(time.time()))
         r = run(["systemd-run", "--user", "--unit", unit, "--collect", "--quiet", "--nice=10", *gate_argv(C, gc, (obj.get("marker") or obj)["tree"], res.get("event"))],
                 capture_output=True, text=True, timeout=120)
