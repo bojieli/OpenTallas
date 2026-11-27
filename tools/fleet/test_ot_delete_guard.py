@@ -62,6 +62,50 @@ class Guard(unittest.TestCase):
             os.environ.pop("OT_GUARD_LIST", None)
 
 
+def test_live_explorer_environment_covers_store_repo_and_shared_state(tmp_path, monkeypatch):
+    # Neither argv, cwd nor an open file names any of these protected paths.
+    script = tmp_path / "tools/explorer/server.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("import sys; print('ready', flush=True); sys.stdin.read()\n")
+    store = f"{S}/guard-explorer-fixture/store"
+    state = f"{S}/guard-explorer-fixture/state"
+    code = f"{S}/guard-explorer-source"
+    private_value = f"{S}/guard-must-not-capture"
+    env = dict(os.environ, LV_STORE=store, FLEET_VIZ_STATE=state, FLEET_VIZ_REPO=code,
+               UNKNOWN_SECRET=private_value, TOKEN_DESIGN_MAP="relative-not-a-dataset")
+    client = subprocess.Popen([sys.executable, "-I", "server.py"], cwd=script.parent, env=env,
+                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    try:
+        assert client.stdout.readline().strip() == "ready"
+        live = g._live_text()
+    finally:
+        client.communicate(timeout=10)
+
+    assert {store, state, code} <= live.datasets
+    assert private_value not in live and private_value not in live.datasets
+    assert "relative-not-a-dataset" not in live.datasets
+    for path in (store, store + "/objects/42", os.path.dirname(store), state, code + "/physical", code + "/results"):
+        assert g.refuse(path, protected=set(), ptext=live) == "live Explorer service dataset"
+    assert g.refuse(store + "-old", protected=set(), ptext=live) is None
+    assert g.refuse(code + "-old", protected=set(), ptext=live) is None
+    monkeypatch.setattr(g, "load_list", lambda: (None, "missing list"))
+    assert g.refuse(store, ptext=live) == "live Explorer service dataset"
+
+
+def test_guard_does_not_read_unrelated_process_environment(tmp_path):
+    script = tmp_path / "server.py"
+    script.write_text("import sys; print('ready', flush=True); sys.stdin.read()\n")
+    unrelated = f"{S}/guard-unrelated-service"
+    client = subprocess.Popen([sys.executable, "-I", str(script)], env=dict(os.environ, LV_STORE=unrelated),
+                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    try:
+        assert client.stdout.readline().strip() == "ready"
+        live = g._live_text()
+    finally:
+        client.communicate(timeout=10)
+    assert unrelated not in live and unrelated not in live.datasets
+
+
 class Integration(unittest.TestCase):
     def test_autoclean_delete_calls_guard(self):
         spec = importlib.util.spec_from_file_location("ot_autoclean_x", str(H / "ot-autoclean.py")); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
