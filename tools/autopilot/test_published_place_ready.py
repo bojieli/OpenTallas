@@ -293,7 +293,11 @@ def test_one_retained_floorplan_claim_checks_content_and_checkpoint(tmp_path):
     ref = ready.producer("capture", capture)
     raw_source = {"manifest_hash": MANIFEST, "host": "epyc7", "from": "verify", "mode": "require"}
     put(origin.parent / "result.json", dict(result, src_manifest=raw_source, published_place_ready=ref))
-    prior = tmp_path / "private_specs/REVIEWED-STATION-PLACE" / ("s81_" + ref["sha256"])
+    real_ap = tmp_path / "hub-coord"
+    real_ap.mkdir()
+    ap = tmp_path / "coord"
+    ap.symlink_to(real_ap, target_is_directory=True)
+    prior = ap / "private_specs/REVIEWED-STATION-PLACE" / ("s81_" + ref["sha256"])
     put(prior / "spec.json", spec)
     claim = dict(spec=spec, ref=ref, review={"verdict": "GOOD", "form": capture["form"]}, attempt=str(prior))
     assert ready.producer("claim-private", claim)["kit"] == str(kit)
@@ -303,7 +307,7 @@ def test_one_retained_floorplan_claim_checks_content_and_checkpoint(tmp_path):
     sha = put(odb, {"simulated": "native floorplan"})
     put(prior / "result.json", dict(stage="floorplan", goal="floorplan", verdict="PASS", ran_on="epyc7",
                                     evidence=f"epyc7:{odb}", floorplan_sha256=sha, published_place_ready=ref))
-    _, handoff = ready.read_private_floorplan(origin, tmp_path)
+    _, handoff = ready.read_private_floorplan(origin, ap)
     assert handoff["floorplan_resume"] == {"attempt": str(prior), "sha256": sha}
     design = kit / "rtl/exact.v"
     design.touch()  # The runner's ownership change invalidates stats and preserves content.
