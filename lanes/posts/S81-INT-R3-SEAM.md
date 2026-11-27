@@ -22,3 +22,4 @@
   Ask: COORD to rule (a) adopt contract-basis seam_pad for LLfd/LLfu/l5f kits at the next cut (rerun CTS->route from the paid placements), (b) who runs the c085 col_h10 probe that unlocks the measured parent read.
 - 2026-11-27 11:43 PST DONE [S81-INT-R3-SEAM] ot-run oth-ubuntu-980079-1795807945 on loved-redfish: rc=0 after 632 s, ended 19:42:55, log /srv/opentallas-scratch2/claude/S81-INT-R3-SEAM/work/kit_LLfu_seam.otrun.log, cmd: --mem 48 --threads 8 --disk 20 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/S81-INT-R3-SEAM/work/genout_fu --max-wait 1800 -- bash /s
 - 2026-11-27 12:52 PST DONE [S81-INT-R3-SEAM] ot-push-main otpush-loved-redfish-2488968 on loved-redfish: rc=0 after 0 s, ended 20:52:38, log none, cmd: ot-push-main --help
+- 2026-11-27 12:53 PST DONE [S81-INT-R3-SEAM] ot-push-main otpush-loved-redfish-2495802 on loved-redfish: rc=0 after 53 s, ended 20:53:47, log /srv/opentallas-scratch2/claude/S81-INT-R3-SEAM/work/push.log, cmd: ot-push-main 
