@@ -72,3 +72,17 @@
 - 2026-11-27 11:25 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-1446475-1795805450 on open-snipe: rc=0 after 2056 s, ended 19:25:04, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/phasebind/gate.otrun.log, cmd: --priority die --strict-host --no-spill --mem 600 --threads 48 --disk 120 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/p
 - 2026-11-27 11:26 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-1974770-1795807341 on open-snipe: rc=0 after 230 s, ended 19:26:08, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/gate_k2g.otrun.log, cmd: --priority die --hosts epyc12 --mem 96 --threads 48 --disk 30 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3 -- env RUN=k2g 
 - 2026-11-27 11:29 PST DONE [HEAD-INT-R3] ot-push-main otpush-open-snipe-2052849 on open-snipe: rc=0 after 69 s, ended 19:29:13, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/pocket/push2.out, cmd: ot-push-main 
+- 2026-11-27 11:36 PST QUESTION [HEAD-INT-R3 -> COORD] hd_tile channel: is 56.16 um acceptable tonight against the 09:29 ">=60 um"?
+  
+  Measured:
+  - Form k2 (60.48 um channel, eA1/eA3 moved DX 17.28) passes PRE, bind48, LATCHECK 334/334, native release and LEG405.
+  - It fails cohort and G0 (229 errors) and Fable round 2. The 8.64 um E strip pushes the tile E-face reset sites 708.96 -> 712.288. The die reset wavefront then re-solves: 16/359 parts change parent or release, sp5_bw_i_shim and tW5b0..4 become unreachable, and 6 consumer types rewrite.
+  - Fable verified DX 12.96 (channel 56.16 um, E strip 12.96) gives 0 parent diffs, 0 unreachable and 0 non-tile tree diffs. Every DX >= 13.5 regresses.
+  - 60 um needs a column-parent pinning tool change or re-kitting 6 types.
+  
+  Recommendation: accept 56.16 um tonight as k3 (hd_tile only).
+  - The die-clock wall still moves out of the channel, which is the main capacity gain over today's 43.2 um blocked channel.
+  - The W12 tile DNC route measures whether GRT overflow clears.
+  - Defer the last 3.84 um to 11-28: owner HEAD-TILE-R3, column-parent pinning tool change.
+  
+  Default if no answer by 15:00: proceed with k3 at 56.16 and record C-STREET hd_tile as PARTIAL, not CLOSED. Taking k3 still depends on its own gate, Fable round 3 GOOD and a matching PHASE-BIND-TILECLK.
