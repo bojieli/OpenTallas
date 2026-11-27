@@ -1,42 +1,48 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126",
- "main_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
- "manifest_hash": "d7c233ac9db1889651aefa47d66d99da037521f74d16f3ed7098ebb45d4cf194",
- "src_manifest_sha": "d7c233ac9db1889651aefa47d66d99da037521f74d16f3ed7098ebb45d4cf194",
- "tools_sha": "1f7f9554db1942db5aa49f32010fdec9f5a2f7c2",
+ "tree": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126",
+ "main_sha": "7a4ba2b79cffa74a220ba47006895232093b7d80",
+ "manifest_hash": "121aa2c4217fa7a88cb2f9a93ce9973be6cb4d5884c82f56893cc017d25ed366",
+ "src_manifest_sha": "121aa2c4217fa7a88cb2f9a93ce9973be6cb4d5884c82f56893cc017d25ed366",
+ "tools_sha": "7a4ba2b79cffa74a220ba47006895232093b7d80",
  "hosts": [
   "epyc8",
-  "intel2"
+  "intel2",
+  "epyc7"
  ],
- "plan": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_pcstrap_1126.json",
- "plan_sha256": "4c5a163e9a21cf78b927b6991fa220771900ad051f36d337694b8a2da98e7f13",
- "asbuilt": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_g6_static_io_pc_pv_1126.json",
+ "plan": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json",
+ "plan_sha256": "5bee15cebae2954460d596d7f85af41cac82fc7db1a8fbc5bd7f1a4be012e5f6",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_g6_static_io_pc_pv_1126.json",
  "asbuilt_sha256": "ff70cc4a0d609df7d95cadae1f829d6b1f00195063c3f11e02d89c1bdea86029",
- "sidecar": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json",
  "sidecar_sha256": "ae84c4ce87db9af9113305529b7e2d7338184e41ece08e91435220522c5174e3",
- "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126_bind_1126095500",
+ "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300",
+ "smoke": "PASS",
+ "smoke_detail": "Whole strict bind 93/93, as-built LATCHECK 2746/2746 and G0; exact combined PRE and formal dry GEN referenced separately.",
+ "band_base": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_pcstrap_1126.json",
+ "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g5_sinkbins_street_1125.json",
  "config": {
-  "event": "KV-A5t9-g6v6r3-1126",
-  "plan_event": "KV-A5t9-g6v6r3-1126",
-  "tools_sha": "1f7f9554db1942db5aa49f32010fdec9f5a2f7c2",
+  "event": "KV-A5t9-g6v6r3-c2100d-1126",
+  "plan_event": "KV-A5t9-g6v6r3-c2100d-1126",
+  "tools_sha": "7a4ba2b79cffa74a220ba47006895232093b7d80",
   "tools_from_rt": true,
   "tools_refresh": false,
   "gen_host": "epyc8",
   "gen_hosts": [
    "epyc8",
-   "intel2"
+   "intel2",
+   "epyc7"
   ],
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json"
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_g6_static_io_pc_pv_1126.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126_bind_1126095500",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_a5t9_g6_static_io_pc_pv_1126.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300",
    "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
   },
   "only_items": [
@@ -46,7 +52,7 @@
   ],
   "only_items_regen": false,
   "review_before_route": {
-   "event": "KV-A5t9-g6v6r3-1126",
+   "event": "KV-A5t9-g6v6r3-c2100d-1126",
    "items": [
     "kv3_hgi",
     "kv3_hgi_v7",
@@ -60,30 +66,6 @@
    "*"
   ]
  },
- "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
-  "OT_GRT_NONPORT_HOLD": "1",
-  "OT_CORE_TAP_REACH_UM": "0",
-  "OT_PREGRT_FF_HOLD_AUTO": "-1",
-  "OT_MAX_BUFFER_PERCENT": "100",
-  "OT_GRT_POST_MAX_S": "0",
-  "OT_HOLD_STOP_PS": "-1000000",
-  "OT_GRT_ALLOW_CONGESTION": "1",
-  "OT_CLAND_STRIP_DENS": "1.0",
-  "OT_TT_SETUP_REPAIR": "both",
-  "OT_PG_DIE_PHASE": "1",
-  "OT_PGCAP": "1",
-  "OT_PG_TRACK_TRUTH": "1",
-  "OT_PG_PIN_CHECK": "1",
-  "OT_KV_HEAD_KST": "2",
-  "OT_PLACE_MAX_TRANSITION": "320",
-  "OT_LAND_RESERVE": "1",
-  "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
- },
- "records": {},
- "smoke": "PASS",
- "smoke_detail": "G4 to G5 exact SINKBINS12 plus three PV leg/aisle adjustments and IO_COR R1; whole strict 93/93, LAT 2746/2746 and G0 0/0; 19 site-matched sys_SD_v1 estimated TT/FF timing rows. VPORT parity unresolved physically; reviewed-route holds preserved.",
- "band_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g4_rel_tree_1125/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g4_sysc_pvfold_1125.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }
