@@ -855,10 +855,10 @@ def cmd_submit(a):
         # nohup/new-session does not leave the trigger's systemd cgroup: oneshot exit kills those clients.
         # A separate user service owns each ot-run client until its job has finished.
         unit = "flow-canary-" + die.replace("_", "-") + "-" + sha[:9] + "-" + stamp.replace("_", "-")
-        r = launch_client(unit, cmd)
         mp = run / "canary_meta.json"
-        meta = jload(mp) or {}
         meta["client_unit"] = unit
+        mp.write_text(json.dumps(meta, indent=1) + "\n")
+        r = launch_client(unit, cmd)
         if r.returncode:
             meta["submission_error"] = r.stderr.strip()
             result = dict(schema="opentallas.flow_canary.v1", die=die, item=c["item"], src=sha,
@@ -868,7 +868,6 @@ def cmd_submit(a):
             mp.write_text(json.dumps(meta, indent=1) + "\n")
             print(f"CANARY {die} NOT RUN: transient client service failed: {r.stderr.strip()}")
             return r.returncode
-        mp.write_text(json.dumps(meta, indent=1) + "\n")
         print(f"CANARY {die} client service {unit}")
     if getattr(a, "plan_review_status", None):
         Path(a.plan_review_status).write_text(json.dumps({"deferred": deferred}) + "\n")
