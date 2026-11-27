@@ -1,4 +1,20 @@
 # CODEX takeover coverage 2026-11-01 05:48 PST
+
+<!-- ACTIVE-TAKEOVER-NOV27 -->
+## Active takeover coverage, 2026-11-27 00:47 PST
+
+The 23:48 sweep counted 469 unsigned partition rows across the four active dies. GUNIT was the only unmapped row and now has a live source owner. Existing family labels are checked against real active owners and work on each distinct defect. HBM design is parked. Current results and exact artifacts are in CODEX-LOG.md and the linked lane posts.
+
+| Work | Active ownership and next release |
+| --- | --- |
+| HEAD East LEP | head_east joins r7, qc_tt_reach owns radius/clone placement, closure_sweep owns LEPK pin source, Astra reviews full coupled H/V/column capacity against actual 9f8ec8. Stage and root budgets fixed where known. Held for actual source closure. |
+| HEAD Host W and integration | head owns protected timed-pad area and revised six-macro corridor. Turn B and CTL N actual placements preserved, sparse physical ownership + parent timing remain. East TX scoped Tile ownership and eight-cycle source option held at parent. |
+| S81 collector | visual_s81 owns P2 named prepared source reuse and gate, clockclasses owns H10 W0 both macro channels, s81_serdes owns D8 internal timing and joined p5, token_qwen p6 east/central, bind_transport H9 r1 FRAME live hooks, visual_qc Y_X2, s81_reset_publish_cohort T5. H9 r2 regions preserved privately pending exact physical integration. |
+| S81 other partitions and cores | s81 owns GUNIT reach and L5f dependency, s81_xg_split XS4 capacity retaining synthesis/LEC, visual_s81_slices exact five KV leaves, head_west true active DSDV source, token_ds SVC LO source, kv_hubwo VN B standalone E7 placement. Ordinary leaves, SVC HI, data SerDes and LEPW retained source results handed to S81 integration. |
+| QC | qc owns 77f formal Fri 09 and TT/native59 standard resume. Coll_s kv_hubeo, E8 unit487557, place-only from paid synthesis/floorplan. qc_collftm_cohort FT family and Coll_n with scoped macro/PHY/status. qc_sitefix exact FTc tool GREEN now handed to QC and working independent native-reset throughput. qc_east_capacity 17 CB types, head_hostw_hold_classes six east small tiles, fleet west small tiles after East H handoff. cl95/cl086 retained final DRT under qc_cl7b_release. |
+| KV | kv Ei, current D5bee hold and outer integration. HG p5/p6/v3 corrected strict 3/3, source integration under KV. class_tracker PV3 and prior families HG/HGI/PC/PCV1/PV/F5/Hub C have distinct source packets. Read actual parent apertures before release. |
+| ROM / Explorer / fleet | seal_perf exact archive native matrix and ROM final batches E7/I1/E11. Existing hourly service and automatic aggressive cleanup on live hosts. Preserve automation and live outputs. |
+
 All live lanes assigned; historical lane steps retained below for gap detection. Owners collect live jobs before launching successors.
 
 ## Live coverage and next actions — 2026-11-01 05:55 PST
