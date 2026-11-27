@@ -49,7 +49,7 @@ HEAD-SMALL-TAPS	HEAD	11 small types rebase e5deaae4	a27edf6bdbb05a60c	2026-11-25
 HEAD-IOHOLD-PARENT	HEAD	parent io hold n4/mesh_e	a595511f756d699a8	2026-11-25 21:54	dead	HEAD-INT-R2
 C1+C2 lep bank	HEAD	lep bank seat/tap group	ad98866c80c468c9c		dead	HEAD-INT-R2
 FLEET-OPS-R2	FLEET	flow F items, clock_taps copy trap, PLATEAU rules	ad2d76f087a78c03e	2026-11-26 05:12	dead	FLEET-OPS-R4
-VIS-REOWN	ALL	render census, VIS-CAUSES	a8d3b2a5bc9130a3e	2026-11-27 06:06	dead	COORD
+VIS-REOWN	ALL	render census, VIS-CAUSES	a8d3b2a5bc9130a3e	2026-11-27 07:06	dead	COORD
 AUTO-EXPORT	ALL	signed export	a89c6782f26cfd184	2026-11-26 21:55	dead	COORD
 Fable hw_r13 reviewer	HEAD	review r18 mesh/host_e	ad8e143a56cb1d898		dead	HEAD-INT-R2
 ADOPT-CENSUS-1800			-	2026-11-20 19:05	dead	COORD
@@ -1343,6 +1343,7 @@ codex-serdes-t4-fclk-export-1126			-	2026-11-26 05:41	dead	COORD
 codex-tt-auth8-su-1126			-	2026-11-26 19:49	dead	COORD
 compose-fast			-	2026-11-26 20:11	dead	COORD
 disk-reclaim-rt			-	2026-11-25 05:08	dead	COORD
+explorer-store-r1			-	2026-11-27 00:45	dead	COORD
 fable-fix-kv-hub-r3-clone	KV		-	2026-11-21 10:51	dead	KV-INT-R2
 fam-lepe			-	2026-11-21 02:14	dead	COORD
 fam-s81-serdes-core	S81		-	2026-11-21 09:26	dead	S81-INT-R2
@@ -1376,6 +1377,7 @@ romw-1119			-	2026-11-26 04:42	dead	COORD
 rrgen-1530			-	2026-11-20 17:56	dead	COORD
 rrgen-r2			-	2026-11-21 01:01	dead	COORD
 rt-prune-refs			-	2026-11-25 01:18	dead	COORD
+s81-gunit-ownership-1126	S81		-	2026-11-27 00:25	dead	S81-INT-R2
 s81-j6-r2-clone	S81		-	2026-11-21 07:35	dead	S81-INT-R2
 s81-j6-r4	S81		-	2026-11-21 18:50	dead	S81-INT-R2
 s81-j9-r6	S81		-	2026-11-24 00:20	dead	S81-INT-R2
