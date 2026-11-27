@@ -32,3 +32,7 @@
 - 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1237238 on tolerant-swine: rc=0 after 1 s, ended 23:33:42, log none, cmd: ot-push-main 
 - 2026-11-26 23:33 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1237263 on tolerant-swine: rc=4 after 1 s, ended 23:33:42, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
 - 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1239547 on tolerant-swine: rc=0 after 0 s, ended 23:33:42, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1239622 on tolerant-swine: rc=4 after 0 s, ended 23:33:42, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1240612 on tolerant-swine: rc=0 after 1 s, ended 23:33:43, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1240153 on tolerant-swine: rc=0 after 1 s, ended 23:33:43, log none, cmd: ot-push-main 
+- 2026-11-26 23:33 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1238811 on tolerant-swine: rc=0 after 1 s, ended 23:33:43, log none, cmd: ot-push-main --dry-run
