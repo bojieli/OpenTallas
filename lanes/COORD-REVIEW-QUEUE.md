@@ -19186,3 +19186,5 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.
 - 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057108 on tolerant-swine: rc=2 after 0 s, ended 12:21:01, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
 - 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057702 on tolerant-swine: rc=3 after 0 s, ended 12:21:02, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1057367 on tolerant-swine: rc=4 after 0 s, ended 12:21:02, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 12:21 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1058608 on tolerant-swine: rc=4 after 1 s, ended 12:21:03, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
