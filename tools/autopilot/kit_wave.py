@@ -2708,7 +2708,7 @@ def allowlist_stale_step(cfg, st, die, d, picks, skip, now=None, post_fn=None, d
         book.pop(die, None)
         return False
     rec = book.setdefault(die, {"since": now})
-    if now - float(rec.get("since") or now) <= ALLOW_STALE_AFTER or not HP.due(rec, "posted", now):
+    if now - float(rec.get("since", now)) <= ALLOW_STALE_AFTER or not HP.due(rec, "posted", now):
         return False
     owner = die_owner(cfg, die)[0]
     shown = " ".join(sorted(allowed)[:12]) or "(empty)"
@@ -14974,9 +14974,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 try:                                         # P-WAVE-ALLOWLIST-STALE 11-27: advisory, never blocks
-                    allowlist_stale_step(cfg, st, die, d, picks, skip, dry=AP.DRY)
+                    allowlist_stale_step(cfg, st, die, d, picks, skip, dry=bool(AP is not None and getattr(AP, "DRY", False)))
                 except Exception as _e:
-                    AP.log(f"KIT-WAVE ALLOWLIST-STALE {die} check failed: {type(_e).__name__}: {_e}")
+                    (AP.log if AP is not None else print)(f"KIT-WAVE ALLOWLIST-STALE {die} check failed: {type(_e).__name__}: {_e}")
                 if picks and FG.stops_off_die(cfg, die) and d.get("families_first") is not False:
                     try:                                         # OWNER 11-20 (#8): representatives first, siblings on spare capacity, held while the family's representative fails
                         _all = list(picks)
