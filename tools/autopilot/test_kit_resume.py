@@ -141,6 +141,71 @@ class Fingerprint(unittest.TestCase):
                 self.assertEqual((dec, start), ("resume", want), d)
                 self.assertEqual(d["reuse"], list(KR.STEPS[:KR.IDX[want]]))
 
+    def test_landing_contract_native_seats_and_single_band_rects_retry_place(self):
+        contract = {
+            "pins": {"clk": {"layer": "M8", "xy_um": [10, 10]}},
+            "native_stage_groups": {
+                "schema": "opentallas.native_stage_groups.v2",
+                "contents": [{"content": "u_core", "module": "core", "params": {"W": 8}}],
+                "groups": [{"prefix": "u_core.data", "tag": "stage:data", "rect_um": [30, 50, 40, 60]}],
+            },
+            "bands": {"t_i": {"instance": "u_cland_t_i", "ring_place": "ff", "width": 8, "rect_um": [8, 10, 30, 40]}},
+        }
+        (self.oK / KR.LANDING_CONTRACT).write_text(json.dumps(contract))
+        old = man(self.oK)
+        for key in ("native", "band"):
+            edited = json.loads(json.dumps(contract))
+            if key == "native":
+                edited["native_stage_groups"]["groups"][0]["rect_um"][3] = 61
+            else:
+                edited["bands"]["t_i"]["rect_um"][3] = 41
+            new = self.new_kit(lambda files: files.update({KR.LANDING_CONTRACT: json.dumps(edited)}))
+            decision = KR.decide(new, old)
+            self.assertEqual(decision["reuse"], ["synth", "floorplan"], decision)
+            self.assertEqual(decision["start"], "place", decision)
+            self.assertEqual(old["fingerprints"]["synth"], new["fingerprints"]["synth"])
+            self.assertNotEqual(old["fingerprints"]["place"], new["fingerprints"]["place"])
+        cached = json.loads(json.dumps(old))
+        cached["files"][KR.LANDING_CONTRACT].pop("landing_place_sha256")
+        self.assertFalse(KR.saved_stage_semantics_usable(new, cached))
+
+    def test_landing_contract_missing_unknown_and_early_changes_restart_synth(self):
+        contract = {"pins": {"clock": [1, 2]}, "bands": {
+            "t_i": {"instance": "u_cland_t_i", "ring_place": "ff", "width": 8, "rect_um": [8, 10, 30, 40]},
+            "t_o": {"instance": "u_cland_t_o", "ring_place": "ff", "width": 8, "rect_um": [50, 60, 70, 80]},
+        }}
+        (self.oK / KR.LANDING_CONTRACT).write_text(json.dumps(contract))
+        old = man(self.oK)
+        for edit in (
+            lambda p: p["pins"].update(clock=[2, 3]),
+            lambda p: p["bands"]["t_i"].pop("rect_um"),
+            lambda p: p["bands"]["t_i"].update(rect_um=[8, 40, 30, 10]),
+            lambda p: p["bands"]["t_i"].update(rects_um=[[8, 10, 30, 40]]),
+            lambda p: p.update(native_stage_groups={"schema": "unrecognised", "groups": []}),
+        ):
+            edited = json.loads(json.dumps(contract))
+            edit(edited)
+            new = self.new_kit(lambda files: files.update({KR.LANDING_CONTRACT: json.dumps(edited)}))
+            decision = KR.decide(new, old)
+            self.assertEqual(decision["decision"], "full", decision)
+            self.assertEqual(decision["start"], "synth", decision)
+
+        # An actual early reader supersedes the typed generated default.
+        (self.oK / "config.mk").write_text(CONFIG + "export PRE_FLOORPLAN_TCL = /work/custom.tcl\n")
+        (self.oK / "custom.tcl").write_text("set fp [open /work/landing_contract.json r]\n")
+        old = man(self.oK)
+        edited = json.loads(json.dumps(contract))
+        edited["bands"]["t_i"]["rect_um"][3] = 41
+
+        def add_early_reader(files):
+            files["config.mk"] = (self.oK / "config.mk").read_text()
+            files["custom.tcl"] = (self.oK / "custom.tcl").read_text()
+            files[KR.LANDING_CONTRACT] = json.dumps(edited)
+
+        new = self.new_kit(add_early_reader)
+        self.assertNotIn("landing_place_sha256", new["files"][KR.LANDING_CONTRACT])
+        self.assertEqual(KR.decide(new, old)["start"], "synth")
+
     def test_pregrt_hold_requires_original_cts_checkpoint(self):
         def add_hook(files):
             files["pregrt_ff_hold.tcl"] = "write_db /work/4_cts.odb"
