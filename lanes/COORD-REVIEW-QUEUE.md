@@ -20299,3 +20299,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963722 on tolerant-swine: rc=3 after 0 s, ended 15:32:14, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
 - 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963496 on tolerant-swine: rc=4 after 0 s, ended 15:32:14, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
 - 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1964250 on tolerant-swine: rc=4 after 0 s, ended 15:32:15, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1969508 on tolerant-swine: rc=4 after 0 s, ended 15:32:23, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
