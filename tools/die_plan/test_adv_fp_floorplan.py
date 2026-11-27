@@ -175,3 +175,37 @@ def test_flat_stale_kit_is_ignored():
     t = _type(cells=998239)
     stale = {"T": {"last": {"cells": 5000000, "t0": time.time() - 6 * 86400, "stage": "place"}}}   # svc 11-20 flat kits predate the cores
     assert not any("ADV-FP-OVERSIZE" in x for x in _flat_lines(t, cache=stale))
+
+def test_colocated_station_spans_price_each_active_rank_once(monkeypatch):
+    from adv_fp_floorplan import aligned_edge_rank_worst, findings
+
+    # Actual fe96 P2 geometry in the type frame, excluding unrelated cores.
+    kind = "col_h9_r0_p2__fixture"
+    typed = {
+        "outline_um": [1442.88, 1278.72],
+        "buses": [{"name": "frame_int_o0", "width": 1167}, {"name": "frame_int_i0", "width": 261}],
+        "internal_stations": [
+            {"conn": "bus:frame_int_o0", "from_um": [1410.744, 604.854],
+             "regs_um": [[1410.744, 951.265], [1391.788, 1278.72], [1045.377, 1278.72],
+                         [698.966, 1278.72], [352.555, 1278.72]], "to_um": [132.946, 1278.72]},
+            {"conn": "bus:frame_int_i0", "from_um": [288.174, 1278.72],
+             "regs_um": [[591.179, 1278.72], [894.183, 1278.72], [1197.188, 1278.72]],
+             "to_um": [1352.232, 1130.759]},
+        ],
+    }
+    raw_plan = {"partition_types": {kind: typed}}
+    row = aligned_edge_rank_worst(typed, {}, kind)
+    assert row["bits"] == 1168 + 262
+    assert row["span_um"] == (288.174, 1197.188)
+    assert row["span_um"][0] < 1007.5 < row["span_um"][1]
+    assert round(row["ratio"], 3) == 2.485
+    assert any(line.startswith("WARN ADV-FP-STREET ") for line in findings(raw_plan, None))
+    monkeypatch.setenv("OT_FP_BLOCK", "1")
+    assert any(line.startswith("FAIL ADV-FP-STREET ") for line in findings(raw_plan, None))
+    assert aligned_edge_rank_worst(typed, {}, "other_fixture") is None
+    separated = copy.deepcopy(typed)
+    for site in separated["internal_stations"][0]["regs_um"][1:]:
+        site[1] -= 27
+    assert aligned_edge_rank_worst(separated, {}, kind) is None
+    typed["internal_stations"][0]["sites"] = "float"
+    assert aligned_edge_rank_worst(typed, {}, kind) is None

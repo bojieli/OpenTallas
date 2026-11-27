@@ -9,6 +9,8 @@ Plan-only floorplan classes that no static check named, so 10-29 h type kits fou
                Core interiors have zero routing capacity (cap-0 gcells: hgi_v8 21.7k of 33.5k overflow sat inside head2_e4/head3_e4/head2_e5),
                so a leg whose straight pin-to-pin path crosses a hard-core box cannot run there: it detours through the streets that
                border that core, and its bits are also counted on those streets (KV-NOROW 11-25, COORD ruling 2).
+  H9 R0 P2 frame_int aligned edge ranks: the same street warning includes a
+               local stripe estimate from overlapping serial rank spans.
   FT-CROSSES-CORE (report only, always WARN) the lanes/bits whose planned legs cross hard-core interiors, per type.
   FP-OVERSIZE  plan `cells` over the 400k single-run cap (kv3_pc_v3 998k).  Default: the plan number as written.  With
                OT_FP_OVERSIZE_FLAT=1 (C-OVERSIZE 11-26): a type with hard_cores has type.cells = its hard-core content too, so
@@ -26,10 +28,13 @@ import math
 
 from schema import placed_macro_boxes
 import street_pg as SP
+from infra_sites import station_bits, station_epoch_modes
 
 CHECK = "FP-FLOORPLAN"
 TV, TH = 48.18, 57.55          # tracks per um M2-M8 (auto_geom), vertical / horizontal street
 USABLE = 0.6
+RANK_WINDOW_UM = 10.0       # same local stripe as AUTO-GEOM; tests full M2-M8 capacity
+ALIGNED_RANK_FAMILY = "col_h9_r0_p2__"  # validated against the bound, placed frame_int cohort
 STREET_MAX = 1.0
 CELL_CAP = 400000
 FLAT_KIT_MAX_AGE_S = 5 * 86400   # OT_FP_OVERSIZE_FLAT: oldest retained kit synth count taken as the flat count
@@ -225,6 +230,74 @@ def street_worst(t, pg=False):
     return worst
 
 
+
+def aligned_edge_rank_worst(t, epochs, typename):
+    """Shared edge stripe pressure from undispersed H9 R0 P2 frame_int station legs.
+
+    Consecutive legs end where the next starts. Price simultaneous opposing
+    buses at each true overlap; a serial chain does not multiply its width.
+    Rank centres with explicitly spread seats or route geometry cannot justify
+    an aligned-span estimate.
+    """
+    outline = t.get("outline_um")
+    if not outline or not typename.startswith(ALIGNED_RANK_FAMILY):
+        return None
+    buses = {b["name"]: b for b in t.get("buses", []) if b["name"].startswith("frame_int_")}
+    spans = collections.defaultdict(list)
+    rank_seats = t.get("relay_rank_sites") or {}
+    for st in t.get("internal_stations", []):
+        conn = st.get("conn") or ""
+        bus = conn.removeprefix("bus:")
+        if bus not in buses or not conn.startswith("bus:"):
+            continue
+        if any(st.get(k) for k in ("bit_sites_um", "face_bit_sites_um", "bit_route", "leg_order", "sites")):
+            continue
+        if any(bus in name for name in rank_seats):
+            continue
+        bits = station_bits(st, buses, epochs, typename)
+        if bits is None:
+            continue
+        points = [st["from_um"], *st.get("regs_um", []), st["to_um"]]
+        for a, b in zip(points, points[1:]):
+            for axis in (0, 1):
+                pos, end = a[1 - axis], outline[1 - axis]
+                if abs(b[1 - axis] - pos) > GEOM_EPS or abs(b[axis] - a[axis]) <= GEOM_EPS:
+                    continue
+                edge = min(pos, end - pos)
+                if edge < -GEOM_EPS or edge >= RANK_WINDOW_UM:
+                    continue
+                low, high = sorted((a[axis], b[axis]))
+                spans[axis, round(pos, 6)].append((low, high, bus, bits))
+
+    best = None
+    for (axis, pos), legs in spans.items():
+        if len({bus for _, _, bus, _ in legs}) < 2:
+            continue
+        ends = sorted({x for lo, hi, _, _ in legs for x in (lo, hi)})
+        cap = min(outline[1 - axis], RANK_WINDOW_UM) * (TH, TV)[axis]
+        for lo, hi in zip(ends, ends[1:]):
+            at = (lo + hi) / 2
+            demand = collections.Counter()
+            for start, end, bus, bits in legs:
+                if start <= at < end:
+                    demand[bus] += bits
+            if len(demand) < 2:
+                continue
+            ratio = sum(demand.values()) / cap
+            direction = ("H", "V")[axis]
+            ranked = demand.most_common()
+            if best is None or ratio > best["ratio"]:
+                best = dict(ratio=ratio, direction=direction, rank_um=pos,
+                            span_um=(lo, hi), cut_um=at, bits=sum(demand.values()),
+                            tracks=cap, buses=ranked)
+            elif (best["direction"], best["rank_um"], best["span_um"][1], best["buses"]) == (direction, pos, lo, ranked):
+                # Preserve the individual legs above, but report the whole
+                # continuous span when their overlapping load stays equal.
+                first = best["span_um"][0]
+                best.update(span_um=(first, hi), cut_um=(first + hi) / 2)
+    return best
+
+
 def overlaps(t):
     """names of hard-core pairs that overlap, and of cores outside the outline."""
     cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
@@ -271,21 +344,35 @@ def findings(raw, plan_path=None, tree=None, **kw):
     lvl = "FAIL" if os.environ.get("OT_FP_BLOCK") == "1" else "WARN"
     out = []
     try:
-        pt = (raw or {}).get("partition_types") or {}
+        raw = raw or {}
+        pt = raw.get("partition_types") or {}
     except AttributeError:
         return out
     n_street = n_big = n_ovl = 0
     pg = pg_enabled(raw)
+    parts = {part["name"]: part for part in (raw.get("partitions") or [])
+             if isinstance(part, dict) and "name" in part and str(part.get("type")).startswith(ALIGNED_RANK_FAMILY)}
+    epochs = station_epoch_modes(parts, raw.get("ports") or []) if parts else {}
     for name, t in sorted(pt.items()):
         try:
             w = street_worst(t, pg)
-            if w and w[0] > STREET_MAX:
-                n_street += 1
+            street_over = bool(w and w[0] > STREET_MAX)
+            if street_over:
                 tracks = (TV if w[1] == "V" else TH) * (SP.pg_factor("V" if w[1] == "V" else "H") if pg else 1.0)
                 required = w[4] / (tracks * USABLE)
                 out.append(f"{lvl} ADV-FP-STREET {name}{' [PG-adjusted]' if pg else ''}: lane demand {w[0]:.2f} > {STREET_MAX} on {w[1]} cut {w[2]} um street {w[3]} um "
                            f"({w[4]} bits vs {w[5]} usable tracks); load {', '.join(f'{a}:{b}' for a, b in w[6])}; "
                            f"fix: reserve at least {required:.2f} um or re-seat lanes onto another cut")
+            rank = aligned_edge_rank_worst(t, epochs, name)
+            rank_over = bool(rank and rank["ratio"] > STREET_MAX)
+            if rank_over:
+                lo, hi = rank["span_um"]
+                out.append(f"{lvl} ADV-FP-STREET {name}: aligned {rank['direction']} edge rank at {rank['rank_um']:.2f} um, "
+                           f"span {lo:.2f}-{hi:.2f} um: demand {rank['ratio']:.2f} > {STREET_MAX} "
+                           f"({rank['bits']} bits vs {rank['tracks']:.2f} tracks per {RANK_WINDOW_UM:g} um); "
+                           f"load {', '.join(f'{bus}:{bits}' for bus, bits in rank['buses'][:3])}; "
+                           "fix: spread coincident ranks over independent stripes")
+            n_street += int(street_over or rank_over)
             cells = t.get("cells") or 0
             if flat:
                 est, basis = flat_cells(name, t, cache)
