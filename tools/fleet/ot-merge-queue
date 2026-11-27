@@ -1412,6 +1412,18 @@ def push_tags(tip, wt, text):
     return series + "-*"
 
 
+def revoked_now(it):
+    """P-AUTOMERGE-REVOKE-RACE (FABLE-FLOW-0910 a3): re-read the review queue at push time; a REVOKED that arrived after the tick read it
+    (11-26 22:55 the auto-merge landed 40ccb3724f0, COORD revoked 22:57) must stop the push.  An unreadable queue does not block."""
+    try:
+        fresh = (COORD / QUEUE_REL).read_text(errors="replace")
+    except OSError:
+        return False
+    full = it.get("sha_full") or it.get("sha", "")
+    return any(kind == "REVOKED" and matches_revocation(it.get("branch", ""), full, branch, sha)
+               for kind, branch, sha, _, _ in coord_rulings(fresh))
+
+
 def land(it, text, st):
     """serial: apply onto current main if it moved, re-test on overlap, push, tag -> post; returns new main or ''"""
     wt = WT / it["id"]
@@ -1438,6 +1450,9 @@ def land(it, text, st):
                 if res == "INFRA":
                     it["status"] = "INFRA"; return ""
                 it["note"] = note + f" (re-tested on {cur[:11]}: main changed {', '.join(overlap[:4])})"
+        if revoked_now(it):
+            log(f"{it[key]}: REVOKED seen at merge time; nothing pushed")
+            return finish(st, it, "REVOKED", "COORD REVOKED seen at merge time (queue re-read before the push)", cur)
         tip = rev("HEAD", cwd=wt)
         big = big_blobs(cur, tip, wt)
         if big:

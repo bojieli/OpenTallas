@@ -59,6 +59,24 @@ class SyncReporting(unittest.TestCase):
 
 
 class Parse(unittest.TestCase):
+    def test_revoked_now_rereads_queue_at_merge_time(self):
+        with tempfile.TemporaryDirectory() as d:
+            q = Path(d) / M.QUEUE_REL
+            q.parent.mkdir(parents=True)
+            q.write_text("- 2026-11-26 22:50 PST COORD APPROVED: claude/b @fedcba98765\n")
+            old = M.COORD
+            M.COORD = Path(d)
+            try:
+                it = {"branch": "claude/b", "sha_full": "fedcba98765" + "0" * 29}
+                self.assertFalse(M.revoked_now(it))
+                q.write_text(q.read_text() + "- 2026-11-26 22:57 PST COORD REVOKED: claude/b @fedcba9\n")
+                self.assertTrue(M.revoked_now(it))
+                self.assertFalse(M.revoked_now({"branch": "claude/other", "sha_full": "1" * 40}))
+                q.unlink()
+                self.assertFalse(M.revoked_now(it))
+            finally:
+                M.COORD = old
+
     def test_approvals_branch_sha_several_per_line_and_revoke(self):
         q = ("- 2026-11-14 19:30 PST [COORD] ruled: COORD APPROVED: claude/a-1114 @0123456789ab; COORD APPROVED: @abcdef1234\n"
              "- 2026-11-14 19:31 PST READY [LANE-X -> COORD] branch claude/x head 99999999aa (asks: COORD APPROVED: claude/x @99999999aa)\n"
