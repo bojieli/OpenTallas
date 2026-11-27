@@ -1,5 +1,5 @@
 # KV-HUB-HOLD 11-23 (FABLE-RC-KV 21:28 ruling): opt-in OT_TAP_LANDING_SEAM=1 (plan clock.tap_landing_seam true), sourced
-# by clock_taps.tcl AFTER the affinity passes, so it sees where macro follow left the hard-core clock pins.
+# after macro follow and the data affinity passes, with an optional dependency before reset affinity and cloning.
 # Cause it fixes: kv3_hub_Eo D28 (kit 1122231125) cland_i_astk_ES ep_zo ring read side sat on clk_t2 / clk_t3 / clk_t47 and its
 # boundary capture u_bin_* on clk_t3, the grid tap that also carried the hard core pin u_astk_ES/ck (114 + ETM 269 ps).  CTS
 # balanced clk_t3 to that pin (tree 623 ps), so the 3-cell ring -> bin seam read launch 215 / capture 572 = -323 ps hold at

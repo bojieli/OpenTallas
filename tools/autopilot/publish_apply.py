@@ -416,7 +416,7 @@ def postbind_parallel_check_sh(binder, identity, rt_root=""):
 
 
 def postbind_runtime_sh(s, *, require_parallel=False):
-    """Select the exact published tools on the bind host. The checkout copy remains the design root."""
+    """Compose the checked-out design with the exact published tools on the bind host."""
     q = shlex.quote
     pin = s.get("tools_sha")
     if not pin:
@@ -439,8 +439,14 @@ def postbind_runtime_sh(s, *, require_parallel=False):
             "[ -n \"$runtime\" ] || { echo \"POSTBIND_RUNTIME unavailable pin $pin in $tool_root or $resolved_root\" >&2; exit 6; }\n")
     if require_parallel:
         return select + postbind_parallel_check_sh('"$runtime/tools/die_plan/bind.py"', '"pin $pin ($runtime)"', s.get("tools_rt_root", ""))
+    copy = q(s["copy"])
+    launch = q(f"{s['copy']}/{POSTBIND_DIR}/launch")
     return (select
-            + f"export OT_REPO_ROOT={q(s['copy'])} OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
+            + f"launch={launch}\n"
+            + f"if ! bash \"$runtime/tools/autopilot/rt_launch_tree.sh\" {copy} \"$runtime\" \"$launch\"; then\n"
+              "    echo \"POSTBIND_RUNTIME could not compose pin $pin in $launch\" >&2; exit 6\n"
+              "fi\n"
+            + f"export OT_REPO_ROOT=\"$launch\" OT_PLAN_ROOT=\"$(realpath -- \"$(dirname -- {q(s['plan'])})\")\" OT_RT_CURRENT=\"$runtime\"\n"
             "echo \"POSTBIND_RUNTIME $pin $runtime\"\n")
 
 

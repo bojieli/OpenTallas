@@ -527,7 +527,8 @@ def test_x_split_preserves_local_place_regions_and_edge_tap_y():
     original = dict(outline_um=[120.0, 120.0],
                     place_regions=[dict(name="west", box_um=[4.32, 8.64, 38.88, 34.56]),
                                    dict(name="east", box_um=[69.12, 43.2, 95.04, 86.4])],
-                    clock=dict(tap_edge_y_um=[8.64, 95.04], tap_landing_seam=True))
+                    clock=dict(tap_edge_y_um=[8.64, 95.04], tap_landing_seam=True,
+                               tap_reset_split=True, tap_landing_seam_before_reset=True))
     raw = dict(die=dict(name="fixture", outline_um=[120.0, 120.0], reach_um=405.0),
                partitions=[dict(name="p", type="T", origin_um=[0.0, 0.0])],
                partition_types={"T": original}, ports=[], lanes=[])
@@ -538,6 +539,7 @@ def test_x_split_preserves_local_place_regions_and_edge_tap_y():
     for part in (west, east):
         assert part["clock"]["tap_edge_y_um"] == original["clock"]["tap_edge_y_um"]
         assert part["clock"]["tap_landing_seam"] is True
+        assert part["clock"]["tap_landing_seam_before_reset"] is True
     original["place_regions"].append(dict(name="cross", box_um=[50.0, 20.0, 70.0, 30.0]))
     with pytest.raises(TS.SplitError, match="place region cross"):
         TS.TypeSplit(_Ev(raw, spec), "T").split()

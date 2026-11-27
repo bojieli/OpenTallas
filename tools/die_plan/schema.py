@@ -750,6 +750,7 @@ SCHEMA = {
                         # Default-off (KV-HUB-HOLD 11-23, gen_phys -> OT_TAP_LANDING_SEAM, tap_landing_seam.tcl): every landing's
                         # local-clock ring sinks + u_bin capture on one tap that carries no hard clock pin.
                         "tap_landing_seam": {"type": "boolean"},
+                        "tap_landing_seam_before_reset": {"type": "boolean"},
                         # Default-off (QC-TTC-R2 11-23, gen_phys -> OT_TAP_RELAY_COHORT, tap_relay_cohort.tcl): consecutive reset/run
                         # relays at one site share one tap (no zero-logic relay pair across two trees).
                         "tap_relay_cohort": {"type": "boolean"},

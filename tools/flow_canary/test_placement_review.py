@@ -101,14 +101,17 @@ def test_unattended_submit_defers_route_and_holds_core(tmp_path, monkeypatch):
     monkeypatch.setenv("OT_CANARY_ANY_SOURCE", "1")
     monkeypatch.setattr(C, "load_spec", lambda _: (specs, {}))
     monkeypatch.setattr(C, "git_head", lambda _: "123456789012")
+    monkeypatch.setattr(C, "pre_submit_review",
+                        lambda: SimpleNamespace(ledger=lambda: "reviewed", hold=lambda *args, **kwargs: ""))
     calls = []
     monkeypatch.setattr(C, "launch_client", lambda *args: calls.append(args) or SimpleNamespace(returncode=0))
     a = SimpleNamespace(spec=None, die=list(specs), src=str(tmp_path), root=str(tmp_path / "runs"),
-                        image="orfs", dry=False, review_before_route=True)
+                        image="orfs", dry=False, require_plan_review=True)
     assert C.cmd_submit(a) == 0
     (run,) = list((tmp_path / "runs").iterdir())
-    assert len(calls) == 1 and "harness/place.sh" in calls[0][1] and "route_canary.sh" not in calls[0][1]
-    assert calls[0][1].count(f"--hosts {R.ADMISSION_HOSTS} --strict-host") == 2
+    assert len(calls) == 1 and "reviewed_locality.py place" in calls[0][1] and "route_canary.sh" not in calls[0][1]
+    meta = json.loads((run / "canary_meta.json").read_text())
+    assert ["--hosts", R.ADMISSION_HOSTS, "--strict-host"] == meta["ot_run_args"][-3:]
     assert all(host not in R.ADMISSION_HOSTS.split(",") for host in ("intel2", "localhost", "epyc9", "epyc2", "epyc12"))
     place = (run / "harness/place.sh").read_text()
     route = (run / "harness/route_canary.sh").read_text()

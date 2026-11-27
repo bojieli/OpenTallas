@@ -4467,6 +4467,19 @@ def tap_chain_affinity_exports(t):
             f"export OT_TAP_CHAIN_MAX_GROUP = {limit}"]
 
 
+def tap_landing_seam_exports(t):
+    """Select whether landing retapping precedes reset affinity and cloning."""
+    clock = t.get("clock") or {}
+    seam = clock.get("tap_landing_seam") is True
+    first = clock.get("tap_landing_seam_before_reset") is True
+    if first and (not seam or not any(clock.get(k) is True for k in ("tap_reset_affinity", "tap_reset_split"))):
+        raise ValueError("clock.tap_landing_seam_before_reset requires tap_landing_seam and a reset tap pass")
+    out = ["export OT_TAP_LANDING_SEAM = 1"] if seam else []
+    if first:
+        out.append("export OT_TAP_LANDING_SEAM_BEFORE_RESET = 1")
+    return out
+
+
 def tap_group_exports(t):
     """DIE-QC-97 11-10: default-off clock.tap_group {"re": <group regex>} -> OT_TAP_GROUP_RE (clock_taps.tcl
     CLOCK-RESET 10-25 group form: every sink whose instance matches goes, with all bits of its group (capture 1 = key),
@@ -8644,8 +8657,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             cfg.append(f"export OT_TAP_RESET_SPLIT_REPAIR_WIRE_UM = {t['clock']['tap_reset_split_repair_wire_um']}")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
-    if (t.get("clock") or {}).get("tap_landing_seam") is True:   # KV-HUB-HOLD 11-23, opt-in: landing ring + u_bin on one hard-free tap
-        cfg.append("export OT_TAP_LANDING_SEAM = 1")
+    cfg += tap_landing_seam_exports(t)
     if tap_relay_cohort_on(t, P.name):   # QC-TTC-R2 11-23 opt-in; S81-XTAP-COHORT 11-26: default on for die s81 (clock.tap_relay_cohort=false opts a type out)
         cfg.append("export OT_TAP_RELAY_COHORT = 1")
     cfg += pinreg_tap_exports(t)

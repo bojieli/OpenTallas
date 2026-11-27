@@ -870,6 +870,13 @@ if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) 
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_pair_affinity.tcl]
 }
+# The reset passes must see the landing seam's final capture tap when the type opts in.
+set ct_seam_on [expr {[info exists ::env(OT_TAP_LANDING_SEAM)] && $::env(OT_TAP_LANDING_SEAM) eq "1"}]
+set ct_seam_first [expr {$ct_seam_on && [info exists ::env(OT_TAP_LANDING_SEAM_BEFORE_RESET)]
+                         && $::env(OT_TAP_LANDING_SEAM_BEFORE_RESET) eq "1"}]
+if {$ct_seam_first} {
+ source [file join [file dirname [info script]] tap_landing_seam.tcl]
+}
 # A named reset cohort must present its final capture tap to the reset split.
 if {[info exists ::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT)] && $::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) ne ""} {
  ct_reassert_fixed_groups [split $::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) ,]
@@ -886,7 +893,7 @@ if {[info exists ::env(OT_TAP_RESET_SPLIT)] && $::env(OT_TAP_RESET_SPLIT) eq "1"
 }
 # KV-HUB-HOLD 11-23 (default off, OT_TAP_LANDING_SEAM=1 from clock.tap_landing_seam): each landing's local-clock ring sinks and
 # its u_bin capture share ONE tap with no hard clock pin (tap_landing_seam.tcl), after macro follow has placed the hard pins.
-if {[info exists ::env(OT_TAP_LANDING_SEAM)] && $::env(OT_TAP_LANDING_SEAM) eq "1"} {
+if {$ct_seam_on && !$ct_seam_first} {
  source [file join [file dirname [info script]] tap_landing_seam.tcl]
 }
 # QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"; ring bonding took clk_t84 from 116

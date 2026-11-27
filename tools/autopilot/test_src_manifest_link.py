@@ -1,5 +1,8 @@
 """STAGE A: D-step as hardlinks of the published base + the delta (COORD 11-17 safeguards)."""
 import json, os, shutil, stat, subprocess, sys, tempfile, unittest
+from pathlib import Path
+from unittest.mock import patch
+
 import src_manifest as SM
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +32,9 @@ def mk_pack(d, base_hash, add, delete=()):
 class Link(unittest.TestCase):
     def setUp(self):
         self.t = tempfile.mkdtemp(); self.addCleanup(lambda: (subprocess.run(["find", self.t, "-type", "d", "-exec", "chmod", "u+w", "{}", "+"]), shutil.rmtree(self.t, ignore_errors=True)))
+        cache = patch.object(SM, "CACHE_DIR", self.t + "/cache")
+        cache.start()
+        self.addCleanup(cache.stop)
         self.base = self.t + "/base"
         self.bm = mk_base(self.base, {"tools/a.py": "A=1\n", "tools/b.py": "B=1\n", "tools/c.py": "C=1\n"})
 
@@ -59,6 +65,49 @@ class Link(unittest.TestCase):
             self.apply(expect="0" * 64)
         self.assertFalse(os.path.exists(self.t + "/d1")); self.assertFalse(os.path.exists(self.t + "/d1.building"))
         self.assertEqual(oct(stat.S_IMODE(os.lstat(self.base + "/tools/a.py").st_mode)), oct(0o444))
+
+    def test_link_delta_reuses_exact_receipt_over_inherited_snapshot_metadata(self):
+        base = Path(self.base)
+        base.chmod(0o755)
+        (base / SM.SNAPDELTA).write_text(json.dumps({"parent_manifest_hash": "0" * 64, "changed": []}))
+        SM.make_ro(self.base)
+        self.assertEqual(SM.verify(self.base, ro=True, full=True)[0], [])
+        with patch.object(SM, "sha256_file", wraps=SM.sha256_file) as hashed:
+            self.apply()
+        building = Path(self.t) / "d1.building"
+        self.assertEqual(
+            {Path(call.args[0]).relative_to(building).as_posix() for call in hashed.call_args_list
+             if Path(call.args[0]).is_relative_to(building)},
+            {"tools/b.py", "tools/new.py"},
+        )
+        errors, info = SM.verify(self.t + "/d1", full=True)
+        self.assertEqual(errors, [])
+        self.assertEqual(info["inherited_from"], self.base)
+
+    def test_same_inode_cannot_satisfy_a_different_advertised_digest(self):
+        self.assertEqual(SM.verify(self.base, ro=True, full=True)[0], [])
+        manifest = self.apply()
+        child = Path(self.t) / "d1"
+        manifest["files"]["tools/a.py"] = manifest["files"]["tools/b.py"]
+        manifest["manifest_hash"] = SM.manifest_hash(manifest)
+        (child / SM.MANIFEST).write_text(json.dumps(manifest))
+        (child / SM.HASHFILE).write_text(manifest["manifest_hash"] + "\n")
+        errors, info = SM.verify(str(child), expect=manifest["manifest_hash"], full=True)
+        self.assertEqual(info["inherited_from"], self.base)
+        self.assertEqual(errors, ["SRC_MANIFEST DRIFT tools/a.py (modified: not the manifest content)"])
+
+    def test_fresh_inode_is_hashed_even_when_digest_matches_parent(self):
+        self.assertEqual(SM.verify(self.base, ro=True, full=True)[0], [])
+        self.apply()
+        child = Path(self.t) / "d1"
+        payload = child / "tools/a.py"
+        payload.unlink()
+        payload.write_text("A=1\n")
+        payload.chmod(0o444)
+        with patch.object(SM, "sha256_file", wraps=SM.sha256_file) as hashed:
+            errors, _info = SM.verify(str(child), full=True)
+        self.assertEqual(errors, [])
+        self.assertIn(str(payload), [call.args[0] for call in hashed.call_args_list])
 
     def test_retiring_the_delta_never_changes_the_bases_file_modes(self):                       # (2)
         self.apply(); SM.publish(self.t + "/d1")
