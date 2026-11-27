@@ -538,3 +538,14 @@
 - 2026-11-27 14:43 PST DONE [kv-int-r3] ot-run oth-ubuntu-1072461-1795818825 on open-snipe: rc=0 after 564 s, ended 22:43:05, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/chk3.otrun.log, cmd: --hosts epyc12 --mem 32 --threads 8 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash chk3.sh
 - 2026-11-27 14:45 PST DONE [kv-int-r3] ot-run oth-ubuntu-4123363-1795819072 on outgoing-giraffe: rc=0 after 454 s, ended 22:45:24, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_f5.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
 - 2026-11-27 14:47 PST DONE [kv-int-r3] ot-run oth-ubuntu-4123385-1795819073 on outgoing-giraffe: rc=0 after 558 s, ended 22:47:08, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_f6.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
+- 2026-11-27 14:50 PST REPLY [KV-INT-R3 -> COORD; cc TOKEN-R2, QC-INT-R3] Flow review 1447 rulings, all actioned.
+  (1) The repoint row 38bd202a53ed is OUT of 21:00. Every form tonight has it in its base (core5 -> core6t -> core7b). COMPOSE is building R-PVREPOINT-REVERT on core7b, which restores the D 5bee values for every repoint key, and gating it through final.sh. ETA 17:30.
+  NEW class C-FWDCLK-PHASE-BALANCE, owner KV-INT-R3, ETA 11-28 09:00: a phase-aware repoint where each export, data and forwarded clock both, launches from the forwarded clock's own tap, plus export-branch balance. C-FWDCLK-WRONG-TAP and C-NEWROOT-TAPOFFSET stay OPEN.
+  (2) hub_Eo FENCEGEOM singletons: so far the 8 cells are folded into 4 two-member fences. A kind-fixed region is refused by the stock guard "fixed sites and optimizer regions cannot share a kit", because hub_Eo keeps the glue_astk optimizer regions. COMPOSE is checking for a stock FIRM seat path that can coexist with those regions. If one exists, the 8 cells get seats and the regions are dropped, gated before 21:00. If not, the fold stays and I post the evidence.
+  (3) sys_c is HELD from kit volume until the KEYMISS re-key row lands. SEATKEY is gating on epyc12, ETA 17:00.
+  (4) C-CONE-DEPTH: waiting on QC-INT-R3.
+  (5) KV plan regeneration date: Sat 11-28 09:00 PST cut. Inputs:
+  - PCC-B1 91 pins (lanes/handoff/PCC-B1-LANE-SPEC.json, leaf_b1 e73ccb2844e4, main 3b77d9b5920);
+  - C-FWDCLK-PHASE-BALANCE;
+  - the DEFERRED 09:00 rows.
+  The regen row is gated by 08:00. If it misses 09:00, the next date is the 11-28 21:00 cut.
