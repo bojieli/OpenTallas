@@ -2785,7 +2785,7 @@ def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=N
     solves, from each class's own selection: LANDREMAP (landremap_types, plan + base; its bind re-pick reads the same plan tree),
     STARTSETTLE (startsettle_types: wf_plan solves every soft type of a wavefront plan; only with a landing sidecar),
     RESETPUB with OT_RESETPUB_SOLVE=1 (resetpub_todo), ANCHORDRY with OT_ANCHORDRY_SOLVE=1 (types with clock.reset_tree_anchor),
-    RSTREACH / DERIVEDNAME (derived_drop.reset_tree_types).  TAPNAME solves density tap grids, not reset trees: nothing.
+    RSTREACH / DERIVEDNAME (derived_drop.reset_tree_types), and ADV-RESET-NAME. TAPNAME only solves density tap grids.
     derived_base is not prewarmed: its trees are read only after an rstnode finding."""
     env = os.environ if env is None else env
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -2808,6 +2808,10 @@ def reset_solve_types(tree, plan, raw, skip, landremap_base=None, derived_base=N
         import reset_anchor as RA
         add("plan", [tn for tn, t in (raw.get("partition_types") or {}).items()
                      if isinstance(t, dict) and (t.get("clock") or {}).get(RA.KEY)], "ANCHORDRY")
+    if "ADVISORY" not in skip and env.get("OT_PLAN_ADVISORY", "").lower() != "off":
+        import adv_reset_names as RN
+        add("plan", (tn for tn, refs in RN.candidates(raw, RN.configured_types(env=env))
+                     if any(RN.RELAY.fullmatch(name) for name in refs.values())), "RESET-NAME")
     dcls = [c for c in ("RSTREACH", "DERIVEDNAME") if c not in skip]
     if dcls:
         import derived_drop as DD
@@ -3102,7 +3106,8 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         findings += view_obs_findings(plan)
     _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
-        findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline, scope=_SCOPE)
+        findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline, scope=_SCOPE,
+                                   reset_plan=warmed_plans.get("plan"))
     _pt.mark(None)
     findings.append(pre_mode(elab_dir, skip))                       # PRE-MODE-1124
     findings.append(_pt.line())                         # PRE-TIME-1124: where the PRE time went
@@ -3139,7 +3144,10 @@ def scope_selection(sel, scope):
     """the reset_solve_types selection a scoped PRE prewarms: scope types, plus every type a die-wide class (DIE_WIDE_RESET) reads"""
     if scope is None:
         return sel
-    return {side: {tn: v for tn, v in d.items() if tn in scope or any(c in DIE_WIDE_RESET for c in v)} for side, d in sel.items()}
+    wide = DIE_WIDE_RESET
+    if os.environ.get("OT_PRE_ADV_SCOPE") == "full" or os.environ.get("OT_ADV_RESETNAME_TYPES"):
+        wide += ("RESET-NAME",)
+    return {side: {tn: v for tn, v in d.items() if tn in scope or any(c in wide for c in v)} for side, d in sel.items()}
 
 
 def parse_types(spec, names):
@@ -3612,7 +3620,7 @@ def site_off_outline_findings(plan):
 # S81 col_h10_r1/r2 died with KeyError col_h10_r0_p1, NOT-EVALUABLE); it too runs on the whole plan, limited by OT_ADV_REFSITE_TYPES.
 # Never filter keep_outs / partitions instead: a wavefront solved on part of the die is another die (wrong relay names, false clean).
 ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME", "REF-SITE")
-ADV_SCOPE_ENV = ("OT_ADV_RESETNAME_TYPES", "OT_ADV_REFSITE_TYPES")     # the die-context checks that judge only the scope's types
+ADV_SCOPE_ENV = ("OT_ADV_REFSITE_TYPES",)
 
 
 def scope_view(raw, scope):
@@ -3623,30 +3631,42 @@ def scope_view(raw, scope):
     return v
 
 
-def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None):
+def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None, reset_plan=None):
     """PRECHECK-R2: plan_advisory.run() lines, each forced to a WARN (an estimator never refuses); [] when the tree has no module."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
     try:
         import plan_advisory as PA
+        import adv_reset_names as RN
     except ImportError:
         return []
-    checks = [c for c, _ in PA.CHECKS if c not in ("IST-PRICE", "IN-OUTLINE", "FT-OUTSIDE")]     # IST-PRICE is a FAIL class now
+    checks = [c for c, _ in PA.CHECKS if c not in ("IST-PRICE", "IN-OUTLINE", "FT-OUTSIDE", "RESET-NAME")]
     try:
         raw = _load(plan)
-        if scope is not None and raw and os.environ.get("OT_PRE_ADV_SCOPE", "view") != "full":
+        scoped = scope is not None and raw and os.environ.get("OT_PRE_ADV_SCOPE", "view") != "full"
+        lines = []
+        if scoped:
             _vchecks = [c for c in checks if c not in ADV_DIE_CONTEXT]
-            lines = PA.run(scope_view(raw, scope), plan, tree, checks=_vchecks, asbuilt=asbuilt,
-                           baseline=baseline) if _vchecks else []          # an empty list would mean ALL checks to PA.run
+            if _vchecks:                                      # an empty list would mean ALL checks to PA.run
+                lines = PA.run(scope_view(raw, scope), plan, tree, checks=_vchecks, asbuilt=asbuilt, baseline=baseline)
+            _dchecks = [c for c in checks if c in ADV_DIE_CONTEXT]
             _set = [k for k in ADV_SCOPE_ENV if os.environ.get(k) is None]
             for k in _set:
                 os.environ[k] = ",".join(sorted(scope))
             try:
-                lines += PA.run(raw, plan, tree, checks=[c for c in checks if c in ADV_DIE_CONTEXT], asbuilt=asbuilt, baseline=baseline)
+                if _dchecks:
+                    lines += PA.run(raw, plan, tree, checks=_dchecks, asbuilt=asbuilt, baseline=baseline)
             finally:
                 for k in _set:
                     os.environ.pop(k, None)
-        else:
+        elif checks:
             lines = PA.run(raw, plan, tree, checks=checks, asbuilt=asbuilt, baseline=baseline)
+        reset_scope = RN.configured_types(scope if scoped else None)
+        if ("RESET-NAME", "adv_reset_names") in PA.CHECKS and RN.candidates(raw, reset_scope):
+            # Use RESETWARM's Plan, repository context and environment. The scope
+            # is an argument so advisory-only filters cannot invalidate tree cache keys.
+            P = reset_plan if reset_plan is not None else _shared_plan(plan, raw)
+            lines += _in_tree(tree, lambda: PA.run(raw, plan, tree, checks=("RESET-NAME",),
+                                                   reset_plan=P, reset_types=reset_scope))
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
     return [x if x.startswith("WARN ") or x.startswith(PA.FAIL_KEEP) else "WARN " + x for x in lines]
