@@ -418,6 +418,10 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
         rec = _plan(kit, stage, rt, dry, index, src, sha, die_src)
         if gen_tools:
             edited_copies(kit, os.path.realpath(rt), gen_tools, rec, dry, dict(src or {}))
+        if not dry and os.path.isfile(os.path.join(kit, "ft_polarity_local_sites.tsv")):
+            hook = os.path.join(kit, "ft_polarity_local.tcl")
+            if not os.path.isfile(hook) or b"proc fpl_load_exact_sites" not in _cur(hook):
+                raise PartialRefresh("authored FT polarity sites require a compatible placement hook")
         txn = list(_TXN)
     finally:
         _TXN = outer

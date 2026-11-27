@@ -2150,6 +2150,17 @@ FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]
 SCHEMA["properties"]["budgets"]["properties"]["ft_polarity_local_group_by_type"] = {
     "type": "object", "additionalProperties": {"type": "string", "pattern": "^" + FT_POLARITY_GROUP_PATTERN + "$"}
 }
+# An authored table covers every payload bit of the exact type/group selector.
+SCHEMA["properties"]["budgets"]["properties"]["ft_polarity_local_sites_by_type"] = {
+    "type": "object", "additionalProperties": {
+        "type": "array", "minItems": 1, "items": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "prefixItems": [{"type": "integer", "minimum": 0},
+                            {"type": "number", "minimum": 0},
+                            {"type": "number", "minimum": 0}],
+        },
+    },
+}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 # ROUTED-REACH (KV-PV-RIDER 11-18, routed_reach.py): G0 severity of check "routed_reach" (internal_stations hops routed
 # round the hard cores whose LEF OBS reaches partition_signal_max); default warn
