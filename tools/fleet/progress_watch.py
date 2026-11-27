@@ -24,6 +24,7 @@ ledger record (~/.local/state/ot-run/submit.jsonl) whose --dir is a private kit 
 Still an alert only."""
 import argparse
 import csv
+import fnmatch
 import json
 import os
 import re
@@ -337,7 +338,7 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
     for r in rows:
         # FLOW-FIX-2045: a row whose type is signed on this plan block is terminal (the wave prints "signed off on this plan block" and never relaunches it) and a row retired by OWNER r711
         # (resign-defer) waits for spare capacity on purpose; neither is stuck (16 s81 / 18 s81_head rows read STUCK-STATE although 28 of 34 were signed)
-        if r.get("_terminal"):
+        if r.get("_terminal") or r.get("_launch_held"):
             continue
         if r.get("status") == "CANCELLED" and r.get("class") == "SUPERSEDED" and r.get("plan_current") == "yes" and (r["die"], r["item"]) not in succ:
             try:
@@ -357,6 +358,7 @@ def load_state(coord):
     ap = Path(coord) / "autopilot"
     st = {"parked": [], "known": [], "rows": [], "eligible": {}}
     configured_pending = {}
+    launch_holds = {}
     try:
         tp = json.load(open(ap / ".tick.progress"))
         if not tp.get("done"):
@@ -374,6 +376,7 @@ def load_state(coord):
                 if v.get("parked"):
                     st["parked"].append(die)
                 if isinstance(v.get("hold_items"), dict) and v["hold_items"]:
+                    launch_holds[die] = v["hold_items"]
                     st.setdefault("holds", {})[die] = [str(x) for x in v["hold_items"].values()]
     except (OSError, ValueError):
         pass
@@ -401,6 +404,12 @@ def load_state(coord):
         pass
     # eligible = current-plan rows that were cancelled/superseded and are waiting for a relaunch (not in flight, LINT, WAIT-*, held)
     for r in st["rows"]:
+        holds = launch_holds.get(r.get("die"), {})
+        item = r.get("item") or ""
+        held = next((reason for pat, reason in holds.items() if fnmatch.fnmatchcase(item, pat)), None)
+        if held:
+            r["_launch_held"] = True
+            continue
         cls = r.get("class") or ""
         if cls == "QUEUE-CANCELLED" and ": CANCEL-DESIGN: " in (r.get("reason") or ""):
             # The design watchdog records terminal failures with the generic queue cancellation class.

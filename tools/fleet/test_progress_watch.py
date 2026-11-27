@@ -140,6 +140,38 @@ class Rules(unittest.TestCase):
         out = [f for f in P.detect([], D(2026, 11, 19, 10, 30), st) if f["cls"] == "STUCK-STATE"]
         self.assertEqual(len(out), 1); self.assertIn("1 current-plan row", out[0]["text"]); self.assertIn("stuck", out[0]["text"])
 
+    def test_configured_launch_holds_suppress_stuck_until_removed(self):
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            ap = Path(tmp) / "autopilot"
+            ap.mkdir()
+            config = ap / "kit_wave.json"
+            def configure(holds):
+                config.write_text(json.dumps({"dies": {
+                    "qwen_compute": {"hold_items": holds, "route_hold_items": {"open": "route review"}},
+                }}))
+            (ap / "kit_wave_stages.tsv").write_text(
+                "die\titem\tstatus\tclass\tplan_current\tupdated\n"
+                + "".join(f"qwen_compute\t{item}\tCANCELLED\tSUPERSEDED\tyes\t2026-11-19 09:00\n"
+                          for item in ("exact", "hc3_sibling", "open"))
+            )
+            configure({"exact": "owner=QC eta=2026-11-19 09:30", "hc3_*": "new form needed"})
+            state = P.load_state(tmp)
+            self.assertEqual(state["eligible"], {"qwen_compute": 1})
+            findings = P.detect([], D(2026, 11, 19, 10, 30), state)
+            stuck = next(f for f in findings if f["cls"] == "STUCK-STATE")
+            self.assertIn("1 current-plan row", stuck["text"])
+            self.assertIn("open", stuck["text"])
+
+            configure({})
+            state = P.load_state(tmp)
+            self.assertEqual(state["eligible"], {"qwen_compute": 3})
+            findings = P.detect([], D(2026, 11, 19, 10, 30), state)
+            stuck = next(f for f in findings if f["cls"] == "STUCK-STATE")
+            self.assertIn("3 current-plan row", stuck["text"])
+
     def test_design_watchdog_cancellations_are_not_launch_candidates(self):
         import json, tempfile
         with tempfile.TemporaryDirectory() as tmp:
