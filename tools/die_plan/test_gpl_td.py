@@ -269,3 +269,25 @@ def test_cluster_above_the_bound_is_not_seated(tmp_path):
             + "proc reg {args} {}\nproc grp {op i} { puts \"ADD $i\" }\n" + s)
     out = subprocess.run(["tclsh"], input=body, capture_output=True, text=True)
     assert out.returncode == 0 and "REGION" in out.stdout and out.stdout.count("ADD") == 5 and "FIRM-SEAT" not in out.stdout, out.stdout + out.stderr
+
+
+# ---- C-TDREPAIR-REGION-MEAN 11-27 (HEAD-EAST-R4): top_overflow_trigger alone keys the trigger on the top-level overflow ----
+# OpenROAD tests the timing-driven trigger on the MEAN overflow of every Nesterov region; the threshold wrapper keeps reading that mean
+# while clusters above firm_small_clusters (r6 East: 24 / 80 / 291 cells) stay GPL regions, so the flag implies post-GPL regions.
+@pytest.mark.parametrize("d,want", [
+    (None, False), ({"top_overflow_trigger": 0, "cell_growth_gate": 1}, False), ({"firm_small_clusters": 1}, False),
+    ({"top_overflow_trigger": 1}, True), ({"top_overflow_trigger": 0.3, "firm_small_clusters": 1}, True),
+])
+def test_post_gpl_regions_follows_top_overflow_trigger(d, want):
+    raw = {} if d is None else {"gpl_td": d}
+    assert GT.post_gpl_regions(raw) is want
+
+
+def test_gen_phys_exports_post_gpl_regions_from_the_plan_flag():
+    import gen_phys as GP
+    src = Path(GP.__file__).read_text()
+    line = next(ln for ln in src.splitlines() if '"export OT_LOGIC_CLUSTER_POST_GPL = 1"' in ln)
+    assert '_gpl_td_mod.post_gpl_regions(P.raw)' in line and 'os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1"' in line
+    assert 't.get("logic_cluster_rects_um")' in line          # still only for a type that has clusters
+    k = src.index('"export OT_LOGIC_CLUSTER_POST_GPL = 1"')
+    assert src.rfind("import gpl_td as _gpl_td_mod", 0, k) > src.rfind("\ndef ", 0, k)   # imported inside the same function, before use

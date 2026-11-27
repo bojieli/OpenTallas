@@ -7,7 +7,9 @@ a handful of tiny OT_LOGIC_CLUSTER regions (3-20 cells, finished at once) pull t
 iteration 1 and repair_design buffers an unsettled placement (HEAD hd_lep0N fed00: +56,515 buffers, HPWL 1.30e7 -> 1.90e7).
   top_overflow_trigger  0 / 1 / settle overflow in (0, 1): timing-driven repair only on a placement whose TOP-LEVEL overflow has
                         settled (gpl_td.tcl: only the reweight thresholds at or under the settle overflow are kept).  1 = the
-                        R-FLOW gpl_keep_overflow (0.25).
+                        R-FLOW gpl_keep_overflow (0.25).  It also exports OT_LOGIC_CLUSTER_POST_GPL=1 (gen_phys, post_gpl_regions):
+                        every logic_cluster region is created after global_placement, so GPL has only the top-level region and the
+                        overflow OpenROAD tests IS the top-level overflow (C-TDREPAIR-REGION-MEAN 11-27).
   firm_small_clusters   0 / 1 / N (3..20): logic_cluster_rects_um clusters of at most N movable cells (1 = 20) are seated FIRM at their
                         rect (logic_cluster.py), released for DPL, and are no GPL region.
   cell_growth_gate      0 / 1 / 2 ("report" / "fail"): non-tap cell count after GPL and after the place resize against
@@ -52,6 +54,13 @@ def spec(raw):
 
 def firm_small(raw):
     return spec(raw).get("firm_small", 0)
+
+
+def post_gpl_regions(raw):
+    """C-TDREPAIR-REGION-MEAN 11-27: True when top_overflow_trigger is on.  OpenROAD tests the timing-driven trigger on the MEAN overflow of
+    the top-level region and every odb region/group; the threshold wrapper alone still reads that mean when logic clusters larger than
+    firm_small_clusters stay GPL regions.  gen_phys then exports OT_LOGIC_CLUSTER_POST_GPL=1 (regions created after global_placement)."""
+    return bool(spec(raw).get("top"))
 
 
 def cfg_lines(raw):
