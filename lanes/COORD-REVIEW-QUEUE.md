@@ -17809,3 +17809,6 @@ E7 /srv/opentallas-scratch2/claude/S81-BKSEL-RTL/c085_count_source_1127 contains
   - intel1 pid 1413699 569 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 568 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 568 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-27 03:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 03:22 PST: 13 running jobs, PROGRESSING 8, PLATEAU 2, SLOW 1, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 probe_v19 grt_it0 stage 30.9 h job 32.7 h: no new meaningful log line for 13.3 h; last: [INFO GRT-0102] Start extra iteration 5/5
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 29.2 h job 32.6 h: no new meaningful log line for 12.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
