@@ -140,8 +140,10 @@ def test_cohort_hook_inserts_before_clock_taps_once():
 def test_cohort_env_maps_groups_like_the_h17_stager():
     import serdes_cohorts_env as E
     model = {"hop_budget_um": 405.0, "unfit_light_root_groups": [], "groups": [
-        {"key": 0, "rrl_ids": [0, 1, 2], "bbox_span_um": 316.2, "root_candidates": [{"name": "clk_t4"}, {"name": "clk_t12"}]},
-        {"key": 6, "rrl_ids": [6, 7], "bbox_span_um": 100.0, "root_candidates": [{"name": "clk_t3"}]}]}
+        {"key": 0, "rrl_ids": [0, 1, 2], "FF_count": 64, "bbox_span_um": 316.2,
+         "root_candidates": [{"name": "clk_t4"}, {"name": "clk_t12"}]},
+        {"key": 6, "rrl_ids": [6, 7], "FF_count": 2, "bbox_span_um": 100.0,
+         "root_candidates": [{"name": "clk_t3"}]}]}
     v = E.env_values(model, "serdes_rst_x:clk_t9")
     assert v["OT_SERDES_RELAY_COHORTS"] == "0,1,2;6,7"
     assert v["OT_TAP_GROUP_FIXED"] == "serdes_rst_x:clk_t9,serdes_rst_0:clk_t4,serdes_rst_6:clk_t3" and v["OT_SERDES_RESET_COHORT"] == "1"
@@ -150,6 +152,11 @@ def test_cohort_env_maps_groups_like_the_h17_stager():
         E.env_values(bad)
     with pytest.raises(SystemExit):
         E.env_values(dict(model, unfit_light_root_groups=["x"]))
+    with pytest.raises(SystemExit, match="group 0 FF 65 over the CTS sizing cap 64"):
+        E.env_values(dict(model, groups=[dict(model["groups"][0], FF_count=65)]))
+    missing_ff = {key: value for key, value in model["groups"][0].items() if key != "FF_count"}
+    with pytest.raises(SystemExit, match="group 0 requires a nonnegative integer FF_count"):
+        E.env_values(dict(model, groups=[missing_ff]))
 
 
 def test_boot_release_sites_are_not_type_constants():

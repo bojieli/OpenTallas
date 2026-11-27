@@ -259,6 +259,56 @@ elif mode == "hash":
     os.makedirs(os.path.dirname(CACHE), exist_ok=True)
     tmp = CACHE + ".tmp"; json.dump(cache, open(tmp, "w")); os.replace(tmp, CACHE)
     print(json.dumps(out))
+elif mode == "late-lec":
+    def verified_late_lec(row):
+        si = row["signoff"]
+        with open(si, "rb") as fh:
+            raw = fh.read()
+        if hashlib.sha256(raw).hexdigest() != row["record"]:
+            return
+        rec = json.loads(raw)
+        if rec.get("profile") != "minimal" or rec.get("verdict") != "SIGNED":
+            return
+        kit = rec.get("inputs", {}).get("kit")
+        odb = row["odb"]
+        gate = os.path.join(os.path.dirname(odb), "6_final.v")
+        if not kit or not os.path.isfile(gate):
+            return
+        gate_mtime = os.path.getmtime(gate)
+        candidates = sorted(glob.glob(os.path.join(kit, "lec_routed*", "lec.json")) +
+                            glob.glob(os.path.join(kit, "lec", "lec.json")), reverse=True)
+        for q in candidates:
+            try:
+                stat = os.stat(q)
+                if stat.st_size >= 20 << 20 or stat.st_mtime < gate_mtime:
+                    continue
+                with open(q, "rb") as fh:
+                    evidence = fh.read()
+                j = json.loads(evidence)
+                n = j.get("netlist")
+                counts = j.get("counts") or {}
+                if (j.get("verdict") != "EQUIVALENT" or j.get("partition") or not isinstance(n, str)
+                    or not isinstance(counts.get("compare_points"), int) or counts["compare_points"] <= 0
+                    or counts.get("proved") != counts["compare_points"] or counts.get("differs") != 0
+                    or counts.get("undecided") != 0):
+                    continue
+                # Resolve the proof's declared routed input, including the kit's normal container mount.
+                n = os.path.join(kit, n.removeprefix("/work/")) if n.startswith("/work/") else n
+                if os.path.realpath(n) != os.path.realpath(gate):
+                    continue
+                if sha(gate, {})[0] != row["gate_sha"] or sha(odb, {})[0] != row["odb_sha"]:
+                    return
+                return dict(key=row["key"], size=len(evidence), sha=hashlib.sha256(evidence).hexdigest(),
+                            lec=dict(src=q, verdict="EQUIVALENT", counts=counts, identity="sha256"))
+            except (OSError, ValueError, TypeError):
+                continue
+    for row in arg["rows"]:
+        try:
+            evidence = verified_late_lec(row)
+        except (OSError, ValueError, TypeError):
+            continue
+        if evidence:
+            print(json.dumps(evidence), flush=True)
 elif mode == "evidence":
     u = unit(arg["signoff"])
     print(json.dumps(dict(files=[x for x in u.get("files", []) if x[1] in ("land_slots.json", "face_guard.json", "1_synth.v") or "/" in x[1]], err=u.get("err"))))
@@ -1012,6 +1062,56 @@ def drain(a):
     return 0
 
 
+def refresh_pending_lec(keys):
+    """Update only exact meta units selected by the RTX pull under its own lock."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    os.makedirs(STATE, exist_ok=True)
+    with open(os.path.join(STATE, 'drain.lock'), 'a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return 0
+        ledger = load_ledger()
+        by_host = collections.defaultdict(list)
+        for key in set(keys):
+            u = ledger['units'].get(key, {})
+            gate_sha = (u.get('shas') or {}).get('6_final.v')
+            if u.get('state') == 'meta' and not u.get('lec') and gate_sha and u.get('host') in HOSTS:
+                by_host[u['host']].append(dict(key=key, signoff=u['signoff'], record=u['record'], odb=u['odb'],
+                                               odb_sha=u['odb_sha'], gate_sha=gate_sha))
+        if not by_host:
+            return 0
+
+        def read_host(host, rows):
+            try:
+                return probe(host, 'late-lec', dict(rows=rows), timeout=36)
+            except (OSError, RuntimeError, subprocess.TimeoutExpired):
+                return []
+
+        updated = 0
+        with ThreadPoolExecutor(max_workers=len(by_host)) as pool:
+            jobs = [(rows, pool.submit(read_host, host, rows)) for host, rows in by_host.items()]
+            for rows, task in jobs:
+                expected = {row['key'] for row in rows}
+                for evidence in task.result():
+                    key = evidence['key']
+                    if key not in expected:
+                        continue
+                    u = ledger['units'][key]
+                    if u.get('lec') or 'lec.json' in u['shas']:
+                        continue
+                    u['files'].append([os.path.dirname(evidence['lec']['src']), 'lec.json'])
+                    u['shas']['lec.json'] = evidence['sha']
+                    u.setdefault('sizes', {})['lec.json'] = evidence['size']
+                    u['bytes'] += evidence['size']
+                    u['lec'] = evidence['lec']
+                    updated += 1
+        if updated:
+            save_ledger(ledger)
+        return updated
+
+
 # ---- 3. rtx-pull (rtx-pro) --------------------------------------------------------------------------------------------
 def rtx_pull(a):
     lk = open('/tmp/ot-auto-export-rtx.lock', 'w')
@@ -1023,6 +1123,31 @@ def rtx_pull(a):
     if r.returncode:
         say('hub unreadable', r.stderr[-200:])
         return 1
+    pending = json.loads(r.stdout or '[]')
+    # The local pull lock is held. Do not refresh entries whose transfer already started.
+    record = getattr(a, 'record', None)
+    if record:
+        pending = [u for u in pending if u['record'] == record]
+    refresh = []
+    for u in pending:
+        dest = os.path.join(RTX_ROOT, u['die'], u['unit'])
+        if u.get('mode') == 'host' and not u.get('lec') and not os.path.lexists(dest) and not os.path.lexists(dest + '.partial'):
+            refresh.append(u['key'])
+    if refresh:
+        hub_tool = '/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/auto_export.py'
+        try:
+            refreshed = subprocess.run(
+                SSH + [a.hub, 'python3 -I %s refresh-pending-lec' % shlex.quote(hub_tool)],
+                input=json.dumps(refresh), capture_output=True, text=True, timeout=45)
+            if refreshed.returncode == 0 and int(refreshed.stdout.strip()) > 0:
+                updated = subprocess.run(SSH + [a.hub, 'cat .local/state/ot-auto-export/pending_rtx.json'],
+                                         capture_output=True, text=True, timeout=45, check=True)
+                pending = [u for u in json.loads(updated.stdout) if not record or u['record'] == record]
+                say('pending routed LEC refreshed', refreshed.stdout.strip())
+        except (OSError, ValueError, subprocess.SubprocessError) as exc:
+            say('pending routed LEC refresh deferred', exc)
+    if getattr(a, 'refresh_lec_only', False):
+        return 0
     reports = []
     er = subprocess.run(SSH + [a.hub, 'cat .local/state/ot-auto-export/evidence_rtx.json'], capture_output=True, text=True, timeout=120)
     ev_reports = []
@@ -1060,7 +1185,7 @@ def rtx_pull(a):
         say('evidence', u['die'], u['unit'], err or 'ok')
     if ev_reports:
         subprocess.run(SSH + [a.hub, 'cat >> .local/state/ot-auto-export/evidence_done.jsonl'], input=''.join(json.dumps(x) + '\n' for x in ev_reports), text=True, timeout=120, check=True)
-    for u in json.loads(r.stdout or '[]'):
+    for u in pending:
         k = '%s/%s' % (u['die'], u['unit'])
         dest, part = os.path.join(RTX_ROOT, k), os.path.join(RTX_ROOT, k + '.partial')
         idx = os.path.join(RTX_ROOT, 'INDEX.tsv')
@@ -1148,8 +1273,16 @@ def main(argv=None):
     d.add_argument('--budget-s', type=float, default=2400)
     r = sub.add_parser('rtx-pull')
     r.add_argument('--hub', default='intel2')
+    r.add_argument('--refresh-lec-only', action='store_true', help='refresh pending evidence and skip the normal archive pull')
+    r.add_argument('--record', help='exact signoff digest for a targeted pending evidence refresh')
+    sub.add_parser('refresh-pending-lec', help=argparse.SUPPRESS)
     sub.add_parser('view-packs', help='cut + publish the queued routed-layout packs (started by the drain)')
     a = ap.parse_args(argv)
+    if a.cmd == 'refresh-pending-lec':
+        print(refresh_pending_lec(json.load(sys.stdin)))
+        return 0
+    if a.cmd == 'rtx-pull' and a.record and (not a.refresh_lec_only or not re.fullmatch(r'[0-9a-f]{64}', a.record)):
+        ap.error('--record requires --refresh-lec-only and a full signoff SHA-256')
     if a.cmd == 'view-packs':
         return view_packs(a)
     if a.cmd == 'enqueue':

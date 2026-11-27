@@ -18,9 +18,16 @@ def env_values(model, existing_fixed=""):
     if not groups:
         raise SystemExit("cohort model: no groups")
     budget = float(model.get("hop_budget_um", 405.0)) + 1e-6
+    max_cohort_ff = model.get("max_cohort_FF", 64)
     for g in groups:
-        if g["FF_count"] > model.get("max_cohort_FF", 64):
-            raise SystemExit(f"cohort model: group {g[key]} FF {g[FF_count]} over the CTS sizing cap (an atomic RRL+collector set; needs a relay split)")
+        ff_count = g.get("FF_count")
+        if type(ff_count) is not int or ff_count < 0:
+            raise SystemExit(f"cohort model: group {g['key']} requires a nonnegative integer FF_count")
+        if ff_count > max_cohort_ff:
+            raise SystemExit(
+                f"cohort model: group {g['key']} FF {ff_count} over the CTS sizing cap "
+                f"{max_cohort_ff} (an atomic RRL+collector set; needs a relay split)"
+            )
         if g["bbox_span_um"] > budget or not g["root_candidates"]:
             raise SystemExit(f"cohort model: group {g['key']} span {g['bbox_span_um']} roots {len(g['root_candidates'])}")
     cohorts = ";".join(",".join(str(i) for i in g["rrl_ids"]) for g in groups)
