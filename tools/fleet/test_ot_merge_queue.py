@@ -840,6 +840,45 @@ class ImportedDirectoryInputs(unittest.TestCase):
                         self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']),
                                          {'data/fix', 'physical/test_archive'})
 
+    def test_assertion_metadata_drops_only_known_expected_operands(self):
+        import re
+        text = """import unittest
+from pathlib import Path
+class Case(unittest.TestCase):
+    def test_uses(self):
+        self.assertIn('data/mock_argument', mock.call_args[0])
+        self.assertNotIn('data/forbidden_pattern/', patterns)
+        self.assertEqual(scan(), ['data/expected_result'])
+        self.assertEqual(Path('data/real_file').exists(), 'data/expected_scalar')
+        self.assertEqual(read('data/real_argument'), ['data/expected_output'])
+        self.assertTrue(Path('data/mock_argument').exists())
+        self.assertUnknown('data/unknown_assertion', data)
+        consume('data/unknown_call')
+        self.assertEqual(value, make_result('data/unknown_builder'))
+"""
+        lit = re.compile(r"'((?:data)/[\w/]+?)/?'")
+        self.assertEqual(M._test_path_literals(text, lit), {
+            'data/mock_argument', 'data/real_file', 'data/real_argument', 'data/unknown_assertion',
+            'data/unknown_call', 'data/unknown_builder',
+        })
+
+    def test_assertion_literals_stay_eligible_when_the_receiver_is_ambiguous(self):
+        import re
+        lit = re.compile(r"'(data/[\w/]+)'")
+        context = """import unittest
+class Case({base}):
+{override}    def test_path(self):
+{rebind}        self.assertIn('data/possible_input', actual)
+"""
+        for base, override, rebind in (
+            ('OtherTestCase', '', ''),
+            ('unittest.TestCase', '    def assertIn(self, path, actual): pass\n', ''),
+            ('unittest.TestCase', '', '        self = actual\n'),
+        ):
+            with self.subTest(base=base, override=override, rebind=rebind):
+                source = context.format(base=base, override=override, rebind=rebind)
+                self.assertEqual(M._test_path_literals(source, lit), {'data/possible_input'})
+
     def test_named_legacy_recipe_stages_exact_spec_and_lef(self):
         from unittest.mock import patch
         with tempfile.TemporaryDirectory() as td:
