@@ -18,6 +18,8 @@ import sys
 import tempfile
 import threading
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 HERE = pathlib.Path(__file__).resolve().parent
 
@@ -104,6 +106,48 @@ class Spill(unittest.TestCase):
 
     def fwd(self, src, dst, stamp):
         return self.m.spill_copy_fwd(src, dst, [self.root], stamp)
+
+    def test_source_only_lease_does_not_hide_nested_keeps(self):
+        pathlib.Path(self.host("src"), ".keep").write_text("hub owned")
+        pathlib.Path(self.host("src"), "d0", ".keep").write_text("separate worker protection")
+        r = self.m.spill_copy_fwd("src", "dst", [self.root], self.stamp(),
+                                  source_only_paths=(self.root + "/.keep",))
+        self.assertEqual(r.returncode, 0, r.stderr[-300:])
+        self.assertEqual(pathlib.Path(self.host("src"), ".keep").read_text(), "hub owned")
+        self.assertFalse(pathlib.Path(self.host("dst"), ".keep").exists())
+        self.assertEqual(pathlib.Path(self.host("dst"), "d0", ".keep").read_text(),
+                         "separate worker protection")
+
+    def test_spill_release_requires_successful_caller_verification(self):
+        events = []
+
+        def copy_back(*_, **__):
+            events.append("copy")
+            return True, ""
+
+        def verify(_):
+            events.append("verify")
+            raise ValueError("bad receipt")
+
+        with patch.multiple(self.m,
+                            admit_first_ok=lambda *_: True,
+                            spill_room=lambda *_, **__: (True, ""),
+                            spill_room_release=lambda *_: None,
+                            run=lambda *_, **__: (0, True),
+                            spill_copy_back=copy_back,
+                            spill_drop_stage=lambda *_: events.append("drop")):
+            # A successful transport is not a validated placement receipt.
+            with patch.object(self.m, "spill_copy_fwd",
+                              return_value=SimpleNamespace(returncode=0, sent=0, stderr="")):
+                with self.assertRaisesRegex(ValueError, "bad receipt"):
+                    self.m.spill_run("src", "dst", [self.root], 1, 8, ["bash"], self.root, 5,
+                                     lambda *_: None, verify_copyback=verify)
+                self.assertEqual(events, ["copy", "verify"])
+                events.clear()
+                self.assertEqual(self.m.spill_run("src", "dst", [self.root], 1, 8, ["bash"],
+                                                 self.root, 5, lambda *_: None,
+                                                 verify_copyback=lambda _: events.append("verify")), 0)
+                self.assertEqual(events, ["copy", "verify", "drop"])
 
     def test_incremental_respill_sends_only_changes(self):
         """v10 (FLEET-PLACE): a lane re-spilled to a host holding its copy sends only what changed"""
