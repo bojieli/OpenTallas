@@ -21,7 +21,7 @@ def emit(body):
     ]}}}
     landing.collect = False
     landing.reset_placements = {}
-    new_body, logic = landing._local_resets("ei", "ei", body, [])
+    new_body, logic = landing._local_resets_with_body("ei", "ei", body, [])
     return new_body, logic, landing.reset_placements["ei"]["local_resets"][0]
 
 

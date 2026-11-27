@@ -2694,7 +2694,7 @@ class Landings:
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
-        body, logic = self._local_resets(tn, key, body, logic)
+        body, logic = self._local_resets_with_body(tn, key, body, logic)
         # A branch feeding only a local copy does not replace the existing
         # ring-reset fanout implementation or any of its physical sites.
         if raw_graph is None or all(role.startswith("local_reset:") for role in raw_graph.roles):
@@ -3204,6 +3204,13 @@ class Landings:
         return pins[0].group(2) if len(pins) == 1 else None
 
     def _local_resets(self, tn, key, body, logic):
+        """Legacy landing-only interface for reset proofs and source tools."""
+        new_body, new_logic = self._local_resets_with_body(tn, key, body, logic)
+        if new_body != body:
+            raise LandingError(f"{tn}: bound input reset copies require the complete type emitter")
+        return new_logic
+
+    def _local_resets_with_body(self, tn, key, body, logic):
         """DIE-HEAD-38 R1 (plan clock.landing_local_resets, opt-in): each listed copy is a kept ot_dp_rrelay
         u_cland_lrst_<name> (d = a registered wavefront raw relay Q) and the listed landing consumers or native EQ input banks take its Q
         on their reset pin instead of the shared reset.  Same cycle: depth(raw)+1 must equal the depth of the
