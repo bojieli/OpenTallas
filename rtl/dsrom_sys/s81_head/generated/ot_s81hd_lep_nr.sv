@@ -25,10 +25,17 @@ module ot_s81hd_lep_core_nr #(
     parameter integer IN_PIPE = 0,     // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
     parameter [15:0]  TXI = 16'h0000,  // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none
-    parameter integer RXH = 0          // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none
+    parameter [3:0]   TXP = 4'b0000,   // LEP-PUSHDUP-3 11-25: lane t with TXP[t] gets one registered TX pre-stage
+                                       // (g_tx[t].g_txp, kept ot_s81hd_lep_txi_st: word + push + push groups, +1 cycle)
+    parameter integer RXH = 0,         // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none
+    parameter integer RTG = 0,         // RST-FAN-1: reset tree groups (0 = ot_rst_relay_tree3; >0 = ot_rst_relay_tree3m)
+    parameter integer RTR = 1,         // RST-FAN-1: root copies of the mapped tree (RTG > 0)
+    parameter [1023:0] RTGS = 1024'd0, // RST-FAN-1: first local of group g at [16g+:16] (RTG > 0)
+    parameter [255:0]  RTRM = 256'd0   // RST-FAN-1: root copy of group g at [4g+:4] (RTG > 0)
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input  wire [15:0]     rst_nr,     // RST-FAN-1d: per-root-copy resets of the mapped tree (RTG > 0; else unread)
     // slice outward line port
     input  wire [1103:0]   ro,
     output wire [1103:0]   ri,
@@ -112,9 +119,13 @@ module ot_s81hd_lep_core_nr #(
     // L5B-LEPMU 10-21: AB_EN 1 + SAFE_FIFO adds two leaves (lanes 2 / 3 TX state) so rr[0] / rr[1] stop driving 40 / 38
     // reset pins (native census); same release edge as every leaf.
     localparam integer NXR=(SAFE_FIFO && NL==4)?2:0;
-    wire [3+NRX_RST+NXR:0] rr;
-    generate if(SAFE_FIFO) begin:g_reset_balanced
+    localparam integer NRV=(SAFE_FIFO && NL==4 && RTG>0)?2:0;   // RST-FAN-1: rxvb_q[0] / [1] own locals (mapped tree only)
+    wire [3+NRX_RST+NXR+NRV:0] rr;
+    generate if(SAFE_FIFO && RTG==0) begin:g_reset_balanced
       ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    end else if(SAFE_FIFO) begin:g_reset_mapped   // RST-FAN-1: root copies + free group boundaries, same 3 edges
+      ot_rst_relay_tree3m #(.REGIONS(4+NRX_RST+NXR+NRV),.GROUPS(RTG),.ROOTS(RTR),.GS(RTGS[16*RTG-1:0]),.RM(RTRM[4*RTG-1:0]),.RIN(1))
+        u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n_rt(rst_nr[RTR-1:0]),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     end endgenerate
@@ -508,8 +519,20 @@ module ot_s81hd_lep_core_nr #(
         wire psh_s = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
         wire psh; wire [TX_NA-1:0] pg_s, pgx; wire [H:0] wdx;
         for(genvar gi=0;gi<TX_NA;gi=gi+1)begin:g_pgs assign pg_s[gi]=push_group[2*gi+t/2]; end
-        ot_s81hd_lep_txi #(.W(H+1),.NG(TX_NA),.N(TXI[4*t+:4])) g_txi(.clk(clk),.rn(rt),.psh_i(psh_s),.pg_i(pg_s),
-            .wd_i({sq[t/2],(t%2==0)?hf0:hf1}),.psh_o(psh),.pg_o(pgx),.wd_o(wdx));
+        wire psh_p; wire [TX_NA-1:0] pg_p; wire [H:0] wd_p;
+        // LEP-PUSHDUP-3 (HEAD-ALLFIX 11-25, Fable C9): g_mtx.wn -> stamp OR tree -> tag mux -> rg3 g_txi.g_s[0] was one 833 ps
+        // cycle over ~700 um (ep3 CTS -112.9 ps).  TXP[t]: lane t's TX word {sq, half}, its push and its push-group copies are
+        // registered together in one kept leaf on the lane reset leaf of g_txi, so the lane FIFO sees the same write sequence
+        // one edge later.  Frame / tag / stamp logic and the other lanes are unchanged (lane FIFOs are credit-read and the
+        // far pair release matches frames by sequence parity, so a one-lane skew is absorbed).  Plan: native_stage_groups.
+        if (TXP[t]) begin:g_txp
+          ot_s81hd_lep_txi_st #(.W(H+1),.NV(TX_NA+1)) u_st(.clk(clk),.rn(rt),.v_i({pg_s,psh_s}),
+            .d_i({sq[t/2],(t%2==0)?hf0:hf1}),.v_o({pg_p,psh_p}),.d_o(wd_p));
+        end else begin:g_ntxp
+          assign psh_p = psh_s; assign pg_p = pg_s; assign wd_p = {sq[t/2],(t%2==0)?hf0:hf1};
+        end
+        ot_s81hd_lep_txi #(.W(H+1),.NG(TX_NA),.N(TXI[4*t+:4])) g_txi(.clk(clk),.rn(rt),.psh_i(psh_p),.pg_i(pg_p),
+            .wd_i(wd_p),.psh_o(psh),.pg_o(pgx),.wd_o(wdx));
         wire wr = psh && (n != DT || iss);
         if(SAFE_FIFO && SRAM!=0) begin:g_safe_write
             localparam integer GA=4, NA=(TX_NS+GA-1)/GA;
@@ -618,6 +641,7 @@ module ot_s81hd_lep_core_nr #(
     wire [NL-1:0] rne_addr,rne_meta,rne_return;
     wire [NL-1:0] rhostx,rksx;
     wire [NL-1:0] rnex, rhkx, rringx, rtagx;
+    wire [NL-1:0] rx_hold_nz, rx_pop_nz;
     wire [NL-1:0] rhk;                                 // MU_EN 1: pre-decoded land bit of each lane's head row
     wire [1:0] relp;                                   // pair releases (pair B only at AB_EN 1)
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
@@ -651,7 +675,55 @@ module ot_s81hd_lep_core_nr #(
         wire [AR-1:0] wp_nx = wr ? ((wp == AR'(DR - 1)) ? '0 : wp + 1'b1) : wp;
         wire [AR-1:0] rp_nx = pop ? ((rp == AR'(DR - 1)) ? '0 : rp + 1'b1) : rp;
         wire [AR:0] n_nx = n + (AR+1)'(wr) - (AR+1)'(pop);
-        assign rnex[t]=n_nx!=0;
+        wire next_nz, peer_next_nz, return_next_nz, next_notfull;
+        if (SAFE_CONTROL
+`ifndef OT_HEAD_LEP_EAST_RX_NZ_PREDICT
+            && 1'b0
+`endif
+        ) begin : g_nz_predict
+            ot_s81hd_lep_nz_predict #(.W(AR+1)) u_predict (
+                .count(n), .write_en(wr), .hold_nz(rx_hold_nz[t]), .pop_nz(rx_pop_nz[t]));
+            wire ready_a = rne[2*(t/2)];
+            wire ready_b = rne[2*(t/2)+1];
+`ifdef OT_S81SL_LEP_MUT_NOPAIR
+            wire own_ready_b = (t == 0) ? 1'b1 : ready_b;
+            wire peer_ready_b = ((t^1) == 0) ? 1'b1 : ready_b;
+`else
+            wire own_ready_b = ready_b;
+            wire peer_ready_b = ready_b;
+`endif
+            ot_s81hd_lep_nz_choose u_self (
+                .ready_a(ready_a), .ready_b(own_ready_b),
+                .hold_nz(rx_hold_nz[t]), .pop_nz(rx_pop_nz[t]), .next_nz(next_nz));
+            ot_s81hd_lep_nz_choose u_peer (
+                .ready_a(ready_a), .ready_b(peer_ready_b),
+                .hold_nz(rx_hold_nz[t^1]), .pop_nz(rx_pop_nz[t^1]), .next_nz(peer_next_nz));
+            if (t == 3) begin : g_return
+                ot_s81hd_lep_nz_choose u_return (
+                    .ready_a(ready_a), .ready_b(own_ready_b),
+                    .hold_nz(rx_hold_nz[t]), .pop_nz(rx_pop_nz[t]), .next_nz(return_next_nz));
+            end else begin : g_return_local
+                assign return_next_nz = next_nz;
+            end
+            if (t == 3) begin : g_write_full
+                wire hold_notfull, pop_notfull;
+                ot_s81hd_lep_nz_predict #(.W(AR+1), .TARGET(DR)) u_predict_full (
+                    .count(n), .write_en(wr), .hold_nz(hold_notfull), .pop_nz(pop_notfull));
+                ot_s81hd_lep_nz_choose u_allow_write (
+                    .ready_a(ready_a), .ready_b(own_ready_b),
+                    .hold_nz(hold_notfull), .pop_nz(pop_notfull), .next_nz(next_notfull));
+            end else begin : g_write_full_legacy
+                assign next_notfull = n_nx != (AR+1)'(DR);
+            end
+        end else begin : g_nz_legacy
+            assign rx_hold_nz[t] = 1'b0;
+            assign rx_pop_nz[t] = 1'b0;
+            assign next_nz = n_nx != 0;
+            assign peer_next_nz = rnex[t^1];
+            assign return_next_nz = next_nz;
+            assign next_notfull = n_nx != (AR+1)'(DR);
+        end
+        assign rnex[t] = return_next_nz;
         integer k;
         always @(posedge clk or negedge rx_state_reset)
             if (!rx_state_reset) begin wp <= 0; rp <= 0; n <= 0; vq <= 1'b0; nz <= 1'b0; cr <= 1'b0; f <= 1'b0; we <= DR'(1); end
@@ -659,18 +731,31 @@ module ot_s81hd_lep_core_nr #(
                 vq <= li_v[t];
                 cr <= pop;
                 if (vq && full && !pop) f <= 1'b1;
-                wp <= wp_nx; rp <= rp_nx; n <= n_nx; nz <= n_nx != 0;
-                for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && (n_nx != (AR+1)'(DR));
+                wp <= wp_nx; rp <= rp_nx; n <= n_nx; nz <= return_next_nz;
+                for (k = 0; k < DR; k = k + 1) we[k] <= (wp_nx == AR'(k)) && next_notfull;
             end
+        wire adv_pair, adv_meta_pair;   // RNE-PAIR-COPY: the pair partner's nonempty flags as seen by this lane's pointers
         if(SAFE_CONTROL) begin:g_nonempty_regions
           (* keep=1 *) reg addr_nz,meta_nz,return_nz;
           wire reset_c=rr[NATIVE32_RXRSTBASE+t];
           always @(posedge clk or negedge reset_c)
             if(!reset_c) begin addr_nz<=0;meta_nz<=0;return_nz<=0;end
-            else begin addr_nz<=n_nx!=0;meta_nz<=n_nx!=0;return_nz<=n_nx!=0;end
+            else begin addr_nz<=next_nz;meta_nz<=next_nz;return_nz<=return_next_nz;end
           assign rne_addr[t]=addr_nz;assign rne_meta[t]=meta_nz;assign rne_return[t]=return_nz;
+          // RNE-PAIR-COPY: this lane's own copy of the pair partner's addr_nz (same D rnex[t^1], same partner reset)
+          (* keep=1 *) reg addr_pz;
+          wire reset_p=rr[NATIVE32_RXRSTBASE+(t^1)];
+          always @(posedge clk or negedge reset_p)
+            if(!reset_p) addr_pz<=0; else addr_pz<=peer_next_nz;
+          assign adv_pair=addr_pz;
+          (* keep=1 *) reg meta_pz;   // RNE-PAIR-COPY: same for the partner's meta_nz (meta read pointers)
+          always @(posedge clk or negedge reset_p)
+            if(!reset_p) meta_pz<=0; else meta_pz<=peer_next_nz;
+          assign adv_meta_pair=meta_pz;
         end else begin:g_nonempty_shared
           assign rne_addr[t]=rne[t];assign rne_meta[t]=rne[t];assign rne_return[t]=rne[t];
+          assign adv_pair=rne[t^1];
+          assign adv_meta_pair=rne[t^1];
         end
         always @(posedge clk) dq<=li_d[t*(H+1)+:H+1];
         if(!SAFE_FIFO) begin:g_legacy_mem
@@ -701,12 +786,12 @@ module ot_s81hd_lep_core_nr #(
             for(genvar mp=0;mp<3;mp=mp+1) begin:g_meta_ptr
               if((NATIVE32!=0 || SAFE_STD) && RX_SRAM!=0) begin:g_local
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
-                wire mb=(t==0)?1'b1:rne_meta[2*(t/2)+1];
+                wire mb=(t==0)?1'b1:(((t%2)==1)?rne_meta[t]:adv_meta_pair);
 `else
-                wire mb=rne_meta[2*(t/2)+1];
+                wire mb=((t%2)==1)?rne_meta[t]:adv_meta_pair;
 `endif
                 (* keep=1 *) ot_sram_showahead_readptr #(.AW(AR),.DEPTH(DR)) u_ptr(
-                  .clk(clk),.rn(rr[NATIVE32_RXRSTBASE+t]),.advance_a(rne_meta[2*(t/2)]),.advance_b(mb),
+                  .clk(clk),.rn(rr[NATIVE32_RXRSTBASE+t]),.advance_a(((t%2)==0)?rne_meta[t]:adv_meta_pair),.advance_b(mb),
                   .next_addr(meta_read_next[mp*AR+:AR]));
               end else begin:g_shared assign meta_read_next[mp*AR+:AR]=rp_nx;end
             end
@@ -743,11 +828,11 @@ module ot_s81hd_lep_core_nr #(
 `endif
                 ot_sram_showahead_1r1w_head_nr #(.W(H+1),.AW(AR),.LOCAL_HIT(1),.SB(8),.LOCAL_RA(NATIVE32+SAFE_STD),.LOCAL_WA(NATIVE32+SAFE_STD),.LOCAL_WD(SAFE_STD),.DEPTH(DR)) u_rx_mem(
                     .clk(clk),.rst_n(rr[4+t*RX_NS+:RX_NS]),.we(wr),.wa(wp),.wd(dq),
-                    .ra(read_next),.q(head),.advance_a(rne_addr[2*(t/2)]),
+                    .ra(read_next),.q(head),.advance_a(((t%2)==0)?rne_addr[t]:adv_pair),
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
-                    .advance_b((t==0)?1'b1:rne_addr[2*(t/2)+1]));
+                    .advance_b((t==0)?1'b1:(((t%2)==1)?rne_addr[t]:adv_pair)));
 `else
-                    .advance_b(rne_addr[2*(t/2)+1]));
+                    .advance_b(((t%2)==1)?rne_addr[t]:adv_pair));
 `endif
                 assign rhd[t*(H+1)+:H+1]=head;
             end else begin:g_old_head
@@ -788,7 +873,13 @@ module ot_s81hd_lep_core_nr #(
         // reg does not stop that) and one flop drove rxv[1] and rxvb[*] ~580 um apart (gate textbook.wire_reach 10-19)
         wire rnb = rr[1];
         (* keep = "true" *) reg [1:0] rxvb_q;
-        always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        if (NRV == 0) begin : g_rxvb_r1
+            always @(posedge clk or negedge rnb) if (!rnb) rxvb_q <= 2'b00; else rxvb_q <= 2'b11;
+        end else begin : g_rxvb_own   // RST-FAN-1: one local per lane (rr[4+NRX_RST+NXR+b]), same release edge
+            wire rnb0 = rr[4+NRX_RST+NXR], rnb1 = rr[5+NRX_RST+NXR];
+            always @(posedge clk or negedge rnb0) if (!rnb0) rxvb_q[0] <= 1'b0; else rxvb_q[0] <= 1'b1;
+            always @(posedge clk or negedge rnb1) if (!rnb1) rxvb_q[1] <= 1'b0; else rxvb_q[1] <= 1'b1;
+        end
         assign rxvb = rxvb_q;
     end else begin : g_nrxb
         assign li2_r = 1'b0; assign li3_r = 1'b0; assign rxvb = 2'b00;
@@ -1263,10 +1354,12 @@ endmodule
 
 module ot_s81hd_lep_idx_nr #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [3:0] TXP = 4'b1000, parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0,
+    parameter integer RTG = 0, parameter integer RTR = 1, parameter [1023:0] RTGS = 1024'd0, parameter [255:0] RTRM = 256'd0
 ) (
     input  wire            clk,
     input  wire            rst_n,
+    input  wire [15:0]     rst_nr,     // RST-FAN-1d: per-root-copy resets of the mapped tree (RTG > 0; else unread)
     input  wire [1103:0]   ro,
     output wire [1103:0]   ri,
     output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
@@ -1297,8 +1390,9 @@ module ot_s81hd_lep_idx_nr #(
     output wire [275:0]    cb
 );
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
-        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .RXH(RXH)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
-        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .TXP(TXP), .RXH(RXH),
+        .RTG(RTG), .RTR(RTR), .RTGS(RTGS), .RTRM(RTRM)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .clk(clk), .rst_n(rst_n), .rst_nr(rst_nr), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
         .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
@@ -1309,23 +1403,38 @@ module ot_s81hd_lep_idx_nr #(
         .l2_f(l2_f), .l3_f(l3_f), .fault(fault), .tl(tl), .ca(ca), .cb(cb));
 endmodule
 
-module ot_sram_oldread_wreg_nr #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W+SB-1)/SB, NB=(W+127)/128, NA=(NS+GA-1)/GA, GROUP_IO=0, MUT=0)(
+module ot_sram_oldread_wreg_nr #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W+SB-1)/SB, NB=(W+127)/128, NA=(NS+GA-1)/GA, GROUP_IO=0, MUT=0, WPIPE=2)(
  input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [NA*AW-1:0] wa, input wire [W-1:0] wd,
  input wire re, input wire [NA*AW-1:0] ra, output wire [W-1:0] q,
  input wire [NA-1:0] we_group, re_group);
  wire [NA-1:0] w_en=(GROUP_IO!=0)?we_group:{NA{we}};
  wire [NA-1:0] r_en=(GROUP_IO!=0)?re_group:{NA{re}};
- wire [NA-1:0] wvalid; wire [NA*AW-1:0] waddr; reg [W-1:0] wdata;
+ wire [NA-1:0] wvalid; wire [NA*AW-1:0] waddr; reg [W-1:0] wdata; wire [W-1:0] wbank;
  always @(posedge clk) wdata<=wd;
- wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},wdata},raw;
+ wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},wbank},raw;
  genvar b,s,a;
- generate for(a=0;a<NA;a=a+1) begin:g_address
+ generate if(WPIPE==2) begin:g_wpipe
+   (* keep="true" *) reg [W-1:0] wdata2;
+   always @(posedge clk) wdata2<=wdata;
+   assign wbank=wdata2;
+ end else begin:g_wnopipe
+   assign wbank=wdata;
+ end
+ for(a=0;a<NA;a=a+1) begin:g_address
    (* keep="true" *) reg [AW-1:0] address_r;
-   reg valid_r; assign wvalid[a]=valid_r;
+   reg valid_r;
    always @(posedge clk or negedge rst_n[GA*a]) if(!rst_n[GA*a]) valid_r<=0;else valid_r<=w_en[a];
-   assign waddr[a*AW+:AW]=address_r;
    always @(posedge clk or negedge rst_n[GA*a]) if(!rst_n[GA*a]) address_r<=0;else address_r<=wa[a*AW+:AW];
+   if(WPIPE==2) begin:g_wpipe
+     (* keep="true" *) reg [AW-1:0] address_r2;
+     reg valid_r2;
+     always @(posedge clk or negedge rst_n[GA*a]) if(!rst_n[GA*a]) begin valid_r2<=0;address_r2<=0;end
+       else begin valid_r2<=valid_r;address_r2<=address_r;end
+     assign wvalid[a]=valid_r2; assign waddr[a*AW+:AW]=address_r2;
+   end else begin:g_wnopipe
+     assign wvalid[a]=valid_r; assign waddr[a*AW+:AW]=address_r;
+   end
  end
  for(b=0;b<NB;b=b+1) begin:g_bank
    ot_sram_1r1w_512x128_m4_r0c0 u_m(.clk(clk),.r_ce_in(r_en[(128*b)/(GA*SB)]),.r_addr_in(9'(ra[AW*((128*b)/(GA*SB))+:AW])),.rd_out(raw[128*b+:128]),
@@ -1336,15 +1445,28 @@ module ot_sram_oldread_wreg_nr #(parameter integer W=553, AW=9, SB=16, GA=16, NS
    (* keep="true" *) reg valid_r,select_r;
    (* keep="true" *) reg [AW-1:0] addr_r;
    reg [SW-1:0] forwarded;
-   wire hit=(MUT==1)?1'b0:(valid_r && ra[AW*(s/GA)+:AW]==addr_r);
+   wire hit1=(MUT==1)?1'b0:(valid_r && ra[AW*(s/GA)+:AW]==addr_r);
+   wire hit2; wire hit=hit1||hit2;
+   wire [SW-1:0] fwd_d;
+   if(WPIPE==2) begin:g_wpipe
+     (* keep="true" *) reg valid_r2;
+     (* keep="true" *) reg [AW-1:0] addr_r2;
+     always @(posedge clk or negedge rst_n[s])
+       if(!rst_n[s]) begin valid_r2<=0;addr_r2<=0;end else begin valid_r2<=valid_r;addr_r2<=addr_r;end
+     assign hit2=(MUT==1)?1'b0:(valid_r2 && ra[AW*(s/GA)+:AW]==addr_r2);
+     assign fwd_d=hit1?wdata[LO+:SW]:wbank[LO+:SW];
+   end else begin:g_wnopipe
+     assign hit2=1'b0;
+     assign fwd_d=wdata[LO+:SW];
+   end
    always @(posedge clk or negedge rst_n[s])
      if(!rst_n[s]) begin valid_r<=0;addr_r<=0;select_r<=0;end
      else begin valid_r<=w_en[s/GA];addr_r<=wa[AW*(s/GA)+:AW];if(r_en[s/GA]) select_r<=hit;end
-   always @(posedge clk) if(r_en[s/GA] && hit) forwarded<=wdata[LO+:SW];
+   always @(posedge clk) if(r_en[s/GA] && hit) forwarded<=fwd_d;
    assign q[LO+:SW]=select_r?forwarded:raw[LO+:SW];
  end endgenerate
 `ifndef SYNTHESIS
- initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || ((128%(GA*SB))!=0 && ((GA*SB)%128)!=0)) $fatal(1,"oldread memory requires1..512rows");
+ initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || (WPIPE!=1 && WPIPE!=2) || ((128%(GA*SB))!=0 && ((GA*SB)%128)!=0)) $fatal(1,"oldread memory requires1..512rows");
 `endif
 endmodule
 
@@ -1606,4 +1728,25 @@ endmodule
 (* keep_hierarchy, keep *)
 module ot_s81hd_lep_rxh_ctl #(parameter integer W = 44) (input wire clk, rn, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
     always @(posedge clk or negedge rn) if (!rn) d_o <= '0; else d_o <= d_i;
+endmodule
+
+// Predict both comparisons before the pair decision reaches the lane.
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_nz_predict #(parameter integer W = 4, parameter integer TARGET = 0) (
+    input wire [W-1:0] count,
+    input wire write_en,
+    output wire hold_nz, pop_nz
+);
+    // Exact modulo 2**W identities, including empty underflow and full-width overflow.
+    assign hold_nz = write_en ? (count != W'(TARGET-1)) : (count != W'(TARGET));
+    assign pop_nz = write_en ? (count != W'(TARGET)) : (count != W'(TARGET+1));
+endmodule
+
+// Select at the consumer. Passing ready operands separately keeps the decode local.
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_nz_choose (
+    input wire ready_a, ready_b, hold_nz, pop_nz,
+    output wire next_nz
+);
+    assign next_nz = (ready_a && ready_b) ? pop_nz : hold_nz;
 endmodule
