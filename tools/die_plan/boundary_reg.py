@@ -134,14 +134,16 @@ def _plan(raw, plan_path):
     return S.Plan(raw, Path(plan_path))
 
 
-def findings(raw, plan_path=None, tree=None, radius=RADIUS_UM, **kw):
+def findings(raw, plan_path=None, tree=None, radius=RADIUS_UM, boundary_reg_types=None, **kw):
     lvl = "FAIL" if os.environ.get("OT_BREG_BLOCK") == "1" else "WARN"
     try:
         P = _plan(raw, plan_path)
     except Exception as e:  # noqa: BLE001 an advisory never breaks the gate
         return [f"WARN {TAG} not checked: plan load {type(e).__name__}: {str(e)[:120]}"]
     out, ntypes, nbits, nslots = [], 0, 0, 0
-    for tn in sorted(P.types):
+    # Keep all peer partitions in P so type-derived port geometry can resolve.
+    selected = P.types if boundary_reg_types is None else P.types.keys() & boundary_reg_types
+    for tn in sorted(selected):
         t = P.types[tn]
         if t.get("hard"):
             continue

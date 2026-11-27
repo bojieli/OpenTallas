@@ -1469,6 +1469,18 @@ SCHEMA = {
             "attach_order": {"enum": ["alphabetical", "nearest"]},
             "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
             "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
+            # Exact named reset BTerms and fresh-wavefront instance guards for
+            # scoped physical refits with an existing reset release contract.
+            "boundary_roles": {"type": "object", "additionalProperties": False,
+                "properties": {
+                    "outputs": {"type": "object", "additionalProperties": {"type": "array", "minItems": 1,
+                        "items": {"type": "object", "additionalProperties": False, "required": ["port", "site", "xy_um"],
+                            "properties": {"port": _name, "site": {"type": "integer", "minimum": 0}, "xy_um": _xy}}}},
+                    "parents": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False,
+                        "required": ["type", "source", "input_um", "output_um", "entry_stages", "depth_K", "release"],
+                        "properties": {"type": _name, "source": _name, "input_um": _xy, "output_um": _xy,
+                                       "entry_stages": {"type": "integer"}, "depth_K": {"type": "integer"},
+                                       "release": {"type": "integer"}}}}}},
             # R-REACH-1 die reset relays (S81-DIE-R4 11-20; reset_tree.plan_die_relays / reach_relay_plan.py): per child
             # partition, registered die-top relay flops on its wavefront hop (solved parent + rst_o site, die-frame sites,
             # every segment <= hop_um); each relay = +1 release cycle of the child's subtree (reset_tree.wf_plan)

@@ -3619,7 +3619,7 @@ def site_off_outline_findings(plan):
 # P-SCOPE-VIEW-KEYOUT (S81-PRE-KEYERR 11-26): REF-SITE solves the same die reset wavefront (reset.keep_outs names types outside the scope:
 # S81 col_h10_r1/r2 died with KeyError col_h10_r0_p1, NOT-EVALUABLE); it too runs on the whole plan, limited by OT_ADV_REFSITE_TYPES.
 # Never filter keep_outs / partitions instead: a wavefront solved on part of the die is another die (wrong relay names, false clean).
-ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME", "REF-SITE")
+ADV_DIE_CONTEXT = ("G0-HOPS", "LANE-STATIONS", "STN-DEADLANE", "RESET-NAME", "REF-SITE", "BOUNDARY-REG-50")
 ADV_SCOPE_ENV = ("OT_ADV_REFSITE_TYPES",)
 
 
@@ -3654,7 +3654,8 @@ def advisory_lines(tree, plan, asbuilt=None, baseline=None, scope=None, reset_pl
                 os.environ[k] = ",".join(sorted(scope))
             try:
                 if _dchecks:
-                    lines += PA.run(raw, plan, tree, checks=_dchecks, asbuilt=asbuilt, baseline=baseline)
+                    lines += PA.run(raw, plan, tree, checks=_dchecks, asbuilt=asbuilt, baseline=baseline,
+                                    boundary_reg_types=scope)
             finally:
                 for k in _set:
                     os.environ.pop(k, None)
