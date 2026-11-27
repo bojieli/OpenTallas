@@ -1,0 +1,1 @@
+- 2026-11-27 09:55 PST DONE [S81-INT-R3-VIEWS] ot-run oth-ubuntu-2243890-1795801367 on loved-redfish: rc=0 after 741 s, ended 17:55:04, log /srv/opentallas-scratch2/claude/S81-INT-R3-VIEWS/fork.log, cmd: --mem 4 --threads 4 --dir /srv/opentallas-scratch2/claude/S81-INT-R3-VIEWS --disk 90 --hosts epyc7 -- python3 -I /srv/opentallas-scratch2/cl
