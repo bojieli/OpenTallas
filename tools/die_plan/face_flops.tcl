@@ -596,6 +596,30 @@ proc ff_core_boxes_of {rects halo} {
   foreach r $rects { lassign $r a b c d; lappend out [list [expr {$a - $halo}] [expr {$b - $halo}] [expr {$c + $halo}] [expr {$d + $halo}]] }
   return $out
 }
+# C-HOLDCHAIN-NET-NOT-DNT (COORD FABLE-RC-S81 1247, S81 leaf t33 ft8: ODB-1211 "Load pin u_hdly_ft8_i.g_b[995].g_k[2].u_hb/A is dont_touch"
+# then RSZ-3006 in the timing-driven GPL pass): the HB4 hold-pad cells u_hdly_* are dont_touch from PRE_FLOORPLAN on, but the nets that
+# feed them (the chain's inter-stage nets c[k], the bus net into the first pad) were not, so any resizer pass that buffers such a net
+# before its loads dies on the dont_touch load.  Before global placement every input net of a dont_touch u_hdly_ cell is made
+# dont_touch too (idempotent; instances and nets of no other cell are touched; OT_HDLY_NETS_DNT=0 restores the old flow).  The pass
+# verifies itself: a pad input net still not dont_touch afterwards is an error.  grt183_resume.tcl protect_pad_nets does the same at GRT.
+proc ff_hdly_nets_dnt {} {
+  if {[info exists ::env(OT_HDLY_NETS_DNT)] && $::env(OT_HDLY_NETS_DNT) eq "0"} { puts "OT_HDLY_NETS_DNT off (OT_HDLY_NETS_DNT=0)"; return }
+  set pads 0; set marked 0; set missing 0
+  foreach inst [[ord::get_db_block] getInsts] {
+    if {[string first "u_hdly_" [$inst getName]] < 0 || ![$inst isDoNotTouch]} continue
+    incr pads
+    foreach it [$inst getITerms] {
+      if {![$it isInputSignal]} continue
+      set net [$it getNet]
+      if {$net eq "NULL" || $net eq "" || [$net getSigType] ne "SIGNAL"} continue
+      if {![$net isDoNotTouch]} { $net setDoNotTouch 1; incr marked }
+      if {![$net isDoNotTouch]} { incr missing }
+    }
+  }
+  puts "OT_HDLY_NETS_DNT pads=$pads nets_marked=$marked missing=$missing (dont_touch on the nets feeding dont_touch u_hdly_ pad loads, before GPL)"
+  if {$missing} { error "OT_HDLY_NETS_DNT: $missing u_hdly_ pad input nets could not be made dont_touch" }
+}
+ff_hdly_nets_dnt
 set ff_core_boxes {}
 if {![info exists ::env(OT_FF_CORE_SKIP)] || $::env(OT_FF_CORE_SKIP) ne "0"} {
   set ff_cb_rects {}

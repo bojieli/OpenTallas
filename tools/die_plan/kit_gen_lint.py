@@ -107,6 +107,25 @@ def _sources_text(kd):
     return "\n".join(out)
 
 
+def hdly_nets_dnt(kd):
+    """C-HOLDCHAIN-NET-NOT-DNT: a kit whose PRE_FLOORPLAN keeps HB4 hold-pad cells (u_hdly_*) dont_touch must run the net guard
+    (face_flops.tcl ff_hdly_nets_dnt, PRE_GLOBAL_PLACE) so every u_hdly_ chain net is dont_touch before GPL.  NA without such pads."""
+    pre = kd / "pre_floorplan_type.tcl"
+    if not pre.is_file() or "u_hdly_" not in pre.read_text(errors="replace") or "setDoNotTouch" not in pre.read_text(errors="replace"):
+        return [], False
+    errs = []
+    cfg = _cfg(kd)
+    if (cfg.get("OT_HDLY_NETS_DNT") or [""])[0] == "0":
+        errs.append("config.mk exports OT_HDLY_NETS_DNT = 0 on a kit with dont_touch u_hdly_ pads (RSZ-3006 on a chain net)")
+    ff = kd / "face_flops.tcl"
+    hook = " ".join(cfg.get("PRE_GLOBAL_PLACE_TCL") or [])
+    if not hook:
+        errs.append("kit keeps u_hdly_ pads dont_touch but has no PRE_GLOBAL_PLACE_TCL hook for the net guard")
+    elif not ff.is_file() or not re.search(r"(?m)^ff_hdly_nets_dnt\s*$", ff.read_text(errors="replace")):
+        errs.append("kit face_flops.tcl does not call ff_hdly_nets_dnt (u_hdly_ chain nets stay buffer-able before GPL)")
+    return errs, True
+
+
 def pins_vs_plan(kd, plan_dir=None):
     if not (kd / "freeze.json").is_file():
         return [], False
@@ -491,6 +510,7 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     put("pins_vs_plan", lambda: pins_vs_plan(kd, plan_dir))
     put("clock_export_form", lambda: clock_export_form(kd))
     put("macro_tcl", lambda: macro_tcl(kd))
+    put("hdly_nets_dnt", lambda: hdly_nets_dnt(kd))
     put("kit_rtl_paths", lambda: kit_rtl_paths(kd))
     cfg = _cfg(kd)
     res = {}
