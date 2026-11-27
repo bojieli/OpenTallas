@@ -290,3 +290,43 @@ def test_exact_diagnostic_receipt_stops_scan_and_preflight(tmp_path):
     signoff.write_bytes(raw + b'\n')
     assert run('signoff-source', args) == [{'state': 'changed'}]
     assert run('signoff-source', dict(args, record=hashlib.sha256(raw + b'\n').hexdigest())) == [{'state': 'ready'}]
+
+
+def test_private_marker_blocks_canonical_report_at_every_export_entry(tmp_path, monkeypatch):
+    import signoff as SO
+    home = tmp_path / 'home'
+    spool = home / AE.SPOOL_REL
+    monkeypatch.setenv('OT_AUTO_EXPORT_SPOOL', str(spool))
+    monkeypatch.setenv('OT_AUTO_EXPORT', '1')
+
+    odb = tmp_path / '6_final.odb'
+    odb.write_bytes(b'0' * (2 << 20))
+    payload = rec(odb=str(odb))
+    private = tmp_path / 'private'
+    public = tmp_path / 'public'
+    marked_output = private / 'signoff' / 'signoff.json'
+    ordinary_output = public / 'signoff' / 'signoff.json'
+    for report in (marked_output, ordinary_output):
+        report.parent.mkdir(parents=True)
+        report.write_text(json.dumps(payload))
+
+    # A record left by an old bundle must also be excluded by the host probe.
+    queued = Path(AE.enqueue(str(marked_output)))
+    (private / 'DO_NOT_COUNT').touch()
+    assert SO.auto_export_enqueue(marked_output, payload) is None
+    assert AE.enqueue(str(marked_output)) is None
+    assert list(spool.iterdir()) == [queued]
+
+    def run(mode, values):
+        env = dict(os.environ, HOME=str(home))
+        completed = subprocess.run([sys.executable, '-I', '-', mode, json.dumps(values)],
+                                   input=AE.PROBE, capture_output=True, env=env, text=True, check=True)
+        return [json.loads(line) for line in completed.stdout.splitlines()]
+
+    unit, = run('spool', {})
+    assert unit['err'] == 'DO_NOT_COUNT sign-off'
+    unit, = run('scan', dict(hours=1, roots=[str(tmp_path)]))
+    assert unit['signoff'] == str(ordinary_output)
+    for report, state in ((marked_output, 'diagnostic'), (ordinary_output, 'ready')):
+        assert run('signoff-source', dict(signoff=str(report), record=hashlib.sha256(report.read_bytes()).hexdigest(),
+                                         odb_sha256='f' * 64)) == [{'state': state}]
