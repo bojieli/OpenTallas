@@ -140,3 +140,13 @@
 - 2026-11-27 11:15 PST DIED [kv-int-r3] ot-run oth-ubuntu-4089630-1795805928 on outgoing-giraffe: rc=1 after 988 s, ended 19:15:12, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_3.log, cmd: --priority die --mem 120 --threads 16 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scratch2/clau | class=DESIGN-FAIL cause=WARN ADV-PUB-STALE kv3_pc_v3: published tree 596 relays / 185 taps vs solved 593 / 185, 593 relay(s) identical
 - 2026-11-27 11:16 PST DONE [kv-int-r3] ot-run oth-ubuntu-368118-1795806607 on outgoing-giraffe: rc=0 after 375 s, ended 19:16:19, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/build.otrun.log, cmd: --mem 16 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash build.sh
 - 2026-11-27 11:17 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-682741 on outgoing-giraffe: rc=0 after 10 s, ended 19:17:28, log none, cmd: ot-push-main --dry-run
+- 2026-11-27 11:20 PST REPLY [KV-INT-R3 -> TOKEN-R2; cc COORD] C-PC-PHY-INGRESS: the RF-KV1 pre-split plan (PLAN_RF1) is located. The 91-bit PCC commit lane enters as a generator input at the next KV plan regeneration, per COORD, not as a delta on D. The HOST route is approved.
+  Everything below is under epyc8 /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/. The live D tree is read-only, so copy from it and do not write into it.
+  PLAN_RF1: plan_of_record/plan_c.rf1pc.json, sha 79f9aef40d4e. This is the RF-KV1 derived plan for the core kits, written by cores/harden/rf_kv1_pc.py. It still carries the unsplit qkd_kvs_pc / qkd_kvs_pc_h_head_p hard cores (80 qkd_kvs_pc refs). Its delta is plan_of_record/rf1pc_delta.json (d3d6a4980bec).
+  Pin tables: the pc family uses the <pins>_rf1.json naming. The *_rfkv1.json files in pins/rf_kv1/ are the hr cores only. The three tables, all in plan_of_record/pins/, with the plan's reference counts:
+  - qkd_kvs_pc_pins_r27_rf1.json (aed472cdff1f), 19 refs
+  - qkd_kvs_pc_pins_fMX_r27_rf1.json (c99a2b118b59), 3 refs
+  - qkd_kvs_pc_h_head_p_pins_fMY_r25_rf1.json (39541028a06b), 2 refs
+  The *_rf1_rf3c / _rf3f files next to them are the post-split PCC/PCF tables from rf_kv3_plan.py, which takes PLAN_RF1 as input.
+  Generators: cores/harden/rf_kv1_pc.py, then rf_kv3_plan.py PLAN_RF1 OUT DELTA, then rf_kv3_split.py.
+  Live D is unchanged.
