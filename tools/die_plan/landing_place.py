@@ -1084,10 +1084,31 @@ def _dsel_cone_tcl(c, t=None):
     names = []
     data_launch = []
     packed_widths = []
+    scoped_words = []
     local_chunks = ((t or {}).get("clock") or {}).get("landing_ring_wreg") or {}
     for name, band in sorted((c or {}).get('bands', {}).items()):
         v = band.get('dsel_cone')
         launch = band.get('dsel_data_launch')
+        word_scope = band.get('dsel_data_scope')
+        if word_scope is not None:
+            width = band.get('width')
+            bits = word_scope.get('word_bits') if isinstance(word_scope, dict) else None
+            slots = word_scope.get('slots') if isinstance(word_scope, dict) else None
+            pockets = word_scope.get('word_rects_um') if isinstance(word_scope, dict) else None
+            ring = band.get('rect_um')
+            if (launch is not True or type(width) is not int or not isinstance(bits, list) or not bits
+                    or any(type(i) is not int or not 0 <= i <= width for i in bits)
+                    or bits != sorted(set(bits)) or type(slots) is not int or slots < 1
+                    or set(word_scope) != {'word_bits', 'slots', 'word_rects_um'}
+                    or not isinstance(pockets, dict) or set(pockets) != {str(i) for i in bits}
+                    or not isinstance(ring, list) or len(ring) != 4
+                    or any(k in band for k in ('rects_um', 'ff_rect_um', 'fill_axis', 'native_role_banks', 'hard_core'))):
+                raise ValueError(f"landing band {name}: invalid DSEL word scope")
+            for rect in pockets.values():
+                if (not isinstance(rect, list) or len(rect) != 4
+                        or any(type(q) not in (int, float) or not isfinite(q) for q in rect)
+                        or not (ring[0] <= rect[0] < rect[2] <= ring[2] and ring[1] <= rect[1] < rect[3] <= ring[3])):
+                    raise ValueError(f"landing band {name}: DSEL word pocket crosses the ring band")
         if launch is not None and (launch is not True or v is not True):
             raise ValueError(f"landing band {name}: dsel_data_launch must be true and requires dsel_cone=true")
         if v is None:
@@ -1098,6 +1119,10 @@ def _dsel_cone_tcl(c, t=None):
             raise ValueError(f"landing band {name}: dsel_cone requires ring_place='ff'")
         instance = band.get('instance', 'u_cland_' + name)
         names.append(instance)
+        if word_scope is not None:
+            words = ' '.join(str(bit) for bit in bits)
+            rects = ' '.join(f'{bit} {{{" ".join(f"{q:.5f}" for q in pockets[str(bit)])}}}' for bit in bits)
+            scoped_words.append(f'dict set ::cland_dsel_word_scope {{{instance}}} {{{{{words}}} {slots} {{{rects}}}}}')
         if launch:
             data_launch.append(instance)
             # Soft default-width rings use a single 64-bit chunk when the
@@ -1111,6 +1136,10 @@ def _dsel_cone_tcl(c, t=None):
         out += 'set cland_dsel_data_launch {' + ' '.join(data_launch) + '}\n'
     if packed_widths:
         out += 'set cland_dsel_data_launch_widths {' + ' '.join(packed_widths) + '}\n'
+    if scoped_words:
+        out += '\n'.join(scoped_words) + '\n'
+        if ((c or {}).get('bands') or {}).get('xo_i0', {}).get('placement_xo_spread') is not None:
+            out += 'set ::cland_export_dsel_anchors 1\n'
     return out
 
 
