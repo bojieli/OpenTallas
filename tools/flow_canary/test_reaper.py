@@ -100,3 +100,22 @@ def test_prune_keeps_odb_reports(tmp_path):
         p.write_bytes(b"x" * (R.BIG + 1))
     go(root, fake(tmp_path))
     assert odb.exists() and rep.exists() and not big.exists() and (r / R.MARK).exists()
+
+
+def test_prune_worktrees_after_source_delete(tmp_path):
+    import shutil
+    import subprocess
+    import reaper
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    env = ["-c", "user.name=t", "-c", "user.email=t@t"]
+    subprocess.run(["git", "-C", str(repo), "init", "-q"], check=True)
+    subprocess.run(["git", "-C", str(repo), *env, "commit", "-q", "--allow-empty", "-m", "x"], check=True)
+    wt = tmp_path / "src1"
+    subprocess.run(["git", "-C", str(repo), "worktree", "add", "-q", "--detach", str(wt)], check=True)
+    owner = reaper.owner_common_dir(wt)
+    assert owner == repo / ".git"
+    shutil.rmtree(wt)
+    assert "src1" in subprocess.run(["git", "-C", str(repo), "worktree", "list"], capture_output=True, text=True).stdout
+    assert reaper.prune_worktrees([owner, None, tmp_path / "nonexistent"]) >= 1
+    assert "src1" not in subprocess.run(["git", "-C", str(repo), "worktree", "list"], capture_output=True, text=True).stdout

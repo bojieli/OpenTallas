@@ -139,6 +139,35 @@ def locked(source):
     return False
 
 
+def owner_common_dir(source):
+    """the repo git dir owning a snapshot worktree, from <source>/.git 'gitdir: <repo>/.git/worktrees/<name>'"""
+    try:
+        g = Path(source) / ".git"
+        if g.is_file():
+            text = g.read_text().strip()
+            if text.startswith("gitdir: "):
+                gd = Path(text[8:])
+                if gd.parent.name == "worktrees":
+                    return gd.parent.parent
+    except OSError:
+        pass
+    return None
+
+
+def prune_worktrees(common_dirs, timeout=60):
+    """git worktree prune per owning repo; never fatal"""
+    n = 0
+    for c in sorted({str(x) for x in common_dirs if x}):
+        try:
+            r = subprocess.run(["git", "--git-dir", c, "worktree", "prune"], capture_output=True, text=True, timeout=timeout)
+            n += r.returncode == 0
+            if r.returncode:
+                print(f"REAPER worktree prune {c}: rc={r.returncode} {r.stderr.strip()[:200]}")
+        except (OSError, subprocess.SubprocessError) as e:
+            print(f"REAPER worktree prune {c}: {e}")
+    return n
+
+
 def keep_file(run, f):
     rel = f.relative_to(run).parts
     n = f.name
@@ -195,9 +224,13 @@ def reap(root, ot_delete=OT_DELETE, dry=False, now=None, unit_alive=unit_active,
         if not dry and files:
             run_delete(ot_delete, files, dry)
             (r / MARK).write_text("pruned by flow_canary reaper\n")
+    owners = []
     for s in srcs:
         print(f"REAPER {tag}delete source {s}")
+        owners.append(owner_common_dir(s))
         run_delete(ot_delete, [s], dry)
+    if not dry and srcs:
+        prune_worktrees(owners)
     print(f"REAPER {tag}summary: runs {len(del_runs)} prune {len(prune)} ({nfiles} files) sources {len(srcs)}")
     return len(del_runs), len(prune), len(srcs)
 
