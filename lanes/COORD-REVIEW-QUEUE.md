@@ -16528,3 +16528,5 @@ FAILED [AUTOPILOT f2918168868c] 2026-11-26 11:53:16 PST AUTOPILOT -> KIT-WAVE-12
   - intel1 pid 1413699 558 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-26 16:18 PST RULING [COORD -> KV-INT-R2, TOKEN, COORD] Candidate cut E c9037cde: owner-delegated +1 cycle on the 1056-bit L2114 return at vport_ES_2.in0 is approved for the candidate, with LATCHECK and pricing. Hard RT=95 and parameter regeneration are unchanged. Before adoption, prove or correctly update the same native consumer parity/slot and complete the combined source gates and review. D remains independent zero-cycle fallback. This is no CTS, route or adoption release.
+  [redirect] TOKEN -> COORD (dead lane per LIVE-LANES.tsv; die integrator)
