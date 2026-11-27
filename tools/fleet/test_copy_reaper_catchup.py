@@ -17,6 +17,7 @@ def test_reaper_script_only_touches_rsync_server_by_exact_pid():
 
 def test_catchup_pushes_only_hosts_behind_in_parallel_and_backs_off_failures(tmp_path):
     m = load()
+    m.RT = tmp_path
     m.current = lambda: "newrev"
     m.log = lambda s: None
     cur = {"a": "newrev", "b": "old", "c": "old", "d": "old"}

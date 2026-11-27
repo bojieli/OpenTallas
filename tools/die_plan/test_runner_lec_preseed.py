@@ -76,6 +76,16 @@ def test_driver_capability_api_does_not_enter_proof():
     driver=Path(GP.__file__).with_name("lec.py")
     run=subprocess.run([sys.executable,"-I",str(driver),"--capabilities"],capture_output=True,text=True,check=True)
     options=json.loads(run.stdout)["proof_options"]
-    assert set(options)=={"OT_LEC_HINTS_PRESEED","OT_LEC_SUPERSET_VEC","OT_LEC_EARLY_COMPARE","OT_LEC_ENABLE_FILL_GUARD","OT_LEC_REPLICA_MATCH","OT_LEC_MEM_LANES","OT_LEC_PARITY_TERMS"}
+    assert set(options) == {
+        "OT_LEC_HINTS_PRESEED",
+        "OT_LEC_SUPERSET_VEC",
+        "OT_LEC_EARLY_COMPARE",
+        "OT_LEC_ENABLE_FILL_GUARD",
+        "OT_LEC_REPLICA_MATCH",
+        "OT_LEC_MEM_LANES",
+        "OT_LEC_PARITY_TERMS",
+        "OT_LEC_PART_RE",
+        "OT_LEC_RELAY_HINTS",
+    }
     run=subprocess.run([sys.executable,"-I",str(driver),"--require-options","UNKNOWN"],capture_output=True,text=True)
     assert run.returncode==2 and "LEC CONFIG ERROR" in run.stderr
