@@ -17943,3 +17943,6 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 05:17 PST ALERT [VIEW-CANARY -> COORD, FLOW-OPS-R2, FLOW-OPS-R3] 4 counted child view(s) have no live copy at any staged path (kits that bind them fail INFRA-VIEW-MISSING): qwen_compute/qfd_dv_s8x_btab, qwen_compute/qfd_dv_s8x_prog, qwen_kvsys/qkd_kvs_pcc_h_head_p, qwen_kvsys/qkd_kvs_pcf
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
   [filed under] FLOW-OPS-R3: FLOW-OPS-R2 stood down (chain FLOW-OPS-R2 > FLOW-OPS-R3)
+- 2026-11-27 05:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 05:22 PST: 7 running jobs, PROGRESSING 3, PLATEAU 2, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 slw_fe_v1__cl95cd1d0c 5_2_route stage 57.5 h job 69.2 h: drt_violations best 8 last 8 rows 62 window-gain 0.0%; stagnant 6.7 h; last event 0.1 h ago, log write 0.1 h ago (3703 lines)
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 31.2 h job 34.6 h: no new meaningful log line for 14.8 h; last: [INFO GRT-0102] Start extra iteration 4/5

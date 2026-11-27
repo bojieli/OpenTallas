@@ -857,3 +857,6 @@
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 29.2 h job 32.6 h: no new meaningful log line for 12.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
 - 2026-11-27 04:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 04:22 PST: 8 running jobs, PROGRESSING 4, PLATEAU 2, SLOW 1, NO-PROGRESS 1 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 30.2 h job 33.6 h: no new meaningful log line for 13.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
+- 2026-11-27 05:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 05:22 PST: 7 running jobs, PROGRESSING 3, PLATEAU 2, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 slw_fe_v1__cl95cd1d0c 5_2_route stage 57.5 h job 69.2 h: drt_violations best 8 last 8 rows 62 window-gain 0.0%; stagnant 6.7 h; last event 0.1 h ago, log write 0.1 h ago (3703 lines)
+  NO-PROGRESS intel1 probe_v20 grt_it0 stage 31.2 h job 34.6 h: no new meaningful log line for 14.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
