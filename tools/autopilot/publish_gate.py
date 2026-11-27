@@ -431,7 +431,7 @@ def run_static(tree, plan, *args, tool_root=None, **kw):
 
 
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
     it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
@@ -467,8 +467,8 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     pre_options = pre_tool.read_text(errors="replace") if pre_tool.is_file() else ""
     # ROWS compares consumer localization with the adopted live plan. The explicit remap
     # base is a separate parent for LANDREMAP and ISTCYC.
-    if band_base_ready and "--baseline-plan" in pre_options:
-        pre += ["--baseline-plan", str(band_base)]
+    if pre_baseline and os.path.isfile(pre_baseline) and "--baseline-plan" in pre_options:
+        pre += ["--baseline-plan", str(pre_baseline)]
     if pre_base and "--remap-base" in pre_options:
         pre += ["--remap-base", str(pre_base)]
     # P-PUBGATE-BOR (KV-INT-R2 11-26): the bound checks (RSTREACH / MACROGHOST / SEATMATCH / GENDRY-KITRTL) read --elab-dir, else the tree's
@@ -522,7 +522,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -536,6 +536,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + "".join(f" --scan {q(str(x))}" for x in scan or []) + "".join(f" --scan-asbuilt {q(str(x))}" for x in scan_asbuilt or [])
            + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
            + (f" --band-base {q(str(band_base))}" if band_base else "")
+           + (f" --pre-baseline {q(str(pre_baseline))}" if pre_baseline else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
            + (f" --tool-root {q(str(tool_root))}" if tool_root else ""))
@@ -658,6 +659,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             live = {}
         band_base = marker.get("band_base") or obj.get("band_base") or (live.get("plan") if live.get("plan") != plan else None)
         rec["band_base"] = band_base
+        # A candidate-supplied G0/remap comparator cannot authorize inherited rows.
+        pre_baseline = None
+        if live.get("src") == expect_source and live.get("event") == expect_event and live.get("plan") != plan:
+            pre_baseline = live.get("plan")
+        rec["pre_baseline"] = pre_baseline
         remap_base = marker.get("remap_base") or obj.get("remap_base")
         native_reset_receipt = marker.get("native_reset_receipt") or obj.get("native_reset_receipt")
         if remap_base:
@@ -693,7 +699,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
-                                                                       native_reset_receipt=native_reset_receipt, tool_root=rt_root())))(
+                                                                       native_reset_receipt=native_reset_receipt, tool_root=rt_root(),
+                                                                       pre_baseline=pre_baseline)))(
                 pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
             pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
             if pre_failure:
@@ -740,6 +747,7 @@ def main(argv=None):
     s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
     s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
     s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
+    s.add_argument("--pre-baseline", help="adopted plan for PRE baseline checks (normally shipped by run from the incumbent config)")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
@@ -752,7 +760,8 @@ def main(argv=None):
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
                                                    band_base=a.band_base, remap_base=a.remap_base,
-                                                   native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root)))
+                                                   native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root,
+                                                   pre_baseline=a.pre_baseline)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)

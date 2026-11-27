@@ -488,13 +488,15 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
         return pre, g0
 
     def test_remap_base_overrides_band_base_for_pre_only(self):
-        pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
+        incumbent = Path(self.td) / "incumbent.json"
+        incumbent.write_text("{}")
+        pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap), pre_baseline=str(incumbent))
         self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
-        self.assertEqual(pre[pre.index("--baseline-plan") + 1], str(self.band))
+        self.assertEqual(pre[pre.index("--baseline-plan") + 1], str(incumbent))
         self.assertEqual(g0[g0.index("--band-base") + 1], str(self.band))
 
-    def test_remap_base_alone_cannot_grandfather_consumer_rows(self):
-        pre, _g0 = self.calls(remap_base=str(self.remap))
+    def test_candidate_comparators_cannot_grandfather_consumer_rows(self):
+        pre, _g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
         self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
         self.assertNotIn("--baseline-plan", pre)
 
@@ -539,8 +541,9 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
             got["cmd"] = argv[-1]
             return R()
         PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, remap_base="/b/rev.json",
-                         native_reset_receipt="/r/rc.json")
+                         native_reset_receipt="/r/rc.json", pre_baseline="/b/live.json")
         self.assertIn("--remap-base /b/rev.json", got["cmd"]); self.assertIn("--native-reset-receipt /r/rc.json", got["cmd"])
+        self.assertIn("--pre-baseline /b/live.json", got["cmd"])
 
     def test_run_gate_takes_both_from_the_candidate(self):
         c = mk_coord(self.td)
@@ -552,12 +555,16 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
             return {k: {"verdict": "FAIL", "why": "stub"} for k in ("schema", "pre_g0", "hashes", "contained")}
         PG.static_remote = fake
         try:
-            obj = dict(cand(self.tree, self.plan), remap_base="/b/rev.json", native_reset_receipt="/r/rc.json")
+            obj = dict(cand(self.tree, self.plan), remap_base="/b/rev.json", native_reset_receipt="/r/rc.json",
+                       band_base="/b/g0.json", pre_baseline="/candidate.json")
             rec = PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_must_not_run, TC=TC)
         finally:
             PG.static_remote = orig
         self.assertEqual((seen.get("remap_base"), seen.get("native_reset_receipt")), ("/b/rev.json", "/r/rc.json"))
         self.assertEqual((rec["remap_base"], rec["native_reset_receipt"]), ("/b/rev.json", "/r/rc.json"))
+        self.assertEqual(seen.get("band_base"), "/b/g0.json")
+        self.assertEqual(seen.get("pre_baseline"), "/p0")
+        self.assertEqual(rec["pre_baseline"], "/p0")
 
 
 class ForeignTree(unittest.TestCase):
