@@ -14,7 +14,7 @@ pytestmark = pytest.mark.skipif(TCL is None, reason="tclsh not installed")
 
 def procs(src):
     out = []
-    for name in ("rt_aff_accept", "rt_net_driver_xy"):
+    for name in ("rt_aff_accept", "rt_aff_choose", "rt_net_driver_xy"):
         m = re.search(r"^proc %s \{.*?\n\}\n" % name, src, re.S | re.M)
         assert m, name
         out.append(m.group(0))
@@ -59,11 +59,46 @@ puts [llength [rt_net_driver_xy NET2]]
     assert out[:2] == ["656700", "576700"] and out[-1] == "0"
 
 
+CHOOSE = [  # best bd ck_i d_launch reach d_drv drv_known lim -> best bd status
+    ("7 50 9 100 400 150 1 180", "9 100 ok"),          # accepted: the clock tap relay is taken
+    ("7 50 9 100 400 205 1 180", "7 50 refused"),      # driver too far: nearest tap kept (best and bd untouched)
+    ("7 50 9 500 400 10 1 180", "7 50 reach"),         # outside the leaf reach: nearest tap kept, not counted as refused
+    ("7 50 9 100 400 0 0 180", "7 50 refused"),        # unmeasurable driver under a limit: refused, never fail-open
+    ("7 50 9 100 400 0 0 {}", "9 100 ok"),             # no limit: unmeasurable driver is irrelevant (default off)
+    ("7 50 9 100 {} 205 1 180", "7 50 refused"),
+    ("7 50 9 100 400 165 1 165", "9 100 ok"),
+    ("7 50 9 100 400 166 1 165", "7 50 refused"),
+]
+
+
+def test_choose_table():
+    assert run("".join("puts [rt_aff_choose %s]\n" % c for c, _ in CHOOSE)) == [x for _, w in CHOOSE for x in ["{%s}" % w] ] or True
+    out = subprocess.run([TCL], input=procs(SRC) + "\n" + "".join("puts [rt_aff_choose %s]\n" % c for c, _ in CHOOSE), capture_output=True, text=True, timeout=30).stdout.strip().splitlines()
+    assert out == [w for _, w in CHOOSE]
+
+
+def _choose_out(src):
+    return subprocess.run([TCL], input=procs(src) + "\n" + "".join("puts [rt_aff_choose %s]\n" % c for c, _ in CHOOSE), capture_output=True, text=True, timeout=30).stdout.strip().splitlines()
+
+
+@pytest.mark.parametrize("old,new", [
+    ("if {$reach_dbu ne \"\" && $d_launch > $reach_dbu} { return [list $best $bd reach] }", ""),
+    ("if {$lim_dbu ne \"\" && !$drv_known} { return [list $best $bd refused] }", ""),
+    ("return [list $ck_i $d_launch ok]", "return [list $ck_i $d_launch ok]; set x 1"),
+    ("  return [list $best $bd refused]\n}", "  return [list $ck_i $d_launch ok]\n}"),
+    ("if {[rt_aff_accept $d_launch $reach_dbu $d_drv $lim_dbu]} {", "if {1} {"),
+])
+def test_choose_mutants(old, new):
+    assert old in SRC
+    if new.endswith("set x 1"):
+        pytest.skip("equivalent mutant")
+    assert _choose_out(SRC.replace(old, new, 1)) != [w for _, w in CHOOSE]
+
+
 def test_call_site_pinned():
-    m = re.search(r"if \{\[rt_aff_accept .*?\n.*?\n\s*\}\n", SRC, re.S)
-    assert m
-    blk = SRC[SRC.index("rt_aff_accept $d"):SRC.index("rt_aff_accept $d") + 700]
-    assert "set best $ck_i; set bd $d" in blk and "incr rt_aff_refused" in blk
+    assert "lassign [rt_aff_choose $best $bd $ck_i $d $reach_dbu $d_drv $drv_known $lim_dbu] best bd aff_st" in SRC   # argument order pinned
+    assert "set d_drv 0; set drv_known 0" in SRC and "set drv_known 1" in SRC and "set lim_dbu [expr" in SRC
+    assert '$aff_st eq "refused"' in SRC and "incr rt_aff_refused" in SRC
     assert "OT_RESET_AFFINITY_REFUSED" in SRC
     assert "OT_RESET_REPOINT_MAX_UM" not in SRC             # the first guard is gone: nearest-tap re-points are never refused
 

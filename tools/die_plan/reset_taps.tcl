@@ -21,6 +21,15 @@ proc rt_aff_accept {d_launch reach_dbu d_drv lim_dbu} {
   if {$lim_dbu ne "" && $d_drv > $lim_dbu} { return 0 }
   return 1
 }
+# rt_aff_choose: the whole affinity decision as one pure proc.  -> {best bd status}; status ok (override taken), refused (override refused by the driver
+# limit, nearest tap kept), reach (outside the leaf reach, nearest tap kept, as before).  drv_known 0 (the relay net has no instance driver) with a limit set
+# REFUSES: an unmeasurable leg is never accepted under a limit.
+proc rt_aff_choose {best bd ck_i d_launch reach_dbu d_drv drv_known lim_dbu} {
+  if {$reach_dbu ne "" && $d_launch > $reach_dbu} { return [list $best $bd reach] }
+  if {$lim_dbu ne "" && !$drv_known} { return [list $best $bd refused] }
+  if {[rt_aff_accept $d_launch $reach_dbu $d_drv $lim_dbu]} { return [list $ck_i $d_launch ok] }
+  return [list $best $bd refused]
+}
 proc rt_net_driver_xy {net} {
   foreach it [$net getITerms] { if {[$it isOutputSignal]} { return [[$it getInst] getLocation] } }
   return {}
@@ -385,11 +394,12 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
         set reach_dbu [expr {[info exists rt_leaf_reach_um] ? $rt_leaf_reach_um * $rt_dbu : ""}]
         set lim_dbu ""
         if {[info exists ::env(OT_RESET_AFFINITY_MAX_DRIVER_UM)] && $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) ne ""} { set lim_dbu [expr {$::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) * $rt_dbu}] }
-        set d_drv 0
+        set d_drv 0; set drv_known 0
         set dxy [rt_net_driver_xy [dict get $rt_rep "$ck_i,$par"]]
-        if {[llength $dxy] == 2} { set d_drv [expr {abs($x - [lindex $dxy 0]) + abs($y - [lindex $dxy 1])}] }
-        if {[rt_aff_accept $d $reach_dbu $d_drv $lim_dbu]} { set best $ck_i; set bd $d } elseif {$d <= [expr {$reach_dbu eq "" ? $d : $reach_dbu}]} {
-          incr rt_aff_refused; lappend rt_aff_l "[$ins getName]/[[$it getMTerm] getName]:clk_t$ck_i driver [format %.1f [expr {$d_drv/double($rt_dbu)}]]um"
+        if {[llength $dxy] == 2} { set d_drv [expr {abs($x - [lindex $dxy 0]) + abs($y - [lindex $dxy 1])}]; set drv_known 1 }
+        lassign [rt_aff_choose $best $bd $ck_i $d $reach_dbu $d_drv $drv_known $lim_dbu] best bd aff_st
+        if {$aff_st eq "refused"} {
+          incr rt_aff_refused; lappend rt_aff_l "[$ins getName]/[[$it getMTerm] getName]:clk_t$ck_i driver [expr {$drv_known ? [format %.1f [expr {$d_drv/double($rt_dbu)}]] : "unmeasurable"}]um"
         }
       }
     }
@@ -415,8 +425,8 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks, max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
     if {[llength $rt_leaf_bad]} { puts "OT_RESET_LEAF advisory, over the hop target, timed at sign-off: [lrange $rt_leaf_bad 0 19]" }
   }
-  if {$rt_aff_refused} { puts "OT_RESET_AFFINITY_REFUSED $rt_aff_refused affinity override(s) refused (relay driver beyond $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) um), nearest tap used: [lrange $rt_aff_l 0 19]" }
-  puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed to the nearest tap's synchroniser, $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
+  if {$rt_aff_refused} { puts "OT_RESET_AFFINITY_REFUSED $rt_aff_refused affinity override(s) refused (relay driver beyond or unmeasurable at $::env(OT_RESET_AFFINITY_MAX_DRIVER_UM) um), nearest tap used: [lrange $rt_aff_l 0 19]" }
+  puts "OT_RESET_TAPS [llength $rt_taps] taps ([llength $rt_bad] without a synchroniser: their flops use the nearest tap that has one), $rt_sync synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: $rt_moved re-pointed (nearest tap, or the clock tap under TAP-PAIR AFFINITY), $rt_keep already there, $rt_nopol without a same-polarity net (kept); per tap: [lsort -stride 2 -integer -index 0 $rt_cnt]"
 }
 }
 lassign [lindex $rt_role_tables 0] rt_reset_role rt_named_nets rt_zero_aliases
