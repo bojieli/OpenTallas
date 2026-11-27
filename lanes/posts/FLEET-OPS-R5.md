@@ -71,3 +71,4 @@
   Late-LEC (ad3c4eeda35): the netlist_sha256 check sits inside the late pickup loop (refresh pending-LEC): a lec.json without it makes that loop skip attaching late evidence for that unit; it does not touch the exported/INDEX record, the counted row or the LEC verdict of any existing record, so nothing is revoked or uncounted.
 - 2026-11-27 11:56 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-2767268 on tolerant-swine: rc=2 after 1 s, ended 11:56:55, log none, cmd: ot-push-main  | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
 - 2026-11-27 11:57 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-2563771 on tolerant-swine: rc=0 after 183 s, ended 11:57:53, log none, cmd: ot-push-main 
+- 2026-11-27 12:03 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-2778820 on tolerant-swine: rc=0 after 371 s, ended 12:03:13, log none, cmd: ot-push-main 
