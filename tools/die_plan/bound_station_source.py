@@ -185,6 +185,93 @@ def _family_reset_scope(proof, old, physical, reference, captured):
     return {"types": sorted(members), "reset_edges": len(edges), "max_reset_hop_um": round(maximum, 6)}
 
 
+_BF_COL3_C_LEF_SHA256 = "cd64688b278cd2aa57985fef07bffad35c6049ed3b8a233ea44ce554821e8148"
+_BF_COL3_C = "ot_v41_bf_col3_c"
+
+
+def _reviewed_artifact(record):
+    path = Path(record["path"])
+    _require(path.is_absolute() and _sha(path) == record["sha256"], f"reviewed macro power artifact changed: {path}")
+    return path
+
+
+def _bf_col3_c_pg_predecessor(raw, tn, proof):
+    prior_path = _reviewed_artifact(proof["prior_plan"])
+    prior = json.loads(prior_path.read_bytes())
+    parts = raw["partition_types"]
+    typ = parts[tn]
+    previous = dict(raw, partition_types={**parts, tn: _omit(typ, {"core_pg_connect"})})
+    _require(typ.get("core_pg_connect") is True and "core_pg_connect" not in prior["partition_types"][tn]
+             and prior == previous, "macro power transition must add only the selected type's explicit grid")
+    return prior_path, prior
+
+
+def _m5_grid_change(before, after, targets):
+    """The only new executable effect is two named memberships in an existing grid."""
+    a, b = ([line for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+            for text in (before, after))
+    grid = "define_pdn_grid -macro -name {core_pg_M5} -instances "
+    connection = "add_pdn_connect -grid {core_pg_M5} -layers {M5 M6}"
+    _require(a.count(connection) == b.count(connection) == 1, "macro power grid must connect M5 to M6")
+    changed = [(old, new) for old, new in zip(a, b) if old != new]
+    _require(len(a) == len(b) and len(changed) == 1, "macro power changes unrelated executable PDN")
+    old, new = changed[0]
+    _require(old.startswith(grid) and new.startswith(grid), "macro power changes the wrong grid")
+
+    def grid_arguments(line):
+        body, delim, options = line.removeprefix(grid + "{").partition("} -voltage_domains ")
+        members = re.findall(r"\{(\^[^}]+\$)\}", body)
+        _require(delim and body == " ".join("{" + member + "}" for member in members),
+                 "macro power membership list is not canonical")
+        return members, options
+
+    old_members, old_options = grid_arguments(old)
+    new_members, new_options = grid_arguments(new)
+    spellings = set(re.findall(r"\{(\^[^}]+\$)\}", targets))
+    _require(len(spellings) == 2 and not set(old_members) & spellings
+             and len(new_members) == len(old_members) + 2 and spellings <= set(new_members)
+             and [member for member in new_members if member not in spellings] == old_members,
+             "macro power changes membership outside the two approved macros")
+    _require(new_options == old_options, "macro power changes the existing grid options")
+    core_commands = ("define_pdn_grid -macro -name {core_pg_", "add_pdn_connect -grid {core_pg_")
+    core = tuple(line for line in a if line.startswith(core_commands))
+    return core, len(old_members), len(new_members)
+
+
+def _verify_bf_col3_c_pg(required, raw, tn, plan, prior_plan, prior, bound_source):
+    import bound_macro_paths
+    import cores
+    import gen_phys
+    import schema
+
+    root = Path(required["source_tree"])
+    _require(root.is_absolute() and root.is_dir(), "macro power requires a named source tree")
+    typ = raw["partition_types"][tn]
+    anchors = {row["inst"]: row for row in typ["hard_cores"] if row.get("module") == _BF_COL3_C}
+    mapped = bound_macro_paths.resolve(typ, bound_source.read_text())
+    aliases = {row["inst"]: row["physical_inst"] for row in mapped if row["physical_master"] == _BF_COL3_C}
+    _require(len(anchors) == 2 and anchors.keys() == aliases.keys()
+             and aliases == required["macro_aliases"], "macro power target differs from the captured BF_COL3_C aliases")
+    _require(all(_sha(cores.resolve(row["lef"], root)) == _BF_COL3_C_LEF_SHA256 for row in anchors.values()),
+             "macro power views do not match the reviewed signed BF_COL3_C LEF")
+
+    bound = {row["inst"]: row["physical_inst"] for row in mapped}
+
+    def stock(data, path):
+        physical = schema.Plan(data, path=path)
+        macros = [(bound.get(row[0], row[0]), *row[1:]) for row in gen_phys.type_macros(physical, tn, root=root)]
+        return "\n".join(gen_phys.core_pg_grids(physical, tn, macros, root=root))
+
+    targets = gen_phys._pdn_inst_patterns(aliases.values())
+    expected = _m5_grid_change(stock(prior, prior_plan), stock(raw, plan), targets)
+    old_pdn, new_pdn = (_reviewed_artifact(required[name]) for name in ("before_pdn", "after_pdn"))
+    observed = _m5_grid_change(old_pdn.read_text(), new_pdn.read_text(), targets)
+    _, before, after = observed
+    _require(expected == observed and before == required["old_m5_memberships"],
+             "macro power grid receipt disagrees with stock generation")
+    return {"macro_aliases": aliases, "before_memberships": before, "after_memberships": after}
+
+
 def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
     """Validate the named source artifact. This does not qualify a bind or a physical run."""
     import bind_component
@@ -204,11 +291,14 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
              (proof["prepared_plan_sha256"], proof["producer_plan_sha256"]), "stale plan or producer")
     raw, producer = [json.loads(path.read_bytes()) for path in (plan, native_plan)]
     typ, old = [value["partition_types"][tn] for value in (raw, producer)]
+    pg = proof.get("reviewed_bf_col3_c_pg")
+    prior_plan, logical_raw = _bf_col3_c_pg_predecessor(raw, tn, pg) if pg is not None else (None, raw)
     current_outline, old_outline = typ["outline_um"], old["outline_um"]
     _require(current_outline != old_outline and all(0 < a <= b for a, b in zip(current_outline, old_outline)),
              "selected outline is not a crop")
     logic = _family_type_logic if family else _type_logic
-    _require(logic(typ) == logic(old), "selected type changes logical station, landing or macro inputs")
+    _require(logic(logical_raw["partition_types"][tn]) == logic(old),
+             "selected type changes logical station, landing or macro inputs")
     man = json.loads((rtl_dir / "kit_rtl.json").read_bytes())
     instance = proof["instance"]
     _require(man["bound_type"] == man["plan_type"] == tn and man["instances"] == [instance],
@@ -245,7 +335,12 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
         _require(saved.get("reviewed_station_source_sha256") == receipt_sha, "prepared station receipt changed")
         expected_readset[man["bound_module"] + ".sv"] = saved["source_sha256"]
     _require(len(readset) == len(files) and readset == expected_readset, "kit RTL readset changed")
-    physical = schema.Plan(raw, path=plan)
+    approved_pg = {}
+    if pg is not None:
+        bound_source, = (path for path in files if path.stem == man["bound_module"])
+        approved_pg["reviewed_bf_col3_c_pg"] = _verify_bf_col3_c_pg(
+            pg, raw, tn, plan, prior_plan, logical_raw, bound_source)
+    physical = schema.Plan(logical_raw, path=plan)
     capture = BRC.kit(files, tn)
     _require(capture is not None and capture["tree_sha256"] == proof["bound_tree_sha256"], "staged reset differs")
     producer_rtl = out / "rtl" / (bind_report["types"][tn]["module"] + ".sv")
@@ -272,7 +367,7 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
         captured = json.loads((out / "bind_reset.json").read_bytes())
         schedule = _family_reset_scope(proof, previous, physical, producer, captured)
         return {"receipt_sha256": receipt_sha, "bound_tree_sha256": capture["tree_sha256"],
-                "native_out_depths": depths, "glue_ports": sorted(glue), "family": schedule}
+                "native_out_depths": depths, "glue_ports": sorted(glue), "family": schedule, **approved_pg}
 
     # A restored physical reset output can have the same release relation as the
     # producer. Check the mapped parent/source names and ages using stock wavefront.
@@ -292,4 +387,4 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
         _require(all(prior_roles[name][field] == source_roles[name][field] for field in fields),
                  f"native parent source or release changed at {name}")
     return {"receipt_sha256": receipt_sha, "bound_tree_sha256": capture["tree_sha256"],
-            "native_out_depths": depths, "glue_ports": sorted(glue)}
+            "native_out_depths": depths, "glue_ports": sorted(glue), **approved_pg}
