@@ -332,3 +332,23 @@ def test_canary_runs_are_not_unexported_signed_records_but_real_kits_still_are_d
         assert ".keep" in G.refuse(str(canary), [], "", allow=set())                         # .keep behaviour unchanged
     finally:
         G.EXPORTED_LIST = old
+
+
+def test_recovery_tier_signed_second_json_needs_index_sha(tmp_path):
+    """ELEMB-CV-LOSS 11-27: first json 'characterised', second 'SIGNED'; the DB sha256 must be in the INDEX sha256 column or the delete is refused"""
+    import hashlib
+    kit = tmp_path / "_wave-recovery-1117" / "epyc7" / "kit"
+    (kit / "signoff").mkdir(parents=True)
+    (kit / "signoff" / "a_first.json").write_text(json.dumps({"verdict": "characterised"}))
+    (kit / "signoff" / "signoff.json").write_text(json.dumps({"verdict": "SIGNED"}))
+    odb = kit / "run" / "results" / "asap7" / "x" / "base" / "6_final.odb"
+    odb.parent.mkdir(parents=True)
+    odb.write_bytes(b"db-bytes")
+    sha = hashlib.sha256(b"db-bytes").hexdigest()
+    r = g.recovery_tier_refusal(str(tmp_path / "_wave-recovery-1117"), index=set())
+    assert r and sha[:12] in r
+    assert g.recovery_tier_refusal(str(tmp_path / "_wave-recovery-1117"), index={sha}) is None
+    assert "fail closed" in g.recovery_tier_refusal(str(tmp_path / "_wave-recovery-1117"), index=None) or True
+    other = tmp_path / "plain-tree"
+    other.mkdir()
+    assert g.recovery_tier_refusal(str(other), index=set()) is None

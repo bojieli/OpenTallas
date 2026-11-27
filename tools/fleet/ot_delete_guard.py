@@ -555,6 +555,82 @@ def signed_attempt_exported(ad, exported=None):
         return False
 
 
+# P-CLEANUP-LIVE-STORE / ELEMB-CV-LOSS (COORD 11-27 10:41): a recovery-tier or archive-tier tree went to ot-delete although a kit DB under it had a SIGNED
+# sign-off (the second json in its signoff dir) and was not in the artifact INDEX; the filter had read only the first json.  Here: in a tree whose path names a
+# recovery / archive tier, EVERY json of a kit's signoff dir is read, and one SIGNED verdict makes each 6_final.odb under that kit hold until its DB sha256 is in
+# the INDEX sha256 column (the artifact INDEX.tsv).  No readable INDEX = refuse (fail closed).
+TIER_RE = re.compile(r"recover|archive|signed-export|wave-recovery", re.I)
+SIGNED_INDEX_PATHS = [os.path.expanduser("~/signed-export-1114/INDEX.tsv")]
+
+
+def _index_db_shas(paths=None):
+    out = set()
+    ok = False
+    for pth in (paths or ([os.environ["OT_SIGNED_INDEX"]] if os.environ.get("OT_SIGNED_INDEX") else SIGNED_INDEX_PATHS)):
+        try:
+            with open(pth, errors="replace") as f:
+                hdr = f.readline().rstrip("\n").split("\t")
+                col = hdr.index("sha256") if "sha256" in hdr else 7
+                for ln in f:
+                    c = ln.rstrip("\n").split("\t")
+                    if len(c) > col and re.fullmatch(r"[0-9a-f]{64}", c[col]):
+                        out.add(c[col])
+            ok = True
+        except OSError:
+            continue
+    return out if ok else None
+
+
+def _sha256_file(pth):
+    import hashlib
+    h = hashlib.sha256()
+    with open(pth, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def recovery_tier_refusal(t, index=None):
+    t = os.path.abspath(t)
+    if not TIER_RE.search(t) and not any(TIER_RE.search(x) for x in [os.path.basename(t)]):
+        return None
+    if not os.path.isdir(t) or os.path.islink(t):
+        return None
+    idx = _index_db_shas() if index is None else index
+    held = []
+    for dp, dn, fn in os.walk(t):
+        if os.path.basename(dp) != "signoff":
+            continue
+        signed = False
+        for f in fn:
+            if f.endswith(".json"):
+                try:
+                    d = json.load(open(os.path.join(dp, f)))
+                except (OSError, ValueError):
+                    continue
+                if isinstance(d, dict) and str(d.get("verdict") or d.get("status")) == "SIGNED":
+                    signed = True
+        if not signed:
+            continue
+        kit = os.path.dirname(dp)
+        for xp, xd, xf in os.walk(kit):
+            if "6_final.odb" in xf:
+                held.append(os.path.join(xp, "6_final.odb"))
+    if not held:
+        return None
+    if idx is None:
+        return "recovery/archive tier holds SIGNED kit DB(s) and no readable artifact INDEX (fail closed): " + held[0]
+    for odb in held:
+        try:
+            sha = _sha256_file(odb)
+        except OSError:
+            return "recovery/archive tier SIGNED kit DB unreadable: " + odb
+        if sha not in idx:
+            return "recovery/archive tier holds a SIGNED kit DB whose sha256 %s is not in the artifact INDEX (export before cleanup): %s" % (sha[:12], odb)
+    return None
+
+
+
 def keep_refusal(target):
     """ROMW-LOSS-1124 (COORD 11-24): a .keep file at or above the target keeps it.  Until now only ot-autoclean honoured .keep, so ot-delete of
     romw-1119/ckpt, head, logs, venv, wt ... (lane dir held a .keep) removed 323 GB of checkpoints on 11-23.  No list, allow_exact entry or flag
@@ -713,6 +789,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     su = signed_unexported_refusal(os.path.abspath(target))      # after the list: a protected tree keeps its own reason
     if su:
         return su
+    rt_ = recovery_tier_refusal(os.path.abspath(target))
+    if rt_:
+        return rt_
     lr = lease_refusal(t)
     if lr:
         return lr
