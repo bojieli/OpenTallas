@@ -103,3 +103,4 @@
   Reaper: main 459bcc2781f runs git worktree prune in the owning repo after deleting a canary source (test with a temp repo).
   In flight (sub-lane, three commits): rt pin >= row tool commit, P-WAVE-ALLOWLIST-STALE guard, WAIT-state post; shas follow in the next post.
 - 2026-11-27 13:42 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3247552 on tolerant-swine: rc=0 after 890 s, ended 13:42:45, log none, cmd: ot-push-main 
+- 2026-11-27 13:46 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-832816 on tolerant-swine: rc=0 after 153 s, ended 13:46:50, log none, cmd: ot-push-main 
