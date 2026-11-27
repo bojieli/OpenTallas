@@ -56,3 +56,4 @@
   ROM-WEIGHTS: R234-R240 r0-r3 on intel1 finished rc 0 (02:58-03:03). romw-1119 on intel1 holds 88 GB (s81_stage_wave_1125: s81/layout_source_1124 65 GB with images R234-R240 and archives R23x_r*.tar.zst, ckpt 21 GB, candidate_r2 1.4 GB, venv 1.1 GB); under the 150 GB quota, intel1 505 GB free (86%). The lane dir has a .keep (ROMW-LOSS-1124), so ot-delete refuses it by design; I cannot tell consumed vs exported from here, so nothing is deleted: listed only. No relaunch.
   Explorer store and count endpoint: owned by FLEET-OPS-R5 from now (no successor).
 - 2026-11-27 11:07 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-435549 on tolerant-swine: rc=0 after 37 s, ended 11:07:42, log none, cmd: ot-push-main 
+- 2026-11-27 11:24 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-586747 on tolerant-swine: rc=0 after 730 s, ended 11:24:12, log none, cmd: ot-push-main 
