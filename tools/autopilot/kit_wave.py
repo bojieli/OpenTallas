@@ -10349,6 +10349,58 @@ def apply_bind_landing(sp, bind_out, host=None, hub=PRIVATE_HUB):
     return rec
 
 
+def reviewed_station_prepare(sp, *, plan=None):
+    """Verify the separate native producer before any named source generation."""
+    ref = sp["reviewed_station_prepare"]
+    kr = sp["kit_rtl"]
+    runtime = sp.get("tools_rt")
+    if (not sp.get("private") or sp.get("die") != "s81" or sp.get("kind") != "type"
+            or sp.get("goal") != "place" or not sp.get("dry_gen")
+            or sp.get("src_manifest") != "require" or not PVR.SHA.fullmatch(sp.get("src_manifest_hash", ""))
+            or not sp.get("launch_plan_review_required") or kr.get("mode") != "bind"
+            or not kr.get("bind_out") or not kr.get("asbuilt") or not runtime
+            or sp.get("gen_pins") or sp.get("type_overlay") or sp.get("prov_views")
+            or sp.get("kit_rtl_reuse") or sp.get("resume_from") or sp.get("gen_tools_manifest_sha")
+            or sp.get("place_spill") is not False or sp.get("roam_hosts") != [sp.get("gen_host")]):
+        raise ValueError("reviewed station preparation requires one sealed same-host private place-only dry")
+    q = shlex.quote
+    cmd = " ".join(q(str(part)) for part in (
+        "python3", "-I", f"{runtime}/tools/die_plan/reviewed_station_prepare.py",
+        ref["path"], ref["sha256"], "--type", sp["item"], "--plan", plan or sp["plan"],
+        "--bind-out", kr["bind_out"], "--asbuilt", kr["asbuilt"], "--tools", runtime,
+    ))
+    argv = _ssh(sp["gen_host"], sp.get("hub") or PRIVATE_HUB)
+    result = subprocess.run(argv + [cmd] if argv else ["bash", "-c", cmd],
+                            capture_output=True, text=True, timeout=120)
+    if result.returncode:
+        raise ValueError(result.stderr.strip() or result.stdout.strip() or "station input verification failed")
+    line = next((line for line in result.stdout.splitlines()
+                 if line.startswith("REVIEWED_STATION_PREPARE ")), "")
+    if not line:
+        raise ValueError("station verifier returned no exact source record")
+    verified = json.loads(line.removeprefix("REVIEWED_STATION_PREPARE "))
+    if verified["source_manifest_sha256"] != sp["src_manifest_hash"]:
+        raise ValueError("reviewed station source manifest differs from the exact recipe")
+    if any(sp.get("gen_env", {}).get(key) != value for key, value in verified.get("generation_environment", {}).items()):
+        raise ValueError("reviewed station geometry settings differ from the exact recipe")
+    return verified
+
+
+def set_reviewed_station_landing(sp, source):
+    """Keep the captured producer's as-built, and select only the reviewed physical input."""
+    args = list(sp["gen_args"])
+    for key in ("--clock-landing", "--bound-native-reset"):
+        if args.count(key) > 1:
+            raise ValueError(f"duplicate named station GEN option {key}")
+        if key in args:
+            i = args.index(key)
+            if i + 1 == len(args):
+                raise ValueError(f"missing value for named station GEN option {key}")
+            del args[i:i + 2]
+    args += ["--clock-landing", source["clock_landing"]["path"], "--bound-native-reset", sp["item"]]
+    sp["gen_args"] = args
+
+
 def private_bind_stale(sp, item, rpy):
     """KIT-TOPO-STALE-1122 (COORD, FAM-S81-SLICE-R6 / FAM-KV-IOPC-R4): the wave bind_preflight probe (PROBE_BIND: kit_topology.bind_matches
     + kit_relay_depth on the bound module, the exact kit_topology / kit_rtl calls) for ONE private spec, on its gen host, before the spec
@@ -10523,8 +10575,28 @@ def private_spec_cmd(a):
     try:
         sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
                           work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
-                          rt=a.rt, goal=a.goal, fork_of=fork_src)
-    except ValueError as e:
+                          rt=None if getattr(a, "reviewed_station_prepare", None) else a.rt,
+                          goal=a.goal, fork_of=fork_src)
+        if getattr(a, "reviewed_station_prepare", None):
+            if not a.rt or not a.host or not a.reviewed_station_manifest:
+                raise ValueError("reviewed station preparation requires --rt, --host and --reviewed-station-manifest")
+            if a.resume_from or a.reuse_kit_rtl_from or a.allow_bind_stale or fork_src:
+                raise ValueError("reviewed station preparation uses its own exact native producer")
+            source = os.path.abspath(a.reviewed_station_prepare)
+            sp.update(private_rt_fields(a.rt),
+                      dry_gen=True, launch_plan_review_required=True, place_spill=False,
+                      src_manifest="require", src_manifest_hash=a.reviewed_station_manifest,
+                      reviewed_station_prepare={"path": source, "sha256": PVR.file_sha(source, a.host)})
+            sp.pop("gen_pins", None)
+            sp["private"]["rt"] = {"sha": sp["tools_sha"], "rt": sp["tools_rt"],
+                                    "from": "reviewed station physical preparation"}
+            reviewed = reviewed_station_prepare(sp)
+            set_reviewed_station_landing(sp, reviewed)
+            sp["publish_place_prepare"] = {"plan_sha256": reviewed["plan"]["sha256"],
+                                           "scheduler": scheduler_code_id()}
+        elif getattr(a, "reviewed_station_manifest", None):
+            raise ValueError("--reviewed-station-manifest requires --reviewed-station-prepare")
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
     predecessor = getattr(a, "resume_from", None)
@@ -10559,7 +10631,7 @@ def private_spec_cmd(a):
             print(f"private-spec: ot-tree-fork {fork_src} -> {sp.get('gen_host')}:{a.tree} failed rc {rc}; no spec written", file=sys.stderr)
             return 2
         sp["private"]["tree_fork"] = {"src": fork_src, "dst": a.tree, "host": sp.get("gen_host") or "", "tool": "ot-tree-fork"}
-    if not getattr(a, "allow_bind_stale", False):          # KIT-TOPO-STALE-1122: refuse a plan / bind mismatch in seconds, not at kit_topology after gen
+    if not sp.get("reviewed_station_prepare") and not getattr(a, "allow_bind_stale", False):          # KIT-TOPO-STALE-1122: refuse a plan / bind mismatch in seconds, not at kit_topology after gen
         verdict, why = private_bind_stale(sp, a.item, AP.rpy)
         if verdict == "STALE":
             print(f"private-spec: REFUSED {a.die}/{a.item}: {why}", file=sys.stderr)
@@ -11469,8 +11541,21 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
                 or prior.get("goal") not in PPV.ROUTING_GOALS):
             print("KW_PRIVATE_VISUAL refused: no unchanged private spec with an exact held placement", flush=True)
             return 2
+    reviewed_station = None
+    if sp.get("reviewed_station_prepare"):
+        try:
+            if resume_reviewed or RUN_ITEM_GOAL not in (None, "", "place"):
+                raise ValueError("reviewed station source cannot drive any chain beyond place")
+            reviewed_station = reviewed_station_prepare(sp)
+            expected_landing = dict(sp)
+            set_reviewed_station_landing(expected_landing, reviewed_station)
+            if expected_landing["gen_args"] != sp["gen_args"]:
+                raise ValueError("reviewed station physical landing recipe changed")
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+            PPV.write(out / "result.json", {"verdict": "FAIL", "stage": "bound_station_source", "tail": str(exc)})
+            return 1
     try:
-        _blr = None if (resume_reviewed or prepared) else runitem_bind_landing(sp)
+        _blr = None if (resume_reviewed or prepared or reviewed_station) else runitem_bind_landing(sp)
     except BindLandingMissing as e:
         print(f"KW_STAGE bind_landing {now_s()} :: REFUSED {e}", flush=True)
         (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_landing", "verdict": "FAIL", "cls": "FLOW", "die": sp.get("die"),
@@ -11482,7 +11567,7 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         _t = Path(str(spec_path) + ".bl.tmp")
         _t.write_bytes(spec_bytes)
         os.replace(_t, spec_path)
-    _bpm = None if resume_reviewed else bind_plan_refusal(sp)
+    _bpm = None if resume_reviewed or reviewed_station else bind_plan_refusal(sp)
     if _bpm:                                             # P-KIT-BIND-PLAN-MISMATCH: FAIL before anything is built, never a WARN
         print(f"KW_STAGE bind_plan {now_s()} :: REFUSED {_bpm}", flush=True)
         (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_plan", "verdict": "FAIL", "cls": "BIND-PLAN", "die": sp.get("die"),
@@ -11500,7 +11585,8 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
                                           log=lambda m: print("KW_KPG " + m, flush=True))
         except Exception as e:                           # noqa: BLE001  never stops the run
             print(f"KW_KPG check error: {type(e).__name__}: {e} (goal kept)", flush=True)
-    sp = repick_stage_hosts(sp)
+    if not reviewed_station:
+        sp = repick_stage_hosts(sp)
     # PLACE-LOST-1125 (QC-PLACELOST): an absolute attempt dir.  A relative spec path (private spec run from ~/coord/autopilot) gave the
     # detached PLACE unit a relative `exec >> log`: systemd --user runs it in $HOME, the redirect failed, KW_PLACE_RC went to the journal
     # and the worker booked KW_PLACE_LOST on a placed kit (QC sle_su_l1 V4 11-25: rc 0, 3_place.odb written)
@@ -12538,9 +12624,10 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
             if sp.get("bind_stream_launch"):
                 # BIND-STREAM-LAUNCH: same bind_report check for a finished bind; a running bind passes per type on its own final
                 # record + kit_topology match (tools/die_plan/bind_stream.py check); an rt without the checker keeps the old check
-                _bsc = f"{tsrc}/tools/die_plan/bind_stream.py"
-                chk = (f"if [ -f {q(_bsc)} ]; then python3 -I {q(_bsc)} check --bind-out {q(bind)} --type {q(T)} --plan {q(plan)}"
-                       + (f" --asbuilt {q(a)}" if a else "") + f"; else {chk}; fi")
+                if not reviewed_station:
+                    _bsc = f"{tsrc}/tools/die_plan/bind_stream.py"
+                    chk = (f"if [ -f {q(_bsc)} ]; then python3 -I {q(_bsc)} check --bind-out {q(bind)} --type {q(T)} --plan {q(plan)}"
+                           + (f" --asbuilt {q(a)}" if a else "") + f"; else {chk}; fi")
             rc, txt = run("bind", remote(chk))
             if rc:
                 return fail("bind", "bind of record not clean / unreadable (plan not fully bound)\n" + txt, f"{G}:{bind}")
@@ -12571,7 +12658,7 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         # BIND-GEN-TOOLSKEW (FLOW-FIX-0400, COORD item 5): a bind of record made with other reset / relay generators than this gen rt fails at gen hours later ("differs from captured bound
         # reset identity"); the stamp bind.py wrote is checked now, before any heavy stage.  A bind with no stamp (older) passes.
-        if sp.get("tools_rt") and not core:
+        if sp.get("tools_rt") and not core and not reviewed_station:
             _tsk = f"{tsrc}/tools/die_plan/bind_tool_stamp.py"
             # SEMANTIC-TOOLSKEW-1122: a checker that can replay gets the bind's plan + this kit's type (hash rule otherwise)
             _sem = f"$(grep -q semantic_replay {q(_tsk)} && echo --plan {q(plan)} --type {q(T)})"
@@ -12650,6 +12737,8 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         krb_cmd = lambda bnd, flag: (f"cd {q(tsrc)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
         src_flag = "" if rcp and pinned_gen else f"--src-tree {q(src)} "
+        if reviewed_station:
+            src_flag += f"--instance {q(reviewed_station['instance'])} "
         rc, txt = run("kit_rtl", otrun(int(sp.get("kit_rtl_mem_gb") or 8), 2, W, krb_cmd(kbind, src_flag), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
@@ -12717,8 +12806,12 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         # the actual typed overlay and before any physical generation.
         helper = f"{tsrc}/tools/die_plan/kit_topology.py"
         context_args = f" --asbuilt {q(kr['asbuilt'])}" if kr.get("asbuilt") else ""
+        source_plan = plan0
+        if reviewed_station:
+            source_plan = reviewed_station["producer_plan"]["path"]
+            context_args += f" --reviewed-station-source {q(reviewed_station['station_receipt']['path'])}"
         prep = (f"cd {q(tsrc)} && {topology_env_prefix(sp)}python3 -I {q(helper)} prepare-stations {q(plan_ov)} {q(T)} {q(W)}/rtl "
-                f"--native-plan {q(plan0)}{context_args}")
+                f"--native-plan {q(source_plan)}{context_args}")
         rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh, roam=False))
         if rc:
             return fail("kit_topology", txt)
@@ -12755,6 +12848,10 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
         # FLOW-NOADV-R3 11-20: PLACE-SETUP-STOP applies to kit-wave gens only (shell exports, not part of the spec / input hashes); re-sign picks are exempt
         genv += "export OT_KIT_WAVE=1; " + ("export OT_RESIGN=1; " if sp.get("resign") else "")
+        if reviewed_station:
+            station_record = sp["reviewed_station_prepare"]
+            genv += (f"export OT_REVIEWED_STATION_PREPARE={q(station_record['path'])}; "
+                     f"export OT_REVIEWED_STATION_PREPARE_SHA256={q(station_record['sha256'])}; ")
         gen = (f"cd {q(tsrc)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}{ov_arg}")
         if kit_rtl_arg:
@@ -23366,6 +23463,10 @@ def main(argv=None):
     ps_.add_argument("--lane", default="", help="owner lane (default $OT_LANE)")
     ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
     ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
+    ps_.add_argument("--reviewed-station-prepare", metavar="FILE",
+                     help="prepare one verified P2/H10 native station source for a place-only publication")
+    ps_.add_argument("--reviewed-station-manifest", metavar="SHA256",
+                     help="verified read-only physical source used by the named station preparation")
     ps_.add_argument("--reuse-kit-rtl-from", metavar="ATTEMPT_DIR",
                      help="reuse the exact sealed early RTL output of a completed supported private type attempt")
     ps_.add_argument("--resume-from", metavar="ATTEMPT_DIR", help="reuse valid synth/floorplan checkpoints from this completed attempt of the same type")

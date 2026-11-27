@@ -110,6 +110,12 @@ def request(spec, plan_sha="", producer=None, overlay_sha=None):
         "region_guide_geom": spec.get("region_guide_geom"), "leafslew_form": spec.get("leafslew_form"),
         "relay_bay_re": spec.get("relay_bay_re"), "canonical_topology_prepare": spec.get("canonical_topology_prepare"),
     })
+    if spec.get("reviewed_station_prepare"):
+        station = spec["reviewed_station_prepare"]
+        if not SHA.fullmatch(station.get("sha256", "")):
+            raise ValueError("invalid named station preparation digest")
+        recipe["reviewed_station_prepare_sha256"] = station["sha256"]
+        recipe["reviewed_station_tools"] = spec["tools_sha"]
     form = {"plan_sha256": plan_sha, "overlay_sha256": overlay_sha, "recipe": recipe,
             "source": source_manifest or spec.get("src_sha") or ""}
     fingerprint = hashlib.sha256(json.dumps(form, sort_keys=True, separators=(",", ":")).encode()).hexdigest()

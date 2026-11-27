@@ -182,3 +182,28 @@ def test_a_changed_prepared_kit_keeps_fresh_preparation_available(tmp_path):
     assert current["work"] != exact["work"]
     assert wave.KRR.configured(spec, {"manifest_hash": MANIFEST}) is None
     assert ready.claim(current, new_spec, accepted, viewed, "fresh-attempt") == new_kit
+
+
+def test_named_station_recipe_is_place_only_and_exact_in_plan_review(tmp_path, monkeypatch):
+    _, spec, _, _ = producer_fixture(tmp_path)
+    spec.update(src_manifest="require", launch_plan_review_required=True, place_spill=False,
+                roam_hosts=["epyc7"], reviewed_station_prepare={"path": "/exact/recipe", "sha256": "c" * 64},
+                gen_args=["--clock-landing", "/producer/old-landing.json"])
+    spec["kit_rtl"]["asbuilt"] = "/exact/asbuilt"
+    def checked(*args, **kwargs):
+        return subprocess.CompletedProcess(args, 0, "REVIEWED_STATION_PREPARE " + json.dumps(
+            {"clock_landing": {"path": "/exact/physical-landing.json"}, "source_manifest_sha256": MANIFEST}))
+    monkeypatch.setattr(wave.subprocess, "run", checked)
+    recipe = wave.reviewed_station_prepare(spec)
+    wave.set_reviewed_station_landing(spec, recipe)
+    args = spec["gen_args"][:]
+    wave.set_reviewed_station_landing(spec, recipe)
+    assert args == spec["gen_args"]
+    assert "/producer/old-landing.json" not in args and "/exact/physical-landing.json" in args
+    form = review.request(spec, plan_sha=PLAN)
+    changed = dict(spec, reviewed_station_prepare=dict(spec["reviewed_station_prepare"], sha256="d" * 64))
+    assert review.request(changed, plan_sha=PLAN)["form_sha256"] != form["form_sha256"]
+    for option in ({"goal": "route"}, {"dry_gen": False}, {"place_spill": True},
+                   {"src_manifest": "off"}, {"type_overlay": "/unexpected/overlay"}):
+        with pytest.raises(ValueError, match="same-host private place-only dry"):
+            wave.reviewed_station_prepare(dict(spec, **option))
