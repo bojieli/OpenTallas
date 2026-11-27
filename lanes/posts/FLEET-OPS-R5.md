@@ -102,3 +102,4 @@
   Fleet writer WARN: main e1777825f1a tools/fleet/writer_watch.py (report-only, posts WARN naming host and lane when a lane writes more than 50 GB/h, once per 3 h per host and lane; rate is an upper bound because rewrites count whole files). NOT installed. Crontab line for COORD to approve: */10 * * * * /usr/bin/python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/writer_watch.py >>$HOME/.local/state/writer-watch.log 2>&1 (create ~/.local/state first).
   Reaper: main 459bcc2781f runs git worktree prune in the owning repo after deleting a canary source (test with a temp repo).
   In flight (sub-lane, three commits): rt pin >= row tool commit, P-WAVE-ALLOWLIST-STALE guard, WAIT-state post; shas follow in the next post.
+- 2026-11-27 13:42 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3247552 on tolerant-swine: rc=0 after 890 s, ended 13:42:45, log none, cmd: ot-push-main 
