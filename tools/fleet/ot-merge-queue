@@ -754,14 +754,8 @@ def _tree_types(rev_, paths, cwd=REPO):
     return out
 
 
-def _temporary_fixture_literals(text):
+def _temporary_fixture_literals(mod):
     """Return source positions of relative joins into a statically known fresh test directory."""
-    if "TemporaryDirectory" not in text:
-        return set()
-    try:
-        mod = ast.parse(text)
-    except SyntaxError:
-        return set()
     names = {"Path", "tempfile"}
     imports = [n for n in ast.walk(mod) if isinstance(n, ast.alias)
                and (n.asname or n.name.split(".")[0]) in names]
@@ -826,14 +820,72 @@ def _temporary_fixture_literals(text):
     return spans
 
 
+def _assertion_fixture_literals(mod):
+    """Return literals in direct unittest.TestCase expectation operands, preserving the tested expressions."""
+    expected_at = {"assertIn": 0, "assertNotIn": 0, "assertEqual": 1}
+    imports = [n for n in ast.walk(mod) if isinstance(n, ast.alias)
+               and (n.asname or n.name.split(".")[0]) in {"unittest", "*"}]
+    if len(imports) != 1 or not any(isinstance(n, ast.Import) and imports[0] in n.names
+                                     and imports[0].name == "unittest" and imports[0].asname is None for n in mod.body):
+        return set()
+    if any((isinstance(n, ast.Name) and n.id == "unittest" and not isinstance(n.ctx, ast.Load))
+           or (isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.ExceptHandler))
+               and n.name == "unittest")
+           or (isinstance(n, ast.Attribute) and n.attr in {"TestCase", *expected_at}
+               and not isinstance(n.ctx, ast.Load)) for n in ast.walk(mod)):
+        return set()
+
+    spans = set()
+    for cls in mod.body:
+        if not (isinstance(cls, ast.ClassDef) and not cls.decorator_list and not cls.keywords and len(cls.bases) == 1):
+            continue
+        base = cls.bases[0]
+        if not (isinstance(base, ast.Attribute) and base.attr == "TestCase"
+                and isinstance(base.value, ast.Name) and base.value.id == "unittest"):
+            continue
+        if any((isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and n.name in expected_at)
+               or (isinstance(n, ast.Name) and n.id in expected_at and not isinstance(n.ctx, ast.Load))
+               for n in ast.walk(cls)):
+            continue
+        for method in cls.body:
+            if not (isinstance(method, ast.FunctionDef) and method.name.startswith("test_") and not method.decorator_list):
+                continue
+            positional = method.args.posonlyargs + method.args.args
+            if not positional or positional[0].arg != "self" or any(
+                    isinstance(n, ast.Name) and n.id == "self" and not isinstance(n.ctx, ast.Load) for n in ast.walk(method)):
+                continue
+            for stmt in method.body:
+                if not isinstance(stmt, ast.Expr) or not isinstance(stmt.value, ast.Call):
+                    continue
+                call, func = stmt.value, stmt.value.func
+                if not (isinstance(func, ast.Attribute) and func.attr in expected_at and isinstance(func.value, ast.Name)
+                        and func.value.id == "self" and len(call.args) == 2 and not call.keywords
+                        and not any(isinstance(a, ast.Starred) for a in call.args)):
+                    continue
+                value = call.args[expected_at[func.attr]]
+                parts = value.elts if func.attr == "assertEqual" and isinstance(value, (ast.List, ast.Tuple)) else [value]
+                if all(isinstance(p, ast.Constant) and isinstance(p.value, str) for p in parts):
+                    spans.update((p.lineno, p.col_offset) for p in parts if p.lineno == p.end_lineno)
+    return spans
+
+
 def _test_path_literals(text, lit):
-    """Keep ambiguous uses and repository paths even when the same text also appears in a temp fixture."""
-    temp = _temporary_fixture_literals(text)
-    if not temp:
+    """Keep ambiguous uses and repository paths even when the same text is also test metadata."""
+    ignored = set()
+    if "TemporaryDirectory" in text or "unittest" in text:
+        try:
+            mod = ast.parse(text)
+        except SyntaxError:
+            pass
+        else:
+            if "TemporaryDirectory" in text:
+                ignored.update(_temporary_fixture_literals(mod))
+            if "unittest" in text:
+                ignored.update(_assertion_fixture_literals(mod))
+    if not ignored:
         return {m.group(1) for m in lit.finditer(text)}
     return {m.group(1) for lineno, line in enumerate(text.splitlines(), 1) for m in lit.finditer(line)
-            if (lineno, len(line[:m.start()].encode("utf-8"))) not in temp}
-
+            if (lineno, len(line[:m.start()].encode("utf-8"))) not in ignored}
 
 
 S81_ROOT = "physical/die_plan/s81"
