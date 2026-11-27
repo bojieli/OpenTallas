@@ -398,7 +398,7 @@ def localize_bound(kd):
     return local
 
 
-def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
+def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None,reviewed_station_source=None):
     """Canonical IN/core application and OUT reuse, once on a fresh kit copy."""
     import kit_istations
     raw=json.loads(Path(plan).read_text());kd=Path(rtl_dir).resolve()
@@ -410,16 +410,26 @@ def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     if man.get('component_proof'):
         component_report=verify_component_source(man['component_proof'],context_plan=native_plan or plan,
             prepared_plan=plan,bind_out=man['bind_out'],type_name=tn,asbuilt=manifest)
-    if component_report is None and (tn not in context['partition_types'] or native_contract(context,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]!=native_contract(dict(raw,asbuilt=context.get('asbuilt',{})) if not (asbuilt or man.get('asbuilt_manifest')) else raw,asbuilt or man.get('asbuilt_manifest'),native_plan or plan)['types'][tn]):
+    reviewed=None
+    if reviewed_station_source:
+        if component_report is not None:
+            raise ValueError('KIT_TOPOLOGY_CONTEXT: use one source authority for station preparation')
+        import bound_station_source
+        reviewed=bound_station_source.verify(reviewed_station_source,plan,native_plan,tn,kd,manifest)
+    ordinary=component_report is None and reviewed is None
+    if ordinary and (tn not in context['partition_types'] or native_contract(context,manifest,native_plan or plan)['types'][tn]!=native_contract(dict(raw,asbuilt=context.get('asbuilt',{})) if not manifest else raw,manifest,native_plan or plan)['types'][tn]):
         raise ValueError('KIT_TOPOLOGY_CONTEXT: selected topology differs from full native plan')
-    if native_plan and component_report is None and digest(raw.get('reset'))!=digest(context.get('reset')):
+    if native_plan and ordinary and digest(raw.get('reset'))!=digest(context.get('reset')):
         raise ValueError('KIT_TOPOLOGY_CONTEXT: selected reset topology differs from full native plan')
-    if native_plan and component_report is None and has_topology(context,tn,manifest):
+    if native_plan and ordinary and has_topology(context,tn,manifest):
         if not man.get('bind_out') or not bind_matches(context,tn,man['bind_out'],manifest,native_plan):
             raise ValueError('KIT_TOPOLOGY_BIND_STALE: regenerate the canonical native bind for this full plan/asbuilt context')
-    fingerprint=digest(dict(type=contract(raw)['types'][tn],reset=contract(context)['reset'],
+    inputs=dict(type=contract(raw)['types'][tn],reset=contract(context)['reset'],
                             asbuilt=hashlib.sha256(Path(manifest).read_bytes()).hexdigest() if manifest else None,
-                            component=hashlib.sha256(Path(man['component_proof']).read_bytes()).hexdigest() if component_report else None))
+                            component=hashlib.sha256(Path(man['component_proof']).read_bytes()).hexdigest() if component_report else None)
+    if reviewed:
+        inputs['reviewed_station_source']=reviewed['receipt_sha256']
+    fingerprint=digest(inputs)
     stamp=kd/'kit_topology_prepared.json'
     bound=next(Path(f) for f in man['files'] if Path(f).stem==man['bound_module'])
     if stamp.exists():
@@ -433,12 +443,17 @@ def prepare_stations(plan,tn,rtl_dir,native_plan=None,asbuilt=None):
     if component_report is not None:
         result.update(source_scope='LOCAL_COMPONENT',source_preparation_only=True,
                       component_report=component_report,global_bind=component_report['global_bind'])
+    if reviewed:
+        result.update(source_scope='BOUND_STATION_SOURCE',source_preparation_only=True,reviewed_station_source=reviewed)
     (kd/'kit_topology.json').write_text(json.dumps(result,indent=2)+'\n')
     if result['problems']:
         raise ValueError('KIT_TOPOLOGY_SOURCE: '+'; '.join(result['problems']))
     if not stamp.exists():
-        stamp.write_text(json.dumps(dict(fingerprint=fingerprint,source_sha256=result['source_sha256'],
-                         native_plan=str(native_plan or plan),asbuilt=manifest),indent=2)+'\n')
+        prepared=dict(fingerprint=fingerprint,source_sha256=result['source_sha256'],
+                      native_plan=str(native_plan or plan),asbuilt=manifest)
+        if reviewed:
+            prepared['reviewed_station_source_sha256']=reviewed['receipt_sha256']
+        stamp.write_text(json.dumps(prepared,indent=2)+'\n')
     return result
 
 
@@ -470,10 +485,11 @@ def main():
     sub=p.add_subparsers(dest='command',required=True)
     census=sub.add_parser('census');census.add_argument('plan');census.add_argument('type');census.add_argument('rtl_dir');census.add_argument('--receipt',required=True)
     prepare=sub.add_parser('prepare-stations');prepare.add_argument('plan');prepare.add_argument('type');prepare.add_argument('rtl_dir');prepare.add_argument('--native-plan');prepare.add_argument('--asbuilt')
+    prepare.add_argument('--reviewed-station-source',help='reviewed source-only receipt for a captured native reset and physical station moves')
     stamp=sub.add_parser('stamp-bind');stamp.add_argument('plan');stamp.add_argument('bind_out');stamp.add_argument('--asbuilt')
     a=p.parse_args();raw=json.loads(Path(a.plan).read_text())
     if a.command=='prepare-stations':
-        result=prepare_stations(a.plan,a.type,a.rtl_dir,a.native_plan,a.asbuilt)
+        result=prepare_stations(a.plan,a.type,a.rtl_dir,a.native_plan,a.asbuilt,a.reviewed_station_source)
         print(json.dumps(dict(type=a.type,required_instances=len(result['required_instances']),problems=result['problems'])))
         return 0
     if a.command=='stamp-bind':
