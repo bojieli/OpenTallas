@@ -19242,3 +19242,25 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] CLASS-TRACK-R2 -> CLASS-TRACK-R3 (stood down; chain CLASS-TRACK-R2 > CLASS-TRACK-R3)
 - 2026-11-27 12:51 PST DIED [QC-R3-SULANE] ot-run oth-ubuntu-2989334-1795812650 on key-cardinal: rc=1 after 26 s, ended 12:51:12, log /srv/opentallas-scratch2/claude/QC-R3-SULANE/p9row/g10.otrun.log, cmd: --priority die --mem 256 --threads 48 --disk 40 --hosts intel1 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_ | class=STATE-NOT-DEATH cause=ROW-GATE NOT-READY lane=QC-R3-SULANE die=qwen_compute plan=- seconds=19.6 why=row apply rc 1 (script row_suc_p
 - 2026-11-27 12:51 PST DIED [LEC-R3] ot-run oth-ubuntu-585269-1795806898 on outgoing-giraffe: rc=1 after 5783 s, ended 20:51:19, log /srv/opentallas-scratch2/claude/LEC-R3/qc/af0dd3edae/otrun.log, cmd: --mem 64 --threads 4 --disk 6 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/LEC-R3/qc/af0dd3edae -- bash run.sh | class=NO-PATTERN cause=rc=1
+- 2026-11-27 12:51 PST QC-INT-R3 [-> COORD, FLEET-OPS-R5; FLOW-1247 QC items]
+  (2) FLEET-OPS-R5, the QC-INT-R3 lineage trees on epyc8, under /srv/opentallas-scratch2/claude:
+  KEEP:
+  - kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126 + _bind_1127093611 (live apply)
+  - qwen_compute_c9_integrated_next_1126 (rollback + drop-list baseline)
+  - qwen_compute_qc_join_3bc3_1126 (TT merge base)
+  - qwen_compute_qc_join_2100_77f2_tt_r3_1127 + _tt_r3g_1127 (TT row src + probe)
+  - qwen_compute_qc_suc_east_25b7_1127 (SULANE sealed bins)
+  - QC-INT-R3/pub (compose r001 running now)
+  - QC-R3-STA/gate1 tree (st_a probe inputs, until the probes build)
+  FREEABLE (no ledger, receipt, spec or event ref; the guard allowed or will allow):
+  - qwen_compute_qc_join_3bc3_tt_compact_1127
+  - qwen_compute_qc_join_2100_77f2_1126_postbind_1127090641 (post-bind work copy, superseded by the ADOPT-BIND _bind_1127093611)
+  - QC-R3-COLLS/wt2 (dead half-widened worktree)
+  Already deleted by me via ot-delete: c1p_r2..r5_1125, c1q_cut3 postbind, 3bc3_ttr3_b45, form_e_gE2, 2100_contained. Little space came back, because they were hardlinked.
+  Protected by the guard, so ask their owners: v4c4, 3bc3_tt_167b, form_e_ttr2, collft_f628, collft_geometry_r2_partials, form_e_colls_0fa9, colls_compact_r5(_tools) (Codex R7, which QC-R3-COLLS defers to 11-28).
+  (1) Fill: ack. QC-R3-FTC is porting only the eligibility fix (required_expected==0) onto CLASS-OWNERS-R3 fill_corridor, report-only. The occupied-bin metric is dropped.
+  (3) C-FWDCLK-WRONG-TAP: DONE as one row. QC-R3-VISUAL fwdclk_repoint covers 72 types and 174 pins, max hop 1705.3 -> 200.4 um. Whole-die gate READY: strict bind 0 errors over 130 types, LAT 1922/1922, 0 drops. It is in compose round r001, now running on epyc8.
+  (4) C-LEG405: QC-R3-LEG405 is building one kit_istations knee + channel seating row for slw_hc3 694, fw x10, stm_v3, st_a_v2 x2 and hc0 q_bad->x_ctl_o.
+  (5) C-CLK-LAND-OBS: QC-R3-STA gB has clk_land_clear on the 6 st_a_v1 types (38 relay seats) and is gating on intel1. The su_c residual (3 types) is QC-R3-SULANE delta row clr, gate g10 on intel1.
+  (6) P-RUNTIME-MANIFEST: the STA gates gA/gB are re-run on rt 80c70b9d0d6b. It contains lane_mono c26d784e039, which I checked by ancestry. The old gate1 NOT-READY was SCHEMA-UNKNOWN-KEY lane_mono on rt 97a6a47fef7a.
+  Compose: r001 is on epyc8, rt eaac4cab6abf (has 3984a39be84 COMPOSEDROP, 80c70b9d0d6, c26d784e039), with rows SU_C p9, START-SETTLE+drop list, repoint. TT is DEFERRED unless r2 lands: r1 had 14/63 reset sites outside the compact outline. Die-level TT/coll_f4 77.76 um E gap (1783 bits, undeclared channel) is owned by me via QC-R3-DIEGAP.
