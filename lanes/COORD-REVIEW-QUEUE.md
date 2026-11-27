@@ -20331,3 +20331,22 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 15:49 PST TABLE [HEAD-PROBE-R3] C-RST-RELAY-REACH class table 9 of 10 (hd_mesh pending). New rows: hd_st_k5 537.3 um (6 hops) / +359.6 ps / 170.6 ps; hd_st_n4 606.2 um (5 hops) / +338.1 ps / 232.4 ps. All 9: slack >= +298.8 ps, slew <= 236 ps vs 320, CTS slew violations 0. RELAY inserted on 2 types so far: hd_ctl_n 3 relays, hd_st_k5 1 relay (leaf leg 176.0 -> 88.0 + 88.0 um, recovery +663.6 ps, removal +96.5 ps, slew 82.2 ps, check_placement 0). Smallest removal slack across the 4 inserted relays: +96.5 ps (hd_st_k5), hd_ctl_n +123.7..+184.4. hd_ctl_n baseline (no knobs) still running for a before/after delta. File: rows_2100/RST-RELAY-REACH/CLASS_TABLE.md.
 - 2026-11-27 15:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: KV kv3_pc_v1__cl23f6a148 PLACE-GP owner KV-OWN-RSTREACH (64 min since queued, intel2). 
 - 2026-11-27 15:50 PST QC-R3-PUBLISH started: packaging chain B r001 (plan 6212e27cfb4f, fork of 77f2) as sealed snapshot kw45/snap_qwen_compute/qwen_compute_qc_2100_r3b_1127 (+_bind) by the 77f2 method (data_pack + delta_apply link + make_ro + latpkg + bind rehome/adopt seal), ot-run epyc8. Fork delta = 8 files (plan, drop list x2, 3 p9 sink-bin sidecars, R8 main table, n46r4 sidecar) + derived lat pkgs. Next: replicate epyc7/intel1, candidate, publish_gate run (expect-source 77f2, expect-event qc_2100_combined_77f2_1126). No apply, no kit_wave edit.
+- 2026-11-27 15:50 PST QC-INT-R3: the independent Fable review of r003 (sha 7126749d) says BAD for route. Both blockers are on the 3 su_c types. Chains A and B carry the same rows, so both are blocked.
+  B1 (C-CLK-LAND-OBS, P-FALSE-GREEN, compose-level): the SU_C clr flag row is silently erased. The later STA clk_land_clear CLI row calls raw.pop("clk_land_clear"), so the bt tap stays inside u_bt. Fix: clr2 materialized, run from the tree root.
+  B2 (C-LEG405 SRC-NOT-AT-LEAF, new vs base): p9 flipped leaf_um from to_um to from_um on 6 per-bit in-bus chains. Leaves sit 741-1399 um from the capture register, and ADV-ISTA-LEAF goes 0 -> 6. Fix: p9b restores leaf_um = to_um on exactly those 6. SULANE gate g15 on intel1 (rt 10c10aeb1320) carries [p9b, clr2], ETA 16:45, hard deadline 17:15.
+  Outside su_c the review says GOOD-WITH-NITS and better than live. Every changed key is claimed by a row, all hops are <= 405 um, and pins over 300 um go from 174 to 3.
+  Non-blocking su_c items, all DEFERRED to 11-28 09:00 with owner QC-R3-SULANE:
+  - fclk_out_x_su_l0_o at 439 um
+  - reset raw re-picks over 405 um
+  - reset section not re-derived
+  - station stack in the su8/ch channel
+  Other non-blocking items:
+  - st_a_v1 tap load 1340-1393 (C-TAP-LOAD, inherited): DEFERRED with the TAP-LOAD row.
+  - tap_reach partial on 4 types, all under 300 um: DEFERRED to 11-28 09:00, owner QC-R3-TAPS.
+  - slw_hc3 port/tap field mismatch: nit, DEFERRED to 11-28 09:00, owner QC-R3-VISUAL.
+  - GENDRY coverage gap on rt 10c10aeb: cap 24, 53 types skipped. I will run uncapped GENDRY on rt a31983a1 against the chosen form's own tree before the apply.
+  Plan:
+  - New fallback chain D = B minus the su_c rows (su_c stays at live). Composing on epyc8, ETA 16:45.
+  - If g15 is READY by 17:15, I add a round 2 on D with [p9b, clr2].
+  - The TT chain C gets the same correction.
+  - Chain A tree released, because disk is at 97%.

@@ -175,3 +175,22 @@
   A is the fallback and carries the 70-type repoint, so the repoint still has to pass phase at CTS. Chains B and C are still gating.
   Started: an independent Fable review of the r003 delta, and the SULANE su_c tap check on it.
   Next on the chosen form: whole-die G0, publish_gate with expect-source and expect-event, the source-geometry review, and the ABI guard.
+- 2026-11-27 15:50 PST QC-INT-R3: the independent Fable review of r003 (sha 7126749d) says BAD for route. Both blockers are on the 3 su_c types. Chains A and B carry the same rows, so both are blocked.
+  B1 (C-CLK-LAND-OBS, P-FALSE-GREEN, compose-level): the SU_C clr flag row is silently erased. The later STA clk_land_clear CLI row calls raw.pop("clk_land_clear"), so the bt tap stays inside u_bt. Fix: clr2 materialized, run from the tree root.
+  B2 (C-LEG405 SRC-NOT-AT-LEAF, new vs base): p9 flipped leaf_um from to_um to from_um on 6 per-bit in-bus chains. Leaves sit 741-1399 um from the capture register, and ADV-ISTA-LEAF goes 0 -> 6. Fix: p9b restores leaf_um = to_um on exactly those 6. SULANE gate g15 on intel1 (rt 10c10aeb1320) carries [p9b, clr2], ETA 16:45, hard deadline 17:15.
+  Outside su_c the review says GOOD-WITH-NITS and better than live. Every changed key is claimed by a row, all hops are <= 405 um, and pins over 300 um go from 174 to 3.
+  Non-blocking su_c items, all DEFERRED to 11-28 09:00 with owner QC-R3-SULANE:
+  - fclk_out_x_su_l0_o at 439 um
+  - reset raw re-picks over 405 um
+  - reset section not re-derived
+  - station stack in the su8/ch channel
+  Other non-blocking items:
+  - st_a_v1 tap load 1340-1393 (C-TAP-LOAD, inherited): DEFERRED with the TAP-LOAD row.
+  - tap_reach partial on 4 types, all under 300 um: DEFERRED to 11-28 09:00, owner QC-R3-TAPS.
+  - slw_hc3 port/tap field mismatch: nit, DEFERRED to 11-28 09:00, owner QC-R3-VISUAL.
+  - GENDRY coverage gap on rt 10c10aeb: cap 24, 53 types skipped. I will run uncapped GENDRY on rt a31983a1 against the chosen form's own tree before the apply.
+  Plan:
+  - New fallback chain D = B minus the su_c rows (su_c stays at live). Composing on epyc8, ETA 16:45.
+  - If g15 is READY by 17:15, I add a round 2 on D with [p9b, clr2].
+  - The TT chain C gets the same correction.
+  - Chain A tree released, because disk is at 97%.
