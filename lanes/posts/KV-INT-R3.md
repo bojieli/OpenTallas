@@ -478,3 +478,4 @@
   - On the new tools, the bind-side PRE fails with 8 FENCEGEOM SINGLETON on kv3_hub_Eo (eo_boot_gate_0..3 and eo_boot_out_inv_0..3, one instance per fence). These came in with R-OUTER 1c623e87e93a.
   - Fix in flight (COMPOSE): the stock remedy of kind fixed at each rect, plus a sibling census of the R-OUTER types. The bind and uncapped GENDRY run after that.
   The 18:00 final compose is set up to run mechanically: compose12/final.sh on epyc12 (compose with conflict stops, drop attribution, then G0, strict bind + LATCHECK, and PRE GENDRY_MAX=200).
+- 2026-11-27 13:49 PST DIED [kv-int-r3] ot-run oth-ubuntu-4080361-1795815249 on open-snipe: rc=1 after 904 s, ended 21:49:10, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/gate.otrun.log, cmd: --priority die --hosts epyc12 --mem 200 --threads 48 --disk 40 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash rungate.sh | class=BIND-FAIL cause=BIND_RC=1
