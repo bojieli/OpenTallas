@@ -14,6 +14,13 @@ until [ -s $RS/5_2_route.odb ] && [ $(( $(date +%s) - $(stat -c %Y $RS/5_2_route
   [ $(date +%s) -gt $END ] && { say "timeout 72h"; post "$NAME: no routed DB after 72 h, waiter stopped; ECO-route not started."; exit 3; }
   sleep 120
 done
+# P-ECO-WAITER-RACE (QC-R3-LEC 11-27): run_kit.sh writes 6_final.spef minutes AFTER 5_2_route.odb (cl086d85ba: 03:04:30 vs 03:09:59), and prd_mk.sh
+# refuses without it ("lacks 5_2_route.odb / .../6_final.spef").  Wait for the SPEF too (stable 120 s, up to 2 h) before making the ECO pass.
+SPEND=$(( $(date +%s) + 7200 ))
+until [ -s $RS/6_final.spef ] && [ $(( $(date +%s) - $(stat -c %Y $RS/6_final.spef) )) -gt 120 ]; do
+  [ $(date +%s) -gt $SPEND ] && { say "6_final.spef not stable within 2 h of 5_2_route.odb"; break; }
+  sleep 30
+done
 LG=$(ls -t $KIT/run/logs/asap7/*/base/5_2_route*.log | head -1)
 N=$(grep -h "Completing 100%" $LG | tail -1 | sed 's/.*with //; s/ violations.*//')
 say "routed DB ready: $RS/5_2_route.odb final: $N"
