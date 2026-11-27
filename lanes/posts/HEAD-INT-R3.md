@@ -106,3 +106,4 @@
   (5) C-RST-TAP-REPOINT: PROBE owns distance limit (relay beyond rtr_lim), Fable fixes, second review, cts4 replay, then flag-on row.
   (6) hd_mesh C-LEG405 r2r 658.6: PART drafting the split row for W13 by 18:30.
   (7) ctl_n PRE rt mismatch: PART re-gates pinned to base rt; FORM checks every drop gate rt against pinned b71c5218e0b5.
+- 2026-11-27 12:52 PST DIED [HEAD-INT-R3] ot-run otrun-open-snipe-3245648 on open-snipe: rc=78 after 2 s, ended 20:52:58, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/form/w13pre_b71c.otrun.log, cmd: --priority die --hosts epyc12 --mem 96 --threads 48 --disk 10 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/form -- env RUN=w13pre_b71c  | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/HEAD-INT-R3/rows_2100/PHASE-BIND/ph
