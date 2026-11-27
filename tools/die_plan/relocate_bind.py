@@ -21,10 +21,14 @@ every old-path occurrence sits in a // comment (yosys source-location notes) is 
 comments do not elaborate).  An HDL file naming the old path in code is rewritten and each receipt that hashed its old bytes is
 re-hashed to the new bytes (write+rename).  Both modes end with check-receipts on OUT and fail (tree: OUT not created) on any
 mismatch.  Writes/extends OUT/RELOCATED.json.
+Ended scoped binds also carry per-type stream records used by kit-rtl when there is no whole die top.  Both passes verify
+the original record and all captured bytes before changing path provenance, then retie only the context and file digests
+affected by the checked rewrites.  The original run, plan, parameters, timestamp and end marker still govern the record.
 Paths written into the bind are NEW_TREE / OUT as given (abspath), never their realpath: a host-local symlink (epyc2 kw45 ->
 scratch3) must not leak into a bind that is copied to other hosts.  --also adds more old prefixes (e.g. the realpath
 spelling of an earlier tree that kit_rtl file lists use), byte-checked against that prefix and rewritten to NEW_TREE."""
-import argparse, hashlib, json, os, re, shutil, sys
+import argparse, hashlib, json, os, re, shutil, sys, tempfile
+from contextlib import contextmanager
 from pathlib import Path
 
 HDL = (".sv", ".v", ".svh", ".vh")
@@ -52,6 +56,14 @@ def _digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def _moved_path(path, olds, new, alias):
+    for old in olds:
+        if path == old or path.startswith(old + "/"):
+            rel = path[len(old):].lstrip("/")
+            return str(Path(new) / alias.get(rel, rel))
+    return path
+
+
 def receipt_errors(bind):
     """the bound_reset_contract.source/validate identity checks, on every receipt of a bind dir -> [(receipt, reason)]"""
     bad = []
@@ -67,7 +79,7 @@ def receipt_errors(bind):
     return bad
 
 
-def _rehash(out, rewritten_hdl, log):
+def _rehash(out, rewritten_hdl, log, stream_changes, replace=os.replace):
     """re-hash receipts whose bound RTL was rewritten (only when the receipt held exactly the pre-rewrite sha)"""
     for rel, before, after in rewritten_hdl:
         p = Path(out, rel)
@@ -79,9 +91,115 @@ def _rehash(out, rewritten_hdl, log):
             continue
         rec["bound_rtl_sha256"] = after
         rec.setdefault("relocated", []).append(dict(bound_rtl_sha256_before=before, tool="relocate_bind.py"))
+        meta_before = sha(meta)
         tmp = str(meta) + ".tmp.%d" % os.getpid()
-        Path(tmp).write_text(json.dumps(rec, indent=1) + "\n"); os.replace(tmp, meta)
-        log.append(str(meta.relative_to(out)))
+        Path(tmp).write_text(json.dumps(rec, indent=1) + "\n"); replace(tmp, meta)
+        rel = str(meta.relative_to(out))
+        log.append(rel)
+        stream_changes.append(dict(file=rel, sha_before=meta_before, sha_after=sha(meta)))
+
+
+def _stream_source(root, old_bind=None):
+    """Verify an ended scoped bind's final records against its captured local bytes."""
+    root = Path(root)
+    folder = root / "native_topology.d"
+    ended = folder / "_ended"
+    report = root / "bind_report.json"
+    if not ended.is_file() or not report.is_file():
+        return None
+    report_doc = json.loads(report.read_text())
+    if not report_doc.get("probe_only"):
+        return None
+    ctx_path = folder / "_context.json"
+    if any(p.is_symlink() for p in (folder, ended, report, ctx_path)):
+        raise ValueError("bind stream source identity needs regular captured files")
+    ctx_bytes = ctx_path.read_bytes()
+    ctx = json.loads(ctx_bytes)
+    ctx_sha = hashlib.sha256(ctx_bytes).hexdigest()
+    run_id, plan_sha = ctx["run_id"], ctx["plan_sha256"]
+    if (ctx.get("schema") != "opentallas.native_topology_stream_context.v1" or not run_id
+            or json.loads(ended.read_text()).get("run_id") != run_id
+            or report_doc.get("plan_sha256") != plan_sha):
+        raise ValueError("bind stream source has unrelated scope, plan or end marker")
+    records = {}
+    for path in sorted(folder.glob("*.json")):
+        if path == ctx_path:
+            continue
+        record = json.loads(path.read_text())
+        if record.get("final") is not True:
+            continue
+        if (path.is_symlink() or record.get("schema") != "opentallas.native_topology_stream.v1"
+                or path.stem != record.get("type") or record.get("run_id") != run_id
+                or record.get("context_sha256") != ctx_sha or record.get("plan_sha256") != plan_sha):
+            raise ValueError(f"bind stream source record has unrelated identity: {path.name}")
+        # The absolute producer paths can be unavailable after cross-host rsync.
+        # bind_cells.sv identifies the bind root; the staged copy supplies the bytes.
+        cells = [Path(p) for p in record["bind_f"] if Path(p).parts[-2:] == ("rtl", "bind_cells.sv")]
+        if len(cells) != 1 or not cells[0].is_absolute() or (old_bind and cells[0].parents[1] not in {Path(old_bind), root}):
+            raise ValueError(f"bind stream source record has no unique bind root: {path.name}")
+        prefix = cells[0].parents[1]
+        files = {}
+        for name, expected in record["files"].items():
+            rel = Path(name).relative_to(prefix)
+            captured = root / rel
+            if (not rel.parts or ".." in rel.parts or captured.is_symlink() or not captured.is_file()
+                    or not captured.resolve().is_relative_to(root.resolve()) or sha(captured) != expected):
+                raise ValueError(f"bind stream source file differs from record: {name}")
+            files[name] = str(rel)
+        if str(cells[0]) not in files:
+            raise ValueError(f"bind stream source record does not cover bind cells: {path.name}")
+        records[path.name] = record, files
+    return ctx, records
+
+
+def _retie_stream(state, root, map_path, changes, replace=os.replace):
+    """Retie records only to exact path rewrites and verified file replacements."""
+    if state is None:
+        return []
+    old_ctx, records = state
+    root = Path(root)
+    folder = root / "native_topology.d"
+    ctx_path = folder / "_context.json"
+    expected_ctx = dict(old_ctx)
+    for key in ("plan", "asbuilt"):
+        if old_ctx.get(key):
+            expected_ctx[key] = map_path(old_ctx[key])
+    if json.loads(ctx_path.read_text()) != expected_ctx:
+        raise ValueError("bind stream context changed fields other than its source paths")
+    if expected_ctx.get("plan") != old_ctx.get("plan") and sha(expected_ctx["plan"]) != old_ctx["plan_sha256"]:
+        raise ValueError("relocated bind stream plan bytes differ")
+    if expected_ctx.get("asbuilt") != old_ctx.get("asbuilt") and sha(expected_ctx["asbuilt"]) != old_ctx["receipt"]["asbuilt_sha256"]:
+        raise ValueError("relocated bind stream as-built bytes differ")
+    ctx_sha = sha(ctx_path)
+    by_file = {}
+    for change in changes:
+        by_file.setdefault(change["file"], []).append(change)
+    writes = []
+    for name, (old, rel_files) in records.items():
+        path = folder / name
+        rec = dict(old, bind_f=[map_path(p) for p in old["bind_f"]],
+                   extra_lib=[map_path(p) for p in old["extra_lib"]],
+                   files={map_path(p): h for p, h in old["files"].items()})
+        if (len(rec["files"]) != len(old["files"]) or json.loads(path.read_text()) != rec):
+            raise ValueError(f"bind stream record changed fields other than its source paths: {name}")
+        for source, rel in rel_files.items():
+            expected = old["files"][source]
+            for change in by_file.get(rel, []):
+                if change["sha_before"] != expected:
+                    raise ValueError(f"unrelated relocation input for bind stream file: {rel}")
+                expected = change["sha_after"]
+            if sha(root / rel) != expected:
+                raise ValueError(f"bind stream relocated file differs from checked rewrite: {rel}")
+            rec["files"][map_path(source)] = expected
+        rec["context_sha256"] = ctx_sha
+        if rec != json.loads(path.read_text()):
+            writes.append((path, rec))
+    for path, rec in writes:
+        tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+        tmp.write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+        os.chmod(tmp, path.stat().st_mode & 0o777)
+        replace(tmp, path)
+    return [path.name for path, _ in writes]
 
 
 def cmd_refsha(a):
@@ -122,6 +240,7 @@ def cmd_tree(a):
     assert not os.path.exists(out), f"REFUSE existing {out}"
     pats = {o: _pat(o) for o in olds}; bad, checked, rewritten, kept, hdl = [], {}, [], [], []
     tmp = out + ".tmp.%d" % os.getpid()
+    stream = _stream_source(src)
 
     def want_of(o, rel):
         if ref is not None and o == a.old_tree.rstrip("/"):
@@ -169,13 +288,19 @@ def cmd_tree(a):
         shutil.rmtree(tmp)
         print(f"REFUSE {len(bad)} path(s) differ or are missing in the new tree: {bad[:10]}"); sys.exit(2)
     rehashed = []                # receipts in tmp may be hard links into BIND_OUT: _rehash replaces them by write+rename
-    _rehash(tmp, hdl, rehashed)
+    stream_changes = []
+    _rehash(tmp, hdl, rehashed, stream_changes)
     rbad = receipt_errors(tmp)
     if rbad:
         shutil.rmtree(tmp)
         print(f"REFUSE {len(rbad)} reset receipt(s) do not match the relocated RTL: {rbad[:5]}"); sys.exit(3)
+    try:
+        retied = _retie_stream(stream, tmp, lambda p: _moved_path(p, olds, new, alias), rewritten + stream_changes)
+    except (OSError, ValueError, KeyError):
+        shutil.rmtree(tmp)
+        raise
     json.dump(dict(tool="relocate_bind.py tree", old_tree=olds, new_tree=new, source=src, alias=alias, paths_checked=len(checked),
-                   rewritten=rewritten, hdl_comment_only_kept=kept, receipts_rehashed=rehashed,
+                   rewritten=rewritten, hdl_comment_only_kept=kept, receipts_rehashed=rehashed, stream_records_retied=retied,
                    receipts_checked=len(list(Path(tmp, "rtl").glob("*.reset_tree.json")))),
               open(os.path.join(tmp, "RELOCATED.json"), "w"), indent=1)
     os.rename(tmp, out)
@@ -183,9 +308,61 @@ def cmd_tree(a):
           f"re-hashed, {len(checked)} distinct paths byte-checked, reset receipts 0 mismatch")
 
 
+@contextmanager
+def _self_edits(out):
+    """Keep a scoped output retryable and publish its audit only after successful edits."""
+    marker = Path(out, "RELOCATED.json")
+    undo = Path(tempfile.mkdtemp(prefix=".bind-self-", dir=marker.parent.parent))
+    saved_marker = undo / "marker"
+    originals = {}
+    started = False
+
+    def replace(src, dst):
+        nonlocal started
+        dst = Path(dst)
+        try:
+            if not started:
+                if os.path.lexists(marker):
+                    os.replace(marker, saved_marker)
+                started = True
+            if dst != marker and dst not in originals:
+                saved = undo / str(len(originals))
+                os.link(dst, saved, follow_symlinks=False)
+                originals[dst] = saved
+            os.replace(src, dst)
+        except OSError:
+            Path(src).unlink(missing_ok=True)
+            raise
+
+    try:
+        yield replace
+    except BaseException:
+        if started:
+            marker.unlink(missing_ok=True)
+            for dst, saved in reversed(originals.items()):
+                os.replace(saved, dst)
+            if os.path.lexists(saved_marker):
+                os.replace(saved_marker, marker)
+        shutil.rmtree(undo)
+        raise
+    else:
+        shutil.rmtree(undo)
+
+
 def cmd_self(a):
     old = a.old_bind.rstrip("/"); raw, out = os.path.realpath(a.raw), os.path.abspath(a.out)
+    stream = _stream_source(out, old)
+    if stream is None:
+        _rewrite_self(old, raw, out, None, os.replace)
+    else:
+        with _self_edits(out) as replace:
+            _rewrite_self(old, raw, out, stream, replace)
+
+
+def _rewrite_self(old, raw, out, stream, replace):
     pat = _pat(old); bad, checked, rew, kept, hdl = [], set(), [], [], []
+    rp = os.path.join(out, "RELOCATED.json")
+    r = json.load(open(rp)) if os.path.isfile(rp) else {}
     for dp, _, fns in os.walk(out):
         for fn in fns:
             p = os.path.join(dp, fn)
@@ -205,7 +382,7 @@ def cmd_self(a):
                 if not (os.path.exists(os.path.join(raw, rel)) and os.path.exists(os.path.join(out, rel))):
                     bad.append(rel or "/")
             new = txt.replace(old + "/", out + "/").replace('"' + old + '"', '"' + out + '"').replace(old + " ", out + " ").replace(old + "\n", out + "\n")
-            tmp = p + ".tmp.%d" % os.getpid(); open(tmp, "w").write(new); os.chmod(tmp, os.stat(p).st_mode & 0o777); os.replace(tmp, p)
+            tmp = p + ".tmp.%d" % os.getpid(); open(tmp, "w").write(new); os.chmod(tmp, os.stat(p).st_mode & 0o777); replace(tmp, p)
             rew.append(dict(file=os.path.relpath(p, out), sha_before=hashlib.sha256(data).hexdigest(), sha_after=sha(p)))
             if fn.endswith(HDL):
                 hdl.append((rew[-1]["file"], rew[-1]["sha_before"], rew[-1]["sha_after"]))
@@ -214,13 +391,17 @@ def cmd_self(a):
             if f != "RELOCATED.json" and os.path.relpath(os.path.join(dp, f), out) not in kept
             and not os.path.islink(os.path.join(dp, f)) and old.encode() in open(os.path.join(dp, f), "rb").read()]
     assert not left, ("still names old", left[:5])
-    rehashed = []; _rehash(out, hdl, rehashed)
+    rehashed, stream_changes = [], []
+    _rehash(out, hdl, rehashed, stream_changes, replace)
     rbad = receipt_errors(out)
-    rp = os.path.join(out, "RELOCATED.json")
-    r = json.load(open(rp)) if os.path.isfile(rp) else {}
-    r["pass2_self"] = dict(tool="relocate_bind.py self", old_bind=old, new_bind=out, paths_checked=len(checked), rewritten=rew,
-                           hdl_comment_only_kept=kept, receipts_rehashed=rehashed, receipt_mismatch=rbad)
-    tmp = rp + ".tmp"; json.dump(r, open(tmp, "w"), indent=1); os.replace(tmp, rp)
+    retied = _retie_stream(stream, out, lambda p: _moved_path(p, [old], out, {}), rew + stream_changes, replace) if not rbad else []
+    previous = r.get("pass2_self", {})
+    same_success = (stream is not None and previous.get("old_bind") == old and previous.get("new_bind") == out
+                    and previous.get("receipt_mismatch") == [] and not (rew or retied or rbad))
+    if not same_success:
+        r["pass2_self"] = dict(tool="relocate_bind.py self", old_bind=old, new_bind=out, paths_checked=len(checked), rewritten=rew,
+                               hdl_comment_only_kept=kept, receipts_rehashed=rehashed, stream_records_retied=retied, receipt_mismatch=rbad)
+        tmp = rp + ".tmp"; json.dump(r, open(tmp, "w"), indent=1); replace(tmp, rp)
     if rbad:
         print(f"FAIL {len(rbad)} reset receipt(s) do not match: {rbad[:5]}"); sys.exit(3)
     print(f"PASS2 {len(rew)} files rewritten, {len(kept)} HDL kept (comment-only), {len(rehashed)} receipt(s) re-hashed, "

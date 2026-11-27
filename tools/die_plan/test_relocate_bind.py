@@ -2,8 +2,11 @@
 import hashlib, json, sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import relocate_bind as RB
+import bind_stream as BS
 
 sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
@@ -72,3 +75,88 @@ def test_tree_writes_given_path_not_realpath_and_also_prefix(tmp_path):
     txt = (real / "out" / "bind.f").read_text() + (real / "out" / "kit.f").read_text()
     assert str(link / "new") + "/rtl/leaf.sv" in txt and str(real / "new") not in txt and str(prev) not in txt
     assert RB.receipt_errors(real / "out") == []
+
+
+def _scoped_capture(tmp_path):
+    old, new, bind = _fixture(tmp_path)
+    producer = tmp_path / "unmounted-producer"
+    station = bind / "native_internal_stations" / "tk"
+    station.mkdir(parents=True)
+    (station / "kit_rtl.json").write_text(json.dumps({"files": [f"{producer}/rtl/tk.sv", f"{old}/rtl/leaf.sv"]}))
+    cells = bind / "rtl" / "bind_cells.sv"
+    cells.write_text("module cells; endmodule\n")
+    plan = old / "rtl" / "leaf.sv"
+    ctx = BS.start(bind, {"asbuilt_sha256": sha(plan)}, plan, plan)
+    typ = BS.write_type(ctx, "tk", "tk", 1, [bind / "rtl" / "tk.sv"], [plan], [], cells, {"u_tk": "#(.N(17))"})
+    rec = bind / BS.DIR / "tk.json"
+    rec.write_text(json.dumps(typ).replace(str(bind), str(producer)))
+    (bind / "bind_report.json").write_text(json.dumps({"probe_only": {"requested": ["tk"]},
+                                                      "plan_sha256": sha(plan)}))
+    BS.mark_ended(ctx)
+    return old, new, bind, producer, rec
+
+
+def test_scoped_capture_survives_tree_then_self_relocation(tmp_path):
+    old, new, bind, producer, rec = _scoped_capture(tmp_path)
+    orig = json.loads(rec.read_text())
+    original_context = sha(bind / BS.DIR / BS.CTX)
+    original_receipt = sha(bind / "rtl" / "tk.reset_tree.json")
+    out = tmp_path / "out"
+    RB.main(["tree", str(old), str(new), str(bind), str(out)])
+    intermediate = json.loads((out / BS.DIR / rec.name).read_text())
+    assert intermediate["context_sha256"] == sha(out / BS.DIR / BS.CTX) != original_context
+    RB.main(["self", str(producer), str(bind), str(out)])
+    assert BS.instance_params(out, "tk", "tk") == {"u_tk": "#(.N(17))"}
+    after, = BS.records(out, "tk", require_live=False)
+    assert after["run_id"] == orig["run_id"] and after["written"] == orig["written"]
+    assert after["plan_sha256"] == orig["plan_sha256"]
+    assert after["files"][str(out / "rtl" / "tk.reset_tree.json")] != original_receipt
+    assert BS.records(out, "tk") == []  # a moved scoped receipt never becomes live
+    assert sha(bind / BS.DIR / BS.CTX) == original_context
+    assert sha(bind / "rtl" / "tk.reset_tree.json") == original_receipt
+    assert json.loads(rec.read_text()) == orig
+    marker = out / "RELOCATED.json"
+    before_retry = marker.read_bytes()
+    RB.main(["self", str(producer), str(bind), str(out)])
+    assert marker.read_bytes() == before_retry
+
+
+def test_scoped_self_failure_after_retie_restores_staged_origin(tmp_path, monkeypatch):
+    old, new, bind, producer, _ = _scoped_capture(tmp_path)
+    out = tmp_path / "out"
+    RB.main(["tree", str(old), str(new), str(bind), str(out)])
+    marker = out / "RELOCATED.json"
+    files = {p: p.read_bytes() for p in out.rglob("*") if p.is_file()}
+    retie = RB._retie_stream
+
+    def fail_after_retie(*args, **kwargs):
+        assert retie(*args, **kwargs) == ["tk.json"]
+        assert not marker.exists()
+        assert BS.instance_params(out, "tk", "tk") == {"u_tk": "#(.N(17))"}
+        raise ValueError("injected retie failure")
+
+    cmd = ["self", str(producer), str(bind), str(out)]
+    with monkeypatch.context() as inject:
+        inject.setattr(RB, "_retie_stream", fail_after_retie)
+        with pytest.raises(ValueError, match="injected retie failure"):
+            RB.main(cmd)
+    assert {p: p.read_bytes() for p in out.rglob("*") if p.is_file()} == files
+    assert "pass2_self" not in json.loads(marker.read_text())
+    RB.main(cmd)
+    assert not json.loads(marker.read_text())["pass2_self"]["receipt_mismatch"]
+    assert BS.instance_params(out, "tk", "tk") == {"u_tk": "#(.N(17))"}
+
+
+@pytest.mark.parametrize("corrupt", ["input_bytes", "context_digest"])
+def test_scoped_capture_refuses_unproven_source(tmp_path, corrupt):
+    old, new, bind, _, rec = _scoped_capture(tmp_path)
+    if corrupt == "input_bytes":
+        (bind / "native_internal_stations" / "tk" / "kit_rtl.json").write_text("{}")
+    else:
+        record = json.loads(rec.read_text())
+        record["context_sha256"] = "a" * 64
+        rec.write_text(json.dumps(record))
+    out = tmp_path / "out"
+    with pytest.raises(ValueError, match="bind stream source"):
+        RB.main(["tree", str(old), str(new), str(bind), str(out)])
+    assert not out.exists()
