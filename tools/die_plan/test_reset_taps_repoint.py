@@ -72,7 +72,6 @@ CHOOSE = [  # best bd ck_i d_launch reach d_drv drv_known lim -> best bd status
 
 
 def test_choose_table():
-    assert run("".join("puts [rt_aff_choose %s]\n" % c for c, _ in CHOOSE)) == [x for _, w in CHOOSE for x in ["{%s}" % w] ] or True
     out = subprocess.run([TCL], input=procs(SRC) + "\n" + "".join("puts [rt_aff_choose %s]\n" % c for c, _ in CHOOSE), capture_output=True, text=True, timeout=30).stdout.strip().splitlines()
     assert out == [w for _, w in CHOOSE]
 
