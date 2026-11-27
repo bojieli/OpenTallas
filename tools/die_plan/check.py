@@ -48,6 +48,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   clock_mesh  (--clock-build DIR, repeatable; COORD PATH-S81-PD12 ruling A 10-27) the die clock mesh build in DIR is
               ONE connected net: an M8-M9 VIA89 at every strap crossing, emitted (mesh.json meta.mesh_vias) and in the
               routed DB (OT_MESH_VIAS of combo_<corner>.log); ERROR in G0 and G0C (die_clock_mesh.mesh_via_findings)
+  start_tap_ports (ERROR, start_tap_ports.py, C-START-TAP-PORT-MISSING) every START stage clock_port t_st_<id>__clk exists on the die clock
+              Verilog (--die-ctree / OT_DIE_CTREE); WARN when no die clock Verilog can be resolved
   clock_entry_macro (G0C) plan clock entry / island (clock_entries.json) over a hard-core macro of core_macros.json
   merged_clock_view (G0C, HBM-STREETS-3, COORD 10-27 19:12 ruling 1) every merged core tap (merged_clock_ports) checked on
               its own vs the native LEF+Liberty (merged_core_clocks.audit): mismatch = ERROR; a core with no native view is
@@ -2991,7 +2993,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
         street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None, band_base=None,
-        pre=None):
+        pre=None, start_stages=None, die_ctree=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -3132,6 +3134,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if clock_builds:
         summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
+    # C-START-TAP-PORT-MISSING (P-FALSE-GREEN, COORD safety fix): every START stage tap port must exist on the die clock; BLOCKING
+    import start_tap_ports as STP
+    summ["start_tap_ports"] = STP.check(raw, R, plan_dir=plan_dir, start_stages=start_stages, die_ctree=die_ctree)
     if street_rule != "off" and plan_dir:
         # STREET-RULE-1 (COORD 11-12, opt-in): hard cores inside a type abut or face a street sized by the pins facing it
         # R-STREET (RULES-STREET-1 11-13): + type pin-face streets (face_street) and station alleys (station_alley)
@@ -3180,6 +3185,10 @@ def main(argv=None):
                          "summary in summary.g0c (types with 0 findings = G3-eligible)")
     ap.add_argument("--core-conns", help="hard-core connectivity sidecar (default PLANDIR/core_conns.json)")
     ap.add_argument("--core-macros", help="hard-core macro sidecar for clock_entry_macro (default PLANDIR/core_macros.json)")
+    ap.add_argument("--start-stages", help="start_stages.json[.gz] (ot_start_stages/1): START stage tap ports required on the die clock (env OT_START_STAGES; "
+                    "else the plan start_tree provider nodes, PLANDIR/start_stages.json*, one ../provider_*/start_stages.json*)")
+    ap.add_argument("--die-ctree", help="die clock Verilog (first module header = its ports) the START tap ports are checked against (env OT_DIE_CTREE; "
+                    "else PLANDIR/ctree.v, die_ctree.v, ../die_clock/ctree.v); missing port = ERROR [start_tap_ports], none resolvable = WARN")
     ap.add_argument("--clock-build", action="append", default=[],
                     help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
                          "connected net (VIA89 at every strap crossing, emitted + routed DB)")
@@ -3239,7 +3248,7 @@ def main(argv=None):
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root, routed_reach=a.routed_reach,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None,
-                  band_base=S.load(a.band_base) if a.band_base else None)
+                  band_base=S.load(a.band_base) if a.band_base else None, start_stages=a.start_stages, die_ctree=a.die_ctree)
     ne = len(R.errors())
     npv = len(R.pendings())
     nw = len(R.items) - ne - npv
