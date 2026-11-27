@@ -121,6 +121,24 @@ def gate_cmd(a, st, batch, out, plan_name):
     return cmd
 
 
+def compose_drops(prev, tree, rel, applied):
+    """-> dict(intended, unnamed): plan paths the composed plan lost against the current one; the rows' ledger field intended_drops
+    (drop-list lines) names the intended ones.  Writes <tree>/<rel>.drop_list (the list COMPOSEDROP reads next to the plan)"""
+    import compose_drop_guard as CDG
+    try:
+        pl = json.loads((Path(prev["tree"]) / prev["plan"]).read_text())
+        nw = json.loads((Path(tree) / rel).read_text())
+    except (OSError, ValueError, KeyError):
+        return dict(intended=[], unnamed=[])
+    lines = [str(x) for r in applied for x in (r.get("intended_drops") or [])]
+    text, named, unnamed = CDG.emit_drop_list(pl, nw, CDG.load_drop_list_lines(lines))
+    try:
+        (Path(str(Path(tree) / rel) + ".drop_list")).write_text(text)
+    except OSError:
+        pass
+    return dict(intended=named, unnamed=unnamed)
+
+
 def run_round(a, st, run=None):
     """one round -> 'idle' | 'published' | 'not-ready'"""
     run = run or subprocess.run
@@ -158,6 +176,14 @@ def run_round(a, st, run=None):
         tree = out / "tree"
         rel = rr["plan"]["rel"]
         prev = dict(st["current"])
+        drops = compose_drops(prev, tree, rel, applied)       # P-COMPOSE-DROP: explicit drop list next to the plan
+        if drops["unnamed"] and os.environ.get("OT_COMPOSE_DROP") != "warn":
+            st["rejected"].update({r["_key"]: dict(plan_sha256=st["current"]["sha256"], round=n, lane=r.get("lane"),
+                                                   why=f"COMPOSEDROP {len(drops['unnamed'])} unnamed drop(s): {drops['unnamed'][:3]}") for r in applied})
+            st["batch_limit"] = None
+            save_state(a.pub, st)
+            print(f"ROLL r{n:03d} NOT PUBLISHED: {len(drops['unnamed'])} drop(s) no row names (intended_drops): {drops['unnamed'][:5]}", flush=True)
+            return "not-ready"
         st["current"] = dict(tree=str(tree), plan=rel, sha256=rr["plan"]["sha256"], round=n, published=RG.utc())
         st["included"] += [r["_key"] for r in applied]
         st["batch_limit"] = None

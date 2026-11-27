@@ -300,9 +300,36 @@ def report(found, max_list=12):
     return lines, silent
 
 
-def findings_for_pre(prev, new, drop_list=None, level="WARN", max_list=6):
+def plan_drop_pats(new, plan_path=None):
+    """P-COMPOSE-DROP (QC-R3-TREERTL 11-27): intended drops a plan carries itself: plan key compose_drop_list (drop-list lines) and
+    the file <plan>.drop_list that compose emits next to the plan"""
+    pats = []
+    v = (new or {}).get("compose_drop_list")
+    if isinstance(v, (list, tuple)):
+        pats += load_drop_list_lines([str(x) for x in v])
+    if plan_path:
+        for suf in (".drop_list", ".drop_list.txt"):
+            fp = str(plan_path) + suf
+            if os.path.isfile(fp):
+                pats += load_drop_list(fp)
+    return pats
+
+
+def emit_drop_list(prev, new, intended_pats=()):
+    """-> (text, intended paths, unnamed paths): the explicit drop list of composing NEW from PREV.  Intended drops are drop-list lines
+    ('DROP <path>  # intended'); an unnamed drop is written as a comment ('#UNNAMED DROP <path>') so the list never names it and
+    COMPOSEDROP keeps failing until a row or a person names it"""
+    named, unnamed = [], []
+    for k, p, _x, ok in guard(prev, new, drop_pats=list(intended_pats)):
+        if k in ("DROP", "ROW-DROP"):
+            (named if ok else unnamed).append(p)
+    text = "".join(f"DROP {p}  # intended\n" for p in sorted(named)) + "".join(f"#UNNAMED DROP {p}\n" for p in sorted(unnamed))
+    return text, sorted(named), sorted(unnamed)
+
+
+def findings_for_pre(prev, new, drop_list=None, level="WARN", max_list=6, plan_path=None):
     """plan_gate_pre COMPOSEDROP: DROP findings of NEW vs the baseline plan, one line per group"""
-    found = guard(prev, new, drop_pats=load_drop_list(drop_list))
+    found = guard(prev, new, drop_pats=load_drop_list(drop_list) + plan_drop_pats(new, plan_path))
     lines, silent = report([f for f in found if not f[3]], max_list)
     if not silent:
         return []

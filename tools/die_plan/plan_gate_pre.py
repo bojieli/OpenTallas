@@ -246,7 +246,7 @@ ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): pl
 
 COMPOSEDROP (COMPOSE-GUARD-1124, QC-COMPOSE-GUARD / COORD 11-24; QC C1k lost the QC-OPEN-STA r10 st_a row): with --baseline-plan
   (the previous event's plan), every plan path the baseline carries and this plan lacks or holds null (dict keys; list elements with a
-  unique name / conn / inst / id) is listed by group: compose_drop_guard.py.  WARN only (r703 report-only); OT_COMPOSE_DROP=fail makes
+  unique name / conn / inst / id) is listed by group: compose_drop_guard.py.  FAIL by default since 11-27 (P-COMPOSE-DROP, COORD FABLE-RC-QC: a drop the plan's compose_drop_list / <plan>.drop_list / $OT_COMPOSE_DROP_LIST does not name fails); OT_COMPOSE_DROP=warn relaxes; formerly: OT_COMPOSE_DROP=fail makes
   it a FAIL; $OT_COMPOSE_DROP_LIST names the intended drops (fnmatch patterns over the dotted path).  Reverts to an older plan and lost
   private rows need the full tool: compose_drop_guard.py PREV NEW --history OLDER... --row NAME=BASE:ROW --drop-list FILE (rc 1).
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
@@ -1788,7 +1788,7 @@ def pre_mode(elab_dir, skip=()):
     return f"LIST PRE-MODE plan-only: {len(names)} bound checks downgraded ({', '.join(names)})"
 
 
-START_SETTLE_LEVEL = "WARN"   # START-SETTLE-1124 (COORD r703): report-only; COORD promotes it to FAIL by an explicit ruling (edit this constant), never by date
+START_SETTLE_LEVEL = "FAIL"   # START-SETTLE-1124 (COORD r703) report-only -> FAIL by COORD FABLE-RC-QC ruling 11-27 (P-STALE-TABLE: QC root_settle 64 < bound 1734)
 
 
 def start_settle_bound(sidecar_doc, max_release):
@@ -1870,7 +1870,7 @@ def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_re
     if have < need:
         out.append(f"{lvl} START-SETTLE root_settle_cycles {have} < ready bound {need} (max release {max_release} + ring train + chain "
                    f"depths): START (ot_dp_landing_root SETTLE) can fire before the last partition leaves reset; set "
-                   f"count_aligned.root_settle_cycles >= {need} in {sc} (report-only: {lvl})")
+                   f"count_aligned.root_settle_cycles >= {need} in {sc} ({lvl})")
     if int(bud.get("raw_reset_release_max_cycles", -1)) != max_release:
         out.append(f"{lvl} START-SETTLE boot_budget raw_reset_release_max_cycles {bud.get('raw_reset_release_max_cycles')} != plan max "
                    f"release {max_release} in {sc}")
@@ -2928,7 +2928,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         try:
             import compose_drop_guard as CDG
             findings += CDG.findings_for_pre(_load(baseline), _load(plan), os.environ.get("OT_COMPOSE_DROP_LIST") or None,
-                                             "FAIL" if os.environ.get("OT_COMPOSE_DROP") == "fail" else "WARN")
+                                             "WARN" if os.environ.get("OT_COMPOSE_DROP") == "warn" else "FAIL", plan_path=plan)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself
             findings.append(f"WARN COMPOSEDROP not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("LANDREMAP")

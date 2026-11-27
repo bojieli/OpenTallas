@@ -1430,6 +1430,19 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
 
 
 
+def settle_floor(side):
+    """START-SETTLE (P-STALE-TABLE, QC-R3-TREERTL 11-27): the die START (ot_dp_landing_root SETTLE = count_aligned.root_settle_cycles) must
+    not fire before the last partition leaves reset, so SETTLE >= the collector ready bound of THIS plan (max wavefront release + ring
+    training + chain depths = boot_budget.ready_at_glue_max_cycles, derived from the bound plan, never a constant).  The 64 of
+    count_align_bind --root-settle is only a floor.  Returns the settle in force (None without a count_aligned table / boot budget)."""
+    ca=side.get("count_aligned");bb=(side.get("collector") or {}).get("boot_budget")
+    if not ca or not isinstance(bb,dict) or bb.get("ready_at_glue_max_cycles") is None:return None
+    need=int(bb["ready_at_glue_max_cycles"])
+    have=int(ca.get("root_settle_cycles",64))
+    if have<need:ca["root_settle_cycles"]=need
+    return int(ca["root_settle_cycles"])
+
+
 def _finish(raw,P,bytype,pports,side):
     # A measured SOURCE control contract survives regeneration only for the
     # same complete sidecar identity. Other graphs keep an incomplete estimate;
@@ -1445,6 +1458,7 @@ def _finish(raw,P,bytype,pports,side):
     elif isinstance(side.get("collector",{}).get("boot_budget"),dict):
         # sidecars without a boot budget (every non-KV die) are left untouched
         side["collector"]["boot_budget"]["source_causal_bound_qualified"]=False
+    settle_floor(side)
     # These are clock/reset-adjacent infrastructure pins, like existing tap
     # and wavefront pins. They are NOT ordinary aligned functional bus ports
     # and do not create fictitious R8 lanes. Keep exact physical endpoint and

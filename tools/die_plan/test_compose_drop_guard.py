@@ -120,7 +120,7 @@ def test_bad_input_rc2(tmp_path):
     assert G.main([p, p, "--row", "broken"]) == 2
 
 
-def test_pre_findings_are_warn_by_default():
+def test_pre_findings_level_is_caller_choice():
     a, b = _plan(), _plan()
     del b["partition_types"]["st_a"]["landing_relay_start_copy"]
     lines = G.findings_for_pre(a, b)
@@ -139,8 +139,11 @@ def test_plan_gate_pre_composedrop_class(tmp_path, monkeypatch):
     cd = lambda fs: [x for x in fs if x.split()[1:2] == ["COMPOSEDROP"]]  # noqa: E731 - not the LIST PRE-TIME line
     monkeypatch.setenv("OT_TREE_PRECHECK", "off")
     f = cd(P.check(str(tmp_path), pb, baseline=pa, skip=others))
-    assert f and all(x.startswith("WARN COMPOSEDROP") for x in f)
+    assert f and all(x.startswith("FAIL COMPOSEDROP") for x in f)      # P-COMPOSE-DROP 11-27: blocking by default
     assert any("landing_relay_start_copy" in x for x in f)
+    monkeypatch.setenv("OT_COMPOSE_DROP", "warn")
+    assert all(x.startswith("WARN COMPOSEDROP") for x in cd(P.check(str(tmp_path), pb, baseline=pa, skip=others)))
+    monkeypatch.delenv("OT_COMPOSE_DROP")
     assert not cd(P.check(str(tmp_path), pb, skip=others))      # no baseline: not run
     monkeypatch.setenv("OT_COMPOSE_DROP", "fail")
     assert [x for x in cd(P.check(str(tmp_path), pb, baseline=pa, skip=others)) if x.startswith("FAIL ")]
@@ -237,3 +240,26 @@ def test_sidecar_usage_errors_rc2(tmp_path):
     p = _w(tmp_path, "p.json", _sc_plan())
     assert G.main([p, p, "--prev-sidecar", p]) == 2                           # needs --sidecar
     assert G.main([p, p, "--sidecar", p]) == 2                                # a plan is not a sidecar
+
+
+def test_plan_key_and_sibling_file_name_intended_drops(tmp_path):
+    a, b = _plan(), _plan()
+    del b["partition_types"]["st_a"]["landing_relay_start_copy"]
+    assert G.findings_for_pre(a, b, level="FAIL")
+    b["compose_drop_list"] = ["partition_types.st_a.landing_relay_start_copy # intended"]
+    assert G.findings_for_pre(a, b, level="FAIL") == []
+    del b["compose_drop_list"]
+    pb = _w(tmp_path, "plan.json", b)
+    (tmp_path / "plan.json.drop_list").write_text("partition_types.st_a.landing_relay_start_copy  # intended\n")
+    assert G.findings_for_pre(a, b, level="FAIL", plan_path=pb) == []
+
+
+def test_emit_drop_list_names_only_intended(tmp_path):
+    a, b = _plan(), _plan()
+    del b["partition_types"]["st_a"]["landing_relay_start_copy"]
+    text, named, unnamed = G.emit_drop_list(a, b)
+    assert not named and unnamed and text.startswith("#UNNAMED DROP ")
+    assert G.load_drop_list_lines(text.splitlines()) == []            # an unnamed drop never reads as intended
+    text, named, unnamed = G.emit_drop_list(a, b, G.load_drop_list_lines(["partition_types.st_a.landing_relay_start_copy"]))
+    assert named and not unnamed and text.startswith("DROP ")
+    assert G.load_drop_list_lines(text.splitlines())                  # the emitted list names it
