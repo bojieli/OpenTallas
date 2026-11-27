@@ -9674,6 +9674,74 @@
          "minimum": 0
         }
        }
+      },
+      "tree_of_record": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "tree_json",
+        "ctree_v",
+        "spef_tt"
+       ],
+       "properties": {
+        "tree_json": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "path",
+          "sha12"
+         ],
+         "properties": {
+          "path": {
+           "type": "string",
+           "minLength": 1
+          },
+          "sha12": {
+           "type": "string",
+           "pattern": "^[0-9a-f]{12}$"
+          }
+         }
+        },
+        "ctree_v": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "path",
+          "sha12"
+         ],
+         "properties": {
+          "path": {
+           "type": "string",
+           "minLength": 1
+          },
+          "sha12": {
+           "type": "string",
+           "pattern": "^[0-9a-f]{12}$"
+          }
+         }
+        },
+        "spef_tt": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "path",
+          "sha12"
+         ],
+         "properties": {
+          "path": {
+           "type": "string",
+           "minLength": 1
+          },
+          "sha12": {
+           "type": "string",
+           "pattern": "^[0-9a-f]{12}$"
+          }
+         }
+        },
+        "note": {
+         "type": "string"
+        }
+       }
       }
      }
     },

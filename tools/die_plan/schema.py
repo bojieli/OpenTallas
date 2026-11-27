@@ -104,6 +104,9 @@ _name = {"type": "string", "minLength": 1}
 _early_late = {"type": "object", "required": ["early", "late"], "additionalProperties": False,
                "properties": {"early": {"type": "number", "minimum": 0}, "late": {"type": "number", "minimum": 0}}}
 _layer = {"type": "string", "pattern": "^M[1-9]$"}
+# C-DIECLOCK-TRUNK-UNPINNED: one plan-relative file of the die clock tree of record, pinned by sha12 (sha256 hex, first 12)
+_tor_file = {"type": "object", "additionalProperties": False, "required": ["path", "sha12"],
+             "properties": {"path": {"type": "string", "minLength": 1}, "sha12": {"type": "string", "pattern": "^[0-9a-f]{12}$"}}}
 _win = {"type": "array", "items": _num, "minItems": 2, "maxItems": 2}
 _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 only on a face_layers face (G0 faces)
 _order = {"enum": ["lsb_low", "lsb_high"]}
@@ -1459,7 +1462,15 @@ SCHEMA = {
                 "trunk": {"type": "object", "additionalProperties": False,
                           "required": ["layer", "node_x_um", "lane_x_um", "riser_um"],
                           "properties": {"layer": _layer, "node_x_um": {"type": "number"},
-                                         "lane_x_um": {"type": "number"}, "riser_um": {"type": "number", "minimum": 0}}}}}}},
+                                         "lane_x_um": {"type": "number"}, "riser_um": {"type": "number", "minimum": 0}}},
+                # C-DIECLOCK-TRUNK-UNPINNED (HEAD-TILE-R3 11-27): the die clock tree of record (kit tree.json, ctree.v, routed
+                # TT spef), plan-relative paths + sha12.  tools/clk/ot_clk.py seeds every die clock regen from tree_json
+                # (tree_eco, trunk nodes pinned); a plan with a bound trunk and no tree_of_record is refused unless the
+                # ot_clk config opts out (eco: {base_tree: none, reason}).
+                "tree_of_record": {"type": "object", "additionalProperties": False,
+                                   "required": ["tree_json", "ctree_v", "spef_tt"],
+                                   "properties": {"tree_json": _tor_file, "ctree_v": _tor_file, "spef_tt": _tor_file,
+                                                  "note": {"type": "string"}}}}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _reset_source, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True},

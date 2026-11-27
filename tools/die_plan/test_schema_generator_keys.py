@@ -37,6 +37,7 @@ _MANIFEST = "reads the as-built / bind manifest (opentallas as-built JSON), whic
 _CORE = "dict named plan/raw here is a core-infra / hook plan (core_tree, cells, clock_ndr ...), not a die plan"
 NOT_PLAN = {
     ("adv_core_param.py", "asbuilt"): _MANIFEST,
+    ("adv_leg405_chain.py", "asbuilt"): _MANIFEST,
     ("bind.py", "asbuilt"): _MANIFEST,
     ("bind_verify.py", "asbuilt"): _MANIFEST,
     ("kit_topology.py", "asbuilt"): _MANIFEST,

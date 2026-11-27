@@ -37,6 +37,9 @@ plan_root, calib: RUN_DIR, balance_types: [T..], balance_ps} makes `kit` (and `a
 base_tree on the config's plan (site-matched taps keep their leaf; moved/new taps reuse freed leaves or hang on the best
 region node; stranded leaves and pile-ups at stale keep-outs re-site) into OUT/eco/tree_eco.json, and die_trial kit gets
 --tree-json on it (the kit re-lays the touched legs on its own legal-site map and fixes parity).
+Trunk seeding is the DEFAULT (C-DIECLOCK-TRUNK-UNPINNED, resolve_eco): `argv` / `kit` (not replay, not --legacy) take
+eco.base_tree from the plan's clock.spine.tree_of_record (sha12-verified) when the config names none; a plan with a bound
+trunk (clock.spine.trunk) and no tree_of_record is refused unless the config opts out with eco: {base_tree: none, reason}.
 
 region.form mesh (CLK-TOOL-6): the region clock is built by tools/clk/mesh_form.py from the config section region.mesh
 (every die value explicit, no defaults), not by die_trial.  check/argv/kit/replay/rec take the same CONFIG; kit writes
@@ -463,6 +466,110 @@ ECO_KEYS = {"base_tree", "resite_types", "max_leaf_leg_um", "lift_tol_ps", "matc
             "balance_ps", "near_um", "keep_attach", "redo", "core_target_tapoff", "core_tol_ps", "no_feed_hang",
             "max_added_kids"}
 
+TRUNK_CLASS = "C-DIECLOCK-TRUNK-UNPINNED"
+TOR_FILES = ("tree_json", "ctree_v", "spef_tt")
+
+
+def sha12(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
+
+
+def _plan_roots(cfg):
+    """explicit plan roots of a config: inputs.plan_root, then --plan-root in extra_argv"""
+    pr = (cfg.get("inputs") or {}).get("plan_root")
+    out = [pr] if isinstance(pr, str) else list(pr or [])
+    xa = [str(x) for x in cfg.get("extra_argv") or []]
+    out += [xa[k + 1] for k, x in enumerate(xa[:-1]) if x == "--plan-root"]
+    return [x for x in out if x]
+
+
+def _resolve_plan_file(rel, plan_path, raw, roots):
+    """a plan-relative asset, looked up as plan_inputs.resolve does: plan folder, explicit roots, OT_PLAN_ROOT,
+    the plan's own plan_root, the tree root"""
+    p = Path(rel)
+    if p.is_absolute():
+        return p if p.is_file() else None
+    dirs = [Path(plan_path).resolve().parent] + [Path(r) for r in roots]
+    dirs += [Path(r) for r in os.environ.get("OT_PLAN_ROOT", "").split(os.pathsep) if r]
+    own = raw.get("plan_root")
+    dirs += [Path(r) for r in ([own] if isinstance(own, str) else own or [])]
+    dirs.append(REPO)
+    for d in dirs:
+        if (d / rel).is_file():
+            return d / rel
+    return None
+
+
+def resolve_eco(cfg, plan_path=None):
+    """C-DIECLOCK-TRUNK-UNPINNED: trunk seeding is the default for a die clock regen.  -> (config to build, provenance).
+      eco {base_tree: none, reason: "..."}  explicit from-scratch opt-out (a reason is required); the eco section is dropped
+      eco {base_tree: PATH, ...}             unchanged (an explicit tree of record)
+      no eco / eco without base_tree / base_tree: tree_of_record
+                                             eco.base_tree = the plan's clock.spine.tree_of_record.tree_json, after every
+                                             tree_of_record file (tree_json, ctree_v, spef_tt) matches its sha12
+    A plan whose clock.spine declares the bound trunk (clock.spine.trunk) and carries no tree_of_record raises unless the
+    config opts out; a plan without a bound trunk builds from scratch as before (no other die is changed).  A plan file
+    that does not exist (historical replay configs) is left to die_trial."""
+    e = cfg.get("eco")
+    if e is not None and not isinstance(e, dict):
+        raise ConfigError("eco must be a map")
+    bt = (e or {}).get("base_tree")
+    if e is not None and isinstance(bt, str) and bt.strip().lower() == "none":
+        reason = e.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ConfigError(f"eco.base_tree none (from-scratch die clock, {TRUNK_CLASS} opt-out) needs eco.reason")
+        if set(e) - {"base_tree", "reason"}:
+            raise ConfigError(f"eco.base_tree none takes only eco.reason; unexpected {sorted(set(e) - {'base_tree', 'reason'})}")
+        c = {k: v for k, v in cfg.items() if k != "eco"}
+        return c, dict(mode="opt_out", reason=reason.strip())
+    if e is not None and "reason" in e:
+        raise ConfigError("eco.reason belongs to the from-scratch opt-out (eco.base_tree none) only")
+    if e is not None and bt not in (None, "tree_of_record"):
+        return cfg, dict(mode="config", base_tree=str(bt))
+    if e is None and "--tree-json" in [str(x) for x in cfg.get("extra_argv") or []]:
+        return cfg, dict(mode="explicit_tree_json", why="extra_argv names --tree-json (a stamped tree, no TRUNK-PIN record)")
+    src = Path(plan_path or cfg["inputs"]["plan"])
+    if not src.is_file():
+        if e is not None:
+            raise ConfigError(f"eco: base_tree from clock.spine.tree_of_record, but plan {src} does not exist")
+        return cfg, dict(mode="unchecked", why=f"plan {src} not found")
+    raw = json.loads(src.read_text())
+    sp = (raw.get("clock") or {}).get("spine") or {}
+    tor = sp.get("tree_of_record")
+    if not tor:
+        if e is not None and not sp.get("trunk"):
+            raise ConfigError(f"{TRUNK_CLASS}: the eco section names no base_tree (or base_tree: tree_of_record) but plan "
+                              f"{src} has no clock.spine.tree_of_record")
+        if sp.get("trunk"):
+            raise ConfigError(f"{TRUNK_CLASS}: plan {src} declares a bound clock spine (clock.spine.trunk) but no "
+                              f"clock.spine.tree_of_record, so this die clock regen would build the trunk from scratch; add "
+                              f"tree_of_record {{tree_json, ctree_v, spef_tt}} (path + sha12) to the plan, or opt out "
+                              f"explicitly with eco: {{base_tree: none, reason: \"...\"}}")
+        return cfg, dict(mode="scratch", why="plan declares no bound clock spine (clock.spine.trunk)")
+    roots = _plan_roots(cfg)
+    files, bad = {}, []
+    for k in TOR_FILES:
+        ent = tor.get(k) or {}
+        if not ent.get("path") or not ent.get("sha12"):
+            bad.append(f"{k}: needs path and sha12")
+            continue
+        f = _resolve_plan_file(ent["path"], src, raw, roots)
+        if f is None:
+            bad.append(f"{k}: {ent['path']} not found")
+            continue
+        got = sha12(f)
+        if got != ent["sha12"]:
+            bad.append(f"{k}: {f} sha12 {got} != plan {ent['sha12']}")
+        files[k] = dict(path=str(f), sha12=got)
+    if bad:
+        raise ConfigError(f"{TRUNK_CLASS}: plan {src} clock.spine.tree_of_record does not verify: " + "; ".join(bad))
+    ne = dict(e or {}, base_tree=files["tree_json"]["path"])
+    xa = [str(x) for x in cfg.get("extra_argv") or []]
+    if not ne.get("plan_root") and "--plan-root" not in xa:
+        ne["plan_root"] = roots if roots else str(src.resolve().parent)
+    c = dict(cfg, eco=ne)
+    return c, dict(mode="tree_of_record", plan=str(src), files=files)
+
 
 def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     """CLK-ECO-1: tree_eco.py argv for the config's eco section (plan root: eco.plan_root, else the kit's --plan-root)"""
@@ -471,10 +578,11 @@ def eco_argv(cfg, kit_out, cal, region_map, plan, die_trial):
     if bad or "base_tree" not in e:
         raise ConfigError(f"eco: keys {sorted(ECO_KEYS)} (base_tree required); unknown {sorted(bad)}")
     xa = [str(x) for x in cfg.get("extra_argv") or []]
-    root = e.get("plan_root") or (xa[xa.index("--plan-root") + 1] if "--plan-root" in xa else None)
-    if not root:
+    root = e.get("plan_root") or [xa[k + 1] for k, x in enumerate(xa[:-1]) if x == "--plan-root"]
+    roots = [root] if isinstance(root, str) else list(root or [])
+    if not roots:
         raise ConfigError("eco: no plan root (eco.plan_root or --plan-root in extra_argv)")
-    a = [str(HERE / "tree_eco.py"), str(e["base_tree"]), str(plan), "--plan-root", str(root), "--out",
+    a = [str(HERE / "tree_eco.py"), str(e["base_tree"]), str(plan)] + [x for r in roots for x in ("--plan-root", str(r))] + ["--out",
          str(eco_tree_path(kit_out)), "--tools", str(Path(die_trial).resolve().parent),
          "--rep-um", _fmt(cfg["top"].get("rep_um", 150))]
     xk = kit_argv(cfg, kit_out)
@@ -860,11 +968,19 @@ def main(argv=None):
         ok, _, why = stage_check(cfg, registry)
         print(("PASS" if ok else "FAIL") + ": " + "; ".join(why))
         return 0 if ok else 1
+    # C-DIECLOCK-TRUNK-UNPINNED: every die_trial build (argv / kit / replay, --legacy too) resolves the eco section the same
+    # way: the plan's tree of record by default, the explicit opt-out, or the config's own base_tree.  Historical replay
+    # configs whose plan file is gone resolve to "unchecked" and keep the config as written.
+    seed = None
+    if a.cmd in ("argv", "kit", "replay"):
+        cfg, seed = resolve_eco(cfg)
+        print(f"ot_clk: trunk seed {json.dumps(seed)}", file=sys.stderr, flush=True)
     if a.cmd == "argv":
         ok, why, cal = _prepare(cfg, a.out, a.legacy, registry)
         rmap, _ = fill_region_map(cfg, a.out)
         print(json.dumps(dict(stage_check="PASS" if ok else "FAIL", why=why,
-                              argv=kit_argv(cfg, a.out, cal, a.workers, region_map=rmap)), indent=1))
+                              argv=kit_argv(cfg, a.out, cal, a.workers, region_map=rmap),
+                              **({"trunk_seed": seed} if seed else {})), indent=1))
         return 0
     out = Path(a.out)
     ok, why, cal = _prepare(cfg, out / "kit", a.legacy, registry)
@@ -875,7 +991,8 @@ def main(argv=None):
     dt = Path(a.die_trial).resolve()
     (out / ("ot_clk_argv_compare.json" if getattr(a, "compare_only", False) else "ot_clk_argv.json")).write_text(json.dumps(dict(config=str(a.config), stage_check="PASS" if ok else "FAIL",
                                                           why=why, pins_rebase=rebase, die_trial=die_trial_rev(dt),
-                                                          argv=args, **({"region_fill": rfill} if rfill else {})),
+                                                          argv=args, **({"region_fill": rfill} if rfill else {}),
+                                                          **({"trunk_seed": seed} if seed else {})),
                                                           indent=1) + "\n")
     if getattr(a, "compare_only", False):          # re-judge an existing replay's clock outputs, no rebuild
         if not (out / "kit" / "clock").is_dir():

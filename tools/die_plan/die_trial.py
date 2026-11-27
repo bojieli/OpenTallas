@@ -2716,10 +2716,13 @@ def _physical_leg_build(site, a, b, rep_um, points, bound):
     return result
 
 
-def physical_pack(site, place, max_displacement=8.64):
+def physical_pack(site, place, max_displacement=8.64, pinned=()):
     """Prebuild native-body home allocation (the existing clock_body_bays recipe).
     All homes are fixed before final leg costs and placement are published.
     No later placement overlay may move these cells.
+    pinned (C-DIECLOCK-TRUNK-UNPINNED): instance names whose current xy is their home (a pinned trunk node of the tree of
+    record): each one whose xy is on the body grid, legal and clear of the pinned homes reserved before it keeps that xy exactly, reserved
+    before every other cell packs; a pinned cell that cannot keep its xy packs as usual (the TRUNK-PIN assert reports it).
     """
     W,H = ISLAND_CELL_UM
     occ = defaultdict(list)
@@ -2733,8 +2736,19 @@ def physical_pack(site, place, max_displacement=8.64):
                                         for b in buckets(q) for p in occ[b])
     shifts = sorted([(31*i,j) for i in range(-5,6) for j in range(-16,17)],
                     key=lambda d:(abs(d[0]*.054)+abs(d[1]*.54),abs(d[1]),d))
+    fixed = {}
+    pin = set(pinned or ())
+    on_grid = lambda q: abs(q[0]/.054-round(q[0]/.054)) < 1e-6 and abs(q[1]/.54-round(q[1]/.54)) < 1e-6
+    for name,x,y in place:
+        if name in pin and on_grid((x,y)) and clear((x,y)):
+            fixed[name] = (x,y)
+            for b in buckets((x,y)):
+                occ[b].append((x,y))
     result = []
     for name,x,y in place:
+        if name in fixed:
+            result.append((name,*fixed[name]))
+            continue
         anchor = round_legal(site,(x,y))
         home = None
         for dx,dy in shifts:
@@ -3901,7 +3915,7 @@ def _leg_layout0(i, nd, p, site, rep_um, even):
     return L, nrep, poly, pts, fix_pts, chain
 
 
-def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None, clock_cell="buf"):
+def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sites=None, clock_cell="buf", pinned=None):
     """buffered tree: a BUF at every node (branch / leaf driver), repeaters every rep_um along each leg.
     tap_pad (DIE-KV-5 opt-in --tap-pad, METHODOLOGY 12.8 plan-computed per-tap sizing): {tap port: n} puts n BUF cells in
     series between the tap's leaf net and the tap (insertion-delay balancing of a light, pruned branch); default None =
@@ -3911,6 +3925,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
     inverter count is odd gets ONE CLK_INV at the tap (instance q<node>_<tap>, placed like a tap pad), so every tap sees the
     true clock polarity by construction.  nodes[i]['inv_parity'] = inverter count parity at the node output.
     Default 'buf': byte-identical netlist.
+    pinned: node ids whose buffer keeps its xy through physical_pack (C-DIECLOCK-TRUNK-UNPINNED pinned trunk nodes).
     -> (verilog, placements [(inst, x, y)], tap ports [(port, x, y)], node_buf {node id: inst}, path {tap port: [inst]})"""
     if clock_cell not in ("buf", "inv", "inv2"):
         raise ValueError(f"clock_cell {clock_cell!r}: buf, inv or inv2")
@@ -4062,7 +4077,7 @@ def tree_netlist(nodes, taps, rep_um=450.0, site=None, tap_pad=None, tap_pad_sit
             while chain[-1] != target:
                 chain.append(parent_of[chain[-1]])
             before_cost[i] = chain_ps([before_xy[c] for c in reversed(chain)])
-        place = physical_pack(site,place)
+        place = physical_pack(site,place,pinned={node_buf[i] for i in (pinned or ()) if i in node_buf})
         xy = {name:(x,y) for name,x,y in place}
         for i,nd in nodes.items():
             nd["x"],nd["y"] = xy[node_buf[i]]
@@ -4171,6 +4186,65 @@ def legalize_stamped_nodes(nodes, site):
     return st
 
 
+STAMPED_INFO = {}             # the last load_stamped_tree: meta.trunk_pin record, ids of the parity nodes fix_parity inserted
+
+
+def trunk_pin_check(nodes, rec, parity_ids=(), tol_um=1e-3):
+    """C-DIECLOCK-TRUNK-UNPINNED: every node of the record (tree_eco meta.trunk_pin.nodes {id: [x, y, parent, level,
+    inv_parity]}) must still exist (unless listed in rec.pruned) at its recorded xy, with the recorded level and inv_parity,
+    under its recorded parent (a parity node fix_parity inserted on the leg is looked through).  -> [violation dict]"""
+    if not isinstance(rec.get("nodes"), dict) or not isinstance(rec.get("pruned", []), list):
+        raise ValueError("TRUNK-PIN: meta.trunk_pin is not a tree_eco record ({nodes: {id: [x, y, parent, level, inv_parity]}, "
+                         f"pruned: [id]}}); keys {sorted(rec)}")
+    par_ids = set(parity_ids or ())
+    pruned = set(int(i) for i in rec.get("pruned", ()))
+    bad = []
+    for k, (x, y, parent, level, inv) in sorted(rec.get("nodes", {}).items(), key=lambda kv: int(kv[0])):
+        i = int(k)
+        v = nodes.get(i)
+        if v is None:
+            if i not in pruned:
+                bad.append(dict(node=i, why="missing"))
+            continue
+        why = []
+        if _man((v["x"], v["y"]), (x, y)) > tol_um:
+            why.append(f"xy {[round(v['x'], 3), round(v['y'], 3)]} != {[x, y]}")
+        p = v.get("parent")
+        while p in par_ids and p in nodes:
+            p = nodes[p].get("parent")
+        if p != parent:
+            why.append(f"parent {p} != {parent}")
+        if v.get("level", 0) != level:
+            why.append(f"level {v.get('level', 0)} != {level}")
+        if (v.get("inv_parity", 0) & 1) != (inv & 1):
+            why.append(f"inv_parity {v.get('inv_parity', 0)} != {inv}")
+        if why:
+            bad.append(dict(node=i, why="; ".join(why)))
+    return bad
+
+
+def enforce_trunk_pin(nodes, rec, parity_ids=()):
+    """the post-netlist TRUNK-PIN assert: raise on any violation of trunk_pin_check, listing the nodes, unless the env
+    OT_TRUNK_PIN_WAIVE=<reason> is set (then it is logged and recorded).  -> meta dict"""
+    if rec.get("waived"):
+        print(f"TRUNK-PIN WAIVED in tree_eco: {rec['waived']}", flush=True)
+        return dict(waived=rec["waived"])
+    bad = trunk_pin_check(nodes, rec, parity_ids)
+    m = dict(checked=len(rec.get("nodes", {})), pruned=len(rec.get("pruned", ())), violations=len(bad),
+             parity_nodes=len(parity_ids or ()), **({"unpinned_illegal": rec["unpinned_illegal"]}
+                                                     if "unpinned_illegal" in rec else {}))
+    print("TRUNK-PIN", json.dumps(dict(m, worst=bad[:20])), flush=True)
+    if bad:
+        waive = os.environ.get("OT_TRUNK_PIN_WAIVE", "").strip()
+        if not waive:
+            raise ValueError(f"TRUNK-PIN (C-DIECLOCK-TRUNK-UNPINNED): {len(bad)} pinned trunk nodes changed after the kit "
+                             f"netlist (set OT_TRUNK_PIN_WAIVE=<reason> to waive): {bad[:50]}")
+        print(f"TRUNK-PIN WAIVED (OT_TRUNK_PIN_WAIVE): {waive}", flush=True)
+        m["waived"] = waive
+        m["violated_nodes"] = [b["node"] for b in bad]
+    return m
+
+
 def load_stamped_tree(path, site=None, rep_um=150.0):
     """CLKSITE-RESERVE-1115: tree.json (tools/die_plan/clksite_stamp_native.py) -> (nodes {int id: node}, taps [(part, port, x, y)]),
     the shape tree_netlist takes.  Names are re-derived by tree_netlist from the node ids (b<id>, r<id>_<k>, q<id>_<tap>)."""
@@ -4183,9 +4257,13 @@ def load_stamped_tree(path, site=None, rep_um=150.0):
         v["taps"] = by.get(i, [])
         v["kids"] = list(v.get("kids", []))
     st = legalize_stamped_nodes(nodes, site) if site is not None else dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    STAMPED_INFO.clear()
+    STAMPED_INFO["trunk_pin"] = (T.get("meta") or {}).get("trunk_pin")
     if site is not None:          # exact parity fix on the kit's own site map (clksite_stamp_native.fix_parity)
         import clksite_stamp_native as _csn
-        st["parity"] = _csn.fix_parity(nodes, rep_um, site)["stats"]
+        fp = _csn.fix_parity(nodes, rep_um, site)
+        st["parity"] = fp["stats"]
+        STAMPED_INFO["parity_ids"] = list(fp["ids"])
     print("STAMPED-TREE", json.dumps(st))
     return nodes, [(t["part"], t["tap"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
 
@@ -4266,7 +4344,13 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     slid_fallback = 0
     spine_info = None
     balanced = None
-    if slice_spine:         # QC-SLICECLK-3 opt-in: spine-column region trees + shared top spine, no slide along a split axis
+    if STAMPED_TREE_JSON:   # C-DIECLOCK-TRUNK-UNPINNED (d4): the stamped / eco tree replaces any built tree below, and nothing
+        nodes = None        # after the replacement reads the built one (only `site` is needed: the same map the build used)
+        if slice_spine and not regions:
+            raise ValueError("--slice-spine needs --region-trees")
+        if slice_spine or site_slide or site_legal:
+            site = clock_site(P)
+    elif slice_spine:         # QC-SLICECLK-3 opt-in: spine-column region trees + shared top spine, no slide along a split axis
         if not regions:
             raise ValueError("--slice-spine needs --region-trees")
         site = clock_site(P)
@@ -4314,7 +4398,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     else:
         nodes = (build_spine_fishbone(P, taps, **(tree_opts or {})) if tree_form == "spine_fishbone" else
                  build_htree(P, taps, leaf_um, full_depth, regions))
-    if site_slide and not slice_spine:          # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
+    if site_slide and not slice_spine and not STAMPED_TREE_JSON:   # opt-in: slide each buffer back along its OWN incoming leg (equal length by construction)
         site = clock_site(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -4362,7 +4446,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                                             if region_dme_early_merge_only else {})))
         elif tree_form == "link_htree":
             balanced = balance_legalize(nodes, site)
-    elif site_legal and not slice_spine:          # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
+    elif site_legal and not slice_spine and not STAMPED_TREE_JSON:   # opt-in: every buffer/repeater on a legal channel site; a one-entry leaf drives AT its entry
         site = clock_site(P)
         for nd in nodes.values():
             nd["req_xy"] = [nd["x"], nd["y"]]
@@ -4388,10 +4472,17 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+    pin_rec = None
     if STAMPED_TREE_JSON:        # CLKSITE-RESERVE-1115: the stamped tree replaces the one built above (same node/tap shape)
         nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"), rep_um)
+        pin_rec = STAMPED_INFO.get("trunk_pin")
+    pin_nodes = {int(k) for k in (pin_rec or {}).get("nodes", {})} & set(nodes)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
-                                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
+                                                            **({"clock_cell": clock_cell} if clock_cell != "buf" else {}),
+                                                            **({"pinned": pin_nodes} if pin_nodes else {}))
+    pin_meta = enforce_trunk_pin(nodes, pin_rec, STAMPED_INFO.get("parity_ids", ())) if pin_rec else None
+    if STAMPED_TREE_JSON and not pin_rec:
+        print("TRUNK-PIN not checked: the stamped tree carries no meta.trunk_pin record (not a tree_eco output)", flush=True)
     if tap_pad:
         unknown = sorted(set(tap_pad) - {t[0] for t in tap_ports})
         if unknown:
@@ -4460,6 +4551,10 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 wire_um=round(sum(abs(a - c) + abs(b - d) for a, b, c, d, _ in segs) +
                               sum(abs(a - c) + abs(b - d) for a, b, c, d in leaf_legs), 1),
                 levels=max(n["level"] for n in nodes.values()))
+    if pin_meta is not None:
+        meta["trunk_pin_check"] = pin_meta
+    if STAMPED_TREE_JSON:
+        meta["build_skipped"] = True
     if tap_pad:
         meta["tap_pad"] = dict(taps=sum(1 for v in tap_pad.values() if v), cells=sum(int(v) for v in tap_pad.values()),
                                max_per_tap=max(int(v) for v in tap_pad.values()), cell=BUF)

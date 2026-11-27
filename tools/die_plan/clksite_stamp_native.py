@@ -26,7 +26,27 @@ def leg_price(a, b, rep):
                 model="CLKSITE stamp leg (8.8 ps + 0.24 ps/um per stage)"), L / st
 
 
-def fix_parity(nodes, rep_um, site=None):
+# split fractions fix_parity tries, nearest the leg midpoint first: the historical coarse grid 0.1..0.9 step 0.025 (same
+# choice as before wherever it solves), then the fine grid 0.02..0.98 step 0.002 (C-DIECLOCK-TRUNK-UNPINNED: the coarse grid
+# misses the narrow split windows of 450-465 um legs, e.g. L = 458 needs f in [0.3275, 0.345) or [0.655, 0.6725))
+_COARSE = sorted((0.1 + 0.025 * k for k in range(33)), key=lambda q: abs(q - 0.5))
+_FINE = sorted((f for f in (0.02 + 0.002 * k for k in range(481)) if all(abs(f - c) > 1e-9 for c in _COARSE)),
+               key=lambda q: abs(q - 0.5))
+
+
+def parity_fractions(L, rep_um):
+    """coarse grid, then the analytic window midpoints t = j*rep + (L - k*rep)/2 (k = floor(L / rep), 0 <= j <= k: the split
+    windows (j*rep, j*rep + L - k*rep) are as narrow as L - k*rep, e.g. 0.2 um at L = 450.2), then the fine grid"""
+    mid = []
+    if L > 0 and rep_um > 0:
+        k = int(L // rep_um)
+        r = L - k * rep_um
+        mid = [(j * rep_um + r / 2.0) / L for j in range(0, k + 1)]
+        mid = sorted((f for f in mid if 0.0 < f < 1.0), key=lambda q: abs(q - 0.5))
+    return _COARSE + mid + _FINE
+
+
+def fix_parity(nodes, rep_um, site=None, fractions=None):
     """A leg laid out by the kit (no physical_leg chain) has nrep = ceil(L / rep) - 1 repeaters; with the node cell the child gets
     parity(parent) ^ ((nrep + 1) & 1).  Where that differs from the child's recorded inv_parity (kept from the template) one parity
     node X is inserted on the leg at a fraction that makes both half-legs add up.  nrep is the kit's own (die_trial._leg_layout)
@@ -49,7 +69,8 @@ def fix_parity(nodes, rep_um, site=None):
         if (nrep_of(pr, v) + 1) & 1 == want:
             continue
         done = False
-        for f in sorted((0.1 + 0.025 * k for k in range(33)), key=lambda q: abs(q - 0.5)):
+        L0 = abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"])
+        for f in (fractions if fractions is not None else parity_fractions(L0, rep_um)):
             L = abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"])
             dx = abs(v["x"] - pr["x"])
             t = L * f
@@ -322,7 +343,7 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None, class_by="si
                nodes_before=len(N), nodes_after=len(nodes), taps_before=len(T["taps"]), taps_after=len(taps_out),
                slid_sites=sum(1 for k, v in slide.items() if tuple(v) != (k[0], k[1])), max_slide_um=max_slide,
                no_legal_slide=illegal_left[0])
-    meta = dict(T["meta"], stamped=dict(type=tname, classes=rep["classes"], max_slide_um=max_slide, schema="clksite_stamp_native/2"))
+    meta = dict({k: v for k, v in T["meta"].items() if k not in ("trunk_pin", "trunk_pin_check")}, stamped=dict(type=tname, classes=rep["classes"], max_slide_um=max_slide, schema="clksite_stamp_native/2"))
     out = dict(meta=meta, nodes={str(i): v for i, v in nodes.items()}, taps=taps_out,
                node_buf={str(i): s for i, s in nbo.items()}, parent_of=pbo, sites=so)
     return out, rep

@@ -26,6 +26,9 @@ Steps (all on the kit's own geometry: die_trial.clock_taps(P) and die_trial.cloc
             the [parent, kid] boxes nearest its kids' centroid: every root->kid Manhattan length is preserved exactly, the
             pile-up at an old keep-out edge spreads; a lift whose model delay change on any kid exceeds --lift-tol-ps is
             not taken.
+  PIN       (C-DIECLOCK-TRUNK-UNPINNED) every base node outside the --resite-types outlines whose base xy is legal on the kit's
+            site map is pinned: base xy, parent, level and inv_parity are kept (no slide / reuse / resite / core detach moves
+            it); meta.trunk_pin lists them for die_trial's post-netlist TRUNK-PIN assert.  OT_TRUNK_PIN_WAIVE=<reason> waives.
   Moved nodes lose their physical_leg chain; die_trial kit --tree-json re-lays those legs on its own legal-site map and
   fixes inverter parity exactly (load_stamped_tree -> legalize_stamped_nodes + clksite_stamp_native.fix_parity).
 
@@ -46,6 +49,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import statistics
 import sys
 from collections import defaultdict
@@ -214,9 +218,10 @@ def natural_nrep(a, b, rep_um=150.0):
     return max(0, math.ceil(man((a["x"], a["y"]), (b["x"], b["y"])) / rep_um) - 1)
 
 
-def repair_parity(nodes, base_parity, nrep_fn):
+def repair_parity(nodes, base_parity, nrep_fn, pinned=()):
     """top-down: a re-laid leg (no chain) takes the parity the kit's own layout gives (parent ^ (stages & 1)), so the kit's
-    fix_parity inserts no parity node; a kept chain keeps its parity RELATIVE to its parent.  -> number of nodes flipped"""
+    fix_parity inserts no parity node; a kept chain keeps its parity RELATIVE to its parent; a pinned node keeps its base
+    parity (the kit's fix_parity inserts a parity node on its leg if a re-laid leg needs one).  -> number of nodes flipped"""
     order = sorted(nodes, key=lambda i: nodes[i].get("level", 0))
     flipped = 0
     done = set()
@@ -228,7 +233,12 @@ def repair_parity(nodes, base_parity, nrep_fn):
             v = nodes[j]
             p = nodes.get(v.get("parent"))
             if p is not None:
-                if v.get("_relaid"):
+                if j in pinned:
+                    want = base_parity.get(j, v.get("inv_parity", 0)) & 1
+                    rel = (want ^ base_parity.get(v["parent"], p.get("inv_parity", 0))) & 1
+                    if not v.get("_relaid") and v.get("physical_leg") and (p.get("inv_parity", 0) ^ rel) & 1 != want:
+                        drop_chain(v)      # the parent's parity moved: the kit re-lays this leg and fix_parity inserts the parity node
+                elif v.get("_relaid"):
                     want = (p.get("inv_parity", 0) ^ ((nrep_fn(p, v) + 1) & 1)) & 1
                 else:
                     rel = (base_parity.get(j, v.get("inv_parity", 0)) ^ base_parity.get(v["parent"], p.get("inv_parity", 0))) & 1
@@ -261,7 +271,7 @@ def keep_interval(v0, p, ks):
 def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None, match_um=0.05, max_leaf_leg_um=2.0,
         resite_types=(), lift_tol_ps=1.0, nrep_fn=None, target="local", k_local=4, early=None, calib=None,
         balance_types=(), balance_ps=None, max_attach_leg_um=None, near_um=0.0, keep=None, redo=(), core_off=None,
-        core_tol_ps=None, no_feed_hang=False, max_added_kids=None, core_reach_um=1500.0):
+        core_tol_ps=None, no_feed_hang=False, max_added_kids=None, core_reach_um=1500.0, pin=None):
     """base: tree.json dict; cur_taps [(part, port, x, y)]; site: object with legal(q) / nearest(q); part_region {part: region}.
     calib: None or dict(node={id: routed ps}, tap={(part, port): routed ps}, leg=(c0, c1)) (load_calib).
     near_um: an unmatched tap within near_um of a gone base tap (any part) keeps that leaf, slid onto it (NEAR pass).
@@ -270,8 +280,17 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     core_off {(part, port): planned offset ps vs the part glue median}: core taps target it; a site-matched core tap
     more than core_tol_ps off it is detached and re-attached.  no_feed_hang: feed-trunk nodes take no hang;
     max_added_kids: at most that many new kids per node, and none on a node driving a core-tap leaf.
+    pin (C-DIECLOCK-TRUNK-UNPINNED, main() passes the base nodes outside the --resite-types outlines whose base xy is legal):
+    those nodes keep base xy, parent, level and inv_parity -- no NEAR slide, freed-leaf reuse, leaf resite or core-tap
+    detach moves them (a tap that loses a pinned leaf hangs a new leaf instead); a pinned leaf left without taps is pruned and
+    listed.  The kept set is written to meta.trunk_pin for die_trial's post-netlist TRUNK-PIN assert.  None = no pinning.
+    A core-tap detach (core_off) only touches taps of resite_types parts when resite_types is given.
     -> (tree.json dict, report dict).  Pure: base is not modified."""
     nodes = {int(k): json.loads(json.dumps(v)) for k, v in base["nodes"].items()}
+    pin = {i for i in (pin or ()) if i in nodes} if pin is not None else None
+    pinned = pin or set()
+    pin_xy = {i: (nodes[i]["x"], nodes[i]["y"]) for i in pinned}
+    pin_base = {i: (nodes[i].get("parent"), nodes[i].get("level", 0)) for i in pinned}
     btaps = base["taps"]
     base_parity = {i: v.get("inv_parity", 0) for i, v in nodes.items()}
     arr0 = arrivals(nodes, model)
@@ -284,7 +303,8 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
             x, y = cur_taps[ci][2:4]
             rg = part_region.get(cur_taps[ci][0])     # same region only: a gone leaf of another region's branch
             best = min(((man(btaps[k]["xy"], (x, y)), k) for k in gset      # routes that region's latency (HEAD
-                        if part_region.get(btaps[k]["part"]) == rg), default=None)   # eco10A lep0N_w t6 on nst4 +250)
+                        if part_region.get(btaps[k]["part"]) == rg            # eco10A lep0N_w t6 on nst4 +250)
+                        and btaps[k]["node"] not in pinned), default=None)    # a pinned leaf never slides
             if best is not None and best[0] <= near_um:
                 gset.discard(best[1]); unm.remove(ci); matched[ci] = best[1]; slid[ci] = best[1]
         gone = [k for k in gone if k in gset]
@@ -320,6 +340,8 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                 if not nb:
                     continue
                 m = statistics.median(base_arr[q[1]] for q in nb)
+                if btaps[k]["node"] in pinned:
+                    continue           # a pinned leaf is never detached
                 if abs(base_arr[k] - m) > balance_ps:
                     balanced.append((ci, k, round(base_arr[k] - m, 1)))
         for ci, k, _ in balanced:
@@ -353,8 +375,13 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
         return statistics.median(q[2] for q in near)
     core_moved = []
     if core_off and core_tol_ps is not None:
+        rset = set(resite_types or ())
         for ci, k in list(matched.items()):
             p, port = cur_taps[ci][:2]
+            if rset and (part_type or {}).get(p) not in rset:
+                continue               # C-DIECLOCK-TRUNK-UNPINNED: an unchanged type keeps its core-tap leaf (hd_lep0N clk_c0)
+            if btaps[k]["node"] in pinned:
+                continue
             if (p, port) in core_off and p in med:
                 d = base_arr[k] - (med[p] + core_off[(p, port)])
                 if abs(d) > core_tol_ps:
@@ -421,7 +448,7 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
             continue
         q = site.nearest(w["xy"]) if not site.legal(w["xy"]) else w["xy"]
         dtap = man(q, w["xy"])
-        if kp["how"] == "reuse" and kp["node"] in nodes and kp["node"] not in used_free and \
+        if kp["how"] == "reuse" and kp["node"] in nodes and kp["node"] not in used_free and kp["node"] not in pinned and \
                 any(kp["node"] in l for l in free.values()):
             pa = nodes[kp["node"]]["parent"]
             a = arr0[pa] + newleg(model.leg(man((nodes[pa]["x"], nodes[pa]["y"]), q)) + model.tap(dtap))
@@ -437,7 +464,7 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     all_internal = [i for v in internal.values() for i in v]
     free_by_region = defaultdict(list)
     for prt, lst in free.items():
-        free_by_region[part_region.get(prt)].extend(lst)
+        free_by_region[part_region.get(prt)].extend(lf for lf in lst if lf not in pinned)
     queue = list(forced)
     while pending or queue:
         if queue:
@@ -518,6 +545,8 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     tap_of_node = {t[4]: t for t in new_taps}
     resite = []
     for t in new_taps:
+        if t[4] in pinned:
+            continue
         v = nodes[t[4]]
         d = man((v["x"], v["y"]), (t[2], t[3]))
         if d <= max_leaf_leg_um:
@@ -570,13 +599,31 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                 for k in ks:
                     drop_chain(k)
                 lifted.append(dict(node=i, old=list(old), new=[v["x"], v["y"]], worst_kid_model_ps=round(worst, 2)))
-    flipped = repair_parity(nodes, base_parity, nrep_fn or (lambda a, b: natural_nrep(a, b, model.rep)))
+    restored = []
+    for i in pinned:                  # safety net: a pinned node ends at its base xy (its legal base site)
+        v = nodes.get(i)
+        if v is not None and (v["x"], v["y"]) != pin_xy[i]:
+            v["x"], v["y"] = pin_xy[i]
+            v["req_xy"] = [v["x"], v["y"]]
+            drop_chain(v)
+            restored.append(i)
+    for v in nodes.values():          # a leg whose parent was restored is re-laid by the kit
+        if v.get("parent") in restored:
+            drop_chain(v)
+    flipped = repair_parity(nodes, base_parity, nrep_fn or (lambda a, b: natural_nrep(a, b, model.rep)), pinned)
     relaid = 0
     for v in nodes.values():
         v["ntaps"] = v.pop("_ntap", 0)
         relaid += bool(v.pop("_relaid", False))
     taps_out = [dict(port=f"t_{p}__{port}", part=p, tap=port, xy=[x, y], node=n) for p, port, x, y, n in new_taps]
-    tree = dict(meta=dict(base.get("meta", {})), nodes={str(i): v for i, v in sorted(nodes.items())}, taps=taps_out)
+    tree = dict(meta={k: v for k, v in (base.get("meta") or {}).items() if k not in ("trunk_pin", "trunk_pin_check")},
+                nodes={str(i): v for i, v in sorted(nodes.items())}, taps=taps_out)
+    if pin is not None:
+        tree["meta"]["trunk_pin"] = dict(
+            tool="tools/clk/tree_eco.py (C-DIECLOCK-TRUNK-UNPINNED)", resite_types=sorted(set(resite_types or ())),
+            nodes={str(i): [pin_xy[i][0], pin_xy[i][1], pin_base[i][0], pin_base[i][1], base_parity.get(i, 0)]
+                   for i in sorted(pinned) if i in nodes},
+            pruned=sorted(i for i in pinned if i not in nodes))
     tree["meta"]["eco"] = dict(tool="tools/clk/tree_eco.py (CLK-ECO-1)", matched=len(matched), attached=len(att),
                                unplaced=len(unplaced), gone=len(gone), pruned=len(removed), resited_leaves=len(resite),
                                lifted=len(lifted), relaid_legs=relaid, parity_set=flipped)
@@ -587,7 +634,9 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
     rep = dict(counts=dict(current=len(cur_taps), base=len(btaps), matched=len(matched), unmatched=len(unm), gone=len(gone),
                            attached={k: dict(v) for k, v in kinds.items()}, unplaced=len(unplaced), pruned=len(removed),
                            resited_leaves=len(resite), lifted=len(lifted), relaid_legs=relaid, parity_set=flipped,
-                           balanced=len(balanced), slid=len(slid), core_detached=len(core_moved), forced=len(forced)),
+                           balanced=len(balanced), slid=len(slid), core_detached=len(core_moved), forced=len(forced),
+                           **({"pinned": len(pinned), "pin_restored": len(restored),
+                               "pin_pruned": sum(1 for i in pinned if i not in nodes)} if pin is not None else {})),
                attach_err_ps=dict(n=len(errs), max=round(max(errs), 1) if errs else None,
                                   p95=round(sorted(errs)[int(0.95 * (len(errs) - 1))], 1) if errs else None),
                attached=att, unplaced=unplaced, resite=resite, lifted=lifted,
@@ -598,6 +647,13 @@ def eco(base, cur_taps, site, model, part_region, part_type=None, part_box=None,
                core_detached=[dict(part=cur_taps[ci][0], port=cur_taps[ci][1], off_ps=d) for ci, _, d in core_moved],
                forced=len(forced), redo=sorted(map(list, redo)))
     return tree, rep
+
+
+def trunk_pin_set(base_xy, site, resite_boxes):
+    """C-DIECLOCK-TRUNK-UNPINNED: base node ids pinned by the eco = base xy (before any legalisation) legal on the kit's site
+    map and outside every re-sited part outline (x0, y0, x1, y1; boundary counts as inside)"""
+    return {i for i, q in base_xy.items() if site.legal(q)
+            and not any(b[0] <= q[0] <= b[2] and b[1] <= q[1] <= b[3] for b in resite_boxes)}
 
 
 def load_calib(run_dir, model):
@@ -647,7 +703,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("base_tree")
     ap.add_argument("plan")
-    ap.add_argument("--plan-root", required=True)
+    ap.add_argument("--plan-root", required=True, action="append", help="plan-relative input folder (repeatable)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--stage-cal", help="ot_clk_stage_cal.json ({leg, tap}); default the HEAD inv/ndr fit values")
     ap.add_argument("--rep-um", type=float, default=150.0)
@@ -696,6 +752,7 @@ def main(argv=None):
     # chains through now-illegal points are re-laid HERE, so attach, lift and parity see the kit's geometry (HEAD W9 eco6:
     # 237 base nodes moved by the kit after the eco -> one parity leg unsolvable)
     bn = {int(k): v for k, v in base["nodes"].items()}
+    base_xy = {i: (v["x"], v["y"]) for i, v in bn.items()}
     legal_st = D.legalize_stamped_nodes(bn, site)
     base["nodes"] = {str(k): v for k, v in bn.items()}
     cal = json.loads(Path(a.stage_cal).read_text()) if a.stage_cal else None
@@ -711,6 +768,20 @@ def main(argv=None):
         w, h = P.types[p["type"]]["outline_um"]
         c0, c1 = P.to_die(n, (0, 0)), P.to_die(n, (w, h))
         pbox[n] = (min(c0[0], c1[0]), min(c0[1], c1[1]), max(c0[0], c1[0]), max(c0[1], c1[1]))
+    # C-DIECLOCK-TRUNK-UNPINNED: every base node outside the re-sited types' outlines whose base xy is legal on the kit's
+    # site map keeps base xy / parent / level / parity (eco(pin=...)); OT_TRUNK_PIN_WAIVE=<reason> turns pinning off (logged)
+    rtypes = [t for t in a.resite_types.split(",") if t]
+    rboxes = [b for n, b in pbox.items() if ptype.get(n) in set(rtypes)]
+    waive = os.environ.get("OT_TRUNK_PIN_WAIVE", "").strip()
+    if waive:
+        pin = None
+        print(f"TRUNK-PIN WAIVED (OT_TRUNK_PIN_WAIVE): {waive}", flush=True)
+    else:
+        pin = trunk_pin_set(base_xy, site, rboxes)
+        outside = [i for i, q in base_xy.items() if not any(b[0] <= q[0] <= b[2] and b[1] <= q[1] <= b[3] for b in rboxes)]
+        unpin_illegal = len(outside) - len(pin)
+        print(f"TRUNK-PIN eco: {len(pin)} base nodes pinned, {unpin_illegal} outside the re-sited outlines unpinned "
+              f"(base xy illegal on the kit site map)", flush=True)
     early = {}                    # (part, core port) -> plan early delivery (TT model ps), as die_trial's DME early sinks
     for n, p in P.parts.items():
         for port, _, _, tp in S.core_taps(P, p["type"]):
@@ -730,7 +801,7 @@ def main(argv=None):
     def nrep_fn(p, v):            # the kit's own leg layout (die_trial._leg_layout), as clksite_stamp_native.fix_parity
         return D._leg_layout(0, dict(v, physical_leg=None), p, site, a.rep_um, False)[1]
     tree, rep = eco(base, cur, site, model, pr, ptype, pbox, a.match_um, a.max_leaf_leg_um,
-                    [t for t in a.resite_types.split(",") if t], a.lift_tol_ps, nrep_fn, a.target, early=early,
+                    rtypes, a.lift_tol_ps, nrep_fn, a.target, early=early, pin=pin,
                     calib=load_calib(a.calib, model) if a.calib else None,
                     balance_types=[t for t in a.balance_types.split(",") if t], balance_ps=a.balance_ps,
                     max_attach_leg_um=a.max_attach_leg_um, near_um=a.near_um,
@@ -743,6 +814,12 @@ def main(argv=None):
     tree["meta"]["eco"].update(base_tree=str(a.base_tree), base_tree_sha256=sha(a.base_tree), plan=str(a.plan),
                                plan_sha256=sha(a.plan))
     rep["base_legalised"] = legal_st
+    if waive:
+        tree["meta"]["trunk_pin"] = dict(waived=waive)
+        rep["trunk_pin_waived"] = waive
+    else:
+        tree["meta"]["trunk_pin"]["unpinned_illegal"] = unpin_illegal
+        rep["counts"]["unpinned_illegal"] = unpin_illegal
     rep["inputs"] = tree["meta"]["eco"]
     Path(a.out).write_text(json.dumps(tree) + "\n")
     Path(a.out + ".report.json").write_text(json.dumps(rep, indent=1) + "\n")
