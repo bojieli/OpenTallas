@@ -627,3 +627,4 @@
   Fix v2 is tool-only on the same opt-in key: union exit through abutting rectangles, and skip tiny blockages. Push plus probe tonight; the row is DEFERRED to 11-28 09:00.
   Dry compose dry18c (10 rows onto core7b, tree2) is CLEAN. core7r G0 PASS.
 - 2026-11-27 15:11 PST DIED [kv-int-r3] ot-run oth-ubuntu-1410641-1795821068 on outgoing-giraffe: rc=1 after 14 s, ended 23:11:21, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/ot_probe1.log, cmd: --mem 24 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash run3b.sh /srv/opentallas-scratch2/claude/kw | class=TOOL-TRACEBACK cause=Error: dump3.tcl, 2 ORD-0007
+- 2026-11-27 15:19 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1272498 on outgoing-giraffe: rc=3 after 5 s, ended 23:19:26, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/lane/push.log, cmd: ot-push-main  | class=PUSH-CONFLICT cause=ot-push-main: rc 3: REBASE CONFLICT on main 0e0590e94f1 in:
