@@ -1,0 +1,1 @@
+- 2026-11-26 23:13 PST DONE [head-east-selector-postsynth-sparse] ot-run oth-ubuntu-1924299-1795763469 on ubuntu: rc=0 after 165 s, ended 23:13:46, log none, cmd: --mem 48 --threads 16 --disk 60 --hosts epyc7,epyc8,epyc10,intel1 --needs /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote --dir /srv/
