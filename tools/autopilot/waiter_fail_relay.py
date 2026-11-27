@@ -33,11 +33,11 @@ HOME = Path(os.path.expanduser("~"))
 LANE = "PLAN-GATE-PRE-1115"
 # Failure is decided from an explicit verdict, never from a bare "FAIL" anywhere in free text (waiter-substring false fail d60241b01e6d:
 # a PASS result mentioning "AUTO-GEOM FAIL on ..." was relayed as a failure).
-VERDICT_TOKEN = re.compile(r"(?:verdict|status|result)\s*[=:]\s*(?P<v>[A-Za-z_-]+)", re.I)
+VERDICT_TOKEN = re.compile(r"\b(?:verdict|status|result)\s*[=:]\s*(?P<v>[A-Za-z_-]+)", re.I)
 FAIL_WORDS = ("fail", "failed", "refuse", "refused", "error", "blocked")
 PASS_WORDS = ("pass", "passed", "ok", "done", "good", "success")
-LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:FAILED?|REFUSE|REFUSED|Traceback)")
-FAIL_PHRASE = re.compile(r"(?:did|do|does) NOT pass")
+LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:FAILED?\b|REFUSE\b|REFUSED\b|Traceback\b)")
+FAIL_PHRASE = re.compile(r"\b(?:did|do|does) NOT pass\b")
 LINE = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d [^\[]*?)\s*\b(?P<tag>RESULT(?:-FAIL|-PASS)?)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)\s*->\s*"
                   r"(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
 SKIP_LANES = ("FABLE-", "COORD", LANE)
