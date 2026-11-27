@@ -5,9 +5,8 @@ A row is drafted on a base that already carries FAIL findings (KV A5t7: 26 RSTRE
 row, ~7 min each) and diffed the FAIL lines by hand (sort | comm -13).  `plan_gate_pre.py check ... --base BASE` does it in the
 checker:
 
-  * the base findings come from the same checker run on BASE (with --baseline-plan BASE, in --base-tree, default --tree), started
-    in a child process BESIDE the row check, or read from the cache (key: sha256 of BASE + as-built + the tools/die_plan sources of
-    the base tree + the base tree path + the skipped classes), so a second row gate on the same base pays nothing for it;
+  * findings come from the same checker run on BASE, in --base-tree, with the same scope and effective options. A sealed
+    source/runtime launch can reuse a completed baseline across private row attempts; the candidate always runs its checks.
   * a row FAIL line that equals a base FAIL line (plan / base / tree paths replaced by tokens) is INHERITED: listed
     (`LIST PRE-INHERITED ...`), never a failure;
   * every other row FAIL line fails: NEW (its class + subject is not in the base) or CHANGED (same class + subject, other text,
@@ -22,11 +21,21 @@ import os
 import subprocess
 import sys
 import time
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 SCRATCH_CACHE = "/srv/opentallas-scratch2/claude/.cache/pre-base"
-VERSION = 1
+VERSION = 2
+# These change where the result or logs are written, or how a COW wrapper is mounted. All other OT_* options are kept.
+NON_INPUT_ENV = frozenset({
+    "OT_PRE_BASE_CACHE", "OT_PRE_BASE_PENDING", "OT_PRE_BASE_CHILD",
+    "OT_PRE_RECORD_DIR", "OT_PRE_RECORD", "OT_PRE_SLOT_DIR", "OT_PRE_TIME_TRACE_S",
+    "OT_ROW_GATE_COW_TREE", "OT_ROW_GATE_COW_LEDGER",
+})
+# None of these files participates in the standalone baseline check.
+WRAPPERS = frozenset({"pre_diff.py", "row_gate.py", "row_gate_cow.py"})
+
 
 
 def cache_dir():
@@ -38,26 +47,6 @@ def cache_dir():
     return Path.home() / ".cache" / "ot-pre-base"
 
 
-def _sha_file(p):
-    h = hashlib.sha256()
-    try:
-        with open(p, "rb") as f:
-            for b in iter(lambda: f.read(1 << 20), b""):
-                h.update(b)
-    except OSError:
-        return "missing"
-    return h.hexdigest()
-
-
-def tools_digest(tree):
-    """sha256 over (name, sha256) of every tools/die_plan/*.py of the tree (the checker's own code and what it imports)"""
-    h = hashlib.sha256()
-    d = Path(tree) / "tools" / "die_plan"
-    for p in sorted(d.glob("*.py")) if d.is_dir() else []:
-        h.update(p.name.encode() + b"\0" + _sha_file(p).encode() + b"\n")
-    return h.hexdigest()
-
-
 def _resolve(path, root):
     if not path:
         return None
@@ -65,12 +54,152 @@ def _resolve(path, root):
     return p if p.is_absolute() else Path(root) / p
 
 
+def file_stamp(path):
+    if path is None:
+        return None
+    p = Path(path)
+    try:
+        stat = p.stat()
+        return [str(p.resolve()), stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns]
+    except OSError:
+        return None
+
+
+def sealed_launch(tree):
+    """The launch stamp is already emitted by rt_launch_tree.sh for this launch."""
+    try:
+        stamp = json.loads((tree / ".rt_launch_ok").read_text())
+        src, rt = (Path(stamp[n]).resolve(strict=True) for n in ("src", "rt"))
+        marker = src / ".src-manifest.sha256"
+        if not marker.is_file() or marker.stat().st_mode & 0o222 or (src / ".fork.json").exists():
+            return None
+        if not (rt / "tools").is_dir() or (rt / "tools").stat().st_mode & 0o222:
+            return None
+        return {
+            "source": file_stamp(marker), "runtime": str(rt),
+            "pins": stamp.get("pins", {}), "pin_runtime": stamp.get("pin_rt", ""),
+        }
+    except (AttributeError, KeyError, OSError, TypeError, ValueError):
+        return None
+
+
+def checker_files(tree):
+    """Ordinary metadata for the checker's local modules and directly used preflight helpers."""
+    paths = [(tree / "tools" / "die_plan", "*.py"), (tree / "tools" / "die_plan", "*.json"),
+             (tree / "tools" / "precheck", "*.py")]
+    artifacts = []
+    for root, pattern in paths:
+        for path in sorted(root.glob(pattern)):
+            if path.name in WRAPPERS or path.name.startswith("test_"):
+                continue
+            value = file_stamp(path)
+            if value is not None:
+                # Runtime launch hard links have an attempt-specific path, but retain their inode.
+                artifacts.append([str(path.relative_to(tree)), *value[1:]])
+    return artifacts
+
+
+def launch_dependencies(tree, launch, checker):
+    """Use original input metadata across hard-link and fallback-copy launch trees."""
+    if not launch:
+        return None
+    rt = Path(launch["runtime"])
+    src = Path(launch["source"][0]).parent
+    deps = []
+    for name, *actual in checker_files(tree):
+        rel = Path(name)
+        if rel.parent == Path("tools/die_plan") and rel.name in launch["pins"]:
+            origin = Path(launch["pin_runtime"]) / rel
+        elif (rt / rel).is_file():
+            origin = rt / rel
+        else:
+            origin = src / rel
+        original = file_stamp(origin)
+        if not original or actual[-2:] != original[-2:]:
+            return None
+        deps.append([name, *original[1:]])
+    expected = next((d[1:] for d in deps if d[0] == "tools/die_plan/plan_gate_pre.py"), None)
+    actual = file_stamp(checker)
+    if expected is None or actual is None or actual[-2:] != expected[-2:]:
+        return None
+    return expected, deps
+
+
+def base_context(base, base_tree, asbuilt=None, sidecar=None, skip=(), types=None, checker=None, env=None):
+    env = os.environ if env is None else env
+    tree = Path(base_tree).absolute()
+    sealed = sealed_launch(tree)
+    if checker is None:
+        checker = HERE / "plan_gate_pre.py"
+    dependencies = launch_dependencies(tree, sealed, checker)
+    if dependencies is None:
+        sealed = None
+        dependencies = (file_stamp(checker) or [None])[1:], checker_files(tree)
+    checker_stamp, related_files = dependencies
+    def argument(value):
+        if value is None:
+            return None
+        path = Path(value)
+        return str(path.relative_to(tree)) if path.is_absolute() and path.is_relative_to(tree) else str(value)
+
+    types_arg = str(types or "")
+    type_files = [file_stamp(_resolve(item[1:], tree)) for spec in types_arg.split(",")
+                  if (item := spec.strip()).startswith("@")]
+    return {
+        "version": VERSION,
+        "launch": sealed,
+        "tree": None if sealed else str(tree.resolve()),
+        "args": [argument(value) for value in (base, asbuilt, sidecar)],
+        "plan": file_stamp(_resolve(base, tree)),
+        "asbuilt": file_stamp(_resolve(asbuilt, tree)),
+        "sidecar": file_stamp(_resolve(sidecar, tree)),
+        "checker": checker_stamp,
+        "dependencies": related_files,
+        "skip": sorted({s.upper() for s in skip}),
+        "types": [types_arg, type_files],
+        "runtime": file_stamp(sys.executable),
+        "environment": context_key({k: v for k, v in env.items()
+                                    if (k.startswith("OT_") and k not in NON_INPUT_ENV)
+                                    or k in ("PATH", "LANG", "LC_ALL", "LC_CTYPE")}),
+        "test_mode": "PYTEST_CURRENT_TEST" in env,
+    }
+
+
+def context_key(context):
+    # Short filename from the small dependency record. No design or tool contents are read.
+    return hashlib.sha256(json.dumps(context, sort_keys=True).encode()).hexdigest()[:32]
+
+
 def cache_key(base, base_tree, asbuilt=None, sidecar=None, skip=(), types=None):
-    parts = [f"v{VERSION}", _sha_file(_resolve(base, base_tree)), _sha_file(_resolve(asbuilt, base_tree)) if asbuilt else "-",
-             _sha_file(_resolve(sidecar, base_tree)) if sidecar else "-", tools_digest(base_tree),
-             os.path.realpath(base_tree), ",".join(sorted({s.upper() for s in skip})),
-             os.environ.get("OT_PLAN_ABSPATH", ""), os.environ.get("OT_TAPNAME_ALL", ""), "types=" + str(types or "")]
-    return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:32]
+    return context_key(base_context(base, base_tree, asbuilt, sidecar, skip, types))
+
+
+def completed_findings(result, findings):
+    return (
+        isinstance(findings, list)
+        and (result == "FAIL" if findings else result == "PASS")
+        and all(isinstance(line, str) and len(line.split()) > 2 and line.startswith("FAIL ")
+                and not line.split()[1].endswith("-UNCHECKED") for line in findings)
+    )
+
+
+def write_record(dest, record, *, publish=False):
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    tmp = tempfile.NamedTemporaryFile(mode="w", dir=dest.parent, prefix=".", delete=False)
+    try:
+        with tmp:
+            json.dump(record, tmp, indent=1)
+            tmp.write("\n")
+        if publish:
+            Path(tmp.name).chmod(0o444)
+            try:
+                os.link(tmp.name, dest)
+            except FileExistsError:
+                pass
+        else:
+            os.replace(tmp.name, dest)
+    finally:
+        Path(tmp.name).unlink(missing_ok=True)
 
 
 def base_cmd(base, base_tree, asbuilt=None, sidecar=None, skip=(), out_json=None, checker=None, types=None):
@@ -94,17 +223,21 @@ class BaseRun:
 
     def __init__(self, base, base_tree, asbuilt=None, sidecar=None, skip=(), use_cache=True, checker=None, types=None):
         self.base, self.base_tree = str(base), str(base_tree)
-        self.key = cache_key(base, base_tree, asbuilt, sidecar, skip, types)
+        self.context = base_context(base, base_tree, asbuilt, sidecar, skip, types, checker)
+        self.key = context_key(self.context)
         self.cfile = cache_dir() / f"{self.key}.json"
         self.proc, self.how, self.t0 = None, "", time.time()
         self.fails = None
         if use_cache:
             try:
                 rec = json.loads(self.cfile.read_text())
-                if rec.get("key") == self.key and isinstance(rec.get("fails"), list):
-                    self.fails, self.how = rec["fails"], f"cache {self.cfile}"
+                if (rec.get("context") == self.context and completed_findings(rec.get("result"), rec.get("fails"))
+                        and isinstance(rec.get("base_tree"), str) and rec["base_tree"]):
+                    old_tree = rec["base_tree"]
+                    self.fails = [line.replace(old_tree, self.base_tree) for line in rec["fails"]]
+                    self.how = f"cache {self.cfile}"
                     return
-            except (OSError, ValueError):
+            except (OSError, ValueError, AttributeError):
                 pass
         self.tmp = self.cfile.with_name(f"{self.key}.{os.getpid()}.run.json")
         try:
@@ -131,18 +264,23 @@ class BaseRun:
             rec = json.loads(self.tmp.read_text())
         except (OSError, ValueError):
             rec = None
-        if rc not in (0, 1) or not isinstance(rec, dict):
+        if (rc not in (0, 1) or not isinstance(rec, dict)
+                or not completed_findings(rec.get("result"), rec.get("findings"))
+                or (rc == 1) != bool(rec["findings"])):
             tail = ""
             try:
                 tail = self.log.read_text(errors="replace")[-300:].replace("\n", " | ")
             except OSError:
                 pass
             return None, f"base check rc {rc}: {tail}"
-        self.fails = list(rec.get("findings") or [])
+        self.fails = rec["findings"]
+        record = dict(key=self.key, context=self.context, base=self.base, base_tree=self.base_tree,
+                      result=rec["result"], fails=self.fails, seconds=round(time.time() - self.t0, 1))
         try:
-            self.cfile.write_text(json.dumps(dict(key=self.key, base=self.base, base_tree=self.base_tree, fails=self.fails,
-                                                  seconds=round(time.time() - self.t0, 1), made=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())),
-                                             indent=1) + "\n")
+            write_record(self.cfile, record, publish=bool(self.context["launch"]))
+            pending = os.environ.get("OT_PRE_BASE_PENDING")
+            if pending and self.context["launch"] and self.context["plan"]:
+                write_record(Path(pending) / self.cfile.name, record)
             self.tmp.unlink()
             self.log.unlink()
         except OSError:

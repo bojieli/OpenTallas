@@ -61,3 +61,64 @@ def test_cache_key_moves_with_base_and_tools(tmp_path):
     k1 = PD.cache_key(b, t)
     (t / "tools" / "die_plan" / "extra.py").write_text("x = 1\n")
     assert len({k0, k1, PD.cache_key(b, t)}) == 3
+
+
+def test_sealed_baseline_crosses_cow_attempts(tmp_path, monkeypatch):
+    """Only the completed baseline moves; neither the candidate nor its paths enter the cache."""
+    import os
+    import shutil
+    import row_gate_cow as COW
+
+    src, rt = tmp_path / "source", tmp_path / "runtime"
+    src.mkdir()
+    (rt / "tools" / "die_plan").mkdir(parents=True)
+    marker = src / ".src-manifest.sha256"
+    marker.touch()
+    marker.chmod(0o444)
+    base = src / "base.json"
+    base.write_text("{}")
+    tool = rt / "tools" / "die_plan" / "plan_gate_pre.py"
+    tool.write_text("""import json, sys
+from pathlib import Path
+tree = sys.argv[sys.argv.index('--tree') + 1]
+result = dict(result='FAIL', findings=['FAIL TEST item in ' + tree])
+Path(sys.argv[sys.argv.index('--json') + 1]).write_text(json.dumps(result))
+sys.exit(1)
+""")
+    (rt / "tools").chmod(0o555)
+    for name in ("launch1", "launch2"):
+        attempt = tmp_path / name
+        (attempt / "tools" / "die_plan").mkdir(parents=True)
+        (attempt / ".rt_launch_ok").write_text(json.dumps(dict(src=str(src), rt=str(rt))))
+        (attempt / "base.json").symlink_to(base)
+        shutil.copy2(tool, attempt / "tools" / "die_plan" / tool.name)
+    cache, pending, shared = (tmp_path / n for n in ("cow-cache", "pending", "shared-cache"))
+    checker = tmp_path / "launch1" / "tools" / "die_plan" / tool.name
+    monkeypatch.setenv("OT_PRE_BASE_CACHE", str(cache))
+    monkeypatch.setenv("OT_PRE_BASE_PENDING", str(pending))
+    first = PD.BaseRun("base.json", tmp_path / "launch1", checker=checker)
+    findings, how = first.result()
+    assert findings == [f"FAIL TEST item in {tmp_path / 'launch1'}"] and how.startswith("run ")
+    COW.publish_pre_baselines(pending, shared)
+    published = shared / first.cfile.name
+    assert not published.stat().st_mode & 0o222
+    old_inode = published.stat().st_ino
+    COW.publish_pre_baselines(pending, shared)
+    assert published.stat().st_ino == old_inode
+    monkeypatch.setenv("OT_PRE_BASE_CACHE", str(shared))
+    second = PD.BaseRun("base.json", tmp_path / "launch2", checker=checker)
+    findings, how = second.result()
+    assert findings == [f"FAIL TEST item in {tmp_path / 'launch2'}"] and how.startswith("cache ")
+    assert second.proc is None
+    scoped = PD.base_context("base.json", tmp_path / "launch2", types="different", checker=checker)
+    assert first.context != scoped
+    changed_env = dict(os.environ, OT_PRE_GENDRY="0")
+    assert scoped != PD.base_context("base.json", tmp_path / "launch2", types="different",
+                                     checker=checker, env=changed_env)
+
+
+def test_unchecked_baseline_cannot_be_reused():
+    assert not PD.completed_findings("FAIL", ["FAIL GEOM-UNCHECKED type missing model"])
+    assert not PD.completed_findings("PASS", ["FAIL SCHEMA type bad key"])
+    assert not PD.completed_findings("PASS", None)
+    assert PD.completed_findings("PASS", [])
