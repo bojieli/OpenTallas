@@ -209,3 +209,33 @@ def test_colocated_station_spans_price_each_active_rank_once(monkeypatch):
     assert aligned_edge_rank_worst(separated, {}, kind) is None
     typed["internal_stations"][0]["sites"] = "float"
     assert aligned_edge_rank_worst(typed, {}, kind) is None
+
+
+def _cache(tmp_path, flops):
+    import json
+    f = tmp_path / "flops_cache.json"
+    f.write_text(json.dumps({"flops": {k: {"flops": v, "kit": "h:" + k, "ts": 1} for k, v in flops.items()}}))
+    return str(f)
+
+
+def test_netlist_flops_catch_type_without_plan_cells(tmp_path):
+    t = _type(cells=0)
+    out = F.findings({"partition_types": {"svc_rs__t5": t}}, flops_cache=_cache(tmp_path, {"svc_rs__t5": 926187}))
+    assert any("ADV-FP-OVERSIZE svc_rs__t5: netlist flops 926,187" in x for x in out)
+
+
+def test_netlist_flops_clear_hard_core_plan_cells_false_positive(tmp_path):
+    t = _type(cells=1904350)           # hard cores: plan cells include the cores' content
+    c = _cache(tmp_path, {"kv_leaf__t1": 28179})
+    assert not any("OVERSIZE" in x for x in F.findings({"partition_types": {"kv_leaf__t1": t}}, flops_cache=c))
+    os.environ["OT_FP_OVERSIZE_NETLIST"] = "0"
+    try:
+        assert any("OVERSIZE kv_leaf__t1" in x for x in F.findings({"partition_types": {"kv_leaf__t1": t}}, flops_cache=c))
+    finally:
+        del os.environ["OT_FP_OVERSIZE_NETLIST"]
+
+
+def test_netlist_base_type_fallback_and_no_cache_entry(tmp_path):
+    c = _cache(tmp_path, {"x__t1": 500000})
+    assert any("base kit" in x for x in F.findings({"partition_types": {"x__t1__cl0abcdef": _type(cells=0)}}, flops_cache=c) if "OVERSIZE" in x)
+    assert not any("OVERSIZE" in x for x in F.findings({"partition_types": {"other": _type(cells=0)}}, flops_cache=c))

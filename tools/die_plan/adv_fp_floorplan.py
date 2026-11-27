@@ -18,6 +18,11 @@ Plan-only floorplan classes that no static check named, so 10-29 h type kits fou
                newest retained kit synth count, at most 5 days old) and OT_FP_OVERSIZE_REPAIR_GROWTH=<f> (default 1.0; 1.2 matches
                lepw_mus_C 333k synth -> >400k after TD repair) scales it before the cap test.  Live 11-26: S81 kv_leaf t1/t3/t4/t5
                1.9M, HEAD hd_tile 1.07M and KV kv3_pc_v3 998k plan cells are 41-313k flat in kits that placed (false positives).
+               NETLIST (C-OVERSIZE 11-27, default on, OT_FP_OVERSIZE_NETLIST=0 off): when the PRECHECK flop cache (adv_tap_load.load_cache)
+               has the type's synthesized netlist flops (exact type, else base type), that count is the authority: flops > CELL_CAP is
+               oversize (cells >= flops, a lower bound; catches S81 svc_lo rs t5/t7 and rs_w t1 with no plan `cells`), and a type
+               with hard cores whose netlist flops are under the cap is NOT flagged on its plan `cells` (which includes the cores'
+               content: kv_leaf t1/t3/t4/t5 1.9M plan cells vs 28-60k flops).  No cache entry: the rules above are unchanged.
   FP-OVERLAP   two hard cores of one type that overlap, or a core outside the type outline (KITFIT / site-grid errors start here).
 
 Report only; plan_advisory forces WARN.  With OT_FP_BLOCK=1 the lines start FAIL (for plan_gate_pre once the live counts are stable).
@@ -328,6 +333,27 @@ def flat_cells(name, t, cache=None, modules=None):
     return est, basis
 
 
+def netlist_flops(name, kw, _cache={}):
+    """(flops, kit label) of the newest kit netlist of this type or its base type from the PRECHECK flop cache, else (None, None)."""
+    try:
+        import adv_tap_load as L
+        src = kw.get("flops_cache")
+        key = repr(src)[:200] if not isinstance(src, dict) else id(src)
+        if key not in _cache:
+            _cache[key] = L.load_cache(src)[0] or {}
+        fl = _cache[key].get("flops") or {}
+        by_base = {}
+        for n in fl:
+            by_base.setdefault(L.base_type(n), []).append(n)
+        rec, basis = L.lookup(fl, name, by_base)
+        n = (rec or {}).get("flops")
+        if not isinstance(n, int) or n <= 0:
+            return None, None
+        return n, f"{basis}: {str(rec.get('kit', '')).split(':')[-1][:60]}"
+    except Exception:
+        return None, None
+
+
 def findings(raw, plan_path=None, tree=None, **kw):
     import os
     flat = os.environ.get("OT_FP_OVERSIZE_FLAT") == "1"
@@ -374,7 +400,18 @@ def findings(raw, plan_path=None, tree=None, **kw):
                            "fix: spread coincident ranks over independent stripes")
             n_street += int(street_over or rank_over)
             cells = t.get("cells") or 0
-            if flat:
+            nflops, nbasis = (netlist_flops(name, kw) if os.environ.get("OT_FP_OVERSIZE_NETLIST") != "0" and not t.get("hard")
+                              else (None, None))
+            if nflops is not None:
+                if nflops > CELL_CAP:
+                    n_big += 1
+                    out.append(f"{lvl} ADV-FP-OVERSIZE {name}: netlist flops {nflops:,} > {CELL_CAP:,} single-run cap (cells >= flops; "
+                               f"plan type.cells {int(cells) if isinstance(cells, (int, float)) else 0:,}, {len(t.get('hard_cores') or [])} hard core(s); {nbasis}); "
+                               "fix: split the type")
+                elif not t.get("hard_cores") and isinstance(cells, (int, float)) and cells > CELL_CAP:
+                    n_big += 1
+                    out.append(f"{lvl} ADV-FP-OVERSIZE {name}: {int(cells)} cells > {CELL_CAP} single-run cap (netlist flops {nflops:,}); fix: split the type")
+            elif flat:
                 est, basis = flat_cells(name, t, cache)
                 proj = est * growth
                 if proj > CELL_CAP:
