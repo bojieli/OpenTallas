@@ -5,7 +5,7 @@ import { api } from '../core/api.js';
 
 export function mountNavigator(host) {
   const S = { die: null, data: null, filter: '', packOnly: false, closed: new Set(ls.get('nav.closed', ['cores'])), node: null, view: null, seq: 0 };
-  const q = h('input.field', { type: 'search', placeholder: 'Filter types and cores', 'aria-label': 'Filter the navigator', testid: 'nav-filter', spellcheck: false });
+  const q = h('input.field', { type: 'search', placeholder: 'Filter partition types and hard cores', 'aria-label': 'Filter the navigator', testid: 'nav-filter', spellcheck: false });
   const packBtn = h('button.btn.sm', { type: 'button', 'aria-pressed': 'false', title: 'Only designs with a routed layout pack', testid: 'nav-packonly' }, 'Routed');
   const tree = h('div.tree', { testid: 'nav-tree' });
   host.append(h('div.nav-tools', q, packBtn), tree);
@@ -46,7 +46,7 @@ export function mountNavigator(host) {
         const out = [row(n)];
         if (n.id === S.node) {   // the macros placed inside the selected type: hover highlights on the canvas, click selects and zooms
           const hc = (n.plan.hard_cores || []).slice().sort((a, b) => a[0].localeCompare(b[0], 'en', { numeric: true }));
-          if (hc.length) out.push(h('div.more', { dataset: { testid: 'nav-macros-head' } }, `${hc.length} macros in this type`));
+          if (hc.length) out.push(h('div.more', { dataset: { testid: 'nav-macros-head' } }, `${hc.length} macros in this partition type`));
           for (const c of hc.slice(0, 300)) { const cn = S.data.nodes[c[1]];
             out.push(h('a.row.core.' + stateCls(cn ? displayState(cn) : 'not built'), { href: store.href({ view: S.view === 'overview' || S.view === 'closure' || S.view === 'token' || S.view === 'dataflow' ? 'element' : S.view, node: n.id, inst: c[0] }), 'aria-current': S.inst === c[0] ? 'true' : null,
               title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + displayStateLabel(cn) : ' · generated memory macro'}`, dataset: { macro: c[0] },
@@ -56,7 +56,7 @@ export function mountNavigator(host) {
         } else if (S.nodeParent === n.id) for (const c of n.children || []) { const cn = S.data.nodes[c]; if (cn) out.push(row(cn, '.core')); }
         return out;
       });
-      tree.append(...group(st, (STATE_LABEL[st] || 'Uncredited') + ' types in plan', rows.length, body, st).flat(3).filter(Boolean));
+      tree.append(...group(st, (STATE_LABEL[st] || 'Uncredited') + ' partition types in plan', rows.length, body, st).flat(3).filter(Boolean));
     }
     if (cores.length) tree.append(...group('cores', 'Hard cores', cores.length, cores.map((n) => row(n))).flat(3).filter(Boolean));
     if (!types.length && !cores.length) tree.append(h('div.more', f ? `Nothing matches “${f}”.` : 'No designs.'));

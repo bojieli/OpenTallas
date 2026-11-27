@@ -164,7 +164,7 @@ export function createShell(root, { views, meta }) {
     if (my !== seq) return;
     hits = r.results; cur = hits.length ? 0 : -1;
     clear(results);
-    if (!hits.length) results.append(h('div.none', r.error ? 'Search failed: ' + r.error : `No type, core or instance matches “${s}”.`));
+    if (!hits.length) results.append(h('div.none', r.error ? 'Search failed: ' + r.error : `No partition type, hard core or instance matches “${s}”.`));
     hits.forEach((o, i) => results.append(h('button', { type: 'button', role: 'option', 'aria-selected': String(i === cur), dataset: { i }, onclick: () => pick(i) },
       h('span.kind', o.kind), h('span.nm', o.name, h('small', o.kind === 'instance' ? `${dieShort(o.die)} · instance of ${o.of || '?'}` : dieShort(o.die))),
       h('span.st.' + stateCls(o.state), h('i.dot'), o.state || ''))));
@@ -209,7 +209,7 @@ export function createShell(root, { views, meta }) {
     clear(dies);
     for (const d of S.meta.dies) {
       const c = (S.dies && S.dies[d.id]) || null, tot = c ? c.types : 0, done = c ? c.counts.type.signed : 0;
-      dies.append(h('button', { type: 'button', 'aria-pressed': String(d.id === cur), title: `${d.label}${c ? ` · ${done} of ${tot} types signed off` : ''} · plan ${d.plan.sha}`, dataset: { testid: 'die-' + d.id },
+      dies.append(h('button', { type: 'button', 'aria-pressed': String(d.id === cur), title: `${d.label}${c ? ` · ${done} of ${tot} partition types signed off` : ''} · plan ${d.plan.sha}`, dataset: { testid: 'die-' + d.id },
         onclick: () => store.go({ view: store.get().view === 'overview' ? 'plan' : store.get().view, node: d.id }) },
         h('span', dieShort(d.id)), c ? h('span.meter', h('i', { style: { width: (tot ? 100 * done / tot : 0) + '%' } })) : null));
     }

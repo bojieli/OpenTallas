@@ -29,12 +29,12 @@ export default {
     function runsOnTab(el) {
       const M = S.map;
       if (!M || M.error) { el.append(h('section.sec', h('div.banner', h('div', h('b', 'No node map for this design. '), (M && M.error) || 'token_design_map.py has not mapped it.')))); return; }
-      el.append(h('section.sec', h('h3', 'Runs on'), h('p.note', { style: { margin: 0 } }, `Token classes mapped to today's types and cores. ${pct(M.coverage.named)} of token cycles map by name, ${pct(M.coverage.inferred)} by inference; the grade is shown per class. Map built ${fmtTime(M.generated && Date.parse(M.generated) / 1000 || S.index.map_generated)}.`)));
+      el.append(h('section.sec', h('h3', 'Runs on'), h('p.note', { style: { margin: 0 } }, `Token classes mapped to today's partition types and hard cores. ${pct(M.coverage.named)} of token cycles map by name, ${pct(M.coverage.inferred)} by inference; the grade is shown per class. Map built ${fmtTime(M.generated && Date.parse(M.generated) / 1000 || S.index.map_generated)}.`)));
       for (const [cid, c] of Object.entries(M.classes).sort((a, b) => (b[1].cycle_share || 0) - (a[1].cycle_share || 0))) {
         const nodes = c.nodes.map((id) => Object.assign({ id }, M.nodes[id])).filter((n) => n.name), signed = nodes.filter((n) => n.state === 'signed').length;
         const open = S.openCls === cid;
         el.append(h('section.sec', h('h3', c.label, h('span.n', pct(c.cycle_share || 0))),
-          h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', fontSize: 'var(--fs-s)' } }, h('span.chip', { title: c.why }, c.confidence === 'named' ? 'mapped by name' : 'inferred'), h('span.muted', `${c.types} types · ${c.cores} cores · ${signed} of ${nodes.length} signed off · ${c.exported} routed packs`)),
+          h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', fontSize: 'var(--fs-s)' } }, h('span.chip', { title: c.why }, c.confidence === 'named' ? 'mapped by name' : 'inferred'), h('span.muted', `${c.types} partition types · ${c.cores} hard cores · ${signed} of ${nodes.length} signed off · ${c.exported} routed packs`)),
           h('p.note', c.why),
           h('button.btn.sm', { type: 'button', style: { marginTop: '6px' }, dataset: { testid: 'tok-cls-' + cid }, onclick: () => { S.openCls = open ? null : cid; ctx.inspector.show('runs'); } }, open ? 'Hide the designs' : `Show the ${nodes.length} designs`),
           open ? h('div.list', { style: { marginTop: '6px' } }, nodes.sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true })).map((n) => h('a.row.' + stateCls(n.state), { href: store.href({ view: n.layout ? 'element' : 'plan', node: n.id }), title: n.id }, h('i.dot'), h('span.nm', n.name), h('small', `${dieShort(n.die)} · ${n.level}${n.layout ? ' · routed' : ''}`)))) : null));

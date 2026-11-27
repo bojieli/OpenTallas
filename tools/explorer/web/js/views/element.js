@@ -55,9 +55,9 @@ export default {
           plan.forEach((c, i) => { if (used.has(i)) return; const [w, hh] = coreSize(c), d = Math.hypot(c[3] + w / 2 - cx, c[4] + hh / 2 - cy); if (d < bd && Math.abs(w - (bb[2] - bb[0])) < 1 && Math.abs(hh - (bb[3] - bb[1])) < 1) { bd = d; best = i; } });
           const pc = best != null ? plan[best] : (plan.find((c) => c[0] === m.name) || null); if (best != null) used.add(best);
           const cn = pc ? core(pc[1]) : macroCore(m);
-          out.push({ key: pc ? pc[0] : m.name, packName: m.name, master: pc ? pc[2] : m.master, coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb, orient: m.orient, where: 'exact, from the routed database of this type' });
+          out.push({ key: pc ? pc[0] : m.name, packName: m.name, master: pc ? pc[2] : m.master, coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb, orient: m.orient, where: 'exact, from the routed database of this partition type' });
         });
-      } else plan.forEach((c) => { const [w, hh] = coreSize(c), cn = core(c[1]); out.push({ key: c[0], master: c[2], coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb: [c[3], c[4], c[3] + w, c[4] + hh], orient: c[7], where: 'plan placement (this type has no routed database yet)' }); });
+      } else plan.forEach((c) => { const [w, hh] = coreSize(c), cn = core(c[1]); out.push({ key: c[0], master: c[2], coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb: [c[3], c[4], c[3] + w, c[4] + hh], orient: c[7], where: 'plan placement (this partition type has no routed database yet)' }); });
       S.macros = out; S.masters = colourSlots(out);
       S.eng.setMarks(out.map((m) => ({ key: m.key, bb: m.bb, label: m.key, sub: shortName(m.master), ci: m.ci,
         tip: [`master ${m.master}`, `${fmt(m.bb[2] - m.bb[0], 2)} × ${fmt(m.bb[3] - m.bb[1], 2)} µm · ${m.orient}`, m.coreId ? `hard core · ${STATE_LABEL[m.state] || m.state}` : 'generated memory macro (no design of its own)', 'click to select'] })));
@@ -259,11 +259,11 @@ export default {
     function show(which) { geo.hidden = which !== 'geo'; planHost.hidden = which !== 'plan'; msg.hidden = which !== 'msg'; }
     async function picker(die) {
       show('msg'); clear(msg); setTabs(); modeSeg.hidden = true; jobSel.hidden = true; unsTag.hidden = true; qbox.hidden = true; fitBtn.hidden = rulerBtn.hidden = clearBtn.hidden = true;
-      ctx.setScope(`${dieShort(die)} · pick a type or core`);
+      ctx.setScope(`${dieShort(die)} · pick a partition type or hard core`);
       const D = await api.die(die), all = Object.values(D.nodes).filter((n) => n.layout && n.layout.store);
       all.sort((a, b) => STATES.indexOf(a.status.state) - STATES.indexOf(b.status.state) || a.level.localeCompare(b.level) * -1 || a.name.localeCompare(b.name, 'en', { numeric: true }));
       const row = (n) => h('a.row.' + stateCls(n.status.state), { href: store.href({ node: n.id }) }, h('i.dot'), h('span.nm', n.name), h('small', `${n.level} · ${STATE_LABEL[n.status.state]} · ${fmtCount(n.layout.store.shapes)} shapes`));
-      msg.append(h('div.page', { testid: 'element-picker' }, h('h1', `Elements of ${D.die.label}`), h('p.lead', `Pick a type or core in the navigator, on the plan, or below. ${all.length} of ${Object.keys(D.nodes).length} designs of this die have a routed layout pack; the others open with their plan contents.`),
+      msg.append(h('div.page', { testid: 'element-picker' }, h('h1', `Elements of ${D.die.label}`), h('p.lead', `Pick a partition type or hard core in the navigator, on the plan, or below. ${all.length} of ${Object.keys(D.nodes).length} designs of this die have a routed layout pack; the others open with their plan contents.`),
         h('div.card', { style: { padding: '6px' } }, h('div.list', all.slice(0, 400).map(row)))));
     }
 
@@ -272,7 +272,7 @@ export default {
         const { die, node, net } = st.sel, my = ++S.seq;
         if (levelOf(node) === 'die') { S.node = node; S.R = null; S.info = null; return picker(die); }
         modeSeg.hidden = false; fitBtn.hidden = false;
-        let R; try { R = await api.node(node); } catch (e) { if (my !== S.seq) return; show('msg'); clear(msg).append(h('div.empty', h('div', h('h3', e.status === 404 ? 'Not in the current plan' : 'Could not load this design'), h('p', e.status === 404 ? `${node} is not a type or core of any plan of record.` : e.message)))); setTabs(); return; }
+        let R; try { R = await api.node(node); } catch (e) { if (my !== S.seq) return; show('msg'); clear(msg).append(h('div.empty', h('div', h('h3', e.status === 404 ? 'Not in the current plan' : 'Could not load this design'), h('p', e.status === 404 ? `${node} is not a partition type or hard core of any plan of record.` : e.message)))); setTabs(); return; }
         if (my !== S.seq) return;
         const n = R.node, has = !!(n.layout && n.layout.store), hasPlan = !!(n.plan && n.plan.outline);
         let comp = null; try { comp = await api.compose(die); } catch (e) { comp = { packs: {} }; } if (my !== S.seq) return;

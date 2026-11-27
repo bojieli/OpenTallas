@@ -8,7 +8,7 @@ export function layersTab(getEngine, { onChange, extra } = {}) {
     const eng = getEngine();
     const paint = () => {
       clear(el);
-      if (!eng || !eng.L) { el.append(h('section.sec', h('p.note', { style: { margin: 0 } }, 'Layers appear when the first routed pack has loaded. Zoom into a signed type, or open a design with a routed layout.'))); return; }
+      if (!eng || !eng.L) { el.append(h('section.sec', h('p.note', { style: { margin: 0 } }, 'Layers appear when the first routed pack has loaded. Zoom into a signed partition type, or open a design with a routed layout.'))); return; }
       const changed = () => { if (onChange) onChange(); };
       const rows = eng.L.map((l) => h('div.lyr' + (l.vis ? '' : '.off'), { style: { '--c': l.color } },
         h('input', { type: 'checkbox', checked: l.vis, 'aria-label': 'Show ' + l.name, dataset: { testid: 'layer-' + l.name.replace(/\W+/g, '') }, onchange: (e) => { l.vis = e.target.checked; eng.afterVis(); changed(); paint(); } }),

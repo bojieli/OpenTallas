@@ -51,18 +51,18 @@ function dieDetails(D, view) {
   const d = D.die, p = d.plan, counts = d.counts_any_plan || d.counts;
   return [
     h('section.sec', h('h1', d.label), h('p.sub', `${d.target || ''} · ${fmt(p.outline[0] / 1000, 2)} × ${fmt(p.outline[1] / 1000, 2)} mm`), actions(d, view)),
-    sec('Sign-off on any plan', null, h('p.note', { style: { margin: '0 0 4px' }, testid: 'insp-signoff-types' }, h('b', counts.type.signed || 0), ` of ${d.type_count} types signed off`), stateBar(counts.type), h('div', { style: { height: '6px' } }), stateLegend(counts.type),
+    sec('Sign-off on any plan', null, h('p.note', { style: { margin: '0 0 4px' }, testid: 'insp-signoff-types' }, h('b', counts.type.signed || 0), ` of ${d.type_count} partition types signed off`), stateBar(counts.type), h('div', { style: { height: '6px' } }), stateLegend(counts.type),
       h('p.note', h('b', counts.core.signed || 0), ` of ${STATES.reduce((a, s) => a + (counts.core[s] || 0), 0)} hard cores signed off`), stateBar(counts.core)),
     sec(D.plan.wave ? 'Plan (kit wave, as counted)' : 'Plan of record', null, D.plan.wave ? h('p.note', { style: { margin: '0 0 6px' }, dataset: { testid: 'plan-wave-note' } }, `This is the plan the kit wave builds and the sign-off count counts (${D.plan.wave.host}:${D.plan.wave.path}). It is not on main yet; the pinned plan of record is ${D.plan.wave.pinned}.`) : null, kv([['plan', h('b.mono', D.plan.sha)], ['file', h('span.mono', p.path)], ['commit', h('span.mono', (p.commit || '').slice(0, 10) + ' · ' + String(p.date || '').slice(0, 10))],
-      ['subject', p.subject], ['clock period', p.period_ps + ' ps'], ['reach', p.reach_um + ' µm per cycle'], ['partitions', `${p.partitions.length} placed, ${d.type_count} types` + ((d.hard_ip || []).length ? `, ${d.hard_ip.length} hard IP` : '')],
+      ['subject', p.subject], ['clock period', p.period_ps + ' ps'], ['reach', p.reach_um + ' µm per cycle'], ['partitions', `${p.partitions.length} placed, ${d.type_count} partition types` + ((d.hard_ip || []).length ? `, ${d.hard_ip.length} hard IP` : '')],
       ['clock', `${p.clock.topology || '?'} on ${(p.clock.layers || []).join('/')}` + (p.clock.insertion_ps ? `, ${p.clock.insertion_ps} ps insertion` : '')], ['PG domains', p.pg_domains.length], ['seams', (p.seams || []).length + ' abutting pairs with ports']]),
       p.release_header ? h('p.note', h('b', 'Historical release note. '), p.release_header) : null),
-    sec('What is real here', null, h('p.note', { style: { margin: 0 } }, 'Inside a signed type or core the routed wires are exact. The die-level route has not run: die-top nets, the M8/M9 power grid and the clock trunks are plan data, shown as plan overlays.')),
+    sec('What is real here', null, h('p.note', { style: { margin: 0 } }, 'Inside a signed partition type or hard core the routed wires are exact. The die-level route has not run: die-top nets, the M8/M9 power grid and the clock trunks are plan data, shown as plan overlays.')),
   ];
 }
 function nodeDetails(R, view, inst) {
   const n = R.node, st = n.status, p = n.plan || {}, isType = n.level === 'type';
-  const out = [h('section.sec', h('h1.mono', n.name), h('p.sub', n.superseded ? n.plan_label : isType && p.outline ? `Type of ${dieShort(n.die)} · ${p.instances} placement${p.instances === 1 ? '' : 's'} · ${fmt(p.outline[0], 1)} × ${fmt(p.outline[1], 1)} µm` + (p.hard ? ' · hard IP' : '')
+  const out = [h('section.sec', h('h1.mono', n.name), h('p.sub', n.superseded ? n.plan_label : isType && p.outline ? `Partition type of ${dieShort(n.die)} · ${p.instances} placement${p.instances === 1 ? '' : 's'} · ${fmt(p.outline[0], 1)} × ${fmt(p.outline[1], 1)} µm` + (p.hard ? ' · hard IP' : '')
     : `Hard core of ${dieShort(n.die)}${p.outline ? ' · ' + fmt(p.outline[0], 1) + ' × ' + fmt(p.outline[1], 1) + ' µm' : ''} · placed ${p.placements || 0}×`),
     h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } }, R.signoff_basis ? h('span.st.st-signed', h('i.dot'), 'Signed off', h('span.muted', R.signoff_basis === 'current' ? ' · current plan' : R.signoff_basis === 'deferred' ? ' · earlier plan' : ' · retired plan')) :
         R.signoff_display_state === 'uncredited' ? h('span.st.muted', 'Uncredited') : badge(st.state, null, st.basis),
@@ -114,7 +114,7 @@ export function mountInspector(tabsEl, body) {
       const out = levelOf(node) === 'die' ? dieDetails(await api.die(die), st.view) : nodeDetails(await api.node(node), st.view, inst);
       if (my === S.seq && S.cur === 'details') { const y = body.dataset.for === node ? body.scrollTop : 0; clear(body).append(...out); body.dataset.for = node; body.scrollTop = y; }
     } catch (e) {
-      if (my === S.seq) clear(body).append(h('section.sec', h('div.banner.bad', h('div', h('b', e.status === 404 ? 'Not in the current plan. ' : 'Could not load. '), e.status === 404 ? `${node} is not a die, type or core of any plan of record.` : e.message))));
+      if (my === S.seq) clear(body).append(h('section.sec', h('div.banner.bad', h('div', h('b', e.status === 404 ? 'Not in the current plan. ' : 'Could not load. '), e.status === 404 ? `${node} is not a die, partition type or hard core of any plan of record.` : e.message))));
     }
   }
   return {

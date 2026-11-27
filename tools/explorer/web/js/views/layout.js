@@ -80,7 +80,7 @@ export default {
       S.insts = insts; S.items = items; eng.instVer = (eng.instVer || 0) + 1;
       // every drawn hard core is a macro with an identity: <partition>/<instance>, coloured by its core type
       S.macros = items.filter((i) => i.level === 'core').map((i) => { const cn = S.D.nodes[i.pack]; return { key: i.name + '/' + i.cname, partition: i.name, typeNode: insts[i.ii].node, master: cn ? cn.name : shortName(i.pack), coreId: i.pack, state: i.state, bb: i.bb, orient: i.xf.sx * i.xf.sy < 0 ? 'mirrored' : 'not mirrored',
-        where: i.plan ? 'plan placement (the type has no routed database drawn)' : 'exact, from the routed database of the type' }; });
+        where: i.plan ? 'plan placement (the partition type has no routed database drawn)' : 'exact, from the routed database of the partition type' }; });
       S.masters = colourSlots(S.macros); S.macroIdx = new Map(S.macros.map((m) => [m.key, m]));
       S.marks = S.macros.map((m) => ({ key: m.key, bb: m.bb, label: m.key.slice(m.partition.length + 1), sub: m.master, ci: m.ci, tip: [`hard core ${m.master} · ${STATE_LABEL[m.state] || m.state}`, `in ${m.partition} · ${m.where}`, `${fmt(m.bb[2] - m.bb[0], 2)} × ${fmt(m.bb[3] - m.bb[1], 2)} µm`, 'click to select'] }));
       return { outline: [0, 0, m.outline[0] / 1000, m.outline[1] / 1000], insts, items, packs: m.packs };
@@ -89,7 +89,7 @@ export default {
       const s = S.man.summary, drawn = S.insts.filter((r) => r.drawn).length;
       const st = store.get(), sel = levelOf(st.sel.node) === 'type' ? S.insts.filter((r) => r.node === st.sel.node) : [];
       const pc = S.items.filter((i) => i.plan).length;
-      clear(head).append(h('b', `${drawn} of ${s.partitions} placements drawn with their routed wires`), ` (${s.signed_with_pack} of ${s.signed_instances} signed placements have a pack)`, pc ? h('span', ' · ', h('b', `${fmtCount(pc)} hard cores`), ' of the other placements drawn at plan placement') : '', ` · ${Object.keys(S.man.packs).length} packs, ${fmtBytes(s.pack_bytes)}`,
+      clear(head).append(h('b', `${drawn} of ${s.partitions} partitions drawn with their routed wires`), ` (${s.signed_with_pack} of ${s.signed_instances} signed partitions have a pack)`, pc ? h('span', ' · ', h('b', `${fmtCount(pc)} hard cores`), ' of the other partitions drawn at their planned locations') : '', ` · ${Object.keys(S.man.packs).length} packs, ${fmtBytes(s.pack_bytes)}`,
         h('div.muted', 'Die-top nets, the M8/M9 power grid and clock trunks are not routed yet and are not drawn.'));
       if (sel.length && !sel.some((r) => r.drawn)) {
         const r = S.man.instances[sel[0].ii], canShow = r.ok && !S.unsigned;

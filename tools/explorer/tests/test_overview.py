@@ -12,7 +12,8 @@ def test_overview_loads_clean_with_freshness(page, die):
     card = page.get_by_test_id('card-' + die)
     expect(card).to_be_visible(); expect(card).to_have_class(re.compile(r'\bon\b'))
     d = next(x for x in api('dies')['dies'] if x['id'] == die)
-    expect(card).to_contain_text(d['plan']['sha']); expect(card).to_contain_text('of %d types' % d['types'])
+    expect(card).to_contain_text(d['plan']['sha']); expect(card).to_contain_text(f"of {d['types']} partition types")
+    expect(card).to_contain_text(f"{d['partitions']} partitions")
     expect(page.get_by_test_id('fresh-chip')).to_contain_text(re.compile(r'Data|Stale'))
     expect(page.get_by_test_id('asof')).to_contain_text('data as of')
     t = page.get_by_test_id('fresh-table')
@@ -48,8 +49,8 @@ def test_overview_five_cards_and_totals(page):
             counts = d['counts_any_plan']
             geometry = page.get_by_test_id('ov-current-designs-' + d['id'])
             expect(geometry).to_have_text(
-                f"{counts['type'].get('signed', 0)} of {d['types']} types, "
-                f"{counts['core'].get('signed', 0)} of {d['cores']} cores")
+                f"{counts['type'].get('signed', 0)} of {d['types']} partition types, "
+                f"{counts['core'].get('signed', 0)} of {d['cores']} hard cores")
             assert sum(counts['type'].values()) == sum(d['counts']['type'].values())
             assert sum(counts['core'].values()) == d['cores']
             expect(page.get_by_test_id('ov-signed-area-' + d['id'])).to_contain_text('of current die area signed on any plan')

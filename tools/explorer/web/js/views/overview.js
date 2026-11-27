@@ -36,7 +36,7 @@ export default {
       h('div.card', { style: { marginBottom: '14px' } }, h('div.pair', { style: { gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))' } },
         signoffChip(census, 'ov-signoff-any'),
         h('div', { testid: 'ov-packs' }, h('div.big', fmt(signedPackTotal)), h('small', `signed-off layout packs from any plan (+${fmt(unsignedPackTotal)} unsigned build views)`)),
-        h('div', h('div.big', fmt(allT.failed), h('small', 'current types failed')))), h('p.note', 'Current types with sign-offs from any plan'), stateBar(allT), stateLegend(allT)));
+        h('div', h('div.big', fmt(allT.failed), h('small', 'current partition types failed')))), h('p.note', 'Current partition types with sign-offs from any plan'), stateBar(allT), stateLegend(allT)));
     const cards = h('div.cards'); page.append(cards);
     const thumbs = [];
     for (const d of r.dies) {
@@ -51,9 +51,9 @@ export default {
         stateBar(counts.type), stateLegend(counts.type),
         h('dl.kv', h('dt', 'plan'), h('dd', h('b.mono', d.plan.sha), ' · ', String(d.plan.date || '').slice(0, 10)), h('dt', 'outline'), h('dd', `${fmt(d.outline[0] / 1000, 2)} × ${fmt(d.outline[1] / 1000, 2)} mm · ${d.partitions} partitions`),
           h('dt', 'current designs signed on any plan'),
-          h('dd', { testid: 'ov-current-designs-' + d.id }, `${counts.type.signed || 0} of ${d.types} types, ${counts.core.signed || 0} of ${d.cores} cores`),
+          h('dd', { testid: 'ov-current-designs-' + d.id }, `${counts.type.signed || 0} of ${d.types} partition types, ${counts.core.signed || 0} of ${d.cores} hard cores`),
           h('dt', 'routed packs on any plan'),
-          h('dd', { title: 'Stored packs of signed-off designs from any plan' }, `${packs.type || 0} types, ${packs.core || 0} cores signed off`,
+          h('dd', { title: 'Stored packs of signed-off designs from any plan' }, `${packs.type || 0} partition types, ${packs.core || 0} hard cores signed off`,
             unsigned ? h('span.muted', ` + ${unsigned} unsigned views`) : '')),
         h('div.acts', h('a.btn.sm', { href: store.href({ view: 'plan', node: d.id }), dataset: { testid: 'open-plan-' + d.id } }, 'Plan'), h('a.btn.sm', { href: store.href({ view: 'layout', node: d.id }), dataset: { testid: 'open-layout-' + d.id } }, 'Routed die map'),
           h('a.btn.sm', { href: store.href({ view: 'closure', node: d.id }), dataset: { testid: 'open-closure-' + d.id } }, 'Closure'), h('a.btn.sm', { href: store.href({ view: 'dataflow', node: d.id }) }, 'Dataflow'))));

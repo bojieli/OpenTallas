@@ -217,4 +217,4 @@ def test_plan_and_inspector_count_earlier_signoffs_in_current_geometry(page):
                            for n in payload['nodes'].values() if n['level'] == 'type')
     goto(page, '#/plan/' + die)
     expect(page.get_by_test_id('plan-legend')).to_contain_text(f'Signed off {expected}')
-    expect(page.get_by_test_id('insp-signoff-types')).to_have_text(f"{expected} of {d['type_count']} types signed off")
+    expect(page.get_by_test_id('insp-signoff-types')).to_have_text(f"{expected} of {d['type_count']} partition types signed off")

@@ -34,7 +34,7 @@ def test_element_die_level_shows_picker(page, die):
     expect(page.get_by_test_id('element-picker')).to_be_visible()
     expect(page.get_by_test_id('element-picker')).to_contain_text('Elements of')
     assert page.get_by_test_id('element-picker').locator('a.row').count() >= 1
-    expect(page.get_by_test_id('view-scope')).to_contain_text('pick a type or core')
+    expect(page.get_by_test_id('view-scope')).to_contain_text('pick a partition type or hard core')
     page.get_by_test_id('element-picker').locator('a.row').first.click()
     page.wait_for_function("() => otx.store.get().sel.node.includes('.')")
     wait_settled(page, 'element')
