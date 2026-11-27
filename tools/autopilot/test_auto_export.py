@@ -1,5 +1,5 @@
 """AUTO-EXPORT-1118: sign-off hook spool, host probe, die inference, INDEX row."""
-import json, os, subprocess, sys
+import hashlib, json, os, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -254,3 +254,39 @@ def test_pending_late_lec_refresh_preserves_archive_queue_identity(tmp_path, mon
     assert pending['bytes'] == 32 and pending['shas']['lec.json'] == 'proof'
     assert pending['lec'] == late['lec']
     assert AE.load_ledger()['units']['unrelated'] == unrelated
+
+
+def test_exact_diagnostic_receipt_stops_scan_and_preflight(tmp_path):
+    folder = tmp_path / 'case'
+    folder.mkdir()
+    odb = folder / '6_final.odb'
+    odb.write_bytes(b'0' * (2 << 20))
+    signoff = folder / 'signoff.json'
+    diagnostic = folder / 'diagnostic_signoff.json'
+    ref = folder / 'SIGNOFF-DIAGNOSTIC-REF.json'
+    raw = json.dumps(rec(odb=str(odb))).encode()
+    signoff.write_bytes(raw)
+    record = hashlib.sha256(raw).hexdigest()
+    odb_sha = hashlib.sha256(odb.read_bytes()).hexdigest()
+    args = dict(signoff=str(signoff), record=record, odb_sha256=odb_sha)
+
+    def run(mode, values):
+        completed = subprocess.run([sys.executable, '-I', '-', mode, json.dumps(values)],
+                                   input=AE.PROBE, capture_output=True, text=True, check=True)
+        return [json.loads(line) for line in completed.stdout.splitlines() if line.startswith('{')]
+
+    assert run('signoff-source', args) == [{'state': 'ready'}]
+    diagnostic.write_bytes(raw)
+    ref.write_text(json.dumps(dict(schema='opentallas.auto_export.diagnostic_signoff.v1',
+                                   record=record, odb_sha256=odb_sha)))
+    assert run('signoff-source', args) == [{'state': 'diagnostic'}]
+    assert run('scan', dict(hours=1, roots=[str(folder)])) == []
+    assert AE.enqueue(str(diagnostic)) is None
+    signoff.unlink()
+    assert run('signoff-source', args) == [{'state': 'diagnostic'}]
+    assert run('signoff-source', dict(args, odb_sha256='f' * 64)) == [{'state': 'missing'}]
+    diagnostic.write_bytes(raw + b'\n')
+    assert run('signoff-source', args) == [{'state': 'missing'}]
+    signoff.write_bytes(raw + b'\n')
+    assert run('signoff-source', args) == [{'state': 'changed'}]
+    assert run('signoff-source', dict(args, record=hashlib.sha256(raw + b'\n').hexdigest())) == [{'state': 'ready'}]
