@@ -17592,3 +17592,4 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
   [redirect] QC-SLECTL-PILE -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 01:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current bbe4827b7029 != hub e0dd0247f1c5 ; epyc12: rt/current bbe4827b7029 != hub e0dd0247f1c5 ; epyc8: rt/current bbe4827b7029 != hub e0dd0247f1c5 ; epyc9: rt/current bbe4827b7029 != hub e0dd0247f1c5
 - 2026-11-27 01:07 PST ALERT [FLEET-OPS-R -> COORD] lane quota: romw-1119 on epyc10 wrote 271 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-27 01:07 PST ALERT [FLEET-OPS-R -> CLEAN-AGGR; cc COORD] lane quota: kw45 on epyc10 wrote 60 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); CLEAN-AGGR prunes superseded event trees and replicas no live or queued row references
