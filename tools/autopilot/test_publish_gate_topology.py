@@ -47,3 +47,22 @@ def test_topology_check_unknown_without_bind_or_tool_and_runs_tool(tmp_path, mon
     monkeypatch.setattr(PG, "_sub", fake_sub)
     r = PG.topology_check("/t", "/p", "/ab", str(bo), str(tmp_path), str(tmp_path))
     assert r["verdict"] == "FAIL" and r["types_failed"] == ["t27", "t36"] and r["n_failed"] == 2
+
+
+def test_kit_rtl_stage_failures_alone_are_advisory_topology_stage_failures_block(tmp_path, monkeypatch):
+    bo = tmp_path / "bind"
+    bo.mkdir()
+    (bo / "bind_report.json").write_text("{}")
+    (tmp_path / "kit_topology_dry.py").write_text("")
+    out = tmp_path / "topology_dry.json"
+
+    def mk(failed):
+        def fake_sub(argv, cwd, timeout=0):
+            out.write_text(json.dumps({"verdict": "FAIL", "n_types": 5, "failed": failed}))
+            return 1, ""
+        monkeypatch.setattr(PG, "_sub", fake_sub)
+        return PG.topology_check("/t", "/p", None, str(bo), str(tmp_path), str(tmp_path))
+    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "x"}])
+    assert r["verdict"] == "ADVISORY" and r["kit_rtl_unverified"] == ["svc1"]
+    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "x"}, {"type": "t31", "stage": "kit_topology", "why": "y"}])
+    assert r["verdict"] == "FAIL" and r["types_failed"] == ["svc1", "t31"]

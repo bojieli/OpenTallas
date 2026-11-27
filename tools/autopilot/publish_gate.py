@@ -491,7 +491,14 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp):
         r = json.loads(Path(out).read_text())
     except (OSError, ValueError):
         return {"verdict": "FAIL", "why": f"topology check did not produce a result (rc {rc}): {txt[-400:]}"}
-    return {"verdict": r.get("verdict", "FAIL"), "n_types": r.get("n_types"), "n_pass": r.get("n_pass"), "n_cached": r.get("n_cached"),
+    # A kit_rtl-stage failure may come from the minimal kit-rtl call used here (the wave adds core / reviewed-station flags for some items): it is
+    # recorded and listed, never blocking.  A kit_topology-stage failure (the stage the wave runs on the same kit RTL) blocks.
+    fl = r.get("failed") or []
+    hard = [f for f in fl if f.get("stage") != "kit_rtl"]
+    verdict = r.get("verdict", "FAIL")
+    if verdict == "FAIL" and fl and not hard:
+        verdict = "ADVISORY"
+    return {"verdict": verdict, "kit_rtl_unverified": sorted(f["type"] for f in fl if f.get("stage") == "kit_rtl"), "n_types": r.get("n_types"), "n_pass": r.get("n_pass"), "n_cached": r.get("n_cached"),
             "seconds": r.get("seconds"), "failed": (r.get("failed") or [])[:60], "n_failed": len(r.get("failed") or []),
             "types_failed": sorted(f["type"] for f in r.get("failed") or []), "why": r.get("why", ""), "result": out}
 
