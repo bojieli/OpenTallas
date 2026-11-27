@@ -2155,6 +2155,50 @@ if {[llength $cland_fails]} {
  error [lindex [lindex $cland_fails 0] 3]
 }
 close $cland_fh
+# Reuse the selected band's occupied equal-size row footprints. Validate all
+# locations and collect target row orientations before moving any instance.
+proc cland_place_capture_rank_seats {} {
+ global ff_blk ff_dbu cland_capture_rank_seats
+ set names {}
+ foreach i [$ff_blk getInsts] {
+  set k [string map [list "\\" ""] [$i getName]]
+  if {[dict exists $names $k]} {error "OT_CLAND duplicate native instance name $k"}
+  dict set names $k $i
+ }
+ set cells {}; set sites {}; set used {}
+ foreach row $cland_capture_rank_seats {
+  lassign $row n master origin dst
+  if {![dict exists $names $n] || [dict exists $cells $n] || [dict exists $used $dst]} {
+   error "OT_CLAND missing or repeated capture rank instance/site $n/$dst"
+  }
+  set i [dict get $names $n]; set m [$i getMaster]
+  if {[$i getPlacementStatus] ne "FIRM" || [$m getName] ne $master ||
+      [$m getWidth] != round(1.08*$ff_dbu) || [$m getHeight] != round(0.27*$ff_dbu)} {
+   error "OT_CLAND capture rank status or footprint mismatch $n"
+  }
+  lassign [$i getLocation] x y
+  lassign $origin ox oy
+  if {$x != round($ox*$ff_dbu) || $y != round($oy*$ff_dbu)} {
+   error "OT_CLAND capture rank baseline site changed $n"
+  }
+  dict set cells $n $i
+  dict set used $dst 1
+  dict set sites $n [list $x $y [$i getOrient]]
+ }
+ if {[lsort [dict keys $used]] ne [lsort [dict keys $sites]]} {
+  error "OT_CLAND capture rank footprints are not a complete permutation"
+ }
+ foreach row $cland_capture_rank_seats {
+  lassign $row n master origin dst
+  lassign [dict get $sites $dst] x y orient
+  set i [dict get $cells $n]
+  $i setOrient $orient
+  $i setLocation $x $y
+ }
+ puts "OT_CLAND capture rank reassigned [dict size $cells] occupied FIRM footprints"
+}
+if {[info exists cland_capture_rank_seats]} {cland_place_capture_rank_seats}
+
 puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"
 # DIE-HEAD-42 V1: landed stations of plan-siteless bits follow their now-placed ring fan-in (face_flops.tcl)
 if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info procs ff_landed_line_place]]} { ff_landed_line_place }
