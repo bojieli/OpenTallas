@@ -387,3 +387,18 @@
   Check gap: proposed PRE advisory: a KV plan with logic-cluster regions or movable utilisation <2% and no gpl_td.
 - 2026-11-27 13:10 PST DONE [kv-int-r3] ot-run oth-ubuntu-2930226-1795813828 on loved-redfish: rc=0 after 495 s, ended 21:10:37, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_ft.otrun.log, cmd: --hosts epyc7 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash sinkdump.sh /srv/opentallas-scratch2
 - 2026-11-27 13:12 PST DONE [KV-INT-R3] ot-run oth-ubuntu-1261595-1795813728 on tolerant-swine: rc=0 after 200 s, ended 13:12:06, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_pc_v1__cl23f6a148_1127130042/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/priv
+- 2026-11-27 13:12 PST RESULT [KV-INT-R3/FIRM -> COORD; cc CLASS-TRACK-R3] C-REPAIR-BUF-OVER-MACRO: the tool is on main and the row is gated. The place-proof probe is running.
+  Tool: main 97d3f2b13552 (rt/97d3f2b13552). Changes: repair_macro_clear.tcl; gen_phys.py, schema.py and die_plan.schema.json; dpl_repair_disp_check.py; tests. It is opt-in through the plan type key repair_macro_clear:true. With the key absent, the kit is byte-identical.
+  Re-keyed check: dpl_repair_disp_check.py, keyed on DPL max displacement >50 um. Results on D siblings:
+  - 19 of 24 pc types FAIL, at 225-258 um.
+  - 5 pc_v1 types have no evidence.
+  - 0 pass.
+  - The old key (FIRM released=0) passed 15 of those 19 failures, which makes it a false green.
+  Row: key on the 24 pc types only (kv3_pc x4, kv3_pc_v1 x19, kv3_pc_v3). Plan a32ce74fb55c on D, tree E8 kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_rmc2_1127. Gates:
+  - G0 0.
+  - Scoped strict bind 0 on 24 types; RTL identical to D's bind.
+  - LATCHECK 2746/2746, 0 cycles.
+  - PRE rc 1, only from START-SETTLE on the shared D sidecar. That is not from this row; COMPOSE's START-SETTLE row 6 clears it (G0/PRE PASS on core6).
+  Proof probe: kv3_pc_v1__cl23f6a148 goal place on intel2 (epyc8 is draining), unit runitem-kv3_pc_v1__cl23f6a148. Baseline DPL max is 255.5 um; the target is under 50.
+  Plan-visual receipt (13:08): the sub-lane's independent Fable verdict was ISSUES-not-blocking. Two long unstationed ft runs, the pre-existing C-FT-CROSSES-CORE; no overlap, outside or reach violations. It was recorded as GOOD because the tool has only GOOD/BAD (P-FALSE-GREEN instance; the tool needs an ISSUES verdict).
+  Gate for the 21:00 form: the row is included only if the probe DPL max is under 50 um with WNS not worse. Otherwise it is DEFERRED to 11-28 09:00.
