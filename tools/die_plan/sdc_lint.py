@@ -371,6 +371,22 @@ def hard_clock_source_sdc(row):
             f"-multiply_by {row['multiply_by']} [get_pins {{{row['instance']}/{row['pin']}}}]")
 
 
+def root_s2_async_block(port, root):
+    """An unbound whole-die S2 root can use either native final-register name."""
+    stem = rf"^{root}[./]"
+    first = stem + r"p\[0\]\$_DFF_PN0_/RESETN$"
+    final = stem + r"(p\[1\]|sync_rst_n)\$_DFF_PN0_/RESETN$"
+    return "\n".join((
+        f"set ot_root_cdc_in [get_ports {{{port}}}]",
+        f"set ot_root_cdc_first [get_pins -hierarchical -regexp {{{first}}}]",
+        f"set ot_root_cdc_final [get_pins -hierarchical -regexp {{{final}}}]",
+        "if {[llength $ot_root_cdc_in] != 1 || [llength $ot_root_cdc_first] != 1 || "
+        f"[llength $ot_root_cdc_final] != 1}} {{error \"{port} must match one input and both {root} RESETN pins\"}}",
+        "set_false_path -from $ot_root_cdc_in -to [concat $ot_root_cdc_first $ot_root_cdc_final]",
+        "unset ot_root_cdc_in ot_root_cdc_first ot_root_cdc_final",
+    ))
+
+
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=None, unc_hold_ps=None, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
@@ -378,7 +394,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None, hard_clock_sources=None):
+         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None, hard_clock_sources=None,
+         root_async_start=False):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -422,6 +439,22 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             prefix = "[./]".join(re.escape(x) for x in root_reset_hier.split("."))
             root_exception = (r"set_false_path -from [get_ports {arst_n}] -to "
                               r"[get_pins -hierarchical -regexp {^" + prefix + r"[./]p\[[01]\]\$_DFF_PN0_/RESETN$}]")
+    if root_async_start:
+        if not root_async_reset or root_reset_hier is not None:
+            err.append("root START: requires an unbound whole-die asynchronous reset root")
+        else:
+            # Lower only the two exact emitted blocks for independent static lint.
+            # The actual SDC checks the native first/final pins at read time.
+            for port, name, replacement in (
+                ("arst_n", "u_rst_root", root_exception),
+                ("start_i", "u_run_root", ""),
+            ):
+                block = root_s2_async_block(port, name)
+                count = text.count(block)
+                if count != 1:
+                    err.append(f"root CDC: expected exactly one guarded {port} exception; found {count}")
+                else:
+                    text = text.replace(block, replacement, 1)
     pol_s, pol_h = policy_uncertainty()
     unc_setup_ps = pol_s if unc_setup_ps is None else unc_setup_ps
     unc_hold_ps = pol_h if unc_hold_ps is None else unc_hold_ps
@@ -1180,6 +1213,7 @@ def kit_context(P, tn):
                 **_tap_offset_ctx(P, tn),
                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
+                **({"root_async_start": True} if gen_phys.root_async_start(P, tn) else {}),
                 **({"root_reset_hier": RT.bound_native_contract(P, tn)["entry_path"]}
                    if RT.bound_native_contract(P, tn) and gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))

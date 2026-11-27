@@ -4365,6 +4365,13 @@ def root_async_reset(P, tn):
     return True
 
 
+def root_async_start(P, tn):
+    """Only the unique wavefront root receives the raw die START in broadcast mode."""
+    import reset_tree as RT
+    return (RT.start_broadcast(P) and not RT.bound_native_contract(P, tn)
+            and root_async_reset(P, tn))
+
+
 def root_reset_false_path(P, tn):
     """A verified bound root may be nested; the default generator keeps its existing top-level target."""
     import reset_tree as RT
@@ -5007,7 +5014,12 @@ def sdc(P, tn, pins):
                  else f"# HOLD-REPAIR plan_demand: sender guarantee - plan seam hold demand ({v:g} ps vs vclk)\n")
                 + f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     out += die_sta_sdc_lines(P, tn, "inputs")
-    if root_async_reset(P, tn):
+    if root_async_start(P, tn):
+        from sdc_lint import root_s2_async_block
+        out += "# Whole-die asynchronous reset and START S2 inputs; forwarded controls remain timed.\n"
+        out += root_s2_async_block("arst_n", "u_rst_root") + "\n"
+        out += root_s2_async_block("start_i", "u_run_root") + "\n"
+    elif root_async_reset(P, tn):
         out += "# Sole asynchronous die-root reset CDC (owner reset rule); forwarded reset remains timed.\n"
         out += root_reset_false_path(P, tn) + "\n"
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
