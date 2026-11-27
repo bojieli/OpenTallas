@@ -39,3 +39,24 @@ def test_unit_probe_retries_then_unknown(monkeypatch):
         raise subprocess.TimeoutExpired(argv, kw.get("timeout"))
     monkeypatch.setattr(KW.subprocess, "run", slow)
     assert KW.unit_probe("kwp-x") is None and len(calls) == 3
+
+
+
+def test_unit_probe_distinguishes_dbus_unknown_from_terminal_unit(monkeypatch, capsys):
+    responses = iter([
+        subprocess.CompletedProcess([], 1, "", "Failed to connect to bus"),
+        subprocess.CompletedProcess([], 1, "inactive\n", ""),
+        subprocess.CompletedProcess([], 0, "active\n", ""),
+        subprocess.CompletedProcess([], 3, "deactivating\n", ""),
+        subprocess.CompletedProcess([], 4, "inactive\n", ""),
+        subprocess.CompletedProcess([], 3, "failed\n", ""),
+    ])
+    monkeypatch.setattr(KW.subprocess, "run", lambda *_a, **_kw: next(responses))
+    monkeypatch.setattr(KW.time, "sleep", lambda _delay: None)
+    assert KW.unit_probe("kwp-x") == "active"
+    assert KW.unit_probe("kwp-x") == "deactivating"
+    assert KW.unit_probe("kwp-x") == "inactive"
+    assert KW.unit_probe("kwp-x") == "failed"
+    diagnostic = capsys.readouterr().out
+    assert diagnostic.count("KW_PROBE_UNKNOWN") == 2
+    assert "Failed to connect to bus" in diagnostic

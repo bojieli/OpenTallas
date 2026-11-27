@@ -47,7 +47,9 @@ class Fake:
             if self.client_rc is not None:
                 (self.d / "place.live.log").write_text(f"KW_PLACE_START 1 u\nKW_PLACE_RC={self.client_rc}\n")
         elif argv[:3] == ["systemctl", "--user", "is-active"]:
-            out = "active\n" if self.active else "inactive\n"
+            if self.active is None:
+                return SimpleNamespace(returncode=1, stdout="", stderr="Failed to connect to bus")
+            out, rc = ("active\n", 0) if self.active else ("inactive\n", 3)
         elif "KW_PLACE_RECEIPT" in s or "physical_completion" in s:
             out = ("KW_PLACE_RECEIPT " + json.dumps(RECEIPT) + "\n") if self.receipt else ""
         elif "run_kit.sh" in s:
@@ -259,6 +261,37 @@ class PlaceAsync(unittest.TestCase):
             self.assertEqual(res["verdict"], "FAIL")
             self.assertIn("KW_PLACE_LOST", res["tail"])
             self.assertEqual(len([c for c in f.calls if c.startswith("systemd-run")]), 1)
+
+    def test_unknown_unit_probe_accepts_receipt_without_declaring_lost(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Fake(d, active=None)
+            with patch.object(KW.time, "sleep"):
+                rc, res = self.go(d, fake)
+            self.assertEqual((rc, res["verdict"]), (0, "PASS"))
+            self.assertNotIn("KW_PLACE_LOST", (Path(d) / "place.log").read_text())
+            self.assertEqual(len([c for c in fake.calls if c.startswith("systemd-run")]), 1)
+
+    def test_unknown_unit_probe_does_not_retire_existing_place_service(self):
+        class MissingCopyback(Fake):
+            def __call__(self, argv, **kw):
+                result = super().__call__(argv, **kw)
+                if "KW_PROBE_OK" in " ".join(argv):
+                    return SimpleNamespace(returncode=0, stdout="KW_PROBE_OK", stderr="")
+                return result
+
+        with tempfile.TemporaryDirectory() as d:
+            run = Path(d)
+            log = run / "place.live.log"
+            log.write_text("KW_PLACE_RC=0\n")
+            (run / "place_service.json").write_text(json.dumps(
+                {"unit": "kwp-x", "argv": ["ot-run"], "kit": "/w/gen/T", "host": "intel1",
+                 "started": 1.0, "log": str(log), "launch": "launched"}))
+            fake = MissingCopyback(d, active=None)
+            with patch.object(KW.time, "sleep"):
+                rc, res = self.go(d, fake)
+            self.assertEqual((rc, res["verdict"]), (0, "PASS"))
+            self.assertFalse((run / "place_service.stale.json").exists())
+            self.assertFalse(any(c.startswith("systemd-run") for c in fake.calls))
 
     def test_lost_client_is_infra_not_unclassified(self):
         # PLACE-LOST-1125: 26 KW_PLACE_LOST rows were UNCLASSIFIED place FAILs routed to design owners
