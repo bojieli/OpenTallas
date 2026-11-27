@@ -2256,6 +2256,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ctl_hold_hb4"] = {
     "type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8},
     "propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
+# Two kept noninverting buffers per raw data bit of the priced West RX W568 ring.
+# Default absent and byte-identical. The binder checks the physical ring form.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_raw_data_hold_hb4"] = {
+    "type": "integer", "const": 2}
 # CLAND-QREG-1 (opt-in, default absent = byte-identical): one rclk register stage on the landing ring output q of
 # each listed input bus (legacy and count-aligned rings), +1 data cycle on that crossing (counted by clock_landings).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_output_qreg"] = {

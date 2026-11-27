@@ -120,3 +120,40 @@ def test_dont_touch_tcl_counts_pad_cells():
         tcl = gen_phys.hold_pad_dont_touch_tcl(P, tn)
         assert 'u_hdly_' in tcl and f'plan {lohi[0]}..{lohi[1]}' in tcl, tcl
     assert gen_phys.hold_pad_dont_touch_tcl(P, 'z') == ''
+
+
+def test_raw_hold_is_default_off_and_exact_type_scoped():
+    t = "hd_spn_wshim_rx"
+    flag = "landing_raw_data_hold_hb4"
+    types = {t: {"clock": {}}}
+    raw = {"partition_types": types}
+    assert CL.raw_landing_hold_hb4(raw, t) == 0
+    assert not G.uses_hold_hb4(raw)
+    types[t]["clock"][flag] = 2
+    assert CL.raw_landing_hold_hb4(raw, t) == 2
+    assert CL.raw_landing_hold_hb4(raw, t + "__one") == 2
+    assert G.uses_hold_hb4(raw)
+    for value in (None, False, 0, 1, 3, "2"):
+        types[t]["clock"][flag] = value
+        with pytest.raises(CL.LandingError, match="two pads"):
+            CL.raw_landing_hold_hb4(raw, t)
+    other = {"partition_types": {"hd_spn_eshim_rx": {"clock": {flag: 2}}}}
+    with pytest.raises(CL.LandingError, match="exact hd_spn_wshim_rx"):
+        CL.raw_landing_hold_hb4(other, "hd_spn_eshim_rx")
+
+
+def test_raw_hold_exact_native_quantity_and_existing_control(tmp_path):
+    t = "hd_spn_wshim_rx"
+    types = {t: dict(clock={"landing_raw_data_hold_hb4": 2, "landing_ctl_hold_hb4": {"link_i": 2}}, reset={})}
+    p = SimpleNamespace(types=types, raw={})
+    (tmp_path / "rtl").mkdir()
+    f = tmp_path / "rtl" / "rx.sv"
+    ctl = "ot_dp_hd #(.W(2), .N(2)) u_hdly_cland_ctl_link_i (.a(c), .y(cd));\n"
+    start = "ot_dp_hd #(.W(1), .N(2)) u_hdly_cland_fs_link_i (.a(s), .y(sd));\n"
+    f.write_text(ctl + start)
+    with pytest.raises(ValueError, match="raw landing data pads absent"):
+        gen_phys.hold_pad_dont_touch_tcl(p, t, tmp_path)
+    f.write_text(ctl + start + "ot_dp_hd #(.W(566), .N(2)) u_hdly_cland_data_link_i (.a(link_i), .y(raw_hd));\n")
+    tcl = gen_phys.hold_pad_dont_touch_tcl(p, t, tmp_path)
+    assert "plan 1138..1138" in tcl
+    assert "u_hdly_cland_data_link_i" in tcl and "$raw_hb != 1132" in tcl
