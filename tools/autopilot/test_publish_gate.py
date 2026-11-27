@@ -11,6 +11,53 @@ PLAN = REPO / "tools/die_plan/examples/tiny_plan.json"
 MANIFEST = "ab" * 32
 
 
+def test_static_remote_preserves_prepared_paths_and_typed_result(tmp_path, monkeypatch):
+    record = {"pre_g0": {"verdict": "FAIL", "pre_failure": {"class": "GENDRY"}}}
+    runner = mock.Mock(return_value=types.SimpleNamespace(
+        stdout="PG_STATIC " + json.dumps(record) + "\n", stderr="ot-heavy: admitted\n", returncode=0))
+    monkeypatch.setenv("OT_PUBGATE_PRE_THREADS", "18")
+    result = PG.static_remote("epyc7", str(tmp_path), "/prepared tree", "/prepared tree/plan.json",
+                              "/retained bind/asbuilt.json", "plan-sha", runner=runner)
+    assert result == record
+    command = runner.call_args.args[0]
+    assert command[-2] == "epyc7"
+    assert "/prepared tree/plan.json" in command[-1]
+    assert "/retained bind/asbuilt.json" in command[-1]
+    assert f" 18 {PG.STEP_TIMEOUT_S} --tree " in command[-1]
+
+
+def test_static_host_budget_and_nested_lease(tmp_path, monkeypatch):
+    unit = "oth-ubuntu-42-123"
+    state = Path("/var/tmp/ot-heavy")
+    read_text = Path.read_text
+    is_file = Path.is_file
+    monkeypatch.setattr(os, "sched_getaffinity", lambda pid: set(range(12)))
+    monkeypatch.setenv("OT_HEAVY_UNIT", unit)
+    monkeypatch.setenv("OT_HEAVY_DIRECT", "1")
+    monkeypatch.setenv("OT_RESET_POOL_J", "99")
+    for matching_scope in (False, True):
+        contents = {
+            Path("/proc/self/cgroup"): f"0::/app.slice/{unit}.scope\n" if matching_scope else "0::/session-1.scope\n",
+            state / f"cthr.{unit}": "6\n",
+        }
+        with mock.patch.object(Path, "read_text", lambda p: contents[p] if p in contents else read_text(p)), \
+             mock.patch.object(Path, "is_file", lambda p: p == state / f"res.{unit}" or is_file(p)), \
+             mock.patch.object(PG.subprocess, "run") as run:
+            run.return_value.returncode = 0
+            assert PG._admit_static_host("exact source", tmp_path, "32", "600", "--tree", "/prepared") == 0
+        command = run.call_args.args[0]
+        env = run.call_args.kwargs["env"]
+        assert command[-3:] == ["static", "--tree", "/prepared"]
+        if matching_scope:
+            assert command[0] == PG.sys.executable
+            assert env["OT_RUN_THREADS"] == env["OT_HEAVY_THREADS"] == env["OT_RESET_POOL_J"] == "6"
+        else:
+            assert command[:6] == ["/usr/local/bin/ot-heavy", "--mem", "56", "--max-wait", "600", "--"]
+            assert env["OT_RUN_THREADS"] == env["OT_HEAVY_THREADS"] == env["OT_RESET_POOL_J"] == "12"
+            assert env["OT_HEAVY_DIECLASS"] == "0"
+            assert "OT_HEAVY_DIRECT" not in env and "OT_HEAVY_UNIT" not in env
+
+
 
 class DryGenRuntimeTests(unittest.TestCase):
     def test_dry_gen_follows_normal_wave_runtime_and_keeps_item_pin(self):

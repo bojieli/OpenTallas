@@ -33,6 +33,7 @@ Nothing here changes a live config: the apply is projected on a scratch copy of 
 work root, the only coord write is the record (committed by bin/coord-commit.sh with --commit)."""
 import argparse
 import hashlib
+import inspect
 import json
 import os
 import re
@@ -521,15 +522,55 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
 
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
+def _admit_static_host(source, work, requested, wait, *args):
+    """Run on the tree's host, inside an existing lease or an ordinary new scope."""
+    work = Path(work)
+    work.mkdir(parents=True, exist_ok=True)
+    threads = min(int(requested), len(os.sched_getaffinity(0)))
+    env = os.environ.copy()
+    fleet_state = Path("/var/tmp/ot-heavy")
+    parent = env.get("OT_HEAVY_UNIT", "")
+    live = False
+    if parent.startswith("oth-") and Path(parent).name == parent:
+        scopes = Path("/proc/self/cgroup").read_text().splitlines()
+        live = (any(f"{parent}.scope" in line.split("/") for line in scopes)
+                and (fleet_state / f"res.{parent}").is_file())
+    if live:
+        parent_threads = int((fleet_state / f"cthr.{parent}").read_text())
+        threads = min(threads, parent_threads)
+    else:
+        for key in ("OT_HEAVY_PRIO", "OT_HEAVY_CPU", "OT_HEAVY_DIRECT", "OT_HEAVY_PARENT_UNIT", "OT_HEAVY_UNIT"):
+            env.pop(key, None)
+        # PRE is recognized as die-level by default. Charge this bounded publication check through ordinary admission.
+        env["OT_HEAVY_DIECLASS"] = "0"
+    env["OT_RUN_THREADS"] = env["OT_HEAVY_THREADS"] = str(threads)
+    if env.get("OT_RESET_POOL_J", "").isdigit():
+        env["OT_RESET_POOL_J"] = str(min(int(env["OT_RESET_POOL_J"]), threads))
+    with tempfile.TemporaryDirectory(prefix="pre-admission-", dir=work) as tmp:
+        script = Path(tmp, "publish_gate.py")
+        script.write_text(source)
+        # Preserve the shipped checker's inline context so inherited candidate tool lookup stays exact.
+        inline = ('import sys; path = sys.argv.pop(1); '
+                  'exec(compile(open(path, "rb").read(), path, "exec"), {"__name__": "__main__"})')
+        command = [sys.executable, "-I", "-c", inline, str(script), "static", *args]
+        if not live:
+            # The PRE pool budgets 4 GiB per worker. Leave headroom for the parent process.
+            command = ["/usr/local/bin/ot-heavy", "--mem", str(8 + 4 * threads), "--max-wait", wait, "--", *command]
+        return subprocess.run(command, env=env).returncode
+
+
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
                   rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
-    """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
-    of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
-    ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
+    """Run the exact static checker with local admission on the host holding its prepared inputs."""
     q = shlex.quote
     _rs = str(os.environ.get("OT_RESETPUB_SOLVE", "")).strip()     # an explicit caller value (1 or 0) is forwarded; unset = the PRE default
     reset_solve = f"OT_RESETPUB_SOLVE={_rs} " if _rs in ("0", "1") else ""
-    cmd = (f"mkdir -p {q(work_dir)} && {reset_solve}nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
+    threads = int(os.environ.get("OT_PUBGATE_PRE_THREADS", "32"))
+    if threads < 1:
+        raise ValueError("OT_PUBGATE_PRE_THREADS must be positive")
+    launch = ("import os, subprocess, sys, tempfile\nfrom pathlib import Path\n" + inspect.getsource(_admit_static_host)
+              + "\nraise SystemExit(_admit_static_host(*sys.argv[1:]))")
+    cmd = (f"{reset_solve}python3 -I -c {q(launch)} {q(Path(__file__).read_text())} {q(work_dir)} {threads} {STEP_TIMEOUT_S} --tree {q(tree)} --plan {q(plan)} "
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
            + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
@@ -541,7 +582,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
            + (f" --tool-root {q(str(tool_root))}" if tool_root else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
-    p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
+    p = runner(argv, capture_output=True, text=True, timeout=4 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
     got = [ln[len("PG_STATIC "):] for ln in txt.splitlines() if ln.startswith("PG_STATIC ")]
     if not got:

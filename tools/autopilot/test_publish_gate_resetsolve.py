@@ -36,6 +36,6 @@ def _cmd(monkeypatch, env):
 
 
 def test_forward_explicit_only(monkeypatch):
-    assert "&& nice -n 10" in _cmd(monkeypatch, {})
-    assert "&& OT_RESETPUB_SOLVE=1 nice" in _cmd(monkeypatch, {"OT_RESETPUB_SOLVE": "1"})
-    assert "&& OT_RESETPUB_SOLVE=0 nice" in _cmd(monkeypatch, {"OT_RESETPUB_SOLVE": "0"})
+    assert _cmd(monkeypatch, {}).startswith("python3 -I -c ")
+    assert _cmd(monkeypatch, {"OT_RESETPUB_SOLVE": "1"}).startswith("OT_RESETPUB_SOLVE=1 python3 -I -c ")
+    assert _cmd(monkeypatch, {"OT_RESETPUB_SOLVE": "0"}).startswith("OT_RESETPUB_SOLVE=0 python3 -I -c ")
