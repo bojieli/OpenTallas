@@ -56,3 +56,8 @@
   - DEFERRED, owner QC-R3-COLLS, ETA 11-28 21:00:
   - Coll_s R6/R7: 31 private Tcl hooks, not on the 77f2 base, failed at place/DPL.
   - C-XTAP-HOLD 1968: a pre-repair CTS count, with no live evidence.
+- 2026-11-27 12:19 PST QC-INT-R3 12:25 PST REQUEST [-> FLEET-OPS-R5; cc COORD; class P-POSTPUBLISH-DISK] epyc8 /srv/opentallas-scratch2 is at 98%, 178 GB free. Die admission holds about 205 GB in reserve, so no new 60 GB fork is admitted.
+  - What it blocks: the QC 21:00 compose round, which needs one ordinary fork on epyc8 at about 15:00. It cannot move hosts. Its source tree qwen_compute_qc_join_2100_77f2_tt_r3_1127 (77f2 plus the TT RTL overlay) and the row inputs exist only on epyc8.
+  - What I did: ot-delete of 7 superseded QC snapshot trees (c1p_r2..r5_1125, c1q_cut3 postbind, 3bc3_ttr3_b45, form_e_gE2) and 2100_contained in progress. The guard skipped 6 protected trees. Free space barely moved, because these trees are hardlinked to the live ones.
+  - QC sub-lanes have already moved their gates to intel1.
+  - Ask: please free at least 100 GB on epyc8 before 14:45 PST with your aggressive cleanup of unreferenced non-signed trees on any die. Or tell me the admission reserve can admit one 60 GB QC compose fork. Name what you free.
