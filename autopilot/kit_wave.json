@@ -43378,7 +43378,7 @@
     "qwen_compute_native59_1125013549"
    ],
    "enabled": true,
-   "event": "qc_c9_integrated_1126",
+   "event": "qc_2100_combined_77f2_1126",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
@@ -43386,15 +43386,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126/physical/die_plan/qwen_compute/plan_of_record/zz_c9_integrated_next_1126.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126/physical/die_plan/qwen_compute/plan_of_record/zz_qc_forms_e_next_1126.json",
    "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126",
+   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126",
    "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_c1p_1125.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126_bind_1126094712",
-    "note": "Exact C9 sealed bind (source_release_pack/sealed_bind, bind_closure_receipt c83555e181b9); closure also reads source_release_pack/sealed_rtl_inputs.",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_c1p_1125.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/QC-INT-R2-COMBINE/staged_next/publish_2100_contained/sealed_bind",
+    "note": "Strict exact 77f2 bind with unchanged retained elaboration, E8 QC-INT-R2 publication scope.",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
    },
@@ -51508,7 +51508,7 @@
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
-   "plan_sha256": "c9eb8883ad40080c194983a0f81e3124891060724e611bb50d11ba83f2dea301",
+   "plan_sha256": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -52233,7 +52233,8 @@
     "s29q103S4Q9N46R6V4",
     "qc_c1p_coll_a_rows_r6_1125",
     "qc_c1q_cut3_1125",
-    "qc_c9_integrated_1126"
+    "qc_c9_integrated_1126",
+    "qc_2100_combined_77f2_1126"
    ],
    "hold_items_lifted_kitops3_qcs29": {
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -53964,6 +53965,125 @@
      "release": [],
      "owner": "QC-INT-R2",
      "cause": "Shared west FW receive START handoff duplicated the pre-repair launch path; the four-stage local chain needs placed review"
+    },
+    {
+     "id": "qc-2100-77f2-su-channel",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Hold C1q route pending a viewed verdict and explicit release on the exact placed attempt",
+     "items": [
+      "slw_su_l1__clcc9d0155",
+      "slw_su_l1__cla2a78701"
+     ],
+     "release": [],
+     "owner": "QC-INT-R2",
+     "cause": "Shared x_su_c west input corridor remains unreconciled at the retained placement before the new channel seats"
+    },
+    {
+     "id": "qc-2100-77f2-hc2-rf1",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Hold C1q route pending a viewed verdict and explicit release on the exact placed attempt",
+     "items": [
+      "slw_hc2__cl6bcaba89",
+      "slw_hc2__cla3497502__cl16607c7a",
+      "slw_hc2__cla3497502__cldc737267"
+     ],
+     "release": [],
+     "owner": "QC-INT-R2",
+     "cause": "Shared predecessor HC2 RF1 collector seating lacks a measured placement witness after relocation"
+    },
+    {
+     "id": "qc-2100-77f2-fw-rx",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Hold C1q route pending a viewed verdict and explicit release on the exact placed attempt",
+     "items": [
+      "slw_fw_v1__clf51c11d8__cl592e3d37"
+     ],
+     "release": [],
+     "owner": "QC-INT-R2",
+     "cause": "Shared west FW receive START handoff duplicated the pre-repair launch path; the four-stage local chain needs placed review"
+    },
+    {
+     "id": "qc-2100-77f2-fw-seats",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "items": [
+      "sle_fw_v1__cl9d029624",
+      "sle_fw_v1__clf58b4dfb",
+      "sle_fw_v2__cl6740750e",
+      "sle_fw_v2__cl69f5e854",
+      "sle_fw_v3",
+      "slw_fw_v2__cl8537f156",
+      "slw_fw_v2__cl8f84514c"
+     ],
+     "owner": "QC-INT-R2",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Review current exact placement before explicit route release",
+     "cause": "New FW landing seats and added west FW taps require measured seat, cap, reach and same-phase timing.",
+     "release": []
+    },
+    {
+     "id": "qc-2100-77f2-st-a-cws0",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "items": [
+      "sle_st_a_v2__pv30dda31f__pv88773f93",
+      "sle_st_a_v2__pv4242de79",
+      "slw_st_a_v2__cl9f076a5c"
+     ],
+     "owner": "QC-INT-R2",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Review current exact placement before explicit route release",
+     "cause": "Four-depth CWS0 interior seat improved; outer approach, BHW/internal paths and timing still require fresh placement.",
+     "release": []
+    },
+    {
+     "id": "qc-2100-77f2-collectors",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "items": [
+      "coll_core",
+      "coll_s",
+      "coll_ftm",
+      "coll_ucie"
+     ],
+     "owner": "QC-INT-R2",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Review current exact placement before explicit route release",
+     "cause": "CollCore stage/timing, Coll_s exact companion/repaired CTS, CollFTM price cohort and licensed PHY all have independent gates.",
+     "release": []
+    },
+    {
+     "id": "qc-2100-77f2-hc3",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "items": [
+      "slw_hc3__clccfc3e6b__pvcca9ff41"
+     ],
+     "owner": "QC-INT-R2",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Review current exact placement before explicit route release",
+     "cause": "Fresh exact post-synth evidence and actual placement needed after new N/CWN3, q_bad and capture seats.",
+     "release": []
+    },
+    {
+     "id": "qc-2100-77f2-tt-native",
+     "plan_sha": "77f2cc98f6622fc1b719174e674ae63be97d8ca85f64cd643250527f3cb96f6c",
+     "items": [
+      "tt_ctlm",
+      "native59"
+     ],
+     "owner": "QC-INT-R2",
+     "route": true,
+     "cancel_running": false,
+     "reason": "Review current exact placement before explicit route release",
+     "cause": "The exact TT recurrence representative and Native59 paired functional/physical scope are still independent.",
+     "release": []
     }
    ],
    "planned_events": [
@@ -53979,8 +54099,8 @@
     "s29q103S4Q9N1B",
     "s29q103S4Q9N3"
    ],
-   "src_manifest_hash": "7dc77a94342966c6702ac25c6baeea38c326662da5fec8fe49a1084ca06a0e8b",
-   "tools_sha": "45bb7d41e172e3ea4335d761a7328d2883a4e9fb",
+   "src_manifest_hash": "fef5070a135ad62b5d25217171f0d769e8e7ff7ab232060f4eafa02125db14d1",
+   "tools_sha": "7c67033baee21d9f2328dc5be4db9dfde6ed5bcb",
    "only_items_prev_qcpin": [
     "cbf_q01",
     "cbf_q01_s2",
@@ -54222,9 +54342,10 @@
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4",
-    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1p_r6_1125"
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1p_r6_1125",
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125"
    ],
-   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125",
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126",
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc7"
@@ -54260,7 +54381,8 @@
     "s29q103S4Q9N46R6V3",
     "s29q103S4Q9N46R6V4",
     "qc_c1p_coll_a_rows_r6_1125",
-    "qc_c1q_cut3_1125"
+    "qc_c1q_cut3_1125",
+    "qc_c9_integrated_1126"
    ],
    "breaker_fix": "QC-TYPES-R3 11-18: OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; rt_tools: TOOLS-DECOUPLE aed901b rt mirror",
    "note_only_items_qcplanr3_1118": "11-18 07:1x QC-PLAN-R3: + sle_st_a_v2__pv30dda31f__pv88773f93,sle_st_a_v2__pv30dda31f__pvd2ec7769,slw_st_b_v2__pva66d0f22__pv3d7bec84,slw_st_b_v2__pva66d0f22__pvb80e2003,sle_ctl__cl503337ff__padE0,sle_ctl__cl503337ff__padE4,sle_ctl__cl67434795__padW5 (N3 plan split children; parents in only_items are pre-split names, never selected)",
@@ -54283,6 +54405,36 @@
     "sle_st_b_v1__pv0e7b1dcc@1:fix=59c032c8eb9"
    ],
    "bound_trees": [
+    {
+     "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126/physical/die_plan/qwen_compute/plan_of_record/zz_c9_integrated_next_1126.json",
+     "plan_sha256": "c9eb8883ad40080c194983a0f81e3124891060724e611bb50d11ba83f2dea301",
+     "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+     "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+     "src_manifest_hash": "7dc77a94342966c6702ac25c6baeea38c326662da5fec8fe49a1084ca06a0e8b",
+     "kit_rtl": {
+      "mode": "bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_c1p_1125.json",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c9_integrated_next_1126_bind_1126094712"
+     },
+     "event": "qc_c9_integrated_1126",
+     "gen_env": {
+      "OT_PLACE_MAX_FANOUT": "64",
+      "OT_GRT_NONPORT_HOLD": "1",
+      "OT_CORE_TAP_REACH_UM": "0",
+      "OT_PREGRT_FF_HOLD_AUTO": "-1",
+      "OT_MAX_BUFFER_PERCENT": "100",
+      "OT_GRT_POST_MAX_S": "0",
+      "OT_HOLD_STOP_PS": "-1000000",
+      "OT_GRT_ALLOW_CONGESTION": "1",
+      "OT_TT_SETUP_REPAIR": "both",
+      "OT_PG_DIE_PHASE": "1",
+      "OT_PGCAP": "1",
+      "OT_PG_TRACK_TRUTH": "1",
+      "OT_PG_PIN_CHECK": "1",
+      "OT_GPL_SPARSE_UTIL": "0.10"
+     }
+    },
     {
      "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125",
      "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_c1q_cut3_1125/physical/die_plan/qwen_compute/plan_of_record/zz_c1q_cut3_1125.json",
@@ -54372,40 +54524,10 @@
       "OT_PG_PIN_CHECK": "1",
       "OT_GPL_SPARSE_UTIL": "0.10"
      }
-    },
-    {
-     "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
-     "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
-     "plan_sha256": "24f8b509b6fd5f3665c6086e91b86f80343e9edfcabcbba4232645e579a52368",
-     "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
-     "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-     "src_manifest_hash": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
-     "kit_rtl": {
-      "mode": "bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_1122203742"
-     },
-     "event": "s29q103S4Q9N46R6V3",
-     "gen_env": {
-      "OT_PLACE_MAX_FANOUT": "64",
-      "OT_GRT_NONPORT_HOLD": "1",
-      "OT_CORE_TAP_REACH_UM": "0",
-      "OT_PREGRT_FF_HOLD_AUTO": "-1",
-      "OT_MAX_BUFFER_PERCENT": "100",
-      "OT_GRT_POST_MAX_S": "0",
-      "OT_HOLD_STOP_PS": "-1000000",
-      "OT_GRT_ALLOW_CONGESTION": "1",
-      "OT_TT_SETUP_REPAIR": "both",
-      "OT_PG_DIE_PHASE": "1",
-      "OT_PGCAP": "1",
-      "OT_PG_TRACK_TRUTH": "1",
-      "OT_PG_PIN_CHECK": "1",
-      "OT_GPL_SPARSE_UTIL": "0.10"
-     }
     }
    ],
    "review_before_route": {
-    "event": "qc_c9_integrated_1126",
+    "event": "qc_2100_combined_77f2_1126",
     "all_items": true,
     "required": true
    },
