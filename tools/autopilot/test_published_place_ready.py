@@ -97,7 +97,13 @@ def test_private_place_uses_the_existing_prepared_receipt(tmp_path, macro_geomet
     ref = ready.producer("capture", payload)
     original = tmp_path / "dry" / "spec.json"
     put(original, spec)
-    put(original.parent / "result.json", dict(result, published_place_ready=ref))
+    source = {"host": "epyc7", "manifest_hash": MANIFEST, "from": "verify", "mode": "require"}
+    dry_result = dict(result, src_manifest=source, published_place_ready=ref)
+    result_path = original.parent / "result.json"
+    put(result_path, dict(dry_result, src_manifest=dict(source, **{"from": "peek"})))
+    with pytest.raises(ValueError, match="private dry preparation"):
+        ready.read_private_prepared(original)
+    put(result_path, dry_result)
     raw, verified = ready.read_private_prepared(original)
     assert raw == original.read_bytes()
     assert verified == {"ref": ref, "private_prepared": {"manifest": MANIFEST, "plan": PLAN}}

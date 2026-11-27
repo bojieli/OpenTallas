@@ -167,7 +167,7 @@ def read_private_prepared(spec_path):
             or result.get("stage") != "preflight" or result.get("verdict") != "DRY-PASS"
             or result.get("preflight_fail_advisory") or result.get("evidence") != f"{spec['gen_host']}:{kit}"
             or source.get("manifest_hash") != identity["manifest"] or source.get("host") != spec["gen_host"]
-            or source.get("tree") != spec["src"] or source.get("tree_read_only") is not True
+            or source.get("from") != "verify" or source.get("mode") != "require"
             or ref.get("path") != str(work / READY_NAME) or ref.get("kit") != str(kit)
             or not re.fullmatch(r"[0-9a-f]{64}", ref.get("sha256", ""))):
         raise ValueError("exact reviewed private dry preparation did not finish")
