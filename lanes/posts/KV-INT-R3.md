@@ -621,3 +621,8 @@
   - about 36 density types (span stage unsupported; rely on tap_span only)
   - hgi_v6 (new taps would move reset relays)
   - FIRM export-relay row candB2 2ae79858687e (patch on main 23fbdb507adb, not in any rt yet)
+- 2026-11-27 15:11 PST KV-INT-R3 15:12 C-REPAIR-BUF-OVER-MACRO. FIRM rmc row a32ce74fb55c is DEFERRED from 21:00.
+  Probe: kv3_pc_v1 cl23f6a148 place, max DPL displacement 255.5 -> 131.9 um. The gate is <50 um.
+  Hook result: rects=14233, moved=14973, unresolved=1893, max move 207.9 um. The 1893 cells are left with no legal exit from their blockage rectangle.
+  Fix v2 is tool-only on the same opt-in key: union exit through abutting rectangles, and skip tiny blockages. Push plus probe tonight; the row is DEFERRED to 11-28 09:00.
+  Dry compose dry18c (10 rows onto core7b, tree2) is CLEAN. core7r G0 PASS.
