@@ -679,9 +679,44 @@ def _remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False,
     return rec
 
 
+RELAY = re.compile(r"^rst_rl_(\d+)$")
+
+
+def retarget_tap_group(new_raw, rec):
+    """C-CA-FARSTRAP-UNSEEN / P-TAPGROUP-RELAYNAME (HEAD-INT-R3 11-27): clock.tap_group names relay instances by substring
+    (re / follow_re regex alternatives, fixed_taps keys: u_rrl_<k>).  A relay renamed rst_rl_<a> -> rst_rl_<b> (receipt resets[].remaps
+    and identity[]) moves its u_rrl_<a> instance to u_rrl_<b>; the group followed by hand twice (host_w 139 -> 179).  Rewritten in one
+    simultaneous pass per type (a swap a<->b cannot chain).  -> [{type, field, old, new}] under rec[tap_group]"""
+    ren = {}
+    for r in rec.get("resets") or []:
+        for m in r.get("remaps") or []:
+            ren.setdefault(r["type"], {})[m["name"]] = m["to"]
+    for r in rec.get("identity") or []:
+        ren.setdefault(r["type"], {})[r["old"]] = r["new"]
+    out = []
+    for tn, mp in sorted(ren.items()):
+        tg = ((new_raw["partition_types"].get(tn) or {}).get("clock") or {}).get("tap_group")
+        mp = {RELAY.match(a).group(1): RELAY.match(b).group(1) for a, b in mp.items() if RELAY.match(a) and RELAY.match(b) and a != b}
+        if not tg or not mp:
+            continue
+        pat = re.compile(r"\bu_rrl_(%s)(?!\d)" % "|".join(sorted(mp, key=len, reverse=True)))
+        sub = lambda x: pat.sub(lambda m: "u_rrl_" + mp[m.group(1)], x)  # noqa: E731
+        for f in ("re", "follow_re"):
+            if isinstance(tg.get(f), str) and sub(tg[f]) != tg[f]:
+                out.append(dict(type=tn, field=f, old=tg[f], new=sub(tg[f])))
+                tg[f] = sub(tg[f])
+        if isinstance(tg.get("fixed_taps"), dict):
+            new_ft = {sub(k): v for k, v in tg["fixed_taps"].items()}
+            if list(new_ft) != list(tg["fixed_taps"]):
+                out.append(dict(type=tn, field="fixed_taps", old=list(tg["fixed_taps"]), new=list(new_ft)))
+                tg["fixed_taps"] = new_ft
+    return out
+
+
 def remap_plan(old_raw, new_raw, root, plan_dir, types=None, *a, origin_raw=False, **kw):
     """_remap_plan, then (origin_raw=True, CLI --origin-raw) record clock.landing_origin_raw (write_origin_raw) -> receipt with receipt['origin_raw']"""
     rec = _remap_plan(old_raw, new_raw, root, plan_dir, types, *a, **kw)
+    rec["tap_group"] = retarget_tap_group(new_raw, rec)
     if origin_raw:
         names = [tn for tn in new_raw["partition_types"] if (not types or tn in types) and tn in old_raw["partition_types"]]
         rec["origin_raw"] = write_origin_raw(new_raw, names, plan_dir)

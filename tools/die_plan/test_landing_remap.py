@@ -371,3 +371,17 @@ def test_unknown_tap_reference_not_added_still_fails():
     new_g = dict(NEW_G, clk_t300=((400, 400), frozenset({(5, 5)})))        # in the new table but no row added it
     with pytest.raises(LR.RemapError, match="clk_t300"):
         _run(old, new, groups_fn=lambda raw, tn: OLD_G if raw is old else new_g)
+
+
+def test_tap_group_follows_renamed_relays():
+    """tap_group re / follow_re / fixed_taps keys name relay instances u_rrl_<k>: a rst_rl_<a> -> <b> rename moves them (host_w 139 -> 179)."""
+    new = {"partition_types": {"T": {"clock": {"tap_group": {
+        "re": "(?:^|[/.])(u_bin_x|u_rrl_139)[/.]", "follow_re": "u_rrl_1390|u_rrl_179", "fixed_taps": {"u_rrl_139": "clk_t62", "u_rrl_5": "clk_t1"}}}}}}
+    rec = {"resets": [{"type": "T", "remaps": [{"name": "rst_rl_139", "to": "rst_rl_179"}, {"name": "rst_rl_179", "to": "rst_rl_139"}]}],
+           "identity": [{"type": "T", "old": "rst_rl_5", "new": "rst_rl_6", "path": "x", "identity": []}]}
+    out = LR.retarget_tap_group(new, rec)
+    tg = new["partition_types"]["T"]["clock"]["tap_group"]
+    assert tg["re"] == "(?:^|[/.])(u_bin_x|u_rrl_179)[/.]"
+    assert tg["follow_re"] == "u_rrl_1390|u_rrl_139"                 # simultaneous swap, 1390 untouched
+    assert list(tg["fixed_taps"].items()) == [("u_rrl_179", "clk_t62"), ("u_rrl_6", "clk_t1")]
+    assert len(out) == 3 and LR.retarget_tap_group(new, {}) == []
