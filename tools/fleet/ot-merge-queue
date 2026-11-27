@@ -1613,9 +1613,29 @@ def await_item(st, it, fut, pending):
             return "INFRA", f"ASIDE: prepare/gate ran > {ITEM_SECS // 60} min; set aside, the rest of the tick goes on"
 
 
+def gate_ref_error(branch, sha):
+    """Preflight the canonical fleet mirror before booking a remote gate slot."""
+    # An override using another runner owns its own source and mirror policy.
+    if not branch.startswith("claude/") or "ot-gate-remote" not in GATE_REMOTE:
+        return ""
+    helper = Path(__file__).resolve().with_name("ot-git-mirror")
+    spec = f"{branch}@{sha}"
+    try:
+        probe = S.run([sys.executable, "-I", str(helper), "fetch-ref", spec],
+                      capture_output=True, text=True, timeout=120)
+    except (OSError, S.TimeoutExpired) as exc:
+        return f"gate ref {spec}: {exc}"
+    if probe.returncode:
+        return f"gate ref {spec}: {(probe.stdout or probe.stderr).strip()[-650:]}"
+    return ""
+
+
 def gate_remote(it, full, base):
     """run the item's gate on a build host (GATE_REMOTE, ot-run + ot-gate-remote; CLEAN-ALL 11-15 16:0x: hub scratch took
     5 gate trees, ~15 GB of churn an hour) -> (status, note), or None when the runner could not start (gate it here)"""
+    error = gate_ref_error(it["branch"] or "", full)
+    if error:
+        return "INFRA", error
     cmd = GATE_REMOTE.format(key=f"{it['branch'] or '-'}@{full}")
     try:
         r = run_group(cmd, GATE_REMOTE_TIMEOUT)
@@ -1691,6 +1711,9 @@ def pregate(branch, sha):
     out = MQ / "pregate" / f"{sha}.out"
     if (MQ / "gates" / f"{full}.json").exists() or out.exists():
         return "gate record or gate run already there (one gate per sha)"
+    error = gate_ref_error(branch, full)
+    if error:
+        return f"remote gate deferred: {error}"
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "w") as f:
         S.Popen(GATE_REMOTE.format(key=f"{branch}@{sha}"), shell=True, stdout=f, stderr=S.STDOUT, stdin=S.DEVNULL, cwd="/",
