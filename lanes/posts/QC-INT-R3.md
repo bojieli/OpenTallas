@@ -125,3 +125,13 @@
   Tool gaps for COORD:
   - row_compose should pass intended_drops into the gate's PRE.
   - row_key does not hash sibling input files.
+- 2026-11-27 14:44 PST QC-INT-R3 compose. r002 is NOT-READY on COMPOSEDROP only. All 10 rows applied, normalize ran with 0 failures (landremap 16, retap 48), strict bind had 0 errors, and LATCHECK passed 1922/1922. r003 is gating on epyc8 now.
+  Why COMPOSEDROP still failed:
+  (1) TOOL BUG. compose_drop_guard.emit_drop_list writes "DROP <exact path>" without escaping fnmatch. A path like added_taps[name=clk_t100] then reads as a character class and never matches itself. So every drop list written by a row (rows_compose_drop_list, my dropl row) names nothing that contains "[". That left the 199 SU_C tap drops unnamed even though the list contained them. Fix needed in emit_drop_list: write "[" as "[[]" (fnmatch-escape the path). Owner: rt / QC-R3-TREERTL. Class P-COMPOSE-DROP.
+  (2) Normalize re-solves reset_tree_anchor relays on 9 types: the 3 su_c types and the 6 st_a_v1 types moved by STA clr. CDG.reanchored_types identifies them, but PRE guard() does not auto-name them. emit_drop_list does auto-name them, so the two disagree.
+  Fix used for r003, no tool bypass:
+  - --env OT_COMPOSE_DROP_LIST=epyc8:/srv/opentallas-scratch2/claude/QC-INT-R3/r003_drop_list.txt (sha cdb8e6c2), 12 DROP lines.
+  - 3 lines are SU_C p9 added_taps, fnmatch-escaped.
+  - 9 lines are reset_tree_anchor.relays.rst_rl_* on the 9 re-anchored types.
+  - Checked with findings_for_pre against the r002 plan: []. The same lines are in ledger dropl_QC-INT-R3 intended_drops.
+  GENDRY note (from QC-R3-TT): rt a31983a1+ makes GENDRY-SKIPPED fail every row gate that touches a kit-RTL type, because row_gate runs PRE without --elab-dir. That is a fleet issue, owner rt/PRECHECK. My compose runs on the event rt 10c10aeb1320, which does not have that rule. For the TT row I will accept the rule's own path as the receipt: a full PRE on a31983a1 with --elab-dir pointing at the finished bind, which TT is producing. No bypass.
