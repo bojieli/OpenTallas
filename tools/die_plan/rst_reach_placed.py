@@ -48,9 +48,9 @@ def p_exceed(x):
     return prev * 0.5
 
 
-def expected_fails(planned_hops, gate=GATE_UM):
+def expected_fails(planned_hops, gate=GATE_UM, near=None):
     """plan-time term: expected number of edges over the gate = sum of P(excess > gate - hop) over the edges with hop >= NEAR_UM"""
-    return sum(p_exceed(gate - h) for h in planned_hops if h >= NEAR_UM)
+    return sum(p_exceed(gate - h) for h in planned_hops if h >= (NEAR_UM if near is None else near))
 
 
 def parse_plan(tcl_text):
@@ -98,13 +98,24 @@ def tree_report(tcl_text, ff_text, gate=GATE_UM):
     hq = [r[3] for r in rows if r[3] is not None]
     over = sorted((r for r in rows if r[3] is not None and r[3] > gate), key=lambda r: -r[3])
     dv = sorted(drift.values())
-    return dict(relays=len(plan), seated=len(placed), edges=len(rows), plan_max=round(max((r[2] for r in rows), default=0.0), 1),
+    return dict(gate_um=gate, relays=len(plan), seated=len(placed), edges=len(rows), plan_max=round(max((r[2] for r in rows), default=0.0), 1),
                 placed_max=round(max(hq), 1) if hq else None, n_over=len(over), verdict=("FAIL" if over else "PASS") if hq else "UNMEASURED",
-                near_cap_edges=sum(1 for r in rows if r[2] >= NEAR_UM), expected_fails=round(expected_fails([r[2] for r in rows], gate), 2),
+                near_cap_edges=sum(1 for r in rows if r[2] >= gate - _SHIFT), expected_fails=round(expected_fails([r[2] for r in rows], gate, near=gate - _SHIFT), 2),
                 drift_p95=round(dv[int(0.95 * (len(dv) - 1))], 1) if dv else None, drift_max=round(dv[-1], 1) if dv else None,
                 drift_gt25=sum(1 for v in dv if v > 25),
                 failing=[dict(q=q, d=d, plan_hop=round(hp, 1), placed_hop=round(hq_, 1), drift_q=round(drift.get(q, 0.0), 1),
                               drift_d=round(drift.get(d, 0.0), 1), plan_seat_q=plan[q], placed_seat_q=placed.get(q)) for q, d, hp, hq_ in over[:8]])
+
+
+_LIM = re.compile(r"set rtr_lim \[expr \{\s*([0-9.]+)\s*\*")
+_SHIFT = GATE_UM - NEAR_UM    # near-cap window below the gate
+
+
+def kit_gate_um(tcl_text, default=GATE_UM):
+    """the type's OWN placed-hop gate: the 'set rtr_lim [expr {N * $ff_dbu}]' the kit reset_tree.tcl itself judges PASS/FAIL against
+    (HEAD 405, hd_spn_wshim_tx 300, hd_spn_wshim_rx 260; KV/S81 300).  GATE_UM is only the fallback when the line is absent."""
+    m = _LIM.search(tcl_text)
+    return float(m.group(1)) if m else default
 
 
 def gen_report(gen_dir):
@@ -113,7 +124,8 @@ def gen_report(gen_dir):
     if not ff or not os.path.isfile(tcl):
         return dict(verdict="UNMEASURED", why="no ot_face_flops.txt / reset_tree.tcl under " + gen_dir)
     with open(tcl, errors="replace") as a, open(ff[0], errors="replace") as b:
-        return tree_report(a.read(), b.read())
+        t = a.read()
+        return tree_report(t, b.read(), kit_gate_um(t))
 
 
 def main(argv=None):
@@ -128,7 +140,7 @@ def main(argv=None):
         r = gen_report(g)
         res[g] = r
         print(f"WARN RST-REACH-PLACED {os.path.basename(g.rstrip('/'))}: {r['verdict']} plan max {r.get('plan_max')} um, placed max {r.get('placed_max')} um, "
-              f"{r.get('n_over')} edge(s) > {GATE_UM:g} um, {r.get('near_cap_edges')} near-cap edges (expected {r.get('expected_fails')}), "
+              f"{r.get('n_over')} edge(s) > {r.get('gate_um', GATE_UM):g} um, {r.get('near_cap_edges')} near-cap edges (expected {r.get('expected_fails')}), "
               f"drift p95 {r.get('drift_p95')} / max {r.get('drift_max')} um (report only)")
         for f in r.get("failing", [])[:3]:
             print(f"    {f['q']} -> {f['d']}: plan {f['plan_hop']} -> placed {f['placed_hop']} um, seat drift {f['drift_q']} / {f['drift_d']} um")

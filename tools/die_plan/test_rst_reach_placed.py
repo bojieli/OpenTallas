@@ -34,3 +34,13 @@ def test_headroom_term_counts_near_cap_edges():
 
 def test_unmeasured_without_placed_rows():
     assert R.tree_report(TCL, "")["verdict"] == "UNMEASURED"
+
+
+def test_gate_is_the_kit_own_rtr_lim_not_the_kv_300():
+    # HEAD kit: rtr_lim 405.  A 315 um placed hop FAILs against 300 (KV) but PASSes against the kit's own 405 gate.
+    tcl = TCL + "set rtr_lim [expr {405 * $ff_dbu}]\n"
+    assert R.kit_gate_um(tcl) == 405.0 and R.kit_gate_um(TCL) == 300.0
+    assert R.tree_report(TCL, ff(590, 700))["verdict"] == "FAIL"
+    r = R.tree_report(tcl, ff(590, 700), R.kit_gate_um(tcl))
+    assert r["verdict"] == "PASS" and r["gate_um"] == 405.0
+    assert R.tree_report(tcl, ff(590, 1000), 405.0)["verdict"] == "FAIL"
