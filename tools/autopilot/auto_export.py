@@ -371,7 +371,7 @@ def save_ledger(L):
     os.replace(tmp, p)
     pend = [dict(key=k, mode='host' if u['state'] == 'meta' else 'agidock',
                  **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src', 'bytes',
-                                      'host', 'files', 'display') if x in u})
+                                      'host', 'files', 'display', 'lec') if x in u})
             for k, u in L['units'].items() if u.get('state') in ('agi', 'meta')]
     tmp = os.path.join(STATE, 'pending_rtx.json.tmp')
     with open(tmp, 'w') as f:

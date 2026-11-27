@@ -141,7 +141,7 @@ def test_legacy_record_shas_cover_empty_record_rows(tmp_path):
     assert got == [hashlib.sha256(b"{\"verdict\": \"SIGNED\"}").hexdigest()]
 
 
-def test_unit_carries_kit_routed_lec_and_sidecar_row(tmp_path):
+def test_unit_carries_kit_routed_lec_and_sidecar_row(tmp_path, monkeypatch):
     """LEC-R2 11-26: a kit's lec_routed*/lec.json (EQUIVALENT, not older than 6_final.v) travels as lec.json; INDEX-LEC.tsv row carries its sha"""
     import hashlib, time
     base = tmp_path / 'claude' / 'k' / 'work' / 'base'
@@ -172,7 +172,14 @@ def test_unit_carries_kit_routed_lec_and_sidecar_row(tmp_path):
     assert ('lec.json' in {f for _, f in u['files']}) and u['lec']['identity'] == 'size' and u['lec']['counts']['compare_points'] == 7
     u['shas'] = {'lec.json': hashlib.sha256(body.encode()).hexdigest()}
     u['odb_sha'] = 'a' * 64
-    c = AE.lec_index_row(u).rstrip('\n').split('\t')
+    # Exercise the hub-to-RTX queue boundary used by the real drain.
+    monkeypatch.setattr(AE, 'STATE', str(tmp_path))
+    AE.save_ledger({'units': {'new': dict(u, state='meta'),
+                              'legacy': {'state': 'agi', 'record': 'legacy'}}})
+    pending, legacy = json.loads((tmp_path / 'pending_rtx.json').read_text())
+    assert pending['lec'] == u['lec']
+    assert AE.lec_index_row(legacy) == ''
+    c = AE.lec_index_row(pending).rstrip('\n').split('\t')
     assert c[0] == u['record'] and c[1] == u['odb_sha'] and c[2] == u['shas']['lec.json'] and c[3] == 'EQUIVALENT' and c[4] == '7' and c[5] == 'size'
     assert AE.lec_index_row(dict(u, lec=None)) == ''
     os.utime(bad, (1, 1))                                                                       # older than 6_final.v: not picked up
