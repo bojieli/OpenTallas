@@ -372,7 +372,7 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
     binds died at EMIT): a type whose tap set is unchanged but whose clock / reset inputs changed is re-solved too, and republished
     when its old published tree was its own (reset_tree.for_type of the old plan).  republish_reset=True republishes every selected
     type that publishes a tree (also an already stale one) with the tree the tools solve now.
-    before_repick restores already-remapped references before the final START reach check.
+    before_repick restores already-remapped references and returns their types for the final START reach check.
     -> {type: [[where, key, was, now, um_or_n]]} for the types that changed."""
     tf = taps_fn or _plan_taps
     to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
@@ -438,13 +438,16 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
                 rep.setdefault(tn, []).extend(ch)
     if tapoff and todo:
         rep.update(_tapoff_close(new_raw, new_path, [tn for tn, _, _ in todo]))
+    repick_types = set(own_todo)
     if before_repick is not None:
-        before_repick()
-    if far_um is not None and own_todo:
+        # LANDREMAP already qualified these restored START refs. This does not
+        # transfer ownership of their separately published collector trees.
+        repick_types.update(before_repick())
+    if far_um is not None and repick_types:
         # RRDRV-FAR: number START raws on the reset tree's consumer taps (what the bind emits), not the clock tap census.
         # Injected taps_fn (tests) doubles as the consumer census when no ctaps_fn is given (no reset.local_taps_um there).
         cf = ctaps_fn or ((lambda raw, path: taps_fn(raw, path)) if taps_fn else None)
-        for tn, ch in repick_start_raws(new_raw, new_path, set(own_todo), far_um, cf).items():
+        for tn, ch in repick_start_raws(new_raw, new_path, repick_types, far_um, cf).items():
             rep.setdefault(tn, []).extend(ch)
     return rep
 

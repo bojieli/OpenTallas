@@ -416,6 +416,7 @@ def step_retap(braw, raw, base_path, plan_path, types, protect=None, *, base_tre
     def restore_landing_refs():
         for tn, keep in protect.items():
             _restore(_pt(raw)[tn], keep)
+        return protect.keys()
 
     base_trees = base_trees or {}
     kwargs = {"prepare_tree_fn": tree_factory} if parallel else {"tree_fn": tree_factory if base_trees else None}
