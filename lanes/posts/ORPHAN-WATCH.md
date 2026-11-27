@@ -80,3 +80,44 @@
   - intel1 pid 1413699 558 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
   - epyc2 pid 331708 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
   - epyc2 pid 337885 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
+- 2026-11-26 17:17 PST ORPHAN-WATCH 218 process(es) older than the age limit, ppid 1, lane silent > 12 h on the hub (REPORT ONLY, nothing killed):
+  - epyc2 pid 2888607 778 h lane tok-lec (last post never): bash -c until [ -f /srv/opentallas-scratch2/claude/tok-lec/eng/bound_r24/lec.json ] && [ -f /srv/opentallas-sc
+  - epyc2 pid 3125652 743 h lane qc-su-prog-l2-1026 (last post never): bash -c L=/srv/opentallas-scratch2/claude/qc-su-prog-l2-1026/kit_l2/route_l2.log; until grep -qE "Start 51st o
+  - intel1 pid 3793435 737 h lane path-s81-pd6-1026 (last post never): bash -c until [ -s /srv/opentallas-scratch2/claude/path-s81-pd6-1026/g0_pd6/g0_report.json ] && ! pgrep -f "ch
+  - intel1 pid 3569845 732 h lane s81-unblock-1027 (last post never): bash -c cd /srv/opentallas-scratch2/claude/s81-unblock-1027/geom21; tail -F -n0 grt_col_h10_r2__t1__cl1f5d6c2a
+  - epyc2 pid 994076 713 h lane die-hbm-4-probe* (last post never) [HBM/skyhum: parked, never touch]: bash -c until grep -q "KIT rc" /srv/opentallas-scratch2/claude/die-hbm-4-probe*/probe_*/../*.log 2>/dev/null |
+  - intel1 pid 1798299 713 h lane die-hbm-4-probe* (last post never) [HBM/skyhum: parked, never touch]: bash -c until grep -q "KIT rc" /srv/opentallas-scratch2/claude/die-hbm-4-probe*/probe_*/../*.log 2>/dev/null |
+  - intel1 pid 2633049 680 h lane die-kv-31-1029 (last post never): bash -c f=/srv/opentallas-scratch2/claude/die-kv-31-1029/src_phy/access/plan.log; until [ -f $f ]; do sleep 5;
+  - epyc2 pid 366192 666 h lane codex-head-kits-2249 (last post never): bash /srv/opentallas-scratch2/claude/codex-head-kits-2249/place_canon_e2_after_repo.sh hd_st_n4
+  - epyc2 pid 366193 666 h lane codex-head-kits-2249 (last post never): bash /srv/opentallas-scratch2/claude/codex-head-kits-2249/place_canon_e2_after_repo.sh hd_tile
+  - intel1 pid 125068 666 h lane die-qc-43 (last post never): bash -c D=/srv/opentallas-scratch2/claude/die-qc-43/btab; until [ $(pgrep -f "die-qc-43/btab/.*json" | wc -l) 
+  - intel1 pid 332817 655 h lane die-hbm-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/die-hbm-36/g2 && until grep -q "OT_DONE\|ERROR" base/part_q_b010/gr
+  - intel1 pid 2995645 629 h lane hbm-cores-kits-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c R=/srv/opentallas-scratch2/claude/hbm-cores-kits-36/query_k; until ls /run_k36mt.log /run_k36mtb.log >
+  - intel1 pid 3021629 629 h lane hbm-cores-kits-36 (last post never) [HBM/skyhum: parked, never touch]: bash -c E=/srv/opentallas-scratch2/claude/hbm-cores-kits-36/hcol_equiv; until grep -q "^rc=" $E/cmp_h1_d1.log;
+  - intel1 pid 1931935 627 h lane kit-wave-7 (last post never): bash -c until [ -s /srv/opentallas-scratch2/claude/kit-wave-7/pp_base.txt ] && ! pgrep -f "kit-wave-7-pp/.*pyt
+  - intel1 pid 1939223 627 h lane kit-wave-7 (last post never): bash -c until [ -s /srv/opentallas-scratch2/claude/kit-wave-7/pp_base.txt ]; do sleep 20; done; until ! pgrep 
+  - intel1 pid 347993 623 h lane die-s81-45 (last post never): bash -c D=/srv/opentallas-scratch2/claude/die-s81-45/ws3; until ! pgrep -f "delta_ws3_1031.py --variant" >/dev
+  - intel1 pid 554867 623 h lane die-s81-45 (last post never): bash -c E=/srv/opentallas-scratch2/claude/die-s81-45/etap; until ! pgrep -f "check.py physical/die_plan/s81/pl
+  - intel1 pid 697270 623 h lane die-s81-45 (last post never): bash -c D=/srv/opentallas-scratch2/claude/die-s81-45/ws3; until ! pgrep -f "delta_ws3_1031.py --variant" >/dev
+  - intel1 pid 851810 623 h lane die-s81-45 (last post never): bash -c D=/srv/opentallas-scratch2/claude/die-s81-45/ws3; until ! pgrep -f "delta_ws3_1031.py --variant" >/dev
+  - intel1 pid 992315 622 h lane die-s81-45 (last post never): bash -c D=/srv/opentallas-scratch2/claude/die-s81-45/ws3; until ! pgrep -f "delta_ws3_1031.py --variant" >/dev
+  - intel1 pid 2044365 621 h lane die-kv-59 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-59/phy && python3 - <<"EOF"
+  - intel1 pid 4166459 618 h lane kit-wave-11 (last post never): bash -c F=/srv/opentallas-scratch2/claude/kit-wave-11/fp; mkdir -p $F; touch $F/.keep; cp -a /srv/opentallas-s
+  - intel1 pid 2997584 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 2998929 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 3107168 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 3234139 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 3444787 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 3584117 613 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ] && [ -f geom_max/DON
+  - intel1 pid 3806311 612 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ]; do sleep 20; done; 
+  - intel1 pid 3989984 612 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ]; do sleep 20; done; 
+  - intel1 pid 4161583 612 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/DONE ]; do sleep 20; done; 
+  - intel1 pid 125677 612 h lane die-kv-60 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-kv-60/hroot3; until [ -f geom_count/geom.tsv ] && grep -q OT_GE
+  - intel2 pid 2348186 597 h lane die-head-48 (last post never): bash prd_post.sh
+  - intel1 pid 3080135 597 h lane tok-qk-2-hbmsrc-1101 (last post never) [HBM/skyhum: parked, never touch]: bash /srv/opentallas-scratch2/claude/tok-qk-2-hbmsrc-1101/source13/sample13.sh /srv/opentallas-scratch2/claude
+  - intel1 pid 3119320 597 h lane die-hbm-57 (last post never) [HBM/skyhum: parked, never touch]: bash -c cd /srv/opentallas-scratch2/claude/die-hbm-57/lat_fix; until ! pgrep -f lat_fix/lat_fix.py >/dev/null;
+  - intel2 pid 2581353 570 h lane die-s81-49 (last post never): bash -c until [ -f /srv/opentallas-scratch2/claude/die-s81-49/gen/src9ln/physical/die_plan/s81/cores/h2/ot_s81
+  - intel1 pid 769354 560 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/plan; until [ -s bind4/head.bind.log ] && [ -s bind4/bas
+  - intel1 pid 1413699 559 h lane die-s81-51 (last post never): bash -c until grep -q G2_DONE /srv/opentallas-scratch2/claude/die-s81-51/g2/die.log; do sleep 30; done; tail -
+  - epyc2 pid 331708 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; until grep -q GUNIT_GATE gu/new.txt 2>/dev/nu
+  - epyc2 pid 337885 558 h lane die-s81-51 (last post never): bash -c cd /srv/opentallas-scratch2/claude/die-s81-51/rfd/bench; s=""; while true; do for f in sel/new.txt sel
