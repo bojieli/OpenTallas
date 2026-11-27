@@ -135,3 +135,22 @@ def test_findings_warn_only(tmp_path):
     assert len(ln) == 1 and ln[0].startswith("WARN SEATMATCH t: 1 of 2") and "1 NEW" in ln[0] and "u_r8b_strap_a_f" in ln[0]
     plan["partition_types"]["t"]["relay_sites"].pop("u_pd5_x_fw_i_3.q")
     assert SM.findings(plan, tmp_path) == []
+
+
+def test_kit_lines_unknown_is_failing(tmp_path):
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "t_bound.sv").write_text(TEXT)
+    (tmp_path / "istations.tcl").write_text("rs_place_all {{u_leaf/u.q[0]} {1.0 2.0}}\n")
+    assert SM.judge({"u_leaf/u.q[0]": [1, 2]}, TEXT) == {"u_leaf/u.q[0]": "UNKNOWN"}
+    assert "UNKNOWN" in SM.FAILING and "UNKNOWN" not in SM.DEAD          # prune keeps DEAD only
+    out = SM.kit_lines(tmp_path)
+    assert out and "1 UNKNOWN key(s) not judged" in out[0]
+    (tmp_path / "istations.tcl").write_text("rs_place_all {{u_lpad_x_fw_i.q[0]} {1.0 2.0}}\n")
+    assert SM.kit_lines(tmp_path) == []                                 # clean control
+
+
+def test_child_module_resolves_unknown():
+    mods = {"child": "module child (input clk);\n  reg [3:0] b;\n  gc u_in (.clk(clk));\nendmodule\n", "gc": "module gc (input clk);\n  reg q;\nendmodule\n"}
+    t = "module top (input clk);\n  child u_c (.clk(clk));\n  hardmac u_h (.clk(clk));\nendmodule\n"
+    v = SM.judge({"u_c.b[0]": [1, 2], "u_c/u_in.q": [1, 2], "u_c.nope[0]": [1, 2], "u_h.x[0]": [1, 2]}, t, modules=mods)
+    assert v == {"u_c.b[0]": "OK", "u_c/u_in.q": "OK", "u_c.nope[0]": "UNKNOWN", "u_h.x[0]": "UNKNOWN"}      # unresolved / black box stays UNKNOWN (fails)

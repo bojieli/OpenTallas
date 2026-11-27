@@ -7,6 +7,9 @@ import kit_gen_lint as GL
 RTL = """module t_part (input wire clk);
   qkd_rlyi_258s u_pv_u_T1Q0_45_r0 (.clk(clk));
 endmodule
+module qkd_rlyi_258s (input wire clk);
+  reg [7:0] b;
+endmodule
 """
 
 
@@ -39,3 +42,15 @@ def test_u_y_relay_key_without_relay_fails(tmp_path):
     (tmp_path / "istations.tcl").write_text("rs_place_all {{u_y_xd_seq_g_fan_2_u_fan_rst_n_0_0.q} {1.0 2.0} {u_y_xd_astk_EN_g_phys_fault_u_fault_rst_n_0_0.q} {1.0 2.0}}\n")
     r = GL.lint(tmp_path, yosys=False)
     assert r["verdict"] == "FAIL" and any("SEAT-MISS 1 of 2" in i for i in r["issues"])
+
+
+def test_unknown_key_fails_the_kit(tmp_path):
+    # R3-GATEFAIL: an UNKNOWN key (first component an instance of another module: not judged) is no longer a pass; the clean control is test_all_seated_passes
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = top\nexport VERILOG_FILES = /work/top.v\n")
+    (tmp_path / "top.v").write_text("module top; endmodule\n")
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "t_bound.sv").write_text("module t_part (input wire clk);\n  other_mod u_leaf (.clk(clk));\n  qkd_rlyi_258s u_a (.clk(clk));\nendmodule\nmodule qkd_rlyi_258s (input wire clk);\n  reg [7:0] b;\nendmodule\n")
+    (tmp_path / "istations.tcl").write_text("rs_place_all {{u_a.b[0]} {1.0 2.0} {u_leaf.q[0]} {1.0 2.0}}\n")
+    r = GL.lint(tmp_path, yosys=False)
+    assert r["verdict"] == "FAIL" and r["checks"]["seat_miss"]["verdict"] == "FAIL"
+    assert any("1 UNKNOWN key(s) not judged" in i and "u_leaf.q[0]" in i for i in r["issues"])

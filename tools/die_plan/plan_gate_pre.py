@@ -180,8 +180,10 @@ GENDRY-1123 (COORD 17:25, FABLE flow review; HEAD E pin-move row cab67: every ga
   clock_landings.py:1808 "writer START raw reset rst_rl_334 has no registered wavefront driver"): every partition type whose
   plan entry differs from the --baseline-plan runs the kit generator dry (gen.py phys --types T --trial, tools of this PRE,
   --rtl-root TREE, --clock-landing SIDECAR or <plan dir>/source_sidecar.json) into a temp dir; rc != 0 is FAIL GENDRY with the
-  generator's error line.  $OT_PRE_GENDRY_TYPES=T1,T2 names the types (also without a baseline); at most $OT_PRE_GENDRY_MAX
-  (24) types, $OT_PRE_GENDRY_J (8) in parallel, $OT_PRE_GENDRY_TIMEOUT_S (1800) each; the rest are WARN GENDRY-UNCHECKED.
+  generator's error line.  $OT_PRE_GENDRY_TYPES=T1,T2 names the types (also without a baseline); EVERY such type is
+  generated (no cap: P-FALSE-GREEN R3-GATEFAIL 11-27, 3 only_items skipped over a cap of 24 and the gate exited 0), $OT_PRE_GENDRY_J in
+  parallel (default min(32, CPUs)), $OT_PRE_GENDRY_TIMEOUT_S (1800) each.  A type that was NOT generated for any reason (kit-RTL type
+  without a finished bind OUT, timeout) ends FAIL GENDRY-SKIPPED naming the types.
   No baseline and no list: not run.  The plan_gate_pre CLI runs it by default ($OT_PRE_GENDRY=0 or --skip GENDRY: off);
   library callers pass gendry=True.  Minutes.
   GENDRY-KITRTL-1123 (KV-ALLFIX A3e/A3d: 24/24 kv3_hg*/hgi*/hroot FAIL GENDRY "bus o_ectl_Q_N_eN is not bound to any leaf
@@ -2669,10 +2671,9 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     types = gendry_types(raw, base, env)
     if not types:
         return []
-    cap = int(env.get("OT_PRE_GENDRY_MAX") or 24)
-    jobs = max(1, int(env.get("OT_PRE_GENDRY_J") or 8))
+    jobs = max(1, int(env.get("OT_PRE_GENDRY_J") or min(32, os.cpu_count() or 8)))
     tmo = int(env.get("OT_PRE_GENDRY_TIMEOUT_S") or 1800)
-    run, rest = types[:cap], types[cap:]
+    run, skipped = list(types), []                       # no cap; every type that does not run is named in FAIL GENDRY-SKIPPED
     kitrtl = set(gendry_kitrtl_types(raw, run))      # GENDRY-KITRTL-1123
     sc, sc_how = gendry_sidecar(tree, plan, sidecar, asbuilt, raw)                 # the sidecar gendry_cmd passes (GENDRY-STOPITER-1124)
     sidecar = sc
@@ -2693,6 +2694,7 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
         for tn in sorted(kitrtl):
             out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind, a pad no contents[].bind names, or the landing observer is not a "
                        f"plan leaf: the kit builds it from the bound RTL via bind.py kit-rtl); not generated dry without a finished error-free bind OUT (--elab-dir with bind_report.json)")
+        skipped += sorted(kitrtl)
         run = [tn for tn in run if tn not in kitrtl]
 
     def _run(cmd, cwd, timeout):
@@ -2730,13 +2732,16 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
         err = next((x for x in reversed(lines) if "ERROR" in x or "Error" in x), lines[-1] if lines else "")
         unm = next((x for x in lines if "LANDING-SOURCE-UNMODELED" in x), None)
         if rc is None:
+            skipped.append(tn)
             out.append(f"WARN GENDRY-UNCHECKED {tn}: kit generator {err}")
         elif unm:                                        # GENDRY-STOPITER-1124: a modelling gap of the dry run, report only
             out.append(f"WARN GENDRY-UNMODELED {tn}: {unm.strip()[unm.strip().find('LANDING-SOURCE-UNMODELED'):][:400]}")
         else:
             out.append(f"FAIL GENDRY {tn}: kit generator rc={rc}: {err.strip()[:400]}")
-    if rest:
-        out.append(f"WARN GENDRY-UNCHECKED {len(rest)} changed type(s) over the cap {cap} ($OT_PRE_GENDRY_MAX): {', '.join(rest[:12])}")
+    if skipped:
+        sk = sorted(set(skipped))
+        out.append(f"FAIL GENDRY-SKIPPED {len(sk)} changed type(s) were NOT generated, so nothing is proven for them: {', '.join(sk)} "
+                   f"(a kit-RTL type needs --elab-dir with a finished bind OUT; a timeout needs $OT_PRE_GENDRY_TIMEOUT_S or a rerun)")
     nk = len(kitrtl) if not bind_out else 0
     out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry ({len(kitrtl) - nk} kit-RTL from the bound RTL), "
                f"{nk} kit-RTL classified not generated, {sum(1 for x in out if x.startswith('FAIL'))} failed; "

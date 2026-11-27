@@ -33,6 +33,9 @@ PARAM = re.compile(r"\.\s*(\w+)\s*\(\s*(\d+)\s*\)")
 NOT_MOD = {"module", "assign", "wire", "reg", "input", "output", "function", "if", "for", "generate", "begin", "case", "always",
            "initial", "localparam", "parameter", "logic", "else", "end", "genvar", "integer"}
 DEAD = ("DEAD-INST", "DEAD-REG", "CONFLICT")
+# P-FALSE-GREEN / C-RELAY-SEAT-KEYMISS (R3-GATEFAIL 11-27): a key nobody could judge is not a pass.  The KIT read (kit_lines, consumed by
+# the blocking kit_gen_lint seat_miss check) fails on DEAD and on UNKNOWN; `prune` still drops DEAD rows only.
+FAILING = DEAD + ("UNKNOWN",)
 # names kit RTL passes / the bind derive from a bound name: the stem decides nothing about the register
 DERIVED = re.compile(r"(__\w+|_u_r\d+_\d+)$")
 KITPASS = re.compile(r"^(u_y_|u_pd\d+_ram_|u_rg\d|u_ring\b)")
@@ -88,7 +91,48 @@ def reg_ok(mod, par, rest):
     return False
 
 
-def judge(relay_sites, text, ist_buses=None):
+MODULE = re.compile(r"(?ms)^\s*module\s+(\w+)\b(.*?)^\s*endmodule\b")
+_MODCACHE = {}
+
+
+def module_index(rtl):
+    """{module: body} of every *.sv / *.v of a bound-RTL dir (cached per dir), for descending into child modules"""
+    key = str(rtl)
+    if key not in _MODCACHE:
+        idx = {}
+        for f in sorted(Path(rtl).glob("*.sv")) + sorted(Path(rtl).glob("*.v")):
+            try:
+                for m in MODULE.finditer(f.read_text(errors="replace")):
+                    idx.setdefault(m.group(1), m.group(2))
+            except OSError:
+                pass
+        _MODCACHE[key] = idx
+    return _MODCACHE[key]
+
+
+def child_ok(mod, rest, modules, depth=0):
+    """True when path `rest` (registers / instances / generate labels, '.' or '/' separated) exists inside defined module `mod`; None when it can not be
+    shown (undefined module = hard macro or black box, a name not found, depth).  Never False: an unresolved key stays UNKNOWN, which fails."""
+    body = modules.get(mod)
+    if body is None or depth > 8:
+        return None
+    parts = re.split(r"[./]", rest, maxsplit=1)
+    c = re.sub(r"\[[^\]]*\]", "", parts[0])
+    nxt = parts[1] if len(parts) > 1 else ""
+    inst = bound_instances(body)
+    if c in inst:
+        m2, par = inst[c]
+        if not nxt:
+            return True
+        if m2 in PRIM:
+            return True if reg_ok(m2, par, nxt.replace("/", ".")) else None
+        return child_ok(m2, nxt, modules, depth + 1)
+    if c in set(re.findall(r"[A-Za-z_]\w*", body)):
+        return True if not nxt else child_ok(mod, nxt, modules, depth + 1)       # a register / net, or a generate label scoping the rest
+    return None
+
+
+def judge(relay_sites, text, ist_buses=None, modules=None):
     """{key: verdict} of one type.  text = the bound module file; ist_buses {bus: stations} = the plan stations the kit adds later (None: the
     text is the kit's own RTL, which has them)"""
     inst = bound_instances(text)
@@ -111,7 +155,8 @@ def judge(relay_sites, text, ist_buses=None):
         if base in inst:
             mod, par = inst[base]
             if not rest or mod not in PRIM:
-                out[k] = "OK" if not rest else "UNKNOWN"
+                # an instance of another module: read that module's definition when the RTL dir has it (C-RELAY-SEAT-KEYMISS 11-27, UNKNOWN fails)
+                out[k] = "OK" if not rest else ("OK" if modules and child_ok(mod, rest, modules) else "UNKNOWN")
                 continue
             ok = reg_ok(mod, par, rest.replace("/", "."))
             out[k] = "UNKNOWN" if ok is None else ("OK-CNT" if ok == "CNT" else ("OK" if ok else "DEAD-REG"))
@@ -190,7 +235,7 @@ def kit_scan(kit):
     if not rs or f is None:
         return None
     text = f.read_text(errors="replace")
-    v = judge(rs, text)
+    v = judge(rs, text, modules=module_index(kit / "rtl"))
     dead = [k for k, x in v.items() if x in ("DEAD-INST", "DEAD-REG")]
     return {"n": len(rs), "counts": dict(Counter(v.values())), "dead": dict(group(dead)),
             "conflict": dict(group([k for k, x in v.items() if x == "CONFLICT"])), "hint": hint(dead, text), "keys": v}
@@ -199,12 +244,16 @@ def kit_scan(kit):
 def kit_lines(kit):
     """loud lines of a kit read: [] when every seat key has a register"""
     r = kit_scan(kit)
-    if not r or not any(x in DEAD for x in r["keys"].values()):
+    if not r or not any(x in FAILING for x in r["keys"].values()):
         return []
     n = sum(x in DEAD for x in r["keys"].values())
+    unk = sorted(k for k, x in r["keys"].items() if x == "UNKNOWN")
     grp = Counter({**r["dead"], **r["conflict"]}).most_common(3)
-    return [f"SEAT-MISS WARN {n} of {r['n']} plan relay_sites keys seat nothing in this kit's RTL ("
-            + ", ".join(f"{g} x{c}" for g, c in grp) + ")" + ("; moved to " + ", ".join(sorted({b for x in r["hint"].values() for b in x})[:4]) if r["hint"] else "")]
+    txt = (f"SEAT-MISS WARN {n} of {r['n']} plan relay_sites keys seat nothing in this kit's RTL ("
+           + ", ".join(f"{g} x{c}" for g, c in grp) + ")" + ("; moved to " + ", ".join(sorted({b for x in r["hint"].values() for b in x})[:4]) if r["hint"] else ""))
+    if unk:      # UNKNOWN is a failing verdict (11-27): the key could not be judged against the kit's own RTL
+        txt += f"; {len(unk)} UNKNOWN key(s) not judged (UNKNOWN fails; first: {', '.join(unk[:3])})"
+    return [txt]
 
 
 def scan(plan_raw, rtl, types=None):
@@ -218,7 +267,7 @@ def scan(plan_raw, rtl, types=None):
         if not rs or f is None:
             continue
         text = f.read_text(errors="replace")
-        v = judge(rs, text, ist_buses(t))
+        v = judge(rs, text, ist_buses(t), module_index(rtl))
         dead = [k for k, x in v.items() if x in ("DEAD-INST", "DEAD-REG")]
         out[tn] = {"n": len(rs), "counts": dict(Counter(v.values())), "dead": dict(group(dead)),
                    "conflict": dict(group([k for k, x in v.items() if x == "CONFLICT"])), "hint": hint(dead, text), "keys": v}
@@ -231,6 +280,10 @@ def findings(plan_raw, rtl, baseline_raw=None, own_bind=True, max_list=3):
     lines = []
     base_t = (baseline_raw or {}).get("partition_types") or {}
     for tn, r in scan(plan_raw, rtl).items():
+        unk = [k for k, x in r["keys"].items() if x == "UNKNOWN"]
+        if unk:      # UNKNOWN is a failing verdict at the KIT read (kit_lines); on the bind RTL, which precedes the kit relay passes, it is listed, never silent
+            lines.append(f"WARN SEATMATCH-UNKNOWN {tn}: {len(unk)} of {r['n']} relay_sites keys not judged on the bound RTL (first: {unk[0]}); "
+                         f"the kit read (kit_gen_lint seat_miss) FAILS on any key still UNKNOWN in the kit's own RTL")
         bad = {k for k, x in r["keys"].items() if x in DEAD}
         if not bad:
             continue

@@ -87,7 +87,7 @@ def test_promote_crashes_unchecked_and_not_checked():
 
 
 def test_promote_crashes_keeps_declared_coverage_limits_as_warn():
-    lines = ["WARN GENDRY-UNCHECKED 30 changed type(s) over the cap 24 ($OT_PRE_GENDRY_MAX): a, b",
+    lines = ["WARN GENDRY-UNCHECKED a: kit generator timeout after 5 s",
              "WARN ADV-HOLDCELL-BUDGET not checked: no hold cache (adv_harvest_hold.py OUT.json)",
              "WARN ADV-TAP-LOAD not checked: NO TAP DATA: 0 types had a kit netlist",
              "WARN ADV-RESET-NAME summary: 0 of 2 referencing type(s) checked, 0 with stale names, 2 not checked (budget -1 s)"]

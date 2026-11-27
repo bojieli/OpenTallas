@@ -40,13 +40,32 @@ def test_crash_is_fail_and_pass_is_quiet(tmp_path):
     assert len(fails) == 1 and "b:" in fails[0] and "rst_rl_334" in fails[0]
 
 
-def test_sidecar_and_cap(tmp_path):
+def test_sidecar_and_no_cap(tmp_path):
     pn, pb = plans(tmp_path)
     (tmp_path / "source_sidecar.json").write_text("{}")
     cmds = []
     out = P.check_gendry(tmp_path, pn, pb, env={"OT_PRE_GENDRY_MAX": "1"}, runner=lambda c, w, t: (cmds.append(c), (0, ""))[1])
-    assert len(cmds) == 1 and "--clock-landing" in cmds[0]
-    assert any(x.startswith("WARN GENDRY-UNCHECKED 1 changed") for x in out)
+    assert len(cmds) == 2 and all("--clock-landing" in c for c in cmds)       # the old cap variable is gone: every changed type runs
+    assert not any("GENDRY-UNCHECKED" in x or x.startswith("FAIL") for x in out)
+
+
+def test_no_cap_30_types_all_generated_and_clean_control(tmp_path):
+    """R3-GATEFAIL: 30 only_items (> the old cap 24) are all generated; a clean run has no FAIL"""
+    raw = {"partition_types": {f"t{i}": {"buses": [{"name": "b", "dir": "in", "width": 1, "leaf": "u.b"}]} for i in range(30)}}
+    pn = tmp_path / "plan.json"
+    pn.write_text(json.dumps(raw))
+    seen = []
+    out = P.check_gendry(tmp_path, pn, None, env={"OT_PRE_GENDRY_TYPES": ",".join(f"t{i}" for i in range(30)), "OT_PRE_GENDRY_J": "4"},
+                         runner=lambda c, w, t: (seen.append(c), (0, ""))[1])
+    assert len(seen) == 30
+    assert not any(x.startswith("FAIL") or "UNCHECKED" in x for x in out)
+
+
+def test_timeout_is_fail_skipped_naming_the_type(tmp_path):
+    pn, pb = plans(tmp_path)
+    out = P.check_gendry(tmp_path, pn, pb, env={}, runner=lambda c, w, t: (None, "timeout after 1 s"))
+    sk = [x for x in out if x.startswith("FAIL GENDRY-SKIPPED")]
+    assert len(sk) == 1 and "b, c" in sk[0]
 
 
 def test_no_baseline_not_run(tmp_path):
@@ -82,7 +101,7 @@ def test_kitrtl_without_bind_out_is_warn_not_fail_and_normal_types_still_run(tmp
         return (1, "gen phys: ERROR type n: bus o_x is not bound to any leaf port (open output)\n") if tn == "n" else (0, "")
     out = P.check_gendry(tmp_path, pn, pb, env={}, runner=runner)
     assert sorted(seen) == ["m", "n", "nb"]                      # the kit-RTL type is not generated from the plan wrapper
-    assert [x.split(":")[0] for x in out if x.startswith("FAIL")] == ["FAIL GENDRY n"]   # a normal type still FAILs
+    assert [x.split(":")[0] for x in out if x.startswith("FAIL GENDRY n")] == ["FAIL GENDRY n"]   # a normal type still FAILs
     assert any(x.startswith("WARN GENDRY-KITRTL k:") for x in out)
     assert not any("GENDRY k" in x for x in out if x.startswith("FAIL"))
 
@@ -135,7 +154,7 @@ def test_failed_bind_out_is_not_used(tmp_path):
     assert P.gendry_bind_out(bo) is None and P.gendry_bind_out(None) is None
     out = P.check_gendry(tmp_path, pn, pb, env={}, runner=lambda c, w, t: (0, "") if "kit-rtl" not in c else (_ for _ in ()).throw(AssertionError),
                          elab_dir=bo)
-    assert any(x.startswith("WARN GENDRY-KITRTL k:") for x in out) and not any(x.startswith("FAIL") for x in out)
+    assert any(x.startswith("WARN GENDRY-KITRTL k:") for x in out) and [x.split()[1] for x in out if x.startswith("FAIL")] == ["GENDRY-SKIPPED"]
 
 
 def test_observer_not_a_plan_leaf_goes_through_kit_rtl(tmp_path):
@@ -153,7 +172,7 @@ def test_observer_not_a_plan_leaf_goes_through_kit_rtl(tmp_path):
     assert len(cmds) == 2 and "kit-rtl" in cmds[0] and "--kit-rtl" in cmds[1]
     cmds.clear()                                                  # no finished bind: classified, not generated, never FAIL
     out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)
-    assert not cmds and any(x.startswith("WARN GENDRY-KITRTL q") for x in out) and not any(x.startswith("FAIL") for x in out)
+    assert not cmds and any(x.startswith("WARN GENDRY-KITRTL q") for x in out) and [x.split()[1] for x in out if x.startswith("FAIL")] == ["GENDRY-SKIPPED"]
     raw["partition_types"]["g"]["contents"] = [{"inst": "u", "module": "face"}]     # plan leaf: native path as before
     pn.write_text(json.dumps(raw))
     P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
@@ -201,7 +220,7 @@ def test_pad_bound_only_in_bound_rtl_goes_through_kit_rtl(tmp_path):
     cmds = []
     run = lambda c, w, t: (cmds.append(c), (0, ""))[1]  # noqa: E731
     out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)        # no bind OUT: WARN, never FAIL, padok still runs
-    assert any(x.startswith("WARN GENDRY-KITRTL glue:") for x in out) and not any(x.startswith("FAIL") for x in out)
+    assert any(x.startswith("WARN GENDRY-KITRTL glue:") for x in out) and [x.split()[1] for x in out if x.startswith("FAIL")] == ["GENDRY-SKIPPED"]
     assert [c[c.index("--types") + 1] for c in cmds] == ["padok"] and "--kit-rtl" not in cmds[0]
     el.mkdir()
     (el / "bind_report.json").write_text(json.dumps({"errors": [], "n_errors": 0}))
