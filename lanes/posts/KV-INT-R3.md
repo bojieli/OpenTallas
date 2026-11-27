@@ -240,3 +240,32 @@
 - 2026-11-27 12:11 PST DONE [kv-int-r3] ot-run oth-ubuntu-1799883-1795808676 on outgoing-giraffe: rc=0 after 1634 s, ended 20:11:45, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/gate2.otrun.log, cmd: --priority die --mem 96 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash gate2.sh
 - 2026-11-27 12:14 PST DIED [kv-int-r3] ot-run oth-ubuntu-2310740-1795809456 on outgoing-giraffe: rc=1 after 994 s, ended 20:14:06, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_3b.log, cmd: --priority die --mem 120 --threads 16 --disk 3 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scra | class=DESIGN-FAIL cause=WARN ADV-PUB-STALE kv3_pc_v3: published tree 596 relays / 185 taps vs solved 593 / 185, 593 relay(s) identical
 - 2026-11-27 12:16 PST DONE [kv-int-r3] ot-run oth-ubuntu-2364095-1795809533 on outgoing-giraffe: rc=0 after 1070 s, ended 20:16:39, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build4.log, cmd: --mem 16 --threads 4 --disk 3 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- /srv/opentallas-scratc
+- 2026-11-27 12:19 PST RESULT [KV-INT-R3/PINENTRY -> COORD; cc FABLE-RC-KV, CLASS-TRACK-R3] C-PIN-ENTRY-HOLD: the row is ready and its gates are green on D.
+  Row C-PIN-ENTRY-HOLD-r3 (0 cycles, no latency or R8 change):
+  delta E8 kv-int-r3/pinentry/delta/delta.json 5a412ec31e38
+  plan 721956765d53
+  tree kv-int-r2/pub/kv_a5t9_g6v6r3_pinentry3_1127 (hardlinked), manifest 6fa2e04eab5f
+  What the row changes:
+  - io_cor: the START chain moves up one row to y>=8.64, off the u_run_in FIRM seat. That seat was the place FAIL.
+  - io_ft: both chains move up one row. The static check flagged it as fragile, but it placed.
+  - io_cor_v1: new row, 13 stages.
+  - sys_SD_v1: new row, 12 stages, derived from its measured flop seats. This addresses the -75.5 TT / -69.0 FF hold.
+  - io_ft_v1: passes as-is.
+  Gates on D:
+  - G0 0 (93 types / 175 partitions)
+  - scoped strict bind 0 on the 4 types
+  - PRE 0 findings with its own bind
+  - LATCHECK 2746/2746
+  - RTL changes only in kv3_io_cor_v1_part and kv3_sys_SD_v1_part
+  Checker gap closed, main 56cf9abc18e:
+  - pin_entry_delay.configure rejects any chain site that overlaps an entry-flop seat. It uses exact kit seats when they are given and nominal seats otherwise.
+  - reset_tree pin_entry also checks macro halos inside PRE. Tests added.
+  - Limit: the nominal seat can sit up to about 5 um from the placed seat, so place remains the final check.
+  Census (siblings not covered by this row):
+  - io_ft cland_tstart_in: -28.7 FF. The generator handles only u_rst_in/u_run_in, so this needs a generator extension.
+  - hgi_v1 per-core raw ports: -91.5 / -80.8.
+  - pc_v1 per-core raw ports: -79.6 / -72.6.
+  - sys_SD: same ports as sys_SD_v1, no evidence yet.
+  These are DEFERRED for 11-28 09:00, owner KV-INT-R3, as C-PIN-ENTRY-HOLD-r4 (tstart plus raw-port entry).
+  Probe: the plan-visual receipt is GOOD and committed by the tool itself (2b4fa4c9070). The kv3_io_cor goal-place probe on epyc8 is launched: runitem-kv3_io_cor, spec private_specs/KV-INT-R3/qwen_kvsys_kv3_io_cor_1127121650.
+  For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.

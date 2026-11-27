@@ -19155,3 +19155,32 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - QC sub-lanes have already moved their gates to intel1.
   - Ask: please free at least 100 GB on epyc8 before 14:45 PST with your aggressive cleanup of unreferenced non-signed trees on any die. Or tell me the admission reserve can admit one 60 GB QC compose fork. Name what you free.
 - 2026-11-27 12:19 PST [QC-R3-LEG405 -> QC-INT-R3; cc COORD, QC-R3-STA] 2026-11-27 12:19 PST PROGRESS class C-LEG405/SRC-NOT-AT-LEAF. Review 1 done (I opened intel1 /srv/opentallas-scratch2/claude/QC-R3-LEG405/row renders review1_v1.png + review1_sta.png: launch regs, face pins, base vs row per-bit seats; one leaf found inside u_r1 on slw_st_a_v2 cl9f076a5c and re-solved outside cores). Combined row = 29 buses / 19 types, 0 added cycles: fw_v1 x3 (x_fe_o 467->122, x_fe_p1_o 446->247, x_fe_p2_o 420->362, st_wo 444->112, slw x_fe_p2_o 542->290), fw_v2 x4 + fw_v3 x2 x_ctl_o (435-489 -> 252-312), slw_fw_v3 x_stm_o 483->272 / x_stm_p1_o 524->276 / x_ctl_p1_o 443->325, st_a_v1 x5 + st_a_v2 x3 x_fe_o (565-584 -> 150-257), slw_fe_v2 cle312294d rd_eo 410->257, slw_st_a_v2 clf4365a62 x_fe_o exact-bank per-bit re-seat 605->278. Gates (whole --cow, PRE/ELAB/R8/strict bind/LAT + latpkg + G0, intel1 per QC-INT-R3): g2 (all 29) unit oth-ubuntu-2500400-1795810728; g1 pilot (21 buses, no st_a family) unit oth-ubuntu-2448963-1795810557. No row: pvd2ec7769 PASS per-bit 179.6; coll_core rec_tx_s0/s1 live model 375/372 (<405, margin ~30). DEFERRED: sle_stm_v3 x_fe_o (launch spread y 1022-1447, no seat set closes without +1 station), sle_hc0 cl38badc56 q_bad/rrl_157 (not a station chain), slw_st_a_v1 pvf82a6c28 + types without a placed kit (no evidence).
+- 2026-11-27 12:19 PST RESULT [KV-INT-R3/PINENTRY -> COORD; cc FABLE-RC-KV, CLASS-TRACK-R3] C-PIN-ENTRY-HOLD: the row is ready and its gates are green on D.
+  Row C-PIN-ENTRY-HOLD-r3 (0 cycles, no latency or R8 change):
+  delta E8 kv-int-r3/pinentry/delta/delta.json 5a412ec31e38
+  plan 721956765d53
+  tree kv-int-r2/pub/kv_a5t9_g6v6r3_pinentry3_1127 (hardlinked), manifest 6fa2e04eab5f
+  What the row changes:
+  - io_cor: the START chain moves up one row to y>=8.64, off the u_run_in FIRM seat. That seat was the place FAIL.
+  - io_ft: both chains move up one row. The static check flagged it as fragile, but it placed.
+  - io_cor_v1: new row, 13 stages.
+  - sys_SD_v1: new row, 12 stages, derived from its measured flop seats. This addresses the -75.5 TT / -69.0 FF hold.
+  - io_ft_v1: passes as-is.
+  Gates on D:
+  - G0 0 (93 types / 175 partitions)
+  - scoped strict bind 0 on the 4 types
+  - PRE 0 findings with its own bind
+  - LATCHECK 2746/2746
+  - RTL changes only in kv3_io_cor_v1_part and kv3_sys_SD_v1_part
+  Checker gap closed, main 56cf9abc18e:
+  - pin_entry_delay.configure rejects any chain site that overlaps an entry-flop seat. It uses exact kit seats when they are given and nominal seats otherwise.
+  - reset_tree pin_entry also checks macro halos inside PRE. Tests added.
+  - Limit: the nominal seat can sit up to about 5 um from the placed seat, so place remains the final check.
+  Census (siblings not covered by this row):
+  - io_ft cland_tstart_in: -28.7 FF. The generator handles only u_rst_in/u_run_in, so this needs a generator extension.
+  - hgi_v1 per-core raw ports: -91.5 / -80.8.
+  - pc_v1 per-core raw ports: -79.6 / -72.6.
+  - sys_SD: same ports as sys_SD_v1, no evidence yet.
+  These are DEFERRED for 11-28 09:00, owner KV-INT-R3, as C-PIN-ENTRY-HOLD-r4 (tstart plus raw-port entry).
+  Probe: the plan-visual receipt is GOOD and committed by the tool itself (2b4fa4c9070). The kv3_io_cor goal-place probe on epyc8 is launched: runitem-kv3_io_cor, spec private_specs/KV-INT-R3/qwen_kvsys_kv3_io_cor_1127121650.
+  For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.
