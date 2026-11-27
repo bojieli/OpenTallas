@@ -152,3 +152,4 @@
   Live D is unchanged.
 - 2026-11-27 11:29 PST DONE [kv-int-r3] ot-run oth-ubuntu-681642-1795807036 on outgoing-giraffe: rc=0 after 729 s, ended 19:29:20, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/gate.otrun.log, cmd: --priority die --mem 96 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash gate.sh
 - 2026-11-27 11:30 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-604481 on outgoing-giraffe: rc=1 after 906 s, ended 19:30:28, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push_dry.log, cmd: ot-push-main --dry-run | class=NO-LOG-RC1 cause=rc 1 after 906 s, no log
+- 2026-11-27 11:30 PST DONE [kv-int-r3] ot-push-main otpush-outgoing-giraffe-1217505 on outgoing-giraffe: rc=0 after 61 s, ended 19:30:54, log /srv/opentallas-scratch2/claude/kv-int-r3/push3.log, cmd: ot-push-main 
