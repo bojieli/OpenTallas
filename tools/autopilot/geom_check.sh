@@ -98,6 +98,10 @@ fi
 # KV-PC-DELTA-1115: the nearest-tap split in the metric applies the kit's own tap cap / reach / macro rule, as clock_taps.tcl does
 TK=(); v=$(kv OT_TAP_MAX_SINKS); [ -n "$v" ] && TK+=(--tap-max-sinks "$v"); v=$(kv OT_TAP_PITCH_UM); [ -n "$v" ] && TK+=(--tap-pitch-um "$v")
 v=$(kv OT_TAP_SPILL_UM); [ -n "$v" ] && TK+=(--tap-spill-um "$v"); [ "$(kv OT_TAP_SKIP_MACRO)" = 1 ] && TK+=(--tap-skip-macro)
+# REPORT-ONLY fill_corridor beside the raw fill (COORD 2026-11-27, C-SPARSE-OUTLINE): only when the kit carries the plan type record
+if [ -f "$KIT/corridor_type.json" ] && [ -f "$TOOLS/geom_corridor.py" ]; then
+  GA+=(--corridor-type-json "$KIT/corridor_type.json")
+fi
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${TK[@]}" "${RA[@]}"
 vrc=$?
 # GEOM-ADVISORY-RC-1122 (COORD: KV-HUB-R6 hub_Ei unit oth-ubuntu-1616143-1795359133 exited 1 on an advisory AUTO-GEOM FAIL line while its record was

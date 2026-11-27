@@ -266,6 +266,26 @@ def area_metrics(D, bins=80):
                 macro_list=sorted([c[1], round(c[2] - X0, 3), round(c[3] - Y0, 3)] for c in macros))
 
 
+def corridor_fill_metric(D, m, plan_type):
+    """REPORT-ONLY (COORD 2026-11-27, C-SPARSE-OUTLINE): fill inside the declared landing/routing corridors of a pin-hull-bound,
+    macro-free collector type, next to the raw fill_of_free.  geom_corridor.py holds the definition; any error is recorded
+    (never raised) and no rule or verdict reads this value."""
+    try:
+        spec = importlib.util.spec_from_file_location("geom_corridor", Path(__file__).with_name("geom_corridor.py"))
+        gc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gc)
+        X0, Y0, X1, Y1 = D.die
+        cells = [(c[2] - X0, c[3] - Y0, c[4] - X0, c[5] - Y0) for c in D.cells.values() if c[0] in "SBKL"]
+        pins = [(p["x"] - X0, p["y"] - Y0) for p in D.pins if p["sig"] not in ("POWER", "GROUND")]
+        res = gc.fill_corridor(plan_type, cells, pins, outline=[X1 - X0, Y1 - Y0], macros=m.get("macros", 0),
+                               raw_fill=m.get("fill_of_free"))
+        res["detail"] = gc.detail(res)
+        return res
+    except Exception as e:  # report-only: a malformed plan record must never touch the verdict
+        return dict(schema="opentallas.fill_corridor.v1", fill_corridor=None, eligible=False, raw_fill=m.get("fill_of_free"),
+                    reasons=[f"error: {type(e).__name__}: {e}"], detail=f"fill_corridor error {type(e).__name__}: {e}")
+
+
 def pin_metrics(D, strap_re):
     X0, Y0, X1, Y1 = D.die
     W, H = X1 - X0, Y1 - Y0
@@ -1538,6 +1558,10 @@ def judge(m, template=None, outline=None, all_kits=False):
     else:
         lim("fill", "fill_of_free", FILL_LO, fsrc, higher_bad=False)
     lim("fill_hi", "fill_of_free", FILL_HI, fsrc)
+    if m.get("fill_corridor"):
+        # REPORT-ONLY beside the raw fill (COORD 2026-11-27 ruling 7): INFO never changes a verdict; the fill gate above is unchanged
+        add("fill_corridor", "INFO", m["fill_corridor"].get("fill_corridor"), "report-only (raw fill gate unchanged)",
+            "COORD RULING 2026-11-27 09:25 PST item 7 (C-SPARSE-OUTLINE); geom_corridor.py", m["fill_corridor"].get("detail", ""))
     if (m.get("empty_area") or 0) > EMPTY_MAX and m.get("macro_area_pct", 0) >= FILL_MACRO_DOMINATED:
         add("empty", "INFO", m["empty_area"], f"<={EMPTY_MAX}", "layout_review.py EMPTY_FLAG (bins < 5 %)",
             f"macro-dominated ({m['macro_area_pct']} % macro area), judged by fill/channel demand")
@@ -1745,10 +1769,13 @@ def stage_of_odb(name, clock_cells=0):
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None, spare_out=None, tap_kit=None):
+            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None, spare_out=None, tap_kit=None,
+            corridor_type=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
+    if corridor_type:
+        m["fill_corridor"] = corridor_fill_metric(D, m, corridor_type)
     m.update(pin_metrics(D, sr))
     ck = clock_metrics(D, **(tap_kit or {}))
     infra_pins = frozenset()
@@ -1807,6 +1834,20 @@ def verdict_line(verdict, rules, title=""):
             + " ".join(parts))
 
 
+def load_corridor_type(a):
+    """the plan type record for the report-only fill_corridor, or None; an unreadable file is reported, never fatal"""
+    if not (a.corridor_type_json or (a.corridor_plan and a.corridor_type)):
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("geom_corridor", Path(__file__).with_name("geom_corridor.py"))
+        gc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gc)
+        return gc.load_type(a.corridor_plan, a.corridor_type, a.corridor_type_json)
+    except Exception as e:
+        print(f"AP_AUTO_GEOM_NOTE fill_corridor skipped: {type(e).__name__}: {e}", file=sys.stderr)
+        return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("dump")
@@ -1833,12 +1874,16 @@ def main(argv=None):
     ap.add_argument("--tap-spill-um", type=float, default=None, help="kit OT_TAP_SPILL_UM (second cap pass reach)")
     ap.add_argument("--tap-skip-macro", action="store_true", help="kit OT_TAP_SKIP_MACRO=1: no grid tap over a macro")
     ap.add_argument("--spare-out", help="kit spare_out.json (opentallas.kit_spare_out.v1): constant-tied spare output bits, exempt from pins_unregistered")
+    ap.add_argument("--corridor-type-json", help="REPORT-ONLY: plan partition-type record (json) -> fill_corridor beside the raw fill")
+    ap.add_argument("--corridor-plan", help="REPORT-ONLY: plan json (with --corridor-type NAME) instead of --corridor-type-json")
+    ap.add_argument("--corridor-type", help="partition type name inside --corridor-plan")
     ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
     ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
                 a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed, a.spare_out,
-                tap_kit=dict(tap_cap=a.tap_max_sinks, tap_pitch_um=a.tap_pitch_um, tap_spill_um=a.tap_spill_um, tap_skip_macro=a.tap_skip_macro))
+                tap_kit=dict(tap_cap=a.tap_max_sinks, tap_pitch_um=a.tap_pitch_um, tap_spill_um=a.tap_spill_um, tap_skip_macro=a.tap_skip_macro),
+                corridor_type=load_corridor_type(a))
     if a.grt_deferred:
         m.update(grt_deferred=True, grt_note="GRT deferred until the exact placement image is reviewed")
     tmpl = json.load(open(a.template)) if a.template else None
