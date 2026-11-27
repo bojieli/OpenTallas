@@ -15,6 +15,69 @@ def _tcl_quote(s):
 def safe(s):return re.sub(r'\W','_',s)
 
 
+def _native_stage_pattern(prefix, mode):
+    return '^' + prefix + '$' if mode == 'cell' else f'(^|[/.]){prefix}[/.]'
+
+
+# The plan emits exact names and large unions of literal suffixes.
+# Use dictionary lookups only for these forms; all other valid selectors
+# run the same Tcl regexp as placement.
+_NATIVE_NAME_LITERAL = r"(?:[A-Za-z0-9_/:-]|\\[.\\\[\]$])+"
+_NATIVE_ENUMERATION = re.compile(
+    r"(" + _NATIVE_NAME_LITERAL + r")\(\?:(" + _NATIVE_NAME_LITERAL +
+    r"(?:\|" + _NATIVE_NAME_LITERAL + r")*)\)(?:(" + _NATIVE_NAME_LITERAL + r"))?"
+)
+
+
+def _native_exact_names(prefix):
+    enumeration = _NATIVE_ENUMERATION.fullmatch(prefix)
+    if enumeration:
+        stem, choices, tail = enumeration.groups()
+        patterns = (stem + choice + (tail or '') for choice in choices.split('|'))
+    elif re.fullmatch(_NATIVE_NAME_LITERAL, prefix):
+        patterns = (prefix,)
+    else:
+        return ''
+    return ' '.join('{' + re.sub(r'\\(.)', r'\1', name) + '}' for name in patterns)
+
+
+_NATIVE_REGEXP_TOKEN = re.compile(r"\\.|\[[A-Za-z0-9_/.-]+\]|[()[\]|]")
+
+
+def _native_cell_stem(prefix):
+    """Find a required literal stem for the common grouped cell regexes."""
+    start = re.match(_NATIVE_NAME_LITERAL, prefix)
+    if not start or prefix[start.end():start.end() + 1] not in ('(', '['):
+        return ''
+    depth = 0
+    for match in _NATIVE_REGEXP_TOKEN.finditer(prefix, start.end()):
+        token = match[0]
+        if token == '(':
+            depth += 1
+        elif token == ')':
+            depth -= 1
+        elif token in ('[', ']') or (token == '|' and depth == 0):
+            return ''
+    return '^' + start[0] if depth == 0 else ''
+
+
+def native_stage_selector_check_tcl(t):
+    """Check ordered native-selector ownership on the retained post-synth DB."""
+    cfg = t.get('clock', {}).get('landing_contract', {}).get('native_stage_groups')
+    if cfg is None:
+        return ''
+    _native_stage_groups(t, [])
+    rows = []
+    for row in cfg['groups']:
+        prefix = row['prefix']
+        mode = row.get('match', 'prefix')
+        pattern = _native_stage_pattern(prefix, mode)
+        names = _native_exact_names(prefix) if mode == 'cell' else ''
+        stem = _native_cell_stem(prefix) if not names and mode == 'cell' else ''
+        rows.append('  {{%s} {%s} %d {%s} {%s}}' % (row['tag'], pattern, 'density' in row, names, stem))
+    return 'cland_native_selector_check {\n' + '\n'.join(rows) + '\n}\n'
+
+
 def _native_stage_groups(t, groups):
     # Existing HEAD vd stages must occupy the windows the plan already prices.
     cfg = t.get('clock', {}).get('landing_contract', {}).get('native_stage_groups')
@@ -68,7 +131,7 @@ def _native_stage_groups(t, groups):
             raise ValueError('native_stage_groups rectangle outside outline')
         seen.add(prefix); added.append((prefix, rect, tag))
         if mode == 'cell':
-            leaf[prefix] = '^' + prefix + '$'
+            leaf[prefix] = _native_stage_pattern(prefix, mode)
     # Use the exact matcher that the later placement loop uses.
     entries = ' '.join('{' + p + '}' for p, _, _ in added)
     check = '\n'.join(['foreach cland_native_prefix {%s} {' % entries,

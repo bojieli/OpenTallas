@@ -8832,6 +8832,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP
         (kd / "landing_placement.tcl").write_text(LP.tcl(P, tn, macro_moves))
+        selector_check = LP.native_stage_selector_check_tcl(t)
+        if selector_check:
+            # Use the existing post-synth gate artifact so its update cannot
+            # invalidate the paid synth fingerprint or alter the stock runner.
+            checker = Path(__file__).with_name("native_stage_selector_check.tcl").read_text()
+            port_gate = kd / "port_bind_gate.py"
+            body = port_gate.read_text()
+            marker = "_NATIVE_STAGE_SELECTOR_TCL = None"
+            if body.count(marker) != 1:
+                raise ValueError("port_bind native selector payload marker missing")
+            port_gate.write_text(body.replace(marker, "_NATIVE_STAGE_SELECTOR_TCL = " + repr(checker + "\n" + selector_check)))
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + LANDING_PLACEMENT_HOOK + "\n")
         # The new cells are packed to actual nonoverlapping rows/sites. Keep
