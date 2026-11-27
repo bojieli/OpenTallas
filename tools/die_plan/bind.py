@@ -7067,6 +7067,9 @@ def cmd_bind(a):
     except ValueError as exc:
         B.errors.append(f"POSITION_BANK {exc}")
     B.check_types()
+    omit_sinks = getattr(a, "omit_sink_sidecar", False)
+    if omit_sinks and not only_types_select(B.by_type, B.types):
+        raise BindError("--omit-sink-sidecar requires a resolved nonempty type scope")
     if getattr(B, "r8sp", None) or getattr(B, "isp", None) or B.lane_count_pads:
         # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
         B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
@@ -7165,6 +7168,8 @@ def cmd_bind(a):
         B.errors.extend(berrs)
     rep["files"] = [str(f) for f in files]
     if getattr(B, "probe_only", None):
+        if omit_sinks:
+            B.probe_only["omitted_sidecars"] = ["bind_sinks.json"]
         rep["probe_only"] = B.probe_only            # PROBE-ONLY-1123: kit_rtl of these types only; never a die bind / sign-off input
         _fresh_write_text(out / "BIND_PROBE_ONLY.json", json.dumps(B.probe_only, indent=1) + "\n")
     else:
@@ -7214,28 +7219,33 @@ def cmd_bind(a):
             scope = bound_groups.scope_for_member(B.types[B.parts[p]["type"]], B.rel_of(ci))
             names[f"{sv_id(p)}.{scope}{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
     _fresh_write_text(out / "bind_names.json", json.dumps(names, indent=0))
-    sinks = {}
-    for (ci, pn, i), d in B.sinks.items():
-        sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
+    if not omit_sinks:
+        sinks = {}
+        for (ci, pn, i), d in B.sinks.items():
+            sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
     try:
         bumps = B.bump_pins()
     except BindError:
         bumps = {}                          # already reported as an EMIT error
-    for p, bs in sorted(bumps.items()):
-        for b in bs:
-            if b["dir"] == "input":         # the die-top port drives the hard core's line-side input (bind_verify)
-                for i in range(b["width"]):
-                    sinks[f"{B.F.cells[b['ci']].path}.{b['pin']}[{i}]"] = ["top", b["dport"]]
+    if not omit_sinks:
+        for _, bs in sorted(bumps.items()):
+            for b in bs:
+                if b["dir"] == "input":     # the die-top port drives the hard core's line-side input (bind_verify)
+                    for i in range(b["width"]):
+                        sinks[f"{B.F.cells[b['ci']].path}.{b['pin']}[{i}]"] = ["top", b["dport"]]
     if bumps:
         rep["bump_ports"] = [dict(die_port=b["dport"], dir=b["dir"], width=b["width"], partition=p,
                                   leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
                              for p, bs in sorted(bumps.items()) for b in bs]
-    _fresh_write_text(out / "bind_sinks.json", json.dumps(sinks))
-    try:
-        import bind_share
-        bind_share.share_identical(str(out / "bind_sinks.json"))   # KIT-SLIM-1118: identical per-attempt copies share one inode
-    except ImportError:
-        pass
+    if omit_sinks:
+        print("bind: omitted bind_sinks.json for scoped placement (no whole-die sink proof)", flush=True)
+    else:
+        _fresh_write_text(out / "bind_sinks.json", json.dumps(sinks))
+        try:
+            import bind_share
+            bind_share.share_identical(str(out / "bind_sinks.json"))   # KIT-SLIM-1118: identical per-attempt copies share one inode
+        except ImportError:
+            pass
     if getattr(B, "core_input_pipe", None):      # QC-NK-HOLD A+P: declared added cycles (bind_verify / compiler / TOK)
         _fresh_write_text(out / "bind_core_input_pipe.json", json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
     if getattr(B, "bin_copy_sinks", None):       # BIN-COPY (N4.1): sinks re-pointed past a pure-wiring leaf (bind_verify)
@@ -9364,7 +9374,20 @@ def _main(argv=None):
                             "recorded in bind_report strict_src; plan key asbuilt.external_roots is the durable form)")
         s.add_argument("--allow-external-paths", action="store_true",
                        help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
+        if n == "bind":
+            s.add_argument("--omit-sink-sidecar", action="store_true",
+                           help="strict scoped placement only: omit whole-die bind_sinks.json; "
+                                "omit this flag for verify, type_split or transport consumers")
     a = ap.parse_args(argv)
+    if getattr(a, "omit_sink_sidecar", False):
+        if not a.strict or not a.types or not a.types.strip(" ,\t\n"):
+            ap.error("--omit-sink-sidecar requires bind --strict --types")
+        if os.environ.get("OT_DIE_SIGNOFF_RECORD"):
+            ap.error("--omit-sink-sidecar cannot be used with OT_DIE_SIGNOFF_RECORD")
+        out = Path(a.out)
+        sinks = out / "bind_sinks.json"
+        if sinks.exists() or sinks.is_symlink() or any((out / "rtl").glob("*_bound_top.sv")):
+            ap.error("--omit-sink-sidecar requires an OUT without a previous sink sidecar or die top")
     # KW-FIX-45 11-12 (COORD): a plan's sibling files (cores, cells, census, die_io.json, macro_pins, sink_bins, r8) resolve
     # relative to the plan folder; links into other lanes' trees made binds depend on foreign files.  OT_BIND_PLAN_PACKAGE:
     # require = refuse, warn (default) = one warning line, off.  Package a plan with tools/die_plan/plan_package.py.

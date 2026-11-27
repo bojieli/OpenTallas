@@ -17,6 +17,8 @@ def load(path):
 
 
 def derive(bind):
+    from bind_sink_sidecar import reject_placement_probe
+    reject_placement_probe(bind)
     param, param_sha = load(bind / "param_regen.json")
     contracts, contract_sha = load(bind / "bind_latency_consumers.json")
     d2d = param["record"]
@@ -92,7 +94,8 @@ def trace_native59(bind):
     and last VM write relay D ages are reported so the caller can account for the
     selected CTL and SRAM implementation separately.
     """
-    with (bind / "bind_sinks.json").open("rb") as source, mmap.mmap(source.fileno(), 0, access=mmap.ACCESS_READ) as data:
+    from bind_sink_sidecar import required_sink_sidecar
+    with required_sink_sidecar(bind).open("rb") as source, mmap.mmap(source.fileno(), 0, access=mmap.ACCESS_READ) as data:
         sinks = {key.decode(): (driver.decode(), int(age)) for key, driver, age in DR_RECORD.findall(data)}
     rows = {}
     upstream = "native59.dr_o"

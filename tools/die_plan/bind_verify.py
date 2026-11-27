@@ -693,6 +693,12 @@ def cmd_verify(a):
     _b._AB_OVERRIDE["path"] = getattr(a, "asbuilt", None)
     raw = load_plan(a.plan)
     out = Path(a.out).resolve()
+    from bind_sink_sidecar import required_sink_sidecar
+    try:
+        sink_path = required_sink_sidecar(out)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"bind: ERROR {exc}")
+        return 2
     rep = json.loads((out / "bind_report.json").read_text())
     require_declared(raw["asbuilt"], _b.plan_base(a.plan, raw))    # before the multi-hour read, not after it
     srcs = json.loads((out / "asbuilt_sources.json").read_text())
@@ -733,7 +739,7 @@ def cmd_verify(a):
     R = Rules(vr)
     R.keep_source = set(names)          # as-built leaves the bind emitted are never reset/clock sources
     G = Graph(F, R, errs)
-    sinks = json.loads((out / "bind_sinks.json").read_text())
+    sinks = json.loads(sink_path.read_text())
     if landing_table:
         import clock_landing_verify as CLV
         live_widths={}

@@ -413,6 +413,8 @@ def bind_check(B, out, lat):
 
 # ---- standalone CLI on a bind output dir ----------------------------------------------------------------------------
 def load_bind_dir(bd, plan, plan_path=None, *, probe_top=False):
+    from bind_sink_sidecar import reject_placement_probe
+    reject_placement_probe(bd)
     bd = Path(bd)
     rtl = bd / "rtl"
     mod_file, type_mod = {}, {}

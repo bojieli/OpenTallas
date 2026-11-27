@@ -4839,6 +4839,11 @@ def census(spec, bind_dir):
       drv_pins {partition: {bus: [[cell, port, bits]]}}  driver pins of the OUT buses
     A leaf's piece: the longest content / hard core that prefixes its as-built local instance, else the spec
     content rules on the local instance; '?<local>' when neither (reported, never routed)."""
+    from bind_sink_sidecar import required_sink_sidecar
+    try:
+        sink_path = required_sink_sidecar(bind_dir)
+    except (FileNotFoundError, ValueError) as exc:
+        raise SplitError(str(exc)) from exc
     ev = Event({k: v for k, v in spec.items() if k != "census"})     # the census is this command's OUTPUT
     plan_dir = ev.plan_dir
     ab = ev.ab or {}
@@ -4941,7 +4946,7 @@ def census(spec, bind_dir):
                     hops += 1
                 if sb and sb[0] == "leaf":
                     inbits[(L["dst"], f"{sb[1]}.{sb[2]}[{sb[3]}]")].add(L["bus_in"])
-    sinks = json.loads((Path(bind_dir) / "bind_sinks.json").read_text())
+    sinks = json.loads(sink_path.read_text())
     intra, intra_pins, miss = Counter(), Counter(), Counter()
     direct_cuts, expression_cuts = defaultdict(set), defaultdict(set)
     for k, desc in sinks.items():
