@@ -1,0 +1,1 @@
+- 2026-11-26 16:55 PST DONE [CLASS-OWNERS-R2] ot-run oth-ubuntu-1818361-1795740713 on ubuntu: rc=0 after 231 s, ended 16:55:41, log none, cmd: --mem 20 --threads 12 --disk 45 --hosts epyc10 --no-spill --dir /srv/opentallas-scratch2/claude/mq-gate -- /home/ubuntu/.local/bin/ot-gate-r
