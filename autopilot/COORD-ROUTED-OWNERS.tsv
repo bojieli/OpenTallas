@@ -38,7 +38,7 @@ qwen_compute	sle_st_b_v2__cl14c98df5__pvcd986c42	QC-STALE-GEOM	COORD 11-16 20:xx
 qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	QC-STALE-GEOM	COORD 11-16 20:xx QC-STALE-GEOM brief (re-owned: no live owner, 38-41 h stale; class in post)
 qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	QC-STALE-GEOM	COORD 11-16 20:xx QC-STALE-GEOM brief (re-owned: no live owner, 38-41 h stale; class in post)
 qwen_compute	slw_fe_v1__clfe325744__cl08d14f0d	QC-STALE-GEOM	COORD 11-16 20:xx QC-STALE-GEOM brief (re-owned: no live owner, 38-41 h stale; class in post)
-s81	gunit__t1	S81-TYPES-R2	CODEX takeover22:18 shared kit_rtl publication class; physical ownership retained in die sublanes
+s81	gunit__t1	S81-ALLFIX-INT	COORD 11-27 precise active 9a46 private source owner; pair Seqhost writer separate, no obsolete KIT-WAVE launch.
 qwen_kvsys	kv3_pc__cl254f2e73	KV-PLAN-R6	COORD 11-21 KV-WAITBIND-R1: rebind on D27d3 (plan 48b92c30c8f6, sealed 19:42, apply ETA ~21:30); kit_wave hold lifts at apply (KV-PLAN-R6 after-apply list); not D28
 qwen_kvsys	kv3_hroot	FAM-KV-HROOT-R1	COORD 11-21 KV-WAITBIND-R1: FAM-KV-HROOT-R1 chain (D27d3+variant A relay rows plan 30004fa0b2df) bind running epyc8 unit oth-ubuntu-3836537-1795316483; then private-spec kit
 qwen_compute	cbn_q11__cl49ae4555	FAM-QC-CB-R4	COORD 11-21 20:50 (OWNERS-SWEEP)
@@ -110,3 +110,6 @@ s81	dsfd_node_LLfd	S81-INT-R2	COORD 11-26 09:23 C-RST-PINREG-DROPPED; LEC-R2 own
 s81	dsfd_node_LLfu	S81-INT-R2	COORD 11-26 09:23 C-RST-PINREG-DROPPED; LEC-R2 owns census
 s81	dsdv_gunit_l5f	S81-INT-R2	COORD 11-26 10:14 C-SYNTH-REG-DROP; LEC-R2 owns census
 s81	ot_s81sl_leaf__t42	S81-OWN-LEAF	COORD 11-26 19:35 exact c085 leaf lane-bank junction; native proof open
+s81	bk_sel__t2	S81-BKSEL-R7	COORD 11-27 c085 exact owner Codex qc_sitefix; BIND PASS and LAT 947/947; count-source repair staged E7; current placement/route held.
+s81	seqhost__t1	CODEX-SEQHOST	COORD 11-27 active c085 direct; measured internal timing, matched sender ranks in private; hold new physical.
+s81	phy__t1	CODEX-S81-PHY	COORD 11-27 active c085 phy_hbm; fixed PHY digital source staged; external package authority held.
