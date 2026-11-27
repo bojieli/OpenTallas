@@ -50,6 +50,36 @@ def _w(msg):
     return f"WARN {CHECK} {msg}"
 
 
+def _rtl_lvl():
+    """P-TREE-RTL-STALE (QC-R3-TREERTL 11-27): OT_TREE_RTL_BLOCK=1 turns the bind-tree RTL findings (LAG in the dependency
+    closure, LOCAL not in the allowlist) into FAIL lines; default WARN (advisory until calibrated)"""
+    return "FAIL" if os.environ.get("OT_TREE_RTL_BLOCK") == "1" else "WARN"
+
+
+def rtl_local_allow(raw, tree, kw=None):
+    """tree-relative rtl paths recorded as deliberate private edits: plan key rtl_local_allow (list of paths or {path: why}),
+    kw['local_allow'], <tree>/rtl_local_allow.json (same shapes, or {"files": ...})"""
+    out = set()
+
+    def _add(v):
+        if isinstance(v, dict) and "files" in v:
+            v = v["files"]
+        if isinstance(v, dict):
+            out.update(str(k) for k in v)
+        elif isinstance(v, (list, tuple, set)):
+            out.update(str(x) for x in v)
+    _add((raw or {}).get("rtl_local_allow"))
+    _add((kw or {}).get("local_allow"))
+    fp = Path(tree) / "rtl_local_allow.json"
+    try:
+        if fp.is_file() and fp.stat().st_size < 5_000_000:
+            import json
+            _add(json.loads(fp.read_text()))
+    except (OSError, ValueError):
+        pass
+    return out
+
+
 def _git(repo, args, timeout, input_=None):
     r = subprocess.run(["git", "--git-dir", repo] + args, capture_output=True, timeout=max(1.0, timeout), input=input_)
     if r.returncode:
@@ -536,8 +566,8 @@ def _run(raw, plan_path, tree, kw):
                      "named by the plan" if name not in closure else "in the closure")
             shown = "; ".join(f"{c[0]} {c[2][:80]}" for c, _ in miss[:3]) + (f"; +{len(miss) - 3} more" if len(miss) > 3 else "")
             base = f" (tree = main version of {g['base'][0]} {time.strftime('%m-%d', time.gmtime(g['base'][1]))})" if g["base"] else ""
-            lines.append(_w(f"rtl {name}: LAG{base}, {reach}; missing {len(miss)} main commit(s): {shown}; "
-                            f"fix = carry from main before bind (event_adopt_diff.py carry) or record why the tree keeps it"))
+            lines.append(f"{_rtl_lvl()} {CHECK} rtl {name}: LAG{base}, {reach}; missing {len(miss)} main commit(s): {shown}; "
+                         f"fix = carry from main before bind (event_adopt_diff.py carry) or record why the tree keeps it")
             continue
         if len(lines) >= MAX_LINES:
             continue
@@ -554,6 +584,13 @@ def _run(raw, plan_path, tree, kw):
                         f"fix = carry from main before bind (event_adopt_diff.py carry) or record why the tree keeps it"))
     if mis_line:
         lines.append(mis_line)
+    allow = rtl_local_allow(raw, tree, kw)
+    rtl_local = sorted(p for p in local if differ[p] == "rtl")
+    rtl_bad = [p for p in rtl_local if p not in allow]
+    if rtl_bad:
+        lines.append(f"{_rtl_lvl()} {CHECK} rtl LOCAL {len(rtl_bad)} bind-tree file(s) differ from every main version and are not in the "
+                     f"allowlist: {', '.join(rtl_bad[:6])}{' ...' if len(rtl_bad) > 6 else ''}; fix = list them (path: why) in plan key "
+                     f"rtl_local_allow or <tree>/rtl_local_allow.json if deliberate, else carry from main")
     cats = {}
     for p in lag:
         cats[differ[p]] = cats.get(differ[p], 0) + 1
@@ -563,7 +600,7 @@ def _run(raw, plan_path, tree, kw):
                     f"LOCAL {len(local)}{_bycat(local, differ)}, MISSING {len(missing)} ({len(mis_list)} listed scope), tree-only {tree_only}"
                     + (f", NOT HASHED {skipped} (time budget)" if skipped else "")
                     + (f", UNRESOLVED {len(unres)} (time budget)" if unres else "") + (f", unreadable {unread}" if unread else "")
-                    + f"; bind RTL closure {len(closure)} file(s) from {len(plan_roots(raw))} plan module(s), LAG {len(rtl_lag)}"
+                    + f"; bind RTL closure {len(closure)} file(s) from {len(plan_roots(raw))} plan module(s), LAG {len(rtl_lag)}, LOCAL {len(rtl_local)} (allowlisted {len(rtl_local) - len(rtl_bad)})"
                     + (" (rtl index CUT at the time budget: partial)" if rtlix and rtlix[1].get(None) else "")
                     + (f" ({nrtl - RTL_LINES} not listed)" if nrtl > RTL_LINES else "")
                     + f"; top missing commits: {top or 'none'}; pin {pin[:10] or '-'}; {time.time() - t0 + t_rtl:.1f} s "

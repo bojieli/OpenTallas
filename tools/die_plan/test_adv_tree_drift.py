@@ -124,3 +124,69 @@ def test_never_raises(world, tmp_path):
 def test_tree_inferred_from_plan_path(world):
     out = A.findings(world["raw"], world["plan"], main_repo=world["repo"], main_ref="main")
     assert any(f"view {VIEW}: LAG 2" in x for x in out)
+
+
+# ---- P-TREE-RTL-STALE (QC-R3-TREERTL 11-27): bind-tree RTL closure LAG / LOCAL allowlist / block level ----
+TOP = "rtl/qwen_dv/qfd_dv_top.sv"
+XH = "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv"
+LOC = "rtl/qwen_split/qfd_priv_helper.sv"
+TOP_T = "module qfd_dv_top;\n  qfd_dv_s5_xhead3 u_x();\n  qfd_priv_helper u_p();\nendmodule\n"
+XH_OLD = "module qfd_dv_s5_xhead3; endmodule\n"
+XH_NEW = "module qfd_dv_s5_xhead3;\n`ifdef OT_QC_XH_SPLIT_FAULT\n`endif\nendmodule\n"
+LOC_MAIN = "module qfd_priv_helper; endmodule\n"
+
+
+@pytest.fixture()
+def rtlworld(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    _commit(repo, {TOP: TOP_T, XH: XH_OLD, LOC: LOC_MAIN}, "base")
+    pin = _git(repo, "rev-parse", "HEAD")
+    _commit(repo, {XH: XH_NEW}, "QC HC/STM setup: per-type split sticky fault define")
+    tree = tmp_path / "qc_tree"
+    for rel, text in ((TOP, TOP_T), (XH, XH_OLD), (LOC, "module qfd_priv_helper; // private edit\nendmodule\n")):
+        _write(tree, rel, text)
+    (tree / "physical" / "die_plan" / "qc").mkdir(parents=True)
+    (tree / ".fork.json").write_text(json.dumps({"src_main_sha": pin}))
+    raw = {"die": "qc", "partition_types": {"slw_hc0": {"module": "qfd_dv_top"}}}
+    plan = tree / "physical" / "die_plan" / "qc" / "plan.json"
+    plan.write_text(json.dumps(raw))
+    return dict(repo=str(repo), tree=str(tree), raw=raw, plan=str(plan))
+
+
+def test_rtl_closure_lag_and_unlisted_local(rtlworld):
+    out = _run(rtlworld)
+    lag = [x for x in out if x.startswith(f"WARN ADV-TREE-DRIFT rtl {XH}: LAG")]
+    assert lag and "slw_hc0" in lag[0] and "per-type split sticky fault define" in lag[0]
+    loc = [x for x in out if " rtl LOCAL 1 bind-tree file(s)" in x]
+    assert loc and LOC in loc[0] and loc[0].startswith("WARN ")
+    assert "bind RTL closure 3 file(s) from 1 plan module(s), LAG 1, LOCAL 1 (allowlisted 0)" in out[-1]
+
+
+def test_rtl_local_allowlist_plan_key_and_tree_file(rtlworld):
+    rtlworld["raw"]["rtl_local_allow"] = {LOC: "private obs hook"}
+    out = _run(rtlworld)
+    assert not any(" rtl LOCAL " in x for x in out) and "LOCAL 1 (allowlisted 1)" in out[-1]
+    rtlworld["raw"].pop("rtl_local_allow")
+    with open(os.path.join(rtlworld["tree"], "rtl_local_allow.json"), "w") as f:
+        json.dump({"files": [LOC]}, f)
+    out = _run(rtlworld)
+    assert not any(" rtl LOCAL " in x for x in out)
+
+
+def test_rtl_block_env_makes_fail_lines(rtlworld, monkeypatch):
+    monkeypatch.setenv("OT_TREE_RTL_BLOCK", "1")
+    out = _run(rtlworld)
+    assert any(x.startswith(f"FAIL ADV-TREE-DRIFT rtl {XH}: LAG") for x in out)
+    assert any(x.startswith("FAIL ADV-TREE-DRIFT rtl LOCAL") for x in out)
+    import plan_advisory as PA
+    kept = PA._norm("TREE-DRIFT", out)
+    assert any(x.startswith("FAIL ADV-TREE-DRIFT rtl ") for x in kept)
+
+
+def test_rtl_synced_tree_clean(rtlworld):
+    _write(rtlworld["tree"], XH, XH_NEW)
+    rtlworld["raw"]["rtl_local_allow"] = [LOC]
+    out = _run(rtlworld)
+    assert len(out) == 1 and "LAG 0 (none)" in out[0] and "LAG 0, LOCAL 1 (allowlisted 1)" in out[0]
