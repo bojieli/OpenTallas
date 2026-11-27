@@ -538,3 +538,13 @@ def test_fallback_review_dir_is_scratch_not_root_state(tmp_path):
     assert got == str(scratch / "noprog-review" / "smell_review" / "hub")
     assert ".local/state" not in got
     assert W.fallback_review_root("vis_review", roots=(str(tmp_path / "none"),)) == __import__("os").path.join(W.STATE_DIR, "vis_review")
+
+
+def test_smell_recipients_route_to_live_successors():
+    import noprog_watchdog as w
+    assert w.smell_recipients("KV", "KV-ALLFIX") == "KV-INT-R3"
+    assert w.smell_recipients("S81", "S81-DIE-R3") == "S81-INT-R3"
+    assert w.smell_recipients("S81", "COORD") == "S81-INT-R3"
+    assert w.smell_recipients("QC", "SOME-LIVE-LANE") == "QC-INT-R3, SOME-LIVE-LANE"
+    assert w.smell_recipients("XX", "") == "COORD"
+    assert "FP-CONVERGE" not in w.smell_recipients("KV", "FP-CONVERGE-KV")

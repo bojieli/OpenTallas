@@ -2558,7 +2558,7 @@ SMELL_DENSITY_RE = re.compile(r"(?i)target[ _]?density\s*[:=]?\s*([0-9]*\.[0-9]+
 SMELL_TD_RE = re.compile(r"(?i)timing-driven(?:\s+(?:iteration|pass|overflow)|:\s*(?:repair|resiz))")
 CTS_POST_RE = re.compile(r"(?m)^OT_CTS_POST_TIMING .*?setup_ws (-?[0-9.]+)(?:.*?hold_ws (-?[0-9.]+))?")
 DIE_TAG = {"qwen_compute": "QC", "qwen_kvsys": "KV", "s81": "S81", "s81_head": "HEAD", "hbm": "HBM"}
-DIE_INT = {"QC": "QC-ALLFIX", "KV": "KV-ALLFIX", "S81": "S81-ALLFIX-INT", "HEAD": "HEAD-ALLFIX"}
+DIE_INT = {"QC": "QC-INT-R3", "KV": "KV-INT-R3", "S81": "S81-INT-R3", "HEAD": "HEAD-INT-R3"}   # P-DEAD-LANE-ROUTING 11-27: live successors
 
 
 def low_layer_share(drc_text):
@@ -3101,14 +3101,25 @@ def smell_tsv_append(recs, path=None):
     return len(out)
 
 
+# P-DEAD-LANE-ROUTING (FABLE-FLOW-1247, COORD 11-27): timer posts must reach LIVE lanes.  Dead lane -> its live successor.
+DEAD_TO_LIVE = {"FP-CONVERGE-QC": "QC-INT-R3", "FP-CONVERGE-KV": "KV-INT-R3", "FP-CONVERGE-S81": "S81-INT-R3", "FP-CONVERGE-HEAD": "HEAD-INT-R3",
+                "KV-ALLFIX": "KV-INT-R3", "QC-ALLFIX": "QC-INT-R3", "S81-ALLFIX-INT": "S81-INT-R3", "HEAD-ALLFIX": "HEAD-INT-R3",
+                "S81-DIE-R3": "S81-INT-R3"}
+INT_R3 = {"QC": "QC-INT-R3", "KV": "KV-INT-R3", "S81": "S81-INT-R3", "HEAD": "HEAD-INT-R3"}
+
+
+def live_lane(name):
+    return DEAD_TO_LIVE.get(name, name)
+
+
 def smell_recipients(tag, owner):
-    """lanes a SMELL / RENDER post is addressed to: the die's FP-CONVERGE lane first, then the type owner unless that is COORD (wave kits have no OT_LANE and resolved to COORD:
-    29 SMELL rows went to COORD, 06:2x).  A kit of an unknown die falls back to COORD, the only lane left."""
+    """lanes a SMELL / RENDER post is addressed to: the die's INT-R3 lane first (successor of FP-CONVERGE-<DIE>), then the type owner (mapped to its live successor)
+    unless that is COORD (wave kits have no OT_LANE and resolved to COORD: 29 SMELL rows went to COORD, 06:2x).  A kit of an unknown die falls back to COORD."""
     to = []
-    if tag in ("QC", "KV", "S81", "HEAD"):
-        to.append(f"FP-CONVERGE-{tag}")
-    if owner and owner != "COORD":
-        to.append(owner)
+    if tag in INT_R3:
+        to.append(INT_R3[tag])
+    if owner and owner != "COORD" and live_lane(owner) not in to:
+        to.append(live_lane(owner))
     return ", ".join(to) or "COORD"
 
 
