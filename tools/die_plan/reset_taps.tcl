@@ -42,12 +42,55 @@ proc rt_relay_needed {d_drv drv_known lim_dbu} {
 proc rt_relay_seat {x y dx dy} {
   return [list [expr {($x + $dx) / 2}] [expr {($y + $dy) / 2}]]
 }
-proc rt_insert_relay {blk it dxy tag} {
+# relay legalization (HEAD-PROBE-R3 11-27): the relay seat is the nearest site of the nearest row that is free of every instance and clear of macro halos.
+proc rt_overlap {ax0 ay0 ax1 ay1 bx0 by0 bx1 by1} {
+  return [expr {$ax0 < $bx1 && $bx0 < $ax1 && $ay0 < $by1 && $by0 < $ay1}]
+}
+proc rt_snap_site {v origin step} {
+  return [expr {$origin + int(round(($v - $origin) / double($step))) * $step}]
+}
+# candidate site offsets 0, +1, -1, +2, -2 ... (site counts) up to n
+proc rt_site_offsets {n} {
+  set l {0}
+  for {set k 1} {$k <= $n} {incr k} { lappend l $k [expr {-$k}] }
+  return $l
+}
+proc rt_legal_seat {blk mx my w h halo} {
+  set rows {}
+  foreach row [$blk getRows] {
+    set bb [$row getBBox]; set site [$row getSite]
+    lappend rows [list [expr {abs([$bb yMin] - $my)}] [$bb xMin] [$bb yMin] [$bb xMax] [$site getWidth] [$site getHeight]]
+  }
+  set boxes {}
+  foreach i [$blk getInsts] {
+    set bb [$i getBBox]; set m [$i getMaster]
+    set hh [expr {[$m isBlock] ? $halo : 0}]
+    lappend boxes [list [expr {[$bb xMin] - $hh}] [expr {[$bb yMin] - $hh}] [expr {[$bb xMax] + $hh}] [expr {[$bb yMax] + $hh}]]
+  }
+  foreach r [lrange [lsort -integer -index 0 $rows] 0 5] {
+    lassign $r dy x0 y0 x1 sw sh
+    set sx0 [rt_snap_site $mx $x0 $sw]
+    foreach k [rt_site_offsets 80] {
+      set sx [expr {$sx0 + $k * $sw}]
+      if {$sx < $x0 || $sx + $w > $x1} continue
+      set free 1
+      foreach b $boxes {
+        if {[rt_overlap $sx $y0 [expr {$sx + $w}] [expr {$y0 + $h}] {*}$b]} { set free 0; break }
+      }
+      if {$free} { return [list $sx $y0] }
+    }
+  }
+  return {}
+}
+proc rt_insert_relay {blk it dxy tag {seat_fn rt_legal_seat}} {
   set ins [$it getInst]; set net [$it getNet]
   lassign [$ins getLocation] x y
   lassign [rt_relay_seat $x $y [lindex $dxy 0] [lindex $dxy 1]] mx my
   set master [[ord::get_db] findMaster BUFx2_ASAP7_75t_R]
   if {$master eq "NULL"} { return 0 }
+  set seat [$seat_fn $blk $mx $my [$master getWidth] [$master getHeight] [expr {int(5.4 * [[ord::get_db_tech] getDbUnitsPerMicron])}]]
+  if {[llength $seat] != 2} { return 0 }
+  lassign $seat mx my
   set safe [string map {/ _ . _ $ _ ~ _} $tag]
   set b [odb::dbInst_create $blk $master "u_rstrelay_$safe"]
   set n2 [odb::dbNet_create $blk "rst_relay_net_$safe"]
