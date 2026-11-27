@@ -89,6 +89,7 @@ import repeat_stop as RS
 import lbl_gate as LBL
 import private_place_review as PPV
 import plan_visual_review as PVR
+import published_place_ready as PPR
 import env_effect as EE
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
@@ -96,7 +97,11 @@ OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: fre
 # older in-memory launch logic; the next ordinary tick imports the new package.
 def scheduler_code_id():
     h = hashlib.sha256()
-    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "kit_rtl_handoff.py", "plan_visual_review.py", "private_place_review.py"):
+    for name in (
+        "kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py",
+        "kit_rtl_closure.py", "kit_rtl_handoff.py", "plan_visual_review.py",
+        "private_place_review.py", "published_place_ready.py",
+    ):
         p = Path(__file__).with_name(name)
         h.update(name.encode())
         h.update(p.read_bytes())
@@ -832,6 +837,8 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
             receipt["stages"]["kit_topology"] = stages["kit_topology"]
         if "kit_rtl" in stages:
             receipt["stages"]["kit_rtl"] = stages["kit_rtl"]
+        if stages.get("kit_rtl_reuse") == 0:
+            receipt["stages"]["kit_rtl_reuse"] = 0
         receipt["canary"] = "kit_rtl_v1"          # receipts with this mark carry the kit_rtl verdict (older receipts are grandfathered)
         target = spec_path.with_name("gen_pilot.json")
         temp = target.with_name(target.name + "." + str(os.getpid()) + ".tmp")
@@ -7337,7 +7344,7 @@ def counted_now(cfg, st, die, item, block=None):
 # switch inputs came from, and the tree was never at it.  A record of provenance, so not an input.
 INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "roam_hosts", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "kit_rtl_mem_gb", "bind_mem_gb", "ot_run", "crit",
-              "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
+              "start_delay_s", "resume_from", "kit_rtl_reuse", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
               "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins"}
 
@@ -11344,8 +11351,47 @@ def wave_stage_args(sp, directory, command, extra_inputs, *, event_env, source_s
     return paths + ["--no-spill"] if paths else []
 
 
-def run_item(spec_path, resume_reviewed=False):
+def publication_place_consumer(spec_path, publication):
+    """Open the exact publisher spec in a normal private attempt directory."""
+    import autopilot as AP
+
+    original = PPV.load(Path(spec_path))
+    hub = original.get("hub")
+    cfg = load_config(private_config_text(AP, hub))
+    die = original["die"]
+    raw, prepared = PPR.read_publication(AP.COORD, spec_path, publication, cfg["dies"][die])
+    why = private_spec_stale(original, cfg=cfg)
+    if why or launch_held(cfg, original):
+        raise ValueError(why or "the committed place hold still applies to this partition")
+    current = spec_for(dict(cfg, _otrun_status={}), die, original["item"], hub, kind="type")
+    plan_sha = prepared["publication"]["plan"]
+    producer = original["gen_host"]
+    approved_form = PVR.request(original, plan_sha=plan_sha, producer=producer)["form_sha256"]
+    if approved_form != PVR.request(current, plan_sha=plan_sha, producer=producer)["form_sha256"] or any(
+            current.get(k) != original.get(k) for k in (
+                "kit_rtl", "preflight_args", "plan_fields", "kit_snap", "kit_store", "gen_tools_manifest_sha")):
+        raise ValueError("the adopted generation or PRE recipe differs from the prepared attempt")
+    if live_attempt_elsewhere(load_state(AP_DIR), die, original["item"], None):
+        raise ValueError("an ordinary attempt already owns this partition")
+    ticket = prepared["ref"]["sha256"]
+    if not PPV.sha256(ticket):
+        raise ValueError("invalid prepared producer ticket")
+    out = AP_DIR / "private_specs" / "PUBLISH-PREPARE" / (die + "_" + ticket)
+    out.mkdir(parents=True, exist_ok=True)
+    spec = out / "spec.json"
+    PPR.write_once(spec, raw)
+    return spec, prepared
+
+
+def run_item(spec_path, resume_reviewed=False, from_publication=None):
     """Keep one standard private controller per exact spec directory."""
+    prepared = None
+    if from_publication:
+        try:
+            spec_path, prepared = publication_place_consumer(spec_path, from_publication)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+            print(f"KW_PUBLISHED_PLACE refused: {exc}", flush=True)
+            return 2
     out = Path(spec_path).absolute().parent
     if not PPV.applies(PPV.load(Path(spec_path))):
         if resume_reviewed:
@@ -11358,14 +11404,28 @@ def run_item(spec_path, resume_reviewed=False):
         except BlockingIOError:
             print("KW_PRIVATE_VISUAL refused: this private controller is already active", flush=True)
             return 75
+        prior = PPV.load(out / "result.json")
+        if prepared:
+            if prior.get("verdict") == "PASS" and prior.get("stage") == "place":
+                return 0
+            try:
+                return _run_item(spec_path, prepared=prepared)
+            except Exception as exc:
+                PPV.write(out / "result.json", {"verdict": "FAIL", "stage": "pipeline",
+                                                "tail": f"{type(exc).__name__}: {exc}"})
+                raise
+        if (PPV.load(Path(spec_path)).get("publish_place_prepare") and prior.get("verdict") == "DRY-PASS"
+                and prior.get("published_place_ready")):
+            return 0
         return _run_item(spec_path, resume_reviewed)
 
 
-def _run_item(spec_path, resume_reviewed=False):
+def _run_item(spec_path, resume_reviewed=False, prepared=None):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
     spec_bytes = Path(spec_path).read_bytes()
     sp = json.loads(spec_bytes)
+    prepare_publication = sp.get("publish_place_prepare") if sp.get("dry_gen") and not prepared else None
     out = Path(spec_path).absolute().parent
     prior = PPV.load(out / "result.json") if resume_reviewed else {}
     if resume_reviewed:
@@ -11378,7 +11438,7 @@ def _run_item(spec_path, resume_reviewed=False):
             print("KW_PRIVATE_VISUAL refused: no unchanged private spec with an exact held placement", flush=True)
             return 2
     try:
-        _blr = None if resume_reviewed else runitem_bind_landing(sp)
+        _blr = None if (resume_reviewed or prepared) else runitem_bind_landing(sp)
     except BindLandingMissing as e:
         print(f"KW_STAGE bind_landing {now_s()} :: REFUSED {e}", flush=True)
         (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_landing", "verdict": "FAIL", "cls": "FLOW", "die": sp.get("die"),
@@ -11991,9 +12051,218 @@ def _run_item(spec_path, resume_reviewed=False):
         why = private_plan_visual_policy(sp)
         if why:
             return fail("plan_visual", why)
-        why = private_spec_stale(sp)
+        why = "" if prepare_publication else private_spec_stale(sp)
         if why:
             return fail("private_spec", "ENV-PROVENANCE " + why)
+
+    def route_preflight(runner, core, strict=False):
+        if route_preflight_on():
+            # PREFLIGHT-EARLY-1122: the route chain's own preflight (driver admission bundle) at gen, before place
+            import autopilot as AP
+            _rpr = runner.format(kit=K, work=W) if core else W + "/gen/run_kit.sh"
+            try:
+                _rpc = route_preflight_cmd(AP, K, _rpr, hosts=(G,))
+            except Exception as _e:                           # bundle staging is infra: the route chain still checks
+                _rpc = f"echo {q('ADMISSION_TOOLS FAIL: bundle not staged: ' + type(_e).__name__)}; exit 3"
+            rc, txt = run("preflight_route", otrun(8, 2, W, _rpc, gh))
+            if rc and not strict and ROUTE_PREFLIGHT_INFRA_RE.search(txt or ""):
+                print(f"KW_NOTE route-chain preflight not run (admission bundle transport, exit {rc}); the route chain checks it", flush=True)
+                rc = 0
+            if rc:
+                return fail("preflight", "KIT_PREFLIGHT FAIL (route-chain preflight at gen, PREFLIGHT-EARLY-1122)\n" + txt,
+                            f"{G}:{K}")
+        elif strict:
+            return fail("preflight", "Prepared placement requires the ordinary route-chain preflight", f"{G}:{K}")
+        return None
+
+    def place_prepared_kit(runner, core):
+        _dg = sp.get("dedup_group") or ""
+        if _dg:                                       # WF-1 11-14 (friction 7): one build per kit identity
+            try:
+                _hrc, _ht = run("kit_identity", remote(f"python3 -I -c {q(KIT_HASH_PY)} {q(K)} {q(T)}"), idempotent=True)
+                _hm = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _ht or "")
+                if _hm:
+                    _kh = _hm.group(1)
+                    (out / "kit_identity.json").write_text(json.dumps({"group": _dg, "hash": _kh, "item": T}))
+
+                    def _hash_of(host, kpath, it):
+                        _r, _t = run("kit_identity_" + re.sub(r"\W", "_", it)[-30:], remote_argv(host, hub, f"python3 -I -c {q(KIT_HASH_PY)} {q(kpath)} {q(it)}"), idempotent=True)
+                        _m2 = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _t or "")
+                        return _m2.group(1) if _m2 else ""
+                    _role, _owner = ident_claim(_dg, _kh, T, hash_of=_hash_of)
+                    res["kit_identity"] = dict(group=_dg, hash=_kh, role=_role, owner=_owner)
+                    print(f"KW_KIT_IDENTITY {T}: {_role} of {_dg} ({_kh[:12]})" + ("" if _role == "owner" else f" owner {_owner}"), flush=True)
+                    if _role == "member":
+                        res.update(verdict="DEDUP", stage="identity", dedup_owner=_owner, dedup_hash=_kh, evidence=f"{G}:{K}")
+                        (out / "result.json").write_text(json.dumps(res, indent=1))
+                        return 0
+            except Exception as _e:
+                print(f"KW_DEDUP_SKIP {type(_e).__name__}: {_e}", flush=True)
+        # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
+        # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
+        # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
+        SSHE = "-e 'ssh -o BatchMode=yes -o ControlPath=none'"
+        on_hub = G in ("localhost", hub)
+        if not on_hub:
+            rc, txt = run("sync_hub", idempotent=True, argv=["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
+            if rc:
+                return fail("sync_hub", txt)
+        # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
+        sk = src_skew_check(sp, K)
+        if sk and sp.get("die") in SRC_SKEW_ADVISORY_DIES:
+            # KIT-OPS-5 11-14 (COORD ruling): src_skew is advisory for these dies (the QC src is ahead of the queue lint copy); logged, never a fail
+            print("KW_SRC_SKEW_ADVISORY " + " | ".join(sk)[:600], flush=True)
+            sk = []
+        if sk:
+            return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
+        explicit_resume = bool(sp.get("private") and (sp.get("resume_from") or {}).get("latest_start"))
+        explicit_rs = ""
+
+        def place_and_geom(K, rs):
+            """PLACE (async service or ot-run) + after_place; rs = the stage-resume start step or ''"""
+            nonlocal explicit_rs
+            # FLOW-21 11-01 (COORD 08:2x): kits whose runner hands the pre-route LEC to lec_async.sh (phase receipts) PLACE
+            # as a detached service on the gen host itself: that kit dir is the one authoritative copy (proof owner, GEOM,
+            # enqueue and the route all use G:K), so it is never relayed, pulled or cleaned while its proof runs.
+            # KW-FIX-45 11-12 (OWNER ruling): list every absolute /srv or /home path in the kit's scripts / config.mk / .f files that
+            # lies outside the kit and the item folder.  cfg kit_self_contained: "list" (default, advisory) or "fail" (stage fail);
+            # "off" skips.  Never raises.
+            try:
+                _sc = str(sp.get("kit_self_contained") or "list")
+                if _sc != "off":
+                    _rc, _t = run("selfcontained", remote(f"python3 -I -c {q(SELFCONT_PY)} {q(K)} {q(W)} {q('copy' if _sc in ('copy', 'copy-strict') else 'list')}"), idempotent=True)
+                    _rows = [ln for ln in (_t or "").splitlines() if ln.startswith("SELFCONT\t")]
+                    (out / "selfcontained.tsv").write_text("\n".join(_rows) + "\n")
+                    _bad = [ln for ln in _rows if "\tMISSING\t" in ln or "\tIMPOSSIBLE" in ln]
+                    res["selfcontained_outside"] = len(_rows); res["selfcontained_bad"] = len(_bad)
+                    if (_sc in ("copy", "copy-strict") and _bad) or (_sc == "fail" and _rows):
+                        return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: a path outside the kit could not be copied in:\n" + "\n".join((_bad or _rows)[:40]))
+            except Exception as _e:
+                print(f"KW_SELFCONT_SKIP {_e}", flush=True)
+            # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
+            # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
+            flow_refresh("place")
+            _epw = env_provenance_record(K)
+            if _epw and sp.get("private"):
+                return fail("env_provenance", "ENV-PROVENANCE " + _epw, f"{G}:{K}")
+            if explicit_resume:
+                explicit_rs = resume_prepare(sp, K, prun0, run, remote, res)
+                if explicit_rs == "nochange":
+                    (out / "result.json").write_text(json.dumps(res, indent=1))
+                    return 1
+                rs = explicit_rs
+            asy = False
+            if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
+                _, at = run("place_mode", idempotent=True, argv=remote(
+                    f"test -f {q(K)}/lec_async.sh && grep -q phase_done {q(K)}/lec_async.sh && test -f {q(K)}/lec.py "
+                    f"&& echo KW_ASYNC_OK || echo KW_ASYNC_NO"))
+                asy = "KW_ASYNC_OK" in at
+            res["place_async"] = asy
+            if asy:
+                if not on_hub:
+                    # FLOW-OPS-1300 item 7 (FAM-QC-COLL-R2: run-item started ON the gen host rm -rf'd the only gen copy -> place 'kit dir missing'): the local W/gen is
+                    # removed only when it is a relay copy, i.e. this process does not run on the gen host and the kit is present there
+                    _ok, _why = hub_copy_removable(G, hub, K)
+                    if _ok:
+                        run("clean_hub", ["bash", "-c", f"rm -rf {q(W)}/gen"])   # pre-place relay copy (lint only)
+                    else:
+                        print(f"KW_CLEAN_HUB_SKIP {_why}", flush=True)
+                m, t = sp["place_mem_gb"], sp["place_threads"]
+                prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
+                rc, txt, rcpt = place_async(K, prun, m, t)
+                res["ran_on"] = G
+                if rcpt:
+                    res["place_receipt"] = rcpt
+                return after_place(K, *resume_verify(rs, rc, txt))
+            # a resumed kit's run/ holds hardlinks into the previous attempt on G: it PLACEs on G only (a relay would copy GBs)
+            pinned = sp.get("place_spill_hosts") in ([], [G]) and pinned_place_producer(sp, G)
+            for h in ([] if rs or pinned else [h for h in sp["hosts"] if h not in (G, hub, "localhost") and h not in stage_drain()]):     # FLOW-OPS-0900 fix 4: no relay copy onto a draining host
+                cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
+                      f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
+                rc, txt = run(f"sync_{h}", ["bash", "-c", cp], idempotent=True)
+                if rc:
+                    return fail(f"sync_{h}", txt)
+            m, t = sp["place_mem_gb"], sp["place_threads"]
+            phosts = [G] if rs or pinned else sp["hosts"]
+            if not rs and not pinned:      # FLEET-WATCH-R5 / FLOW-OPS-0900 fix 4: the spec's frozen host list (die `hosts`, e.g. intel1 on KV-D26) is re-checked against the drain state, no fall-back to
+                phosts = [h for h in phosts if h not in stage_drain()] or [G]      # the capped list: only the gen host, where the kit already is
+            pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
+            if pref and not rs and not pinned:                              # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
+                p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
+                stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
+                ok = place_prefer_live(pref, stt, m, hub, fall=sp.get("host_fall_gb_h"))
+                if ok:
+                    # KW-FIX-45 11-12 place_prefer is an ORDER, not a pin: pinning --hosts to the preferred hosts alone made ot-run
+                    # answer NOT RUN when the preferred host refused (epyc2 scratch2 dipping under its 50 GB floor: 9 HBM rows
+                    # RETRY-INFRA at 02:51-03:01).  The preferred hosts go first, every other host stays allowed.
+                    phosts = ok + [h for h in phosts if h not in ok]
+            prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
+            argv = otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True)
+            if pinned:
+                argv[1:1] = place_dispatch_limits(sp, G, hub, False)
+            rc, txt = run("place", argv)
+            ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
+            res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
+            if h and h != G and not (on_hub and h == hub):
+                rp = rq = 0
+                if h != hub:
+                    rp, _ = run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"], idempotent=True)
+                if not on_hub:
+                    rq, _ = run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"], idempotent=True)
+                if rp == 0 and rq == 0:
+                    # the placed kit now lives on the gen host (the only path records/evidence/enqueue name): drop the
+                    # PLACE-host and hub relay copies (~2.5 GB per station kit) so scratch floors are not eaten by duplicates
+                    for x in sorted({h, hub} - {G}):
+                        run(f"clean_{x}", (["bash", "-c", f"rm -rf {q(W)}/gen"] if x == hub else
+                                           ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", x, f"rm -rf {q(W)}/gen"]))
+            return after_place(K, *resume_verify(rs, rc, txt))
+
+        def resume_verify(rs, rc, txt):
+            """KW-RESUME-1: after a resumed PLACE every hardlinked source file must be unchanged (no write through a link)"""
+            if not rs:
+                return rc, txt
+            vrc, vt = run("resume_verify", remote(kr_cmd(f"verify {q(K)}")), idempotent=True)
+            if vrc:
+                return (rc or 1), txt + "\nKW_RESUME_VERIFY FAIL: a reused (hardlinked) checkpoint file changed\n" + vt[-1500:]
+            return rc, txt
+
+        prun0 = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
+        rs = "" if explicit_resume else resume_prepare(sp, K, prun0, run, remote, res)
+        if rs == "nochange":
+            (out / "result.json").write_text(json.dumps(res, indent=1))
+            return 1
+        try:
+            rc = place_and_geom(K, rs)
+        finally:
+            if rs or explicit_rs not in ("", "nochange"):
+                resume_release(K)
+        return chain_after_geom(rc)
+
+    if prepared:
+        # The producer is the only holder of these generated absolute paths.
+        # Claim before touching W. Never run fresh-gen cleanup on this branch.
+        source_spec = json.loads(spec_bytes)
+        if chain_goal != "place" or not PPV.applies(sp) or G != source_spec["gen_host"]:
+            return fail("published_place", "prepared source requires its exact private place-only producer")
+        plan_sha = prepared["publication"]["plan"]
+        plan_shas = {(G, sp["plan"]): plan_sha}
+        review = plan_visual_refusal(sp, out, hub, plan_shas=plan_shas)
+        if review:
+            return fail("plan_visual", review)
+        form = PVR.request(sp, plan_sha=plan_sha, producer=G)["form_sha256"]
+        payload = dict(spec=source_spec, ref=prepared["ref"], publication=prepared["publication"],
+                       review={"verdict": "GOOD", "form": form}, attempt=str(out))
+        rc, txt = run("published_place_claim", remote(PPR.producer_command("claim", payload)), idempotent=True)
+        if rc:
+            return fail("published_place", txt, f"{G}:{K}")
+        _seal["manifest_hash"] = prepared["publication"]["manifest"]
+        res["src_manifest"] = {**_seal, "host": G, "mode": "require"}
+        res["published_place_ready"] = prepared["ref"]
+        refused = route_preflight(None, False, strict=True)
+        if refused is not None:
+            return refused
+        return place_prepared_kit(None, False)
+
     def pre_gen_check(plan_, kr_, tools):
         """List unresolved absolute inputs and active plan assets before kit workers."""
         items = pre_gen_inputs(sp, plan_, kr_)
@@ -12115,6 +12384,7 @@ def _run_item(spec_path, resume_reviewed=False):
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
     core = sp.get("kind") == "core" and bool(sp.get("core_kit"))
+    runner = None
     snap_on = bool(sp.get("kit_snap")) and kit_store_applies(sp)
     ks_on = snap_on or (bool(sp.get("kit_store")) and kit_store_applies(sp))
     if ks_on:
@@ -12196,6 +12466,9 @@ def _run_item(spec_path, resume_reviewed=False):
                 rc, txt = run("kit_rtl_prepare_gen", remote(f"rm -rf {q(W)}/gen {q(W)}/geom"), idempotent=True)
                 if rc:
                     return fail("kit_rtl_prepare_gen", txt)
+            # Preserve ordinary stage eligibility and separately name transport
+            # so the pilot receipt does not imply a new native producer run.
+            completed_stages["kit_rtl"] = 0
             reuse_applied = True
             res["kit_rtl_reuse"] = str(source_pointer)
         except (OSError, ValueError, KeyError, TypeError) as exc:
@@ -12580,192 +12853,44 @@ def _run_item(spec_path, resume_reviewed=False):
         rc = 0
     if rc:
         return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/{pfo}")
-    if route_preflight_on() and not sp.get("dry_gen"):
-        # PREFLIGHT-EARLY-1122: the route chain's own preflight (driver admission bundle) at gen, before place
-        import autopilot as AP
-        _rpr = runner.format(kit=K, work=W) if core else W + "/gen/run_kit.sh"
-        try:
-            _rpc = route_preflight_cmd(AP, K, _rpr, hosts=(G,))
-        except Exception as _e:                           # bundle staging is infra: the route chain still checks
-            _rpc = f"echo {q('ADMISSION_TOOLS FAIL: bundle not staged: ' + type(_e).__name__)}; exit 3"
-        rc, txt = run("preflight_route", otrun(8, 2, W, _rpc, gh))
-        if rc and ROUTE_PREFLIGHT_INFRA_RE.search(txt or ""):
-            print(f"KW_NOTE route-chain preflight not run (admission bundle transport, exit {rc}); the route chain checks it", flush=True)
-            rc = 0
-        if rc:
-            return fail("preflight", "KIT_PREFLIGHT FAIL (route-chain preflight at gen, PREFLIGHT-EARLY-1122)\n" + txt,
-                        f"{G}:{K}")
+    if not sp.get("dry_gen"):
+        refused = route_preflight(runner, core)
+        if refused is not None:
+            return refused
     # KW-FIX-44 11-10 (DIE-KV-97): the contract advisories of this --plan-dir run (macro_pin_grid, macro_channels ...)
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
     res["preflight_advisory"] = preflight_advisory(rtxt)
     if sp.get("dry_gen"):             # PUBLISH-GATE-1116: the pre-apply gate stops here: kit_snap, kit_rtl, gen, lint and preflight passed; no place
         res.update(stage="preflight", verdict="DRY-PASS", evidence=f"{G}:{K}")
+        if prepare_publication:
+            source_spec = json.loads(spec_bytes)
+            plan_sha = prepare_publication["plan_sha256"]
+            manifest = _seal.get("manifest_hash")
+            # Stock src_manifest verify --ro already judged this source. Use its
+            # exact identity and the generated input inventory, not a tree rehash.
+            if (source_spec.get("src_manifest") == "require" and _seal.get("from") == "verify"
+                    and manifest == source_spec.get("src_manifest_hash")
+                    and prepare_publication.get("scheduler") == scheduler_code_id()):
+                form = PVR.request(source_spec, plan_sha=plan_sha, producer=G)["form_sha256"]
+                source = dict(tree=source_spec["src"], host=G, tree_read_only=True, manifest_hash=manifest)
+                outcome = {k: res.get(k) for k in ("stage", "verdict", "evidence", "preflight_fail_advisory")}
+                rc, txt = run("published_place_ready", remote(PPR.producer_command("capture", dict(
+                    spec=source_spec, result=dict(outcome, src_manifest=source), stages=completed_stages,
+                    form=form, plan=plan_sha, preflight=f"{W}/{pfo}"))), idempotent=True)
+                ref = _kr_json(txt, PPR.PREFIX.strip())
+                if rc == 0 and ref:
+                    res["published_place_ready"] = ref
+                else:
+                    res["published_place_declined"] = "producer receipt unavailable: " + (txt or "")[-500:]
+            else:
+                res["published_place_declined"] = "source lacks the ordinary verified read-only receipt"
+            res["stage"] = "preflight"
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 0
     if publish_gen_pilot_receipt(spec_path, spec_sha256, completed_stages):
         print("KW_GEN_PILOT_PASS source-specific GEN + preflight receipt", flush=True)
-    _dg = sp.get("dedup_group") or ""
-    if _dg:                                       # WF-1 11-14 (friction 7): one build per kit identity
-        try:
-            _hrc, _ht = run("kit_identity", remote(f"python3 -I -c {q(KIT_HASH_PY)} {q(K)} {q(T)}"), idempotent=True)
-            _hm = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _ht or "")
-            if _hm:
-                _kh = _hm.group(1)
-                (out / "kit_identity.json").write_text(json.dumps({"group": _dg, "hash": _kh, "item": T}))
-
-                def _hash_of(host, kpath, it):
-                    _r, _t = run("kit_identity_" + re.sub(r"\W", "_", it)[-30:], remote_argv(host, hub, f"python3 -I -c {q(KIT_HASH_PY)} {q(kpath)} {q(it)}"), idempotent=True)
-                    _m2 = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _t or "")
-                    return _m2.group(1) if _m2 else ""
-                _role, _owner = ident_claim(_dg, _kh, T, hash_of=_hash_of)
-                res["kit_identity"] = dict(group=_dg, hash=_kh, role=_role, owner=_owner)
-                print(f"KW_KIT_IDENTITY {T}: {_role} of {_dg} ({_kh[:12]})" + ("" if _role == "owner" else f" owner {_owner}"), flush=True)
-                if _role == "member":
-                    res.update(verdict="DEDUP", stage="identity", dedup_owner=_owner, dedup_hash=_kh, evidence=f"{G}:{K}")
-                    (out / "result.json").write_text(json.dumps(res, indent=1))
-                    return 0
-        except Exception as _e:
-            print(f"KW_DEDUP_SKIP {type(_e).__name__}: {_e}", flush=True)
-    # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
-    # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
-    # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
-    SSHE = "-e 'ssh -o BatchMode=yes -o ControlPath=none'"
-    on_hub = G in ("localhost", hub)
-    if not on_hub:
-        rc, txt = run("sync_hub", idempotent=True, argv=["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
-        if rc:
-            return fail("sync_hub", txt)
-    # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
-    sk = src_skew_check(sp, K)
-    if sk and sp.get("die") in SRC_SKEW_ADVISORY_DIES:
-        # KIT-OPS-5 11-14 (COORD ruling): src_skew is advisory for these dies (the QC src is ahead of the queue lint copy); logged, never a fail
-        print("KW_SRC_SKEW_ADVISORY " + " | ".join(sk)[:600], flush=True)
-        sk = []
-    if sk:
-        return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
-    explicit_resume = bool(sp.get("private") and (sp.get("resume_from") or {}).get("latest_start"))
-    explicit_rs = ""
-
-    def place_and_geom(K, rs):
-        """PLACE (async service or ot-run) + after_place; rs = the stage-resume start step or ''"""
-        nonlocal explicit_rs
-        # FLOW-21 11-01 (COORD 08:2x): kits whose runner hands the pre-route LEC to lec_async.sh (phase receipts) PLACE
-        # as a detached service on the gen host itself: that kit dir is the one authoritative copy (proof owner, GEOM,
-        # enqueue and the route all use G:K), so it is never relayed, pulled or cleaned while its proof runs.
-        # KW-FIX-45 11-12 (OWNER ruling): list every absolute /srv or /home path in the kit's scripts / config.mk / .f files that
-        # lies outside the kit and the item folder.  cfg kit_self_contained: "list" (default, advisory) or "fail" (stage fail);
-        # "off" skips.  Never raises.
-        try:
-            _sc = str(sp.get("kit_self_contained") or "list")
-            if _sc != "off":
-                _rc, _t = run("selfcontained", remote(f"python3 -I -c {q(SELFCONT_PY)} {q(K)} {q(W)} {q('copy' if _sc in ('copy', 'copy-strict') else 'list')}"), idempotent=True)
-                _rows = [ln for ln in (_t or "").splitlines() if ln.startswith("SELFCONT\t")]
-                (out / "selfcontained.tsv").write_text("\n".join(_rows) + "\n")
-                _bad = [ln for ln in _rows if "\tMISSING\t" in ln or "\tIMPOSSIBLE" in ln]
-                res["selfcontained_outside"] = len(_rows); res["selfcontained_bad"] = len(_bad)
-                if (_sc in ("copy", "copy-strict") and _bad) or (_sc == "fail" and _rows):
-                    return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: a path outside the kit could not be copied in:\n" + "\n".join((_bad or _rows)[:40]))
-        except Exception as _e:
-            print(f"KW_SELFCONT_SKIP {_e}", flush=True)
-        # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
-        # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
-        flow_refresh("place")
-        _epw = env_provenance_record(K)
-        if _epw and sp.get("private"):
-            return fail("env_provenance", "ENV-PROVENANCE " + _epw, f"{G}:{K}")
-        if explicit_resume:
-            explicit_rs = resume_prepare(sp, K, prun0, run, remote, res)
-            if explicit_rs == "nochange":
-                (out / "result.json").write_text(json.dumps(res, indent=1))
-                return 1
-            rs = explicit_rs
-        asy = False
-        if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
-            _, at = run("place_mode", idempotent=True, argv=remote(
-                f"test -f {q(K)}/lec_async.sh && grep -q phase_done {q(K)}/lec_async.sh && test -f {q(K)}/lec.py "
-                f"&& echo KW_ASYNC_OK || echo KW_ASYNC_NO"))
-            asy = "KW_ASYNC_OK" in at
-        res["place_async"] = asy
-        if asy:
-            if not on_hub:
-                # FLOW-OPS-1300 item 7 (FAM-QC-COLL-R2: run-item started ON the gen host rm -rf'd the only gen copy -> place 'kit dir missing'): the local W/gen is
-                # removed only when it is a relay copy, i.e. this process does not run on the gen host and the kit is present there
-                _ok, _why = hub_copy_removable(G, hub, K)
-                if _ok:
-                    run("clean_hub", ["bash", "-c", f"rm -rf {q(W)}/gen"])   # pre-place relay copy (lint only)
-                else:
-                    print(f"KW_CLEAN_HUB_SKIP {_why}", flush=True)
-            m, t = sp["place_mem_gb"], sp["place_threads"]
-            prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-            rc, txt, rcpt = place_async(K, prun, m, t)
-            res["ran_on"] = G
-            if rcpt:
-                res["place_receipt"] = rcpt
-            return after_place(K, *resume_verify(rs, rc, txt))
-        # a resumed kit's run/ holds hardlinks into the previous attempt on G: it PLACEs on G only (a relay would copy GBs)
-        pinned = sp.get("place_spill_hosts") in ([], [G]) and pinned_place_producer(sp, G)
-        for h in ([] if rs or pinned else [h for h in sp["hosts"] if h not in (G, hub, "localhost") and h not in stage_drain()]):     # FLOW-OPS-0900 fix 4: no relay copy onto a draining host
-            cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
-                  f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
-            rc, txt = run(f"sync_{h}", ["bash", "-c", cp], idempotent=True)
-            if rc:
-                return fail(f"sync_{h}", txt)
-        m, t = sp["place_mem_gb"], sp["place_threads"]
-        phosts = [G] if rs or pinned else sp["hosts"]
-        if not rs and not pinned:      # FLEET-WATCH-R5 / FLOW-OPS-0900 fix 4: the spec's frozen host list (die `hosts`, e.g. intel1 on KV-D26) is re-checked against the drain state, no fall-back to
-            phosts = [h for h in phosts if h not in stage_drain()] or [G]      # the capped list: only the gen host, where the kit already is
-        pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
-        if pref and not rs and not pinned:                              # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
-            p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
-            stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
-            ok = place_prefer_live(pref, stt, m, hub, fall=sp.get("host_fall_gb_h"))
-            if ok:
-                # KW-FIX-45 11-12 place_prefer is an ORDER, not a pin: pinning --hosts to the preferred hosts alone made ot-run
-                # answer NOT RUN when the preferred host refused (epyc2 scratch2 dipping under its 50 GB floor: 9 HBM rows
-                # RETRY-INFRA at 02:51-03:01).  The preferred hosts go first, every other host stays allowed.
-                phosts = ok + [h for h in phosts if h not in ok]
-        prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-        argv = otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True)
-        if pinned:
-            argv[1:1] = place_dispatch_limits(sp, G, hub, False)
-        rc, txt = run("place", argv)
-        ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
-        res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
-        if h and h != G and not (on_hub and h == hub):
-            rp = rq = 0
-            if h != hub:
-                rp, _ = run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"], idempotent=True)
-            if not on_hub:
-                rq, _ = run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"], idempotent=True)
-            if rp == 0 and rq == 0:
-                # the placed kit now lives on the gen host (the only path records/evidence/enqueue name): drop the
-                # PLACE-host and hub relay copies (~2.5 GB per station kit) so scratch floors are not eaten by duplicates
-                for x in sorted({h, hub} - {G}):
-                    run(f"clean_{x}", (["bash", "-c", f"rm -rf {q(W)}/gen"] if x == hub else
-                                       ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", x, f"rm -rf {q(W)}/gen"]))
-        return after_place(K, *resume_verify(rs, rc, txt))
-
-    def resume_verify(rs, rc, txt):
-        """KW-RESUME-1: after a resumed PLACE every hardlinked source file must be unchanged (no write through a link)"""
-        if not rs:
-            return rc, txt
-        vrc, vt = run("resume_verify", remote(kr_cmd(f"verify {q(K)}")), idempotent=True)
-        if vrc:
-            return (rc or 1), txt + "\nKW_RESUME_VERIFY FAIL: a reused (hardlinked) checkpoint file changed\n" + vt[-1500:]
-        return rc, txt
-
-    prun0 = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-    rs = "" if explicit_resume else resume_prepare(sp, K, prun0, run, remote, res)
-    if rs == "nochange":
-        (out / "result.json").write_text(json.dumps(res, indent=1))
-        return 1
-    try:
-        rc = place_and_geom(K, rs)
-    finally:
-        if rs or explicit_rs not in ("", "nochange"):
-            resume_release(K)
-    return chain_after_geom(rc)
+    return place_prepared_kit(runner, core)
 
 
 # ------------------------------------------------------------------------------------------------ KIT-INPUT-STORE-1
@@ -23192,6 +23317,7 @@ def main(argv=None):
     r = sub.add_parser("run-item")
     r.add_argument("spec")
     r.add_argument("--resume-reviewed", action="store_true", help="continue an exact held private placement without rebuilding it")
+    r.add_argument("--from-publication", help="resume a prepared publication spec from its canonical PASS record")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
@@ -23302,21 +23428,27 @@ def main(argv=None):
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
-            if a.resume_reviewed and a.goal:
-                print("KW_PRIVATE_VISUAL refused: the held goal cannot be overridden", flush=True)
+            if (a.resume_reviewed and a.goal) or (a.from_publication and (a.goal or a.resume_reviewed)):
+                print("KW_PRIVATE_VISUAL refused: the prepared or held goal cannot be overridden", flush=True)
                 return 2
             RUN_ITEM_GOAL = a.goal
             drv = runitem_driver(a.spec)
             argv = ["python3", str(drv), "run-item", a.spec] + (["--goal", a.goal] if a.goal else [])
             if a.resume_reviewed:
                 argv.append("--resume-reviewed")
+            if a.from_publication:
+                argv += ["--from-publication", a.from_publication]
             runitem_reexec(a.spec, argv)
             if drv != Path(__file__).resolve():
                 print(f"KW_DRIVER_REEXEC {Path(__file__).resolve()} -> {drv} (private run-item drives from rt/current; result tools stay pinned)", flush=True)
                 os.environ["KW_DRIVER_FROM"] = str(Path(__file__).resolve())
                 os.execvp(argv[0], argv)
+            if a.from_publication:
+                return run_item(a.spec, from_publication=a.from_publication)
             return run_item(a.spec, resume_reviewed=True) if a.resume_reviewed else run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
+            if a.from_publication:
+                raise  # The publisher paths are immutable evidence, not this attempt's result.
             out = Path(a.spec).parent / "result.json"
             out.write_text(json.dumps({"verdict": "FAIL", "stage": "pipeline", "tail": f"Traceback (most recent call "
                                        f"last) {type(e).__name__}: {e}"}))
