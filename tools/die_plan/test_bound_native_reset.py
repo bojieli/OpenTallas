@@ -490,3 +490,35 @@ def test_export_pair_definition_absent_is_resolved_but_present_mutant_fails(tmp_
     p, f = out_fixture(tmp_path, mutate=lambda s: s.replace('export_q <= d;', 'export_q <= q;'))
     with pytest.raises(gen_rtl.GenError):
         G.install_bound_native_reset(p, 't', [f])
+
+
+def test_indexed_native_reset_refuses_duplicate_local_relay(tmp_path):
+    def duplicate(text):
+        line = next(line for line in text.splitlines() if "ot_dp_rrelay u_rrl_0 (" in line)
+        return text.replace(line, line + "\n" + line)
+
+    plan, rtl = fixture(tmp_path, mutate=duplicate)
+    with pytest.raises(gen_rtl.GenError, match="ambiguous instance"):
+        G.install_bound_native_reset(plan, "t", [rtl])
+
+
+def test_indexed_native_reset_excludes_disconnected_module(tmp_path):
+    unused = ("\nmodule unused(input clk, arst_n);\n"
+              "  bound duplicate_parent(.clk(clk), .arst_n(arst_n));\n"
+              "  ot_dp_rrelay u_rst_in(.clk(clk), .d(arst_n), .q(unused_rst));\n"
+              "endmodule\n")
+    plan, rtl = fixture(tmp_path, mutate=lambda text: text + unused)
+    assert G.install_bound_native_reset(plan, "t", [rtl])["native_paths"] == {
+        "u_rst_in": "u_bound.u_rst_in", "u_rrl_0": "u_bound.u_rrl_0",
+    }
+
+
+def test_indexed_native_reset_refuses_cyclic_wrapper(tmp_path):
+    def recursive(text):
+        boundary = text.index("\nendmodule", text.index("module bound("))
+        return text[:boundary] + "\n bound u_self(.clk(clk), .arst_n(arst_n));" + text[boundary:]
+
+    plan, rtl = fixture(tmp_path, mutate=recursive)
+    plan.types["t"]["module"] = "bound"
+    with pytest.raises(gen_rtl.GenError, match="wrapper hierarchy contains a cycle"):
+        G.install_bound_native_reset(plan, "t", [rtl])
