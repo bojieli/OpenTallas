@@ -21,6 +21,8 @@ finding only at synth, place or CTS:
   memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
                      landing-ring flip-flop map synth applies) <= SYNTH_MEMORY_MAX_BITS (ORFS
                      default 4096) unless SYNTH_MOCK_LARGE_MEMORIES = 1: ORFS mem_dump.py fails synth otherwise
+  hook_rtl_net       REPORT-ONLY (P-HOOK-RTL-NET): a placement hook status net (cland_status) absent from / undriven in the RTL
+                     -> `hook_rtl_net` warning list in gen_lint.json and a GEN_LINT WARN line; verdict / rc unchanged
   src_skew           (kit_wave, on the hub, after gen; COORD 04:0x KIT-WAVE-5 03:47) the kit's source commit vs the
                      queue's: the queue admits a kit with ITS OWN lint (kit_preflight / kit_contract / sdc_lint, the
                      admission bundle), so a kit generated on a source whose copy of those files differs can fail there
@@ -422,6 +424,51 @@ def _run_yosys(kd, image, mem_gb, flatten):
     return parse_check(chk), rows, 0
 
 
+def _hook_status_specs(kd):
+    """{net: [hook file, ...]}: status nets named by a kit placement hook (`set cland_status { {net x y} ... }`)."""
+    out = {}
+    for f in sorted(list(kd.glob("*.tcl")) + list(kd.glob("*/*.tcl"))):
+        try:
+            txt = f.read_text(errors="replace")
+        except OSError:
+            continue
+        m = re.search(r"^\s*set\s+cland_status\s*\{", txt, re.M)
+        if not m:
+            continue
+        depth, i = 1, m.end()
+        while i < len(txt) and depth:
+            depth += {"{": 1, "}": -1}.get(txt[i], 0)
+            i += 1
+        for spec in re.findall(r"\{\s*([^\s{}]+)\s+[-\d.eE+]+\s+[-\d.eE+]+\s*\}", txt[m.end():i - 1]):
+            out.setdefault(spec, []).append(f.name)
+    return out
+
+
+def hook_status_nets(kd, check_problems=None):
+    """P-HOOK-RTL-NET (R3-HOOKNET 11-27, REPORT-ONLY): -> (warnings, applies).  Every status net a placement hook names
+    (cland_status) must exist in the kit RTL (identifier match, tail of a hierarchical name) and must not be reported
+    undriven by the yosys `check` (a local source dropped by drop_undriven_local_sources removes the net at synth: KV hroot
+    probe 1126164111 passed rtl_check and died at global_place 'OT_CLAND missing actual status net
+    landing_ready_i_host_die_rst_n')."""
+    specs = _hook_status_specs(kd)
+    if not specs:
+        return [], False
+    text = _sources_text(kd)
+    und = {}
+    for ln in check_problems or ():
+        if "no driver" in ln or "undriven" in ln:
+            for w in re.findall(r"[\w$.\\\[\]]+", ln):
+                und.setdefault(re.split(r"[./\\]", re.sub(r"\[\d+\]$", "", w))[-1], ln.strip()[:160])
+    warns = []
+    for net, files in sorted(specs.items()):
+        tail = net.rsplit(".", 1)[-1]
+        if not re.search(r"(?<![\w$])" + re.escape(tail) + r"(?![\w$])", text):
+            warns.append(f"HOOK-RTL-NET {net} (hook {files[0]}): no such net in the kit RTL")
+        elif tail in und:
+            warns.append(f"HOOK-RTL-NET {net} (hook {files[0]}): net is undriven in the RTL ({und[tail]})")
+    return warns, True
+
+
 def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     kd = Path(kd).resolve()
     checks = {}
@@ -446,8 +493,8 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     put("macro_tcl", lambda: macro_tcl(kd))
     put("kit_rtl_paths", lambda: kit_rtl_paths(kd))
     cfg = _cfg(kd)
+    res = {}
     if yosys and cfg.get("DESIGN_NAME"):
-        res = {}
 
         def ys():
             res["r"] = run_yosys(kd, image, mem_gb)
@@ -470,9 +517,13 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
         seat = [f"SEAT-MISS WARN not checked: {type(error).__name__}: {error}"]
     miss = [w.replace("SEAT-MISS WARN", "SEAT-MISS", 1) for w in seat if "not checked" not in w]
     checks["seat_miss"] = dict(verdict="FAIL" if miss else ("PASS" if any((kd / f).is_file() for f in ("istations.tcl", "istations_post.tcl")) else "NA"), errors=miss, n_errors=len(miss))
+    try:                                  # P-HOOK-RTL-NET 11-27, REPORT-ONLY: never in issues / verdict
+        hook, hook_on = hook_status_nets(kd, (res.get("r") or ([],))[0])
+    except Exception as error:            # noqa: BLE001
+        hook, hook_on = [f"HOOK-RTL-NET not checked: {type(error).__name__}: {error}"], True
     bad = [f"{n}: {e}" for n, row in checks.items() for e in row["errors"]]
     return dict(schema="opentallas.kit_gen_lint.v1", kit=str(kd), verdict="FAIL" if bad else "PASS",
-                checks=checks, issues=bad, seat_miss=seat, note="BUILD check (OWNER 12.27 d), not a sign-off check")
+                checks=checks, issues=bad, seat_miss=seat, hook_rtl_net=hook, hook_rtl_net_applies=hook_on, note="BUILD check (OWNER 12.27 d), not a sign-off check")
 
 
 def main(argv=None):
@@ -491,6 +542,8 @@ def main(argv=None):
         print("  - GEN_LINT FAIL", i)          # FAIL on every issue line: kit_wave.error_lines/classify read them
     for w in [w for w in rec.get("seat_miss") or [] if "not checked" in w]:
         print("  - GEN_LINT WARN", w)
+    for w in rec.get("hook_rtl_net") or []:
+        print("  - GEN_LINT WARN", w)          # report-only (P-HOOK-RTL-NET): rc unchanged
     return int(rec["verdict"] != "PASS")
 
 

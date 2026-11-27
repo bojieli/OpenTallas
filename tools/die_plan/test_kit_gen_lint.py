@@ -212,3 +212,36 @@ def test_src_skew_every_git_call_no_lazy_fetch(tmp_path, monkeypatch):
     GL.src_skew(head, r)
     GL.src_skew("0123456789ab", r)
     assert len(seen) >= 2
+
+
+def _hook_kit(tmp_path, rtl, status="landing_ready_i_host_die_rst_n"):
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n")
+    (tmp_path / "demo.sv").write_text(rtl)
+    (tmp_path / "landing_place.tcl").write_text(
+        "set cland_groups {\n}\nset cland_status {\n  {%s 10.0 20.0}\n  {landing_ready_ft0_i 11.0 21.0}\n}\nproc x {} {}\n" % status)
+    return tmp_path
+
+
+def test_hook_status_nets_hroot_case_and_clean_control(tmp_path):
+    """P-HOOK-RTL-NET: hook names a status net the RTL lacks (hroot probe 1126164111) -> warning; clean control -> none."""
+    bad = _hook_kit(tmp_path / "bad", "module demo(input a, output y);\n wire landing_ready_ft0_i; assign y = a;\nendmodule\n") \
+        if (tmp_path / "bad").mkdir() is None else None
+    w, on = GL.hook_status_nets(bad)
+    assert on and len(w) == 1 and "landing_ready_i_host_die_rst_n" in w[0] and "no such net" in w[0]
+    (tmp_path / "ok").mkdir()
+    ok = _hook_kit(tmp_path / "ok", "module demo(input a, output y);\n wire landing_ready_ft0_i;\n"
+                   " wire landing_ready_i_host_die_rst_n; assign y = a;\nendmodule\n")
+    assert GL.hook_status_nets(ok) == ([], True)
+    und = ["Warning: Wire demo.landing_ready_i_host_die_rst_n is used but has no driver."]
+    w, _ = GL.hook_status_nets(ok, und)
+    assert len(w) == 1 and "undriven" in w[0]
+
+
+def test_hook_status_nets_na_and_report_only(tmp_path):
+    (tmp_path / "config.mk").write_text("export VERILOG_FILES = /work/demo.sv\n")
+    (tmp_path / "demo.sv").write_text("module demo; endmodule\n")
+    assert GL.hook_status_nets(tmp_path) == ([], False)
+    kit_ = _hook_kit(tmp_path, "module demo; endmodule\n")
+    rec = GL.lint(kit_, yosys=False)
+    assert rec["hook_rtl_net_applies"] and len(rec["hook_rtl_net"]) == 2
+    assert not any("HOOK-RTL-NET" in i for i in rec["issues"])
