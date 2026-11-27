@@ -590,9 +590,14 @@ def archive_index():
 _REC = dict(key=None, recs={})
 
 
+def _layout_projection_stamp():
+    store = layout_service.LS.STORE
+    return _mtime(store / 'elements'), _mtime(store / 'recovery-identities')
+
+
 def records():
     idx = index()
-    key = (idx.get('generated'), _mtime(CENSUS), _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120))
+    key = (idx.get('generated'), _mtime(CENSUS), _mtime(ARCHIVE_INDEX), _layout_projection_stamp(), int(time.time() // 120))
     if key != _REC['key']:
         d = _json_file(ARCHIVE_INDEX) or {}
         census = signoff_census()
@@ -610,12 +615,16 @@ def records():
                               for ref in set(item.get('source_refs') or ()))
         source_archives = APR.source_archives(d.get('agidock_index_tsv'),
                                               {key for key, n in source_refs.items() if n == 1})
-        recs = census_records(census, idx['nodes'], layouts, source_archives) if census else layouts
+        bodies_by_unit = defaultdict(set)
+        if (layout_service.LS.STORE / 'recovery-identities').is_dir():
+            for row, level, unit, record, odb_sha in APR.indexed_archive_bodies(d.get('agidock_index_tsv'), idx['nodes']):
+                bodies_by_unit[row['die'], level, unit].add((record, odb_sha))
+        recs = census_records(census, idx['nodes'], layouts, source_archives, bodies_by_unit) if census else layouts
         _REC.update(key=key, recs=recs)
     return _REC['recs']
 
 
-def census_records(census, nodes, layouts, source_archives=None):
+def census_records(census, nodes, layouts, source_archives=None, bodies_by_unit=None):
     recs = {}
     node_names = {}
     for node in nodes.values():
@@ -649,6 +658,13 @@ def census_records(census, nodes, layouts, source_archives=None):
                             matches[match['record'], match['odb_sha256']] = match
                     if len(matches) == 1:
                         archive = next(iter(matches.values()))
+                if pack is None and bodies_by_unit:
+                    bodies = set().union(*(bodies_by_unit.get((die, level, unit), ())
+                                           for unit in archive['units']))
+                    if archive.get('record') and archive.get('odb_sha256'):
+                        bodies.intersection_update({(archive['record'], archive['odb_sha256'])})
+                    if bodies:
+                        pack = design_index.recovered_store_entry(rid, item['key'], bodies)
                 recs[rid] = dict(id=rid, die=die, name=name, level=level, node=nid, plan='current' if bucket == 'current' else 'superseded',
                                  plan_label=APR.LABEL[label], superseded=bucket != 'current', signoff_basis=bucket,
                                  census_key=item['key'], node_state=((nodes.get(nid) or {}).get('status') or {}).get('state'),
@@ -961,11 +977,11 @@ class H(BaseHTTPRequestHandler):
         g = lambda k, d='': (q.get(k, [d])[0] or d)
         idx = DS.index(); stamp = (idx.get('generated') if idx else None, _mtime(CENSUS))
         if p == 'meta': return self.send(200, json.dumps(meta(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
-        if p == 'dies': return self.json('dies', (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), dies)
+        if p == 'dies': return self.json('dies', (stamp, _mtime(ARCHIVE_INDEX), _layout_projection_stamp(), int(time.time() // 120)), dies)
         if p.startswith('die/'): d = p[4:]; return self.json('die:' + d, stamp, lambda: die(d))
         if p.startswith('node/'): n = p[5:]; return self.json('node:' + n, (stamp, _mtime(layout_service.LS.STORE / 'elements' / n / 'index.json'), _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime'), int(time.time() // 120)), lambda: node(n))
         if p.startswith('compose/'): d = p[8:]; return self.json('compose:' + d, stamp, lambda: compose_of(d))
-        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), lambda: closure(d))
+        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, (stamp, _mtime(ARCHIVE_INDEX), _layout_projection_stamp(), int(time.time() // 120)), lambda: closure(d))
         if p == 'resolve': return self.send(200, json.dumps(resolve([x for x in g('q').split(',') if x][:400])).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p == 'search': return self.send(200, json.dumps(search(g('q'), g('die') or None, min(200, int(g('limit', '40') or 40)))).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p.startswith('layout/'): return LS.handle(self, p[7:], q, False)
@@ -996,8 +1012,8 @@ class H(BaseHTTPRequestHandler):
                             dies={d: dict(types=i['nodes'][d].get('type_count'), signed_types=v['type']['counted'], pending_archive_types=v['type']['pending'], credited_types=v['type']['before'],
                                           signed_cores=v['core']['counted'], pending_archive_cores=v['core']['pending'], credited_cores=v['core']['before'], pending=v['pending_list']) for d, v in (g.get('dies') or {}).items()})
             return self.json('count', stamp, count)
-        if p == 'records': return self.json('records:%s:%s' % (g('die'), g('plan')), (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), lambda: records_list(g('die') or None, g('plan') or None))
-        if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime'), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), archive_summary)
+        if p == 'records': return self.json('records:%s:%s' % (g('die'), g('plan')), (stamp, _mtime(ARCHIVE_INDEX), _layout_projection_stamp(), int(time.time() // 120)), lambda: records_list(g('die') or None, g('plan') or None))
+        if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime'), _layout_projection_stamp(), int(time.time() // 120)), archive_summary)
         if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')
         if p == 'coverage':
