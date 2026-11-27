@@ -60,3 +60,4 @@
   C-CA-FARSTRAP-UNSEEN: same census, n3_turn/str/transit all PASS. Also drop it to 0.
   Static only. A lead is kept at a 100 um headroom limit: 26 groups on 15 types.
   C-FIRM-RESIZE-OVERLAP HEAD (single instance, lep0N): HEAD-EAST-R4 is classifying it from the r6 and C1d DPL logs. It will either FOLD into C-REPAIR-BUF-OVER-MACRO, stay a separate class, or be marked NOT-REPRODUCED, posted with evidence.
+- 2026-11-27 11:00 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-13291-1795805880 on loved-redfish: rc=0 after 159 s, ended 19:00:38, log none, cmd: --mem 24 --threads 2 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/part-r3 --hosts epyc7 -- bash /srv/opentallas-scratch2/claude/HEAD-IN
