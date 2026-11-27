@@ -15,8 +15,9 @@ def env(tmp, **kw):
 
 def test_second_check_of_a_lane_waits_then_runs_anyway_and_other_lanes_are_not_gated(tmp_path):
     P._LANE_SLOT.clear()
-    a, b = tmp_path / "claude" / "laneA" / "t", tmp_path / "claude" / "laneB" / "t"
-    a.mkdir(parents=True); b.mkdir(parents=True)
+    # The tree path supplies a lane label only. Keep the synthetic labels outside
+    # the real temporary slot directory, which can already sit under /claude/.
+    a, b = "/fixture/claude/laneA/t", "/fixture/claude/laneB/t"
     assert P.lane_slot(str(a), env(tmp_path)) == 0
     out = io.StringIO()
     assert P.lane_slot(str(a), env(tmp_path), out) is None and "running anyway" in out.getvalue()      # slot taken: waits (0 s here), then proceeds
