@@ -2989,6 +2989,38 @@ def _plan_geom_default():
     return PGEO.DEFAULT_MODE
 
 
+def native_cover_error(raw, band_raw, receipt_path):
+    """P-RESET-RECEIPT item 8 (HEAD-PROBE-R3 11-27, default off: OT_NATIVE_COVER_REQUIRED=1): when the hd_serdes partitions of this plan differ from the event's
+    base plan (--band-base), the native reset receipt must come with changed_binding_cover.json (written by rebind_nr_serdes --new-receipt) that lists every
+    differing partition.  -> None when fine / not applicable, else the error text."""
+    import json as _json
+    import os as _os
+    if _os.environ.get("OT_NATIVE_COVER_REQUIRED") != "1" or band_raw is None:
+        return None
+
+    def parts(r):
+        ts = {n for n, t in (r.get("partition_types") or {}).items() if n == "hd_serdes" or t.get("module") == "ot_s81hd_serdes"} or {"hd_serdes"}
+        return {q["name"]: q for q in (r.get("partitions") or []) if q.get("type") in ts}
+    a, b = parts(band_raw), parts(raw)
+    differing = sorted(n for n in set(a) | set(b) if a.get(n) != b.get(n))
+    if not differing:
+        return None
+    if receipt_path is None:
+        return "hd_serdes partitions differ from the band base (%s) and there is no native reset receipt" % ", ".join(differing[:4])
+    cover = Path(receipt_path).parent / "changed_binding_cover.json"
+    if not cover.is_file():
+        return "hd_serdes partitions differ from the band base (%s) but %s is missing: the receipt was not produced by the changed-binding guard" % (", ".join(differing[:4]), cover.name)
+    try:
+        c = _json.loads(cover.read_text())
+        covered = {x.split("]")[0].split("[", 1)[1] for x in c["covered"]}
+    except (ValueError, KeyError, IndexError, TypeError, AttributeError):
+        return "changed_binding_cover.json is malformed"
+    missing = [n for n in differing if n not in covered]
+    if missing:
+        return "changed_binding_cover.json does not cover differing partition(s) %s" % ", ".join(missing[:4])
+    return None
+
+
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
@@ -3011,6 +3043,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
     if native_reset_receipt is None:
         native_reset_receipt = find_native_reset_receipt(P, repo_root)
+    _ce = native_cover_error(raw, band_base, native_reset_receipt)
+    if _ce:
+        R.err("native_reset_cover", _ce)
     if native_reset_receipt is not None:
         P._native_reset_release_receipt = native_reset_receipt
         summ_receipt = str(native_reset_receipt)
