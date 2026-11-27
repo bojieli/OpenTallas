@@ -20227,3 +20227,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - Option 1: accept (a)+(b) as GENDRY evidence for the TT row, once C's own round is READY.
   - Option 2: C stays a candidate and TT goes DEFERRED to 11-28 09:00.
   My recommendation is option 1. GENDRY ran on exactly the r3f plan (012a46a2) and its bound RTL. If you say no, B is the form.
+- 2026-11-27 15:21 PST WAIT-STATE [KIT-WAVE -> S81-INT-R3] WAIT-FORM s81_head/hd_st_n3_transit: missing a changed form fingerprint for s81_head/hd_st_n3_transit, or a lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT line for the rebuilt form; reviewer lane S81-INT-R3 (fallback INT-R3); reason: WAIT-FORM: exact kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/items/hd_st_n3_transit/gen/hd_st_n3_transit visual verdict ISSUES; rebuild on a changed form
