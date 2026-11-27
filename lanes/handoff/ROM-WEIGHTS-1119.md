@@ -68,3 +68,11 @@ Worktree epyc7 `/srv/opentallas-scratch2/claude/romw-1119/wt`, branch `claude/ro
 - Stage37 +1024 T CLOSED: 8-rank media 0 collisions and both native benches pass (E7 romw-1119/stage37_t1024_1124/media); C1h root/return replay passes with 640 slack, mutants fail.
 - E10: 455 GB QC + 208 GB HEAD failed partials deleted with ot-delete (710 GB freed). Lane-root .keep moved to tmp/.keep.lane-root-1124. The 40 live subdirs each have a .keep + lease (tmp/keep_dirs_1124.txt), renewed by bin/renew_leases.sh from cron 41 */12. Inventory: logs/e10_failed_batch_inventory_1124.txt.
 - Open: final composed die GDS + post-overlay DRC, ROM readout periphery, S81 R012+.
+
+## S81 compact stages R216-R240, November 26
+
+- E7 R216-R227 and Intel1 R228-R240 are explicitly allocated. Both stage roots are `/srv/opentallas-scratch2/claude/romw-1119/s81_stage_wave_1125`. Stage units E7 `oth-ubuntu-3294806-1795763373` and Intel1 `oth-ubuntu-1892582-1795763368` ended rc0. Each host staged only its three checkpoint shards, all size/SHA checked against the original pinned FETCH_MANIFEST. Portable source e6aa0d2d0aba plus the exact BF16 fixture and stock ns-floor byte stream verifier are shared. No additional E8 work.
+- E7 native rank units in rank order. R216-R221 `3660549-1795764509 3661764-1795764510 3662895-1795764511 3665614-1795764516`. R222-R227 `3664399-1795764514 3666882-1795764518 3666858-1795764517 3668582-1795764519`. Prefix `oth-ubuntu-`.
+- Intel1 native rank units in rank order. R228-R233 `1915460-1795763461 1916649-1795763462 1917745-1795763463 1919042-1795763464`. R234-R240 `1920316-1795763465 1922647-1795763467 1923418-1795763467 1924661-1795763469`. Prefix `oth-ubuntu-`.
+- At 23:41 PST the first Intel1 stages R228 and R234 had all eight verified compressed archives with their stock receipts. All remaining rank scopes are running. Durable results are in `s81/layout_source_1124/archives` below the stage roots. Local dispatcher logs are rtx-pro `/tmp/ot-publish-bind-reuse.2uX8RY/pre-admission/rom-logs`; each build log is under the stage `logs` subdir. Scope lists prevent duplicate launches.
+- Intel1 `romw-1119` ancestor now has its ordinary ROM-WEIGHTS-1119 72-hour fleet lease and persistent `.keep` through ROM integration. E7 already has the inherited ancestor marker and ordinary renewal. Other stage owners handle earlier ranges.
