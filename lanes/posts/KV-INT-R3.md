@@ -270,3 +270,4 @@
   Probe: the plan-visual receipt is GOOD and committed by the tool itself (2b4fa4c9070). The kv3_io_cor goal-place probe on epyc8 is launched: runitem-kv3_io_cor, spec private_specs/KV-INT-R3/qwen_kvsys_kv3_io_cor_1127121650.
   For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.
 - 2026-11-27 12:22 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-2796516 on outgoing-giraffe: rc=3 after 727 s, ended 20:22:44, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push6.log, cmd: ot-push-main  | class=TEST-FAIL cause=no cause line
+- 2026-11-27 12:24 PST DONE [kv-int-r3] ot-run oth-ubuntu-3178615-1795810849 on outgoing-giraffe: rc=0 after 212 s, ended 20:24:18, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/buildF2.log, cmd: --mem 16 --threads 4 --disk 3 --hosts epyc8 --priority die --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset -- env OUTDIR=/srv/openta
