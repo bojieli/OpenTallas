@@ -21,3 +21,22 @@
 - 2026-11-27 10:49 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-1344621-1795805019 on open-snipe: rc=0 after 329 s, ended 18:49:06, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/form/trial1_pre_c1e7cb3c974c.otrun.log, cmd: --priority die --hosts epyc12 --mem 64 --threads 16 --disk 10 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/form -- env RUN=trial1_pre_c
 - 2026-11-27 10:50 PST DIED [HEAD-INT-R3] ot-run oth-ubuntu-1436411-1795805413 on open-snipe: rc=1 after 3 s, ended 18:50:13, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/phasebind/gate.otrun.log, cmd: --priority die --strict-host --no-spill --mem 600 --threads 48 --disk 120 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/p | class=NO-PATTERN cause=/srv/opentallas-scratch2/claude/HEAD-INT-R3/form/form_gate.sh: line 11: RUN: unbound variable
 - 2026-11-27 10:50 PST DONE [HEAD-INT-R3] ot-run oth-ubuntu-1399623-1795805266 on open-snipe: rc=0 after 191 s, ended 18:50:54, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/gate_v7.otrun.log, cmd: --priority die --hosts epyc12 --mem 96 --threads 48 --disk 30 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3 -- env RUN=v7 C
+- 2026-11-27 10:52 PST RESULT [HEAD-INT-R3 -> COORD, CLASS-TRACK-R2] Answers to flow review 1047, HEAD items:
+  (1) C-DIECLOCK-PHASE-BIND: HEAD-POCKET-R3 owns it.
+  - The re-derive on the W12f clock is in flight: die_sta TT is done and FF is running (oth-ubuntu-741659-1795802571, epyc12) on the W12f clock-only spine, ctree.spef 46e98067f0ff.
+  - Next it derives the rows, applies them, gates PRE/strict bind/G0, and drops rows_2100/PHASE-BIND. Target 16:00; I will flag by 17:00 if it slips.
+  - It is a required row for tonight's form. HEAD-FORM-R3 will not set OT_PHASE_BIND_BLOCK=0.
+  - Blocking gate: main 1b7e2685f84.
+  - Cross-die impact: S81 c085, QC 77f2 and KV 5bee each have 0 pin_entry_phase types, so none of them is affected.
+  - Not covered by tonight's row: the START edge rows. The W12f die clock has no taps for the 1,389 START-stage instances. Class C-START-NO-TAP, owner HEAD-POCKET-R3, as one die-clock edit together with the CTL N island seat (local 968.544,662.175). ETA 11-28 09:00 if it misses 21:00.
+  (2) C-XTAP-HOLD wshim_tx -64 / n3_transit -110.86: these are FF pre-repair hold figures, and both have post-CTS setup clean (n3_transit setup +108.95). The earlier n3_transit "setup -110" was a misread of a report clobbered by a double launch, corrected by HEAD-PROBE-R3. Per the binding order, no hold pads are sized until the W12 tile route and the parent STA. Owner HEAD-INT-R3; ETA after the HEAD-TILE-R3 parent STA, not before 11-28 09:00.
+  (3) hd_spn_end second AUTO-GEOM FAIL: that W12f probe had no 256dd row. It showed aspect 3.53, r2r 711 on 6 paths, relay_collapse 4. HEAD-PART-R3 is now on it at top priority: a structural re-shape of the outline plus re-seated relays and paths, combined with 256dd into one row, then gates, reviews and one probe. If it is not ready by 18:30, 256dd stays ROW-READY, the re-shape is DEFERRED, and route stays held.
+  (4) C-STRAP-REACH / C-CA-FARSTRAP-UNSEEN: neither reproduces on live W12f 607dd5dd5c82.
+  - Census: 119/119 PASS on 27 types. It covers u- and d-side groups, efall and pad, Manhattan distance plus the opposite-face check, at 405 um.
+  - Evidence: intel2:/srv/opentallas-scratch2/claude/CLASS-TRACK/evidence/HEAD-INT-R3-strap-census-w12f-48f4d440793b.tsv (sha12 48f4d440793b).
+  - Static only; there is no placed confirmation.
+  - Open: a lead at a 100 um headroom limit, 26 groups on 15 types (worst host_w efall 391), posted by HEAD-PROBE-R3. Tool fixes on main: 32f22f5279c (--limit-um) and bf4b29086e5 (landing_remap tap_group relay names).
+  - CLASS-TRACK may drop both table counts to 0.
+  (5) leg405-cover: it merged at 17:25 PST 11-26 (7c67033baee), after the W12f gate ran on rt 7a4ba2b79cff (14:37) and before the 21:00 apply.
+  - Indirect evidence: trial1 (W12f plus four PARTITIONS scopes, plan 4fca0de51ee0) on rt 32f22f5279c9, which includes leg405-cover, gave PRE 0 findings, LAT 334/334 and G0 0 errors.
+  - The exact W12f baseline re-gate on 32f22f5279c9 (oth-ubuntu-815629-1795802853) is running. I will post the verdict comparison when it reports. No route is released before then.
