@@ -10,6 +10,17 @@ import re
 
 MAX_UTIL = 0.70
 
+REGION_TCL = [
+    "proc ot_lc_region {name x0 y0 x1 y1 mem} {",
+    "  global lc_b lc_u",
+    "  set reg [odb::dbRegion_create $lc_b $name]",
+    "  $reg setRegionType INCLUSIVE",
+    "  odb::dbBox_create $reg [expr {round($x0*$lc_u)}] [expr {round($y0*$lc_u)}] [expr {round($x1*$lc_u)}] [expr {round($y1*$lc_u)}]",
+    "  set grp [odb::dbGroup_create $reg $name]",
+    "  foreach i $mem { $grp addInst $i }",
+    "}",
+]
+
 
 def validate(t, tn):
     rows = t.get("logic_cluster_rects_um")
@@ -103,14 +114,7 @@ def tcl(P, tn, *, no_core_rows=(), firm_small=0):
            f"  if {{$area > {MAX_UTIL} * $ra}} {{ error \"OT_LOGIC_CLUSTER $name: cell area $area um2 exceeds {MAX_UTIL:g} of rect $ra um2\" }}",
            "  return [list $mem $skipped $area $ra]",
            "}",
-           "proc ot_lc_region {name x0 y0 x1 y1 mem} {",
-           "  global lc_b lc_u",
-           "  set reg [odb::dbRegion_create $lc_b $name]",
-           "  $reg setRegionType INCLUSIVE",
-           "  odb::dbBox_create $reg [expr {round($x0*$lc_u)}] [expr {round($y0*$lc_u)}] [expr {round($x1*$lc_u)}] [expr {round($y1*$lc_u)}]",
-           "  set grp [odb::dbGroup_create $reg $name]",
-           "  foreach i $mem { $grp addInst $i }",
-           "}",
+           *REGION_TCL,
            "proc ot_logic_cluster {name x0 y0 x1 y1 pats} {",
            "  global lc_post lc_pending",
            "  lassign [ot_lc_members $name $x0 $y0 $x1 $y1 $pats] mem skipped area ra",
