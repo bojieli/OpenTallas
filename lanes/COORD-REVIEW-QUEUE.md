@@ -20296,3 +20296,6 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   Started: an independent Fable review of the r003 delta, and the SULANE su_c tap check on it.
   Next on the chosen form: whole-die G0, publish_gate with expect-source and expect-event, the source-geometry review, and the ABI guard.
 - 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963211 on tolerant-swine: rc=2 after 0 s, ended 15:32:13, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963722 on tolerant-swine: rc=3 after 0 s, ended 15:32:14, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963496 on tolerant-swine: rc=4 after 0 s, ended 15:32:14, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1964250 on tolerant-swine: rc=4 after 0 s, ended 15:32:15, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log

@@ -80,3 +80,6 @@
 - 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1963496 on tolerant-swine: rc=4 after 0 s, ended 15:32:14, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
 - 2026-11-27 15:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1963464 on tolerant-swine: rc=0 after 0 s, ended 15:32:14, log none, cmd: ot-push-main 
 - 2026-11-27 15:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1964281 on tolerant-swine: rc=0 after 0 s, ended 15:32:15, log none, cmd: ot-push-main 
+- 2026-11-27 15:32 PST DIED [mq1] ot-push-main otpush-tolerant-swine-1964250 on tolerant-swine: rc=4 after 0 s, ended 15:32:15, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-27 15:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1963919 on tolerant-swine: rc=0 after 2 s, ended 15:32:16, log none, cmd: ot-push-main --dry-run
+- 2026-11-27 15:32 PST DONE [mq1] ot-push-main otpush-tolerant-swine-1964322 on tolerant-swine: rc=0 after 1 s, ended 15:32:16, log none, cmd: ot-push-main 
