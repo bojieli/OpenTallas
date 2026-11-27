@@ -175,6 +175,30 @@ def write_request(path, candidate):
     os.replace(tmp, path)
 
 
+def commit_receipt(target, ident):
+    """Commit the ledger file alone so `git show HEAD:<ledger>` (read_ledger) sees it. Never pushes, never add -A."""
+    target = Path(target)
+    git = ["git", "-C", str(target.parent)]
+
+    def run(*argv):
+        return subprocess.run(git + list(argv), capture_output=True, text=True, timeout=60)
+
+    if run("rev-parse", "--is-inside-work-tree").stdout.strip() != "true":
+        return False
+    if run("check-ignore", "-q", "--", target.name).returncode == 0:
+        return False
+    if run("add", "--", target.name).returncode != 0:
+        return False
+    if run("diff", "--cached", "--quiet", "--", target.name).returncode == 0:
+        return False
+    who = []
+    if not run("config", "user.name").stdout.strip() or not run("config", "user.email").stdout.strip():
+        who = ["-c", "user.name=plan-visual-review", "-c", "user.email=noreply@anthropic.com"]
+    done = subprocess.run(git + who + ["commit", "-q", "-m", f"plan visual review receipt {ident}", "--", target.name],
+                          capture_output=True, text=True, timeout=60)
+    return done.returncode == 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("request", type=Path)
@@ -206,7 +230,8 @@ def main():
             if ledger.tell() == 0:
                 ledger.write(HEADER)
             ledger.write("\t".join(fields) + "\n")
-        print(f"{args.verdict} {candidate['die']}/{candidate['item']} {candidate['form_sha256']}: {target}")
+        committed = commit_receipt(target, f"{candidate['die']}/{candidate['item']}/{candidate['form_sha256'][:12]}")
+        print(f"{args.verdict} {candidate['die']}/{candidate['item']} {candidate['form_sha256']}: {target}" + (" committed" if committed else ""))
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
         parser.exit(1, f"plan-visual-review: {exc}\n")
 

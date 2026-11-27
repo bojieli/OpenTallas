@@ -164,3 +164,19 @@ def test_explicit_rollout_scope():
     assert not PVR.enabled(["t1", "near_*"], "s81", "t2", "type")
     assert not PVR.enabled(True, "hbm", "t1", "type")
     assert not PVR.enabled(True, "s81", "t1", "core")
+
+
+def test_receipt_is_committed_once(tmp_path):
+    import subprocess
+    repo = tmp_path / "coord"
+    (repo / "lanes").mkdir(parents=True)
+    git = lambda *a: subprocess.run(["git", "-C", str(repo)] + list(a), capture_output=True, text=True, check=True).stdout
+    git("init", "-q")
+    ledger = repo / PVR.LEDGER
+    ledger.write_text(PVR.HEADER + "row\n")
+    assert PVR.commit_receipt(ledger, "s81/t1/abc")
+    assert git("show", f"HEAD:{PVR.LEDGER}") == ledger.read_text()
+    assert "plan visual review receipt s81/t1/abc" in git("log", "-1", "--format=%s")
+    n = git("rev-list", "--count", "HEAD")
+    assert not PVR.commit_receipt(ledger, "s81/t1/abc")
+    assert git("rev-list", "--count", "HEAD") == n
