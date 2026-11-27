@@ -54,10 +54,12 @@ def base_name(el, die=None):
     return VARIANT.sub('', el)
 
 
-def record_id(die, kind, el, nodes=None):
+def record_id(die, kind, el, nodes=None, *, use_alias=True):
     """<die>.<t|c>.<base element>; when only the other level is a node of the current plan, that one"""
+    b = base_name(el, die if use_alias else None)
+    if kind == 'core':   # legacy INDEX spells out the role, including for retired cores
+        return '%s.c.%s' % (die, b)
     k = kind if kind in ('t', 'c') else 't'
-    b = base_name(el, die)
     nid = '%s.%s.%s' % (die, k, b)
     if nodes is not None and nid not in nodes:
         o = '%s.%s.%s' % (die, 'c' if k == 't' else 't', b)
@@ -73,9 +75,10 @@ def parse_index(tsv):
     return [dict(zip(head, l.split('\t'))) for l in lines[1:]]
 
 
-def build(nodes, index_tsv, export_rows=None, store_entry=None):
+def build(nodes, index_tsv, export_rows=None, store_entry=None, *, exact_retired_ids=()):
     """-> {id: record}.  nodes: design index nodes; index_tsv: AGIdock INDEX.tsv text; export_rows: archive_index.json 'export'
-    (rtx-pro signed-export-1114 dirs: die, name, path, odb); store_entry(id) -> pack summary or None."""
+    (rtx-pro signed-export-1114 dirs: die, name, path, odb); store_entry(id) -> pack summary or None.
+    An explicitly counted retired archive name has priority over its display alias."""
     names = {}   # (die, name) of every current-plan node and type module: a superseded record of such a name is a re-sign backlog
     for n in nodes.values():
         if n.get('level') in ('type', 'core'):
@@ -84,8 +87,15 @@ def build(nodes, index_tsv, export_rows=None, store_entry=None):
             if m: names[(n['die'], m)] = n['id']
     out = {}
 
+    def archive_id(die, kind, el):
+        if (die, AX.sub('', el or '')) in ALIAS:
+            raw = record_id(die, kind, el, use_alias=False)
+            if raw in exact_retired_ids:
+                return raw
+        return record_id(die, kind, el, nodes)
+
     def add(die, kind, el, arch):
-        rid = record_id(die, kind, el, nodes)
+        rid = archive_id(die, kind, el)
         n = nodes.get(rid)
         st = ((n or {}).get('status') or {}).get('state')
         plan = 'current' if st == 'signed' else 'superseded'
@@ -108,7 +118,7 @@ def build(nodes, index_tsv, export_rows=None, store_entry=None):
                                                           unit=(row.get('rtx_db') or row.get('db') or '').rsplit('/', 2)[-2] if (row.get('rtx_db') or row.get('db')) else row.get('element')))
     for e in export_rows or []:   # rtx-pro full records without an INDEX row (older exports, NO-DB rows whose DB rtx-pro holds)
         if e.get('die') not in DIES or not e.get('odb'): continue
-        rid = record_id(e['die'], 't', e.get('name'), nodes)
+        rid = archive_id(e['die'], 't', e.get('name'))
         if rid in out:
             out[rid]['archive']['rtx'] = True
             continue
