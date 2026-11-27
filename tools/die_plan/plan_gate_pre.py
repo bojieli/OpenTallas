@@ -2954,7 +2954,7 @@ def _check_unscoped(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, b
         findings.append("WARN ISTPRICE --skip ignored: ISTPRICE is not skippable (FABLE FLOW REVIEW 11-23 22:50)")
     try:                                                 # STN-REPRICE-1124: report-only count of lanes with station depth != priced fixed_cycles
         import stn_reprice as _SR
-        findings += _SR.check_stnprice(plan)
+        findings += _SR.check_stnprice(plan, baseline=baseline or rb)
     except Exception as _e:  # noqa: BLE001
         findings.append(f"LIST STNPRICE not counted: {type(_e).__name__}: {str(_e)[:120]}")
     findings += check_istprice(tree, plan, asbuilt)     # ISTPRICE-1123: every lane's stations vs its priced cycles, seconds, never skipped

@@ -92,6 +92,25 @@ def test_pre_line_is_report_only(tmp_path):
     assert len(out) == 1 and out[0].startswith("LIST STNPRICE 1 of 1")
 
 
+def test_baseline_station_growth_without_fixed_delta_is_reported(tmp_path):
+    base = tmp_path / "base.json"
+    candidate = tmp_path / "candidate.json"
+    base.write_text(json.dumps(_plan(fixed=21, regs_a=11)))
+    candidate.write_text(json.dumps(_plan(fixed=21, regs_a=12)))
+
+    assert SR.G.istcyc_lanes(json.loads(candidate.read_text()), json.loads(base.read_text())) == []
+    assert SR.check_stnprice(candidate, baseline=base)[1] == (
+        "WARN ADV-IST-PRICE STATION-DELTA lane L1: lane-end stations 12 -> 13, "
+        "fixed_cycles 21 -> 21; 1 added cycle(s) lack a fixed price"
+    )
+
+    candidate.write_text(json.dumps(_plan(fixed=22, regs_a=12)))
+    assert len(SR.check_stnprice(candidate, baseline=base)) == 1
+
+    candidate.write_text(json.dumps(_plan(fixed=21, regs_a=11)))
+    assert len(SR.check_stnprice(candidate, baseline=base)) == 1
+
+
 def test_upstream_reach_flags_member_fed_by_moved_lane(tmp_path):
     base = _plan()
     new = _plan(fixed=3, regs_a=2)
