@@ -1,0 +1,1 @@
+- 2026-11-26 20:25 PST DONE [CODEX-THIN-SOURCE] ot-run oth-ubuntu-3874766-1795753051 on tolerant-swine: rc=0 after 468 s, ended 20:25:12, log /srv/opentallas-scratch2/claude/codex-thin-source-1127/gate.otrun.log, cmd: --mem 48 --threads 12 --hosts epyc7 --disk 30 --dir /srv/opentallas-scratch2/claude -- /srv/opentallas-scratch2/claude/rt/current/tools/flee
