@@ -18383,3 +18383,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - E c9037: +1 L2114; paired F5 cfg_age.
   - pc idpc 5723ba: pcstrap base; programme compile blocked.
   pvfst5 83ca10 is SUPERSEDED by E c9037 (identical 23 keys).
+- 2026-11-27 10:00 PST DIED [HEAD-PART-R3] ot-run oth-ubuntu-704710-1795802445 on tolerant-swine: rc=1 after 4 s, ended 10:00:47, log /tmp/hpr3_gate_v1.otrun.log, cmd: --priority die --mem 150 --threads 48 --disk 80 --hosts epyc12 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/part -- bash -c export RUN= | class=NO-PATTERN cause=/srv/opentallas-scratch2/claude/HEAD-INT-R3/part/gate_part.sh: line 15: TYPES: unbound variable
