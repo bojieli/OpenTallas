@@ -141,10 +141,15 @@ def test_explicit_slice_interior_clock_exact_rectangle():
 
 def test_natural_core_publishes_latency_contract(tmp_path):
     """A natural core must retain the FF frame used by its hold repair."""
+    # The frozen plan's cfg7 clock is an interior M5 entry with its own trial slice.
+    clock_slice = HERE / "slices_cfg7_1102"
     r = subprocess.run([sys.executable, str(GEN), "--module", "ot_s81_cfg7_seq_bfp",
-                        "--out", str(tmp_path), "--trial"], capture_output=True, text=True)
+                        "--out", str(tmp_path), "--trial", "--master-slice", str(clock_slice)],
+                       capture_output=True, text=True)
     assert r.returncode == 0, r.stderr[-2000:]
     kit = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+    clock, = (pin for pin in json.loads((kit / "pins.json").read_text()) if pin["bus"] == "clk")
+    assert clock == {"bus": "clk", "bit": 0, "layer": "M5", "x": 15.132, "y": 30.24, "face": "C"}
     sys.path.insert(0, str(G.TOOL))
     import signoff
     cc = signoff.hard_core_latency_contract({"kit": str(kit)})

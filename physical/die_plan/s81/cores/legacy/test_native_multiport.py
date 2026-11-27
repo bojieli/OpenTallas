@@ -22,3 +22,23 @@ def test_native_connected_edge_access_preserves_logical_center(q,rects,w,h):
     assert G.native_multiport(q,disconnected,w,h) is None
     assert G.native_multiport(dict(q,x=q["x"]+.001),rects,w,h) is None
     assert G.native_multiport(q,rects[1:],w,h) is None
+
+
+@pytest.mark.parametrize("q,rects,w,h", [
+    (
+        {"name": "cfg[47]", "layer": "M3", "x": 16.137, "y": 0.019},
+        [["M3", 16.128, 0.0, 16.146, 0.144], ["M3", 16.128, 0.108, 16.146, 1.723]],
+        116.64, 198.72,
+    ),
+    (
+        {"name": "ck", "layer": "M4", "x": 0.042, "y": 12.972},
+        [["M4", 0.0, 12.96, 0.192, 12.984], ["M4", 0.156, 12.96, 0.275, 12.984]],
+        86.4, 25.92,
+    ),
+])
+def test_native_extended_edge_keeps_nominal_pin_site(q, rects, w, h):
+    assert G.native_multiport(q, rects, w, h) == rects
+    for axis in ("x", "y"):
+        moved = dict(q)
+        moved[axis] += .001
+        assert G.native_multiport(moved, rects, w, h) is None

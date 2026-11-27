@@ -837,25 +837,46 @@ def stage_native_clock_drt(kd, native_roots):
 
 
 def native_multiport(q, rects, w, h):
-    """Accept only original connected same-layer metal containing the logical anchor."""
+    """Keep connected same-layer access metal at its original logical pin site."""
     if len(rects) < 2 or any(a[0] != q["layer"] for a in rects):
         return None
-    f = face_of(q["x"], q["y"], w, h)
-    for a in rects:
-        if not (0 <= a[1] < a[3] <= w and 0 <= a[2] < a[4] <= h):
+    x, y = q["x"], q["y"]
+    face = face_of(x, y, w, h)
+    pw, ph = RECT[q["layer"]]
+    tol = 1e-4
+    anchored = edge = False
+    for _, x0, y0, x1, y1 in rects:
+        if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             return None
-    center = [i for i,a in enumerate(rects) if a[1] <= q["x"] <= a[3] and a[2] <= q["y"] <= a[4]]
-    if not center:
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        on_edge = {"W": x0, "E": w - x1, "S": y0, "N": h - y1}[face] < tol
+        edge |= on_edge
+        if abs(cx - x) < tol and abs(cy - y) < tol:
+            anchored = True
+        elif on_edge and not anchored:
+            # Widened or extended edge metal can cover the original nominal
+            # pin. Its track coordinate stays at the centre of that metal.
+            nx, ny, depth = {
+                "W": (pw / 2, cy, pw),
+                "E": (w - pw / 2, cy, pw),
+                "S": (cx, ph / 2, ph),
+                "N": (cx, h - ph / 2, ph),
+            }[face]
+            available = x1 - x0 if face in "EW" else y1 - y0
+            anchored = available >= depth - tol and abs(nx - x) < tol and abs(ny - y) < tol
+    if not anchored or not edge:
         return None
-    reached = set(center)
+    reached = {0}
     while True:
-        more = {i for i,a in enumerate(rects) if any(max(a[1],rects[j][1]) <= min(a[3],rects[j][3]) and max(a[2],rects[j][2]) <= min(a[4],rects[j][4]) for j in reached)}
+        more = {
+            i for i, box in enumerate(rects)
+            if any(max(box[1], rects[j][1]) <= min(box[3], rects[j][3])
+                   and max(box[2], rects[j][2]) <= min(box[4], rects[j][4]) for j in reached)
+        }
         if more <= reached:
             break
         reached |= more
     if len(reached) != len(rects):
-        return None
-    if not any(abs({"W":a[1],"E":w-a[3],"S":a[2],"N":h-a[4]}[f]) < 1e-4 for a in rects):
         return None
     return rects
 
