@@ -2690,6 +2690,37 @@ def plan_names_from_cache(st, d):
     return list(c.get("types") or [])
 
 
+ALLOW_STALE_AFTER = 3600          # P-WAVE-ALLOWLIST-STALE: seconds an allowlist may match nothing before ONE hub line
+
+
+def allowlist_stale_step(cfg, st, die, d, picks, skip, now=None, post_fn=None, dry=False):
+    """FLEET-OPS-R5 P-WAVE-ALLOWLIST-STALE: only_items (a list) that is empty or matches no eligible row (rows dropped as 'outside configured
+    only_items', nothing picked, no allowed item in any other skip class) for more than 1 h -> one KIT-WAVE hub line per die per 6 h
+    (QC sat 35 h with only_items [] left by a C1q apply).  First-seen state: st['allow_stale'][die].  Never blocks a launch.  -> True when posted"""
+    import hub_post as HP
+    now = time.time() if now is None else now
+    book = st.setdefault("allow_stale", {})
+    only = d.get("only_items")
+    dropped = list((skip or {}).get("outside configured only_items") or [])
+    allowed = set(only) if isinstance(only, (list, tuple, set)) else set()
+    matched = bool(picks) or any(it in allowed for its in (skip or {}).values() if isinstance(its, list) for it in its)
+    if not isinstance(only, (list, tuple, set)) or matched or not dropped:
+        book.pop(die, None)
+        return False
+    rec = book.setdefault(die, {"since": now})
+    if now - float(rec.get("since") or now) <= ALLOW_STALE_AFTER or not HP.due(rec, "posted", now):
+        return False
+    owner = die_owner(cfg, die)[0]
+    shown = " ".join(sorted(allowed)[:12]) or "(empty)"
+    msg = (f"ALLOWLIST-STALE [KIT-WAVE -> {owner}; cc COORD] {die}: only_items has {len(allowed)} name(s) [{shown}] and matches no eligible row "
+           f"for {int((now - float(rec['since'])) / 3600)} h while {len(dropped)} row(s) are dropped as outside configured only_items "
+           f"({' '.join(dropped[:8])}); zero launches.  Fix: kit_wave_edit only_items (or only_items_from_plan / only_items_extend_families).")
+    if dry:
+        return False
+    HP.post("KIT-WAVE", msg, post_fn=post_fn)
+    return True
+
+
 def plan_drift_step(AP, cfg, st):
     """after every compile (adopt / tree switch / config edit changes the signature): extend only_items for opted-in dies, post ONE ALERT per
     change listing plan items outside only_items and config keys matching no plan item.  Names come from the plan cache; no probe here."""
@@ -14942,6 +14973,10 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     record_lint(st, cfg, die, d["_lint"])
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
+                try:                                         # P-WAVE-ALLOWLIST-STALE 11-27: advisory, never blocks
+                    allowlist_stale_step(cfg, st, die, d, picks, skip, dry=AP.DRY)
+                except Exception as _e:
+                    AP.log(f"KIT-WAVE ALLOWLIST-STALE {die} check failed: {type(_e).__name__}: {_e}")
                 if picks and FG.stops_off_die(cfg, die) and d.get("families_first") is not False:
                     try:                                         # OWNER 11-20 (#8): representatives first, siblings on spare capacity, held while the family's representative fails
                         _all = list(picks)
