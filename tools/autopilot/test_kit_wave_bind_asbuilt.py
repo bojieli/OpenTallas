@@ -59,3 +59,50 @@ def test_bind_asbuilt_resolves_by_sha_when_a_stale_tree_sits_at_the_recorded_pat
     assert KW.bind_asbuilt(bo, tmp_path / "launch") is None               # nothing matches the bind sha
     (bo / "native_topology.json").write_text(json.dumps(dict(asbuilt_sha256=hashlib.sha256(stale.read_bytes()).hexdigest())))
     assert KW.bind_asbuilt(bo, tmp_path / "launch") == str(stale)         # the file at the path IS the bind's: kept
+
+
+def test_clock_landing_prefers_declared_external_base(tmp_path):
+    src = tmp_path / "source"
+    capsule = tmp_path / "capsule"
+    manifests = capsule / "manifests"
+    src.mkdir()
+    manifests.mkdir(parents=True)
+    legacy = src / "landing.json"
+    legacy.write_text('{"stale": true}')
+    exact = capsule / "landing.json"
+    exact.write_text('{"exact": true}')
+    manifest = manifests / "asbuilt.json"
+    manifest.write_text(json.dumps({"base": "..", "clock_landing_table": "landing.json"}))
+
+    assert KW.asbuilt_clock_landing(manifest, src) == str(exact)
+    exact.unlink()
+    assert KW.asbuilt_clock_landing(manifest, src) == str(legacy)
+
+    exact.symlink_to(legacy)
+    assert KW.asbuilt_clock_landing(manifest, src) is None
+
+
+def test_clock_landing_snapshot_rejects_live_fallback(tmp_path):
+    live = tmp_path / "live"
+    live.mkdir()
+    table = live / "landing.json"
+    table.write_text("{}")
+    root = tmp_path / "snaps" / ("a" * 40) / "root"
+    capsule = root / "capsule"
+    capsule.mkdir(parents=True)
+    manifest = capsule / "asbuilt.json"
+    manifest.write_text(json.dumps({"base": ".", "clock_landing_table": "landing.json"}))
+
+    assert KW.asbuilt_clock_landing(manifest, live) is None
+    captured = capsule / "landing.json"
+    captured.write_text("{}")
+    assert KW.asbuilt_clock_landing(manifest, live) == str(captured)
+    captured.unlink()
+    captured.symlink_to(table)
+    assert KW.asbuilt_clock_landing(manifest, live) is None
+
+    mirror = root / live.relative_to("/")
+    mirror.mkdir(parents=True)
+    (mirror / table.name).write_text("{}")
+    manifest.write_text(json.dumps({"base": str(live), "clock_landing_table": str(table)}))
+    assert KW.asbuilt_clock_landing(manifest, live) == str(mirror / table.name)

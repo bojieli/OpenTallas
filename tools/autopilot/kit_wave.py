@@ -10058,21 +10058,54 @@ def bind_manifest_named(bind_out):
 
 
 def asbuilt_clock_landing(asbuilt, src):
-    """FLOW-STRIPBODY-R2 11-22: the clock-landing sidecar an as-built manifest names (clock_landing_table, relative to the src tree
-    or absolute) when it exists here, else None.  A split plan's asbuilt_vN.json names its re-composed eW_sidecar.json; the wave
-    gen --clock-landing still named the base plan's sidecar."""
+    """Resolve a bind's clock table using its declared as-built base before the legacy source fallback."""
+    manifest = Path(asbuilt)
     try:
-        t = json.loads(Path(asbuilt).read_text()).get("clock_landing_table")
+        ab = json.loads(manifest.read_text())
+        t = ab.get("clock_landing_table")
     except (OSError, ValueError, AttributeError, TypeError):
         return None
-    if not t or not isinstance(t, str) or (not os.path.isabs(t) and not src):
+    if not isinstance(t, str) or not t:
         return None
-    f = Path(t) if os.path.isabs(t) else Path(src) / t
-    if f.is_file():
-        return str(f)
-    for c, _exact in _tree_map(t, src):                 # BIND-COPY-1124: the sidecar of a copied / forked tree (gen_phys checks its plan sha)
-        if c.is_file():
-            return str(c)
+    table = Path(t)
+    try:
+        snapshot = next((p for p in manifest.absolute().parents if p.name == "root"
+                         and p.parent.parent.name == "snaps" and len(p.parent.name) == 40
+                         and all(c in "0123456789abcdef" for c in p.parent.name)), None)
+        manifest = manifest.resolve()
+        if snapshot and not manifest.is_relative_to(snapshot):
+            return None
+        if table.is_absolute() and not snapshot:
+            # Preserve existing absolute-table and copied-tree handling.
+            if table.is_file():
+                return str(table)
+            for candidate, _exact in _tree_map(t, src):
+                if candidate.is_file():
+                    return str(candidate)
+            return None
+        declared = ab.get("base")
+        if isinstance(declared, str) and declared:
+            base = Path(declared)
+            if not base.is_absolute():
+                base = manifest.parent / base
+            elif snapshot and not base.is_relative_to(snapshot):
+                base = snapshot / base.relative_to(base.anchor)
+            if snapshot and table.is_absolute() and not table.is_relative_to(snapshot):
+                table = snapshot / table.relative_to(table.anchor)
+            base = base.resolve()
+            candidate = (base / table).resolve()
+            if (snapshot and not base.is_relative_to(snapshot)) or not candidate.is_relative_to(base):
+                return None
+            if candidate.is_file():
+                return str(candidate)
+        # A relocated manifest must not silently pick up a live source table.
+        if src and not snapshot:
+            base = Path(src).resolve()
+            candidate = (base / table).resolve()
+            if candidate.is_relative_to(base) and candidate.is_file():
+                return str(candidate)
+    except (OSError, RuntimeError, ValueError):
+        return None
     return None
 
 
