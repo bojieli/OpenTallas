@@ -1,2 +1,3 @@
 - 2026-11-26 09:25 PST DIED [C-STREET-R2] ot-push-main otpush-tolerant-swine-3365550 on tolerant-swine: rc=6 after 4 s, ended 09:25:47, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 6 after 4 s, no log
 - 2026-11-26 09:31 PST DIED [C-STREET-R2] ot-push-main otpush-tolerant-swine-3669987 on tolerant-swine: rc=2 after 0 s, ended 09:31:20, log none, cmd: ot-push-main --dry-run | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
+- 2026-11-26 16:46 PST DONE [C-STREET-R2] ot-run oth-ubuntu-1458852-1795739651 on ubuntu: rc=0 after 714 s, ended 16:46:00, log none, cmd: --mem 20 --threads 12 --disk 45 --hosts epyc10 --no-spill --dir /srv/opentallas-scratch2/claude/mq-gate -- /home/ubuntu/.local/bin/ot-gate-r
