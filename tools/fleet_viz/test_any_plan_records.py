@@ -90,3 +90,24 @@ def test_exact_retired_record_takes_precedence_over_archive_alias():
     assert result[current_id]['archive']['units'] == ['hd_tile__ax_0123456789']
     assert result[retired_id]['archive']['units'] == ['hd_tile_htr_eco1124__ax_0123456789']
     assert result[retired_id]['superseded']
+
+
+def test_exact_source_archive_requires_same_role_and_unique_identity():
+    source = 'epyc8:/srv/work/one/signoff/signoff.json'
+    key = ('s81', 'core', source)
+    def native(die, name, kind, record, odb, *, source_path=source):
+        return '\t'.join([die, name, kind, record, '', f'/store/{name}/6_final.odb',
+                           '1', odb, '', '', 'RTX-FULL-AGI-META',
+                           f'AUTO-EXPORT-1118 {source_path} (spool)'])
+    good = native('s81', 'physical_variant', 'core', '1' * 64, '2' * 64)
+    others = [native('qwen_compute', 'other_die', 'c', '3' * 64, '4' * 64),
+              native('s81', 'partition', 't', '3' * 64, '4' * 64),
+              native('s81', 'other_source', 'c', '3' * 64, '4' * 64,
+                     source_path='epyc8:/srv/work/two/signoff/signoff.json')]
+    tsv = '\n'.join([HEAD, good, *others])
+    arch = APR.source_archives(tsv, {key})
+    assert list(arch) == [key]
+    assert arch[key]['units'] == ['physical_variant']
+    assert arch[key]['record'] == '1' * 64 and arch[key]['odb_sha256'] == '2' * 64
+    ambiguous = native('s81', 'changed_same_path', 'c', '5' * 64, '6' * 64)
+    assert APR.source_archives(tsv + '\n' + ambiguous, {key}) == {}
