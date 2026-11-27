@@ -569,3 +569,4 @@
   - No placed proof yet for the 8 static-only start-fan types.
   - C-NEWROOT-TAPOFFSET: 0 missing ports on 16 PV types, but it stays OPEN per COORD 1447.
   Provenance: the raw branches came from a locally patched kv_start_corridor_event tool (relay-origin fix). The push to main is requested. If it does not land by 17:30, this is noted as P-RUNTIME-MANIFEST.
+- 2026-11-27 15:01 PST DONE [kv-int-r3] ot-run oth-ubuntu-1414824-1795820082 on open-snipe: rc=0 after 413 s, ended 23:01:33, log /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6/pre2.otrun.log, cmd: --priority die --hosts epyc12 --mem 80 --threads 16 --dir /srv/opentallas-scratch2/claude/kv-int-r3/seatkey6 -- bash /srv/opentallas-scratch
