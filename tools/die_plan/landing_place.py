@@ -1068,6 +1068,52 @@ def _dsel_cone_tcl(c, t=None):
 
 
 
+def _actual_pin_y_manifest(tn, name, cfg, t, bx):
+    """Qualify the exact physical pins and bit-major native sequence of one east input."""
+    hint = f'{tn}.{name}: pinslot_profile actual_pin_y'
+    inputs = [bus for bus in t.get('buses', []) if bus.get('name') == name]
+    if len(inputs) != 1 or inputs[0].get('dir') != 'in' or inputs[0].get('face') != 'E':
+        raise ValueError(f'{hint} requires an exact east input bus')
+    if not isinstance(cfg, dict) or set(cfg) != {'pins', 'members'}:
+        raise ValueError(f'{hint} requires physical pins and ordered native members')
+    pins, members = cfg['pins'], cfg['members']
+    if not isinstance(pins, list) or not pins or not isinstance(members, list) or not members:
+        raise ValueError(f'{hint} has an empty physical pin or native member list')
+    width, height = t['outline_um']
+    for pin in pins:
+        if (not isinstance(pin, list) or len(pin) != 3 or pin[0] not in inputs[0].get('layers', [])
+                or any(type(v) not in (int, float) or not isfinite(v) for v in pin[1:])
+                or not bx <= pin[1] <= width or not 0 <= pin[2] <= height):
+            raise ValueError(f'{hint} has an invalid physical pin reference')
+    pattern = re.compile(rf'u_cland_{re.escape(name)}/[A-Za-z0-9_./\[\]$]+')
+    names, bits = set(), set()
+    for row in members:
+        if (not isinstance(row, list) or len(row) != 2 or not isinstance(row[0], str)
+                or not pattern.fullmatch(row[0]) or row[0] in names
+                or type(row[1]) is not int or not 0 <= row[1] < len(pins)):
+            raise ValueError(f'{hint} has an invalid or duplicate native member')
+        names.add(row[0])
+        bits.add(row[1])
+    if bits != set(range(len(pins))):
+        raise ValueError(f'{hint} has physical pins without a keyed member')
+    return pins, members
+
+
+def validate_pinslot_plan_pins(tn, t, planned_pins):
+    """Refuse a retained bit-y manifest that differs from the current plan pin emitter."""
+    bands = t.get('clock', {}).get('landing_contract', {}).get('bands', {})
+    for name, band in bands.items():
+        profile = band.get('pinslot_profile', {})
+        if 'actual_pin_y' not in profile:
+            continue
+        pins, _ = _actual_pin_y_manifest(tn, name, profile['actual_pin_y'], t, band['rect_um'][2])
+        pattern = re.compile(rf'{re.escape(name)}\[([0-9]+)\]')
+        native = [pin for pin in planned_pins if pattern.fullmatch(pin['name'])]
+        expected = {(f'{name}[{bit}]', layer, x, y) for bit, (layer, x, y) in enumerate(pins)}
+        if len(native) != len(expected) or {(p['name'], p['layer'], p['x'], p['y']) for p in native} != expected:
+            raise ValueError(f'{tn}.{name}: pinslot_profile actual_pin_y differs from current plan pin records')
+
+
 def _pinslot_profile_tcl(tn, c, t):
     """Optional east edge of the bit-major slot rows and literal writer FF locations."""
     out = []
@@ -1078,7 +1124,7 @@ def _pinslot_profile_tcl(tn, c, t):
         hint = f'{tn}.{name}: pinslot_profile'
         required = {'inset_um', 'guard_east_um', 'guard_seats_um'}
         if (not isinstance(cfg, dict) or not required <= set(cfg)
-                or set(cfg) - required - {'reserve_guard_resize'}
+                or set(cfg) - required - {'reserve_guard_resize', 'actual_pin_y'}
                 or type(cfg.get('reserve_guard_resize', False)) is not bool
                 or band.get('ring_place') != 'ff'
                 or any(k in band for k in ('rects_um', 'ff_rect_um', 'fill_axis', 'native_role_banks', 'hard_core', 'dsel_cone'))):
@@ -1110,8 +1156,15 @@ def _pinslot_profile_tcl(tn, c, t):
             raise ValueError(f'{hint} has unsupported native ring prefix')
         lo, hi, xmax = profile
         resize = ' 1' if cfg.get('reserve_guard_resize') else ''
+        manifest = ''
+        if 'actual_pin_y' in cfg:
+            pins, members = _actual_pin_y_manifest(tn, name, cfg['actual_pin_y'], t, bx)
+            pin_rows = ' '.join(f'{{{layer} {x:.5f} {y:.5f}}}' for layer, x, y in pins)
+            member_rows = ' '.join('{{' + member + '} ' + str(bit) + '}' for member, bit in members)
+            resize = f" {int(cfg.get('reserve_guard_resize', False))}"
+            manifest = f' {{{{{pin_rows}}} {{{member_rows}}}}}'
         out.append(f'dict set ::cland_pinslot_profiles {{{prefix}}} '
-                   f'{{{{{lo:.5f} {hi:.5f} {xmax:.5f}}} {edge:.5f} {{{" ".join(rows)}}}{resize}}}')
+                   f'{{{{{lo:.5f} {hi:.5f} {xmax:.5f}}} {edge:.5f} {{{" ".join(rows)}}}{resize}{manifest}}}')
     return '\n'.join(out) + '\n' if out else ''
 
 
