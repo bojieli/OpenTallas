@@ -1,7 +1,7 @@
 """P-FLEET-LOCALITY: the Explorer fleet probe never touches epyc9 or epyc2 by default."""
 import importlib.util, os, pathlib, sys
 
-SERVER = pathlib.Path(__file__).resolve().parents[1] / "server.py"
+SERVER = pathlib.Path(__file__).resolve().parent / "server.py"
 
 
 def _hosts(env):
