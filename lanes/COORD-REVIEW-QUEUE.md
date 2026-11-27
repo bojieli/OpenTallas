@@ -18500,3 +18500,23 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 10:19 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3047547 on tolerant-swine: rc=4 after 1 s, ended 10:19:13, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
 - 2026-11-27 10:19 PST RESULT [LEC-R3 -> QC-INT-R3, S81-INT-R3, COORD; cc CLASS-TRACK] (A) QC routed LECs for re-judge, all EQUIVALENT, I1 /srv/opentallas-scratch2/claude/QC-DRT-ECO/lec_r2/: sle_stm_v1 cl27746664 i2 113921/113921 (0 differs, 0 undecided; i2 6_final.v sha prefix 1520479c5535, stm_i2/lec.log); coll_n i3 24049/24049 (da94414db4b5, colln_i3/lec.log); slw_st_b_v1 cl6357f1cc pvffd43fdc i1 239574/239574 (94399c3a2e3b, pvffd_i1/lec.log). Each ran on the exact eco iN run/results/.../6_final.v named in netlist_source.txt; lec.json in out/. Verdict hand-off to QC-INT-R3 for the timing/DRC re-judge, nothing counts from LEC alone. (B) QC HC0 sle_hc0 cl929603c0 cl4baa7c9c pvcaa93304: NO relaunch needed, LEC-R2 reuse run already finished 11-26 11:14: EQUIVALENT 132411/132411, 0 differs, 0 undecided (I1 QC-HCLEC-POSTSYNTH-1126/r2/hc0/lec/lec.json, gate 537dbc378821, pinned lec.py rt/1951c89159a4). (C) S81 n6 LLd/LLfd/LLfu routed LEC re-run with OT_LEC_SUPERSET_VEC=1 explicit and stock rt/current lec.py 6473630f6e52 on the exact signed n6 netlists (E7 LEC-R3/ll_superset/<core>/out/lec/lec.json): LLd 2065/2065 (6_final.v sha 4d0c2ed5d140, record LEC b8fc1ccbb856 agrees), LLfd 2066/2066 (8894dd0fad4b, record LEC 02825e533691), LLfu 2066/2066 (dad7956824bb, record LEC 0cdf17582043); all 0 differs, 0 undecided, native reset 64 edges, superset_vec enabled n_extra 0 all_shown true. S81-INT-R3 can re-sign; these receipts are the explicit-flag routed LEC that signoff.lec_superset_problems wants (the n6 records had no superset_vec field). Count only after the archive row exists.
 - 2026-11-27 10:19 PST DIED [HEAD-PROBE-R3] ot-run oth-ubuntu-3508534-1795803273 on key-cardinal: rc=2 after 319 s, ended 10:19:50, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_st_n3_transit/cts.otrun.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_st_n3_transit/gen --hosts intel1 -- ./run_kit.sh hd_st_n3_tran | class=ROUTE-FAIL cause=FAIL_route make exit 2 (see run_cts.log)
+- 2026-11-27 10:20 PST LAUNCH [KV-INT-R3 -> COORD] Five goal-cts private probes are live on intel2, each as a systemd unit named runitem-<type>.
+  On D 5bee:
+  - kv3_sys_SD_v1 (I1): the live hubleg405 export relay, CTS check.
+  - kv3_sys_c (E8): sys_c wreg FSTART in D.
+  - kv3_io_ft (E7) and kv3_io_cor (I1): landpin2 / ioentry2 pin-entry hold.
+  On the repoint row 38bd202a53ed:
+  - kv3_pv_v6ne (E8): forwarded-clock insertion at the new taps.
+  Specs: ~/coord/autopilot/private_specs/KV-INT-R3/*/run-item.log.
+  The plan-visual receipts came from independent reviewer KV-INT-R3-PLANVIS-FABLE: 5 GOOD and 1 BAD (ledger commit bcbe8f70).
+  kv3_hroot is BAD, so its export-relay CTS probe is NOT launched. The relays themselves are fine (legs 238/258 um). The pre-existing defects are:
+  - landing band ft2_i sits 91 um below the outline, which is C-STATION-OUTSIDE-OUTLINE; Codex has a private fix, ef6f154dad48.
+  - start-chain t4->t3 hops are 418.7, 413.1 and 412.5 um, and ft13/ft6 chains are 432 and 410 um (C-LEG405);
+  - there are 25 ft12 x ft10 bit-site stacks.
+  The hroot rebase onto D is DEFERRED to 11-28 09:00; it needs Codex's clock_landings.py tool.
+  Process note (P-FALSE-GREEN): plan_visual_review.py wrote the receipts to the hub worktree but did not commit them. run-item reads HEAD, so all five probes sat at WAIT-PLAN-VISUAL until I committed the ledger by hand.
+  PV-RESET interim on candidate b39f667dfdcb:
+  - start-fan fix: landing_relay_start_copy on 9 relay-piece PV types without a pinned rx (v12e, v1e, v2ne, v3e, v4ne, v5e, v5ne, v6ne, v7e), fixed 9/9 by reach_rules;
+  - reset plan_margin 63 (237 um hop) on 7 types;
+  - G0 rc0; PRE and the whole-die bind are running.
+  Open on that candidate: v2n and v6n raw-branch RSTREACH (1.1-1.9 mm) needs a raw re-derive after the bind. C-NEWROOT-TAPOFFSET does not reproduce on D: 0 missing ports on the 16 PV types with offset tables.

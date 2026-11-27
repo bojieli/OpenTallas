@@ -69,3 +69,23 @@
 - 2026-11-27 10:06 PST DONE [kv-int-r3] ot-run oth-ubuntu-1479304-1795802565 on outgoing-giraffe: rc=0 after 244 s, ended 18:06:46, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build2.log, cmd: --mem 16 --threads 4 --disk 5 --hosts epyc8 --priority die -- /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/build2.sh /srv/opentallas-sc
 - 2026-11-27 10:11 PST DONE [kv-int-r3] ot-run oth-ubuntu-1589283-1795802726 on outgoing-giraffe: rc=0 after 348 s, ended 18:11:09, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0_2.log, cmd: --mem 40 --threads 8 --disk 5 --hosts epyc8 --priority die -- /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/g0.sh pvreset2_1127
 - 2026-11-27 10:19 PST DONE [KV-INT-R3] ot-run oth-ubuntu-3746559-1795803421 on tolerant-swine: rc=0 after 175 s, ended 10:19:54, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_sys_SD_v1_1127095044/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/pri
+- 2026-11-27 10:20 PST LAUNCH [KV-INT-R3 -> COORD] Five goal-cts private probes are live on intel2, each as a systemd unit named runitem-<type>.
+  On D 5bee:
+  - kv3_sys_SD_v1 (I1): the live hubleg405 export relay, CTS check.
+  - kv3_sys_c (E8): sys_c wreg FSTART in D.
+  - kv3_io_ft (E7) and kv3_io_cor (I1): landpin2 / ioentry2 pin-entry hold.
+  On the repoint row 38bd202a53ed:
+  - kv3_pv_v6ne (E8): forwarded-clock insertion at the new taps.
+  Specs: ~/coord/autopilot/private_specs/KV-INT-R3/*/run-item.log.
+  The plan-visual receipts came from independent reviewer KV-INT-R3-PLANVIS-FABLE: 5 GOOD and 1 BAD (ledger commit bcbe8f70).
+  kv3_hroot is BAD, so its export-relay CTS probe is NOT launched. The relays themselves are fine (legs 238/258 um). The pre-existing defects are:
+  - landing band ft2_i sits 91 um below the outline, which is C-STATION-OUTSIDE-OUTLINE; Codex has a private fix, ef6f154dad48.
+  - start-chain t4->t3 hops are 418.7, 413.1 and 412.5 um, and ft13/ft6 chains are 432 and 410 um (C-LEG405);
+  - there are 25 ft12 x ft10 bit-site stacks.
+  The hroot rebase onto D is DEFERRED to 11-28 09:00; it needs Codex's clock_landings.py tool.
+  Process note (P-FALSE-GREEN): plan_visual_review.py wrote the receipts to the hub worktree but did not commit them. run-item reads HEAD, so all five probes sat at WAIT-PLAN-VISUAL until I committed the ledger by hand.
+  PV-RESET interim on candidate b39f667dfdcb:
+  - start-fan fix: landing_relay_start_copy on 9 relay-piece PV types without a pinned rx (v12e, v1e, v2ne, v3e, v4ne, v5e, v5ne, v6ne, v7e), fixed 9/9 by reach_rules;
+  - reset plan_margin 63 (237 um hop) on 7 types;
+  - G0 rc0; PRE and the whole-die bind are running.
+  Open on that candidate: v2n and v6n raw-branch RSTREACH (1.1-1.9 mm) needs a raw re-derive after the bind. C-NEWROOT-TAPOFFSET does not reproduce on D: 0 missing ports on the 16 PV types with offset tables.
