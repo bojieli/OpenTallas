@@ -6,6 +6,10 @@ PHASE-BIND class (skip PHASE-BIND / OT_PHASE_BIND_BLOCK=0 turns it off).  Unboun
   STALE-CLOCK        the bind's ctree.spef sha12 differs from $OT_PHASE_BIND_CTREE_SHA12 (the cut's live die clock), when set
   STALE-INSTANCE     a pin_entry_phase instance with no record in the bind (the plan grew after the derive)
   RESET-ENTRY MISBOUND / START-EDGE MISBOUND   a plan phase scoring below the guard where the routed clock has a choice above it
+Typed deferral: <plan dir>/phase_bind_deferred.json or $OT_PHASE_BIND_DEFERRED
+({"deferred": [{"instance", "row", "class_id", "owner", "eta", "reason"}]}, eta "YYYY-MM-DD HH:MM" America/Los_Angeles) turns the
+RESET-ENTRY MISBOUND of a listed instance into WARN DEFERRED owner=.. eta=..; an entry with no owner, no reason, an unreadable eta or an eta
+in the past stays a FAIL.  Every other MISBOUND stays blocking; the derived bind is never edited.
 UNMEASURED instances, NO-WINDOW seams (structural rows) and COUNT-ALIGN-UNBOUND stay WARN unless OT_PHASE_BIND_STRICT=1.
 
 The plan's per-instance clock-phase choices (partitions[].reset_entry_phase + id_straps strap_rst_ph of pin_entry_phase
@@ -59,6 +63,40 @@ BLOCK_PREFIXES = ("RESET-ENTRY MISBOUND", "START-EDGE MISBOUND")
 STRICT_PREFIXES = ("RESET-ENTRY NO-WINDOW", "COUNT-ALIGN-UNBOUND")
 
 
+def _now():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    v = os.environ.get("OT_PHASE_BIND_NOW")           # tests only
+    return datetime.strptime(v, "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/Los_Angeles")) if v else datetime.now(ZoneInfo("America/Los_Angeles"))
+
+
+def _deferrals(pdir):
+    """{instance: (ok, text)} from the typed deferral file; ok False = invalid / expired (the MISBOUND stays a FAIL)"""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    dp = os.environ.get("OT_PHASE_BIND_DEFERRED") or str(pdir / "phase_bind_deferred.json")
+    doc = _load(dp) if Path(dp).is_file() else None
+    out = {}
+    for e in (doc or {}).get("deferred", []) or []:
+        inst = e.get("instance")
+        if not inst:
+            continue
+        owner, eta, why = e.get("owner"), e.get("eta"), e.get("reason")
+        try:
+            t = datetime.strptime(str(eta), "%Y-%m-%d %H:%M").replace(tzinfo=ZoneInfo("America/Los_Angeles"))
+        except ValueError:
+            t = None
+        if not owner or not why:
+            out[inst] = (False, f"deferral has no owner or reason (owner={owner!r})")
+        elif t is None:
+            out[inst] = (False, f"deferral eta {eta!r} unreadable (want YYYY-MM-DD HH:MM)")
+        elif t < _now():
+            out[inst] = (False, f"deferral owner={owner} eta={eta} is past")
+        else:
+            out[inst] = (True, f"DEFERRED owner={owner} eta={eta} class={e.get('class_id')} row={e.get('row')}: {why}")
+    return out
+
+
 def blocking(raw, plan_path, **_kw):
     """FAIL ADV-PHASE-BIND lines (always [] when OT_PHASE_BIND_BLOCK=0 or the plan has no phase users)."""
     if os.environ.get("OT_PHASE_BIND_BLOCK", "1") == "0":
@@ -85,7 +123,14 @@ def blocking(raw, plan_path, **_kw):
     if miss:
         out.append(f"FAIL ADV-PHASE-BIND STALE-INSTANCE {len(miss)} pin_entry_phase instance(s) not in the bind, e.g. {', '.join(miss[:4])}")
     pre = BLOCK_PREFIXES + (STRICT_PREFIXES if os.environ.get("OT_PHASE_BIND_STRICT") == "1" else ())
+    defer = _deferrals(pdir)
     for x in PB.check_lines(raw, bind, sidecar, max_list=10 ** 6):
         if x.startswith(pre):
-            out.append(f"FAIL ADV-PHASE-BIND {x}")
+            f = x.split()
+            inst = f[2] if x.startswith("RESET-ENTRY MISBOUND") and len(f) > 2 else None
+            if inst in defer:
+                ok, text = defer[inst]
+                out.append(f"WARN ADV-PHASE-BIND {x} -- {text}" if ok else f"FAIL ADV-PHASE-BIND {x} -- {text}")
+            else:
+                out.append(f"FAIL ADV-PHASE-BIND {x}")
     return out

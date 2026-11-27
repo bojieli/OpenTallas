@@ -175,3 +175,44 @@ def test_pre_class_is_registered_and_blocks(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_PHASE_BIND_BLOCK", raising=False)
     got = G.phase_bind_findings(str(pp))
     assert got and all(x.startswith("FAIL ADV-PHASE-BIND ") for x in got)
+
+
+def _deferral_setup(tmp_path, monkeypatch, entry):
+    for k in ("OT_PHASE_BIND", "OT_PHASE_BIND_SIDECAR", "OT_PHASE_BIND_CTREE_SHA12", "OT_PHASE_BIND_STRICT", "OT_PHASE_BIND_BLOCK",
+              "OT_PHASE_BIND_DEFERRED"):
+        monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("OT_PHASE_BIND_NOW", "2026-11-27 12:00")
+    plan, bind, pp = _bound(tmp_path, 0)
+    (tmp_path / "phase_bind.json").write_text(json.dumps(bind))
+    if entry is not None:
+        (tmp_path / "phase_bind_deferred.json").write_text(json.dumps({"deferred": [entry]}))
+    return plan, pp
+
+
+GOOD = dict(instance="a", row="PHASE-BIND-a-H", class_id="C-DIECLOCK-PHASE-BIND", owner="HEAD-INT-R3", eta="2026-11-28 09:00", reason="native receipt requal")
+
+
+def test_typed_deferral_warns_with_owner_and_eta(tmp_path, monkeypatch):
+    plan, pp = _deferral_setup(tmp_path, monkeypatch, GOOD)
+    got = ADV.blocking(plan, str(pp))
+    mis = [x for x in got if "RESET-ENTRY MISBOUND a " in x]
+    assert len(mis) == 1 and mis[0].startswith("WARN ADV-PHASE-BIND ") and "DEFERRED owner=HEAD-INT-R3 eta=2026-11-28 09:00" in mis[0]
+    assert not any(x.startswith("FAIL") for x in got)
+
+
+def test_deferral_only_covers_listed_instance(tmp_path, monkeypatch):
+    plan, pp = _deferral_setup(tmp_path, monkeypatch, dict(GOOD, instance="zzz"))
+    assert any(x.startswith("FAIL ADV-PHASE-BIND RESET-ENTRY MISBOUND a ") for x in ADV.blocking(plan, str(pp)))
+
+
+def test_expired_eta_mutant_fails(tmp_path, monkeypatch):
+    plan, pp = _deferral_setup(tmp_path, monkeypatch, dict(GOOD, eta="2026-11-27 11:59"))
+    got = [x for x in ADV.blocking(plan, str(pp)) if "MISBOUND a " in x]
+    assert got and got[0].startswith("FAIL") and "is past" in got[0]
+
+
+def test_missing_owner_and_bad_eta_mutants_fail(tmp_path, monkeypatch):
+    for bad, word in ((dict(GOOD, owner=""), "no owner"), (dict(GOOD, reason=""), "no owner or reason"), (dict(GOOD, eta="tomorrow"), "unreadable")):
+        plan, pp = _deferral_setup(tmp_path, monkeypatch, bad)
+        got = [x for x in ADV.blocking(plan, str(pp)) if "MISBOUND a " in x]
+        assert got and got[0].startswith("FAIL") and word in got[0], bad
