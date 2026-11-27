@@ -329,6 +329,43 @@ def test_reviewed_sites_keep_ids_and_bound_hops(tmp_path):
     with pytest.raises(gen_rtl.GenError,match='beyond captured reach'):G.install_bound_native_reset(p,'t',[f])
 
 
+def test_cropped_native_reset_requires_exact_reviewed_replacement(tmp_path):
+    import bound_reset_contract as B
+
+    plan, rtl = fixture(tmp_path)
+    typ = plan.types['t']
+    landing = typ['clock']['landing_contract']
+    captured = B.emitted(rtl, 't', landing['collector_tree'])
+    typ['outline_um'] = [15, 15]
+    image = tmp_path / 'review.png'
+    image.write_bytes(b'test source review')
+    overlay = dict(schema='opentallas.bound_reset_placement.v1',
+                   source_tree_sha256=captured['tree_sha256'],
+                   sites={'u_rrl_0': [12, 12]},
+                   review=dict(verdict='PASS', image=str(image), findings='source seats reviewed'))
+
+    def install():
+        return G.install_bound_native_reset(plan, 't', [rtl], source_contract=captured)
+
+    with pytest.raises(gen_rtl.GenError, match='u_rrl_0 coordinate outside outline'):
+        install()
+    landing['bound_reset_placement'] = overlay
+    result = install()
+    assert result['tree'] == captured['tree']
+    assert result['physical_nodes'][0]['xy'] == [12, 12]
+    overlay['sites']['u_rrl_0'] = [16, 12]
+    with pytest.raises(gen_rtl.GenError, match='resite outside outline: u_rrl_0'):
+        install()
+    overlay['sites']['u_rrl_0'] = [12, 12]
+    overlay['review']['verdict'] = 'FAIL'
+    with pytest.raises(gen_rtl.GenError, match='PASS image review'):
+        install()
+    overlay['review']['verdict'] = 'PASS'
+    overlay['source_tree_sha256'] = 'stale'
+    with pytest.raises(gen_rtl.GenError, match='u_rrl_0 coordinate outside outline'):
+        install()
+
+
 # KV-PLAN-2 11-09 (kv3_hub_C): the root type's PLL lock qualifier is verified exactly, not refused.
 LOCK=dict(inst='u_pll',pin='locked',stable=16,stages=16+R.LOCKQ_EXTRA)
 PLL=('\n wire [0:0] w_pll_locked;\n pll_stub u_pll(.locked(w_pll_locked));\n wire '+R.LOCK_SRC+';\n assign '

@@ -10566,7 +10566,8 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     import reset_tree as RT
     import bound_reset_contract as BRC
     source_contract = source_contract or BRC.kit(rtl_files, tn)
-    declared_tree = P.types[tn].get("clock", {}).get("landing_contract", {}).get("collector_tree")
+    landing_contract = P.types[tn].get("clock", {}).get("landing_contract", {})
+    declared_tree = landing_contract.get("collector_tree")
     if source_contract:
         BRC.validate(source_contract, tn)
         tree = copy.deepcopy(source_contract["tree"])
@@ -10626,14 +10627,27 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     except RT.ResetError as exc:
         raise gen_rtl.GenError(f"type {tn}: {exc}") from exc
     w, h = P.types[tn]["outline_um"]
+    overlay = landing_contract.get("bound_reset_placement")
+    # Cropping may exclude a historical coordinate in the immutable bound tree.
+    # Only an explicitly authored overlay for that receipt can replace it.
+    # BRC.placement still checks the effective sites, image, hierarchy and reach.
+    resites = {}
+    if (source_contract and isinstance(overlay, dict)
+            and overlay.get("schema") == "opentallas.bound_reset_placement.v1"
+            and overlay.get("source_tree_sha256") == source_contract["tree_sha256"]
+            and isinstance(overlay.get("sites"), dict)):
+        resites = overlay["sites"]
+    entry_names = ({"root": "u_rst_root", "start_in": "u_run_root"} if tree["entry"] == "sync"
+                   else {"root": "u_rst_in", "start_in": "u_run_in"})
     for label, xy in [("root", tree.get("root")), ("start_in", tree.get("start_in"))] + [
             (r.get("name", "relay"), r.get("xy")) for r in tree.get("relays", [])] + [
             (c['name'], c['xy']) for c in pin_copies + start_copies]:
         if label == "start_in" and not tree.get("start"):
             continue
+        name = entry_names.get(label, label)
         if (not isinstance(xy, (list, tuple)) or len(xy) != 2
                 or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)
-                or not 0 <= xy[0] <= w or not 0 <= xy[1] <= h):
+                or (name not in resites and not (0 <= xy[0] <= w and 0 <= xy[1] <= h))):
             raise gen_rtl.GenError(f"type {tn}: native reset {label} coordinate outside outline")
     relays = tree.get("relays")
     if (not isinstance(relays, list) or not relays
