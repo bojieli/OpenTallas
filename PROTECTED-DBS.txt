@@ -523,3 +523,5 @@ epyc7	/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87
 epyc7	/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N42/items/sle_su_l1__cl5ea486db/gen/sle_su_l1__cl5ea486db	HARVEST-0330 11-20 routed-but-failed DB (qc sle_su_l1__cl5ea486db class b_setup, 5_2_route=1 6_final=1): keep until re-signed or owner release; never delete/prune
 epyc7	/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9L2/items/sle_fe_v1__cl1cbb7497/attempt_4/gen/sle_fe_v1__cl1cbb7497	HARVEST-0330 11-20 routed-but-failed DB (qc sle_fe_v1__cl1cbb7497 class b_setup, 5_2_route=0 6_final=1): keep until re-signed or owner release; never delete/prune
 epyc10	/srv/opentallas-scratch3/claude/rt-data	RT-HOST-DATA-1124 (COORD 05:3x): epyc10 rt version dirs (ot-tools-sync OT_RT_HOST_DATA); RT/<sha12> links here; prune via ot-tools-sync only
+
+/srv/opentallas-scratch2/claude/explorer-2-work/store # EXPLORER-STORE-R1 live shared layout store (immutable signed layout objects)
