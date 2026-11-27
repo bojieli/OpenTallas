@@ -2290,6 +2290,18 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # FE3 source-only START transport: reuse its existing registered relay Q as the first
 # writer phase; literal raw branches preserve every original reset equation/depth.
 _CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+_CKPROPS["scalar_hold_pads"] = {
+    "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": False,
+        "required": ["port", "capture", "count"],
+        "properties": {
+            "port": {"type": "string", "minLength": 1},
+            "capture": {"type": "string", "minLength": 1},
+            "count": {"type": "integer", "minimum": 1, "maximum": 4},
+            "through_logic": {"type": "boolean"},
+        },
+    },
+}
 _CKPROPS["landing_writer_start"]["properties"]["reuse_relay_origin"] = {"type": "boolean"}
 _CKPROPS["landing_writer_start"]["properties"]["direct_fstart_buses"] = {
     "type": "array", "uniqueItems": True,
