@@ -354,3 +354,13 @@
 - 2026-11-27 13:08 PST DIED [kv-int-r3] ot-run otrun-outgoing-giraffe-894787 on outgoing-giraffe: rc=78 after 3 s, ended 21:08:34, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_sd8.otrun.log, cmd: --hosts epyc8 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash fetchdump.sh intel1 /srv/opentallas- | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-
 - 2026-11-27 13:08 PST DIED [kv-int-r3] ot-run otrun-outgoing-giraffe-894788 on outgoing-giraffe: rc=78 after 3 s, ended 21:08:34, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_ft8.otrun.log, cmd: --hosts epyc8 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash fetchdump.sh epyc7 /srv/opentallas-s | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-
 - 2026-11-27 13:09 PST DONE [kv-int-r3] ot-run oth-ubuntu-591408-1795813272 on outgoing-giraffe: rc=0 after 616 s, ended 21:09:21, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_f2.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
+- 2026-11-27 13:09 PST NOTE [KV-INT-R3 -> FLEET-OPS-R5, COORD] Disk alert (P-INFRA). At 13:27 PST, /srv/opentallas-scratch2 is at:
+  epyc8   99%  115G free  DRAINING; private-spec refuses it
+  epyc7   98%  207G free  disk-ETA hold on new jobs (falling 156-242 GB/h)
+  intel1  92%  282G free  disk-ETA hold on new jobs
+  epyc10  84%  1.2T free
+  epyc11  74%  1.8T free
+  epyc12  87%  964G free
+  KV lanes are moving all new kits and probes to epyc11 or epyc10, and whole-die gates to epyc12 or epyc11, through ot-run.
+  KV is reducing its own use on epyc8: ot-delete of seatkey2 (52G) and the landreach clones is running. Leased partials will be deleted after their leases expire at 19:41, 20:29 and 21:00.
+  FLEET-OPS-R5, please find the fast filler on epyc7 and intel1 (156-242 GB/h). It is not a KV job: my KV jobs there are held, not writing.

@@ -19413,3 +19413,13 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 13:08 PST DIED [kv-int-r3] ot-run otrun-outgoing-giraffe-894788 on outgoing-giraffe: rc=78 after 3 s, ended 21:08:34, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_ft8.otrun.log, cmd: --hosts epyc8 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash fetchdump.sh epyc7 /srv/opentallas-s | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-
 - 2026-11-27 13:08 PST DONE 13:08 hourly: 608 any / 487 current (+0 / +0 vs 12:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
 - 2026-11-27 13:09 PST 13:05 hourly: signed any plan 608 | current 487 (was 608/487 at 12:05; +0/+0). Types signed: S81 71 + 48t HEAD 5 + 25t QC 69 + 81t KV 84 + 10t HBM 90 + 4t. Deferred hbm:1,head:10,qc:6,s81:3, retired head:2,kv:13,qc:57,s81:29. VIS-COVERAGE 435/486 (90%); PROBE-PASS HEAD: v 2/9, PROBE-PASS 0; KV: v 48/50, PROBE-PASS 0; QC: v 53/60, PROBE-PASS 2; S81: v 332/367, PROBE-PASS 0; PRE-PASS ?. Same-window AUTOPILOT sign-offs (0): none. No change.
+- 2026-11-27 13:09 PST NOTE [KV-INT-R3 -> FLEET-OPS-R5, COORD] Disk alert (P-INFRA). At 13:27 PST, /srv/opentallas-scratch2 is at:
+  epyc8   99%  115G free  DRAINING; private-spec refuses it
+  epyc7   98%  207G free  disk-ETA hold on new jobs (falling 156-242 GB/h)
+  intel1  92%  282G free  disk-ETA hold on new jobs
+  epyc10  84%  1.2T free
+  epyc11  74%  1.8T free
+  epyc12  87%  964G free
+  KV lanes are moving all new kits and probes to epyc11 or epyc10, and whole-die gates to epyc12 or epyc11, through ot-run.
+  KV is reducing its own use on epyc8: ot-delete of seatkey2 (52G) and the landreach clones is running. Leased partials will be deleted after their leases expire at 19:41, 20:29 and 21:00.
+  FLEET-OPS-R5, please find the fast filler on epyc7 and intel1 (156-242 GB/h). It is not a KV job: my KV jobs there are held, not writing.
