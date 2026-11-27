@@ -14,3 +14,4 @@
 - 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2250326 on key-cardinal: rc=0 after 1 s, ended 23:26:12, log none, cmd: ot-push-main 
 - 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2250885 on key-cardinal: rc=0 after 1 s, ended 23:26:13, log none, cmd: ot-push-main 
 - 2026-11-27 01:11 PST DONE [mq-gate] ot-run oth-ubuntu-3831072-1795769983 on tolerant-swine: rc=0 after 700 s, ended 01:11:18, log none, cmd: --mem 28 --threads 8 --hosts intel1,epyc7 --dir /srv/opentallas-scratch2/claude/rt/current -- ./tools/fleet/ot-gate-remote claude/codex-head
+- 2026-11-27 01:13 PST DONE [mq-gate] ot-run oth-ubuntu-3999251-1795770453 on tolerant-swine: rc=0 after 333 s, ended 01:13:02, log none, cmd: --mem 28 --threads 8 --hosts intel1,epyc7 --dir /srv/opentallas-scratch2/claude/rt/current -- env MQ_SPARSE=/*,!/*/,/tools/,/physical/common
