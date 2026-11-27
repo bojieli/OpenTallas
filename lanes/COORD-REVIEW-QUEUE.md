@@ -18781,3 +18781,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - No rejudge-geom has run. A new metric needs a fresh geom run, not a re-judge of the stored line.
   - Side note: test_geom_checkpoint_host.py::test_missing_old_source_stages_complete_tools_at_checkpoint_host fails on main 97a6a47fef7, unrelated to FTC.
   - Live state: ledger has 1 READY row (SU_C p9). First compose round ~15:00, final 18:30.
+- 2026-11-27 11:09 PST 11:2x TURNB-DETOUR place-only probe STARTED: ot-run oth-ubuntu-344118-1795806571 on epyc8 (outgoing-giraffe), kit copy of Codex 47187-stock hd_turn_b + hook chained at POST_DETAIL_PLACE (after DPL, before CTS), A/B key OT_RESET_REACH=1 declared in kit_env_provenance, typed resume start step 2 (synth+floorplan reused, no repeat), ENV-PROVENANCE PASS, KIT_PREFLIGHT PASS. Log epyc8:/srv/opentallas-scratch2/claude/HEAD-INT-R3/part-r3/probe/place.otrun.log. No CTS in this lane (HEAD-PROBE-R3 owns CTS-only).
