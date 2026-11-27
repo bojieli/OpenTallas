@@ -525,3 +525,5 @@ epyc7	/srv/opentallas-scratch/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/
 epyc10	/srv/opentallas-scratch3/claude/rt-data	RT-HOST-DATA-1124 (COORD 05:3x): epyc10 rt version dirs (ot-tools-sync OT_RT_HOST_DATA); RT/<sha12> links here; prune via ot-tools-sync only
 
 /srv/opentallas-scratch2/claude/explorer-2-work/store # EXPLORER-STORE-R1 live shared layout store (immutable signed layout objects)
+/srv/opentallas-scratch2/claude/explorer-2/physical # EXPLORER-STORE-R1 source plans and retained Wave pins used by live Explorer
+/srv/opentallas-scratch2/claude/explorer-2/results # EXPLORER-STORE-R1 pinned plan and coverage inputs used by live Explorer
