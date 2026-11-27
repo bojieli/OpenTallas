@@ -82,6 +82,7 @@ def test_probe_scan_spool_hash(tmp_path):
     s, = run('spool', {})
     assert s['odb'] == str(base / '6_final.odb') and s['spool'].endswith('.json')
     u['host'], u['hint'] = 'epyc7', {}
+    u['signoff'] = str(Path('/srv/scratch') / Path(u['signoff']).relative_to(tmp_path))
     die, el, kind, how = AE.infer(u, [])
     assert (die, el, how) == ('s81', 'ot_top_m', 'lane dir')
 
