@@ -26,3 +26,27 @@ class TclCommentDependencies(unittest.TestCase):
         self.assertEqual(stages["landing_placement.tcl"], "synth")
 
 if __name__ == "__main__": unittest.main()
+
+def test_authored_ft_sites_follow_exact_executable_consumer():
+    table = "ft_polarity_local_sites.tsv"
+    hook = "ft_polarity_local.tcl"
+    texts = {"face_flops.tcl": f"source /work/{hook}\n",
+             hook: "set sites [fpl_load_exact_sites $::env(OT_FT_POLARITY_LOCAL_SITES)]\n",
+             table: "444\t553.014\t745.47\n",
+             "type_overlay.json": '{"changed":{"ft_polarity_sites":[444]}}'}
+    config = {"PRE_GLOBAL_PLACE_TCL": "/work/face_flops.tcl",
+              "OT_FT_POLARITY_LOCAL_SITES": f"/work/{table}"}
+    stages = KR.classify(texts, texts, config)
+    assert stages[table] == "place"
+    assert stages["type_overlay.json"] == KR.GATE
+
+    earlier = {**config, "PRE_SYNTH_TCL": f"/work/{hook}"}
+    assert KR.classify(texts, texts, earlier)[table] == "synth"
+    without_consumer = {**texts, hook: "# set ignored $::env(OT_FT_POLARITY_LOCAL_SITES)\n"}
+    assert KR.classify(without_consumer, texts, config)[table] == "synth"
+    arbitrary_path = {**config, "OT_FT_POLARITY_LOCAL_SITES": "/work/other.tsv"}
+    assert KR.classify(texts, [*texts, "other.tsv"], arbitrary_path)["other.tsv"] == "synth"
+
+    saved = {"files": {table: {"stage": "synth", "sha256": "old"}}}
+    new = {"files": {table: {"stage": "place", "sha256": "new"}}}
+    assert not KR.saved_stage_semantics_usable(new, saved)

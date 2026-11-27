@@ -313,3 +313,66 @@ def test_g0_worse_metric_new_key_and_count_are_new():
     assert TO.g0_new(hop, {("geometry", "type t lane l3: hop 410.5 um over 405 um")})[0] == []
     assert len(TO.g0_new(hop, {("geometry", "type t lane l3: hop 440.0 um over 405 um")})[0]) == 1
     assert TO.g0_key("rs_n_hi_p[8] at 12 um")[0] == "rs_n_hi_p[8] at <um> um"
+
+
+@pytest.fixture
+def authored_ft_plan(plan):
+    plan["budgets"][TO.FT_GROUP_TABLE] = {"mid": "u_bound.u_ft_dd_wo_dd_i_o_0"}
+    plan["budgets"][TO.FT_SITE_TABLE] = {"mid": [[9, 86.4, 86.4], [4, 90.0, 90.0]]}
+    return plan
+
+
+def test_ft_polarity_coordinate_overlay_reuses_group_and_bit_order(authored_ft_plan):
+    base = authored_ft_plan
+    new = copy.deepcopy(base)
+    new["budgets"][TO.FT_SITE_TABLE]["mid"][1][1] = 92.0
+    overlay = TO.overlay_from_plans(base, new, "mid")
+    assert overlay["ft_polarity_sites"] == {
+        "group": "u_bound.u_ft_dd_wo_dd_i_o_0", "sites": [[4, 92.0, 90.0]],
+    }
+    result, receipt = TO.apply_validated(base, overlay)
+    assert result == new
+    assert receipt["changed"] == {"ft_polarity_sites": [4]}
+    assert base["budgets"][TO.FT_SITE_TABLE]["mid"][1] == [4, 90.0, 90.0]
+
+
+@pytest.mark.parametrize("change, match", [
+    ({"group": "u_ft_other_s0"}, "group does not match"),
+    ({"sites": [[5, 92.0, 90.0]]}, "absent from the bound plan"),
+    ({"sites": [[4, 92.0, 90.0], [4, 93.0, 90.0]]}, "duplicate bit"),
+    ({"sites": [[4, -1, 90.0]]}, "outside the type outline"),
+    ({"sites": [[4, True, 90.0]]}, "expected"),
+    ({"sites": [[4, float("inf"), 90.0]]}, "expected"),
+    ({"type": "other"}, "expected only group and sites"),
+])
+def test_ft_polarity_overlay_refuses_group_bit_and_coordinate_mutants(authored_ft_plan, change, match):
+    base = authored_ft_plan
+    overlay = {"format": TO.FORMAT, "type": "mid", "base_plan_sha256": TO.plan_sha(base),
+               "ft_polarity_sites": {"group": "u_bound.u_ft_dd_wo_dd_i_o_0",
+                                     "sites": [[4, 92.0, 90.0]], **change}}
+    with pytest.raises(TO.OverlayError, match=match):
+        TO.apply_overlay(base, overlay)
+
+
+def test_ft_polarity_overlay_requires_digest_and_rejects_selector_reordering(authored_ft_plan):
+    base = authored_ft_plan
+    new = copy.deepcopy(base)
+    new["budgets"][TO.FT_SITE_TABLE]["mid"][1][1] = 92.0
+    overlay = TO.overlay_from_plans(base, new, "mid")
+    overlay.pop("base_plan_sha256")
+    with pytest.raises(TO.OverlayError, match="exact base_plan_sha256"):
+        TO.apply_overlay(base, overlay)
+    new["budgets"][TO.FT_SITE_TABLE]["mid"].reverse()
+    with pytest.raises(TO.OverlayError, match="not a positions-only"):
+        TO.overlay_from_plans(base, new, "mid")
+
+
+def test_ft_polarity_overlay_rejects_other_type_budget_and_bad_direct_delta(authored_ft_plan):
+    base = authored_ft_plan
+    new = copy.deepcopy(base)
+    new["budgets"][TO.FT_SITE_TABLE]["src"] = [[4, 92.0, 90.0]]
+    with pytest.raises(TO.OverlayError, match="not a positions-only"):
+        TO.overlay_from_plans(base, new, "mid")
+    del new["budgets"][TO.FT_SITE_TABLE]["src"]
+    new["budgets"][TO.FT_SITE_TABLE]["mid"][1][2] = 1e12
+    assert "outside the type outline" in TO.validate_overlay(base, new, "mid")[0]
