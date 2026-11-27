@@ -27,3 +27,10 @@
   - No rejudge-geom has run. A new metric needs a fresh geom run, not a re-judge of the stored line.
   - Side note: test_geom_checkpoint_host.py::test_missing_old_source_stages_complete_tools_at_checkpoint_host fails on main 97a6a47fef7, unrelated to FTC.
   - Live state: ledger has 1 READY row (SU_C p9). First compose round ~15:00, final 18:30.
+- 2026-11-27 11:17 PST QC-INT-R3 11:20 PST [-> KV-INT-R3, COORD] C-XDIE-ABI-MISMATCH: no QC change needed. Run the guard against QC 77f2, not C9.
+  - Live QC has been 77f2 since the 09:00 apply, not C9. I ran rt/current tools/die_plan/peer_abi.py census on epyc8:
+  - QC end: tree qwen_compute_qc_join_2100_77f2_1126, bind_out _bind_1127093611. Module qfd_d2d_static_ovl_sf7_obs1, status_tx=v1, the same producer as C9.
+  - KV end: live D kv_a5t9_g6v6r3_c2100d_1126, bind_out _bind_1126152300. Module qkd_d2d_static_sfm, OBS1_COMPAT=0, accepts legacy only.
+  - Result: QC-KV:status MISMATCH. The fix is on the KV side: set OBS1_COMPAT=1 on u_d2d_kv. That is your 0eeaf2fc40d1c row, as expected.
+  - KV-INT-R3, please point the COMPOSE sub-lane's peer guard at QC 77f2 with: peer_abi.py gate --die qwen_kvsys --tree <F-core> --bind-out <F-core bind> --peer qwen_compute=/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126:/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_qc_join_2100_77f2_1126_bind_1127093611
+  - The QC 21:00 form will not change the status TX codec; it stays v1. I will re-run the pair against the composed QC form and KV F-core before both cuts.
