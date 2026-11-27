@@ -11486,6 +11486,7 @@ def _run_item(spec_path, resume_reviewed=False):
 
     _drc = {}
     _seal = {}
+    local_runtime_host = None
 
     def stage_drain(fresh=False):
         """FLOW-OPS-0900 fix 4: draining hosts now (ot-run status + the spec's host_caps + fleet caps).  FLOW-OPS-1300 (FABLE-FLOW-1240 d): was read ONCE per run, so a
@@ -11517,7 +11518,7 @@ def _run_item(spec_path, resume_reviewed=False):
                                f"{DRAIN_WAIT_S // 60} min apart, and none holds this kit")
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
-        command = rt_tree_cmd(sp) + cmd
+        command = rt_tree_cmd(sp, local_runtime=hosts == [local_runtime_host]) + cmd
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)]
         argv += wave_stage_args(sp, d, command, extra_inputs, event_env=os.environ.get("OT_RUN_EVENT_ENV"),
                                 source_seal=_seal)
@@ -11983,7 +11984,17 @@ def _run_item(spec_path, resume_reviewed=False):
             return fail("mkdir", txt)
 
     def compose_rt():
-        """the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there; -> fail result or None"""
+        """Compose from a verified host-local runtime, or mirror the pinned tools before composition."""
+        nonlocal local_runtime_host
+        if not roamer.others and PPV.sha256(_seal.get("manifest_hash")):
+            local = rt_local_launch_cmd(sp, G)
+            if local:
+                rc, _ = run("rt_tools_local", remote(local), idempotent=True)
+                if rc == 0:
+                    local_runtime_host = G
+                    print(f"KW_RT_TOOLS {sp.get('tools_sha')} {tsrc} (verified local runtime)", flush=True)
+                    return None
+                print(f"KW_RT_LOCAL_FALLBACK {G}: local runtime probe or composition failed (rc {rc})", flush=True)
         for _h in [G] + [h for h in roamer.others if h != G]:
             _ra = (lambda c, _h=_h: remote_argv(_h, hub, c))
             rc = 0
@@ -15389,7 +15400,7 @@ def bind_rt_cmd(bind, rt_root):
     return f"python3 -I - {q(str(bind))} {q(str(rt_root))} <<'KWBINDRT'\n{BIND_RT_PY}\nKWBINDRT"
 
 
-def rt_tree_cmd(sp):
+def rt_tree_cmd(sp, *, local_runtime=False):
     """shell prefix that makes sure the launch tree exists on the host running the command ('' when the spec has no tools_rt).  The tree is
     composed from the host's own full rt/<sha12> when it has one, else from the mirror the rt_tools stage pushed; exit 97 when neither exists"""
     if not sp.get("tools_rt"):
@@ -15409,7 +15420,8 @@ def rt_tree_cmd(sp):
     else:
         pre = ""
     # a made tree needs nothing from rt any more (hardlinks): a later stage still runs after rt/<sha> or the mirror was pruned
-    return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ R={q(rt)}; [ -f \"$R\"/{sh} ] || R={q(M)}; "
+    fallback = "" if local_runtime else f"[ -f \"$R\"/{sh} ] || R={q(M)}; "
+    return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ R={q(rt)}; {fallback}"
             f"[ -f \"$R\"/{sh} ] || {{ echo \"KW_RT_TOOLS FAIL: no rt tools {rt} or mirror on $(hostname -s)\" >&2; exit 97; }}; {pre}"
             f"bash \"$R\"/{sh} {q(str(sp['src']).rstrip('/'))} \"$R\" {q(L)}{pin_sh} || exit 97; }}; ")
 
@@ -15449,6 +15461,56 @@ def rt_live_refs(roots=None, now=None, max_age_h=336.0, ttl=300.0):
     if roots is None:
         RT_REF_CACHE.update(t=now, v=frozenset(out))
     return frozenset(out)
+
+
+RT_LOCAL_LAUNCH = "tools/autopilot/rt_launch_tree.sh"
+RT_LOCAL_READY_PY = r"""
+import hashlib, json, sys
+from pathlib import Path
+
+alias, sha, script = sys.argv[1:]
+try:
+    root = Path(alias).resolve(strict=True)
+    receipt = Path(alias + ".manifest.json").resolve(strict=True)
+    if root.name != sha[:12] or receipt != root.with_name(root.name + ".manifest.json"):
+        sys.exit(1)
+    manifest = json.loads(receipt.read_text())
+    if manifest.get("sha") != sha:
+        sys.exit(1)
+    # ot-tools-sync installs this receipt only after verifying all installed
+    # content. Check the immutable payload roots and two launch inputs here.
+    for rel in ("tools", "physical/common_flow"):
+        p = root / rel
+        if p.is_symlink() or not p.is_dir() or p.stat().st_mode & 0o222:
+            sys.exit(1)
+    for rel in (script, "physical/common_flow/abc_kit.script"):
+        p = root / rel
+        if (not p.resolve(strict=True).is_relative_to(root) or not p.is_file() or p.stat().st_mode & 0o222
+                or hashlib.sha256(p.read_bytes()).hexdigest() != manifest["files"].get(rel)):
+            sys.exit(1)
+except (OSError, ValueError, RuntimeError, KeyError, AttributeError, TypeError):
+    sys.exit(1)
+"""
+
+
+def rt_local_ready_cmd(rt, sha):
+    """Read the host-sync receipt for this exact immutable runtime."""
+    return shlex.join(["python3", "-I", "-c", RT_LOCAL_READY_PY, rt, sha, RT_LOCAL_LAUNCH])
+
+
+def rt_local_launch_cmd(sp, host):
+    """Try a local runtime only when this private type is pinned against spill."""
+    sha = str(sp.get("tools_sha") or "")
+    rt = str(sp.get("tools_rt") or "").rstrip("/")
+    if (sp.get("kind") != "type" or not pinned_place_producer(sp, host)
+            or sp.get("place_spill_hosts") not in ([], [host])
+            or (sp.get("gen_pins") or {}).get("files") or not re.fullmatch(r"[0-9a-f]{40}", sha)
+            or Path(rt) != Path(RT_CURRENT).with_name(sha[:12])):
+        return ""
+    launch = sp_launch_path(sp)
+    compose = shlex.join(["bash", f"{rt}/{RT_LOCAL_LAUNCH}", sp["src"], rt, launch])
+    marker = shlex.quote(f"{launch}/.rt_launch_ok")
+    return f"{rt_local_ready_cmd(rt, sha)} && {compose} && cat {marker}"
 
 
 def rt_mirror_cmds(sp, host, hub, tag=""):
