@@ -4102,6 +4102,10 @@
          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
         }
        },
+       "landing_raw_data_hold_hb4": {
+        "type": "integer",
+        "const": 2
+       },
        "landing_output_qreg": {
         "type": "array",
         "minItems": 1,

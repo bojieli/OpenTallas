@@ -557,6 +557,19 @@ def ctl_hold_hb4(plan, tn, bus):
     return int(cfg.get(bus, 0))
 
 
+def raw_landing_hold_hb4(plan, tn):
+    # Two noninverting buffers on each raw data input of the priced West RX ring.
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    clock = typ.get("clock") or {}
+    if "landing_raw_data_hold_hb4" not in clock:
+        return 0
+    count = clock["landing_raw_data_hold_hb4"]
+    if tn.split("__")[0] != "hd_spn_wshim_rx" or type(count) is not int or count != 2:
+        raise LandingError(f"{tn}: landing_raw_data_hold_hb4 requires exact hd_spn_wshim_rx and two pads")
+    return count
+
+
 def check_ca_freg_declared(plan, tn, bus, c, pid, err=None):
     """FREG-DECL-1 (COORD 11-11, fail closed): the count-aligned FREG face register (landing_ring_wreg.freg) delays data
     AND writer start one fclk; strap_ties adds K + 2 (WREG + FREG), so q is ONE clk later than the plan's geometric
@@ -2081,6 +2094,10 @@ class Landings:
                 self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_writer_start branches must name output rings of the type"))   # BIND-ALL-ERRORS: type-level, collect
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
+        raw_hb = raw_landing_hold_hb4(self.plan, key)
+        if raw_hb and (not self.dataflow or not self.strap or key not in self.ca_type
+                       or set(mask["inputs"]) != {"link_i"}):
+            raise LandingError(f"{tn}: raw landing hold pads require the single count-aligned dataflow link_i ring")
         if not mask["inputs"] and not mask["outputs"] and not active_collector and key not in self.ca_type:
             if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None:
                 self._collect_err(tn, None, None, None, LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware'))   # BIND-ALL-ERRORS: type-level, collect
@@ -2567,10 +2584,20 @@ class Landings:
                               f"    ot_dp_hd #(.W(1), .N({hb_n})) u_hdly_cland_fs_{b} (.a({d_fs}), .y(cland_fs_hd_{b}));"]
                     d_ctl, d_fs = f"cland_dn_ctl_hd_{b}", f"cland_fs_hd_{b}"
                     ring_rst = ring_rst.replace(f".t_rst_n(cland_fstart_in_{b})", f".t_rst_n({d_fs})")
+                data_in = b
+                if raw_hb:
+                    if (w != 566 or not ring_mod.startswith("ot_dp_clk_landing_cas ")
+                            or not all(param in ring_mod for param in (".WREG(1)", ".DEPTH(4)"))
+                            or any(param in ring_mod for param in (".WFALL(1)", ".WNEG(1)", ".FREG(1)"))
+                            or ".t_rst_n(" not in ring_rst):
+                        raise LandingError(f"{tn}.{b}: raw hold pads require the priced W568, DEPTH4, rising WREG ring")
+                    data_in = f"cland_raw_data_hd_{b}"
+                    logic += [f"    wire [{w-1}:0] {data_in};",
+                              f"    ot_dp_hd #(.W({w}), .N({raw_hb})) u_hdly_cland_data_{b} (.a({b}), .y({data_in}));"]
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
                           f"    {ring_mod.format(w=w+2)} u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{{d_ctl}, {b}}}), .q({ring}),",
+                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{{d_ctl}, {data_in}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]

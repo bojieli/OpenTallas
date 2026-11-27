@@ -4158,6 +4158,11 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
     hb += [(int(s["hold_hb4"]), int(s["width"])) for s in P.types[tn].get("ft_slots", [])      # HOLDFORM-1 for ft slots
            if int(s.get("hold_hb4") or 0) > 0 and int(s.get("stations", 1)) > 0]
+    # The exact raw-input landing form counts the bound 566-bit bus, including its epoch.
+    raw_data_count = 0
+    if "landing_raw_data_hold_hb4" in (P.types[tn].get("clock") or {}):
+        from clock_landings import raw_landing_hold_hb4
+        raw_data_count = 566 * raw_landing_hold_hb4({"partition_types": P.types}, tn)
     # SEAMHOLD-CTL-K5-DI: landing_ctl_hold_hb4 {bus: N} = N HB4 on 3 control bits (type-level ot_dp_hd, counted from the kit RTL)
     hb += [(int(n), 3) for n in ((P.types[tn].get("clock") or {}).get("landing_ctl_hold_hb4") or {}).values() if int(n) > 0]
     # SEAMHOLD-HB4-HOSTN-RST: reset.pin_entry_hb4 pads live inside the phase entry cell (u_rst_in / u_run_in .u_hdly_in, not counted in RTL)
@@ -4176,10 +4181,19 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
                 "  foreach it [$i getITerms] { set n [$it getNet]; if {$n ne \"NULL\" && [$n getSigType] eq \"SIGNAL\"} { $n setDoNotTouch 1 } } }\n"
                 "puts \"OT_HOLDPAD_LK dont_touch [llength $ot_hb] latch_except_hb4 pad cells (and their nets: repair_design RSZ-3006 on a net into a dont_touch load)\"\n"
                 "if {![llength $ot_hb]} { error \"OT_HOLDPAD_LK: plan declares latch_except_hb4 for this type but the netlist has no pad cell\" }\n")
-    if not hb:
+    if not hb and not raw_data_count:
         return ""
-    lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
+    lo = raw_data_count + sum(n * w for n, w in hb)
+    hi = raw_data_count + sum(n * (w + 1) for n, w in hb)  # legacy bus epoch is optional
     exact = hold_pad_rtl_cells(kd)
+    raw_scope_check = ""
+    if raw_data_count:
+        if exact is not None and exact < raw_data_count:
+            raise ValueError(f"HOLDFORM-1 {tn}: raw landing data pads absent from exact kit RTL")
+        raw_scope_check = (
+            "set raw_hb 0\n"
+            "foreach i $ot_hb { if {[string match *u_hdly_cland_data_link_i* [$i getName]]} { incr raw_hb } }\n"
+            f"if {{$raw_hb != {raw_data_count}}} {{ error \"OT_HOLDPAD: raw data pads $raw_hb, expected {raw_data_count}\" }}\n")
     if exact is not None:
         if exact > hi:
             raise ValueError(f"HOLDFORM-1 {tn}: the kit RTL declares {exact} hold-pad cells, more than the plan allows ({hi})")
@@ -4193,7 +4207,7 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
             "foreach i $ot_hb { $i setDoNotTouch 1 }\n"
             f"puts \"OT_HOLDPAD dont_touch [llength $ot_hb] hold-pad cells (plan {lo}..{hi})\"\n"
             f"if {{[llength $ot_hb] < {lo} || [llength $ot_hb] > {hi}}} {{ error \"OT_HOLDPAD: netlist holds "
-            f"[llength $ot_hb] hold-pad cells, plan expects {lo}..{hi}\" }}\n")
+            f"[llength $ot_hb] hold-pad cells, plan expects {lo}..{hi}\" }}\n" + raw_scope_check)
 
 
 def input_hold_min(P, tn, structural=False):

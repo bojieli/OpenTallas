@@ -275,6 +275,7 @@ def uses_hold_hb4(raw):
     return (any(int(b.get("hold_hb4") or 0) > 0 and b.get("dir") == "in" for t in types for b in t.get("buses", []))
             or any(int(s.get("hold_hb4") or 0) > 0 for t in types for s in t.get("ft_slots", []))
             or _PEP.uses_hb(raw or {})                                        # SEAMHOLD-HB4-HOSTN-RST (reset.pin_entry_hb4)
+            or any((t.get("clock") or {}).get("landing_raw_data_hold_hb4") is not None for t in types)
             or any(int(n or 0) > 0 for t in types for n in ((t.get("clock") or {}).get("landing_ctl_hold_hb4") or {}).values()))  # SEAMHOLD-CTL-K5-DI
 
 
