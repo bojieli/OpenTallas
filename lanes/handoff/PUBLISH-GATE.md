@@ -46,3 +46,9 @@ Exact33 S81 publication owner rows ->S81-TYPES-R2 committed01ff7a2214d2; current
 - Old D4 G0 rc1/reportPASS confusion is not reproduced: actual E10 /runs/s81/kit-wave/pubgate/g0/g0_report.json at21:43 reads FAIL6.
   Fresh unique output directories in new helper avoid stale result authorization.
 - All my source gates terminal. No physical job launched. Keep integration worktree until S81/KV helper users switch to merged runtime, then remove it.
+
+## Publication PRE CPU admission, 2026-11-26
+
+- QC 77f2's stock raw SSH static launcher had one unadmitted PRE tree with 106 descendants, about 72 runnable. Roughly 60 other runnable CPU workers were normal ROM image scopes declared and running at four workers each. E8 exceeded its normal 115 load cap. Existing jobs, stock die bind budgets and host policies were left in place.
+- Candidate `acb1b70887044bd1073709a1e0b5c0a3644dca40` keeps exact prepared input paths and the typed `PG_STATIC` result. It admits a local PRE scope bounded by affinity and declares its worker count to the actual PRE fork pools. Qualifying inherited local leases are reused. Default request 32, optional `OT_PUBGATE_PRE_THREADS`. This publication call uses the existing ordinary-admission flag without changing fleet defaults. E7 fresh scope measured 7 PRE workers and Intel1 nested lease reused exactly 4.
+- Two initial branch fetch holds were due to the fleet's bare mirror not yet holding the exact ref. The routine targeted fetch from origin registered the branch. The first actual gate exposed an inline checker context regression and a stale literal-nice fixture. Both are fixed in the successor. Exact E7 gate `oth-ubuntu-3516375-1795764123` GREEN 8/8 on main `eca7f429a3f`, rc0. Activation is root-owned. The running 77f2 PRE was untouched.
