@@ -275,6 +275,47 @@ class Spill(unittest.TestCase):
         self.assertEqual(open(self.host("src") + "/late.txt").read(), "late")
         self.assertTrue(os.path.exists(os.path.join(self.m.SPILL_PENDING, "t1.done")))
 
+    def test_sweeper_preserves_imported_client_and_active_scope(self):
+        stamp = self.stamp()
+        self.assertEqual(self.fwd("src", "dst", stamp).returncode, 0)
+        pathlib.Path(self.host("dst"), "late.txt").write_text("exact completed output")
+        pid = os.getpid()
+        self.assertFalse(self.m.pid_alive(pid), "a Python API caller lacks an ot-run argv")
+        start = self.m._proc_start_ticks(pid)
+        unit = "oth-ubuntu-123-1790000000"
+        rec = dict(tag="api", pid=pid, pid_start=start, src="src", dst="dst",
+                   roots=[self.root], stamp=stamp, unit=unit, t=0, cmd="x")
+        self.m.pending_write(rec)
+
+        probe = SimpleNamespace(returncode=0, stdout="active\ninactive\n")
+        original_ssh = self.m.ssh_sh
+        calls = []
+
+        def ssh(host, cmd, **kwargs):
+            if cmd.startswith("systemctl --user is-active"):
+                calls.append((host, cmd))
+                return probe
+            return original_ssh(host, cmd, **kwargs)
+
+        with patch.object(self.m, "ssh_sh", side_effect=ssh):
+            self.assertEqual(self.m.spill_sweep(say=lambda _: None), 1)
+            self.assertEqual(calls, [], "the exact live PID owns the pending record")
+
+            self.m.pending_write(dict(rec, pid_start=start - 1))
+            self.assertEqual(self.m.spill_sweep(say=lambda _: None), 1)
+            self.assertEqual(calls, [("dst", f"systemctl --user is-active {unit}.scope {unit}.service")])
+            self.assertTrue(pathlib.Path(stamp).exists())
+            self.assertFalse(pathlib.Path(self.host("src"), "late.txt").exists())
+
+            probe.returncode, probe.stdout = 255, ""
+            self.assertEqual(self.m.spill_sweep(say=lambda _: None), 1)
+            self.assertTrue(pathlib.Path(stamp).exists())
+
+            probe.returncode, probe.stdout = 3, "inactive\ninactive\n"
+            self.assertEqual(self.m.spill_sweep(say=lambda _: None), 0)
+        self.assertFalse(pathlib.Path(stamp).exists())
+        self.assertEqual(pathlib.Path(self.host("src"), "late.txt").read_text(), "exact completed output")
+
     def test_sweep_skips_a_live_client(self):
         self.m.pending_write(dict(tag="t2", pid=os.getpid(), src="src", dst="dst", roots=[self.root], stamp="/nonexistent",
                                   unit=None, t=0, cmd="x"))

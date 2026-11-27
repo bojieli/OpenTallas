@@ -2953,16 +2953,19 @@ def _status_records(d):
     return sorted(out, key=lambda r: r.get("_mtime", 0), reverse=True)
 
 
+def _proc_start_ticks(pid):
+    if pid:
+        try:
+            with open(f"/proc/{pid}/stat") as f:
+                return int(f.read().rsplit(")", 1)[1].split()[19])
+        except (OSError, ValueError, IndexError):
+            pass
+    return None
+
+
 def _client_alive(rec):
-    pid = rec.get("pid")
-    if not pid or not os.path.exists(f"/proc/{pid}"):
-        return False
-    try:
-        with open(f"/proc/{pid}/stat") as f:
-            st = int(f.read().rsplit(")", 1)[1].split()[19])
-    except (OSError, ValueError, IndexError):
-        return False
-    return rec.get("pid_start") in (None, st)
+    start = _proc_start_ticks(rec.get("pid"))
+    return start is not None and rec.get("pid_start") in (None, start)
 
 
 def unit_status(target, d=None, alive=_client_alive):
@@ -4825,7 +4828,7 @@ def spill_handoff_cli(tag, goal="place", dry=False, say=print):
     except (OSError, ValueError) as e:
         say(f"ot-run --spill-handoff: no record {tag}: {e}")
         return 2
-    if not pid_alive(rec["pid"]):
+    if not spill_client_alive(rec):
         say(f"ot-run --spill-handoff: client {rec['pid']} is gone: --spill-sweep owns this record")
         return 2
     src, dst, roots, stamp = rec["src"], rec["dst"], rec["roots"], rec["stamp"]
@@ -4908,8 +4911,9 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None, *
         return None
     say(f"ot-run: SPILL: copied {r.sent} changed entries in {time.time() - t0:.0f} s; running on {dst}; written files go back to {src} after the run")
     log_signal(f"SPILL {roots} {src} -> {dst} pid {os.getpid()}: {' '.join(cmd)[:200]}")
-    rec = dict(tag=tag, pid=os.getpid(), src=src, dst=dst, roots=roots, stamp=stamp, unit=None, t=int(time.time()),
-               cmd=" ".join(cmd)[:300])
+    pid = os.getpid()
+    rec = dict(tag=tag, pid=pid, pid_start=_proc_start_ticks(pid), src=src, dst=dst, roots=roots,
+               stamp=stamp, unit=None, t=int(time.time()), cmd=" ".join(cmd)[:300])
     pending_write(rec)
 
     def on_start(unit):
@@ -5042,6 +5046,27 @@ def pid_alive(pid):
     return any(os.path.basename(x) == "ot-run" for x in proc_args(pid)[:3])
 
 
+def spill_client_alive(record):
+    """New records identify the owning process even when it imports ot-run."""
+    if record.get("pid_start") is not None:
+        return _client_alive(record)
+    return pid_alive(record["pid"])
+
+
+def spill_worker_finished(host, unit):
+    """Allow an orphan copy only when native scope and service are both terminal."""
+    unit = unit.removesuffix(".scope").removesuffix(".service")
+    names = shlex.join([unit + ".scope", unit + ".service"])
+    try:
+        result = ssh_sh(host, f"systemctl --user is-active {names}", timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    states = result.stdout.splitlines()
+    terminal = {"inactive", "failed", "unknown"}
+    return (result.returncode in (3, 4) and len(states) == 2
+            and all(state.strip() in terminal for state in states))
+
+
 def spill_sweep(dry=False, say=print):
     """copy back the outputs of spilled runs whose client is gone (killed agent, session limit, failed back-copy) once
     their unit has ended on dst.  Returns the number of records still pending."""
@@ -5057,15 +5082,13 @@ def spill_sweep(dry=False, say=print):
                 rec = json.load(fh)
         except (OSError, ValueError):
             continue
-        if pid_alive(rec["pid"]):
+        if spill_client_alive(rec):
             left += 1
             continue
-        if rec.get("unit"):
-            a = ssh_sh(rec["dst"], f"systemctl --user is-active {shlex.quote(rec['unit'])}", timeout=60).stdout.strip()
-            if a in ("active", "activating", "deactivating", "reloading"):
-                say(f"ot-run --spill-sweep: {rec['tag']} unit {rec['unit']} still {a} on {rec['dst']}")
-                left += 1
-                continue
+        if rec.get("unit") and not spill_worker_finished(rec["dst"], rec["unit"]):
+            say(f"ot-run --spill-sweep: {rec['tag']} waiting for terminal unit {rec['unit']} on {rec['dst']}")
+            left += 1
+            continue
         say(f"ot-run --spill-sweep: {rec['tag']} {rec['roots']} {rec['dst']} -> {rec['src']} (unit {rec.get('unit')})"
             + (" DRY" if dry else ""))
         if dry:
