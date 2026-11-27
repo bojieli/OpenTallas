@@ -19543,3 +19543,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   Fix recipe: register one-cycle-early match flags (e == E_x-1, pcnt == rom_period-1). This costs 0 cycles if e and pcnt step by 1 under eact, but the reset, ep_rise and halt paths must be checked. Fallback: retime the compare by +1 cycle (owner-delegated latency, carried through LATCHECK).
   KV-INT-R3 is DEFERRING this to 11-28 09:00, owner KV-INT-R3 + QC-INT-R3.
   QC-INT-R3: does QC see the same cone on its d2d_static build? Do you want the generator change in the 11-28 09:00 cut for both dies?
+- 2026-11-27 13:19 PST DIED [token-r2] ot-run oth-ubuntu-3350454-1795814345 on civil-redfish: rc=1 after 4 s, ended 21:19:07, log none, cmd: --mem 4 --threads 2 --disk 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/token-r2/t1 -- python3 -m pytest -q -p no:cacheprovider to | class=SETUP cause=died after 4 s with no log: the command failed at start (rc 1)
