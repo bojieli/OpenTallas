@@ -12,3 +12,12 @@
   (4) kv3_phy / kv3_phy_v1 cland_up 431.5 um is an ACCEPTED EXCEPTION to C-LEG405: signed hard-IP boundary, report-only. kv3_phy and SYS_C are dual-indexed on rtx-pro (Codex 16:49), so they count.
   (5) All KV rows that were DEFERRED to 09:00 11-27 are now DEFERRED to 21:00 11-27, owner KV-INT-R3. Any of them that misses the 21:00 gates is DEFERRED again, with its blocker named.
 - 2026-11-27 09:14 PST DIED [kv-int-r3] ot-run oth-ubuntu-3871349-1795799644 on outgoing-giraffe: rc=127 after 3 s, ended 17:14:05, log none, cmd: --priority die --hosts epyc8 --mem 8 --threads 1 -- bash census.sh | class=SETUP cause=command could not start (rc 127)
+- 2026-11-27 09:22 PST ACK [KV-INT-R3 -> COORD; cc CLASS-TRACK-R2] FLOW-0910 KV items.
+  a7 C-EXT-CONTRACT-MISSING (SYS_C L664): ruling taken. Until the owner answers OWNER? 02:22, the working contract is the measured peak occupancy 23 plus margin, i.e. join depth 32 (Codex L664-BOARD-RATE-1127 shows depth 24/32 pass and depth 16 fails at full 19/24 pacing). L664 9b99c88c9b75 is now assessed on its gates on D for the 21:00 form, not held on the OWNER?.
+  b21 C-TAP-LOAD hub_Eo (7 taps over cap): DEFERRED, ETA 11-28 09:00. The outer-hub packets are in the PACKETS census first.
+  b22 C-FSTART-HALFCYCLE: the outer raw FSTART source 53aa117263ca (56 branches, legs <=188.8 um) is a candidate for the 21:00 form, pending the PACKETS census. The PV cland_rstart sibling (v6ne −1476 ps) is owned by sub-lane PV-RESET.
+  b23 C-FACE-SHARED-LOAD (new): the KV Eo output inverter detour (−1697 ps) is owned by KV-INT-R3. The candidate is Codex's Eo INV fence plan bc824c36f3c5, in the PACKETS census.
+  b30 / c10 P-EVIDENCE-VOLATILE: sub-lane VIEWS is restoring qkd_kvs_pcc_h_head_p and qkd_kvs_pcf from the signed store through the stock path, and checking which D kits bind them.
+  c3 Codex KV sub-lanes: KV-INT-R3 adopts the Codex KV source packets by die (outer hub, Hroot, HG v3, Ei, SYS_C, E VPORT). token_qwen stays with TOKEN/COORD.
+  c12: the CLOSURE row for KV D 5bee is present (CLASS-TRACK-R2 backfill).
+  c20: CLASSES.tsv has new ETAs on 16 KV rows that named the missed 09:00 cut, commit 27b22d1f. Rows moved to 21:00 11-27: FIRM-RESIZE, SEAT-KEYMISS, RELAY-NEARCORE, NEWROOT-TAPOFFSET, PV FSTART / RST-REACH / FT-CROSSES-CORE, and LAND-REACH (closes if still 0). Rows moved to 11-28 09:00: PARENT-SEAM, STRAP-REACH, TAP-LOAD, TAP-REACH, GPL-TD, PC-PHY-INGRESS, PV STREET strip, hg XTAP.
