@@ -385,3 +385,4 @@
   - The fix is UNPROVEN on KV. Place-only proof probes on sys_c and pv_v6ne will run on epyc11.
   - It joins 21:00 only if place WNS is not worse. Otherwise it is DEFERRED 11-28 09:00, owner KV-INT-R3.
   Check gap: proposed PRE advisory: a KV plan with logic-cluster regions or movable utilisation <2% and no gpl_td.
+- 2026-11-27 13:10 PST DONE [kv-int-r3] ot-run oth-ubuntu-2930226-1795813828 on loved-redfish: rc=0 after 495 s, ended 21:10:37, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/dump_ft.otrun.log, cmd: --hosts epyc7 --mem 16 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash sinkdump.sh /srv/opentallas-scratch2
