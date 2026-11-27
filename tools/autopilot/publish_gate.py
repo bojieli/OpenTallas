@@ -196,6 +196,32 @@ def _sub(argv, cwd, timeout=STEP_TIMEOUT_S):
         return 99, f"{type(e).__name__}: {e}"
 
 
+def pre_failure_record(output, tree, plan, plan_sha256):
+    """Read the exact native PRE failure receipt before the advisory output is truncated."""
+    match = re.search(r"^LIST PRE-RECORD (.+) plan_sha256 ([0-9a-f]{12}) result FAIL$", output, re.MULTILINE)
+    if not match:
+        return {}
+    name, short_sha = match.groups()
+    path = Path(tree, name)
+    if (not re.fullmatch(short_sha + r"[0-9a-f]{4}", path.parent.name)
+            or not re.fullmatch(r"[0-9a-f]{16}\.json", path.name)):
+        return {}
+    diagnostic = {"record": str(path)}
+    try:
+        record = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return diagnostic
+    if (not isinstance(record, dict) or record.get("record") != "PRE-RECORD-1125"
+            or record.get("plan") != str(plan) or record.get("tree") != str(tree)
+            or record.get("result") != "FAIL" or not str(record.get("plan_sha256") or "").startswith(path.parent.name)
+            or (plan_sha256 and record.get("plan_sha256") != plan_sha256)):
+        return {}
+    findings = record.get("fails")
+    if not isinstance(findings, list) or not all(isinstance(finding, str) for finding in findings[:5]):
+        return diagnostic
+    return dict(diagnostic, findings=[finding[:500] for finding in findings[:5]], finding_count=len(findings))
+
+
 def load_g0_baseline(spec):
     """Read an explicitly pinned review record; it never changes plan or check output."""
     if not spec:
@@ -472,6 +498,10 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
                      "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
                      "reset_solved": resetpub_solve_default(plan),
                      "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
+    if rc1:
+        pre_failure = pre_failure_record(t1, pre_tree, plan, plan_sha256)
+        if pre_failure:
+            res["pre_g0"]["pre_failure"] = pre_failure
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
@@ -654,11 +684,15 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         with CF.ThreadPoolExecutor(max_workers=1) as ex:
             fut = ex.submit(_dry)
             t0 = time.time()
+            pre_host = static_host or hosts[0]
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
                                                                        native_reset_receipt=native_reset_receipt, tool_root=rt_root())))(
-                static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
+                pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
+            pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
+            if pre_failure:
+                pre_failure["host"] = pre_host
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
             rec["checks"]["dry_gen"] = fut.result()
@@ -721,7 +755,11 @@ def main(argv=None):
         return 1 if why else 0
     obj = json.loads(Path(a.candidate).read_text())
     rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit, gen_host=a.gen_host, static_host=a.static_host)
-    print(json.dumps({k: (v if k != "checks" else {c: (x or {}).get("verdict") for c, x in v.items()}) for k, v in rec.items()}))
+    summary = dict(rec, checks={c: (x or {}).get("verdict") for c, x in rec["checks"].items()})
+    pre_failure = (rec["checks"].get("pre_g0") or {}).get("pre_failure")
+    if pre_failure:
+        summary["pre_failure"] = pre_failure
+    print(json.dumps(summary))
     return 0 if rec["verdict"] == "PASS" else 1
 
 

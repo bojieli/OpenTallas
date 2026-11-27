@@ -257,6 +257,35 @@ class Concurrent(unittest.TestCase):
         self.assertIn("gate_s", rec)
 
 
+def test_publish_gate_preserves_exact_pre_failure_after_truncated_advisories(tmp_path, monkeypatch):
+    tree, plan = mk_tree(str(tmp_path))
+    plan_sha = PG.sha256_file(plan)
+    record = tmp_path / "pre cache" / plan_sha[:16] / ("a" * 16 + ".json")
+    record.parent.mkdir(parents=True)
+    findings = ["FAIL ROWS-NO-PROOF nine source types lack emitted proof",
+                "FAIL ADV-RESET-NAME cbf_q00__cl1b5a6458: TREE-ERROR (_Timeout: )"]
+    rec = {"record": "PRE-RECORD-1125", "tree": str(tree), "plan": str(plan), "plan_sha256": plan_sha,
+           "result": "FAIL", "fails": findings}
+    record.write_text(json.dumps(rec))
+    out = f"LIST PRE-RECORD {record} plan_sha256 {plan_sha[:12]} result FAIL\n" + "PRE advisory\n" * 90
+    rc = 1
+
+    def sub(argv, cwd, timeout=None):
+        return (rc, out) if argv[2].endswith("plan_gate_pre.py") else (0, "")
+
+    monkeypatch.setattr(PG, "_sub", sub)
+    pre = PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    assert pre["verdict"] == "FAIL" and pre["pre_rc"] == 1 and pre["g0_rc"] == 0
+    assert "PRE-RECORD" not in pre["tail"]
+    assert pre["pre_failure"] == {"record": str(record), "findings": findings, "finding_count": 2}
+
+    record.write_text(json.dumps(dict(rec, plan_sha256=plan_sha[:-1] + ("1" if plan_sha[-1] != "1" else "2"))))
+    assert "pre_failure" not in PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    rc = 0
+    passed = PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    assert passed["verdict"] == "PASS" and "pre_failure" not in passed
+
+
 class RtToolsForPreG0(unittest.TestCase):
     """PUBGATE-PREG0 11-23: PRE/G0 run the rt checkout's tools (tool_root), not the candidate tree's frozen copy, so rt fixes reach a published tree."""
     def setUp(self):
