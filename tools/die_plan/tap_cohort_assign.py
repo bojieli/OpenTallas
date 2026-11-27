@@ -260,6 +260,9 @@ def main(argv=None):
     ap.add_argument("--split-oversize", action="store_true",
                     help="default OFF: an unpinned cohort whose own box W+H exceeds --span is demoted to singles on their nearest taps; this cuts related pairs "
                          "(see split_cohorts in the report) - the alternative is reshaping the cohort's seat")
+    ap.add_argument("--no-freeze", action="store_true",
+                    help="opt out of the RESET-KEY freeze (logged in the report and on stderr): by default, when taps are appended, the BASE taps are first "
+                         "recorded as type.reset.consumer_sites_um via reach_fix._freeze_reset_consumers so no reset relay moves and the bound reset RTL stays valid")
     ap.add_argument("--out"); ap.add_argument("--report")
     ap.add_argument("--tools", help="tools/die_plan dir to import schema / tap_split from (default: beside this file); density types read their sink bins relative to that tree")
     ap.add_argument("--density-radii", metavar="R1,R2,...",
@@ -380,6 +383,22 @@ def main(argv=None):
             except Refused as exc:
                 print(f"REFUSED: {exc}", file=sys.stderr)
                 return 4
+        freeze = None
+        if added and not a.no_freeze:
+            import copy
+            import reach_fix as RF
+            import row_normalize as RN
+            tree = Path(a.tools).resolve().parent.parent if a.tools else Path(__file__).resolve().parent.parent.parent
+            t0 = copy.deepcopy(raw["partition_types"][a.type]); rec0 = {"changes": []}
+            with RN.in_tree(tree):
+                RF._freeze_reset_consumers(plan, a.type, t0, rec0)                  # BEFORE the taps are appended: it reads the BASE taps
+            sites = (t0.get("reset") or {}).get("consumer_sites_um")
+            if sites:
+                raw["partition_types"][a.type].setdefault("reset", {})["consumer_sites_um"] = sites
+            freeze = dict(frozen=bool(sites), sites=len(sites or []), record=rec0)
+        elif added:
+            print("NO-FREEZE: taps are appended without recording reset.consumer_sites_um; the reset tree may move (landing / DERIVEDNAME findings)", file=sys.stderr)
+            freeze = dict(frozen=False, opted_out=True)
         ck = raw["partition_types"][a.type]["clock"]
         if radius is not None:
             ck["tap_radius_um"] = radius
@@ -390,6 +409,8 @@ def main(argv=None):
                 ck["tap_mode"] = "grid+explicit"
         if tg is not None:
             ck["tap_group"] = tg
+        if a.report and freeze is not None:
+            rp = json.loads(Path(a.report).read_text()); rp["reset_freeze"] = freeze; Path(a.report).write_text(json.dumps(rp, indent=1) + "\n")
         Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
     return 0
 

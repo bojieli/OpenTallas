@@ -104,6 +104,7 @@ MUTANTS = [
     ('if a.add_taps and (res["unassigned"] or res["over_span"] or res["single_far"]) and mode != "density":', 'if a.add_taps and res["unassigned"] and mode != "density":'),
     ("        if len(keep) != len(added):", "        if False:"),
     ("tap_order(t)))", "t))"),
+    ("        if added and not a.no_freeze:", "        if False:"),
     ("    if split_oversize:\n        excl = set()", "    if False:\n        excl = set()"),
     ("k not in forced_set and k not in excl and box_wh(", "k not in excl and box_wh("),
     ("coh, singles, swallowed = cohorts_of(sinks, min_cohort, forced=[k for k in forced_keys if SAFE.fullmatch(k)], exclude=excl)", "pass"),
@@ -121,14 +122,14 @@ def test_mutants_are_killed():
     src = (HERE / "tap_cohort_assign.py").read_text()
     base = type(sys)("base")
     exec(compile(src, "base", "exec"), base.__dict__)
-    for fn in (check, _rules_on, _index_on, _main_on, _renum_on):          # unmutated control: every checker must pass on the real module
+    for fn in (check, _rules_on, _index_on, _main_on, _renum_on, _split_on, _split2_on, _freeze_on):          # unmutated control: every checker must pass on the real module
         assert fn(base)
     for old, new in MUTANTS:
         assert old in src, old
         mod = type(sys)("mut")
         exec(compile(src.replace(old, new, 1), "mut", "exec"), mod.__dict__)
         killed = False
-        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m), lambda m: _split_on(m), lambda m: _split2_on(m)):
+        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m), lambda m: _split_on(m), lambda m: _split2_on(m), lambda m: _freeze_on(m)):
             try:
                 fn(mod)
             except Exception:
@@ -187,15 +188,17 @@ def _run(tmp_path, clock, sinks, extra=()):
     tools.mkdir(exist_ok=True)
     (tools / "schema.py").write_text(STUB_SCHEMA)
     (tools / "tap_split.py").write_text(STUB_SPLIT)
+    (tools / "reach_fix.py").write_text(STUB_RF)
+    (tools / "row_normalize.py").write_text(STUB_RN)
     plan = tmp_path / "plan.json"
     plan.write_text(json.dumps({"partition_types": {"t": {"clock": clock}}}))
     tsv = tmp_path / "sinks.tsv"
     tsv.write_text("".join(f"clk\t{i}\tDFF\t{x}\t{y}\n" for i, x, y in sinks))
     out, rep = tmp_path / "out.json", tmp_path / "rep.json"
-    for m in ("schema", "tap_split"):
+    for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
         sys.modules.pop(m, None)
     rc = T.main([str(plan), "t", str(tsv), "--tools", str(tools), "--out", str(out), "--report", str(rep), *extra])
-    for m in ("schema", "tap_split"):
+    for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
         sys.modules.pop(m, None)
     if str(tools) in sys.path:
         sys.path.remove(str(tools))
@@ -283,12 +286,13 @@ def test_main_renumbers_added_taps_after_dropping_an_empty_one(tmp_path):
                               "CALLS = [0]\ndef explicit_legalize(tile, x, y, taken):\n    CALLS[0] += 1\n    return (x, y + 900.0) if CALLS[0] == 1 else (x, y)")
     tools = tmp_path / "tools"; tools.mkdir()
     (tools / "schema.py").write_text(STUB_SCHEMA); (tools / "tap_split.py").write_text(stub)
+    (tools / "reach_fix.py").write_text(STUB_RF); (tools / "row_normalize.py").write_text(STUB_RN)
     plan = tmp_path / "plan.json"; plan.write_text(json.dumps({"partition_types": {"t": {"clock": _clock()}}}))
     tsv = tmp_path / "s.tsv"; tsv.write_text("".join(f"clk\t{i}\tDFF\t{x}\t{y}\n" for i, x, y in [("a", 1500.0, 0.0), ("b", 1501.0, 5.0), ("c", 3000.0, 0.0)]))
     for m in ("schema", "tap_split"):
         sys.modules.pop(m, None)
     rc = T.main([str(plan), "t", str(tsv), "--tools", str(tools), "--out", str(tmp_path / "o.json"), "--report", str(tmp_path / "r.json"), "--add-taps", "4"])
-    for m in ("schema", "tap_split"):
+    for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
         sys.modules.pop(m, None)
     taps = [x["name"] for x in json.loads((tmp_path / "o.json").read_text())["partition_types"]["t"]["clock"]["taps"]] if rc == 0 else []
     nums = [int(n[5:]) for n in taps if n.startswith("clk_t")]
@@ -349,6 +353,57 @@ def _split2_on(m):
     keep, T = T, m
     try:
         test_split_respects_plan_re_keys_and_recomputes_membership()
+    finally:
+        T = keep
+    return True
+
+
+STUB_RF = '''
+def _freeze_reset_consumers(P, tn, t, rec, rnd=0):
+    t.setdefault("reset", {})["consumer_sites_um"] = [["clk", 0.0, 0.0]]
+    rec["changes"].append(["reset.consumer_sites_um", rnd, 1])
+'''
+STUB_RN = '''
+import contextlib
+@contextlib.contextmanager
+def in_tree(p):
+    yield
+'''
+
+
+def _run_freeze(tmp_path, extra):
+    import json
+    tools = tmp_path / "tools"; tools.mkdir()
+    for n, src in (("schema", STUB_SCHEMA), ("tap_split", STUB_SPLIT), ("reach_fix", STUB_RF), ("row_normalize", STUB_RN)):
+        (tools / f"{n}.py").write_text(src)
+    plan = tmp_path / "plan.json"; plan.write_text(json.dumps({"partition_types": {"t": {"clock": _clock()}}}))
+    tsv = tmp_path / "s.tsv"; tsv.write_text("".join(f"clk\t{i}\tDFF\t{x}\t{y}\n" for i, x, y in S("u_far", 3, 1500.0, 0.0)))
+    out, rep = tmp_path / "o.json", tmp_path / "r.json"
+    for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
+        sys.modules.pop(m, None)
+    rc = T.main([str(plan), "t", str(tsv), "--tools", str(tools), "--out", str(out), "--report", str(rep), "--add-taps", "3", *extra])
+    for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
+        sys.modules.pop(m, None)
+    if str(tools) in sys.path:
+        sys.path.remove(str(tools))
+    return rc, json.loads(out.read_text())["partition_types"]["t"], json.loads(rep.read_text())
+
+
+def test_main_freezes_reset_consumers_by_default_and_logs_opt_out(tmp_path):
+    rc, t, rep = _run_freeze(tmp_path, [])
+    assert rc == 0 and t["reset"]["consumer_sites_um"] == [["clk", 0.0, 0.0]] and rep["reset_freeze"]["frozen"] is True
+    t2 = tmp_path / "r2"; t2.mkdir()
+    rc, t, rep = _run_freeze(t2, ["--no-freeze"])
+    assert rc == 0 and "reset" not in t and rep["reset_freeze"] == {"frozen": False, "opted_out": True}
+
+
+def _freeze_on(m):
+    global T
+    keep, T = T, m
+    try:
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            test_main_freezes_reset_consumers_by_default_and_logs_opt_out(Path(d))
     finally:
         T = keep
     return True
