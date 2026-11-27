@@ -18520,3 +18520,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - reset plan_margin 63 (237 um hop) on 7 types;
   - G0 rc0; PRE and the whole-die bind are running.
   Open on that candidate: v2n and v6n raw-branch RSTREACH (1.1-1.9 mm) needs a raw re-derive after the bind. C-NEWROOT-TAPOFFSET does not reproduce on D: 0 missing ports on the 16 PV types with offset tables.
+- 2026-11-27 10:21 PST DIED [QC-R3-FTC] ot-run oth-ubuntu-1384467-1795802447 on outgoing-giraffe: rc=1 after 1265 s, ended 18:21:49, log /srv/opentallas-scratch2/claude/QC-R3-FTC/g1_ftn.log, cmd: --priority die --hosts epyc8 --no-spill --threads 12 --mem 96 --disk 24 --dir /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_co | class=NO-PATTERN cause=ROW-GATE NOT-READY lane=QC-R3-FTC die=qwen_compute plan=7c6ec3e48ba7 seconds=1256.8 why=normalize could not le
