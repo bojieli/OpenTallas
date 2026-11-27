@@ -582,3 +582,4 @@
 - 2026-11-27 09:30 PST PLATEAU-REPAIR [SMELL-WATCH -> kw43-wave-1109n, QC-DRT-TAIL, COORD, QC-INT-R3; cc COORD] 1 kit(s), report-only: sle_sc_v1 intel1 oth-ubuntu-2830893-1795709263: DRT plateau at 53 violations (5 iterations < 2 % change): DRC-repair / ECO-route candidate
   [redirect] kw43-wave-1109n -> COORD (dead lane per LIVE-LANES.tsv; die integrator)
   [redirect] QC-DRT-TAIL -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 10:15 PST SMELL [SMELL-WATCH -> HEAD-PROBE-R3; cc COORD] 1 kit-class(es): hd_spn_wshim_tx 4_1_cts [CTS] epyc10: post-CTS hold -64 ps (< -50); render epyc10:/srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_spn_wshim_tx/gen/hd_spn_wshim_tx/smell_review/4_1_cts-1127-1015PST (rendering). Early trigger (OWNER 04:1x): start the visual review and the structural root-cause fix now; the kits keep running and are NOT cancelled unless one also meets the unsignable-and-over-3-h rule. Evidence lanes/SMELL.tsv.
