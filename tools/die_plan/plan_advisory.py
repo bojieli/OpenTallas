@@ -109,6 +109,11 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    type's reset tree / tap table no longer emits (tap rows renumbered the tree: S81 J8, HEAD Row B, KV D29 14
                    EMIT); fix = landing_remap --resets anchor from the TREE's tools (adv_reset_names.py, TAP-GRID-R5)
 
+  FIRM-FIXED-SEAT  (C-FIXEDSITE-FIRM-OVERLAP, R3-FIRMSEAT 11-27, report only) a FIRM cell (reset-tree relay rrl:*, landing reader / writer START,
+                   status, local reset, collector, raw export, relay_sites) whose 2.16 x 0.27 um footprint overlaps a fixed seat
+                   (place_regions kind fixed reserve_rect_um) that place_fixed_sites.tcl seeds AFTER those cells are FIRM: QC TT r3c 11 of the 12
+                   placed pairs, all 10 seats (adv_firm_fixed_seat.py; core / station overlaps are context counts only)
+
   PUB-STALE        (P-RESET-PUB-STALE, C-RST-RELAY-REACH 11-26) the published clock.landing_contract.collector_tree vs the tree the bind re-solves
                    (reset_tree.for_type): relay-set / tap-count / depth mismatch and any collector ref > 405 um on the solved tree (S81 v3: 126 types,
                    col_h10_r2 rst_n_t30 950 um); budgeted solve, never reports unchecked types as clean (adv_pub_stale.py)
@@ -151,7 +156,8 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
           ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
           ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("RESERVED-POCKET", "reserved_pocket"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"), ("FENCE-GEOM", "adv_fence_geom"), ("PARAM-NOT-IN-RTL", "adv_param_not_in_rtl"),
-          ("LEG405-POLY", "adv_leg405_chain:LEG405-POLY"), ("LEG405-RRL", "adv_leg405_chain:LEG405-RRL"), ("LEG405-TAIL", "adv_leg405_chain:LEG405-TAIL"))
+          ("LEG405-POLY", "adv_leg405_chain:LEG405-POLY"), ("LEG405-RRL", "adv_leg405_chain:LEG405-RRL"), ("LEG405-TAIL", "adv_leg405_chain:LEG405-TAIL"),
+          ("FIRM-FIXED-SEAT", "adv_firm_fixed_seat"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
