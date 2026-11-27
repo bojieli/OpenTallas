@@ -44,8 +44,8 @@ def test_matches_and_skips():
     assert R.parse(q(1, "DIE-S81-92", "Traceback (most recent call last) in elab"))
     assert R.parse(q(1, "DIE-S81-92", "REFUSE: input missing"))
     assert R.parse(q(1, "DIE-S81-92", "G1d passed, adopted")) is None
-    assert R.parse(q(1, "DIE-S81-92", "ok " + "x" * 400 + " FAIL late")) is None          # verdict window is the head
-    assert R.parse(q(1, "FABLE-FLOW-1800", "86 FAIL before P&R")) is None                  # reviews are not waiter results
+    assert R.parse(q(1, "DIE-S81-92", "ok " + "x" * 400 + " did NOT pass late")) is None          # verdict window is the head
+    assert R.parse(q(1, "FABLE-FLOW-1800", "FAIL: 86 before P&R")) is None                  # reviews are not waiter results
     assert R.parse(q(1, "DIE-S81-92", "FAIL", tag="LAUNCH")) is None                        # only RESULT lines
     assert R.parse(q(1, "PLAN-GATE-PRE-1115", "FAIL")) is None
     assert R.parse("- 2026 NEEDS-ACTION [X -> Y] RESULT [DIE-A -> COORD] FAIL") is None
@@ -79,7 +79,7 @@ def test_new_line_new_key_and_same_text_other_time(tmp_path):
     R.run(qf, st, "x", poster=p)
     with open(qf, "a") as f:
         f.write(q(0, "DIE-S81-92", "G1d did NOT pass") + "\n")                     # same text, new stamp: new event
-        f.write(q(0, "KV-102", "kit_rtl FAIL again") + "\n")
+        f.write(q(0, "KV-102", "FAIL: kit_rtl again") + "\n")
     posted, _, _ = R.run(qf, st, "x", poster=p)
     assert len(posted) in (1, 2)
     assert len(p.posts) == 3 or len(p.posts) == 2     # stamp has minute resolution: identical minute = same key
@@ -93,7 +93,7 @@ def test_first_run_relays_only_recent(tmp_path):
     assert len(posted) == 1 and len(noted) == 1 and "DIE-QC-103" in p.posts[0]
     # later runs relay any new line however old its stamp says
     with open(qf, "a") as f:
-        f.write(q(600, "KV-102", "late FAIL") + "\n")
+        f.write(q(600, "KV-102", "FAIL: late") + "\n")
     assert len(R.run(qf, st, "x", max_age_min=120, poster=p)[0]) == 1
 
 
@@ -126,3 +126,21 @@ def test_real_post_sh_contract(tmp_path):
     assert len(R.run(qf, st, str(fake))[0]) == 1
     lane, text = (tmp_path / "got.txt").read_text().split("|", 1)
     assert lane == "PLAN-GATE-PRE-1115" and text.startswith("NEEDS-ACTION")
+
+
+XTAP_TEXT = 'class_id=C-XTAP-HOLD A arm DONE: base c085ccb76d2e (lag row in base), col_h9_r2__t1__clce45cab5__pv9e92407b, place->CTS (goal cts, no route), epyc8, rt b521092f9e17, place svc kwp-678f021e2d50774e99dc, 3_place sha 47354d1381b4 (Fable GOOD, plan-visual GOOD, AUTO-GEOM FAIL on fill/empty/r2r/channels/clock_tap_sinks 1936 = C-TAP-LOAD, expected for macro type). CTS: 6 core taps clk_c0..c5 landed on u_c/u_ha/u_hb clk, FF read on 4_cts.odb (read-only STA, E8 unit oth-ubuntu-1170350-1795807732, evidence epyc8:/srv/opentallas-scratch2/claude/s81-int-r3-xtap/read_A/read.{ff,tt}.log): half->c hold FF 0 negative on all 77 endpoints per view, worst +42.87 (e13e, otag[2]->r_t_a[2]) and +32.94 (e13w), vs'
+
+
+def test_pass_result_mentioning_fail_is_not_a_failure():
+    """regression d60241b01e6d: S81-INT-R3-XTAP PASS result quoting 'AUTO-GEOM FAIL' (expected) was relayed as WAITER-FAIL."""
+    ln = q(1, "S81-INT-R3-XTAP", XTAP_TEXT, to="S81-INT-R3", cc="COORD")
+    assert "FAIL" in XTAP_TEXT[:R.WINDOW]
+    assert R.classify(XTAP_TEXT) == "UNKNOWN"
+    assert R.parse(ln) is None
+
+
+def test_explicit_verdict_decides():
+    assert R.parse(q(1, "L", "verdict=FAIL: G0 17")) and R.parse(q(1, "L", "status: failed, see log"))
+    assert R.parse(q(1, "L", "all good verdict=PASS but AUTO-GEOM FAIL expected")) is None
+    assert R.parse(q(1, "L", "x", tag="RESULT-FAIL")) and R.parse(q(1, "L", "FAIL everywhere", tag="RESULT-PASS")) is None
+    assert R.classify("class_id=C-X FAIL: bind") == "FAIL" and R.classify("clean run") == "PASS"

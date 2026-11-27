@@ -31,7 +31,13 @@ from pathlib import Path
 
 HOME = Path(os.path.expanduser("~"))
 LANE = "PLAN-GATE-PRE-1115"
-VERDICT = re.compile(r"did NOT pass|FAIL|REFUSE|Traceback")
+# Failure is decided from an explicit verdict, never from a bare "FAIL" anywhere in free text (waiter-substring false fail d60241b01e6d:
+# a PASS result mentioning "AUTO-GEOM FAIL on ..." was relayed as a failure).
+VERDICT_TOKEN = re.compile(r"(?:verdict|status|result)\s*[=:]\s*(?P<v>[A-Za-z_-]+)", re.I)
+FAIL_WORDS = ("fail", "failed", "refuse", "refused", "error", "blocked")
+PASS_WORDS = ("pass", "passed", "ok", "done", "good", "success")
+LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:FAILED?|REFUSE|REFUSED|Traceback)")
+FAIL_PHRASE = re.compile(r"(?:did|do|does) NOT pass")
 LINE = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d [^\[]*?)\s*\bRESULT\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)\s*->\s*"
                   r"(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
 SKIP_LANES = ("FABLE-", "COORD", LANE)
@@ -57,6 +63,28 @@ def stamp_age_min(stamp, now=None):
     return ((now if now is not None else time.time()) - t) / 60.0
 
 
+def classify(text, tag="RESULT"):
+    """'FAIL' | 'PASS' | 'UNKNOWN' from an explicit verdict only: the post kind (RESULT-FAIL/RESULT-PASS), a verdict=/status=
+    token in the head, a leading FAIL/REFUSE/Traceback, or a 'did NOT pass' phrase.  Free-text 'FAIL' elsewhere is UNKNOWN."""
+    if tag == "RESULT-FAIL":
+        return "FAIL"
+    if tag == "RESULT-PASS":
+        return "PASS"
+    head = text[:WINDOW]
+    m = VERDICT_TOKEN.search(head)
+    if m:
+        v = m.group("v").lower()
+        if v in FAIL_WORDS:
+            return "FAIL"
+        if v in PASS_WORDS:
+            return "PASS"
+    if LEAD_FAIL.match(head.lstrip()) or FAIL_PHRASE.search(head):
+        return "FAIL"
+    if re.search(r"FAIL|REFUSE|Traceback", head):
+        return "UNKNOWN"
+    return "PASS"
+
+
 def parse(line):
     """dict(lane, to, cc, stamp, text, key) for a waiter FAIL result line, else None."""
     m = LINE.match(line.rstrip("\n"))
@@ -66,7 +94,7 @@ def parse(line):
     if lane.startswith(SKIP_LANES) or "NEEDS-ACTION" in line[:200]:
         return None
     text = m.group("text")
-    if not VERDICT.search(text[:WINDOW]):
+    if classify(text, m.group("tag")) != "FAIL":
         return None
     tos = [x.strip() for x in re.split(r"[,\s]+", (m.group("to") or "").strip()) if x.strip()]
     cc = [x.strip() for x in re.split(r"[,\s]+", (m.group("cc") or "").strip()) if x.strip()]
