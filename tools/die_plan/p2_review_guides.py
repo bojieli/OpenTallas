@@ -33,9 +33,9 @@ def install(cfg, kit_dir, type_name, typed_plan, stage_hook_lines, recipe, recip
         f"source /work/{FRAME}\n::ot_p2_frame_bridge::group_atoms [ord::get_db_block]\n")
     (kit_dir / frame_check).write_text(
         f"source /work/{FRAME}\n::ot_p2_frame_bridge::verify_and_release [ord::get_db_block]\n")
-    lines = (stage_hook_lines(cfg, kit_dir, "PRE_GLOBAL_PLACE_TCL", [grouping], "p2_frame_pre_global.tcl")
-             + stage_hook_lines(cfg, kit_dir, "PRE_DETAIL_PLACE_TCL", [grouping], "p2_frame_pre_detail.tcl")
-             + stage_hook_lines(cfg, kit_dir, "POST_DETAIL_PLACE_TCL", [frame_check], "p2_frame_post_detail.tcl"))
+    cfg.extend(stage_hook_lines(cfg, kit_dir, "PRE_GLOBAL_PLACE_TCL", [grouping], "p2_frame_pre_global.tcl")
+               + stage_hook_lines(cfg, kit_dir, "PRE_DETAIL_PLACE_TCL", [grouping], "p2_frame_pre_detail.tcl")
+               + stage_hook_lines(cfg, kit_dir, "POST_DETAIL_PLACE_TCL", [frame_check], "p2_frame_post_detail.tcl"))
     sources = "".join(f"source /work/{name}\n" for name in EDGE)
     setup, edge_check = "p2_edge_corridor_pre_detail.tcl", "p2_edge_corridor_post_detail.tcl"
     (kit_dir / setup).write_text(sources
@@ -44,7 +44,6 @@ def install(cfg, kit_dir, type_name, typed_plan, stage_hook_lines, recipe, recip
     (kit_dir / edge_check).write_text(sources
         + "::ot_p2_ft0_guard::verify_after_detail_and_release [ord::get_db_block] $::ot_p2_ft0_specs\n"
         + "::ot_p2_t2_guard::verify_after_detail_and_release [ord::get_db_block] $::ot_p2_t2_specs\n")
-    frame_cfg = cfg + lines
-    lines += (stage_hook_lines(frame_cfg, kit_dir, "PRE_DETAIL_PLACE_TCL", [setup], "p2_edge_corridor_setup.tcl")
-              + stage_hook_lines(frame_cfg, kit_dir, "POST_DETAIL_PLACE_TCL", [edge_check], "p2_edge_corridor_check.tcl"))
-    return lines + ["export OT_S81_P2_CROP_REVIEW_GUIDES = 1"]
+    return (stage_hook_lines(cfg, kit_dir, "PRE_DETAIL_PLACE_TCL", [setup], "p2_edge_corridor_setup.tcl")
+            + stage_hook_lines(cfg, kit_dir, "POST_DETAIL_PLACE_TCL", [edge_check], "p2_edge_corridor_check.tcl")
+            + ["export OT_S81_P2_CROP_REVIEW_GUIDES = 1"])
