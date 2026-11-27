@@ -2,6 +2,7 @@
 # and save PNGs marked with the worst offenders.  Run by layout_render_hook.sh: openroad -gui (offscreen Qt), timeout-bounded.
 # env: OT_LR_ODB, OT_LR_OUT, OT_LR_LABEL (place|grt|route), OT_LR_TOOLS, OT_LR_MAX_INST (default 400000: above it sampled connectivity
 # (OT_LR_SAMPLE_ROOTS plain nets, default 100000; repeater trees, ports, macros, clocks complete), low resolution), OT_LR_KEEP_DUMP=1 keeps dump.tsv.
+# CTS and custom labels get placement views. OT_LR_RUDY=1 requests the diagnostic fallback on a routed checkpoint.
 # Everything inside one catch: under -gui an uncaught Tcl error would leave OpenROAD in its event loop until the timeout.
 set lr_top_rc [catch {
 proc lr_env {n d} { return [expr {[info exists ::env($n)] ? $::env($n) : $d}] }
@@ -110,14 +111,35 @@ proc lr_keep_full {n} {
 set lr_dump_path $lr_out/dump.tsv
 set lr_cong $lr_out/congestion.csv
 if {[catch {lr_dump $lr_dump_path} e]} { lr_note "dump failed: $e" }
-# The Routing heat map reads the GRT usage stored in the ODB; some ODBs (seen on routed 5_2_route) carry none: use RUDY and say so
+# Routing reads the retained GCell grid. RUDY can initialize the router, so
+# reserve it for an explicit diagnostic on a recognized routed checkpoint.
 set lr_cong_src none; set lr_cong_ctl ""
 proc lr_csv_rows {p} { if {[catch {set f [open $p]}]} { return 0 }; set n 0; while {$n < 3 && [gets $f l] >= 0} { incr n }; close $f; return $n }
-if {$lr_label ne "place"} {
-  if {[catch {gui::dump_heatmap Routing $lr_cong} e]} { lr_note "Routing heat map dump: $e" }
-  if {[lr_csv_rows $lr_cong] >= 2} { set lr_cong_src routing; set lr_cong_ctl "Heat Maps/Routing Congestion" } else {
+set lr_odb_name [file tail $::env(OT_LR_ODB)]
+set lr_routed_view [expr {
+  ($lr_label eq "grt" && $lr_odb_name in {5_1_grt.odb 5_1_grt-failed.odb})
+  || ($lr_label eq "route" && $lr_odb_name eq "5_2_route.odb")
+}]
+if {$lr_routed_view} {
+  set lr_has_grid 0
+  catch {
+    set lr_grid [$lr_b getGCellGrid]
+    set lr_has_grid [expr {$lr_grid ne "NULL" && [$lr_grid getNumGridPatternsX] > 0 && [$lr_grid getNumGridPatternsY] > 0}]
+  }
+  catch {file delete $lr_cong}
+  if {$lr_has_grid} {
+    if {[catch {gui::dump_heatmap Routing $lr_cong} e]} { lr_note "Routing heat map dump: $e" }
+    if {[lr_csv_rows $lr_cong] >= 2} {
+      set lr_cong_src routing; set lr_cong_ctl "Heat Maps/Routing Congestion"
+      catch {gui::set_heatmap Routing ShowLegend 1}
+    }
+  }
+  if {$lr_cong_src eq "none" && [lr_env OT_LR_RUDY 0] eq "1"} {
     if {[catch {gui::dump_heatmap RUDY $lr_cong} e]} { lr_note "RUDY heat map dump: $e" }
-    if {[lr_csv_rows $lr_cong] >= 2} { set lr_cong_src rudy; set lr_cong_ctl "Heat Maps/Estimated Congestion (RUDY)" }
+    if {[lr_csv_rows $lr_cong] >= 2} {
+      set lr_cong_src rudy; set lr_cong_ctl "Heat Maps/Estimated Congestion (RUDY)"
+      catch {gui::set_heatmap RUDY ShowLegend 1}
+    }
   }
 }
 set lr_smell_rc [catch {
@@ -162,17 +184,11 @@ proc lr_save {name args} {
   if {[catch {save_image -area [list $::lr_x0 $::lr_y0 $::lr_x1 $::lr_y1] -resolution $::lr_res $::lr_out/$name} e]} { lr_note "$name: $e" }
 }
 catch {gui::set_heatmap Placement ShowLegend 1}
-catch {gui::set_heatmap Routing ShowLegend 1}
-catch {gui::set_heatmap RUDY ShowLegend 1}
 catch {gui::set_display_controls "Misc/Scale bar" visible true}
 catch {lr_pins}
 catch {lr_marks}
 set lr_rc [catch {
-  switch $lr_label {
-    place {
-      lr_save density.png "Nets/*" false "Shape Types/Routing/*" false "Heat Maps/Placement Density" true
-      lr_save layout.png "Nets/*" false "Instances/*" true
-    }
+  switch -- $lr_label {
     grt {
       if {$lr_cong_ctl ne ""} { lr_save congestion.png "Nets/*" false "Instances/StdCells/*" false "Shape Types/Routing/*" false $lr_cong_ctl true }
       lr_save density.png "Nets/*" false "Instances/StdCells/*" true "Heat Maps/Placement Density" true
@@ -180,6 +196,10 @@ set lr_rc [catch {
     route {
       if {$lr_cong_ctl ne ""} { lr_save congestion.png "Nets/*" false "Instances/StdCells/*" false "Shape Types/Routing/*" false $lr_cong_ctl true }
       lr_save wires.png "Nets/*" true "Nets/Power" false "Nets/Ground" false "Instances/StdCells/*" false "Shape Types/Routing/*" true
+    }
+    default {
+      lr_save density.png "Nets/*" false "Shape Types/Routing/*" false "Heat Maps/Placement Density" true
+      lr_save layout.png "Nets/*" false "Instances/*" true
     }
   }
 } e]

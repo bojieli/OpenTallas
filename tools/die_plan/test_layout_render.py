@@ -281,6 +281,89 @@ def test_lr_keep_full_keeps_ports_macros_clocks_and_repeater_nets(tmp_path):
     assert got == {"nPlain": "0", "nRep": "1", "nPort": "1", "nMacro": "1", "nClkPin": "1", "nClk": "1", "nPwr": "1"}
 
 
+TCL_RENDER_MOCK = r"""
+proc read_db {path} {}
+namespace eval ord {
+    proc get_db_block {} { return mock_block }
+    proc get_db {} { return mock_db }
+}
+proc mock_db {method} { return mock_tech }
+proc mock_tech {method} { return {} }
+proc mock_block {method} {
+    switch $method {
+        getName { return mock }
+        getDbUnitsPerMicron { return 1000 }
+        getDieArea - getCoreArea { return mock_box }
+        getGCellGrid { return [expr {$::env(MOCK_GRID) ? "mock_grid" : "NULL"}] }
+        default { return {} }
+    }
+}
+proc mock_grid {method} { return 1 }
+proc mock_box {method} {
+    return [expr {$method in {xMin yMin} ? 0 : 100000}]
+}
+namespace eval gui {
+    proc set_display_controls {args} { puts "visibility [join $args |]" }
+    proc set_heatmap {name args} { puts "settings $name" }
+    proc dump_heatmap {name path} {
+        puts "dump $name"
+        if {$name eq "RUDY" || $::env(MOCK_ROUTING_CSV)} {
+            set f [open $path w]
+            puts $f "x0,y0,x1,y1,value (%)"
+            puts $f "20,20,25,25,80"
+            close $f
+        }
+    }
+}
+proc save_image {args} { puts "image [file tail [lindex $args end]]" }
+source [lindex $argv 0]
+"""
+
+
+@pytest.mark.skipif(not __import__("shutil").which("tclsh"), reason="no tclsh")
+@pytest.mark.parametrize(
+    "label,odb,grid,routing_csv,diagnostic,heatmaps,images",
+    [
+        ("place", "3_5_place_dp.odb", "0", "0", "0", [], ["density", "layout"]),
+        ("cts", "4_cts.odb", "0", "0", "0", [], ["density", "layout"]),
+        ("4_1_cts", "4_1_cts.odb", "1", "1", "1", [], ["density", "layout"]),
+        ("postplace", "5_2_route.odb", "1", "1", "1", [], ["density", "layout"]),
+        ("-custom", "5_1_grt.odb", "1", "1", "1", [], ["density", "layout"]),
+        ("grt", "4_cts.odb", "1", "1", "1", [], ["density"]),
+        ("grt", "5_1_grt.odb", "1", "1", "0", ["Routing"], ["congestion", "density"]),
+        ("route", "5_2_route.odb", "1", "1", "1", ["Routing"], ["congestion", "wires"]),
+        ("route", "5_2_route.odb", "0", "0", "0", [], ["wires"]),
+        ("grt", "5_1_grt-failed.odb", "1", "0", "0", ["Routing"], ["density"]),
+        ("grt", "5_1_grt-failed.odb", "1", "0", "1", ["Routing", "RUDY"], ["congestion", "density"]),
+    ],
+)
+def test_renderer_dispatches_heatmaps_only_for_routed_checkpoints(
+    tmp_path, label, odb, grid, routing_csv, diagnostic, heatmaps, images,
+):
+    script = tmp_path / "render.tcl"
+    script.write_text(TCL_RENDER_MOCK)
+    env = dict(
+        os.environ, OT_LR_LABEL=label, OT_LR_ODB=str(tmp_path / odb),
+        OT_LR_OUT=str(tmp_path), OT_LR_TOOLS=str(CF), OT_LR_KEEP_DUMP="1",
+        OT_LR_RUDY=diagnostic, MOCK_GRID=grid, MOCK_ROUTING_CSV=routing_csv,
+    )
+    result = subprocess.run(
+        ["tclsh", str(script), str(CF / "layout_render.tcl")],
+        env=env, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "OT_LR script stopped" not in result.stdout, result.stdout
+    trace = result.stdout.splitlines()
+    assert [line.removeprefix("dump ") for line in trace if line.startswith("dump ")] == heatmaps
+    assert [line.removeprefix("image ") for line in trace if line.startswith("image ")] == [
+        f"{name}.png" for name in images
+    ]
+    if not heatmaps:
+        assert "settings Routing" not in trace and "settings RUDY" not in trace
+        assert not any(line.endswith("Congestion|visible|true") for line in trace)
+    assert (tmp_path / "dump.tsv").read_text().startswith(f"H\t{label}\t")
+
+
 def test_main_writes_outputs_and_congestion_skips_macros(tmp_path):
     p = dump(tmp_path, clock_tree_lines() + [inst(9, "ram", 120, 10, 50, 20, block=1, top=4)])
     csv = tmp_path / "c.csv"
