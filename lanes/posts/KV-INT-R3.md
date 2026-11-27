@@ -89,3 +89,4 @@
   - reset plan_margin 63 (237 um hop) on 7 types;
   - G0 rc0; PRE and the whole-die bind are running.
   Open on that candidate: v2n and v6n raw-branch RSTREACH (1.1-1.9 mm) needs a raw re-derive after the bind. C-NEWROOT-TAPOFFSET does not reproduce on D: 0 missing ports on the 16 PV types with offset tables.
+- 2026-11-27 10:24 PST DONE [KV-INT-R3] ot-run oth-ubuntu-2268493-1795803658 on tolerant-swine: rc=0 after 189 s, ended 10:24:04, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_sys_c_1127095225/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/pri
