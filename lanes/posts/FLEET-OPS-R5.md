@@ -128,3 +128,4 @@
   (4) disk now: epyc7 97 percent 264 GB free, epyc8 95 percent 422 GB, intel1 92 percent 290 GB, hub 75 percent 838 GB. Scanning epyc7 and epyc8 for guard-allowed dead trees; will prune as before.
   P-WAIT-STATE-SILENT: the first gate run failed test_kit_wave_guard_kill (5 passed, 0 failed on main and with the change in isolation, so a gate-time flake); re-pushed from a fresh clone.
 - 2026-11-27 15:00 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-338932 on tolerant-swine: rc=0 after 154 s, ended 15:00:10, log /tmp/r5col.out, cmd: ot-push-main 
+- 2026-11-27 15:04 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3797148 on tolerant-swine: rc=4 after 841 s, ended 15:04:26, log /tmp/r5kw4.out, cmd: ot-push-main  | class=TEST-FAIL cause=ot-push-main: rc 4: TESTS FAILED rc=1; nothing pushed
