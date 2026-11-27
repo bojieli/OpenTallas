@@ -3202,6 +3202,24 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def install_head_post_gpl_reseat(cfg, kd, die, type_name, raw):
+    """Keep the East LEP post-GPL electrical repair on its final source geometry."""
+    if os.environ.get("OT_HEAD_POST_GPL_RESEAT") != "1" or (die, type_name) != ("s81_head", "hd_lep0N"):
+        return
+    if (raw.get("gpl_td") or {}).get("cell_growth_gate") not in (2, "fail"):
+        raise ValueError(f"{type_name}: post_gpl_wire_reseat requires the existing hard cell growth gate")
+    hook = "export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"
+    hooks = [line for line in cfg if re.match(r"(?:override\s+)?export\s+POST_GLOBAL_PLACE_TCL\b", line)]
+    if hooks != [hook]:
+        raise ValueError(f"{type_name}: post_gpl_wire_reseat requires the stock forest hook")
+    cfg[cfg.index(hook)] = "export POST_GLOBAL_PLACE_TCL = /work/head_post_gpl_reseat.tcl"
+    keep = re.compile(r"(?:override\s+)?export\s+GPL_KEEP_OVERFLOW\b")
+    cfg[:] = [line for line in cfg if not keep.match(line)]
+    cfg += ["# Keep timing-driven weights and run the ordinary electrical repair on the final global placement",
+            "export GPL_KEEP_OVERFLOW = 0"]
+    shutil.copyfile(Path(__file__).with_name("head_post_gpl_reseat.tcl"), Path(kd) / "head_post_gpl_reseat.tcl")
+
+
 def explicit_pg_cfg(cfg):
     """Carry explicitly requested PG booleans even when R-FLOW/CONS defaults are off.
 
@@ -8702,6 +8720,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
     cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
+    install_head_post_gpl_reseat(cfg, kd, P.name, tn, P.raw)
     cfg += post_dpl_hook_lines(cfg, kd, type_name=tn)
     import gen_rtl as _GRL
     cfg += hop_latch_leaf_lines(kd, zlk_spec, ft=_GRL.ft_hop_lockup(getattr(P, "raw", None), tn))
