@@ -51,15 +51,46 @@ def stnprice_lanes(raw):
     return out, n
 
 
-def check_stnprice(plan, max_list=5):
-    """(c) one LIST line: lanes where station depth != priced fixed_cycles; report-only (a non-native lane may price extra on purpose)"""
+def unpriced_depth_growth(raw, baseline):
+    """Find extra lane-end stations that outgrow the change in the priced fixed cycles."""
+    old_types = {p.get("name"): p.get("type") for p in baseline.get("partitions") or []}
+    current_types = {p.get("name"): p.get("type") for p in raw.get("partitions") or []}
+    ports = {p.get("id"): p for p in raw.get("ports") or []}
+    old_ports = {p.get("id"): p for p in baseline.get("ports") or []}
+    lanes = {lane.get("id"): lane for lane in raw.get("lanes") or []}
+    old_lanes = {lane.get("id"): lane for lane in baseline.get("lanes") or []}
+    for lid, (old_depth, depth) in sorted(G.depth_changed_lanes(raw, baseline).items()):
+        path = lanes[lid].get("ports")
+        old = old_lanes.get(lid)
+        if depth <= old_depth or not old or not path or path != old.get("ports"):
+            continue
+        endpoints = ((path[0], "src"), (path[-1], "dst"))
+        if any(ports[pid].get(end) != (old_ports.get(pid) or {}).get(end) for pid, end in endpoints):
+            continue
+        parts = [ports[pid][end].get("part") for pid, end in endpoints]
+        if any(current_types.get(part) != old_types.get(part) for part in parts):
+            continue
+        old_fixed, fixed = (int(lane.get("fixed_cycles", 0) or 0) for lane in (old, lanes[lid]))
+        if fixed - old_fixed < depth - old_depth:
+            yield lid, old_depth, depth, old_fixed, fixed
+
+
+def check_stnprice(plan, max_list=5, baseline=None):
+    """Report station prices and flag baseline growth regardless of preexisting fixed-cycle overhead."""
     raw = G._load(plan) or {}
     bad, n = stnprice_lanes(raw)
     if not n:
         return []
     ex = "; ".join(f"{a} {s[0]}.{s[1]}->{d[0]}.{d[1]} depth {dp} fixed {fx}" for a, s, d, dp, fx in bad[:max_list])
-    return [f"LIST STNPRICE {len(bad)} of {n} lanes have station depth != priced fixed_cycles (report-only; ISTCYC/ISTPRICE judge the touched / bound ones)"
-            + (f": {ex}" if bad else "")]
+    lines = [f"LIST STNPRICE {len(bad)} of {n} lanes have station depth != priced fixed_cycles (report-only; ISTCYC/ISTPRICE judge the touched / bound ones)"
+             + (f": {ex}" if bad else "")]
+    missing = list(unpriced_depth_growth(raw, G._load(baseline))) if baseline else []
+    lines += [f"WARN ISTPRICE STATION-DELTA lane {lid}: lane-end stations {before} -> {after}, "
+              f"fixed_cycles {old} -> {new}; {after - before - (new - old)} added cycle(s) lack a fixed price"
+              for lid, before, after, old, new in missing[:max_list]]
+    if len(missing) > max_list:
+        lines.append(f"WARN ISTPRICE STATION-DELTA ... {len(missing) - max_list} more lane(s)")
+    return lines
 
 
 def reprice_raw(raw, braw):
@@ -194,7 +225,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "wrap":
         ap.error("wrap needs `-- ROW.py PLAN_IN PLAN_OUT`")
-    out = check_stnprice(a.plan)
+    out = check_stnprice(a.plan, baseline=a.baseline_plan)
     hits = law_hits(a.plan, a.baseline_plan, a.asbuilt, a.tree, a.regen_table, a.upstream) if a.baseline_plan else {}
     out += _law_lines(hits, a.strict)
     print("\n".join(out))
