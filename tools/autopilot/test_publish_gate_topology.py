@@ -68,3 +68,24 @@ def test_kit_rtl_stage_failures_alone_are_advisory_topology_stage_failures_block
     assert r["verdict"] == "FAIL" and r["types_failed"] == ["svc2"]
     r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "timed out"}, {"type": "t31", "stage": "kit_topology", "why": "y"}])
     assert r["verdict"] == "FAIL" and r["types_failed"] == ["svc1", "t31"]
+
+
+def test_topology_check_ships_the_live_baseline_and_reports_held(tmp_path, monkeypatch):
+    bo = tmp_path / "bind"
+    bo.mkdir()
+    (bo / "bind_report.json").write_text("{}")
+    (tmp_path / "kit_topology_dry.py").write_text("")
+    out = tmp_path / "topology_dry.json"
+    seen = []
+
+    def fake_sub(argv, cwd, timeout=0):
+        seen.append(argv)
+        out.write_text(json.dumps({"verdict": "PASS", "n_types": 5, "failed": [], "held": [{"type": "svc1", "stage": "kit_rtl", "why": "x", "baseline": "same"}]}))
+        return 0, ""
+    monkeypatch.setattr(PG, "_sub", fake_sub)
+    r = PG.topology_check("/t", "/p", None, str(bo), str(tmp_path), str(tmp_path),
+                          {"plan": "/live/plan.json", "bind_out": "/live/bind", "asbuilt": "/live/ab.json", "tree": "/live/src"})
+    a = seen[0]
+    assert a[a.index("--baseline-plan") + 1] == "/live/plan.json" and a[a.index("--baseline-tree") + 1] == "/live/src"
+    assert a[a.index("--baseline-asbuilt") + 1] == "/live/ab.json"
+    assert r["verdict"] == "PASS" and r["held_preexisting"][0]["type"] == "svc1"

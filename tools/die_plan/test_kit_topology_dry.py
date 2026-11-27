@@ -78,3 +78,52 @@ def test_types_filter_and_missing_bind_report(tmp_path):
     r = KD.run_all(str(plan), str(bo), None, str(tmp_path), str(tmp_path / "w2"), tools=tools, runner=fake([]),
                    has_topology=lambda raw, t: True)
     assert r["verdict"] == "FAIL" and "bind_report.json" in r["why"]
+
+
+def base_fixture(tmp_path, drop=()):
+    bo, plan, tools = fixture(tmp_path)
+    raw = json.loads(plan.read_text())
+    for d in drop:
+        raw["partition_types"].pop(d)
+    bplan = tmp_path / "base_plan.json"
+    bplan.write_text(json.dumps(raw))
+    return bo, plan, tools, bplan
+
+
+def with_base(tmp_path, cand_fail, base_fail, drop=()):
+    """cand_fail / base_fail: {(type, stage): why}; the runner tells the candidate plan from the live one by the plan path in the command"""
+    bo, plan, tools, bplan = base_fixture(tmp_path, drop)
+
+    def runner(cmd, cwd, timeout):
+        stage = "kit_rtl" if "kit-rtl" in cmd else "kit_topology"
+        tn = cmd[cmd.index("--type") + 1] if stage == "kit_rtl" else cmd[cmd.index("prepare-stations") + 2]
+        fails = base_fail if str(bplan) in cmd else cand_fail
+        why = fails.get((tn, stage))
+        return (1, "Traceback\n" + why) if why else (0, "ok")
+    return KD.run_all(str(plan), str(bo), None, str(tmp_path), str(tmp_path / "work"), tools=tools, jobs=2, runner=runner,
+                      has_topology=lambda raw, t: bool(raw["partition_types"][t]),
+                      baseline=dict(plan=str(bplan), bind_out=str(bo), asbuilt=None, tree=str(tmp_path)))
+
+
+ERR = "bind: ERROR kit-rtl t_bad: core clock clk_c0: expected one bound leaf x, got 0"
+
+
+def test_failure_identical_on_the_live_event_is_held_not_blocking(tmp_path):
+    r = with_base(tmp_path, {("t_bad", "kit_rtl"): ERR}, {("t_bad", "kit_rtl"): ERR})
+    assert r["verdict"] == "PASS" and r["failed"] == [] and [h["type"] for h in r["held"]] == ["t_bad"]
+
+
+def test_new_failures_still_block_passing_on_live_other_error_other_stage_or_type_absent(tmp_path):
+    r = with_base(tmp_path / "a", {("t_bad", "kit_rtl"): ERR}, {})                                      # passes on live: NEW
+    assert r["verdict"] == "FAIL" and r["failed"][0]["type"] == "t_bad" and "live event: PASS" in r["failed"][0]["baseline"]
+    r = with_base(tmp_path / "b", {("t_bad", "kit_rtl"): ERR}, {("t_bad", "kit_rtl"): ERR + " other"})   # another error line: NEW
+    assert r["verdict"] == "FAIL" and not r["held"]
+    r = with_base(tmp_path / "c", {("t_bad", "kit_topology"): ERR}, {("t_bad", "kit_rtl"): ERR})        # another stage: NEW
+    assert r["verdict"] == "FAIL"
+    r = with_base(tmp_path / "d", {("t_ok", "kit_topology"): ERR}, {("t_ok", "kit_topology"): ERR}, drop=("t_ok",))   # live plan lacks the type: NEW
+    assert r["verdict"] == "FAIL" and "not bound on the live event" in r["failed"][0]["baseline"]
+
+
+def test_old_failure_held_while_a_new_one_in_the_same_run_blocks(tmp_path):
+    r = with_base(tmp_path, {("t_bad", "kit_rtl"): ERR, ("t_ok", "kit_topology"): ERR}, {("t_bad", "kit_rtl"): ERR})
+    assert r["verdict"] == "FAIL" and [f["type"] for f in r["failed"]] == ["t_ok"] and [h["type"] for h in r["held"]] == ["t_bad"]

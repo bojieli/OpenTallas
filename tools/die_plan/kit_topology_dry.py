@@ -11,7 +11,7 @@ before synthesis and stops there (no gen, no preflight, no P&R):
     kit_topology.py prepare-stations PLAN T WORK/T/rtl --native-plan PLAN --asbuilt AB               inputs, relay_depth, reset trees)
 
   python3 -I tools/die_plan/kit_topology_dry.py run --plan P --bind-out B --asbuilt AB --tree TREE --work DIR
-        [--jobs N] [--tools DIR] [--types T ...] [--type-timeout S] [--out RESULT.json]          exit 0 PASS, 1 FAIL (type list), 2 unusable input
+        [--jobs N] [--tools DIR] [--baseline-plan P --baseline-bind B --baseline-tree T [--baseline-asbuilt A]] [--types T ...] [--type-timeout S] [--out RESULT.json]          exit 0 PASS, 1 FAIL (type list), 2 unusable input
 
 Types: every partition_types key that is a bound type of BIND_OUT (bind_report.json; exact key, or a `key__...` variant), has a topology
 (kit_topology.has_topology) and is not a hard core without RTL.  Others are listed under `skipped` with the reason, never silently.
@@ -123,7 +123,37 @@ def check_type(tn, plan, bind_out, asbuilt, tree, work, tools=HERE, timeout=3600
     return dict(type=tn, verdict="PASS", stage="kit_topology", seconds=round(time.time() - t0, 1))
 
 
-def run_all(plan, bind_out, asbuilt, tree, work, tools=HERE, jobs=None, wanted=None, timeout=3600, runner=None, has_topology=None):
+def split_held(failed, baseline, work, tools, timeout, runner, jobs):
+    """-> (new failures, held).  A candidate failure is HELD only when the SAME type fails the SAME stage with the SAME error line on the live event
+    (baseline = {plan, bind_out, asbuilt, tree}): a pre-existing defect, listed, not blocking.  A type the live plan lacks, a type that passes
+    there, another stage or another error line is NEW and blocks (the baseline never weakens the check for new failures)."""
+    braw = json.loads(Path(baseline["plan"]).read_text())
+    try:
+        brep = json.loads((Path(baseline["bind_out"]) / "bind_report.json").read_text()).get("types") or {}
+    except (OSError, ValueError):
+        brep = None
+    new, held = [], []
+    todo = []
+    for f in failed:
+        tn = f["type"]
+        if brep is None or tn not in (braw.get("partition_types") or {}) or bound_key(brep, tn) is None:
+            new.append(dict(f, baseline="type not bound on the live event"))
+        else:
+            todo.append(f)
+    bwork = Path(work) / "baseline"
+
+    def one(f):
+        return f, check_type(f["type"], baseline["plan"], baseline["bind_out"], baseline.get("asbuilt"), baseline["tree"], bwork, tools, timeout, runner)
+    with CF.ThreadPoolExecutor(max_workers=max(1, int(jobs or os.environ.get("OT_TOPO_DRY_JOBS") or 8))) as ex:
+        for f, b in ex.map(one, todo):
+            if b["verdict"] != "PASS" and b["stage"] == f["stage"] and b.get("why") == f.get("why"):
+                held.append(dict(f, baseline="same failure on the live event"))
+            else:
+                new.append(dict(f, baseline="live event: " + (b["verdict"] if b["verdict"] == "PASS" else f"{b['stage']}: {b.get('why', '')[:160]}")))
+    return new, held
+
+
+def run_all(plan, bind_out, asbuilt, tree, work, tools=HERE, jobs=None, wanted=None, timeout=3600, runner=None, has_topology=None, baseline=None):
     """-> result dict (verdict PASS | FAIL, failed [{type, stage, why}], counts, seconds)"""
     t0 = time.time()
     raw = json.loads(Path(plan).read_text())
@@ -161,7 +191,10 @@ def run_all(plan, bind_out, asbuilt, tree, work, tools=HERE, jobs=None, wanted=N
             results.append(r)
             cached += bool(hit)
     failed = [dict(type=r["type"], stage=r["stage"], why=r.get("why", "")) for r in results if r["verdict"] != "PASS"]
-    return dict(schema=SCHEMA_ID, verdict="FAIL" if failed else "PASS", n_types=len(types), n_pass=len(types) - len(failed),
+    held = []
+    if failed and baseline:
+        failed, held = split_held(failed, baseline, work, tools, timeout, runner, jobs)
+    return dict(schema=SCHEMA_ID, verdict="FAIL" if failed else "PASS", held=held, n_types=len(types), n_pass=len(types) - len(failed) - len(held),
                 n_cached=cached, n_skipped=len(skipped), failed=failed, skipped=skipped, jobs=jobs, tool_sha=tsha,
                 seconds=round(time.time() - t0, 1), slowest=sorted(((r["seconds"], r["type"]) for r in results), reverse=True)[:5])
 
@@ -176,13 +209,17 @@ def main(argv=None):
     r.add_argument("--tree", required=True)
     r.add_argument("--work", required=True)
     r.add_argument("--jobs", type=int)
+    r.add_argument("--baseline-plan")
+    r.add_argument("--baseline-bind")
+    r.add_argument("--baseline-asbuilt")
+    r.add_argument("--baseline-tree")
     r.add_argument("--tools", default=str(HERE), help="tools/die_plan dir whose bind.py / kit_topology.py run (default: this file's dir)")
     r.add_argument("--types", nargs="*")
     r.add_argument("--type-timeout", type=float, default=3600)
     r.add_argument("--out")
     a = ap.parse_args(argv)
     try:
-        res = run_all(a.plan, a.bind_out, a.asbuilt, a.tree, a.work, tools=a.tools, jobs=a.jobs, wanted=set(a.types or []) or None, timeout=a.type_timeout)
+        res = run_all(a.plan, a.bind_out, a.asbuilt, a.tree, a.work, tools=a.tools, jobs=a.jobs, baseline=(dict(plan=a.baseline_plan, bind_out=a.baseline_bind, asbuilt=a.baseline_asbuilt, tree=a.baseline_tree) if a.baseline_plan and a.baseline_bind and a.baseline_tree else None), wanted=set(a.types or []) or None, timeout=a.type_timeout)
     except (OSError, ValueError, KeyError) as e:
         print(f"kit_topology_dry: {type(e).__name__}: {e}", file=sys.stderr)
         return 2
@@ -190,6 +227,8 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(res, indent=1))
     print(f"TOPOLOGY-DRY {res['verdict']} types {res.get('n_types')} pass {res.get('n_pass')} cached {res.get('n_cached')} "
           f"skipped {res.get('n_skipped')} jobs {res.get('jobs')} {res.get('seconds')} s")
+    for f in res.get("held") or []:
+        print(f"HELD TOPOLOGY-DRY {f['type']} [{f['stage']}] {f['why'][:200]} ({f['baseline']})")
     for f in res["failed"]:
         print(f"FAIL TOPOLOGY-DRY {f['type']} [{f['stage']}] {f['why']}")
     return 0 if res["verdict"] == "PASS" else 1

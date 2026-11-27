@@ -469,7 +469,7 @@ def peer_abi_check(tree, plan, bind_out, peers, tool_root=None, die=None):
     return rec
 
 
-def topology_check(tree, plan, asbuilt, bind_out, work, dp):
+def topology_check(tree, plan, asbuilt, bind_out, work, dp, topology_base=None):
     """C-ISTATION-PACKED-DELAY (COORD FLOW-1047 item 1, BLOCKING): kit_rtl + kit_topology on EVERY bound type of the candidate (tools/die_plan/
     kit_topology_dry.py, rt tools), so an adopted plan cannot hold a type whose kit chain dies before synthesis.  FAIL lists the types; UNKNOWN
     (never blocks) when the candidate has no finished bind or the tool dir has no checker (a tree older than the check)."""
@@ -483,6 +483,9 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp):
             "--work", os.path.join(work, "topology_dry"), "--out", out]
     if asbuilt:
         argv += ["--asbuilt", str(asbuilt)]
+    if topology_base:
+        argv += ["--baseline-plan", str(topology_base["plan"]), "--baseline-bind", str(topology_base["bind_out"]),
+                 "--baseline-tree", str(topology_base["tree"])] + (["--baseline-asbuilt", str(topology_base["asbuilt"])] if topology_base.get("asbuilt") else [])
     jobs = os.environ.get("OT_PUBGATE_TOPOLOGY_JOBS")
     if jobs:
         argv += ["--jobs", jobs]
@@ -500,12 +503,12 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp):
     if verdict == "FAIL" and fl and not hard:
         verdict = "ADVISORY"
     return {"verdict": verdict, "kit_rtl_unverified": sorted(f["type"] for f in fl if f.get("stage") == "kit_rtl"), "n_types": r.get("n_types"), "n_pass": r.get("n_pass"), "n_cached": r.get("n_cached"),
-            "seconds": r.get("seconds"), "failed": (r.get("failed") or [])[:60], "n_failed": len(r.get("failed") or []),
+            "seconds": r.get("seconds"), "held_preexisting": r.get("held") or [], "failed": (r.get("failed") or [])[:60], "n_failed": len(r.get("failed") or []),
             "types_failed": sorted(f["type"] for f in r.get("failed") or []), "why": r.get("why", ""), "result": out}
 
 
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None, topology_base=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
     it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
@@ -596,7 +599,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     bp = check_bound_params(tree, bind_out)
     res["bound_params"] = {"verdict": "PASS" if not bp else "ADVISORY", "advisory": True, "n": len(bp), "findings": bp[:40]}
     res["peer_abi"] = peer_abi_check(tree, plan, bind_out, peers, tool_root, die)
-    res["topology"] = topology_check(tree, plan, asbuilt, bind_out, work, dp)
+    res["topology"] = topology_check(tree, plan, asbuilt, bind_out, work, dp, topology_base)
     return res
 
 
@@ -639,7 +642,7 @@ def _admit_static_host(source, work, requested, wait, *args):
 
 
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None, topology_base=None):
     """Run the exact static checker with local admission on the host holding its prepared inputs."""
     q = shlex.quote
     _rs = str(os.environ.get("OT_RESETPUB_SOLVE", "")).strip()     # an explicit caller value (1 or 0) is forwarded; unset = the PRE default
@@ -657,6 +660,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
            + (f" --band-base {q(str(band_base))}" if band_base else "")
            + (f" --pre-baseline {q(str(pre_baseline))}" if pre_baseline else "")
+           + (f" --topology-base-json {q(json.dumps(topology_base))}" if topology_base else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
            + (f" --die-ctree {q(str(die_ctree))}" if die_ctree else "")
@@ -814,6 +818,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         if live.get("src") == expect_source and live.get("event") == expect_event and live.get("plan") != plan:
             pre_baseline = live.get("plan")
         rec["pre_baseline"] = pre_baseline
+        # TOPOLOGY baseline: the live event's own kit_rtl / kit_topology results are the comparison for the candidate's failures (pre-existing ones are HELD)
+        topology_base = None
+        if pre_baseline and (live.get("kit_rtl") or {}).get("bind_out") and live.get("src"):
+            topology_base = dict(plan=live["plan"], bind_out=live["kit_rtl"]["bind_out"], asbuilt=live["kit_rtl"].get("asbuilt"), tree=live["src"])
+        rec["topology_baseline"] = topology_base
         remap_base = marker.get("remap_base") or obj.get("remap_base")
         native_reset_receipt = marker.get("native_reset_receipt") or obj.get("native_reset_receipt")
         die_ctree = marker.get("die_ctree") or obj.get("die_ctree")
@@ -864,7 +873,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
                                                                        native_reset_receipt=native_reset_receipt, tool_root=rt_root(),
-                                                                       pre_baseline=pre_baseline, peers=peers, die=die, die_ctree=die_ctree)))(
+                                                                       pre_baseline=pre_baseline, peers=peers, die=die, die_ctree=die_ctree, topology_base=topology_base)))(
                 pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
             pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
             if pre_failure:
@@ -917,6 +926,7 @@ def main(argv=None):
     s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
     s.add_argument("--die", help="candidate die name (default: from the plan path)")
     s.add_argument("--peer", action="append", default=[], help="live peer DIE=TREE[:BIND_OUT] for the P-PEER-ABI check (normally shipped by run from the coord config)")
+    s.add_argument("--topology-base-json", help="live event {plan, bind_out, asbuilt, tree}: topology failures identical on it are HELD (normally shipped by run)")
     s.add_argument("--pre-baseline", help="adopted plan for PRE baseline checks (normally shipped by run from the incumbent config)")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
@@ -932,6 +942,7 @@ def main(argv=None):
                                                    band_base=a.band_base, remap_base=a.remap_base,
                                                    native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root,
                                                    pre_baseline=a.pre_baseline, die=a.die, die_ctree=a.die_ctree,
+                                                   topology_base=json.loads(a.topology_base_json) if a.topology_base_json else None,
                                                    peers={d: tuple((v.partition(":")[0], v.partition(":")[2] or None)) for d, _, v in (x.partition("=") for x in a.peer)})))
         return 0
     if a.cmd == "check":
