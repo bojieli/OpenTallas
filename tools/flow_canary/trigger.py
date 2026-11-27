@@ -27,6 +27,9 @@ flow_paths = _watch_module.flow_paths
 _canary_spec = importlib.util.spec_from_file_location("flow_canary_runner", HERE / "canary.py")
 _canary_module = importlib.util.module_from_spec(_canary_spec)
 _canary_spec.loader.exec_module(_canary_module)
+_reaper_spec = importlib.util.spec_from_file_location("flow_canary_reaper", HERE / "reaper.py")
+_reaper = importlib.util.module_from_spec(_reaper_spec)
+_reaper_spec.loader.exec_module(_reaper)
 _inputs_spec = importlib.util.spec_from_file_location("flow_canary_inputs", HERE / "placement_inputs.py")
 _inputs = importlib.util.module_from_spec(_inputs_spec)
 _inputs_spec.loader.exec_module(_inputs)
@@ -327,6 +330,11 @@ def main(argv=None):
     if a.dry:
         return 0
     release_review_leases(a.root)
+    if os.environ.get("OT_CANARY_REAPER") != "0":
+        try:
+            _reaper.reap(a.root)
+        except Exception as exc:  # noqa: BLE001 -- the reaper never blocks a submit
+            print(f"FLOW_CANARY_TRIGGER reaper failed: {exc}")
     if dies:
         selected = {c["die"]: c for c in spec["canaries"] if c["die"] in dies}
         source = snapshot_path(a.root, new)
