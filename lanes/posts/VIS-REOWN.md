@@ -1339,3 +1339,4 @@
   [redirect] QC-C1O-COMPOSE -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 15:20 PST REVIEW NEEDED [VIS-REOWN -> KV-OWN-RSTREACH, FP-CONVERGE-KV, KV-INT-R3; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): KV kv3_pc_v1__cl23f6a148 PLACE-GP render intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/private/KV-INT-R3/kv3_pc_v1__cl23f6a148_1127130025/gen/kv3_pc_v1__cl23f6a148/vis_review/place-gp-1127-1445PST (34 min)
   [redirect] KV-OWN-RSTREACH -> KV-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 15:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: KV kv3_pc_v1__cl23f6a148 PLACE-GP owner KV-OWN-RSTREACH (64 min since queued, intel2). 
