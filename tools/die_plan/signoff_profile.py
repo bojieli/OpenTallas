@@ -286,6 +286,14 @@ def record_die(rec):
     return m.group(1) if m else None
 
 
+def probe_signoff(rec):
+    """A probe receipt has timing evidence but cannot establish sign-off."""
+    check = (rec.get("checks") or {}).get("probe_through")
+    return (rec.get("probe") is True
+            or (isinstance(check, dict) and check.get("verdict") == "FAIL")
+            or any(str(reason).startswith("probe_through: FAIL") for reason in rec.get("reasons") or []))
+
+
 def judge(rec, die=None):
     """R-MINIMAL judgement of one record (does not modify it).
     -> dict(verdict SIGNED|NOT SIGNED, gates, reasons (blocking), advisories, tt_wns_ps, ff_hold_wns_ps, drc,
@@ -309,6 +317,9 @@ def judge(rec, die=None):
                                                             + (f"at signed period {sp:g} ps" if sp is not None else f"(P_die {die_period_ps(die):g} ps)")))
     if gates["hold_ff"] != "PASS":
         reasons.append(f"hold_ff: {gates['hold_ff']}" + ("" if ff is None else f" WNS {ff:+.2f} ps < {HOLD_MIN_PS:g}"))
+    if probe_signoff(rec):
+        gates["probe_through"] = "FAIL"
+        reasons.append("probe_through: FAIL diagnostic probe receipt")
     # HEAD-DIE-R 11-17 (COORD): balance pads on a forwarded-clock output (fwd_pad_check.py) shift the receiver's
     # landing clock by ns at die level while the type STA stays clean: blocking whenever the record measured it
     fp = (rec.get("checks") or {}).get("fwd_pads")
@@ -319,13 +330,13 @@ def judge(rec, die=None):
                            f"delaybuf_otstb > {fp.get('limit')} on fclk_out")
     adv = []
     for k, v in sorted((rec.get("checks") or {}).items()):
-        if k in MINIMAL_GATES or k == "fwd_pads" or not isinstance(v, dict):
+        if k in MINIMAL_GATES or k in ("fwd_pads", "probe_through") or not isinstance(v, dict):
             continue
         if v.get("verdict") not in ("PASS", "REPORT", "WARN", None):
             adv.append(f"{k}: {v.get('verdict')}")
     for r in rec.get("reasons") or []:          # summary-only records (autopilot job 'signoff')
         k = str(r).split(":", 1)[0]
-        if k not in MINIMAL_GATES and not any(a.startswith(k + ":") for a in adv):
+        if k not in MINIMAL_GATES and k != "probe_through" and not any(a.startswith(k + ":") for a in adv):
             adv.append(str(r)[:160])
     return dict(verdict="SIGNED" if not reasons else "NOT SIGNED", profile="minimal", gates=gates, reasons=reasons,
                 advisories=adv + ([f"hold_ff: boundary hold {boundary_ff:+.2f} ps (io_hold_parent, die STA; advisory)"]

@@ -31,7 +31,7 @@ LOCAL = set()          # hosts read in-process (the hub itself: ssh to self is n
 DIES = ("s81", "s81_head", "qwen_compute", "qwen_kvsys")
 ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "cp1": "s81", "results": "s81_head", "head": "s81_head"}
 KEEP_CHECKS = ("drc", "setup_tt", "hold_ff", "antenna", "drv", "clock", "pg", "io_hold_parent", "sdc_lint", "face_guard",
-               "unconstrained", "lec_superset", "timing_modes", "macro_libs", "ft_interface")
+               "unconstrained", "lec_superset", "timing_modes", "macro_libs", "ft_interface", "probe_through")
 
 
 def compact(rec):
@@ -42,7 +42,7 @@ def compact(rec):
         if isinstance(v, dict):
             ch[k] = {x: v.get(x) for x in ("verdict", "count", "wns_ps", "sdc_wns_ps", "port_only_needs_parent",
                                            "violators") if x in v}
-    return dict(verdict=rec.get("verdict"), local_verdict=rec.get("local_verdict"), name=rec.get("name"),
+    return dict(verdict=rec.get("verdict"), local_verdict=rec.get("local_verdict"), name=rec.get("name"), probe=rec.get("probe"),
                 checks=ch, reasons=(rec.get("reasons") or [])[:12], route=rec.get("route") or {},
                 kit=(rec.get("inputs") or {}).get("kit"), base=(rec.get("inputs") or {}).get("base"),
                 created=rec.get("created") or rec.get("time") or rec.get("finished"))

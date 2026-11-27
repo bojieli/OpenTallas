@@ -12,6 +12,7 @@ _PROFILE_PY = profile_file.read_text()
 _profile = {}
 exec(compile(_PROFILE_PY, str(profile_file), 'exec'), _profile)
 judge_minimal = _profile['judge']
+probe_signoff = _profile['probe_signoff']
 
 
 def measured_minimal(d):
@@ -61,6 +62,8 @@ def legacy_rminimal(d):
     except Exception:
         return False
 def counts_signed(d):
+    if probe_signoff(d):
+        return False
     # Minimal verdict stamps can be written by older callers. Always replay
     # their evidence, including the complete internal FF census.
     if d.get('profile') == 'minimal':
