@@ -12788,19 +12788,37 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "", jobdir=out)
         if plan is None:
             return prc
+    if not core:
+        genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
+        # FLOW-NOADV-R3 11-20: PLACE-SETUP-STOP applies to kit-wave gens only (shell exports, not part of the spec / input hashes); re-sign picks are exempt
+        genv += "export OT_KIT_WAVE=1; " + ("export OT_RESIGN=1; " if sp.get("resign") else "")
+        if reviewed_station:
+            station_record = sp["reviewed_station_prepare"]
+            genv += (f"export OT_REVIEWED_STATION_PREPARE={q(station_record['path'])}; "
+                     f"export OT_REVIEWED_STATION_PREPARE_SHA256={q(station_record['sha256'])}; ")
     plan_ov = plan                       # plan the station preparation reads (istations.tcl sites follow the overlay)
     ov_arg = ""
     if sp.get("type_overlay") and not core:
-        # KIT-OVERLAY-1: fail closed on a source without the flag; the overlaid plan (type-scoped validation, EQ projection)
-        # feeds prepare-stations so the FIRM station sites match the placement; gen phys applies the same overlay itself.
+        # Both consumers use the same pinned generator and environment. Older
+        # generator snapshots retain the ordinary standalone validation path.
         ovp = q(sp["type_overlay"])
-        rc, txt = run("type_overlay", otrun(8, 2, W, f"cd {q(tsrc)} && python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --type-overlay "
-                                                     f"&& python3 -I tools/die_plan/type_overlay.py apply {q(plan)} {ovp} --out {q(W)}/plan_overlaid.json "
-                                                     f"|| {{ echo 'KW_TYPE_OVERLAY source has no --type-overlay or the overlay is rejected'; exit 1; }}", gh))
+        plan_ov = f"{W}/plan_overlaid.json"
+        prepared_ov = f"{W}/type_overlay_prepared.json"
+        prepare = (f"cd {q(tsrc)} && {{ {genv}"
+                   'overlay_help=$(python3 tools/die_plan/gen.py phys --help 2>/dev/null) && '
+                   'printf "%s\n" "$overlay_help" | grep -q -- --type-overlay '
+                   "|| { echo 'KW_TYPE_OVERLAY source has no --type-overlay'; exit 1; }; "
+                   'overlay_receipt=; '
+                   'if printf "%s\n" "$overlay_help" | grep -q -- --prepared-type-overlay; then '
+                   f"overlay_receipt={q(prepared_ov)}; fi; "
+                   f"python3 -I tools/die_plan/type_overlay.py apply {q(plan)} {ovp} --out {q(plan_ov)} "
+                   '${overlay_receipt:+--prepared-receipt "$overlay_receipt"}; }')
+        rc, txt = run("type_overlay", otrun(8, 2, W, prepare, gh, roam=False))
         if rc:
             return fail("type_overlay", txt)
-        plan_ov = f"{W}/plan_overlaid.json"
         ov_arg = f" --type-overlay {ovp}"
+        if "TYPE_OVERLAY PREPARED" in txt.splitlines():
+            ov_arg += f" --prepared-type-overlay {q(prepared_ov)}"
     if not core and kit_rtl_arg and sp.get("canonical_topology_prepare"):
         # One canonical implementation for both bind and script callers, after
         # the actual typed overlay and before any physical generation.
@@ -12845,13 +12863,6 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
                f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
         rgp, rga = region_guide_cmd(sp, False)
-        genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
-        # FLOW-NOADV-R3 11-20: PLACE-SETUP-STOP applies to kit-wave gens only (shell exports, not part of the spec / input hashes); re-sign picks are exempt
-        genv += "export OT_KIT_WAVE=1; " + ("export OT_RESIGN=1; " if sp.get("resign") else "")
-        if reviewed_station:
-            station_record = sp["reviewed_station_prepare"]
-            genv += (f"export OT_REVIEWED_STATION_PREPARE={q(station_record['path'])}; "
-                     f"export OT_REVIEWED_STATION_PREPARE_SHA256={q(station_record['sha256'])}; ")
         gen = (f"cd {q(tsrc)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}{ov_arg}")
         if kit_rtl_arg:
