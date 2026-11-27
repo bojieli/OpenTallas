@@ -647,6 +647,9 @@ SCHEMA = {
                         # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
                         "tap_clear_um": _pos,
                         "tap_reserved_um": {"type": "array", "items": _rect},
+                        # The clock tables were priced on these named sites in the type frame.
+                        # tap_site.rekey follows the site if tap generation later renumbers the port.
+                        "tap_sites_um": {"type": "object", "additionalProperties": _xy},
                         # S81-BANDTAP-1115: tap windows - rects no ring band may cover, so a legal tap site exists for sinks no tap reaches
                         "band_keepout_um": {"type": "array", "items": _rect},
                         # S81-BANDTAP-1115 opt-in: ring band points within this L1 reach of a planned tap / band_tap_sites_um
