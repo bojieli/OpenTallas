@@ -44,7 +44,7 @@ HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow rtl/
 # RT/current, RT/<sha12> and RT/<sha12>.manifest.json resolve for every caller unchanged.  Older versions stay where they are; prune removes a
 # symlinked version together with its target.
 HOST_DATA = dict(x.split("=", 1) for x in os.environ.get("OT_RT_HOST_DATA", "").split() if "=" in x)
-GEN_SMOKE_HOSTS = os.environ.get("OT_RT_GEN_SMOKE_HOSTS", "epyc9 epyc10 epyc8 epyc2").split()   # tried in order: the first one reached judges
+GEN_SMOKE_HOSTS = os.environ.get("OT_RT_GEN_SMOKE_HOSTS", "epyc8 intel1 epyc7 epyc11").split()   # tried in order: the first one reached judges
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 SMOKE_TESTS = os.environ.get("OT_RT_SMOKE_TESTS", "tools/autopilot/test_kit_wave.py").split()
 LEGACY = [p for p in os.environ.get("OT_RT_LEGACY", "/srv/opentallas-scratch2/claude/kw38/rt").split() if p]

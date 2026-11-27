@@ -27,6 +27,16 @@ def _load():
     return m
 
 
+
+def test_gen_smoke_defaults_to_approved_hosts_and_honors_override(monkeypatch):
+    monkeypatch.delenv("OT_RT_GEN_SMOKE_HOSTS", raising=False)
+    assert load().GEN_SMOKE_HOSTS == ["epyc8", "intel1", "epyc7", "epyc11"]
+    monkeypatch.setenv("OT_RT_GEN_SMOKE_HOSTS", "epyc11 intel1")
+    assert load().GEN_SMOKE_HOSTS == ["epyc11", "intel1"]
+    monkeypatch.setenv("OT_RT_GEN_SMOKE_HOSTS", "")
+    assert load().GEN_SMOKE_HOSTS == []
+
+
 class GenSmokeScript(unittest.TestCase):
     def setUp(self):
         self.d = pathlib.Path(tempfile.mkdtemp())
