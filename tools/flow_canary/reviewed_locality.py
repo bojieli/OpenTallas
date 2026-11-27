@@ -14,6 +14,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import placement_review as review
+import placement_inputs as inputs
 
 SCRATCH = Path("/srv/opentallas-scratch2/claude")
 WARM_REPO = SCRATCH / "warm" / "OpenTallas.git"
@@ -182,9 +183,14 @@ def check_placement_copyback(run, kit, status):
     if status != 0:
         return
     try:
+        if (run / inputs.PROPOSAL).is_file():
+            accepted = inputs.accept_reuse(run, review)
+            print(f"CANARY PLACE-REUSED {run.name}: {accepted['prior_run']} "
+                  f"odb_sha256={accepted['odb_sha256']}")
+            return
         document = review.read_receipt(run)
         review.validate_placement(kit, review.receipt_path(run), document)
-    except (KeyError, OSError, ValueError) as error:
+    except (KeyError, OSError, TypeError, ValueError) as error:
         raise PlacementReceiptError(str(error)) from error
 
 
@@ -210,6 +216,7 @@ def run_stage(run, stage):
             raise ValueError(hold)
         meta["placement_host"] = worker
         write_metadata(meta_path, meta)
+        inputs.prepare_prior(run, spec, review)
         command = ["bash", "-c", "set -e; bash ./job.sh; test -f GENERATED; bash ./harness/place.sh"]
         try:
             return run_on_worker(run, worker, spec, command,

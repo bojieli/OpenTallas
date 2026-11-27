@@ -27,6 +27,9 @@ flow_paths = _watch_module.flow_paths
 _canary_spec = importlib.util.spec_from_file_location("flow_canary_runner", HERE / "canary.py")
 _canary_module = importlib.util.module_from_spec(_canary_spec)
 _canary_spec.loader.exec_module(_canary_module)
+_inputs_spec = importlib.util.spec_from_file_location("flow_canary_inputs", HERE / "placement_inputs.py")
+_inputs = importlib.util.module_from_spec(_inputs_spec)
+_inputs_spec.loader.exec_module(_inputs)
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
 LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
@@ -68,7 +71,7 @@ def live_dies(root, now=None, target_sha=None):
     out = set()
     for d in glob.glob(f"{root}/*/canary_meta.json"):
         run = Path(d).parent
-        if (run / "canary.json").exists():
+        if (run / "canary.json").exists() or _inputs.accepted_reuse(run):
             continue
         m = json.loads(Path(d).read_text())
         if is_ab_candidate(m) or mutable_source(m):
@@ -121,7 +124,7 @@ def release_review_leases(root):
         if not m.get("review_before_route") or not m.get("client_unit"):
             continue
         run, die = path.parent, m["spec"]["die"]
-        result = run / "canary.json"
+        result = run / (_inputs.ACCEPTED if _inputs.accepted_reuse(run) else "canary.json")
         if review.receipt_path(run).is_file():
             candidate = (m.get("submitted_at", 0), m.get("src_commit", ""))
             newest[die] = max(newest.get(die, (0, "")), candidate)
@@ -182,7 +185,7 @@ def unlock_completed_sources(repo, root):
         lock = source_lock_file(source)
         if not lock or not lock.exists() or not lock.read_text().startswith(LOCK_REASON):
             continue
-        if not all((p / "canary.json").is_file() for p, _ in entries):
+        if not all((p / "canary.json").is_file() or _inputs.accepted_reuse(p) for p, _ in entries):
             continue
         units = {m.get("client_unit") for _, m in entries} - {None, ""}
         if any(subprocess.run(["systemctl", "--user", "is-active", "--quiet", u],

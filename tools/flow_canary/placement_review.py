@@ -87,6 +87,11 @@ def render(a):
            "kit": str(kit), "kit_location": f"{a.host}:{kit}", "odb": str(odb),
            "odb_sha256": placed_sha, "runner_sha256": digest(kit.parent / "run_kit.sh"), "ready_at": time.time(),
            "images": {name: digest(out / name) for name in IMAGES}}
+    certificate = getattr(a, "input_certificate", None)
+    if certificate:
+        path = Path(certificate)
+        if path.is_file() and not path.is_symlink():
+            doc["placement_inputs_file_sha256"] = digest(path)
     write_json(out / "placed.json", doc)
     print(f"CANARY WAIT-VISUAL {a.die}/{a.item} attempt_1 kit={doc['kit_location']} "
           f"odb_sha256={placed_sha} views={out}/{','.join(IMAGES)}")
@@ -225,6 +230,7 @@ def main():
     placement = sub.add_parser("render")
     for name in ("kit", "out", "tools", "die", "item", "src-commit", "host", "image"):
         placement.add_argument(f"--{name}", required=True)
+    placement.add_argument("--input-certificate")
     route = sub.add_parser("prepare-route")
     for name in ("kit", "runner", "receipt", "approval"):
         route.add_argument(f"--{name}", required=True)
