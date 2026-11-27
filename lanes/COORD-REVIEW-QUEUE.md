@@ -19648,3 +19648,22 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   S81-INT-R3 (xr bind inputs): the 5 mid-run FileNotFoundError deaths on epyc12 each end in a stdin python step that opens a file the earlier step never wrote: /srv/opentallas-scratch2/claude/s81-int-r3-xr/latcheck_v11s.json (bind_v11s), latcheck_v12f.json (bind_v12f), latcheck_v16f.json (bind_v16f), latcheck_lo11.json (bind_lo11), and s81-int-r3-xr/g0_v11s/g0_report.json (g0_v11s). So the LATCHECK step and the G0 step of those chains produced no output file (they failed or wrote elsewhere) and the chain went on to read it. Logs: s81-int-r3-xr/*.otrun.log on epyc12.
   SETUP reclassification: main d8465e344cb ot_deathclass: FileNotFoundError / No such file after more than 60 s of runtime is class RUNTIME-INPUT-MISSING (the first 60 s stay SETUP); test added.
   Sub-lane pushes so far: rt pin (kit_wave private-spec refuses an rt pin that does not contain the row's tool commit, NOT-RUN SETUP) main 1bbece360ff; allowlist guard and WAIT-state post are still being pushed, shas follow; preflight extension for relative inputs, source/dot files and empty-variable paths is with a sub-lane.
+- 2026-11-27 13:48 PST RESULT [KV-INT-R3/AHUB -> COORD; cc CLASS-OWNERS-R3, CLASS-TRACK-R3] C-AHUB-ETM-CLOCK-CONTRACT (folded into C-EXT-CONTRACT-MISSING) is FIXED on core5, from SIGNED records. The COORD fallback of PROVISIONAL +10 ps was not needed.
+  Cause: there is no tool regression; core_clock_contract.py is byte-identical in efc6b92330fa and 58982fe1cd00.
+  - Since HUBCTAP-v2 (11-24), every kv3_hub_C core tap has budget_owner "SIGNED:...". So gen_phys uses require_signed=True, which needs a clock_contract.json or signoff.json beside each lib.
+  - Two hub_C core views have neither: qkd_ahub (the reported error) and qkd_kvs_ctl, which the ahub error was masking.
+  - D carries the same gap, because hub_C is identical in D and core5.
+  - Earlier hub PREs never ran kv3_hub_C GENDRY.
+  Remedy: a view-file row only. Plan 24b5d5dae206 is unchanged, with no RTL, R8 or cycle change.
+  - qkd_ahub: clock_contract.json b9919faa8bdf, built from SIGNED E8 kv-ahub-rh1/k_s2/signoff/signoff.json (the budget_owner record). The lib is byte-identical to the signed lib. Pin-register mean is 242.72 TT / 193.02 FF ps (n=772), the same as the plan taps.
+  Limit: the record is a single merged census, so all 7 ck pins share one mean, as the plan already assumes.
+  - qkd_kvs_ctl: stock core_clock_contract.py --signoff from intel2 ss32/resign/kit_kvctl/signoff/signoff.json. Contract cf4ba64d7f6a, ck 283.5 / 233.96 ps (n=7289), equal to the plan tap.
+  - Delta kv-int-r3/ahub/pack_hubcc/delta.json 5214e52f54c4. Tree kv-int-r2/pub/kv_a5t9_g6v6r3_c2100f_core5_hubcc_1127.
+  Gates:
+  - G0: 0.
+  - Scoped PRE on kv3_hub_C: PASS, 0 findings, and GENDRY passes.
+  - Whole PRE with OT_PRE_GENDRY_MAX=500: PASS, 0 findings.
+  - LATCHECK: 0.
+  Census over 83 types with hard cores: 69 pass, 13 on the legacy path with no mean contract, and 1 FAIL (hub_C, 2 of its 63 cores). The FAIL is fixed by this row.
+  P-FALSE-GREEN (for CLASS-OWNERS-R3): whole-die PRE passed even on a tree that still failed kv3_hub_C GENDRY, with the cap lifted. Whole PRE does not run GENDRY for hub_C at all, so whole-PRE PASS is blind to this class. The all-type proof is the contract census plus the scoped run. Please make PRE dry-generate every type that has require_signed cores, or report each skipped type as FAIL.
+  This row goes into tonight's form.

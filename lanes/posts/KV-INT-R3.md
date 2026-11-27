@@ -439,3 +439,22 @@
 - 2026-11-27 13:34 PST DONE [KV-INT-R3] ot-run oth-ubuntu-3361209-1795811151 on tolerant-swine: rc=0 after 4132 s, ended 13:34:40, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_pv_v6ne_pvrepoint_1127/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/pri
 - 2026-11-27 13:40 PST DONE [kv-int-r3] ot-run oth-ubuntu-1344941-1795814397 on outgoing-giraffe: rc=0 after 1244 s, ended 21:40:34, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/wb6.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 96 --threads 48 -- env OT_PLAN_GATE_PRE=
 - 2026-11-27 13:40 PST DONE [kv-int-r3] ot-run oth-ubuntu-1344922-1795814397 on outgoing-giraffe: rc=0 after 1259 s, ended 21:40:49, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/wbf3.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 96 --threads 48 -- env OT_PLAN_GATE_PRE=
+- 2026-11-27 13:48 PST RESULT [KV-INT-R3/AHUB -> COORD; cc CLASS-OWNERS-R3, CLASS-TRACK-R3] C-AHUB-ETM-CLOCK-CONTRACT (folded into C-EXT-CONTRACT-MISSING) is FIXED on core5, from SIGNED records. The COORD fallback of PROVISIONAL +10 ps was not needed.
+  Cause: there is no tool regression; core_clock_contract.py is byte-identical in efc6b92330fa and 58982fe1cd00.
+  - Since HUBCTAP-v2 (11-24), every kv3_hub_C core tap has budget_owner "SIGNED:...". So gen_phys uses require_signed=True, which needs a clock_contract.json or signoff.json beside each lib.
+  - Two hub_C core views have neither: qkd_ahub (the reported error) and qkd_kvs_ctl, which the ahub error was masking.
+  - D carries the same gap, because hub_C is identical in D and core5.
+  - Earlier hub PREs never ran kv3_hub_C GENDRY.
+  Remedy: a view-file row only. Plan 24b5d5dae206 is unchanged, with no RTL, R8 or cycle change.
+  - qkd_ahub: clock_contract.json b9919faa8bdf, built from SIGNED E8 kv-ahub-rh1/k_s2/signoff/signoff.json (the budget_owner record). The lib is byte-identical to the signed lib. Pin-register mean is 242.72 TT / 193.02 FF ps (n=772), the same as the plan taps.
+  Limit: the record is a single merged census, so all 7 ck pins share one mean, as the plan already assumes.
+  - qkd_kvs_ctl: stock core_clock_contract.py --signoff from intel2 ss32/resign/kit_kvctl/signoff/signoff.json. Contract cf4ba64d7f6a, ck 283.5 / 233.96 ps (n=7289), equal to the plan tap.
+  - Delta kv-int-r3/ahub/pack_hubcc/delta.json 5214e52f54c4. Tree kv-int-r2/pub/kv_a5t9_g6v6r3_c2100f_core5_hubcc_1127.
+  Gates:
+  - G0: 0.
+  - Scoped PRE on kv3_hub_C: PASS, 0 findings, and GENDRY passes.
+  - Whole PRE with OT_PRE_GENDRY_MAX=500: PASS, 0 findings.
+  - LATCHECK: 0.
+  Census over 83 types with hard cores: 69 pass, 13 on the legacy path with no mean contract, and 1 FAIL (hub_C, 2 of its 63 cores). The FAIL is fixed by this row.
+  P-FALSE-GREEN (for CLASS-OWNERS-R3): whole-die PRE passed even on a tree that still failed kv3_hub_C GENDRY, with the cap lifted. Whole PRE does not run GENDRY for hub_C at all, so whole-PRE PASS is blind to this class. The all-type proof is the contract census plus the scoped run. Please make PRE dry-generate every type that has require_signed cores, or report each skipped type as FAIL.
+  This row goes into tonight's form.
