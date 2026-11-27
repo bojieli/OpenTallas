@@ -575,3 +575,19 @@ cut_local	die	class_id	count	basis	source	prev_count	prev_basis	move
 2026-11-27 09:00 PST	QC	*STREAK*	1	meta	no-fall streak on comparable classes			STREAK
 2026-11-27 09:00 PST	KV	*STREAK*	2	meta	no-fall streak on comparable classes			STREAK
 2026-11-27 09:00 PST	FLEET	*STREAK*	1	meta	no-fall streak on comparable classes			STREAK
+2026-11-27 09:00 PST	S81	P-PLAN-AHEAD-OF-RTL	6	review-count	FABLE-FLOW-0910 a1: WREG d44304a8a2c5 6 ops PARAM_REGEN, v3/v4 whole binds f			NEW
+2026-11-27 09:00 PST	FLEET	P-CLEANUP-LIVE-STORE	1	review-count	FABLE-FLOW-0910 a2: Explorer LV_STORE 17.9 GB + physical + results removed 1			NEW
+2026-11-27 09:00 PST	FLEET	P-AUTOMERGE-REVOKE-RACE	1	review-count	FABLE-FLOW-0910 a3: edbf auto-merged as 40ccb3724f0 before REVOKED 9079a85bc			NEW
+2026-11-27 09:00 PST	FLEET	P-STAGE-REUSE-MISS	4	review-count	FABLE-FLOW-0910 a4: 4 measured waste cases (KIT_RTL 112 s, dry 555 s, resume			NEW
+2026-11-27 09:00 PST	S81	P-SIGNED-CANDIDATE-FALSE	3	review-count	FABLE-FLOW-0910 a5: 3 LL diagnostic bodies (S81), 3 QC SIGNED-NO-TAG probes;			NEW
+2026-11-27 09:00 PST	QC	P-SIGNED-CANDIDATE-FALSE	3	review-count	FABLE-FLOW-0910 a5: 3 LL diagnostic bodies (S81), 3 QC SIGNED-NO-TAG probes;			NEW
+2026-11-27 09:00 PST	HEAD	C-FILL-RULE-STRUCTURAL	3	review-count	FABLE-FLOW-0910 a6: HEAD East TX, Turn B, CTL N; QC FTc, FTn + 3 siblings; S			NEW
+2026-11-27 09:00 PST	QC	C-FILL-RULE-STRUCTURAL	5	review-count	FABLE-FLOW-0910 a6: HEAD East TX, Turn B, CTL N; QC FTc, FTn + 3 siblings; S			NEW
+2026-11-27 09:00 PST	S81	C-FILL-RULE-STRUCTURAL	2	review-count	FABLE-FLOW-0910 a6: HEAD East TX, Turn B, CTL N; QC FTc, FTn + 3 siblings; S			NEW
+2026-11-27 09:00 PST	QC	C-EXT-CONTRACT-MISSING	1	review-count	FABLE-FLOW-0910 a7: QC Coll_N s597 PHY view, S81 phy_hbm bump authority, KV 			NEW
+2026-11-27 09:00 PST	S81	C-EXT-CONTRACT-MISSING	1	review-count	FABLE-FLOW-0910 a7: QC Coll_N s597 PHY view, S81 phy_hbm bump authority, KV 			NEW
+2026-11-27 09:00 PST	KV	C-EXT-CONTRACT-MISSING	1	review-count	FABLE-FLOW-0910 a7: QC Coll_N s597 PHY view, S81 phy_hbm bump authority, KV 			NEW
+2026-11-27 09:00 PST	HEAD	C-FENCE-GEOM-ILLEGAL	2	review-count	FABLE-FLOW-0910 a8: HEAD East DPL-0033 unsnapped bounds + zero-area band, QC			NEW
+2026-11-27 09:00 PST	QC	C-FENCE-GEOM-ILLEGAL	1	review-count	FABLE-FLOW-0910 a8: HEAD East DPL-0033 unsnapped bounds + zero-area band, QC			NEW
+2026-11-27 09:00 PST	S81	C-FENCE-GEOM-ILLEGAL	1	review-count	FABLE-FLOW-0910 a8: HEAD East DPL-0033 unsnapped bounds + zero-area band, QC			NEW
+2026-11-27 09:00 PST	FLEET	P-DEATH-UNCLASSIFIED	82	review-count	FABLE-FLOW-0910 a9: 143 DIED posts since 14:47, 82 NO-PATTERN (57 percent)			NEW
