@@ -24,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 SRC = (HERE / "face_flops.tcl").read_text()
 FIX = json.loads((HERE / "testdata" / "station_bitorder_t3_ft3.json").read_text())
 DBU = 1000
+GOLDEN_OFF = "26ad3871e56d76638ef172f1829b140dcb288a58984f6fc4ab90aa30d1ddcba1"
 
 
 def _procs():
@@ -111,6 +112,8 @@ def _run(mono, fx=None):
     if not shutil.which("tclsh"):
         pytest.skip("tclsh unavailable")
     env = "set ::env(OT_FT_LANE_MONO) 1\n" if mono else "catch {unset ::env(OT_FT_LANE_MONO)}\n"
+    for k_, v_ in (fx.get("env") or {}).items():
+        env += f"set ::env({k_}) {v_}\n"
     script = env + _mock(fx) + _station_pass() + '\nputs "RESULT mono=$ff_mono_n bits=$ff_mono_bits miss=$ff_st_miss lst=$ff_lst st=$ff_st"\n'
     r = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, timeout=600)
     assert r.returncode == 0 and not r.stderr, (r.stdout[-2000:] + r.stderr[-2000:])
@@ -120,7 +123,7 @@ def _run(mono, fx=None):
         m = re.fullmatch(r"l?st(\d+)", p[1]) if len(p) >= 5 else None
         if m:
             seats.setdefault(int(p[4].rsplit("[", 1)[1][:-1]), {})[int(m.group(1))] = (float(p[2]), float(p[3]))
-    res = "\n".join(ln for ln in r.stdout.splitlines() if ln.startswith(("RESULT", "OT_FT_LANE_MONO WARNING")))
+    res = "\n".join(ln for ln in r.stdout.splitlines() if ln.startswith(("RESULT", "OT_FT_LANE_MONO WARNING", "OT_FT_LANE_MONO on:")))
     for b, (x, y) in (fx.get("st0") or {}).items():
         if int(b) in seats:
             seats[int(b)][0] = (x, y)
@@ -232,3 +235,84 @@ def test_reports_overlength_planned_hops_only_when_opted_in():
     _, on = _run(True, fx)
     assert "WARNING" not in off
     assert "slot ft0: 2 planned hops exceed 405 um after escape selection (max 450.0 um)" in on
+
+
+def _tcl(snippet):
+    if not shutil.which("tclsh"):
+        pytest.skip("tclsh unavailable")
+    r = subprocess.run(["tclsh"], input=_procs() + "\n" + snippet, text=True, capture_output=True, timeout=60)
+    assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
+    return r.stdout.strip()
+
+
+def test_core_box_test_is_edge_inclusive():
+    # a target exactly on a box edge is inside the core (FF-CORE-BOX closes the edge row / column too)
+    out = _tcl("set b {{100 100 200 200}}\n"
+               "foreach p {{100 150} {200 150} {150 100} {150 200} {99 150} {201 150} {150 99} {150 201}} "
+               "{ puts -nonewline \"[expr {[ff_core_box_at $b {*}$p] ne {}}]\" }")
+    assert out == "11110000", out
+
+
+def test_one_target_formula_and_one_rounding_rule():
+    stage = SRC[SRC.index("proc ff_stage_target"):SRC.index("# start of a landed chain")]
+    station_pass = _station_pass()
+    # the loops take every target from ff_stage_target; no second copy of the regs / point_at formula in them
+    assert station_pass.count("ff_stage_target") >= 4
+    assert "ff_point_at" not in station_pass and "ff_lane_xy" not in station_pass
+    assert "regs [expr" not in station_pass
+    assert "ff_point_at" in stage and "ff_lane_xy" in stage
+    # the opt-in plan rounds start, targets and end to whole dbu once (so chosen == target is an exact test)
+    plan = SRC[SRC.index("proc ff_mono_plan"):SRC.index("# per-bit station chain hop record")]
+    assert "ff_rnd_pts $tgts" in plan and "ff_rnd_pt $end" in plan and "ff_rnd_pt $start" in plan
+    assert _tcl("puts [ff_rnd_pt {10.5 3.49}]; puts [ff_rnd_pts {{1.2 2.7} {5 6}}]") == "11 3\n{1 3} {5 6}"
+
+
+def test_flag_off_placement_is_byte_identical_to_the_pre_change_code():
+    import hashlib
+    seats, res = _run(False)
+    digest = hashlib.sha256(json.dumps(sorted((b, sorted(s.items())) for b, s in seats.items())).encode()).hexdigest()
+    # golden of the flag-off t3 ft3 seats made with the pre-11-27 face_flops.tcl (a8e18b0d21b + 89fb176f40f)
+    assert digest == GOLDEN_OFF, digest
+
+
+def test_mono_counter_counts_only_internal_station_seats(runs):
+    _, res = runs[True]
+    n = int(re.search(r"mono=(\d+)", res).group(1))
+    bits = int(re.search(r"bits=(\d+)", res).group(1))
+    assert 0 < bits <= 669 and n <= bits * (FIX["k"] - 1), res
+
+
+def test_ring_leg_is_measured_and_reported(runs):
+    _, res = runs[True]
+    m = re.search(r"ring->s0 leg max ([0-9.]+) um, (\d+) > 405 um", res)
+    assert m, res
+    assert float(m.group(1)) > 0
+    _, off = runs[False]
+    assert "ring->s0" not in off          # report only with the flag on: flag-off logs stay as before
+
+
+def _channel_fixture(**kw):
+    """40 bits, one unlanded slot; core A [400,500,600,900], core B [615,500,1000,900]: a 15 um channel at x 600-615"""
+    n = 40
+    fx = dict(slot="ft0", k=2, landed=False, fin="W", fout="E", core=[0, 0, 1000, 1000],
+              pins_i={str(b): [100, 600 + 4 * b] for b in range(n)}, pins_o={str(b): [800, 950] for b in range(n)},
+              regs=[100, 700, 500, 700], boxes=[[400, 500, 600, 900], [615, 500, 1000, 900]],
+              st0={str(b): [100, 600 + 4 * b] for b in range(n)})
+    fx.update(kw)
+    return fx
+
+
+def test_channel_capacity_warning():
+    fx = _channel_fixture()
+    _, quiet = _run(True, fx)
+    assert "WARNING channel" not in quiet and "worst channel fill" in quiet, quiet
+    _, loud = _run(True, dict(fx, env={"OT_FT_LANE_MONO_FILL": "0.0001"}))
+    m = re.search(r"WARNING channel x \[(\d+\.\d), (\d+\.\d)\] um x ([0-9.]+) um: (\d+) moved seats on (\d+) station-grid sites", loud)
+    assert m, loud
+    assert (float(m.group(1)), float(m.group(2))) == (600.0, 615.0)
+    assert int(m.group(4)) >= 1
+
+
+def test_channel_warning_off_without_the_flag():
+    _, off = _run(False, dict(_channel_fixture(), env={"OT_FT_LANE_MONO_FILL": "0.0001"}))
+    assert "WARNING" not in off

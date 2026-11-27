@@ -840,7 +840,7 @@ proc ff_mono_slot_on {slot} {
   return [expr {[ff_mono_on] && !([info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot])}]
 }
 proc ff_core_box_at {boxes x y} {
-  foreach b $boxes { lassign $b a bb c d; if {$x > $a && $x < $c && $y > $bb && $y < $d} { return $b } }
+  foreach b $boxes { lassign $b a bb c d; if {$x >= $a && $x <= $c && $y >= $bb && $y <= $d} { return $b } }
   return ""
 }
 # step out of the box at (x, y) and of every box it then lands in, along x (vert 1) or y (vert 0), dir -1 / +1; "" = off core
@@ -855,6 +855,9 @@ proc ff_lane_escape_walk {boxes x y vert dir} {
   }
   return ""
 }
+# one rounding rule for every point the opt-in plan handles: whole dbu
+proc ff_rnd_pt {p} { return [list [expr {round([lindex $p 0])}] [expr {round([lindex $p 1])}]] }
+proc ff_rnd_pts {ps} { set o {}; foreach p $ps { lappend o [ff_rnd_pt $p] }; return $o }
 proc ff_md {p q} { return [expr {abs([lindex $p 0] - [lindex $q 0]) + abs([lindex $p 1] - [lindex $q 1])}] }
 # plan stage jj (1..k) target of a slot bit, exactly as the station loops compute it (dbu)
 proc ff_stage_target {slot bt ob regs k pts L jj} {
@@ -918,6 +921,7 @@ proc ff_lane_chain {start tgts end} {
 # The chosen chain is still a geometric estimate before row/site placement.
 proc ff_mono_plan {slot start tgts end} {
   global ff_mono_over ff_mono_worst ff_dbu
+  set tgts [ff_rnd_pts $tgts]; set end [ff_rnd_pt $end]; set start [ff_rnd_pt $start]
   set targets [ff_lane_chain $start $tgts $end]
   set prev $start
   foreach at [concat $targets [list $end]] {
@@ -932,6 +936,46 @@ proc ff_mono_plan {slot start tgts end} {
   }
   return $targets
 }
+# ring -> station 0 leg of a landed chain (flag on only): the planned ring point sits OT_FT_LANE_MONO_RING_UM inside the pin
+proc ff_ring_leg {ring got} {
+  global ff_ring_max ff_ring_n405 ff_dbu
+  set h [expr {[ff_md $ring $got] / double($ff_dbu)}]
+  if {$h > $ff_ring_max} { set ff_ring_max $h }
+  if {$h > 405.0} { incr ff_ring_n405 }
+}
+# channel-capacity estimate: every seat that moved to a chosen core exit is binned by the free channel at that exit
+# (narrower of the x gap and the y gap between core boxes / die edge); demand = such seats, capacity = station-grid sites
+# of the channel (gap / ff_cpitch columns x free length / ff_rh rows).  Report only; warns above OT_FT_LANE_MONO_FILL (0.5).
+proc ff_chan_at {x y} {
+  global ff_core_boxes ff_x0 ff_y0 ff_x1 ff_y1
+  set xl $ff_x0; set xr $ff_x1; set yb $ff_y0; set yt $ff_y1
+  foreach b $ff_core_boxes {
+    lassign $b a bb c d
+    if {$y > $bb && $y < $d} { if {$c <= $x && $c > $xl} { set xl $c }; if {$a >= $x && $a < $xr} { set xr $a } }
+    if {$x > $a && $x < $c} { if {$d <= $y && $d > $yb} { set yb $d }; if {$bb >= $y && $bb < $yt} { set yt $bb } }
+  }
+  if {$xr - $xl <= $yt - $yb} { return [list x $xl $xr [expr {$yt - $yb}]] }
+  return [list y $yb $yt [expr {$xr - $xl}]]
+}
+proc ff_mono_note {slot j xy} {
+  global ff_mono_ch
+  dict incr ff_mono_ch [ff_chan_at [lindex $xy 0] [lindex $xy 1]]
+}
+proc ff_mono_capacity {} {
+  global ff_mono_ch ff_cpitch ff_rh ff_dbu
+  set lim [expr {[info exists ::env(OT_FT_LANE_MONO_FILL)] ? $::env(OT_FT_LANE_MONO_FILL) : 0.5}]
+  set worst 0.0
+  dict for {ch n} $ff_mono_ch {
+    lassign $ch ax lo hi len
+    set sites [expr {max(1, int(($hi - $lo) / $ff_cpitch)) * max(1, int($len / $ff_rh))}]
+    set fill [expr {double($n) / $sites}]
+    if {$fill > $worst} { set worst $fill }
+    if {$fill > $lim} {
+      puts "OT_FT_LANE_MONO WARNING channel $ax \[[format %.1f [expr {$lo / double($ff_dbu)}]], [format %.1f [expr {$hi / double($ff_dbu)}]]\] um x [format %.1f [expr {$len / double($ff_dbu)}]] um: $n moved seats on $sites station-grid sites (fill [format %.2f $fill] > $lim)"
+    }
+  }
+  return $worst
+}
 # per-bit station chain hop record (um): the longest placed station -> station hop of the pass (report only)
 proc ff_lane_hop {prev got} {
   global ff_lane_max ff_lane_n405 ff_dbu
@@ -941,7 +985,7 @@ proc ff_lane_hop {prev got} {
   if {$h > 405.0} { incr ff_lane_n405 }
 }
 set ff_st 0; set ff_st_miss 0; set ff_lst 0; set ff_landed_line {}
-set ff_mono_n 0; set ff_mono_bits 0; set ff_mono_over {}; set ff_mono_worst {}
+set ff_mono_n 0; set ff_mono_bits 0; set ff_mono_over {}; set ff_mono_worst {}; set ff_mono_ch {}; set ff_ring_max 0.0; set ff_ring_n405 0
 set ff_lane_c [ff_lane_centroids $ff_blk]; set ff_lane_max 0.0; set ff_lane_n405 0; set ff_lane_bits 0
 foreach bt [$ff_blk getBTerms] {
   if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne "INPUT"} continue
@@ -976,12 +1020,7 @@ foreach bt [$ff_blk getBTerms] {
     for {set j 0} {$j < $k} {incr j} {
       set f [lindex $fs $j]
       dict set ff_done [$f getName] 1
-      if {$j + 1 < $k && [llength $regs] >= 2 * $k} {
-        set xy [list [expr {round([lindex $regs [expr {2*($j+1)}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*($j+1)+1}]] * $ff_dbu)}]]
-        set xy [ff_lane_xy $slot $bt $ob $xy [expr {double($j + 1) / $k}]]
-      } else {
-        set xy [ff_point_at $pts [expr {$L * double($j + 1) / $k}]]
-      }
+      set xy [ff_stage_target $slot $bt $ob $regs $k $pts $L [expr {$j + 1}]]
       set target $xy
       if {$j + 1 < $k} {
         if {$ff_mono} { set xy [lindex $ff_esc $j] }
@@ -990,7 +1029,8 @@ foreach bt [$ff_blk getBTerms] {
         set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
       }
       if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
-      if {$ff_mono && $xy ne $target} { incr ff_mono_n; set ff_mono_used 1 }
+      if {$ff_mono && $xy ne [ff_rnd_pt $target] && $j + 1 < $k} { incr ff_mono_n; set ff_mono_used 1; ff_mono_note $slot [expr {$j + 1}] $xy }
+      if {$j == 0 && $ff_mono} { ff_ring_leg [ff_lane_ring_pt $bt $fin] $got }
       ff_lane_hop $lprev $got; set lprev $got
       puts $ff_out "[$f getName]\tlst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
       incr ff_lst
@@ -1025,17 +1065,12 @@ foreach bt [$ff_blk getBTerms] {
     if {$q eq "" || [dict exists $ff_done [$q getName]]} { incr ff_st_miss; break }
     set f $q
     dict set ff_done [$f getName] 1
-    if {[llength $regs] >= 2 * $k} {
-      set xy [list [expr {round([lindex $regs [expr {2*$j}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$j+1}]] * $ff_dbu)}]]
-      set xy [ff_lane_xy $slot $bt $ob $xy [expr {double($j) / $k}]]
-    } else {
-      set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
-    }
+    set xy [ff_stage_target $slot $bt $ob $regs $k $pts $L $j]
     set target $xy
     if {$ff_mono} { set xy [lindex $ff_esc [expr {$j - 1}]] }
     set got [ff_put_stage $f $slot $j $nm $xy]
     if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
-    if {$ff_mono && $xy ne $target} { incr ff_mono_n; set ff_mono_used 1 }
+    if {$ff_mono && $xy ne [ff_rnd_pt $target]} { incr ff_mono_n; set ff_mono_used 1; ff_mono_note $slot $j $xy }
     ff_lane_hop $lprev $got; set lprev $got
     puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
     incr ff_st
@@ -1098,7 +1133,8 @@ if {[ff_mono_on]} {
     set worst [format %.1f [dict get $ff_mono_worst $slot]]
     puts "OT_FT_LANE_MONO WARNING slot $slot: $count planned hops exceed 405 um after escape selection (max $worst um)"
   }
-  puts "OT_FT_LANE_MONO on: $ff_mono_n successful station seats used adjusted targets on $ff_mono_bits slot bits (C-STATION-BIT-SCRAMBLE)"
+  set ff_cap [ff_mono_capacity]
+  puts "OT_FT_LANE_MONO on: $ff_mono_n successful station seats used adjusted targets on $ff_mono_bits slot bits; ring->s0 leg max [format %.1f $ff_ring_max] um, $ff_ring_n405 > 405 um; worst channel fill [format %.3f $ff_cap] (C-STATION-BIT-SCRAMBLE)"
 }
 ot_ff_tick ft_stations_and_hop_latches
 close $ff_out

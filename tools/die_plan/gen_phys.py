@@ -490,6 +490,37 @@ def _ft_polarity_local_exports(budgets, tn, kd=None):
     return exports
 
 
+def _ft_lane_mono(budgets, tn):
+    """C-STATION-BIT-SCRAMBLE (STATION-BITORDER 11-27; face_flops.tcl OT_FT_LANE_MONO): chain-planned core exits for ft station
+    banks.  Opt-in three ways, absent = unchanged kits: GEN env OT_FT_LANE_MONO=1 (kit-wave item_env, per die / per item;
+    "0" forces it off), plan-wide budgets.ft_lane_mono, or per type budgets.ft_lane_mono_types (types or unsplit base names)."""
+    env = os.environ.get("OT_FT_LANE_MONO", "").strip()
+    if env in ("0", "1"):
+        return env == "1"
+    if budgets.get("ft_lane_mono"):
+        return True
+    on = list(budgets.get("ft_lane_mono_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
+def _ft_lane_mono_exports(budgets, tn):
+    """config.mk exports of the flag and its two tuning knobs (GEN env, validated; the knobs only travel with the flag)"""
+    if not _ft_lane_mono(budgets, tn):
+        return []
+    out = ["export OT_FT_LANE_MONO = 1"]
+    for key in ("OT_FT_LANE_MONO_RING_UM", "OT_FT_LANE_MONO_FILL"):
+        v = os.environ.get(key, "").strip()
+        if v:
+            try:
+                ok = math.isfinite(float(v)) and float(v) > 0
+            except ValueError:
+                ok = False
+            if not ok:
+                raise ValueError(f"{key} must be a positive number, got {v!r}")
+            out.append(f"export {key} = {v}")
+    return out
+
+
 def _relay_polylines(P, tn):
     """FIX-RELAYPOLY 11-14 (FABLE-REVIEW-COL R-COL-4): opt-in plan partition_types.<t>.relay_polylines = [{group_re, sink,
     polyline_um [[x, y], ...], max_hop_um}], absent = unchanged kits.  One point = the source point of a soft-source head
@@ -8711,6 +8742,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_RELAY_MID_FIT_CHAIN = 1"] if macros and (_relay_mid_fit_chain(P.budgets, tn) or _stage_seat_on(P, tn)) else []),
            *(["export OT_RELAY_MID_STAGGER = 1"] if macros and _relay_mid_stagger(P.budgets, tn) else []),
            *_ft_polarity_local_exports(P.budgets, tn, kd),
+           *_ft_lane_mono_exports(P.budgets, tn),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)

@@ -2222,6 +2222,16 @@ SCHEMA["properties"]["budgets"]["properties"]["ft_polarity_local_sites_by_type"]
         },
     },
 }
+# C-STATION-BIT-SCRAMBLE (STATION-BITORDER 11-27, gen_phys _ft_lane_mono): opt-in chain-planned core exits for ft station banks.
+# P-FLAG-SCHEMA-UNREGISTERED: the flag keys gen_phys already read for ft_polarity_local / relay_mid_fit / relay_mid_stagger /
+# relay_fallback_max_frac were never declared, so PRE refused a plan that set them (test_kit_flag_registry.py keeps this list whole).
+_BT = SCHEMA["properties"]["budgets"]["properties"]
+_TYPE_LIST = {"type": "array", "items": {"type": "string", "minLength": 1}}
+for _k in ("ft_lane_mono", "ft_polarity_local", "relay_mid_fit", "relay_mid_stagger"):
+    _BT[_k] = {"type": "boolean"}
+for _k in ("ft_lane_mono_types", "ft_polarity_local_types", "relay_mid_fit_types", "relay_mid_stagger_types"):
+    _BT[_k] = dict(_TYPE_LIST)
+_BT["relay_fallback_max_frac"] = {"type": ["number", "null"], "exclusiveMinimum": 0}   # null = advisory only
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 # ROUTED-REACH (KV-PV-RIDER 11-18, routed_reach.py): G0 severity of check "routed_reach" (internal_stations hops routed
 # round the hard cores whose LEF OBS reaches partition_signal_max); default warn

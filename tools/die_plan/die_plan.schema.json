@@ -11204,6 +11204,53 @@
       }
      }
     },
+    "ft_lane_mono": {
+     "type": "boolean"
+    },
+    "ft_polarity_local": {
+     "type": "boolean"
+    },
+    "relay_mid_fit": {
+     "type": "boolean"
+    },
+    "relay_mid_stagger": {
+     "type": "boolean"
+    },
+    "ft_lane_mono_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "ft_polarity_local_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "relay_mid_fit_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "relay_mid_stagger_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "relay_fallback_max_frac": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "exclusiveMinimum": 0
+    },
     "r_reach": {
      "enum": [
       "error",
