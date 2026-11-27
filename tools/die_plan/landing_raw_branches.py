@@ -99,6 +99,22 @@ class RawBranches:
         matches = index.get(net, [])
         if len(matches)!=1 or matches[0][1].get('clk')!='clk' or not matches[0][1].get('d'):raise RawBranchError(f"raw Q {net}: exactly one same-clk plain relay required")
         return matches[0]
+    @staticmethod
+    def literal_signature(net, index):
+        """Root and exact cell phases of an unconditional, single-clock raw chain."""
+        phases, seen = [], set()
+        while net in index:
+            if net in seen:
+                return None
+            seen.add(net)
+            try:
+                _, pins = RawBranches.driver(None, net, index)
+            except RawBranchError:
+                return None
+            phases.append(index.modules[net][0])
+            net = pins["d"]
+        return (net, tuple(phases)) if phases else None
+
     def baseline_relay(self,line):
         if not isinstance(line,str) or 'ot_dp_rrelay' not in line or 'u_cland_raw_' in line:raise RawBranchError(f"{self.tn}: baseline relay must be a default landing ot_dp_rrelay line")
         self.baseline.append(line)
@@ -132,6 +148,7 @@ class RawBranches:
                 raise RawBranchError(f"{self.tn}: raw relay module/clock phase changed for {row['original']}")
         # Consumer defaults may be an alias of another equivalent copied branch.
         original_for={r['net']:r['original'] for r in self.rows}
+        local_aliases = {}
         for role,old in self.used.items():
             if not isinstance(old,str) or not old:raise RawBranchError(f"{self.tn}: {role} lacks an original raw equation")
             seen=set()
@@ -141,9 +158,19 @@ class RawBranches:
                 if not a:break
                 old=a.group(1)
             original=original_for.get(old,old)
-            if original!=self.roles[role]['original']:raise RawBranchError(f"{self.tn}: {role} reset phase/equation differs: {original} != {self.roles[role]['original']}")
+            expected = self.roles[role]["original"]
+            if original != expected:
+                # A local copy may be supplied through a different literal trunk
+                # only when both roots and every physical relay phase coincide.
+                actual_chain = self.literal_signature(original, original_index) if role.startswith("local_reset:") else None
+                if actual_chain is None or actual_chain != self.literal_signature(expected, original_index):
+                    raise RawBranchError(f"{self.tn}: {role} reset phase/equation differs: {original} != {expected}")
+                local_aliases[role] = dict(original=original, selected=expected, root=actual_chain[0],
+                                           relay_phases=list(actual_chain[1]))
         report = dict(branches=len(self.names), flops=sum(r["added_flops"] for r in self.rows),
                       consumers=dict(self.roles), status="literal source chains and relay clock phases verified; cold admission still requires actual mechanism proof")
+        if local_aliases:
+            report["same_age_local_raw_aliases"] = local_aliases
         if self.hard_prefixes:
             depth = {}
             for prefix in self.hard_prefixes:

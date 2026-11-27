@@ -2668,7 +2668,9 @@ class Landings:
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
         logic[:] = self._local_resets(tn, key, body, logic)
-        if raw_graph is None:
+        # A branch feeding only a local copy does not replace the existing
+        # ring-reset fanout implementation or any of its physical sites.
+        if raw_graph is None or all(role.startswith("local_reset:") for role in raw_graph.roles):
             self._ring_reset_fan(tn, key, logic, body)
         if raw_graph is not None:
             self.reset_placements[tn]["literal_raw_branches"] = raw_graph.validate(body + "\n" + "\n".join(logic))
@@ -3243,6 +3245,7 @@ class Landings:
                 raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
                 if was is not None:
                     self.__dict__.setdefault("local_reset_rederived", {}).setdefault(key, []).append(dict(name=name, was=was, raw=raw))
+            raw = self._branch_raw(tn, f"local_reset:{name}", raw)
             if not isinstance(raw, str) or not re.search(r"\bot_dp_(?:rrelay(?:_nl)?|head_raw_export_pair)\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 self._collect_err(tn, f"local_reset:{name}", "local", None,      # BIND-ALL-ERRORS: collect, next entry
