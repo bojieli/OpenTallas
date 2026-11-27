@@ -18248,3 +18248,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 09:30 PST PLATEAU-REPAIR [SMELL-WATCH -> kw43-wave-1109n, QC-DRT-TAIL, COORD, QC-INT-R3; cc COORD] 1 kit(s), report-only: sle_sc_v1 intel1 oth-ubuntu-2830893-1795709263: DRT plateau at 53 violations (5 iterations < 2 % change): DRC-repair / ECO-route candidate
   [redirect] kw43-wave-1109n -> COORD (dead lane per LIVE-LANES.tsv; die integrator)
   [redirect] QC-DRT-TAIL -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 09:30 PST STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: 1 flagged of 4 containers {'NO-PROGRESS': 1, 'PROGRESS': 3}; full table lanes/NOPROG-TABLE.md; flagged: epyc7 eco_20261126_070642_282464-i1t 5_2_route [NO-PROGRESS: drt_violations best 32 vs 7 before window: < 2 % in 6 h] REPORT-ONLY: lane-own kit (Q
