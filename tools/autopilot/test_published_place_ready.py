@@ -156,9 +156,11 @@ def test_opted_in_publisher_freezes_real_event_and_distinct_work(tmp_path, monke
 
 
 @pytest.mark.parametrize("route_ok", [False, True])
-@pytest.mark.parametrize("private_mode, floorplan", [(False, False), (True, False), (True, True)])
+@pytest.mark.parametrize("private_mode, floorplan, resumed", [
+    (False, False, False), (True, False, False), (True, True, False), (True, True, True),
+])
 def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneration(
-    tmp_path, monkeypatch, route_ok, private_mode, floorplan
+    tmp_path, monkeypatch, route_ok, private_mode, floorplan, resumed
 ):
     raw = cfg()
     die,item = "qwen_kvsys","kv3_pc"
@@ -183,19 +185,22 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
     monkeypatch.setattr(wave.KRR, "configured", early_reuse_forbidden)
     called=[]
     def check_review(*a,**k):
-        called.append("visual")
+        called.append("actual_visual" if k.get("floorplan_sha256") else "visual")
         assert k["plan_shas"] == {("epyc7",spec["plan"]):PLAN}
         return ""
     monkeypatch.setattr(wave,"plan_visual_refusal",check_review)
     def claim_command(operation, payload):
-        assert operation == ("claim-private" if private_mode else "claim")
+        assert operation == ("claim-floorplan-place" if resumed else "claim-private" if private_mode else "claim")
         assert ("publication" in payload) is not private_mode
+        assert ("floorplan" in payload) is resumed
         return "prepared_claim_only"
     monkeypatch.setattr(ready,"producer_command",claim_command)
     monkeypatch.setattr(wave,"route_preflight_on",lambda:True)
     monkeypatch.setattr(wave,"route_preflight_cmd",lambda *a,**k:"real_route_preflight")
     monkeypatch.setattr(wave,"src_skew_check",lambda *a:"")
     monkeypatch.setattr(wave,"resume_prepare",lambda *a:"")
+    monkeypatch.setattr(wave,"private_config_text",lambda *a:json.dumps(raw))
+    monkeypatch.setattr(wave,"reviewed_floorplan_place_allowed",lambda *a:True)
     class EnteredPlace(Exception):
         pass
     def fake_run(argv,**kw):
@@ -223,7 +228,12 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
             assert "[3456]_*.odb" in argv
             return subprocess.CompletedProcess(argv,0,stdout=f"{'f' * 64}  checkpoint\n")
         if "run_kit.sh" in argv and " place " in argv:
-            called.append("ordinary_place")
+            if resumed:
+                called.append("resume_place")
+                for item in ("--strict-host", "--no-spill", "OT_RESUME=0", "kit_resume.py", "kit_env_provenance.json"):
+                    assert item in argv
+            else:
+                called.append("ordinary_place")
             raise EnteredPlace()
         raise AssertionError(f"unexpected stage {argv[:180]}")
     monkeypatch.setattr(wave.subprocess,"run",fake_run)
@@ -231,7 +241,13 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
     if not private_mode:
         authority["verdict"] = "PASS"
     proof = {"private_prepared" if private_mode else "publication": authority, "ref": {"sha256": "c" * 64}}
-    if route_ok and floorplan:
+    if resumed:
+        proof["floorplan_resume"] = {"sha256": "f" * 64, "attempt": "/prior"}
+    if route_ok and resumed:
+        with pytest.raises(EnteredPlace):
+            wave._run_item(spec_path, prepared=proof)
+        assert called == ["visual", "actual_visual", "claim", "route_preflight", "resume_place"]
+    elif route_ok and floorplan:
         assert wave._run_item(spec_path, prepared=proof) == 0
         assert called == ["visual", "claim", "route_preflight", "env_provenance", "stock_floorplan", "native_checkpoint"]
         result = json.loads((folder / "result.json").read_bytes())
@@ -243,7 +259,8 @@ def test_prepared_pipeline_calls_route_preflight_after_claim_without_regeneratio
         assert called == ["visual","claim","route_preflight","sync_hub","ordinary_place"]
     else:
         assert wave._run_item(spec_path,prepared=proof) == 1
-        assert called == ["visual","claim","route_preflight"]
+        expected = ["visual", "actual_visual"] if resumed else ["visual"]
+        assert called == expected + ["claim", "route_preflight"]
         assert json.loads((folder/"result.json").read_text())["stage"] == "preflight"
 
 
@@ -262,6 +279,58 @@ def test_only_exact_current_floorplan_permit_honors_the_place_hold(tmp_path):
     assert not wave.reviewed_floorplan_allowed(config, spec, "1" * 64)
     die["event"] = "later_event"
     assert not wave.reviewed_floorplan_allowed(config, spec, PLAN)
+
+
+def test_one_retained_floorplan_claim_checks_content_and_checkpoint(tmp_path):
+    kit, spec, result, capture = producer_fixture(tmp_path)
+    spec.update(src_manifest="require", launch_plan_review_required=True, place_spill=False,
+                roam_hosts=["epyc7"], place_spill_hosts=["epyc7"], hosts=["epyc7"],
+                reviewed_station_stop="floorplan", reviewed_station_prepare={"sha256": "c" * 64})
+    origin = tmp_path / "dry" / "spec.json"
+    put(origin, spec)
+    capture["form"] = review.request(spec, plan_sha=PLAN)["form_sha256"]
+    put(Path(capture["preflight"]), {"kit": str(kit), "verdict": "PASS", "macro_geometry": {"verdict": "PASS"}})
+    ref = ready.producer("capture", capture)
+    raw_source = {"manifest_hash": MANIFEST, "host": "epyc7", "from": "verify", "mode": "require"}
+    put(origin.parent / "result.json", dict(result, src_manifest=raw_source, published_place_ready=ref))
+    prior = tmp_path / "private_specs/REVIEWED-STATION-PLACE" / ("s81_" + ref["sha256"])
+    put(prior / "spec.json", spec)
+    claim = dict(spec=spec, ref=ref, review={"verdict": "GOOD", "form": capture["form"]}, attempt=str(prior))
+    assert ready.producer("claim-private", claim)["kit"] == str(kit)
+    work, _ = ready.path_layout(spec)
+    (work / ".reviewed_station_floorplan.done").touch()
+    odb = ready.floorplan_path(spec)
+    sha = put(odb, {"simulated": "native floorplan"})
+    put(prior / "result.json", dict(stage="floorplan", goal="floorplan", verdict="PASS", ran_on="epyc7",
+                                    evidence=f"epyc7:{odb}", floorplan_sha256=sha, published_place_ready=ref))
+    _, handoff = ready.read_private_floorplan(origin, tmp_path)
+    assert handoff["floorplan_resume"] == {"attempt": str(prior), "sha256": sha}
+    design = kit / "rtl/exact.v"
+    design.touch()  # The runner's ownership change invalidates stats and preserves content.
+    request = dict(claim, attempt="place-run", floorplan=handoff["floorplan_resume"])
+    assert ready.producer("claim-floorplan-place", request)["kit"] == str(kit)
+    with pytest.raises(ValueError, match="already claimed"):
+        ready.producer("claim-floorplan-place", dict(request, attempt="duplicate"))
+    design.write_text("module changed; endmodule\n")
+    with pytest.raises(ValueError, match="prepared input changed"):
+        ready.producer("claim-floorplan-place", request)
+    design.write_text("module exact; endmodule\n")
+    (odb.parent / "3_place.odb").touch()
+    with pytest.raises(ValueError, match="stage boundary changed"):
+        ready.producer("claim-floorplan-place", request)
+
+
+def test_checkpoint_review_cannot_authorize_another_floorplan(tmp_path):
+    _, spec, _, _ = producer_fixture(tmp_path)
+    spec.update(reviewed_station_stop="floorplan", reviewed_station_prepare={"sha256": "c" * 64})
+    checkpoint = "f" * 64
+    form = review.request(spec, plan_sha=PLAN, floorplan_sha256=checkpoint)["form_sha256"]
+    assert form != review.request(spec, plan_sha=PLAN)["form_sha256"]
+    permit = dict(event=spec["event"], form_sha256=form, producer=spec["gen_host"], floorplan_sha256=checkpoint)
+    config = {"dies": {spec["die"]: {"event": spec["event"],
+                                     "reviewed_station_floorplan_place": {spec["item"]: permit}}}}
+    assert wave.reviewed_floorplan_place_allowed(config, spec, PLAN, checkpoint)
+    assert not wave.reviewed_floorplan_place_allowed(config, spec, PLAN, "0" * 64)
 
 
 def test_a_changed_prepared_kit_keeps_fresh_preparation_available(tmp_path):

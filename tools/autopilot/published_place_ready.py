@@ -30,6 +30,11 @@ def generation_identity(spec):
     return digest({k: v for k, v in spec.items() if k not in SCHEDULING_ONLY})
 
 
+def file_digest(path):
+    with path.open("rb") as handle:
+        return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
 def signature(path):
     owner = path.lstat()
     if not stat.S_ISREG(owner.st_mode):
@@ -98,7 +103,7 @@ def verify(receipt, spec, accepted_publication, current_review):
     return _verify_prepared(receipt, spec, current_review)
 
 
-def _verify_prepared(receipt, spec, current_review):
+def _verify_prepared(receipt, spec, current_review, *, after_floorplan=False):
     root, kit = path_layout(spec)
     if current_review != {"verdict": "GOOD", "form": receipt["form"]}:
         raise ValueError("current committed review does not authorize this source form")
@@ -106,13 +111,28 @@ def _verify_prepared(receipt, spec, current_review):
             or receipt["producer"] != spec["gen_host"] or receipt["work"] != str(root) or receipt["kit"] != str(kit)
             or any(receipt["stages"].get(stage) != 0 for stage in REQUIRED)):
         raise ValueError("prepared recipe, location or producer differs")
+    manifest = kit / INPUTS
+    raw = manifest.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != receipt["inputs_sha256"]:
+        raise ValueError("stock kit input inventory changed")
+    # The floorplan runner can change file ownership timestamps. The original
+    # stock input inventory still holds every generated file's content digest.
+    native = {str((kit / k).relative_to(root)): v for k, v in json.loads(raw)["files"].items()} if after_floorplan else {}
+    if after_floorplan and not set(native) <= receipt["files"].keys():
+        raise ValueError("floorplan input inventory is outside the original claim")
     for rel, saved in receipt["files"].items():
         path = root / rel
-        if Path(rel).is_absolute() or ".." in Path(rel).parts or path.resolve() != path or signature(path) != saved:
+        if Path(rel).is_absolute() or ".." in Path(rel).parts or path.resolve() != path:
             raise ValueError(f"prepared input changed: {rel}")
-    manifest = kit / INPUTS
-    if hashlib.sha256(manifest.read_bytes()).hexdigest() != receipt["inputs_sha256"]:
-        raise ValueError("stock kit input inventory changed")
+        current = signature(path)
+        if after_floorplan and rel == str(manifest.relative_to(root)):
+            continue
+        if rel in native:
+            unchanged = file_digest(path) == native[rel]
+        else:
+            unchanged = current == saved
+        if not unchanged:
+            raise ValueError(f"prepared input changed: {rel}")
     return kit
 
 
@@ -122,11 +142,11 @@ def claim(receipt, spec, accepted_publication, current_review, attempt):
     return _claim(receipt, kit, attempt)
 
 
-def _claim(receipt, kit, attempt):
+def _claim(receipt, kit, attempt, *, filename=".published_place_claim.json"):
     if not attempt or not isinstance(attempt, str):
         raise ValueError("normal controller attempt identity is required")
     work = Path(receipt["work"])
-    path = work / ".published_place_claim.json"
+    path = work / filename
     with tempfile.NamedTemporaryFile("w", dir=work, delete=False) as handle:
         staged = Path(handle.name)
         json.dump({"attempt": attempt, "receipt_sha256": digest(receipt), "kit": str(kit)}, handle, sort_keys=True)
@@ -185,6 +205,50 @@ def claim_private(receipt, spec, current_review, attempt):
     if preflight.get("macro_geometry", {}).get("verdict") != "PASS":
         raise ValueError("reviewed private kit has known macro geometry findings")
     return _claim(receipt, kit, attempt)
+
+
+def floorplan_path(spec):
+    _, kit = path_layout(spec)
+    return kit / "run/results/asap7" / ("dp_" + spec["item"]) / "base/2_floorplan.odb"
+
+
+def read_private_floorplan(spec_path, ap_dir):
+    """Resolve the current stock completed floorplan controller and its original dry proof."""
+    raw, prepared = read_private_prepared(spec_path)
+    spec = json.loads(raw)
+    ref = prepared["ref"]
+    attempt = Path(ap_dir) / "private_specs/REVIEWED-STATION-PLACE" / (spec["die"] + "_" + ref["sha256"])
+    if (attempt / "spec.json").read_bytes() != raw:
+        raise ValueError("the retained floorplan controller spec differs")
+    result = json.loads((attempt / "result.json").read_bytes())
+    odb = floorplan_path(spec)
+    sha = result.get("floorplan_sha256", "")
+    if (spec.get("reviewed_station_stop") != "floorplan" or result.get("stage") != "floorplan"
+            or result.get("goal") != "floorplan" or result.get("verdict") != "PASS"
+            or result.get("ran_on") != spec["gen_host"] or result.get("evidence") != f"{spec['gen_host']}:{odb}"
+            or result.get("published_place_ready") != ref or not re.fullmatch(r"[0-9a-f]{64}", sha)):
+        raise ValueError("exact stock floorplan completion required")
+    prepared["floorplan_resume"] = {"attempt": str(attempt.resolve()), "sha256": sha}
+    return raw, prepared
+
+
+def claim_floorplan_place(receipt, spec, current_review, attempt, floorplan):
+    _private_spec(spec)
+    if (spec.get("reviewed_station_stop") != "floorplan"
+            or receipt["manifest"] != spec["src_manifest_hash"]
+            or receipt["plan"] != spec["publish_place_prepare"]["plan_sha256"]):
+        raise ValueError("reviewed floorplan source identity changed")
+    kit = _verify_prepared(receipt, spec, current_review, after_floorplan=True)
+    root = Path(receipt["work"])
+    prior = json.loads((root / ".published_place_claim.json").read_bytes())
+    if (prior != {"attempt": floorplan["attempt"], "receipt_sha256": digest(receipt), "kit": str(kit)}
+            or not (root / ".reviewed_station_floorplan.done").is_file()):
+        raise ValueError("the exact original producer did not complete floorplan")
+    odb = floorplan_path(spec)
+    if (odb.resolve() != odb or signature(odb)[2] <= 0 or file_digest(odb) != floorplan["sha256"]
+            or any(odb.parent.glob("[3456]_*.odb"))):
+        raise ValueError("the retained floorplan checkpoint or stage boundary changed")
+    return _claim(receipt, kit, attempt, filename=".reviewed_station_floorplan_place.claim")
 
 
 def read_publication(coord, spec_path, publication, current):
@@ -259,7 +323,7 @@ def producer(operation, payload):
         encoded = (json.dumps(receipt, sort_keys=True) + "\n").encode()
         write_once(target, encoded)
         return {"path": str(target), "sha256": hashlib.sha256(encoded).hexdigest(), "kit": str(kit)}
-    if operation not in ("claim", "claim-private"):
+    if operation not in ("claim", "claim-private", "claim-floorplan-place"):
         raise ValueError("unknown producer operation")
     ref = payload["ref"]
     if target != Path(ref["path"]) or target.resolve() != target:
@@ -270,6 +334,8 @@ def producer(operation, payload):
     receipt = json.loads(blob)
     if operation == "claim-private":
         resolved = claim_private(receipt, spec, payload["review"], payload["attempt"])
+    elif operation == "claim-floorplan-place":
+        resolved = claim_floorplan_place(receipt, spec, payload["review"], payload["attempt"], payload["floorplan"])
     else:
         resolved = claim(receipt, spec, payload["publication"], payload["review"], payload["attempt"])
     return {"path": str(target), "sha256": ref["sha256"], "kit": str(resolved)}

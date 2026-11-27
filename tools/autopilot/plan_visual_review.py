@@ -77,7 +77,7 @@ def file_sha(path, host=None, image=False):
     return value[0]
 
 
-def request(spec, plan_sha="", producer=None, overlay_sha=None):
+def request(spec, plan_sha="", producer=None, overlay_sha=None, floorplan_sha256=""):
     """Keep attempt directories, placement hosts, and route-only options out of the key."""
     source_manifest = str(spec.get("src_manifest_hash") or "")
     if spec.get("private") and not SHA.fullmatch(source_manifest):
@@ -118,6 +118,11 @@ def request(spec, plan_sha="", producer=None, overlay_sha=None):
         recipe["reviewed_station_tools"] = spec["tools_sha"]
         if spec.get("reviewed_station_stop"):
             recipe["reviewed_station_stop"] = spec["reviewed_station_stop"]
+    if floorplan_sha256:
+        if (spec.get("reviewed_station_stop") != "floorplan" or not spec.get("reviewed_station_prepare")
+                or not SHA.fullmatch(floorplan_sha256)):
+            raise ValueError("expected an exact reviewed station floorplan checkpoint")
+        recipe["place_after_floorplan_sha256"] = floorplan_sha256
     form = {"plan_sha256": plan_sha, "overlay_sha256": overlay_sha, "recipe": recipe,
             "source": source_manifest or spec.get("src_sha") or ""}
     fingerprint = hashlib.sha256(json.dumps(form, sort_keys=True, separators=(",", ":")).encode()).hexdigest()

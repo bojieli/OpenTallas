@@ -11334,7 +11334,7 @@ def private_plan_visual_policy(sp):
     return ""
 
 
-def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None):
+def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None, floorplan_sha256=""):
     """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
     if not PVR.applies(sp):
         return ""
@@ -11344,7 +11344,7 @@ def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=Tru
         if plan_shas is not None and plan_key not in plan_shas:
             plan_shas[plan_key] = PVR.file_sha(sp["plan"], producer)
         plan_sha = plan_shas[plan_key] if plan_shas is not None else ""
-        candidate = PVR.request(sp, plan_sha=plan_sha, producer=producer)
+        candidate = PVR.request(sp, plan_sha=plan_sha, producer=producer, floorplan_sha256=floorplan_sha256)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as e:
         return f"WAIT-PLAN-VISUAL: cannot resolve exact plan, source or overlay on {sp.get('gen_host')}: {e}"
     request_path = Path(out) / "plan_visual_request.json"
@@ -11507,18 +11507,38 @@ def reviewed_floorplan_allowed(cfg, spec, plan_sha):
     return permit == {"event": die_cfg["event"], "form_sha256": form, "producer": spec["gen_host"]}
 
 
-def private_prepared_consumer(spec_path):
-    """Continue one unchanged named private dry attempt using its reviewed stop."""
+def reviewed_floorplan_place_allowed(cfg, spec, plan_sha, checkpoint):
+    """Require an exact current place permit for this reviewed floorplan only."""
+    die_cfg = cfg["dies"][spec["die"]]
+    if not (spec.get("reviewed_station_stop") == "floorplan" and spec.get("reviewed_station_prepare")
+            and spec.get("event") == die_cfg.get("event")):
+        return False
+    permit = (die_cfg.get("reviewed_station_floorplan_place") or {}).get(spec["item"])
+    if not permit:
+        return False
+    form = PVR.request(spec, plan_sha=plan_sha, producer=spec["gen_host"],
+                       floorplan_sha256=checkpoint)["form_sha256"]
+    return permit == {"event": die_cfg["event"], "form_sha256": form, "producer": spec["gen_host"],
+                      "floorplan_sha256": checkpoint}
+
+
+def private_prepared_consumer(spec_path, from_floorplan=False):
+    """Continue one unchanged named private attempt at its separately reviewed boundary."""
     import autopilot as AP
 
-    raw, prepared = PPR.read_private_prepared(spec_path)
+    raw, prepared = (PPR.read_private_floorplan(spec_path, AP_DIR) if from_floorplan
+                     else PPR.read_private_prepared(spec_path))
     original = json.loads(raw)
     cfg = load_config(private_config_text(AP, original.get("hub")))
     die, item, host = original["die"], original["item"], original["gen_host"]
     why = private_spec_stale(original, cfg=cfg)
     if why:
         raise ValueError(why)
-    if launch_held(cfg, original):
+    if from_floorplan:
+        if not reviewed_floorplan_place_allowed(cfg, original, prepared["private_prepared"]["plan"],
+                                                prepared["floorplan_resume"]["sha256"]):
+            raise ValueError("the exact committed floorplan-to-place permit is required")
+    elif launch_held(cfg, original):
         if not reviewed_floorplan_allowed(cfg, original, prepared["private_prepared"]["plan"]):
             raise ValueError("the committed place hold still applies to this partition")
         prepared["held_floorplan"] = True
@@ -11531,24 +11551,26 @@ def private_prepared_consumer(spec_path):
         raise ValueError("the exact private producer is draining")
     if live_attempt_elsewhere(load_state(AP_DIR), die, item, None):
         raise ValueError("an ordinary attempt already owns this partition")
-    out = AP_DIR / "private_specs" / "REVIEWED-STATION-PLACE" / (die + "_" + prepared["ref"]["sha256"])
+    lane = "REVIEWED-STATION-FLOORPLAN-PLACE" if from_floorplan else "REVIEWED-STATION-PLACE"
+    out = AP_DIR / "private_specs" / lane / (die + "_" + prepared["ref"]["sha256"])
     out.mkdir(parents=True, exist_ok=True)
     spec = out / "spec.json"
     PPR.write_once(spec, raw)
     return spec, prepared
 
 
-def run_item(spec_path, resume_reviewed=False, from_publication=None, from_private_prepared=False):
+def run_item(spec_path, resume_reviewed=False, from_publication=None, from_private_prepared=False,
+             from_private_floorplan=False):
     """Keep one standard private controller per exact spec directory."""
     prepared = None
-    if from_publication or from_private_prepared:
+    if from_publication or from_private_prepared or from_private_floorplan:
         try:
-            if from_private_prepared:
-                spec_path, prepared = private_prepared_consumer(spec_path)
+            if from_private_prepared or from_private_floorplan:
+                spec_path, prepared = private_prepared_consumer(spec_path, from_floorplan=from_private_floorplan)
             else:
                 spec_path, prepared = publication_place_consumer(spec_path, from_publication)
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
-            label = "KW_PRIVATE_PREPARED_PLACE" if from_private_prepared else "KW_PUBLISHED_PLACE"
+            label = "KW_PUBLISHED_PLACE" if from_publication else "KW_PRIVATE_PREPARED_PLACE"
             print(f"{label} refused: {exc}", flush=True)
             return 2
     out = Path(spec_path).absolute().parent
@@ -11565,7 +11587,7 @@ def run_item(spec_path, resume_reviewed=False, from_publication=None, from_priva
             return 75
         prior = PPV.load(out / "result.json")
         if prepared:
-            stop = PPV.load(Path(spec_path)).get("reviewed_station_stop") or "place"
+            stop = "place" if from_private_floorplan else (PPV.load(Path(spec_path)).get("reviewed_station_stop") or "place")
             if prior.get("verdict") == "PASS" and prior.get("stage") == stop:
                 return 0
             try:
@@ -12455,6 +12477,31 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         PPV.write(out / "result.json", res)
         return 0
 
+    def place_from_reviewed_floorplan(resume):
+        """Reuse the same-host floorplan and collect the normal placement geometry."""
+        import autopilot as AP
+
+        current_cfg = load_config(private_config_text(AP, hub))
+        if not reviewed_floorplan_place_allowed(current_cfg, sp, prepared["private_prepared"]["plan"],
+                                                resume["sha256"]):
+            return fail("place", "exact committed floorplan-to-place permit changed", f"{G}:{K}")
+        memory, threads = sp["place_mem_gb"], sp["place_threads"]
+        runtime = f"{W}/gen/run_kit.sh"
+        marker = f"{W}/.reviewed_station_floorplan_place.started"
+        envoy = q(f"{K}/kit_env_provenance.json")
+        check = ("import json,sys;r=json.load(open(sys.argv[1]));"
+                 "sys.exit(0 if r.get('start')=='place' and r.get('auto') is True "
+                 "and r.get('reused_steps')==['synth','floorplan'] and not r.get('changed') else 1)")
+        resume_cmd = shlex.join(["python3", "-I", f"{K}/kit_resume.py", "auto", K, "place"])
+        guard = shlex.join(["python3", "-I", "-c", check, f"{K}/resume.json"])
+        runner = shlex.join(["env", "OT_RESUME=0", "bash", runtime, K, "place", str(memory), str(threads)])
+        command = f"test -s {envoy} && {resume_cmd} && {guard} && mkdir {q(marker)} && {runner}"
+        argv = otrun(memory, threads, K, command, [G], roam=False, extra_inputs=(runtime,))
+        argv[1:1] = place_dispatch_limits(sp, G, hub, False)
+        res["floorplan_sha256"] = resume["sha256"]
+        rc, txt = run("place", argv)
+        return after_place(K, rc, txt)
+
     if prepared:
         # The producer is the only holder of these generated absolute paths.
         # Claim before touching W. Never run fresh-gen cleanup on this branch.
@@ -12471,6 +12518,13 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         form = PVR.request(sp, plan_sha=plan_sha, producer=G)["form_sha256"]
         payload = dict(spec=source_spec, ref=prepared["ref"], review={"verdict": "GOOD", "form": form}, attempt=str(out))
         operation = "claim-private" if private_proof else "claim"
+        floorplan = prepared.get("floorplan_resume")
+        if floorplan:
+            review = plan_visual_refusal(sp, out, hub, plan_shas=plan_shas, floorplan_sha256=floorplan["sha256"])
+            if review:
+                return fail("plan_visual", review)
+            operation = "claim-floorplan-place"
+            payload["floorplan"] = floorplan
         if not private_proof:
             payload["publication"] = authority
         rc, txt = run("published_place_claim", remote(PPR.producer_command(operation, payload)), idempotent=True)
@@ -12482,6 +12536,8 @@ def _run_item(spec_path, resume_reviewed=False, prepared=None):
         refused = route_preflight(None, False, strict=True)
         if refused is not None:
             return refused
+        if floorplan:
+            return place_from_reviewed_floorplan(floorplan)
         if station_stop == "floorplan":
             return floorplan_prepared_kit()
         return place_prepared_kit(None, False)
@@ -23565,6 +23621,8 @@ def main(argv=None):
     r.add_argument("--from-publication", help="resume a prepared publication spec from its canonical PASS record")
     r.add_argument("--from-private-prepared", action="store_true",
                    help="continue a completed same-host reviewed station spec to its locked private stop")
+    r.add_argument("--from-private-floorplan", action="store_true",
+                   help="place one independently reviewed exact private floorplan in the original kit")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
@@ -23681,9 +23739,8 @@ def main(argv=None):
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
-            prepared = bool(a.from_publication or a.from_private_prepared)
-            if ((a.resume_reviewed and a.goal) or (prepared and (a.goal or a.resume_reviewed))
-                    or (a.from_publication and a.from_private_prepared)):
+            prepared = sum(map(bool, (a.from_publication, a.from_private_prepared, a.from_private_floorplan)))
+            if ((a.resume_reviewed and a.goal) or (prepared and (a.goal or a.resume_reviewed)) or prepared > 1):
                 print("KW_PRIVATE_VISUAL refused: the prepared or held goal cannot be overridden", flush=True)
                 return 2
             RUN_ITEM_GOAL = a.goal
@@ -23695,6 +23752,8 @@ def main(argv=None):
                 argv += ["--from-publication", a.from_publication]
             if a.from_private_prepared:
                 argv.append("--from-private-prepared")
+            if a.from_private_floorplan:
+                argv.append("--from-private-floorplan")
             runitem_reexec(a.spec, argv)
             if drv != Path(__file__).resolve():
                 print(f"KW_DRIVER_REEXEC {Path(__file__).resolve()} -> {drv} (private run-item drives from rt/current; result tools stay pinned)", flush=True)
@@ -23702,10 +23761,11 @@ def main(argv=None):
                 os.execvp(argv[0], argv)
             if prepared:
                 return run_item(a.spec, from_publication=a.from_publication,
-                                from_private_prepared=a.from_private_prepared)
+                                from_private_prepared=a.from_private_prepared,
+                                from_private_floorplan=a.from_private_floorplan)
             return run_item(a.spec, resume_reviewed=True) if a.resume_reviewed else run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
-            if a.from_publication or a.from_private_prepared:
+            if a.from_publication or a.from_private_prepared or a.from_private_floorplan:
                 raise  # The publisher paths are immutable evidence, not this attempt's result.
             out = Path(a.spec).parent / "result.json"
             out.write_text(json.dumps({"verdict": "FAIL", "stage": "pipeline", "tail": f"Traceback (most recent call "
