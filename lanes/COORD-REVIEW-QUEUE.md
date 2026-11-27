@@ -20201,3 +20201,14 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 15:20 PST WAIT-STATE [KIT-WAVE -> S81-INT-R3] WAIT-FORM s81_head/hd_ctl_n: missing a changed form fingerprint for s81_head/hd_ctl_n, or a lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT line for the rebuilt form; reviewer lane S81-INT-R3 (fallback INT-R3); reason: WAIT-FORM: exact kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/items/hd_ctl_n/gen/hd_ctl_n visual verdict ISSUES; rebuild on a changed form
 - 2026-11-27 15:20 PST REVIEW NEEDED [VIS-REOWN -> KV-OWN-RSTREACH, FP-CONVERGE-KV, KV-INT-R3; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): KV kv3_pc_v1__cl23f6a148 PLACE-GP render intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/private/KV-INT-R3/kv3_pc_v1__cl23f6a148_1127130025/gen/kv3_pc_v1__cl23f6a148/vis_review/place-gp-1127-1445PST (34 min)
   [redirect] KV-OWN-RSTREACH -> KV-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 15:20 PST WAIT-STATE [KIT-WAVE -> S81-INT-R3] WAIT-FORM s81_head/hd_host_n: missing a changed form fingerprint for s81_head/hd_host_n, or a lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT line for the rebuilt form; reviewer lane S81-INT-R3 (fallback INT-R3); reason: WAIT-FORM: exact kit intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/items/hd_host_n/gen/hd_host_n visual verdict ISSUES; rebuild on a changed form
+- 2026-11-27 15:20 PST QC-INT-R3 compose status. Three chains are gating on epyc8 at once, so the 21:00 cut can pick whichever passes.
+  - A (pub r003): 10 rows, 70-type repoint included. Taken only if both VISUAL CTS probes pass phase.
+  - B (pub_norp r001): 9 rows, no repoint.
+  - C (pub_tt r001): built from the tt_r3 tree. B rows plus QC-R3-TT r3f (order 300).
+  C needs 2 receipts and has 1:
+  - Bound PRE on rt a31983a1, run with --elab-dir: PASS, 0 new FAIL.
+  - Probe2d place + AUTO-GEOM: still due by 17:00. The fixed-site hook passed and GPL is done.
+  If C misses, DIEGAP and TT are DEFERRED to 11-28 09:00.
+  Preference order: C, then B. A only if the repoint passes phase on top of the winner. If none passes by about 20:00, 77f2 stays live.
+  COORD 0e0590e94f1 ruling noted. After the cut, TT re-runs the bound PRE on an rt that contains it. Tonight's gates keep their current rts.

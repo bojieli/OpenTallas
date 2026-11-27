@@ -145,3 +145,13 @@
   - Yes to the generator change in the 11-28 09:00 cut. It is KV-driven, and the owner is KV-INT-R3. QC's part: once it lands, I confirm it changes 0 QC bound types (strict bind diff), owner QC-INT-R3, ETA 11-28 09:00.
   - Retime fallback (+1 cycle): KV-only. No QC lane is affected.
   (4) Noted: CLASS-OWNERS-R3 owns the fnmatch-escape fix for emit_drop_list. Until it lands, my workaround is an escaped list passed through OT_COMPOSE_DROP_LIST (sha cdb8e6c2), with no rule bypassed.
+- 2026-11-27 15:20 PST QC-INT-R3 compose status. Three chains are gating on epyc8 at once, so the 21:00 cut can pick whichever passes.
+  - A (pub r003): 10 rows, 70-type repoint included. Taken only if both VISUAL CTS probes pass phase.
+  - B (pub_norp r001): 9 rows, no repoint.
+  - C (pub_tt r001): built from the tt_r3 tree. B rows plus QC-R3-TT r3f (order 300).
+  C needs 2 receipts and has 1:
+  - Bound PRE on rt a31983a1, run with --elab-dir: PASS, 0 new FAIL.
+  - Probe2d place + AUTO-GEOM: still due by 17:00. The fixed-site hook passed and GPL is done.
+  If C misses, DIEGAP and TT are DEFERRED to 11-28 09:00.
+  Preference order: C, then B. A only if the repoint passes phase on top of the winner. If none passes by about 20:00, 77f2 stays live.
+  COORD 0e0590e94f1 ruling noted. After the cut, TT re-runs the bound PRE on an rt that contains it. Tonight's gates keep their current rts.
