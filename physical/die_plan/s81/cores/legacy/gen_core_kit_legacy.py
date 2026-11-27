@@ -215,6 +215,42 @@ def pg_top_pdn(pdn, info, pg_top=None, obs_max=None):
     return pdn, info
 
 
+def pg_internal_bridge_pdn(pdn, info, bridge=None, obs_max=None):
+    """Tie the internal M5 grid together while keeping its M5 PG ports.
+
+    The M6 rows are half a stripe period from the standard parent M6
+    rows. Keep detailed M6 OBS for the bridge and land the exported
+    M5 ports through the intervening parent rows.
+    """
+    if bridge is None:
+        return pdn, info
+    if bridge != "M6":
+        raise ValueError(f"unsupported pg_internal_bridge {bridge!r}; supported M6")
+    if not isinstance(obs_max, str) or not re.fullmatch(r"M[6-9]", obs_max):
+        raise ValueError(f"M6 internal PG requires declared obs_max>=M6, found {obs_max!r}")
+    if "-pins {M5}" not in pdn or "-layer {M6}" in pdn:
+        raise ValueError("pg_internal_bridge requires exported M5 and no existing M6 PG strips")
+
+    pdn += (
+        "# Internal M6 PG bridge leaves the normal parent M6 stripe rows open.\n"
+        "add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {4.128}\n"
+        "add_pdn_connect -grid {top} -layers {M5 M6}\n"
+    )
+    info = dict(info or {})
+    info.update(
+        schema="opentallas.core_pg_interface.v1",
+        exported_pg_pin_layer="M5",
+        added_pg_layers=["M6"],
+        added_signal_routing_layers=[],
+        declared_parent_obs_max=obs_max,
+        abstract_obstruction_min_layer="M6",
+        parent_landing_layer="M6",
+        parent_adoption="requires detailed M6 OBS and explicit M5-to-M6 parent PG landing",
+        m6_stripe_um=dict(width=.288, spacing=.096, pitch=4.32, offset=4.128),
+    )
+    return pdn, info
+
+
 FACE_GUARD_CORE = r'''"""kits_repin wrapper of tools/die_plan/face_guard.py (copied beside it, unmodified): guard the Yosys netlist with this
 core's clock / reset skip set; planned bits from pins.json (scalar ports by bare name).
     python3 -I face_guard_core.py NETLIST TOP SKIP_RE pins.json OUT.json      exit 1 = FAIL"""
@@ -408,6 +444,26 @@ REG_FANOUT_STEP = ("if [ \\$rc = 0 ] && [ -f /work/reg_fanout_gate.py ]; then py
                    "if [ \\$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (WF-1 11-14 OWNER: no procedural gates; register > 64 data loads or NOT RUN, "
                    "see reg_fanout.json; synthesis / placement buffering handles the fanout; not a gate)'; rc=0; fi; fi; ")
 
+INTERNAL_PG_ABSTRACT = r"""#!/bin/bash
+set -euo pipefail
+shopt -s nullglob
+top=$1
+views=(/work/run/results/asap7/*/base/"$top".lef)
+databases=(/work/run/results/asap7/*/base/6_final.odb)
+if [[ ${#views[@]} != 1 || ${#databases[@]} != 1 ]]; then
+    echo "Expected one routed database and one abstract for $top" >&2
+    exit 1
+fi
+view=${views[0]}
+database=${databases[0]}
+printf 'read_db %s\nwrite_abstract_lef -bloat_factor 0 %s\n' \
+    "$database" /work/internal_pg_abstract_b0.lef > /work/internal_pg_abstract.tcl
+openroad -no_init -exit /work/internal_pg_abstract.tcl
+python3 -I /work/abstract_exact.py form --base "$view" --detail /work/internal_pg_abstract_b0.lef \
+    --out "$view.exact" --layers M6 --receipt /work/abstract_exact_receipt.json
+mv "$view.exact" "$view"
+"""
+
 
 def land_slot_contract(rec,buses_in):
     """Validate declared slots and retain hierarchy types for the mapped ODB guard.
@@ -444,7 +500,7 @@ LECA_START = '# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place
 LECA_FINISH = '[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1 "$NAME" "$GOAL")\n'
 
 
-def run_kit(modern, lint_checkpoint=False):
+def run_kit(modern, lint_checkpoint=False, pg_internal_bridge=False):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
     t = RUN_KIT
@@ -483,6 +539,14 @@ def run_kit(modern, lint_checkpoint=False):
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
         t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",
                       "2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; ", 1)
+    if pg_internal_bridge:
+        after_abstract = r"  if [ \$rc = 0 ] && [ $GOAL = place ]"
+        publish_pg = (
+            r"  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then "
+            r"bash /work/internal_pg_abstract.sh $TOP > /work/internal_pg_abstract.log 2>&1; rc=\$?; fi; " + "\\\n"
+        )
+        assert t.count(after_abstract) == 1
+        t = t.replace(after_abstract, publish_pg + after_abstract, 1)
     assert "@" not in t.split("bash -lc", 1)[1].split("> \"$K/run_$GOAL.log\"", 1)[0], "RUN_KIT placeholder left"
     return t
 
@@ -2273,6 +2337,9 @@ def main():
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
     pdn_text, pg_interface = macro_pdn(mplace, kd / "macros", hc.get("obs_max"))
     pdn_text, pg_interface = pg_top_pdn(pdn_text, pg_interface, rec.get("pg_top"), hc.get("obs_max"))
+    pdn_text, pg_interface = pg_internal_bridge_pdn(
+        pdn_text, pg_interface, rec.get("pg_internal_bridge"), hc.get("obs_max")
+    )
     (kd / "pdn.tcl").write_text(pdn_text)
     if pg_interface is not None:
         (kd / "pg_interface.json").write_text(json.dumps(pg_interface, indent=1) + "\n")
@@ -2288,7 +2355,14 @@ def main():
     (kd / "post_grt_drv.tcl").write_text(POST_GRT + "".join(rec.get("post_grt_extra", [])))
     grt_post_drv = ["/work/post_grt_drv.tcl"] if (a.post_grt_drv or rec.get("post_grt_extra")) else []
     lint_checkpoint = modern and mod == "ot_s81sl_xs4"
-    (kd / "run_kit.sh").write_text(run_kit(modern, lint_checkpoint=lint_checkpoint))
+    internal_bridge = rec.get("pg_internal_bridge")
+    if internal_bridge:
+        (kd / "internal_pg_abstract.sh").write_text(INTERNAL_PG_ABSTRACT)
+        for helper in ("abstract_exact.py", "abstract_detail.py", "kvpc_exact_m45.py"):
+            shutil.copyfile(TOOL / helper, kd / helper)
+    (kd / "run_kit.sh").write_text(run_kit(
+        modern, lint_checkpoint=lint_checkpoint, pg_internal_bridge=bool(internal_bridge)
+    ))
     if lint_checkpoint:
         shutil.copyfile(TOOL / "synth_lint_checkpoint.py", kd / "synth_lint_checkpoint.py")
     (kd / "run_kit.sh").chmod(0o755)

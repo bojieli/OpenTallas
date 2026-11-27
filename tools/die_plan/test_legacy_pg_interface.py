@@ -7,7 +7,8 @@ import re
 
 SRC = Path(__file__).resolve().parents[2] / "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py"
 TREE = ast.parse(SRC.read_text())
-NAMES = {"PDN", "PDN_MACRO", "macro_pdn", "pg_top_pdn", "NS_ESCAPE_UM", "_m5_ns_signal_pins"}
+NAMES = {"PDN", "PDN_MACRO", "macro_pdn", "pg_top_pdn", "pg_internal_bridge_pdn",
+         "NS_ESCAPE_UM", "_m5_ns_signal_pins"}
 BODY = [n for n in TREE.body if (isinstance(n, ast.FunctionDef) and n.name in NAMES) or
         (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in NAMES for t in n.targets))]
 G = dict(Path=Path, re=re)
@@ -38,6 +39,31 @@ class PGInterface(unittest.TestCase):
     def test_missing_reservation_refused(self):
         with self.assertRaisesRegex(ValueError,"obs_max"):
             G["pg_top_pdn"](G["PDN"],None,"M6","M5")
+
+    def test_internal_bridge_preserves_m5_ports_and_signal_layers(self):
+        form = G["pg_internal_bridge_pdn"]
+        base = G["PDN"] + G["PDN_MACRO"]
+        self.assertEqual(form(base, None), (base, None))
+        pdn, info = form(base, None, "M6", "M6")
+        self.assertTrue(pdn.startswith(base))
+        self.assertIn("-pins {M5}", pdn)
+        self.assertNotIn("-pins {M6}", pdn)
+        self.assertIn("-pitch {4.32} -offset {4.128}", pdn)
+        self.assertIn("add_pdn_connect -grid {top} -layers {M5 M6}", pdn)
+        self.assertEqual(info["exported_pg_pin_layer"], "M5")
+        self.assertEqual(info["parent_landing_layer"], "M6")
+        self.assertEqual(info["abstract_obstruction_min_layer"], "M6")
+        self.assertEqual(info["added_signal_routing_layers"], [])
+
+    def test_internal_bridge_requires_reservation_and_its_own_phase(self):
+        form = G["pg_internal_bridge_pdn"]
+        with self.assertRaisesRegex(ValueError, "obs_max"):
+            form(G["PDN"], None, "M6", "M5")
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            form(G["PDN"], None, "M4", "M6")
+        occupied, info = G["pg_top_pdn"](G["PDN"], None, "M6", "M6")
+        with self.assertRaisesRegex(ValueError, "existing M6 PG"):
+            form(occupied, info, "M6", "M6")
 
 if __name__ == "__main__":
     unittest.main()
