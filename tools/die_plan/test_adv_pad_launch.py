@@ -39,3 +39,61 @@ def test_findings_are_warn_lines_and_never_raise():
     out = A.findings(plan(), "p.json", measured={"sle_ctl": {"bus:x_su_c_p1_o": [630, 640]}})
     assert out[0].startswith("WARN ADV-PAD-LAUNCH sle_ctl bus:x_su_c_p1_o") and "summary" in out[-1]
     assert A.findings({"partition_types": 3}, "p.json")[0].startswith("WARN ADV-PAD-LAUNCH not checked")
+
+
+def packed_plan():
+    return {
+        "die": {"reach_um": 600},
+        "partitions": [{"type": "frame"}],
+        "partition_types": {"frame": {
+            "buses": [{"name": "frame_i", "dir": "in", "width": 2}],
+            "internal_stations": [{
+                "conn": "bus:frame_i", "launch": "face flop",
+                "regs_um": [[3, 3], [4, 4], [5, 5]],
+            }],
+            "relay_sites": {
+                "u_bin_frame_i.q[0]": [0, 0],
+                "u_lpad_frame_i.r[0][0]": [400, 7],
+                "u_lpad_frame_i/r[1][0]": [800, 16],
+                # This last 405 um leg is legal at the stock cap.
+                "u_lpad_frame_i.r[2][0]": [1200, 21],
+            },
+        }},
+    }
+
+
+def test_packed_point_override_checks_first_and_consecutive_real_ranks():
+    p = packed_plan()
+    rows = A.packed_override_hits(p, "p.json")
+    assert [(r["stage"], r["bit"], r["distance"], r["reach"]) for r in rows] == [
+        (1, 0, 409, 405), (0, 0, 407, 405),
+    ]
+    warnings = A.findings(p, "p.json")
+    assert len(warnings) == 2
+    assert "1 first leg(s) and 1 consecutive rank leg(s)" in warnings[0]
+    assert "2 over-reach packed legs in 1 chain(s)" in warnings[1]
+
+
+def test_rank_line_and_conflicting_aliases_do_not_price_stale_point():
+    p = packed_plan()
+    t = p["partition_types"]["frame"]
+    t["relay_rank_sites"] = {"u_lpad_frame_i.r[0]": {"line_um": [[10, 20], [20, 30]]}}
+    assert A.packed_override_hits(p, "p.json") == []
+    del t["relay_rank_sites"]
+    t["relay_sites"]["u_bound.u_lpad_frame_i/r[0][0]"] = [10, 10]
+    assert A.packed_override_hits(p, "p.json") == []
+
+
+def test_exact_bank_can_complete_a_leg_but_nominal_site_cannot():
+    p = packed_plan()
+    t = p["partition_types"]["frame"]
+    del t["relay_sites"]["u_lpad_frame_i/r[1][0]"]
+    assert [r["stage"] for r in A.packed_override_hits(p, "p.json")] == [0]
+    t["internal_stations"][0]["bit_sites_um"] = [
+        [[30, 30], [31, 30], [32, 30]],
+        [[800, 12], [801, 12], [802, 12]],
+        [[1200, 21], [1201, 21], [1202, 21]],
+    ]
+    assert [(r["stage"], r["distance"]) for r in A.packed_override_hits(p, "p.json")] == [
+        (2, 409), (0, 407),
+    ]
