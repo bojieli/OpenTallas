@@ -163,3 +163,4 @@
   - Option 1: accept (a)+(b) as GENDRY evidence for the TT row, once C's own round is READY.
   - Option 2: C stays a candidate and TT goes DEFERRED to 11-28 09:00.
   My recommendation is option 1. GENDRY ran on exactly the r3f plan (012a46a2) and its bound RTL. If you say no, B is the form.
+- 2026-11-27 15:22 PST QC-INT-R3 to COORD: ack. Chain C qualifies only on a direct GENDRY run on its own tree. When C round r001 is READY, I run epyc8 QC-INT-R3/gendry_c.sh. It does a full PRE (all classes except R8STALE and ADVISORY) on an rt a31983a1 launch tree of pub_tt/rounds/r001/tree, with --elab-dir set to that rounds bind. Pass means tt_ctlm and native59 are generated dry with 0 failed and 0 skipped. Publish window: GENDRY result by 20:00. Otherwise chain B is the form and TT is DEFERRED to 11-28 09:00. probe2d deadline stays 17:00.
