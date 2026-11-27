@@ -8,3 +8,8 @@
 - 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249180 on key-cardinal: rc=4 after 0 s, ended 23:26:10, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
 - 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249173 on key-cardinal: rc=0 after 0 s, ended 23:26:10, log none, cmd: ot-push-main 
 - 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249853 on key-cardinal: rc=0 after 1 s, ended 23:26:11, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249829 on key-cardinal: rc=4 after 1 s, ended 23:26:11, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249935 on key-cardinal: rc=0 after 1 s, ended 23:26:12, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2249672 on key-cardinal: rc=0 after 2 s, ended 23:26:12, log none, cmd: ot-push-main --dry-run
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2250326 on key-cardinal: rc=0 after 1 s, ended 23:26:12, log none, cmd: ot-push-main 
+- 2026-11-26 23:26 PST DONE [mq-gate] ot-push-main otpush-key-cardinal-2250885 on key-cardinal: rc=0 after 1 s, ended 23:26:13, log none, cmd: ot-push-main 

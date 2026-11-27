@@ -17404,3 +17404,5 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-26 23:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: romw-1119 on intel1 wrote 40 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2248938 on key-cardinal: rc=2 after 0 s, ended 23:26:09, log none, cmd: ot-push-main  | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 2)
 - 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249497 on key-cardinal: rc=3 after 0 s, ended 23:26:10, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249180 on key-cardinal: rc=4 after 0 s, ended 23:26:10, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
+- 2026-11-26 23:26 PST DIED [mq-gate] ot-push-main otpush-key-cardinal-2249829 on key-cardinal: rc=4 after 1 s, ended 23:26:11, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
