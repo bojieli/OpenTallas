@@ -658,6 +658,7 @@ SCHEMA = {
                         # S81-BANDTAP-1115: tap windows (holes) cut in frozen bands: where S81-PHYT1 puts taps for uncovered band points
                         "band_tap_windows_um": {"type": "array", "items": _rect},
                         "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+                        "reserved_pocket_fill": {"type": "boolean"},
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
