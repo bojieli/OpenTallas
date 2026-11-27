@@ -78,8 +78,9 @@ def _num(x):
 def internal_hold_measurement(rec):
     """Complete native internal census, or a complete nonnegative all-path bound.
 
-    core_n/core_wns are emitted only after both native searches finish without
-    truncation. A zero count/zero bound proves no internal hold miss; it does
+    core_n/core_wns are emitted only after the required searches finish without
+    truncation, including any declared native pad inputs. A zero count/zero
+    bound proves no internal hold miss; it does
     not claim the boundary WNS is zero. Typed summaries may carry that same
     measurement, but an old local SIGNED/port-only verdict is not evidence.
     """
@@ -93,11 +94,16 @@ def internal_hold_measurement(rec):
         done = ff.get("done") is True and not ff.get("errors") and ff.get("rc", 0) == 0
         complete = done and c.get("err") == 0 and c.get("trunc") == 0
         w, n = _num(c.get("core_wns")), _num(c.get("core_n"))
+        if "native_n" in c:
+            native_n, native_w = _num(c["native_n"]), _num(c.get("native_wns"))
+            complete = (complete and native_n is not None and n is not None and w is not None
+                        and 0 <= native_n <= n and native_n.is_integer()
+                        and native_w is not None and (native_w == 0 if native_n == 0 else w <= native_w < 0))
         source = "corners.ff.std_min_start.core_wns (complete internal census)"
         # Older native signers omitted the census when every STD min path met.
         # That complete, finite all-path minimum is a stronger internal bound.
         # Never replace a present/ambiguous core census or use another frame.
-        if "core_wns" not in c and "core_n" not in c:
+        if "core_wns" not in c and "core_n" not in c and "native_n" not in c:
             all_w, all_n = _num(ff.get("std_wns_min")), _num(ff.get("std_nviol_min"))
             census_ok = c.get("err", 0) == 0 and c.get("trunc", 0) == 0
             if done and census_ok and all_w is not None and all_w >= 0 and all_n == 0:
@@ -118,6 +124,10 @@ def internal_hold_measurement(rec):
 
 
 def boundary_hold_metric(rec):
+    ff = (rec.get("corners") or {}).get("ff") or rec.get("ff_census") or {}
+    census = ff.get("std_min_start") if isinstance(ff, dict) else None
+    if isinstance(census, dict) and census.get("native_n", 0) != 0:
+        return None, None    # The all-path WNS may belong to a native pad path.
     ch = rec.get("checks") or {}
     hf = ch.get("hold_ff") if isinstance(ch.get("hold_ff"), dict) else {}
     for value, source in ((hf.get("wns_ps"), "hold_ff.wns_ps (standard overlay)"),

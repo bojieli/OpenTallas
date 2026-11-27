@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import signoff  # noqa: E402
 import resign  # noqa: E402
@@ -134,3 +136,56 @@ def test_census_parses_core_fields():
                                             "SO STD_MIN_START_OPORTS ft0_o\nSO STD_MIN_NONPORT n 5 wns -4.00 core_n 3 core_wns -1.50")
     s = signoff.corner_result(signoff.parse_session(t))["std_min_start"]
     assert s["nonport_n"] == 5 and s["nonport_wns"] == -4.0 and s["core_n"] == 3 and s["core_wns"] == -1.5
+
+
+def test_declared_native_pma_hold_blocks_with_parent_paths_present(monkeypatch):
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
+    # Retained HEAD-SERDES endpoint split: 544 recovered-clock PMA paths and six parent paths.
+    t = """
+SO NATIVE_PAD_INPUTS 544 golden_delays_preserved
+SO STD_MIN_START port 550 other 0 reg 0 trunc 0 err 0 oport 0
+SO STD_MIN_START_PORTS arst_n pma_rx start_i coll_fstart_i
+SO STD_MIN_NATIVE n 544 wns -219.46
+SO STD_MIN_NONPORT n 0 wns 0 core_n 544 core_wns -219.46"""
+    r = record(ff_hold=-219.46)
+    r["corners"]["ff"] = signoff.corner_result(signoff.parse_session(session_text(ff_hold=-219.46)["ff"] + t))
+    r = signoff.evaluate(r)
+    ff = r["corners"]["ff"]["std_min_start"]
+    assert ff["native_n"] == 544 and ff["port"] == 550 and ff["nonport_n"] == 0
+    assert r["internal_hold"]["violators"] == 544 and r["internal_hold"]["wns_ps"] == -219.46
+    assert r["profile_gates"]["hold_ff"] == r["checks"]["hold_ff"]["verdict"] == "FAIL"
+    assert not r["checks"]["hold_ff"].get("port_only_needs_parent")
+
+
+@pytest.mark.parametrize("native_report,gate", [
+    ("SO STD_MIN_NATIVE n 0 wns 0", "PASS"),
+    ("", "NOT RUN"),
+    ("SO STD_MIN_NATIVE n 3 wns -4", "NOT RUN"),
+])
+def test_parent_hold_exclusion_requires_complete_native_census(native_report, gate, monkeypatch):
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
+    t = "\n".join((
+        session_text(ff_hold=-5)["ff"],
+        "SO NATIVE_PAD_INPUTS 544 golden_delays_preserved",
+        "SO STD_MIN_START port 1 other 0 reg 0 trunc 0 err 0 oport 0",
+        "SO STD_MIN_START_PORTS start_i",
+        "SO STD_MIN_NONPORT n 0 wns 0 core_n 0 core_wns 0",
+        native_report,
+    ))
+    r = record(ff_hold=-5)
+    r["corners"]["ff"] = signoff.corner_result(signoff.parse_session(t))
+    r = signoff.evaluate(r)
+    assert r["profile_gates"]["hold_ff"] == gate
+    assert bool(r["checks"]["hold_ff"].get("port_only_needs_parent")) == (gate == "PASS")
+
+
+def test_native_pad_search_is_opt_in_and_restricted_to_declared_clock():
+    contracts = signoff.native_pad_inputs("# OT_NATIVE_PAD_INPUT pma_rck pma_rx[*] -265 166.6\n")
+    ff = signoff.session_tcl("ff", [], True, native_pad_inputs=contracts)
+    assert "get_ports -quiet {pma_rx[*]}" in ff and "get_clocks -quiet {pma_rck}" in ff
+    assert "find_timing_paths -path_delay min -from $so_ports -to $so_ck" in ff
+    assert "if {$so_sl >= 0 || [$so_eo is_top_level_port]} continue" in ff
+    assert "STD_MIN_NATIVE" not in signoff.session_tcl("ff", [], True)
+    assert "STD_MIN_NATIVE" not in signoff.session_tcl("tt", [], True, native_pad_inputs=contracts)
+    with pytest.raises(ValueError, match="malformed"):
+        signoff.native_pad_inputs("# OT_NATIVE_PAD_INPUT pma_rck pma_rx -265 166.6\n")
