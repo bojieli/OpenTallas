@@ -614,6 +614,8 @@ SCHEMA = {
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
                                        "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
                                        "keep_firm": {"type": "boolean"},  # opt-in preserve FT sites through DPL
+                                       "buffer_corridor_stages": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                                  "items": {"type": "integer", "minimum": 0}},
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
@@ -2563,6 +2565,41 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
     "type": "object", "additionalProperties": False, "required": ["name", "patterns", "rect_um"], "properties": {
         "name": {"type": "string"}, "patterns": {"type": "array", "minItems": 1, "items": {"type": "string"}},
         "rect_um": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}}}}
+# Opt-in post-landing, pre-GPL receive-ring logic regions with native bit-role paths.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["receive_ring_depth"] = {
+    "type": "object", "additionalProperties": False, "required": ["version", "regions", "source_bins"],
+    "properties": {
+        "version": {"const": 1},
+        "regions": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["name", "ring", "rect_um", "capacity_um2"],
+            "properties": {
+                "name": {"type": "string"}, "ring": {"type": "string"},
+                "rect_um": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+                "capacity_um2": {"type": "number", "exclusiveMinimum": 0},
+            },
+        }},
+        "source_bins": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False, "required": ["key", "required_um2", "picks"],
+            "properties": {
+                "key": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2},
+                "required_um2": {"type": "number", "exclusiveMinimum": 0},
+                "picks": {"type": "array", "minItems": 1, "items": {
+                    "type": "object", "additionalProperties": False, "required": ["region", "anchor", "path", "area_um2"],
+                    "properties": {
+                        "region": {"type": "string"}, "area_um2": {"type": "number", "exclusiveMinimum": 0},
+                        "anchor": {"type": "array", "prefixItems": [
+                            {"type": "integer", "minimum": 0}, {"enum": ["storage", "read"]},
+                            {"type": "integer", "minimum": 0},
+                        ], "minItems": 3, "maxItems": 3},
+                        "path": {"type": "array", "minItems": 1, "maxItems": 6, "items": {
+                            "type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 2,
+                        }},
+                    },
+                }},
+            },
+        }},
+    },
+}
 # RANK-SEAT 11-22 (FABLE-FIX-S81-COL-RANKSEAT; kit_istations rank_sites_lines / rs_rank_line): opt-in per type, every bit of a wide
 # register rank (key = register name without its last [bit]) FIRM on the line line_um, bit 0 first (asc); absent = byte-identical kits
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_rank_sites"] = {"type": "object", "additionalProperties": {
@@ -3983,6 +4020,10 @@ def validate(raw):
                 validate_slot(s)
             except ValueError as exc:
                 errs.append(f"type {tn} slot {s['name']}: {exc}")
+            if "buffer_corridor_stages" in s:
+                first, last = s["buffer_corridor_stages"]
+                if not (0 <= first <= last < s.get("stations", 1) - 1):
+                    errs.append(f"type {tn} slot {s['name']}: buffer corridor must join two existing internal registers")
             if s["in_face"] == s["out_face"]:
                 if not s.get("turnaround", False):
                     errs.append(f"type {tn} slot {s['name']}: in_face == out_face")

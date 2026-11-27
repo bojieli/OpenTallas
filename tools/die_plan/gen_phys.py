@@ -7714,6 +7714,35 @@ def stage_hook_lines(cfg, kd, var, scripts, chain):
     return [f"export {var} = /work/{chain}"]
 
 
+def ft_data_corridor_lines(cfg, kd, tn, t, budgets):
+    """Keep exclusive existing same-bit repeats within authored FT stage corridors."""
+    records = []
+    polarity = (budgets.get("ft_polarity_local_group_by_type") or {}).get(tn)
+    exact_polarity = (budgets.get("ft_polarity_local_sites_by_type") or {}).get(tn)
+    for slot in t.get("ft_slots", ()):
+        stages = slot.get("buffer_corridor_stages")
+        if stages is None:
+            continue
+        first, last = stages
+        name = slot["name"]
+        keep_polarity = int(bool(exact_polarity) and polarity == f"u_bound.u_ft_{name}_o_0")
+        records.append(f"{{{name} {first} {last} {slot['width']} {keep_polarity}}}")
+    if not records:
+        return []
+    for name in ("authority_input_local.tcl", "ft_data_corridors.tcl"):
+        shutil.copyfile(Path(__file__).with_name(name), Path(kd) / name)
+    (Path(kd) / "ft_data_corridors_setup.tcl").write_text(
+        "if {[info exists ::env(OT_SERDES_AUTH_INPUT_LOCAL)] && $::env(OT_SERDES_AUTH_INPUT_LOCAL) eq \"1\"} {\n"
+        "    error \"FT data and SerDes authority corridor hooks cannot share a kit stage\"\n"
+        "}\n"
+        "source /work/authority_input_local.tcl\n"
+        "source /work/ft_data_corridors.tcl\n"
+        f"ot_ft_data_corridors::run {{{' '.join(records)}}} /work/ft_polarity_local_sites.tsv\n"
+    )
+    return stage_hook_lines(cfg, kd, "PRE_DETAIL_PLACE_TCL", ["ft_data_corridors_setup.tcl"],
+                            "ft_data_pre_dpl_chain.tcl")
+
+
 def post_dpl_hook_lines(cfg, kd, env=None, type_name=None):
     """Gen env OT_POST_DPL_SCRIPTS = comma list of kit-local script names (already staged in the kit) -> POST_DETAIL_PLACE_TCL chain.
     Unset/empty = no-op."""
@@ -8755,6 +8784,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     install_head_post_gpl_reseat(cfg, kd, P.name, tn, P.raw)
+    cfg += ft_data_corridor_lines(cfg, kd, tn, t, P.budgets)
     cfg += post_dpl_hook_lines(cfg, kd, type_name=tn)
     reviewed_station_recipe = os.environ.get("OT_REVIEWED_STATION_PREPARE")
     if reviewed_station_recipe and os.environ.get("OT_S81_P2_CROP_REVIEW_GUIDES") == "1":
@@ -8890,6 +8920,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "logic_cluster.tcl").write_text(lc_tcl)
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/logic_cluster.tcl\n")
+    if t.get("receive_ring_depth") is not None:
+        import receive_ring_depth
+        rx_tcl = receive_ring_depth.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms])
+        (kd / "receive_ring_depth.tcl").write_text(rx_tcl)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nsource /work/receive_ring_depth.tcl\n")
     gpl_td.apply(kd, P.raw)    # after the cluster hook: timing-driven trigger wrapper + cell growth gate (gpl_td.tcl)
     if t.get("rck_band"):
         # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;

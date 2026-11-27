@@ -1161,6 +1161,34 @@ def validate_pinslot_plan_pins(tn, t, planned_pins):
             raise ValueError(f'{tn}.{name}: pinslot_profile actual_pin_y differs from current plan pin records')
 
 
+def _capture_rank_seats_tcl(tn, c):
+    """Emit an opt-in permutation of existing native data FF footprints."""
+    lines = []
+    masters = {"writer_capture": "DFFLQNx1_ASAP7_75t_R", "read_data": "DFFHQNx1_ASAP7_75t_R"}
+    for bus, band in sorted(c.get("bands", {}).items()):
+        moves = band.get("capture_rank_seats")
+        if moves is None:
+            continue
+        prefix = "u_bound." + band.get("instance", "u_cland_" + bus) + "/"
+        if band.get("ring_place") != "ff" or band.get("hard_core") or not moves:
+            raise ValueError(f"{tn}.{bus}: native rank seats require a soft FF band and a nonempty permutation")
+        by_name = {row["inst"]: row for row in moves}
+        if len(by_name) != len(moves) or set(by_name) != {row["to_site_of"] for row in moves}:
+            raise ValueError(f"{tn}.{bus}: native rank seats must permute the same set of instances")
+        for row in moves:
+            inst, dest = row["inst"], row["to_site_of"]
+            x, y = row["from_um"]
+            tx, ty = row["to_um"]
+            valid = all(re.fullmatch(r"[A-Za-z0-9_.$/\[\]-]+", n) and n.startswith(prefix) for n in (inst, dest))
+            if not valid or inst == dest or masters.get(row["role"]) != row["master"] or not all(
+                    type(v) in (float, int) and isfinite(v) and v >= 0 for v in (x, y, tx, ty)):
+                raise ValueError(f"{tn}.{bus}: invalid native rank FF {inst}")
+            if [tx, ty] != by_name[dest]["from_um"]:
+                raise ValueError(f"{tn}.{bus}: target footprint drift for {inst}")
+            lines.append(f"  {{{{{inst}}} {row['master']} {{{x:.4f} {y:.4f}}} {{{dest}}}}}")
+    return "set cland_capture_rank_seats {\n" + "\n".join(lines) + "\n}\n" if lines else ""
+
+
 def _pinslot_profile_tcl(tn, c, t):
     """Optional east edge of the bit-major slot rows and literal writer FF locations."""
     out = []
@@ -1284,7 +1312,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,P.types[tn])+_pinslot_profile_tcl(tn,c,P.types[tn])+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,P.types[tn])+_pinslot_profile_tcl(tn,c,P.types[tn])+_capture_rank_seats_tcl(tn,c)+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -1306,4 +1334,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,t)+_pinslot_profile_tcl(tn,c,t or {})+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
+    return '\n'.join(out)+'\n'+override_check+_dsel_cone_tcl(c,t)+_pinslot_profile_tcl(tn,c,t or {})+_capture_rank_seats_tcl(tn,c)+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
