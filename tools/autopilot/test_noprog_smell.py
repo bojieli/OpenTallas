@@ -68,7 +68,7 @@ def test_dry_run_posts_the_would_fire_list_then_goes_live_without_cancelling(tmp
     c = tsv[1].split("\t")
     assert c[1].endswith("slw_sc_v2_1/gen/slw_sc_v2") and c[2] == "QC" and c[3] == "slw_sc_v2" and c[5] == "DRT" and c[6].startswith("iteration-0") and c[8] == "QC-ALLFIX"
     p = posted(tmp_path)[-1]
-    assert "-> FP-CONVERGE-QC, QC-ALLFIX; cc QC-ALLFIX]" in p and "NOT cancelled" in p
+    assert "-> QC-INT-R3; cc QC-INT-R3]" in p and "NOT cancelled" in p
     nw.smell_pass([srow()], seen, NOW + 2800, render=lambda r, t: calls.append(r) or ("x", ""))
     assert len(calls) == 1                                                    # once per kit and class
 
@@ -80,7 +80,7 @@ def test_hub_down_writes_the_fallback_file(tmp_path, monkeypatch, capsys):
     seen = {"smell_t0": NOW - 4000}
     nw.smell_pass([srow()], seen, NOW, render=None)
     fb = (tmp_path / "st/smell_fallback.tsv").read_text()
-    assert "FP-CONVERGE-QC" in fb and "HUB POST FAILED" in capsys.readouterr().err
+    assert "QC-INT-R3" in fb and "HUB POST FAILED" in capsys.readouterr().err
     p, n = nw.smell_pending_write([srow()], "epyc7", str(tmp_path / "pend.tsv"))
     assert n == 1 and "slw_sc_v2" in open(p).read()
 
@@ -233,15 +233,15 @@ def test_one_row_per_kit_and_class_a_restarted_container_is_a_repeat(tmp_path, m
 def test_wave_kit_smell_goes_to_the_die_fp_lane_never_to_coord(tmp_path, monkeypatch):
     coord(tmp_path, monkeypatch)
     monkeypatch.setattr(nw, "STATE_DIR", str(tmp_path / "st"))
-    assert nw.smell_recipients("KV", "COORD") == "FP-CONVERGE-KV"
-    assert nw.smell_recipients("QC", "QC-ALLFIX") == "FP-CONVERGE-QC, QC-ALLFIX"
+    assert nw.smell_recipients("KV", "COORD") == "KV-INT-R3"
+    assert nw.smell_recipients("QC", "QC-ALLFIX") == "QC-INT-R3"
     assert nw.smell_recipients("?", "COORD") == "COORD"
     r = srow(lane="", kit="/srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3", work="/srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3",
              ident="dpkit-kv3_pv_v3-1 /srv/x/kit-wave/qwen_kvsys/E/items/kv3_pv_v3/gen/kv3_pv_v3", type="kv3_pv_v3")
     r2 = dict(r, kit=r["kit"] + "b", work=r["work"] + "b", container="dpkit-kv3_pv_v3-2")
     nw.smell_pass([r, r2], {"smell_t0": NOW - 4000}, NOW, render=lambda *a: ("rendering", "/rev"))
     p = [x for x in posted(tmp_path) if x.startswith("SMELL-WATCH|SMELL [")]
-    assert len(p) == 1 and "-> FP-CONVERGE-KV, KV-ALLFIX;" in p[0] and "COORD" not in p[0].split("]")[0].replace("cc KV-ALLFIX", "") and "2 kit-class(es)" in p[0]
+    assert len(p) == 1 and "-> KV-INT-R3;" in p[0] and "COORD" not in p[0].split("]")[0].replace("cc KV-INT-R3", "") and "2 kit-class(es)" in p[0]
 
 
 def test_vis_queue_status_follows_the_render(tmp_path):
@@ -360,7 +360,7 @@ def test_sta_numbers_reach_the_vis_rows_and_a_wns_below_150_is_a_smell(tmp_path,
     sm = (tmp_path / "lanes/SMELL.tsv").read_text().splitlines()
     assert len(sm) == 2 and "STA-WNS" in sm[1] and "-171.0" in sm[1]
     p = [x for x in posted(tmp_path) if "STA-WNS" in x]
-    assert len(p) == 1 and "FP-CONVERGE-S81, S81-ALLFIX-INT" in p[0]
+    assert len(p) == 1 and "-> S81-INT-R3; cc S81-INT-R3" in p[0]
     assert nw.vis_sta_sync(str(q), runner, post=True, now=NOW) == 0          # filled rows are not redone
 
 

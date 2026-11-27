@@ -160,6 +160,6 @@ def test_plateau_pass_posts_once_report_only(tmp_path, monkeypatch):
     out = nw.plateau_route_pass(rows, seen, NOW)
     assert sorted(c for _, c, _ in out) == ["RECOMMEND-CANCEL", "REPAIR"]
     p = posted(tmp_path)
-    assert any("PLATEAU-REPAIR [SMELL-WATCH -> QC-ALLFIX, QC-DRT-TAIL;" in x for x in p) and any("PLATEAU-RECOMMEND-CANCEL" in x and "FP-CONVERGE-QC" in x and "cancel recommended" in x for x in p)
+    assert any("PLATEAU-REPAIR [SMELL-WATCH -> QC-INT-R3, QC-DRT-TAIL;" in x for x in p) and any("PLATEAU-RECOMMEND-CANCEL" in x and "QC-INT-R3" in x and "cancel recommended" in x for x in p)
     assert nw.plateau_route_pass(rows, seen, NOW + 900) == []
     assert not (tmp_path / "autopilot/cancel_marks.tsv").exists()

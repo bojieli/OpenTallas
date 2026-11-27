@@ -2092,7 +2092,7 @@ def plateau_route_pass(rows, seen, now, post=True):
         groups = {}
         for k, cls, txt, r in out:
             die = DIE_TAG.get(die_of(" ".join(str(r.get(x) or "") for x in ("container", "kit", "work", "ident"))), "?")
-            to = smell_recipients(die, owner_of([r])) if cls != "REPAIR" else ", ".join(x for x in (owner_of([r]), "QC-DRT-TAIL") if x and x != "COORD") or "QC-DRT-TAIL"
+            to = smell_recipients(die, owner_of([r])) if cls != "REPAIR" else ", ".join(dict.fromkeys(live_lane(x) for x in (owner_of([r]), "QC-DRT-TAIL") if x and x != "COORD")) or "QC-DRT-TAIL"
             groups.setdefault((cls, to), []).append(f"{r.get('type', '')} {r.get('host')} {r.get('unit') or r.get('container')}: {txt}")
         for (cls, to), items in sorted(groups.items()):
             _post(os.environ.get("NOPROG_SMELL_LANE", "SMELL-WATCH"), f"PLATEAU-{cls} [SMELL-WATCH -> {to}; cc COORD] {len(items)} kit(s), report-only: " + " | ".join(items[:25]))
