@@ -94,21 +94,57 @@ def pin_rects(lef, pin, roots):
     return _PIN[k]
 
 
+def _orient_rect(r, orient, w, h):
+    """LEF macro-frame rect -> placed-frame offset from the DEF origin (lower-left of the oriented box); None for rotations"""
+    x0, y0, x1, y1 = r
+    if orient == "R0":
+        return (x0, y0, x1, y1)
+    if orient == "MY":
+        return (w - x1, y0, w - x0, y1)
+    if orient == "MX":
+        return (x0, h - y1, x1, h - y0)
+    if orient == "R180":
+        return (w - x1, h - y1, w - x0, h - y0)
+    return None
+
+
 def at_own_pin(label, inst, g, view):
-    """a core tap `<inst>.<pin>` whose xy lies within PIN_TOL_UM of its own LEF pin shape is the real pin entry (KV head cores,
-    CORE-DIRECT), never a buried plan point.  Unknown pin / rotated macro / no LEF: not at a pin (the tap is judged by the body rule)."""
+    """a core tap `<inst>.<pin>` whose xy lies within PIN_TOL_UM of its own pin is the real pin entry (KV head cores,
+    CORE-DIRECT, QC NK tiles), never a buried plan point.  The pin is the plan's clock_entry_access footprints of that pin
+    (type frame, every layer; C-CLK-LAND-OBS 11-27: the QC cb* NK tiles are MY, so the old R0-only LEF test reported 36 real
+    ck entries as buried and clk_land_clear would have moved them off the pin), else the LEF pin shape placed by the core's
+    orientation (R0 / MX / MY / R180).  Unknown pin / 90-degree rotation / no LEF: not at a pin (judged by the body rule)."""
     m = re.match(r"clock\.taps\[(.*)\] core$", label)
-    lef, ox, oy, orient, roots = view
-    if not m or not lef or orient != "R0":
+    lef, ox, oy, orient, roots = view[:5]
+    wh, cea = (view[5], view[6]) if len(view) > 6 else (None, None)
+    if not m:
         return False
     name = m.group(1)
     pin = name[len(inst) + 1:] if name.startswith(inst + ".") else None
     if not pin:
         return False
+
+    def near(r):
+        return r[0] - PIN_TOL_UM <= g[0] <= r[2] + PIN_TOL_UM and r[1] - PIN_TOL_UM <= g[1] <= r[3] + PIN_TOL_UM
+    if isinstance(cea, dict) and cea.get("pin") == pin:
+        for rs in (cea.get("footprints_um") or {}).values():
+            for r in rs or []:
+                if isinstance(r, (list, tuple)) and len(r) == 4 and near([float(v) for v in r]):
+                    return True
+    if not lef:
+        return False
     rs = pin_rects(lef, pin, roots)
     if not rs:
         return False
-    return any(ox + r[0] - PIN_TOL_UM <= g[0] <= ox + r[2] + PIN_TOL_UM and oy + r[1] - PIN_TOL_UM <= g[1] <= oy + r[3] + PIN_TOL_UM for r in rs)
+    if orient != "R0" and not wh:
+        return False
+    out = []
+    for r in rs:
+        q = _orient_rect(r, orient, *(wh or (0.0, 0.0)))
+        if q is None:
+            return False
+        out.append((ox + q[0], oy + q[1], ox + q[2], oy + q[3]))
+    return any(near(r) for r in out)
 
 
 def entry_top(raw_or_P):
@@ -134,7 +170,8 @@ def macros(t, top, roots=()):
             mt = int(m.group(1)) if m else top
         tr = h.get("track_offset_um") or [0.0, 0.0]
         out.append((float(x0), float(y0), float(x0) + float(w), float(y0) + float(hh), halo, h.get("inst") or h.get("name") or "core", mt >= top - 1,
-                    (h.get("lef"), float(x0) + float(tr[0]), float(y0) + float(tr[1]), str(h.get("orient", "R0")), tuple(map(str, roots)))))
+                    (h.get("lef"), float(x0) + float(tr[0]), float(y0) + float(tr[1]), str(h.get("orient", "R0")), tuple(map(str, roots)),
+                     (float(w), float(hh)), h.get("clock_entry_access"))))
     return out
 
 
