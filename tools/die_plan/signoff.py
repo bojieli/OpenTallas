@@ -3364,7 +3364,8 @@ def auto_export_enqueue(signoff, rec):
     """AUTO-EXPORT-1118 (OWNER r711): an R-MINIMAL SIGNED record is spooled for the hub export to AGIdock + rtx-pro
     (tools/autopilot/auto_export.py drain).  Inline, not a bundle import, so every kit copy of signoff.py carries it.
     One small file in ~/.local/state/ot-auto-export/spool/; never fails or changes the sign-off.  OT_AUTO_EXPORT=0
-    turns it off; OT_EXPORT_DIE / OT_EXPORT_ELEMENT / OT_EXPORT_KIND are hints for the INDEX row."""
+    turns off the hook. A DO_NOT_COUNT file in the report directory or its parent also excludes a private report
+    from archive discovery. OT_EXPORT_DIE / OT_EXPORT_ELEMENT / OT_EXPORT_KIND are INDEX hints."""
     try:
         if rec.get("profile") != "minimal" or rec.get("verdict") != "SIGNED" or os.environ.get("OT_AUTO_EXPORT", "1") == "0":
             return None
@@ -3372,6 +3373,9 @@ def auto_export_enqueue(signoff, rec):
             return None
         import socket
         signoff = os.path.realpath(str(signoff))
+        report = Path(signoff).parent
+        if any((d / "DO_NOT_COUNT").is_file() for d in (report, report.parent)):
+            return None
         sha = hashlib.sha256(Path(signoff).read_bytes()).hexdigest()
         spool = os.environ.get("OT_AUTO_EXPORT_SPOOL") or os.path.expanduser("~/.local/state/ot-auto-export/spool")
         os.makedirs(spool, exist_ok=True)

@@ -69,12 +69,17 @@ def r_minimal_pass(rec):
     return rec.get('profile') == 'minimal' and rec.get('verdict') == 'SIGNED'
 
 
+def private_report(signoff):
+    report = os.path.dirname(os.path.realpath(signoff))
+    return any(os.path.isfile(os.path.join(d, "DO_NOT_COUNT")) for d in (report, os.path.dirname(report)))
+
+
 def enqueue(signoff, rec=None, die=None, element=None, kind=None, spool=None):
     """spool one R-MINIMAL SIGNED record; -> spool path or None (not R-MINIMAL PASS / disabled)."""
     if os.environ.get('OT_AUTO_EXPORT', '1') == '0':
         return None
     signoff = os.path.realpath(signoff)
-    if os.path.basename(signoff) == 'diagnostic_signoff.json':
+    if os.path.basename(signoff) == 'diagnostic_signoff.json' or private_report(signoff):
         return None
     raw = open(signoff, 'rb').read()
     rec = rec if rec is not None else json.loads(raw)
@@ -99,6 +104,10 @@ def enqueue(signoff, rec=None, die=None, element=None, kind=None, spool=None):
 # ---- host probe (runs on a build host over ssh, script on stdin) ------------------------------------------------------
 PROBE = r'''
 import glob, hashlib, json, os, re, socket, sys, time
+# Keep this in sync with the local enqueue predicate. This probe runs on the remote build host.
+def private_report(signoff):
+    report = os.path.dirname(os.path.realpath(signoff))
+    return any(os.path.isfile(os.path.join(d, "DO_NOT_COUNT")) for d in (report, os.path.dirname(report)))
 mode, arg = sys.argv[1], json.loads(sys.argv[2])
 HOME = os.path.expanduser("~"); SPOOL = os.path.join(HOME, %(spool)r)
 CACHE = os.path.join(HOME, ".local/state/ot-auto-export/sha_cache.json")
@@ -130,6 +139,8 @@ def diagnostic_signoff(so, record, odb_sha=None):
 
 
 def unit(so, hint=None):
+    if private_report(so):
+        return dict(signoff=so, err="DO_NOT_COUNT sign-off")
     try:
         raw = open(so, "rb").read(); rec = json.loads(raw)
     except Exception as e:
@@ -331,6 +342,9 @@ elif mode == "late-lec":
             print(json.dumps(evidence), flush=True)
 elif mode == "signoff-source":
     so = arg["signoff"]
+    if private_report(so):
+        print(json.dumps(dict(state="diagnostic")))
+        sys.exit()
     if os.path.isfile(so):
         with open(so, "rb") as fh:
             actual_record = hashlib.sha256(fh.read()).hexdigest()
