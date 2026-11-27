@@ -138,7 +138,8 @@ def test_census_parses_core_fields():
     assert s["nonport_n"] == 5 and s["nonport_wns"] == -4.0 and s["core_n"] == 3 and s["core_wns"] == -1.5
 
 
-def test_declared_native_pma_hold_blocks_with_parent_paths_present():
+def test_declared_native_pma_hold_blocks_with_parent_paths_present(monkeypatch):
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
     # Retained HEAD-SERDES endpoint split: 544 recovered-clock PMA paths and six parent paths.
     t = """
 SO NATIVE_PAD_INPUTS 544 golden_delays_preserved
@@ -161,7 +162,8 @@ SO STD_MIN_NONPORT n 0 wns 0 core_n 544 core_wns -219.46"""
     ("", "NOT RUN"),
     ("SO STD_MIN_NATIVE n 3 wns -4", "NOT RUN"),
 ])
-def test_parent_hold_exclusion_requires_complete_native_census(native_report, gate):
+def test_parent_hold_exclusion_requires_complete_native_census(native_report, gate, monkeypatch):
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
     t = "\n".join((
         session_text(ff_hold=-5)["ff"],
         "SO NATIVE_PAD_INPUTS 544 golden_delays_preserved",
