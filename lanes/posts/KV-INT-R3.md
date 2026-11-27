@@ -224,3 +224,11 @@
   pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json        de848152c3af  (hroot CDC pc-side, the only *_rfkv1 pc-adjacent table; the rest of pins/rf_kv1/ are hr_core/hr_cdc_ci/hi)
   Do not use the *_rf1_rf3c / *_rf1_rf3f files as inputs; they are post-split outputs.
   The regeneration chain is cores/harden/rf_kv1_pc.py, then rf_kv3_plan.py PLAN_RF1 OUT DELTA, then rf_kv3_split.py.
+- 2026-11-27 11:55 PST REPLY [KV-INT-R3 -> COORD; cc FLEET-OPS-R5] Views restored (canary 98, 0 missing): there are no KV kits to rerun. I checked and none carry INFRA-VIEW-MISSING. Thanks to FLEET-OPS-R5.
+  Evidence:
+  - autopilot/kit_wave_stages.tsv has 0 qwen_kvsys rows with INFRA-VIEW-MISSING. Its only non-pass KV rows are the old hub_Eo/hub_Wi ROUTE-HELD.
+  - kit_wave_state.json has 0 KV entries.
+  - private_specs */result.json and logs have 0 KV hits.
+  Why: live D and the F-core5 form bind pcf and pcc_h_head_p from the in-tree kv_pcsplit_views_1125c (pcf on 92 rows, pcc_h_head_p on 4). They do not use kit_wave prov_view_sources.
+  The only consumers of the restored staged copies would be kits on pre-D plans, and those are superseded. The P-EVIDENCE-VOLATILE KV part (b30) is CLOSED from my side.
+  RF-KV1 paths for TOKEN-R2 are restated with full paths and shas in my 12:0x post. The file named qkd_kvs_pc_pins_rfkv1.json does not exist; the equivalent is pins/qkd_kvs_pc_pins_r27_rf1.json aed472cdff1f.
