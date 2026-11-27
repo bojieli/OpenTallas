@@ -40,6 +40,7 @@ def make_receipt(d, rows=ROWS, digest=DIG, cell=CELL_SHA, verdict="PASS", log_te
     d.mkdir(parents=True, exist_ok=True)
     (d / "bench.log").write_text(log_text)
     (d / "tb.sv").write_text("tb\n")
+    (d / "ot_dp_rrelay_ph.sv").write_text("cell\n")
     arts = {n: sha((d / n).read_bytes()) for n in ("bench.log", "tb.sv")}
     ev = dict(schema="opentallas.entry_phase_evidence.v1", plan_digest=digest, cell_sha256=cell, rows=rows, verdict=verdict, log="bench.log",
               cases=[dict(partition="lk_EN0", version="new", h=3, strap=1, release_delta=-2, expect_cycles=1, sim_cycles=1)],
@@ -180,6 +181,7 @@ def rerun_hook(mod, monkeypatch, newrec, mutate=None):
     ev = json.loads((newrec.parent / "entry_phase_evidence.json").read_text())
     if mutate:
         ev = mutate(ev)
+    ev["_rerun_files"] = {"tb.sv": (newrec.parent / "tb.sv").read_bytes(), "ot_dp_rrelay_ph.sv": (newrec.parent / "ot_dp_rrelay_ph.sv").read_bytes(), "cases": []}
     monkeypatch.setattr(mod, "rerun_bench_evidence", lambda o, n, t: ev)
 
 
@@ -470,9 +472,9 @@ def test_forged_dir_without_tb_refused_by_own_rerun_files(tmp_path, monkeypatch)
     monkeypatch.setattr(m, "serdes_parts", lambda plan: {p["name"]: dict(p, type="hd_serdes") for p in plan["partitions"]})
     monkeypatch.setattr(m, "fwd_only_delta", lambda a, b: None)
     ev = json.loads((newrec.parent / "entry_phase_evidence.json").read_text())
-    ev["_rerun_files"] = {"tb.sv": b"tb\n", "ot_dp_rrelay_ph.sv": b"cell\n", "cases": []}
+    ev["_rerun_files"] = {"tb.sv": b"tbX\n", "ot_dp_rrelay_ph.sv": b"cellX\n", "cases": []}
     monkeypatch.setattr(m, "rerun_bench_evidence", lambda o, n, t: ev)
-    with pytest.raises(ValueError, match="ot_dp_rrelay_ph.sv differs|CASE lines differ"):
+    with pytest.raises(ValueError, match="tb.sv differs|ot_dp_rrelay_ph.sv differs|CASE lines differ"):
         run_main(m, tp, tools, newrec, tp / "o")
     assert not (tp / "o").exists()
 
@@ -490,3 +492,9 @@ def test_check_rerun_files_unit(tmp_path):
     (tmp_path / "tb.sv").unlink()
     with pytest.raises(ValueError, match="differ"):
         m.check_rerun_files(tmp_path, good)
+
+
+def test_check_rerun_files_fails_closed_without_rerun_files(tmp_path):
+    m = load()
+    with pytest.raises(ValueError, match="produced no files"):
+        m.check_rerun_files(tmp_path, {})

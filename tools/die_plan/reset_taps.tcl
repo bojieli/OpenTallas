@@ -101,8 +101,8 @@ proc rt_insert_relay {blk it dxy tag {seat_fn rt_legal_seat}} {
   set b [odb::dbInst_create $blk $master "u_rstrelay_$safe"]
   set n2 [odb::dbNet_create $blk "rst_relay_net_$safe"]
   if {$b eq "NULL" || $n2 eq "NULL"} { return 0 }
+  if {[info exists orient] && $orient ne ""} { $b setOrient $orient }   ;# BEFORE setLocation: setOrient keeps the origin, not the lower-left
   $b setLocation $mx $my
-  if {[info exists orient] && $orient ne ""} { $b setOrient $orient }
   $b setPlacementStatus PLACED
   [$b findITerm A] connect $net
   [$b findITerm Y] connect $n2

@@ -137,7 +137,7 @@ def check_rerun_files(receipt_dir, rerun_ev):
     """tb.sv, the cell file and the CASE lines of the receipt's bench.log must be byte/line equal to what the guard's own re-run produced"""
     files = rerun_ev.get("_rerun_files")
     if files is None:
-        return
+        raise ValueError("HEAD native reset instance bindings changed: the bench re-run produced no files to compare")
     root = Path(receipt_dir)
     for name in ("tb.sv", "ot_dp_rrelay_ph.sv"):
         f = root / name

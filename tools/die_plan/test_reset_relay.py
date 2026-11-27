@@ -192,6 +192,7 @@ def test_repeated_pass_does_not_create_orphans():
 def test_relay_takes_the_row_orientation():
     out = run("puts [rt_insert_relay BLK FIT {300 400} t SEATMX]\nputs $::LOG")
     assert out[0] == "1" and "buf setOrient MX" in out[1]
+    assert out[1].index("buf setOrient MX") < out[1].index("buf setLocation")      # setOrient keeps the origin: it must come first
     out = run("puts [rt_insert_relay BLK FIT {300 400} t FAKESEAT]\nputs $::LOG")
     assert "setOrient" not in out[1]
 
@@ -203,7 +204,7 @@ def test_call_site_uses_the_report_proc_not_an_index_expression():
 @pytest.mark.parametrize("old,new", [
     ("  foreach td $todo { lappend items \"[lindex $td 4]:[lindex $td 5]um\" }\n", "  foreach td $todo { lappend items \"[lindex $td 4]\" }\n"),
     ("  if {[$blk findInst \"u_rstrelay_$safe\"] ne \"NULL\" || [$blk findNet \"rst_relay_net_$safe\"] ne \"NULL\"} { return 0 }   ;# already relayed (earlier pass): nothing created\n", ""),
-    ("  if {[info exists orient] && $orient ne \"\"} { $b setOrient $orient }\n", ""),
+    ("  if {[info exists orient] && $orient ne \"\"} { $b setOrient $orient }   ;# BEFORE setLocation: setOrient keeps the origin, not the lower-left\n  $b setLocation $mx $my\n", "  $b setLocation $mx $my\n  if {[info exists orient] && $orient ne \"\"} { $b setOrient $orient }\n"),
 ])
 def test_new_relay_mutants_die(old, new):
     assert old in SRC, old
