@@ -18672,3 +18672,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - hd_lep0N writer_start 427.7/435.3 um (hold HEAD-W12F-EAST-WSTART-REACH, EAST).
   - hd_spn_end be_i/bw_i 472.5/718.5 um (hold HEAD-W12F-SPN-END-STATUS-REACH). The PARTITIONS 256dd row clears it: trial1 4fca0de51ee0 flags 2 types and hd_spn_end is gone.
   - So no route release is affected, apart from those three held types.
+- 2026-11-27 10:52 PST RESULT P-RECEIPT-NOT-COMMITTED pushed 749c76d9ad8: plan_visual_review.commit_receipt commits the PLAN-VISUAL-REVIEW.tsv ledger in coord after append (path-only add+commit, no-op if unchanged/ignored/non-repo, no push); test_receipt_is_committed_once
