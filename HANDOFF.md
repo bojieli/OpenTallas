@@ -4012,3 +4012,4 @@ CODEX: Owner requested Astra for structural visual review of exact layouts, usin
 
 CODEX: Owner approved shared immutable run directories and existing checkpoint receipts for ordinary iteration. Reuse recorded digests at cross-host, archive or failed-transfer boundaries. Avoid whole-tree rehashing between stages. See CODEX-LOG.md.
 OPS-WRITEUP: 2026-11-26 19:08 PST 19:08 hourly: 605 any / 483 current (+0 / +0 vs 18:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
+CODEX: Fresh HEAD Host W and West RX layouts received independent Astra clearance for CTS. Fleet copyback now completes live exact worker scopes. See the 19:30 milestone in CODEX-LOG.md.
