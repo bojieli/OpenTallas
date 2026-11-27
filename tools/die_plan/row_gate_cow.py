@@ -1,4 +1,5 @@
 """Mount a sealed die source as the read-only lower of a terminal row gate."""
+import json
 import os
 from pathlib import Path
 import runpy
@@ -14,6 +15,22 @@ SHARED_PRE_CACHE = Path("/srv/opentallas-scratch2/claude/.cache/pre-base")
 SHARED_PRE_SLOTS = Path("/tmp/ot-pre-slots")
 
 
+def publish_pre_baselines(pending, shared):
+    """Persist completed baseline facts after leaving the read-only COW namespace."""
+    from pre_diff import completed_findings, context_key, write_record
+
+    for path in pending.glob("*.json"):
+        try:
+            record = json.loads(path.read_text())
+            context = record.get("context")
+            if (isinstance(context, dict) and context.get("launch")
+                    and record.get("key") == path.stem == context_key(context)
+                    and completed_findings(record.get("result"), record.get("fails"))):
+                write_record(shared / path.name, record, publish=True)
+        except (OSError, ValueError, AttributeError):
+            continue
+
+
 def run(argv, src, out, ledger=None):
     """Invoke the same gate in a private mount namespace with writable OUT."""
     bwrap = shutil.which("bwrap")
@@ -26,7 +43,7 @@ def run(argv, src, out, ledger=None):
         if ledger == src or ledger.is_relative_to(src):
             raise ValueError("ledger must not write into the sealed source")
     out.mkdir(parents=True, exist_ok=True)
-    for p in ("tree", "launch", "ROW-READY.json", ".cow-upper", ".cow-work", ".pre-base"):
+    for p in ("tree", "launch", "ROW-READY.json", ".cow-upper", ".cow-work", ".pre-base", ".pre-base-findings"):
         if os.path.lexists(out / p):
             raise ValueError(f"copy-on-write requires a new attempt directory ({out / p} exists)")
     upper, work = out / ".cow-upper", out / ".cow-work"
@@ -50,6 +67,7 @@ def run(argv, src, out, ledger=None):
             "--dev-bind", "/dev", "/dev", "--tmpfs", "/tmp", *mounts,
             "--overlay-src", str(src), "--overlay", str(upper), str(work), str(view),
             "--setenv", INNER, str(view), "--setenv", "OT_PRE_BASE_CACHE", str(cache),
+            "--setenv", "OT_PRE_BASE_PENDING", str(out / ".pre-base-findings"),
             "--setenv", "OT_PRE_SLOT_DIR", str(SHARED_PRE_SLOTS),
             "--setenv", LEDGER, str(out / ".cow-ledger"),
             sys.executable, "-I", *argv,
@@ -58,6 +76,7 @@ def run(argv, src, out, ledger=None):
         # The mount lives only in bwrap. Remove its empty placeholder so the
         # ordinary gate cannot mistake it for an already materialized fork.
         view.rmdir()
+    publish_pre_baselines(out / ".pre-base-findings", SHARED_PRE_CACHE)
     if ledger:
         for record in (out / ".cow-ledger").glob("*.json"):
             ledger.mkdir(parents=True, exist_ok=True)
