@@ -2,9 +2,32 @@
 """Check exact top-level plan port bits before floorplan; missing/extra ports fail closed."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
+import subprocess
 import sys
+import tempfile
+
+
+_NATIVE_STAGE_SELECTOR_TCL = None
+
+
+def check_native_stage_selectors(netlist, selector_tcl):
+    """Check exact OpenDB names using the existing synth output, read-only."""
+    odb = Path(netlist).with_name('1_synth.odb')
+    if not odb.is_file():
+        raise FileNotFoundError(f'native selector check requires saved {odb}')
+    env = dict(os.environ, OT_NATIVE_STAGE_SELECTOR_ODB=str(odb))
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.tcl') as script:
+        script.write('if {[catch {\nread_db $::env(OT_NATIVE_STAGE_SELECTOR_ODB)\n')
+        script.write(selector_tcl)
+        script.write('} msg]} {puts stderr $msg; exit 16}\n')
+        script.flush()
+        result = subprocess.run(['openroad', '-exit', script.name], env=env,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    print(result.stdout, end='')
+    return result.returncode
 
 
 def check(text, top, pins, straps=()):
@@ -334,6 +357,10 @@ def main(argv=None):
         sj=kit/'straps.json'   # OWNER 10-25 option B: declared ID straps (strap_* inputs)
         sl=(lambda d: d.get('straps',[]) if isinstance(d,dict) else d)(json.loads(sj.read_text())) if sj.is_file() else []
         r=check(Path(a.netlist).read_text(), budget['module'], json.loads((kit/'port_bind_pins.json').read_text()), sl)
+        if r['verdict'] == 'PASS' and _NATIVE_STAGE_SELECTOR_TCL is not None:
+            rc = check_native_stage_selectors(a.netlist, _NATIVE_STAGE_SELECTOR_TCL)
+            if rc:
+                r.update(verdict='FAIL', reason='native stage selector check failed', native_selector_exit=rc)
     except Exception as e:
         r=dict(verdict='FAIL', reason=f'port-bind checker error: {e}')
     (kit/'port_bind.json').write_text(json.dumps(r,indent=1)+'\n')
