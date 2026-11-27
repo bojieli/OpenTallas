@@ -767,8 +767,8 @@ FLEET_API = os.environ.get('FLEET_API', 'http://127.0.0.1:8764')
 FLEET_TTL = dict(fleet=4, fleetjobs=12, jobs=12, verdicts=45)
 # P-FLEET-LOCALITY (FABLE-FLOW-0910 b13, COORD 11-27): epyc9 takes no new work and epyc2 takes no kit/probe dispatch while its root is above 90 %,
 # so neither is probed by default; FLEET_PROBE_EXCLUDE overrides the exclusion list, FLEET_PROBE_HOSTS the base list.
-PROBE_EXCLUDE = set(h for h in os.environ.get(FLEET_PROBE_EXCLUDE, epyc9,epyc2).split(,) if h)
-PROBE_HOSTS = [h for h in os.environ.get(FLEET_PROBE_HOSTS, intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,epyc12).split(,) if h and h not in PROBE_EXCLUDE]
+PROBE_EXCLUDE = set(h for h in os.environ.get('FLEET_PROBE_EXCLUDE', 'epyc9,epyc2').split(',') if h)
+PROBE_HOSTS = [h for h in os.environ.get('FLEET_PROBE_HOSTS', 'intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11,epyc12').split(',') if h and h not in PROBE_EXCLUDE]
 _FLEET = {}; _FLEET_FAIL = dict(t=0, err=None); _PROBE = dict(t=0, hosts={}, thread=None); _AUDIT = dict(t=0, rows=None, error=None)
 DIE_RE = re.compile(r'/runs/(s81_head|s81|qwen_compute|qwen_kvsys|hbm)/|[/_-](s81_head|qwen_compute|qwen_kvsys)[/_-]|/(?:die-)?(s81|hbm|head|kv|qc)[-_/]', re.I)
 ITEM_RE = re.compile(r'/items/([^/\s"\']+)/attempt_(\d+)(?:/([a-z0-9_]+))?')
