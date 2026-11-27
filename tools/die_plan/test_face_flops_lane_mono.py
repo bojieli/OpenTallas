@@ -58,12 +58,11 @@ def _mock(fx):
         f"set ff_x0 {x0}; set ff_y0 {y0}; set ff_x1 {x1}; set ff_y1 {y1}",
         "set ff_ns_stride 1; set ff_ns_inset 0; set ff_gocc {}; set ff_explicit_occ {}; set ff_done {}; set ff_out stdout",
         "set ff_orient {}; for {set y $ff_y0} {$y + $ff_rh <= $ff_y1} {incr y $ff_rh} { dict set ff_orient $y R0 }",
-        "set ff_mono_n 0; set ff_mono_bits 0",
         "set ff_core_boxes {" + " ".join("{%d %d %d %d}" % tuple(round(v * DBU) for v in b[:4]) for b in fx["boxes"]) + "}",
         f"set ff_ft [dict create {sl} [list {k} {fx['fin']} {fx['fout']} {{{' '.join(str(v) for v in fx['regs'])}}}]]",
         "proc mff {m} { return [expr {$m eq \"getName\" ? \"DFFHQNx1_ASAP7_75t_R\" : ($m eq \"getWidth\" ? 1080 : 270)}] }",
-        "proc flop {b j m args} { global st; set n \"u_ft_" + sl + "_o_${j}_q$b\"",
-        "  switch -- $m { getName { return $n } getMaster { return mff } getPlacementStatus { return [expr {[info exists st($n)] ? $st($n) : \"PLACED\"}] }",
+        "proc flop {b j m args} { global st st0_status; set n \"u_ft_" + sl + "_o_${j}_q$b\"",
+        "  switch -- $m { getName { return $n } getMaster { return mff } getPlacementStatus { return [expr {$j == 0 && [info exists st0_status($b)] ? $st0_status($b) : ([info exists st($n)] ? $st($n) : \"PLACED\")}] }",
         "    getLocation { global st0; return [expr {$j == 0 && [info exists st0($b)] ? $st0($b) : {}}] }",
         "    setPlacementStatus { set st($n) [lindex $args 0] } setOrient { } setLocation { } default { error \"flop $m\" } } }",
         "proc bbx {x y m} { return [expr {$m in {xMin xMax} ? $x : $y}] }",
@@ -73,6 +72,13 @@ def _mock(fx):
     ]
     for b, (x, y) in (fx.get("st0") or {}).items():
         lines.append(f"set st0({b}) [list {round(x * DBU)} {round(y * DBU)}]")
+    for bit, status in fx.get("st0_status", {}).items():
+        lines.append(f"set st0_status({bit}) {status}")
+    if fx.get("explicit_sites"):
+        lines.append(f"set ff_bit_site_cells [dict create {sl} {{1.404 0.27}}]")
+        lines.append("set ff_bit_sites {}")
+        for key, (x, y) in fx["explicit_sites"].items():
+            lines.append(f"dict set ff_bit_sites {sl},{key} {{ {x} {y} }}")
     for io, pins in (("i", fx["pins_i"]), ("o", fx["pins_o"])):
         for b, (x, y) in pins.items():
             X, Y = round(x * DBU), round(y * DBU)
@@ -83,6 +89,8 @@ def _mock(fx):
         "set ff_blk blk",
     ]
     body = "\n".join(lines) + "\n" + _procs() + "\n"
+    if fx.get("no_open_seat"):
+        body += "proc ff_put_near {f x y} { return {} }\n"
     body += "proc F {b j} { set a F_${b}_$j; if {[llength [info commands $a]] == 0} { interp alias {} $a {} flop $b $j }; return $a }\n"
     if fx.get("landed", True):
         # landed slot: the ring is at the in pin; the k stations of bit b are the flops u_ft_<slot>_o_<j>[b]
@@ -112,7 +120,7 @@ def _run(mono, fx=None):
         m = re.fullmatch(r"l?st(\d+)", p[1]) if len(p) >= 5 else None
         if m:
             seats.setdefault(int(p[4].rsplit("[", 1)[1][:-1]), {})[int(m.group(1))] = (float(p[2]), float(p[3]))
-    res = [ln for ln in r.stdout.splitlines() if ln.startswith("RESULT")][0]
+    res = "\n".join(ln for ln in r.stdout.splitlines() if ln.startswith(("RESULT", "OT_FT_LANE_MONO WARNING")))
     for b, (x, y) in (fx.get("st0") or {}).items():
         if int(b) in seats:
             seats[int(b)][0] = (x, y)
@@ -190,3 +198,37 @@ def test_flag_on_leaves_targets_outside_cores_unchanged(runs):
     on, _ = runs[True]
     # the low bits never touch a core: same seats with and without the flag
     assert all(off[b] == on[b] for b in range(0, 300)), [b for b in range(0, 300) if off[b] != on[b]][:5]
+
+
+def _one_unlanded():
+    return dict(slot="ft0", k=2, landed=False, fin="W", fout="E", core=[0, 0, 1000, 1000],
+                pins_i={"0": [100, 700]}, pins_o={"0": [800, 700]}, regs=[100, 700, 500, 700],
+                boxes=[[400, 500, 600, 900]], st0={"0": [900, 700]})
+
+
+def test_unplaced_station0_uses_pin_side():
+    fx = _one_unlanded()
+    unplaced, _ = _run(True, dict(fx, st0_status={"0": "NONE"}))
+    placed, _ = _run(True, dict(fx, st0_status={"0": "PLACED"}))
+    assert unplaced[0][1][0] < 400
+    assert placed[0][1][0] > 600
+
+
+def test_explicit_sites_and_failed_seats_do_not_count_as_escaped():
+    fx = _one_unlanded()
+    explicit = dict(fx, explicit_sites={"1,0": [345.6, 699.57]})
+    baseline, _ = _run(False, explicit)
+    enabled, report = _run(True, explicit)
+    assert enabled == baseline
+    assert "mono=0 bits=0 miss=0" in report
+    _, missing = _run(True, dict(fx, no_open_seat=True))
+    assert "mono=0 bits=0 miss=1" in missing
+
+
+def test_reports_overlength_planned_hops_only_when_opted_in():
+    fx = dict(_one_unlanded(), boxes=[], pins_i={"0": [50, 700]}, pins_o={"0": [950, 700]},
+              st0_status={"0": "NONE"})
+    _, off = _run(False, fx)
+    _, on = _run(True, fx)
+    assert "WARNING" not in off
+    assert "slot ft0: 2 planned hops exceed 405 um after escape selection (max 450.0 um)" in on
