@@ -7613,6 +7613,22 @@ def ft_keep_firm_exports(t):
     return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
 
 
+def ft_lane_mono_exports(t):
+    """QC-R3-STA 11-27 (C-STATION-BIT-SCRAMBLE): ft_slots.lane_mono true -> OT_FT_LANE_MONO_SLOTS (face_flops.tcl ff_mono_slot_on).
+    The plan, not a per-run env flag, selects the monotone lane exit assignment, so the bound plan reproduces it on every kit."""
+    names = []
+    for slot in t.get("ft_slots", []):
+        enabled = slot.get("lane_mono", False)
+        if not isinstance(enabled, bool):
+            raise ValueError("ft_slots.lane_mono must be boolean")
+        if enabled:
+            name = slot.get("name", "")
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise ValueError("unsafe FT lane_mono slot name")
+            names.append(name)
+    return ["export OT_FT_LANE_MONO_SLOTS = " + " ".join(names)] if names else []
+
+
 SERDES_H_DENSITY = 0.30
 SERDES_H_LEAF_SLEW_PS = 165
 SERDES_H_FILES = ("h4_meta_reflow.tcl", "serdes_boot_release_local.tcl", "serdes_pre_drt.tcl", "pad_in_direct.tcl",
@@ -8894,6 +8910,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += pinreg_tap_exports(t)
     cfg += ft_stage0_exports(t)
     cfg += ft_keep_firm_exports(t)
+    cfg += ft_lane_mono_exports(t)
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)

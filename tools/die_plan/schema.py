@@ -617,6 +617,7 @@ SCHEMA = {
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
                                        "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
                                        "keep_firm": {"type": "boolean"},  # opt-in preserve FT sites through DPL
+                                       "lane_mono": {"type": "boolean"},  # QC-R3-STA 11-27: monotone core exits for this regs-only slot (OT_FT_LANE_MONO_SLOTS)
                                        "buffer_corridor_stages": {"type": "array", "minItems": 2, "maxItems": 2,
                                                                   "items": {"type": "integer", "minimum": 0}},
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},

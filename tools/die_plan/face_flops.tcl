@@ -834,10 +834,14 @@ proc ff_lane_xy {slot bt ob xy t} {
 # boxes, inside the core), the other targets stay, and a small DP over the chain (in pin or station 0 -> targets -> out
 # end) picks the exits that minimise the longest leg, then the total move off target.  A bit therefore keeps one side of
 # every core along its chain and the bank stays in bit order; the spiral then legalises around the chosen point as before.
-proc ff_mono_on {} { return [expr {[info exists ::env(OT_FT_LANE_MONO)] && $::env(OT_FT_LANE_MONO) eq "1"}] }
+# QC-R3-STA 11-27: the plan owns the choice per slot (ft_slots.lane_mono -> OT_FT_LANE_MONO_SLOTS, gen_phys.ft_lane_mono_exports), so the bind and
+# every kit see the same default; OT_FT_LANE_MONO=1 still forces every slot.  Slots with explicit per-bit sites stay bypassed.
+proc ff_mono_all {} { return [expr {[info exists ::env(OT_FT_LANE_MONO)] && $::env(OT_FT_LANE_MONO) eq "1"}] }
+proc ff_mono_listed {slot} { return [expr {[info exists ::env(OT_FT_LANE_MONO_SLOTS)] && $slot in $::env(OT_FT_LANE_MONO_SLOTS)}] }
+proc ff_mono_on {} { return [expr {[ff_mono_all] || ([info exists ::env(OT_FT_LANE_MONO_SLOTS)] && [llength $::env(OT_FT_LANE_MONO_SLOTS)] > 0)}] }
 proc ff_mono_slot_on {slot} {
   global ff_bit_site_cells
-  return [expr {[ff_mono_on] && !([info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot])}]
+  return [expr {([ff_mono_all] || [ff_mono_listed $slot]) && !([info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot])}]
 }
 proc ff_core_box_at {boxes x y} {
   foreach b $boxes { lassign $b a bb c d; if {$x >= $a && $x <= $c && $y >= $bb && $y <= $d} { return $b } }
