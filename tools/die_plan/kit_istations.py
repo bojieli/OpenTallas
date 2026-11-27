@@ -1529,6 +1529,7 @@ RELAY_SPLIT_TCL = r"""# RESET-RELAY-GEN-1530 11-21 plan relay_split (opt-in part
 proc rs_key {nm} {
   set k [string map {\\ {}} $nm]
   regsub {\$_[A-Za-z0-9_]*$} $k {} k
+  regsub {^(u_(?:y|lk)_xd_.*)_k([0-9]+)_([0-9]+)([.]|$)} $k {\1_\2_\3\4} k
   return $k
 }
 # S81-CLASSCOPY 11-24 (relay_split[].unbuffer, opt-in per row): the fan-out BUF tree synthesis put on the flop hides the sinks,

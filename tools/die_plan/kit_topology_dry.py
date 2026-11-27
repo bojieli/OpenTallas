@@ -111,13 +111,15 @@ def check_type(tn, plan, bind_out, asbuilt, tree, work, tools=HERE, timeout=3600
         kr += ["--asbuilt", asbuilt]
     rc, txt = runner(kr, tree, timeout)
     if rc:
-        return dict(type=tn, verdict="FAIL", stage="kit_rtl", why=_why(txt), seconds=round(time.time() - t0, 1))
+        (kit.parent / "kit_rtl.log").write_text(txt)         # the full output of the failed stage, next to the kit (WORK/types/T/)
+        return dict(type=tn, verdict="FAIL", stage="kit_rtl", why=_why(txt), seconds=round(time.time() - t0, 1), log=str(kit.parent / "kit_rtl.log"))
     kt = [py, "-I", str(Path(tools) / "kit_topology.py"), "prepare-stations", plan, tn, str(kit), "--native-plan", plan]
     if asbuilt:
         kt += ["--asbuilt", asbuilt]
     rc, txt = runner(kt, tree, timeout)
     if rc:
-        return dict(type=tn, verdict="FAIL", stage="kit_topology", why=_why(txt), seconds=round(time.time() - t0, 1))
+        (kit.parent / "kit_topology.log").write_text(txt)
+        return dict(type=tn, verdict="FAIL", stage="kit_topology", why=_why(txt), seconds=round(time.time() - t0, 1), log=str(kit.parent / "kit_topology.log"))
     return dict(type=tn, verdict="PASS", stage="kit_topology", seconds=round(time.time() - t0, 1))
 
 

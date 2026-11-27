@@ -37,3 +37,8 @@ def test_krd_alias_is_exact_only():
 
 def test_place_time_seating_tcl_normalises_the_same_rename():
     assert r"regsub {^(u_(?:y|lk)_xd_.*)_k([0-9]+)_([0-9]+)([.]|$)} $n" in KI.RELAY_TCL
+
+
+def test_relay_split_flop_keys_normalise_the_same_rename():
+    """the 16 __rs clones of t27 were never made: rs_key (flop names of rs_split_all) must read u_y_xd_..._k0_3.q as the plan's ..._0_3.q"""
+    assert r"regsub {^(u_(?:y|lk)_xd_.*)_k([0-9]+)_([0-9]+)([.]|$)} $k {\1_\2_\3\4} k" in KI.RELAY_SPLIT_TCL
