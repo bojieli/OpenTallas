@@ -129,3 +129,4 @@
   pinreg: the s3 probes report status within 20 min; deleted once results are recorded, unless it becomes the single shared fork for PART sibling work.
   hdmesh_leg405: folded onto the one kept PART fork.
   tree_k4: kept while the hd_tile DNC place+CTS probe runs; deleted after CTS-REACH is recorded, unless needed for the tile route.
+- 2026-11-27 13:29 PST DIED [HEAD-INT-R3] ot-push-main otpush-open-snipe-3933024 on open-snipe: rc=4 after 227 s, ended 21:29:20, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 227 s, no log
