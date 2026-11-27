@@ -39,3 +39,20 @@
   - The only QC row with that failure is sle_su_c b65c2b2c45c5e (kw-qwenco-slesuc-30-25603). It failed on the old event s29q103S4Q9N46R6V3 and is now CANCELLED SUPERSEDED. I am not reviving it, under the skip-superseded rule. The current sle_su_c form comes in through the SU_C p9 ledger row, which is READY for the 21:00 cut.
   - qfd_dv_s8x_btab and qfd_dv_s8x_prog are counted cores: plan --probe lists them as "kind core not in wave", so they have no kit of their own. They are now resolvable for any parent that binds them, starting with tonight's form.
   - If FLEET has a list of private (non-wave) QC kits that died on INFRA-VIEW-MISSING, send it to me. I will rerun each one with reuse of its qualifying early stages.
+- 2026-11-27 11:56 PST QC-INT-R3 12:05 PST [-> COORD; FLOW-1047 item 5 P-HOLD-OVERDUE; classes C-GPL-REGION-DIVERGE, C-CONE-DEPTH, C-LEG405, C-STREET, C-CLK-LAND-OBS]
+  - hc0 cl38badc56 place-only probe ended rc 0. Verdict: PLACE PASS, AUTO-GEOM FAIL, PASS-WITH-ROWS (QC-R3-VISUAL post b0647120f2bc).
+  - C-GPL-REGION-DIVERGE does NOT reproduce: GPL completed with 8 fences, no GPL-0304, DPL 0 violations, and each fence bbox equals its region. So fence-free clean types are not blocked.
+  - The dropped hc0_xh0_fault region (42 cells) lands 75-309 um from its anchor, 0 over 405. It is a finding only (C-CONE-DEPTH sibling, plan membership regex).
+  - hc0 itself is not clean, and its hold stays. Its rows:
+  - the STALE-EXPORT-TAP repoint (gate3 whole-die running);
+  - C-LEG405 q_bad -> x_ctl_o 566 um (new lane QC-R3-LEG405, one combined SRC-NOT-AT-LEAF row with all deferred siblings);
+  - a GRT-stage probe for col_v 1.229 (C-STREET).
+  - Clean-type launch: done. All 25 plan-visual GOOD QC types fall into three groups:
+  - running or ROUTE-HELD for review: 14;
+  - signed: coll_n;
+  - held with a named row in flight: tt_ctlm/native59 (TT row), sle_su_c (p9), coll_ftm/ftn (fill ruling), coll_s (R7, DEFERRED), coll_core (RC-QC-32 rows), hc0.
+  No eligible clean type remains unlaunched.
+  - QC-R3-COLLS landed a fix on main (80c70b9d0d6). The C-CLK-LAND-OBS checker now handles mirrored cores, which removes false hits: QC 77 -> 41 landings, KV 4544 -> 4125. The real QC residual (6 st_a_v1, 3 su_c) goes to the STA and SULANE rows as clk_land_clear.
+  - DEFERRED, owner QC-R3-COLLS, ETA 11-28 21:00:
+  - Coll_s R6/R7: 31 private Tcl hooks, not on the 77f2 base, failed at place/DPL.
+  - C-XTAP-HOLD 1968: a pre-repair CTS count, with no live evidence.
