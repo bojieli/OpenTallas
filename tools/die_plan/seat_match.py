@@ -81,6 +81,7 @@ def judge(relay_sites, text, ist_buses=None):
     text is the kit's own RTL, which has them)"""
     inst = bound_instances(text)
     ident = set(re.findall(r"[A-Za-z_]\w*", text))
+    has_y = any(i.startswith("u_y_") for i in ident)
     twin = {}
     for k in relay_sites:
         twin.setdefault(k.replace("/", "."), []).append(k)
@@ -100,8 +101,11 @@ def judge(relay_sites, text, ist_buses=None):
                 continue
             ok = reg_ok(mod, par, rest.replace("/", "."))
             out[k] = "UNKNOWN" if ok is None else ("OK-CNT" if ok == "CNT" else ("OK" if ok else "DEAD-REG"))
-        elif base in ident or KITPASS.match(base):
+        elif base in ident:
             out[k] = "UNKNOWN"
+        elif KITPASS.match(base):
+            # C-RELAY-SEAT-KEYMISS 11-27: once the text holds u_y_ relays (the relay pass ran), a u_y_ key with no such identifier seats nothing (hub_Eo astk_EN/ES)
+            out[k] = "DEAD-INST" if base.startswith("u_y_") and has_y else "UNKNOWN"
         elif ist_buses is not None and IST.match(base):
             m = IST.match(base)
             out[k] = "UNKNOWN" if int(m.group(2)) < ist_buses.get(m.group(1), 0) else "DEAD-INST"
