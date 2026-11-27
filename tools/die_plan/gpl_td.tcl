@@ -128,14 +128,14 @@ proc ot_gpl_td_wrapped {args} {
   if {$growth} { ot_gpl_td_growth_gate post_gpl }
   return $rc
 }
+# C-GPL-TD-CHAIN 11-27 (FABLE review of HEAD-EAST-R4 next-form rows, problem 6): ALWAYS wrap the current ::global_placement by rename.
+# The old form asked `interp alias {} ::global_placement` and reused the answer as the previous layer; Tcl keeps the alias record under its
+# original name after logic_cluster.tcl renames the OT_GPL_GUARD alias away and defines its own ::global_placement proc, so the query still
+# named the guard target and the re-alias deleted the logic-cluster wrapper: ot_logic_cluster_apply never ran (no OT_LOGIC_CLUSTER_POST
+# line in the hd_lep0N C1d / r6 place logs; every OT_LOGIC_CLUSTER_POST_GPL region of a gpl_td kit was dropped).
 if {![info exists ::ot_gpl_td_release] && [info commands ::global_placement] ne "" && [info commands ::ot_gpl_td_native] eq "" && ![info exists ::ot_gpl_td_prev]} {
-  set ot_gpl_td_alias [interp alias {} ::global_placement]
-  if {$ot_gpl_td_alias ne ""} {
-    set ::ot_gpl_td_prev $ot_gpl_td_alias
-  } else {
-    rename ::global_placement ::ot_gpl_td_native
-    set ::ot_gpl_td_prev ::ot_gpl_td_native
-  }
+  rename ::global_placement ::ot_gpl_td_native
+  set ::ot_gpl_td_prev ::ot_gpl_td_native
   interp alias {} ::global_placement {} ::ot_gpl_td_wrapped
 }
 # PRE_DETAIL_PLACE (face_flops_release.tcl) sources this file with ::ot_gpl_td_release set, then calls ot_gpl_td_growth_gate post_resize
