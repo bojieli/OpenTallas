@@ -69,3 +69,15 @@ def test_judge_alerts_once_after_two_hours_and_rearms():
 def test_render():
     out = US.render([dict(die="s81", name="t52", gate="LEC", age_h=20.7, evidence="PENDING-LEC")], 0)
     assert "| s81 | t52 | LEC | 20.7 h |" in out
+
+
+def test_prescreen_drops_rejudged_not_signed_and_lec_not_eq_keeps_unreadable():
+    import json as _j
+    import uncounted_signed as u
+    ev = "SIGNED-NO-TAG /srv/opentallas-scratch2/claude/x/kit/signoff/signoff.json"
+    row = {"evidence": ev}
+    assert u.prescreen(row, read=lambda p: _j.dumps({"verdict": "LOCAL_PASS_NEEDS_PARENT"}))[0] is False
+    assert u.prescreen(row, read=lambda p: _j.dumps({"verdict": "SIGNED", "lec": "NOT-EQ"}))[0] is False
+    assert u.prescreen(row, read=lambda p: _j.dumps({"verdict": "SIGNED", "lec": "EQ"}))[0] is True
+    assert u.prescreen(row, read=lambda p: (_ for _ in ()).throw(OSError("no")))[0] is True
+    assert u.prescreen({"evidence": "no path here"})[0] is True

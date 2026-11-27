@@ -125,6 +125,31 @@ def rows_from_spool(d=SPOOL_FAILED, done=()):
     return out
 
 
+# P-SIGNED-CANDIDATE-FALSE (FABLE-FLOW-0910 a5, COORD 11-27 ruling 4; no b4e3 prescreen source exists on main, so this is the ruled rule): a row is a REAL signed
+# candidate only if (1) its sign-off verdict re-reads as SIGNED, (2) the record has an INDEX or AGIdock row by sha, and (3) the LEC verdict is EQ.  A row whose
+# evidence names a readable sign-off / LEC artifact that fails (1) or (3) is a false candidate (diagnostic body, NOT SIGNED probe) and is dropped from the table;
+# an unreadable artifact keeps the row (an alert is cheap, a lost one is not).  Gate (2) is what the table itself reports (gate "archive key"), so it is not a drop reason.
+PATH_RE = re.compile(r"(/[\w@.+=,/-]+?/(?:signoff/)?signoff\.json)")
+
+
+def prescreen(row, read=lambda p: Path(p).read_text()):
+    """-> (keep, why)"""
+    m = PATH_RE.search(row.get("evidence", "") or "")
+    if not m:
+        return True, "no readable sign-off artifact named"
+    try:
+        d = json.loads(read(m.group(1)))
+    except (OSError, ValueError):
+        return True, "sign-off artifact unreadable"
+    verdict = str(d.get("verdict") or d.get("status") or "")
+    if verdict and verdict != "SIGNED":
+        return False, f"rejudged verdict {verdict}"
+    lec = str(((d.get("checks") or {}).get("lec") or {}).get("verdict") or d.get("lec") or "") if isinstance(d.get("checks"), dict) or d.get("lec") else ""
+    if lec and lec.upper() not in ("EQ", "EQUIVALENT"):
+        return False, f"LEC {lec}"
+    return True, "SIGNED"
+
+
 def judge(rows, state, now, alert_h=ALERT_H):
     """-> (due rows with 'age_h', new keys).  state {'seen': {key: t}, 'alerted': {key: t}} is updated in place"""
     seen = state.setdefault("seen", {})
@@ -185,6 +210,7 @@ def main(argv=None):
         state = json.loads(STATE.read_text())
     except (OSError, ValueError):
         state = {}
+    rows = [r for r in rows if prescreen(r)[0]]
     due, new = judge(rows, state, now)
     for r in due:
         print(f"UNCOUNTED-SIGNED {r['die']} {r['name']}: gate {r['gate']}, {r['age_h']:.1f} h ({r['evidence'][:120]})")
