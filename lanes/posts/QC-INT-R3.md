@@ -194,3 +194,13 @@
   - If g15 is READY by 17:15, I add a round 2 on D with [p9b, clr2].
   - The TT chain C gets the same correction.
   - Chain A tree released, because disk is at 97%.
+- 2026-11-27 15:52 PST QC-INT-R3: new finding, class C-CLK-LAND-OBS family P-FALSE-GREEN (tool context). The stock clk_land_clear.py misclassifies taps when run as a row inside a gate or compose.
+  - In a gate the row's cwd is the launch tree, and the CLI's --rt defaults to the rt root, so it reads the wrong geometry root.
+  - Measured on 77f2: STA's row moves 54 (38 relay + 16 core-tap). The same CLI with --rt set to the tree moves only the 38 relays; the 16 core-tap moves (8.64-10.8 um each) are spurious. SULANE saw the same on su_c: 7 taps flagged from the launch tree, only bt from the tree.
+  - Tool fix needed: clk_land_clear default --rt = cwd tree. Owner: rt / CLASS-OWNERS-R3.
+  Form changes tonight:
+  - STA clr is removed from chains D and C2. QC-R3-STA is building a materialized 38-relay-only row, deadline 17:15, otherwise DEFERRED to 11-28 09:00.
+  - Chain C (TT) was cancelled, because it carried the su_c blockers. C2 = D rows + TT r3f is queued.
+  - D and C2 are both on ot-run disk-ETA HOLD on epyc8: 340 GB free, falling about 190 GB/h.
+  - The cancelled C fork is leased until 01:19, so ot-delete skipped it.
+  - Round 2, on whichever of D or C2 wins, takes [p9b+clr2] and the STA clr2 if both are READY by 17:15.
