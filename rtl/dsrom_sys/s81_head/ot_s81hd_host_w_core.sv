@@ -25,6 +25,11 @@
 // keep): +1 cycle on EVERY host276 h_rx_o frame (HFWD type 7, CSR type 6, fault STATUS type 8, all others); the lane0 ingress / HBC dates,
 // peer0/peer1 RX and the lane1 seam are unchanged.  The plan declares the cycle as fixed_cycles +1 on the host_rx lane (LAT_HD_HOST_RX +1).
 // TX_STAGE=0 = the DH58 circuit (bench reference); production default 1 after the lockstep bench passed (HEAD-94 11-11).
+// HEAD-INT-R2 11-26 (C-LEG405, indep. place review of hd_host_w clk9: 13 legs 405.0-406.7 um and 216 more at 395-405 um around the lane0
+// gearbox beat_tx, the sf SRAM rd_out -> beat_tx side and the beat_tx -> u_bout_coll_o0 side sum to ~820 um, one flop cannot serve both):
+// CO_STAGE=1 registers the 512-bit lane0 egress flit once before coll_o0 (the E core's co_m, DH56, same form: data unreset, keep): +1 cycle on the
+// physical HOST0 egress link (the safe8 credit/ACK protocol absorbs it); the plan declares it as fixed_cycles +1 on lane coll_HOST0_d and sets
+// CO_STAGE=1 in the type's contents params.  CO_STAGE=0 (default) = the circuit of record, every other user of this core unchanged.
 module ot_s81hd_host_w_core #(
  parameter[1:0]CH_B=2'b11,
  parameter integer LOCAL_STAGE=255,LOCAL_RANK=4,PHASE_BOUND=0,
@@ -32,6 +37,7 @@ module ot_s81hd_host_w_core #(
  parameter integer SPLIT_MUT=0,
  parameter integer L0_STAGE=1,
  parameter integer TX_STAGE=1,
+ parameter integer CO_STAGE=0,
  parameter[63:0]CLOCK_RESET_ID=0,
  parameter[47:0]BOOT_HEADER_EDGE=48'hffffffffffff,
  parameter[47:0]BOOT_COMMIT_EDGE=48'hffffffffffff
@@ -62,9 +68,17 @@ module ot_s81hd_host_w_core #(
  wire[1:0]lv,txv;wire[1105:0]ld,txd;wire[3:0]lf0;
  assign lv[1]=lv1;assign ld[1105:553]=ld1;
  wire l0v_q;wire[552:0]l0d_q;wire[3:0]l0f_q;
+ wire[511:0]co0;
  ot_s81hd_mesh_lane u_lane0(.ck(ck),.rst_n(rst_n),.chb(CH_B[0]),
-  .rx(coll_i0),.tx(coll_o0),.tx_v(txv[0]),.tx_d(txd[552:0]),
+  .rx(coll_i0),.tx(co0),.tx_v(txv[0]),.tx_d(txd[552:0]),
   .rx_v(l0v_q),.rx_d(l0d_q),.flt(l0f_q));
+ generate if(CO_STAGE!=0)begin:g_co
+  (* keep="true" *)reg[511:0]co0_m;
+  always@(posedge ck)co0_m<=co0;
+  assign coll_o0=co0_m;
+ end else begin:g_cod
+  assign coll_o0=co0;
+ end endgenerate
  generate if(L0_STAGE!=0&&SPLIT_MUT!=5)begin:g_l0s
   (* keep="true" *)reg l0s_v;(* keep="true" *)reg[3:0]l0s_f;(* keep="true" *)reg[552:0]l0s_d;
   always@(posedge ck or negedge rst_n)if(!rst_n)begin l0s_v<=0;l0s_f<=0;end else begin l0s_v<=l0v_q;l0s_f<=l0f_q;end

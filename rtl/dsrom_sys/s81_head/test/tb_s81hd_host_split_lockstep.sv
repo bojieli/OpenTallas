@@ -19,11 +19,13 @@
 // DH58-RFRTL (l48rf): the W core lane0 RX stage (L0_STAGE=1) adds W0X=1 to every lane0 ingress frame: h_rx_o type 7
 //   HFWD +1, and the DUT HBC runs on dates +1 (BOOT_HEADER_EDGE 502 / BOOT_COMMIT_EDGE 512, the HBC header / COMMIT
 //   record date fields [289:242] +1; the body and its CRC32C are unchanged -- gen_vectors.py CRCs the body only).
+// HEAD-INT-R2 11-26 (C-LEG405): CO_STAGE=1 registers the lane0 egress flit before coll_o0 (like the E co_m): every peer0 RX frame arrives +P0X=CO_EXP=1
+//   (RESULT via lane0); nothing else moves.  CO_EXP must equal CO_STAGE; mutant 7 = stage dropped while the bench expects it.
 //   MODE 0 also checks the DUT HBC receiver_edge / context_valid equal the REF ones one cycle earlier (the whole
 //   receiver timeline is shifted by exactly W0X).  SPLIT_MUT 5 (stage dropped) must FAIL.
-module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0, parameter integer TX_STAGE=0, parameter integer TX_EXP=0);
+module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0, parameter integer TX_STAGE=0, parameter integer TX_EXP=0, parameter integer CO_STAGE=0, parameter integer CO_EXP=0);
  reg ck=0,rn=0,start=0;always #0.4165 ck=~ck;
- localparam integer E2W=4, W2E=4, P1X=1, W0X=1, TXX=TX_EXP;   // TXX: HEAD-94 TX_STAGE, +1 on every h_rx_o frame
+ localparam integer E2W=4, W2E=4, P1X=1, W0X=1, TXX=TX_EXP, P0X=CO_EXP;   // TXX: HEAD-94 TX_STAGE, +1 on every h_rx_o frame; P0X: HEAD-INT-R2 CO_STAGE, +1 on every lane0 egress flit (peer0 RX)
  // ---------------- shared stimulus
  reg[1:0]pv=0;reg[552:0]pd0=0,pd0d=0,pd1=0;reg flip1=0;
  // ---------------- REF system
@@ -43,7 +45,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
  assign seam_rx=wb_rx1;assign seam_tx=wb_tx1;
  ot_s81hd_mesh_lane dp0(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx0}),.tx(dp_tx0),.tx_v(pv[0]),.tx_d(pd0d),.rx_v(dprv[0]),.rx_d(dprd0),.flt(dpf0));
  ot_s81hd_mesh_lane dp1(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx1}),.tx(dp_tx1),.tx_v(pv[1]),.tx_d(pd1),.rx_v(dprv[1]),.rx_d(dprd1),.flt(dpf1));
- ot_s81hd_host_w_core #(.SPLIT_MUT(SPLIT_MUT),.TX_STAGE(TX_STAGE),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
+ ot_s81hd_host_w_core #(.SPLIT_MUT(SPLIT_MUT),.TX_STAGE(TX_STAGE),.CO_STAGE(CO_STAGE),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
   .BOOT_HEADER_EDGE(48'd501+W0X),.BOOT_COMMIT_EDGE(48'd511+W0X))dut_w(.ck(ck),.rst_n(rn),.start_i(start),
   .coll_i0({2'b10,dp_tx0}),.coll_o0(dh_tx0),.h_tx_i(d_htx),.h_rx_o(d_hrx),.l1_rx_i(seam_rx),.l1_tx_o(seam_tx_w));
  ot_s81hd_host_e_core dut_e(.ck(ck),.rst_n(rn),.coll_i1({2'b10,dp_tx1^{511'd0,flip1}}),.coll_o1(dh_tx1),.l1_rx_o(seam_rx_e),.l1_tx_i(seam_tx));
@@ -140,7 +142,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
     if(hrx_off(rdd)>=0)q_hrx.push_back('{c+hrx_off(rdd),rdd});else q_hrx.push_back('{c+TXX,rdd});
     n_hrx++;if(rdd[3:0]==6)n_t6++;else if(rdd[3:0]==7)n_t7++;else n_t8++;
    end
-   if(rprv[0])begin q_p0.push_back('{c,rprd0});n_p0++;end
+   if(rprv[0])begin q_p0.push_back('{c+P0X,rprd0});n_p0++;end
    if(rprv[1])begin q_p1.push_back('{c+W2E+P1X,rprd1});n_p1++;end
    if(ref_host.u_lane1.tx_v)begin q_l1.push_back('{c+W2E,ref_host.u_lane1.tx_d});n_l1++;end
    if(ddv)expect_rx(q_hrx,ddd,"h_rx_o",0,(ddd[3:0]!=6&&ddd[3:0]!=7)?E2W:0);
