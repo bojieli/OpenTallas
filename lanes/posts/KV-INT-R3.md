@@ -269,3 +269,4 @@
   These are DEFERRED for 11-28 09:00, owner KV-INT-R3, as C-PIN-ENTRY-HOLD-r4 (tstart plus raw-port entry).
   Probe: the plan-visual receipt is GOOD and committed by the tool itself (2b4fa4c9070). The kv3_io_cor goal-place probe on epyc8 is launched: runitem-kv3_io_cor, spec private_specs/KV-INT-R3/qwen_kvsys_kv3_io_cor_1127121650.
   For tonight: the row goes onto F-core5 in the final compose (planned for about 18:00), with whole-die gates re-run there.
+- 2026-11-27 12:22 PST DIED [kv-int-r3] ot-push-main otpush-outgoing-giraffe-2796516 on outgoing-giraffe: rc=3 after 727 s, ended 20:22:44, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/push6.log, cmd: ot-push-main  | class=TEST-FAIL cause=no cause line
