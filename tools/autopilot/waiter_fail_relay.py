@@ -38,7 +38,7 @@ FAIL_WORDS = ("fail", "failed", "refuse", "refused", "error", "blocked")
 PASS_WORDS = ("pass", "passed", "ok", "done", "good", "success")
 LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:FAILED?|REFUSE|REFUSED|Traceback)")
 FAIL_PHRASE = re.compile(r"(?:did|do|does) NOT pass")
-LINE = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d [^\[]*?)\s*\bRESULT\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)\s*->\s*"
+LINE = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d [^\[]*?)\s*\b(?P<tag>RESULT(?:-FAIL|-PASS)?)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)\s*->\s*"
                   r"(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
 SKIP_LANES = ("FABLE-", "COORD", LANE)
 WINDOW = 300
