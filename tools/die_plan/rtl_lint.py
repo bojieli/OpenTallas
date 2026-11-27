@@ -18,7 +18,7 @@ def config(kit):
     return values
 
 
-def script(kit, mount='/work', flatten=None):
+def script(kit, mount='/work', flatten=None, checkpoint=None):
     cfg = config(kit)
     top = cfg.get('DESIGN_NAME', [])
     sources = cfg.get('VERILOG_FILES', [])
@@ -63,6 +63,15 @@ def script(kit, mount='/work', flatten=None):
                 libs.append(line)
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
+    hierarchy = f'hierarchy -check -top {top[0]}'
+    capture = []
+    if checkpoint is not None:
+        capture = [
+            hierarchy + ' -keep_positionals -keep_portwidths -nodefaults',
+            'select *', f'write_rtlil -selected {checkpoint}/active.rtlil',
+            'select =A:blackbox =A:whitebox', f'write_rtlil -selected {checkpoint}/lint_boxes.rtlil',
+            'select -clear',
+        ]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
                      # -defer as ORFS synth: modules elaborate once, with the parameters they are instantiated
                      # with (FLOW-CANARY 10-25: without it 'initial if(P<1) $fatal' guards fired on the default
@@ -76,7 +85,7 @@ def script(kit, mount='/work', flatten=None):
                      # Optional actual-top liveness for macro-composed parents: hierarchy-local dead outputs can
                      # retain undriven cones whose consumers disappear only across module boundaries. Flatten
                      # before pruning preserves every LIVE undriven top connection for check -assert.
-                     parameter_commands + [f'hierarchy -check -top {top[0]}', 'proc'] +
+                     parameter_commands + capture + [hierarchy, 'proc'] +
                      dead_output_commands +
                      (['flatten', 'opt_expr -keepdc'] if (cfg.get('OT_RTL_LINT_FLATTEN') == ['1'] if flatten is None else flatten) else []) + [
                                            # Check the elaborated live design. Dead parameter-disabled cones can
@@ -371,7 +380,7 @@ def dead_undriven_only(log):
     return bool(und) and len(und) == len(probs) and bool(errs) and all(re.search(r'Found (?:and reported )?\d+ problems', e) for e in errs)
 
 
-def run(kit, yosys='yosys'):
+def run(kit, yosys='yosys', checkpoint=None):
     out = kit / 'rtl_lint.json'
     try:
         macro_authority = config(kit).get('OT_NATIVE_SRAM_PATHS') == ['1']
@@ -387,7 +396,7 @@ def run(kit, yosys='yosys'):
                 raise ValueError('private clock role requires its exact hierarchical native source check')
             (kit / 'rtl_lint_elaborated.json').unlink(missing_ok=True)
         ys = kit / 'rtl_lint.ys'
-        ys.write_text(script(kit))
+        ys.write_text(script(kit, checkpoint=checkpoint))
         result = subprocess.run([yosys, '-q', '-s', str(ys)], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         log = result.stdout
         (kit / 'rtl_lint.log').write_text(log)
