@@ -11,6 +11,8 @@ import subprocess
 from tempfile import NamedTemporaryFile
 import time
 
+import flow_health
+
 ACTIVE_DIES = {"s81", "s81_head", "qwen_compute", "qwen_kvsys"}
 ROUTING_GOALS = {"auto", "grt", "route", "finish"}
 REQUEST_SCHEMA = "placement-visual-request.v1"
@@ -166,7 +168,7 @@ def central(hub, operation, ident, doc=None):
     argv = ["python3", "-I", "-c", INDEX, operation, ident]
     if doc is not None:
         argv.append(json.dumps(doc, sort_keys=True))
-    if hub != "localhost":
+    if not flow_health.is_local_host(hub):
         argv = ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=5",
                 hub, shlex.join(argv)]
     try:
