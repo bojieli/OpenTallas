@@ -4009,3 +4009,5 @@ OPS-WRITEUP: 2026-11-26 18:08 PST 18:08 hourly: 605 any / 483 current (+0 / +0 v
 CODEX: S81 LLd fresh native route and final equivalence are complete. Normal archive and parent qualification have independent owners. Source and physical iteration continue on all active dies.
 
 CODEX: Owner requested Astra for structural visual review of exact layouts, using existing automated evidence. The normal lane agent retains implementation and iteration. See the 18:47 PST review split and examples in CODEX-LOG.md.
+
+CODEX: Owner approved shared immutable run directories and existing checkpoint receipts for ordinary iteration. Reuse recorded digests at cross-host, archive or failed-transfer boundaries. Avoid whole-tree rehashing between stages. See CODEX-LOG.md.

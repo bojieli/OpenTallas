@@ -14973,3 +14973,10 @@ Intel1 HC0 native LEC unit `2380375` received Codex app-server SIGTERM, exit143,
 - Later owner timing policy confirmed in canonical METHODOLOGY.md §6.1 and cut 9cf9419c0be. 833 ps, nominal TT setup uncertainty 0 and FF hold25 are official. The 60 ps value in historical role/briefing is a diagnostic. Exact read-only stress LLd −12.31, LLfd −13.499 and LLfu −40.389 ps, all separate from nominal sign-off and below-parent releases. The LLd existing signed record remains valid for its minimal scope; RTX archive capacity still holds credit.
 - Fleet stock stage coordinator e85 successor on da071bba7c0c and runtime synced. Reviewed exact QC coll_ftm first, then normal timer restored before S81 t12, HEAD turn_a and KV io_ft admitted. All four managed worker stages and exact hub leases observed. No route.
 
+
+### Owner-confirmed artifact identity for routine iteration, 2026-11-26
+
+- Give each attempt a unique shared run directory. Keep a published stage output fixed and have later stages read its recorded path or existing stock checkpoint receipt. Use a new path for a new attempt. Treat aliases such as latest as locators for discovery, then use the selected attempt path.
+- Reuse a recorded digest at cross-host transfer, archive, or recovery when a prior transfer left identity uncertain. Verify only the affected files when the existing receipt is unavailable or fails. Avoid separate routine hashing and whole-tree rehashing between ordinary stages.
+- Preserve exact visual review, timing, equivalence and sign-off through their normal receipts. The owner approved this approach to reduce flow overhead and carry it into the next shift.
+
