@@ -4019,3 +4019,4 @@ OPS-WRITEUP: 2026-11-26 20:08 PST 20:08 hourly: 605 any / 483 current (+0 / +0 v
 CODEX: S81 c085 full formal and four-host source guard are green for the scheduled exact retained-bind cut. Host W combined FF+clock repair has a fresh immutable CTS candidate awaiting its exact reviews. See 20:15 milestone.
 CODEX: Exact HEAD W12 clock extraction and repaired Host W/Coll_s native CTS evidence are recorded. S81/KV staged 21:00; QC corrected exact binding in flight. See 20:30 milestone.
 CODEX: Timed S81/KV/HEAD carriers remain staged. Corrected QC formal may slip. Hourly stock signed ingest now past former 4G OOM; see 20:45 milestone.
+OPS-WRITEUP: 2026-11-26 21:09 PST 21:09 hourly: 605 any / 483 current (+0 / +0 vs 20:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
