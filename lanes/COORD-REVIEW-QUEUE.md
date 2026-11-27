@@ -19105,3 +19105,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 12:16 PST DIED [mq1] ot-push-main otpush-tolerant-swine-544931 on tolerant-swine: rc=3 after 0 s, ended 12:16:36, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 0 s, no log
 - 2026-11-27 12:16 PST DIED [mq1] ot-push-main otpush-tolerant-swine-543670 on tolerant-swine: rc=4 after 1 s, ended 12:16:36, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
 - 2026-11-27 12:16 PST DIED [mq1] ot-push-main otpush-tolerant-swine-546218 on tolerant-swine: rc=4 after 1 s, ended 12:16:37, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1 s, no log
+- 2026-11-27 12:16 PST DIED [mq1] ot-push-main otpush-tolerant-swine-560990 on tolerant-swine: rc=4 after 0 s, ended 12:16:43, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 0 s, no log
