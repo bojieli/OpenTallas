@@ -105,6 +105,7 @@ MUTANTS = [
     ("        if len(keep) != len(added):", "        if False:"),
     ("tap_order(t)))", "t))"),
     ("        if added and not a.no_freeze:", "        if False:"),
+    ("            if rec0.get(\"notes\"):", "            if False:"),
     ("    if split_oversize:\n        excl = set()", "    if False:\n        excl = set()"),
     ("k not in forced_set and k not in excl and box_wh(", "k not in excl and box_wh("),
     ("coh, singles, swallowed = cohorts_of(sinks, min_cohort, forced=[k for k in forced_keys if SAFE.fullmatch(k)], exclude=excl)", "pass"),
@@ -122,14 +123,14 @@ def test_mutants_are_killed():
     src = (HERE / "tap_cohort_assign.py").read_text()
     base = type(sys)("base")
     exec(compile(src, "base", "exec"), base.__dict__)
-    for fn in (check, _rules_on, _index_on, _main_on, _renum_on, _split_on, _split2_on, _freeze_on):          # unmutated control: every checker must pass on the real module
+    for fn in (check, _rules_on, _index_on, _main_on, _renum_on, _split_on, _split2_on, _freeze_on, _ffail_on):          # unmutated control: every checker must pass on the real module
         assert fn(base)
     for old, new in MUTANTS:
         assert old in src, old
         mod = type(sys)("mut")
         exec(compile(src.replace(old, new, 1), "mut", "exec"), mod.__dict__)
         killed = False
-        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m), lambda m: _split_on(m), lambda m: _split2_on(m), lambda m: _freeze_on(m)):
+        for fn in (check, lambda m: _rules_on(m), lambda m: _index_on(m), lambda m: _main_on(m), lambda m: _renum_on(m), lambda m: _split_on(m), lambda m: _split2_on(m), lambda m: _freeze_on(m), lambda m: _ffail_on(m)):
             try:
                 fn(mod)
             except Exception:
@@ -404,6 +405,50 @@ def _freeze_on(m):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             test_main_freezes_reset_consumers_by_default_and_logs_opt_out(Path(d))
+    finally:
+        T = keep
+    return True
+
+
+def test_main_failed_freeze_exits_5_and_writes_nothing(tmp_path):
+    import json
+    global STUB_RF
+    keep = STUB_RF
+    STUB_RF = '''
+def _freeze_reset_consumers(P, tn, t, rec, rnd=0):
+    rec.setdefault("notes", []).append("reset consumers not frozen: boom")
+'''
+    try:
+        tools = tmp_path / "tools"; tools.mkdir()
+        for n, src in (("schema", STUB_SCHEMA), ("tap_split", STUB_SPLIT), ("reach_fix", STUB_RF), ("row_normalize", STUB_RN)):
+            (tools / f"{n}.py").write_text(src)
+        plan = tmp_path / "plan.json"; plan.write_text(json.dumps({"partition_types": {"t": {"clock": _clock()}}}))
+        tsv = tmp_path / "s.tsv"; tsv.write_text("".join(f"clk\t{i}\tDFF\t{x}\t{y}\n" for i, x, y in S("u_far", 3, 1500.0, 0.0)))
+        out, rep = tmp_path / "o.json", tmp_path / "r.json"
+        for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
+            sys.modules.pop(m, None)
+        rc = T.main([str(plan), "t", str(tsv), "--tools", str(tools), "--out", str(out), "--report", str(rep), "--add-taps", "3"])
+        assert rc == 5 and not out.exists() and json.loads(rep.read_text())["reset_freeze"]["record"]["notes"]
+        for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
+            sys.modules.pop(m, None)
+        (tools / "reach_fix.py").write_text(STUB_RF)
+        rc = T.main([str(plan), "t", str(tsv), "--tools", str(tools), "--out", str(out), "--report", str(rep), "--add-taps", "3", "--no-freeze"])
+        assert rc == 0 and out.exists()                           # the explicit opt-out still writes
+    finally:
+        STUB_RF = keep
+        for m in ("schema", "tap_split", "reach_fix", "row_normalize"):
+            sys.modules.pop(m, None)
+        if str(tools) in sys.path:
+            sys.path.remove(str(tools))
+
+
+def _ffail_on(m):
+    global T
+    keep, T = T, m
+    try:
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            test_main_failed_freeze_exits_5_and_writes_nothing(Path(d))
     finally:
         T = keep
     return True

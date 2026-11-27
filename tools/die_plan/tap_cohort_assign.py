@@ -21,7 +21,7 @@ Model, in order: (1) singles (ungrouped sinks) go to their TRUE nearest tap, as 
 centroid: every sink within --reach, tap box W+H <= --span, load <= --cap.  A cohort with no feasible tap is UNASSIGNED; with --add-taps
 (explicit / grid / grid+explicit types) a tap is added per cluster of unassigned items and the pass repeats.  Exit 0 only when nothing is
 unassigned, every pinned cohort is feasible and no tap box exceeds --span or --cap (default the plan's tap_max_sinks); later CTS passes (pinreg, chain /
-pair / reset affinity, landing seam, relay cohort, reset split, hop latches) are NOT modelled and are listed in the report as unmodelled_passes; exit 2 unassigned, 3 pinned/over-span violations, 4 refused form.
+pair / reset affinity, landing seam, relay cohort, reset split, hop latches) are NOT modelled and are listed in the report as unmodelled_passes; exit 2 unassigned, 3 pinned/over-span violations, 4 refused form, 5 reset freeze failed (nothing written unless --no-freeze).
 Plan write (--out): fixed_taps merged (plan pins win), `re` extended only when the plan's own re has the form ^(a|b)[/.] (else refused);
 a type that had no tap_group gets follow_re "" (group mode otherwise switches the u_rrl_ follower pass on, gen_phys 4612).
 Compose with tap_reach_fix (adds taps for seats beyond the radius) when the report asks for new taps the mode cannot add.
@@ -396,6 +396,11 @@ def main(argv=None):
             if sites:
                 raw["partition_types"][a.type].setdefault("reset", {})["consumer_sites_um"] = sites
             freeze = dict(frozen=bool(sites), sites=len(sites or []), record=rec0)
+            if rec0.get("notes"):                          # the stock step could not read the base taps: appended taps would move the reset tree
+                print(f"FREEZE FAILED ({rec0['notes']}): nothing written; fix the plan or pass --no-freeze (the reset tree may then move)", file=sys.stderr)
+                if a.report:
+                    rp = json.loads(Path(a.report).read_text()); rp["reset_freeze"] = freeze; Path(a.report).write_text(json.dumps(rp, indent=1) + "\n")
+                return 5
         elif added:
             print("NO-FREEZE: taps are appended without recording reset.consumer_sites_um; the reset tree may move (landing / DERIVEDNAME findings)", file=sys.stderr)
             freeze = dict(frozen=False, opted_out=True)
