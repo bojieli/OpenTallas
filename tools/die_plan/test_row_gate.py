@@ -208,3 +208,28 @@ def test_normalize_tables_forwards_the_exact_pin_to_r8_refresh(tmp_path, monkeyp
     assert RG.RN.normalize_tables(*args, pin_pre=pre, pin_extra=0)["rc"] == 0
     assert RG.RN.normalize_tables(*args)["rc"] == 0
     assert seen[0] == seen[1] + ["--pin-pre", str(pre), "--pin-extra", "0"]
+
+
+def test_bind_paths_survive_the_fork_delete(tmp_path):
+    """P-RUNTIME-MANIFEST: bind.f / bind_report.json recorded absolute launch-tree paths; after the fork is deleted they still resolve"""
+    import shutil
+    src, L, tree, out = (tmp_path / n for n in ("src", "launch", "tree", "out"))
+    for r in (src, L):
+        (r / "rtl").mkdir(parents=True)
+    (src / "rtl/a.sv").write_text("module a; endmodule\n")
+    (L / "rtl/a.sv").write_text("module a; endmodule\n")          # identical -> the sealed path
+    (src / "rtl/b.sv").write_text("module b; endmodule\n")
+    (L / "rtl/b.sv").write_text("module b; // row edit\nendmodule\n")   # changed -> copied
+    (out / "bind").mkdir(parents=True)
+    paths = [str(L / "rtl/a.sv"), str(L / "rtl/b.sv")]
+    (out / "bind/bind.f").write_text("\n".join(paths) + "\n")
+    (out / "bind/bind_report.json").write_text(json.dumps(dict(files=paths, extra_lib=[], errors=[])))
+    st = RG.relocate_bind_paths(out / "bind", [str(L), str(tree)], src, out / "bind_inputs")
+    shutil.rmtree(L)
+    assert st["rewritten"] == 2 and st["copied"] == 1 and st["missing"] == 0
+    rep = json.loads((out / "bind/bind_report.json").read_text())
+    assert [Path(x).is_file() for x in rep["files"]] == [True, True]
+    assert rep["files"][0] == str(src / "rtl/a.sv")
+    assert "row edit" in Path(rep["files"][1]).read_text()
+    assert (out / "bind/bind.f").read_text().split() == rep["files"]
+    assert str(L) not in (out / "bind/bind.f").read_text()

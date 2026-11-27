@@ -665,11 +665,61 @@ def gate(a):
     shutil.copy2(plan, out / "plan.json")
     R["plan"]["copy"] = str(out / "plan.json")
     R["tree_deleted"] = not a.keep_tree
+    if not a.keep_tree and not getattr(a, "cow", False) and (out / "bind").is_dir():
+        # the fork / launch tree are deleted below: re-point the bind output's recorded paths so a bound PRE can still run (P-RUNTIME-MANIFEST)
+        gone = [str(L)] + ([] if a.keep_fork else [str(tree)])
+        R["bind_paths"] = relocate_bind_paths(out / "bind", gone, src, out / "bind_inputs")
+        print(f"row_gate: bind paths re-pointed off the deleted fork: {R['bind_paths']}", flush=True)
     rc = finish()                                         # ROW-READY first: the 50 GB fork delete is not on the reader's path
     if not a.keep_tree and not getattr(a, "cow", False):
         for p in (L, tree) if not a.keep_fork else (L,):
             ot_delete(p, log)
     return rc
+
+
+def relocate_bind_paths(bind_dir, roots, src, keep_dir):
+    """P-RUNTIME-MANIFEST: bind.f / bind_report.json / the other top-level bind lists record absolute paths into the gate's launch tree
+    and fork, which the gate deletes after ROW-READY, so no bound PRE (--elab-dir) could run afterwards.  Every recorded file under
+    one of ROOTS is re-pointed to the sealed source tree when it is byte-identical there, else copied under KEEP_DIR (a row that
+    changed it) and pointed at the copy.  Returns {rewritten, copied, missing}."""
+    roots = sorted({str(Path(r)) for r in roots}, key=len, reverse=True)
+    pat = re.compile("(?:" + "|".join(re.escape(r) for r in roots) + r")/[^\s\"',\]\[]+")
+    stat, memo = dict(rewritten=0, copied=0, missing=0), {}
+
+    def target(m):
+        q = m.group(0)
+        if q in memo:
+            return memo[q]
+        root = next(r for r in roots if q.startswith(r + "/"))
+        rel = q[len(root) + 1:]
+        memo[q] = q
+        if Path(q).is_file():
+            cand = Path(src) / rel
+            if cand.is_file() and sha(cand) == sha(Path(q)):
+                memo[q] = str(cand)
+            else:
+                dst = Path(keep_dir) / rel
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(q, dst)
+                memo[q] = str(dst)
+                stat["copied"] += 1
+        else:
+            stat["missing"] += 1
+        return memo[q]
+
+    for f in sorted(Path(bind_dir).iterdir()):
+        if f.is_file() and f.suffix in (".f", ".json") and not f.is_symlink():
+            try:
+                t = f.read_text()
+            except (OSError, UnicodeDecodeError):
+                continue
+            n = pat.sub(target, t)
+            if n != t:
+                tmp = f.with_name(f.name + ".reloc")
+                tmp.write_text(n)
+                os.replace(tmp, f)
+    stat["rewritten"] = sum(1 for k, v in memo.items() if k != v)
+    return stat
 
 
 def row_bind_scope(types, base, candidate):
