@@ -8,7 +8,8 @@ def derive(plan,bound,source):
     names=json.loads((bound/'bind_names.json').read_text())
     owner={v:k.split('.',1)[0] for k,v in names.items()}
     if len(owner)!=len(names):raise ValueError('ambiguous native instance owner')
-    sinks=json.loads((bound/'bind_sinks.json').read_text())
+    from bind_sink_sidecar import required_sink_sidecar
+    sinks=json.loads(required_sink_sidecar(bound).read_text())
     buses=json.loads((bound/'bind_latency.json').read_text())['buses']
     ctl=(source/'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv').read_text()
     aliases={int(n):(port,int(bit))for n,port,bit in re.findall(r'bobs__applied_hbm__(\d+)\s*=\s*(i_hroot_\w+)\[(\d+):\d+\]',ctl)}

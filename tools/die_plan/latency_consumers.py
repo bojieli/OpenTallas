@@ -387,6 +387,11 @@ def main(argv=None):
     ap.add_argument("--json", type=Path)
     a = ap.parse_args(argv)
     d = a.bind_dir
+    from bind_sink_sidecar import reject_placement_probe
+    try:
+        reject_placement_probe(d)
+    except ValueError as exc:
+        ap.error(str(exc))
     prov = (_load(d / "provenance_bind.json") or {}).get("provenance", {})
     plan, man = a.plan or prov.get("plan"), a.manifest or prov.get("manifest")
     ab = {}

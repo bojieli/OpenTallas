@@ -34,8 +34,13 @@ def pipe_digest(rec):
 
 def object_items(path, chunk_size=1 << 20):
     """Stream the flat bind_sinks object without constructing its multi-GB dict."""
+    path = Path(path)
+    if path.name == 'bind_sinks.json':
+        marker = path.with_name('BIND_PROBE_ONLY.json')
+        if marker.exists() and path.name in json.loads(marker.read_text()).get('omitted_sidecars', ()):
+            raise ValueError(f'{path.parent}: placement-only bind omits full sink evidence')
     decoder = json.JSONDecoder()
-    with Path(path).open() as f:
+    with path.open() as f:
         buf, at, eof = '', 0, False
 
         def need():
@@ -101,6 +106,8 @@ class BoundDie:
         if self.inventory.get('schema') != 'opentallas.s81.bound_inventory.v1':
             raise ValueError('unsupported bound logical-interface inventory')
         report = json.loads((self.bound / 'bind_report.json').read_text())
+        if report.get('probe_only'):
+            raise ValueError('BoundDie requires a whole-die bind')
         if report.get('n_errors') != 0 or report.get('errors') or report.get('type_splits'):
             raise ValueError('BoundDie requires a clean strict bind with no type splits')
         tops = list((self.bound / 'rtl').glob('*_bound_top.sv'))

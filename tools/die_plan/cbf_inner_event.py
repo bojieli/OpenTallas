@@ -65,7 +65,9 @@ def generate(plan, bdir, r8_path, extra_path):
     seed_report=json.loads((bd/'bind_report.json').read_text())
     if seed_report.get('errors') or seed_report.get('n_errors',0):
         raise ValueError('requires clean strict seed bind before coherent CBF event; errors='+str(seed_report.get('n_errors',len(seed_report.get('errors',[])))))
-    bg=json.loads((bd/'bus_groups.json').read_text());sinks=json.loads((bd/'bind_sinks.json').read_text())
+    from bind_sink_sidecar import required_sink_sidecar
+    sinks = json.loads(required_sink_sidecar(bd).read_text())
+    bg = json.loads((bd/'bus_groups.json').read_text())
     names=json.loads((bd/'bind_names.json').read_text());part_of={leaf:k.split('.',1)[0] for k,leaf in names.items()}
     ptypes={p['name']:p['type'] for p in raw['partitions']}
     r8=json.loads(Path(r8_path).read_text());extra=json.loads(Path(extra_path).read_text())
