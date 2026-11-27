@@ -1,5 +1,6 @@
 """PIN-AUDIT-COUNT-STRAP: an extra pin passes only as a plan count strap, bound-only input and tied at the parent."""
 import copy
+import hashlib
 import json
 import sys
 import types
@@ -243,3 +244,107 @@ def test_bind_plan_sha_recorded_and_warned(tmp_path, capsys):
     ta = ev["tie_audit"]
     assert ta["bind_plan_sha256"] and ta["kit_plan_sha256"] and ta["bind_plan_sha256"] != ta["kit_plan_sha256"]
     assert "differs from the kit plan sha" in capsys.readouterr().out
+
+
+
+@pytest.fixture
+def copied_head_tie_audit(tmp_path):
+    moved = tmp_path / "moved"
+    moved.mkdir()
+    plan = tmp_path / "source_plan.json"
+    plan.write_text(json.dumps({"partition_types": {"t": HEAD_TYPE},
+                                "partitions": [dict(part, name=name) for name, part in HEAD_PARTS]}))
+    plan_sha = hashlib.sha256(plan.read_bytes()).hexdigest()
+    audit = dict(HEAD_AUDIT, rows=len(HEAD_AUDIT["accepted"]), rejected=[],
+                 plan=str(tmp_path / "retired" / "source_plan.json"), plan_sha256=plan_sha, top_sha256="3" * 64)
+    audit_file = moved / "tie_audit.json"
+    receipt_file = moved / "kit_rtl.json"
+    receipt = dict(schema="opentallas.head_wave_kit_rtl.v1", plan_type="t",
+                   tie_audit=str(tmp_path / "old-kit" / "tie_audit.json"),
+                   tie_audit_source=str(tmp_path / "retired" / "bind" / "tie_audit.json"),
+                   tie_audit_plan_sha256=plan_sha)
+    def stage():
+        data = json.dumps(audit).encode()
+        audit_file.write_bytes(data)
+        receipt["tie_audit_sha256"] = hashlib.sha256(data).hexdigest()
+        receipt_file.write_text(json.dumps(receipt))
+    stage()
+    return plan, receipt_file, audit_file, receipt, audit, stage
+
+
+def test_native_head_copied_audit_survives_relocation(copied_head_tie_audit, tmp_path):
+    plan, receipt_file, audit_file, receipt, _, _ = copied_head_tie_audit
+    assert not Path(receipt["tie_audit"]).exists() and not Path(receipt["tie_audit_source"]).exists()
+    assert CSE.bind_plan_of(audit_file) == (None, None)
+    assert CSE.main([str(plan), "t", str(receipt_file), str(tmp_path)]) == 0
+    ev = json.loads((tmp_path / CSE.FILE).read_text())
+    assert ev["verification"] == "VERIFIED"
+    assert ev["tie_audit"]["bind_plan_sha256"] == ev["tie_audit"]["kit_plan_sha256"] == receipt["tie_audit_plan_sha256"]
+    assert PA.accepted_count_strap_bits(ev) == BITS6
+
+
+@pytest.mark.parametrize("defect, reason", [
+    ("wrong_plan", "supplied plan"),
+    ("forged_schema", "invalid HEAD kit"),
+    ("old_native_audit", "complete native PASS"),
+    ("duplicate_literal", "duplicate accepted rows"),
+    ("byte_tamper", "sha256 differs"),
+    ("disagreeing_source", "copied HEAD tie audit differs from"),
+    ("disagreeing_neighbor", "available bound plan"),
+    ("missing_kit_plan", "supplied plan"),
+])
+def test_copied_head_audit_refuses_ambiguous_provenance(copied_head_tie_audit, tmp_path, defect, reason):
+    plan, kr, copied, receipt, audit, stage = copied_head_tie_audit
+    if defect == "wrong_plan":
+        plan.write_text(plan.read_text() + chr(10))
+    elif defect == "forged_schema":
+        receipt["schema"] = "forged.head_wave"
+        stage()
+    elif defect == "old_native_audit":
+        audit.pop("top_sha256")
+        stage()
+    elif defect == "duplicate_literal":
+        audit["accepted"] = audit["accepted"] + [audit["accepted"][0]]
+        audit["rows"] += 1
+        stage()
+    elif defect == "byte_tamper":
+        copied.write_bytes(copied.read_bytes() + bytes([10]))
+    elif defect == "disagreeing_source":
+        original = Path(receipt["tie_audit_source"])
+        original.parent.mkdir(parents=True)
+        original.write_text("{}")
+    elif defect == "disagreeing_neighbor":
+        stale = tmp_path / "stale.json"
+        stale.write_text("{}")
+        (copied.parent / "module_check.json").write_text(json.dumps({"plan": str(stale)}))
+    else:
+        plan = None
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, kr, parts=HEAD_PARTS, plan_path=plan)
+    assert ev["verification"] == "UNVERIFIED" and ev["tie_audit"]["bind_plan_sha256"] is None
+    assert PA.accepted_count_strap_bits(ev) == set()
+    with pytest.raises(ValueError, match=reason):
+        CSE.write_for_kit(tmp_path, HEAD_TYPE, kr, parts=HEAD_PARTS, strict=True, plan_path=plan)
+
+
+def test_audit_claim_without_export_receipt_does_not_supply_bind_sha(copied_head_tie_audit, tmp_path):
+    plan, kr, copied, _, _, _ = copied_head_tie_audit
+    kr.write_text(json.dumps({"schema": CSE.HEAD_KIT_SCHEMA, "plan_type": "t", "tie_audit": str(copied)}))
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, kr, parts=HEAD_PARTS, plan_path=plan)
+    assert ev["tie_audit"]["bind_plan_sha256"] is None
+
+
+
+def test_copied_head_kit_does_not_trust_metadata_over_exact_plan_parts(copied_head_tie_audit, tmp_path):
+    plan, kr, copied, receipt, audit, stage = copied_head_tie_audit
+    parts = HEAD_PARTS + [("second", {"type": "t"})]
+    raw = json.loads(plan.read_text())
+    raw["partitions"].append({"name": "second", "type": "t"})
+    plan.write_text(json.dumps(raw))
+    receipt["tie_audit_plan_sha256"] = audit["plan_sha256"] = hashlib.sha256(plan.read_bytes()).hexdigest()
+    receipt["instances"] = [HEAD_PARTS[0][0]]
+    receipt["bound_only_pins"] = [{"port": "strap_ca_k_coll_i0", "dir": "input", "width": 6}]
+    stage()
+    with pytest.raises(ValueError, match="instance inventory"):
+        CSE.write_for_kit(tmp_path, HEAD_TYPE, kr, parts=HEAD_PARTS, strict=True, plan_path=plan)
+    with pytest.raises(ValueError, match="UNVERIFIED"):
+        CSE.write_for_kit(tmp_path, HEAD_TYPE, kr, parts=parts, strict=True, plan_path=plan)
