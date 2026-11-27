@@ -85,7 +85,35 @@ def lec_twin_ties(src):
     return out
 
 
-def main(kit, pcc_out, pcf_out, top):
+def connect_b1_commit(source, child, instance):
+    """Export the already checked, physical native write observer through its owner."""
+    # TOKEN-R2 11-27: generated leaf instances are single-line (end in '));'), which the stock
+    # multi-line inst_block regex does not match; match the whole statement up to its ';'.
+    call = re.search(r"\n(\s*)" + re.escape(child) + r"\b[^;]*?\b" + re.escape(instance) + r"\s*\((.*?)\);", source, re.S)
+    assert call, (child, instance)
+    instance_text = call.group(0)
+    aliases = []
+    for native, index in (("native_commit_valid", "[90]"),
+                          ("native_commit_identity", "[89:29]"),
+                          ("native_commit_address", "[28:0]")):
+        pin = f"pcc_b1_raw{index}"
+        match = re.search(r"\." + native + r"\s*\(([^()]*)\)", instance_text)
+        if match:
+            old = match.group(1).strip()
+            if old:
+                aliases.append(f"    assign {pin} = {old};\n")
+            else:
+                instance_text = instance_text[:match.start(1)] + pin + instance_text[match.end(1):]
+        else:
+            assert not re.search(r"\." + native + r"\s*\(", instance_text), native
+            start = instance_text.index("(", instance_text.index(instance)) + 1
+            instance_text = instance_text[:start] + f"\n        .{native}({pin})," + instance_text[start:]
+    return source[:call.start()] + instance_text + "\n" + "".join(aliases) + source[call.end():]
+
+
+def main(kit, pcc_out, pcf_out, top, b1_commit_export=False):
+    if b1_commit_export and top != "qkd_kvs_pc":
+        raise ValueError("B1 PCC commit export is scoped to the ordinary native PCC kit")
     kit, pcc_out, pcf_out = Path(kit), Path(pcc_out), Path(pcf_out)
     pcc_top = {"qkd_kvs_pc": "qkd_kvs_pcc", "qkd_kvs_pc_h_head_p": "qkd_kvs_pcc_h_head_p"}[top]
     pcf_top = "qkd_kvs_pcf"   # same front + return RTL in PC and HHP
@@ -159,6 +187,9 @@ def main(kit, pcc_out, pcf_out, top):
         assert ci, (mod, inst)
         rep = ci.group(0).replace(child, child + SFX, 1) + ".pcf_x(pcf_x), "
         M = M[:ci.start()] + rep + M[ci.end():]
+        if b1_commit_export and mod.endswith("__leaf"):
+            M = M[:k] + "\n    output wire [90:0] pcc_b1_raw," + M[k:]
+            M = connect_b1_commit(M, child + SFX, inst)
         src[fn] = s[:a0] + M + s[b0:]
     # ---- top: rename, re-port i_grp/o_grp, registered pcf_x
     tf = f"{top}.sv"
@@ -185,8 +216,27 @@ def main(kit, pcc_out, pcf_out, top):
         assert n1 + n2 == 1, k
     s = sub1(r"\.i_grp\(i_grp\[127:0\]\),", ".i_grp({i_grp_c[93:71], 34'd0, i_grp_c[70:0]}),   /* [104:71] -> PCF */", s, "leaf igrp")
     s = sub1(r"qkd_kvs_pc(_h_head_p)?__leaf u_leaf \(", f"wire [297:0] pcf_x_d;\n    {pcc_top}__leaf u_leaf (\n        .pcf_x(pcf_x_d),", s, "leaf inst")
+    b1_regs = ""
+    if b1_commit_export:
+        s = sub_once(s, "module " + pcc_top + " (",
+                     "module " + pcc_top + " (\n    output wire [90:0] pcc_b1_commit,", "B1 port")
+        s = sub_once(s, "    " + pcc_top + "__leaf u_leaf (",
+                     "    wire [90:0] pcc_b1_raw;\n    " + pcc_top +
+                     "__leaf u_leaf (\n        .pcc_b1_raw(pcc_b1_raw),", "B1 leaf")
+        b1_regs = (
+            "    (* keep *) reg pcc_b1_valid;\n"
+            "    always @(posedge ck[0] or negedge hrst_n[0])\n"
+            "        if (!hrst_n[0]) pcc_b1_valid <= 1'b0;\n"
+            "        else pcc_b1_valid <= pcc_b1_raw[90];\n"
+            "    assign pcc_b1_commit[90] = pcc_b1_valid;\n"
+        )
+        b1_regs += "".join(
+            f"    (* keep *) ot_kvpc_pin_dff u_b1_commit_{bit} "
+            f"(.ck(ck[0]), .d(pcc_b1_raw[{bit}]), .q(pcc_b1_commit[{bit}]));\n"
+            for bit in range(90)
+        )
     regs = "".join(f"    (* keep *) ot_kvpc_pin_dff u_pcfx_{k} (.ck(ck[0]), .d(pcf_x_d[{k}]), .q(pcf_x[{k}]));\n" for k in range(298))
-    s = s.replace("\nendmodule", "\n    // RF-B split: PCC -> PCF face launch flops (+1 edge)\n" + regs + "endmodule", 1)
+    s = s.replace("\nendmodule", "\n    // RF-B split: PCC -> PCF face launch flops (+1 edge)\n" + regs + b1_regs + "endmodule", 1)
     src[tf] = s
     pcc_src = lec_twin_ties(src)
     if top == "qkd_kvs_pc_h_head_p":   # DIE-KV-71/HHP 11-05 form: this core only
@@ -248,4 +298,7 @@ def main(kit, pcc_out, pcf_out, top):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:5])
+    args = sys.argv[1:]
+    if len(args) not in (4, 5) or (len(args) == 5 and args[4] != "--b1-commit-export"):
+        raise SystemExit("rf_kv3_split.py KIT PCC_OUT PCF_OUT TOP [--b1-commit-export]")
+    main(*args[:4], b1_commit_export=len(args) == 5)
