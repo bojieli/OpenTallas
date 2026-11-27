@@ -1,0 +1,137 @@
+{
+ "advisory": [
+  "foreign_tree"
+ ],
+ "band_base": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_pcstrap_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_pcstrap_1126.json",
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/srv/opentallas-scratch2/claude/kv-int-r2/c2100/codex/d/qwen_kvsys/121aa2c4217f/kv3_phy_v1",
+   "gen_host": "epyc8",
+   "item": "kv3_phy_v1",
+   "kind": "type",
+   "origin": "/srv/opentallas-scratch2/claude/kv-int-r2/c2100/codex/d/qwen_kvsys/121aa2c4217f/kv3_phy_v1/published_gen_origin.json",
+   "origin_sha256": "89828bd5432cfe66d4e5a393260f35c3f02f7c5dd852357ad6ceda94e9654f39",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "f5075748a7a4aafb82d5c8e7883307176cf70042950faa9285a321905b8a9347",
+   "spec_sha256": "d334a38f22463e5f0effe26e5abf530d844a993bab60cb3f6f078aa6c9d0382c",
+   "spec_src": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126",
+   "stage": "preflight",
+   "unit_log_sha256": "cfcf90f8ab9c345a5544ebaafeb43bf0c9e4d5c770b2e19e438d053be5f54517",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kv_pvfin_views_1119/qkd_pv_fin_s8_pin/signoff.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w259_ns_a43af/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w292_ew_81b3f/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w294_ew_a7ae4/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w300_ew_ba263/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w523_ew_05742/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvd23_hubc_views/kv_cland_w549_ew_bf94f/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w129_ew_7738e/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w144_ew_5f45d/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w145_ew_8341d/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w175_ew_50ae4/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w32_ns_58467/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w33_ew_95a44/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w44_ew_aca8a/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w65_ew_43b80/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json names /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/kvringmac_views/kv_cland_w83_ew_4b021/clock_contract.json (published tree /srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/bind_cells.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1__r889141819.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1__r88f4bfb40.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1__r8dffc461a.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p2.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p3__r81da466fe.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p3__r838481cd7.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p3__r8c662a835.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p4.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p5.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v1p6.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hg_v3_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v1__cl141fc26e.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v1__cl42bc8b12.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v2__cl2862d491.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v2__cle0015330.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v3_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v4_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v5_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v6_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v7_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)",
+    "FOREIGN-TREE /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f names /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600/_postbind/out/rtl/kv3_hgi_v8_part.sv (published tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_postbind_1126150600, not the candidate tree /srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126)"
+   ],
+   "n": 173,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 83
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-0qarv9mu/g0_report.json",
+   "pre_rc": 0,
+   "reset_solved": false,
+   "tail": "PRE: _cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\nPRE-TIME ADVISORY 86 s (PRE at 233 s)\n\nG0: advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t54 radius=207.024/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v1__cl7f648944__r8f64f1de3: grid+explicit tap clk_t107 radius=210.784/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t103 radius=207.36/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t111 radius=203.264/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "tools": "rt",
+   "tools_dir": "/srv/opentallas-scratch2/claude/rt/ec0da8a29ef3/tools/die_plan",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/sidecar_a5t9_g6_static_io_pc_pv_1126.json",
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/bind.f",
+   "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126_bind_1126152300/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 498.2,
+ "hosts": [
+  "epyc8",
+  "intel2",
+  "epyc7",
+  "intel1"
+ ],
+ "item": "kv3_phy_v1",
+ "manifest_hash": "121aa2c4217fa7a88cb2f9a93ce9973be6cb4d5884c82f56893cc017d25ed366",
+ "plan": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_g6v6r3_c2100d_1126.json",
+ "plan_sha256": "5bee15cebae2954460d596d7f85af41cac82fc7db1a8fbc5bd7f1a4be012e5f6",
+ "remap_base": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t9_r8_g5r2_candidate_tree_1126/physical/die_plan/qwen_kvsys/plan_of_record/plan_a5t9_r8_g5_sinkbins_street_1125.json",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 498.2,
+ "t": 1795738863.2412484,
+ "tree": "/srv/opentallas-scratch2/claude/kv-int-r2/pub/kv_a5t9_g6v6r3_c2100d_1126",
+ "verdict": "PASS"
+}
