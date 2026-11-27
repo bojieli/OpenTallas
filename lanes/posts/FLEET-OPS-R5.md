@@ -113,3 +113,4 @@
 - 2026-11-27 13:55 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-1715452 on tolerant-swine: rc=0 after 165 s, ended 13:55:20, log none, cmd: ot-push-main 
 - 2026-11-27 13:56 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-719198 on tolerant-swine: rc=4 after 806 s, ended 13:56:47, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 806 s, no log
 - 2026-11-27 14:10 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-2212439 on tolerant-swine: rc=4 after 819 s, ended 14:10:36, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 819 s, no log
+- 2026-11-27 14:35 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3258975 on tolerant-swine: rc=0 after 1685 s, ended 14:35:04, log /tmp/r5kwpush.out, cmd: ot-push-main 
