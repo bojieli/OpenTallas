@@ -698,6 +698,13 @@ def pre_submit_review():
     return mod
 
 
+def reviewed_locality():
+    spec = importlib.util.spec_from_file_location("canary_reviewed_locality", HERE / "reviewed_locality.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def launch_client(unit, cmd):
     return subprocess.run(["systemd-run", "--user", "--unit", unit, "--collect", "--property=Type=exec",
                            "--property=KillMode=process", "--", "bash", "-lc", cmd],
@@ -719,6 +726,10 @@ def cmd_submit(a):
         print(f"CANARY REFUSED: --src {src} is not a flow-canary/sources/<sha> commit snapshot (mutable worktree?)")
         return 2
     sha = git_head(src)
+    locality = reviewed_locality() if pre_review and not a.dry else None
+    runtime_sha = None
+    hub_ready = False
+    ready_workers = {}
     stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
     for n, die in enumerate(dies):
         PIN = f"--hosts {review.ADMISSION_HOSTS} --strict-host " if review else pin_for(n)
@@ -739,6 +750,20 @@ def cmd_submit(a):
             if refusal:
                 deferred.append(die)
                 print(f"CANARY {die} HELD: {refusal}")
+                continue
+        worker = None
+        if locality:
+            if runtime_sha is None:
+                runtime_sha = locality.source_head(src)
+                hub_ready = locality.hub_runtime_ready(runtime_sha)
+            if not hub_ready:
+                deferred.append(die)
+                print(f"CANARY {die} DEFERRED: runtime {runtime_sha[:12]} awaits hub acceptance")
+                continue
+            worker = locality.pick_ready_worker(c, runtime_sha, ready_workers)
+            if worker is None:
+                deferred.append(die)
+                print(f"CANARY {die} DEFERRED: no approved worker admits runtime {runtime_sha[:12]}")
                 continue
         run = Path(a.root) / f"{die}_{sha[:9]}_{stamp}"
         run.mkdir(parents=True, exist_ok=True)
@@ -767,6 +792,8 @@ def cmd_submit(a):
         if review:
             meta.update(review_before_route=True, submitted_at=time.time(), image=a.image,
                         ot_run_args=shlex.split(CRIT + PIN))
+        if worker:
+            meta.update(placement_host=worker, worker_runtime_sha=runtime_sha)
         (run / meta_name).write_text(json.dumps(meta, indent=1) + "\n")
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
@@ -834,9 +861,9 @@ def cmd_submit(a):
         if pre_review:
             # The hub keeps policy and receipts. The exact worker stages its source, generates,
             # places, and returns the retained checkpoint without a hub compute fallback.
-            locality = shlex.join([sys.executable, "-I", str(src / "tools/flow_canary/reviewed_locality.py"),
+            place_cmd = shlex.join([sys.executable, "-I", str(src / "tools/flow_canary/reviewed_locality.py"),
                                    "place", str(run)])
-            launch = (f"{locality}; "
+            launch = (f"{place_cmd}; "
                       f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
                       f'python3 -I {run}/canary.py check --run {run}; fi; exit "$rc"')
         elif review:
