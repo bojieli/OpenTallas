@@ -835,11 +835,12 @@ def _test_path_literals(text, lit):
 
 
 
-S81_LEGACY = "physical/die_plan/s81/cores/legacy"
+S81_ROOT = "physical/die_plan/s81"
+S81_LEGACY = f"{S81_ROOT}/cores/legacy"
 
 
 def _legacy_recipe_inputs(wt, text_by_test):
-    """Resolve named legacy core fixtures through the same recipe table as the kit generator."""
+    """Read exact inputs of named legacy fixtures from their recipes, specs, and plan rows."""
     names = set()
     for path, text in text_by_test.items():
         if not (path.startswith(S81_LEGACY + "/") or "gen_core_kit_legacy.py" in text):
@@ -853,33 +854,120 @@ def _legacy_recipe_inputs(wt, text_by_test):
             names.update(words)
     if not names:
         return set()
-    # The recipe may itself be outside the sparse projection. Reading a tracked
-    # JSON blob is sufficient and does not stage a working tree or execute a generator.
-    try:
-        recipes_path = f"{S81_LEGACY}/recipes.json"
-        path = wt / recipes_path
-        recipes = json.loads(path.read_text() if path.is_file() else git("show", f"HEAD:{recipes_path}", cwd=wt).stdout)
-    except (OSError, ValueError, GitError):
-        return set()
-    if not isinstance(recipes, dict):
-        return set()
-    pending = set(recipes) & names
-    seen, files = set(), set()
-    while pending:
-        name = pending.pop()
-        if name in seen:
+
+    files, parsed = set(), {}
+
+    def stage(path):
+        if not isinstance(path, str) or not path or set(path) & {"\n", "\r", "\x00"}:
+            return None
+        relative = Path(path)
+        if relative.is_absolute() or ".." in relative.parts:
+            return None
+        path = relative.as_posix()
+        files.add(path)
+        return path
+
+    def load_json(path=None, *, ref=None, obj_type=dict):
+        if ref is None:
+            path = stage(path)
+            if path is None:
+                return {}
+            ref = f"HEAD:{path}"
+        if ref not in parsed:
+            try:
+                local = wt / path if path is not None else None
+                text = local.read_text() if local and local.is_file() else git("show", ref, cwd=wt).stdout
+                doc = json.loads(text)
+                parsed[ref] = doc
+            except (OSError, ValueError, GitError):
+                parsed[ref] = {}
+        doc = parsed[ref]
+        return doc if isinstance(doc, obj_type) else {}
+
+    def spec_for(recipe):
+        ref = recipe.get("spec_git")
+        if isinstance(ref, str) and ref:
+            return load_json(ref=ref)
+        tile = recipe.get("ref_tile")
+        return load_json(f"{tile.rstrip('/')}/spec.json") if isinstance(tile, str) and tile else {}
+
+    def hard_core(plan, module, pins_file=None):
+        return next((row for part in plan.get("partition_types", {}).values()
+                     for row in part.get("hard_cores", ())
+                     if row.get("module") == module and (pins_file is None or row.get("pins_file") == pins_file)), {})
+
+    def stage_plan_paths(rec, module):
+        if rec.get("lef_contract"):
+            stage(rec["lef_contract"])
+            return
+        module = rec.get("plan_module", module)
+        plan_path = rec.get("plan")
+        pins_file = rec.get("plan_pins_file")
+        plan = load_json(plan_path or f"{S81_ROOT}/plan_h2_2249.json")
+        if not plan_path and not hard_core(plan, module) and not rec.get("superseded_by"):
+            plan = load_json(f"{S81_ROOT}/die_plan.json")
+        row = hard_core(plan, module, pins_file)
+        pins_file = row.get("pins_file")
+        if pins_file:
+            stage(f"{S81_ROOT}/{pins_file}")
+        replacement = rec.get("master") or {}
+        if replacement.get("pins_file"):
+            pins = load_json(f"{S81_ROOT}/{replacement['pins_file']}")
+            stage(pins.get("lef"))
+        else:
+            stage(row.get("lef"))
+
+    def stage_macro(view, *, master=None, signed=False):
+        if not isinstance(view, str) or not view:
+            return
+        master = master or Path(view).name
+        for suffix in (".lef", "_tt.lib", "_ff.lib", "_bb.v", ".gds", ".gds.gz"):
+            stage(f"{view}/{master}{suffix}")
+        if signed:
+            for name in ("provenance.json", "PROVENANCE.json", "gates.json", "signoff.json", "lec.json"):
+                stage(f"{view}/{name}")
+
+    recipes = load_json(f"{S81_LEGACY}/recipes.json")
+    def stage_recipe(rec, module):
+        parent = recipes.get(rec.get("child_of"))
+        if parent:
+            spec_for(parent)  # only the parent spec is opened by the child kit
+        stage_plan_paths(rec, module)
+        spec = spec_for(rec)
+        dropped = set(rec.get("drop_sources", ()))
+        for path in spec.get("sources", ()):
+            if path not in dropped:
+                stage(path)
+        for path in rec.get("includes", ()):
+            stage(path)
+        for key in ("lec_hints", "face_hold_pad"):
+            stage(rec.get(key))
+        if rec.get("ref_tile") and spec.get("top"):
+            stage(f"{rec['ref_tile']}/slices/{spec['top']}.json")
+        for macro in spec.get("macros", ()):
+            stage_macro(macro.get("view"))
+        children = rec.get("hard_children") or {}
+        if children and spec.get("children"):
+            child_rows = spec["children"]
+            if children.get("children_file"):
+                doc = load_json(children["children_file"], obj_type=(list, dict))
+                child_rows = doc.get("children", ()) if isinstance(doc, dict) else doc
+                masters = {row.get("module") for row in child_rows}
+            else:
+                masters = {Path(row["view"]).name for row in child_rows if row.get("view")}
+            for master in masters:
+                stage_macro(children.get("views", {}).get(master), master=master, signed=True)
+            for contract in children.get("parameter_contracts", ()):
+                stage(contract.get("child_spec"))
+                stage(contract.get("binding_source"))
+
+    for module in set(recipes) & names:
+        try:
+            stage_recipe(recipes[module], module)
+        except (AttributeError, KeyError, TypeError, ValueError):
+            # A malformed or unrecognized source belongs to the native test.
+            # Keep any inputs already named and let the ordinary runner report it.
             continue
-        seen.add(name)
-        row = recipes.get(name)
-        if not isinstance(row, dict):
-            continue
-        parent, ref_tile, lef = (row.get(k) for k in ("child_of", "ref_tile", "lef_contract"))
-        if isinstance(parent, str):
-            pending.add(parent)
-        if not row.get("spec_git") and isinstance(ref_tile, str) and ref_tile.startswith("physical/ref_tile/"):
-            files.add(ref_tile.rstrip("/") + "/spec.json")
-        if isinstance(lef, str) and lef.startswith("physical/ref_tile/"):
-            files.add(lef)
     return files
 
 
