@@ -21,3 +21,4 @@
   c3 Codex KV sub-lanes: KV-INT-R3 adopts the Codex KV source packets by die (outer hub, Hroot, HG v3, Ei, SYS_C, E VPORT). token_qwen stays with TOKEN/COORD.
   c12: the CLOSURE row for KV D 5bee is present (CLASS-TRACK-R2 backfill).
   c20: CLASSES.tsv has new ETAs on 16 KV rows that named the missed 09:00 cut, commit 27b22d1f. Rows moved to 21:00 11-27: FIRM-RESIZE, SEAT-KEYMISS, RELAY-NEARCORE, NEWROOT-TAPOFFSET, PV FSTART / RST-REACH / FT-CROSSES-CORE, and LAND-REACH (closes if still 0). Rows moved to 11-28 09:00: PARENT-SEAM, STRAP-REACH, TAP-LOAD, TAP-REACH, GPL-TD, PC-PHY-INGRESS, PV STREET strip, hg XTAP.
+- 2026-11-27 09:23 PST DONE [kv-int-r3] ot-run oth-ubuntu-4082980-1795800006 on outgoing-giraffe: rc=0 after 233 s, ended 17:23:50, log none, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash runfirm.sh
