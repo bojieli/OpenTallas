@@ -51,8 +51,10 @@ def test_repeated_name_is_refused(tmp_path):
 
 def test_schema_has_the_key():
     p = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"]
-    assert p["items"]["required"] == ["name", "inst_re"] and p["items"]["additionalProperties"] is False
-    assert set(p["items"]["properties"]) == {"name", "inst_re", "util", "centre_um", "near_re", "note", "kind", "box_um", "radius_um", "cone"}
+    item = p["items"]
+    assert item["required"] == ["name"] and item["else"]["required"] == ["inst_re"]
+    assert item["additionalProperties"] is False
+    assert set(item["properties"]) == {"name", "inst_re", "util", "centre_um", "near_re", "note", "kind", "box_um", "radius_um", "cone", "fixed_sites"}
 
 
 def test_region_box_is_snapped_to_the_placement_grid():
@@ -188,3 +190,39 @@ def test_exact_regions_require_a_box_and_precheck_checks_the_named_members(tmp_p
     assert "{word {sram_mask} 0.55 {} {} {} fence {24 25 32 34} {} exact}" in text
     missing = place_precheck.cone_regions(tmp_path, {}, {})
     assert len(missing) == 1 and "matches no movable" in missing[0]["msg"]
+
+
+FIXED = {
+    "name": "core",
+    "kind": "fixed",
+    "box_um": [10, 20, 40, 50],
+    "fixed_sites": [
+        {"instance": "u_core/q[2]", "master": "DFF", "reserve_rect_um": [11, 22, 13.16, 22.27]},
+    ],
+}
+
+
+def test_fixed_sites_attach_to_place_hooks_only(tmp_path):
+    import place_fixed_sites
+
+    for hook in ("face_flops.tcl", "face_flops_release.tcl"):
+        (tmp_path / hook).write_text("existing_hook\n")
+    assert gen_phys.install_place_regions(tmp_path, [FIXED]) == []
+    place_fixed_sites.install(tmp_path, [FIXED])
+    assert not (tmp_path / "place_regions_data.tcl").exists()
+    assert "{u_core/q[2]} {DFF} 11 22 13.16 22.27" in (tmp_path / place_fixed_sites.SITE_DATA).read_text()
+    assert (tmp_path / "face_flops.tcl").read_text().endswith("ot_fixed_sites::seed\n")
+    assert (tmp_path / "face_flops_release.tcl").read_text().endswith("ot_fixed_sites::check\n")
+
+
+def test_fixed_sites_refuse_stale_or_unsafe_members(tmp_path):
+    import place_fixed_sites
+
+    site = FIXED["fixed_sites"][0]
+    with pytest.raises(ValueError, match="exceeds region"):
+        place_fixed_sites.install(tmp_path, [dict(FIXED, fixed_sites=[dict(site, reserve_rect_um=[1, 2, 3, 4])])])
+    with pytest.raises(ValueError, match="duplicate fixed-site instance"):
+        place_fixed_sites.install(tmp_path, [dict(FIXED, fixed_sites=[site, site])])
+    with pytest.raises(ValueError, match="invalid fixed-site instance"):
+        place_fixed_sites.install(tmp_path, [dict(FIXED, fixed_sites=[dict(site, instance="bad}")])])
+    assert list(tmp_path.iterdir()) == []

@@ -7264,8 +7264,7 @@
        "type": "object",
        "additionalProperties": false,
        "required": [
-        "name",
-        "inst_re"
+        "name"
        ],
        "properties": {
         "name": {
@@ -7299,7 +7298,8 @@
         "kind": {
          "enum": [
           "fence",
-          "soft"
+          "soft",
+          "fixed"
          ]
         },
         "box_um": {
@@ -7319,6 +7319,97 @@
           "auto",
           "between",
           "exact"
+         ]
+        },
+        "fixed_sites": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "instance",
+           "master",
+           "reserve_rect_um"
+          ],
+          "properties": {
+           "instance": {
+            "type": "string",
+            "minLength": 1
+           },
+           "master": {
+            "type": "string",
+            "minLength": 1
+           },
+           "reserve_rect_um": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+             "type": "number"
+            }
+           }
+          }
+         }
+        }
+       },
+       "if": {
+        "required": [
+         "kind"
+        ],
+        "properties": {
+         "kind": {
+          "const": "fixed"
+         }
+        }
+       },
+       "then": {
+        "required": [
+         "box_um",
+         "fixed_sites"
+        ],
+        "not": {
+         "anyOf": [
+          {
+           "required": [
+            "inst_re"
+           ]
+          },
+          {
+           "required": [
+            "util"
+           ]
+          },
+          {
+           "required": [
+            "near_re"
+           ]
+          },
+          {
+           "required": [
+            "centre_um"
+           ]
+          },
+          {
+           "required": [
+            "radius_um"
+           ]
+          },
+          {
+           "required": [
+            "cone"
+           ]
+          }
+         ]
+        }
+       },
+       "else": {
+        "required": [
+         "inst_re"
+        ],
+        "not": {
+         "required": [
+          "fixed_sites"
          ]
         }
        }
