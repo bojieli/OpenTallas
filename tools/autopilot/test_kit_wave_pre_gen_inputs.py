@@ -55,6 +55,54 @@ class PreGenInputs(unittest.TestCase):
         self.assertIn(f"{self.d / 'base' / 'gone.sv'} (named by {self.asb})", why)
         self.assertNotIn(str(self.d / "plan.json") + ";", why)
 
+    def test_active_plan_assets_join_existing_missing_list(self):
+        plan = self.d / "plan.json"
+        plan.write_text(json.dumps({
+            "die": {"layer_budget": {
+                "type_m8_grant": {"guide": "default.guide", "type_guides": {"t": ["a.guide", "b.guide"]}},
+                "type_m9_grant": {"guide": "inactive.guide", "enable": False},
+            }},
+            "partitions": [{"name": "p", "type": "t"}, {"name": "q", "type": "other"}],
+            "partition_types": {
+                "t": {"clock": {"tap_mode": "grid+explicit", "sink_bins_file": "t_bins.json"}},
+                "other": {"clock": {"tap_mode": "density", "sink_bins_file": "other_bins.json"}},
+            },
+        }))
+        items = self.items()
+        root = str(Path(__file__).resolve().parents[2])
+        check = KW.pre_gen_plan_probe_cmd(str(plan), str(self.d), "t", False, (root,), {})
+        cmd = KW.pre_gen_probe_cmd(items) + "; " + check
+        txt = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=60, check=True).stdout
+        why = KW.pre_gen_verdict(items, "epyc7", txt)
+        for name in ("gone.sv", "a.guide", "b.guide", "t_bins.json"):
+            self.assertIn(name, why)
+        for name in ("default.guide", "inactive.guide", "other_bins.json"):
+            self.assertNotIn(name, why)
+
+
+    def test_m9_forced_m8_and_independent_m8_default(self):
+        plan = self.d / "plan.json"
+        layers = {"type_m9_grant": {"guide": "m9-default.guide", "type_guides": {"t": "m9-type.guide"}},
+                  "type_m8_grant": False}
+        raw = {"die": {"layer_budget": layers}, "partitions": [{"name": "p", "type": "t"}],
+               "partition_types": {"t": {}, "unplaced": {}}}
+        stock = str(Path(__file__).resolve().parents[2])
+        cmd = KW.pre_gen_plan_probe_cmd(str(plan), str(self.d), "t", False, (stock,), {})
+        plan.write_text(json.dumps(raw))
+        output = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=60, check=True).stdout
+        self.assertIn("m9-type.guide", output)
+        self.assertIn("type_m8_grant (t), type_m9_grant (t)", output)
+        self.assertNotIn("m9-default.guide", output)
+
+        layers["type_m8_grant"] = {"guide": "m8-default.guide", "type_guides": {"unplaced": "ignored.guide"}}
+        plan.write_text(json.dumps(raw))
+        output = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=60, check=True).stdout
+        self.assertIn("m8-default.guide (named by type_m8_grant (t))", output)
+        self.assertIn("m9-type.guide (named by type_m9_grant (t))", output)
+        self.assertNotIn("ignored.guide", output)
+        self.assertNotIn("m9-default.guide", output)
+
+
     def test_all_present_is_clean(self):
         self.sp = {}
         self.kr = {"mode": "bind", "asbuilt": str(self.d / "plan.json")}

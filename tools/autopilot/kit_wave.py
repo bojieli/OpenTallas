@@ -11836,16 +11836,22 @@ def _run_item(spec_path, resume_reviewed=False):
         why = private_spec_stale(sp)
         if why:
             return fail("private_spec", "ENV-PROVENANCE " + why)
-    def pre_gen_check(plan_, kr_):
-        """FLOW-PROC-A 11-21: every absolute gen / kit-rtl input resolves on G, else one fail listing all of them"""
+    def pre_gen_check(plan_, kr_, tools):
+        """List unresolved absolute inputs and active plan assets before kit workers."""
         items = pre_gen_inputs(sp, plan_, kr_)
-        if not items:
+        cmd = pre_gen_probe_cmd(items)
+        if sp.get("kind") == "type" and plan_:
+            bind_all = kr_.get("mode") == "bind" and not kr_.get("bind_out")
+            cmd += "; " + pre_gen_plan_probe_cmd(plan_, src, T, bind_all, tools, sp.get("gen_env") or {})
+        if not items and sp.get("kind") != "type":
             return None
-        _rc, _txt = run("abs_inputs", remote(pre_gen_probe_cmd(items)), idempotent=True)
+        _rc, _txt = run("abs_inputs", remote(cmd), idempotent=True)
         _why = pre_gen_verdict(items, G, _txt)
         return fail("abs_inputs", _why, G) if _why else None
+
     if not ((bool(sp.get("kit_snap")) or bool(sp.get("kit_store"))) and kit_store_applies(sp)):
-        _pg = pre_gen_check(plan, sp.get("kit_rtl") or {})       # no kit store: the spec paths are what gen reads; check before mkdir
+        # Preserve the existing before-mkdir absolute input check for uncopied paths.
+        _pg = pre_gen_check(plan, sp.get("kit_rtl") or {}, (tsrc, sp.get("tools_rt"), src))
         if _pg is not None:
             return _pg
     if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
@@ -11962,7 +11968,9 @@ def _run_item(spec_path, resume_reviewed=False):
         sp["plan"], sp["kit_rtl"] = plan, kr
         sp["gen_args"] = ks_map(list(sp.get("gen_args") or []), mp)
         sp["gen_env"] = ks_map(dict(sp.get("gen_env") or {}), mp)
-        _pg = pre_gen_check(plan, kr)                       # FLOW-PROC-A 11-21: the snapshot-mapped paths, before kit-rtl / gen
+    if ks_on or (sp.get("tools_rt") and sp.get("kind") == "type"):
+        # Check snapshot-mapped paths, or recheck with the now-composed tool tree.
+        _pg = pre_gen_check(plan, kr, (tsrc,))
         if _pg is not None:
             return _pg
     # DIE-KV-69 11-04: die option prov_first_re names types whose planned children have no source under the manifest
@@ -12634,20 +12642,41 @@ def pre_gen_probe_cmd(items):
     return "; ".join(parts + ["true"])
 
 
+def pre_gen_plan_probe_cmd(plan, src, tn, bind_all, tools, env):
+    """Read exactly the same plan paths and enabled grant flags as this kit."""
+    q = shlex.quote
+    checkers = " ".join(q(f"{root}/tools/die_plan/plan_file_inputs.py") for root in dict.fromkeys(tools) if root)
+    args = f"{q(plan)} --tree {q(str((env or {}).get('OT_REPO_ROOT') or src))} --guide-type {q(tn)}"
+    if not bind_all:
+        args += f" --bin-type {q(tn)}"
+    flags = " ".join(f"{name}={q(str(env[name]))}" for name in ("OT_GEN_M8_GRANT", "OT_GEN_M9_GRANT") if name in env)
+    return (f"for reader in {checkers}; do "
+            'if [ -f "$reader" ]; then '
+            f"P_OUT=$(env {flags} python3 -I \"$reader\" {args} 2>&1); P_RC=$?; "
+            'if [ -n "$P_OUT" ]; then printf "%s\\n" "$P_OUT"; fi; '
+            'if [ "$P_RC" -ne 0 ] && ! printf "%s\\n" "$P_OUT" | grep -q "^P "; then '
+            'printf "P plan asset check could not run (%s)\\n" "$P_RC"; fi; break; fi; done; true')
+
+
 def pre_gen_verdict(items, host, txt):
     """-> '' (all resolve) or the KIT_INPUT_MISSING text naming EVERY unresolvable path with its role and the host"""
     role = {p: r for r, p in items}
     miss = []
+    has_plan_assets = False
     for ln in (txt or "").splitlines():
         f = ln.split()
         if len(f) >= 2 and f[0] == "M":
             miss.append(f"{role.get(f[1], '?')} {f[1]}")
         elif len(f) >= 3 and f[0] == "D":
             miss.append(f"{f[2]} (named by {f[1]})")
+        elif ln.startswith("P "):
+            miss.append(ln[2:])
+            has_plan_assets = True
     miss = list(dict.fromkeys(miss))
     if not miss:
         return ""
-    return (f"{KIT_INPUT_MISSING}: pre-gen check on host {host}: {len(miss)} absolute input(s) do not resolve before any work: "
+    kind = "input(s)" if has_plan_assets else "absolute input(s)"
+    return (f"{KIT_INPUT_MISSING}: pre-gen check on host {host}: {len(miss)} {kind} do not resolve before any work: "
             + "; ".join(miss) + " (copy them into the kit / tree, or repoint the spec)")
 
 

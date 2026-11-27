@@ -461,6 +461,14 @@ def manifest_paths(ab, manifest_dir, tree):
     return base, res
 
 
+def check_bind_assets(raw, tree, plan, types=None):
+    """Bind reads clock inventory. Physical kit generation checks guides separately."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import plan_file_inputs
+    return [f"FAIL INPUT-MISSING plan asset {issue}"
+            for issue in plan_file_inputs.missing(raw, plan, Path(tree), guide_types=set(), bin_types=types)]
+
+
 def check_inputs(tree, plan, sidecar=None, asbuilt=None, want_list=False, require_asbuilt=False):
     out = []
     listing = []
@@ -468,6 +476,7 @@ def check_inputs(tree, plan, sidecar=None, asbuilt=None, want_list=False, requir
         if p and not Path(p).is_file():
             out.append(f"FAIL INPUT-MISSING {what} {p}")
     raw = _load(plan)
+    out += check_bind_assets(raw, tree, plan, _SCOPE)
     if asbuilt:
         ab, mdir = _load(asbuilt), Path(asbuilt).resolve().parent
     else:

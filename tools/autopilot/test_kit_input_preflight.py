@@ -67,6 +67,9 @@ class TestPreflight(unittest.TestCase):
         (v / "stub" / "provenance.json").write_text(json.dumps({"export": {"signoff": "/a"}}))
         plan = json.loads(self.plan.read_text())
         plan["partition_types"]["T"]["cores"].pop()
+        vendor = v / "vendor.lef"
+        vendor.write_text("vendor view has no local signoff provenance")
+        plan["partition_types"]["T"]["cores"].append(str(vendor))
         self.plan.write_text(json.dumps(plan))
         self.assertEqual(KP.preflight(cfg, "d", ["localhost"], run=local_run), [])
 
