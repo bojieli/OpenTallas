@@ -282,7 +282,7 @@ def launch(ap, st, r, a, t, odb, sig):
     out = f"{AG_ROOT}/{rid}"
     th, tp = t["metrics"].split(":", 1) if ":" in t["metrics"] else (host, t["metrics"])
     tools = [HERE / "geom_check.sh", HERE / "geom_dump.tcl", HERE / "geom_rules.py", HERE / "geom_memory.py", HERE / "geom_grt.tcl",
-             HERE / "geom_png.py", HERE / "geom_corridor.py"] + ([HERE / "placed_scan.py"] if (HERE / "placed_scan.py").is_file() else [])
+             HERE / "geom_png.py"] + [HERE / f for f in ("placed_scan.py", "geom_corridor.py") if (HERE / f).is_file()]
     rc, _, err = ap.rbash(host, f"mkdir -p {shlex.quote(out)}/tools", timeout=60)
     ok = rc == 0
     for f in tools:

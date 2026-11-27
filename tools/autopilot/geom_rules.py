@@ -1839,6 +1839,8 @@ def verdict_line(verdict, rules, title=""):
 def load_corridor_type(a):
     """the plan type record for the report-only fill_corridor, or None; an unreadable file is reported, never fatal"""
     if not (a.corridor_type_json or (a.corridor_plan and a.corridor_type)):
+        if a.corridor_plan or a.corridor_type:
+            print("AP_AUTO_GEOM_NOTE fill_corridor skipped: --corridor-plan and --corridor-type must be given together", file=sys.stderr)
         return None
     try:
         spec = importlib.util.spec_from_file_location("geom_corridor", Path(__file__).with_name("geom_corridor.py"))

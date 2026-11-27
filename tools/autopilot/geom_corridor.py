@@ -25,23 +25,40 @@ Definition (all geometry in the type frame, um, clipped to the type outline; pla
   design is mostly OUTSIDE the corridors and fill_corridor says little), raw_fill.
 
 Eligibility (all three from plan / measured data, never from names; all must hold or fill_corridor is None):
-  collector     : clock.landing_contract.collector_tree is a dict AND ft_slots is non-empty AND `contents` is empty
-                  (the type declares no logic content of its own: it only lands, relays and feeds clock/reset/data through)
+  collector     : (pure feed-through collector tile) plan die is in COLLECTOR_DIES (qwen_compute: the ruling is QC-only; the
+                  record carries it as `_die`, set by load_type / the kit record writer), clock.landing_contract.collector_tree
+                  is a non-empty dict, ft_slots is non-empty AND `contents` is empty (the type declares no logic of its own:
+                  it only lands, relays and feeds clock/reset/data through).  collector_tree alone does not discriminate
+                  (it is on nearly every type); on S81 the same shape is a slice station, hence the die scope (FABLE review M1)
   macro_free    : no hard_cores, no `hard` block, no `macro_under_ft`, and (when measured) zero hard macros in the dump
-  pin_hull_bound: the signal-pin bounding box spans >= PIN_HULL_SPAN (0.98) of the outline width AND height (pins on
-                  opposite faces on both axes), so the outline cannot shrink below the pin envelope; pin_hull_frac = bbox area
-                  / outline area is reported (QC coll_ftc 848,781 / 849,139 = 0.9996)
+  pin_hull_bound: >= PIN_HULL_MIN_PINS (100) signal pins whose full extent (min..max: fixed pins cannot move, so the
+                  outline cannot shrink below the farthest pin) spans >= PIN_HULL_SPAN (0.98) of the measured outline width
+                  AND height; pin_hull_frac = span_x * span_y is reported (QC coll_ftc 848,781 / 849,139 = 0.9996).  The
+                  p1..p99 trimmed extent is reported alongside as pin_hull_frac_robust (information; it is far lower for the
+                  small collector siblings, whose far-end pins are few).  This is an extent test: a face may carry no pins.
+  frame         : the plan record outline must equal the measured outline within OUTLINE_TOL, else ineligible (wrong type /
+                  stale record); all geometry uses the measured outline.
+
+Numerator: EXACT cell area overlapping the corridor union (a cell straddling an edge counts its overlap), so the value is
+bounded by 1.  The result is reported per corridor kind, with the number of ft slots that declare no station sites
+(`ft_slots_undeclared`): routing area is only counted where the plan declares it, so the value degrades to landing-only,
+visibly, on a plan without bit_sites_um.  Provenance (`_plan_sha256`, `_type`, `_die`) of the record is echoed.
 """
 from __future__ import annotations
 
 import bisect
+import hashlib
 import json
+import math
 from pathlib import Path
 
 SCHEMA = "opentallas.fill_corridor.v1"
 PIN_HULL_SPAN = 0.98
-PIN_STRIP_UM = 30.0     # geom_rules PIN_REG_P90: AUTO-GEOM requires every pin register within 30 um (p90) of its pin
-FACE_TOL_UM = 2.0       # geom_rules.face_of tolerance
+PIN_STRIP_UM = 30.0     # == geom_rules.PINREG_P90 (asserted in the test): every pin register within 30 um (p90) of its pin
+PIN_HULL_MIN_PINS = 100
+OUTLINE_TOL = 0.01      # == geom_rules.OUTLINE_TOL
+COLLECTOR_DIES = ("qwen_compute",)
+FACE_TOL_UM = 2.0       # == geom_rules.face_of default tolerance
 
 
 def _rect(r, W, H):
@@ -50,13 +67,16 @@ def _rect(r, W, H):
         x0, y0, x1, y1 = (float(v) for v in r[:4])
     except (TypeError, ValueError):
         return None
+    if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
+        return None
     x0, x1 = max(0.0, min(x0, x1)), min(W, max(x0, x1))
     y0, y1 = max(0.0, min(y0, y1)), min(H, max(y0, y1))
     return (x0, y0, x1, y1) if x1 > x0 and y1 > y0 else None
 
 
 def pin_strips(pins, W, H):
-    """landing strips: per outline face carrying signal pins, PIN_STRIP_UM deep along the pin span of that face"""
+    """landing strips: along every face carrying signal pins, PIN_STRIP_UM deep, as the union of per-pin +-PIN_STRIP_UM
+    intervals (a gap between two pin clusters is NOT corridor; a single pin still gets a strip)"""
     byf = {"W": [], "E": [], "S": [], "N": []}
     for x, y in pins or []:
         f = ("W" if x < FACE_TOL_UM else "E" if x > W - FACE_TOL_UM else "S" if y < FACE_TOL_UM
@@ -65,19 +85,23 @@ def pin_strips(pins, W, H):
             byf[f].append(y if f in "WE" else x)
     d, out = PIN_STRIP_UM, []
     for f, v in byf.items():
-        if not v:
-            continue
-        lo, hi = min(v), max(v)
-        r = {"W": [0, lo, d, hi], "E": [W - d, lo, W, hi], "S": [lo, 0, hi, d], "N": [lo, H - d, hi, H]}[f]
-        r = _rect(r, W, H)
-        if r:
-            out.append(("pin_landing_strip",) + r)
+        merged = []
+        for lo, hi in sorted((p - d, p + d) for p in v):
+            if merged and lo <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], hi)
+            else:
+                merged.append([lo, hi])
+        for lo, hi in merged:
+            r = {"W": [0, lo, d, hi], "E": [W - d, lo, W, hi], "S": [lo, 0, hi, d], "N": [lo, H - d, hi, H]}[f]
+            r = _rect(r, W, H)
+            if r:
+                out.append(("pin_landing_strip",) + r)
     return out
 
 
-def corridor_rects(t, pins=None):
+def corridor_rects(t, pins=None, outline=None):
     """[(kind, x0, y0, x1, y1)] declared corridors of one plan partition type (type frame, clipped); pins = [(x, y)]"""
-    W, H = (float(v) for v in t["outline_um"][:2])
+    W, H = (float(v) for v in (outline or t["outline_um"])[:2])
     lc = (t.get("clock") or {}).get("landing_contract") or {}
     out = []
     for b in (lc.get("bands") or {}).values():
@@ -120,6 +144,25 @@ class Union:
             self.slabs.append(([m[0] for m in merged], [m[1] for m in merged]))
             self.area += (b - a) * sum(m[1] - m[0] for m in merged)
 
+    def overlap(self, c):
+        """exact area of rect c = (x0, y0, x1, y1) inside the union"""
+        if not self.slabs or c[2] <= self.xs[0] or c[0] >= self.xs[-1]:
+            return 0.0
+        i = max(0, bisect.bisect_right(self.xs, c[0]) - 1)
+        tot = 0.0
+        while i < len(self.slabs) and self.xs[i] < c[2]:
+            w = min(c[2], self.xs[i + 1]) - max(c[0], self.xs[i])
+            if w > 0:
+                los, his = self.slabs[i]
+                h = 0.0
+                k = max(0, bisect.bisect_right(los, c[1]) - 1)
+                while k < len(los) and los[k] < c[3]:
+                    h += max(0.0, min(c[3], his[k]) - max(c[1], los[k]))
+                    k += 1
+                tot += w * h
+            i += 1
+        return tot
+
     def contains(self, x, y):
         i = bisect.bisect_right(self.xs, x) - 1
         if i < 0 or i >= len(self.slabs):
@@ -129,65 +172,106 @@ class Union:
         return k >= 0 and y <= his[k]
 
 
+def _span(v, total, trim=False):
+    v = sorted(v)
+    if trim:
+        return (v[int(math.ceil(0.99 * (len(v) - 1)))] - v[int(0.01 * (len(v) - 1))]) / total
+    return (v[-1] - v[0]) / total
+
+
 def eligibility(t, outline=None, pins=None, macros=None):
-    """dict(eligible, collector, macro_free, pin_hull_bound, pin_hull_frac, reasons[]); pins = [(x, y)] in the type frame
-    (None = not measurable -> pin_hull_bound False), macros = measured hard-macro count (None = not measured)"""
+    """dict(eligible, collector, macro_free, pin_hull_bound, pin_hull_frac, frame_ok, reasons[]); pins = [(x, y)] in the
+    measured type frame (None = not measurable -> pin_hull_bound False), macros = measured hard-macro count (None = not measured)"""
     lc = (t.get("clock") or {}).get("landing_contract") or {}
     reasons = []
-    collector = isinstance(lc.get("collector_tree"), dict) and bool(t.get("ft_slots")) and not t.get("contents")
+    ct = lc.get("collector_tree")
+    collector = (t.get("_die") in COLLECTOR_DIES and isinstance(ct, dict) and bool(ct)
+                 and bool(t.get("ft_slots")) and not t.get("contents"))
     if not collector:
-        reasons.append("not collector (needs landing_contract.collector_tree, ft_slots, empty contents)")
+        reasons.append("not a QC pure feed-through collector (needs _die in %s, collector_tree, ft_slots, empty contents)"
+                       % (COLLECTOR_DIES,))
     macro_free = not t.get("hard_cores") and not t.get("hard") and not t.get("macro_under_ft") and not macros
     if not macro_free:
         reasons.append("not macro-free (hard_cores / hard / macro_under_ft / measured macros)")
     W, H = (float(v) for v in (outline or t["outline_um"])[:2])
-    frac, hull = None, False
-    if pins:
+    po = t.get("outline_um")
+    frame_ok = bool(po) and abs(float(po[0]) - W) <= OUTLINE_TOL and abs(float(po[1]) - H) <= OUTLINE_TOL
+    if not frame_ok:
+        reasons.append("plan record outline %s != measured %sx%s (wrong or stale record)" % (po, W, H))
+    frac, hull, robust = None, False, None
+    if pins and len(pins) >= PIN_HULL_MIN_PINS:
         xs, ys = [p[0] for p in pins], [p[1] for p in pins]
-        sx, sy = (max(xs) - min(xs)) / W, (max(ys) - min(ys)) / H
+        sx, sy = _span(xs, W), _span(ys, H)
         frac = round(sx * sy, 4)
+        robust = round(_span(xs, W, True) * _span(ys, H, True), 4)
         hull = sx >= PIN_HULL_SPAN and sy >= PIN_HULL_SPAN
     if not hull:
-        reasons.append("not pin-hull-bound" if pins else "pin hull not measurable")
-    return dict(eligible=collector and macro_free and hull, collector=collector, macro_free=macro_free,
-                pin_hull_bound=hull, pin_hull_frac=frac, reasons=reasons)
+        reasons.append("not pin-hull-bound" if pins and len(pins) >= PIN_HULL_MIN_PINS else "pin hull not measurable")
+    return dict(eligible=collector and macro_free and hull and frame_ok, collector=collector, macro_free=macro_free,
+                pin_hull_bound=hull, pin_hull_frac=frac, pin_hull_frac_robust=robust, frame_ok=frame_ok, reasons=reasons)
 
 
 def fill_corridor(t, cells, pins, outline=None, macros=0, raw_fill=None):
-    """cells = [(x0, y0, x1, y1)] std cells in the type frame; pins = [(x, y)] signal pins in the type frame.
-    Returns the report dict (fill_corridor None unless eligible); never raises on a malformed plan record."""
+    """cells = [(x0, y0, x1, y1)] std cells in the measured type frame; pins = [(x, y)] signal pins in that frame.
+    Returns the report dict (fill_corridor None unless eligible); never raises: a malformed record is reported."""
+    prov = {k: t.get(k) for k in ("_die", "_type", "_plan_sha256")} if isinstance(t, dict) else {}
+    try:
+        return _fill_corridor(t, cells, pins, outline, macros, raw_fill, prov)
+    except Exception as e:
+        return dict(schema=SCHEMA, raw_fill=raw_fill, fill_corridor=None, eligible=False, provenance=prov,
+                    reasons=["error: %s: %s" % (type(e).__name__, e)])
+
+
+def _fill_corridor(t, cells, pins, outline, macros, raw_fill, prov):
     el = eligibility(t, outline, pins, macros)
-    res = dict(schema=SCHEMA, raw_fill=raw_fill, fill_corridor=None, **el)
+    res = dict(schema=SCHEMA, raw_fill=raw_fill, fill_corridor=None, provenance=prov, **el)
     if not el["eligible"]:
         return res
-    rects = corridor_rects(t, pins)
-    u = Union([r[1:] for r in rects])
-    tot = ins = 0.0
-    for c in cells:
-        a = (c[2] - c[0]) * (c[3] - c[1])
-        tot += a
-        if u.contains((c[0] + c[2]) / 2, (c[1] + c[3]) / 2):
-            ins += a
-    kinds = {}
+    rects = corridor_rects(t, pins, outline)
+    slots = [s for s in t.get("ft_slots") or [] if isinstance(s, dict)]
+    undeclared = sum(1 for s in slots if not any(s.get("bit_sites_um") or []))
+    per, allr = {}, [r[1:] for r in rects]
     for r in rects:
-        kinds[r[0]] = kinds.get(r[0], 0) + 1
-    res.update(corridor_area=round(u.area, 3), corridor_rects=kinds, cell_area_in=round(ins, 3), cell_area_total=round(tot, 3),
+        per.setdefault(r[0], []).append(r[1:])
+    unions = {k: Union(v) for k, v in per.items()}
+    u = Union(allr)
+    tot = ins = 0.0
+    ink = {k: 0.0 for k in unions}
+    for c in cells:
+        tot += (c[2] - c[0]) * (c[3] - c[1])
+        ins += u.overlap(c)
+        for k, uk in unions.items():
+            ink[k] += uk.overlap(c)
+    by_kind = {k: dict(rects=len(per[k]), area=round(unions[k].area, 3), cell_area=round(ink[k], 3),
+                       fill=round(ink[k] / unions[k].area, 4) if unions[k].area > 0 else None) for k in unions}
+    res.update(corridor_area=round(u.area, 3), corridor_rects={k: len(v) for k, v in per.items()}, by_kind=by_kind,
+               cell_area_in=round(ins, 3), cell_area_total=round(tot, 3),
                share_in=round(ins / tot, 4) if tot > 0 else None,
+               ft_slots_total=len(slots), ft_slots_undeclared=undeclared,
                fill_corridor=round(ins / u.area, 4) if u.area > 0 else None)
     return res
 
 
 def load_type(plan_path=None, type_name=None, type_json=None):
-    """a plan partition type from PLAN.json + name, or from a file holding the type record itself"""
+    """a plan partition type, from PLAN.json + name or from a file holding the record; the record carries its provenance
+    (_die, _type, _plan_sha256 -- sha of the plan file when read from a plan) which fill_corridor echoes"""
     if type_json:
         return json.loads(Path(type_json).read_text())
-    return json.loads(Path(plan_path).read_text())["partition_types"][type_name]
+    raw = Path(plan_path).read_bytes()
+    plan = json.loads(raw)
+    t = dict(plan["partition_types"][type_name])
+    t.update(_die=(plan.get("die") or {}).get("name"), _type=type_name, _plan_sha256=hashlib.sha256(raw).hexdigest())
+    return t
 
 
 def detail(res):
     if res.get("fill_corridor") is None:
         return "raw fill %s; fill_corridor n/a: %s" % (res.get("raw_fill"), "; ".join(res.get("reasons") or ["no corridor area"]))
-    return ("raw fill %s (gate unchanged); fill_corridor %s = %s um2 of cells in / %s um2 declared corridors %s; "
-            "%s of all std-cell area lies in the corridors; pin_hull_frac %s; REPORT-ONLY"
-            % (res["raw_fill"], res["fill_corridor"], res["cell_area_in"], res["corridor_area"], res["corridor_rects"],
-               res["share_in"], res["pin_hull_frac"]))
+    bk = " ".join("%s=%s(%s um2)" % (k, v["fill"], v["area"]) for k, v in sorted(res["by_kind"].items()))
+    p = res.get("provenance") or {}
+    return ("raw fill %s (gate unchanged); fill_corridor %s = %s um2 of cells in / %s um2 declared corridors; by kind %s; "
+            "%s of all std-cell area lies in the corridors; ft slots without declared sites %s/%s; pin_hull_frac %s (robust %s); "
+            "record %s %s sha %s; REPORT-ONLY"
+            % (res["raw_fill"], res["fill_corridor"], res["cell_area_in"], res["corridor_area"], bk, res["share_in"],
+               res["ft_slots_undeclared"], res["ft_slots_total"], res["pin_hull_frac"], res["pin_hull_frac_robust"], p.get("_die"), p.get("_type"),
+               (p.get("_plan_sha256") or "none")[:12]))

@@ -9162,7 +9162,7 @@ def control_call_cmd(name, args_json):
     return 0
 
 
-GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py")
+GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py", "geom_corridor.py")
 
 
 def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None, control=None):

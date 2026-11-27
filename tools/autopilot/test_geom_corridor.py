@@ -16,13 +16,13 @@ from test_auto_geom import dump  # noqa: E402
 
 
 def ctype(W=100.0, H=100.0, band=(40, 40, 60, 60), **kw):
-    t = dict(outline_um=[W, H], contents=[], ft_slots=[dict(name="s", in_face="E", out_face="W", width=1, stations=1)],
+    t = dict(outline_um=[W, H], contents=[], _die="qwen_compute", _type="x", _plan_sha256="ab" * 32, ft_slots=[dict(name="s", in_face="E", out_face="W", width=1, stations=1)],
              clock=dict(landing_contract=dict(collector_tree={"root": [0, 0]}, bands={"b": dict(rect_um=list(band))})))
     t.update(kw)
     return t
 
 
-PINS = [(0, 0), (0, 100), (100, 0), (100, 100)]       # W and E faces, full height and width
+PINS = [(0, y) for y in range(0, 101, 2)] + [(100, y) for y in range(0, 101, 2)]    # W and E faces, full height and width
 
 
 class Geometry(unittest.TestCase):
@@ -42,14 +42,21 @@ class Geometry(unittest.TestCase):
         self.assertEqual(r["landing_group"], (50.0, 50.0, 52.0, 52.0))        # malformed rect dropped
         self.assertEqual(r["routing_station"], (10.0, 10.0, 11.0, 12.5))      # sites bbox + cell, empty station skipped
         self.assertEqual(len(GC.corridor_rects(t)), 3)
+        self.assertIsNone(GC._rect([float("nan"), 0, 10, 10], 100, 100))       # non-finite is dropped, not full-width
+        self.assertAlmostEqual(GC.Union([(0, 0, 10, 10)]).overlap((5, 5, 25, 25)), 25.0)
+        self.assertEqual(GC.Union([(0, 0, 10, 10)]).overlap((10, 0, 12, 5)), 0.0)
 
-    def test_pin_landing_strips_only_on_faces_with_pins(self):
-        pins = [(0, 10), (0, 90), (20, 0), (50, 0), (50, 50)]
-        s = {x[0]: x[1:] for x in GC.pin_strips(pins, 100, 100)}
-        self.assertEqual(len(GC.pin_strips(pins, 100, 100)), 2)    # W and S only; interior pin ignored
-        self.assertEqual(GC.pin_strips([(50, 50)], 100, 100), [])
-        self.assertIn((0.0, 10.0, 30.0, 90.0), [x[1:] for x in GC.pin_strips([(0, 10), (0, 90)], 100, 100)])
-        self.assertIn("pin_landing_strip", s)
+    def test_pin_landing_strips_per_pin_intervals(self):
+        pins = [(0, 10), (0, 90), (20, 0), (50, 50)]
+        st = {tuple(x[1:]) for x in GC.pin_strips(pins, 100, 100)}
+        self.assertEqual(st, {(0.0, 0.0, 30.0, 40.0), (0.0, 60.0, 30.0, 100.0), (0.0, 0.0, 50.0, 30.0)})  # gap 40..60 not corridor
+        self.assertEqual(GC.pin_strips([(50, 50)], 100, 100), [])               # interior pin
+        self.assertEqual(len(GC.pin_strips([(0, 50)], 100, 100)), 1)            # a single pin still gets a strip
+
+    def test_constants_match_geom_rules(self):
+        self.assertEqual(GC.PIN_STRIP_UM, G.PINREG_P90)
+        self.assertEqual(GC.OUTLINE_TOL, G.OUTLINE_TOL)
+        self.assertEqual(GC.FACE_TOL_UM, 2.0)
 
 
 class Eligibility(unittest.TestCase):
@@ -67,15 +74,27 @@ class Eligibility(unittest.TestCase):
         for k, v in (("hard_cores", [{"name": "m"}]), ("hard", {"x": 1}), ("macro_under_ft", {"rule": "r"})):
             self.assertFalse(GC.eligibility(ctype(**{k: v}), pins=PINS)["macro_free"], k)
         self.assertFalse(GC.eligibility(ctype(), pins=PINS, macros=2)["macro_free"])      # measured macro in the dump
-        self.assertFalse(GC.eligibility(ctype(), pins=[(0, 0), (0, 100)])["pin_hull_bound"])    # one face pair only
-        self.assertFalse(GC.eligibility(ctype(), pins=[(0, 40), (100, 60)])["pin_hull_bound"])  # short span
+        self.assertFalse(GC.eligibility(ctype(), pins=[(0, 40 + i % 20) for i in range(150)])["pin_hull_bound"])   # short span
+        self.assertFalse(GC.eligibility(ctype(), pins=[(0, 0), (0, 100), (100, 50)])["pin_hull_bound"])         # too few pins
+        stray = [(0, 40 + i % 20) for i in range(150)] + [(100, 0), (0, 100)]
+        e = GC.eligibility(ctype(), pins=stray)
+        self.assertTrue(e["pin_hull_bound"])         # fixed far-end pins DO bound the outline ...
+        self.assertLess(e["pin_hull_frac_robust"], 0.2)    # ... and the trimmed extent is reported beside it
+        self.assertFalse(GC.eligibility(ctype(), pins=stray[:3])["pin_hull_bound"])     # but a handful of pins never qualifies
+        self.assertFalse(GC.eligibility(ctype(_die="s81"), pins=PINS)["collector"])          # S81 slice stations are out of scope
+        self.assertFalse(GC.eligibility(ctype(_die=None), pins=PINS)["collector"])
+        t = ctype()
+        t["clock"]["landing_contract"]["collector_tree"] = {}
+        self.assertFalse(GC.eligibility(t, pins=PINS)["collector"])
+        e = GC.eligibility(ctype(), outline=[120, 120], pins=PINS)
+        self.assertFalse(e["eligible"] or e["frame_ok"])                                      # plan 100x100 vs measured 120x120
         e = GC.eligibility(ctype(), pins=None)
         self.assertFalse(e["eligible"] or e["pin_hull_bound"])
         self.assertIn("pin hull not measurable", e["reasons"])
 
     def test_names_are_never_read(self):
-        t = ctype(module="qfd_qc_coll_ftc_part", note="coll_ftc collector")
-        self.assertEqual(GC.eligibility(t, pins=PINS)["eligible"], GC.eligibility(dict(t, module="x", note=""), pins=PINS)["eligible"])
+        t = ctype(module="qfd_qc_coll_ftc_part", note="coll_ftc collector", _type="coll_ftc")
+        self.assertEqual(GC.eligibility(t, pins=PINS)["eligible"], GC.eligibility(dict(t, module="x", note="", _type="zz"), pins=PINS)["eligible"])
 
 
 class Metric(unittest.TestCase):
@@ -94,8 +113,32 @@ class Metric(unittest.TestCase):
         self.assertEqual(r["share_in"], round(120 / 130, 4))
         self.assertEqual(r["raw_fill"], 0.013)
         self.assertEqual(r["corridor_rects"], {"landing_band": 1, "pin_landing_strip": 2})
+        self.assertEqual(r["by_kind"]["landing_band"]["fill"], round(20 / 400, 4))
+        self.assertEqual((r["ft_slots_total"], r["ft_slots_undeclared"]), (1, 1))     # no declared station sites: said so
+        self.assertEqual(r["provenance"]["_type"], "x")
         self.assertIn("raw fill 0.013 (gate unchanged)", GC.detail(r))
         self.assertIn("REPORT-ONLY", GC.detail(r))
+
+    def test_bounded_by_one_and_straddling_cell_counts_overlap(self):
+        r = GC.fill_corridor(ctype(band=(40, 40, 42, 42)), [(35.0, 35.0, 55.0, 55.0)], PINS)    # 20x20 cell over a 2x2 band
+        self.assertEqual(r["fill_corridor"], round(4 / (4 + 6000), 4))
+
+    def test_malformed_record_never_raises(self):
+        for bad in (None, {}, {"outline_um": None}, ctype(ft_slots=5), dict(ctype(), clock={"landing_contract": []})):
+            r = GC.fill_corridor(bad, [(0.0, 0.0, 1.0, 1.0)], PINS, outline=[100, 100])
+            self.assertIsNone(r["fill_corridor"])
+        t = ctype()
+        t["ft_slots"] = [dict(name="s", bit_sites_um=[[["x", "y"]]])]
+        r = GC.fill_corridor(t, [(0.0, 0.0, 1.0, 1.0)], PINS, outline=[100, 100])
+        self.assertTrue(r["reasons"][0].startswith("error:"))
+
+    def test_load_type_echoes_provenance(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "p.json"
+            p.write_text(json.dumps(dict(die=dict(name="qwen_compute"), partition_types=dict(x=ctype()))))
+            t = GC.load_type(str(p), "x")
+            self.assertEqual((t["_die"], t["_type"]), ("qwen_compute", "x"))
+            self.assertEqual(len(t["_plan_sha256"]), 64)
 
     def test_ineligible_reports_none_with_reason(self):
         r = GC.fill_corridor(ctype(hard_cores=[{"n": 1}]), self.cells(), PINS, raw_fill=0.2)
@@ -109,7 +152,7 @@ class Integration(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.d = Path(self.tmp.name)
-        pins = [(0, "a", "INPUT", 0, 0), (1, "b", "INPUT", 0, 200), (2, "c", "OUTPUT", 200, 0), (3, "d", "OUTPUT", 200, 200)]
+        pins = [(i, f"w{i}", "INPUT", 0, 2 * i) for i in range(100)] + [(100 + i, f"e{i}", "OUTPUT", 200, 2 * i) for i in range(100)]
         comb = [(100 + i, 5 + 2 * (i % 10), 5 + 2 * (i // 10)) for i in range(100)]      # 100 cells in the SW corner: raw fill ~0.0025
         self.dump = dump(self.d / "d.tsv", comb=comb, pins=pins)
         self.t = ctype(W=200.0, H=200.0, band=(0, 0, 40, 40))
@@ -135,10 +178,7 @@ class Integration(unittest.TestCase):
         self.assertEqual(by["fill_corridor"]["status"], "INFO")
         self.assertIn("raw fill", by["fill_corridor"]["detail"])
         self.assertEqual([r for r in R1 if r["rule"] != "fill_corridor"], R0)
-        line = G.verdict_line(v1, R1)
-        self.assertIn("fill=FAIL(", line)
-        self.assertTrue(line.endswith(f" fill_corridor(report-only)={fc['fill_corridor']}"))
-        self.assertEqual(G.verdict_line(v0, R0), line.rsplit(" fill_corridor", 1)[0])    # rest of the line identical
+        self.assertNotIn("fill_corridor=", G.verdict_line(v1, R1))
 
     def test_malformed_type_is_recorded_never_raised(self):
         t = dict(self.t)
@@ -151,7 +191,7 @@ class Integration(unittest.TestCase):
         tj = self.d / "t.json"
         tj.write_text(json.dumps(self.t))
         pj = self.d / "p.json"
-        pj.write_text(json.dumps(dict(partition_types=dict(x=self.t))))
+        pj.write_text(json.dumps(dict(die=dict(name="qwen_compute"), partition_types=dict(x=self.t))))
         outs = []
         for extra in ([], ["--corridor-type-json", str(tj)], ["--corridor-plan", str(pj), "--corridor-type", "x"]):
             o = self.d / f"o{len(outs)}.json"
@@ -163,7 +203,8 @@ class Integration(unittest.TestCase):
         self.assertNotIn("fill_corridor", [r["rule"] for r in outs[0][1]["rules"]])
         a, b = (o["rules"][-1] if o["rules"][-1]["rule"] == "fill_corridor" else
                 [r for r in o["rules"] if r["rule"] == "fill_corridor"][0] for _, o in outs[1:])
-        self.assertEqual(a, b)
+        self.assertIsNotNone(a["value"])
+        self.assertEqual(a["value"], b["value"])
         self.assertEqual(a["status"], "INFO")
 
 
