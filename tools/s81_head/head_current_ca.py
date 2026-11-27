@@ -69,7 +69,7 @@ def main():
     step('proof0', [H/'head_mk_proof_lca.py', a.run, a.regions, out/'proof0'])
     step('fall_TT', [T/'tap_fall_merge.py', out/'proof0', 'TT', a.run/'out_TT/arr_TT.txt', '--tree', a.run/'clk/tree.json', '--out', out/'proofT'])
     step('fall_FF', [T/'tap_fall_merge.py', out/'proofT', 'FF', a.run/'out_FF/arr_FF.txt', '--tree', a.run/'clk/tree.json', '--out', out/'proof'])
-    step('physical_ocv', [H/'landed_phase_ocv.py', a.plan, a.run, '--tools', T, '--clock-cell', a.clock_cell, '--core-lat', f'TT={a.core_tt:g},FF={a.core_ff:g}', '--port-taps', '--out', out/'physical_ocv.json'])
+    step('physical_ocv', [H/'landed_phase_ocv.py', a.plan, a.run, '--tools', T, '--clock-cell', a.clock_cell, '--core-lat', f'TT={a.core_tt:g},FF={a.core_ff:g}', '--port-taps', '--gate-proof', out/'proof', '--out', out/'physical_ocv.json'])
     ocv = region_rows(json.loads((out/'physical_ocv.json').read_text()), table, mapping)
     (out/'region_ocv.json').write_text(json.dumps(ocv, indent=1))
     step('plan', [T/'count_align_plan.py', out/'region_ocv.json', '--corner', f'TT_droop-regions_corelat{a.core_tt:g},FF_droop-regions_corelat{a.core_ff:g}', '--sta-proof', out/'proof', '--sta-plan', a.plan, '--sta-clock-cal', 'spice_edge', '--sta-cppr-lca', '--sta-clock-ocv', 'table', '--sta-clock-droop', 'shared', '--sta-droop-regions', out/'proof/droop_regions.json', '--sta-core-latency-ff', a.core_ff, '--sta-ca-ring', a.ca_ring, '--sta-clock-cell', a.clock_cell, '--start-tree', 'clock', '--start-clean', 'width', '--start-max-hop-um', a.start_max_hop_um, '--start-retime-max', 64, '--mc-chips', 2000, '--out', out/'plan.json'])

@@ -33,6 +33,32 @@ def arrivals(f):
     return T, N
 
 
+def arrival_source_check(run, corner, arr, tol_ps=0.5, max_report=12):
+    """CA-ONESOURCE-1 (P-FALSE-GREEN): the planner (RUN/out_<C>/arr_<C>.txt) and the CA gate (die_sta_related reads
+    RUN/tap_arrivals_<C>.json late_ps) must read ONE arrival source.  Returns (n_taps, bad) where bad lists every tap
+    whose planner arrival differs from the gate arrival by more than tol_ps, or that the planner arr file lacks.
+    Extra planner taps are ignored (the gate only reads its own taps).  A missing
+    tap_arrivals json is itself a mismatch (fail closed)."""
+    f = Path(run) / f"tap_arrivals_{corner}.json"
+    if not f.is_file():
+        return 0, [dict(port="*", reason=f"missing {f}")]
+    taps = json.loads(f.read_text())["taps"]
+    if not taps:
+        return 0, [dict(port="*", reason=f"empty taps in {f}")]
+    Tarr = arr[0]
+    bad = []
+    for t in taps:
+        p = t["port"]
+        if p not in Tarr:
+            bad.append(dict(port=p, reason="tap absent from planner arr file", gate_ps=t["late_ps"]))
+            continue
+        g = t.get("abs_late_ps", t["late_ps"])   # the arrival the gate uses for non-mesh pairs (die_sta_related.arr4)
+        if abs(Tarr[p] - g) > tol_ps:
+            bad.append(dict(port=p, reason="planner/gate arrival differ", planner_ps=Tarr[p], gate_ps=g,
+                            diff_ps=round(Tarr[p] - g, 3)))
+    return len(taps), bad
+
+
 def chain(tree, cell):
     out = [cell]
     while cell in tree["parent_of"]:
@@ -170,6 +196,13 @@ def main(argv=None):
     ap.add_argument("--budget-ps", type=float, default=833.0 / 2)
     ap.add_argument("--core-lat", default="TT=250,FF=202.5", help="partition-internal latency per corner (12.3), class B")
     ap.add_argument("--out")
+    ap.add_argument("--arrival-tol-ps", type=float, default=0.5,
+                    help="CA-ONESOURCE-1: max |planner arr - gate tap_arrivals late_ps| per tap before the run fails closed")
+    ap.add_argument("--gate-proof", help="CA-ONESOURCE-1: dir holding the gate tap_arrivals_<C>.json when it is not RUN "
+                    "(head_current_ca / head_strip_ca_plan build it in OUT/proof from the same arr files)")
+    ap.add_argument("--arrival-source-check", choices=("fail", "off"), default="fail",
+                    help="CA-ONESOURCE-1: fail (default) = exit 3 when RUN/out_<C>/arr_<C>.txt and RUN/tap_arrivals_<C>.json "
+                         "disagree; off only for a proof dir that has no gate json (information runs)")
     ap.add_argument("--clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
                     help="CLK-INV-CAL-1: die clock cell (AOCV die class A for buf, Ainv for CKINVDCx16 inv/inv2); auto = "
                          "the declaration in RUN/clk/tree.json meta clock_cell (die_trial); missing -> FAIL closed "
@@ -211,6 +244,19 @@ def main(argv=None):
         if not f.is_file():
             continue
         arr = arrivals(f)
+        if a.arrival_source_check == "fail":
+            gate_dir = Path(a.gate_proof) if a.gate_proof else run
+            gate_json = gate_dir / f"tap_arrivals_{c}.json"
+            n, bad = arrival_source_check(gate_dir, c, arr, a.arrival_tol_ps)
+            out.setdefault("arrival_source", {})[c] = dict(taps=n, mismatched=len(bad), tol_ps=a.arrival_tol_ps, first=bad[:12])
+            if bad:
+                print(f"ARRIVAL-SOURCE FAIL {c}: {len(bad)}/{n} taps differ (>{a.arrival_tol_ps} ps) between planner "
+                      f"{f} and gate {gate_json}; first {bad[:3]} -> fail closed (P-FALSE-GREEN)",
+                      file=sys.stderr)
+                if a.out:
+                    Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
+                return 3
+            print(f"ARRIVAL-SOURCE OK {c}: {n} taps identical within {a.arrival_tol_ps} ps")
         for droop in ("regions", "same"):
             for clat in (float(cl[c]), 0.0):
                 rows = analyse(plan, tree, arr, CA, T, c, clat, a.budget_ps, droop,

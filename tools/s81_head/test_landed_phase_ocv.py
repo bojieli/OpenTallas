@@ -44,3 +44,23 @@ def test_matches_shared_model_and_droop(tmp_path):
     # d = -100 grows by p_dn (a late, b early)
     assert abs(reg["derated_abs_ps"] - (100 + reg["p_dn_ps"])) < 0.02
     assert abs(reg["margin_ps"] - (416.5 - reg["derated_abs_ps"])) < 0.02
+
+
+def _gate_json(tmp_path, late):
+    (tmp_path / "tap_arrivals_TT.json").write_text(json.dumps(
+        {"taps": [{"port": p, "late_ps": v} for p, v in late.items()]}))
+
+
+def test_arrival_source_check_ok_mismatch_missing(tmp_path):
+    """CA-ONESOURCE-1 (P-FALSE-GREEN): planner arr file and gate tap_arrivals json must agree per tap, else fail closed."""
+    arr = ({"t_a__clk": 1100.0, "t_b__clk": 1000.0}, {})
+    _gate_json(tmp_path, {"t_a__clk": 1100.2, "t_b__clk": 1000.0})
+    n, bad = LP.arrival_source_check(tmp_path, "TT", arr)
+    assert n == 2 and bad == []
+    _gate_json(tmp_path, {"t_a__clk": 1125.0, "t_b__clk": 1000.0})
+    n, bad = LP.arrival_source_check(tmp_path, "TT", arr)
+    assert [b["port"] for b in bad] == ["t_a__clk"] and bad[0]["diff_ps"] == -25.0
+    _gate_json(tmp_path, {"t_a__clk": 1100.0, "t_c__clk": 5.0})
+    assert LP.arrival_source_check(tmp_path, "TT", arr)[1][0]["port"] == "t_c__clk"
+    n, bad = LP.arrival_source_check(tmp_path / "nowhere", "TT", arr)
+    assert bad and "missing" in bad[0]["reason"]
