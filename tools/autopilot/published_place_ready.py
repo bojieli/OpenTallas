@@ -145,6 +145,7 @@ def _private_spec(spec):
     if (not spec.get("private") or spec.get("die") != "s81" or spec.get("kind") != "type"
             or spec.get("goal") != "place" or not spec.get("dry_gen")
             or not spec.get("launch_plan_review_required") or not spec.get("reviewed_station_prepare")
+            or spec.get("reviewed_station_stop") not in (None, "floorplan")
             or spec.get("src_manifest") != "require" or not spec.get("publish_place_prepare")
             or spec.get("place_spill") is not False or spec.get("roam_hosts") != [spec.get("gen_host")]
             or spec.get("place_spill_hosts") != [spec.get("gen_host")]
