@@ -423,10 +423,8 @@ def check_m9_clock(P, tn, G, g, ndr="4w"):
         raise ValueError(m9_clock_refusal(tn, "no M9 track is left for the type after the die PG, reserve and clock route"))
 
 
-def kit_grant(P, tn, layer=LAYER, force=False):
-    """the grant a type kit carries on `layer`, or None (grant off, type not selected, ceiling already >= layer, not
-    placed).  force=True: the M8 grant an M9 kit needs (an M9 route reaches M9 only through M8, so M8 must be obstructed
-    on the die tracks too) even when the M8 grant itself is off; it then takes the M9 grant's guide / ndr."""
+def kit_grant_inputs(P, tn, layer=LAYER, force=False):
+    """Return the active grant configuration and exact guide paths, without reading the guides."""
     c = grant_config(P, layer)
     if c is None and force:
         c = grant_config(P, "M9") or dict(enable=True, types=None, guide=None, ndr="4w")
@@ -438,17 +436,26 @@ def kit_grant(P, tn, layer=LAYER, force=False):
     if layer == "M9" and not c["guide"]:
         raise ValueError(m9_clock_refusal(tn, "layer_budget.type_m9_grant.guide is not set (no die route guides to prove the M9 "
                                               "clock use; without them the grant subtracts the die PG straps only)"))
-    G, gsha = None, None
-    # HEAD-PLAN-R4 11-18 (COORD, M8 lock of the HEAD die clock): type_guides {type: [guide, ...]} re-grants ONE type from the UNION
-    # of its own die route guides (e.g. the frozen route + the new die clock route) while every other type keeps `guide`, so an
-    # open type clears its lock conflicts without touching a signed type's grant.  Absent = unchanged.
+    # Per-type guides replace the default list; an empty override inherits the default.
     names = (c.get("type_guides") or {}).get(tn) or ([c["guide"]] if c["guide"] else [])
     if isinstance(names, str):
         names = [names]
+    plan_dir = Path(P.path).resolve().parent if names and P.path else None
+    paths = []
     for name in names:
         gp = Path(name)
-        if not gp.is_absolute() and P.path:
-            gp = Path(P.path).resolve().parent / gp
+        paths.append(plan_dir / gp if plan_dir and not gp.is_absolute() else gp)
+    return c, paths
+
+
+def kit_grant(P, tn, layer=LAYER, force=False):
+    """Build the active kit grant; forced M8 protects lower layers for an M9 kit."""
+    inputs = kit_grant_inputs(P, tn, layer, force)
+    if inputs is None:
+        return None
+    c, paths = inputs
+    G, gsha = None, None
+    for gp in paths:
         if not gp.is_file():
             raise FileNotFoundError(f"type {tn}: layer_budget.{GRANT_KEY[layer]} guide {gp} missing")
         Gi, si = _guides(str(gp))
