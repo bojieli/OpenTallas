@@ -1,0 +1,1 @@
+- 2026-11-26 16:32 PST DONE [C-RESERVED-POCKET] ot-run oth-ubuntu-1173071-1795738862 on ubuntu: rc=0 after 678 s, ended 16:32:17, log none, cmd: --mem 20 --threads 12 --disk 45 --hosts epyc10 --no-spill --dir /srv/opentallas-scratch2/claude/mq-gate -- /home/ubuntu/.local/bin/ot-gate-r
