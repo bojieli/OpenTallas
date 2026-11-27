@@ -154,3 +154,32 @@ def test_late_baseline_mixed_phase_is_rejected_instead_of_guessed():
     g.baseline_relay(line)
     with pytest.raises(RawBranchError, match='module/clock phase'):
         g.validate(emitted(g, line))
+
+
+@pytest.mark.parametrize(
+    "role, root, module, should_pass",
+    [
+        ("local_reset:start", "rst_raw_n", "ot_dp_rrelay", True),
+        ("fstart:out", "rst_raw_n", "ot_dp_rrelay", False),
+        ("local_reset:start", "other_reset", "ot_dp_rrelay", False),
+        ("local_reset:start", "rst_raw_n", "ot_dp_rrelay_nl", False),
+    ],
+)
+def test_local_raw_copy_can_use_an_equal_phase_literal_trunk(role, root, module, should_pass):
+    body = BODY + f"""
+    ot_dp_rrelay u_peer0 (.clk(clk), .d({root}), .q(peer0));
+    {module} u_peer1 (.clk(clk), .d(peer0), .q(peer1));
+    """
+    choice = dict(name="local", base="peer0", stages=[dict(original="peer1", xy_um=[1.0, 2.0])], consumers=[role])
+    branch = RawBranches("t", [choice], body, [10.0, 10.0])
+    assert branch.raw_for(role, "r1") == "cland_raw_local_0"
+    text = body + "\n" + "\n".join(branch.rtl)
+    if not should_pass:
+        with pytest.raises(RawBranchError, match="phase/equation differs"):
+            branch.validate(text)
+        return
+    aliases = branch.validate(text)["same_age_local_raw_aliases"]
+    assert aliases[role] == dict(
+        original="r1", selected="peer1", root="rst_raw_n",
+        relay_phases=["ot_dp_rrelay", "ot_dp_rrelay"],
+    )
