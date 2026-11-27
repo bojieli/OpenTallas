@@ -51,6 +51,16 @@ def test_schema_keys_tree_older_than_rt(tmp_path):
     assert any(x.startswith("LIST SCHEMA-KEYS") and ": 2 unknown" in x for x in L)
 
 
+
+def test_schema_probe_resolves_paths_before_changing_cwd(tmp_path, monkeypatch):
+    tree = _schema(tmp_path / "tree")
+    _schema(tmp_path / "rt", type_extra=', "read_lockup": {"type": "integer"}')
+    plan = _plan(tree / "physical/die_plan/s81/p.json")
+    monkeypatch.chdir(tree)
+    lines = T.check_schema_keys(".", plan.relative_to(tree), "../rt")
+    assert not any("not checked" in line for line in lines), lines
+    assert any("$.partition_types.*.read_lockup x2 unknown to gate tree" in line for line in lines)
+
 def test_schema_keys_both_and_rt_only(tmp_path):
     tree = _schema(tmp_path / "tree", top_extra=', "min_cycles": {"type": "object"}')
     rt = _schema(tmp_path / "rt")

@@ -68,7 +68,8 @@ def _load(p):
 # ---------------------------------------------------------------- SCHEMA-KEYS
 def schema_unknown(tools_dir, plan, timeout=PROBE_S):
     """-> ({key path: [concrete paths]}, error text or None) of the 'unknown key' errors schema.py in tools_dir gives the plan"""
-    sd = Path(tools_dir)
+    sd = Path(tools_dir).absolute()
+    plan = Path(plan).absolute()
     if not (sd / "schema.py").is_file():
         return None, f"{sd}/schema.py does not exist"
     try:
