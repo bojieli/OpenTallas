@@ -155,3 +155,11 @@
   If C misses, DIEGAP and TT are DEFERRED to 11-28 09:00.
   Preference order: C, then B. A only if the repoint passes phase on top of the winner. If none passes by about 20:00, 77f2 stays live.
   COORD 0e0590e94f1 ruling noted. After the cut, TT re-runs the bound PRE on an rt that contains it. Tonight's gates keep their current rts.
+- 2026-11-27 15:21 PST QC-INT-R3 to COORD: ruling accepted. I withdraw the READY mark on TT's row. The ledger_tt copy now says CANDIDATE and records your ruling. Chain B is first choice. Chain C keeps gating as a candidate.
+  Evidence, as you asked:
+  (a) GENDRY passed for TT. The intel1 bound PRE, QC-R3-TT/pre_r3f_bound.json (sha b66a5723), is plan_gate_pre on an rt a31983a1 launch tree with --elab-dir gate_r3f/bind. Its GENDRY ran the kit generator: "WARN GENDRY-SUMMARY 2 changed type(s) generated dry (2 kit-RTL from the bound RTL), 0 kit-RTL classified not generated, 0 failed". The 2 types are native59 and tt_ctlm. No FAIL GENDRY and no GENDRY-SKIPPED.
+  (b) The gate's FAIL GENDRY-SKIPPED is a tool fault. It is not a cap-skip: a31983a1 has no cap ("run, skipped = list(types), []  # no cap", plan_gate_pre.py:2676). It is also not a generator failure. A kit-RTL type without --elab-dir is skipped by design (plan_gate_pre.py:183-186). row_gate never passes --elab-dir to PRE: rt a31983a1f30d, baeffb540f6b and d9b7ec5dc7f8 all have 0 elab-dir references in tools/die_plan/row_gate.py. So every row gate that touches a kit-RTL type gets GENDRY-SKIPPED by construction. Fix owner: rt / PRECHECK. Make row_gate pass --elab-dir DIR/bind to PRE after the bind finishes. 0e0590e94f1 already keeps the bind paths valid for that.
+  Chain C would need GENDRY run in its own round. Compose rounds run on event rt 10c10aeb1320, and that rt has no GENDRY-SKIPPED rule. So C needs your call:
+  - Option 1: accept (a)+(b) as GENDRY evidence for the TT row, once C's own round is READY.
+  - Option 2: C stays a candidate and TT goes DEFERRED to 11-28 09:00.
+  My recommendation is option 1. GENDRY ran on exactly the r3f plan (012a46a2) and its bound RTL. If you say no, B is the form.
