@@ -9,8 +9,8 @@ OT_TAP_MAX_SINKS (kit_wave die_gen_env; wins when set), else clock.tap_max_sinks
 clock.tap_grid.bank_sinks when tap_grid is on; it is written to the kit config.mk as OT_TAP_MAX_SINKS and clock_taps.tcl re-homes
 sinks above it.  --cap N forces one constant for every type (the old default was 5000).
 UNDER-LOAD: a tap whose predicted load is under the type's floor.  Floor = clock.tap_post_merge_min_sinks (the plan's own
-"a near-empty tap must not be left to padding" value), else clock.tap_min_sinks, else gate // 20 (taps.py density_taps merges a
-stray leaf under target / 20, min 1).  Report-only. The shared caches do not identify the plan
+"a near-empty tap must not be left to padding" value), else clock.tap_min_sinks.  With neither set the type is UNDER-LOAD
+NOT-CHECKED and not counted (the old gate // 20 fallback flagged 188 of 188 S81 types: noise, C-TAP-LOAD 11-27).  Report-only. The shared caches do not identify the plan
 digest for every record, so a matching type/outline is a correlation sample.
 """
 import argparse
@@ -57,14 +57,15 @@ def largest_groups(path, group_re, fixed):
 
 
 def kit_gate(tile):
-    """(cap, floor): the kit's OT_TAP_MAX_SINKS for this type (gen_phys._tap_cap) and the under-load floor (see module doc)."""
+    """(cap, floor): the kit's OT_TAP_MAX_SINKS for this type (gen_phys._tap_cap) and the under-load floor (see module doc);
+    floor None = the plan sets neither clock.tap_post_merge_min_sinks nor clock.tap_min_sinks: UNDER-LOAD NOT-CHECKED."""
     try:
         import gen_phys
         cap = int(gen_phys._tap_cap(tile))
     except Exception:  # noqa: BLE001 -- same rule without the generator import
         cap = adv_tap_load.kit_cap(tile)
     ck = tile.get("clock") or {}
-    floor = int(ck.get("tap_post_merge_min_sinks") or ck.get("tap_min_sinks") or max(1, cap // 20))
+    floor = int(ck.get("tap_post_merge_min_sinks") or ck.get("tap_min_sinks") or 0) or None   # None: the plan sets no floor
     return cap, floor
 
 
@@ -109,6 +110,7 @@ def placement_load(plan, tn, placed, floor=None):
         predicted_min_sinks=min(counts),
         predicted_taps=len(counts),
         predicted_under_taps=sum(c < floor for c in counts) if floor is not None else None,
+        under_load="NOT-CHECKED" if floor is None else ("UNDER" if any(c < floor for c in counts) else "OK"),
     )
 
 
@@ -175,7 +177,8 @@ def census(plan, cache, measured, *, tree=None, sink_lists=None, cap=None):
         gates=dict(sorted(Counter(row["gate"] for row in rows).items())),
         verdicts=dict(sorted(Counter(row["verdict"] for row in rows).items())),
         not_checked=[row["type"] for row in rows if row["verdict"] == "NOT-CHECKED"],
-        under_load=dict(types=len(under), taps=sum(row["predicted_under_taps"] for row in under)),
+        under_load=dict(types=len(under), taps=sum(row["predicted_under_taps"] for row in under),
+                        not_checked=sum(1 for row in rows if row.get("under_load") == "NOT-CHECKED")),
         predicted=tally("predicted_max_sinks"), measured=tally("measured_max_sinks"),
         bins_inside_over_5pct=sum(row.get("bins_inside_fraction", 0) > .05 for row in rows),
         types=rows,

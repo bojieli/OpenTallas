@@ -27,7 +27,7 @@ def test_gen_env_overrides_plan_cap(monkeypatch):
 
 def test_under_floor_sources(monkeypatch):
     monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
-    assert C.kit_gate(_tile(tap_max_sinks=1000)) == (1000, 50)              # cap // 20
+    assert C.kit_gate(_tile(tap_max_sinks=1000)) == (1000, None)            # no plan floor: UNDER-LOAD NOT-CHECKED, no cap // 20
     assert C.kit_gate(_tile(tap_max_sinks=1000, tap_min_sinks=7))[1] == 7
     assert C.kit_gate(_tile(tap_max_sinks=1000, tap_min_sinks=7, tap_post_merge_min_sinks=16))[1] == 16
 
@@ -88,3 +88,20 @@ def test_measured_only_type_is_checked(tmp_path, monkeypatch):
     plan = _bins_plan(tmp_path, 1000, [], monkeypatch, with_file=False)
     assert C.census(plan, {}, {"T": {"max_sinks": 4000}})["types"][0]["verdict"] == "OVER"
     assert C.census(plan, {}, {"T": {"max_sinks": 400}})["types"][0]["verdict"] == "OK"
+
+
+def test_under_load_only_where_the_plan_sets_a_floor(monkeypatch):
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    sites = [("a", 0, 0), ("b", 50, 50), ("c", 99, 99)]
+    monkeypatch.setattr(C.taps, "explicit_tap_sites", lambda p, tn: sites)
+    placed = {"die_um": [100.0, 100.0], "bins": [[0, 0, 900], [50, 50, 10], [99, 99, 400]], "kit": "k"}
+    plan = types.SimpleNamespace(types={"T": _tile(tap_max_sinks=1000)})
+    r = C.placement_load(plan, "T", placed, floor=None)
+    assert r["under_load"] == "NOT-CHECKED" and r["predicted_under_taps"] is None
+    r = C.placement_load(plan, "T", placed, floor=50)
+    assert r["under_load"] == "UNDER" and r["predicted_under_taps"] == 1
+    mk = lambda **c: dict(_tile(**c))  # noqa: E731
+    plan = types.SimpleNamespace(name="D", path="p", types={"A": mk(tap_max_sinks=1000), "B": mk(tap_max_sinks=1000, tap_min_sinks=50)},
+                                 parts={"i": {"type": "A"}, "j": {"type": "B"}})
+    res = C.census(plan, {"placed_bins": {"A": placed, "B": placed}}, {})
+    assert res["under_load"] == {"types": 1, "taps": 1, "not_checked": 1}                                  # only B has a floor

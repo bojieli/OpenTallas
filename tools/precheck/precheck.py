@@ -703,26 +703,47 @@ def voronoi_share_max(t, grid, max_pts=40000):
     return max(cnt.values()) / free if free else 1.0
 
 
-def tap_cal_level(pred):
-    """None | WARN (>= 1000) | WATCH (>= 3000, recall-safe for > 5000) | BLOCK-CANDIDATE (>= 5000)"""
-    if pred >= TAP_CAL_BLOCK:
+def tap_cap_of(t):
+    """The per-type kit cap (die_plan adv_tap_load.kit_cap = gen_phys._tap_cap rule: OT_TAP_MAX_SINKS, clock.tap_max_sinks, 1500 density /
+    3000 grid, tap_grid bank clamp).  C-TAP-LOAD 11-27: TAP-CAP-CAL scales its levels on this, not the constant 5000."""
+    try:
+        sys.path.insert(0, str(HERE.parent / "die_plan"))
+        try:
+            import adv_tap_load
+            return int(adv_tap_load.kit_cap(t))
+        finally:
+            sys.path.pop(0)
+    except Exception:  # noqa: BLE001 -- same rule without the die_plan import
+        ck = (t or {}).get("clock") or {}
+        e = os.environ.get("OT_TAP_MAX_SINKS", "")
+        return int(e) if e.isdigit() and int(e) > 0 else int(ck.get("tap_max_sinks") or (1500 if ck.get("tap_mode") == "density" else 3000))
+
+
+def tap_cal_level(pred, cap=None):
+    """None | WARN (>= 0.2 cap) | WATCH (>= 0.6 cap, recall-safe for > cap) | BLOCK-CANDIDATE (>= cap).  cap None = the fit constants
+    (5000 / 3000 / 1000); a type passes its own kit cap and the three levels scale with it (cap 5000 reproduces the constants)."""
+    block = TAP_CAL_BLOCK if cap is None else cap
+    watch = TAP_CAL_WATCH if cap is None else cap * TAP_CAL_WATCH / TAP_CAL_BLOCK
+    warn = TAP_CAL_WARN if cap is None else cap * TAP_CAL_WARN / TAP_CAL_BLOCK
+    if pred >= block:
         return "BLOCK-CANDIDATE"
-    if pred >= TAP_CAL_WATCH:
+    if pred >= watch:
         return "WATCH"
-    if pred >= TAP_CAL_WARN:
+    if pred >= warn:
         return "WARN"
     return None
 
 
 def tap_cal_findings(t, grid, flops):
-    """[(predicted max tap sinks, level, detail)] -- empty below 1000 or without a flop count"""
+    """[(predicted max tap sinks, level, detail)] -- empty below 0.2 x the type kit cap or without a flop count"""
     pred = predict_tap_max(flops, voronoi_share_max(t, grid) if grid else 1.0)
-    lv = tap_cal_level(pred)
+    cap = tap_cap_of(t)
+    lv = tap_cal_level(pred, cap)
     if lv is None:
         return []
     return [(round(pred), lv, f"predicted busiest tap {pred:,.0f} sinks from {flops:,} synth flops over {len(grid)} taps "
-                              f"(Voronoi share {voronoi_share_max(t, grid):.3f}); >={TAP_CAL_BLOCK} blocks once COORD flips it, "
-                              f"{TAP_CAL_WARN}-{TAP_CAL_BLOCK} advises; fit rmse x1.9")]
+                              f"(Voronoi share {voronoi_share_max(t, grid):.3f}); >={cap} (the type kit cap) blocks once COORD flips it, "
+                              f"{round(cap * TAP_CAL_WARN / TAP_CAL_BLOCK)}-{cap} advises; fit rmse x1.9")]
 
 
 def load_flops_cache(path=""):
@@ -782,7 +803,7 @@ def type_findings(ctx, tn, checks, opts):
             if fl is None:
                 fl = opts.flops_map = load_flops_cache(getattr(opts, "flops_cache", ""))
             for v, lv, d in tap_cal_findings(t, grid, fl.get(tn)):
-                add("TAP-CAP-CAL", v, TAP_CAL_BLOCK, f"{lv}: {d}")
+                add("TAP-CAP-CAL", v, tap_cap_of(t), f"{lv}: {d}")
         # TAP-COVER only where the taps follow a sink inventory (tap_mode density): an explicit/grid type's taps are placed by
         # hand and 28 of 43 signed S81 types would flag (CALIBRATED 11-19); the KV pv root-tap class is density + stale bins
         if "TAP-COVER" in checks and grid and ck.get("tap_mode") == "density":

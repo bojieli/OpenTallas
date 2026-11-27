@@ -411,6 +411,20 @@ def test_tap_cal_level_thresholds():
     assert PC.tap_cal_level(2000) == "WARN" and PC.tap_cal_level(900) is None
 
 
+def test_tap_cal_levels_scale_on_the_type_kit_cap(monkeypatch):
+    monkeypatch.delenv("OT_TAP_MAX_SINKS", raising=False)
+    assert PC.tap_cal_level(5200, 5000) == "BLOCK-CANDIDATE" and PC.tap_cal_level(4800, 5000) == "WATCH"     # cap 5000 = the old constants
+    assert PC.tap_cal_level(1200, 1000) == "BLOCK-CANDIDATE" and PC.tap_cal_level(700, 1000) == "WATCH"
+    assert PC.tap_cal_level(300, 1000) == "WARN" and PC.tap_cal_level(150, 1000) is None
+    assert PC.tap_cal_level(1200) == "WARN"                                                                   # no cap: constants
+    assert PC.tap_cap_of({"clock": {"tap_max_sinks": 1000}}) == 1000 and PC.tap_cap_of({"clock": {}}) == 3000
+    t1 = {"outline_um": [1000, 1000], "clock": {"tap_max_sinks": 1000}}
+    t5 = {"outline_um": [1000, 1000], "clock": {"tap_max_sinks": 5000}}
+    four = [("a", 250.0, 250.0), ("b", 750.0, 250.0), ("c", 250.0, 750.0), ("d", 750.0, 750.0)]
+    lo, hi = PC.tap_cal_findings(t1, four, 20000), PC.tap_cal_findings(t5, four, 20000)
+    assert lo and lo[0][1] == "BLOCK-CANDIDATE" and hi and hi[0][1] != "BLOCK-CANDIDATE"      # same prediction, judged on its own cap
+
+
 def test_tap_cal_prediction_uses_flops_and_tap_share():
     t = {"outline_um": [1000, 1000]}
     one = [("clk", 500.0, 500.0)]
@@ -420,7 +434,7 @@ def test_tap_cal_prediction_uses_flops_and_tap_share():
     assert PC.predict_tap_max(0, 1.0) == 0 and PC.predict_tap_max(60000, 1.0) > PC.predict_tap_max(60000, 0.25)
     big = PC.tap_cal_findings(t, one, 64000)                 # 64k flops on one tap: > 5000 (iq_C: measured 27,453)
     assert big and big[0][1] == "BLOCK-CANDIDATE"
-    assert PC.tap_cal_findings(t, four, 20000)[0][1] in ("WARN", "WATCH")
+    assert PC.tap_cal_findings(dict(t, clock={"tap_max_sinks": 5000}), four, 20000)[0][1] in ("WARN", "WATCH")   # judged on a 5000 cap
     assert PC.tap_cal_findings(t, four, 300) == []           # mutant: a tiny type must not flag
     assert PC.tap_cal_findings(t, one, None) == []           # no flop count: silent
 
