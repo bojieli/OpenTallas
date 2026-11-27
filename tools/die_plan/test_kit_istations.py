@@ -906,3 +906,34 @@ def test_relay_seat_stop_gen_env_reaches_tcl_through_make(tmp_path, monkeypatch)
     tolerated = run()
     assert tolerated.returncode == 0 and "stop on, limit 1" in tolerated.stdout
     assert GP.kit_effective_env()[limit] == "1"
+
+
+def _packed_rdk_txt(w, d_in="{a_eb, a_b}", stage_q="u_y_xd_lpad_a_d_k0_s0_q"):
+    """KIT-RD-1 form: the D of u_lpad_a is the relay output rdk_lpad_a_d_k0_out (S81-LPAD-DK-ISTATION-PACKED-C085)."""
+    return (f"module m(input clk, input rst_n);\n"
+            f"    wire [{w}:0] rdk_lpad_a_d_k0_in;\n    wire [{w}:0] rdk_lpad_a_d_k0_out;\n    wire [1:0] u_y_xd_lpad_a_d_k0_s0_q;\n"
+            f"    ot_dp_st #(.W({w})) u_bin_a (.clk(clk), .rst_n(rst_n), .d(x), .ea(y), .q(a_b), .eq(a_eb));\n"
+            f"    assign rdk_lpad_a_d_k0_in = {d_in};\n"
+            f"    ot_dp_dly #(.W(2), .D(1)) u_y_xd_lpad_a_d_k0_0 (.clk(clk), .d(rdk_lpad_a_d_k0_in[{w}:{w - 1}]), .q(u_y_xd_lpad_a_d_k0_s0_q));\n"
+            f"    assign rdk_lpad_a_d_k0_out[{w}:{w - 1}] = {stage_q};\n"
+            f"    assign rdk_lpad_a_d_k0_out[{w - 2}:0] = rdk_lpad_a_d_k0_in[{w - 2}:0];\n"
+            f"    ot_dp_dly #(.W({w + 1}), .D(3)) u_lpad_a (.clk(clk), .d(rdk_lpad_a_d_k0_out), .q({{a_eq, a_q}}));\n"
+            f"endmodule\n")
+
+
+def test_packed_delay_follows_relay_rewritten_d_to_the_face_pair():
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    got = K.packed_input_delay("T", bus, _packed_rdk_txt(8), 8, 3)
+    assert got["depth"] == 3 and got["relay_chain"] == ["rdk_lpad_a_d_k0_out"]
+    assert got["pins"]["d"] == "{a_eb,a_b}"
+
+
+def test_packed_delay_relay_traced_to_wrong_source_still_fails():
+    import pytest
+    import kit_istations as K
+    bus = dict(name="a", dir="in", width=8)
+    with pytest.raises(ValueError, match="does not preserve exact face epoch/data"):
+        K.packed_input_delay("T", bus, _packed_rdk_txt(8, d_in="{a_b, a_eb}"), 8, 3)
+    with pytest.raises(ValueError, match="driven by something other"):
+        K.packed_input_delay("T", bus, _packed_rdk_txt(8, stage_q="other_q"), 8, 3)

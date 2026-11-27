@@ -74,6 +74,30 @@ def bound_bus_width(tn, bus, txt, manifest):
     return actual
 
 
+def _trace_relay_d(tn, name, code, d):
+    """S81-LPAD-DK-ISTATION-PACKED-C085: kit_relay_depth (KIT-RD-1) rewrites the D input of the packed receiver delay to
+    rdk_<sid>_<port>_k<k>_out; follow it back through the relay (every driver of _out is a stage output or a pass-through of
+    _in, _in is one plain assign) to the expression the plain RTL had.  The caller still compares that expression with
+    the exact face {eq,q} pair, so the check is not widened.  -> (traced d, [relay wire names]); d unchanged when no relay."""
+    chain = []
+    while True:
+        m = re.fullmatch(r'(rdk_\w+)_out', d)
+        if not m:
+            return d, chain
+        base, out = m.group(1), d
+        if len(chain) >= 8:
+            raise ValueError(f'{tn}.{name}: relay chain {chain} does not terminate')
+        ins = re.findall(r'\bassign\s+' + re.escape(base) + r'_in\s*=\s*([^;]+);', code)
+        if len(ins) != 1:
+            raise ValueError(f'{tn}.{name}: relay input {base}_in has {len(ins)} drivers, exactly one assign required')
+        drv = re.findall(r'\bassign\s+' + re.escape(out) + r'\s*(?:\[[^\]]*\])?\s*=\s*([^;]+);', code)
+        stage = re.compile(r'u_y_xd_\w+_s\d+_q|' + re.escape(base) + r'_in(?:\[[^\]]*\])?')
+        if not drv or any(not stage.fullmatch(re.sub(r'\s+', '', x)) for x in drv):
+            raise ValueError(f'{tn}.{name}: relay output {out} is driven by something other than relay stages / its input')
+        chain.append(out)
+        d = re.sub(r'\s+', '', ins[0])
+
+
 def packed_input_delay(tn,bus,txt,width,stages):
     """Recognize the canonical already-priced packed receiver delay, including epoch."""
     name=gen_rtl.sv_id(bus['name']);inst='u_lpad_'+name
@@ -112,6 +136,9 @@ def packed_input_delay(tn,bus,txt,width,stages):
     if re.search(r'\b(?:u_ist_'+re.escape(name)+r'_\d+|u_b(?:in|out)_'+re.escape(name)+r'_pad\d+)\s*\(',code):
         raise ValueError(f'{tn}.{name}: mixed packed/individual station forms; regenerate native source')
     pins={k:re.sub(r'\s+','',v) for k,v in pins.items()}
+    relay=None
+    if not counted:
+        pins['d'],relay=_trace_relay_d(tn,name,code,pins.get('d',''))
     face=re.search(r'\bot_dp_ste?\s*#\(\.W\('+str(width)+r'\)\)\s+u_bin_'+re.escape(name)+r'\s*\(([^;]*)\);',code,re.S)
     facepins=dict(re.findall(r'\.(q|eq)\s*\(([^()]*)\)',face.group(1))) if face else {}
     expected={'clk':'clk','d':'{'+facepins.get('eq','?')+','+facepins.get('q','?')+'}',
@@ -121,6 +148,8 @@ def packed_input_delay(tn,bus,txt,width,stages):
                   stage_registers=[f'{inst}.r[{j}]' for j in range(d)])
     if counted:
         result["alias"] = alias
+    if relay:
+        result["relay_chain"] = relay
     return result
 
 
