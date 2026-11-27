@@ -141,6 +141,42 @@ class Fingerprint(unittest.TestCase):
                 self.assertEqual((dec, start), ("resume", want), d)
                 self.assertEqual(d["reuse"], list(KR.STEPS[:KR.IDX[want]]))
 
+    def test_relocated_topology_source_requires_exact_packaged_bound_rtl(self):
+        rel = "rtl/chip_bound.sv"
+
+        def audit(W, K):
+            rtl = K / rel
+            rtl.write_text("module chip; endmodule")
+            return {
+                "schema": "opentallas.kit_topology.v1",
+                "type": "chip",
+                "source": str(W / rel),
+                "source_sha256": KR.sha256_file(rtl),
+                "required_instances": ["u_bound"],
+            }
+
+        def write(K, data):
+            (K / "kit_topology.json").write_text(json.dumps(data))
+
+        write(self.oK, audit(self.oW, self.oK))
+        old = man(self.oK)
+        W, K = make_kit(self.d, "relocated", upto=None)
+        new_audit = audit(W, K)
+        write(K, new_audit)
+        new = man(K, with_checkpoint=False)
+        self.assertEqual(old["fingerprints"]["synth"], new["fingerprints"]["synth"])
+        result = KR.decide(new, old, latest_start="place")
+        self.assertEqual((result["start"], result["reuse"]), ("place", ["synth", "floorplan"]))
+        del old["files"]["kit_topology.json"]["physical_sha256"]
+        self.assertFalse(KR.saved_stage_semantics_usable(new, old))
+
+        for change in ({"source": str(self.oW / rel)}, {"source_sha256": "stale"},
+                       {"required_instances": ["changed"]}):
+            with self.subTest(change=change):
+                write(K, dict(new_audit, **change))
+                invalid = man(K, with_checkpoint=False)
+                self.assertEqual(KR.decide(invalid, man(self.oK))["start"], "synth")
+
     def test_landing_contract_native_seats_and_single_band_rects_retry_place(self):
         contract = {
             "pins": {"clk": {"layer": "M8", "xy_um": [10, 10]}},

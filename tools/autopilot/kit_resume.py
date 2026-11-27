@@ -517,6 +517,28 @@ def sender_budget_fingerprints(text):
     return {"physical_sha256": H(budget), "parent_plan_sha256": plan}
 
 
+def topology_fingerprints(text, kit, files):
+    """A generated audit's work path can move with its identical bound RTL."""
+    try:
+        audit = json.loads(text)
+    except ValueError:
+        return {}
+    if not isinstance(audit, dict) or audit.get("schema") != "opentallas.kit_topology.v1":
+        return {}
+    source, digest = audit.get("source"), audit.get("source_sha256")
+    if not isinstance(source, str) or not isinstance(digest, str):
+        return {}
+    name = os.path.basename(source)
+    rel = os.path.join("rtl", name)
+    generated = os.path.join(os.path.dirname(os.path.dirname(kit)), rel)
+    bound = files.get(rel, {})
+    if (source != generated or not name.endswith("_bound.sv")
+            or bound.get("stage") != "synth" or bound.get("sha256") != digest):
+        return {}
+    audit["source"] = rel
+    return {"physical_sha256": H(audit)}
+
+
 def landing_contract_fingerprints(text):
     """Split only generated native seat rows and single fixed-flop band rectangles.
 
@@ -630,6 +652,9 @@ def manifest(K, cutoff=None, runner=None, image="openroad/orfs:asap7lock", with_
          "image": image_info(image)}
     if "budget.json" in m["files"]:
         m["files"]["budget.json"].update(sender_budget_fingerprints(texts.get("budget.json", "")))
+    topology = m["files"].get("kit_topology.json")
+    if topology and "kit_topology.json" not in early_readers:
+        topology.update(topology_fingerprints(texts.get("kit_topology.json", ""), K, m["files"]))
     if LANDING_CONTRACT in m["files"]:
         landing = m["files"][LANDING_CONTRACT]
         landing["stage"] = "synth"  # earlier metadata stays a full-rebuild input
@@ -675,7 +700,7 @@ def write_inputs(K):
 # ------------------------------------------------------------------------------------------------ hub side (pure)
 def saved_stage_semantics_usable(new, saved):
     """Older cached manifests need normal inspection only for changed, newly modeled inputs."""
-    for rel in ("budget.json", FLOW_REFRESH_LOG, LANDING_CONTRACT, "ft_polarity_local_sites.tsv"):
+    for rel in ("budget.json", "kit_topology.json", FLOW_REFRESH_LOG, LANDING_CONTRACT, "ft_polarity_local_sites.tsv"):
         a, b = new["files"].get(rel), saved["files"].get(rel)
         if not a or not b or a["sha256"] == b["sha256"]:
             continue
