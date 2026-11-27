@@ -83,3 +83,12 @@ def test_recorded_preflight_refusal_survives_without_a_log():
     }
     assert "| class=NOT-RUN cause=NOT-RUN PREFLIGHT (event c9): missing bind input" in ot_status.post_text(rec)
     assert cls(78, "NOT-RUN no host qualifies (epyc9 unreachable)") == "SSH-DROP"
+
+
+def test_mid_run_filenotfound_is_runtime_input_missing_not_setup():
+    import ot_deathclass as d
+    tail = "Traceback (most recent call last):\n  File \"<stdin>\", line 2, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/x/latcheck_v11s.json'\n"
+    r = d.classify(1, "bash bind.sh", tail, 1089)
+    assert (r[0] if isinstance(r, tuple) else r.get("class")) == "RUNTIME-INPUT-MISSING"
+    r2 = d.classify(1, "bash bind.sh", tail, 4)
+    assert (r2[0] if isinstance(r2, tuple) else r2.get("class")) == "SETUP"

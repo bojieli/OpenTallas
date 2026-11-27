@@ -120,6 +120,10 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("TEST-FAIL", _last_line(t, r"TESTS FAILED|FAILED|\d+ failed|AssertionError"))
     if "ot-push-main" in cmd and re.search(r"merge conflict|CONFLICT|dropped from.*train", t, re.I):
         return _c("PUSH-CONFLICT", _last_line(t, r"conflict|train"))
+    # P-LAUNCH-SETUP-FAIL (COORD 11-27): a missing file hit AFTER the job ran for a while (the s81-int-r3-xr bind jobs died 1000-1400 s in on latcheck_<tag>.json / g0_report.json)
+    # is an input of the running job, not a start failure.
+    if rc and secs > 60 and re.search(r"FileNotFoundError|No such file or directory", t) and not re.search(r"command not found|not a kit-wave|FAIL_PREFLOOR", t):
+        return _c("RUNTIME-INPUT-MISSING", _last_line(t, r"FileNotFoundError|No such file or directory") or "a file the job reads is missing (rc %s after %s s)" % (rc, secs))
     if rc in (64, 126, 127, 14, 10) or re.search(r"No such file or directory|command not found|not a kit-wave attempt|FAIL_PREFLOOR|kit_preflight|Permission denied|usage:", t):
         return _c("SETUP", _last_line(t, r"No such file|not found|not a kit-wave|PREFLOOR|preflight|Permission|usage:|refus") or "command could not start (rc %s)" % rc)
     if re.search(r"(^|/)FAIL_route\b|make(\[\d+\])?: \*\*\* \[[^\]]*(route|grt|5_)[^\]]*\] Error \d+", t, re.M):
