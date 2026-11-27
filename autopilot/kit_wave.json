@@ -43170,7 +43170,7 @@
      "route": true,
      "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
      "owner": "HEAD-INT-R3",
-     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "reason": "CTS-only measured CLEAN on W12f 4_cts (setup clean; FF pre-repair hold -93.95 ps on 3 endpoints, locally repairable; no tap/reset reach member). Remaining condition for route release: reproduced in the W13 cut gate on rt b71c5218e0b5 plus a second review of the same 3_place. owner=HEAD-PROBE-R3 eta=2026-11-28 09:00 (COORD FABLE-RC-HEAD 1247 item 6)",
      "release": []
     },
     {
@@ -43218,7 +43218,7 @@
      "route": true,
      "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
      "owner": "HEAD-INT-R3",
-     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "reason": "CTS-only measured CLEAN on hold/setup on W12f 4_cts (setup clean; FF pre-repair hold -82.54 ps on 4 endpoints). Still open as sibling members: C-TAP-REACH (tap span 387 um) and C-RST-RELAY-REACH (u_rst_in tree 429.1 um); rows drafted for the next form. Release to route when those rows land or are ruled non-blocking, after the W13 cut gate on rt b71c5218e0b5. owner=HEAD-PROBE-R3 eta=2026-11-28 09:00 (COORD FABLE-RC-HEAD 1247 item 6)",
      "release": []
     },
     {
@@ -43254,7 +43254,7 @@
      "route": true,
      "cause": "P-VISUAL-UNMEASURED-HOLD / C-SPARSE-PIN-HULL",
      "owner": "HEAD-INT-R3",
-     "reason": "W12f post-place ISSUES verdict names no measured defect; CTS-only measurement on the same checkpoint (COORD 09:29 item 5) decides. Route needs both reviews. owner=HEAD-PROBE-R3 eta=2026-11-27 21:00",
+     "reason": "CTS-only measured on W12f 4_cts: FF pre-repair hold -163.72 ps on 4,138 endpoints, beyond the -160 ps screen (C-PARENT-SEAM-HOLD); tap span 959 um on 12 of 21 taps (C-TAP-REACH); reset tree 498.9 um (C-RST-RELAY-REACH). Hold pads are sized only after the W12 tile DNC route and parent STA (binding order 4). owner=HEAD-INT-R3 eta=2026-11-28 09:00",
      "release": []
     },
     {
