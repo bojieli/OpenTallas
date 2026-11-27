@@ -21,7 +21,11 @@ conflict lists its files; after a moved main only the affected test files re-run
 origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here.
 SPARSE-RESTORE-1124 (COORD): the auto-widen in (1) is temporary: the caller's sparse-checkout file is saved before the run and put back
 (+ `git sparse-checkout reapply`, which drops the widened dirs from disk) on every exit, pushed, refused, failed or crashed.  A widened
-cone left behind wrote ~40 GB per push into intel2 onboard-epyc12/wt and took scratch2 under its 150 GB floor."""
+cone left behind wrote ~40 GB per push into intel2 onboard-epyc12/wt and took scratch2 under its 150 GB floor.
+P-LAUNCH-SETUP-FAIL: every run writes a log (default /tmp/ot-push-main.<user>.<epoch>.log, $OT_PUSH_LOG overrides; the path is the first
+stderr line, all stdout and stderr are teed into it) and every nonzero exit ends stderr and the log with ONE line
+`ot-push-main: rc N: <reason>` (rc 2 = usage error, not inside a git clone, or uncommitted tracked changes; 3 rebase conflict; 4 tests failed;
+6 kit staging import; 1 fetch / push refused or a crash).  A job that "died after 0 s with no log" now always has that log and reason."""
 import argparse
 import os
 import re
@@ -29,6 +33,7 @@ import shlex
 import subprocess as S
 import sys
 import threading
+import time
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))     # python3 -I drops the script dir from sys.path
@@ -290,7 +295,7 @@ def main():
 
 
 def _main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(prog="ot-push-main", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-test", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="rebase + test, no push")
     ap.add_argument("--max", type=int, default=8, help="push attempts; main-moved test re-runs are capped at 3 (REPUSH_RETEST)")
@@ -300,10 +305,10 @@ def _main():
         a.test_timeout = default_timeout()
     top = out("rev-parse", "--show-toplevel")
     if not top:
-        print("ot-push-main: not in a git clone"); return 2
+        print("ot-push-main: rc 2: not inside a git clone (cwd %s has no git work tree; cd into the lane clone first)" % os.getcwd()); return 2
     os.chdir(top)
     if out("status", "--porcelain", "--untracked-files=no"):
-        print("ot-push-main: uncommitted changes to tracked files; commit them first (no stash)"); return 2
+        print("ot-push-main: rc 2: uncommitted changes to tracked files; commit them first (no stash)"); return 2
     tested_files = None
     retests = 0
     for attempt in range(1, a.max + 1):
@@ -364,5 +369,85 @@ def _main():
     return 5
 
 
+class _Tee:
+    """P-LAUNCH-SETUP-FAIL: write to the real stream and the log; remember the last 'ot-push-main:' line (the exit reason)"""
+    def __init__(self, real, log, st):
+        self.real, self.log, self.st, self.buf = real, log, st, ""
+
+    def write(self, text):
+        self.real.write(text)
+        try:
+            self.log.write(text)
+            self.log.flush()
+        except (OSError, ValueError):
+            pass
+        self.buf += text
+        *lines, self.buf = self.buf.split("\n")
+        for ln in lines:
+            if ln.startswith("ot-push-main: error:"):
+                self.st["reason"] = "usage error: " + ln[len("ot-push-main: error:"):].strip()
+            elif ln.startswith("ot-push-main: rc "):
+                self.st["rcline"] = True
+            elif ln.startswith("ot-push-main:"):
+                self.st["reason"] = ln[len("ot-push-main:"):].strip()
+        return len(text)
+
+    def flush(self):
+        self.real.flush()
+
+    def __getattr__(self, k):
+        return getattr(self.real, k)
+
+
+def log_path(env=None):
+    env = os.environ if env is None else env
+    if env.get("OT_PUSH_LOG"):
+        return env["OT_PUSH_LOG"]
+    try:
+        user = os.environ.get("USER") or os.getlogin()
+    except OSError:
+        user = str(os.getuid())
+    return "/tmp/ot-push-main.%s.%d.log" % (user, int(time.time()))
+
+
+def logged_main():
+    """run main() with stdout / stderr teed into the log; every nonzero exit gets `ot-push-main: rc N: reason` on stderr and in the log"""
+    path = log_path()
+    try:
+        log = open(path, "a", buffering=1)
+    except OSError as e:
+        sys.stderr.write("ot-push-main: WARN cannot open log %s (%s); continuing without a log\n" % (path, e))
+        log = open(os.devnull, "w")
+    sys.stderr.write("ot-push-main: log %s\n" % path)
+    log.write("ot-push-main: log %s\nargv: %s\ncwd: %s\n" % (path, sys.argv, os.getcwd() if os.path.isdir(".") else "(unreadable)"))
+    st = {}
+    real_out, real_err = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = _Tee(real_out, log, st), _Tee(real_err, log, st)
+    try:
+        try:
+            rc = main()
+        except SystemExit as e:             # argparse: usage error / --help
+            rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+            if isinstance(e.code, str):
+                st["reason"] = e.code
+        except BaseException as e:          # noqa: BLE001 - a crash is still reported with its reason
+            import traceback
+            traceback.print_exc()
+            st["reason"] = "crashed: %s: %s" % (type(e).__name__, str(e)[:200])
+            rc = 1
+        rc = 0 if rc is None else rc
+        if rc:
+            line = "ot-push-main: rc %d: %s" % (rc, st.get("reason") or "no reason recorded; see " + path)
+            if not st.get("rcline"):
+                sys.stderr.write(line + "\n")
+    finally:
+        sys.stdout, sys.stderr = real_out, real_err
+        try:
+            log.close()
+        except OSError:
+            pass
+    return rc
+
+
 if __name__ == "__main__":
-    sys.exit(_OTS.run_recorded("push", main, "ot-push-main " + " ".join(sys.argv[1:])) if _OTS else main())
+    sys.exit(_OTS.run_recorded("push", logged_main, "ot-push-main " + " ".join(sys.argv[1:])) if _OTS else logged_main())
