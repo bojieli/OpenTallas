@@ -12,8 +12,8 @@ What a fork is:
     or chmod in the fork ever reaches another tree, and the fork never raises the link count of a sealed tree;
   * SRC is resolved once (realpath); nothing that points OUTSIDE SRC is dereferenced: a symlink inside SRC whose target is inside SRC is
     recreated (absolute targets are rewritten to the same place inside DST), a symlink to anything else is kept verbatim, EXCEPT a symlink
-    that resolves into an event tree (a kw45 tree, a read-only src_manifest tree, $OT_EVENT_TREE_ROOTS): that is refused (exit 3), because a
-    write through it lands in the event tree.  --materialize copies such a target's content into the fork instead (real copy, same rules);
+    that resolves into an event tree (a kw45 tree, a read-only src_manifest tree, $OT_EVENT_TREE_ROOTS) or another scratch tree:
+    that is normally refused (exit 3).  --materialize copies such a target's content into the fork instead (real copy, same rules);
   * DST must not exist (missing parent dirs are made) and must not lie inside SRC, inside an event tree, or behind a symlink into one;
   * the copy is built in DST.forking-<pid> and renamed to DST only after the check: no regular file with nlink > 1
     (`find DST -type f -links +1` = 0; directories always have nlink >= 2, so -type f) and no symlink into an event tree or back into SRC;
@@ -703,8 +703,14 @@ def plan(src, dst, materialize=False):
                         P["links"].append((rel, text))
                         continue
                     ev = event_root(res) or (f"{res} (a symlinked plan dir {rel} outside SRC)" if plan_rel(rel) else "")
-                    if ev:
-                        if materialize and os.path.exists(res) and res not in seen:
+                    if not ev and os.path.basename(rel) == FORK_JSON:
+                        continue                          # a provenance link is never copied: the fork writes its own regular .fork.json
+                    scratch = SCRATCH_TREE_RE.match(res) and (
+                        materialize or not os.environ.get("OT_TREE_FORK_ALLOW_EXTERNAL")
+                    )
+                    if ev or scratch:
+                        target = f"event tree {ev}" if ev else f"another scratch tree {res}"
+                        if materialize and res not in seen and (os.path.isfile(res) or os.path.isdir(res)):
                             P["materialized"].append((rel, res))
                             if os.path.isdir(res):
                                 walk(res, rel, seen | {res})
@@ -713,16 +719,8 @@ def plan(src, dst, materialize=False):
                                 P["files"].append((res, rel, s2.st_mode, s2.st_size))
                                 P["bytes"] += s2.st_size
                         else:
-                            P["refused"].append(f"{rel} -> {text} (resolves into event tree {ev})")
+                            P["refused"].append(f"{rel} -> {text} (resolves into {target})")
                         continue
-                    if os.path.basename(rel) == FORK_JSON:
-                        continue                          # a provenance link is never copied: the fork writes its own regular .fork.json
-                    _res = os.path.realpath(p)
-                    if SCRATCH_TREE_RE.match(_res) and not os.environ.get("OT_TREE_FORK_ALLOW_EXTERNAL"):
-                        # FLEET-OPS 11-25 (F-06): a kept link into another scratch tree lets a write in the fork land there (C1L tree rewritten by 4 forks); refused unless --materialize or OT_TREE_FORK_ALLOW_EXTERNAL=1
-                        if not materialize:
-                            P["refused"].append(f"{rel} -> {text} (resolves into another scratch tree {_res})")
-                            continue
                     P["links"].append((rel, text))
                     P["external"].append(f"{rel} -> {text}")
                     continue
@@ -853,7 +851,7 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
         os.makedirs(os.path.dirname(dst), exist_ok=True)      # e.g. <lane>/trees/ on first use
     P = plan(src, dst, materialize)
     if P["refused"]:
-        raise Refused(f"{len(P['refused'])} symlink(s) in SRC resolve into an event tree or are plan dirs outside SRC (a write through them lands there): "
+        raise Refused(f"{len(P['refused'])} symlink(s) in SRC resolve into guarded trees outside SRC (a write through them lands there): "
                       + "; ".join(P["refused"][:5]) + ("; ..." if len(P["refused"]) > 5 else "")
                       + ".  Fork that tree on its own, or pass --materialize to copy the targets in.")
     n, gb = len(P["files"]), P["bytes"] / 2**30
@@ -862,7 +860,7 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
         # owner sees which trees the private copy still points into (a write through one lands there).  The default behaviour is unchanged.
         import collections
         by = collections.Counter(os.path.dirname(t.split(" -> ", 1)[1].rstrip("/")) or "/" for t in P["external"])
-        out(f"TREE-FORK WARN {len(P['external'])} symlink(s) in {src} point OUTSIDE it and were kept verbatim (not dereferenced; --materialize copies them in): "
+        out(f"TREE-FORK WARN {len(P['external'])} symlink(s) in {src} point OUTSIDE it and were kept verbatim: "
             + ", ".join(f"{k} x{v}" for k, v in by.most_common(5)) + "; first: " + "; ".join(P["external"][:5]))
     if dry:
         out(f"TREE-FORK DRY {src} -> {dst}: {n} files {gb:.2f} GB, {len(P['dirs'])} dirs, {len(P['links'])} links "
@@ -961,7 +959,7 @@ def main(argv=None):
     ap.add_argument("--host", default="", help="run the fork on this host (SRC and DST are paths there)")
     ap.add_argument("--src-host", default="", help="SRC lives on this host (DST on --host or here): reuse a same-manifest tree of the DST host, else fetch once")
     ap.add_argument("--jobs", type=int, default=0, help="parallel copy workers (default and ceiling 2, OT_TREE_FORK_MAX_JOBS; E11-IO-STALL-1124)")
-    ap.add_argument("--materialize", action="store_true", help="copy the content of symlinks into event trees instead of refusing")
+    ap.add_argument("--materialize", action="store_true", help="copy guarded external symlink targets into the fork")
     ap.add_argument("--no-manifest", action="store_true", help="with --src-host: SRC is a private fork edited after its manifest: "
                     "fetch it straight into DST (no same-manifest reuse, no tree cache)")
     ap.add_argument("--bind-tree", nargs=2, metavar=("SRC_TREE", "DST_TREE"),
