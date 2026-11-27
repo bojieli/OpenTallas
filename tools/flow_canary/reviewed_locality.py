@@ -4,6 +4,7 @@ import fcntl
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -17,7 +18,18 @@ import placement_review as review
 SCRATCH = Path("/srv/opentallas-scratch2/claude")
 WARM_REPO = SCRATCH / "warm" / "OpenTallas.git"
 HUB_REPO = "/srv/opentallas-scratch2/git/OpenTallas.git"
-WORKER_SETUP = SCRATCH / "rt" / "current" / "tools" / "flow_canary" / "reviewed_locality.py"
+RUNTIME_ROOT = SCRATCH / "rt"
+WORKER_SETUP = Path("tools/flow_canary/reviewed_locality.py")
+RUNTIME_PROBE = """
+import json, sys
+from pathlib import Path
+root, sha, helper = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
+name = sha[:12]
+with (root / f"{name}.manifest.json").open() as stream:
+    manifest = json.load(stream)
+sys.exit(not (manifest["sha"] == sha and str(helper) in manifest["files"]
+              and (root / name / helper).is_file()))
+"""
 OT_RUN = Path.home() / ".local/bin/ot-run"
 SOURCE_DISK_GB = 12
 WORK_DISK_GB = 20
@@ -69,16 +81,58 @@ def write_metadata(path, meta):
             temporary.unlink(missing_ok=True)
 
 
-def strict_pick(spec):
-    hosts = review.ADMISSION_HOSTS
-    worker = command_output([str(OT_RUN), "--hosts", hosts, "--strict-host", "--no-spill",
+def strict_pick(spec, hosts):
+    result = subprocess.run([str(OT_RUN), "--hosts", ",".join(hosts), "--strict-host", "--no-spill",
                              "--dir", str(SCRATCH), "--mem", str(spec["mem_gb"]),
                              "--threads", str(spec.get("threads", 8)),
                              "--disk", str(SOURCE_DISK_GB + WORK_DISK_GB),
-                             "--max-wait", "1", "--pick"])
-    if worker not in hosts.split(","):
+                             "--max-wait", "1", "--pick"], capture_output=True, text=True)
+    if result.returncode:
+        if "NOT-RUN " in result.stderr:
+            return None
+        result.check_returncode()
+    worker = result.stdout.strip()
+    if worker not in hosts:
         raise ValueError("stock picker did not return a permitted canary worker")
     return worker
+
+
+def hub_runtime_ready(sha):
+    if not re.fullmatch(r"[0-9a-f]{40}", sha):
+        return False
+    try:
+        if (RUNTIME_ROOT / "current").readlink().name != sha[:12]:
+            return False
+        return json.loads((RUNTIME_ROOT / f"{sha[:12]}.manifest.json").read_text())["sha"] == sha
+    except (OSError, ValueError, KeyError):
+        return False
+
+
+def worker_runtime_ready(worker, sha):
+    # The host manifest is published only after stock sync checks the copied bytes.
+    # Check the immutable name directly: another host may still be copying, and
+    # this worker's own current symlink may already have moved.
+    probe = shlex.join(["python3", "-I", "-B", "-c", RUNTIME_PROBE, str(RUNTIME_ROOT), sha, str(WORKER_SETUP)])
+    try:
+        result = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=3", worker, probe],
+                                capture_output=True, timeout=5)
+    except subprocess.TimeoutExpired:
+        return False
+    return result.returncode == 0
+
+
+def pick_ready_worker(spec, sha, readiness):
+    remaining = review.ADMISSION_HOSTS.split(",")
+    while remaining:
+        worker = strict_pick(spec, remaining)
+        if worker is None:
+            return None
+        if worker not in readiness:
+            readiness[worker] = worker_runtime_ready(worker, sha)
+        if readiness[worker]:
+            return worker
+        remaining.remove(worker)
+    return None
 
 
 def stage_worker_source(worker, run, sha):
@@ -87,7 +141,7 @@ def stage_worker_source(worker, run, sha):
         result = subprocess.run([str(OT_RUN), "--hosts", worker, "--strict-host", "--no-spill",
                                  "--dir", str(SCRATCH), "--mem", "8", "--threads", "4",
                                  "--disk", str(SOURCE_DISK_GB), "--", "python3", "-I", "-B",
-                                 str(WORKER_SETUP), "prepare", str(run.parent), sha],
+                                 str(RUNTIME_ROOT / sha[:12] / WORKER_SETUP), "prepare", str(run.parent), sha],
                                 stdout=output, stderr=subprocess.STDOUT)
     if result.returncode:
         raise ValueError(f"source setup on {worker} exited {result.returncode} (see {log})")
@@ -145,7 +199,9 @@ def run_stage(run, stage):
         source = Path(meta["src"])
         if not sha.startswith(meta["src_commit"]) or source != run.parent.parent / "sources" / sha[:12]:
             raise ValueError("canary source changed before stage")
-        worker = strict_pick(spec)
+        worker = meta["placement_host"]
+        if meta["worker_runtime_sha"] != sha or worker not in review.ADMISSION_HOSTS.split(","):
+            raise ValueError("canary worker or pinned runtime differs from admission")
         stage_worker_source(worker, run, sha)
         import pre_submit_review
         hold = pre_submit_review.hold(spec, source, sha, run.parent, meta.get("image", "openroad/orfs:asap7lock"),
