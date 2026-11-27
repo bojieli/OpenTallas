@@ -105,3 +105,13 @@ def test_measured_guard_is_larger_and_tt_floor_default_zero():
     _, audit2 = S.size(tight)
     assert [r["port"] for r in audit2["refused"]] == ["x[0]"]
 
+
+
+def test_child_merge_subcommand():
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        (td / "ff.tsv").write_text("a[0]\tu/d0/D\t-43.0\t999.0\nrst_n[0]\tu/rn/RESETN\t-54.6\t999.0\n")
+        (td / "tt.tsv").write_text("a[0]\tu/d0/D\t-66.0\t620.0\nrst_n[0]\tu/rn/RESETN\t-60.0\t649.0\n")
+        assert S.main(["child", "--ff", str(td / "ff.tsv"), "--tt", str(td / "tt.tsv"), "--out", str(td / "c.tsv")]) == 0
+        c = S.read_child((td / "c.tsv").read_text())
+        assert c["a[0]"]["ff"] == -43.0 and c["a[0]"]["tt"] == 620.0 and c["rst_n[0]"]["tt"] == 649.0

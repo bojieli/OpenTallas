@@ -16,7 +16,8 @@ every pin whatever the parent really delivers.  This tool sizes one pad per INPU
 No pin is padded to a silent cap: a pin that exceeds n_max or whose TT slack cannot pay is listed under 'refused'.
 Reads only; the pads are installed by stage() below (gen_core_kit_legacy --seam-pad / recipe key `seam_pad`, default off;
 the hook is seam_pad_port.tcl, one chain per input PORT net), or proven in memory by seam_pad_measure.tcl (PAD_SPEC).
-MEASURED-basis sizing is an estimate for a provisional parent: the kit SDC still carries the -40 contract, so a kit verdict
+Combining with face_hold_pad in one kit is UNTESTED (that hook disconnects flop D pins from nets this hook marks dont_touch);
+use one or the other per core.  MEASURED-basis sizing is an estimate for a provisional parent: the kit SDC still carries the -40 contract, so a kit verdict
 only changes when the matched parent receipt (io_hold_parent) passes; the contract basis is what removes NEEDS_PARENT at the kit.
 
   seam_pad_per_pin.py size --child CHILD.tsv [--parent-ff FF.tsv --parent-tt TT.tsv] --out SPEC.json [--audit AUDIT.tsv]
@@ -170,6 +171,10 @@ def size(child, parent_ff=None, parent_tt=None, guard=GUARD_PS, per_ff=HB4_FF_PS
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    m = sub.add_parser("child", help="merge a FF-corner and a TT-corner seam_pad_measure.tcl table into CHILD.tsv (FF hold, TT setup)")
+    m.add_argument("--ff", required=True)
+    m.add_argument("--tt", required=True)
+    m.add_argument("--out", required=True)
     z = sub.add_parser("size")
     z.add_argument("--child", required=True)
     z.add_argument("--parent-ff")
@@ -185,6 +190,14 @@ def main(argv=None):
     z.add_argument("--tt-floor", type=float, default=TT_FLOOR_PS)
     z.add_argument("--n-max", type=int, default=N_MAX)
     a = ap.parse_args(argv)
+    if a.cmd == "child":
+        ff, tt = read_child(Path(a.ff).read_text()), read_child(Path(a.tt).read_text())
+        if set(ff) != set(tt):
+            print("seam_pad_per_pin child: FF and TT tables list different ports", file=sys.stderr)
+            return 2
+        Path(a.out).write_text("".join(f"{p}\t{ff[p]['endpoint']}\t{ff[p]['ff']}\t{tt[p]['tt']}\n" for p in sorted(ff)))
+        print(f"child: {len(ff)} ports")
+        return 0
     child = read_child(Path(a.child).read_text())
     if not child:
         print("seam_pad_per_pin: no child rows", file=sys.stderr)
