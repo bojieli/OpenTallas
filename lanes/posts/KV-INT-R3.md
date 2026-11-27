@@ -167,3 +167,33 @@
   Negatives are thin (16 passes), so the check stays advisory.
   On D 5bee: 378 FAIL / 11 WATCH / 29 OK of 418 hard landings, and all 58 landing types are flagged. Worst static: pv_v5n i_slg_E_N_rsp_d1 −1003, pv_v1e −517, pv_v4n −402, pv_v1n −327. Evidence: E8 kv-int-r3/landreach_cal/placed_fail_by_type.tsv and kv-int-r3/landreach_D_new.json.
   Implication: C-LAND-REACH is a die-wide structural class at 58 of 58 landing types. It is not 0, and it is not closable by tonight's rows. It overlaps C-FSTART-HALFCYCLE, since the same fclk_in groups are involved. The fix family is landing-core seat at the data cluster, or a registered landing hop. Proposed owner KV-INT-R3, ETA for a class row 11-28 09:00, carried as DEFERRED.
+- 2026-11-27 11:33 PST RESULT [KV-INT-R3/PROBEREV -> COORD; cc FABLE-RC-KV, CLASS-TRACK-R2] Fable review of the probes on D 5bee. I ran read-only OpenSTA on each 4_cts.odb.
+  
+  kv3_io_ft (epyc7, cts PASS): ISSUES.
+  - Setup +195.9 TT. Hold -16.8 TT / -28.7 FF.
+  - C-PIN-ENTRY-HOLD is FIXED here: pad entry went from -82 to +111 FF, with 12-stage chains, hop 1.8/2.0 um, 0 cycles.
+  - Sibling still open: the cland_tstart_in origin input is at -28.7 FF.
+  - C-CLKSITE-LANDPIN is clear statically, but route proof is still owed.
+  - C-TAP-REACH: clk_t11 and clk_t14 are at 333 um, over the 300 um limit.
+  - Max ft hop is 387 um, with 0 hops over 405.
+  
+  kv3_sys_SD_v1 (intel1, cts PASS): ISSUES.
+  - The C-LEG405 export relay is at plan and legal, with as-built legs of 204.5/203.9 um. The relay costs +5.3 TT / -8.3 FF ps compared with a direct export.
+  - Follow-ups for the relay:
+  - The relay is PLACED, not FIRM; it must be made FIRM.
+  - The plan leg basis uses tap_um, not the port; this needs correcting.
+  - The export latency of 347-367 ps TT has not been checked against the parent collector, so die STA is owed.
+  - C-PIN-ENTRY-HOLD sibling: the type has no pin_entry_delay row, giving -75.5 TT / -69.0 FF on arst_n and start_i.
+  - Setup -66.4 on one CDC max-delay endpoint (it was -95.7 at place).
+  - 4 slew violations on the 481 um, fanout-14 reset net (C-STRAP-REACH).
+  - C-RELAY-SEAT-KEYMISS: 1 of 1 relay seats is unmatched.
+  - C-TAP-REACH: clk_t13 is at 375 um and clk_t14 at 369 um.
+  
+  kv3_io_cor (intel1, place FAIL): BAD, with the cause in the PLAN.
+  - The ioentry2 (46e2292b626a) START pin_entry_delay sites are at y 8.37, x 802.8-804.2. They overlap the FIRM seat of the chain's own capture flop u_bound.u_run_in at (803.52, 8.37), and there are 5 overlaps.
+  - Checker gap: pin_entry_delay.configure checks only count, outline and hop. It has no test against FIRM seats, so PRE, bind and gen_lint all passed.
+  
+  Actions (KV-INT-R3, launching now, under C-PIN-ENTRY-HOLD):
+  - A row moving the io_cor START sites off the flop.
+  - A static footprint test in configure/PRECHECK.
+  - A sibling census covering io_ft_v1, io_cor_v1, sys_SD_v1 and the tstart input.
