@@ -80,6 +80,7 @@ if str(Path(__file__).resolve().parent) not in sys.path:
 
 import plan_block_identity as BI
 import kit_resume as KR
+import kit_rtl_handoff as KRR
 import tool_skew as TS
 import wave_jobs as WJ
 import kit_wave_roam as ROAM
@@ -95,7 +96,7 @@ OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: fre
 # older in-memory launch logic; the next ordinary tick imports the new package.
 def scheduler_code_id():
     h = hashlib.sha256()
-    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "plan_visual_review.py", "private_place_review.py"):
+    for name in ("kit_wave.py", "autopilot.py", "source_follow.py", "kit_resume.py", "kit_rtl_handoff.py", "plan_visual_review.py", "private_place_review.py"):
         p = Path(__file__).with_name(name)
         h.update(name.encode())
         h.update(p.read_bytes())
@@ -831,6 +832,8 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
             receipt["stages"]["kit_topology"] = stages["kit_topology"]
         if "kit_rtl" in stages:
             receipt["stages"]["kit_rtl"] = stages["kit_rtl"]
+        if stages.get("kit_rtl_reuse") == 0:
+            receipt["stages"]["kit_rtl_reuse"] = 0
         receipt["canary"] = "kit_rtl_v1"          # receipts with this mark carry the kit_rtl verdict (older receipts are grandfathered)
         target = spec_path.with_name("gen_pilot.json")
         temp = target.with_name(target.name + "." + str(os.getpid()) + ".tmp")
@@ -1951,6 +1954,25 @@ def kit_rtl_closure_cmd(W, src, mode="inputs", chain=True, guard=False):
     code = (Path(__file__).resolve().parent / "kit_rtl_closure.py").read_text()
     return ((" && " if chain else "") + f"python3 - {shlex.quote(W)}/rtl --source {shlex.quote(src)} --mode {mode} <<'KW_CLOSURE_EOF'"
             + (" || exit $?" if guard else "") + "\n" + code + "\nKW_CLOSURE_EOF\n")
+
+
+def kit_rtl_handoff_cmd(mode, request):
+    """Run the current handoff policy without modifying the pinned generator."""
+    here = Path(__file__).resolve().parent
+    code = (
+        "import sys, types\n"
+        "mod = sys.modules['kit_rtl_closure'] = types.ModuleType('kit_rtl_closure')\n"
+        f"exec({(here / 'kit_rtl_closure.py').read_text()!r}, mod.__dict__)\n"
+        + (here / "kit_rtl_handoff.py").read_text()
+    )
+    return " ".join(map(shlex.quote, ("python3", "-I", "-c", code, mode, json.dumps(request))))
+
+
+def kit_rtl_handoff_result(txt):
+    for line in reversed(txt.splitlines()):
+        if line.startswith("KW_KIT_RTL_HANDOFF "):
+            return json.loads(line.split(" ", 1)[1])
+    raise ValueError("KIT_RTL handoff missing its worker receipt")
 
 
 def kit_rtl_mode(d):
@@ -7317,7 +7339,7 @@ def counted_now(cfg, st, die, item, block=None):
 # switch inputs came from, and the tree was never at it.  A record of provenance, so not an input.
 INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "roam_hosts", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "kit_rtl_mem_gb", "bind_mem_gb", "ot_run", "crit",
-              "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
+              "start_delay_s", "resume_from", "kit_rtl_reuse", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
               "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins"}
 
@@ -10397,6 +10419,25 @@ def private_resume_request(AP, sp, attempt_dir, restart_at="place"):
     return rf
 
 
+def kit_rtl_predecessor(path, sp):
+    path = Path(path).resolve()
+    old = KRR.read(path / "spec.json")
+    result = KRR.read(path / "result.json")
+    payload_path = path / KRR.NAME
+    raw = payload_path.read_bytes()
+    receipt = json.loads(raw)
+    item = (sp["die"], sp["item"])
+    if ((old.get("die"), old.get("item")) != item
+            or (result.get("die"), result.get("item")) != item
+            or result.get("verdict") not in ("FAIL", "PASS")
+            or not old.get("work") or old["work"] == sp["work"]
+            or receipt.get("rtl") != old["work"] + "/rtl"
+            or receipt.get("host") != old.get("gen_host")
+            or not (old.get("private") and receipt.get("payload", {}).get("schema") == KRR.SCHEMA)):
+        raise ValueError("KIT_RTL predecessor needs a distinct completed private attempt and its prepared receipt")
+    return {"attempt": str(path), "sha256": hashlib.sha256(raw).hexdigest()}
+
+
 def private_spec_cmd(a):
     detach_stdin(getattr(a, "stdin", False))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -10451,6 +10492,13 @@ def private_spec_cmd(a):
         return 2
     predecessor = getattr(a, "resume_from", None)
     restart_at = getattr(a, "restart_at", None)
+    reuse_early = getattr(a, "reuse_kit_rtl_from", None)
+    if reuse_early:
+        try:
+            sp["kit_rtl_reuse"] = kit_rtl_predecessor(reuse_early, sp)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print(f"private-spec: KIT_RTL handoff: {exc}", file=sys.stderr)
+            return 2
     if predecessor or restart_at:
         try:
             if not predecessor:
@@ -10482,6 +10530,9 @@ def private_spec_cmd(a):
         if verdict == "UNKNOWN":
             print(f"private-spec: WARN {a.die}/{a.item}: {why} (spec written; kit_topology will check)", file=sys.stderr)
     out = Path(a.out or (AP_DIR / "private_specs" / re.sub(r"[^A-Za-z0-9_.-]", "_", lane or "lane") / f"{a.die}_{a.item}_{time.strftime('%m%d%H%M%S')}"))
+    if reuse_early and out.resolve() == Path(sp["kit_rtl_reuse"]["attempt"]):
+        print("private-spec: KIT_RTL predecessor and new attempt need distinct spec directories", file=sys.stderr)
+        return 2
     if predecessor and out.resolve() == Path(sp["resume_from"]["attempt_dir"]):
         print("private-spec: previous and new attempts need distinct spec directories", file=sys.stderr)
         return 2
@@ -11966,7 +12017,12 @@ def _run_item(spec_path, resume_reviewed=False):
     if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
         run("work_alt", idempotent=True, argv=remote(work_alt_cmd(W, sp["work_alt_lane"])))
     review_private_plan = bool(sp.get("private") and PVR.applies(sp))
-    mkdir = f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"
+    rtl_receipt_path = out / KRR.NAME
+    own_rtl = rtl_receipt_path.is_file()
+    # A completed early-stage receipt owns RTL across a same-attempt retry.
+    mkdir = f"mkdir -p {q(W)}/logs {q(sp['root'])}"
+    if not own_rtl and not sp.get("kit_rtl_reuse"):
+        mkdir += f" && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"
     if not review_private_plan:
         rc, txt = run("mkdir", idempotent=True, argv=remote(mkdir))
         if rc:
@@ -12101,6 +12157,54 @@ def _run_item(spec_path, resume_reviewed=False):
         plan, prc = prov_stage(sp, run, remote, fail, res, jobdir=out)
         if plan is None:
             return prc
+    rtl_input = KRR.configured(sp, _seal)
+    rtl_reuse = sp.get("kit_rtl_reuse")
+    rtl_path = f"{W}/rtl"
+    reuse_applied = False
+    rtl_identity = None
+    identity_request = {"rtl": rtl_path, "inputs": rtl_input, "launch": tsrc,
+                        "script": kr.get("script"), "plan": plan}
+    if own_rtl or rtl_reuse:
+        try:
+            if not rtl_input:
+                raise ValueError("effective inputs have no supported prepared RTL contract")
+            source_pointer = rtl_receipt_path if own_rtl else Path(rtl_reuse["attempt"]) / KRR.NAME
+            raw = source_pointer.read_bytes()
+            if not own_rtl and hashlib.sha256(raw).hexdigest() != rtl_reuse["sha256"]:
+                raise ValueError("donor prepared RTL receipt changed")
+            pointer = json.loads(raw)
+            payload = pointer["payload"]
+            if any(payload["identity"].get(k) != v for k, v in rtl_input.items()):
+                raise ValueError("prepared RTL source, runtime, or declared configuration changed")
+            if own_rtl and (pointer["rtl"], pointer["host"]) != (rtl_path, G):
+                raise ValueError("prepared RTL is on another worker; use an explicit predecessor attempt")
+            request = dict(identity_request, receipt=payload)
+            mode = "check" if own_rtl else "restore"
+            if not own_rtl:
+                request.update(donor=pointer["rtl"], host="" if pointer["host"] == G else pointer["host"])
+            command = kit_rtl_handoff_cmd(mode, request)
+            if not own_rtl:
+                command = (f"test ! -e {q(W)}/gen && test ! -e {q(W)}/geom && " + command)
+            disk = max(2, (int(payload["bytes"]) + 2**30 - 1) // 2**30 + 1)
+            argv = otrun(4, 1, W, command, gh,
+                         allow_hub=False, roam=False, stage_disk_gb=disk)
+            rc, txt = run("kit_rtl_reuse", argv, idempotent=True)
+            if rc:
+                raise ValueError(txt.strip()[-600:])
+            if not own_rtl:
+                KRR.write(rtl_receipt_path, {"host": G, "rtl": rtl_path,
+                                             "payload": kit_rtl_handoff_result(txt)})
+            if own_rtl:
+                rc, txt = run("kit_rtl_prepare_gen", remote(f"rm -rf {q(W)}/gen {q(W)}/geom"), idempotent=True)
+                if rc:
+                    return fail("kit_rtl_prepare_gen", txt)
+            # Preserve ordinary stage eligibility and separately name transport
+            # so the pilot receipt does not imply a new native producer run.
+            completed_stages["kit_rtl"] = 0
+            reuse_applied = True
+            res["kit_rtl_reuse"] = str(source_pointer)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            return fail("kit_rtl_reuse", f"KIT_RTL_HANDOFF REFUSED {exc}")
     if core:
         _, _, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], tsrc, plan, sp["root"], W, T)
         rgp, rga = region_guide_cmd(sp, True)
@@ -12115,6 +12219,8 @@ def _run_item(spec_path, resume_reviewed=False):
         if rc or not K.startswith(f"{W}/gen/"):
             return fail("gen", txt + "\nGEN_NO_KIT: core generator exit 0 but wrote no kit (freeze.json) under W/gen")
         flow_refresh("gen")
+    elif reuse_applied:
+        kit_rtl_arg = f"--kit-rtl {q(T + '=' + rtl_path + '/kit_rtl.f')}"
     elif kr.get("mode") == "bind":
         a = kr["asbuilt"]
         if kr.get("bind_out"):
@@ -12266,10 +12372,19 @@ def _run_item(spec_path, resume_reviewed=False):
         # STRAP-EVIDENCE-PRIV-1124 (HEAD-WEST 86b4806b): a declared bind (private-spec --bind-out) reaches the script as OT_KIT_BIND_OUT, so the
         # kit-rtl export names its tie audit and gen's COUNT_STRAP_EVIDENCE_CHECK reads it (was UNVERIFIED, tie_audit None, on every private HEAD kit)
         kbo = f"OT_KIT_BIND_OUT={q(kr['bind_out'])} " if kr.get("bind_out") else ""
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(tsrc)} && {kbo}TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
-                                       + kit_rtl_closure_cmd(W, src), gh, roam=False))
+        producer = f"cd {q(tsrc)} && {kbo}TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
+        producer += kit_rtl_closure_cmd(W, src)
+        if rtl_input:
+            identity_cmd = kit_rtl_handoff_cmd("identity", identity_request)
+            producer += f'rc=$?; if [ "$rc" = 0 ]; then {identity_cmd} || true; fi; exit "$rc"'
+        rc, txt = run("kit_rtl", otrun(8, 2, W, producer, gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)
+        if rtl_input:
+            try:
+                rtl_identity = kit_rtl_handoff_result(txt)
+            except ValueError:
+                print("KW_KIT_RTL_HANDOFF unavailable for this producer; keeping ordinary GEN", flush=True)
         if ks_on:
             rc, txt = run("kit_store_fl", remote(ks_cmd(f"localize-filelist {q(W)}/rtl/kit_rtl.f --kit-root {q(W)} "
                                                         f"--kit-inputs {q(W)}/kit_inputs")), idempotent=True)
@@ -12307,12 +12422,23 @@ def _run_item(spec_path, resume_reviewed=False):
         rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh, roam=False))
         if rc:
             return fail("kit_topology", txt)
-    if not core and kit_rtl_arg:
+    if not core and kit_rtl_arg and not reuse_applied:
         # Native preparation owns the original complete bind and mutates only
         # localized attempt sources. Publish the portable closure after it succeeds.
         rc, txt = run("kit_rtl_closure", remote(kit_rtl_closure_cmd(W, src, "seal", chain=False)), idempotent=True)
         if rc:
             return fail("kit_rtl_closure", txt)
+        if rtl_identity:
+            rc, txt = run("kit_rtl_publish", remote(kit_rtl_handoff_cmd("publish", {
+                "rtl": rtl_path, "identity": rtl_identity,
+            })), idempotent=True)
+            try:
+                if rc:
+                    raise ValueError(txt.strip()[-600:])
+                KRR.write(rtl_receipt_path, {"host": G, "rtl": rtl_path,
+                                             "payload": kit_rtl_handoff_result(txt)})
+            except (OSError, ValueError) as exc:
+                print(f"KW_KIT_RTL_HANDOFF publish unavailable; keeping ordinary GEN: {exc}", flush=True)
     if not core and str(sp.get("seal_derived") or "report") != "off":
         _sdrc, _sdtxt = run("seal_derived", remote(seal_derived_cmd(tsrc, src, plan_ov, T, W)), idempotent=True)
         _sdl, _sdw = seal_derived_summary(_sdtxt)
@@ -23087,6 +23213,8 @@ def main(argv=None):
     ps_.add_argument("--lane", default="", help="owner lane (default $OT_LANE)")
     ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
     ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
+    ps_.add_argument("--reuse-kit-rtl-from", metavar="ATTEMPT_DIR",
+                     help="reuse the exact sealed early RTL output of a completed supported private type attempt")
     ps_.add_argument("--resume-from", metavar="ATTEMPT_DIR", help="reuse valid synth/floorplan checkpoints from this completed attempt of the same type")
     ps_.add_argument("--restart-at", choices=PRIVATE_RESTART_STAGES, help="restart no later than this stage (default place when --resume-from is set)")
     ps_.add_argument("--kind", default="type")
