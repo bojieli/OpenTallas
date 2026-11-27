@@ -12,6 +12,16 @@ Codex opened floorplan, density, and available path overlays for the 17 exact re
 
 The remaining renders cover canary t12, two t50 variants, t21, t28, t45, t29 GP and GRT, t40, t24, and t38 GP and GRT. The exact queue records identify checkpoints and residual hot spots. The canary, t21, t28 and both t50 variants have geometry-only coverage because their retained render bundle contains no stage timing paths. t29 and t38 GRT have positive setup and still carry hold debt.
 
-Three indexed GP attempts lack reviewable images under the recorded render paths. E9 leaf t54 and station t52 are FAILED and E8 station t30 is GONE. The retained t52 GRT already has a separate structural verdict. These records do not count as positive reviews.
+The E9 leaf t54 and station t52 GP renderers selected invalid zero-byte `3_3_place_gp.odb` aliases. Both kits retained exact detailed placement renders, which were opened and recorded at their actual stage. E8 station t30 is GONE and has no retained checkpoint. The original GP rows retain their failure status.
+
+| Recovered stage | Finding |
+| --- | --- |
+| Leaf `t54__cl706d9749` DP `8212961e4e4a` | Opposing south efall and pad pins to north CLAND. The leafdown q[594] branch spans 1,920.9 µm. The SRAM rows and the two thin central hard regions create a shared throat. |
+| Same t54 failed GRT `ccb33e6ff3d3` | The throat near (569,409) reaches density 0.983, the GRT grid peaks at 119%, and 25,395 cells exceed 90%. The CA face fix has a separate source packet. Route remains held for the macro throat and leafdown fanout. |
+| Station t52 DP `af3075510085` | Macro-free floorplan. Sparse north and south row bands, with 538.3 µm maximum fanout spread, led by `u_rrl_104`. The retained GRT has 81% maximum congestion and zero grid cells above 90%. The existing independent GRT verdict retains its scope. |
+
+The retained native GRT reports identify a common virtual reset ingress defect on t1, BKSEL, t38 and t29. The explicit min input delay is −40 ps and uncertainty is 12.5 ps on all four. Their local `arst_n` to `u_rst_in/q` hold slacks are −31.66, −51.58, −59.44 and −61.44 ps. Relative to each local virtual clock, the effective parent minima at break-even are −8.34, +11.58, +19.44 and +21.44 ps. The two phase groups use different virtual clock latencies. The matched parent arrival remains open.
+
+The v6 leaf count-strap repair uses five exact guarded entries across t35, t70 and t54. The 11 moved M7 pins affect 128 retained first non-buffer loads. The guarded source patch, before/after images and stock track/PG access checks are under `epyc12:/srv/opentallas-scratch2/claude/codex-s81-leaf-ca-faces-v6-1126/r2` with patch SHA `8d95e2390455`. The source visual review applies to those pin moves. Actual changed-kit visual review and the other physical holds remain open.
 
 The local inspection sheets and reports are under `/srv/opentallas-scratch/claude/codex-visual-s81-1126/noncol_restart_1612`. The canonical queue entries retain each host, kit and render path.
