@@ -844,3 +844,5 @@
   [redirect] S81-OWN-COLH10 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-26 16:07 PST RENDERS >1 h NO VERDICT [VIS-REOWN -> S81-OWN-DSDV, S81-INT-R2; cc FP-CONVERGE-S81] 1 landed render(s) in lanes/VIS-QUEUE.tsv that you own have no verdict row yet. Spawn your own Fable/Opus review and append the verdict row (same kit + checkpoint): S81 dsdv_slice_c1x_C__t8 PLACE-GP 11h50m epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/dsdv_slice_c1x_C__t8_1124154058/gen/dsdv_slice_c1x_C__t8/vis_review/place-gp-1126-0415PST
   [redirect] S81-OWN-DSDV -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-26 17:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R2; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (23.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
