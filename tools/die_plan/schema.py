@@ -2179,7 +2179,8 @@ SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties"
 # CLK-LAND-CLEAR (CLASS-OWNERS-B C-CLK-LAND-OBS 11-26, clk_land_clear.py): opt-in, default absent = byte-identical; clock taps, reserved die clock
 # sites and relay seats inside a hard macro body / halo / OBS stack are re-sited in P.types
 SCHEMA["properties"]["clk_land_clear"] = {"type": "object", "additionalProperties": False, "properties": {
-    "enable": {"type": ["integer", "boolean"]}, "types": {"type": "array", "items": {"type": "string"}},
+    "enable": {"type": ["integer", "boolean"]}, "land_clear_um": {"type": "number", "minimum": 0},  # clk_land_clear._opts reads it (P-FLAG-SCHEMA-UNREGISTERED)
+    "types": {"type": "array", "items": {"type": "string"}},
     "classes": {"type": "array", "items": {"enum": ["tap", "reserved", "relay"]}},
     "clear_um": {"type": "number", "minimum": 0}, "max_move_um": {"type": "number", "exclusiveMinimum": 0}}}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
@@ -2198,6 +2199,10 @@ SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": Fals
 SCHEMA["properties"]["pin_track_pg"] = {"type": "object", "additionalProperties": False, "properties": {
     "pg": {"anyOf": [{"type": "boolean"}, {"type": "integer", "enum": [0, 1]}]},
 }}
+# P-FLAG-SCHEMA-UNREGISTERED 11-27 (test_schema_generator_keys.py): top-level plan inputs the tools already read but the schema did not list.
+SCHEMA["properties"]["rtl_local_allow"] = {"type": ["array", "object"]}      # adv_tree_drift: deliberate private RTL edits (paths or {path: why})
+SCHEMA["properties"]["census_fork_modules"] = {"type": "string", "minLength": 1}   # census_cov: regex of broadcast fork / relaunch leaf modules
+SCHEMA["properties"]["plan_root"] = {"type": ["string", "array"], "items": {"type": "string"}}   # plan_inputs / pin_track_pg / reset_tree: extra input roots
 SCHEMA["properties"]["street_sizing"] = {"type": "object", "additionalProperties": False, "properties": {
     "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0}}}
 

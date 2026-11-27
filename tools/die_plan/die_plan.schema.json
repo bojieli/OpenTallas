@@ -11542,6 +11542,10 @@
       "boolean"
      ]
     },
+    "land_clear_um": {
+     "type": "number",
+     "minimum": 0
+    },
     "types": {
      "type": "array",
      "items": {
@@ -11642,6 +11646,25 @@
       }
      ]
     }
+   }
+  },
+  "rtl_local_allow": {
+   "type": [
+    "array",
+    "object"
+   ]
+  },
+  "census_fork_modules": {
+   "type": "string",
+   "minLength": 1
+  },
+  "plan_root": {
+   "type": [
+    "string",
+    "array"
+   ],
+   "items": {
+    "type": "string"
    }
   },
   "street_sizing": {
