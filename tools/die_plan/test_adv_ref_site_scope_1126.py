@@ -40,7 +40,7 @@ def fake_ref_site(monkeypatch):
 
 def test_ref_site_is_die_context_with_scope_env():
     assert "REF-SITE" in PGP.ADV_DIE_CONTEXT and "OT_ADV_REFSITE_TYPES" in PGP.ADV_SCOPE_ENV
-    assert "RESET-NAME" in PGP.ADV_DIE_CONTEXT and "OT_ADV_RESETNAME_TYPES" in PGP.ADV_SCOPE_ENV
+    assert "RESET-NAME" in PGP.ADV_DIE_CONTEXT and "OT_ADV_RESETNAME_TYPES" not in PGP.ADV_SCOPE_ENV
 
 
 def test_scoped_advisory_runs_ref_site_on_whole_plan_limited_to_scope(monkeypatch, tmp_path):

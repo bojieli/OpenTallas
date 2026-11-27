@@ -1,4 +1,6 @@
 """adv_reset_names.py (ADV-RESET-NAME, TAP-GRID-R5 11-23).   python3 -m pytest -q tools/die_plan/test_adv_reset_names.py"""
+import json
+import os
 import sys
 from pathlib import Path
 
@@ -49,3 +51,41 @@ def test_tree_error_is_not_checked_not_raised():
 
 def test_registered_as_advisory():
     assert ("RESET-NAME", "adv_reset_names") in PA.CHECKS
+
+
+def test_pre_scope_reuses_warmed_tree_in_the_same_inputs_context(monkeypatch, tmp_path):
+    import plan_gate_pre as PGP
+    import reset_tree as RT
+
+    raw = json.loads((Path(__file__).with_name("examples") / "tiny_plan.json").read_text())
+    raw["reset"]["root_part"] = "pa"  # root type lies outside the judged scope
+    raw["partition_types"]["mid"]["clock"] = {"local_ref": "rst_rl_35"}
+    raw["partition_types"]["src"]["clock"] = {"tap_ref": "clk_t10"}
+    raw["partition_types"]["sink"]["clock"] = {"local_ref": "rst_rl_999"}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    tree = tmp_path / "source"
+    tree.mkdir()
+    monkeypatch.setattr(PA, "CHECKS", (("RESET-NAME", "adv_reset_names"),))
+    monkeypatch.delenv("OT_ADV_RESETNAME_TYPES", raising=False)
+    monkeypatch.delenv("OT_ADV_REFSITE_TYPES", raising=False)
+    monkeypatch.delenv("OT_PRE_ADV_SCOPE", raising=False)
+    monkeypatch.delenv("OT_PLAN_ADVISORY", raising=False)
+    monkeypatch.setenv("OT_RESET_POOL_J", "1")
+    seen = []
+
+    def cold_solve(P, tn, reach=None):
+        seen.append((P, tn, os.getcwd(), os.environ.get("OT_REPO_ROOT")))
+        return {"relays": [{"q": "rst_rl_34"}]}
+
+    monkeypatch.setattr(RT, "for_type_uncached", cold_solve)
+    classes = {"LANDREMAP", "STARTSETTLE", "RESETPUB", "ANCHORDRY", "RSTREACH", "DERIVEDNAME"}
+    selected = PGP.reset_solve_types(str(tree), str(plan), raw, classes)
+    assert selected["plan"] == {"mid": ["RESET-NAME"], "sink": ["RESET-NAME"]}  # tap-only ref does not need a tree
+    warmed = {}
+    scope = {"mid"}
+    PGP.reset_prewarm(str(tree), str(plan), PGP.scope_selection(selected, scope), warmed_plans=warmed)
+    out = PGP.advisory_lines(str(tree), str(plan), scope=scope, reset_plan=warmed["plan"])
+    assert seen == [(warmed["plan"], "mid", str(tree), str(tree))]  # one solve in RESETWARM, no cold advisory solve
+    assert len(out) == 2 and "mid:" in out[0] and "rst_rl_35" in out[0] and "1 of 1" in out[1]
+    assert "OT_ADV_RESETNAME_TYPES" not in os.environ and "OT_ADV_REFSITE_TYPES" not in os.environ

@@ -54,24 +54,40 @@ def stale(ref, relays, taps):
     return out
 
 
-def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=None, **_kw):
+def configured_types(scope=None, env=None):
+    env = os.environ if env is None else env
+    only = {name for name in env.get("OT_ADV_RESETNAME_TYPES", "").split(",") if name}
+    return only or scope
+
+
+def candidates(raw, types=None):
+    rows = (raw or {}).get("partition_types") or {}
+    selected = []
+    for name, row in sorted(rows.items()):
+        if not isinstance(row, dict) or row.get("hard") or (types is not None and name not in types):
+            continue
+        references = refs(row)
+        if references:
+            selected.append((name, references))
+    return selected
+
+
+def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=None,
+             reset_plan=None, reset_types=None, **_kw):
     here = Path(__file__).resolve().parent
     if str(here) not in sys.path:
         sys.path.insert(0, str(here))
-    types = (raw or {}).get("partition_types") or {}
     rp = ((raw or {}).get("reset") or {}).get("root_part")
     if rp and rp not in {x.get("name") for x in (raw or {}).get("partitions") or [] if isinstance(x, dict)}:
         # P-FALSE-GREEN-1126: a scoped view dropped the reset root partition; the tree solve would die with KeyError (sp5)
         raise KeyError(f"reset.root_part {rp!r} is not a partition of this plan view: run RESET-NAME on the whole plan (OT_ADV_RESETNAME_TYPES limits the types)")
-    only = set(filter(None, os.environ.get("OT_ADV_RESETNAME_TYPES", "").split(",")))
-    todo = [(tn, r) for tn, t in sorted(types.items()) if isinstance(t, dict) and not t.get("hard")
-            and (not only or tn in only) for r in [refs(t)] if r]
+    todo = candidates(raw, configured_types() if reset_types is None else reset_types)
     if not todo:
         return []
     if tree_fn is None or taps_fn is None:
         import schema
         import reset_tree as RT
-        P = schema.Plan(raw, Path(plan_path).parent / "die_plan.json")
+        P = reset_plan if reset_plan is not None else schema.Plan(raw, Path(plan_path).parent / "die_plan.json")
         tree_fn = tree_fn or (lambda tn: {x["q"] for x in RT.for_type(P, tn)["relays"]})
         taps_fn = taps_fn or (lambda tn: {p[0] for p in schema.tap_grid(P, tn)})
     budget = float(budget_s if budget_s is not None else os.environ.get("OT_ADV_RESETNAME_BUDGET_S", "100"))

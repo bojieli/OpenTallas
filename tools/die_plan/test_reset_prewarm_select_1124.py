@@ -30,7 +30,7 @@ def test_landremap_reads_equal_selection(tmp_path):
         seen.add(("plan", tn))
         return set(), None
     G.check_landremap(str(np_), str(bp), tree_fn=tree_fn, repick_fn=repick_fn)
-    sel = G.reset_solve_types(str(tmp_path), str(np_), new, {"RSTREACH", "DERIVEDNAME"}, landremap_base=str(bp), env={})
+    sel = G.reset_solve_types(str(tmp_path), str(np_), new, {"ADVISORY", "RSTREACH", "DERIVEDNAME"}, landremap_base=str(bp), env={})
     assert seen == {(side, tn) for side in ("plan", "base") for tn in sel[side]} == {("plan", "a"), ("base", "a")}
 
 
