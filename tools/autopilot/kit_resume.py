@@ -568,7 +568,7 @@ def _iso_ts(s):
         return None
 
 
-def decide(new, old, allow_nochange=False):
+def decide(new, old, allow_nochange=False, latest_start=None):
     """-> decision dict {decision: resume|full|nochange, start, reuse[], why, changed[], fingerprints}"""
     d = {"schema": SCHEMA, "decision": "full", "start": "synth", "reuse": [], "why": "", "changed": []}
     for m, w in ((new, "new"), (old, "old")):
@@ -591,6 +591,8 @@ def decide(new, old, allow_nochange=False):
     upto = ck.get("upto")
     s_ck = STEPS[IDX[upto] + 1] if upto else "synth"
     start = minstage(s_fp, s_ck)
+    if latest_start is not None:
+        start = minstage(start, latest_start)
     d["start_fingerprint"], d["start_checkpoint"] = s_fp, s_ck
     if start == "synth":
         why = []
@@ -610,7 +612,8 @@ def decide(new, old, allow_nochange=False):
         d["why"] = "ORFS image created after (or unknown vs) the old checkpoint: cannot prove the same tools"
         return d
     d.update(decision="resume", start=start, reuse=list(STEPS[:IDX[start]]),
-             why=f"first changed step {s_fp}, old attempt complete through {upto}")
+             why=f"first changed step {s_fp}, old attempt complete through {upto}"
+                 + (f", restart no later than {latest_start}" if latest_start else ""))
     return d
 
 
@@ -977,6 +980,9 @@ def main(argv):
     a.add_argument("--runner")
     a.add_argument("--image", default="openroad/orfs:asap7lock")
     a.add_argument("--no-checkpoint", action="store_true")
+    a = sub.add_parser("checkpoint")
+    a.add_argument("kit")
+    a.add_argument("--run-files", action="store_true", help="include the file inventory required for a cross-host relay")
     a = sub.add_parser("apply")
     a.add_argument("kit")
     a.add_argument("--src", required=True)
@@ -1000,6 +1006,11 @@ def main(argv):
     elif a.cmd == "manifest":
         m = manifest(a.kit, a.cutoff, a.runner, a.image, not a.no_checkpoint)
         print("KW_RESUME_MANIFEST " + json.dumps(m))
+    elif a.cmd == "checkpoint":
+        m = {"kit": os.path.abspath(a.kit), "checkpoint": checkpoint(a.kit)}
+        if a.run_files:
+            m["run_files"] = run_tree(a.kit)
+        print("KW_RESUME_CHECKPOINT " + json.dumps(m))
     elif a.cmd == "apply":
         d = json.load(sys.stdin if a.decision == "-" else open(a.decision))
         try:
