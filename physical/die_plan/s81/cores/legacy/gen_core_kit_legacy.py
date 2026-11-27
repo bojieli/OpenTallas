@@ -1604,6 +1604,29 @@ def pin_gate_refusal(module, pg):
             f"pins, e.g. {pg['examples']}) -- fix the plan pin assignment, not the kit")
 
 
+def stage_core_pg(kd, cfg):
+    """Close supplies after core optimizers, using the kit's persisted PDN rules."""
+    from core_infra import cfg_effective
+
+    for stage in ("POST_GLOBAL_PLACE", "POST_RESIZE", "POST_DETAIL_PLACE",
+                  "POST_CTS", "PRE_FINAL_REPORT"):
+        var = stage + "_TCL"
+        previous = cfg_effective(cfg, var)
+        # Stock detailed placement does not insert cells. A custom hook can.
+        if stage == "POST_DETAIL_PLACE" and not previous:
+            continue
+        name = stage.lower() + "_core_pg"
+        hook = kd / (name + ".tcl")
+        if previous and (not re.fullmatch(r"/work/[A-Za-z0-9_.-]+\.tcl", previous)
+                         or not (kd / Path(previous).name).is_file()):
+            raise ValueError(f"{kd.name}: cannot preserve {var} = {previous!r}")
+        hook.write_text((f"source {{{previous}}}\n" if previous else "") +
+                        "uplevel #0 [list source /work/pg_connect.tcl]\n"
+                        f"ot_pg_connect_all {name}\n"
+                        f"ot_pg_require_bound {name}\n")
+        cfg.append(f"override export {var} = /work/{hook.name}")
+
+
 def planned_tree_cts(kd, cfg):
     """S81-CORE-LAT-R12 (ODB-0370 root cause): a master-plan core tree (core_infra, 12.7c/12.8b) is built from the
     plan before GPL with dont_touch cells and nets.  TritonCTS ignores dont_touch nets, re-buffers the planned tree and
@@ -2375,6 +2398,8 @@ def main():
                       gpl_hook=kd / "face_flops.tcl",
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
+    if modern:
+        stage_core_pg(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     stage_native_clock_drt(kd, native_roots)
     if hcb:

@@ -41,6 +41,43 @@ def test_generators_ship_helper():
     assert "pg" in signoff.BLOCKING
 
 
+def test_s81_core_pg_stage_chains(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(HERE))
+    monkeypatch.syspath_prepend(str(REPO / "physical/die_plan/s81/cores/legacy"))
+    from gen_core_kit_legacy import stage_core_pg
+    from core_infra import cfg_effective
+
+    for hook in ("regional.tcl", "custom_place.tcl", "ignored.tcl"):
+        (tmp_path / hook).write_text("# existing hook\n")
+    cfg = [
+        "override export POST_CTS_TCL = /work/regional.tcl",
+        "export POST_CTS_TCL = /work/ignored.tcl",
+        "export POST_DETAIL_PLACE_TCL = /work/custom_place.tcl",
+    ]
+    stage_core_pg(tmp_path, cfg)
+    for stage, previous in {
+        "POST_GLOBAL_PLACE": None, "POST_RESIZE": None,
+        "POST_DETAIL_PLACE": "custom_place.tcl", "POST_CTS": "regional.tcl",
+        "PRE_FINAL_REPORT": None,
+    }.items():
+        value = cfg_effective(cfg, stage + "_TCL")
+        script = (tmp_path / Path(value).name).read_text()
+        lines = script.splitlines()
+        if previous:
+            assert lines.pop(0) == f"source {{/work/{previous}}}"
+        assert "pg_connect.tcl" in lines[0]
+        assert lines[1].startswith("ot_pg_connect_all ")
+        assert lines[2].startswith("ot_pg_require_bound ")
+    (tmp_path / "cts_post.tcl").write_text("# S81 scalar CTS hook\n")
+    scalar = ["export POST_CTS_TCL = /work/cts_post.tcl"]
+    stage_core_pg(tmp_path, scalar)
+    scalar_hook = tmp_path / Path(cfg_effective(scalar, "POST_CTS_TCL")).name
+    assert scalar_hook.read_text().startswith("source {/work/cts_post.tcl}")
+    assert cfg_effective(scalar, "POST_DETAIL_PLACE_TCL") is None
+    with pytest.raises(ValueError, match="cannot preserve POST_RESIZE_TCL"):
+        stage_core_pg(tmp_path, ["export POST_RESIZE_TCL = /work/missing.tcl"])
+
+
 TCL_MOCK = r"""
 # minimal OpenDB mock: inst u1 (dont_touch, VDD open), u2 (bound), u3 (VSS on a SIGNAL net)
 proc mk {name dt nets} { set ::dt($name) $dt; foreach {p n} $nets { set ::net($name/$p) $n } }
