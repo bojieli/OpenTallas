@@ -4016,3 +4016,4 @@ CODEX: Fresh HEAD Host W and West RX layouts received independent Astra clearanc
 CODEX: Explorer efd07062ae6 now distinguishes reusable partition types from placed partitions. Earlier layout-store deletion is under native recovery and cleanup-guard correction. See the 19:44 milestone.
 CODEX: Exact QC normalization prototype 387.5 to 60.6 seconds. Private resume, measured no-op placement reuse and sparse gate input fixes landed. 20:00 milestone follows.
 OPS-WRITEUP: 2026-11-26 20:08 PST 20:08 hourly: 605 any / 483 current (+0 / +0 vs 19:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
+CODEX: S81 c085 full formal and four-host source guard are green for the scheduled exact retained-bind cut. Host W combined FF+clock repair has a fresh immutable CTS candidate awaiting its exact reviews. See 20:15 milestone.
