@@ -196,6 +196,32 @@ def _sub(argv, cwd, timeout=STEP_TIMEOUT_S):
         return 99, f"{type(e).__name__}: {e}"
 
 
+def pre_failure_record(output, tree, plan, plan_sha256):
+    """Read the exact native PRE failure receipt before the advisory output is truncated."""
+    match = re.search(r"^LIST PRE-RECORD (.+) plan_sha256 ([0-9a-f]{12}) result FAIL$", output, re.MULTILINE)
+    if not match:
+        return {}
+    name, short_sha = match.groups()
+    path = Path(tree, name)
+    if (not re.fullmatch(short_sha + r"[0-9a-f]{4}", path.parent.name)
+            or not re.fullmatch(r"[0-9a-f]{16}\.json", path.name)):
+        return {}
+    diagnostic = {"record": str(path)}
+    try:
+        record = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return diagnostic
+    if (not isinstance(record, dict) or record.get("record") != "PRE-RECORD-1125"
+            or record.get("plan") != str(plan) or record.get("tree") != str(tree)
+            or record.get("result") != "FAIL" or not str(record.get("plan_sha256") or "").startswith(path.parent.name)
+            or (plan_sha256 and record.get("plan_sha256") != plan_sha256)):
+        return {}
+    findings = record.get("fails")
+    if not isinstance(findings, list) or not all(isinstance(finding, str) for finding in findings[:5]):
+        return diagnostic
+    return dict(diagnostic, findings=[finding[:500] for finding in findings[:5]], finding_count=len(findings))
+
+
 def load_g0_baseline(spec):
     """Read an explicitly pinned review record; it never changes plan or check output."""
     if not spec:
@@ -405,7 +431,7 @@ def run_static(tree, plan, *args, tool_root=None, **kw):
 
 
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
     it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
@@ -438,7 +464,12 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     band_base_ready = band_base and os.path.isfile(band_base)
     pre_base = remap_base if remap_base and os.path.isfile(remap_base) else (band_base if band_base_ready else None)
     pre_tool = Path(dp, "plan_gate_pre.py")
-    if pre_base and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
+    pre_options = pre_tool.read_text(errors="replace") if pre_tool.is_file() else ""
+    # ROWS compares consumer localization with the adopted live plan. The explicit remap
+    # base is a separate parent for LANDREMAP and ISTCYC.
+    if pre_baseline and os.path.isfile(pre_baseline) and "--baseline-plan" in pre_options:
+        pre += ["--baseline-plan", str(pre_baseline)]
+    if pre_base and "--remap-base" in pre_options:
         pre += ["--remap-base", str(pre_base)]
     # P-PUBGATE-BOR (KV-INT-R2 11-26): the bound checks (RSTREACH / MACROGHOST / SEATMATCH / GENDRY-KITRTL) read --elab-dir, else the tree's
     # <plan dir>/bind_of_record, which a published tree carries frozen from an older cut (KV d7c233ac: plan_c bind -> false RSTREACH on
@@ -472,6 +503,10 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
                      "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
                      "reset_solved": resetpub_solve_default(plan),
                      "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
+    if rc1:
+        pre_failure = pre_failure_record(t1, pre_tree, plan, plan_sha256)
+        if pre_failure:
+            res["pre_g0"]["pre_failure"] = pre_failure
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
@@ -487,7 +522,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -501,6 +536,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + "".join(f" --scan {q(str(x))}" for x in scan or []) + "".join(f" --scan-asbuilt {q(str(x))}" for x in scan_asbuilt or [])
            + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
            + (f" --band-base {q(str(band_base))}" if band_base else "")
+           + (f" --pre-baseline {q(str(pre_baseline))}" if pre_baseline else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
            + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
            + (f" --tool-root {q(str(tool_root))}" if tool_root else ""))
@@ -623,6 +659,11 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             live = {}
         band_base = marker.get("band_base") or obj.get("band_base") or (live.get("plan") if live.get("plan") != plan else None)
         rec["band_base"] = band_base
+        # A candidate-supplied G0/remap comparator cannot authorize inherited rows.
+        pre_baseline = None
+        if live.get("src") == expect_source and live.get("event") == expect_event and live.get("plan") != plan:
+            pre_baseline = live.get("plan")
+        rec["pre_baseline"] = pre_baseline
         remap_base = marker.get("remap_base") or obj.get("remap_base")
         native_reset_receipt = marker.get("native_reset_receipt") or obj.get("native_reset_receipt")
         if remap_base:
@@ -654,11 +695,16 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         with CF.ThreadPoolExecutor(max_workers=1) as ex:
             fut = ex.submit(_dry)
             t0 = time.time()
+            pre_host = static_host or hosts[0]
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
-                                                                       native_reset_receipt=native_reset_receipt, tool_root=rt_root())))(
-                static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
+                                                                       native_reset_receipt=native_reset_receipt, tool_root=rt_root(),
+                                                                       pre_baseline=pre_baseline)))(
+                pre_host, tree, plan, marker.get("asbuilt"), plan_sha)
+            pre_failure = (st.get("pre_g0") or {}).get("pre_failure")
+            if pre_failure:
+                pre_failure["host"] = pre_host
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
             rec["checks"]["dry_gen"] = fut.result()
@@ -701,6 +747,7 @@ def main(argv=None):
     s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
     s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
     s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
+    s.add_argument("--pre-baseline", help="adopted plan for PRE baseline checks (normally shipped by run from the incumbent config)")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
@@ -713,7 +760,8 @@ def main(argv=None):
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
                                                    band_base=a.band_base, remap_base=a.remap_base,
-                                                   native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root)))
+                                                   native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root,
+                                                   pre_baseline=a.pre_baseline)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
@@ -721,7 +769,11 @@ def main(argv=None):
         return 1 if why else 0
     obj = json.loads(Path(a.candidate).read_text())
     rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit, gen_host=a.gen_host, static_host=a.static_host)
-    print(json.dumps({k: (v if k != "checks" else {c: (x or {}).get("verdict") for c, x in v.items()}) for k, v in rec.items()}))
+    summary = dict(rec, checks={c: (x or {}).get("verdict") for c, x in rec["checks"].items()})
+    pre_failure = (rec["checks"].get("pre_g0") or {}).get("pre_failure")
+    if pre_failure:
+        summary["pre_failure"] = pre_failure
+    print(json.dumps(summary))
     return 0 if rec["verdict"] == "PASS" else 1
 
 

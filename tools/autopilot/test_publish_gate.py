@@ -257,6 +257,35 @@ class Concurrent(unittest.TestCase):
         self.assertIn("gate_s", rec)
 
 
+def test_publish_gate_preserves_exact_pre_failure_after_truncated_advisories(tmp_path, monkeypatch):
+    tree, plan = mk_tree(str(tmp_path))
+    plan_sha = PG.sha256_file(plan)
+    record = tmp_path / "pre cache" / plan_sha[:16] / ("a" * 16 + ".json")
+    record.parent.mkdir(parents=True)
+    findings = ["FAIL ROWS-NO-PROOF nine source types lack emitted proof",
+                "FAIL ADV-RESET-NAME cbf_q00__cl1b5a6458: TREE-ERROR (_Timeout: )"]
+    rec = {"record": "PRE-RECORD-1125", "tree": str(tree), "plan": str(plan), "plan_sha256": plan_sha,
+           "result": "FAIL", "fails": findings}
+    record.write_text(json.dumps(rec))
+    out = f"LIST PRE-RECORD {record} plan_sha256 {plan_sha[:12]} result FAIL\n" + "PRE advisory\n" * 90
+    rc = 1
+
+    def sub(argv, cwd, timeout=None):
+        return (rc, out) if argv[2].endswith("plan_gate_pre.py") else (0, "")
+
+    monkeypatch.setattr(PG, "_sub", sub)
+    pre = PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    assert pre["verdict"] == "FAIL" and pre["pre_rc"] == 1 and pre["g0_rc"] == 0
+    assert "PRE-RECORD" not in pre["tail"]
+    assert pre["pre_failure"] == {"record": str(record), "findings": findings, "finding_count": 2}
+
+    record.write_text(json.dumps(dict(rec, plan_sha256=plan_sha[:-1] + ("1" if plan_sha[-1] != "1" else "2"))))
+    assert "pre_failure" not in PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    rc = 0
+    passed = PG.run_static(tree, plan, plan_sha256=plan_sha, work=tmp_path / "work")["pre_g0"]
+    assert passed["verdict"] == "PASS" and "pre_failure" not in passed
+
+
 class RtToolsForPreG0(unittest.TestCase):
     """PUBGATE-PREG0 11-23: PRE/G0 run the rt checkout's tools (tool_root), not the candidate tree's frozen copy, so rt fixes reach a published tree."""
     def setUp(self):
@@ -459,9 +488,17 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
         return pre, g0
 
     def test_remap_base_overrides_band_base_for_pre_only(self):
-        pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
+        incumbent = Path(self.td) / "incumbent.json"
+        incumbent.write_text("{}")
+        pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap), pre_baseline=str(incumbent))
         self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
+        self.assertEqual(pre[pre.index("--baseline-plan") + 1], str(incumbent))
         self.assertEqual(g0[g0.index("--band-base") + 1], str(self.band))
+
+    def test_candidate_comparators_cannot_grandfather_consumer_rows(self):
+        pre, _g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
+        self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
+        self.assertNotIn("--baseline-plan", pre)
 
     def test_without_remap_base_pre_keeps_band_base(self):
         pre, _g0 = self.calls(band_base=str(self.band))
@@ -504,8 +541,9 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
             got["cmd"] = argv[-1]
             return R()
         PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, remap_base="/b/rev.json",
-                         native_reset_receipt="/r/rc.json")
+                         native_reset_receipt="/r/rc.json", pre_baseline="/b/live.json")
         self.assertIn("--remap-base /b/rev.json", got["cmd"]); self.assertIn("--native-reset-receipt /r/rc.json", got["cmd"])
+        self.assertIn("--pre-baseline /b/live.json", got["cmd"])
 
     def test_run_gate_takes_both_from_the_candidate(self):
         c = mk_coord(self.td)
@@ -517,12 +555,16 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
             return {k: {"verdict": "FAIL", "why": "stub"} for k in ("schema", "pre_g0", "hashes", "contained")}
         PG.static_remote = fake
         try:
-            obj = dict(cand(self.tree, self.plan), remap_base="/b/rev.json", native_reset_receipt="/r/rc.json")
+            obj = dict(cand(self.tree, self.plan), remap_base="/b/rev.json", native_reset_receipt="/r/rc.json",
+                       band_base="/b/g0.json", pre_baseline="/candidate.json")
             rec = PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_must_not_run, TC=TC)
         finally:
             PG.static_remote = orig
         self.assertEqual((seen.get("remap_base"), seen.get("native_reset_receipt")), ("/b/rev.json", "/r/rc.json"))
         self.assertEqual((rec["remap_base"], rec["native_reset_receipt"]), ("/b/rev.json", "/r/rc.json"))
+        self.assertEqual(seen.get("band_base"), "/b/g0.json")
+        self.assertEqual(seen.get("pre_baseline"), "/p0")
+        self.assertEqual(rec["pre_baseline"], "/p0")
 
 
 class ForeignTree(unittest.TestCase):
