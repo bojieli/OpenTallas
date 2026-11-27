@@ -9014,6 +9014,14 @@ def _tree_precheck(a):
     except Exception as e:  # noqa: BLE001 - report only
         print(f"bind: TREE-PRECHECK not run: {type(e).__name__}: {str(e)[:200]}")
         return 0
+    try:
+        import plan_gate_pre as _G
+        raw = _G._load(a.plan)
+        types = raw.get("partition_types") or {}
+        scope = only_types_select(types, types)
+        lines += _G.check_bind_assets(raw, E.REPO, a.plan, scope)
+    except (OSError, ValueError, AttributeError, TypeError, BindError):
+        pass  # Existing schema and bind scope checks diagnose malformed input.
     for x in lines:
         print(f"bind: TREE-PRECHECK {x}", flush=True)
     try:                       # PRE-INPUT-STOP-1124: a missing input stops the bind before its elab (hours), unless PRE is warn / off
@@ -9370,12 +9378,12 @@ def _main(argv=None):
             print(f"bind: PLAN-PACKAGE {'WARNING' if _ok else 'ERROR'} {_msg}")
         if not _ok:
             return 2
+    if getattr(a, "types", None):
+        os.environ["OT_BIND_ONLY_TYPES"] = a.types
     if a.cmd in ("elab", "bind", "all") and getattr(a, "plan", None):
         _rc = _tree_precheck(a)    # PRE-SCHEMA-KEYS 11-24: SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH before the elab
         if _rc:
             return _rc
-    if getattr(a, "types", None):
-        os.environ["OT_BIND_ONLY_TYPES"] = a.types
     _AB_OVERRIDE["path"] = a.asbuilt
     try:                                   # P-FALSE-GREEN-1126: the plan file every bind JSON of this run names
         _pp = Path(a.plan).resolve()

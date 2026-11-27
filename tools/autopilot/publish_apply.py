@@ -24,6 +24,7 @@ the moment its tree is PUBLISHED:
   bind-fail writes dies.<die>.bind_fail {id, bind, items} first: the wave books those rows FAIL class BIND-FAIL until the bind changes.
 """
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import re
@@ -39,6 +40,7 @@ sys.path.insert(0, str(HERE))
 import apply_reviewed_tree_marker as A  # noqa: E402
 import flow_guard as FG  # noqa: E402
 import hold_records as HR  # noqa: E402
+import publish_bind_receipt as PBR  # noqa: E402
 sys.path.insert(0, str(HERE.parent / "fleet"))
 import ot_event_env as EE  # noqa: E402
 
@@ -390,10 +392,15 @@ def postbind_spec(obj, stamp, host="", live=None):
         pin = str(cfg.get("gen_tools_pin") or marker.get("tools_sha") or cfg.get("tools_sha") or "")
         if pin and not re.fullmatch(r"[0-9a-f]{12}([0-9a-f]{28})?", pin):
             raise ValueError(f"post-bind: invalid tools pin {pin!r}")
-    return {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
+    spec = {"host": host or hosts[0], "tree": tree, "copy": f"{tree}_postbind_{stamp}", "plan": _rel(args["plan"], tree),
             "asbuilt": _rel(args["asbuilt"], tree) if args["asbuilt"] else "", "env": env,
             "bind_out": args["bind_out"], "tools_sha": pin,
             "tools_rt_root": str(cfg.get("tools_rt_root") or "/srv/opentallas-scratch2/claude/rt")}
+
+
+    if (marker.get("manifest_hash") or marker.get("src_manifest_sha")) and marker.get("plan_sha256"):
+        spec["receipt_inputs"] = PBR.receipt_inputs(spec, marker)
+    return spec
 
 
 def postbind_parallel_check_sh(binder, identity, rt_root=""):
@@ -404,7 +411,7 @@ def postbind_parallel_check_sh(binder, identity, rt_root=""):
     hint = ""
     if rt_root:
         cur = f"$(readlink -f -- {q(rt_root)}/current 2>/dev/null)"
-        hint = (f"hint=\ncur={cur}\n"
+        hint = (f"hint=\ncur={cur} || cur=\n"
                 "if [ -n \"$cur\" ] && grep -Fq -- 'BIND_PARALLEL_REQUIRED: whole-die emit' \"$cur/tools/die_plan/bind.py\" 2>/dev/null; then\n"
                 "    hint=\" Current parallel-capable pin: $(basename \"$cur\") (set the candidate's config.gen_tools_pin / marker.tools_sha to it; "
                 "it is not selected automatically).\"\nfi\n")
@@ -457,13 +464,20 @@ def postbind_run_sh(s):
     ab = f" --asbuilt {q(s['asbuilt'])}" if s["asbuilt"] else ""
     env = "".join(f"export {k}={q(v)}\n" for k, v in sorted(s["env"].items()))
     runtime = postbind_runtime_sh(s)
+
     tools = '"$runtime"/tools/die_plan' if runtime else "tools/die_plan"
+    inputs_name = q(str(Path(L) / PBR.INPUT))
+    result_name = q(str(Path(L) / PBR.RESULT))
+    inputs = s.get("receipt_inputs")
+    record_inputs = f"printf '%s\\n' {q(json.dumps(inputs, sort_keys=True))} > {inputs_name} || exit 6\n" if inputs else ""
+    record_result = f"""printf '{{"elab":%s,"bind":%s,"latcheck":%s}}\\n' "$e" "$b" "$l" > {result_name} || exit 6\n""" if inputs else ""
     return (f"#!/bin/bash\n# publish_apply.py post-bind: strict bind + LATCHECK of {s['tree']} in its hardlink copy\nset -uo pipefail\n"
             "export PYTHONDONTWRITEBYTECODE=1\n"
             f"{env}"
             # Older pinned runtimes still bound auto workers by JMAX. Preserve an explicit lower cap.
             'export OT_BIND_EMIT_JMAX="${OT_BIND_EMIT_JMAX:-${OT_HEAVY_THREADS:-8}}"\n'
             f"cd {q(s['copy'])} || exit 6\n{runtime}mkdir -p {q(L)}/out\n"
+            f"{record_inputs}"
             f"python3 -I -B {tools}/bind.py elab {q(s['plan'])}{ab} --out {q(L)}/out --strict --mem {POSTBIND_MEM} > {q(L)}/elab.log 2>&1\n"
             f"e=$?; echo ELAB_RC=$e; tail -n 1 {q(L)}/elab.log | cut -c1-300\n"
             f"python3 -I -B {tools}/bind.py bind {q(s['plan'])}{ab} --out {q(L)}/out --strict > {q(L)}/bind.log 2>&1\n"
@@ -472,6 +486,7 @@ def postbind_run_sh(s):
             f"python3 -I -B {tools}/lane_asbuilt_latency.py {q(L)}/out {q(s['plan'])}{ab} --pricing as-bound --tsv {q(L)}/latcheck.tsv "
             f"--json {q(L)}/latcheck.json > {q(L)}/latcheck.log 2>&1\n"
             f"l=$?; echo LATCHECK_RC=$l; tail -n 2 {q(L)}/latcheck.log | cut -c1-300\n"
+            f"{record_result}"
             f"echo POSTBIND_DONE elab $e bind $b latcheck $l\nexit $(( e || b || l ))\n")
 
 
@@ -493,7 +508,10 @@ def start_postbind(C, obj, lane, die, run=subprocess.run, host="", stamp=None, l
     """start the post-apply strict bind + LATCHECK as a hub user unit: ssh-prep the copy, ot-run the job there (plan/bind admission), post the result.
     -> (unit or None, text)"""
     stamp = stamp or time.strftime("%m%d%H%M%S")
-    s = postbind_spec(obj, stamp, host, live_die_cfg(C, die))
+    live = live_die_cfg(C, die)
+    if not auto_adopt:
+        live = publication_live_cfg(obj, live)
+    s = postbind_spec(obj, stamp, host, live)
     if not s:
         return None, "no bind (candidate is not kit_rtl mode bind)"
     ld = Path(log_dir or os.path.expanduser("~/.local/state/ot-postbind"))
@@ -558,6 +576,11 @@ def adopt_bind_seal_sh(plan_):
             f"cp -a {o} {d}.part\nchmod -R a-w {d}.part\nmv {d}.part {d}\necho ADOPT_SEAL {d}\n")
 
 
+def bind_copy_of_record(cfg, copy):
+    old = [path for path in cfg.get("bind_copy_of_record") or [] if isinstance(path, str) and path != copy]
+    return [copy] + old[:3]
+
+
 def adopt_bind_candidate(cfg, die, dest):
     """the candidate shape bind_check reads: the die's live tree and plan with the NEW bind_out"""
     d = cfg["dies"][die]
@@ -617,8 +640,7 @@ def cmd_adopt_bind(a, run=subprocess.run, check_fn=None):
     n_items = len(plan_["patch"]) - 1
     # a bind of record's source copy is a live reference: any absolute scratch path in a die block is on the delete guard's protected list (build_protected walks every key), so the copy is
     # registered under dies.<die>.bind_copy_of_record (newest 4, like bound_trees); a lane can no longer delete the tree the bind of record reads (KV D25e)
-    prev = [p for p in ((cfg["dies"][a.die].get("bind_copy_of_record")) or []) if isinstance(p, str) and p != a.copy][:3]
-    plan_["patch"] = plan_["patch"] + [{"op": "add", "path": f"/dies/{a.die}/bind_copy_of_record", "value": [a.copy] + prev}]
+    plan_["patch"] += [{"op": "add", "path": f"/dies/{a.die}/bind_copy_of_record", "value": bind_copy_of_record(cfg["dies"][a.die], a.copy)}]
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
         json.dump(plan_["patch"], f)
     r = run([sys.executable, "-I", str(HERE / "kit_wave_edit.py"), "--coord", str(C), "--message",
@@ -751,7 +773,7 @@ def with_bind_out(obj, dest):
 def cmd_post_bind(a, run=subprocess.run):
     obj = json.loads(Path(a.candidate).read_text())
     m = obj.get("marker", obj)
-    unit, txt = start_postbind(a.coord, obj, a.lane, a.die or obj.get("die") or m.get("die") or "die", run=run, host=a.host or "")
+    unit, txt = start_postbind(a.coord, obj, a.lane, a.die or obj.get("die") or m.get("die") or "die", run=run, host=a.host or "", auto_adopt=not getattr(a, "no_auto_adopt", False))
     print(f"POST-BIND {txt}")
     return 0 if unit else 2
 
@@ -770,6 +792,77 @@ def postbind_required_problem(obj, no_post_bind=False):
     return ""
 
 
+def publication_live_cfg(obj, live):
+    """Project the same plan-sensitive config apply_marker will use after its source switch."""
+    marker = obj.get("marker", obj)
+    data = json.loads(json.dumps(live))
+    HR._deep_set(data, marker.get("config") or {})
+    HR._deep_set(data.setdefault("die_gen_env", {}), marker.get("die_gen_env") or {})
+    A.repoint_gen_env(data, live.get("src"), marker["tree"], exists=lambda _: True)
+    return data
+
+
+def publication_receipt_spec(obj, live):
+    # A fallback tree-relative match is useful to the normal bind worker, but a
+    # reusable receipt must attest the exact files the publication will read.
+    args, _hosts = candidate_bind_args(obj)
+    if not args:
+        raise ValueError("receipt candidate has no selected bind")
+    tree = Path(args["src"])
+    if any(not Path(args[key]).is_absolute() or not Path(args[key]).is_relative_to(tree) or ".." in Path(args[key]).parts
+           for key in ("plan", "asbuilt")):
+        raise ValueError("receipt plan and asbuilt must be inside the selected source tree")
+    spec = postbind_spec(obj, "reuse", live=live)
+    if not spec or not spec.get("receipt_inputs") or not spec.get("tools_sha"):
+        raise ValueError("receipt requires source and plan hashes, pinned tools, and generation hosts")
+    return spec
+
+
+def verify_reusable_bind(obj, live, expected, hosts=None, run=subprocess.run):
+    """Verify one exact sealed producer receipt and its local enrollment on every generation host."""
+    spec = publication_receipt_spec(obj, live)
+    _args, candidates = candidate_bind_args(obj)
+    if not spec or not spec.get("receipt_inputs") or not re.fullmatch(r"[0-9a-f]{64}", expected):
+        raise ValueError("post-bind receipt requires a sealed bind-mode candidate and a full producer SHA-256")
+    bind = Path(spec["bind_out"])
+    if not bind.is_absolute() or bind.name != "out" or bind.parent.name != POSTBIND_DIR:
+        raise ValueError("the selected bind must be the immutable producer's _postbind/out")
+    hosts = list(dict.fromkeys(candidates if hosts is None else hosts))
+    if not hosts:
+        raise ValueError("no generation hosts for post-bind receipt")
+    arg = dict(bind=str(bind), inputs=spec["receipt_inputs"], expected=expected)
+    source = Path(PBR.__file__).read_text().split('if __name__ == "__main__":', 1)[0] + """
+import sys
+try:
+    a = json.loads(sys.argv[1])
+    print("AP_JSON " + json.dumps(verify(Path(a["bind"]), a["inputs"], a["expected"])))
+except (OSError, ValueError, TypeError, KeyError, IndexError) as exc:
+    print("AP_JSON " + json.dumps({"error": str(exc)}))
+"""
+    cmd = "python3 -I -c " + shlex.quote(source) + " " + shlex.quote(json.dumps(arg))
+
+    def one(host):
+        try:
+            proc = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd],
+                       capture_output=True, text=True, timeout=90)
+            lines = [ln[8:] for ln in proc.stdout.splitlines() if ln.startswith("AP_JSON ")]
+            if proc.returncode or len(lines) != 1:
+                raise ValueError(f"verification did not finish (rc {proc.returncode})")
+            info = json.loads(lines[0])
+            if "error" in info:
+                raise ValueError(info["error"])
+            return info, ""
+        except (ValueError, OSError, subprocess.TimeoutExpired) as exc:
+            return None, f"{host}: {exc}"
+
+    with ThreadPoolExecutor(max_workers=len(hosts)) as pool:
+        results = list(pool.map(one, hosts))
+    errors = [why for _, why in results if why]
+    if errors:
+        raise ValueError("; ".join(errors))
+    return dict(results[0][0], sha256=expected, bind=str(bind), hosts=hosts)
+
+
 def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     C = Path(a.coord)
     obj = json.loads(Path(a.candidate).read_text())
@@ -779,7 +872,11 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     # POSTBIND-FAILCLOSED 11-23 (COORD FABLE-FLOW-REVIEW item 4): HEAD s2 was applied with post_bind null (script-mode kit_rtl, no bind probe): no strict bind, no LATCHECK.
     # An apply without a post-apply strict bind + LATCHECK is refused (rc 6) unless --allow-no-post-bind names why; a post-bind that cannot start fails the apply AFTER the commit (rc 6, held).
     allow_nopb = getattr(a, "allow_no_post_bind", "") or ""
-    if not allow_nopb:
+    reuse_sha = getattr(a, "reuse_post_bind", "") or ""
+    if reuse_sha and (getattr(a, "skip_out_check", False) or getattr(a, "skip_bind_check", False) or allow_nopb):
+        print("APPLY REFUSED: reusable strict bind evidence cannot be combined with waived checks")
+        return 6
+    if not allow_nopb and not reuse_sha:
         why_ = postbind_required_problem(obj, getattr(a, "no_post_bind", False))
         if why_:
             print(f"APPLY REFUSED: {why_} (pass --allow-no-post-bind 'reason' to apply without it; the wave is then NOT bind-verified)")
@@ -792,7 +889,7 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
             return r[0], r[1], (list(r[2]) if len(r) > 2 else [])
         ok, txt, stale_types = check(obj)
         print(f"BIND-CHECK {txt}", flush=True)
-        if ok is False and not getattr(a, "no_bind_first", False):
+        if ok is False and not reuse_sha and not getattr(a, "no_bind_first", False):
             # the candidate names a bind that does not match its plan (publish never carried the new bind): run the strict bind on the PUBLISHED new tree first, switch tree + bind in ONE commit
             dest, btxt, fails = (getattr(a, "bind_first_fn", None) or bind_first)(C, obj, a.lane, a.die if getattr(a, "die", "") else (obj.get("die") or (obj.get("marker") or obj).get("die") or ""), run=run)
             print(f"BIND-FIRST {btxt}", flush=True)
@@ -818,15 +915,41 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
             raise SelectedBindVerificationError
 
     die0 = a.die if getattr(a, "die", "") else (obj.get("die") or (obj.get("marker") or obj).get("die") or "")
-    prev = prev_event_of(live_die_cfg(C, die0), die0) if die0 else {}       # ADOPT-CENSUS-1800: read BEFORE the switch
+    live = live_die_cfg(C, die0) if die0 else {}
+    prev = prev_event_of(live, die0) if die0 else {}       # ADOPT-CENSUS-1800: read BEFORE the switch
     t0 = time.time()
+    reused = None
+
+    def verify_reuse(hosts=None):
+        nonlocal reused
+        reused = verify_reusable_bind(obj, projected_bind_cfg, reuse_sha, hosts=hosts, run=run)
+
+    def check_reuse_context(projected):
+        if publication_receipt_spec(obj, projected)["receipt_inputs"] != expected_inputs:
+            raise ValueError("the effective bind configuration changed during publication")
+
     try:
         kwargs = {}
-        if not getattr(a, "skip_out_check", False):
+        if reuse_sha:
+            projected_bind_cfg = publication_live_cfg(obj, live)
+            expected_inputs = publication_receipt_spec(obj, projected_bind_cfg)["receipt_inputs"]
+            verify_reuse()
+            marker = obj.get("marker", obj)
+            copy = str(Path(reused["bind"]).parent.parent)
+            marker.setdefault("config", {})["bind_copy_of_record"] = bind_copy_of_record(live, copy)
+            if apply_fn is None:
+                kwargs["verify_retained_bind"] = verify_reuse
+                kwargs["check_bind_config"] = check_reuse_context
+        elif not getattr(a, "skip_out_check", False):
             verify_selected_bind()
             if apply_fn is None:
                 kwargs["verify_retained_bind"] = verify_selected_bind
         res = (apply_fn or A.apply_marker)(C, obj, a.expect_source, a.expect_event, pilot_item=a.pilot_item, optimistic=True, **kwargs)
+    except ValueError as exc:
+        if not reuse_sha:
+            raise
+        print(f"APPLY REFUSED: cannot reuse the selected strict bind + LATCHECK: {exc}")
+        return 6
     except SelectedBindVerificationError:
         print("APPLY REFUSED: the candidate's selected bind output could not be verified across publish hosts; fix the host named above or pass --skip-out-check")
         return 5
@@ -868,7 +991,10 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
                 pc = "not started (%s)" % type(e).__name__
     res["precheck"] = pc
     pb = "off (--no-post-bind)"
-    if not getattr(a, "no_post_bind", False):
+    if reused is not None:
+        res["post_bind_reused"] = reused
+        pb = f"reused strict bind {reused['types']} types + LATCHECK {reused['lanes']} lanes ({reuse_sha[:12]})"
+    elif not getattr(a, "no_post_bind", False):
         unit, pb = (getattr(a, "postbind_fn", None) or start_postbind)(C, obj, a.lane, res["applied"], run=run)
         res["post_bind"] = unit
     w = res.get("warnings") or []
@@ -877,7 +1003,7 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
                     f"{len(w)} advisory warning(s){': ' + ' | '.join(w)[:900] if w else ''}. Strict bind + LATCHECK stay blocking: {pb}; on a failure run "
                     f"publish_apply.py bind-fail (holds only the named types).", run=run)
     print(json.dumps(res))
-    nopb_ok = bool(getattr(a, "allow_no_post_bind", "")) or bool(bound_dest)
+    nopb_ok = bool(getattr(a, "allow_no_post_bind", "")) or bool(bound_dest) or reused is not None
     if not res.get("post_bind") and not nopb_ok:
         post(C, a.lane, f"POSTBIND-MISSING [{a.lane} -> COORD, FLOW-OPS-R3] {res['applied']}: applied but the post-apply strict bind + LATCHECK did NOT start ({pb}); NOT bind-verified. "
                         f"Run publish_apply.py post-bind --candidate {a.candidate} --lane {a.lane}; treat the wave as not ready until POST-APPLY-BIND is GREEN.", run=run)
@@ -1041,12 +1167,14 @@ def main(argv=None):
     p.add_argument("--die", default="", help="die name (default: from the candidate)")
     p.add_argument("--allow-no-post-bind", default="", metavar="REASON", help="apply without a post-apply strict bind + LATCHECK (default: refused, rc 6, POSTBIND-FAILCLOSED 11-23)")
     p.add_argument("--no-post-bind", action="store_true", help="do not start the post-apply strict bind + LATCHECK (hardlink copy of the published tree)")
+    p.add_argument("--reuse-post-bind", metavar="SHA256", help="consume the exact sealed strict-bind + LATCHECK producer receipt already enrolled for this candidate")
     pb = sp.add_parser("post-bind", help="post-apply strict bind + LATCHECK in a hardlink copy of the candidate's published tree (apply starts it itself)")
     pb.add_argument("--candidate", required=True)
     pb.add_argument("--lane", required=True)
     pb.add_argument("--die", default="")
     pb.add_argument("--host", default="", help="build host holding the tree (default: the candidate's first gen host)")
     pb.add_argument("--coord", default=os.path.expanduser("~/coord"))
+    pb.add_argument("--no-auto-adopt", action="store_true", help="prepare exact bind output for later publication without modifying wave configuration")
     ad = sp.add_parser("adopt-bind", help="after a GREEN post-bind: seal its output, replicate it to the die gen hosts, verify it matches the live plan, switch kit_rtl.bind_out (one CAS commit)")
     ad.add_argument("--die", required=True)
     ad.add_argument("--lane", required=True)

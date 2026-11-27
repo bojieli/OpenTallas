@@ -63,6 +63,30 @@ def test_bind_refuses_before_elab_on_missing_source(tmp_path, monkeypatch, capsy
     assert bind._tree_precheck(a) == 0
 
 
+def test_bind_presence_stops_for_only_scoped_active_clock_inventory(tmp_path, monkeypatch, capsys):
+    import bind
+
+    plan = _tree(tmp_path, missing=False)
+    raw = json.loads(plan.read_text())
+    raw.update(die={}, partitions=[], partition_types={
+        "active": {"clock": {"tap_mode": "grid+explicit", "sink_bins_file": "active.json"}},
+        "other": {"clock": {"tap_mode": "density", "sink_bins_file": "other.json"}},
+        "grid": {"clock": {"tap_mode": "grid", "sink_bins_file": "inactive.json"}},
+    })
+    plan.write_text(json.dumps(raw))
+    monkeypatch.setattr(bind.E, "REPO", tmp_path)
+    monkeypatch.setenv("OT_TREE_PRECHECK", "on")
+    monkeypatch.setenv("OT_PLAN_GATE_PRE", "refuse")
+    monkeypatch.setenv("OT_BIND_ONLY_TYPES", "active")
+    a = types.SimpleNamespace(plan=str(plan), asbuilt=None, out=str(tmp_path / "out"))
+    assert bind._tree_precheck(a) == 2
+    output = capsys.readouterr().out
+    assert "REFUSED before the elab" in output
+    assert "active.json" in output
+    assert "other.json" not in output
+    assert "inactive.json" not in output
+
+
 def test_timer_line():
     t = G.PreTimer()
     t.mark("A")

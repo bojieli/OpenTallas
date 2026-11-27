@@ -98,3 +98,20 @@ def test_staged_submit_denies_missing_review_before_job_creation(source, monkeyp
     assert C.cmd_submit(args) == 0
     assert json.loads(status.read_text()) == {"deferred": ["s81_head"]}
     assert not root.exists()
+
+
+def test_approved_submit_defers_when_no_exact_worker_admits(source, monkeypatch):
+    src, _, root = source
+    status = root.parent / "status.json"
+    monkeypatch.setattr(C, "pre_submit_review", lambda:
+                        SimpleNamespace(ledger=lambda: "reviewed", hold=lambda *a, **k: ""))
+    monkeypatch.setattr(C, "reviewed_locality", lambda:
+                        SimpleNamespace(source_head=lambda _: "a" * 40, hub_runtime_ready=lambda _: True,
+                                        pick_ready_worker=lambda *_: None))
+    monkeypatch.setattr(C, "load_spec", lambda _: ({"s81_head": TYPE}, {}))
+    monkeypatch.setattr(C, "launch_client", lambda *_: pytest.fail("no eligible worker"))
+    args = SimpleNamespace(spec=None, die=["s81_head"], src=str(src), root=str(root),
+                           image="img", dry=False, require_plan_review=True, plan_review_status=status)
+    assert C.cmd_submit(args) == 0
+    assert json.loads(status.read_text()) == {"deferred": ["s81_head"]}
+    assert not root.exists()
