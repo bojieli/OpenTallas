@@ -1242,3 +1242,5 @@
   [redirect] QC-SLECTL-PILE -> QC-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 10:50 PST REVIEW NEEDED [VIS-REOWN -> HEAD-PROBE-R3, FP-CONVERGE-HEAD, HEAD-INT-R3; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): ? hd_host_n PLACE-GP render epyc11:/srv/opentallas-scratch2/claude/HEAD-INT-R3/cts/hd_host_n/gen/hd_host_n/vis_review/place-gp-1127-1015PST (35 min)
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 11:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R3; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (41.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
