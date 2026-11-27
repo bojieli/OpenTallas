@@ -483,3 +483,34 @@
 - 2026-11-27 13:59 PST DONE [kv-int-r3] ot-run oth-ubuntu-2150620-1795815653 on outgoing-giraffe: rc=0 after 1101 s, ended 21:59:10, log /srv/opentallas-scratch2/claude/kv-int-r3/pvreset/pre_6.log, cmd: --priority die --hosts epyc8 --disk 3 --dir /srv/opentallas-scratch2/claude/kv-int-r3/pvreset --mem 120 --threads 16 -- env PREOUT=/srv/open
 - 2026-11-27 14:01 PST DONE [kv-int-r3] ot-run oth-ubuntu-298451-1795816565 on viable-ram: rc=0 after 315 s, ended 22:01:16, log /srv/opentallas-scratch2/claude/kv-int-r3/pvr/core5/bind_c5.otrun.log, cmd: --priority die --hosts epyc11 --mem 60 -- bash /srv/opentallas-scratch2/claude/kv-int-r3/pvr/core5/bind_c5.sh kv3_pv_v5n,kv3_pv_v5,kv3_pv_v4
 - 2026-11-27 14:01 PST DONE [kv-int-r3] ot-run oth-ubuntu-209526-1795816458 on open-snipe: rc=0 after 1079 s, ended 22:01:53, log /srv/opentallas-scratch2/claude/kv-int-r3/tap/chk2.otrun.log, cmd: --hosts epyc12 --mem 32 --threads 8 --disk 5 --dir /srv/opentallas-scratch2/claude/kv-int-r3/tap -- bash chk2.sh
+- 2026-11-27 14:02 PST RESULT + DECISION-NEEDED [KV-INT-R3/PHASEREV -> COORD; cc FABLE-RC-KV, CLASS-TRACK-R3] C-FWDCLK-WRONG-TAP: measured export phase on kv3_pv_v6ne after the hooks, CTS post-hook, repoint row 38bd202a53ed. Fable review, with read-only OpenSTA TT/FF on 4_cts.odb.
+  Repoint: applied as intended. All 69 of 69 exports come from the plan's new_tap, with 0 dead. Driver-to-pin is now 15-127 um; on the old taps it was 508-1790 um. The pre-hook ft7_o hold of -149.6 is cleared; the worst vclk hold is now +4.56.
+  Phase: FAIL. The row does not close the class.
+  - Export clock insertion at the pin spreads 176 ps TT, from 65 to 241. The forward buffer hangs 3-10 levels deep in the tap tree, so the tap-balance pads do not cover it.
+  - The clk_t20 pair (ft5_o, ft6_o) leaves about 220 ps ahead of its own flops.
+  - 53 of 69 data buses launch from a different tap than their forwarded clock, so they carry a 160 ps window with no CRPR. All 53 fall outside the receiver window of -140.5 / +166.6, at up to +651 TT.
+  - Min side: 3 buses go negative, down to -69 FF.
+  - The type STA has no forwarded-clock launch/capture paths, so the kit PASS cannot see any of this.
+  - Limit: there is no old-tap CTS kit, so I cannot show whether this is better or worse than D.
+  Other items measured on the same kit:
+  - C-NEWROOT-TAPOFFSET passes on means: t23 254.7, t68 246.3, t149 251.4 TT. t149 has a +97 ps tail and a 427 um span. I propose to CLOSE the class.
+  - The u_srl_3 -> u_srl_4 seam improved from -345.1 pre-hook to -140.1 TT post-hook. The real skew is 7.7 ps; the rest is the 160 ps window. PV-RESET's seam row targets this.
+  - Landing groups all MET, with TT setup >= +19 and hold >= +45. This confirms C-LAND-REACH must be re-fit at CTS.
+  - Setup WNS is -1612 TT, set by cland_rstart_in -> u_cland_rstart_rx (about 45 buffers, 2528 ps arrival). That is C-RST-RELAY-REACH, which PV-RESET's 237 um raw-corridor row targets.
+  - C-TAP-REACH: 29 of 151 taps are over the 300 um limit, max 765. C-TAP-LOAD: 18 taps are over the 1000-sink cap, max 1756.
+  - Evidence: E8 kv-int-r3/pvr/launch_phase_table_v6ne_measured.tsv (b1051ad942b5; 69 rows measured) and the phaserev/ scripts.
+  C-PIN-ENTRY-HOLD-r3 proof on the kv3_io_cor goal-place probe: PASS.
+  - Both chains have 13 BUFx4 FIRM cells at the planned sites, with 0 overlaps and DPL max 6.9 um.
+  - Pad entry hold at place: +66.5 FF / +204 TT (was -82). Setup is +374 / +510.
+  - The sibling cland_tstart_in -> u_cland_origin is at -104.8 FF and is already in the DEFERRED r4 row.
+  DECISION-NEEDED for the 21:00 apply. The repoint is in the base of every form tonight (F-core5, core6t, core7b).
+  Recommendation (easiest closure): KEEP the repoint in the 21:00 form as a geometric improvement that does not close the class. Reasons:
+  - It meets its own static goal (428 -> 10 export pins over 405).
+  - Post-hook it removes the only measured export hold failure (ft7_o).
+  - Its phase defects are inherited from the export structure (branch depth, cross-tap data launch), not created by the row.
+  - Removing it means recomposing and re-gating every form before 21:00.
+  Open new class C-FWDCLK-PHASE-BALANCE, owner KV-INT-R3, DEFERRED to 11-28 09:00. It needs:
+  - export-branch balance to the tap target;
+  - export launch flops bound to the export tap;
+  - a die seam check of the related pair.
+  If COORD rules OUT, I take the repoint out of the form and re-gate at 18:00. Without a ruling by 18:00, I proceed with the recommendation.
