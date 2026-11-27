@@ -13,7 +13,7 @@ TCL = Path(__file__).with_name("landing_placement.tcl").read_text()
 pytestmark = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh unavailable")
 NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_freg_rekey", "cland_dsel_wch", "cland_wcc_w",
          "cland_column_select", "cland_kbit", "cland_nearest_bit", "cland_ctl_rekey", "cland_bus_pins",
-         "cland_place_pinslot", "cland_place_pinslot_col", "cland_start_bterm_name", "cland_place_ff", "cland_fill_spread"]
+         "cland_pinslot_nearest_row", "cland_place_pinslot", "cland_place_pinslot_col", "cland_start_bterm_name", "cland_place_ff", "cland_fill_spread"]
 BITS, SLOTS = 8, 2
 PIN_Y = {b: 300 + 650 * b for b in range(BITS)}     # W-face pins i[b] at x 0, y 0.30 .. 4.85 um
 
@@ -77,6 +77,34 @@ def test_pinslot_fits_every_slot_next_to_its_own_pin_without_overlap():
         bit = int(re.search(r"\]\[(\d+)\]$", n).group(1))
         assert abs(y + 135 - PIN_Y[bit]) <= 1000, (n, y)
     assert max(farthest(new).values()) < max(farthest(old).values()) / 2
+
+
+def test_y_column_above_the_band_uses_the_nearest_free_row():
+    pin_y = {**PIN_Y, 7: 5700}
+    occupied_top = "dict set cland_occ 19 {{2000 12000}}\n"
+    placed, _ = run("1", pin_y=pin_y, occ=occupied_top)
+    for name, (_, y) in placed.items():
+        if name.endswith("[7]"):
+            assert y == 18 * 270
+
+
+def test_y_column_row_search_preserves_unexpected_errors():
+    s = COMMON + "\n" + _proc("cland_pinslot_nearest_row") + r"""
+proc cland_put {i row tag spread cur} {
+    return -code error -errorcode {OPENDB INVALID_ROW} "unexpected row error"
+}
+proc cell {method} {return master}
+proc master {method} {return 270}
+if {![catch {cland_pinslot_nearest_row cell {2 0 12 5.4} ring:i+ff 1.0 5400} message options]} {
+    exit 1
+}
+if {$message ne "unexpected row error" || [dict get $options -errorcode] ne {OPENDB INVALID_ROW}} {
+    exit 2
+}
+puts "original row error preserved"
+"""
+    cp = subprocess.run(["tclsh"], input=s, text=True, capture_output=True, check=True)
+    assert cp.stdout == "original row error preserved\n" and not cp.stderr
 
 
 def test_lsb_high_bus_is_stretched_in_its_key_order():
