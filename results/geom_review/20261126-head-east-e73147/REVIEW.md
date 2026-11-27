@@ -1,0 +1,5 @@
+# HEAD East hd_lep0N source visual review
+
+GOOD for place-only, form `7efc6dfe06227d997256a80e7ae57a93a5927b13ed98bbe14d5644f0a15c8b12`, plan `e73147aa7713`. Personally opened the complete type render at `epyc12:/srv/opentallas-scratch2/claude/HEAD-EAST-R3/gate_x3_all_writer/lean/type_hd_lep0N.png` and exact writer aisle detail at `epyc12:/srv/opentallas-scratch2/claude/HEAD-EAST-R3/east_writer_all_1126/east_writer_all_source.png`.
+
+The central aisle has three distinct nonoverlapping first-writer windows. The old LEPK window intersects a logic cluster; the successor sits clear between it and two SRAMs. The SRAM LEFs obstruct M1–M4, leaving upper routing layers across the projection. All ten writer and reader branch envelopes meet 405 µm after the move. The revised LEPK reset input leg is at most 84.24 µm. The adjacent writer and reset shapes are preserved. The northwest planned-bin tap-load advisory remains to be read from the exact checkpoint. Native fill, pin escape, PDN and timing still need physical evidence.
