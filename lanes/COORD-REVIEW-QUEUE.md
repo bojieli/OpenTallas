@@ -17522,3 +17522,4 @@ FAILED [AUTOPILOT 635edd5b58f0] 2026-11-26 18:47:44 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 00:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 00:22 PST: 18 running jobs, PROGRESSING 14, PLATEAU 2, SLOW 0, NO-PROGRESS 2 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
   NO-PROGRESS epyc10 probe_v19 grt_it0 stage 27.9 h job 29.7 h: no new meaningful log line for 10.2 h; last: [INFO GRT-0102] Start extra iteration 5/5
   NO-PROGRESS intel1 probe_v20 grt_it0 stage 26.2 h job 29.6 h: no new meaningful log line for 9.8 h; last: [INFO GRT-0102] Start extra iteration 4/5
+- 2026-11-27 00:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc12: rt/current fff1b6a85ead != hub ac4221808efa ; epyc8: rt/current fff1b6a85ead != hub ac4221808efa
