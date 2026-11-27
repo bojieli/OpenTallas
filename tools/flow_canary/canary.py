@@ -765,7 +765,8 @@ def cmd_submit(a):
         meta_name = "canary_meta.dry.json" if getattr(a, "dry", False) else "canary_meta.json"
         meta = dict(spec=c, kit=kit, src=str(src), src_commit=sha, submitted=time.strftime("%F %T %Z"))
         if review:
-            meta.update(review_before_route=True, submitted_at=time.time(), ot_run_args=shlex.split(CRIT + PIN))
+            meta.update(review_before_route=True, submitted_at=time.time(), image=a.image,
+                        ot_run_args=shlex.split(CRIT + PIN))
         (run / meta_name).write_text(json.dumps(meta, indent=1) + "\n")
         genenv = "".join(f"{k}={shlex.quote(fmt(v, **kv))} " for k, v in c.get("gen_env", {}).items())
         job = JOB.format(die=die, item=c["item"], src=sha, run=run, kit=kit, top=c["top"], image=a.image,
@@ -830,8 +831,15 @@ def cmd_submit(a):
         generate = f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh"
         physical = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} "
                     f"--dir {run}/gen --stage {run}/gen --stage {harness} -- bash ")
-        if review:
-            # The staged placement script has no route action and no report that could seed a route baseline.
+        if pre_review:
+            # The hub keeps policy and receipts. The exact worker stages its source, generates,
+            # places, and returns the retained checkpoint without a hub compute fallback.
+            locality = shlex.join([sys.executable, "-I", str(src / "tools/flow_canary/reviewed_locality.py"),
+                                   "place", str(run)])
+            launch = (f"{locality}; "
+                      f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
+                      f'python3 -I {run}/canary.py check --run {run}; fi; exit "$rc"')
+        elif review:
             launch = (f"{generate}; if [ -f {run}/GENERATED ]; then {physical}{harness}/place.sh; "
                       f'rc=$?; if [ "$rc" != 0 ] && grep -q "^CANARY_PLACE_RC [1-9]" {run}/otrun.log; then '
                       f"python3 -I {run}/canary.py check --run {run}; fi; fi")
@@ -915,6 +923,9 @@ def cmd_resume(a):
         "--mem", str(spec["mem_gb"]), "--threads", str(spec.get("threads", 8)),
         "--max-wait", str(review.MAX_ROUTE_WAIT_S), "--dir", str(gen),
         "--stage", str(gen), "--stage", str(harness), "--", "bash", str(harness / "route_canary.sh")])
+    if meta.get("placement_host"):
+        locality = Path(meta["src"]) / "tools/flow_canary/reviewed_locality.py"
+        route = shlex.join([sys.executable, "-I", str(locality), "route", str(run)])
     complete = shlex.join([sys.executable, "-I", str(run / "canary.py"), "finish-route", "--run", str(run)])
     qlog = shlex.quote(str(log))
     r = launch_client(meta["client_unit"] + "-route", f'{route} > {qlog} 2>&1; {complete} --rc "$?"')
