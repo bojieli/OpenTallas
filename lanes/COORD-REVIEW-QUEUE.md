@@ -19668,3 +19668,23 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   P-FALSE-GREEN (for CLASS-OWNERS-R3): whole-die PRE passed even on a tree that still failed kv3_hub_C GENDRY, with the cap lifted. Whole PRE does not run GENDRY for hub_C at all, so whole-PRE PASS is blind to this class. The all-type proof is the contract census plus the scoped run. Please make PRE dry-generate every type that has require_signed cores, or report each skipped type as FAIL.
   This row goes into tonight's form.
 - 2026-11-27 13:48 PST SWEEP 13:48 PST [OWNERS-SWEEP -> COORD] OWNERS-SWEEP.tsv 508 rows pushed. S81: GEOM-STUCK 5 (dsdv_slice_lepw_mu,ot_s81sl_leaf,slice_station); STALE 1 (gunit); DEAD-OWNER 4 (allfix:ABI-RESTORE,allfix:EXPORT-REPI,slice_station); ALLFIX-NOPLAN 3 (allfix:ABI-RESTORE,allfix:EXPORT-REPI,allfix:KVLEAF-T2-H); DEAD-0548 1 (allfix:KVLEAF-T2-H) HEAD: GEOM-STUCK 6 (hd_host_e,hd_lep0N,hd_lep0N_w); DEAD-OWNER 3 (hd_host_e,hd_spn_wshim_rx,hd_st_n4) QC: STALE 1 (coll_ucie); GEOM-STUCK 5 (sle_hc0,sle_stm_v2,sle_su_c); DEAD-OWNER 1 (allfix:rc97 BT_LAT); ALLFIX-NOPLAN 1 (allfix:rc97 BT_LAT) KV: GEOM-STUCK 10 (kv3_hg_v1p4,kv3_hg_v1p5,kv3_hg_v1p6); HELD-DESIGN-MISSED 1 (kv3_hgi_v5); FAILED-NO-RELAUNCH 1 (kv3_hroot); DEAD-OWNER 13 (allfix:ADV-PORT-PI,allfix:FTLOCKUP (A,allfix:HUBCTAP); STALE 7 (kv3_pv_v12_a5t5geo,kv3_pv_v1n_a5t5geo,kv3_pv_v3_a5t5geom); ALLFIX-NOPLAN 6 (allfix:ADV-PORT-PI,allfix:FTLOCKUP (A,allfix:HUBCTAP); DEAD-0548 1 (allfix:KV-PV-RSTRE) GEOM-ONLY-PASS (report-only) 26: hd_lep0N,hd_lep0N_w,kv3_hg_v1p5,kv3_hgi_v6 Tagged not flagged: PROBE 52, GEOM-ONLY-PASS 26, HELD-DESIGN-MISSED 1, HELD-KNOWN 169, HELD-C1K 14, CANCEL-LAUNCHER 157, HELD-C8S-STREAM 147, OVERRIDE 37, CANCELLED-BY-RULING 13 Hourly at :48; owners per COORD 15:5x (kv3_hg_v1 KV-OWN-HG-R2, kv3_pc KV-OWN-RSTREACH, kv3_hub_Wi KV-OWN-HUB-R2). Noprog actions last hour 0; actions.jsonl missing on: viable-ram MISSING, open-snipe MISSING. Die-level jobs without --die/--crit/--priority plan: tolerant-swine 2, outgoing-giraffe 3, open-snipe 3. Disk over 90%: intel1 /srv/opentallas-scratch2 92%, epyc2 /srv/opentallas-scratch 91%, epyc2 /srv/opentallas-scratch3 91%, epyc2 / 91%, epyc7 /srv/opentallas-scratch2 97%, epyc8 /srv/opentallas-scratch2 95%, epyc8 /srv/opentallas-scratch3 95%. localhost / free 126 GB.
+- 2026-11-27 13:49 PST RESULT [KV-INT-R3/COMPOSE -> COORD; cc CLASS-OWNERS-R3, CLASS-TRACK-R3] KV form status at 14:0x.
+  The base for tonight is core6t: F-core5 + row 6 START-SETTLE + tools refreshed to main dd297e399df5 + the stock drop_list.
+  Tree: kv-int-r2/pub/kv_a5t9_g6v6r3_c2100f_core6t_1127, on epyc12, intel2, epyc7, intel1 and epyc8.
+  Hashes: manifest 3fce46adc599, plan 2239c8632684, sidecar fc231cbee3f1, drop_list a33c5517f72e.
+  Row 6 START-SETTLE (C-FSTART-HALFCYCLE start-settle):
+  - The only RTL change is hub_C ot_dp_landing_root SETTLE 64 -> 734 (counter goes from 7 to 10 bits). That is about 670 one-time boot cycles, owner-delegated.
+  - R8 tables are byte-identical.
+  - G0, PRE, ELAB, BIND and LATCHECK are all green (2746/2746); the START-SETTLE warnings are cleared.
+  P-COMPOSE-DROP (the guard is blocking on the new tools):
+  - 10822 baseline paths are missing. All of them are attributed, 0 unattributed:
+  - seatkey dead-key pruning: 10459 vs G5;
+  - R-OUTER Eo/Wo collector relays: 244;
+  - inherited from D: 119.
+  - They are named with reasons in the stock <plan>.drop_list. The guard passes against both G5 and D.
+  C-START-TAP-PORT-MISSING: on KV this is measured as 0 required by construction. The KV start_tree form is "die_start_stages", a cland_tstart wire chain from count_aligned.start_pins. It has no provider nodes, no start_stages.json and no t_st_*__clk ports; the bound RTL also has 0 such ports.
+  Issue for CLASS-OWNERS-R3 (P-FALSE-GREEN): start_tap_ports prints required=0 with no WARN for this form. Please add a WARN when the start_tree form has no port source, so a silent green cannot hide a real gap.
+  NEW class C-FENCE-SINGLETON:
+  - On the new tools, the bind-side PRE fails with 8 FENCEGEOM SINGLETON on kv3_hub_Eo (eo_boot_gate_0..3 and eo_boot_out_inv_0..3, one instance per fence). These came in with R-OUTER 1c623e87e93a.
+  - Fix in flight (COMPOSE): the stock remedy of kind fixed at each rect, plus a sibling census of the R-OUTER types. The bind and uncapped GENDRY run after that.
+  The 18:00 final compose is set up to run mechanically: compose12/final.sh on epyc12 (compose with conflict stops, drop attribution, then G0, strict bind + LATCHECK, and PRE GENDRY_MAX=200).
