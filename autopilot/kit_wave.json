@@ -40984,7 +40984,14 @@
    "derive_exclude_hosts": [
     "epyc2"
    ],
-   "launch_plan_review_required": true
+   "launch_plan_review_required": true,
+   "reviewed_station_floorplan": {
+    "col_h10_r2__t1__clac068e56": {
+     "event": "c085ccb76d",
+     "producer": "epyc8",
+     "form_sha256": "fe3b72f3bd70a64eebeaf253ef6a98e62033dcc79439924df043b5ffa049cd69"
+    }
+   }
   },
   "s81_head": {
    "enabled": true,
