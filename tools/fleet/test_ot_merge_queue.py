@@ -867,6 +867,44 @@ class ImportedDirectoryInputs(unittest.TestCase):
             self.assertFalse(M._covered('file:physical/ref_tile/parent/unrelated.odb', pats))
 
 
+    def test_legacy_fixture_follows_selected_plan_view_and_live_sources_from_pinned_spec(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+
+            def put(path, document):
+                dst = root / path
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                dst.write_text(json.dumps(document))
+
+            recipe = M.S81_LEGACY + '/recipes.json'
+            plan = M.S81_ROOT + '/plan_h2_2249.json'
+            lef = 'physical/ref_tile/selected/views/core/core.lef'
+            bb = 'physical/foo/macro/macro_bb.v'
+            pins = 'pins/core.json'
+            top = 'core_rtl'
+            put(recipe, {top: {'plan_module': 'core', 'plan_pins_file': pins, 'spec_git': 'abc:old.json',
+                               'drop_sources': ['rtl/golden.sv'], 'includes': ['rtl/extra.sv']}})
+            put(plan, {'partition_types': {'some_type': {'hard_cores': [
+                {'module': 'core', 'pins_file': 'pins/stale.json', 'lef': 'physical/stale.lef'},
+                {'module': 'core', 'pins_file': pins, 'lef': lef}]}}})
+            spec = {'top': top, 'sources': ['rtl/core.sv', 'rtl/golden.sv', bb],
+                    'macros': [{'view': 'physical/foo/macro'}]}
+            test = M.S81_LEGACY + '/test_core.py'
+            (root / test).write_text("run(['--module', 'core_rtl'])\n")
+            expected = {recipe, plan, M.S81_ROOT + '/' + pins, lef, 'rtl/core.sv', 'rtl/extra.sv', bb,
+                        'physical/foo/macro/macro.lef', 'physical/foo/macro/macro_tt.lib',
+                        'physical/foo/macro/macro_ff.lib'}
+            tracked = expected | {'physical/stale.lef', 'rtl/golden.sv', 'old.json', 'physical/foo/macro/extra.odb'}
+            with patch.object(M, 'git', return_value=SimpleNamespace(stdout=json.dumps(spec))) as show, \
+                 patch.object(M, '_tops', return_value=['physical', 'rtl']), \
+                 patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: 'blob' for p in paths & tracked}):
+                entries = M.test_deps(root, 'main', [test])
+            self.assertEqual(entries, {f'file:{p}' for p in expected})
+            show.assert_called_once_with('show', 'abc:old.json', cwd=root)
+
+
     def test_incomplete_baseline_cannot_mask_candidate_failure(self):
         from unittest.mock import patch
         with tempfile.TemporaryDirectory() as td:
