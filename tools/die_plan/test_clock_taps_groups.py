@@ -329,6 +329,35 @@ set ::env(OT_TAP_FIXED_BEFORE_RESET_SPLIT) a
     assert 'NET ck_a/q nt1' in p.stdout and 'NET ck_b/q nt1' in p.stdout
 
 
+def test_landing_seam_order_preserves_default_and_sets_capture_before_reset(tmp_path, monkeypatch):
+    hook = tmp_path / HOOK.name
+    shutil.copyfile(HOOK, hook)
+    monkeypatch.setitem(globals(), "HOOK", hook)
+    for name, body in {
+        "tap_pair_affinity": 'puts "HOOK pair"',
+        "tap_landing_seam": 'puts "HOOK seam"; ck_eq/q disconnect; ck_eq/q connect nt1',
+        "tap_reset_affinity": 'puts "HOOK affinity [ck_eq/q getNet]"',
+        "tap_reset_split": ('puts "HOOK split [ck_eq/q getNet]"; ck_rl/q disconnect; '
+                            'ck_rl/q connect [ck_eq/q getNet]'),
+    }.items():
+        (tmp_path / f"{name}.tcl").write_text(body + "\n")
+    env = "unset -nocomplain ::env(OT_TAP_LANDING_SEAM_BEFORE_RESET)\n"
+    env += "\n".join(f"set ::env(OT_TAP_{pass_}) 1"
+                     for pass_ in ("PAIR_AFFINITY", "LANDING_SEAM", "RESET_AFFINITY", "RESET_SPLIT"))
+    body = "mkflop eq/q 0\nmkflop rl/q 0\n"
+    absent = run(tmp_path, body, env=env)
+    disabled = run(tmp_path, body, env=env + "\nset ::env(OT_TAP_LANDING_SEAM_BEFORE_RESET) 0")
+    enabled = run(tmp_path, body, env=env + "\nset ::env(OT_TAP_LANDING_SEAM_BEFORE_RESET) 1")
+    assert all(p.returncode == 0 for p in (absent, disabled, enabled))
+    assert absent.stdout == disabled.stdout
+    assert [ln for ln in absent.stdout.splitlines() if ln.startswith("HOOK ")] == [
+        "HOOK pair", "HOOK affinity nclk", "HOOK split nclk", "HOOK seam"]
+    assert [ln for ln in enabled.stdout.splitlines() if ln.startswith("HOOK ")] == [
+        "HOOK pair", "HOOK seam", "HOOK affinity nt1", "HOOK split nt1"]
+    assert "NET ck_eq/q nt1" in absent.stdout and "NET ck_rl/q nclk" in absent.stdout
+    assert "NET ck_eq/q nt1" in enabled.stdout and "NET ck_rl/q nt1" in enabled.stdout
+
+
 def test_fixed_output_group_survives_cap_and_min_merges(tmp_path):
     env = (GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
            "\nset ::env(OT_TAP_MAX_SINKS) 3"

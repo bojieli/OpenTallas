@@ -83,3 +83,15 @@ def test_full_tap_prefers_room():
     out, nets = run(fill + '\nset ::env(OT_TAP_LANDING_SEAM) 1\nset ::env(OT_TAP_MAX_SINKS) 7\nset ::env(OT_TAP_SEAM_RADIUS_UM) 2000')
     # tB would hold 8 > cap 7; tC (7, inside the radius) wins over the full nearer tap
     assert [nets[f'ck{i}'] for i in range(2, 7)] == ['tC'] * 5
+
+
+def test_typed_order_opt_in_exports_only_the_selected_dependency():
+    from gen_phys import tap_landing_seam_exports
+
+    seam = {"tap_landing_seam": True, "tap_reset_split": True}
+    assert tap_landing_seam_exports({}) == []
+    assert tap_landing_seam_exports({"clock": seam}) == ["export OT_TAP_LANDING_SEAM = 1"]
+    assert tap_landing_seam_exports({"clock": dict(seam, tap_landing_seam_before_reset=True)}) == [
+        "export OT_TAP_LANDING_SEAM = 1", "export OT_TAP_LANDING_SEAM_BEFORE_RESET = 1"]
+    with pytest.raises(ValueError, match="requires tap_landing_seam and a reset tap pass"):
+        tap_landing_seam_exports({"clock": {"tap_landing_seam_before_reset": True}})

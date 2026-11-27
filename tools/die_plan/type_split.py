@@ -1595,7 +1595,7 @@ class TypeSplit:
         t, cut, T = self.t, self.cut, self.T
         ck = t.get("clock") or {}
         known = {"tap_um", "layer", "insertion_ps", "insertion_tol_ps", "tap_pitch_um", "tap_edge_y_um", "taps",
-                 "tap_landing_seam",
+                 "tap_landing_seam", "tap_landing_seam_before_reset",
                  "core_taps", "edge_clocks", "landing_contract", "added_taps", "tap_mode", "sink_sites_um",
                  "reach_fix_sinks", "tap_radius_um", "tap_max_sinks", "tap_target_sinks", "die_islands_um",
                  "keepouts_um", "sink_bins_file", "landing_ring_wreg", "landing_local_resets"} | CLOCK_COPY_KEYS | \
