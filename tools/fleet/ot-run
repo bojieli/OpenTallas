@@ -460,6 +460,68 @@ if _sh:
     _made = bool(_before) and bool(_re.search(r"(?:>>?|\btee\b[^;&|]*|\b(?:cp|mv|install|ln)\b[^;&|]*)\s*" + _re.escape(_p) + r"(?:\s|;|&|$|\|)", _before))
     if _under and not os.path.exists(_p) and not _made and not any(r[1].startswith("script %s missing" % _p) for r in out):
         out.append(["refuse", "NOT-RUN SETUP missing script %s" % _p])
+# P-LAUNCH-SETUP-FAIL b10: EVERY absolute input path under the scratch roots (any argument, --flag=/abs, paths inside a bash -c line) must exist
+# when its parent does (or its parent is missing outside --dir); outputs, logs, dirs, paths made earlier in the line, --stage / --needs paths
+# (copied or checked by ot-run itself), globs, $vars, ~ and URLs are skipped
+import shlex as _shlex
+_ROOTS = ("/srv/opentallas-scratch2/", "/srv/opentallas-scratch/")
+_OUTFLAG = _re.compile(r"(?:^o$|out|log|dir|dest|prefix|save|tmp|work|report|result|root)", _re.I)
+_REDIR = (">", ">>", ">&", "&>", "&>>", "1>", "2>", "<<", "<<<")
+_OPS = (";", "&&", "||", "|", "(", ")", "&", "|&")
+_OUTCMD = ("mkdir", "tee", "touch", "rm", "rmdir", "ln", "cp", "mv", "install")
+_skip = [s.rstrip("/") for s in (a.get("skip") or []) if s]
+
+
+def _seqs(toks):
+    t0 = os.path.basename(toks[0]) if toks else ""
+    rest = toks[1:]
+    if t0 in ("bash", "sh") and len(rest) >= 2 and _re.fullmatch(r"-[a-z]*c[a-z]*", rest[0]):
+        try:
+            lx = _shlex.shlex(rest[1], posix=True, punctuation_chars=True)
+            lx.whitespace_split = True
+            return list(lx)
+        except Exception:
+            return list(toks[:1])
+    return list(toks)
+
+
+def _cands(seq):
+    made, cand, cmd, prev = [], [], None, ""
+    for t in seq:
+        if t in _OPS:
+            cmd, prev = None, ""
+            continue
+        if t in _REDIR or _re.fullmatch(r"\d*>>?&?\d*", t):
+            prev = ">"
+            continue
+        if cmd is None:
+            cmd, prev = os.path.basename(t), ""
+            continue
+        flag, word = "", t
+        if "=" in t and (t.startswith("-") or not t.startswith("/")):
+            flag, _, word = t.partition("=")
+        elif t.startswith("-"):
+            prev = t
+            continue
+        isout = prev == ">" or bool(flag and _OUTFLAG.search(flag.lstrip("-"))) or bool(prev.startswith("-") and _OUTFLAG.search(prev.lstrip("-"))) or cmd in _OUTCMD
+        w = word.strip("\"',;")
+        if w.startswith(_ROOTS) and not _re.search(r"[*?\[\]{}$`~]|://", w):
+            (made if isout else cand).append(w.rstrip("/"))
+        prev = "arg"
+    return made, cand
+
+
+made, cand = _cands(_seqs(toks))
+_dd = (d or "").rstrip("/")
+_under = lambda p, b: bool(b) and (p == b or p.startswith(b + "/"))
+for p in dict.fromkeys(cand):
+    if any(_under(p, m) or _under(m, p) for m in made) or any(_under(p, s) for s in _skip) or os.path.exists(p):
+        continue
+    if _dd and _under(p, _dd) and (not os.path.isdir(_dd) or not os.path.isdir(os.path.dirname(p))):
+        continue                      # --dir not here yet (spill / autostage copies it) or a parent the job creates
+    if any(p in r[1] for r in out):
+        continue
+    out.append(["refuse", "NOT-RUN SETUP missing input %s" % p])
 print(json.dumps(out))
 """
 
@@ -471,11 +533,25 @@ def deep_rows(text):
         return []
 
 
-def deep_preflight(host, d, cmd, run=None):
+def abs_input_hint(cmd):
+    """True when any command-line token (or bash -c text) names a path under the scratch roots: the deep preflight then also runs for jobs with no --stage / relative script"""
+    return any(("/srv/opentallas-scratch/" in str(t)) or ("/srv/opentallas-scratch2/" in str(t)) for t in cmd)
+
+
+def stage_skip_paths(stage, needs):
+    """paths ot-run itself copies (--stage) or checks (--needs): never judged by the deep input check (a spill host gets them from here)"""
+    out = []
+    for x in list(stage or []) + list(needs or []):
+        x = str(x)
+        out.append(x.split(":", 1)[1] if ":" in x and not x.startswith("/") else x)
+    return out
+
+
+def deep_preflight(host, d, cmd, run=None, skip=()):
     """-> [(severity, text)] from one host (severity refuse | warn); an unreachable host or an unreadable answer proves nothing (empty)"""
     try:
         r = (run or subprocess.run)(["ssh", "-o", "ConnectTimeout=20", "-o", "BatchMode=yes", host, "python3 -I -c " + shlex.quote(DEEP_PREFLIGHT_PY)],
-                                    input=json.dumps({"d": d, "cmd": list(cmd)}) + "\n", capture_output=True, text=True, timeout=60)
+                                    input=json.dumps({"d": d, "cmd": list(cmd), "skip": list(skip)}) + "\n", capture_output=True, text=True, timeout=60)
     except Exception:
         return []
     return deep_rows(r.stdout)
@@ -488,7 +564,7 @@ def preflight_report(hosts, d, stage, cmd, deep=None):
     if pf:
         ref.append(pf)
     for host in hosts[:1]:
-        for sev, txt in (deep or deep_preflight)(host, d, cmd):
+        for sev, txt in (deep or deep_preflight)(host, d, cmd, skip=stage_skip_paths(stage, NEEDS)) if deep is None else deep(host, d, cmd):
             (ref if sev == "refuse" else warn).append(f"{host}: {txt}")
     return ref, warn
 
@@ -3347,7 +3423,7 @@ def main():
             held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
             hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
-        if first and not job and not os.environ.get("OT_RUN_NO_PREFLIGHT") and (STAGE or rel_script(cmd)):
+        if first and not job and not os.environ.get("OT_RUN_NO_PREFLIGHT") and (STAGE or rel_script(cmd) or abs_input_hint(cmd)):
             # DEATHCLASS-1122 SETUP: the --stage paths and the relative script must exist on a host that holds --dir (or here, for --stage)
             _have = [h for h in hosts if not str(PLACE_NOTES.get(h) or "").startswith(("no ", "SSH probe"))]
             _pf = setup_preflight(_have, d, STAGE, cmd, check_dir=False)
@@ -3355,7 +3431,14 @@ def main():
                 say(f"ot-run: NOT RUN: {_pf}")
                 not_run(_pf)
             if _have and not os.environ.get("OT_RUN_NO_DEEP_PREFLIGHT"):     # P-LAUNCH-SETUP-FAIL: interpreter, syntax, imports on the first answering host
-                _dp = [(sv, tx) for sv, tx in deep_preflight(_have[0], d, cmd)]
+                _sk = stage_skip_paths(STAGE, NEEDS)
+                _dp = [(sv, tx) for sv, tx in deep_preflight(_have[0], d, cmd, skip=_sk)]
+                _mi = "NOT-RUN SETUP missing input "
+                for _h in _have[1:4]:        # an input missing on the first host but present on another candidate is no refusal (placement may pick that one)
+                    if not any(sv == "refuse" and tx.startswith(_mi) for sv, tx in _dp):
+                        break
+                    _alt = {tx for sv, tx in deep_preflight(_h, d, cmd, skip=_sk) if sv == "refuse" and tx.startswith(_mi)}
+                    _dp = [(sv, tx) for sv, tx in _dp if not (sv == "refuse" and tx.startswith(_mi) and tx not in _alt)]
                 for _sv, _tx in _dp:
                     if _sv == "warn":
                         say(f"ot-run: PREFLIGHT WARN {_have[0]}: {_tx}")
