@@ -64,3 +64,29 @@ def test_archive_element_alias_record_id():
     assert list(out) == ["s81_head.t.hd_tile"]
     assert out["s81_head.t.hd_tile"]["archive"]["units"] == ["hd_tile_htr_eco1124__ax_417e624cd7"]
     assert APR.base_name("hd_tile_htr_eco1124") == "hd_tile_htr_eco1124"   # the alias is per die
+
+
+def test_legacy_core_index_preserves_retired_role():
+    current = {'s81.t.shared': dict(id='s81.t.shared', die='s81', level='type',
+                                   name='shared', status={'state': 'signed'})}
+    tsv = '\n'.join([HEAD, row('s81', 'shared'), row('s81', 'shared', kind='core'),
+                     row('s81', 'old_core', kind='core')])
+    result = APR.build(current, tsv)
+    assert set(result) == {'s81.t.shared', 's81.c.shared', 's81.c.old_core'}
+    assert all(result[r]['archive']['agi'] for r in result)
+    assert result['s81.c.shared']['node'] is None
+    assert result['s81.c.old_core']['superseded']
+
+
+def test_exact_retired_record_takes_precedence_over_archive_alias():
+    current_id = 's81_head.t.hd_tile'
+    retired_id = 's81_head.t.hd_tile_htr_eco1124'
+    current = {current_id: dict(id=current_id, die='s81_head', level='type',
+                               name='hd_tile', status={'state': 'signed'})}
+    tsv = '\n'.join([HEAD, row('s81_head', 'hd_tile'),
+                     row('s81_head', 'hd_tile_htr_eco1124')])
+    result = APR.build(current, tsv, exact_retired_ids={retired_id})
+    assert set(result) == {current_id, retired_id}
+    assert result[current_id]['archive']['units'] == ['hd_tile__ax_0123456789']
+    assert result[retired_id]['archive']['units'] == ['hd_tile_htr_eco1124__ax_0123456789']
+    assert result[retired_id]['superseded']

@@ -595,8 +595,15 @@ def records():
     key = (idx.get('generated'), _mtime(CENSUS), _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120))
     if key != _REC['key']:
         d = _json_file(ARCHIVE_INDEX) or {}
-        layouts = APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry)
         census = signoff_census()
+        exact_retired_ids = {
+            '%s.%s.%s' % (die, 'c' if level == 'core' else 't', item['name'])
+            for die, entry in (census or {}).get('dies', {}).items()
+            for item in entry.get('retired', [])
+            for level in census_levels(item)
+        }
+        layouts = APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry,
+                            exact_retired_ids=exact_retired_ids)
         recs = census_records(census, idx['nodes'], layouts) if census else layouts
         _REC.update(key=key, recs=recs)
     return _REC['recs']
