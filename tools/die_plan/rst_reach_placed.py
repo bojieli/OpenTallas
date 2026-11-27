@@ -17,7 +17,7 @@ Measured on 29 retained KV trees (35 kits, intel2 R/KV-*/ ot_face_flops.txt + ge
     edges inside the tail margin (headroom).  A re-seat row for a failing tree is the failing relay's placed seat (or a cap of 250 um in
     reset_tree for the type: an edge then needs > 50 um drift, 0.08 % of cap edges in the table above).
 
-    python3 -I rst_reach_placed.py GEN_DIR [GEN_DIR ...] [--json OUT]       GEN_DIR = kit gen/<type> with run/results/.../ot_face_flops.txt
+    python3 -I rst_reach_placed.py GEN_DIR [GEN_DIR ...] [--json OUT] [--plan PLAN]       GEN_DIR = kit gen/<type> with run/results/.../ot_face_flops.txt
 """
 import glob
 import json
@@ -118,14 +118,25 @@ def kit_gate_um(tcl_text, default=GATE_UM):
     return float(m.group(1)) if m else default
 
 
-def gen_report(gen_dir):
+def plan_gate_um(plan, default=GATE_UM):
+    """the per-die gate a plan records as reset.reach_cap_um (HEAD 405; KV/S81 record none);
+    `default` (the historic 300) when the plan records none.  plan = path, raw dict or reset section (cbc_rules.plan_reset_hop_cap)."""
+    try:
+        import cbc_rules as C
+        v = C.plan_reset_hop_cap(plan)
+    except Exception:  # noqa: BLE001 - older tree without cbc_rules
+        v = None
+    return float(v) if v else default
+
+
+def gen_report(gen_dir, plan_gate=None):
     ff = glob.glob(os.path.join(gen_dir, "run/results/*/*/base/ot_face_flops.txt"))
     tcl = os.path.join(gen_dir, "reset_tree.tcl")
     if not ff or not os.path.isfile(tcl):
         return dict(verdict="UNMEASURED", why="no ot_face_flops.txt / reset_tree.tcl under " + gen_dir)
     with open(tcl, errors="replace") as a, open(ff[0], errors="replace") as b:
         t = a.read()
-        return tree_report(t, b.read(), kit_gate_um(t))
+        return tree_report(t, b.read(), kit_gate_um(t, plan_gate if plan_gate else GATE_UM))
 
 
 def main(argv=None):
@@ -135,9 +146,14 @@ def main(argv=None):
         i = argv.index("--json")
         out = argv[i + 1]
         del argv[i:i + 2]
+    plan_gate = None
+    if "--plan" in argv:     # gate order: the kit's own rtr_lim, else the plan's reset.reach_cap_um, else GATE_UM (300)
+        i = argv.index("--plan")
+        plan_gate = plan_gate_um(argv[i + 1], 0.0) or None
+        del argv[i:i + 2]
     res = {}
     for g in argv:
-        r = gen_report(g)
+        r = gen_report(g, plan_gate)
         res[g] = r
         print(f"WARN RST-REACH-PLACED {os.path.basename(g.rstrip('/'))}: {r['verdict']} plan max {r.get('plan_max')} um, placed max {r.get('placed_max')} um, "
               f"{r.get('n_over')} edge(s) > {r.get('gate_um', GATE_UM):g} um, {r.get('near_cap_edges')} near-cap edges (expected {r.get('expected_fails')}), "

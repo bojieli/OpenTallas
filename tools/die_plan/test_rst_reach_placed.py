@@ -44,3 +44,25 @@ def test_gate_is_the_kit_own_rtr_lim_not_the_kv_300():
     r = R.tree_report(tcl, ff(590, 700), R.kit_gate_um(tcl))
     assert r["verdict"] == "PASS" and r["gate_um"] == 405.0
     assert R.tree_report(tcl, ff(590, 1000), 405.0)["verdict"] == "FAIL"
+
+
+def test_plan_gate_reads_reset_reach_cap_um_else_300(tmp_path):
+    assert R.plan_gate_um({"reset": {"reach_cap_um": 405}}) == 405.0
+    assert R.plan_gate_um({"reset": {}}) == 300.0 and R.plan_gate_um({}) == 300.0 and R.plan_gate_um(None) == 300.0
+    p = tmp_path / "plan.json"
+    p.write_text('{"partition_types": {}, "reset": {"reach_cap_um": 405}}')
+    assert R.plan_gate_um(str(p)) == 405.0
+    assert R.plan_gate_um(str(tmp_path / "missing.json")) == 300.0
+
+
+def test_gen_report_gate_order_kit_then_plan_then_300(tmp_path):
+    g = tmp_path / "g"
+    (g / "run/results/a/b/base").mkdir(parents=True)
+    (g / "run/results/a/b/base/ot_face_flops.txt").write_text(ff(590, 700))
+    # no rtr_lim in the kit: the plan's 405 applies (315 um placed hop PASSes), else 300 (FAIL)
+    (g / "reset_tree.tcl").write_text(TCL)
+    assert R.gen_report(str(g))["verdict"] == "FAIL"
+    assert R.gen_report(str(g), 405.0)["verdict"] == "PASS" and R.gen_report(str(g), 405.0)["gate_um"] == 405.0
+    # the kit's own rtr_lim wins over the plan cap
+    (g / "reset_tree.tcl").write_text(TCL + "set rtr_lim [expr {300 * $ff_dbu}]\n")
+    assert R.gen_report(str(g), 405.0)["gate_um"] == 300.0
