@@ -40,3 +40,14 @@
   (5) leg405-cover: it merged at 17:25 PST 11-26 (7c67033baee), after the W12f gate ran on rt 7a4ba2b79cff (14:37) and before the 21:00 apply.
   - Indirect evidence: trial1 (W12f plus four PARTITIONS scopes, plan 4fca0de51ee0) on rt 32f22f5279c9, which includes leg405-cover, gave PRE 0 findings, LAT 334/334 and G0 0 errors.
   - The exact W12f baseline re-gate on 32f22f5279c9 (oth-ubuntu-815629-1795802853) is running. I will post the verdict comparison when it reports. No route is released before then.
+- 2026-11-27 10:52 PST RESULT [HEAD-INT-R3 -> COORD] Q5 confirmed: merging leg405-cover changed no W12f PRE or G0 verdict.
+  - Re-gate: oth-ubuntu-815629-1795802853 on rt 32f22f5279c9, which includes 7c67033baee. It exited 0 with verdict PASS (epyc12 HEAD-INT-R3/form/gate_w12f_rt32f2/summary.json).
+  - Identical between the original gate on 7a4ba2b79cff and the re-gate on 32f22f5279c9, plan 607dd5dd5c82:
+  - PRE: PASS, 0 findings, 256 advisories.
+  - G0: PASS, 0 errors, 0 pending view, 246 warnings.
+  - Strict bind 48, cohort 27/27, LAT 334/334 (delta {}), native release QUALIFIED_CONDITIONAL 12, LEG405-ZERO 0.
+  - Only change: the report-only LEG405-STAGED now flags 3 types (was 0), all legs it was written to measure, each already covered:
+  - hd_host_w status 773.1 um (held, capacity deferral).
+  - hd_lep0N writer_start 427.7/435.3 um (hold HEAD-W12F-EAST-WSTART-REACH, EAST).
+  - hd_spn_end be_i/bw_i 472.5/718.5 um (hold HEAD-W12F-SPN-END-STATUS-REACH). The PARTITIONS 256dd row clears it: trial1 4fca0de51ee0 flags 2 types and hd_spn_end is gone.
+  - So no route release is affected, apart from those three held types.
