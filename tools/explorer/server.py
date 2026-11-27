@@ -604,12 +604,18 @@ def records():
         }
         layouts = APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry,
                             exact_retired_ids=exact_retired_ids)
-        recs = census_records(census, idx['nodes'], layouts) if census else layouts
+        source_refs = Counter((die, item['level'], ref)
+                              for die, entry in (census or {}).get('dies', {}).items()
+                              for item in entry.get('current', [])
+                              for ref in set(item.get('source_refs') or ()))
+        source_archives = APR.source_archives(d.get('agidock_index_tsv'),
+                                              {key for key, n in source_refs.items() if n == 1})
+        recs = census_records(census, idx['nodes'], layouts, source_archives) if census else layouts
         _REC.update(key=key, recs=recs)
     return _REC['recs']
 
 
-def census_records(census, nodes, layouts):
+def census_records(census, nodes, layouts, source_archives=None):
     recs = {}
     node_names = {}
     for node in nodes.values():
@@ -635,6 +641,14 @@ def census_records(census, nodes, layouts):
                 # A build of a current node is layout evidence only for its own plan state.
                 pack = existing.get('pack') if rid in (nid, raw_id) and existing.get('superseded') == (bucket != 'current') else None
                 archive = existing.get('archive') or dict(agi=False, rtx=False, status=None, units=[])
+                if source_archives and not (archive['agi'] or archive['rtx']):
+                    matches = {}
+                    for ref in item.get('source_refs') or ():
+                        match = source_archives.get((die, level, ref))
+                        if match:
+                            matches[match['record'], match['odb_sha256']] = match
+                    if len(matches) == 1:
+                        archive = next(iter(matches.values()))
                 recs[rid] = dict(id=rid, die=die, name=name, level=level, node=nid, plan='current' if bucket == 'current' else 'superseded',
                                  plan_label=APR.LABEL[label], superseded=bucket != 'current', signoff_basis=bucket,
                                  census_key=item['key'], node_state=((nodes.get(nid) or {}).get('status') or {}).get('state'),
