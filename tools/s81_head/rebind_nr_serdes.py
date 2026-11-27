@@ -21,6 +21,57 @@ def serdes_parts(plan):
     return {part["name"]: part for part in plan["partitions"] if part["type"] == "hd_serdes"}
 
 
+# P-RESET-RECEIPT guard change (HEAD-PROBE-R3 11-27): a CHANGED hd_serdes partition (reset_entry_phase, id_straps, ...) used to be refused outright,
+# even when a receipt qualified on the new plan existed.  It is accepted only with --new-receipt: a receipt produced on the NEW plan digest by the
+# stock producer (head_native_release_receipt.py) whose proof.exercised_plan_fields cover EVERY partition key that differs, and that qualifies.
+def _flat(prefix, v, out):
+    if isinstance(v, dict):
+        for k in sorted(v):
+            _flat(prefix + "." + str(k) if prefix else str(k), v[k], out)
+    else:
+        out[prefix] = json.dumps(v, sort_keys=True)
+
+
+def part_diff(old_parts, new_parts):
+    """sorted leaf paths 'partitions[NAME].key.sub' that differ between two {name: part} maps (added / removed / changed)"""
+    out = []
+    for name in sorted(set(old_parts) | set(new_parts)):
+        a, b = {}, {}
+        if name in old_parts:
+            _flat("", old_parts[name], a)
+        if name in new_parts:
+            _flat("", new_parts[name], b)
+        for k in sorted(set(a) | set(b)):
+            if a.get(k) != b.get(k):
+                out.append("partitions[%s].%s" % (name, k))
+    return out
+
+
+def norm_field(path):
+    """partitions[lk_EN0].reset_entry_phase -> partitions[*].reset_entry_phase"""
+    import re
+    return re.sub(r"^partitions\[[^\]]*\]", "partitions[*]", path)
+
+
+def check_changed_binding(old_parts, new_parts, new_receipt, new_digest):
+    """-> sorted diff paths when the receipt covers the whole partition diff; raises ValueError otherwise (fail closed)"""
+    diff = part_diff(old_parts, new_parts)
+    if not diff:
+        return diff
+    if new_receipt is None:
+        raise ValueError("HEAD native reset instance bindings changed")
+    if new_receipt.get("plan_sha256") != new_digest:
+        raise ValueError("HEAD native reset instance bindings changed: receipt is not for the new plan digest")
+    fields = (new_receipt.get("proof") or {}).get("exercised_plan_fields")
+    if not fields:
+        raise ValueError("HEAD native reset instance bindings changed: receipt lists no exercised plan fields")
+    covered = set(fields)
+    bad = sorted({norm_field(p) for p in diff} - covered)
+    if bad:
+        raise ValueError("HEAD native reset instance bindings changed: receipt does not cover " + ", ".join(bad[:6]))
+    return diff
+
+
 def fwd_only_delta(a, b):
     """FWDTAP-1 serdes requal: the hd_serdes type may differ ONLY by the reach_rules fix_fwd form on forwarded clock
     exports (pins[i].source_clock_port of an out clock pin fclk_out_*, and landing_contract.forwarded_clock_only_inputs
@@ -64,6 +115,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("old_plan", "new_plan", "old_receipt", "out", "tools"):
         parser.add_argument(name, type=Path)
+    parser.add_argument("--new-receipt", type=Path, default=None,
+                        help="receipt produced on the NEW plan digest whose proof.exercised_plan_fields cover every changed hd_serdes partition key")
     args = parser.parse_args()
     sys.path.insert(0, str(args.tools))
     import cores
@@ -75,7 +128,21 @@ def main():
     receipt = json_load(args.old_receipt)
     fwd_only_delta(old["partition_types"]["hd_serdes"], new["partition_types"]["hd_serdes"])
     if serdes_parts(old) != serdes_parts(new):
-        raise ValueError("HEAD native reset instance bindings changed")
+        nr = json_load(args.new_receipt) if args.new_receipt else None
+        diff = check_changed_binding(serdes_parts(old), serdes_parts(new), nr, head_native_release.digest(new))
+        new_plan = schema.Plan(new, args.new_plan)
+        result = head_native_release.qualify(new_plan, reset_tree.wf_plan(new_plan), args.new_receipt)
+        args.out.mkdir(parents=True, exist_ok=False)
+        root = args.new_receipt.parent
+        for item in root.iterdir():
+            if item.is_file() and item.name != "native_release_receipt.json":
+                shutil.copyfile(item, args.out / item.name)
+        accepted = args.out / "native_release_receipt.json"
+        shutil.copyfile(args.new_receipt, accepted)
+        print("CHANGED_BINDING_COVERED", len(diff), "paths", diff[:8])
+        print("NATIVE_RELEASE", result["release_qualification"]["verdict"], len(result["release_qualification"]["native_targets"]), "targets", accepted)
+        print("PLAN", args.new_plan, hexdigest(args.new_plan))
+        return
     old_plan = schema.Plan(old, args.old_plan)
     head_native_release.qualify(old_plan, reset_tree.wf_plan(old_plan), args.old_receipt)
     args.out.mkdir(parents=True, exist_ok=False)
