@@ -119,9 +119,12 @@ def test_precheck_report_only(tmp_path):
 
 def test_merged_gds_verdict():
     cells = {"filled": {"m": "/out/core_m.gds"}, "missing": [], "empty_allowed": []}
-    assert MG.judge({"new_hardcore": 0, "new_parent": 3}, cells)["verdict"] == "PASS"
-    assert MG.judge({"new_hardcore": 2}, cells)["verdict"] == "FAIL"
-    assert MG.judge({"new_hardcore": 0}, dict(cells, missing=["x"]))["verdict"] == "FAIL"
+    clean = {"new_hardcore": 0, "new_parent": 3}
+    assert MG.judge(clean, cells)["verdict"] == "NOT-FLAT"
+    clean["mode"] = MG.FLAT_MODE
+    assert MG.judge(clean, cells)["verdict"] == "PASS"
+    assert MG.judge(dict(clean, new_hardcore=2), cells)["verdict"] == "FAIL"
+    assert MG.judge(clean, dict(cells, missing=["x"]))["verdict"] == "FAIL"
 
 
 def test_merged_gds_gate_required_only_for_exact_views(tmp_path):
@@ -138,9 +141,12 @@ def test_merged_gds_gate_required_only_for_exact_views(tmp_path):
     g = MG.gate_check(kit)
     assert g["verdict"] == "NOT RUN"                                 # blocks until the merged-GDS DRC ran
     (kit / "merged_gds_drc").mkdir()
-    (kit / "merged_gds_drc" / "verdict.json").write_text(json.dumps({"verdict": "PASS", "new_hardcore": 0}))
+    verdict = kit / "merged_gds_drc" / "verdict.json"
+    verdict.write_text(json.dumps({"verdict": "PASS", "new_hardcore": 0}))
+    assert MG.gate_check(kit)["verdict"] == "NOT RUN"
+    verdict.write_text(json.dumps({"verdict": "PASS", "mode": MG.FLAT_MODE, "new_hardcore": 0}))
     assert MG.gate_check(kit)["verdict"] == "PASS"
-    (kit / "merged_gds_drc" / "verdict.json").write_text(json.dumps({"verdict": "ERROR"}))
+    verdict.write_text(json.dumps({"verdict": "ERROR"}))
     assert MG.gate_check(kit)["verdict"] == "NOT RUN"
     kp = MG.kit_plan(kit)
     assert kp["required"] and kp["allow_empty"] == "core"             # no core.gds beside the view yet
