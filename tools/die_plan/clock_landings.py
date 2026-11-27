@@ -541,6 +541,22 @@ def output_qreg(plan, tn, bus):
     return bus in cfg
 
 
+def ctl_hold_hb4(plan, tn, bus):
+    """SEAMHOLD-CTL-K5-DI (HEAD-INT-R2 11-26): HB4 count in front of the three control inputs (cland_dn_ready_<bus>,
+    cland_dn_fault_<bus>, cland_fstart_in_<bus>) of landed input bus <bus> of type tn, from
+    partition_types[tn].clock.landing_ctl_hold_hb4 {bus: N}; 0 / absent = none (byte-same RTL).  A split copy
+    "<base>__<suffix>" reads its base.  Pure delay, no flop, no data or status cycle."""
+    types = plan.get("partition_types", {})
+    typ = types.get(tn) or types.get(tn.split("__")[0]) or {}
+    cfg = (typ.get("clock") or {}).get("landing_ctl_hold_hb4")
+    if cfg is None:
+        return 0
+    if (not isinstance(cfg, dict) or not cfg
+            or any(type(v) is not int or not 1 <= v <= 8 or not re.fullmatch(r"[A-Za-z_]\w*", str(k)) for k, v in cfg.items())):
+        raise LandingError(f"{tn}: landing_ctl_hold_hb4 must map landed input buses to an HB4 count 1..8")
+    return int(cfg.get(bus, 0))
+
+
 def check_ca_freg_declared(plan, tn, bus, c, pid, err=None):
     """FREG-DECL-1 (COORD 11-11, fail closed): the count-aligned FREG face register (landing_ring_wreg.freg) delays data
     AND writer start one fclk; strap_ties adds K + 2 (WREG + FREG), so q is ONE clk later than the plan's geometric
@@ -1191,6 +1207,22 @@ def _cam(obj, tn):
         return obj.ca_by_type.get(tn) or dict(inputs=(), outputs=())
     m = (getattr(obj, "by_type", None) or {}).get(tn) or {}
     return dict(inputs=tuple(m.get("inputs", ())), outputs=tuple(m.get("outputs", ())))
+
+
+def drop_undriven_local_sources(sources, logic, extra=()):
+    """C-LANDING-STATUS-UNDRIVEN: split collector local sources into (driven, stale).  A source is driven when the emitted
+    type declares its status wire (`wire landing_ready_<b>` in the logic, or an `output wire` port): the ring of every
+    landed input declares it.  A source whose bus is not a landed input of the type (compose sidecar older than the plan
+    prune) declares nothing, so reading it would leave an undriven wire in the collector."""
+    text = "\n".join(list(logic) + list(extra))
+    keep, stale = [], []
+    for src in sources:
+        r = src.get("ready")
+        if r and re.search(r"\bwire\b[^;\n]*\b" + re.escape(r) + r"\b", text) is None:
+            stale.append(src.get("name"))
+        else:
+            keep.append(src)
+    return keep, stale
 
 
 class Landings:
@@ -2332,6 +2364,9 @@ class Landings:
                 if not isinstance(local_write, bool):
                     self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_local must be a boolean"))
                     continue
+                if band.get("write_select_bank") and not local_write:
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_bank needs write_select_local"))
+                    continue
                 if local_write:
                     ring_width = w + 2 if self.dataflow else w
                     if (not cat.get("straps") or hard is not None or wreg or status_copy
@@ -2341,6 +2376,16 @@ class Landings:
                         continue
                     ring_mod = ring_mod[:-1] + ", .WRITE_SELECT_LOCAL(1))"
                     self.reset_placements[tn][b].update(write_select_local=True, write_select_local_added_cycles=0)
+                    # HIFANOUT-1 (HEAD-INT-R2 11-26, C-HIFANOUT-SELECT): band write_select_bank = N -> one slot decode per N data bits
+                    # (hd_lep0N u_cland_unit_i0: one decode net of 64 sinks, 2132 ps slew).  Same enables, 0 added cycles, 0 added
+                    # registers: LATCHECK sees the ring unchanged (latency / producer / consumer carry no new cycle).
+                    bank = band.get("write_select_bank", 0)
+                    if type(bank) is not int or bank < 0 or (bank and not 4 <= bank <= 32):
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: write_select_bank must be 0 or an integer 4..32"))
+                        continue
+                    if bank:
+                        ring_mod = ring_mod[:-1] + f", .WRITE_SELECT_BANK({bank}))"
+                        self.reset_placements[tn][b].update(write_select_bank=bank, write_select_bank_added_cycles=0)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
@@ -2509,10 +2554,23 @@ class Landings:
                 # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
                 # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
                 ring = f"cland_ring_{b}"
+                hb_n = ctl_hold_hb4(self.plan, key, b) or ctl_hold_hb4(self.plan, tn, b)
+                d_ctl, d_fs = f"cland_dn_fault_{b}, cland_dn_ready_{b}", f"cland_fstart_in_{b}"
+                if hb_n:
+                    # SEAMHOLD-CTL-K5-DI: pads on the control bits only (never the data bus); the ring still sees the same bits
+                    if f".t_rst_n({d_fs})" not in ring_rst:
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_ctl_hold_hb4 needs the ring t_rst_n on cland_fstart_in_{b}"))
+                        continue
+                    logic += [f"    wire [1:0] cland_dn_ctl_hd_{b};  // SEAMHOLD-CTL-K5-DI hold pad: {hb_n} x HB4 per bit",
+                              f"    ot_dp_hd #(.W(2), .N({hb_n})) u_hdly_cland_ctl_{b} (.a({{{d_ctl}}}), .y(cland_dn_ctl_hd_{b}));",
+                              f"    wire cland_fs_hd_{b};  // SEAMHOLD-CTL-K5-DI hold pad: {hb_n} x HB4",
+                              f"    ot_dp_hd #(.W(1), .N({hb_n})) u_hdly_cland_fs_{b} (.a({d_fs}), .y(cland_fs_hd_{b}));"]
+                    d_ctl, d_fs = f"cland_dn_ctl_hd_{b}", f"cland_fs_hd_{b}"
+                    ring_rst = ring_rst.replace(f".t_rst_n(cland_fstart_in_{b})", f".t_rst_n({d_fs})")
                 logic += [f"    wire [{w+1}:0] {ring};", f"    wire [{w-1}:0] {landed};",
                           f"    assign {landed} = {ring}[{w-1}:0];",
                           f"    {ring_mod.format(w=w+2)} u_cland_{b} (",
-                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{cland_dn_fault_{b}, cland_dn_ready_{b}, {b}}}), .q({ring}),",
+                          f"        .fclk(fclk_in_{b}), {ring_rst}, .d({{{d_ctl}, {b}}}), .q({ring}),",
                           f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));",
                           f"    wire cland_ok_{b} = {ring}[{w}] && landing_ready_{b} && !landing_fault_{b};",
                           f"    wire cland_bad_{b} = landing_fault_{b} || (landing_ready_{b} && {ring}[{w+1}]);"]
@@ -2558,7 +2616,12 @@ class Landings:
             import landing_tie_children as LTC
             lc = self.types[key].get("clock", {}).get("landing_contract", {})
             use_ports = LTC.seam_use_ports(lc.get("tieable_children"))
-            sources=list(collector_info["local_sources"])
+            sources, stale_sources = drop_undriven_local_sources(list(collector_info["local_sources"]), logic, extra)
+            if stale_sources:
+                # C-LANDING-STATUS-UNDRIVEN 11-26: a stale compose-sidecar collector source (bus pruned from the type) has no
+                # landed ring here, so its landing_ready_/fault_ wires would be used and never driven (gen_lint rtl_check FAIL)
+                self.reset_placements.setdefault(tn, {})["collector_stale_sources"] = stale_sources
+                print(f"CLAND-COLLECTOR-STALE {tn}: dropped {len(stale_sources)} sidecar local source(s) without a landed ring: {stale_sources}", flush=True)
             monitor_reset_copies = []
             for ch in collector_info["children"]:
                 i=ch["index"]

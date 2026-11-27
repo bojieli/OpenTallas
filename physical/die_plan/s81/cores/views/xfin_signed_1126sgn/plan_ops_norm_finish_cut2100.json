@@ -1,0 +1,198 @@
+{
+ "schema": "plan_ops.v1",
+ "note": "C-VIEW-NO-OBS: bind the signed native norm_finish RF1 view+libs (xfin_signed_1126sgn)",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t10/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t3/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t4/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t5/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t6/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t7/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t8/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c1x_C__t9/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c3x_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_c3x_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_iq_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_iq_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_kv512_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_mu_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepw_mu_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/7/lef",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish.lef"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepw_mus_C__t1/hard_cores/7/lib",
+   "old": "physical/die_plan/s81/cores/views/xfin_signed_1104/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib",
+   "value": "physical/die_plan/s81/cores/views/xfin_signed_1126sgn/ot_s81dv_norm_finish/ot_s81dv_norm_finish_tt.lib"
+  }
+ ]
+}

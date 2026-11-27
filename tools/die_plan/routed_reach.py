@@ -37,6 +37,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
+sys.path.insert(0, str(HERE))
+import per_bit_reach  # noqa: E402
 SCHEMA = "opentallas.routed_reach.v1"
 REACH_UM = 405.0
 EPS = 1e-6
@@ -262,8 +264,10 @@ def hops(pts, boxes, outline=None):
     return out
 
 
-def type_hops(t, ceiling="M7", root=None):
-    """[{conn, hop, from, to, man, routed}] of every internal_stations hop of a type"""
+def type_hops(t, ceiling="M7", root=None, src=None):
+    """[{conn, hop, from, to, man, routed}] of every internal_stations hop of a type.  src = src_centroid.overrides(geom, t) (C-LEG405 SRC-NOT-AT-LEAF):
+    an out bus's first hop is the worst edge from its real source registers to the first station, an in bus's last hop the worst edge to its real
+    consumers (placed geometry); without it (or for a bus it does not list) the chain keeps from_um / to_um as before."""
     boxes, info = blocking_boxes(t, ceiling, root)
     W, H = t["outline_um"]
     rows = []
@@ -271,13 +275,27 @@ def type_hops(t, ceiling="M7", root=None):
         if "from_um" not in e or "to_um" not in e:
             continue
         pts = [tuple(e["from_um"])] + [tuple(r) for r in e.get("regs_um", [])] + [tuple(e["to_um"])]
+        ov = (src or {}).get(str(e.get("conn", "")))
+        buses = {b.get("name"): b for b in t.get("buses") or []}
+        pbh = per_bit_reach.per_bit_hops(e, buses.get(str(e.get("conn", ""))[4:]), W, H)
+        if pbh:   # kit per_bit chain (HEAD-INT-R2): sites follow the pin -> leaf_um L, not regs_um
+            for i, m in enumerate(pbh):
+                rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[0]), b=list(pts[-1]), man=round(m, 3), routed=round(m, 3), bits=e.get("bits")))
+            continue
+        ch = (ov or {}).get("chain")
+        last = len(pts) - 2
         for i, m, L in hops(pts, boxes, (W, H)):
+            if ch is not None:   # placed chain: pin-side hop = worst real register edge, hops between stations = worst placed station -> station edge, far end = plan
+                if i == (0 if ov["end"] == "src" else last):
+                    m = L = ch["max_um"]
+                elif 0 < i < last:
+                    m = L = ch.get("inter_max_um") or 0.0
             rows.append(dict(conn=e.get("conn", ""), hop=i, a=list(pts[i]), b=list(pts[i + 1]), man=round(m, 3),
                              routed=round(L, 3) if L != float("inf") else -1.0, bits=e.get("bits")))
     return rows, boxes, info
 
 
-def plan_report(raw, types=None, reach=None, root=None):
+def plan_report(raw, types=None, reach=None, root=None, geoms=None):
     ceil = ((raw.get("die") or {}).get("layer_budget") or {}).get("partition_signal_max") or \
         (raw.get("layer_budget") or {}).get("partition_signal_max") or "M7"
     reach = float(reach or min(float((raw.get("budgets") or {}).get("ft_station_max_um", REACH_UM)), REACH_UM))
@@ -287,7 +305,11 @@ def plan_report(raw, types=None, reach=None, root=None):
     for tn, t in sorted((raw.get("partition_types") or {}).items()):
         if t.get("hard") or (rx and not rx.search(tn)) or not t.get("internal_stations"):
             continue
-        rows, boxes, info = type_hops(t, ceil, root)
+        src = None
+        if geoms and tn in geoms:
+            import src_centroid
+            src = src_centroid.overrides(src_centroid.load(geoms[tn]), t)
+        rows, boxes, info = type_hops(t, ceil, root, src)
         out["blocking_cores"] += len(boxes)
         out["no_view_cores"] += sum(1 for v in info.values() if v == "no_view")
         mr = max([r["routed"] for r in rows] or [0.0])
@@ -301,6 +323,12 @@ def plan_report(raw, types=None, reach=None, root=None):
     return out
 
 
+def _geoms_from_env():
+    import os
+    p = os.environ.get("OT_ROUTED_REACH_GEOM")
+    return json.loads(Path(p).read_text()) if p and Path(p).is_file() else None
+
+
 def check_plan(P, R, mode=None, root=None, max_msgs=60):
     """G0 entry: findings under check "routed_reach" (WARN default; mode / budgets.routed_reach "error" -> ERROR)."""
     mode = mode or P.budgets.get("routed_reach", "warn")
@@ -308,7 +336,7 @@ def check_plan(P, R, mode=None, root=None, max_msgs=60):
         return dict(mode="off")
     raw = dict(P.raw)
     raw.setdefault("layer_budget", dict(partition_signal_max=P.layer_budget["partition_signal_max"]))
-    rep = plan_report(raw, reach=None, root=root)
+    rep = plan_report(raw, reach=None, root=root, geoms=_geoms_from_env())
     for k, o in enumerate(sorted(rep["over"], key=lambda r: -r["routed"])):
         msg = (f"type {o['type']}: internal_stations {o['conn']} hop {o['hop']} {o['a']} -> {o['b']} routes "
                f"{o['routed']:.0f} um round the blocking cores (Manhattan {o['man']:.0f}) > {rep['reach_um']:g} um")
@@ -330,9 +358,10 @@ def main(argv=None):
     c.add_argument("--reach", type=float)
     c.add_argument("--json")
     c.add_argument("--root", help="repo root the LEF paths resolve against (default: this checkout)")
+    c.add_argument("--geom", help="JSON {type: geom.tsv of its 3_place}: out buses start / in buses end at the real register centroid (src_centroid.py)")
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan).read_text())
-    rep = plan_report(raw, a.types, a.reach, a.root)
+    rep = plan_report(raw, a.types, a.reach, a.root, json.loads(Path(a.geom).read_text()) if a.geom else None)
     if a.json:
         Path(a.json).write_text(json.dumps(rep, indent=1) + "\n")
     print(f"ROUTED_REACH hops {rep['hops']} detour {rep['detour_hops']} max_routed {rep['max_routed_um']:.1f} "

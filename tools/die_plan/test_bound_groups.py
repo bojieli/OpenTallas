@@ -167,3 +167,33 @@ def test_segmented_group_registers_only_exact_native_dependency_and_fails_closed
         G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,ordinary,segmented_memory_delay=1)
     with pytest.raises(G.BoundGroupError,match='explicit 0 or 1'):
         G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,grouped,segmented_memory_delay=2)
+
+
+def test_materialize_keeps_committed_module_across_landing_pad_rename(tmp_path, monkeypatch):
+    """P-SU-LANE-COMMITTED-STALE: a refreshed R8 pin (landing pads outside the lane) must not fail EMIT with
+    'grouped source differs'; the committed module is kept and only the frame hookup is rewired."""
+    import qc_su_lane_cut as C
+    from test_qc_su_lane_cut import landing_pad_vehicle
+    source, reference = landing_pad_vehicle()
+    (tmp_path/'rtl/physical').mkdir(parents=True)
+    (tmp_path/'rtl/physical/qfd_qc_su_lane_w_l0.sv').write_text(reference)
+    members=[dict(inst='u_'+k+'0',module='leaf',reset_pin='rst_n') for k in ('exp','head','lrly','rcp','rsq')]
+    hc=dict(inst='u_lane0',module='qfd_qc_su_lane_w_l0',
+            bound_group=dict(kind='exact_post_bind_group',reset_pin='rst_n',members=members,memory_alignment=None))
+    tree=dict(core_resets=[dict(inst='u_lane0',tap=10)],relays=[dict(q='rst_n_t10',depth=4),dict(q='rst_n_t3',depth=4)])
+    monkeypatch.setitem(sys.modules,'reset_tree',N(for_type=lambda P,t:tree,leaf_tap=lambda P,t:3))
+    planned=source.replace('.rst_n(rst_n)','.rst_n(rst_n_t10)').replace('    wire [7:0] x_q;','    wire rst_n_t10;\n    wire [7:0] x_q;')
+    out=tmp_path/'bind';out.mkdir();frame=out/'t.sv';frame.write_text(planned)
+    binder=N(types={'t':dict(hard_cores=[hc])},base=str(tmp_path),extra_lib=[],wavefront_plan=lambda:{})
+    products=G.materialize(binder,'t',frame)
+    assert [p.name for p in products]==['qfd_qc_su_lane_w_l0.sv']
+    assert G._code(products[0].read_text())==G._code(reference)
+    rec=binder.bound_group_records['t'][0]
+    assert rec['input_abi']=='landing_pad' and rec['input_abi_changed_bits']==8
+    assert 'pd1_x_q_0[0]' in frame.read_text().split('u_lane0 (')[1]
+    # any non-pad difference still fails closed
+    stale=reference.replace('.x(w_u_rsq0_y)','.x(w_u_exp0_y)')
+    assert stale!=reference
+    (tmp_path/'rtl/physical/qfd_qc_su_lane_w_l0.sv').write_text(stale)
+    frame.write_text(planned);products[0].unlink();del binder.bound_group_records
+    with pytest.raises((G.BoundGroupError,ValueError)):G.materialize(binder,'t',frame)

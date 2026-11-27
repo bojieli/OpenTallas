@@ -124,3 +124,32 @@ def test_cli(tmp_path):
     assert json.loads((tmp_path / "r.json").read_text())["schema"] == RR.SCHEMA
     f.write_text(json.dumps(_plan(tmp_path, [[290.0, 310.0], [510.0, 310.0]])))
     assert RR.main(["check", str(f)]) == 0
+
+
+def test_per_bit_chain_follows_kit_not_regs_um(monkeypatch):
+    """HEAD-INT-R2 F1: per_bit station hops are L(pin window end, leaf_um)/(n+1) whatever regs_um says (kit is_bits).  Opt-in."""
+    monkeypatch.setenv("OT_PERBIT_REACH", "1")
+    t = {"outline_um": [1442.88, 2000.0], "hard_cores": [],
+         "buses": [{"name": "be_i", "dir": "in", "face": "E", "width": 8, "window_um": [504.26, 1008.5]}],
+         "internal_stations": [{"conn": "bus:be_i", "bits": 8, "bit_route": "per_bit", "leaf_um": [430.0, 780.0], "from_um": [1442.88, 756.0],
+                                "regs_um": [[457.5, 760.0]] * 3, "to_um": [430.0, 780.0]}]}
+    a, _, _ = RR.type_hops(t)
+    t["internal_stations"][0]["regs_um"] = [[1400.0, 700.0]] * 3
+    b, _, _ = RR.type_hops(t)
+    assert [r["man"] for r in a] == [r["man"] for r in b] and len(a) == 4 and abs(a[0]["man"] - 1288.62 / 4) < 0.01
+    del t["internal_stations"][0]["bit_route"]
+    c, _, _ = RR.type_hops(t)
+    assert [r["man"] for r in c] != [r["man"] for r in a]
+
+
+def test_per_bit_chain_default_off_uses_regs_um(monkeypatch):
+    """COORD 11-26: default OFF -> routed_reach measures the regs_um chain again (re-seating regs_um changes the hops)."""
+    monkeypatch.delenv("OT_PERBIT_REACH", raising=False)
+    t = {"outline_um": [1442.88, 2000.0], "hard_cores": [],
+         "buses": [{"name": "be_i", "dir": "in", "face": "E", "width": 8, "window_um": [504.26, 1008.5]}],
+         "internal_stations": [{"conn": "bus:be_i", "bits": 8, "bit_route": "per_bit", "leaf_um": [430.0, 780.0], "from_um": [1442.88, 756.0],
+                                "regs_um": [[457.5, 760.0]] * 3, "to_um": [430.0, 780.0]}]}
+    a, _, _ = RR.type_hops(t)
+    t["internal_stations"][0]["regs_um"] = [[1400.0, 700.0]] * 3
+    b, _, _ = RR.type_hops(t)
+    assert [r["man"] for r in a] != [r["man"] for r in b]

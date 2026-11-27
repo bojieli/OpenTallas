@@ -476,6 +476,7 @@ def gate(a):
     raw = json.loads(plan.read_text())
     tap_manifest = getattr(a, "tap_manifest", None)
     tap_types = []
+    reach_types = []
     try:
         if tap_manifest:
             import tap_derive
@@ -483,6 +484,12 @@ def gate(a):
             tap_types, report = tap_derive.derive(raw, plan, tree, tap_manifest)
             (out / "tap_derive.json").write_text(json.dumps(report, indent=1) + "\n")
             R["tap_derive"] = {"types": tap_types, "report": str(out / "tap_derive.json")}
+        import tap_reach_fix                  # C-TAP-REACH: plan flag tap_reach.enable, default off (derive is then a no-op)
+
+        reach_types, reach_report = tap_reach_fix.derive(raw, plan, tree)
+        if tap_reach_fix.enabled(raw):
+            (out / "tap_reach.json").write_text(json.dumps(reach_report, indent=1) + "\n")
+            R["tap_reach"] = {"types": reach_types, "report": str(out / "tap_reach.json")}
         nrep = RN.normalize_plan(braw, raw, str(L), (tree / a.base).resolve(), plan.resolve(), a.skip_normalize)
         if tap_types:
             import tap_offset_cover
@@ -498,6 +505,12 @@ def gate(a):
             with RN.in_tree(L):
                 covered = tap_offset_cover.fill(raw, plan.resolve(), types=tap_pattern)
             R["tap_derive"]["tap_offset_cover"] = covered
+        if reach_types:
+            import tap_offset_cover
+
+            reach_pattern = "^(?:" + "|".join(re.escape(tn) for tn in reach_types) + ")$"
+            with RN.in_tree(L):
+                R["tap_reach"]["tap_offset_cover"] = tap_offset_cover.fill(raw, plan.resolve(), types=reach_pattern)
     except Exception as e:  # noqa: BLE001 - a normalize crash is a named NOT-READY, never a silent pass
         nrep = dict(error=f"{type(e).__name__}: {str(e)[:400]}")
     (out / "normalize_plan.json").write_text(json.dumps(nrep, indent=1, default=str) + "\n")
@@ -505,7 +518,7 @@ def gate(a):
     if nrep.get("error"):
         done("NOT", f"normalize crashed: {nrep['error']}")
         return finish()
-    if nrep["changed"] or tap_types:
+    if nrep["changed"] or tap_types or reach_types:
         RN.dump(raw, plan)
     nfail = {k: [tn for tn, x in v.items() if isinstance(x, dict) and (x.get("failed") or x.get("bank_failed"))]
              for k, v in nrep["steps"].items() if isinstance(v, dict)}
@@ -519,7 +532,7 @@ def gate(a):
     elif a.types == "all":
         types = []
     else:
-        types = sorted({t for t in a.types.split(",") if t} | set(tap_types))
+        types = sorted({t for t in a.types.split(",") if t} | set(tap_types) | set(reach_types))
     R["types"] = types or "all"
     if a.types == "auto" and not types:
         done("NOT", "the rows changed no bound partition type (nothing to bind; use --types)")
@@ -712,9 +725,18 @@ def main(argv=None):
     g.add_argument("--drop-failed-rows", action="store_true", help="a row that fails to apply is dropped (recorded), the rest go on")
     g.add_argument("--plan-name", help="file name of the gated plan in the fork's plan dir (default plan_row_<lane>.json)")
     g.add_argument("--local", action="store_true", help="run here, not through ot-run --die")
+    g.add_argument("--light", action="store_true", default=os.environ.get("OT_ROW_GATE_LIGHT") != "0",
+                   help="P-POSTPUBLISH-DISK: use the sparse --cow overlay instead of a full 60 GB fork when the gate is eligible "
+                        "(scoped types, sealed source, pinned OT_BIND_YOSYS, no --keep-*); otherwise the ordinary fork. DEFAULT ON (COORD 11-26); OT_ROW_GATE_LIGHT=0 turns it off")
     g.add_argument("--cow", action="store_true",
                    help="isolate a terminal gate in a copy-on-write overlay of a sealed source")
     a = ap.parse_args(argv)
+    if a.light and not a.cow:
+        use, why = COW.light_choice(Path(a.src).resolve(), rt_dir(a.rt), a.types, a.keep_tree or a.keep_fork)
+        print(f"row_gate: light fork {'ON (' + why + ')' if use else 'off, ordinary fork: ' + why}", flush=True)
+        if use:
+            a.cow = True
+            argv = [*argv, "--cow"]
     cow_whole = a.cow and a.types == "all"
     pin_flags = [v is not None for v in (a.r8_pin_pre, a.r8_pin_pre_sha256, a.r8_pin_extra)]
     if any(pin_flags):

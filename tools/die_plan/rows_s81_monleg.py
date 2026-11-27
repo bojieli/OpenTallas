@@ -61,6 +61,8 @@ def pairs(raw, only=None):
             continue
         R = tree_index(lc.get("collector_tree") or {})
         for c in lc["collector_children"]:
+            if not isinstance(c, dict) or c.get("index") is None:
+                continue                  # HEAD children (bus/fault/ready/seam/xy_um) have no monitor index and no monitor_* band
             b = (lc.get("bands") or {}).get(f"monitor_{c['index']}")
             if not b or not b.get("rect_um"):
                 continue

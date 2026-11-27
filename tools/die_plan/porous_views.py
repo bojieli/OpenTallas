@@ -54,6 +54,15 @@ DATA = HERE / "porous_views_data"
 ENV = "OT_POROUS_VIEWS"
 DEFAULT_LAYERS = ("M4", "M5", "M6", "M7")
 EDGE_UM = 0.5
+# C-LEGACY-VIEW-EOL (S81-COL-EOL 11-26, FABLE-INDEP 10:05/10:11): these porous views keep an own-wire OBS stub or a separate OBS inside the M4/M5 line-end
+# keep-out of signal pins (static pin_eol_findings of the view: qbank_N 5 M5 pins, qbank_S 30, NNfd 18, NNfu 6, sstn_base566 23, bf_front_roots 47).
+# Kits that took them stalled DRT at 358-388 M5 Lef58EolKeepOut (H9 R2, P5, P6); the plain legacy view (qbank_N 68732dce ...) routed clean (H9 P4: DRC 0 at
+# iteration 6).  select() therefore never applies them, even with OT_POROUS_VIEWS=all; the kit keeps the plan LEF and porous_views.json lists the row as not applied.
+# OT_POROUS_ALLOW_EOL=1 restores the old behaviour (a deliberate EOL probe).  A rebuilt porous row without the keep-out leaves this set automatically
+# (it has a new sha256).  First 8 hex of the view sha256 (the porous_views_data/map.json row).
+EOL_STALL_SHA8 = {"6e387979": "dsfd_qbank_N", "3d4bea94": "dsfd_qbank_S", "37a8c80c": "dsfd_node_NNfd", "9df7a432": "dsfd_node_NNfu",
+                  "b5ff37d0": "ot_s81_sstn_base566", "63b8a7f6": "dsfd_bf_front_roots"}
+ALLOW_EOL_ENV = "OT_POROUS_ALLOW_EOL"
 APPLIED, SKIPPED = {}, {}
 _map = None
 
@@ -104,6 +113,8 @@ def select(lef, resolve, log=print):
         why = "view carries hard landing evidence (signed LEF proved by hash)"
     elif sha_file(plan) != row["base_sha256"]:
         why = "plan LEF is not the base of this view (sha256 %s)" % sha_file(plan)[:12]
+    elif row["sha256"][:8] in EOL_STALL_SHA8 and os.environ.get(ALLOW_EOL_ENV, "").strip() != "1":
+        why = "C-LEGACY-VIEW-EOL: porous view %s keeps M4/M5 OBS inside the pin line-end keep-out (DRT stalls on Lef58EolKeepOut); the plan LEF is bound" % row["sha256"][:8]
     if why:
         SKIPPED[name] = dict(lef=name, module=mod, plan_lef=str(lef), reason=why)
         log("OT_POROUS_VIEW " + json.dumps(dict(lef=name, action="not applied: " + why)))

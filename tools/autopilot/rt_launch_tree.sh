@@ -43,7 +43,9 @@ if [ -e "$L/.rt_launch_ok" ] || [ -L "$L/.rt_launch_ok" ]; then
   exit 97
 fi
 T="$L.tmp.$$"
-chmod -R u+w "$T" "$L" 2>/dev/null; rm -rf "$T" "$L"   # an L without .rt_launch_ok was never complete, so nothing runs from it
+# SEALED-INODE-SHARED (COORD 11-26): files of an incomplete L may be HARD LINKS of rt files; chmod on a link changes the rt inode, so only DIRECTORIES are made writable (removing
+# a name needs write on its dir, never on the file).  find does not follow symlinks.
+find "$T" "$L" -type d ! -perm -u+w -exec chmod u+w {} + 2>/dev/null; rm -rf "$T" "$L"   # an L without .rt_launch_ok was never complete, so nothing runs from it
 mkdir -p "$T/physical" || exit 97
 for e in "$S"/* "$S"/.[!.]*; do
   [ -e "$e" ] || [ -L "$e" ] || continue
@@ -59,7 +61,7 @@ if [ -d "$S/physical" ]; then
     ln -s "$e" "$T/physical/$b" || exit 97
   done
 fi
-link_tree() { cp -al "$1" "$2" 2>/dev/null || { chmod -R u+w "$2" 2>/dev/null; rm -rf "$2"; cp -a "$1" "$2"; }; }   # cp -a keeps rt's a-w dir modes
+link_tree() { cp -al "$1" "$2" 2>/dev/null || { find "$2" -type d ! -perm -u+w -exec chmod u+w {} + 2>/dev/null; rm -rf "$2"; cp -a "$1" "$2"; }; }   # dirs only: a chmod -R u+w here changed the rt inodes (SEALED-INODE-SHARED)   # cp -a keeps rt's a-w dir modes
 link_tree "$RT/tools" "$T/tools" || exit 97
 if [ -d "$RT/physical/common_flow" ]; then
   link_tree "$RT/physical/common_flow" "$T/physical/common_flow" || exit 97

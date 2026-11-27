@@ -137,6 +137,9 @@ if {[info exists ::env(OT_HOLD_STOP_PS)] && $::env(OT_HOLD_STOP_PS) ne ""} { set
 set hg_stop_lim [expr {$OT_HOLD_STOP_PS + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
 set hg_stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
 set hg_screen [expr {$w < $hg_lim || ($hg_legacy && $n > 2000)}]
+# blocking FF hold limit = the academic profile's (signoff_profile.HOLD_MIN_PS, test_hold_gate_limit pins it)
+set hg_block 0.0
+if {[info exists ::env(OT_HOLD_BLOCK_PS)] && [string is double -strict $::env(OT_HOLD_BLOCK_PS)]} { set hg_block $::env(OT_HOLD_BLOCK_PS) }
 # KW-FIX-17 11-05 (COORD 16:2x class, same scope as tools/orfs_hold_mm.tcl ot_hold_rr_stats and
 # physical/die_plan/hbm_arch_cores/hold_gate.tcl): the structural stop counts register-to-register FF hold only.  In/out-
 # port hold paths (timed against the kit's boundary vclk/seam contract) are an ADVISORY line + report; die STA checks
@@ -184,6 +187,11 @@ if {$hg_screen && $hg_stop} {
 }
 if {$hg_screen} {
   puts [format "OT_HOLD_GATE INFO FF wns_ps %.2f endpoints %d (true negative slack): beyond the pre-repair screen, information only; repair_timing -hold and the routed FF hold sign-off decide" $w $n]
+} elseif {$w < $hg_block} {
+  # P-FALSE-GREEN (S81-GATE-LINT 11-26, FABLE-FLOW-0847 B17b): the screen / stop limits above are ADVISORY pre-repair numbers
+  # (S81 t23 printed PASS at -42.34 against -210 and could not tell fixed from unfixed).  The blocking FF hold limit is the
+  # academic profile's (signoff_profile.HOLD_MIN_PS = 0 ps; OT_HOLD_BLOCK_PS overrides): a negative WNS is never a PASS.
+  puts [format "OT_HOLD_GATE INFO FF wns_ps %.2f endpoints %d (true negative slack): inside the advisory pre-repair limit %.1f but below the blocking hold limit %.1f ps; not a PASS, repair_timing -hold and the routed FF hold sign-off decide" $w $n $hg_lim $hg_block]
 } else {
   puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
 }

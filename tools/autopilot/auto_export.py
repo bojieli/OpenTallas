@@ -96,7 +96,7 @@ def enqueue(signoff, rec=None, die=None, element=None, kind=None, spool=None):
 
 # ---- host probe (runs on a build host over ssh, script on stdin) ------------------------------------------------------
 PROBE = r'''
-import hashlib, json, os, re, socket, sys, time
+import glob, hashlib, json, os, re, socket, sys, time
 mode, arg = sys.argv[1], json.loads(sys.argv[2])
 HOME = os.path.expanduser("~"); SPOOL = os.path.join(HOME, %(spool)r)
 CACHE = os.path.join(HOME, ".local/state/ot-auto-export/sha_cache.json")
@@ -159,6 +159,29 @@ def unit(so, hint=None):
                 dn[:] = [d for d in dn if d not in ("objects", ".git", "__pycache__")] if dp.count("/") - r.count("/") < 4 else []
                 if "1_synth.v" in fn:
                     files.append((dp, "1_synth.v")); have_f.add("1_synth.v"); break
+    # LEC-R2 11-26 (P-LEC-PROOF-GAP sub-cause routed-LEC-not-exported; sle_hc0 cl38badc56 1a425d2f175f: its routed EQUIVALENT lec.json sat in the kit as
+    # lec_routed_relec1122/lec.json, was never copied, and the count audit read MISSING / AT-RISK): the newest EQUIVALENT routed lec.json of the kit travels with the
+    # record as lec.json (the name export_restore reads), unless the sign-off directory already carries one.  Same acceptance as kit_wave pp: verdict EQUIVALENT, not older
+    # than 6_final.v; identity: the kit's own routed 6_final.v has the size of the exported one (else "mtime").  Its sha is added to INDEX-LEC.tsv by the rtx-pro drain.
+    lec_info = None
+    if "lec.json" not in have_f:
+        cands = []
+        for r in [x for x in (inp.get("kit"), os.path.dirname(sod), sod, os.path.dirname(dbd)) if x and os.path.isdir(x)]:
+            for pat in ("lec_routed*", "lec"):
+                for q in glob.glob(os.path.join(r, pat, "lec.json")):
+                    try:
+                        j = json.load(open(q))
+                    except (OSError, ValueError):
+                        continue
+                    if j.get("verdict") == "EQUIVALENT" and os.path.getsize(q) < 20 << 20 and os.path.isfile(os.path.join(dbd, "6_final.v")) \
+                            and os.path.getmtime(q) >= os.path.getmtime(os.path.join(dbd, "6_final.v")):
+                        cands.append((os.path.getmtime(q), q, j, r))
+        if cands:
+            _, q, j, r = max(cands, key=lambda c: c[0])
+            nl = glob.glob(os.path.join(r, "run", "results", "*", "*", "base", "6_final.v"))
+            same = bool(nl) and any(os.path.getsize(x) == os.path.getsize(os.path.join(dbd, "6_final.v")) for x in nl)
+            files.append((os.path.dirname(q), "lec.json")); have_f.add("lec.json")
+            lec_info = dict(src=q, verdict="EQUIVALENT", counts=j.get("counts"), identity="size" if same else "mtime")
     vt = 0
     for vr in [x for x in (os.path.join(sod, "view"), os.path.join(sod, "views"), os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(sod), "views"),
                            os.path.join(dbd, "view"), os.path.join(dbd, "views"), os.path.join(inp.get("kit") or "/nonexistent", "views")) if os.path.isdir(x)]:
@@ -190,7 +213,7 @@ def unit(so, hint=None):
     tt = ((rec.get("checks") or {}).get("setup_tt") or {}).get("wns_ps")
     ff = ((rec.get("checks") or {}).get("hold_ff") or {}).get("wns_ps")
     o.update(odb=os.path.realpath(odb), odb_size=os.path.getsize(odb), odb_mtime=os.path.getmtime(odb), files=files,
-             display=disp, top=top_of(rec, so), tt=tt, ff=ff, drc=((rec.get("route") or {}).get("drc")))
+             display=disp, top=top_of(rec, so), tt=tt, ff=ff, drc=((rec.get("route") or {}).get("drc")), lec=lec_info)
     return o
 def sha(p, cache):
     st = os.stat(p); k = "%%s|%%d|%%d" %% (p, st.st_size, int(st.st_mtime))
@@ -348,7 +371,7 @@ def save_ledger(L):
     os.replace(tmp, p)
     pend = [dict(key=k, mode='host' if u['state'] == 'meta' else 'agidock',
                  **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src', 'bytes',
-                                      'host', 'files', 'display') if x in u})
+                                      'host', 'files', 'display', 'lec') if x in u})
             for k, u in L['units'].items() if u.get('state') in ('agi', 'meta')]
     tmp = os.path.join(STATE, 'pending_rtx.json.tmp')
     with open(tmp, 'w') as f:
@@ -368,6 +391,17 @@ def index_row(u):
     pack = '%s/display' % k if split and u.get('display') else ''
     return '\t'.join([u['die'], u['element'], u['kind'], u['record'], db, '%s/%s/6_final.odb' % (RTX_ROOT, k),
                       str(u['odb_size']), u['odb_sha'], pack, meta, SPLIT_STATUS if split else 'ARCHIVED-BOTH', u['src']]) + '\n'
+
+
+def lec_index_row(u):
+    """INDEX-LEC.tsv row (append-only sidecar of INDEX.tsv, LEC-R2 11-26): the routed lec.json that travelled with a unit.
+    record, odb sha256, lec.json sha256, verdict, compare points, identity (size | mtime), the host path it came from.  '' when the unit carried none."""
+    l = u.get('lec')
+    sha = (u.get('shas') or {}).get('lec.json')
+    if not l or not sha:
+        return ''
+    cp = (l.get('counts') or {}).get('compare_points', '')
+    return '\t'.join([u['record'], u['odb_sha'], sha, l.get('verdict', ''), str(cp), l.get('identity', ''), l.get('src', '')]) + '\n'
 
 
 def meta_files(u):
@@ -1080,6 +1114,10 @@ def rtx_pull(a):
             if not any(c[7] == u['odb_sha'] for c in parse_index(open(idx).read())):
                 with open(idx, 'a') as f:
                     f.write(index_row(u))
+                row = lec_index_row(u)
+                if row:
+                    with open(os.path.join(RTX_ROOT, 'INDEX-LEC.tsv'), 'a') as f:
+                        f.write(row)
         say('rtx done', k)
         reports.append(dict(key=u['key'], ok=True))
     if reports:

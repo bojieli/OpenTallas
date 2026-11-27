@@ -124,7 +124,7 @@ def read_local_rel(roots, rel):
             return t
     return None
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
-          "SIGNED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
+          "SIGNED-UNVERSIONED", "CREDITED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
 # generated memory macros (tools/mem_compiler: ROM/SRAM compilers, owner 2026-10-25 ROM-MACRO): one content-independent
 # LEF/Liberty/behavioural view per shape, built by the generator, never kitted or routed -- ROM content is per-instance
 # via-map data (rom_gen.py personalise / verify), so a macro is never a design to harden
@@ -151,6 +151,7 @@ NEXT = {
     "FIX": "structural fix -> GEOM REQ -> rebuild",
     "WAIT-PARENT": "matching actual parent seam receipt required; preserve physical views",
     "SIGNED-UNVERSIONED": "sign-off record lacks src commit + flow tag (closure order rule 3): re-run sign-off at a flow tag",
+    "CREDITED-UNVERSIONED": "- (accepted legacy: signed record without flow tag, COORD 11-26; coord autopilot/OWNERS-CREDITED.tsv)",
     "SIGNED": "-",
     "GENERATED": "- (generated macro view; per-content check = tools/mem_compiler/rom_gen.py verify)",
     "RETIRED": "- (not a design of the plan of record; coord autopilot/OWNERS-RETIRED.tsv)",
@@ -665,7 +666,8 @@ def build(inp, now=None):
             elif k in signed:
                 state, why = "SIGNED", signed[k]
             elif k in unversioned and not live_route:
-                state, why = "SIGNED-UNVERSIONED", unversioned[k]
+                cr = _credited(inp.get("credited"), die, it)
+                state, why = ("CREDITED-UNVERSIONED", cr) if cr else ("SIGNED-UNVERSIONED", unversioned[k])
             elif live_route:
                 state, why = "ROUTING", live_route[0][0]
             else:
@@ -715,7 +717,7 @@ def build(inp, now=None):
             rows.append(dict(die=die, item=it["item"], kind=it["kind"], state=state, owner=owner, live_job=live,
                              last_activity=age, next_step=nxt, default_owner=dflt, evidence=(why or "").replace("\t", " ")[:200],
                              replicas=it.get("replicas", ""), members=_members(it), _last=last))
-            if state not in ("SIGNED", "GENERATED", "RETIRED") and not e["live"] and (not last or now - last > UNOWNED_S):
+            if state not in ("SIGNED", "CREDITED-UNVERSIONED", "GENERATED", "RETIRED") and not e["live"] and (not last or now - last > UNOWNED_S):
                 unowned.setdefault((die, dflt), []).append((last, it["item"], state, owner))
 
     for (die, owner), lst in sorted(unowned.items()):
@@ -754,6 +756,13 @@ def _retired(ret, die, it):
         if any(n and (n == pat or (pat.endswith("*") and n.startswith(pat[:-1]))) for n in names):
             return f"RETIRED ({pat}): {why}"
     return None
+
+
+def _credited(cred, die, it):
+    """P-SIGNED-UNVERSIONED (COORD 11-26): an UNVERSIONED record the coordinator accepted as legacy -> reason, else None.
+    Same row shape and matching as OWNERS-RETIRED.tsv (exact item / member / module, or 'prefix*')."""
+    r = _retired(cred, die, it)
+    return r.replace("RETIRED", "CREDITED-UNVERSIONED", 1) if r else None
 
 
 def summary(rows, unowned, inp):

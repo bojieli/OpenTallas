@@ -74,21 +74,46 @@ def test_manhattan_mode_and_default_unchanged():
     assert A.core_crossings(ty) and A.core_crossings(ty, manhattan=True) == []
 
 
-def test_ft_slot_station_moves_with_its_bit_sites():
+def test_ft_slot_interior_station_moves_with_its_bit_sites_ends_stay():
     raw = _plan()
     ty = raw["partition_types"]["t"]
     ty["internal_stations"] = []
-    ty["outline_um"] = [880.0, 700.0]
-    ty["ft_slots"] = [dict(name="ft0", in_face="W", width=1, stations=3,
-                           regs_um=[[0.0, 500.0], [460.0, 340.0], [740.0, 300.0]],
-                           bit_sites_um=[[[460.0, 340.0], [460.0, 340.27]], [[740.0, 300.0], [740.0, 300.27]]],
-                           out_face="E", out_window_um=[139.0, 141.0])]
+    ty["outline_um"] = [900.0, 700.0]
+    old = [[330.0, 500.0], [460.0, 340.0], [740.0, 300.0], [860.0, 140.0]]
+    ty["ft_slots"] = [dict(name="ft0", in_face="W", width=1, stations=5,
+                           regs_um=[[0.0, 500.0]] + [list(p) for p in old],
+                           bit_sites_um=[[[p[0], p[1]], [p[0], p[1] + 0.27]] for p in old])]
+    assert _nonl(ty) > 0
     raw, led = D.apply(raw)
     s = raw["partition_types"]["t"]["ft_slots"][0]
-    assert len(s["regs_um"]) == 3 and len(s["bit_sites_um"]) == 2
+    assert len(s["regs_um"]) == 5 and len(s["bit_sites_um"]) == 4          # station count unchanged
+    assert s["regs_um"][1] == old[0] and s["regs_um"][4] == old[3]          # first and last station pinned
     assert any(x.get("kind") == "ft_slot" and x["bad_hops_after"] < x["bad_hops_before"] for x in led)
-    for k, (ox, oy) in enumerate(((460.0, 340.0), (740.0, 300.0))):
+    for k, (ox, oy) in enumerate(old):
         dx, dy = s["regs_um"][k + 1][0] - ox, s["regs_um"][k + 1][1] - oy
         assert abs(s["bit_sites_um"][k][0][0] - (ox + dx)) < 1e-3 and abs(s["bit_sites_um"][k][1][1] - (oy + 0.27 + dy)) < 1e-3
+    assert _nonl(raw["partition_types"]["t"]) == 0
+
+
+def test_station_never_lands_on_another_station_cell():
+    raw = _plan()
     ty = raw["partition_types"]["t"]
-    assert _nonl(ty) == 0
+    # a second chain already holds the best detour corner; the re-sited station must not share its 12-um cell
+    ty["internal_stations"].append(dict(conn="bus:b", launch="bus b", from_um=[380.0, 500.0], to_um=[380.0, 520.0],
+                                        regs_um=[[477.5, 442.5]]))
+    raw, _ = D.apply(raw)
+    s = raw["partition_types"]["t"]["internal_stations"][0]
+    ctx = D.Ctx(raw["partition_types"]["t"])
+    cells = [ctx._ck(q) for q in s["regs_um"]] + [ctx._ck([477.5, 442.5])]
+    assert len(cells) == len(set(cells))
+
+
+def test_schema_registers_flag():
+    import copy
+    import schema
+    import test_schema
+    p = schema.SCHEMA["properties"]["ft_core_detour"]
+    assert p["additionalProperties"] is False and set(p["properties"]) == {"enable", "types"}
+    base = copy.deepcopy(test_schema.EX)
+    assert schema.validate({**base, "ft_core_detour": {"enable": 1}}) == []
+    assert schema.validate({**base, "ft_core_detour": {"enable": 1, "bogus": 1}})

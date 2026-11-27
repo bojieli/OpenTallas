@@ -8758,6 +8758,20 @@ def relay_class_rows(env, kit, top, rec):
     return rows
 
 
+def output_compare_gate(cpg, cpt, rec):
+    """FAIL-CLOSED output points (LEC-R2 11-26, COORD safety fix, P-LEC-PROOF-GAP sub-cause FAIL-OPEN): a primary-output compare point (po:*) that exists on only one
+    side is never compared, so an EQUIVALENT verdict over the remaining points is vacuous for that output.  Observed: a gold script variant that removed the gold's X
+    source left all 259 po:* points of kv_cland_w257_ew_aee53 as gate_only_compare, and the checker still printed EQUIVALENT.  Any po:* in gold_only_compare or
+    gate_only_compare makes the run UNPROVEN, with the complete list in the record (rec['output_compare_gaps']).  Register points stay as before: the kept-register
+    check and the proved free inputs already account for them."""
+    gold_po = [k for k in cpg if str(k).startswith("po:")]
+    gate_po = [k for k in cpt if str(k).startswith("po:")]
+    if gold_po or gate_po:
+        rec["output_compare_gaps"] = dict(gold_only=dict(n=len(gold_po), points=gold_po), gate_only=dict(n=len(gate_po), points=gate_po))
+        raise Unproven(f"{len(gold_po)} gold-only and {len(gate_po)} gate-only primary-output compare points are never compared "
+                       f"(first: {(gold_po + gate_po)[:6]}); an EQUIVALENT over the other points would be vacuous on these outputs")
+
+
 def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
@@ -8984,6 +8998,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             gold_unmatched_live=lst(live_g), gate_unmatched=lst(live_t),
             gold_x_sources=len(L.gx), gold_unwritten_x=lst(getattr(L, "unwritten", [])), gate_x_sources=len(L.tx),
             gold_only_compare=lst(cpg), gate_only_compare=lst(cpt))
+        output_compare_gate(cpg, cpt, rec)
         if not m.outs:
             raise Unproven("no matched compare points")
         # 4. prove every compare point (and the correspondence hypotheses once more, together)

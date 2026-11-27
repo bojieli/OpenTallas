@@ -108,3 +108,41 @@ def test_rows_without_pin_hits_and_other_kinds_are_untouched(pins):
     led, left = _run(raw)
     assert led == [] and left == {}
     assert raw["partition_types"]["T"]["clock"]["reserved_sites_um"] == rows
+
+
+def _landing(raw, pins_):
+    raw["partition_types"]["T"]["clock"]["landing_contract"] = dict(pins=pins_)
+    return raw
+
+
+def test_landing_pin_escape_corridor_moves_a_cluster_4um_west_of_the_pin(pins):
+    # C-CLKSITE-LANDPIN (kv3_phy_v1 fclk_out_cland_up[0]): M7 pin 2.1 um inside the east face, cluster 4 um west of it with a
+    # M3-M7 window: no face-pin rect/2-um corridor is touched, but the 8-um escape corridor is
+    pins["pins"] = []
+    rect = (848.77, 760.86, 857.74, 764.37)
+    raw = _landing(_plan(864.0, 1520.64, [_row(rect, stack=[rect])]),
+                   [dict(name="fclk_out_cland_up", layer="M7", dir="out", kind="clock", xy_um=[861.856, 761.952]),
+                    dict(name="cland_up_ready", layer="M7", dir="out", kind="ctl", xy_um=[861.856, 763.392])])
+    assert PC.recheck(None, raw, G) == {"T": 4}                   # 2 pins x (M7, M6): the stack window covers M3-M7 corridors
+    raw0 = _landing(_plan(864.0, 1520.64, [_row(rect, stack=[rect])]), raw["partition_types"]["T"]["clock"]["landing_contract"]["pins"])
+    led, left = _run(raw0)
+    assert left == {} and len(led) == 1 and led[0]["kind"] == "inward", led
+    assert sorted(led[0]["pins_cleared"]) == ["cland_up_ready", "fclk_out_cland_up"]
+    assert led[0]["new"][2] <= 861.856 - 8.0 - PC.LAND_MARGIN_UM + 1e-6   # obstruction ends >= 8 um + stand-off from the pin
+    r = raw0["partition_types"]["T"]["clock"]["reserved_sites_um"][0]
+    assert max(w[2] for w in r["stack_um"]) <= 861.856 - 10.0 + 1e-6      # every M3-M7 window, not just the rect
+    assert not any(w[3] > 761.952 - 0.216 - 2.1 and w[1] < 761.952 + 0.216 + 2.1 and w[2] > 861.856 - 10.0 for w in r["stack_um"])
+
+
+def test_landing_corridor_is_class_wide_and_can_be_switched_off(pins):
+    pins["pins"] = []
+    for face_xy, w, h in (([2.0, 50.0], 40.0, 100.0), ([20.0, 97.0], 40.0, 100.0)):     # west-face pin, north-face pin
+        rect = (face_xy[0] + 4.0, face_xy[1] - 1.0, face_xy[0] + 6.0, face_xy[1] + 1.0) if face_xy[0] < 5 else \
+            (face_xy[0] - 1.0, face_xy[1] - 7.0, face_xy[0] + 1.0, face_xy[1] - 5.0)
+        raw = _landing(_plan(w, h, [_row(rect)]), [dict(name="cland_up_fault", layer="M7", xy_um=face_xy)])
+        raw["partition_types"]["T"]["clock"]["reserved_sites_um"][0]["route_layers"] = "M1-M7"
+        led, left = _run(raw)
+        assert left == {} and led[0]["new"] is not None, led
+        raw = _landing(_plan(w, h, [_row(rect)]), [dict(name="cland_up_fault", layer="M7", xy_um=face_xy)])
+        raw["partition_types"]["T"]["clock"]["reserved_sites_um"][0]["route_layers"] = "M1-M7"
+        assert PC.run(None, raw, G, RS, CP, land_clear=0.0) == []     # off = the old behaviour

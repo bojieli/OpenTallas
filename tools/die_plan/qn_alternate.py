@@ -80,9 +80,19 @@ def main(src, dst, rep):
             c.append(nxt[c[-1]])
         chains.append(c)
     conv = set()
+    ports = set()
     for c in chains:
         k = len(c)
-        conv.update(c[: k - k % 2])
+        n = k - k % 2
+        # C-FACE-SHARED-LOAD / C-RELAYBAY-QNALT (QC-INT-R2-FEFW 11-26): the last stage of a chain that drives a module output
+        # port stays a plain ot_dp_st.  An even chain made all of its stations stn, so the face register was an ot_dp_stn whose
+        # QN fed the port AND the kept unused q[b] inverter (face_guard "shared", 516 bits on sle_fw_v1 cws0) and whose
+        # `.q(<port>)` form no longer matched relay_bay (FAIL_PREBUILD last station not found).  Even k -> k-2 stn + 2 plain.
+        lb = base(insts[c[-1]]["q"])
+        if k % 2 == 0 and lb is not None and re.search(rf"^\s*output\b[^;]*\b{re.escape(lb)}\b", text, re.M):
+            n = k - 2
+            ports.add(c[-1])
+        conv.update(c[:n])
     for i in conv:
         lines[i] = lines[i].replace("ot_dp_st #(", "ot_dp_stn #(", 1).replace(" .q(", " .qn(", 1)
         assert " .qn(" in lines[i], lines[i]
@@ -96,7 +106,7 @@ def main(src, dst, rep):
     bits = sum(insts[i]["W"] for i in conv)
     json.dump(dict(stations=len(insts), chains=len(chains), chain_len_hist=dict(sorted(hist.items())),
                    converted=len(conv), converted_bits=bits,
-                   kept_plain=len(insts) - len(conv),
+                   kept_plain=len(insts) - len(conv), port_tail_plain=len(ports),
                    chains_detail=[[insts[i]["name"] for i in c] for c in chains if len(c) > 1][:5000]),
               open(rep, "w"), indent=1)
     print(json.dumps(dict(stations=len(insts), chains=len(chains), converted=len(conv), converted_bits=bits,

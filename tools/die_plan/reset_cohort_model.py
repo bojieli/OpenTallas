@@ -229,10 +229,14 @@ def main():
     ap.add_argument('--exclude-root', action='append', default=[])
     ap.add_argument('--no-auto-encoder-exclusion', action='store_true')
     ap.add_argument('--source')
+    ap.add_argument('--plan', type=Path, help='P-FALSE-GREEN-1126: the plan the input graph was extracted from; its sha256 is stamped into the output')
     a = ap.parse_args()
     result = model(a.input, hop_um=a.hop_um, excluded_roots=a.exclude_root,
                    auto_encoder=not a.no_auto_encoder_exclusion, max_ff=a.max_ff,
                    type_name=a.type_name, source=a.source)
+    import hashlib
+    result['input_sha256'] = hashlib.sha256(a.input.read_bytes()).hexdigest()
+    result['plan_sha256'] = hashlib.sha256(a.plan.read_bytes()).hexdigest() if a.plan else None   # None = the caller did not name the plan: not a plan-bound cohort
     a.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(dict(groups=len(result['groups']),
                           max_bbox_span_um=max(g['bbox_span_um'] for g in result['groups']),

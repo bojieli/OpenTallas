@@ -114,13 +114,22 @@ def materialize(binder, tn, frame):
         if target is None:
             raise BoundGroupError('group has no planned reset target '+hc['inst'])
         lane=int(re.fullmatch(r'u_lane(\d+)',hc['inst'])[1])
-        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0), segmented_memory_delay=c.get('segmented_memory_delay',0), input_abi=input_abi_contract(binder.base,tn,hc['module'],c.get('input_abi')))
+        knobs=dict(kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0),segmented_memory_delay=c.get('segmented_memory_delay',0))
+        explicit=input_abi_contract(binder.base,tn,hc['module'],c.get('input_abi'))
+        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],input_abi=explicit,**knobs)
+        reference=Path(binder.base)/'rtl/physical'/(hc['module']+'.sv')
+        derived=None
+        if explicit is None and reference.is_file() and _code(reference.read_text())!=_code(rtl):
+            # P-SU-LANE-COMMITTED-STALE: R8 landing pads outside the lane renamed its inputs; keep the committed module
+            # (all leaf port bits re-verified) and rewire only the frame hookup.  Any other difference still fails below.
+            derived=C.landing_pad_input_abi(text,lane,hc['module'],reference.read_text(),source_type=tn,source_partition=hc['inst'],**knobs)
+            if derived is not None:
+                rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],input_abi=derived,**knobs)
         actual={(x['instance'].replace('u_u_','u_',1),x['module']) for x in report['leaves']}
         expected={(x['inst'],x['module']) for x in c['members']}
         net=f"rst_n_t{target['tap']}"
         if actual!=expected or report['reset_source']!=net:
             raise BoundGroupError(f'{hc["inst"]}: final member/reset projection differs, got{report["reset_source"]} expected{net}')
-        reference=Path(binder.base)/'rtl/physical'/(hc['module']+'.sv')
         if not reference.is_file() or _code(reference.read_text())!=_code(rtl):
             raise BoundGroupError(f'{hc["inst"]}: grouped source differs from committed actual module')
         register_masters(binder,text,rtl,segmented_memory_delay=c.get('segmented_memory_delay',0))
@@ -132,7 +141,9 @@ def materialize(binder, tn, frame):
         depths={r['q']:r['depth'] for r in tree['relays']}
         original=f'rst_n_t{RT.leaf_tap(P,t.get("split_of",tn))}'
         records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,
-                            source_matches_committed=True,reset_delivery=c.get('reset_delivery','preserve_release'),
+                            source_matches_committed=True,
+                            input_abi=('explicit' if explicit is not None else 'landing_pad' if derived is not None else 'raw'),
+                            input_abi_changed_bits=report.get('input_abi_changed_bits',0),reset_delivery=c.get('reset_delivery','preserve_release'),
                             previous_leaf_release_depth=depths[original],planned_core_release_depth=depths[net],
                             reset_release_delta_cycles=depths[net]-depths[original]))
     binder.__dict__.setdefault('bound_group_records',{})[tn]=records

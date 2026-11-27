@@ -450,7 +450,8 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
         orig = PG._sub
         PG._sub = lambda argv, cwd, timeout=None: (seen.append(argv), (0, ""))[1]
         try:
-            PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrbw-"), **kw)
+            ab = kw.pop("asbuilt", None)
+            PG.run_static(self.tree, self.plan, ab, "0" * 64, tempfile.mkdtemp(prefix="pgrbw-"), **kw)
         finally:
             PG._sub = orig
         pre = [a for a in seen if any(str(x).endswith("plan_gate_pre.py") for x in a)][0]
@@ -469,6 +470,23 @@ class RemapBaseAndNativeReceipt(unittest.TestCase):
     def test_missing_remap_base_file_falls_back_to_band_base(self):
         pre, _g0 = self.calls(band_base=str(self.band), remap_base=str(Path(self.td) / "nope.json"))
         self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.band))
+
+    def test_bind_out_reaches_pre_as_elab_dir(self):
+        """P-PUBGATE-BOR 11-26: the candidate's sealed bind (with asbuilt.json) feeds PRE's bound checks, not the tree's frozen bind_of_record"""
+        bo = Path(self.td) / "bind"; bo.mkdir(); (bo / "asbuilt.json").write_text("{}")
+        ab = Path(self.td) / "ab.json"; ab.write_text("{}")
+        pre, g0 = self.calls(remap_base=str(self.remap), bind_out=str(bo), asbuilt=str(ab))
+        self.assertEqual(pre[pre.index("--elab-dir") + 1], str(bo))
+        self.assertNotIn("--elab-dir", g0)
+
+    def test_no_elab_dir_without_asbuilt_or_bind_asbuilt(self):
+        bo = Path(self.td) / "bind2"; bo.mkdir()
+        ab = Path(self.td) / "ab.json"; ab.write_text("{}")
+        pre, _g0 = self.calls(bind_out=str(bo), asbuilt=str(ab))
+        self.assertNotIn("--elab-dir", pre)
+        (bo / "asbuilt.json").write_text("{}")
+        pre, _g0 = self.calls(bind_out=str(bo))
+        self.assertNotIn("--elab-dir", pre)
 
     def test_native_reset_receipt_reaches_g0(self):
         _pre, g0 = self.calls(native_reset_receipt="/r/native_release_receipt.json")

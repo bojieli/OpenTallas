@@ -76,3 +76,43 @@ def test_launch_stamp_must_be_local_and_match_pinned_tools(tmp_path):
     result = launch(source, runtime, target, *args)
     assert result.returncode == 97
     assert marker.is_symlink()
+
+
+def test_cleanup_of_an_incomplete_launch_tree_never_changes_rt_inode_modes(tmp_path):
+    """SEALED-INODE-SHARED (COORD 11-26): a stale L made of cp -al hard links of rt files is removed without chmod on the files: the rt inode modes stay a-w"""
+    import os
+    import stat
+    source = tmp_path / "source"
+    runtime = tmp_path / "runtime"
+    target = tmp_path / "launch"
+    (source / "tools").mkdir(parents=True)
+    (runtime / "tools/sub").mkdir(parents=True)
+    f1, f2 = runtime / "tools/clock.py", runtime / "tools/sub/deep.py"
+    f1.write_text("# rt tool\n")
+    f2.write_text("# rt deep tool\n")
+    for f in (f1, f2):
+        f.chmod(0o444)
+    for d in (runtime / "tools/sub", runtime / "tools", runtime):
+        d.chmod(0o555)
+    # an incomplete launch tree: hard links of rt files, dirs read-only, no .rt_launch_ok
+    subprocess.run(["cp", "-al", str(runtime / "tools"), str(target)], check=True)       # target/ = links of rt/tools, no stamp
+    os.chmod(target / "sub", 0o555)
+    os.chmod(target, 0o555)
+    assert (target / "clock.py").samefile(f1) and f1.stat().st_nlink == 2
+    try:
+        result = launch(source, runtime, target)
+        assert result.returncode == 0, result.stderr
+        for f in (f1, f2):
+            assert stat.S_IMODE(f.stat().st_mode) == 0o444, f           # the rt inodes are still a-w
+        assert f1.read_text() == "# rt tool\n" and f2.read_text() == "# rt deep tool\n"
+        assert (target / ".rt_launch_ok").is_file() and (target / "tools/clock.py").samefile(f1)
+    finally:
+        for d in (runtime, runtime / "tools", runtime / "tools/sub"):
+            d.chmod(0o755)
+
+
+def test_script_has_no_recursive_file_chmod():
+    """no chmod -R u+w anywhere in the launch script: that is the corruption path into sealed rt"""
+    text = Path(__file__).with_name("rt_launch_tree.sh").read_text()
+    code = [ln for ln in text.splitlines() if not ln.lstrip().startswith("#")]
+    assert not any("chmod -R" in ln.split("#")[0] for ln in code)

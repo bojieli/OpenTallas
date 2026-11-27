@@ -271,8 +271,11 @@ def ft_hold_hb4(t, slot):
 def uses_hold_hb4(raw):
     """any partition type of the plan declares a hold_hb4 in bus or ft slot"""
     types = ((raw or {}).get("partition_types") or {}).values()
+    import pin_entry_phase as _PEP
     return (any(int(b.get("hold_hb4") or 0) > 0 and b.get("dir") == "in" for t in types for b in t.get("buses", []))
-            or any(int(s.get("hold_hb4") or 0) > 0 for t in types for s in t.get("ft_slots", [])))
+            or any(int(s.get("hold_hb4") or 0) > 0 for t in types for s in t.get("ft_slots", []))
+            or _PEP.uses_hb(raw or {})                                        # SEAMHOLD-HB4-HOSTN-RST (reset.pin_entry_hb4)
+            or any(int(n or 0) > 0 for t in types for n in ((t.get("clock") or {}).get("landing_ctl_hold_hb4") or {}).values()))  # SEAMHOLD-CTL-K5-DI
 
 
 def hold_pad(n, src, width, N):
@@ -943,6 +946,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
     import pin_entry_phase as PEP
     (out / "ot_dp_cells.sv").write_text(CELLS + (PED.CELL_RTL if PED.uses(P.raw) else "")
                                         + (PEP.CELL_RTL if PEP.uses(P.raw) else "")
+                                        + (PEP.CELL_RTL_HB if PEP.uses_hb(P.raw) else "")
                                         + (ENTRY_FALL_CELLS if uses_entry_fall(P.raw) else "")
                                         + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
                                         + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))

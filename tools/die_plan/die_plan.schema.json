@@ -2031,6 +2031,9 @@
          "maxItems": 2
         }
        },
+       "reserved_pocket_fill": {
+        "type": "boolean"
+       },
        "reserved_sites_um": {
         "type": "array",
         "items": {
@@ -4073,6 +4076,18 @@
          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
         }
        },
+       "landing_ctl_hold_hb4": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 8
+        },
+        "propertyNames": {
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+       },
        "landing_output_qreg": {
         "type": "array",
         "minItems": 1,
@@ -5557,6 +5572,23 @@
        },
        "pin_entry_phase": {
         "type": "boolean"
+       },
+       "pin_entry_hb4": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+         "reset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+         },
+         "start": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+         }
+        }
        },
        "root_entry_negedge": {
         "type": "boolean"
@@ -9418,6 +9450,94 @@
       }
      }
     },
+    "xtap_seam_element": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "pairs"
+      ],
+      "properties": {
+       "note": {
+        "type": "string"
+       },
+       "pairs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "inst",
+          "ports",
+          "form"
+         ],
+         "properties": {
+          "inst": {
+           "type": "string",
+           "minLength": 1
+          },
+          "ports": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "form": {
+           "type": "string",
+           "enum": [
+            "hb4",
+            "lockup"
+           ]
+          },
+          "types": {
+           "type": "array",
+           "items": {
+            "type": "string",
+            "minLength": 1
+           }
+          },
+          "n": {
+           "type": "integer",
+           "minimum": 1,
+           "maximum": 12
+          },
+          "deficit_ps": {
+           "type": "number"
+          },
+          "margin_ps": {
+           "type": "number",
+           "minimum": 0
+          },
+          "delta_ps": {
+           "type": "number"
+          },
+          "window_ps": {
+           "type": "number",
+           "minimum": 0
+          },
+          "clk": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "launch": {
+           "type": "string"
+          },
+          "allow_missing": {
+           "type": "boolean"
+          },
+          "note": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    },
     "fwd_export": {
      "type": "object",
      "additionalProperties": {
@@ -10814,6 +10934,184 @@
     }
    }
   },
+  "ft_core_detour": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "types": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "relay_spread": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "stack_min": {
+     "type": "integer",
+     "minimum": 2
+    },
+    "max_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "halo_um": {
+     "type": "number",
+     "minimum": 0
+    },
+    "margin_um": {
+     "type": "number",
+     "minimum": 0
+    },
+    "tap_frac": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    }
+   }
+  },
+  "clk_land_clear": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "types": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "classes": {
+     "type": "array",
+     "items": {
+      "enum": [
+       "tap",
+       "reserved",
+       "relay"
+      ]
+     }
+    },
+    "clear_um": {
+     "type": "number",
+     "minimum": 0
+    },
+    "max_move_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    }
+   }
+  },
+  "tap_reach": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "radius_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "span_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "rounds": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "jobs": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "types": {
+     "type": "string"
+    }
+   }
+  },
+  "gpl_td": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "top_overflow_trigger": {
+     "type": [
+      "integer",
+      "number",
+      "boolean"
+     ]
+    },
+    "firm_small_clusters": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "cell_growth_gate": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    }
+   }
+  },
+  "pin_track_pg": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "pg": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "integer",
+       "enum": [
+        0,
+        1
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "street_sizing": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "pg": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "pg_track_loss": {
+     "type": "number",
+     "minimum": 0
+    }
+   }
+  },
   "core_shape_exceptions": {
    "type": "array",
    "items": {
@@ -10896,6 +11194,42 @@
      }
     }
    ]
+  },
+  "land_reach": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "enable": {
+     "type": [
+      "integer",
+      "boolean"
+     ]
+    },
+    "margin_ps": {
+     "type": "number",
+     "maximum": 0
+    },
+    "target_ps": {
+     "type": "number",
+     "maximum": 200
+    },
+    "types": {
+     "type": "string"
+    },
+    "landings": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "sidecar": {
+     "type": "string"
+    },
+    "note": {
+     "type": "string"
+    }
+   }
   }
  }
 }

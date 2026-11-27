@@ -823,6 +823,98 @@ proc ff_lane_xy {slot bt ob xy t} {
   }
   return [list [expr {round([lindex $xy 0] + $dx)}] [expr {round([lindex $xy 1] + $dy)}]]
 }
+# C-STATION-BIT-SCRAMBLE 11-26 (STATION-BITORDER; opt-in OT_FT_LANE_MONO=1, unset / 0 = byte-identical placement).
+# A regs-only / siteless slot station target is the plan stage site plus the bit's lane offset (ff_lane_xy).  When the plan
+# centre line hugs a hard core edge, the offset puts part of the bank INSIDE the core box (FF-CORE-BOX), and ff_put_near's
+# spiral then leaves the box on whichever side has the nearest free cell, judged afresh at every station.  S81
+# ot_s81sl_kv_leaf__t3 ft3 (landed, k 4, 669 bits, centre x 568 / 577 / 542 against rxsb 569-712 at y 878, vs 578-753 at
+# y 531, ve_u_s 543-718 at y 184): bits 600-667 alternate right / left / right by about +/-100 um, bit 635 hop 0 is planned
+# 356 um and placed 534 um (95 hops > 405).  With the flag, each bit's chain is planned once before its stations are seated:
+# every target inside a core box gets the four exits of that box (left / right / below / above, stepping out of abutting
+# boxes, inside the core), the other targets stay, and a small DP over the chain (in pin or station 0 -> targets -> out
+# end) picks the exits that minimise the longest leg, then the total move off target.  A bit therefore keeps one side of
+# every core along its chain and the bank stays in bit order; the spiral then legalises around the chosen point as before.
+proc ff_mono_on {} { return [expr {[info exists ::env(OT_FT_LANE_MONO)] && $::env(OT_FT_LANE_MONO) eq "1"}] }
+proc ff_core_box_at {boxes x y} {
+  foreach b $boxes { lassign $b a bb c d; if {$x > $a && $x < $c && $y > $bb && $y < $d} { return $b } }
+  return ""
+}
+# step out of the box at (x, y) and of every box it then lands in, along x (vert 1) or y (vert 0), dir -1 / +1; "" = off core
+proc ff_lane_escape_walk {boxes x y vert dir} {
+  global ff_x0 ff_y0 ff_x1 ff_y1 ff_cpitch ff_rh
+  for {set n 0} {$n < 16} {incr n} {
+    set b [ff_core_box_at $boxes $x $y]
+    if {$b eq ""} { return [list [expr {round($x)}] [expr {round($y)}]] }
+    lassign $b a bb c d
+    if {$vert} { set x [expr {$dir < 0 ? $a - $ff_cpitch : $c + $ff_cpitch}] } else { set y [expr {$dir < 0 ? $bb - 2 * $ff_rh : $d + $ff_rh}] }
+    if {$x < $ff_x0 || $x > $ff_x1 - $ff_cpitch || $y < $ff_y0 || $y > $ff_y1 - $ff_rh} { return "" }
+  }
+  return ""
+}
+proc ff_md {p q} { return [expr {abs([lindex $p 0] - [lindex $q 0]) + abs([lindex $p 1] - [lindex $q 1])}] }
+# plan stage jj (1..k) target of a slot bit, exactly as the station loops compute it (dbu)
+proc ff_stage_target {slot bt ob regs k pts L jj} {
+  global ff_dbu
+  if {$jj < $k && [llength $regs] >= 2 * $k} {
+    set xy [list [expr {round([lindex $regs [expr {2*$jj}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$jj+1}]] * $ff_dbu)}]]
+    return [ff_lane_xy $slot $bt $ob $xy [expr {double($jj) / $k}]]
+  }
+  return [ff_point_at $pts [expr {$L * double($jj) / $k}]]
+}
+# start of a landed chain: the landing ring sits in the in-face strip, OT_FT_LANE_MONO_RING_UM (default 20) inside the pin
+proc ff_lane_ring_pt {bt fin} {
+  global ff_dbu
+  set r [expr {round(([info exists ::env(OT_FT_LANE_MONO_RING_UM)] ? $::env(OT_FT_LANE_MONO_RING_UM) : 20.0) * $ff_dbu)}]
+  lassign [ff_bt_ctr $bt] x y
+  switch -- $fin { N { set y [expr {$y - $r}] } S { set y [expr {$y + $r}] } E { set x [expr {$x - $r}] } W { set x [expr {$x + $r}] } }
+  return [list $x $y]
+}
+set ff_mono_n 0; set ff_mono_bits 0
+# start -> targets -> end (dbu points): the targets with core-box targets replaced by the chosen exits
+proc ff_lane_chain {start tgts end} {
+  global ff_core_boxes ff_mono_n ff_mono_bits
+  if {![info exists ff_core_boxes] || ![llength $ff_core_boxes] || [llength $start] != 2 || [llength $end] != 2} { return $tgts }
+  set cands {}; set any 0
+  foreach t $tgts {
+    lassign $t x y
+    if {[ff_core_box_at $ff_core_boxes $x $y] eq ""} { lappend cands [list $t]; continue }
+    set cl {}
+    foreach v {1 0} { foreach dir {-1 1} { set e [ff_lane_escape_walk $ff_core_boxes $x $y $v $dir]; if {$e ne "" && $e ni $cl} { lappend cl $e } } }
+    if {![llength $cl]} { set cl [list $t] } else { set any 1 }
+    lappend cands $cl
+  }
+  if {!$any} { return $tgts }
+  # DP: per candidate {longest leg so far, total move off target, index of the predecessor}
+  set pc [list $start]; set ps [list {0 0 -1}]; set back {}
+  foreach t $tgts cl $cands {
+    set cur {}
+    foreach c $cl {
+      set best ""; set i 0
+      foreach q $pc s $ps {
+        set m [expr {max([lindex $s 0], [ff_md $q $c])}]; set d [expr {[lindex $s 1] + [ff_md $t $c]}]
+        if {$best eq "" || $m < [lindex $best 0] || ($m == [lindex $best 0] && $d < [lindex $best 1])} { set best [list $m $d $i] }
+        incr i
+      }
+      lappend cur $best
+    }
+    lappend back $cur; set pc $cl; set ps $cur
+  }
+  set best ""; set i 0
+  foreach q $pc s $ps {
+    set m [expr {max([lindex $s 0], [ff_md $q $end])}]; set d [lindex $s 1]
+    if {$best eq "" || $m < [lindex $best 0] || ($m == [lindex $best 0] && $d < [lindex $best 1])} { set best [list $m $d $i] }
+    incr i
+  }
+  set i [lindex $best 2]; set out {}
+  for {set n [expr {[llength $tgts] - 1}]} {$n >= 0} {incr n -1} {
+    set out [linsert $out 0 [lindex $cands $n $i]]
+    set i [lindex $back $n $i 2]
+  }
+  set moved 0
+  foreach t $tgts o $out { if {$t ne $o} { incr moved } }
+  if {$moved} { incr ff_mono_n $moved; incr ff_mono_bits }
+  return $out
+}
 # per-bit station chain hop record (um): the longest placed station -> station hop of the pass (report only)
 proc ff_lane_hop {prev got} {
   global ff_lane_max ff_lane_n405 ff_dbu
@@ -858,6 +950,10 @@ foreach bt [$ff_blk getBTerms] {
     set L 0
     for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
     set lprev ""; incr ff_lane_bits
+    if {[ff_mono_on]} {
+      set ff_tg {}; for {set jj 1} {$jj < $k} {incr jj} { lappend ff_tg [ff_stage_target $slot $bt $ob $regs $k $pts $L $jj] }
+      set ff_esc [ff_lane_chain [ff_lane_ring_pt $bt $fin] $ff_tg [ff_stage_target $slot $bt $ob $regs $k $pts $L $k]]
+    }
     for {set j 0} {$j < $k} {incr j} {
       set f [lindex $fs $j]
       dict set ff_done [$f getName] 1
@@ -867,7 +963,7 @@ foreach bt [$ff_blk getBTerms] {
       } else {
         set xy [ff_point_at $pts [expr {$L * double($j + 1) / $k}]]
       }
-      if {$j + 1 < $k} { set got [ff_put_stage $f $slot [expr {$j + 1}] $nm $xy] } else { set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]] }
+      if {$j + 1 < $k} { if {[ff_mono_on]} { set xy [lindex $ff_esc $j] }; set got [ff_put_stage $f $slot [expr {$j + 1}] $nm $xy] } else { set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]] }
       if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
       ff_lane_hop $lprev $got; set lprev $got
       puts $ff_out "[$f getName]\tlst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
@@ -891,6 +987,10 @@ foreach bt [$ff_blk getBTerms] {
     puts $ff_out "[$f getName]\tst0_explicit\t[expr {[lindex $lprev 0]/double($ff_dbu)}]\t[expr {[lindex $lprev 1]/double($ff_dbu)}]\t$nm"
   }
   incr ff_lane_bits
+  if {[ff_mono_on]} {
+    set ff_tg {}; for {set jj 1} {$jj < $k} {incr jj} { lappend ff_tg [ff_stage_target $slot $bt $ob $regs $k $pts $L $jj] }
+    set ff_esc [ff_lane_chain [expr {[llength $lprev] == 2 ? $lprev : [list $ax $ay]}] $ff_tg [list $bx $by]]
+  }
   for {set j 1} {$j < $k} {incr j} {
     set q [ff_next_station $f]
     if {$q eq "" || [dict exists $ff_done [$q getName]]} { incr ff_st_miss; break }
@@ -902,6 +1002,7 @@ foreach bt [$ff_blk getBTerms] {
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }
+    if {[ff_mono_on]} { set xy [lindex $ff_esc [expr {$j - 1}]] }
     set got [ff_put_stage $f $slot $j $nm $xy]
     if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
     ff_lane_hop $lprev $got; set lprev $got
@@ -965,6 +1066,7 @@ close $ff_out
 close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
+if {[ff_mono_on]} { puts "OT_FT_LANE_MONO on: $ff_mono_n station targets of $ff_mono_bits slot bits inside a core box moved to the chain-best core exit (C-STATION-BIT-SCRAMBLE)" }
 if {$ff_lane_bits} { puts "OT_FT_LANE [expr {[ff_lane_on] ? "on" : "off (OT_FT_LANE=0)"}]: $ff_lane_bits slot bits, max placed station hop [format %.1f $ff_lane_max] um, $ff_lane_n405 hops > 405 um (plan reach)" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
@@ -1185,8 +1287,117 @@ proc ot_gpl_guarded {args} {
  set ::env(GPL_TIMING_DRIVEN) 0
  return [uplevel 1 [list ::ot_gpl_native {*}$plain]]
 }
+# FIRM-RESIZE-1126 (HEAD-INT-R2, C-FIRM-RESIZE-OVERLAP): timing-driven GPL / repair_design resize a FIRM std cell IN PLACE (the origin stays,
+# the cell grows to the right) and DPL cannot move a FIRM cell, so every grown cell that reaches a neighbour FIRM / LOCKED / FIXED cell is
+# released to PLACED by the DPL scan and legalised away from its seat (HEAD hd_lep0N fed00: 9 FIRM cland cells released, max displacement
+# 93.3 um: 5 lepk_i0 writer-guard u_wen flops DFFHQNx1 -> x2 abutting each other and 4 coll_i3 dch[4] u_dsel flops abutting u_io station flops).
+# The placement-time reserve (landing_placement.tcl cland_family_w, OT_CLAND_FIT_RESERVE) only covers the cells that hook seats.  This is the
+# class-wide form, judged at the global_placement call after every seat hook: a FIRM std cell is AT RISK when its widest drive variant (same name
+# stem / suffix / height, the cland_family_w rule) reaches the left edge of the next FIRM / LOCKED / FIXED / COVER std cell of its row.
+# Always: report line OT_FIRM_RESIZE_RISK.  Opt-in OT_FIRM_RESIZE_FREEZE=1 is a SIZING-ONLY lock (HEAD-INT-R2 11-26 rework): the at-risk
+# cell is NOT dont_touch (dont_touch makes repair_design refuse to buffer every net that has a pin on it: RSZ-3006 on HEAD West u_srl_36 /
+# rn_rst_rl_33, the stage died).  The guard records each at-risk cell's master in $RESULTS_DIR/ot_firm_size_lock.txt (first master seen
+# wins) and face_flops_release.tcl (PRE_DETAIL_PLACE, ot_firm_size_restore) swaps every cell that is still FIRM back to that master
+# before DPL, so the seat is never grown into a fixed / FIRM neighbour while its nets stay bufferable.  The OpenROAD build of the kits has
+# no set_dont_size / size_only property (strings of the binary: only rsz::set_dont_touch_instance / _net), so the lock is a restore.
+# Unset / 0 = report only.
+proc ot_firm_resize_risk {} {
+ set blk [ord::get_db_block]
+ set famw [dict create]
+ set rows [dict create]
+ foreach i [$blk getInsts] {
+  if {[$i getPlacementStatus] ni {FIRM LOCKED FIXED COVER}} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} continue
+  set b [$i getBBox]
+  dict lappend rows [$b yMin] [list [$b xMin] [$b xMax] $i]
+ }
+ set nf 0; set risk {}
+ dict for {y l} $rows {
+  set l [lsort -integer -index 0 $l]
+  set n [llength $l]
+  for {set k 0} {$k < $n} {incr k} {
+   lassign [lindex $l $k] x0 x1 i
+   if {[$i getPlacementStatus] ne "FIRM"} continue
+   incr nf
+   if {$k == $n-1} continue
+   set m [$i getMaster]; set nm [$m getName]
+   if {![dict exists $famw $nm]} {
+    set fw [$m getWidth]
+    if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} $nm -> pre suf]} {
+     foreach lib [[ord::get_db] getLibs] {
+      foreach mm [$lib getMasters] {
+       if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} [$mm getName] -> p2 s2] && $p2 eq $pre && $s2 eq $suf
+           && [$mm getHeight] == [$m getHeight] && [$mm getWidth] > $fw} { set fw [$mm getWidth] }
+      }
+     }
+    }
+    dict set famw $nm $fw
+   }
+   set reach [expr {$x0 + [dict get $famw $nm]}]
+   set nx0 [lindex [lindex $l [expr {$k+1}]] 0]
+   if {$reach > $nx0 && $x1 <= $nx0} { lappend risk $i }
+  }
+ }
+ return [list $nf $risk]
+}
+if {![info exists ::ot_firm_size_lock]} { set ::ot_firm_size_lock [dict create] }
+proc ot_firm_resize_guard {} {
+ if {[info exists ::env(OT_FIRM_RESIZE_RISK)] && $::env(OT_FIRM_RESIZE_RISK) eq "0"} return
+ lassign [ot_firm_resize_risk] nf risk
+ set frz [expr {[info exists ::env(OT_FIRM_RESIZE_FREEZE)] && $::env(OT_FIRM_RESIZE_FREEZE) eq "1"}]
+ puts [format "OT_FIRM_RESIZE_RISK firm_std_cells=%d at_risk=%d freeze=%d" $nf [llength $risk] $frz]
+ set shown 0
+ foreach i $risk {
+  if {$shown < 40} { puts "OT_FIRM_RESIZE_RISK_CELL [$i getName] [[$i getMaster] getName]"; incr shown }
+  if {$frz && ![dict exists $::ot_firm_size_lock [$i getName]]} { dict set ::ot_firm_size_lock [$i getName] [[$i getMaster] getName] }
+ }
+ if {$frz && [info exists ::env(RESULTS_DIR)]} {
+  set fh [open $::env(RESULTS_DIR)/ot_firm_size_lock.txt w]
+  dict for {fn fm} $::ot_firm_size_lock { puts $fh "$fn\t$fm" }
+  close $fh
+ }
+ if {$frz && [llength $risk]} { puts "OT_FIRM_RESIZE_FREEZE size lock on [llength $risk] FIRM cells whose widest drive variant reaches a fixed / FIRM neighbour (no dont_touch; masters restored before DPL)" }
+}
+# GPL-GROWTH-1126 (HEAD-INT-R2, C-GPL-TD-INFLATION): report line after every guarded global_placement call: std-cell count and area before ->
+# after.  The timing-driven passes run repair_design inside the call, so this is the post-repair_design growth: HEAD hd_lep0N fed00 +56,515
+# buffers (+25.5 % area, HPWL 1.30e7 -> 1.90e7), S81 lepw_mus_C +151,289 (+71 %).  Report only by default; opt-in OT_GPL_GROWTH_MAX=F (a
+# fraction of the cell count, e.g. 0.30) turns it into an error after the call (the kit stops before 3_4 / DPL spend time on it).
+proc ot_gpl_census {} {
+ set n 0; set a 0.0
+ foreach i [[ord::get_db_block] getInsts] {
+  set m [$i getMaster]
+  if {[$m isBlock]} continue
+  incr n; set a [expr {$a+double([$m getWidth])*[$m getHeight]}]
+ }
+ return [list $n $a]
+}
+proc ot_gpl_reported {args} {
+ lassign [ot_gpl_census] n0 a0
+ if {[catch {ot_firm_resize_guard} fr_err]} {
+  if {[info exists ::env(OT_FIRM_RESIZE_FREEZE)] && $::env(OT_FIRM_RESIZE_FREEZE) eq "1"} { error $fr_err }
+  puts "OT_FIRM_RESIZE_RISK ERROR (report skipped): $fr_err"
+ }
+ set rc [catch {uplevel 1 [list ::ot_gpl_guarded {*}$args]} res opts]
+ if {$rc} { return -options $opts $res }
+ lassign [ot_gpl_census] n1 a1
+ set u 1.0; catch {set u [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]}
+ set gn [expr {$n0 > 0 ? double($n1-$n0)/$n0 : 0.0}]
+ set ga [expr {$a0 > 0 ? double($a1-$a0)/$a0 : 0.0}]
+ set lim "none"
+ if {[info exists ::env(OT_GPL_GROWTH_MAX)] && $::env(OT_GPL_GROWTH_MAX) ne ""} {
+  set lim $::env(OT_GPL_GROWTH_MAX)
+  if {![string is double -strict $lim] || $lim <= 0} { error "OT_GPL_GROWTH_MAX must be a number > 0 (fraction of the cell count), got '$lim'" }
+ }
+ puts [format "OT_GPL_GROWTH cells %d -> %d (%+.1f %%) std_cell_area %.1f -> %.1f um2 (%+.1f %%) limit %s" $n0 $n1 [expr {100.0*$gn}] \
+   [expr {$a0/($u*$u)}] [expr {$a1/($u*$u)}] [expr {100.0*$ga}] $lim]
+ if {$lim ne "none" && $gn > $lim} {
+  error [format "OT_GPL_GROWTH FAIL: global_placement grew the std-cell count by %.1f %% (%d -> %d), limit %.1f %% (OT_GPL_GROWTH_MAX)" [expr {100.0*$gn}] $n0 $n1 [expr {100.0*$lim}]]
+ }
+ return $res
+}
 if {[info commands ::ot_gpl_native] eq "" && [info commands ::global_placement] ne ""} {
  rename ::global_placement ::ot_gpl_native
- interp alias {} ::global_placement {} ::ot_gpl_guarded
+ interp alias {} ::global_placement {} ::ot_gpl_reported
 }
 # OT_GPL_GUARD end

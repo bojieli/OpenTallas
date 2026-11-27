@@ -8,7 +8,8 @@ Class: a plan row edit moves a station / tap / macro and a DEPENDENT table is no
              this adds the stale keys and the census per die.
   ORGROUP    internal_stations entry with or_groups: or_groups[0].regs_um must equal the row's regs_um (QC coll_core 624.645 vs 626.454;
              kit_istations.or_group_check refuses it late).  Repair: python3 -I tools/die_plan/stale_tables.py fix-orgroups IN OUT.
-  TAPLEGAL   an explicit / added clock tap that is illegal against the moved macros / obstacles (Coll_s clk_t41 [512.992, 415.776]) or a
+  TAPLEGAL   (C-MACRO-TAP-LEGAL) every clock tap the kit gets (tap grid, explicit, added) re-judged against the current macros / halos / outline
+             (Coll_s clk_t41 [512.992, 415.776] on the old C9 placement; legal at [504.288, 424.48] after badd78bdf36b) or a
              tap grid the solver cannot evaluate (reason listed).
   RELAYBIT   relay_sites of a station bank (u_ist_<bus>_<j>.q[k]) must sit within TOL_UM of internal_stations bit_sites_um[j][k]
              (QC D2: differ up to 302 um).
@@ -132,22 +133,26 @@ def findings(raw, tap_sites=None, legal=None, max_list=3):
             d = next((p for p, q in zip(a, b) if p != q), a[0])
             out.append(f"{lv} STALETABLE-ORGROUP {tn} {conn}: or_groups[0].regs_um != the row's regs_um (first differing {d} vs "
                        f"{next((q for p, q in zip(a, b) if p != q), b[0])}); the kit refuses it (fix: stale_tables.py fix-orgroups)")
-        if legal is not None:
+        if legal is not None and not t.get("hard"):        # a hard IP wrapper's tap IS the macro's clock terminal
             ck = t.get("clock") or {}
-            rows = ck.get("added_taps") or (ck.get("taps") if ck.get("tap_mode") == "explicit" else None) or []
-            bad = []
-            for p in rows:
+            pts = {}
+            if tap_sites and tn in tap_sites and not tap_sites[tn][2] and isinstance(tap_sites[tn][0], dict):
+                pts.update({n: list(xy) for n, xy in tap_sites[tn][0].items() if not str(n).startswith("clk_c")})   # every tap the kit gets
+            for p in (ck.get("added_taps") or []) + (ck.get("taps") if ck.get("tap_mode") == "explicit" else []):
                 if isinstance(p, dict) and p.get("kind") != "core" and isinstance(p.get("xy"), list) and len(p["xy"]) == 2:
-                    try:
-                        ok = legal(tn, float(p["xy"][0]), float(p["xy"][1]), p.get("name"))
-                    except Exception:  # noqa: BLE001
-                        ok = None
-                    if ok is False:
-                        bad.append((p.get("name"), p["xy"]))
+                    pts[p.get("name")] = p["xy"]
+            bad = []
+            for name, xy in pts.items():
+                try:
+                    ok = legal(tn, float(xy[0]), float(xy[1]), name)
+                except Exception:  # noqa: BLE001
+                    ok = None
+                if ok is False:
+                    bad.append((name, [round(float(xy[0]), 3), round(float(xy[1]), 3)]))
             if bad:
                 cnt["TAPLEGAL"] += 1
-                out.append(f"{lv} STALETABLE-TAPLEGAL {tn}: {len(bad)} clock tap(s) illegal against macros / obstacles / spacing: "
-                           + ", ".join(f"{n}={xy}" for n, xy in bad[:max_list]))
+                out.append(f"{lv} STALETABLE-TAPLEGAL {tn}: {len(bad)} clock tap(s) overlap a macro / its halo or leave the outline (C-MACRO-TAP-LEGAL): "
+                           + ", ".join(f"{n}={xy}" for n, xy in bad[:max_list]) + " (re-seat the tap; re-run after every macro move / row apply)")
         rb = relay_bit_rows(t)
         if rb:
             cnt["RELAYBIT"] += 1
@@ -188,6 +193,15 @@ def main(argv=None):
     return 0
 
 
+def tap_legal_in(outline, clear, boxes, x, y):
+    """C-MACRO-TAP-LEGAL: a clock tap at (x, y) must lie inside the outline (tap clearance) and in no interior of a macro / obstacle box
+    already grown by the tap clearance (placement_obstacles.placement_boxes(halo=clear), keepouts); boundary contact is legal"""
+    w, h = outline
+    eps = 1e-8
+    return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+            and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+
+
 def make_legal(raw, plan_path):
     """legal(tn, x, y, name): the tap lies inside the outline (tap clearance) and in no macro / obstacle halo interior
     (placement_obstacles.placement_boxes, as taps.grid_explicit_sites / added_tap_recentre.legal judge it); None when the tools do not import"""
@@ -202,14 +216,12 @@ def make_legal(raw, plan_path):
     def legal(tn, x, y, name):
         if tn not in cache:
             t = P.types[tn]
-            clear = S.TAP_CLEAR_UM
+            clear = S.type_tap_clear(t) if hasattr(S, "type_tap_clear") else S.TAP_CLEAR_UM
             boxes = list(placement_boxes(t, halo=clear).values())
             boxes += [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in (t.get("clock") or {}).get("keepouts_um", [])]
             cache[tn] = (t["outline_um"], clear, boxes)
-        (w, h), clear, boxes = cache[tn]
-        eps = 1e-8
-        return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
-                and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+        outline, clear, boxes = cache[tn]
+        return tap_legal_in(outline, clear, boxes, x, y)
     return legal
 
 

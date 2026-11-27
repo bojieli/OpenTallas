@@ -112,3 +112,13 @@ def test_sidecar_path_read_or_named_error(tmp_path):
     ok = L.apply(_plan(flag={"enable": 1, "sidecar": "side.json"}), tree, check=True)
     bad = L.apply(_plan(flag={"enable": 1, "sidecar": "nope.json"}), tree, check=True)
     assert "sidecar_error" not in ok and "sidecar_error" in bad and bad["summary"]["moved"] == 1
+
+
+def test_flag_is_known_to_the_plan_schema():
+    import schema as S
+    errs = []
+    S._check({"enable": 1, "margin_ps": -100, "types": "^sle_", "landings": ["t/x_i"], "sidecar": "a/b.json"}, S.SCHEMA["properties"]["land_reach"], "$", errs)
+    assert errs == []
+    bad = []
+    S._check({"enable": 1, "bogus": 2}, S.SCHEMA["properties"]["land_reach"], "$", bad)
+    assert bad and "bogus" in bad[0]

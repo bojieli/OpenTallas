@@ -100,6 +100,20 @@ def bind_gate(plan, out, errors):
     return dict(gate="STRICT", verdict="FAIL" if errs else "PASS", mismatches=len(errs), rows=len(rows))
 
 
+def probe_scope(summary, kept, probe):
+    """P-FALSE-GREEN (S81-GATE-LINT 11-26, COL fb31655c E12 p2-n7 probe binds): on a probe-only bind (`probe` = bind.probe_only) the gate
+    summary said FAIL (79 mismatches, rows 0) while the in-scope errors were all filtered away -> n_errors 0 -> PASS.  A probe-only bind
+    never yields PASS: in-scope mismatches -> FAIL, none -> NOT-RUN (the emitted types were not judged; whole-die bind decides)."""
+    if not probe:
+        return summary
+    out = dict(summary)
+    out["mismatches_out_of_scope"] = max(0, int(summary.get("mismatches") or 0) - len(kept))
+    out["mismatches"] = len(kept)
+    out["verdict"] = "FAIL" if kept else "NOT-RUN"
+    out["scope"] = "probe-only"
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan")

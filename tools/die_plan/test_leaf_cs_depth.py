@@ -110,7 +110,8 @@ def test_real_r12ng_bind_fails_the_gate(tmp_path):
 def test_bind_py_calls_the_gate_when_the_manifest_asks():
     src = (HERE / "bind.py").read_text()
     assert 'B.ab.get("leaf_cs_depth_gate")' in src and "LCD.bind_gate(raw, out, _lcd_errs)" in src
-    assert 'B.errors.extend(probe_only_filter(_lcd_errs, getattr(B, "probe_only", None)))' in src
+    assert "_lcd_kept = probe_only_filter(_lcd_errs, getattr(B, \"probe_only\", None))" in src and "LCD.probe_scope(" in src
+    assert "B.errors.extend(_lcd_kept)" in src
     assert src.index("LCD.bind_gate") < src.index('rep["errors"], rep["n_errors"] = B.errors[:2000]')
 
 
@@ -122,3 +123,14 @@ def test_cli_exit_status(tmp_path):
     (tmp_path / "s81p_ot_s81sl_leaf__t8.sv").write_text(_bound("u_lf1_", hig=0, y=1))
     assert LCD.main([str(pf), str(tmp_path), "--json", str(tmp_path / "r.json")]) == 1
     assert json.loads((tmp_path / "r.json").read_text())["errors"]
+
+
+def test_probe_only_gate_is_never_pass():
+    """P-FALSE-GREEN: probe-only bind, 79 out-of-scope mismatches filtered, n_errors 0 -> NOT-RUN (never PASS); in-scope mismatch -> FAIL"""
+    import leaf_cs_depth as L
+    s = dict(gate="STRICT", verdict="FAIL", mismatches=79, rows=0)
+    nr = L.probe_scope(s, [], {"emitted": ["a"]})
+    assert nr["verdict"] == "NOT-RUN" and nr["mismatches_out_of_scope"] == 79 and nr["mismatches"] == 0
+    assert L.probe_scope(dict(s, verdict="PASS", mismatches=0), [], {"emitted": ["a"]})["verdict"] == "NOT-RUN"
+    assert L.probe_scope(s, ["LF_CS_DEPTH a x"], {"emitted": ["a"]})["verdict"] == "FAIL"
+    assert L.probe_scope(s, [], None) is s                       # a whole bind is unchanged

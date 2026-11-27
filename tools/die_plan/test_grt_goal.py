@@ -136,14 +136,14 @@ exit 0
                 self.assertFalse(any(x in ' '.join(makes) for x in ['route', 'do-finish', 'do-generate_abstract']))
                 self.assertFalse(any('pin_audit.py' in x for x in lines))
 
-    def test_hold_build_failure_is_advisory(self):
-        # R-CLOCK (HOLD-TAP-1 11-13): a crashed pre-GRT hold build keeps 4_cts.odb and the kit goes on to GRT
+    def test_hold_build_crash_fails_before_grt(self):
+        # P-PREGRT-HOLD-CRASH 11-26 (S81 c1x_C t5 SIGSEGV rc 139 in findRegAsyncPins, 659,800 insts): a crashed pre-GRT hold build used to keep the
+        # unrepaired 4_cts.odb and go on to GRT; it now stops the kit (FAIL_POSTCTS, rc 9, no GRT)
         rc, lines, err = self.execute(self.new, 'grt', fail_pg=True)
-        self.assertEqual(rc, 0, (lines, err))
+        self.assertEqual(rc, 9, (lines, err))
         self.assertTrue(any('pregrt_ff_hold.tcl' in x for x in lines), lines)
-        self.assertEqual(sum('grt' in x.split() for x in lines if x.startswith('make ')), 1, lines)
-        # COORD 11-13 07:2x: the fallback is a classified line in run_<goal>.log, not silent
-        self.assertIn('PREGRT_HOLD_FALLBACK tool rc 139', self.last_stdout)
+        self.assertEqual(sum('grt' in x.split() for x in lines if x.startswith('make ')), 0, lines)
+        self.assertIn('OT_PREGRT_FF_HOLD CRASH step rc 139', self.last_stdout)
 
     def test_hold_build_guard_fallback_is_classified(self):
         rc, lines, err = self.execute(self.new, 'grt', fail_pg=2)

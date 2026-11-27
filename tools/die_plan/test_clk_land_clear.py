@@ -88,6 +88,16 @@ class T(unittest.TestCase):
         self.assertEqual(C.apply(types, dict(raw, clk_land_clear={"enable": 1, "types": ["other"]})), [])
         self.assertEqual(types["t"]["clock"]["taps"][0]["xy"], [100.0, 200.0])
 
+    def test_schema_registers_flag(self):
+        import schema
+        base = plan()
+        e0 = set(schema.validate_structure(base))
+        for v in ({"enable": 1}, {"enable": True, "types": ["t"], "classes": ["tap", "relay"], "clear_um": 2.0, "max_move_um": 60}):
+            self.assertEqual(set(schema.validate_structure(dict(base, clk_land_clear=v))) - e0, set())
+        bad = set(schema.validate_structure(dict(base, clk_land_clear={"enable": 1, "bogus": 1}))) - e0
+        self.assertTrue(bad and all("clk_land_clear" in m or "bogus" in m for m in bad), bad)
+        self.assertEqual({m for m in e0 if "clk_land_clear" in m}, set())
+
     def test_unmovable_is_reported(self):
         raw = plan(tap=(100.0, 200.0))
         raw["clk_land_clear"] = {"enable": 1, "max_move_um": 5}

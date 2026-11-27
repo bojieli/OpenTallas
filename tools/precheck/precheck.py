@@ -62,6 +62,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "die_plan"))
+import per_bit_reach as PBR  # noqa: E402  the kit per_bit station rule (HEAD-INT-R2 11-26)
 import cbc_rules as CBC  # noqa: E402  owner r713 close-by-construction: ONE rule module shared with the CBC generator
 sys.path.pop(0)
 REACH_UM = CBC.REACH_UM_PER_HOP
@@ -229,11 +230,15 @@ def reach_findings(t, reach=REACH_UM, margin=None):
             elif bus.get("dir") == "out" and on_face(bus["face"], pts[-1], w, h):
                 pts[-1] = face_end_worst(bus["face"], bus["window_um"], w, h, pts[-2])
         hops = chain_hops(pts)
+        pbh = PBR.per_bit_hops(e, bus, w, h)          # kit per_bit chain: regs_um is never read for sites (P-FALSE-GREEN HEAD-INT-R2)
+        if pbh:
+            hops = pbh
+            pts = [pts[0]] * (len(pbh) + 1)
         bits = int(e.get("bits") or 0) or widths.get(conn[4:] if conn.startswith("bus:") else "", 0)
         if hops and max(hops) > limit(bits):
             j = max(range(len(hops)), key=hops.__getitem__)
             out.append((round(max(hops), 1), f"internal_stations[{i}] {e.get('conn', '')} bits {e.get('bits', '?')} hop {j} "
-                        f"{pts[j]} -> {pts[j + 1]} ({len(hops)} hops)"))
+                        f"{pts[j]} -> {pts[j + 1]} ({len(hops)} hops)" + (" [kit per_bit sites, regs_um ignored]" if pbh else "")))
     for s in t.get("ft_slots") or []:
         regs = s.get("regs_um") or []
         k = int(s.get("stations", 1) or 1)

@@ -18,15 +18,26 @@ the shortest legal move wins (then the smaller dx, dy).  No move over --max-move
 (clksite_resite form: R0 centre, else origin + orient) for the die clock rebuild (the die node goes to the new site).
 The re-check on the written plan counts pin-rect hits (the kit_pin_site_check class) and must find 0.
 
-  clksite_pinclear.py PLAN -o OUT.json --ledger L.json [--types T,..] [--clear-um 2.0] [--side-um 0.1] [--max-move-um 20] [--rt RT]
+LANDING PINS (C-CLKSITE-LANDPIN, KV-INT-R2 11-26: kv3_phy_v1 fclk_out_cland_up[0] M7 x 861.8 with a die-clock-tree cluster 4 um west of
+it -> GRT detour, DRT-0255 at the pin access point).  The landing-contract pins (clock.landing_contract.pins[]: fclk_*/cland_* of
+every type, xy_um in the type frame, a few um inside the nearest face) are not type_pins() face pins, so the 2-um corridor never
+saw them.  Each one now owns an ESCAPE CORRIDOR on its layer and the layer below (the via access): from the pin inward to
+--land-clear-um (default 8) from the pin, out to the face, +-side-um across; a row whose obstruction overlaps one moves exactly like a
+face-pin row (inward / slide / outward, joint legality against every corridor of the type).  --land-margin-um (default 2) is a stand-off added beyond the corridor end and on both sides; --land-clear-um 0 turns it off.
+
+  clksite_pinclear.py PLAN -o OUT.json --ledger L.json [--types T,..] [--clear-um 2.0] [--land-clear-um 8.0] [--land-margin-um 2.0] [--side-um 0.1] [--max-move-um 20] [--rt RT]
 """
 import argparse
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
 EPS = 1e-9
+LAND_CLEAR_UM = 8.0          # landing-pin escape corridor, from the pin inward
+LAND_MARGIN_UM = 2.0         # stand-off added to the landing corridor (far end and both sides): router jog / via-enclosure room
+LAND_PIN_LEN_UM = 0.432      # landing pin stub length (kv3_phy_v1 M7 0.08 x 0.432)
 
 
 def load(rt):
@@ -65,6 +76,36 @@ def type_pin_index(G, P, tn, w, h, clear, side=0.0):
     for bus, bit, ln, x, y, f in G.type_pins(P, tn):
         r = pin_rect(G, ln, x, y, f)
         out.append((f"{bus}[{bit}]", ln, f, r, corridor(r, f, w, h, clear, side)))
+    return out
+
+
+def _lower(ln):
+    m = re.fullmatch(r"M(\d+)", ln or "")
+    return f"M{int(m.group(1)) - 1}" if m and int(m.group(1)) > 1 else None
+
+
+def landing_pin_index(G, t, w, h, land_clear, side=0.0, margin=LAND_MARGIN_UM):
+    """[(name, layer, face, corridor, corridor)] of every landing-contract pin of type dict t: the corridor (pin -> land_clear um
+    inward + margin -> out to the face, +-(side + margin) across) on the pin layer and the layer below, which is the rect a row
+    obstruction must not touch (the pin rect itself is inside it).  The margin (kv3_phy_v1 review: a window ending 0.06 um from the
+    bare 8-um corridor left the router no jog room) makes the stand-off real, not an abutment."""
+    out = []
+    if land_clear <= 0:
+        return out
+    for p in ((t.get("clock") or {}).get("landing_contract") or {}).get("pins") or []:
+        xy, ln = p.get("xy_um"), p.get("layer")
+        if not (isinstance(xy, (list, tuple)) and len(xy) == 2 and ln):
+            continue
+        x, y = float(xy[0]), float(xy[1])
+        f = min(("E", w - x), ("W", x), ("N", h - y), ("S", y), key=lambda fd: fd[1])[0]
+        lw = G.LAYER_W.get(ln, 0.04) / 2; hl = LAND_PIN_LEN_UM / 2
+        r = (x - lw, y - hl, x + lw, y + hl)
+        L, sd = land_clear + margin, side + margin
+        c = {"E": (x - L, r[1] - sd, w, r[3] + sd), "W": (0.0, r[1] - sd, x + L, r[3] + sd),
+             "N": (r[0] - sd, y - L, r[2] + sd, h), "S": (r[0] - sd, 0.0, r[2] + sd, y + L)}[f]
+        for l2 in (ln, _lower(ln)):
+            if l2:
+                out.append((str(p.get("name")), l2, f, c, c))
     return out
 
 
@@ -144,7 +185,7 @@ def _parts(raw):
     return pr.items() if isinstance(pr, dict) else [(v.get("name"), v) for v in pr]
 
 
-def run(P, raw, G, RS, CP, types=None, clear=2.0, max_move=20.0, side=0.1):
+def run(P, raw, G, RS, CP, types=None, clear=2.0, max_move=20.0, side=0.1, land_clear=LAND_CLEAR_UM, land_margin=LAND_MARGIN_UM):
     led = []
     parts_all = list(_parts(raw))
     for tn in sorted(raw["partition_types"]):
@@ -155,7 +196,7 @@ def run(P, raw, G, RS, CP, types=None, clear=2.0, max_move=20.0, side=0.1):
         if not any(e.get("kind") == "die_clock_tree" for e in rs):
             continue
         w, h = t["outline_um"]
-        pins = type_pin_index(G, P, tn, w, h, clear, side)
+        pins = type_pin_index(G, P, tn, w, h, clear, side) + landing_pin_index(G, t, w, h, land_clear, side, land_margin)
         cores = [RS._grow(c, CP.CORE_HALO_UM) for c in CP._cores(t)]
         pts = [c[i] for _, c, i, _ in CP.points(t)]
         pts = [p for p in pts if isinstance(p, (list, tuple)) and len(p) == 2]
@@ -184,8 +225,8 @@ def run(P, raw, G, RS, CP, types=None, clear=2.0, max_move=20.0, side=0.1):
     return led
 
 
-def recheck(P, raw, G, types=None):
-    """pin-rect hits left on the plan (the kit_pin_site_check class) -> {type: n}"""
+def recheck(P, raw, G, types=None, land_clear=LAND_CLEAR_UM, side=0.1, land_margin=LAND_MARGIN_UM):
+    """pin-rect hits (the kit_pin_site_check class) and landing-pin escape-corridor hits left on the plan -> {type: n}"""
     left = {}
     for tn in sorted(raw["partition_types"]):
         if types and tn not in types:
@@ -195,7 +236,7 @@ def recheck(P, raw, G, types=None):
         if not rows:
             continue
         w, h = t["outline_um"]
-        pins = type_pin_index(G, P, tn, w, h, 0.0)
+        pins = type_pin_index(G, P, tn, w, h, 0.0) + landing_pin_index(G, t, w, h, land_clear, side, land_margin)
         n = sum(len(pin_hits(row_obs(G, tn, e), pins)) for e in rows)
         if n:
             left[tn] = n
@@ -206,6 +247,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("plan"); ap.add_argument("-o", required=True); ap.add_argument("--ledger", required=True)
     ap.add_argument("--types"); ap.add_argument("--clear-um", type=float, default=2.0)
+    ap.add_argument("--land-clear-um", type=float, default=LAND_CLEAR_UM, help="landing-pin escape corridor length (0 = off)")
+    ap.add_argument("--land-margin-um", type=float, default=LAND_MARGIN_UM, help="stand-off added to the landing corridor (far end, both sides)")
     ap.add_argument("--max-move-um", type=float, default=20.0)
     ap.add_argument("--side-um", type=float, default=0.1, help="corridor margin along the face on each side of a pin (spacing)")
     ap.add_argument("--rt", default=str(Path(__file__).resolve().parents[2]))
@@ -214,16 +257,16 @@ def main(argv=None):
     path = Path(a.plan); raw = json.load(open(path))
     types = set(a.types.split(",")) if a.types else None
     P = schema.Plan(raw, path.parent / "die_plan.json")
-    led = run(P, raw, G, RS, CP, types, a.clear_um, a.max_move_um, a.side_um)
+    led = run(P, raw, G, RS, CP, types, a.clear_um, a.max_move_um, a.side_um, a.land_clear_um, a.land_margin_um)
     P2 = schema.Plan(json.loads(json.dumps(raw)), path.parent / "die_plan.json")
-    left = recheck(P2, raw, G, types)
+    left = recheck(P2, raw, G, types, a.land_clear_um, a.side_um, a.land_margin_um)
     stuck = [x for x in led if x["new"] is None]
     json.dump(raw, open(a.o, "w"), indent=1, ensure_ascii=False)
     mv = [abs(x["move_um"][0]) + abs(x["move_um"][1]) for x in led if x["new"]]
     summ = dict(rows_moved=len(led) - len(stuck), not_moved=len(stuck), types=len({x["type"] for x in led}),
                 max_moved_um=round(max(mv, default=0.0), 4), hits_left=sum(left.values()),
                 kinds={k: sum(1 for x in led if x.get("kind") == k) for k in ("inward", "slide", "outward")})
-    json.dump(dict(clear_um=a.clear_um, side_um=a.side_um, max_move_um=a.max_move_um, hits_left_by_type=left, rows=led, **summ),
+    json.dump(dict(clear_um=a.clear_um, land_clear_um=a.land_clear_um, land_margin_um=a.land_margin_um, side_um=a.side_um, max_move_um=a.max_move_um, hits_left_by_type=left, rows=led, **summ),
               open(a.ledger, "w"), indent=1)
     print(json.dumps(summ))
     return 1 if stuck or left else 0

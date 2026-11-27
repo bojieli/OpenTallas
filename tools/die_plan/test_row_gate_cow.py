@@ -103,3 +103,32 @@ else:
     assert outside.read_text() == "unchanged"
     assert (out / "receipt.json").read_text() == "candidate"
     assert not (out / "tree").exists()
+
+
+def test_light_choice_falls_back_unless_eligible(tmp_path, monkeypatch):
+    """P-POSTPUBLISH-DISK: light = overlay only for a scoped, sealed, yosys-pinned, non-keep gate; every other case = ordinary fork."""
+    src = tmp_path / "source"
+    sealed(src)
+    monkeypatch.setenv("PATH", "/usr/bin:/bin")
+    env = {"OT_BIND_YOSYS": "/bin/true", "PATH": "/usr/bin:/bin"}
+    use, why = cow.light_choice(src, RT, "auto", False, env)
+    if shutil.which("bwrap"):
+        assert use and why == "bwrap-overlay"
+    assert cow.light_choice(src, RT, "all", False, env)[0] is False
+    assert cow.light_choice(src, RT, "auto", True, env)[0] is False
+    assert cow.light_choice(src, RT, "auto", False, {"PATH": "/usr/bin:/bin"})[0] is False
+    fork = tmp_path / "fork"
+    shutil.copytree(src, fork, symlinks=True)
+    fork.chmod(0o755)
+    (fork / ".fork.json").write_text("{}")
+    assert cow.light_choice(fork, RT, "auto", False, env)[0] is False
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    assert cow.light_choice(plain, RT, "auto", False, env)[0] is False
+
+
+def test_light_is_on_by_default_and_env_zero_turns_it_off():
+    """COORD 11-26: --light is the default; OT_ROW_GATE_LIGHT=0 opts out"""
+    src = (Path(__file__).resolve().parent / "row_gate.py").read_text()
+    assert 'default=os.environ.get("OT_ROW_GATE_LIGHT") != "0"' in src
+    assert "DEFAULT ON" in src

@@ -25,6 +25,7 @@ import collections
 import math
 
 from schema import placed_macro_boxes
+import street_pg as SP
 
 CHECK = "FP-FLOORPLAN"
 TV, TH = 48.18, 57.55          # tracks per um M2-M8 (auto_geom), vertical / horizontal street
@@ -130,17 +131,62 @@ def core_crossings(t, manhattan=False):
     return out
 
 
-def street_worst(t):
-    """(ratio, orient, cut_um, street, bits, cap, top lanes) of the worst street of type dict t, or None."""
+def pg_enabled(raw):
+    """C-STREET-R2 opt-in: plan top-level street_sizing.pg (or OT_STREET_PG=1) derates street capacity by the PG stripe bands."""
+    import os
+    f = (raw or {}).get("street_sizing") if isinstance(raw, dict) else None
+    return bool((isinstance(f, dict) and f.get("pg")) or os.environ.get("OT_STREET_PG") == "1")
+
+
+PILE_BIN_UM = 25.92            # coreless lane band: 3 x 8.64 (the HEAD SPN hotspot lane was x222-250, 28 um wide)
+
+
+def lane_band_worst(t, pg=True):
+    """Coreless types have no macro streets, so street_worst is blind to them (HEAD hd_spn: 3.11 measured lane, no verdict).
+    Same tuple as street_worst: the worst PILE_BIN_UM-wide x band, demand = the bits of every planned leg crossing one horizontal
+    cut inside it, capacity = band width x vertical tracks/um x USABLE x PG factor.  Only used with the PG flag (opt-in)."""
+    W, H = t.get("outline_um", (0, 0))
+    lanes = _lanes(t)
+    if not W or not H or not lanes:
+        return None
+    nb = max(1, int(W // PILE_BIN_UM) + 1)
+    tracks = TV * (SP.pg_factor("V") if pg else 1.0)
+    best = None
+    cuts = sorted({round(q[1] / 10.0) * 10.0 for _, pts, _ in lanes for q in pts if 0 < q[1] < H})
+    for c in cuts or [H / 2]:
+        dem, who = collections.Counter(), collections.defaultdict(collections.Counter)
+        for w, pts, nm in lanes:
+            for a, e in zip(pts, pts[1:]):
+                lo, hi = sorted((a[1], e[1]))
+                if not lo <= c < hi:
+                    continue
+                al = (c - a[1]) / (e[1] - a[1])
+                m = a[0] + al * (e[0] - a[0])
+                k = min(nb - 1, max(0, int(m // PILE_BIN_UM)))
+                dem[k] += w
+                who[k][nm] += w
+        for k, d in dem.items():
+            cap = PILE_BIN_UM * tracks * USABLE
+            r = d / cap
+            if best is None or r > best[0]:
+                best = (r, "V", round(c), [round(k * PILE_BIN_UM), round((k + 1) * PILE_BIN_UM)], d, round(cap), who[k].most_common(3))
+    return best
+
+
+def street_worst(t, pg=False):
+    """(ratio, orient, cut_um, street, bits, cap, top lanes) of the worst street of type dict t, or None.
+    pg=True: usable tracks per um are scaled by street_pg.pg_factor (PART_PG_BANDS exclusion), default off."""
     cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
     if not cores:
-        return None
+        return lane_band_worst(t, pg) if pg else None
     W, H = t["outline_um"]
     bx = [_box(c) for c in cores]
     lanes = _lanes(t)
     worst = None
     for axis in (0, 1):                     # axis 1: horizontal cuts y = c ; axis 0: vertical cuts x = c
         length, tracks = (W, H)[1 - axis], (TH, TV)[axis]
+        if pg:
+            tracks *= SP.pg_factor("V" if axis else "H")
         cuts = sorted({(b[axis] + b[axis + 2]) / 2 for b in bx if (b[2] - b[0]) * (b[3] - b[1]) > MIN_CORE_UM2})
         for c in cuts:
             fr = _free([(b[1 - axis], b[3 - axis]) for b in bx if b[axis] < c < b[axis + 2]], length)
@@ -229,14 +275,15 @@ def findings(raw, plan_path=None, tree=None, **kw):
     except AttributeError:
         return out
     n_street = n_big = n_ovl = 0
+    pg = pg_enabled(raw)
     for name, t in sorted(pt.items()):
         try:
-            w = street_worst(t)
+            w = street_worst(t, pg)
             if w and w[0] > STREET_MAX:
                 n_street += 1
-                tracks = TV if w[1] == "V" else TH
+                tracks = (TV if w[1] == "V" else TH) * (SP.pg_factor("V" if w[1] == "V" else "H") if pg else 1.0)
                 required = w[4] / (tracks * USABLE)
-                out.append(f"{lvl} ADV-FP-STREET {name}: lane demand {w[0]:.2f} > {STREET_MAX} on {w[1]} cut {w[2]} um street {w[3]} um "
+                out.append(f"{lvl} ADV-FP-STREET {name}{' [PG-adjusted]' if pg else ''}: lane demand {w[0]:.2f} > {STREET_MAX} on {w[1]} cut {w[2]} um street {w[3]} um "
                            f"({w[4]} bits vs {w[5]} usable tracks); load {', '.join(f'{a}:{b}' for a, b in w[6])}; "
                            f"fix: reserve at least {required:.2f} um or re-seat lanes onto another cut")
             cells = t.get("cells") or 0

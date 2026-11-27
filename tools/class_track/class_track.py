@@ -41,6 +41,7 @@ TREND_COLS = ["cut_local", "die", "class_id", "count", "basis", "source", "prev_
 EXACT = "exact"
 CARRIED = set()      # (die, class) rows copied from the previous cut without a fresh measurement: shown, never counted as a fall or a rise
 OWNER_OVERRIDE = {}  # (die, class) -> owner named by a carry row (lane-measured rows may name the right owner)
+OWN_NOTE = re.compile(r"\d\d:\d\d PST CLASS-TRACK|^PRE |CLASS-TRACK PRE")  # a note this tool wrote itself (evidence paths may contain the CLASS-TRACK directory)
 LANE_SHA = re.compile(r"\b[0-9a-f]{7,64}\b")
 
 
@@ -232,8 +233,8 @@ def update_classes(path, rows, label, meta=None):
         note = f"{label} CLASS-TRACK {r['source']}: {r['count']} (last {r['prev_count'] if r['prev_count'] != '' else 'none'}, {r['move']})"
         if k in idx:
             old = idx[k].get("owner_measurement", "")
-            lane_sha = bool(LANE_SHA.search(old)) and "CLASS-TRACK" not in old
-            carry_sha = bool(LANE_SHA.search(r["source"])) and "CLASS-TRACK" not in r["source"]
+            lane_sha = bool(LANE_SHA.search(old)) and not OWN_NOTE.search(old)
+            carry_sha = bool(LANE_SHA.search(r["source"])) and not OWN_NOTE.search(r["source"])
             # COORD 11-26 09:22: a lane-measured count with an evidence sha wins over the cut tool's own count: a row whose
             # owner_measurement carries a sha (and is not a CLASS-TRACK note) keeps its count and text unless this cut brings its own lane sha.
             if carry_sha:

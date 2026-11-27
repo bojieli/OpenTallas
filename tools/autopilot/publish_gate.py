@@ -440,6 +440,13 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     pre_tool = Path(dp, "plan_gate_pre.py")
     if pre_base and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
         pre += ["--remap-base", str(pre_base)]
+    # P-PUBGATE-BOR (KV-INT-R2 11-26): the bound checks (RSTREACH / MACROGHOST / SEATMATCH / GENDRY-KITRTL) read --elab-dir, else the tree's
+    # <plan dir>/bind_of_record, which a published tree carries frozen from an older cut (KV d7c233ac: plan_c bind -> false RSTREACH on
+    # kv3_pv_v2/v6 that the candidate's own sealed bind clears).  The candidate's bind_out is the bind of THIS plan (check_bound_params):
+    # with its asbuilt.json and the candidate asbuilt, PRE judges the bound checks on it.
+    if (asbuilt and bind_out and os.path.isfile(os.path.join(str(bind_out), "asbuilt.json")) and pre_tool.is_file()
+            and "--elab-dir" in pre_tool.read_text(errors="replace")):
+        pre += ["--elab-dir", str(bind_out)]
     if rc1 == 0:
         rc1, t1 = _sub(pre, pre_tree)
     g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker

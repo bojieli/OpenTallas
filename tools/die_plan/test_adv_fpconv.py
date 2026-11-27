@@ -63,8 +63,18 @@ def test_leg405_zero():
 def test_relay_seat():
     r = mut(lambda t, r: t["relay_sites"].update(r1=[200.0, 200.0]))
     assert "inside core a" in lines("RELAY-SEAT", r)[0]
+    # (b) stacks are calibrated (CLASS-OWNERS-B 11-26): only a stack relay_spread.py cannot seat within the hop margin is reported
     r = mut(lambda t, r: t["relay_sites"].update({f"s{i}": [600.0, 700.0] for i in range(6)}))
-    assert "x6 on one point" in lines("RELAY-SEAT", r)[0]
+    assert lines("RELAY-SEAT", r) == []                                   # spreadable: the placer / relay_spread seats it, no harm
+    r = mut(lambda t, r: (t["relay_sites"].update({f"s{i}": [600.0, 700.0] for i in range(6)}), t["relay_depth"][0].update(path_um=810.0)))
+    assert "x6 on one point (no seat room" in lines("RELAY-SEAT", r)[0]  # hop 405 um: no margin to spread
+    import os
+    os.environ["OT_ADV_RELAY_STACK_ALL"] = "1"
+    try:
+        r = mut(lambda t, r: t["relay_sites"].update({f"s{i}": [600.0, 700.0] for i in range(6)}))
+        assert "x6 on one point" in lines("RELAY-SEAT", r)[0]             # old behaviour: every stack
+    finally:
+        del os.environ["OT_ADV_RELAY_STACK_ALL"]
 
 
 def test_seat_density():

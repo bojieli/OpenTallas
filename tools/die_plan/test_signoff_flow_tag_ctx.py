@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -70,6 +71,7 @@ class StampFlowTag(unittest.TestCase):
         import signoff
         self.S = signoff
         self.old = os.environ.get(signoff.FLOW_TAG_ENV)
+        os.environ.pop(signoff.UNRESOLVED_ENV, None)
 
     def tearDown(self):
         if self.old is None:
@@ -90,3 +92,67 @@ class StampFlowTag(unittest.TestCase):
     def test_existing_not_overwritten(self):
         os.environ[self.S.FLOW_TAG_ENV] = "flow-20261117-sg-kv"
         self.assertEqual(self.S.stamp_flow_tag({"flow_tag": "flow-20261113-a-kv"})["flow_tag"], "flow-20261113-a-kv")
+
+
+class DeriveFlowTag(unittest.TestCase):
+    """P-SIGNED-UNVERSIONED forward gap: no --flow-tag -> derived from the kit rt/tree, loud only when nothing is found"""
+    def setUp(self):
+        import signoff
+        self.S = signoff
+        self.saved = {k: os.environ.pop(k, None) for k in (signoff.FLOW_TAG_ENV, signoff.SRC_COMMIT_ENV, signoff.UNRESOLVED_ENV)}
+
+    def tearDown(self):
+        for k, v in self.saved.items():
+            os.environ.pop(k, None)
+            if v is not None:
+                os.environ[k] = v
+
+    def repo(self, td, tag=None):
+        r = Path(td) / "repo"
+        (r / "tools" / "die_plan").mkdir(parents=True)
+        f = r / "tools" / "die_plan" / "signoff.py"
+        f.write_text("x = 1\n")
+        g = lambda *x: subprocess.run(["git", "-C", str(r)] + list(x), check=True, capture_output=True,
+                                      env=dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t", GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t"))
+        g("init", "-q")
+        g("add", "-A")
+        g("commit", "-q", "-m", "c")
+        if tag:
+            g("tag", tag)
+        return r, subprocess.run(["git", "-C", str(r), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+
+    def test_kit_pin_with_tag_on_commit(self):
+        with tempfile.TemporaryDirectory() as td:
+            r, sha = self.repo(td, "flow-20261117-sg-kv")
+            kit = Path(td) / "kit"
+            kit.mkdir()
+            (kit / "freeze.json").write_text('{"repo_rev": "%s"}' % sha)
+            d = self.S.derive_flow_tag(kit, r / "tools" / "die_plan")
+            self.assertEqual((d["src_commit"], d["flow_tag"]), (sha, "flow-20261117-sg-kv"))
+
+    def test_tree_rev_when_no_kit_pin(self):
+        with tempfile.TemporaryDirectory() as td:
+            r, sha = self.repo(td, "flow-20261117-sg-kv")
+            d = self.S.derive_flow_tag(Path(td) / "nokit", r / "tools" / "die_plan")
+            self.assertEqual(d["flow_tag"], "flow-20261117-sg-kv")
+
+    def test_commit_without_tag_keeps_source_commit(self):
+        with tempfile.TemporaryDirectory() as td:
+            r, sha = self.repo(td)
+            d = self.S.derive_flow_tag(None, r / "tools" / "die_plan")
+            self.assertEqual((d["src_commit"], d["flow_tag"]), (sha, ""))
+
+    def test_nothing_found_warns_and_stamps_unresolved(self):
+        with tempfile.TemporaryDirectory() as td:
+            with unittest.mock.patch.object(self.S, "_git", return_value=""), \
+                    unittest.mock.patch.object(self.S, "kit_source_shas", return_value=[]):
+                try:
+                    self.assertEqual(self.S.ensure_flow_tag(Path(td)), "")
+                    self.assertEqual(self.S.stamp_flow_tag({})["flow_tag"], "UNRESOLVED")
+                    self.assertNotIn(self.S.FLOW_TAG_ENV, os.environ)
+                finally:
+                    os.environ.pop(self.S.UNRESOLVED_ENV, None)
+
+    def test_explicit_env_wins(self):
+        os.environ[self.S.FLOW_TAG_ENV] = "flow-20261117-sg-kv"
+        self.assertEqual(self.S.ensure_flow_tag(None), "flow-20261117-sg-kv")

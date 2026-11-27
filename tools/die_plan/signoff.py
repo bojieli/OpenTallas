@@ -393,7 +393,10 @@ def container_path_preflight(libconfig, work, corner):
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
                   "netlist_alias_check.py", "fwd_pad_check.py")
-OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
+# P-MERGED-GDS-NOT-RUN (QC-DRT-ECO-R2 11-26): an ECO pass dir runs the STAGED signoff.py; without these three the merged-GDS gate import fails and the
+# fail-closed branch records "NOT RUN" on kits that bind only generated memory macros (gate_check = not applicable): 5 QC kits held by that alone.
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py",
+                           "merged_gds_drc.py", "merged_gds_drc_pya.py", "abstract_exact.py", "abstract_detail.py", "kvpc_exact_m45.py")
 
 
 def _common_flow(source, name):
@@ -1076,8 +1079,8 @@ puts "SO_PATH_END"
   # register-launched path hidden behind a worse port path included, and their worst slack.  eco_loop.near_miss scores
   # this, since port-start hold is the parent's.  Each find_timing_paths result is read before the next call: a later
   # call frees the earlier PathEnds, and reading them crashes OpenROAD, which no catch stops.
-  # KW-FIX-36 11-08 (COORD R4): core_n / core_wns = the same census without output-port endpoints, which sign-off
-  # assigns to the parent (oport above).  eco_loop.near_miss scores core_*; n / wns stay what the ECO's nonport scope repairs.
+  # The core census excludes parent-facing ports and includes explicitly declared, recovered-clock native pad inputs.
+  # The nonport fields retain the ECO's existing nonport scope.
   catch {
     set so_np [dict create]; set so_np_core [dict create]; set so_np_all 0; set so_np_reg 0
     foreach so_pe [find_timing_paths -path_delay min -group_path_count 100000 -endpoint_path_count 1 -slack_max 0] {
@@ -1101,6 +1104,7 @@ puts "SO_PATH_END"
         if {![$so_eo is_top_level_port] && (![dict exists $so_np_core $so_ep] || $so_sl < [dict get $so_np_core $so_ep])} { dict set so_np_core $so_ep $so_sl }
       }
     }
+@NATIVE_HOLD@
     if {$so_np_all < 100000 && $so_np_reg < 100000} {
       set so_np_w 0.0; set so_np_cw 0.0
       dict for {so_ep so_sl} $so_np { if {$so_sl < $so_np_w} { set so_np_w $so_sl } }
@@ -1398,6 +1402,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                              if k not in {sel.split("[")[0] for _ck, sels in fwd_ring for sel in sels}}
     if native_pad_inputs:
         t = _native_pad_tcl(t, native_pad_inputs)
+    t = t.replace("@NATIVE_HOLD@", NATIVE_HOLD_TCL if native_pad_inputs and corner == "ff" else "")
     t = t.replace("@DROOP665@", "" if not droop else (
         "# ---- 12.4a b2 0.665 V data droop re-time (INFORMATION only, never a reason) ----\n" + droop +
         "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
@@ -1605,12 +1610,15 @@ def _native_pad_tcl(t, contracts):
     overlay = "@IN_MIN_PORTS@\n"
     if t.count(anchor) != 1 or t.count(overlay) != 1:
         raise ValueError('signoff: native pad overlay anchors changed')
-    lines = ['set so_native_in {}\n']
+    lines = ['set so_native_in {}\n', 'set so_native_clocks {}\n']
     restore = []
     for ck, sel, mn, mx in contracts:
-        lines += [f'if {{[llength [get_clocks -quiet {{{ck}}}]] != 1}} {{error "missing native pad clock {ck}"}}\n',
+        lines += [f'set so_native_ck [get_clocks -quiet {{{ck}}}]\n',
+                  f'if {{[llength $so_native_ck] != 1 || ![llength [get_property [lindex $so_native_ck 0] sources]]}} '
+                  f'{{error "missing physical native pad clock {ck}"}}\n',
                   f'set so_native_ports [get_ports -quiet {{{sel}}}]\n',
                   f'if {{![llength $so_native_ports]}} {{error "empty native pad selector {sel}"}}\n',
+                  'dict lappend so_native_clocks [lindex $so_native_ck 0] {*}$so_native_ports\n',
                   'foreach p $so_native_ports {\n'
                   '  if {$p ni [all_inputs] || [get_full_name $p] in $so_ck_ports || [get_full_name $p] in $so_native_in} {error "ambiguous native pad input"}\n'
                   '  lappend so_native_in [get_full_name $p]\n' ' }\n']
@@ -1619,6 +1627,32 @@ def _native_pad_tcl(t, contracts):
     lines += ['set so_din [lmap p $so_din {if {[get_full_name $p] in $so_native_in} continue; set p}]\n',
               'so NATIVE_PAD_INPUTS [llength $so_native_in] golden_delays_preserved\n']
     return t.replace(anchor, anchor + ''.join(lines)).replace(overlay, overlay + ''.join(restore))
+
+
+NATIVE_HOLD_TCL = r"""    # A worse parent input may hide a local native path to the same capture.
+    set so_native_hold {}
+    dict for {so_ck so_ports} $so_native_clocks {
+      set so_paths [find_timing_paths -path_delay min -from $so_ports -to $so_ck -group_path_count 100000 -endpoint_path_count 1 -slack_max 0]
+      if {[llength $so_paths] >= 100000} {error "truncated native pad hold census"}
+      foreach so_pe $so_paths {
+        set so_sl [get_property $so_pe slack]
+        set so_eo [get_property $so_pe endpoint]
+        if {$so_sl >= 0 || [$so_eo is_top_level_port]} continue
+        set so_ep [get_full_name $so_eo]
+        if {![dict exists $so_native_hold $so_ep] || $so_sl < [dict get $so_native_hold $so_ep]} {
+          dict set so_native_hold $so_ep $so_sl
+        }
+      }
+    }
+    set so_native_wns 0.0
+    dict for {so_ep so_sl} $so_native_hold {
+      if {$so_sl < $so_native_wns} {set so_native_wns $so_sl}
+      if {![dict exists $so_np_core $so_ep] || $so_sl < [dict get $so_np_core $so_ep]} {
+        dict set so_np_core $so_ep $so_sl
+      }
+    }
+    so STD_MIN_NATIVE n [dict size $so_native_hold] wns [format %.2f $so_native_wns]
+"""
 
 
 FWD_RING_TAG = "# OT_FWD_RING_INPUTS"
@@ -1978,6 +2012,9 @@ def corner_result(parsed, hard_signed=()):
             out["std_min_start"].update(nonport_n=_f(d.get("n")), nonport_wns=_f(d.get("wns")))
             if d.get("core_n") is not None:         # KW-FIX-36 R4: the census without output-port endpoints
                 out["std_min_start"].update(core_n=_f(d.get("core_n")), core_wns=_f(d.get("core_wns")))
+        if "NATIVE_PAD_INPUTS" in kv:
+            d = _kvlist(kv.get("STD_MIN_NATIVE") or "")
+            out["std_min_start"].update(native_n=_f(d.get("n")), native_wns=_f(d.get("wns")))
     out["slew_viol"] = _f(kv.get("SLEW_VIOL"))
     out["cap_viol"] = _f(kv.get("CAP_VIOL"))
     fo = (kv.get("FANOUT_MAX") or "").split()
@@ -2976,6 +3013,8 @@ def port_only_hold(ff):
         return False
     if any(s.get(k) is None for k in ("port", "other", "reg", "trunc", "err")):
         return False
+    if s.get("native_n", 0) != 0:
+        return False
     # S81-TYPES-5 11-07: output-port endpoints (census field oport, absent on older sessions = 0) count as port hold
     op = s.get("oport") or 0
     return (s["err"] == 0 and s["trunc"] == 0 and s["other"] == 0 and s["reg"] == 0 and s["port"] + op >= n
@@ -3042,7 +3081,96 @@ def stamp_flow_tag(rec):
     tag = (os.environ.get(FLOW_TAG_ENV) or "").strip()
     if tag and FLOW_TAG_RE.match(tag) and not rec.get("flow_tag"):
         rec["flow_tag"] = tag
+    elif not tag and os.environ.get(UNRESOLVED_ENV) and not rec.get("flow_tag"):
+        rec["flow_tag"] = UNRESOLVED
+    sha = os.environ.get(SRC_COMMIT_ENV)
+    if sha and SHA40_RE.match(sha) and not rec.get("src_commit"):
+        rec["src_commit"] = sha
     return rec
+
+
+SRC_COMMIT_ENV = 'OT_SRC_COMMIT'
+UNRESOLVED_ENV = 'OT_FLOW_TAG_UNRESOLVED'   # set by ensure_flow_tag; never read as a tag
+UNRESOLVED = 'UNRESOLVED'
+SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _git(repo, *args):
+    p = subprocess.run(["git", "-C", str(repo)] + list(args), capture_output=True, text=True, timeout=120)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def kit_source_shas(kit, here=None):
+    """candidate commits that built this kit, best first: the kit's own records (resign.kit_build_commit fields, an rt pin file),
+    then the git revision of the tree this signoff.py runs from.  -> [(sha, basis)]"""
+    out = []
+    for n in ("PROVENANCE.json", "AUTOPILOT.json", "freeze.json", "kit_provenance.json", "rt_pin.json"):
+        try:
+            x = json.loads((Path(kit) / n).read_text()) if kit else None
+        except (OSError, ValueError):
+            continue
+        if not isinstance(x, dict) or x.get("kind") == "resign":
+            continue
+        for k in ("build_commit", "src_commit", "source_commit", "rt_sha", "rt_commit", "repo_rev"):
+            v = x.get(k)
+            if isinstance(v, str) and re.match(r"^[0-9a-f]{7,40}$", v):
+                out.append((v, f"{n}:{k}"))
+    here = Path(here or __file__).resolve().parent
+    rev = _git(here, "rev-parse", "HEAD")
+    if SHA40_RE.match(rev):
+        out.append((rev, "git rev of the tree running signoff.py"))
+    return out
+
+
+def derive_flow_tag(kit, here=None):
+    """P-SIGNED-UNVERSIONED forward gap (COORD 11-26): no --flow-tag / $OT_FLOW_TAG -> the flow tag of the kit's own rt/tree.
+    A flow tag ON the source commit, else a flow tag whose tools/die_plan/signoff.py is byte-identical to this one (the tag's
+    tools).  -> dict(src_commit, flow_tag or '', basis) ; src_commit '' = nothing found."""
+    here = Path(here or __file__).resolve().parent
+    repo = _git(here, "rev-parse", "--show-toplevel")
+    shas = kit_source_shas(kit, here)
+    for sha, basis in shas:
+        if not repo:
+            break
+        full = _git(repo, "rev-parse", "-q", "--verify", sha + "^{commit}")
+        if not full:
+            continue
+        tags = sorted(t for t in _git(repo, "tag", "--points-at", full).split() if FLOW_TAG_RE.match(t))
+        if tags:
+            return dict(src_commit=full, flow_tag=tags[-1], basis=f"{basis}; tag on commit")
+        mine = hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+        for t in sorted((t for t in _git(repo, "tag", "-l", "flow-*").split() if FLOW_TAG_RE.match(t)), reverse=True):
+            blob = subprocess.run(["git", "-C", repo, "show", f"{t}:tools/die_plan/signoff.py"], capture_output=True).stdout
+            if blob and hashlib.sha256(blob).hexdigest() == mine:
+                return dict(src_commit=full, flow_tag=t, basis=f"{basis}; {t} carries this signoff.py")
+        return dict(src_commit=full, flow_tag="", basis=basis)
+    if shas:
+        return dict(src_commit="", flow_tag="", basis=shas[0][1])
+    return dict(src_commit="", flow_tag="", basis="")
+
+
+def ensure_flow_tag(kit, here=None):
+    """at the start of a sign-off run: a tag from --flow-tag / env stays; else derive it from the kit's rt/tree and export it
+    (flow tag + source commit) for stamp_flow_tag.  REPORT-ONLY (COORD 11-26): when nothing can be derived the run prints a loud
+    WARNING and the record is stamped flow_tag "UNRESOLVED"; a sign-off is never blocked over metadata."""
+    if (os.environ.get(FLOW_TAG_ENV) or "").strip():
+        return os.environ[FLOW_TAG_ENV].strip()
+    d = derive_flow_tag(kit, here)
+    if not d["src_commit"] and not d["basis"]:
+        os.environ[UNRESOLVED_ENV] = "1"
+        print("SIGNOFF WARNING no flow tag (--flow-tag / $OT_FLOW_TAG) and none derivable: no kit rt pin "
+              "(PROVENANCE/AUTOPILOT/freeze.json) and no git revision of the tree running signoff.py; "
+              f"record is stamped flow_tag {UNRESOLVED}")
+        return ""
+    if d["src_commit"]:
+        os.environ[SRC_COMMIT_ENV] = d["src_commit"]
+    if d["flow_tag"]:
+        os.environ[FLOW_TAG_ENV] = d["flow_tag"]
+        print(f"SIGNOFF flow tag {d['flow_tag']} derived from the kit rt/tree ({d['basis']})")
+    else:
+        os.environ[UNRESOLVED_ENV] = "1"
+        print(f"SIGNOFF WARNING no flow tag carries the kit rt/tree ({d['basis']}): record stamped flow_tag {UNRESOLVED}")
+    return d["flow_tag"]
 
 
 def cmd_run(a):
@@ -3051,6 +3179,7 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     require_signoff_bundle()
+    ensure_flow_tag(disc.get("kit"))
     retain_clock = getattr(a, "retain_child_clock_witness", False)
     parent_targets = tuple(getattr(a, "parent_boundary_instance", ()) or ())
     parent_std_limit = getattr(a, "parent_boundary_std_query_limit", 0)
@@ -3363,6 +3492,13 @@ def cmd_verdict(a):
     evaluate(rec, a.insertion_target)
     if getattr(a, "rescore_unconstrained", False) and getattr(a, "write", False):
         Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
+    if getattr(a, "rejudge", False) and getattr(a, "write", False):
+        # P-MERGED-GDS-NOT-RUN 11-26: re-evaluate the SAME recorded measurements with the current tool (no STA, no corner data touched) and store
+        # the result with its provenance; the record before the rewrite is kept beside it as <record>.before-rejudge.
+        import shutil, time as _t
+        shutil.copyfile(a.record, str(a.record) + ".before-rejudge")
+        rec["rejudged"] = dict(by="signoff.py verdict --rejudge --write", at=_t.strftime("%Y-%m-%dT%H:%M:%S%z"), note=getattr(a, "rejudge_note", None) or "same measurements, current tool")
+        Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
@@ -3419,6 +3555,8 @@ def main(argv=None):
                    "with endpoints under SIGNED hard-core views excluded (no STA re-run); --write stores the record")
     v.add_argument("--kit", help="kit dir (default: the record dir parent)")
     v.add_argument("--write", action="store_true")
+    v.add_argument("--rejudge", action="store_true", help="with --write: store the re-evaluated verdict of the same recorded measurements (provenance in rec['rejudged'])")
+    v.add_argument("--rejudge-note")
     rc_ = sub.add_parser("refresh-coverage", help="re-derive child-flop clock coverage of a finished record from its own "
                          "receipts (NOMCAP-MAP) and re-evaluate; --write to store")
     rc_.add_argument("record")

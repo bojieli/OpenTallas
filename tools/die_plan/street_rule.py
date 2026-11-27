@@ -113,7 +113,10 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
                 add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0,
                 face_rule=1, face_depth_um=129.6, face_passes=5, dense_per_um=3.0, transit_rule=0, sparse_tier=1,
-                pin_relay=1, pin_relay_um=4.32)
+                pin_relay=1, pin_relay_um=4.32,
+                # C-STREET-R2 (11-26): opt-in PG-adjusted sizing.  street_pg=1 (or plan top-level street_sizing.pg) scales the usable
+                # street fill by (1 - PG band blockage of the street layers, schema.PART_PG_BANDS); 0 = byte-identical.
+                street_pg=0, pg_track_loss=-1.0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 # ERROR kinds; sliver / outline_sliver / tap_street are WARN.  face_street / station_alley: R-STREET (11-13)
@@ -125,9 +128,35 @@ HARD = ("street", "wall", "outline_street", "face_street", "station_alley")
 # so check counts it as an error and legalize widens it to need_um (>= street_min_um).  Default 0 keeps the WARN class.
 
 
+def pg_loss(cfg):
+    """fraction of street tracks lost to PG stripe bands (0 unless cfg street_pg).  pg_track_loss >= 0 overrides the derived
+    value: the mean blocked share (2 x half exclusion / pitch, schema.PART_PG_BANDS) of the street layers M3/M5/M7."""
+    if not cfg.get("street_pg"):
+        return 0.0
+    if cfg.get("pg_track_loss", -1.0) >= 0:
+        return float(cfg["pg_track_loss"])
+    import street_pg as SP
+    return SP.street_layer_loss()
+
+
+def eff_fill(cfg):
+    return cfg["street_fill"] * (1.0 - pg_loss(cfg))
+
+
 def need_um(pins, cfg):
-    w = pins * cfg["pin_pitch_um"] / (cfg["street_layers"] * cfg["street_fill"])
+    w = pins * cfg["pin_pitch_um"] / (cfg["street_layers"] * eff_fill(cfg))
     return round(max(cfg["street_min_um"], math.ceil(w / G - 1e-9) * G), 4)
+
+
+def plan_street_cfg(raw):
+    """opt-in plan flag: top-level `street_sizing` {pg: 1, pg_track_loss: x} (C-STREET-R2).  Absent / falsy pg -> {} (default off)."""
+    f = (raw or {}).get("street_sizing") if isinstance(raw, dict) else None
+    if not isinstance(f, dict) or not f.get("pg"):
+        return {}
+    out = dict(street_pg=1)
+    if isinstance(f.get("pg_track_loss"), (int, float)):
+        out["pg_track_loss"] = float(f["pg_track_loss"])
+    return out
 
 
 def up(v, q=G):
@@ -136,7 +165,7 @@ def up(v, q=G):
 
 def k_per_um(cfg):
     """K: routable tracks per um of street width (37.5 at the defaults)."""
-    return cfg["street_layers"] * cfg["street_fill"] / cfg["pin_pitch_um"]
+    return cfg["street_layers"] * eff_fill(cfg) / cfg["pin_pitch_um"]
 
 
 def cols_in(cols, x0, y0, x1, y1):
@@ -417,7 +446,7 @@ def face_shadow_rule(W, H, boxes, wins, cfg):
     ends, movable, free_spans)] for macros `boxes` behind the type pin windows `wins` (type_face_windows)."""
     V = []
     smin, D, ab, pmin = cfg["street_min_um"], cfg["face_depth_um"], cfg["abut_um"], cfg["pinface_min"]
-    k = cfg["street_layers"] * cfg["street_fill"] / cfg["pin_pitch_um"]
+    k = k_per_um(cfg)
     for face in "WESN":
         fw = wins.get(face) or []
         if sum(w[2] for w in fw) < pmin:
@@ -830,7 +859,7 @@ def transit_streets(t, cfg, boxes=None):
         boxes += extra_boxes(t)
     if not boxes:
         return []
-    k = cfg["street_layers"] * cfg["street_fill"] / cfg["pin_pitch_um"]
+    k = k_per_um(cfg)
     bk = cfg["street_min_um"]
     R = [(b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"], b["inst"]) for b in boxes]
     acc = collections.defaultdict(lambda: collections.defaultdict(int))
@@ -2898,6 +2927,9 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
     rs_cfg = dict(RS.DEFAULTS, derate=dict(RS.DERATE), core_ceiling=RS.DEFAULTS["core_ceiling"], views={}, kit_views={})
     conns = RS.load_conns(die_dir, None, Path(plan_dir), RS.REF_DIRS[1:])
     cfg = dict(DEFAULTS, **(cfg or {}))
+    for k, v in plan_street_cfg(raw).items():
+        if k not in (cfg or {}):
+            cfg[k] = v
     if cfg.get("face_rule"):
         cfg["_planwins"] = plan_face_windows(raw, Path(plan_dir) / "die_plan.json")
     ccfg = dict(gap=G, sweeps=0, topk=1, lam=1.0, reach=cfg["reach"], grid_um=21.6, grt_halving="full",
@@ -2983,6 +3015,9 @@ def setup(a):
             cfg[k] = v
         else:
             cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
+    for k, v in plan_street_cfg(P).items():
+        if not any(kv.partition("=")[0] == k for kv in a.set or []):
+            cfg[k] = v
     if cfg.get("face_rule"):
         xn = [n for n, t in P["partition_types"].items() if not t.get("hard_cores") and extra_boxes(t)]
         if a.types:

@@ -658,6 +658,7 @@ SCHEMA = {
                         # S81-BANDTAP-1115: tap windows (holes) cut in frozen bands: where S81-PHYT1 puts taps for uncovered band points
                         "band_tap_windows_um": {"type": "array", "items": _rect},
                         "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+                        "reserved_pocket_fill": {"type": "boolean"},
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
@@ -1063,6 +1064,11 @@ SCHEMA = {
                         # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff
                         # (pin_entry_phase.py); needs the 1-bit id_strap strap_rst_ph; instances give reset_entry_phase.
                         "pin_entry_phase": {"type": "boolean"},
+                        # SEAMHOLD-HB4-HOSTN-RST 11-26 (opt-in, needs pin_entry_phase): N kept HB4xp67 between the pin and the
+                        # phase entry's capture registers (pin_entry_phase.CELL_RTL_HB), 0 flops, 0 cycles.
+                        "pin_entry_hb4": {"type": "object", "additionalProperties": False, "minProperties": 1,
+                            "properties": {"reset": {"type": "integer", "minimum": 0, "maximum": 8},
+                                           "start": {"type": "integer", "minimum": 0, "maximum": 8}}},
                         # RESET-RELAY-GEN-R3 11-21: root entry u_rst_in = ot_dp_rrelay_nl (launch-side lockup, 0 cycles)
                         "root_entry_negedge": {"type": "boolean"},
                         # Exact physical input-to-capture technology chain; no new FF/cycle.
@@ -1696,6 +1702,20 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
         "capture_tap": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "pattern": "^[^\\s]+$"}},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
         "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}
+# C-XTAP-HOLD 11-26 (COORD 09:22 ruling, kit_xtap_seam.py): per type (exact name or 'prefix*') the planned hard-seam hold
+# elements on hard-core input pins fed by a neighbouring hard core on another core tap: form hb4 (n kept HB4 per bit on the
+# capture-side net) or lockup (negative-level latch on a fabric tap); both 0 cycles.  absent = off, byte-identical kits.
+_XS_PAIR = {"type": "object", "additionalProperties": False, "required": ["inst", "ports", "form"], "properties": {
+    "inst": {"type": "string", "minLength": 1}, "ports": {"type": "array", "minItems": 1, "items": _name},
+    "form": {"type": "string", "enum": ["hb4", "lockup"]}, "types": {"type": "array", "items": _name},
+    "n": {"type": "integer", "minimum": 1, "maximum": 12}, "deficit_ps": {"type": "number"},
+    "margin_ps": {"type": "number", "minimum": 0}, "delta_ps": {"type": "number"},
+    "window_ps": {"type": "number", "minimum": 0},
+    "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}, "launch": {"type": "string"},
+    "allow_missing": {"type": "boolean"}, "note": {"type": "string"}}}
+SCHEMA["properties"]["clock"]["properties"]["xtap_seam_element"] = {"type": "object", "additionalProperties": {
+    "type": "object", "additionalProperties": False, "required": ["pairs"], "properties": {
+        "note": {"type": "string"}, "pairs": {"type": "array", "minItems": 1, "items": _XS_PAIR}}}}
 # KV-SENDER-SKEW 11-24 (COORD ruling, landing_contract.fwd_export_spec): per type (exact name or 'prefix*') the forwarded
 # clock export form; from = leaf hangs each export buffer on its ring's launch-flop leaf at POST_CTS (fwd_export_leaf.tcl),
 # ports = the forwarded outputs covered (default all); absent / from = tap = the source-tap root form, byte-identical kits.
@@ -2087,7 +2107,39 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
         "note": {"type": "string"}}}
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
+# FT-CORE-DETOUR (CLASS-OWNERS-B C-FT-CROSSES-CORE 11-26, ft_core_detour.py): opt-in, default absent = byte-identical; zero-cycle re-site of
+# hop-chain stations so no hop needs a path through a hard core (optional types = restrict to these partition types)
+SCHEMA["properties"]["ft_core_detour"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "types": {"type": "array", "items": {"type": "string"}}}}
+# RELAY-SPREAD (CLASS-OWNERS-B C-RELAY-SEAT 11-26, relay_spread.py): opt-in, default absent = byte-identical; the tool spreads relay_sites
+# stacks (> stack_min - 1 keys on one point) over the kit's station grid within max_um / the hop margin / 0.3 x clock.tap_radius_um
+SCHEMA["properties"]["relay_spread"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "stack_min": {"type": "integer", "minimum": 2}, "max_um": {"type": "number", "exclusiveMinimum": 0},
+    "halo_um": {"type": "number", "minimum": 0}, "margin_um": {"type": "number", "minimum": 0}, "tap_frac": {"type": "number", "exclusiveMinimum": 0}}}
+# CLK-LAND-CLEAR (CLASS-OWNERS-B C-CLK-LAND-OBS 11-26, clk_land_clear.py): opt-in, default absent = byte-identical; clock taps, reserved die clock
+# sites and relay seats inside a hard macro body / halo / OBS stack are re-sited in P.types
+SCHEMA["properties"]["clk_land_clear"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "types": {"type": "array", "items": {"type": "string"}},
+    "classes": {"type": "array", "items": {"enum": ["tap", "reserved", "relay"]}},
+    "clear_um": {"type": "number", "minimum": 0}, "max_move_um": {"type": "number", "exclusiveMinimum": 0}}}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}
+# TAP-REACH (CLASS-OWNERS-B C-TAP-REACH 11-26, tap_reach_fix.py): opt-in, default absent = byte-identical; the per-cut generator appends sink
+# taps (explicit clock.taps / added_taps) for FIRM seats beyond the type's tap radius, optionally splits taps over span_um
+SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": False, "properties": {
+    "enable": {"type": ["integer", "boolean"]}, "radius_um": {"type": "number", "exclusiveMinimum": 0},
+    "span_um": {"type": "number", "exclusiveMinimum": 0}, "rounds": {"type": "integer", "minimum": 1},
+    "jobs": {"type": "integer", "minimum": 1}, "types": {"type": "string"}}}
+# GPL-TD (CLASS-OWNERS-B C-GPL-TD-INFLATION 11-26, gpl_td.py) and STREET-PG (C-STREET-R2 11-26, street_rule.plan_street_cfg): top-level
+# opt-in flags the generator / advisories already read; declared so PRE SCHEMA-UNKNOWN-KEY admits a plan that sets them (HEAD-EAST-R3
+# 11-26: the flag-ready probes used private plan copies and never met the schema check).  Value rules stay in gpl_td.spec.
+SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": False, "properties": {
+    "top_overflow_trigger": {"type": ["integer", "number", "boolean"]}, "firm_small_clusters": {"type": ["integer", "boolean"]},
+    "cell_growth_gate": {"type": ["integer", "boolean"]}}}
+SCHEMA["properties"]["pin_track_pg"] = {"type": "object", "additionalProperties": False, "properties": {
+    "pg": {"anyOf": [{"type": "boolean"}, {"type": "integer", "enum": [0, 1]}]},
+}}
+SCHEMA["properties"]["street_sizing"] = {"type": "object", "additionalProperties": False, "properties": {
+    "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0}}}
 
 # Exact native launch group for a slot-local polarity inverter placement hook.
 FT_POLARITY_GROUP_PATTERN = r"(?:[A-Za-z0-9_]+[./])*u_ft_[A-Za-z0-9_]+_(?:s[0-9]+|[io]_[0-9]+)"
@@ -2193,6 +2245,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
     "type": "array", "minItems": 1, "uniqueItems": True,
     "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
+# SEAMHOLD-CTL-K5-DI 11-26 (opt-in, default absent = byte-identical): {landed input bus: N} puts N kept HB4xp67 (gen_rtl.ot_dp_hd,
+# instances u_hdly_cland_ctl_<bus> / u_hdly_cland_fs_<bus>) in front of the dataflow ring's three control inputs
+# cland_dn_ready_<bus>, cland_dn_fault_<bus> and cland_fstart_in_<bus> (the ring d bits above the data and t_rst_n): 0 flops,
+# 0 cycles.  For a seam whose receiver capture insertion exceeds the sender launch (host_w -> st_k5 d_i, FF hold -50 ps).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ctl_hold_hb4"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8},
+    "propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
 # CLAND-QREG-1 (opt-in, default absent = byte-identical): one rclk register stage on the landing ring output q of
 # each listed input bus (legacy and count-aligned rings), +1 data cycle on that crossing (counted by clock_landings).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_output_qreg"] = {
@@ -4142,6 +4201,15 @@ SCHEMA["properties"]["cbc"] = {"oneOf": [{"type": "boolean"}, {
     "properties": {"enabled": {"type": "boolean"}, "hop_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
                    "depth_levels": {"type": "integer", "minimum": 4}, "tap_sinks": {"type": "integer", "minimum": 100},
                    "reset_leaf": {"type": "integer", "minimum": 1, "maximum": 48}, "note": {"type": "string"}}}]}
+
+# C-LAND-REACH 11-26 (land_reach.py; row_normalize runs it when enabled; default off): re-seat a hard clock-landing core + band within the
+# data-wire allowance of its port.  Absent = byte-identical plans and reports.
+SCHEMA["properties"]["land_reach"] = {
+    "type": "object", "additionalProperties": False,
+    "properties": {"enable": {"type": ["integer", "boolean"]}, "margin_ps": {"type": "number", "maximum": 0},
+                   "target_ps": {"type": "number", "maximum": 200}, "types": {"type": "string"},
+                   "landings": {"type": "array", "uniqueItems": True, "items": {"type": "string"}},
+                   "sidecar": {"type": "string"}, "note": {"type": "string"}}}
 
 # Exact sites for existing DLY lockup latches. The physical kit checks their
 # data connectivity, row legality and the exact launch and capture taps.

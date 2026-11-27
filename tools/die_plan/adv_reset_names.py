@@ -59,6 +59,10 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
     if str(here) not in sys.path:
         sys.path.insert(0, str(here))
     types = (raw or {}).get("partition_types") or {}
+    rp = ((raw or {}).get("reset") or {}).get("root_part")
+    if rp and rp not in {x.get("name") for x in (raw or {}).get("partitions") or [] if isinstance(x, dict)}:
+        # P-FALSE-GREEN-1126: a scoped view dropped the reset root partition; the tree solve would die with KeyError (sp5)
+        raise KeyError(f"reset.root_part {rp!r} is not a partition of this plan view: run RESET-NAME on the whole plan (OT_ADV_RESETNAME_TYPES limits the types)")
     only = set(filter(None, os.environ.get("OT_ADV_RESETNAME_TYPES", "").split(",")))
     todo = [(tn, r) for tn, t in sorted(types.items()) if isinstance(t, dict) and not t.get("hard")
             and (not only or tn in only) for r in [refs(t)] if r]
@@ -84,8 +88,10 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
                 taps = taps_fn(tn)
         except Exception as e:  # noqa: BLE001 the bind reports its own tree error
             errs += 1
+            # P-FALSE-GREEN (S81-GATE-LINT 11-26, col_h10_r0_p1 KeyError): a crashed check is an ERROR (FAIL line), never "not checked"
             if errs <= 3:
-                out.append(f"WARN {CHECK} {tn}: not checked ({type(e).__name__}: {str(e)[:120]})")
+                out.append(f"FAIL {CHECK} {tn}: TREE-ERROR ({type(e).__name__}: {str(e)[:120]}); the reset tree / tap table could not "
+                           f"be solved, so this type was NOT checked (a tool error, not a clean result)")
             continue
         bad = stale(r, relays, taps)
         if bad:
@@ -97,6 +103,6 @@ def findings(raw, plan_path, tree=None, tree_fn=None, taps_fn=None, budget_s=Non
                            f"--resets anchor from the TREE's tools/die_plan over this type")
     left = len(todo) - done
     if nbad or left or errs:
-        out.append(f"WARN {CHECK} summary: {done} of {len(todo)} referencing type(s) checked, {nbad} with stale names"
-                   + (f", {left} not checked (budget {budget:.0f} s)" if left else "") + (f", {errs} tree error(s)" if errs else ""))
+        out.append(f"WARN {CHECK} summary: {done - errs} of {len(todo)} referencing type(s) checked, {nbad} with stale names"
+                   + (f", {left} not checked (budget {budget:.0f} s)" if left else "") + (f", {errs} TREE ERROR(S) (FAIL)" if errs else ""))
     return out

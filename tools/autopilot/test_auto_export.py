@@ -82,6 +82,7 @@ def test_probe_scan_spool_hash(tmp_path):
     s, = run('spool', {})
     assert s['odb'] == str(base / '6_final.odb') and s['spool'].endswith('.json')
     u['host'], u['hint'] = 'epyc7', {}
+    u['signoff'] = str(Path('/srv/scratch') / Path(u['signoff']).relative_to(tmp_path))
     die, el, kind, how = AE.infer(u, [])
     assert (die, el, how) == ('s81', 'ot_top_m', 'lane dir')
 
@@ -139,3 +140,48 @@ def test_legacy_record_shas_cover_empty_record_rows(tmp_path):
     (tmp_path / "INDEX.tsv").write_text("\n".join(rows) + "\n")
     got = AE.legacy_record_shas(str(tmp_path), str(tmp_path / "cache.json"))
     assert got == [hashlib.sha256(b"{\"verdict\": \"SIGNED\"}").hexdigest()]
+
+
+def test_unit_carries_kit_routed_lec_and_sidecar_row(tmp_path, monkeypatch):
+    """LEC-R2 11-26: a kit's lec_routed*/lec.json (EQUIVALENT, not older than 6_final.v) travels as lec.json; INDEX-LEC.tsv row carries its sha"""
+    import hashlib, time
+    base = tmp_path / 'claude' / 'k' / 'work' / 'base'
+    base.mkdir(parents=True)
+    (base / '6_final.odb').write_bytes(b'\0' * (2 << 20))
+    (base / '6_final.v').write_text('module m; endmodule\n')
+    kit = tmp_path / 'claude' / 'k' / 'work'
+    (kit / 'config.mk').write_text('export DESIGN_NAME = ot_top_m\n')
+    nlk = kit / 'run' / 'results' / 'asap7' / 'm' / 'base'
+    nlk.mkdir(parents=True)
+    (nlk / '6_final.v').write_text('module m; endmodule\n')
+    sod = tmp_path / 'claude' / 'k' / 'signoff'
+    sod.mkdir()
+    (sod / 'signoff.json').write_text(json.dumps(rec(odb=str(base / '6_final.odb'), kit=str(kit))))
+    env = dict(os.environ, HOME=str(tmp_path / 'home'))
+
+    def scan():
+        r = subprocess.run([sys.executable, '-I', '-', 'scan', json.dumps(dict(hours=1, roots=[str(tmp_path / 'claude')]))], input=AE.PROBE, text=True, capture_output=True, env=env, check=True)
+        return [json.loads(l) for l in r.stdout.splitlines() if l.startswith('{')][0]
+    time.sleep(0.05)
+    (kit / 'lec_routed_relec1122').mkdir()
+    bad = kit / 'lec_routed_relec1122' / 'lec.json'
+    bad.write_text(json.dumps(dict(verdict='NOT EQUIVALENT')))
+    assert scan()['lec'] is None and 'lec.json' not in {f for _, f in scan()['files']}        # only EQUIVALENT travels
+    body = json.dumps(dict(verdict='EQUIVALENT', counts=dict(compare_points=7, proved=7)))
+    bad.write_text(body)
+    u = scan()
+    assert ('lec.json' in {f for _, f in u['files']}) and u['lec']['identity'] == 'size' and u['lec']['counts']['compare_points'] == 7
+    u['shas'] = {'lec.json': hashlib.sha256(body.encode()).hexdigest()}
+    u['odb_sha'] = 'a' * 64
+    # Exercise the hub-to-RTX queue boundary used by the real drain.
+    monkeypatch.setattr(AE, 'STATE', str(tmp_path))
+    AE.save_ledger({'units': {'new': dict(u, state='meta'),
+                              'legacy': {'state': 'agi', 'record': 'legacy'}}})
+    pending, legacy = json.loads((tmp_path / 'pending_rtx.json').read_text())
+    assert pending['lec'] == u['lec']
+    assert AE.lec_index_row(legacy) == ''
+    c = AE.lec_index_row(pending).rstrip('\n').split('\t')
+    assert c[0] == u['record'] and c[1] == u['odb_sha'] and c[2] == u['shas']['lec.json'] and c[3] == 'EQUIVALENT' and c[4] == '7' and c[5] == 'size'
+    assert AE.lec_index_row(dict(u, lec=None)) == ''
+    os.utime(bad, (1, 1))                                                                       # older than 6_final.v: not picked up
+    assert scan()['lec'] is None

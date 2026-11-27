@@ -37,3 +37,12 @@ def _lec_rawprefix_wall_off(monkeypatch):
     (OT_LEC_RAWPREFIX_S=0), so no test result depends on host load; the deterministic AND-node cap stays at its
     default.  A test that checks the wall bound sets or deletes the variable itself."""
     monkeypatch.setenv("OT_LEC_RAWPREFIX_S", "0")
+
+
+@pytest.fixture(autouse=True)
+def _pre_crash_warn_for_toy_plans(monkeypatch):
+    """P-FALSE-GREEN-1126 (HEAD-INT-R2): plan_gate_pre.check() now turns a crashed check (WARN ...-UNCHECKED <Exception>) into a FAIL.
+    The fixture plans of the PRE tests are deliberately minimal ({"die": "x"}), so estimators crash on them by construction; those tests
+    judge the finding classes they build, so they run with the old WARN (OT_PRE_CRASH_WARN=1).  test_false_green_r2.py tests the
+    promotion itself and passes env explicitly / removes the variable."""
+    monkeypatch.setenv("OT_PRE_CRASH_WARN", "1")

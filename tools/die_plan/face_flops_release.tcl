@@ -102,3 +102,29 @@ if {[file exists $ff_f]} {
   close $fh
   puts "OT_NATIVE_POSE released $ff_m posed FFs for DPL"
 }
+# FIRM-SIZE-LOCK-1126 (HEAD-INT-R2, C-FIRM-RESIZE-OVERLAP, opt-in OT_FIRM_RESIZE_FREEZE=1 at PRE_GLOBAL_PLACE, face_flops.tcl): the sizing-only lock.
+# The guard wrote ot_firm_size_lock.txt (at-risk FIRM std cells, master at the global_placement call).  Timing-driven GPL / repair_design resized
+# some of them IN PLACE (origin stays, the cell grows right) and DPL cannot move a FIRM cell; every listed cell goes back to its locked master
+# so its seat fits, whatever its status now (a cell released to PLACED above may be re-FIRMed later by the cland block, grown cells then
+# overlap again).  Frozen cells keep their master.  No file = nothing changes.
+proc ot_firm_size_restore {blk} {
+ set f $::env(RESULTS_DIR)/ot_firm_size_lock.txt
+ if {![file exists $f]} return
+ set db [ord::get_db]
+ set n 0; set same 0; set miss 0
+ set fh [open $f r]; set data [read $fh]; close $fh
+ foreach ln [split $data "\n"] {
+  if {$ln eq ""} continue
+  lassign [split $ln "\t"] nm mn
+  set i [$blk findInst $nm]
+  if {$i eq "NULL" || $i eq ""} { set i [$blk findInst [string map {"\[" "\\[" "\]" "\\]"} $nm]] }
+  if {$i eq "NULL" || $i eq ""} { incr miss; continue }
+  if {[[$i getMaster] getName] eq $mn} { incr same; continue }
+  set m [$db findMaster $mn]
+  if {$m eq "NULL" || $m eq ""} { incr miss; continue }
+  if {![$i swapMaster $m]} { incr miss; continue }
+  incr n
+ }
+ puts "OT_FIRM_SIZE_LOCK restored $n FIRM cells to their locked master ($same kept it, $miss missing / not swappable)"
+}
+ot_firm_size_restore $ff_blk

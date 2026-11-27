@@ -1375,8 +1375,22 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
         row["lag_ok"] = min(ml, mh) >= need_ps
         if amb_tree and tr[1].get("edge_fall"):
             # FLOW-ONEMODEL-1: an ambiguous tree crossing's lag window is the plan sync window, which places the fall
-            # sample at rise + T/2; with measured duty distortion that is not a bound -> fail closed
-            row.update(lag_ok=False, reason="ambiguous fall-edge tree crossing (sync window assumes fall = rise + T/2)")
+            # sample at rise + T/2.  CA-FALL-DUTY-1 (HEAD-SERDES-R2, COORD 14:08): the real fall sample sits at
+            # rise + T/2 + (fall arrival - rise arrival) of the capture taps, so the window is widened on BOTH sides by
+            # the measured duty distortion of the port (its fall interval, the capture taps' MEASURED fall arrivals,
+            # against its rise interval).  No measured fall arrival on a capture tap -> fail closed as before.
+            fv = (dfall or {}).get(pid)
+            if fv is None:
+                row.update(lag_ok=False, reason="ambiguous fall-edge tree crossing without a measured fall arrival "
+                                                "(sync window assumes fall = rise + T/2; fail closed)")
+            else:
+                dd = max(abs(fv[0] - dl), abs(fv[1] - dh))
+                lo2, hi2 = lo - dd, hi + dd
+                ml2, mh2 = lo2 - 0.5 * period, (D - 0.5) * period - hi2
+                row.update(L_lo_ps=round(lo2, 1), L_hi_ps=round(hi2, 1), margin_lo_ps=round(ml2, 1),
+                           margin_hi_ps=round(mh2, 1), slot_read_ps=round(lo2 - 0.5 * period, 1),
+                           guard_hi_slack_ps=round(mh2 - ap, 1), source="plan-sync+fall",
+                           duty_distortion_ps=round(dd, 1), lag_ok=min(ml2, mh2) >= need_ps)
         row["slot_read_ok"] = row["slot_read_ps"] >= 0
         row["guard_ok"] = row["guard_hi_slack_ps"] >= 0
         rows.append(row)

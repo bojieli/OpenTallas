@@ -30,6 +30,37 @@ endmodule
 '''
 NOMINAL_STAGES = 2          # cap_r + q at h = 0
 
+# SEAMHOLD-HB4-HOSTN-RST (HEAD-INT-R2 11-26, opt-in reset.pin_entry_hb4 {"reset": N, "start": M}, absent = byte-identical):
+# the same phase entry with N kept HB4xp67 (gen_rtl.ot_dp_hd, instance u_hdly_in) between the pin and BOTH capture registers.
+# A zero-logic reset / START seam whose selected capture sits FF-hold-negative (host_n sp5 -> u_rst_in/cap_f -1.446 ps)
+# gains ~N x 30 ps with no FF and no whole cycle (identity in RTL); the pin still feeds only the entry cell's d (por_gate G3,
+# bind_component reset edge unchanged).  The pad is also on the unselected capture register (false path, no cost).
+CELL_HB = 'ot_dp_rrelay_ph_hb'
+CELL_RTL_HB = '''(* keep_hierarchy, keep *)
+module ot_dp_rrelay_ph_hb #(parameter integer N = 1) (input wire clk, input wire ph, input wire d, output reg q);
+    wire dh;
+    ot_dp_hd #(.W(1), .N(N)) u_hdly_in (.a(d), .y(dh));
+    (* keep *) reg cap_r;
+    (* keep *) reg cap_f;
+    always @(posedge clk) cap_r <= dh;
+    always @(negedge clk) cap_f <= dh;
+    always @(posedge clk) q <= ph ? cap_f : cap_r;
+endmodule
+'''
+
+
+def hb4_spec(t):
+    return (t.get('reset') or {}).get('pin_entry_hb4')
+
+
+def uses_hb(raw):
+    return any(isinstance(hb4_spec(t), dict) and (hb4_spec(t).get('reset', 0) or hb4_spec(t).get('start', 0))
+               for t in (raw.get('partition_types') or {}).values())
+
+
+def hb_count(T, signal):
+    return int((T.get('pin_entry_hb4') or {}).get(signal, 0))
+
 
 def enabled(t):
     return (t.get('reset') or {}).get('pin_entry_phase') is True
@@ -44,6 +75,8 @@ def configure(P, tn, T, error=ValueError):
     if type(flag) is not bool:
         raise error(f'type {tn}: reset.pin_entry_phase must be boolean')
     if not flag:
+        if hb4_spec(P.types[tn]) is not None:
+            raise error(f'type {tn}: reset.pin_entry_hb4 needs reset.pin_entry_phase')
         return T
     if T.get('entry') != 'relayed':
         raise error(f'type {tn}: pin_entry_phase requires a synchronous relayed entry')
@@ -53,7 +86,16 @@ def configure(P, tn, T, error=ValueError):
     straps = {s['name']: s['width'] for s in P.types[tn].get('id_straps', [])}
     if straps.get(STRAP) != 1:
         raise error(f'type {tn}: pin_entry_phase needs the 1-bit id_strap {STRAP}')
-    return dict(T, pin_entry_phase=True, pin_entry_added_flops=2 * (1 + int(bool(T.get('start')))))
+    spec = hb4_spec(P.types[tn])
+    out = dict(T, pin_entry_phase=True, pin_entry_added_flops=2 * (1 + int(bool(T.get('start')))))
+    if spec is not None:
+        if (not isinstance(spec, dict) or not set(spec) <= {'reset', 'start'} or not spec
+                or any(type(v) is not int or not 0 <= v <= 8 for v in spec.values())):
+            raise error(f'type {tn}: reset.pin_entry_hb4 must be {{"reset": 0..8, "start": 0..8}}')
+        if spec.get('start') and not T.get('start'):
+            raise error(f'type {tn}: pin_entry_hb4 START needs a broadcast input')
+        out['pin_entry_hb4'] = dict(spec)
+    return out
 
 
 def port_text(T):
@@ -155,7 +197,10 @@ def main(argv):
 def summary(T):
     if not T.get('pin_entry_phase'):
         return {}
-    return dict(pin_entry_phase=dict(cell=CELL, strap=STRAP, added_flops=T['pin_entry_added_flops'],
+    hb = ({} if not T.get('pin_entry_hb4') else dict(pin_entry_hb4=dict(
+        cell='HB4xp67_ASAP7_75t_R', reset=hb_count(T, 'reset'), start=hb_count(T, 'start'), added_flops=0,
+        added_whole_cycles=0)))
+    return dict(**hb, pin_entry_phase=dict(cell=CELL, strap=STRAP, added_flops=T['pin_entry_added_flops'],
                                      nominal_entry_stages=NOMINAL_STAGES, delay_cells=0, clock_forks=0,
                                      per_instance='partitions[].reset_entry_phase (half cycles); release delta = '
                                                   '-ceil(h/2); die STA proves each seam'))

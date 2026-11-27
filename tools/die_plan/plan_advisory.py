@@ -53,6 +53,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    with the TREE tools, no synthesis (KV R6: kv3_hg_v1p4/v1p6 ">= 2 copies needed", kv3_pc_v1 r8ef700d7c strap_r8pad_lane_*, all
                    found only at gen); report only, OT_GEN_PARSE_BLOCK=1 -> FAIL lines (adv_gen_parse.py)
   BOUNDARY-REG-50  ft out pins with no planned register within 50 um (precheck BOUNDARY-REG reading, exact bit sites); boundary_reg.py plan seats an out-face station (COORD 19:25 FABLE-RC-KV item 3; OT_BREG_BLOCK=1 -> FAIL lines)
+  RSTSPREAD        reset nets (FIRM seats on their nearest consumer tap) over 3,000 loads, 405 um of seat-to-tap, or 900 um HPWL; report only,
+                   adv_rst_spread.py, fix = rst_reach_construct.py spread (one relay stage per sink region, opt-in) (C-RST-RELAY-REACH r3)
   EDGE-STRIP       >= 256-bit die windows with a hard core < 69.12 um behind the window span (VIS-DIE-S81 EDGESTRIP-1; S81 J8:
                    241 types, 0/47 signed, 40/51 failing); fix = edgestrip_row.py interior shift or re-shape (adv_edge_strip.py)
 
@@ -98,10 +100,19 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   LAND-REACH       a hard landing core parked farther from its port than the cland data allowance (QC sle_ctl 300 um / 192 ps vs 45 ps)
   TIED-BITS        UNBOUND-tied bits: observed in the bind of record + predicted unlisted parameterized blackbox leaves (S81 svc c8)
   TREE-DRIFT       a view LEF / porous map / flow script / tool fix on main the bound tree lacks (u_cf view 31c7ccbd1b on J7/J8)
+  CONE-DEPTH       (C-CONE-DEPTH) a register/port logic cone in the elab json deeper than period - 130 ps at 22 ps per level (adv_cone_depth.py;
+                   needs the bind's asbuilt.json next to the as-built or $OT_CONE_YOSYS_JSON; silent without it)
   OFF-GRID         exact station / bank sites off the placement grid (KV sys_c row C)
   RESET-NAME       a generated reset relay (rst_rl_<k>) / density tap (clk_t<i>) name the clock section references that the
                    type's reset tree / tap table no longer emits (tap rows renumbered the tree: S81 J8, HEAD Row B, KV D29 14
                    EMIT); fix = landing_remap --resets anchor from the TREE's tools (adv_reset_names.py, TAP-GRID-R5)
+
+  PUB-STALE        (P-RESET-PUB-STALE, C-RST-RELAY-REACH 11-26) the published clock.landing_contract.collector_tree vs the tree the bind re-solves
+                   (reset_tree.for_type): relay-set / tap-count / depth mismatch and any collector ref > 405 um on the solved tree (S81 v3: 126 types,
+                   col_h10_r2 rst_n_t30 950 um); budgeted solve, never reports unchecked types as clean (adv_pub_stale.py)
+  PHASE-BIND       (DIECLOCK-PHASE-BIND-CHECK, C-DIECLOCK-PHASE-BIND 11-26) plan reset_entry_phase / strap_rst_ph / START edge_fall
+                   vs the choices phase_bind.py derived from a die STA on the ROUTED die clock (<plan dir>/phase_bind.json or
+                   $OT_PHASE_BIND); NO-BIND when a phase-using plan has none (HEAD W10: 33/358 entry phases below 60 ps)
 
     python3 -I tools/die_plan/plan_advisory.py --plan PLAN.json [--tree TREE] [--checks A,B] [--json OUT]   (exit 0 always, 2 = bad input)
 """
@@ -119,19 +130,20 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 # (check name, module in this directory); a module absent from an older tree is skipped quietly
 CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), ("SITE-COLLIDE", "adv_site_collide"),
-          ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
+          ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("CONE-DEPTH", "adv_cone_depth"), ("DENSITY", "adv_density"),
           ("CELLCAP", "adv_cellcap"), ("CELL-BUDGET", "adv_cell_budget"), ("HOLDCELL-BUDGET", "adv_holdcell_budget"),
-          ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"), ("STALE-BINS", "adv_stale_bins"),
+          ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"), ("XTAP-PAIR", "adv_xtap_pair"), ("TAP-REACH", "tap_reach_fix"), ("STALE-BINS", "adv_stale_bins"),
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
           ("PHANTOM-STATION", "adv_phantom_station"), ("BANK-OFFAREA", "adv_bank_offarea"),
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
           ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"),
           ("ROUTE-DEMAND", "adv_route_demand"), ("EDGE-STRIP", "adv_edge_strip"), ("RESET-NAME", "adv_reset_names"),
-          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("STN-DEADLANE", "adv_stn_deadlane"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"), ("PG-EDGE-PIN", "adv_pg_edge_pin"), ("RST-SIDECAR", "adv_rst_sidecar"), ("STATION-STACK", "adv_station_stack"), ("SINKBIN-STALE", "adv_sinkbin_stale"), ("BANK-SPAN", "adv_bank_span"), ("TAP-STEP", "adv_tap_step"), ("SITE-IN-MACRO", "adv_site_in_macro"), ("CLK-LAND-OBS", "adv_clk_land_obs"), ("PHY-FACE-ROWS", "adv_phy_face_rows"), ("TREE-LINKS", "adv_tree_links"), ("ISTA-LEAF", "adv_ista_leaf"), ("C2-REACH", "adv_c2_reach"), ("INSERTION-BAND", "adv_insertion_band"), ("CHANNEL-PILE", "adv_channel_pile"), ("PG-HALO-APPLIED", "adv_pg_halo_applied"), ("MACRO-CHANNEL", "adv_macro_channel"), ("GCELL-SLIVER", "adv_gcell_sliver"), ("FP-FLOORPLAN", "adv_fp_floorplan"), ("LEG-DELAY", "adv_leg_delay"), ("SLOT-GAP", "adv_slot_gap"), ("CHANNEL-WIDTH", "adv_channel_width"), ("FT-OUTSIDE", "adv_ft_outside"), ("BUS-CHANNEL-FIT", "adv_bus_channel"), ("DRT-M2M3", "adv_drt_m2m3"), ("BOUNDARY-REG-50", "boundary_reg"), ("IN-OUTLINE", "adv_fpconv:IN-OUTLINE"), ("LEG405-ZERO", "adv_fpconv:LEG405-ZERO"), ("LEG405-STAGED", "adv_fpconv:LEG405-STAGED"), ("RELAY-SEAT", "adv_fpconv:RELAY-SEAT"), ("SEAT-DENSITY", "adv_fpconv:SEAT-DENSITY"), ("PIN-FACE-CLEAR", "adv_fpconv:PIN-FACE-CLEAR"), ("HUB-BOX", "adv_fpconv:HUB-BOX"), ("FT-CLEAR", "adv_fpconv:FT-CLEAR"), ("TAP-STEP-DUP", "adv_fpconv:TAP-STEP-DUP"), ("BAND-AT-PIN", "adv_fpconv:BAND-AT-PIN"), ("SEAT-UNIQUE", "adv_fpconv:SEAT-UNIQUE"), ("RANK-PILE-PINFACE", "adv_fpconv2:RANK-PILE-PINFACE"), ("FT-SITE-LEGAL", "adv_fpconv2:FT-SITE-LEGAL"),
+          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("STN-DEADLANE", "adv_stn_deadlane"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("UNSEATED-CHAIN", "adv_unseated_chain"), ("ROW-APPLIED", "adv_row_applied"), ("PAD-LAUNCH", "adv_pad_launch"), ("UNSET-DEFINE", "adv_unset_define"), ("TREE-SWITCH", "adv_tree_switch"), ("TIED-BITS", "adv_tied_bits"), ("RECT-OUTLINE", "adv_rect_outline"), ("BITSITE-AREA", "adv_bitsite_area"), ("PG-EDGE-PIN", "adv_pg_edge_pin"), ("PIN-TRACK-PG", "pin_track_pg"), ("RST-SIDECAR", "adv_rst_sidecar"), ("STATION-STACK", "adv_station_stack"), ("SINKBIN-STALE", "adv_sinkbin_stale"), ("BANK-SPAN", "adv_bank_span"), ("TAP-STEP", "adv_tap_step"), ("SITE-IN-MACRO", "adv_site_in_macro"), ("CLK-LAND-OBS", "adv_clk_land_obs"), ("PHY-FACE-ROWS", "adv_phy_face_rows"), ("TREE-LINKS", "adv_tree_links"), ("ISTA-LEAF", "adv_ista_leaf"), ("C2-REACH", "adv_c2_reach"), ("INSERTION-BAND", "adv_insertion_band"), ("CHANNEL-PILE", "adv_channel_pile"), ("PG-HALO-APPLIED", "adv_pg_halo_applied"), ("MACRO-CHANNEL", "adv_macro_channel"), ("GCELL-SLIVER", "adv_gcell_sliver"), ("FP-FLOORPLAN", "adv_fp_floorplan"), ("LEG-DELAY", "adv_leg_delay"), ("SLOT-GAP", "adv_slot_gap"), ("CHANNEL-WIDTH", "adv_channel_width"), ("FT-OUTSIDE", "adv_ft_outside"), ("BUS-CHANNEL-FIT", "adv_bus_channel"), ("DRT-M2M3", "adv_drt_m2m3"), ("BOUNDARY-REG-50", "boundary_reg"), ("IN-OUTLINE", "adv_fpconv:IN-OUTLINE"), ("LEG405-ZERO", "adv_fpconv:LEG405-ZERO"), ("LEG405-STAGED", "adv_fpconv:LEG405-STAGED"), ("RELAY-SEAT", "adv_fpconv:RELAY-SEAT"), ("SEAT-DENSITY", "adv_fpconv:SEAT-DENSITY"), ("PIN-FACE-CLEAR", "adv_fpconv:PIN-FACE-CLEAR"), ("HUB-BOX", "adv_fpconv:HUB-BOX"), ("FT-CLEAR", "adv_fpconv:FT-CLEAR"), ("TAP-STEP-DUP", "adv_fpconv:TAP-STEP-DUP"), ("BAND-AT-PIN", "adv_fpconv:BAND-AT-PIN"), ("SEAT-UNIQUE", "adv_fpconv:SEAT-UNIQUE"), ("RANK-PILE-PINFACE", "adv_fpconv2:RANK-PILE-PINFACE"), ("FT-SITE-LEGAL", "adv_fpconv2:FT-SITE-LEGAL"),
           ("STATUS-UP-REACH", "adv_rcs81:STATUS-UP-REACH"), ("CORE-LEG-OVERMACRO", "adv_rcs81:CORE-LEG-OVERMACRO"), ("RELAY-COHORT-SPAN", "adv_rcs81:RELAY-COHORT-SPAN"),
           ("SEAT-ORIENT", "adv_seatgap:SEAT-ORIENT"), ("MACRO-GAP", "adv_seatgap:MACRO-GAP"),
           ("BITS-OVER-CYCLE", "adv_bitscycle:BITS-OVER-CYCLE"), ("PIN-FACE-KVLEAF", "adv_bitscycle:PIN-FACE-KVLEAF"),
-          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"))
+          ("PLACED-HOP-RATIO", "adv_placed_hop_ratio"), ("GEN-PARSE", "adv_gen_parse"),
+          ("XTAP-SEAM", "kit_xtap_seam"), ("RSTSPREAD", "adv_rst_spread"), ("RESERVED-POCKET", "reserved_pocket"), ("PHASE-BIND", "adv_phase_bind"), ("PUB-STALE", "adv_pub_stale"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
@@ -144,11 +156,17 @@ def _alarm(_sig, _frm):
     raise _Timeout()
 
 
+FAIL_KEEP = ("FAIL ADV-RESET-NAME ",)
+
+
 def _norm(name, lines):
     out = []
     for x in lines or []:
         x = str(x)
         if not x.strip() or x.startswith("#"):          # module debug / coverage lines
+            continue
+        if x.startswith(FAIL_KEEP):                     # P-FALSE-GREEN: a crashed estimator is an ERROR, kept as a FAIL line
+            out.append(x)
             continue
         if not x.startswith("WARN "):
             x = f"WARN ADV-{name} {x}"

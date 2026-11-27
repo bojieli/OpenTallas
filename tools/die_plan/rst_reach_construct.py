@@ -289,6 +289,202 @@ def local_tap_fix(raw, path, tn, step=4.32, rmax=216.0):
     return out
 
 
+# ---------------------------------------------------------------------------------------------------------------------------
+# SPREAD (round 3): one relay stage per sink region.  adv_rst_spread.py (ADV-RSTSPREAD) assigns every FIRM-seated flop of the plan to
+# the nearest consumer tap -- the rule reset_taps.tcl applies after placement, over reset.local_taps_um terminals too -- and
+# reports the nets whose seats are spread or whose fanout is high.  The construct adds one local terminal relay
+# (reset.local_taps_um, same release depth K: no clock port, no flop beyond the tree's own pad) per REGION of such a net:
+#   region = a sink cluster within the reach box (k_cover, 405 um CBC budget), split by load (median bisection) until each holds
+#            <= --cap loads; the region nearest the existing tap keeps it, every other region gets a terminal at its centre,
+#            on the nearest legal free site (reset_tree._free: outside every hard core / blockage, never inside a macro).
+# Nothing else changes: new terminals are APPENDED after the clock taps and after earlier local taps, so every rr_t<N> / rst_n_t<N>
+# index already in the plan keeps its meaning; the type is then re-solved, START raws re-derived at the new seats where a raw
+# pointer now has a nearer tap (retap.repick_start_raws), and the result is kept only when it is strictly better (spread_fix).
+SPREAD_MIN_LOADS = 64
+SPREAD_MAX_NEW = 48
+
+
+def _centre_uv(pts):
+    us = [x + y for x, y in pts]
+    vs = [x - y for x, y in pts]
+    u, v = (min(us) + max(us)) / 2.0, (min(vs) + max(vs)) / 2.0
+    return (u + v) / 2.0, (u - v) / 2.0
+
+
+def split_load(rows, cap):
+    """[(x, y, w)] -> groups of total weight <= cap (median bisection on the longer bbox side); a single seat is never split"""
+    tot = sum(r[2] for r in rows)
+    if tot <= cap or len(rows) < 2:
+        return [rows]
+    xs = [r[0] for r in rows]
+    ys = [r[1] for r in rows]
+    ax = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
+    rs = sorted(rows, key=lambda r: (r[ax], r[1 - ax]))
+    half, acc, k = tot / 2.0, 0.0, 0
+    for k, r in enumerate(rs):
+        acc += r[2]
+        if acc >= half:
+            break
+    k = min(max(k + 1, 1), len(rs) - 1)
+    return split_load(rs[:k], cap) + split_load(rs[k:], cap)
+
+
+def spread_regions(taps, sts, reach=405.0, cap=None):
+    """-> {tap name: [(centre xy, load, n seats)]} regions of the WIDE nets (all but the one the tap keeps); a region holds <= cap loads"""
+    import adv_rst_spread as SP
+    cap = SP.SPLIT if cap is None else cap
+    by = {}
+    for x, y, w, _k in sts:
+        j = min(range(len(taps)), key=lambda q: (abs(taps[q][1] - x) + abs(taps[q][2] - y), q))
+        by.setdefault(j, []).append((x, y, w))
+    out = {}
+    met = SP.net_metrics(taps, sts, reach)
+    for j, rows in by.items():
+        name = taps[j][0]
+        if not SP.wide(met[name]):
+            continue
+        regs = []
+        for cl in SP.k_cover([(i, (r[0], r[1])) for i, r in enumerate(rows)], reach):
+            sub = [rows[i] for i, _xy in cl]
+            for g in split_load(sub, cap):
+                regs.append((_centre_uv([(r[0], r[1]) for r in g]), sum(r[2] for r in g), len(g)))
+        if len(regs) < 2:
+            continue
+        keep = min(range(len(regs)), key=lambda q: (abs(regs[q][0][0] - taps[j][1]) + abs(regs[q][0][1] - taps[j][2]), q))
+        out[name] = [r for q, r in enumerate(regs) if q != keep]
+    return out
+
+
+def _free_near(RT, boxes, bounds, taken, x0, y0, rmax, step=4.32):
+    best = None
+    n = int(rmax / step)
+    for dx in range(-n, n + 1):
+        for dy in range(-n, n + 1):
+            x, y = round((x0 + dx * step) / step) * step, round((y0 + dy * step) / step) * step
+            d = abs(x - x0) + abs(y - y0)
+            if d > rmax or (best is not None and d >= best[0]):
+                continue
+            if not (bounds[0] <= x <= bounds[2] and bounds[1] <= y <= bounds[3]):
+                continue
+            if not RT._free((x, y), boxes, bounds) or any(abs(x - a) < 1e-6 and abs(y - c) < 1e-6 for a, c in taken):
+                continue
+            best = (d, round(x, 3), round(y, 3))
+    return best
+
+
+def spread_metrics(raw, path, tree, tn):
+    """{max_fanout, max_hpwl, far, wide_nets, depth, n_taps, n_tree, n_pad} of one type as written (ADV-RSTSPREAD model + the solved
+    tree: depth = release cycles to every tap, the LATCHECK input)"""
+    import adv_rst_spread as SP
+    D, RT = _modules()
+    S = D.Solver(raw, path, tree)
+    f = SP.type_features(raw, path, tree, tn, S)
+    row = dict(SP.summarize_type(f)) if f else dict(max_fanout=0, max_hpwl=0.0, far=0.0, wide_nets=0)
+    T = S.tree(tn)
+    row.update(depth=int(T["depth"]), n_taps=int(T["n_reset_consumers"]), n_tree=int(T["n_tree"]), n_pad=int(T["n_pad"]))
+    return row
+
+
+def spread_type(raw, path, tree, tn, reach=405.0, cap=None, min_loads=SPREAD_MIN_LOADS, max_new=SPREAD_MAX_NEW, rmax=60.0):
+    """append local terminals for the regions of the wide nets of type tn (in place on raw);
+    -> [[tap, region centre, load, site, hop_um]]"""
+    import adv_rst_spread as SP
+    D, RT = _modules()
+    S = D.Solver(raw, path, tree)
+    P = S._plan()
+    t = raw["partition_types"][tn]
+    taps = RT.consumer_taps(P, tn)
+    sts = SP.seats(t, SP.read_bins(t.get("clock") or {}, path, tree))
+    regs = spread_regions(taps, sts, reach, cap)
+    w, h_ = t["outline_um"]
+    boxes = RT.blockages(t)
+    bounds = (RT.CLEAR_UM, RT.CLEAR_UM, w - RT.CLEAR_UM, h_ - RT.CLEAR_UM)
+    extra = [list(map(float, x)) for x in (t.get("reset") or {}).get("local_taps_um") or []]
+    taken = [(a, b) for _, a, b in taps]
+    out = []
+    for name, rs in sorted(regs.items()):
+        for (cx, cy), load, n in sorted(rs, key=lambda r: -r[1]):
+            if load < min_loads or len(out) >= max_new:
+                continue
+            best = _free_near(RT, boxes, bounds, taken, cx, cy, rmax)
+            if best is None:
+                continue
+            extra.append([best[1], best[2]])
+            taken.append((best[1], best[2]))
+            out.append([name, [round(cx, 1), round(cy, 1)], load, [best[1], best[2]], round(best[0], 1)])
+    if out:
+        t.setdefault("reset", {})["local_taps_um"] = extra
+    return out
+
+
+def _nfail(D, raw, path, tree, tn):
+    return sum(x.startswith("FAIL") for x in D.rstreach_type(tn, raw["partition_types"][tn], D.Solver(raw, path, tree), None))
+
+
+def spread_fix(raw, path, tree, only=None, cap=None, reach=405.0, allow_depth=True, **kw):
+    """RSTSPREAD construct over the selected types.  Per type: add terminals, re-derive START raws at the new seats, re-solve, and
+    KEEP only when the tree still solves, RSTREACH FAIL lines do not grow, max fanout and the wide-net count are each no worse and
+    one is strictly better, and (allow_depth False) the release depth is unchanged.  -> (raw, report)"""
+    import adv_rst_spread as SP
+    import retap
+    D, RT = _modules()
+    rep = dict(types={}, steps=dict(types_changed=0, taps_added=0, reverted=[], skipped=[], depth_grew=[]))
+    S0 = D.Solver(raw, path, tree)
+    todo = []
+    for tn in sorted(raw["partition_types"]):
+        if only and tn not in only:
+            continue
+        try:
+            f = SP.type_features(raw, path, tree, tn, S0)
+        except Exception as e:  # noqa: BLE001
+            rep["steps"]["skipped"].append([tn, f"{type(e).__name__}: {str(e)[:100]}"])
+            continue
+        if f and any(SP.wide(m) for m in f.values()):
+            todo.append(tn)
+    for tn in todo:
+        keep = copy.deepcopy(raw["partition_types"][tn])
+        try:
+            before = spread_metrics(raw, path, tree, tn)
+            nf0 = _nfail(D, raw, path, tree, tn)
+            added = spread_type(raw, path, tree, tn, reach, cap, **kw)
+            if not added:
+                continue
+            # the new terminals renumber the generated reset relays: every plan name that points at one (START stages, local resets,
+            # landing_raw_branches / exports) is re-derived by (depth, site) identity -- landing_remap, the plan-event tool for exactly
+            # this -- so a reference keeps its relay and no stage count changes
+            import landing_remap as LR
+            view = dict(raw)
+            view["partition_types"] = dict(raw["partition_types"])
+            view["partition_types"][tn] = keep
+            rec = LR._remap_plan(view, raw, tree, Path(path).parent, types={tn})
+            remapped = sum(len(r.get("raw", [])) + len(r.get("exports", [])) for r in rec.get("resets", [])) + len(rec.get("identity", []))
+            retap.repick_start_raws(raw, path, {tn})
+            after = spread_metrics(raw, path, tree, tn)
+            nf1 = _nfail(D, raw, path, tree, tn)
+        except Exception as e:  # noqa: BLE001
+            raw["partition_types"][tn].clear()
+            raw["partition_types"][tn].update(keep)
+            rep["steps"]["reverted"].append(tn)
+            rep["types"][tn] = dict(reverted=True, why=f"{type(e).__name__}: {str(e)[:160]}")
+            continue
+        better = (after["max_fanout"] <= before["max_fanout"] and after["wide_nets"] <= before["wide_nets"]
+                  and (after["max_fanout"] < before["max_fanout"] or after["wide_nets"] < before["wide_nets"]))
+        if not (better and nf1 <= nf0 and (allow_depth or after["depth"] == before["depth"])):
+            raw["partition_types"][tn].clear()
+            raw["partition_types"][tn].update(keep)
+            rep["steps"]["reverted"].append(tn)
+            rep["types"][tn] = dict(reverted=True, why=f"before {before} after {after} rstreach FAIL {nf0}->{nf1}")
+            continue
+        rep["steps"]["types_changed"] += 1
+        rep["steps"]["taps_added"] += len(added)
+        if after["depth"] != before["depth"]:
+            rep["steps"]["depth_grew"].append([tn, before["depth"], after["depth"]])
+        rep["types"][tn] = dict(before=before, after=after, taps=added[:12], taps_added=len(added), rstreach_fail=[nf0, nf1], names_remapped=remapped,
+                                new_taps=[f"rst_n_t{i}" for i in range(before["n_taps"], after["n_taps"])],
+                                raw_changes=raw_diff(keep, raw["partition_types"][tn]))
+    return raw, rep
+
+
 def after_check(raw, path, tree, only):
     return census(raw, path, tree, only)
 
@@ -309,6 +505,14 @@ def main(argv=None):
     f.add_argument("--fstart-reseat", action="store_true")
     f.add_argument("--report")
     f.add_argument("--require", action="store_true")
+    sp = sub.add_parser("spread", help="RSTSPREAD construct: one relay stage per sink region (opt-in)")
+    sp.add_argument("plan")
+    sp.add_argument("out")
+    sp.add_argument("--tree")
+    sp.add_argument("--types")
+    sp.add_argument("--cap", type=int, help="loads per region after the split (default adv_rst_spread.SPLIT 1500)")
+    sp.add_argument("--report")
+    sp.add_argument("--no-depth-growth", action="store_true")
     a = ap.parse_args(argv)
     only = set(filter(None, (a.types or "").split(",")))
     raw = json.loads(Path(a.plan).read_text())
@@ -317,6 +521,13 @@ def main(argv=None):
         print(json.dumps(summarize(c)))
         if a.json:
             Path(a.json).write_text(json.dumps(dict(summary=summarize(c), types=c), indent=1) + "\n")
+        return 0
+    if a.cmd == "spread":
+        raw, rep = spread_fix(raw, a.plan, a.tree, only, cap=a.cap, allow_depth=not a.no_depth_growth)
+        Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
+        if a.report:
+            Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+        print(json.dumps(rep["steps"]))
         return 0
     raw, rep = fix(raw, a.plan, a.tree, only, a.fstart_reseat)
     txt = json.dumps(raw, indent=1) + "\n"

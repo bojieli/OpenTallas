@@ -3292,7 +3292,9 @@ def pin_entry_cell(T, signal):
     if T.get('root_entry_negedge'):
         return 'ot_dp_rrelay_nl'
     if T.get('pin_entry_phase'):
-        return 'ot_dp_rrelay_ph'
+        import pin_entry_phase as PH
+        n = PH.hb_count(T, signal)
+        return f'{PH.CELL_HB} #(.N({n}))' if n else 'ot_dp_rrelay_ph'
     return D.entry_cell(T, signal)
 
 
@@ -4009,11 +4011,17 @@ def check(P):
                 T = for_type(P, tn)
                 errs += [f"type {tn}: reset tree: {e}" for e in verify(T)]
             W = wf_plan(P)
+            import head_native_release as _HNR
+            _nr = _HNR.status(W.get('release_qualification'))
             if W.get('release_qualification', {}).get('verdict') == 'PENDING':
                 errs.append('reset wavefront: FULL native release qualification PENDING: ' +
                             str(W['release_qualification']['native_targets']))
-            if W.get("release_qualification", {}).get("verdict") == "QUALIFIED_CONDITIONAL":
-                warns.append("native PHY reset conditionally qualified in recovered-clock edges; no finite core-cycle deadline while PMA clock is stopped; no CDC or clock-period exception")
+            elif not _nr['counts_as_pass']:       # P-FALSE-GREEN-1126: an unknown verdict is never a pass
+                errs.append(f"reset wavefront: native release verdict {W['release_qualification'].get('verdict')!r} is not one of "
+                            f"{_HNR.NATIVE_RELEASE_PASSING} or PENDING")
+            elif _nr['verdict'] == _HNR.VERDICT_QUALIFIED:
+                warns.append("NATIVE-RELEASE QUALIFIED_CONDITIONAL (counts as G0 PASS, only under: " + ", ".join(_nr['conditions'])
+                             + "): native PHY reset conditionally qualified in recovered-clock edges; no finite core-cycle deadline while PMA clock is stopped; no CDC or clock-period exception")
             if W["long_hops"] or W["unreachable"]:
                 errs.append(f"reset wavefront: {len(W['long_hops'])} partitions have no neighbour rst_o within "
                             f"{hop_um(P):g} um of their reset IN pin (attached to the nearest, hop um): "

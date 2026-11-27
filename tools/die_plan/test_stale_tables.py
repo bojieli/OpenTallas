@@ -73,3 +73,22 @@ def test_block_env_and_list_line(monkeypatch):
     assert lines[-1].startswith("LIST STALETABLE die d TAPTABLE 1 ORGROUP 1") and "advisory" in lines[-1]
     monkeypatch.setenv("OT_PRE_STALETABLE_BLOCK", "1")
     assert any(x.startswith("FAIL STALETABLE-ORGROUP") for x in ST.findings(copy.deepcopy(raw), ts))
+
+
+def test_tap_legal_in_macro_halo():
+    # Coll_s: macro box y 449.29..530.29 grown by the 8.64 clearance; old C9 clk_t41 inside a moved macro's halo, new seat clean
+    boxes = [(319.68, 440.65, 515.59, 538.93)]
+    assert not ST.tap_legal_in((786.24, 803.52), 8.64, boxes, 512.992, 445.0)
+    assert ST.tap_legal_in((786.24, 803.52), 8.64, boxes, 512.992, 415.776)
+    assert ST.tap_legal_in((786.24, 803.52), 8.64, boxes, 504.288, 424.48)          # badd78bdf36b seat
+    assert ST.tap_legal_in((786.24, 803.52), 8.64, boxes, 515.59, 480.0)            # on the halo face: legal
+    assert not ST.tap_legal_in((786.24, 803.52), 8.64, boxes, 3.0, 100.0)           # outside the clearance ring
+
+
+def test_legality_covers_solver_taps_not_only_rows():
+    raw, ts = _raw()
+    ports = dict(ts["cA4"][0], clk_t50=(5.0, 5.0))
+    ts = {"cA4": (ports, set(), None)}
+    lines = ST.findings(raw, ts, legal=lambda tn, x, y, n: n != "clk_t50")
+    tl = [x for x in lines if "STALETABLE-TAPLEGAL" in x]
+    assert len(tl) == 1 and "clk_t50=[5.0, 5.0]" in tl[0] and "C-MACRO-TAP-LEGAL" in tl[0]

@@ -268,3 +268,124 @@ def test_sparse_spread_caps_density_and_raises_pad_only_on_sparse_kits():
     assert "CALL 1: " + PLAIN.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2") in out, out
     out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_DENSITY) x")
     assert "RC=1" in out and "OT_GPL_SPARSE_DENSITY must be a number" in out, out
+
+
+# ---- GPL-GROWTH-1126 (HEAD-INT-R2, C-GPL-TD-INFLATION): OT_GPL_GROWTH report line / opt-in gate ----
+GROW = "lappend ::insts {PLACED 10 10 0 0 0}; lappend ::insts {PLACED 10 10 0 0 0}; lappend ::insts {PLACED 10 10 0 0 0}"
+
+
+def _run_grow(env="", insts=DENSE):
+    body = MOCK % dict(INSTS=" ".join("{" + " ".join(map(str, i)) + "}" for i in insts), ENV=env, GPL="ok")
+    body = body.replace("incr ::calls\n", "incr ::calls\n  " + GROW + "\n", 1)       # the call inserts 3 buffers (DENSE has 2 insts)
+    tail = ('\nset rc [catch {global_placement -density 0.5 -timing_driven} res]\nputs "RC=$rc RES=$res"\n')
+    out = subprocess.run(["tclsh"], input=body + GUARD + tail, capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    return out.stdout
+
+
+@needs_tcl
+def test_growth_report_line_default_never_fails():
+    out = _run_grow()
+    assert "OT_GPL_GROWTH cells 2 -> 5 (+150.0 %)" in out and "limit none" in out and "RC=0 RES=done" in out, out
+
+
+@needs_tcl
+def test_growth_gate_opt_in_fails_above_limit_only():
+    out = _run_grow("set ::env(OT_GPL_GROWTH_MAX) 0.3")
+    assert "RC=1" in out and "OT_GPL_GROWTH FAIL" in out and "limit 30.0 %" in out, out
+    out = _run_grow("set ::env(OT_GPL_GROWTH_MAX) 2.0")
+    assert "RC=0 RES=done" in out and "limit 2.0" in out, out
+    out = _run_grow('set ::env(OT_GPL_GROWTH_MAX) ""')
+    assert "limit none" in out and "RC=0" in out, out
+    assert "RC=1" in _run_grow("set ::env(OT_GPL_GROWTH_MAX) abc")
+
+
+@needs_tcl
+def test_growth_wrapper_keeps_the_guard_behaviour():
+    out = _run(SPARSE, "diverge_modal")
+    assert "OT_GPL_FALLBACK" in out and "RC=0 RES=done CALLS=2" in out and "OT_GPL_GROWTH cells" in out, out
+    out = _run(DENSE, "other")
+    assert "RC=1 RES=GPL-0301 CALLS=1" in out and "OT_GPL_GROWTH" not in out, out      # a failed call reports nothing
+
+
+# ---- FIRM-RESIZE-1126 (HEAD-INT-R2, C-FIRM-RESIZE-OVERLAP): at-risk FIRM cells, report + opt-in dont_touch ----
+FR_MOCK = r"""
+namespace eval ord { proc get_db_block {} { return blk }; proc get_db {} { return db } }
+proc db {op} { return [list lib] }
+proc lib {op} { return [list M:DFFHQNx1_ASAP7_75t_R M:DFFHQNx2_ASAP7_75t_R M:DFFHQNx3_ASAP7_75t_R M:INVx1_ASAP7_75t_R M:TAPCELL_ASAP7_75t_R] }
+array set ::MW {DFFHQNx1_ASAP7_75t_R 20 DFFHQNx2_ASAP7_75t_R 28 DFFHQNx3_ASAP7_75t_R 36 INVx1_ASAP7_75t_R 6 TAPCELL_ASAP7_75t_R 4}
+# insts: name master status x0 y0
+set ::I {%(INSTS)s}
+proc blk {op} { set r {}; foreach x $::I { lappend r "I:[lindex $x 0]" }; return $r }
+proc inst_of {c} { foreach x $::I { if {"I:[lindex $x 0]" eq $c} { return $x } } }
+proc unknown {cmd args} {
+  if {[string match I:* $cmd]} { lassign [inst_of $cmd] n m st x y
+    switch [lindex $args 0] { getName { return $n } getPlacementStatus { return $st } getMaster { return "M:$m" } getBBox { return "B:$cmd" }
+      setDoNotTouch { puts "DONT_TOUCH $n"; return } } }
+  if {[string match M:* $cmd]} { set m [string range $cmd 2 end]
+    switch [lindex $args 0] { getName { return $m } getWidth { return $::MW($m) } getHeight { return 10 } isBlock { return 0 } getMasters { return [list] } } }
+  if {$cmd eq "lib"} { return }
+  if {[string match B:* $cmd]} { lassign [inst_of [string range $cmd 2 end]] n m st x y
+    switch [lindex $args 0] { xMin { return $x } yMin { return $y } xMax { return [expr {$x+$::MW($m)}] } yMax { return [expr {$y+10}] } } }
+  error "unknown $cmd $args"
+}
+"""
+FR_FUNCS = GUARD[GUARD.index("proc ot_firm_resize_risk"):GUARD.index("# GPL-GROWTH-1126")]
+
+
+def _fr(insts, env=""):
+    body = FR_MOCK % dict(INSTS=" ".join("{" + " ".join(map(str, i)) + "}" for i in insts))
+    # lib getMasters: the mock lib returns the master handles
+    body = body.replace("proc lib {op} { return", "proc lib {op} { if {$op eq \"getMasters\"} { return [list M:DFFHQNx1_ASAP7_75t_R M:DFFHQNx2_ASAP7_75t_R M:DFFHQNx3_ASAP7_75t_R M:INVx1_ASAP7_75t_R M:TAPCELL_ASAP7_75t_R] }; return")
+    body = body.replace("proc db {op} { return [list lib] }", "proc db {op} { return [list lib] }")
+    out = subprocess.run(["tclsh"], input=body + env + "\n" + FR_FUNCS + "\not_firm_resize_guard\n", capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr + out.stdout
+    return out.stdout
+
+
+FR_ROW = [("a", "DFFHQNx1_ASAP7_75t_R", "FIRM", 0, 0),        # x1 abutting the next FIRM cell: x2 (28) reaches 22 -> at risk
+          ("b", "DFFHQNx1_ASAP7_75t_R", "FIRM", 20, 0),       # next is 60 away: safe
+          ("c", "DFFHQNx1_ASAP7_75t_R", "FIRM", 80, 0),       # next is a LOCKED tap at 100 (x3 reaches 116): at risk
+          ("t", "TAPCELL_ASAP7_75t_R", "LOCKED", 100, 0),
+          ("p", "DFFHQNx1_ASAP7_75t_R", "FIRM", 200, 0),      # next is PLACED: DPL legalises it, not at risk
+          ("q", "INVx1_ASAP7_75t_R", "PLACED", 205, 0),
+          ("r", "DFFHQNx1_ASAP7_75t_R", "FIRM", 0, 10)]
+
+
+@needs_tcl
+def test_firm_resize_risk_reports_growers_and_default_does_not_freeze():
+    out = _fr(FR_ROW)
+    assert "OT_FIRM_RESIZE_RISK firm_std_cells=5 at_risk=2 freeze=0" in out, out     # r (row 2) has no right neighbour
+    assert "OT_FIRM_RESIZE_RISK_CELL a DFFHQNx1" in out and "OT_FIRM_RESIZE_RISK_CELL c DFFHQNx1" in out, out
+    assert "DONT_TOUCH" not in out and "b DFF" not in out and "p DFF" not in out, out
+
+
+@needs_tcl
+def test_firm_resize_freeze_is_a_sizing_lock_not_dont_touch(tmp_path):
+    # HEAD-INT-R2 11-26: dont_touch on a FIRM cell made repair_design refuse to buffer its nets (RSZ-3006); the lock records masters instead
+    out = _fr(FR_ROW, f"set ::env(OT_FIRM_RESIZE_FREEZE) 1; set ::env(RESULTS_DIR) {tmp_path}")
+    assert "DONT_TOUCH" not in out and "freeze=1" in out, out
+    assert "size lock on 2 FIRM cells" in out and "no dont_touch" in out, out
+    rows = sorted((tmp_path / "ot_firm_size_lock.txt").read_text().splitlines())
+    assert rows == ["a\tDFFHQNx1_ASAP7_75t_R", "c\tDFFHQNx1_ASAP7_75t_R"], rows
+    assert "OT_FIRM_RESIZE_RISK" not in _fr(FR_ROW, "set ::env(OT_FIRM_RESIZE_RISK) 0")
+
+
+@needs_tcl
+def test_firm_resize_default_writes_no_lock_file(tmp_path):
+    out = _fr(FR_ROW, f"set ::env(RESULTS_DIR) {tmp_path}")
+    assert "freeze=0" in out and not (tmp_path / "ot_firm_size_lock.txt").exists(), out
+
+
+@needs_tcl
+def test_firm_size_lock_keeps_first_master_seen(tmp_path):
+    # a second global_placement call in the same process must not overwrite the recorded master with a grown one
+    env = f"set ::env(OT_FIRM_RESIZE_FREEZE) 1; set ::env(RESULTS_DIR) {tmp_path}; set ::ot_firm_size_lock [dict create a DFFHQNx1_ASAP7_75t_R]"
+    rows = [("a", "DFFHQNx2_ASAP7_75t_R", "FIRM", 0, 0), ("t", "TAPCELL_ASAP7_75t_R", "LOCKED", 10, 0)]
+    _fr(rows, env)
+    assert (tmp_path / "ot_firm_size_lock.txt").read_text().splitlines() == ["a\tDFFHQNx1_ASAP7_75t_R"]
+
+
+def test_firm_resize_guard_runs_before_the_call_and_report_errors_do_not_stop_a_kit():
+    assert GUARD.index("ot_firm_resize_guard} fr_err") < GUARD.index("::ot_gpl_guarded {*}$args")
+    assert "OT_FIRM_RESIZE_RISK ERROR (report skipped)" in GUARD

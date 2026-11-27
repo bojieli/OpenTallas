@@ -196,3 +196,87 @@ def test_segmented_existing_enable_cannot_be_silently_selected_by_default():
         cut(source,0)
     with pytest.raises(ValueError,match='different SEGMENTED_MEMORY_DELAY'):
         cut(source,0,memory_read_extra=44)
+
+
+DLY = '''module ot_dp_dly #(parameter W=1, parameter D=1)(input clk, input [W-1:0] d, output [W-1:0] q);
+    reg [W-1:0] r [0:D-1]; integer k;
+    always @(posedge clk) begin r[0]<=d; for(k=1;k<D;k=k+1) r[k]<=r[k-1]; end
+    assign q=r[D-1];
+    endmodule
+    '''
+
+
+def landing_pad_vehicle(bits=range(8), wrong=None, comment='// landing pad: as-built relative timing'):
+    """P-SU-LANE-COMMITTED-STALE: a refreshed R8 pin puts W=1 landing pads (outside the lane) in front of the lane
+    inputs, so the raw cut names its inputs pd1_x_q_N and sorts c_i differently from the committed module."""
+    source = fixture()
+    reference, _, _ = cut(source, 0)
+    decl = ''.join(f'    wire [0:0] pd1_x_q_{i};\n' for i in bits)
+    pads = ''.join(f'    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_q_{i} (.clk(clk), .d(x_q[{wrong if i == 0 and wrong is not None else i}]), '
+                   f'.q(pd1_x_q_{i}));  {comment}\n' for i in bits)
+    changed = source.replace('    wire [7:0] x_q;\n', '    wire [7:0] x_q;\n' + decl).replace('    assign y=', pads + '    assign y=')
+    sel = ', '.join(f'pd1_x_q_{i}[0]' if i in bits else f'x_q[{i}]' for i in reversed(range(8)))
+    return changed.replace('.x(x_q)', '.x({' + sel + '})'), reference
+
+
+def test_landing_pad_rename_keeps_committed_module_and_rewires_only_frame(tmp_path):
+    from qc_su_lane_cut import landing_pad_input_abi
+    import hashlib
+    source, reference = landing_pad_vehicle(bits=[0, 1, 2, 5, 6])
+    raw, _, _ = cut(source, 0)
+    assert raw != reference                                 # the strict committed comparison alone fails
+    abi = landing_pad_input_abi(source, 0, None, reference, source_type='t', source_partition='u_lane0')
+    assert abi['reference_sha256'] == hashlib.sha256(reference.encode()).hexdigest()
+    rtl, frame, r = cut(source, 0, input_abi=abi)
+    assert rtl == reference and r['input_abi_changed_bits'] == 5 and r['input_abi_all_leaf_ports_verified']
+    assert '.c_i({x_q[7], pd1_x_q_6[0], pd1_x_q_5[0], x_q[4], x_q[3], pd1_x_q_2[0], pd1_x_q_1[0], pd1_x_q_0[0]})' in frame
+    assert all(g['r8_member_id'].startswith('landing_pad:') for g in abi['aliases'])
+    if not shutil.which('iverilog'):
+        pytest.skip('iverilog unavailable')
+    leaf = '''module leaf(input clk,rst_n,input [7:0] x,output reg [7:0] y=0);
+    always @(posedge clk) if(!rst_n) y<=0; else y<={x[6:0],x[7]}^8'h49;
+    endmodule
+    '''
+    tb = '''module tb;
+    reg clk=0,rst_n=0; reg[7:0] x=0; wire[7:0] a,b;
+    original ref0(clk,rst_n,x,a); grouped dut(clk,rst_n,x,b);
+    always #5 clk=~clk;
+    integer i;
+    initial begin
+      repeat(3) @(negedge clk); rst_n=1;
+      for(i=0;i<256;i=i+1) begin x=i*37; @(negedge clk); if(a!==b) $fatal(1,"pad abi differs at %0d",i); end
+      $display("PAD ABI LOCKSTEP PASS256"); $finish;
+    end endmodule
+    '''
+    def run(body, name):
+        p = tmp_path / (name + '.sv'); exe = tmp_path / name
+        p.write_text(DLY + leaf + source + body.replace('module original(', 'module grouped(') + rtl + tb)
+        subprocess.run(['iverilog', '-g2012', '-s', 'tb', '-o', str(exe), str(p)], check=True, capture_output=True, text=True)
+        return subprocess.run(['vvp', str(exe)], capture_output=True, text=True)
+    good = run(frame, 'pad')
+    assert good.returncode == 0 and 'PAD ABI LOCKSTEP PASS256' in good.stdout
+    bad = run(frame.replace('pd1_x_q_0[0]})', 'x_q[0]})'), 'unpadded')
+    assert bad.returncode != 0 and 'pad abi differs' in bad.stdout
+
+
+def test_landing_pad_abi_refuses_non_pad_or_wrong_origin():
+    from qc_su_lane_cut import landing_pad_input_abi
+    source, reference = landing_pad_vehicle(comment='// plain rename')
+    assert landing_pad_input_abi(source, 0, None, reference) is None
+    source, reference = landing_pad_vehicle(wrong=1)        # pad 0 is fed from x_q[1]: not a rename of c_i bit 0
+    with pytest.raises(ValueError):
+        cut(source, 0, input_abi=landing_pad_input_abi(source, 0, None, reference))
+
+
+def test_aliased_input_also_read_unchanged_is_refused():
+    """the same committed c_i bit must not feed one sink through the pad and another sink without it"""
+    from qc_su_lane_cut import landing_pad_input_abi
+    base = fixture().replace('.x(w_u_rsq0_y)', '.x(x_q)')     # rcp also reads x_q in the committed module
+    reference, _, _ = cut(base, 0)
+    decl = ''.join(f'    wire [0:0] pd1_x_q_{i};\n' for i in range(8))
+    pads = ''.join(f'    ot_dp_dly #(.W(1), .D(1)) u_pd1_x_q_{i} (.clk(clk), .d(x_q[{i}]), .q(pd1_x_q_{i}));  // landing pad: as-built relative timing\n' for i in range(8))
+    sel = '{' + ', '.join(f'pd1_x_q_{i}[0]' for i in reversed(range(8))) + '}'
+    source = base.replace('    wire [7:0] x_q;\n', '    wire [7:0] x_q;\n' + decl).replace('    assign y=', pads + '    assign y=')
+    source = source.replace('.x(x_q)', '.x(' + sel + ')', 1)  # only exp is padded; rcp still reads x_q
+    with pytest.raises(ValueError, match='also read unchanged'):
+        cut(source, 0, input_abi=landing_pad_input_abi(source, 0, None, reference))

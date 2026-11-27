@@ -20,7 +20,10 @@ LEG405-STAGED   (C-LEG405-R2) the staged-aware form: relay_depth entry with stag
                 kind, and 'WARN LEG405-STAGED-UNCHECKED <type>: <kinds>' names every leg kind the plan carries but the check cannot see
                 (macro pin-to-pin nets, relay_sites without relay_depth, reset relay -> sink, ft_slots, clock sinks).  WARN not FAIL: a
                 missing coordinate is missing evidence, not a measured violation (PRE promotes only UNCHECKED lines naming an exception).
-RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point (S81 t15 32 seats in lane cores).
+                (C-LEG405-R3 11-26) plus the per-bit station-chain census of leg405_perbit.py: every bit from its true source pin through
+                its own seats to the out pin, planned hop + 3 um placed drift > 405 (calibrated on the retained KV 3_place OT_FT_LANE
+                lines; the relay_depth rows alone read 0 of 65 placed KV pairs).
+RELAY-SEAT      a relay site inside a hard core, or more than RELAY_STACK relays on one point that relay_spread.py cannot seat within the hop margin (S81 t15 32 seats in lane cores; OT_ADV_RELAY_STACK_ALL=1 lists every stack).
 SEAT-DENSITY    station + ft register flops (bits x 0.38 um2) over free area (bin minus cores) per 100 um bin > 0.5 (t15 1.09).
 PIN-FACE-CLEAR  a station endpoint on a core face with < 43 um clear in front of it (neighbour core or outline).
 HUB-BOX         a core with > 200 station bits needs >= 2 faces with >= 60 um clear (vn_a / vn_b / vs boxed in at 8.6-17 um).
@@ -28,11 +31,13 @@ FT-CLEAR        an ft register hop (straight segment) that crosses a hard core b
 TAP-STEP-DUP    two added (explicit) taps < 40 um apart (t54 five taps within 11-13 um); core-pin taps are excluded (macro_follow).
 BAND-AT-PIN     a landing band farther than 180 um from its pins (max_pin_to_band_hop_um) or overlapping a hard core.
 SEAT-UNIQUE     >= 4 station registers of different stations on one point (reader-start duplicate seats)."""
+import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import adv_geom_static as G  # noqa: E402
+import leg405_perbit as LB  # noqa: E402
 
 TOL = 0.01
 LEG_UM = 405.0
@@ -642,33 +647,118 @@ def _f_leg(raw, plan_path, tree=None, **_k):
     return _run("LEG405-ZERO", lambda t, tn, r: leg405_zero(t), lambda h: f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} 0 stages", raw)
 
 
+def _geoms_env():
+    """OT_ADV_LEG405_GEOM = JSON {type: geom.tsv of its 3_place} (tools/autopilot/geom_dump.tcl output): placed register geometry for SRC-NOT-AT-LEAF"""
+    p = os.environ.get("OT_ADV_LEG405_GEOM")
+    if not p or not os.path.isfile(p):
+        return {}
+    import json
+    with open(p) as f:
+        return json.load(f)
+
+
+def leg405_perbit_types(raw, plan_path, budget_s=None):
+    """C-LEG405-R3: per-bit station-chain census from the true source (leg405_perbit.py) -> ({type: (over, near, worst um, slot list)}, n unmeasured,
+    note).  over = hop + DRIFT_UM > 405, near = hop + NEAR_UM > 405.  Needs the plan on disk (schema.Plan); a type that cannot be built
+    is counted as unmeasured, a plan that cannot load measures nothing and says so.  Bounded by OT_ADV_LEG405_S seconds (default 150).
+    SRC-NOT-AT-LEAF: with OT_ADV_LEG405_GEOM (placed geom.tsv per type) every internal_stations bus whose registers the placed netlist shows starts
+    (out bus) / ends (in bus) at the real register centroid instead of leaf_um / from_um / to_um; without it nothing changes."""
+    import time
+    from pathlib import Path as _P
+    import schema as S
+    import src_centroid as SC
+    budget = float(os.environ.get("OT_ADV_LEG405_S", "150")) if budget_s is None else budget_s
+    geoms = _geoms_env()
+    t0, out, skipped, left = time.time(), {}, 0, 0
+    P = S.Plan(raw, _P(plan_path))
+    names = [tn for tn, t in _types(raw) if t.get("ft_slots") or (tn in geoms and t.get("internal_stations"))]
+    for i, tn in enumerate(names):
+        if time.time() - t0 > budget:
+            left = len(names) - i
+            break
+        try:
+            t = raw["partition_types"][tn]
+            cen = LB.type_census(P, tn) if t.get("ft_slots") else {}
+            ic = {}
+            if tn in geoms:
+                ic = {c: v for c, v in LB.internal_census(t, SC.overrides(SC.load(geoms[tn]), t)).items() if v["moved"]}
+        except Exception:  # noqa: BLE001 - one unbuildable type never stops the scan
+            skipped += 1
+            continue
+        over = [(sn, v["full_max"], v["first_max"], v["full_over"]) for sn, v in cen.items() if v["full_max"] + LB.DRIFT_UM > LB.LIMIT_UM]
+        over += [(c + " (placed source)", v["max_um"], v["first_um"], v["n_over"]) for c, v in ic.items() if v["max_um"] + LB.DRIFT_UM > LB.LIMIT_UM]
+        near = [sn for sn, v in cen.items() if v["full_max"] + LB.NEAR_UM > LB.LIMIT_UM] + [c for c, v in ic.items() if v["max_um"] + LB.NEAR_UM > LB.LIMIT_UM]
+        if near:
+            out[tn] = (len(over), len(near), max([v["full_max"] for v in cen.values()] + [v["max_um"] for v in ic.values()]), sorted(over, key=lambda x: -x[1]))
+    note = f"{skipped} type(s) not buildable" if skipped else ""
+    if left:
+        note = (note + "; " if note else "") + f"scan stopped at {budget:g} s, {left} type(s) not read"
+    return out, note
+
+
 def _f_leg_staged(raw, plan_path, tree=None, **_k):
-    lines, unchecked, kinds = [], [], {}
-    n = 0
+    rows, unchecked, kinds = [], [], {}
+    flagged = set()
     for tn, t in _types(raw):
         v, cnt = leg405_measure(t)
         for k, c in cnt.items():
             kinds[k] = kinds.get(k, 0) + c
         if v:
-            n += 1
-            lines.append(_w("LEG405-STAGED", tn, f"{len(v)} finding(s):",
+            flagged.add(tn)
+            rows.append(_w("LEG405-STAGED", tn, f"{len(v)} finding(s):",
                             "; ".join(f"{h[0]}.{h[1]} path {h[2]} um D={h[3]} short {h[4]} station(s)" for h in v[:MAX_EX]) + (" ..." if len(v) > MAX_EX else "")))
         windows = writer_start_firm_lower_bounds(t)
         if windows:
             parts = ", ".join(f"{bus} {minimum:.2f} um" for bus, minimum in windows)
-            lines.append(_w("LEG405-STAGED", tn, f"writer START minimum between emitted FIRM windows: {parts}"))
+            flagged.add(tn)
+            rows.append(_w("LEG405-STAGED", tn, f"writer START minimum between emitted FIRM windows: {parts}"))
         u = leg405_unchecked(t, cnt)
         if u:
             unchecked.append(f"WARN LEG405-STAGED-UNCHECKED {tn}: " + "; ".join(u))
-    summ = _w("LEG405-STAGED", f"summary {n} types flagged (report only); legs measured " + (", ".join(f"{k}={v}" for k, v in sorted(kinds.items())) or "none")
-              + f"; {len(unchecked)} type(s) carry legs the check cannot see (WARN LEG405-STAGED-UNCHECKED)")
-    return lines + unchecked + [summ]
+    pb, note = {}, ""
+    if plan_path and os.path.exists(str(plan_path)):
+        try:
+            pb, note = leg405_perbit_types(raw, plan_path)
+        except Exception as e:  # noqa: BLE001
+            note = f"per-bit census not run: {type(e).__name__}: {str(e)[:120]}"
+    lines, n_over = [], 0
+    for tn, (n_over_slots, n_near, worst, over) in sorted(pb.items()):
+        if n_over_slots:
+            n_over += 1
+            ex = "; ".join(f"{sn} {h:.1f} um (first hop {f:.1f}, {nb} hop(s) over)" for sn, h, f, nb in over[:MAX_EX])
+            lines.append(_w("LEG405-STAGED", tn, f"per-bit chain from the pin: {n_over_slots} slot(s) over 405 um incl. {LB.DRIFT_UM:g} um placed drift: {ex}"))
+        else:
+            lines.append(_w("LEG405-STAGED", tn, f"near: {n_near} slot(s) within {LB.NEAR_UM:g} um of 405 (worst planned hop {worst:.1f} um); not counted"))
+    both = flagged & {tn for tn, v in pb.items() if v[0]}
+    total = len(flagged | {tn for tn, v in pb.items() if v[0]})
+    summ = _w("LEG405-STAGED", f"summary {total} types flagged ({len(flagged)} relay_depth / cland rows, {n_over} per-bit chain, {len(both)} both; "
+                               f"drift {LB.DRIFT_UM:g} um){(' [' + note + ']') if note else ''} (report only)")
+    coverage = ", ".join(f"{name}={count}" for name, count in sorted(kinds.items())) or "none"
+    summ += f"; legs measured {coverage}; {len(unchecked)} type(s) carry legs the staged check cannot see"
+    return rows + lines + unchecked + [summ]
+
+
+def relay_stack_hurt(t):
+    """RELAY-SEAT (b) calibrated (CLASS-OWNERS-B 11-26): of the stacks relay_seats() lists, those relay_spread.py cannot seat within the hop /
+    tap margin.  A stack the planner can spread (kit ff_put_near spirals it the same way) is not reported: 0 placement failures and no
+    DPL displacement difference (median 111.5 um stacked vs 107.6 unstacked, 90 kit logs) for stacks of 5..1034.  OT_ADV_RELAY_STACK_ALL=1 lists all."""
+    ins, st = relay_seats(t)
+    if not st or os.environ.get("OT_ADV_RELAY_STACK_ALL") == "1":
+        return st, None
+    import relay_spread as RS
+    cfg = dict(RS.DEFAULTS)
+    cfg["stack_min"] = RELAY_STACK + 1
+    _c, rep = RS.spread_type(t, cfg)
+    stuck = {(round(p[0], 1), round(p[1], 1)) for p in rep["kept_groups"]}
+    return [(k, m) for k, m in st if k in stuck], rep.get("max_um_used")
 
 
 def _f_relay(raw, plan_path, tree=None, **_k):
     def fn(t, tn, r):
-        ins, st = relay_seats(t)
-        return [("inside core " + c, n) for n, c in ins] + [(f"{k} x{m} on one point", "") for k, m in st]
+        ins, _st = relay_seats(t)
+        st, dmax = relay_stack_hurt(t)
+        why = "" if dmax is None else f" (no seat room within {dmax} um)"
+        return [("inside core " + c, n) for n, c in ins] + [(f"{k} x{m} on one point{why}", "") for k, m in st]
     return _run("RELAY-SEAT", fn, lambda h: f"{h[0]} {h[1]}".strip(), raw)
 
 

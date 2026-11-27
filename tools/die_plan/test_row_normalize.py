@@ -215,4 +215,5 @@ def test_land_reach_flag_off_changes_nothing_and_on_reseats(tmp_path):
     on = _lr_plan({"enable": 1})
     rep = RN.normalize_plan(base, on, tree=str(tmp_path), hooks=NOHOOK)
     assert rep["steps"]["landreach"] and rep["changed"]["landreach"] == 1 and on["partition_types"]["t"]["hard_cores"][0]["origin_um"] != [300.0, 1000.0]
+    assert rep["touched_types"] == ["t"]               # the later steps (legal / tapname / landremap / retap) see the re-seated type
     assert RN.normalize_plan(base, _lr_plan({"enable": 1}), tree=str(tmp_path), skip=["landreach"], hooks=NOHOOK)["steps"].get("landreach") is None

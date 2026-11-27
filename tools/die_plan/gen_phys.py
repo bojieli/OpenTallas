@@ -179,6 +179,12 @@ dict for {cg_y cg_l} $cg_rows {
 }
 dict for {cg_n cg_c} $cg_bad { $cg_c setPlacementStatus PLACED }
 puts "OT_CLAND released [dict size $cg_bad] FIRM cland cells grown into an occupied site (in-place resize) for DPL"
+# HEAD-INT-R2 11-26 (C-FIRM-RESIZE-OVERLAP, opt-in OT_FIRM_RELEASE_FAIL=1): "FIRM released = 0" as a stage error, before DPL moves any seat.
+# The names go to the log first (HEAD fed00: 9 released, max DPL displacement 93.3 um).
+if {[dict size $cg_bad]} { dict for {cg_n cg_c} $cg_bad { puts "OT_CLAND_RELEASED_CELL $cg_n [[$cg_c getMaster] getName]" } }
+if {[dict size $cg_bad] && [info exists ::env(OT_FIRM_RELEASE_FAIL)] && $::env(OT_FIRM_RELEASE_FAIL) eq "1"} {
+ error "OT_CLAND FIRM released = [dict size $cg_bad] cland cells (OT_FIRM_RELEASE_FAIL=1 requires 0): resized FIRM seats overlap a fixed / FIRM neighbour"
+}
 dict for {cg_n cg_c} $cg_ft { $cg_c setPlacementStatus PLACED }
 if {[dict size $cg_ft]} { puts "OT_FT_KEEP_FIRM released [dict size $cg_ft] keep_firm ft station cells placed on an occupied site (tap / edge cell) for DPL" }
 """
@@ -3232,10 +3238,13 @@ def gen_knobs():
     `set ::env(OT_X)`).  The kit runner's docker run forwards only a fixed -e list, so a gen-env value that was recorded but not
     exported to config.mk never reached the tcl (OT_TAP_GRT_PRE_ITERS=5 ran the tapbal GRT with -congestion_iterations 30).
     One rule: set in the gen env -> config.mk export (make exports it to the flow) + kit_effective_env.json.  Unset = byte-equal kit."""
-    import re
+    from itertools import chain
+    import kit_istations as KI
+
     rd, st = set(), set()
-    for f in sorted(Path(__file__).parent.glob("*.tcl")):
-        t = f.read_text(errors="ignore")
+    files = sorted(Path(__file__).parent.glob("*.tcl"))
+    # Explicit relay seats run from generated Tcl inside istations.tcl.
+    for t in chain((f.read_text(errors="ignore") for f in files), (KI.RELAY_TCL,)):
         rd |= set(re.findall(r"::env\((OT_\w+)\)", t))
         st |= set(re.findall(r"set\s+::env\((OT_\w+)\)", t))
     # a name this generator already decides itself (quoted or `export NAME` anywhere in gen_phys.py) keeps its own decision
@@ -4149,6 +4158,12 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
     hb += [(int(s["hold_hb4"]), int(s["width"])) for s in P.types[tn].get("ft_slots", [])      # HOLDFORM-1 for ft slots
            if int(s.get("hold_hb4") or 0) > 0 and int(s.get("stations", 1)) > 0]
+    # SEAMHOLD-CTL-K5-DI: landing_ctl_hold_hb4 {bus: N} = N HB4 on 3 control bits (type-level ot_dp_hd, counted from the kit RTL)
+    hb += [(int(n), 3) for n in ((P.types[tn].get("clock") or {}).get("landing_ctl_hold_hb4") or {}).values() if int(n) > 0]
+    # SEAMHOLD-HB4-HOSTN-RST: reset.pin_entry_hb4 pads live inside the phase entry cell (u_rst_in / u_run_in .u_hdly_in, not counted in RTL)
+    _eh = (P.types[tn].get("reset") or {}).get("pin_entry_hb4") or {}
+    entry_hb = sum(int(v) for v in _eh.values())
+    hb += [(int(v), 1) for v in _eh.values() if int(v) > 0]
     lk = _lockup_pad_type(P, tn)
     if not hb and lk:
         return ("# latch_except_hb4 (clock.core_input_lockup): keep the bit-level lockup hold pads (u_hdly_lk_*, HB4xp67)\n"
@@ -4168,7 +4183,7 @@ def hold_pad_dont_touch_tcl(P, tn, kd=None):
     if exact is not None:
         if exact > hi:
             raise ValueError(f"HOLDFORM-1 {tn}: the kit RTL declares {exact} hold-pad cells, more than the plan allows ({hi})")
-        lo = hi = exact
+        lo = hi = exact + entry_hb
     return ("# HOLDFORM-1: keep the ot_dp_hd hold pads (gen_rtl.HOLD_CELLS)\n"
             "set ot_hb {}\n"
             "foreach i [[ord::get_db_block] getInsts] {\n"
@@ -4753,6 +4768,16 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_DEPTH = {depth}"] + \
         ([f"export OT_TAP_PAIR_OVERFULL_GROW = {grow:g}"] if grow > 0 else []) + \
         (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring + extra
+
+
+def tap_relay_cohort_on(t, die=None):
+    """C-XTAP-HOLD (S81-XTAP-COHORT 11-26): same-site reset/run relay pairs on two clock taps are a cross-tap FF hold class
+    (slice_station__t23 CTS-only screen with the hook on: cross-tap FF hold 4 -> 0, TT WNS +213.9, TNS 0).  Explicit
+    clock.tap_relay_cohort true/false in the plan wins on any die; unset = on for the S81 die by exact name (s81_head is not S81)."""
+    v = (t.get("clock") or {}).get("tap_relay_cohort")
+    if v is not None:
+        return v is True
+    return str(die or "") == "s81"
 
 
 def tap_post_merge_exports(t):
@@ -5531,6 +5556,7 @@ def reserved_sites_tcl(P, tn):
     rings are FIRM in it (other logic stays out of the bank), released before DPL (DPL counts fixed cells
     under a blockage as not placed in rows). Returns (pre_tcl, post_landing_tcl, release_tcl); empty strings
     when the key is absent, so a plan without it emits a byte-identical kit.
+    clock.reserved_pocket_fill adds protected, capped gaps as hard blockages and M1-M4 obstructions.
     """
     t = P.types[tn]
     rows = t.get("clock", {}).get("reserved_sites_um", [])
@@ -5560,12 +5586,23 @@ def reserved_sites_tcl(P, tn):
             padded.add((x0, y0, x1, y1))
         (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
     tap_rects = interior_tap_pin_rects(P, tn) if any(it[2] for it in hard_route) else {}
+    fill = []
+    if t.get("clock", {}).get("reserved_pocket_fill"):
+        import reserved_pocket as RP
+        groups = RP.candidates(RP.wall_rows(t), (w, h))
+        if groups:
+            if not tap_rects:
+                tap_rects = interior_tap_pin_rects(P, tn)
+            protected = RP.protected_rects(t, tap_rects, [r["rect_um"] for r in rows])
+            fill = RP.clear_fill(groups, protected)
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
+    precise = padded | set(fill)
+
     def create(rects, var):
         out = []
         for x0, y0, x1, y1 in rects:
-            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in padded else f"{v:g}" for v in (x0, y0, x1, y1))
+            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in precise else f"{v:g}" for v in (x0, y0, x1, y1))
             q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
             out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
         return out
@@ -5574,9 +5611,11 @@ def reserved_sites_tcl(P, tn):
     pre = post = rel = ""
     if hard:
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
-                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
+                          *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard + fill, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
                           *route_obstruction_lines(hard_route, tap_rects, snap=os.environ.get("OT_RESERVED_SNAP", "1") != "0"),
+                          *route_obstruction_lines([(r, ("M1", "M2", "M3", "M4"), False) for r in fill]),
+                          *([f'puts "OT_RESERVED_POCKET rects={len(fill)}"'] if fill else []),
                           *([f'puts "OT_RESERVED_SITES edge_pad_sites: {npad} route-obstructed sites padded E/W in placement"'] if npad else []),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
@@ -7764,6 +7803,17 @@ def raw_tap_hold_pinned(RT, P, tn):
     return 0
 
 
+def colls_rx_istations_guard(tn, t, ist):
+    """Coll_s RX-stable seats replace the plan-site istations.tcl: accept a candidate istations.tcl that is byte-equal to the stock plan-site writer
+    (kit_istations.relay_sites_only_tcl, which kit_rtl always writes) and return [] ; refuse any real native station sidecar."""
+    if not ist:
+        return ist
+    import kit_istations as _KI_RX
+    if Path(ist[0]).read_text() != _KI_RX.relay_sites_only_tcl(tn, t):
+        raise ValueError("Coll_s RX stable seats require direct plan relay_sites")
+    return []
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -7832,6 +7882,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             import bound_reset_contract as BRC
             BRC.stage(kd / "rtl", native_reset["source_authority"], native_reset)
     mlef, mlib, mplace = [], [], ["# GENERATED by tools/die_plan/gen.py phys: content macros at their plan sites."]
+    native_sram_paths = macros and os.environ.get("OT_NATIVE_SRAM_PATHS") == "1"
     if macros:
         (kd / "macros").mkdir(exist_ok=True)
         base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
@@ -7888,6 +7939,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             mplace.append(f"place_macro -macro_name {{{q['inst_db']}}} -location {{{q['x']:.4f} {q['y']:.4f}}} "
                           f"-orientation {q['o']} -exact")
         mplace += macro_halo_lines(t, placed)
+        if native_sram_paths:
+            import native_sram_paths as NSP
+            expected = [{"inst": q["inst"], "master": q["master"]} for q in placed]
+            (kd / NSP.EXPECTED).write_text(json.dumps(expected, indent=1) + "\n")
+            shutil.copyfile(Path(NSP.__file__), kd / "native_sram_paths.py")
         # KW6-CODE 11-04: advisory LEF/lib compare; a view with no LEF of its own gets its staged copy pruned to the lib's
         # ports.  Clean masters stay byte-identical.  bump kits keep the plain copy (bump pins are on the macro LEF).
         import view_lef as _VL
@@ -7949,6 +8005,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             zlp_rec = _ZLK.apply_ports_kit(kd / "rtl", t["module"], zlk_spec["ports"], zlk_spec.get("clk", "clk"))
             (kd / "zl_ports.json").write_text(json.dumps(zlp_rec, indent=1) + "\n")
             print(f"gen phys: type {tn}: OT_ZL_PORTS {json.dumps(zlp_rec)}")
+    # C-XTAP-HOLD 11-26 (plan clock.xtap_seam_element, kit_xtap_seam.py; absent = nothing): the planned hard-seam hold element
+    # (hb4 chain u_xshd_* / lockup latch u_xslk_*) on hard-core input pins of the staged wrapper RTL.  0 cycles.
+    import kit_xtap_seam as _XS
+    xs_spec = _XS.spec_of(getattr(P, "raw", None), tn)
+    if xs_spec:
+        xs_rec = _XS.apply_kit(kd / "rtl", xs_spec)
+        (kd / "xtap_seam.json").write_text(json.dumps(dict(spec=xs_spec, files=xs_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_XTAP_SEAM " + json.dumps({f: {k: r[k] for k in ("elements", "bits", "hb4_cells", "forms")}
+                                                                  for f, r in xs_rec.items() if isinstance(r, dict)}))
     # KV-PV-CAP 11-23 (plan partition_types[t].dly_alt_pol, kit_dly_ap.py; absent = nothing): ot_dp_dly lines (D >= 2) of the
     # staged bound RTL stored at alternating polarity, so the QN-only ASAP7 flops need no inverter between stages (cycle-exact,
     # same instance/register names; LEC kit RTL vs netlist).  After every pass that parses or splits the delay lines.
@@ -8055,6 +8120,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
         import s81_svc_live_sites
         pdn = s81_svc_live_sites.wrap_pdn(tn, pdn, enabled=True)
+    if native_sram_paths:
+        pdn = NSP.wrapper("pdn.tcl", pdn)
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
@@ -8114,7 +8181,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # COORD 11-04 06:00 (2): opt-in kit-level cap; without the option the file is byte-identical to before
     (kd / "pre_floorplan_type.tcl").write_text((f"set ::ot_native_cell_limit {int(native_cell_cap)}\n" if native_cell_cap else "")
                                                + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n"
-                                               + hold_pad_dont_touch_tcl(P, tn, kd))
+                                               + hold_pad_dont_touch_tcl(P, tn, kd)
+                                               + _XS.keep_tcl(xs_spec))
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
@@ -8207,6 +8275,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export CORE_AREA = {' '.join(_um(v) for v in core_area)}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
+           *(["export OT_NATIVE_SRAM_PATHS = 1"] if native_sram_paths else []),
            *([f"export POST_PDN_TCL = {post_pdn[0] if len(post_pdn) == 1 else '/work/post_pdn.tcl'}"] if post_pdn else []),
            *(["export PRE_TAPCELL_TCL = /work/phy_region_rows.tcl"] if phy_doms else []),
            *(["export POST_TAPCELL_TCL = /work/macro_halo_carve.tcl"] if halo_ring else []),
@@ -8261,6 +8330,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
            *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
+           # HEAD-INT-R2 11-26 (C-GPL-TD-INFLATION, opt-in gen env OT_LOGIC_CLUSTER_POST_GPL=1): logic_cluster regions are created after
+           # global_placement (logic_cluster.py), so the timing-driven trigger reads the top-level overflow, not the mean over the tiny regions.
+           *(["export OT_LOGIC_CLUSTER_POST_GPL = 1"] if os.environ.get("OT_LOGIC_CLUSTER_POST_GPL", "") == "1" and t.get("logic_cluster_rects_um") else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
@@ -8457,6 +8529,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
             import s81_svc_live_sites
             macro_script = s81_svc_live_sites.wrap(tn, macro_script, enabled=True)
+        if native_sram_paths:
+            macro_script = NSP.wrapper("macro_place.tcl", macro_script)
         (kd / "macro_place.tcl").write_text(macro_script)
         if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
             shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
@@ -8572,7 +8646,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_group_exports(t)
     if (t.get("clock") or {}).get("tap_landing_seam") is True:   # KV-HUB-HOLD 11-23, opt-in: landing ring + u_bin on one hard-free tap
         cfg.append("export OT_TAP_LANDING_SEAM = 1")
-    if (t.get("clock") or {}).get("tap_relay_cohort") is True:   # QC-TTC-R2 11-23, opt-in: same-site reset/run relays on one tap
+    if tap_relay_cohort_on(t, P.name):   # QC-TTC-R2 11-23 opt-in; S81-XTAP-COHORT 11-26: default on for die s81 (clock.tap_relay_cohort=false opts a type out)
         cfg.append("export OT_TAP_RELAY_COHORT = 1")
     cfg += pinreg_tap_exports(t)
     cfg += ft_stage0_exports(t)
@@ -8703,11 +8777,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text("source /work/reserved_banks_release.tcl\n" + hook.read_text())
     # QC-GLUE 11-25 (QC-ALLFIX): opt-in plan key logic_cluster_rects_um -> odb region/group, last in PRE_GLOBAL_PLACE
     import logic_cluster
-    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms])
+    import gpl_td     # C-GPL-TD-INFLATION 11-26 (CLASS-OWNERS-B): opt-in top-level plan key gpl_td (absent = unchanged kit)
+    lc_tcl = logic_cluster.tcl(P, tn, no_core_rows=[(domain[0], domain[3]) for domain in phy_doms], firm_small=gpl_td.firm_small(P.raw))
     if lc_tcl:
         (kd / "logic_cluster.tcl").write_text(lc_tcl)
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/logic_cluster.tcl\n")
+    gpl_td.apply(kd, P.raw)    # after the cluster hook: timing-driven trigger wrapper + cell growth gate (gpl_td.tcl)
     if t.get("rck_band"):
         # S81-RCK-3 (COORD 09:41 class form): first-stage capture flops of the PHY receiver FIRM under its PG region;
         # face_flops_release.tcl releases them (ot_face_flops.txt rows tagged RCKB) for DPL
@@ -8895,6 +8971,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f'{tn}: realized source lacks its exact station placement sidecar')
     if not ist:
         ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
+    relay_type = t
+    if tn == "coll_s" and os.environ.get("OT_COLLS_RX_STABLE") == "1":
+        ist = colls_rx_istations_guard(tn, t, ist)
+        import colls_rx_stable_sites
+        relay_type = colls_rx_stable_sites.install(kd, t)
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
         if t.get('realize_internal_stations'):
@@ -8904,7 +8985,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     elif t.get("relay_sites") or t.get("relay_rank_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
-        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))
+        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, relay_type))
     if rls_rec is not None:
         _RLS.install(kd, rls_rec)     # REG-LEAF-SPLIT: copy sites into istations.tcl + kd/reg_leaf_split.json
     # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
@@ -10061,7 +10142,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       OT_PREGRT_HOLD_GUARD=\$(sed -n 's/^export OT_PREGRT_HOLD_GUARD = //p' /work/config.mk) OT_PREGRT_HOLD_PORT_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_PORT_MARGIN = //p' /work/config.mk) OT_PREGRT_HOLD_PORTS=\$(sed -n 's/^export OT_PREGRT_HOLD_PORTS = //p' /work/config.mk) OT_PREGRT_HOLD_R2R_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_R2R_MARGIN = //p' /work/config.mk) OT_PREGRT_HOLD_R2R_CHUNK_BUFS=\$(sed -n 's/^export OT_PREGRT_HOLD_R2R_CHUNK_BUFS = //p' /work/config.mk) OT_PREGRT_SKIP_SETUP_PS=\$(sed -n 's/^export OT_PREGRT_SKIP_SETUP_PS = //p' /work/config.mk) \
       LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
       openroad -exit /work/pregrt_ff_hold.tcl > /work/pregrt_ff_hold.log 2>&1; pgrc=\$?; grep -h OT_PREGRT_FF_HOLD /work/pregrt_ff_hold.log | tail -4; \
-    rm -f \"\$C.pg_tmp\"; if [ \$pgrc != 0 ]; then echo \"OT_PREGRT_FF_HOLD FALLBACK step rc \$pgrc (pregrt_ff_hold.log): 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt\" | tee -a /work/pregrt_ff_hold_fallback.log; echo \"PREGRT_HOLD_FALLBACK tool rc \$pgrc: 4_cts.odb unchanged (pregrt_ff_hold.log)\" | tee -a /work/pregrt_ff_hold_fallback.log; \
+    rm -f \"\$C.pg_tmp\"; if [ \$pgrc -ge 128 ]; then echo \"OT_PREGRT_FF_HOLD CRASH step rc \$pgrc (pregrt_ff_hold.log): the tool died (signal \$((pgrc-128))); 4_cts.odb is the UNREPAIRED copy and is not sent to GRT\" | tee -a /work/pregrt_ff_hold_fallback.log; echo \"FAIL_POSTCTS pregrt_ff_hold crashed rc \$pgrc (pregrt_ff_hold.log): no unrepaired 4_cts.odb goes to GRT\" | tee -a /work/FAIL_POSTCTS; rc=9; \
+    elif [ \$pgrc != 0 ]; then echo \"OT_PREGRT_FF_HOLD FALLBACK step rc \$pgrc (pregrt_ff_hold.log): 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt\" | tee -a /work/pregrt_ff_hold_fallback.log; echo \"PREGRT_HOLD_FALLBACK tool rc \$pgrc: 4_cts.odb unchanged (pregrt_ff_hold.log)\" | tee -a /work/pregrt_ff_hold_fallback.log; \
     elif grep -q 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log; then grep -h 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log | tail -1 | sed 's/^.*OT_PREGRT_FF_HOLD FALLBACK */PREGRT_HOLD_FALLBACK guard /' | tee -a /work/pregrt_ff_hold_fallback.log; fi; fi; \
   HM=; if [ \$rc = 0 ] && [ ! -f /work/HOLD_SKIPPED_SETUP ]; then HMR=\$(\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\$?; \
     if [ \$hmr != 0 ]; then cat /work/hold_margin_read.log; echo 'FAIL_POSTCTS hold margin Make read' | tee -a /work/FAIL_POSTCTS; rc=9; \

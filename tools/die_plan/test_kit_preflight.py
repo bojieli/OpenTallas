@@ -81,7 +81,7 @@ proc sta::time_sta_ui {x} {return $x}
     r=subprocess.run(['tclsh',str(p)],capture_output=True,text=True,env=env)
     hard=wns<-200   # COORD 11-05 07:36: OT_HOLD_STOP_PS -200 stays a stop by default (legacy contract, no tap window)
     assert (r.returncode!=0)==(failed and (stop or hard)),r.stdout+r.stderr
-    assert ('OT_HOLD_GATE PASS' if not failed else 'OT_HOLD_GATE FAIL' if (stop or hard) else 'OT_HOLD_GATE INFO') in r.stdout
+    assert ('OT_HOLD_GATE FAIL' if failed and (stop or hard) else 'OT_HOLD_GATE PASS' if (wns>=0 and not failed) else 'OT_HOLD_GATE INFO') in r.stdout     # P-FALSE-GREEN: negative WNS is never PASS
 
 
 def test_item_env_synth_args_is_opt_in(tmp_path,monkeypatch):

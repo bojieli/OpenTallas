@@ -8,6 +8,31 @@ import json
 from pathlib import Path
 
 
+# P-FALSE-GREEN-1126 (HEAD-INT-R2, FABLE-FLOW-0847 B16): the reset-qualification verdict is an exact string with ONE meaning each, never
+# matched by substring.  NATIVE_RELEASE_PASSING = verdicts a G0 counts as PASS (with the listed conditions, as a WARN that names them);
+# PENDING and anything unknown are G0 ERRORs.  QUALIFIED_CONDITIONAL = the receipt proved, on the exact plan digest, that the PHY leaf
+# reset is held >= 64 recovered-clock edges after restart (66 guard + 2 synchronizer edges) ONLY while: delivered reset is high, PMA lock is
+# high and the PMA recovered clock is running.  It is NOT a core-cycle deadline, a CDC exception or a clock-period waiver.
+VERDICT_QUALIFIED = 'QUALIFIED_CONDITIONAL'
+VERDICT_PENDING = 'PENDING'
+NATIVE_RELEASE_PASSING = (VERDICT_QUALIFIED,)
+CONDITIONS = ('delivered reset high', 'PMA lock high', 'PMA recovered clock running')
+
+
+def status(rq):
+    """explicit G0 reading of a wf_plan release_qualification dict (None = no native PHY targets)
+    -> dict(verdict, counts_as_pass, conditions, core_cycle_release, receipt_sha256, native_targets)"""
+    if not rq:
+        return dict(verdict='NOT_APPLICABLE', counts_as_pass=True, conditions=[], core_cycle_release=None,
+                    receipt_sha256=None, native_targets=0)
+    v = rq.get('verdict')
+    ok = v in NATIVE_RELEASE_PASSING
+    return dict(verdict=v, counts_as_pass=ok, conditions=list(CONDITIONS) if v == VERDICT_QUALIFIED else [],
+                core_cycle_release=None, receipt_sha256=rq.get('receipt_sha256'), native_targets=len(rq.get('native_targets') or []),
+                meaning=('measured recovered-clock-edge release; valid only under the listed conditions; no core-cycle deadline' if ok
+                         else 'not qualified: needs a verified native release receipt for this exact plan'))
+
+
 def digest(raw):
     return hashlib.sha256(json.dumps(raw, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 

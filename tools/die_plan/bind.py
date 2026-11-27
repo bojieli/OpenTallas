@@ -263,6 +263,20 @@ def sv_id(s):
     s = re.sub(r"_+", "_", s).strip("_")
     return s if s and not s[0].isdigit() else "n" + s
 
+_GATE_PLAN = {}
+
+
+def _stamp_plan(obj):
+    """P-FALSE-GREEN-1126 (FABLE-INDEP 08:45 W10 packet: only tie_audit.json carried the plan sha): every bind JSON names the plan file it judged."""
+    sha = _GATE_PLAN.get("sha256")
+    if sha and isinstance(obj, dict) and "plan_sha256" not in obj:
+        return dict(obj, plan_sha256=sha)
+    return obj
+
+
+def _write_gate_json(path, obj, indent=1):
+    _fresh_write_text(path, json.dumps(_stamp_plan(obj), indent=indent) + "\n")
+
 
 def short_id(s, n=60):
     s = sv_id(s)
@@ -1178,6 +1192,7 @@ def optional_gen_cells(raw, cells):
     for used, mod, text in ((gen_rtl.uses_entry_fall(raw), "ot_dp_rrelay_fn", gen_rtl.ENTRY_FALL_CELLS),
                             (PED.uses(raw), "ot_dp_rrelay_delay", PED.CELL_RTL),
                             (PEP.uses(raw), "ot_dp_rrelay_ph", PEP.CELL_RTL),
+                            (PEP.uses_hb(raw), "ot_dp_rrelay_ph_hb", PEP.CELL_RTL_HB),
                             (gen_rtl.uses_relay_lockup(raw, "negedge"), "ot_dp_rrelay_nl", gen_rtl.LOCKUP_CELLS)):
         if used and not re.search(r"^\s*module\s+" + re.escape(mod) + r"\b", cells, re.M):
             cells += "\n" + text
@@ -4235,7 +4250,7 @@ class Binder:
             missing = set(W["parts"]) - set(self.members)
             if missing:
                 raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
-            (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
+            (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))   # NOT stamped: tests and readers compare it to wf_plan() exactly; bind_report.json names the plan
         if (((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("core_input_lockup"))
                 or any(r.get("lockup") for t_ in (self.plan.get("partition_types") or {}).values()
                        for r in t_.get("relay_depth") or [])) \
@@ -4341,7 +4356,7 @@ class Binder:
                     texts, getattr(self, "_bound_core_resets", {}))
                 R["not_emitted"] = sorted(k for k, v in W0.get("types", {}).items()
                                           if v.get("core_resets") and k not in texts)
-                (out.parent / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")
+                _write_gate_json(out.parent / "bind_reset_core_class.json", R)
                 print(f"BIND-RESET-CORE-CLASS mismatches={R['mismatches']} by_class={R['by_class']}")
                 # COORD ruling 11-24: publish spine-driven core resets as spine consumers in bind_reset.json (what the
                 # RTL does).  OT_BIND_RESET_SPINE_CLASS=0 keeps the plan-only contract (report only).
@@ -4403,9 +4418,9 @@ class Binder:
             # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
             import por_gate
             rec = dict(rebinds=self.por_rebinds, analog=self.por_analog)
-            (out.parent / "bind_por.json").write_text(json.dumps(rec, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_por.json", rec)
             g = por_gate.check(P, out, rec)
-            (out.parent / "bind_por_gate.json").write_text(json.dumps(g, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_por_gate.json", g)
             if g["verdict"] != "PASS":
                 raise BindError("die reset pad gate (por_gate.py): " + "; ".join(g["errors"][:6]))
         man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
@@ -4443,27 +4458,27 @@ class Binder:
         if monitor_use:
             man = LTC.with_use_manifest(man, self.types, monitor_use)
         if any(man["types"].values()):
-            (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_parent_id_straps.json", man)
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
         # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
         import straps as STR
         aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types},
                                  landing_ties=LTC.landing_ties(self.types), spare_ft_ties=self.spare_ft_ties)
-        (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
+        _write_gate_json(out.parent / "bind_tie_audit.json", aud)
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")
         rows = aud["rows"]
         if monitor_use:
             expected = {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in monitor_use.items()}
             monitor_aud = STR.audit_count_strap_values(f.read_text(), expected, prefix=LTC.MONITOR_USE_PREFIX)
-            (out.parent / "bind_monitor_use_audit.json").write_text(json.dumps(monitor_aud, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_monitor_use_audit.json", monitor_aud)
             if monitor_aud["verdict"] != "PASS":
                 raise BindError(f"monitor use strap audit: {monitor_aud['reason']}")
         if cexp:
             # count-strap VALUE audit (COORD addition, 12.14a: extends this audit): literal == bind value, every pin
             # FLOW-STRIPBODY-R2 11-22: the top names instances by sv_id (s_7N_C__strip_S -> s_7N_C_strip_S)
             cva = STR.audit_count_strap_values(f.read_text(), {sv_id(q): v for q, v in cexp.items()})
-            (out.parent / "bind_count_strap_audit.json").write_text(json.dumps(cva, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_count_strap_audit.json", cva)
             if cva["verdict"] != "PASS":
                 raise BindError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
             # the netlist tie check takes count-strap values from the bind, not from the literals it just checked
@@ -4472,7 +4487,7 @@ class Binder:
         if r8v:
             # R8 pad-count strap VALUE audit (G0 ERROR): every strap_r8pad_* pin tied to exactly its bind count
             rva = STR.audit_count_strap_values(f.read_text(), r8v, prefix="strap_r8pad_")
-            (out.parent / "bind_r8pad_strap_audit.json").write_text(json.dumps(rva, indent=1) + "\n")
+            _write_gate_json(out.parent / "bind_r8pad_strap_audit.json", rva)
             if rva["verdict"] != "PASS":
                 raise BindError(f"R8 pad-strap tie-value audit (G0 ERROR): {rva['reason']}")
             rows = [r for r in rows if not r[1].startswith("strap_r8pad_")] + STR.count_strap_rows(r8v)
@@ -6475,7 +6490,11 @@ def _write_provenance(a, step):
             return str(Path(p).resolve().relative_to(E.REPO.resolve()))
         except ValueError:
             return str(Path(p).resolve())
-    rec.update(step=step, plan=rel(a.plan), manifest=rel(getattr(a, "asbuilt", None)),
+    try:                    # P-KIT-BIND-PLAN-MISMATCH: the plan content the bind was made from (kit_wave run-item refuses a spec of another plan)
+        plan_sha = hashlib.sha256(Path(a.plan).read_bytes()).hexdigest() if a.plan else None
+    except OSError:
+        plan_sha = None
+    rec.update(step=step, plan=rel(a.plan), plan_sha256=plan_sha, manifest=rel(getattr(a, "asbuilt", None)),
                external_paths_allowed=bool(_AB_OVERRIDE.get("allow_external_paths")))
     rec["inputs"] = [x for x in (rec["plan"], rec["manifest"]) if x]
     Path(a.out).mkdir(parents=True, exist_ok=True)
@@ -7274,7 +7293,9 @@ def cmd_bind(a):
         import leaf_cs_depth as LCD
         _lcd_errs = []
         rep["leaf_cs_depth"] = LCD.bind_gate(raw, out, _lcd_errs)
-        B.errors.extend(probe_only_filter(_lcd_errs, getattr(B, "probe_only", None)))
+        _lcd_kept = probe_only_filter(_lcd_errs, getattr(B, "probe_only", None))
+        rep["leaf_cs_depth"] = LCD.probe_scope(rep["leaf_cs_depth"], _lcd_kept, getattr(B, "probe_only", None))     # P-FALSE-GREEN
+        B.errors.extend(_lcd_kept)
     # TOK-VERIFY-1 / COORD 11-10: signed landing phase class (WNEG=1 rings flip +3 -> +2 at zero phase).  ADVISORY
     # (targets, not gates): reported here and in landing_phase_sign.json, never a bind error.  Arrivals at the rings
     # (routed clock, TT + FF, OCV-derated) come from OT_LANDING_PHASE_ARRIVALS; without them every ring is UNMEASURED.
@@ -7361,7 +7382,7 @@ def cmd_bind(a):
             print(f"bind: BIND_STREAM withdrew {len(_wd)} streamed types named by bind errors: {_wd[:20]}", flush=True)
     except Exception as exc:
         print(f"bind: WARN BIND_STREAM finish: {type(exc).__name__}: {exc}", flush=True)
-    _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
+    _fresh_write_text(out / "bind_report.json", json.dumps(_stamp_plan(rep), indent=1))
     try:                                     # BIND-STREAM-ENDED 11-25: the end marker a kit-store snapshot keeps (blob mtimes do not)
         import bind_stream
         bind_stream.mark_ended(getattr(B, "_stream", None))
@@ -9356,6 +9377,11 @@ def _main(argv=None):
     if getattr(a, "types", None):
         os.environ["OT_BIND_ONLY_TYPES"] = a.types
     _AB_OVERRIDE["path"] = a.asbuilt
+    try:                                   # P-FALSE-GREEN-1126: the plan file every bind JSON of this run names
+        _pp = Path(a.plan).resolve()
+        _GATE_PLAN.update(sha256=hashlib.sha256(_pp.read_bytes()).hexdigest(), plan=str(_pp))
+    except (AttributeError, OSError, TypeError):
+        pass
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     if a.cmd in ("bind", "all") and getattr(a, "out", None):
         # BIND-REPORT-STALE-1123 (COORD, KV K3e): the previous run's report goes aside (OUT/bind_report.json.prev) at run start,
