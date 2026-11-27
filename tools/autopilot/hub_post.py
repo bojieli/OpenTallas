@@ -7,6 +7,7 @@ int_r3_lane(die)                the die's INT-R3 lane (QC-INT-R3, KV-INT-R3, S81
 import os
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 SIX_H = 6 * 3600
@@ -16,6 +17,8 @@ COORD = Path(os.environ.get("COORD_DIR") or Path.home() / "coord")
 def post(lane, text, post_fn=None, hub="intel2"):
     if post_fn is not None:
         return post_fn(lane, text)
+    if "pytest" in sys.modules and not os.environ.get("OT_HUB_POST_REAL"):
+        return False                          # a test never posts to the real hub
     try:
         if (COORD / "bin/post.sh").is_file():
             r = subprocess.run(["bash", str(COORD / "bin/post.sh"), lane, text], capture_output=True, text=True, timeout=120)

@@ -11445,7 +11445,62 @@ def private_plan_visual_policy(sp):
     return ""
 
 
-def plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None, floorplan_sha256=""):
+WAIT_STATE_BOOK = "wait_state_posts.json"      # beside kit_wave_state.json in AP_DIR
+
+
+def wait_state_receipt(state, text, die, item):
+    """what a WAIT-* state is missing, for the one hub line"""
+    m = re.search(r"form (\w+); request (\S+)", text or "")
+    if state == "WAIT-PLAN-VISUAL":
+        return ("lanes/PLAN-VISUAL-REVIEW.tsv row" + (f" for form {m.group(1)}" if m else "") + (f" (request {m.group(2)})" if m else "")
+                + " (a GOOD verdict on the exact plan form)")
+    if state.startswith("WAIT-VISUAL"):
+        return f"lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for {die}/{item}"
+    if state == "WAIT-FORM":
+        return f"a changed form fingerprint for {die}/{item}, or a lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT line for the rebuilt form"
+    return "the receipt named in the hold text"
+
+
+def wait_state_post(die, item, text, cfg=None, now=None, post_fn=None, book_path=None):
+    """FLEET-OPS-R5 P-WAIT-STATE-SILENT: a job parked at WAIT-PLAN-VISUAL / WAIT-VISUAL / WAIT-FORM / any WAIT-* posts ONE hub line naming the
+    missing receipt and the reviewer lane, per (die, item, state) per 6 h.  Never raises, never blocks.  -> True when posted"""
+    try:
+        import hub_post as HP
+        state = str(text or "").split(":", 1)[0].split(" (")[0].strip()
+        if not state.startswith("WAIT-") or not die or not item:
+            return False
+        now = time.time() if now is None else now
+        bp = Path(book_path or (AP_DIR / WAIT_STATE_BOOK))
+        try:
+            book = json.loads(bp.read_text())
+        except (OSError, ValueError):
+            book = {}
+        if not HP.due(book, f"{die}|{item}|{state}", now):
+            return False
+        d = ((cfg or {}).get("dies") or {}).get(die) or {}
+        lane = str(d.get("visual_reviewer_lane") or d.get("reviewer_lane") or "") or HP.int_r3_lane(die)
+        msg = (f"WAIT-STATE [KIT-WAVE -> {lane}] {state} {die}/{item}: missing {wait_state_receipt(state, text, die, item)}; "
+               f"reviewer lane {lane} (fallback INT-R3); reason: {str(text)[:240]}")
+        try:
+            tmp = bp.with_suffix(".tmp")
+            tmp.write_text(json.dumps({k: v for k, v in book.items() if now - float(v) < 7 * 86400}))
+            os.replace(tmp, bp)
+        except OSError:
+            pass
+        HP.post("KIT-WAVE", msg, post_fn=post_fn)
+        return True
+    except Exception:
+        return False
+
+
+def plan_visual_refusal(sp, out, hub, **kw):
+    r = _plan_visual_refusal(sp, out, hub, **kw)
+    if r and r.startswith("WAIT-") and kw.get("record", True):
+        wait_state_post(sp.get("die"), sp.get("item"), r)
+    return r
+
+
+def _plan_visual_refusal(sp, out, hub, *, plan_shas=None, ledger=None, record=True, prior=None, floorplan_sha256=""):
     """Hold a fresh submission until its current plan and effective recipe are visually reviewed."""
     if not PVR.applies(sp):
         return ""
@@ -20699,6 +20754,13 @@ def required_route_hold(cfg, rec):
 
 
 def route_hold_reason(cfg, rec):
+    r = _route_hold_reason(cfg, rec)
+    if r and str(r).startswith("WAIT-"):
+        wait_state_post(rec.get("die"), rec.get("item"), str(r), cfg=cfg)
+    return r
+
+
+def _route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
     if required_route_review(cfg, rec):
         if why := required_route_hold(cfg, rec):
