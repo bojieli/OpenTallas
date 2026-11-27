@@ -1,0 +1,1 @@
+- 2026-11-27 09:04 PST START 09:04 PST: inherited R4 chain. R4 posted undo of dedupe links finished (16:30 11-26), rt_launch_tree fix ec0da8a29ef3, RTX INDEX 1118/1120 landed. Re-verifying each (nlink, sha, writable) per host, then disk, orphans, hung jobs. First 3 actions: rt verify all hosts; disk census; ot-run list.
