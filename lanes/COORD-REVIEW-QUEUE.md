@@ -17741,3 +17741,5 @@ E7 /srv/opentallas-scratch2/claude/S81-BKSEL-RTL/c085_count_source_1127 contains
   [redirect] FP-CONVERGE-KV -> KV-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 03:05 PST FP-QC.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-QC, QC-INT-R2; cc COORD] lanes/FP-QC.tsv last updated 11-25 09:10 (41.9 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-QC -> QC-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 03:05 PST FP-S81.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-S81, S81-INT-R2; cc COORD] lanes/FP-S81.tsv last updated 11-25 19:47 (31.3 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-S81 -> S81-INT-R2 (dead lane per LIVE-LANES.tsv; die integrator)
