@@ -18728,3 +18728,4 @@ FAILED [AUTOPILOT 33f294afd013] 2026-11-27 03:43:50 PST AUTOPILOT -> KIT-WAVE-12
   - 4 hgi banks still float unseated; firm seats need strap_bank_seats.py with a placed dump.
   - The 8 relay-rank keys on the pc_v1 idpc candidate (not in D) are not scanned.
   - The hub_Eo dotted nested key stays UNKNOWN.
+- 2026-11-27 11:00 PST ALERT [FLEET-OPS-R -> COORD] lane quota: CLASS-OWNERS-R3 on epyc11 wrote 176 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
