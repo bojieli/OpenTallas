@@ -32,3 +32,4 @@
 - 2026-11-27 10:35 PST RESULT b9 P-LAUNCH-SETUP-FAIL pushed 3d76ea4f296: ot-run deep preflight refuses NOT-RUN SETUP missing script for absolute bash/sh/python3 script under --dir or /srv (not created earlier in same shell line); tests pass
 - 2026-11-27 10:38 PST DONE [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-3671493 on tolerant-swine: rc=0 after 92 s, ended 10:38:44, log /tmp/b10push.out, cmd: ot-push-main 
 - 2026-11-27 10:38 PST RESULT b10 P-RUNTIME-MANIFEST pushed 034482f0774: ot-tools-sync prune keeps rt shas named by staged permit files (autopilot/*/permit*, 72 h window); test added, passes
+- 2026-11-27 10:39 PST RESULT a5 P-SIGNED-CANDIDATE-FALSE NOT DONE: the b4e3 RTX prescreen is not in /home/ubuntu/bin/ot-auto-export/auto_export.py (no prescreen/unpowered/merged-GDS strings; probably on rtx-pro, unreachable) and the cache evidence is only path + SIGNED-NO-TAG, so the filter cannot be copied without guessing; need the filter source or criteria
