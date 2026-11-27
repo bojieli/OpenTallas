@@ -2201,6 +2201,7 @@ SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": F
 SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": False, "properties": {
     "top_overflow_trigger": {"type": ["integer", "number", "boolean"]}, "firm_small_clusters": {"type": ["integer", "boolean"]},
     "cell_growth_gate": {"type": ["integer", "boolean"]},
+    "post_td_exit": {"type": ["integer", "number", "boolean"]},   # C-GPL-POSTTD-TAIL-SPARSE 11-27 (gpl_td.py)
     "types": {"type": "string", "minLength": 1}}}   # FLAG-SCOPE 11-27: optional type-name regex (absent = every type)
 SCHEMA["properties"]["pin_track_pg"] = {"type": "object", "additionalProperties": False, "properties": {
     "pg": {"anyOf": [{"type": "boolean"}, {"type": "integer", "enum": [0, 1]}]},

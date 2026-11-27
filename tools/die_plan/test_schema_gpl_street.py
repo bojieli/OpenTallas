@@ -8,7 +8,7 @@ import schema as S  # noqa: E402
 
 def test_keys_declared():
     props = S.SCHEMA["properties"]
-    assert set(props["gpl_td"]["properties"]) == {"top_overflow_trigger", "firm_small_clusters", "cell_growth_gate", "types"}
+    assert set(props["gpl_td"]["properties"]) == {"top_overflow_trigger", "firm_small_clusters", "cell_growth_gate", "post_td_exit", "types"}
     assert set(props["street_sizing"]["properties"]) == {"pg", "pg_track_loss", "types"}   # types: FLAG-SCOPE 11-27
     assert props["gpl_td"]["additionalProperties"] is False
 
