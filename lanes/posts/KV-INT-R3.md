@@ -129,3 +129,4 @@
   - 4 hgi banks still float unseated; firm seats need strap_bank_seats.py with a placed dump.
   - The 8 relay-rank keys on the pc_v1 idpc candidate (not in D) are not scanned.
   - The hub_Eo dotted nested key stays UNKNOWN.
+- 2026-11-27 10:59 PST DONE [KV-INT-R3] ot-run oth-ubuntu-4069511-1795805615 on tolerant-swine: rc=0 after 377 s, ended 10:59:43, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-INT-R3/qwen_kvsys_kv3_io_ft_1127095245/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-A5t9-g6v6r3-c2100d-1126/pri
