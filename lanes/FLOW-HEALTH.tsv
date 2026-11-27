@@ -1,5 +1,4 @@
 hour	launches	fail_pre_pr	fail_pre_pr_by_class	fail_in_pr	fail_in_pr_by_stage	passes	preflight_refused	breakers_open
-2026-11-25 07	13	1	1x UNCLASSIFIED[design:gen]: unclassified failure @gen (see log): gen phys: ERROR type <id>: <id>: origin <id> is	0		0	0	
 2026-11-25 08	9	1	1x UNCLASSIFIED[design:gen]: unclassified failure @gen (see log): gen phys: ERROR type <id>: <id>: origin <id> is	1	1x place	4	0	
 2026-11-25 09	8	0		1	1x place	7	0	
 2026-11-25 10	1	0		0		3	0	
@@ -20,7 +19,7 @@ hour	launches	fail_pre_pr	fail_pre_pr_by_class	fail_in_pr	fail_in_pr_by_stage	pa
 2026-11-26 13	1	0		0		0	0	
 2026-11-26 21	14	0		0		2	0	
 
-# SKEW 2026-11-27 07:07 closure of tools/die_plan/gen.py, tools/die_plan/gen_phys.py, tools/die_plan/bind.py = 379 modules vs origin/main
+# SKEW 2026-11-27 08:07 closure of tools/die_plan/gen.py, tools/die_plan/gen_phys.py, tools/die_plan/bind.py = 379 modules vs origin/main
 die	host	tree	n_differ_from_main	modules
 hbm	epyc7	/srv/opentallas-scratch2/claude/kw45/src_hbm_main_d6b0b70323	382	tools/die_bind_unread_manifest.py tools/die_plan/abstract_cutout.py tools/die_plan/abstract_detail.py tools/die_plan/abstract_exact.py tools/die_plan/added_tap_recentre.py tools/die_plan/adv_bitscycle.py tools/die_plan/adv_clk_land_obs.py tools/die_plan/adv_fpconv.py tools/die_plan/adv_fpconv2.py tools/die_plan/adv_ft_outside.py tools/die_plan/adv_geom_static.py tools/die_plan/adv_ist_price.py tools/die_plan/adv_reset_names.py tools/die_plan/adv_route_demand.py tools/die_plan/adv_seatgap.py tools/die_plan/adv_site_collide.py tools/die_plan/adv_site_in_macro.py tools/die_plan/adv_stn_conflict.py tools/die_plan/align_groups.py tools/die_plan/anchor_dry.py ...
 hbm	epyc2	/srv/opentallas-scratch2/claude/kw45/src_hbm_main_d6b0b70323	383	tools/die_bind_unread_manifest.py tools/die_plan/abstract_cutout.py tools/die_plan/abstract_detail.py tools/die_plan/abstract_exact.py tools/die_plan/added_tap_recentre.py tools/die_plan/adv_bitscycle.py tools/die_plan/adv_clk_land_obs.py tools/die_plan/adv_fpconv.py tools/die_plan/adv_fpconv2.py tools/die_plan/adv_ft_outside.py tools/die_plan/adv_geom_static.py tools/die_plan/adv_ist_price.py tools/die_plan/adv_reset_names.py tools/die_plan/adv_route_demand.py tools/die_plan/adv_seatgap.py tools/die_plan/adv_site_collide.py tools/die_plan/adv_site_in_macro.py tools/die_plan/adv_stn_conflict.py tools/die_plan/align_groups.py tools/die_plan/anchor_dry.py ...
