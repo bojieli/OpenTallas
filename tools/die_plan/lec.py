@@ -3224,12 +3224,32 @@ def relayout(L, log, words=4, trials=64, packed=frozenset()):
 IDXK = re.compile(r"^(.*)\[(\d+)\]$")
 
 
+def seed_relay_hints(L, work, conflicts, log):
+    """Propose the structural relay-class hints (LEC-RELAYHINT-1, L.relay_pre) BEFORE renamed() decides which vectors
+    to re-key.  Proposal only (propose_only): no proof runs here, every hint is proved by the induction afterwards
+    exactly as before.  OT_LEC_RENAMED_AFTER_HINTS=0 restores the old order.  -> number seeded."""
+    pre = getattr(L, "relay_pre", None)
+    if not pre or os.environ.get("OT_LEC_RENAMED_AFTER_HINTS", "1") == "0":
+        return 0
+    seed = apply_hints(L, pre, work, conflicts, log, propose_only=True)
+    L.relay_seeded = seed["applied"]
+    log.append(f"relay classes seeded before renamed(): {seed['applied']} of {len(pre)} hints applied")
+    return seed["applied"]
+
+
 def renamed(L, log, words=4, packed=frozenset()):
     """a register vector synthesis narrowed (constant low bits dropped: r256 = {res_q, 8'd0}) keeps names that start
     at bit 0, so the gate's r[1][10] is the RTL's r[1][18]: when the matched bits of a vector disagree in simulation
     and most of the disagreeing gold bits simulate like a different gate bit of the same vector, the vector's gate
     names are not trusted (re-keyed base#t, paired by function like a re-laid array)."""
-    m, kind = plain_build(L)
+    # RENAMED-BEFORE-HINTS (LEC-R3 11-27, hd_mesh 22dcfc2f): the relay classes seeded by seed_relay_hints() bind the
+    # relays of one class together, so a counter whose gate tap was re-pointed to another relay of its class no longer
+    # simulates as disagreeing; without them the by-name relays are independent random inputs and the counter bits look
+    # renamed (re-keyed base#t, 478 differs).  Hypotheses are only assumptions here: the induction still proves them.
+    if getattr(L, "relay_seeded", 0):
+        m, kind = L.build(with_compare=False, with_hyp=True)
+    else:
+        m, kind = plain_build(L)
     val, mask = m.simulate(words, seed=5151)
     sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
     bases = collections.defaultdict(list)
@@ -6863,6 +6883,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     alias_arrays(L, log, work=work)
     packed = slang_packed_vectors(Path(work) / "gold.aliases.json")
     relayout(L, log, packed=packed)
+    seed_relay_hints(L, work, conflicts, log)
     renamed(L, log, packed=packed)
     replica_cohort_closure(L, log, collections.Counter())
     replica_proposals(L, log)
@@ -8968,6 +8989,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                                e[2] and e[2][0] == "cube"))]
         if relay:                         # LEC-RELAYHINT-1: structural relay classes replace supplied relay hints
             supplied, rec["relay_hints"] = _relay_hints().rewrite(supplied, relay)
+            L.relay_pre = _relay_hints().hints(relay)
             log.append(f"relay hints: {rec['relay_hints']['structural']} structural ({rec['relay_hints']['classes']} "
                        f"classes of {rec['relay_hints']['relays']} relays); supplied relay hints replaced "
                        f"{rec['relay_hints']['supplied_relay']}, of them wrong-phase "
