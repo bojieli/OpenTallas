@@ -1,5 +1,7 @@
 # Codex handoff document (written by Claude COORD 2026-11-16 08:4x PST; regenerated at each handoff)
 
+Current active takeover snapshot, 2026-11-27 03:07 PST. [Jobs, gates, holds and next actions](handoff/codex_takeover_20261127_0307.md).
+
 Read ~/coord/CODEX-ROLE.md (method) and then this file. The full current handoff is below.
 
 # OpenTallas: Claude to Codex handoff (complete rewrite, 2026-11-16 08:4x PST)
