@@ -1,5 +1,6 @@
 """DIE-HEAD-13: opt-in band_ring="ff" (ring flops only FIRM, bit-major, ring logic to GPL); defaults unchanged."""
 
+import json
 import re
 import shutil
 import subprocess
@@ -12,6 +13,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import clock_landing_plan as CP  # noqa: E402
 import landing_place as LP  # noqa: E402
+from schema import SCHEMA, _check  # noqa: E402
 from test_landing_place_spread import _P  # noqa: E402
 
 TCL = (HERE / "landing_placement.tcl").read_text()
@@ -262,6 +264,15 @@ def test_actual_pin_y_checks_plan_and_native_identity_before_using_physical_rows
     c = {"bands": {"lepk_i0": band}}
     t = {"outline_um": [20, 10], "buses": [{"name": "lepk_i0", "dir": "in", "face": "E", "layers": ["M4", "M6"]}],
          "clock": {"landing_contract": c}}
+    def profile_schema(schema):
+        return schema["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"][
+            "landing_contract"]["properties"]["bands"]["additionalProperties"]["properties"]["pinslot_profile"]
+    schema = profile_schema(SCHEMA)
+    errors = []
+    _check(profile, schema, "$", errors)
+    assert not errors
+    assert schema["properties"]["actual_pin_y"] == profile_schema(
+        json.loads((HERE / "die_plan.schema.json").read_text()))["properties"]["actual_pin_y"]
     declared = [{"name": f"lepk_i0[{i}]", "layer": layer, "x": x, "y": y}
                 for i, (layer, x, y) in enumerate(pins)]
     LP.validate_pinslot_plan_pins("hd_lep0N", t, declared)

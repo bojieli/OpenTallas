@@ -1659,6 +1659,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                     "inset_um": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
                     "guard_east_um": {"type": "number"},
                     "reserve_guard_resize": {"type": "boolean"},
+                    "actual_pin_y": {"type": "object", "additionalProperties": False,
+                        "required": ["pins", "members"], "properties": {
+                            "pins": {"type": "array", "minItems": 1,
+                                "items": {"type": "array", "minItems": 3, "maxItems": 3,
+                                    "items": {"oneOf": [{"type": "string"}, {"type": "number"}]}}},
+                            "members": {"type": "array", "minItems": 1,
+                                "items": {"type": "array", "minItems": 2, "maxItems": 2,
+                                    "items": {"oneOf": [{"type": "string"}, {"type": "integer", "minimum": 0}]}}}
+                        }},
                     "guard_seats_um": {"type": "object", "minProperties": 1,
                         "additionalProperties": {"type": "array", "minItems": 2, "maxItems": 2,
                                                  "items": {"type": "number"}}}
