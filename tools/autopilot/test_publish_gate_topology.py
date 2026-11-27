@@ -62,7 +62,9 @@ def test_kit_rtl_stage_failures_alone_are_advisory_topology_stage_failures_block
             return 1, ""
         monkeypatch.setattr(PG, "_sub", fake_sub)
         return PG.topology_check("/t", "/p", None, str(bo), str(tmp_path), str(tmp_path))
-    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "x"}])
+    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "timed out after 3600 s"}])
     assert r["verdict"] == "ADVISORY" and r["kit_rtl_unverified"] == ["svc1"]
-    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "x"}, {"type": "t31", "stage": "kit_topology", "why": "y"}])
+    r = mk([{"type": "svc2", "stage": "kit_rtl", "why": "bind: ERROR kit-rtl svc2: core clock clk_c0: expected one bound leaf x, got 0"}])
+    assert r["verdict"] == "FAIL" and r["types_failed"] == ["svc2"]
+    r = mk([{"type": "svc1", "stage": "kit_rtl", "why": "timed out"}, {"type": "t31", "stage": "kit_topology", "why": "y"}])
     assert r["verdict"] == "FAIL" and r["types_failed"] == ["svc1", "t31"]

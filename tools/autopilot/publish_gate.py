@@ -491,10 +491,11 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp):
         r = json.loads(Path(out).read_text())
     except (OSError, ValueError):
         return {"verdict": "FAIL", "why": f"topology check did not produce a result (rc {rc}): {txt[-400:]}"}
-    # A kit_rtl-stage failure may come from the minimal kit-rtl call used here (the wave adds core / reviewed-station flags for some items): it is
-    # recorded and listed, never blocking.  A kit_topology-stage failure (the stage the wave runs on the same kit RTL) blocks.
+    # The 8 c085 kit_rtl failures were re-run with the wave's exact kit-rtl call (bind-mode items, same tools, same cwd) and are genuine
+    # (bind: ERROR kit-rtl ...), so a kit_rtl failure that carries a bind ERROR line blocks like a kit_topology one.  A kit_rtl failure
+    # without one (timeout, crash, admission) is infrastructure: recorded in kit_rtl_unverified, never blocking.
     fl = r.get("failed") or []
-    hard = [f for f in fl if f.get("stage") != "kit_rtl"]
+    hard = [f for f in fl if f.get("stage") != "kit_rtl" or "ERROR kit-rtl" in str(f.get("why", ""))]
     verdict = r.get("verdict", "FAIL")
     if verdict == "FAIL" and fl and not hard:
         verdict = "ADVISORY"
