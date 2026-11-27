@@ -414,19 +414,73 @@ def declared_infra_arcs(D, interface, declaration):
     return result
 
 
-LAND_CONE_DEPTH = 6      # comb cells pin -> landing slot D pin: face_guard land_mux_depth <= 2 plus placement buffers
+LAND_CONE_DEPTH = 6      # logic depth pin -> landing slot D pin
+LAND_CONE_WALK_DEPTH = 32  # including inserted BUF/INV cells
+LAND_CONE_WALK_EDGES = 512  # visited sink references per input bit
 
 
 def _bus_of(name):
     return name.split("[", 1)[0] if re.fullmatch(r"[^\[\]]+(\[\d+\])?", name) else None
 
 
+def _landing_data_cone(D, start):
+    """Return every reachable D capture through a bounded acyclic data cone."""
+    flops, active, depths = set(), set(), {}
+    edges = 0
+
+    def visit(net):
+        nonlocal edges
+        if net in active:
+            raise ValueError("cycle in landing cone")
+        if net in depths:
+            return depths[net]
+        if len(active) > LAND_CONE_WALK_DEPTH:
+            raise ValueError(f"cone deeper than {LAND_CONE_WALK_DEPTH} physical cells")
+        active.add(net)
+        total = logic = 0
+        sinks = D.nets[net][2]
+        edges += len(sinks)
+        if edges > LAND_CONE_WALK_EDGES:
+            raise ValueError(f"landing cone exceeds {LAND_CONE_WALK_EDGES} sink references")
+        if not sinks:
+            raise ValueError("landing cone has a net without sinks")
+        for sink in sinks:
+            typ, cid, clock = sink
+            kind = D.kind(cid) if typ == "i" else "P"
+            if typ != "i" or clock or kind not in ("S", "L", "B"):
+                raise ValueError(f"reaches {kind or 'unknown'}{' clock pin' if typ == 'i' and clock else ''}")
+            if kind == "S":
+                flops.add(cid)
+                continue
+            outputs = D.drives.get(cid, ())
+            if not outputs:
+                raise ValueError("landing cone reaches a cell without a driven net")
+            # B comes from the checkpoint dump's BUF/INV/HB classification.
+            # Exclude only single-input, single-output transparent data cells.
+            transparent = (kind == "B" and D.cells[cid][1].startswith(("BUF", "INV", "HB"))
+                           and D.cell_in.get(cid) == [(net, False)] and len(outputs) == 1)
+            for output in outputs:
+                physical_depth, logic_depth = visit(output)
+                total = max(total, 1 + physical_depth)
+                logic = max(logic, int(not transparent) + logic_depth)
+            if total > LAND_CONE_WALK_DEPTH:
+                raise ValueError(f"cone deeper than {LAND_CONE_WALK_DEPTH} physical cells")
+            if logic > LAND_CONE_DEPTH:
+                raise ValueError(f"cone deeper than {LAND_CONE_DEPTH} logic cells")
+        active.remove(net)
+        depths[net] = total, logic
+        return depths[net]
+
+    visit(start)
+    return flops
+
+
 def land_ring_captures(D, land, guard):
     """Declared landing ring = registered capture (COORD 2026-10-29 11:09, GEOM-59; config of the pin_reg rule).
     land: kit land_slots.json, guard: kit face_guard.json.  Only with face_guard verdict PASS (it proves on the
     netlist that every bit of a declared slot bus loads exactly D slot-flop D pins through the write mux), and only
-    per pin where the CHECKPOINT agrees: the input pin's forward combinational cone (<= LAND_CONE_DEPTH B/L cells)
-    reaches exactly D sequential data pins and nothing else (no output pin, macro, clock pin or clock cell), and the
+    per pin where the CHECKPOINT agrees: the input pin's bounded forward cone (<= LAND_CONE_DEPTH logic cells,
+    with independent limits on physical depth and fanout) reaches exactly D sequential data pins and nothing else (no output pin, macro, clock pin or clock cell), and the
     face_guard-named capture flop of that bit, when it names one, is among them.  The pin is then judged at the
     distance to its FARTHEST slot flop (GEOM-59), so pin_reg_p90/max still judge the placement.  ring_start /
     origin_start inputs require their exact proved writer groups / sampler names at the checkpoint. Undeclared buses get nothing.  face_guard clock_exports (sdc create_generated_clock
@@ -455,24 +509,12 @@ def land_ring_captures(D, land, guard):
         if p["io"] != "INPUT" or b not in buses:
             continue
         n = D.pin_net.get(p["k"])
-        flops, leak, front, seen, depth = set(), None, [n], {n}, 0
-        while front and leak is None and n is not None:
-            nf = []
-            for nn in front:
-                for s in D.nets[nn][2]:
-                    k = D.kind(s[1]) if s[0] == "i" else "P"
-                    if s[0] != "i" or s[2] or k in ("M", "K", None):
-                        leak = f"reaches {k or 'unknown'}{' clock pin' if s[0] == 'i' and s[2] else ''}"
-                    elif k == "S":
-                        flops.add(s[1])
-                    elif depth >= LAND_CONE_DEPTH:
-                        leak = f"cone deeper than {LAND_CONE_DEPTH} cells"
-                    else:
-                        for on in D.drives.get(s[1], []):
-                            if on not in seen:
-                                seen.add(on)
-                                nf.append(on)
-            front, depth = nf, depth + 1
+        flops, leak = set(), None
+        if n is not None:
+            try:
+                flops = _landing_data_cone(D, n)
+            except ValueError as exc:
+                leak = str(exc)
         names = {D.cells[c][6].replace("\\", "") for c in flops}
         if n is None:
             leak = "no net"

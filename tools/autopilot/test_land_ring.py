@@ -8,7 +8,7 @@ LAND = {"schema": "land_slots/3", "buses": {"i": {"D": 2, "form": "hold_mux"},
 GUARD = {"verdict": "PASS", "flops": {"i[0]": "u_ring.s_d[1][0]$_DFFE_PP_"}, "clock_exports": {"fclk_o": "clk"}}
 
 
-def dump(tmp_path, *, slots=2, far=40):
+def dump(tmp_path, *, slots=2, far=40, prefix=()):
     """i[0] -> AND2 -> AO21 -> slot flop, per slot (write mux); go_i -> AND2 -> flop; fclk_o driven by a buffer."""
     L = ['D\t0\t0\t600\t100',
          'P\t0\ti[0]\tINPUT\tSIGNAL\tM4\t0\t10',
@@ -25,7 +25,12 @@ def dump(tmp_path, *, slots=2, far=40):
               f'C\t{f}\tS\tDFFHQNx1_ASAP7_75t_R\t{x - .5}\t9.5\t{x + .5}\t10.5\tu_ring.s_d\\[{k}\\]\\[0\\]$_DFFE_PP_',
               f'N\tSIGNAL\ti{a}\ti{o}', f'N\tSIGNAL\ti{o}\ti{f}']
         first.append(f'i{a}')
-    L.append('N\tSIGNAL\tp0\t' + '\t'.join(first))
+    driver = "p0"
+    for cid, (kind, master) in enumerate(prefix, 100):
+        L.extend((f'C\t{cid}\t{kind}\t{master}\t2\t9.5\t3\t10.5\tpre{cid}',
+                  f'N\tSIGNAL\t{driver}\ti{cid}'))
+        driver = f"i{cid}"
+    L.append(f'N\tSIGNAL\t{driver}\t' + '\t'.join(first))
     L += ['C\t50\tL\tAND2x2_ASAP7_75t_R\t5\t50\t6\t50\tgand', 'C\t51\tS\tDFF\t9.5\t49.5\t10.5\t50.5\tgff',
           'N\tSIGNAL\tp1\ti50', 'N\tSIGNAL\ti50\ti51']
     p = tmp_path / 'dump.tsv'
@@ -140,3 +145,32 @@ def test_ring_start_writer_groups_must_match_every_checkpoint_capture(tmp_path):
         if mutation=='extra':d.nets[d.cell_in[51][0][0]][2].append(('p',2,False))
         r,m=reg(d,LAND,g)
         assert 'go_i' not in r['caps'] and m['pins_unregistered']==1,(mutation,r)
+
+
+
+def test_landing_counts_logic_through_bounded_transparent_buffers(tmp_path):
+    prefix = [("B", "BUFx2_ASAP7_75t_R"), ("B", "INVx1_ASAP7_75t_R")] * 2
+    prefix.append(("B", "BUFx2_ASAP7_75t_R"))
+    d = dump(tmp_path, far=244, prefix=prefix)
+    r, m = reg(d)
+    assert r["caps"]["i[0]"] == [12, 15]
+    assert m["pin_reg_max"] == 244 and m["pin_reg_max"] > G.PINREG_HARD
+
+    # Even with the expected captures behind the buffers, a foreign sink
+    # after the long transparent path must reject the pin.
+    d.nets[d.drives[104][0]][2].append(("p", 2, False))
+    r, m = reg(d)
+    assert not r["caps"] and "reaches P" in r["rejected"][0]
+    assert m["pins_unregistered"] == 2
+
+    for prefix, reason in (([("L", "AND2")] * 5, "logic cells"),
+                           ([("B", "BUF")] * G.LAND_CONE_WALK_DEPTH, "physical cells")):
+        r, m = reg(dump(tmp_path, prefix=prefix))
+        assert not r["caps"] and reason in r["rejected"][0]
+        assert m["pins_unregistered"] == 2
+
+
+    d = dump(tmp_path)
+    d.drives[11].append(d.pin_net[0])
+    r, m = reg(d)
+    assert not r["caps"] and "cycle" in r["rejected"][0] and m["pins_unregistered"] == 2
