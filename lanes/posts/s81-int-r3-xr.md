@@ -1,0 +1,1 @@
+- 2026-11-27 09:44 PST DONE [s81-int-r3-xr] ot-run oth-ubuntu-397334-1795801095 on open-snipe: rc=0 after 356 s, ended 17:44:10, log /srv/opentallas-scratch2/claude/s81-int-r3-xr/pre_base.otrun.log, cmd: --priority die --hosts epyc12 --mem 60 --threads 8 --dir /srv/opentallas-scratch2/claude/s81-int-r3-xr --disk 20 -- bash /srv/opentallas-scr
