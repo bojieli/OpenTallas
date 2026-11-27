@@ -11,6 +11,12 @@ Plan-only floorplan classes that no static check named, so 10-29 h type kits fou
                border that core, and its bits are also counted on those streets (KV-NOROW 11-25, COORD ruling 2).
   H9 R0 P2 frame_int aligned edge ranks: the same street warning includes a
                local stripe estimate from overlapping serial rank spans.
+  ADV-FP-STREET-BUS (C-STREET-R3 11-27, own WARN tag, default on, OT_STREET_BUS=0 off): the face buses (face + window_um + leaf) are priced
+               as lanes too (face window -> owning hard cores) at the AUTO-GEOM 0.45 usable share, PG-adjusted, limit 0.9.  The stock check
+               read 0 on HEAD W12f (607dd5dd5c82) while placed views failed: it counts only internal_stations / ft_slots legs.  Caught:
+               hd_lep0N 5.45 (placed channel_h 2.246), hd_tile 3.96 (73 GRT overflow); sister hd_lep0N_w 2.94.  Still missed: hd_host_w (no plan
+               lane: 0 stations, buses price 0.5; its 0.78 is internal net bboxes among 55 SRAMs) and hd_ctl_n (coreless, needs the lane band;
+               0.73 vs placed 0.613).  Other dies (extra types over 0.9, not already over 1.0): S81 36, QC 8, KV 0.
   FT-CROSSES-CORE (report only, always WARN) the lanes/bits whose planned legs cross hard-core interiors, per type.
   FP-OVERSIZE  plan `cells` over the 400k single-run cap (kv3_pc_v3 998k).  Default: the plan number as written.  With
                OT_FP_OVERSIZE_FLAT=1 (C-OVERSIZE 11-26): a type with hard_cores has type.cells = its hard-core content too, so
@@ -141,6 +147,48 @@ def core_crossings(t, manhattan=False):
     return out
 
 
+BUSLANE_USABLE = 0.45          # AUTO-GEOM: 0.6 utilisation limit x 0.75 track derate = 0.45 of the raw tracks
+BUSLANE_MAX = 0.9              # plan model tolerance below the AUTO-GEOM limit (HEAD ctl_n measured 0.613 vs 0.60 reads 0.98 here)
+
+
+def buslane_enabled():
+    """ADV-FP-STREET-BUS (report-only, WARN, own tag so the counted C-STREET class does not move) is on unless OT_STREET_BUS=0."""
+    import os
+    return os.environ.get("OT_STREET_BUS") != "0"
+
+
+def bus_lanes(t):
+    """(bits, points, label) per face bus with a face window: the straight leg from the face window centre to the centroid of the hard
+    cores that own the bus leaf (first path component of `leaf` == a core inst prefix; else every hard core).  Buses that an
+    internal_stations row already carries (conn `bus:<name>` or launch `bus <name>`) are not counted twice.  Plan-only proxy for the
+    AUTO-GEOM net-bbox channel demand: HEAD 11-27 measured channel_h 2.246 / col_v 1.602 (lep0N), H 0.78 (host_w), 73 GRT overflow
+    (tile), col_v 0.613 (ctl_n) on plans that read 0 here because their data buses were not lanes."""
+    W, H = t.get("outline_um", (0, 0))
+    cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
+    if not W or not H:
+        return []
+    done = set()
+    for s in t.get("internal_stations", []):
+        done.add((s.get("launch") or "").removeprefix("bus ").strip())
+        done.add((s.get("conn") or "").removeprefix("bus:"))
+    centers = [(c.get("inst") or c.get("name") or "", [(_box(c)[0] + _box(c)[2]) / 2, (_box(c)[1] + _box(c)[3]) / 2]) for c in cores]
+    out = []
+    for b in t.get("buses", []):
+        face, win, nm = b.get("face"), b.get("window_um"), b.get("name")
+        if not face or not win or nm in done:
+            continue
+        pt = _face_center(face, win, W, H)
+        if not pt:
+            continue
+        head = str(b.get("leaf") or "").split(".")[0]
+        own = [c for n, c in centers if head and n.split(".")[0] == head] or [c for _, c in centers]
+        if not own:
+            continue
+        tgt = [sum(c[0] for c in own) / len(own), sum(c[1] for c in own) / len(own)]
+        out.append((b.get("width", 1), [pt, tgt], nm))
+    return out
+
+
 def pg_enabled(raw):
     """C-STREET-R2 opt-in: plan top-level street_sizing.pg (or OT_STREET_PG=1) derates street capacity by the PG stripe bands."""
     import os
@@ -151,12 +199,12 @@ def pg_enabled(raw):
 PILE_BIN_UM = 25.92            # coreless lane band: 3 x 8.64 (the HEAD SPN hotspot lane was x222-250, 28 um wide)
 
 
-def lane_band_worst(t, pg=True):
+def lane_band_worst(t, pg=True, extra=None, usable=USABLE):
     """Coreless types have no macro streets, so street_worst is blind to them (HEAD hd_spn: 3.11 measured lane, no verdict).
     Same tuple as street_worst: the worst PILE_BIN_UM-wide x band, demand = the bits of every planned leg crossing one horizontal
     cut inside it, capacity = band width x vertical tracks/um x USABLE x PG factor.  Only used with the PG flag (opt-in)."""
     W, H = t.get("outline_um", (0, 0))
-    lanes = _lanes(t)
+    lanes = _lanes(t) + list(extra or [])
     if not W or not H or not lanes:
         return None
     nb = max(1, int(W // PILE_BIN_UM) + 1)
@@ -176,22 +224,22 @@ def lane_band_worst(t, pg=True):
                 dem[k] += w
                 who[k][nm] += w
         for k, d in dem.items():
-            cap = PILE_BIN_UM * tracks * USABLE
+            cap = PILE_BIN_UM * tracks * usable
             r = d / cap
             if best is None or r > best[0]:
                 best = (r, "V", round(c), [round(k * PILE_BIN_UM), round((k + 1) * PILE_BIN_UM)], d, round(cap), who[k].most_common(3))
     return best
 
 
-def street_worst(t, pg=False):
+def street_worst(t, pg=False, extra=None, usable=USABLE):
     """(ratio, orient, cut_um, street, bits, cap, top lanes) of the worst street of type dict t, or None.
     pg=True: usable tracks per um are scaled by street_pg.pg_factor (PART_PG_BANDS exclusion), default off."""
     cores = [c for c in t.get("hard_cores", []) if c.get("origin_um") and c.get("outline_um")]
     if not cores:
-        return lane_band_worst(t, pg) if pg else None
+        return lane_band_worst(t, pg, extra, usable) if (pg or extra) else None
     W, H = t["outline_um"]
     bx = [_box(c) for c in cores]
-    lanes = _lanes(t)
+    lanes = _lanes(t) + list(extra or [])
     worst = None
     for axis in (0, 1):                     # axis 1: horizontal cuts y = c ; axis 0: vertical cuts x = c
         length, tracks = (W, H)[1 - axis], (TH, TV)[axis]
@@ -228,7 +276,7 @@ def street_worst(t, pg=False):
                         who[j][nm] += w
             for k, d in dem.items():
                 street = fr[k] if fr else (0.0, 0.0)
-                cap = (street[1] - street[0]) * tracks * USABLE
+                cap = (street[1] - street[0]) * tracks * usable
                 r = d / cap if cap > 0 else math.inf
                 if worst is None or r > worst[0]:
                     worst = (r, "V" if axis else "H", round(c), [round(x) for x in street], d, round(cap), who[k].most_common(3))
@@ -374,8 +422,9 @@ def findings(raw, plan_path=None, tree=None, **kw):
         pt = raw.get("partition_types") or {}
     except AttributeError:
         return out
-    n_street = n_big = n_ovl = 0
+    n_street = n_big = n_ovl = n_bus = 0
     pg = pg_enabled(raw)
+    bus_on = buslane_enabled()
     parts = {part["name"]: part for part in (raw.get("partitions") or [])
              if isinstance(part, dict) and "name" in part and str(part.get("type")).startswith(ALIGNED_RANK_FAMILY)}
     epochs = station_epoch_modes(parts, raw.get("ports") or []) if parts else {}
@@ -389,6 +438,15 @@ def findings(raw, plan_path=None, tree=None, **kw):
                 out.append(f"{lvl} ADV-FP-STREET {name}{' [PG-adjusted]' if pg else ''}: lane demand {w[0]:.2f} > {STREET_MAX} on {w[1]} cut {w[2]} um street {w[3]} um "
                            f"({w[4]} bits vs {w[5]} usable tracks); load {', '.join(f'{a}:{b}' for a, b in w[6])}; "
                            f"fix: reserve at least {required:.2f} um or re-seat lanes onto another cut")
+            if bus_on and not street_over:
+                ex = bus_lanes(t)
+                wb = street_worst(t, True, ex, BUSLANE_USABLE) if ex else None
+                if wb and wb[0] > BUSLANE_MAX:
+                    n_bus += 1
+                    out.append(f"WARN ADV-FP-STREET-BUS {name}: lane demand {wb[0]:.2f} > {BUSLANE_MAX} (face-bus legs + stations, PG-adjusted, "
+                               f"{BUSLANE_USABLE} usable share) on {wb[1]} cut {wb[2]} um street {wb[3]} um ({wb[4]} bits vs {wb[5]} tracks); "
+                               f"load {', '.join(f'{a}:{b}' for a, b in wb[6])}; AUTO-GEOM channel limit 0.6 would read this placed view as FAIL; "
+                               "fix: open the street / re-seat the bus landing, REPORT ONLY")
             rank = aligned_edge_rank_worst(t, epochs, name)
             rank_over = bool(rank and rank["ratio"] > STREET_MAX)
             if rank_over:
@@ -438,6 +496,6 @@ def findings(raw, plan_path=None, tree=None, **kw):
                            f"{len(outside)} core(s) outside the outline {outside[:3]}")
         except Exception as e:  # a malformed type never stops the others
             out.append(f"WARN ADV-FP-FLOORPLAN {name}: not checked ({type(e).__name__}: {str(e)[:80]})")
-    out.append(f"WARN ADV-FP-FLOORPLAN summary {n_street} type(s) street demand > {STREET_MAX}, {n_big} over {CELL_CAP} cells, "
+    out.append(f"WARN ADV-FP-FLOORPLAN summary {n_street} type(s) street demand > {STREET_MAX} (+{n_bus} bus-lane model > {BUSLANE_MAX}), {n_big} over {CELL_CAP} cells, "
                f"{n_ovl} with core overlap/outside, of {len(pt)} types")
     return out

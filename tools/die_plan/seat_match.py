@@ -160,6 +160,11 @@ def kit_sites(kit):
                 if ln.startswith("rs_place_all "):
                     for k, x, y in re.findall(r"\{([^{}]+)\} \{(-?[\d.e+]+) (-?[\d.e+]+)\}", ln):
                         out[k] = [float(x), float(y)]
+            # C-RELAY-SEAT-KEYMISS (11-27): relay_rank_sites seats are rs_rank_line calls, not rs_place_all keys; the lint ignored them
+            for m in re.finditer(r"(?m)^\s*rs_rank_line\s+\{([^{}]*)\}\s+(-?[\d.e+]+)\s+(-?[\d.e+]+)", f.read_text(errors="replace")):
+                alts = m.group(1).split()
+                if alts:
+                    out[alts[0]] = [float(m.group(2)), float(m.group(3))]
     return out
 
 
