@@ -522,6 +522,231 @@ for p in dict.fromkeys(cand):
     if any(p in r[1] for r in out):
         continue
     out.append(["refuse", "NOT-RUN SETUP missing input %s" % p])
+# P-LAUNCH-SETUP-FAIL b11 (COORD 11-27 patterns 2 and 4): (a) RELATIVE input files (file args of grep/cat/head/tail/sed/awk/python3/bash, redirect-in
+# sources, script args after input-ish flags) resolved against --dir (skipped when --dir is not here: spill / autostage), (b) `. FILE` / `source FILE`
+# (a `.` with no file is itself a setup error), (c) an absolute path whose first component is no known root (an empty $VAR expanded).  Files made
+# earlier in the same line (> tee touch cp mv mkdir, out-flag values), tested in [ ] and --stage / --needs paths are never reported; globs, $vars, ~, URLs skipped.
+_BARE = ("if", "then", "elif", "else", "do", "while", "until", "!", "{", "}")
+_WRAP = ("time", "exec", "command", "nohup", "env", "sudo", "nice", "timeout", "ionice", "stdbuf", "xargs")
+_KNOWN_ROOT = ("srv", "home", "tmp", "var", "usr", "opt", "etc", "proc", "sys", "dev", "mnt", "run", "root", "bin", "lib", "lib64", "sbin", "boot", "media", "work")
+_INFLAG = _re.compile(r"^-{1,2}(?:in|input|inputs|infile|cfg|config|file|src|from|manifest|list|census|rows|plan|data|script|source|tsv|csv|yaml)(?:[-_](?:file|path))?$", _re.I)
+_INEXT = _re.compile(r"\.(?:sh|py|tcl|sv|v|sdc|env|cfg|conf|yaml|yml|list|lef|def|lib|mk|ys)$")
+_RINEXT = _re.compile(r"\.[A-Za-z][A-Za-z0-9]{0,7}$")
+_RVAL = {"grep": ("-e", "-f", "-m", "-A", "-B", "-C", "--regexp", "--file", "--max-count", "--include", "--exclude", "--exclude-dir", "--color"),
+         "sed": ("-e", "-f", "--expression", "--file", "-l"), "awk": ("-f", "-v", "-F", "--file", "--assign"),
+         "head": ("-n", "-c"), "tail": ("-n", "-c"), "cut": ("-d", "-f", "-c", "-b"), "python": ("-W", "-X"), "bash": ("-o", "-O", "--rcfile", "--init-file")}
+_ALIAS = {"python3": "python", "python": "python", "sh": "bash", "bash": "bash", "zsh": "bash", "egrep": "grep", "fgrep": "grep", "rg": "grep", "gawk": "awk", "mawk": "awk"}
+_PATFLAGS = ("-e", "--regexp", "--expression", "-f", "--file")
+
+
+def _rl_special(t):
+    return (not t) or bool(_re.search(r"[\s*?\[\]{}$`~=:;|&<>()\\!\"']|://", t))
+
+
+def _rl_pathy(t):
+    if _rl_special(t) or t[0] in "-/" or t.endswith("/") or t in (".", ".."):
+        return False
+    return "/" in t or bool(_RINEXT.search(t))
+
+
+def _rl_lex(toks):
+    t0 = os.path.basename(toks[0]) if toks else ""
+    rest = toks[1:]
+    if t0 in ("bash", "sh") and len(rest) >= 2 and _re.fullmatch(r"-[a-z]*c[a-z]*", rest[0]):
+        line = rest[1]
+        m = _re.search(r"<<(?!<)", line)
+        if m:
+            line = line[:m.start()]
+        try:
+            lx = _shlex.shlex(line.replace("\n", " ; "), posix=True, punctuation_chars=True)
+            lx.whitespace_split = True
+            return list(lx), False
+        except Exception:
+            return [], False
+    return list(toks), True
+
+
+def _rl_cmds(seq):
+    cmds, cur, i = [], {"w": [], "in": [], "out": []}, 0
+    while i < len(seq):
+        t = seq[i]
+        if t in _OPS:
+            cmds.append(cur)
+            cur = {"w": [], "in": [], "out": []}
+        elif t == "<<":
+            break
+        elif t == "<<<":
+            i += 1
+        elif t == "<" and i + 1 < len(seq):
+            cur["in"].append(seq[i + 1])
+            i += 1
+        elif _re.fullmatch(r"(?:>>?|&>>?|>&|>\|)", t) and i + 1 < len(seq):
+            cur["out"].append(seq[i + 1])
+            i += 1
+        else:
+            cur["w"].append(t)
+        i += 1
+    cmds.append(cur)
+    return cmds
+
+
+def _rl_parse(w, valflags):
+    pos, fv, i = [], [], 0
+    while i < len(w):
+        t = w[i]
+        if t == "--":
+            pos += w[i + 1:]
+            break
+        if t.startswith("--") and "=" in t:
+            f, _, v = t.partition("=")
+            fv.append((f, v))
+        elif t.startswith("-") and len(t) > 1:
+            if (t in valflags or (t.startswith("--") and (_INFLAG.match(t) or _OUTFLAG.search(t.lstrip("-"))) and not w[i + 1:i + 2][:1] == ["--"])) and i + 1 < len(w) and not w[i + 1].startswith("-"):
+                fv.append((t, w[i + 1]))
+                i += 1
+            elif not t.startswith("--") and t[:2] in valflags and len(t) > 2:
+                fv.append((t[:2], t[2:]))
+        else:
+            pos.append(t)
+        i += 1
+    return pos, fv
+
+
+def _rl_pass():
+    seq, top = _rl_lex(toks)
+    cwd = d if (d and os.path.isdir(d)) else None
+    made, tested, reported = [], [], set()
+    skips = []
+    for s in _skip:
+        skips.append(s)
+        if d and not os.path.isabs(s):
+            skips.append(os.path.normpath(os.path.join(d, s)))
+
+    def under(p, b):
+        return bool(b) and (p == b or p.startswith(b.rstrip("/") + "/"))
+
+    def covered(ap):
+        return os.path.exists(ap) or any(under(ap, x) or under(x, ap) for x in skips + made + tested)
+
+    def absof(p):
+        if os.path.isabs(p):
+            return os.path.normpath(p)
+        return os.path.normpath(os.path.join(cwd, p)) if cwd else None
+
+    def miss(p, label):
+        ap = absof(p)
+        if ap is None or ap in reported or covered(ap) or any(p in r[1] for r in out):
+            return
+        reported.add(ap)
+        out.append(["refuse", "NOT-RUN SETUP missing %s %s%s" % (label, p, "" if os.path.isabs(p) else " (under %s)" % cwd)])
+
+    def empty(p):
+        m = _re.fullmatch(r"/([A-Za-z0-9_.+-]+)(?:/[A-Za-z0-9_.+/-]*)?", p)
+        if not m or m.group(1) in _KNOWN_ROOT:
+            return
+        ap = os.path.normpath(p)
+        if ap in reported or covered(ap) or under(ap, (d or "").rstrip("/")):
+            return
+        reported.add(ap)
+        out.append(["refuse", "NOT-RUN SETUP path %s looks like an empty variable expanded (no such top-level directory)" % p])
+
+    for c in _rl_cmds(seq):
+        w, k, wrapped, adds, cc = list(c["w"]), 0, False, [], []
+        while k < len(w):
+            t = w[k]
+            if t in _BARE or _re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", t):
+                k += 1
+            elif t in _WRAP:
+                wrapped = True
+                k += 1
+            elif wrapped and (t.startswith("-") or _re.fullmatch(r"[0-9.]+[smhd]?", t)):
+                k += 1
+            else:
+                break
+        for t in c["in"]:
+            if not t.startswith(("/", "-")) and not _rl_special(t):
+                miss(t, "input")
+        cc += c["out"]
+        adds += c["out"]
+        cmd = w[k] if k < len(w) else ""
+        args = w[k + 1:]
+        base = _ALIAS.get(os.path.basename(cmd), os.path.basename(cmd))
+        if cmd in (".", "source"):
+            if not args:
+                out.append(["refuse", "NOT-RUN SETUP source with no file"])
+            elif not _rl_special(args[0]) and not args[0].startswith("-"):
+                miss(args[0], "sourced file")
+            cc += args[:1]
+        elif cmd in ("cd", "pushd"):
+            tgt = absof(args[0]) if args and not _rl_special(args[0]) and cwd else None
+            cc += args[:1]
+            cwd = tgt if tgt and os.path.isdir(tgt) else None
+        elif cmd == "popd":
+            cwd = None
+        elif cmd in ("[", "[[", "test"):
+            for t in args:
+                ap = absof(t) if not _rl_special(t) and not t.startswith("-") else None
+                if ap:
+                    tested.append(ap)
+        elif base in ("python", "bash"):
+            a2 = args
+            for j, t in enumerate(args):
+                if _re.fullmatch(r"-[a-z]*c[a-z]*", t) or t == "-m":
+                    a2 = args[:j]
+                    break
+            pos, fv = _rl_parse(a2, _RVAL[base])
+            if pos:
+                if not top and (_rl_pathy(pos[0]) or (base == "bash" and not _rl_special(pos[0]))):
+                    miss(pos[0], "input")
+                adds.append(pos[0])
+            for p in pos[1:]:
+                if _rl_pathy(p) and _INEXT.search(p):
+                    miss(p, "input")
+                adds.append(p)
+            for f, v in fv:
+                if _OUTFLAG.search(f.lstrip("-")):
+                    adds.append(v)
+                elif _INFLAG.match(f) and _rl_pathy(v):
+                    miss(v, "input")
+            cc += pos + [v for f, v in fv if f not in _PATFLAGS] + [t for t in args[len(a2) + 2:] if not t.startswith("-")]
+        elif base in ("grep", "sed", "awk"):
+            pos, fv = _rl_parse(args, _RVAL[base])
+            if not any(f in _PATFLAGS for f, _ in fv) and pos:
+                pos = pos[1:]
+            for f, v in fv:
+                if f in ("-f", "--file") and _rl_pathy(v):
+                    miss(v, "input")
+            for p in pos:
+                if _rl_pathy(p):
+                    miss(p, "input")
+            cc += pos
+        elif base in ("cat", "head", "tail", "wc", "cut"):
+            pos, fv = _rl_parse(args, _RVAL.get(base, ()))
+            for p in pos:
+                if _rl_pathy(p):
+                    miss(p, "input")
+            cc += pos
+        else:
+            if cmd and not os.path.isabs(cmd) and "/" in cmd and _rl_pathy(cmd):
+                miss(cmd, "input")
+            pos, fv = _rl_parse(args, ())
+            cc += pos + [v for f, v in fv if f not in _PATFLAGS]
+            if base in ("touch", "mkdir", "tee"):
+                adds += pos
+            elif base in ("cp", "mv", "install", "ln") and pos:
+                adds.append(pos[-1])
+            else:
+                adds += [p for p in pos if _rl_pathy(p)]
+            adds += [v for f, v in fv if _OUTFLAG.search(f.lstrip("-"))]
+        for t in cc:
+            empty(t)
+        for t in adds:
+            ap = absof(t) if not _rl_special(t) else None
+            if ap:
+                made.append(ap)
+
+
+_rl_pass()
 print(json.dumps(out))
 """
 
@@ -536,6 +761,19 @@ def deep_rows(text):
 def abs_input_hint(cmd):
     """True when any command-line token (or bash -c text) names a path under the scratch roots: the deep preflight then also runs for jobs with no --stage / relative script"""
     return any(("/srv/opentallas-scratch/" in str(t)) or ("/srv/opentallas-scratch2/" in str(t)) for t in cmd)
+
+
+def deep_input_hint(cmd):
+    """P-LAUNCH-SETUP-FAIL b11: relative inputs / sourced files / empty-variable roots live in shell lines and file-reading commands, so those jobs get the deep check too"""
+    if not cmd:
+        return False
+    b = os.path.basename(str(cmd[0]))
+    if b in ("bash", "sh", "zsh", "python3", "python", "grep", "cat", "head", "tail", "sed", "awk", "source", "."):
+        return True
+    return any(str(t).startswith("/") and str(t).split("/")[1] not in DEEP_ROOTS for t in cmd)
+
+
+DEEP_ROOTS = ("", "srv", "home", "tmp", "var", "usr", "opt", "etc", "proc", "sys", "dev", "mnt", "run", "root", "bin", "lib", "lib64", "sbin", "boot", "media", "work")
 
 
 def stage_skip_paths(stage, needs):
@@ -3461,7 +3699,7 @@ def main():
             held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
             hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
-        if first and not job and not os.environ.get("OT_RUN_NO_PREFLIGHT") and (STAGE or rel_script(cmd) or abs_input_hint(cmd)):
+        if first and not job and not os.environ.get("OT_RUN_NO_PREFLIGHT") and (STAGE or rel_script(cmd) or abs_input_hint(cmd) or deep_input_hint(cmd)):
             # DEATHCLASS-1122 SETUP: the --stage paths and the relative script must exist on a host that holds --dir (or here, for --stage)
             _have = [h for h in hosts if not str(PLACE_NOTES.get(h) or "").startswith(("no ", "SSH probe"))]
             _pf = setup_preflight(_have, d, STAGE, cmd, check_dir=False)
