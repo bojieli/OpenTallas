@@ -60,3 +60,76 @@ def test_run_item_refuses_before_building(tmp_path, monkeypatch):
 def test_bind_provenance_records_plan_sha():
     assert '"plan_sha256"' in (Path(__file__).resolve().parents[1] / "die_plan" / "bind.py").read_text() or \
         "plan_sha256=plan_sha" in (Path(__file__).resolve().parents[1] / "die_plan" / "bind.py").read_text()
+
+
+def _collector_alias_spec(tmp_path, monkeypatch):
+    import copy
+
+    tools = Path(KW.__file__).resolve().parents[1] / "die_plan"
+    monkeypatch.syspath_prepend(str(tools))
+    import kit_topology as topology
+
+    rt = tmp_path / "rt"
+    mod = rt / "tools/die_plan/kit_topology.py"
+    mod.parent.mkdir(parents=True)
+    mod.symlink_to(tools / mod.name)
+    rt_sha = "a" * 40
+    (tmp_path / "rt.manifest.json").write_text(json.dumps({
+        "sha": rt_sha, "files": {"tools/die_plan/kit_topology.py": _sha(mod)},
+    }))
+    (tmp_path / "landing.json").write_text("{}")
+    ab = tmp_path / "asbuilt.json"
+    ab.write_text(json.dumps({"base": str(tmp_path), "clock_landing_table": "landing.json"}))
+    canonical = {"rect_um": [1, 2, 3, 4], "width": 2, "instance": "u_cland_ag"}
+    contract = {"bands": {"ag": canonical}, "collector_local_sources": [
+        {"name": "ag", "node": "rst_n_t1", "band": dict(canonical, rect_um=[5, 6, 7, 8])}]}
+    old = {"partition_types": {
+        "tt": {"clock": {"landing_contract": contract}, "buses": []},
+        "neighbour": {"buses": []},
+        "unemitted": {"buses": []},
+    }, "lanes": [], "ports": []}
+    producer = tmp_path / "producer.json"
+    producer.write_text(json.dumps(old))
+    producer_sha = _sha(producer)
+    current = copy.deepcopy(old)
+    lc = current["partition_types"]["tt"]["clock"]["landing_contract"]
+    lc["collector_local_sources"][0]["band"] = copy.deepcopy(lc["bands"]["ag"])
+    plan = tmp_path / "new.json"
+    plan.write_text(json.dumps(current))
+    out = tmp_path / "bind"
+    out.mkdir()
+    topology.write_bind_receipt(old, out, ab, plan_path=producer)
+    (out / "provenance_bind.json").write_text(json.dumps({"provenance": {
+        "step": "bind", "plan": str(producer), "plan_sha256": producer_sha}}))
+    (out / "bind_report.json").write_text(json.dumps({
+        "plan_sha256": producer_sha, "n_errors": 0, "types": old["partition_types"],
+        "probe_only": {"emitted": ["tt", "neighbour"]},
+    }))
+    sp = {"item": "tt", "private": {"lane": "test"}, "gen_host": "localhost",
+          "tools_sha": rt_sha, "tools_rt": str(rt), "plan": str(plan), "src": str(tmp_path),
+          "kit_rtl": {"mode": "bind", "bind_out": str(out), "asbuilt": str(ab)}}
+    return sp, current, producer
+
+
+def test_exact_collector_alias_refresh_preserves_private_runner_admission(tmp_path, monkeypatch):
+    sp, _, _ = _collector_alias_spec(tmp_path, monkeypatch)
+    assert KW.bind_plan_refusal(sp) is None
+    assert KW.bind_plan_refusal(dict(sp, item="neighbour")) is None
+    assert KW.bind_plan_refusal(dict(sp, item="unemitted")).startswith("BIND-PLAN-MISMATCH")
+    assert KW.bind_plan_refusal(dict(sp, private=False)).startswith("BIND-PLAN-MISMATCH")
+    assert KW.bind_plan_refusal(dict(sp, tools_sha="b"*40)).startswith("BIND-PLAN-MISMATCH")
+
+
+def test_collector_alias_does_not_authorize_modified_native_plan(tmp_path, monkeypatch):
+    sp, current, producer = _collector_alias_spec(tmp_path, monkeypatch)
+    plan = Path(sp["plan"])
+    lc = current["partition_types"]["tt"]["clock"]["landing_contract"]
+    lc["bands"]["ag"]["rect_um"] = [1, 2, 3, 9]
+    lc["collector_local_sources"][0]["band"] = dict(lc["bands"]["ag"])
+    plan.write_text(json.dumps(current))
+    assert KW.bind_plan_refusal(sp).startswith("BIND-PLAN-MISMATCH")
+    lc["bands"]["ag"]["rect_um"] = [1, 2, 3, 4]
+    lc["collector_local_sources"][0]["band"] = dict(lc["bands"]["ag"])
+    plan.write_text(json.dumps(current))
+    producer.write_bytes(producer.read_bytes()+b" ")
+    assert KW.bind_plan_refusal(sp).startswith("BIND-PLAN-MISMATCH")

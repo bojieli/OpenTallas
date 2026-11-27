@@ -10153,13 +10153,14 @@ def asbuilt_clock_landing(asbuilt, src):
     return None
 
 
-def bind_plan_probe(bind_out, src, plan):
+def bind_plan_probe(bind_out, src, plan, alias_context=None):
     """P-KIT-BIND-PLAN-MISMATCH (S81-GATE-LINT 11-26; self-contained: also run on the gen host over ssh) -> {"bind_sha", "spec_sha", "how"}.
     bind_sha = provenance_bind.json provenance.plan_sha256 (binds since this fix), else the sha of the plan file its provenance.plan names when
     that resolves under src to a file other than the spec plan; None = cannot tell.  spec_sha = sha256 of the spec plan."""
     import hashlib
     import json
     import os
+    import sys
     from pathlib import Path
 
     def sha(p):
@@ -10181,6 +10182,24 @@ def bind_plan_probe(bind_out, src, plan):
         return out
     if pv.get("plan_sha256"):
         out.update(bind_sha=str(pv["plan_sha256"]), how="provenance plan_sha256")
+        if alias_context and spec_plan and out["bind_sha"] != out["spec_sha"]:
+            try:
+                rt = Path(alias_context["runtime"])
+                manifest = json.loads(Path(f"{rt}.manifest.json").read_bytes())
+                mod = rt / "tools/die_plan/kit_topology.py"
+                if (rt.is_absolute() and manifest["sha"] == alias_context["runtime_sha"]
+                        and sha(mod) == manifest["files"]["tools/die_plan/kit_topology.py"]):
+                    sys.path.insert(0, str(mod.parent))
+                    try:
+                        import kit_topology
+                        if Path(kit_topology.__file__).resolve() == mod.resolve():
+                            out["collector_alias_only"] = kit_topology.collector_band_alias_plan_matches(
+                                spec_plan, bind_out, alias_context["asbuilt"],
+                                alias_context["item"], out["bind_sha"])
+                    finally:
+                        sys.path.pop(0)
+            except (OSError, ValueError, KeyError, TypeError, ImportError, AttributeError):
+                pass
         return out
     bp = under(pv.get("plan"))
     if bp and spec_plan and os.path.realpath(bp) != os.path.realpath(spec_plan):
@@ -10202,13 +10221,18 @@ def bind_plan_refusal(sp, run=subprocess.run):
     if not bind_out or not plan or not str(bind_out).startswith("/"):
         return None
     src, host, hub = sp.get("src") or "", sp.get("gen_host"), sp.get("hub") or PRIVATE_HUB
+    alias_context = None
+    if sp.get("private") and sp.get("kind", "type") == "type" and kr.get("mode") == "bind":
+        if all((sp.get("tools_rt"), sp.get("tools_sha"), sp.get("item"), kr.get("asbuilt"))):
+            alias_context = {"runtime": sp["tools_rt"], "runtime_sha": sp["tools_sha"],
+                             "asbuilt": kr["asbuilt"], "item": sp["item"]}
     if BIND_PLAN_REMOTE is not None:
         got = BIND_PLAN_REMOTE(host, hub, str(bind_out), src, str(plan))
     elif (Path(bind_out) / "provenance_bind.json").is_file():
-        got = bind_plan_probe(str(bind_out), src, str(plan))
+        got = bind_plan_probe(str(bind_out), src, str(plan), alias_context)
     else:
         import inspect
-        args = json.dumps([str(bind_out), src, str(plan)])
+        args = json.dumps([str(bind_out), src, str(plan), alias_context])
         py = ("import json, sys\n" + inspect.getsource(bind_plan_probe)
               + "\nprint('KW_BIND_PLAN ' + json.dumps(bind_plan_probe(*json.loads(sys.argv[1]))))\n")
         argv = _ssh(host, hub) + ["python3 -I -c " + shlex.quote(py) + " " + shlex.quote(args)]
@@ -10222,6 +10246,9 @@ def bind_plan_refusal(sp, run=subprocess.run):
             got = {}
     b, s = str((got or {}).get("bind_sha") or ""), str((got or {}).get("spec_sha") or "")
     if b and s and b != s:
+        if alias_context and (got or {}).get("collector_alias_only") is True:
+            print(f"KW_BIND_PLAN compatible collector band copies {b[:12]} -> {s[:12]}", flush=True)
+            return None
         return (f"BIND-PLAN-MISMATCH: kit_rtl.bind_out {bind_out} was bound from plan sha {b[:12]} ({got.get('how')}) but the spec plan {plan} is "
                 f"{s[:12]}; bind that plan strictly and use it as bind_out (a kit built on another plan's bind carries its reset tree / stations)")
     return None
