@@ -4358,7 +4358,7 @@
            "uniqueItems": true,
            "items": {
             "type": "string",
-            "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"
+            "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+|local_reset:\\w+)$"
            }
           }
          }

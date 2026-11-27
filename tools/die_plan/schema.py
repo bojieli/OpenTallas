@@ -2333,7 +2333,7 @@ _CKPROPS["landing_raw_branches"] = {
                 "type": "object", "additionalProperties": False, "required": ["original", "xy_um"],
                 "properties": {"original": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}, "xy_um": _XY2}}},
             "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
-                          "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
+                          "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+|local_reset:\\w+)$"}}
         }}}
 
 # Default-OFF TT_C source-event PREP. This pointer is admitted only with exact

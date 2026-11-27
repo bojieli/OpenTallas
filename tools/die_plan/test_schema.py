@@ -47,6 +47,18 @@ def test_named_tap_site_stamp_schema():
     assert any("tap_sites_um" in error for error in schema.validate(p))
 
 
+def test_raw_branch_local_reset_consumer_schema():
+    p = copy.deepcopy(EX)
+    clock = next(iter(p["partition_types"].values())).setdefault("clock", {})
+    branch = dict(name="fstart_copy", base="rst_rl_0",
+                  stages=[dict(original="rst_rl_1", xy_um=[12.96, 25.92])],
+                  consumers=["local_reset:fstart_0"])
+    clock["landing_raw_branches"] = [branch]
+    assert schema.validate(p) == []
+    branch["consumers"] = ["local_reset:fstart_0:1"]
+    assert any("landing_raw_branches" in error for error in schema.validate(p))
+
+
 def test_structure_errors():
     assert any("missing 'die'" in e for e in errs_of(lambda p: p.pop("die")))
     assert any("unknown key" in e for e in errs_of(lambda p: p.update(extra=1)))
