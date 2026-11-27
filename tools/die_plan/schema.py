@@ -2135,6 +2135,9 @@ SCHEMA["properties"]["tap_reach"] = {"type": "object", "additionalProperties": F
 SCHEMA["properties"]["gpl_td"] = {"type": "object", "additionalProperties": False, "properties": {
     "top_overflow_trigger": {"type": ["integer", "number", "boolean"]}, "firm_small_clusters": {"type": ["integer", "boolean"]},
     "cell_growth_gate": {"type": ["integer", "boolean"]}}}
+SCHEMA["properties"]["pin_track_pg"] = {"type": "object", "additionalProperties": False, "properties": {
+    "pg": {"anyOf": [{"type": "boolean"}, {"type": "integer", "enum": [0, 1]}]},
+}}
 SCHEMA["properties"]["street_sizing"] = {"type": "object", "additionalProperties": False, "properties": {
     "pg": {"type": ["integer", "boolean"]}, "pg_track_loss": {"type": "number", "minimum": 0}}}
 

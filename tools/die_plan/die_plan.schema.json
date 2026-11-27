@@ -11076,6 +11076,26 @@
     }
    }
   },
+  "pin_track_pg": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "pg": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "integer",
+       "enum": [
+        0,
+        1
+       ]
+      }
+     ]
+    }
+   }
+  },
   "street_sizing": {
    "type": "object",
    "additionalProperties": false,

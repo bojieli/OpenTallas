@@ -53,12 +53,14 @@ def snap_origin(o, mode="nearest"):
 
 def census(t, pins_for, snap=False):
     """pins_for(core) -> [(layer, x_local, y_local)] in the core frame; orientation + origin applied here (core outline / orient / origin_um)."""
-    out = dict(cores=0, off_pitch=0, pins=0, blocked=0, pdn_0110_est=0)
+    out = dict(cores=0, off_pitch=0, pins=0, blocked=0, pdn_0110_est=0, missing_tables=0)
     for c in t.get("hard_cores") or []:
         if not (c.get("origin_um") and c.get("outline_um")):
             continue
         pl = pins_for(c)
         if not pl:
+            if c.get("pins_file"):
+                out["missing_tables"] += 1
             continue
         out["cores"] += 1
         org = snap_origin(c["origin_um"]) if snap else c["origin_um"]
@@ -78,26 +80,37 @@ def census(t, pins_for, snap=False):
     return out
 
 
-def _resolver(plan_path):
+def _resolver(raw, plan_path, tree):
     import json
-    import os
+    from pathlib import Path
+    from types import SimpleNamespace
+
+    import plan_inputs
+
+    roots = raw.get("plan_root") or []
+    roots = [roots] if isinstance(roots, str) else list(roots)
+    if tree:
+        roots.append(str(tree))
+    context = SimpleNamespace(path=plan_path, raw={"plan_root": roots})
+    ancestors = list(Path(plan_path).resolve().parents[1:3]) if plan_path else []
     cache = {}
-    base = os.path.dirname(plan_path) if plan_path else ""
 
     def pins_for(c):
         pf = c.get("pins_file")
         if not pf:
             return []
         if pf not in cache:
+            path = plan_inputs.resolve(context, pf)
+            if path is None and not Path(pf).is_absolute():
+                path = next((d / pf for d in ancestors if (d / pf).is_file()), None)
             cache[pf] = []
-            for d in (base, os.path.dirname(base), os.path.dirname(os.path.dirname(base))):
-                f = os.path.join(d, pf)
-                if d and os.path.isfile(f):
-                    j = json.load(open(f))
-                    j = j if isinstance(j, list) else j.get("pins", [])
-                    cache[pf] = [(q["layer"], q["x"], q["y"]) for q in j if isinstance(q, dict) and "layer" in q and "x" in q]
-                    break
+            if path is not None:
+                j = json.loads(path.read_text())
+                rows = j if isinstance(j, list) else j.get("pins", [])
+                cache[pf] = [(q["layer"], q["x"], q["y"]) for q in rows
+                             if isinstance(q, dict) and {"layer", "x", "y"} <= q.keys()]
         return cache[pf]
+
     return pins_for
 
 
@@ -106,8 +119,8 @@ def findings(raw, plan_path=None, tree=None, pins_for=None, **kw):
     import os
     if not (enabled(raw) or os.environ.get("OT_PIN_TRACK_PG") == "1"):
         return []
-    out, pf = [], pins_for or _resolver(plan_path)
-    n_off = n_blk = 0
+    out, pf = [], pins_for or _resolver(raw, plan_path, tree)
+    n_off = n_blk = n_missing = 0
     try:
         pt = raw.get("partition_types") or {}
     except AttributeError:
@@ -125,5 +138,7 @@ def findings(raw, plan_path=None, tree=None, pins_for=None, **kw):
                        f"{a['blocked']}/{a['pins']} pins under PG stripe/via-pad bands ({a['pdn_0110_est']} on off-pitch cores = PDN-0110 estimate); "
                        f"snapped to pitch: {b['blocked']} blocked; fix: move the macro in {PG_PITCH_UM} um steps (snap_origin) and pick pin tracks with free_tracks")
         n_blk += a["blocked"]
-    out.append(f"WARN ADV-PIN-TRACK-PG summary {n_off} type(s) with off-pitch cores or PDN-0110 estimate, {n_blk} blocked pins, of {len(pt)} types")
+        n_missing += a["missing_tables"]
+    out.append(f"WARN ADV-PIN-TRACK-PG summary {n_off} type(s) with off-pitch cores or PDN-0110 estimate, "
+               f"{n_blk} blocked pins, of {len(pt)} types. {n_missing} declared pin table uses unavailable or empty")
     return out
