@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 SCHEMA = "opentallas.bound_station_source.v1"
+FAMILY_SCHEMA = "opentallas.bound_station_source.family.v1"
 
 
 def _sha(path):
@@ -61,17 +62,142 @@ def _require(ok, detail):
         raise ValueError(f"KIT_TOPOLOGY_BOUND_STATION_SOURCE: {detail}")
 
 
+def _family_type_logic(typ):
+    """Ignore the reviewed physical fields while retaining landing and station identities."""
+    normalized = copy.deepcopy(typ)
+    clock = normalized["clock"]
+    for key in ("sink_sites_um", "tap_pitch_um", "tap_pin_heights_um"):
+        clock.pop(key, None)
+    for edge in clock.get("edge_clocks", ()):
+        edge.pop("tap_um", None)
+    landing = clock.setdefault("landing_contract", {})
+    for key, empty in (("bands", {}), ("collector_local_sources", []), ("pins", [])):
+        landing.setdefault(key, empty)
+    for child in landing.get("collector_children", ()):
+        child.pop("xy_um", None)
+    clock.setdefault("landing_local_resets", [])
+    clock.setdefault("landing_writer_start", {"branches": {}})
+    return _type_logic(normalized)
+
+
+def _changed_keys(previous, current):
+    return (previous.keys() ^ current.keys()
+            | {key for key in previous.keys() & current.keys() if previous[key] != current[key]})
+
+
+def _family_reset_scope(proof, old, physical, reference, captured):
+    """Qualify the incident edges of a named family against the captured release schedule."""
+    import reset_tree as RT
+
+    members = proof["family_types"]
+    _require(isinstance(members, dict) and all(isinstance(part, str) for part in members.values())
+             and members.get(proof["type"]) == proof["instance"]
+             and len(members) == len(set(members.values())), "invalid family type selection")
+    _require(old.parts.keys() == physical.parts.keys(), "family changes the partition inventory")
+    for part, row in old.parts.items():
+        typ = row["type"]
+        _require(physical.parts[part]["type"] == typ, f"family changes type at {part}")
+        if typ in members:
+            _require(members[typ] == part, f"family type {typ} is shared by another instance")
+            continue
+        _require(physical.rect(part) == old.rect(part) and physical.parts[part] == row
+                 and all(physical.types[typ].get(key) == old.types[typ].get(key)
+                         for key in ("reset", "clock", "hard", "hard_cores")),
+                 f"reset geometry or ownership outside family changes at {part}")
+    _require(all(part in old.parts and old.parts[part]["type"] == typ for typ, part in members.items()),
+             "family names an unbound instance")
+    for typ in members:
+        _require(_family_type_logic(old.types[typ]) == _family_type_logic(physical.types[typ]),
+                 f"station, landing or macro logic changed for family type {typ}")
+    prior_parts = captured["parts"]
+    member_parts = set(members.values())
+    edges = {p for p, row in prior_parts.items() if p in member_parts or row.get("parent") in member_parts}
+    reset = physical.reset
+    original = reference["reset"]
+    roles = reset["boundary_roles"]
+    previous_roles = original.get("boundary_roles", {})
+    _require(set(roles["outputs"]) == set(members) and set(roles["parents"]) == member_parts,
+             "named reset boundary does not exactly match the family")
+    _require(set(previous_roles.get("outputs", {})) <= members.keys()
+             and set(previous_roles.get("parents", {})) <= member_parts,
+             "family removes existing boundary roles outside its scope")
+    changes = {"in_sites": set(members), "keep_outs": set(members),
+               "parent_pins": edges, "die_relays": edges}
+    _require(_changed_keys(original, reset) <= changes.keys() | {"boundary_roles"},
+             "unrelated global reset inputs changed")
+    for key, allowed in changes.items():
+        _require(_changed_keys(original.get(key, {}), reset.get(key, {})) <= allowed,
+                 f"unrelated {key} changed")
+
+    fields = ("source", "type", "entry_stages", "depth_K", "release")
+    for p in member_parts:
+        role = roles["parents"][p]
+        _require(all(prior_parts[p][field] == role[field] for field in fields)
+                 and reset["in_sites"][role["type"]] == role["input_um"],
+                 f"native parent source, entry or release changed at {p}")
+    typed_outputs = {}
+    for typ in members:
+        rows = roles["outputs"][typ]
+        previous = captured["types"][typ]["outs"]
+        expected_names = [port for port, *_ in previous]
+        _require([row["port"] for row in rows] == expected_names
+                 and reset["keep_outs"][typ] == [row["site"] for row in rows],
+                 f"named reset outputs or order changed for {typ}")
+        typed_outputs[typ] = {row["port"]: row for row in rows}
+
+    maximum = 0.0
+    with RT.site_rule(physical):
+        for p in sorted(edges):
+            old_edge = prior_parts[p]
+            q, port = old_edge["source"].rsplit(".", 1)
+            parent_type = prior_parts[q]["type"]
+            site_parent, slot = reset["parent_pins"][p]
+            _require(q == site_parent, f"named parent changed at {p}")
+            parent_slots = RT.face_sites(physical, parent_type)
+            _require(type(slot) is int and 0 <= slot < len(parent_slots), f"invalid parent slot at {p}")
+            out = parent_slots[slot]["xy"]
+            if parent_type in members:
+                named = typed_outputs[parent_type].get(port, {})
+                _require(named.get("site") == slot and tuple(named.get("xy_um", ())) == tuple(out),
+                         f"named parent output changed at {p}")
+            else:
+                out_before = {name: xy for name, *xy in captured["types"][parent_type]["outs"]}
+                _require(port in out_before and tuple(out_before[port]) == tuple(out),
+                         f"captured external parent output changed at {p}")
+            if p in member_parts:
+                role = roles["parents"][p]
+                _require(tuple(role["output_um"]) == tuple(out), f"declared parent output differs at {p}")
+                entry = role["input_um"]
+            else:
+                entry = captured["types"][old_edge["type"]]["in_um"]
+            bridge = reset.get("die_relays", {}).get(p)
+            old_bridge = original.get("die_relays", {}).get(p)
+            sites = bridge["sites_um"] if bridge else []
+            _require(len(sites) == old_edge.get("die_relays", 0)
+                     and (not bridge or (bridge["parent"], bridge["site"]) == (q, slot)),
+                     f"registered bridge identity or depth changed at {p}")
+            _require(_changed_keys(old_bridge or {}, bridge or {}) <= {"site", "sites_um"},
+                     f"registered bridge policy changed at {p}")
+            route = [physical.to_die(q, out), *sites, physical.to_die(p, entry)]
+            hop = max(sum(abs(a - b) for a, b in zip(u, v)) for u, v in zip(route, route[1:]))
+            _require(hop <= RT.hop_um(physical) + 1e-6, f"named reset bridge exceeds reach at {p}")
+            maximum = max(maximum, hop)
+    return {"types": sorted(members), "reset_edges": len(edges), "max_reset_hop_um": round(maximum, 6)}
+
+
 def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
     """Validate the named source artifact. This does not qualify a bind or a physical run."""
     import bind_component
     import bound_reset_contract as BRC
     import gen_phys
     import kit_topology as KT
+    import native_istations as NI
     import reset_tree as RT
     import schema
 
     proof = json.loads(Path(receipt).read_bytes())
-    _require(proof.get("schema") == SCHEMA and proof.get("type") == tn, "wrong receipt type")
+    family = proof.get("schema") == FAMILY_SCHEMA
+    _require((family or proof.get("schema") == SCHEMA) and proof.get("type") == tn, "wrong receipt type")
     _require(native_plan and manifest, "an explicit native plan and asbuilt manifest are required")
     plan, native_plan, rtl_dir = map(Path, (plan, native_plan, rtl_dir))
     _require((_sha(plan), _sha(native_plan)) ==
@@ -81,7 +207,8 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
     current_outline, old_outline = typ["outline_um"], old["outline_um"]
     _require(current_outline != old_outline and all(0 < a <= b for a, b in zip(current_outline, old_outline)),
              "selected outline is not a crop")
-    _require(_type_logic(typ) == _type_logic(old), "selected type changes logical station, landing or macro inputs")
+    logic = _family_type_logic if family else _type_logic
+    _require(logic(typ) == logic(old), "selected type changes logical station, landing or macro inputs")
     man = json.loads((rtl_dir / "kit_rtl.json").read_bytes())
     instance = proof["instance"]
     _require(man["bound_type"] == man["plan_type"] == tn and man["instances"] == [instance],
@@ -103,6 +230,10 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
              and current["ownership"][tn] == original["ownership"][tn], "transport or station ownership changed")
     depths = {row["conn"]: row["stages"] for row in current["ownership"][tn] if row["phase"] == "NATIVE"}
     _require(depths == proof["native_out_depths"], "producer native output depth changed")
+    if family:
+        native_buses = {conn.removeprefix("bus:") for conn in depths}
+        _require(NI.source_entries(typ, native_buses) == NI.source_entries(old, native_buses),
+                 "family changes the captured native output station geometry")
 
     files = [Path(path) for path in man["files"]]
     readset = {path.name: _sha(path) for path in files}
@@ -137,6 +268,11 @@ def verify(receipt, plan, native_plan, tn, rtl_dir, manifest):
              "actual wrapper clock census differs from the reviewed plan")
     verified = gen_phys.install_bound_native_reset(physical, tn, files, source_contract=capture)
     _require(verified["tree"] == original_reset["tree"], "native graph changed")
+    if family:
+        captured = json.loads((out / "bind_reset.json").read_bytes())
+        schedule = _family_reset_scope(proof, previous, physical, producer, captured)
+        return {"receipt_sha256": receipt_sha, "bound_tree_sha256": capture["tree_sha256"],
+                "native_out_depths": depths, "glue_ports": sorted(glue), "family": schedule}
 
     # A restored physical reset output can have the same release relation as the
     # producer. Check the mapped parent/source names and ages using stock wavefront.
