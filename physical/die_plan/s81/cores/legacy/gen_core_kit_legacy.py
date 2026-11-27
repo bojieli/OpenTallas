@@ -444,7 +444,7 @@ LECA_START = '# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place
 LECA_FINISH = '[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1 "$NAME" "$GOAL")\n'
 
 
-def run_kit(modern):
+def run_kit(modern, lint_checkpoint=False):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
     t = RUN_KIT
@@ -462,6 +462,23 @@ def run_kit(modern):
         t = t.replace('  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-finish && \\$M do-generate_abstract; rc=\\$?; fi; \\\n', '  if [ \\$rc = 0 ] && [ $GOAL = route ]; then \\$M do-finish; rc=\\$?; fi; \\\n  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-generate_abstract; rc=\\$?; fi; \\\n', 1)
         t = t.replace("; rc=0; ", "; rc=0; " + "if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; ", 1)
         t = t.replace("  chown -R ", "  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \\$rc; fi; chown -R ", 1)
+    if modern and lint_checkpoint:
+        lint = "python3 -I /work/rtl_lint.py /work"
+        checkpoint_lint = (
+            r"LCP=; if [ '${OT_RTL_LINT_CHECKPOINT:-0}' = 1 ]; then "
+            r"LCP=\$(mktemp -d /work/.rtl-lint-checkpoint.XXXXXX) || LCP=; fi; "
+            r"if [ -n \"\$LCP\" ]; then "
+            r"""trap 'rm -rf -- \"\$LCP\"' EXIT; """
+            r"python3 -I /work/synth_lint_checkpoint.py lint /work \"\$LCP\"; "
+            "else " + lint + "; fi"
+        )
+        # Keep the stock lint log and FAIL_PREFLOOR handling outside this branch.
+        assert lint in t
+        t = t.replace(lint + " > /work/rtl_lint.log", "{ " + checkpoint_lint + "; } > /work/rtl_lint.log", 1)
+        t = t.replace(r"then \$M synth; rc=\$?; fi;",
+                      r"then if [ -n \"\$LCP\" ]; then "
+                      r"python3 -I /work/synth_lint_checkpoint.py synth /work \"\$LCP\" \$M synth; "
+                      r"else \$M synth; fi; rc=\$?; fi;", 1)
     if not modern:   # the old first step had no rc guard
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
         t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",
@@ -2270,7 +2287,10 @@ def main():
     # (custom body) keeps the old chain.
     (kd / "post_grt_drv.tcl").write_text(POST_GRT + "".join(rec.get("post_grt_extra", [])))
     grt_post_drv = ["/work/post_grt_drv.tcl"] if (a.post_grt_drv or rec.get("post_grt_extra")) else []
-    (kd / "run_kit.sh").write_text(run_kit(modern))
+    lint_checkpoint = modern and mod == "ot_s81sl_xs4"
+    (kd / "run_kit.sh").write_text(run_kit(modern, lint_checkpoint=lint_checkpoint))
+    if lint_checkpoint:
+        shutil.copyfile(TOOL / "synth_lint_checkpoint.py", kd / "synth_lint_checkpoint.py")
     (kd / "run_kit.sh").chmod(0o755)
     flow_cfg = []
     if modern:
