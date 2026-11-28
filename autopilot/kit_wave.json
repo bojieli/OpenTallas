@@ -41158,7 +41158,8 @@
      "OT_PG_TRACK_TRUTH": "1",
      "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
      "OT_PG_CELL_KEEPOUT": "0",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_CLAND_STRIP_DENS": "1.5"
     },
     "hd_ctl_e": {
      "OT_IO_HOLD": "sender_min",
@@ -41243,7 +41244,8 @@
      "OT_PG_TRACK_TRUTH": "1",
      "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_PIN_CHECK": "warn",
-     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_CLAND_STRIP_DENS": "1.5"
     },
     "hd_spn_eshim_rx": {
      "OT_IO_HOLD": "sender_min",
@@ -41332,7 +41334,8 @@
      "OT_PG_TRACK_TRUTH": "1",
      "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
      "OT_PG_CELL_KEEPOUT": "0",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_CLAND_STRIP_DENS": "1.5"
     },
     "hd_host_w": {
      "OT_GEN_M8_GRANT": "1",
@@ -43539,7 +43542,8 @@
     "epyc2"
    ],
    "launch_plan_review_required": true,
-   "w10_probe_items": []
+   "w10_probe_items": [],
+   "item_env_note_w13q": "HEAD-FORM-R3 2026-11-27 W13q env rows (staged before the 21:00 cut so the first W13q kits carry them; none of the three types is in the W12f only_items, so no W12f launch changes): OT_CLAND_STRIP_DENS=1.5 for hd_spn_end (C-SPN-END-STRUCT, probe 3_place 8ada4aa816a9 p90 28.27 GRT0; revert if the W13 hd_spn_end place shows pin_reg_p90 > 30 or GRT overflow), hd_host_e (PINREG-W13, probe p90 27.52 GRT0; revert with the coll_i1 row if the r2r_count 68->104 judgement is worse or CTS pin access under strips is not clean), hd_ctl (PINREG-W13 with budgets.cland_pinslot_dense_types, probe p90 29.78; revert if CTS pin access is not clean or p90 > 30). If W13q is not applied at 21:00, these three keys are removed again (prior value: unset, die_gen_env 1.0)."
   },
   "qwen_compute": {
    "private_retired_specs_qcglue_1125": [
