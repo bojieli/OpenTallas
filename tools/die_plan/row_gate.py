@@ -64,6 +64,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import row_normalize as RN  # noqa: E402
 import row_gate_cow as COW  # noqa: E402
+import row_keyclash as KC  # noqa: E402
 
 SCHEMA = "row-ready.v1"
 MISSING = object()
@@ -214,9 +215,10 @@ def apply_row(s, plan_in, plan_out, report, cwd, env, log):
     return dict(rc=3 if conf else 0, applied=n, conflicts=conf[:50], n_conflicts=len(conf))
 
 
-def apply_rows(specs, plan_in, plan_out, work, cwd, env, drop_failed=False):
+def apply_rows(specs, plan_in, plan_out, work, cwd, env, drop_failed=False, writes_out=None):
     """apply every row in order -> (rc, [per-row record]); rc != 0 at the first row that fails or conflicts, or, with drop_failed
-    (rolling compose), that row is recorded dropped=True, the running plan stays as before it, and rc != 0 only when no row applied"""
+    (rolling compose), that row is recorded dropped=True, the running plan stays as before it, and rc != 0 only when no row applied.
+    writes_out (a list) gets one {plan path tuple: add|del|set} per spec, {} for a dropped one (P-ROW-SILENT-OVERWRITE, row_keyclash)"""
     cur, recs = plan_in, []
     for i, s in enumerate(specs):
         nxt = str(Path(work) / f"apply_{i}.json")
@@ -226,7 +228,11 @@ def apply_rows(specs, plan_in, plan_out, work, cwd, env, drop_failed=False):
             if not drop_failed:
                 return r["rc"], recs
             recs[-1]["dropped"] = True
+            if writes_out is not None:
+                writes_out.append({})
             continue
+        if writes_out is not None:
+            writes_out.append(KC.writes(json.loads(Path(cur).read_text()), json.loads(Path(nxt).read_text())))
         cur = nxt
     if cur == plan_in:
         return (recs[-1]["rc"] if recs else 2), recs
@@ -462,12 +468,33 @@ def gate(a):
     t0 = time.time()
     pdir = (tree / a.base).parent
     plan = pdir / (a.plan_name or f"plan_row_{re.sub(r'[^A-Za-z0-9_.-]', '_', lane)}.json")
+    wr = []
     rc, recs = apply_rows(specs, str(tree / a.base), str(plan), str(work), str(L), dict(base_env, OT_DIE_PLAN_TOOLS=str(L / "tools/die_plan")),
-                          drop_failed=a.drop_failed_rows)
+                          drop_failed=a.drop_failed_rows, writes_out=wr)
     R["rows"] = recs
+    R["row_id"], R["overrides"] = a.row_id or lane, sorted(set(a.overrides))
     sec["apply"] = round(time.time() - t0, 1)
     if rc:
         done("NOT", f"row apply rc {rc} ({recs[-1].get('kind')} {os.path.basename(recs[-1]['path'])}: {recs[-1].get('conflicts')[:3]})")
+        return finish()
+
+    # P-ROW-SILENT-OVERWRITE: a plan key written by two rows fails unless the later row names the earlier (`overrides`)
+    try:
+        meta = json.loads(Path(a.row_meta).read_text()) if a.row_meta else []
+        prior = json.loads(Path(a.prior_writes).read_text()) if a.prior_writes and Path(a.prior_writes).is_file() else {}
+    except (OSError, ValueError) as e:
+        done("NOT", f"KEYCLASH row meta unreadable: {e}")
+        return finish()
+    krows = []
+    for i, (s, w) in enumerate(zip(specs, wr)):
+        m = meta[i] if i < len(meta) else dict(group=i, ids=[a.row_id or lane, os.path.basename(s["path"])], overrides=sorted(set(a.overrides)))
+        krows.append(dict(m, writes=w))
+    clashes = KC.check(krows, prior)
+    (out / "ROW-WRITES.json").write_text(json.dumps(dict(
+        rows=[dict(ids=r.get("ids"), writes=[KC.SEP.join(p) for p in r["writes"]]) for r in krows], clashes=clashes), indent=1) + "\n")
+    R["keyclash"] = clashes
+    if clashes:
+        done("NOT", KC.describe(clashes))
         return finish()
 
     # 3 NORMALIZE (plan phase)
@@ -760,6 +787,11 @@ def main(argv=None):
     g.add_argument("--types", default="auto")
     g.add_argument("--rt")
     g.add_argument("--lane")
+    g.add_argument("--row-id", help="this row's id, the name a later row's --overrides uses (default: the lane)")
+    g.add_argument("--overrides", action="append", default=[], help="id of an EARLIER row whose plan keys this row deliberately overwrites or pops "
+                   "(P-ROW-SILENT-OVERWRITE: a key written by two rows fails KEYCLASH unless the later row names the earlier)")
+    g.add_argument("--row-meta", help="row_compose: JSON list, one {group, ids, overrides} per --row")
+    g.add_argument("--prior-writes", help="row_compose: JSON {plan path: [[ids], ...]} of keys earlier rounds' rows already wrote")
     g.add_argument("--ledger", help="directory ROW-READY json files are copied into (the die's ALLFIX ledger dir; row_compose reads it)")
     g.add_argument("--env", action="append", default=[], help="K=V over the die bind env")
     g.add_argument("--mem", type=int, default=96, help="ot-run --mem for the whole gate (GB)")

@@ -63,6 +63,12 @@ def read_ledger(d):
     return uniq
 
 
+def row_ids(r, spec=None):
+    """the names a later row's `overrides` can use for this ledger row: its row_id, lane, key (full and 8 chars), spec file name"""
+    return [x for x in (r.get("row_id"), r.get("lane"), r.get("_key"), (r.get("_key") or "")[:8],
+                        os.path.basename(spec["path"]) if spec else None) if x]
+
+
 def spec_of(rec):
     if rec["kind"] == "script":
         return f"script:{rec['path']}::{rec.get('args') or '{in} {out} {report}'}"
@@ -111,6 +117,12 @@ def gate_cmd(a, st, batch, out, plan_name):
         cmd += ["--rt", a.rt]
     if getattr(a, "tap_manifest", None):
         cmd += ["--tap-manifest", str(Path(a.tap_manifest).resolve())]
+    meta = [dict(group=gi, ids=row_ids(r, x), overrides=list(r.get("overrides") or [])) for gi, r in enumerate(batch) for x in r["rows"]]
+    mp = Path(str(out) + ".rowmeta.json")
+    mp.parent.mkdir(parents=True, exist_ok=True)
+    mp.write_text(json.dumps(meta) + "\n")
+    wp = Path(a.pub) / "writers.json"
+    cmd += ["--row-meta", str(mp), "--prior-writes", str(wp)]
     for e in a.env:
         cmd += ["--env", e]
     for r in batch:
@@ -184,6 +196,15 @@ def run_round(a, st, run=None):
             save_state(a.pub, st)
             print(f"ROLL r{n:03d} NOT PUBLISHED: {len(drops['unnamed'])} drop(s) no row names (intended_drops): {drops['unnamed'][:5]}", flush=True)
             return "not-ready"
+        try:                                             # P-ROW-SILENT-OVERWRITE: later rounds check against the keys this round's rows wrote
+            wf = Path(a.pub) / "writers.json"
+            wd = json.loads(wf.read_text()) if wf.is_file() else {}
+            for rw in json.loads((out / "ROW-WRITES.json").read_text()).get("rows") or []:
+                for p in rw.get("writes") or []:
+                    wd.setdefault(p, []).append(rw.get("ids") or [])
+            wf.write_text(json.dumps(wd) + "\n")
+        except (OSError, ValueError):
+            pass
         st["current"] = dict(tree=str(tree), plan=rel, sha256=rr["plan"]["sha256"], round=n, published=RG.utc())
         st["included"] += [r["_key"] for r in applied]
         st["batch_limit"] = None
