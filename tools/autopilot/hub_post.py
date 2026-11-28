@@ -39,7 +39,7 @@ def due(book, key, now, every=SIX_H):
 
 def int_r3_lane(die):
     d = str(die or "").lower()
-    for sub, lane in (("kv", "KV-INT-R3"), ("s81", "S81-INT-R3"), ("head", "HEAD-INT-R3"), ("qc", "QC-INT-R3"), ("compute", "QC-INT-R3")):
+    for sub, lane in (("head", "HEAD-INT-R3"), ("kv", "KV-INT-R3"), ("s81", "S81-INT-R3"), ("qc", "QC-INT-R3"), ("compute", "QC-INT-R3")):   # head first: s81_head is the HEAD die
         if sub in d:
             return lane
     return (d.upper().replace("_", "-") or "COORD") + "-INT-R3"

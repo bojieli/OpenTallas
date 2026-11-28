@@ -18,3 +18,16 @@ def test_post_throttle_receipt_and_reviewer(tmp_path):
     assert KW.wait_state_post("qwen_kvsys", "x", t, now=100 + 6 * 3600 + 1, post_fn=f, book_path=bp)      # 6 h later
     assert not KW.wait_state_post("qwen_kvsys", "x", "FAIL: no", now=1, post_fn=f, book_path=bp)
     assert KW.__dict__["HP"] if False else True
+
+
+def test_s81_head_routes_to_head_int_r3_not_s81():
+    import hub_post as HP
+    assert HP.int_r3_lane("s81_head") == "HEAD-INT-R3"
+    assert HP.int_r3_lane("s81") == "S81-INT-R3"
+    assert HP.int_r3_lane("qwen_kvsys") == "KV-INT-R3"
+    assert HP.int_r3_lane("qwen_compute") == "QC-INT-R3"
+    posts = []
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        KW.wait_state_post({"die": "s81_head", "item": "hd_x"}, MSG, post_fn=lambda l, t: posts.append(t), book_path=Path(d) / "b.json", now=1)
+    assert "-> HEAD-INT-R3;" in posts[0]
