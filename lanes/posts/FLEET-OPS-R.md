@@ -1682,3 +1682,4 @@
 - 2026-11-28 11:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
 - 2026-11-28 11:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
 - 2026-11-28 11:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-28 11:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-int-r2 on intel1 wrote 51 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
