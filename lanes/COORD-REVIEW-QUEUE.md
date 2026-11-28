@@ -20765,3 +20765,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - epyc7 pid 3288124 259 h lane fable-fix-s81-cong (last post 203 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
   - intel1 pid 578664 259 h lane fable-fix-s81-cong (last post 203 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
   - epyc7 pid 1409990 257 h lane fable-fix-s81-coltap (last post 203 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
+- 2026-11-27 17:20 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: HEAD hd_mesh PLACE-GP owner HEAD-PROBE-R3 (64 min since queued, epyc11). 
