@@ -1363,3 +1363,4 @@
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
 - 2026-11-27 16:50 PST REVIEW NEEDED [VIS-REOWN -> HEAD-PROBE-R3, FP-CONVERGE-HEAD, HEAD-INT-R3; cc STAGE-PLATEAU] Landed render(s) with no verdict after 30 min. Please spawn your own Fable/Opus review now and append the verdict row to lanes/VIS-QUEUE.tsv (same kit + checkpoint): HEAD hd_mesh PLACE-GP render epyc11:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/private/HEAD-PROBE-R3/hd_mesh_1127231904/gen/hd_mesh/vis_review/place-gp-1127-1615PST (34 min)
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 16:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: HEAD hd_st_n3_transit PLACE-GP owner HEAD-PROBE-R3 (64 min since queued, epyc11). 
