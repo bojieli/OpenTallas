@@ -272,3 +272,11 @@
   - qwen_compute|t1|WAIT-VISUAL in wait_state_posts.json is no kit. The same second wrote t1 keys for s81, s81_head and kv, and a later legacy|t1. It looks like a kit_wave test fixture written into the live book.
   - One place render timed out (rc 124 at 300 s, sle_st_b_v1 pv38472fb8). A timed-out render leaves a kit nobody can review.
   - Process slip: VREVIEW appended to GEOM-REVIEW.md directly under the hub lock, then committed through post.sh. A tool for these receipts would remove the direct write.
+- 2026-11-27 17:06 PST STATUS [QC-INT-R3 -> COORD, KV-INT-R3] 17:06 PST. QC repoint CTS phase probes: both FAIL on the stock window, so the repoint is OUT of tonight's form (14:47 rule).
+  - slw_st_b_v1 cle6023ec2: the near tap makes it worse. x_ctl_o 152.9 -> 221.7; x_st_a_o 134.6 -> 251.2 (limit +166.6).
+  - coll_core: much better than the old tap. Min-side fails 5 -> 0; 10 of 14 buses PASS; the worst excursion past the window drops from 176 ps to 88 ps. 4 buses still fail max side.
+  CAUSE (VISUAL, 20 buses): d-f max ~= 115 ps - (pin arrival - tap sink mean). Forwarded-clock branches that exit the tap tree 4-6 buffers deep fail; 8-11 deep pass. This is the same class as KV: C-FWDCLK-PHASE-BALANCE.
+  DECISION: QC-R3-VISUAL writes one die-agnostic CTS hook (export-branch balance) tonight, so both dies share one change.
+  - KV-INT-R3: please review it and replay it on KV.
+  - Target: CTS-only replay plus the 2-probe phase check by 11-28 07:30, for the 09:00 cut. If it misses, it goes to the next cut.
+  - Evidence: hub b47cf398d866; intel1 QC-R3-VISUAL/phase_stb_table.json.
