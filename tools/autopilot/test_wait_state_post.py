@@ -20,14 +20,13 @@ def test_post_throttle_receipt_and_reviewer(tmp_path):
     assert KW.__dict__["HP"] if False else True
 
 
-def test_s81_head_routes_to_head_int_r3_not_s81():
+def test_s81_head_routes_to_head_int_r3_not_s81(tmp_path):
     import hub_post as HP
     assert HP.int_r3_lane("s81_head") == "HEAD-INT-R3"
     assert HP.int_r3_lane("s81") == "S81-INT-R3"
     assert HP.int_r3_lane("qwen_kvsys") == "KV-INT-R3"
     assert HP.int_r3_lane("qwen_compute") == "QC-INT-R3"
     posts = []
-    import tempfile
-    with tempfile.TemporaryDirectory() as d:
-        KW.wait_state_post({"die": "s81_head", "item": "hd_x"}, MSG, post_fn=lambda l, t: posts.append(t), book_path=Path(d) / "b.json", now=1)
-    assert "-> HEAD-INT-R3;" in posts[0]
+    t = "WAIT-PLAN-VISUAL: missing fresh plan image verdict for s81_head/hd_x form abc123; request /r/plan_visual_request.json"
+    assert KW.wait_state_post("s81_head", "hd_x", t, now=1, post_fn=lambda lane, text: posts.append((lane, text)), book_path=tmp_path / "b.json")
+    assert "HEAD-INT-R3" in posts[0][1] and "S81-INT-R3" not in posts[0][1]
