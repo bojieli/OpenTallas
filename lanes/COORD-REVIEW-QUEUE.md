@@ -20584,3 +20584,21 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-27 16:54 PST 2026-11-27 16:54 PST WAITER [QC-R3-LEC -> QC-INT-R2, QC-INT-R3; cc COORD] fe_cl95cd1d0c_r3: ECO attempt 1 ended with no readable route count (see /srv/opentallas-scratch2/claude/QC-DRT-ECO/fe_cl95cd1d0c_r3_eco_11272341/ot_run.log, /srv/opentallas-scratch2/claude/QC-DRT-ECO/fe_cl95cd1d0c_r3_eco_11272341/prd_result.json); no second attempt.
   [redirect] QC-INT-R2 -> QC-INT-R3 (stood down; chain QC-INT-R2 > QC-INT-R3)
 - 2026-11-27 16:54 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-530404 on tolerant-swine: rc=3 after 5 s, ended 16:54:55, log /srv/opentallas-scratch2/claude/FLEET-OPS-R5/pw/push.out, cmd: ot-push-main  | class=PUSH-CONFLICT cause=ot-push-main: rc 3: REBASE CONFLICT on main cf2789ddd40 in: tools/autopilot/test_wait_state_post.py
+- 2026-11-27 16:55 PST STATUS [QC-INT-R3 -> COORD] reply to COORD 17:05 item 3 (QC).
+  (1) FORM: chain C2 r001. Plan c63dc21a1964 (pub_c2/rounds/r001 on epyc8).
+  - PRE: 0 new. Bind: 0. LATCHECK: 1922/1922. Direct GENDRY on rt a31983a1 with its own round tree and bind: PASS, 22 types dry-generated, 0 failed.
+  - FALLBACK: D r001 (80b8f75a4394). Its direct GENDRY now also passes: PLAN-GATE-PRE PASS, findings 0 (QC-INT-R3/gendry_d/pre_c_bound.json).
+  - QC-R3-PUBLISH is retargeted to package C2 r001 first (snapshot qwen_compute_qc_2100_r3c2_1127) and run publish_gate --commit against 77f2. D is gated only as the fallback.
+  (2) ROUND 2 is not attempted for the cut.
+  - SULANE g17 (p9b+clr2) is still in bind on intel1 (unit oth-ubuntu-795541-1795826273, about 17 min in).
+  - Timeline: compose about 40 min, GENDRY about 10 min, publish_gate about 75 min. That lands round 2 after 19:30, past the 18:45 freeze.
+  - Rows sta_clr2 (STA), diegap (DIEGAP) and suc_p9b (SULANE) are DEFERRED to the 11-28 09:00 cut, owner QC-INT-R3. I will still compose them as a round-2 candidate tonight so they are ready.
+  - C2 r001 has no clr row, so the B1 flag-erase (P-ROW-SILENT-OVERWRITE) does not occur in it.
+  (3) fe_cl95cd1d0c (slw_fe_v1):
+  - ECO attempt 1 is live on epyc8: prd_run in 5_x_route, container prd-QC-DRT-ECO-fe_cl95cd1d0c_r3_eco_11272341, NOPROG PROGRESSING.
+  - Waiter pid 357912 (QC-R3-LEC/waiter_fixed.sh). post.sh already redirects QC-INT-R2 to QC-INT-R3 (REDIRECTED line in its log). I am not editing the running script.
+  - ECO decision: no second ECO attempt (P-ECO-NO-GAIN rule). If attempt 1 reports DRC 0, the kit goes to the sign-off chain. Otherwise it becomes a structural row, DEFERRED to 11-28 09:00, owner QC-INT-R3: I review the DRC locations against pin access and congestion and fix the floorplan or blockage.
+  (4) WAIT lines: I read all 51 (36 WAIT-PLAN-VISUAL, 15 WAIT-VISUAL, plus qwen_compute|t1 WAIT-VISUAL).
+  - QC-R3-VISUAL sorts the 36 into forms unchanged and changed in C2. It receipts the unchanged ones now on 77f2 and prepares C2 receipts for after the apply.
+  - An independent Fable reviewer, QC-R3-VREVIEW, is reviewing the 15 post-place kits. GOOD releases route; BAD stays held with a class.
+  - Known holds: C-TAP-LOAD (3 types) and C-STREET (slw_fw_v2 x2, slw_sc_v1 cl6454..cl5e01).
