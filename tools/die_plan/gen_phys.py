@@ -4543,8 +4543,11 @@ HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sd
 
 
 def _density(t):
-    """clock.tap_mode "density" (OWNER decision 5, 10-24): taps placed by sink density (taps.density_taps), no grid."""
-    return t.get("clock", {}).get("tap_mode") == "density"
+    """clock.tap_mode "density" (OWNER decision 5, 10-24): taps placed by sink density (taps.density_taps), no grid.
+    clock.tap_recipe "density" (C-TAP-DENSITY-GROUPED-NOLEVER): a density type frozen to explicit taps keeps the density KIT recipe
+    (OT_TAP_REASSIGN_UM, post-GRT tap balance, density budget rows, density cap default); the taps themselves stay explicit."""
+    ck = t.get("clock", {})
+    return ck.get("tap_mode") == "density" or ck.get("tap_recipe") == "density"
 
 
 def tap_chain_affinity_exports(t):

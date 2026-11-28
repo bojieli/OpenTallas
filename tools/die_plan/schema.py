@@ -703,6 +703,8 @@ SCHEMA = {
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit", "grid+explicit"]}, "tap_radius_um": _pos,
                         # opt-in per type: density taps as frozen plans solved them (pre-0ddc1ccd8c8 anchor lattice, see taps.density_taps)
                         "tap_model": {"enum": ["consumed", "frozen_anchor"]},
+                        # C-TAP-DENSITY-GROUPED-NOLEVER: a density type frozen to explicit taps keeps the density kit recipe (gen_phys._density)
+                        "tap_recipe": {"enum": ["density"]},
                         # "grid+explicit" (DIE-S81-39 10-31, COORD 00:2x): the R4 grid unchanged + these ADDED light taps
                         # (names clk_t<n_grid+i> in order; taps.grid_explicit_taps validates each one)
                         "added_taps": {"type": "array", "items": {

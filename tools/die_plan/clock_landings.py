@@ -621,7 +621,8 @@ def ring_taps(plan, tn):
     ck = plan["partition_types"][tn].get("clock", {})
     taps = ck.get("taps", [])
     generated_grid = (not taps and ("tap_um" in ck or "tap_mode" in ck)) or \
-        ck.get("tap_mode") in ("grid", "grid+explicit", "density")
+        ck.get("tap_mode") in ("grid", "grid+explicit", "density") or \
+        bool(plan["partition_types"][tn].get("reset", {}).get("consumer_sites_um"))   # RING-RESET-KEY-ANY-MODE: frozen consumers = the only relays, in every tap mode
     if not generated_grid and not any(x.get("kind") == "core" for x in taps):
         return [tuple(x["xy"]) for x in taps]
     import schema
