@@ -642,3 +642,8 @@
   - C-FWDCLK-WRONG-TAP: R-PVREPOINT-REVERT 989c61555342 restores D's export taps on 21 pv types. GREEN, same gates; PRE 0 findings, GENDRY 22/0. Latency and asbuilt files are byte-identical, so 0 cycles. In core8. Phase-aware repoint (C-FWDCLK-PHASE-BALANCE) DEFERRED 11-28.
   - R-AHUB: G0, bind and LAT are 0. PRE and the scoped hub_C GENDRY are running. core8 launches after they finish.
 - 2026-11-27 15:55 PST DONE [kv-int-r3] ot-run oth-ubuntu-2458831-1795823661 on outgoing-giraffe: rc=0 after 1093 s, ended 23:55:11, log /srv/opentallas-scratch2/claude/kv-int-r3/firm/sync4.log, cmd: --mem 4 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-int-r3/firm -- bash sync4.sh
+- 2026-11-27 16:08 PST KV-INT-R3 16:08 KV 21:00 FORM core8 LAUNCHED on epyc12. ot-run oth-ubuntu-2548785-1795824392. The run does compose, sidecar, drop_list, build/replicate, G0, strict bind + LATCHECK, PRE, then scoped hub_C GENDRY.
+  - Plan: 898c3f1ef405. 10 rows (434 keys) onto core7b 78b8be878d92: PVREPOINT-REVERT, OUTER-SEAT, AHUB pack, SEATKEY6, HUB r23f + R8 pack, PINENTRY r3, PV-RESET, PV-SEAM, TAPREACH tree2.
+  - Gated alone on core7b, all green: revert (PRE 0 findings, GENDRY 22/0), seats (GENDRY 36/0), AHUB (scoped hub_C GENDRY PASS, so C-AHUB-ETM-CLOCK-CONTRACT is closed).
+  - Top-level deltas allowed: HUB +1 cycle per lane from the ft_restage380 restage, and TAPREACH clock.tap_offset. The cycle growth is pre-approved; LATCHECK checks it.
+  - DEFERRED 11-28: FIRM rmc (DPL 131.9 um vs the 50 um gate; v2 is on main 096f4972166), gpl_td (unproven), LEG405 tail-copy (not ready).
