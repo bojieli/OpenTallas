@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-27 20:15 PST
+# COORD snapshot 2026-11-27 20:30 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -11,22 +11,22 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 ## READY/ASK with no later COORD post naming them (0, heuristic: check each)
 
 ## Lane handoff files (age) and last queue post
-- CLAUDE-RESUME-1127: handoff 672 min old; last post none in recent queue
-- EXPLORER-STORE-R1: handoff 1167 min old; last post 2026-11-26 22:07 STATE
-- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 985 min old; last post none in recent queue
-- LIMIT-OUTAGE: handoff 0 min old; last post none in recent queue
-- PCC-B1-LANE-SPEC: handoff 535 min old; last post none in recent queue
-- PREPARED-PUBLICATION-PLACE: handoff 1262 min old; last post none in recent queue
-- PUBLISH-GATE: handoff 1167 min old; last post 2026-11-26 23:27 READY
-- QC-ALLFIX-COLL: handoff 993 min old; last post none in recent queue
-- ROM-WEIGHTS-1119: handoff 1167 min old; last post 2026-11-26 23:36 STATE
+- CLAUDE-RESUME-1127: handoff 687 min old; last post none in recent queue
+- EXPLORER-STORE-R1: handoff 1182 min old; last post 2026-11-26 22:07 STATE
+- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 1000 min old; last post none in recent queue
+- PCC-B1-LANE-SPEC: handoff 550 min old; last post none in recent queue
+- PREPARED-PUBLICATION-PLACE: handoff 1277 min old; last post none in recent queue
+- PUBLISH-GATE: handoff 1182 min old; last post 2026-11-26 23:27 READY
+- QC-ALLFIX-COLL: handoff 1008 min old; last post none in recent queue
+- ROM-WEIGHTS-1119: handoff 1182 min old; last post 2026-11-26 23:36 STATE
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
-- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 10 live
+- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 11 live
+- UNCOUNTED-SIGNED agent ? last post 2026-11-27 20:25 NEEDS-ACTION
+- KIT-WAVE agent ? last post 2026-11-27 20:23 WAIT-STATE
+- NOPROG-FIX-1115 agent ? last post 2026-11-27 20:22 STATE
 - qwen_compute agent ? last post 2026-11-27 20:12 KIT-WAVE
-- KIT-WAVE agent ? last post 2026-11-27 20:09 WAIT-STATE
 - AUTO-CLEAN agent ? last post 2026-11-27 19:40 INFO
-- NOPROG-FIX-1115 agent ? last post 2026-11-27 19:22 STATE
 - CBC-RULES-1119 agent ? last post 2026-11-27 19:17 HOURLY
 - S81-INT-R3 agent ? last post 2026-11-27 19:11 DIED
 - QC-R3-LEG405 agent ? last post 2026-11-27 19:00 DIED
@@ -42,34 +42,29 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
     HOST-REPORT 2026-11-27 20:05 | tolera L9.79/112 units0 free826G | key-ca L2.57/112 units0 free272G | dear-c L3.27/128 units0 free357G | loved- L12.82/96 units1 free230G | outgoi L7.97/96 units2 free321G | renewe L1.50/96 units0 free1427G | civil- L5.46/96 units0 free1220G | viable L1.66/96 units0 free1617G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (187.9 h left); epy
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  336G  109G  76% /
-    20:15:02 up 34 days, 15:55, 147 users,  load average: 12.49, 10.77, 11.00
+    20:30:02 up 34 days, 16:10, 149 users,  load average: 13.87, 12.46, 11.61
 
 ## ot-run status
-    ot-run status: epyc2 admits 946 GB (avail 987, reserve 0, fresh 0, peak 0) load 3/128 run 0 threads 8/128 root 91% scratch 356 GB
-    intel1 admits 918 GB (avail 982, reserve 0, fresh 0, peak 0) load 1/112 run 0 threads 32/112 root 21% scratch 271 GB
-    localhost admits 827 GB (avail 955, reserve 0, fresh 0, peak 0) load 13/112 run 0 threads 14/112 root 76% scratch 825 GB
-    epyc7 admits 887 GB (avail 940, reserve 0, fresh 0, peak 0) load 11/96 run 1 threads 120/96 root 35% scratch 225 GB
-    epyc8 admits 914 GB (avail 968, reserve 0, fresh 0, peak 5.8) load 6/96 run 2 threads 190/96 root 51% scratch 315 GB
-    epyc9 admits 939 GB (avail 988, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 47/96 root 40% scratch 1426 GB
+    ot-run status: epyc2 admits 946 GB (avail 986, reserve 0, fresh 0, peak 0) load 2/128 run 0 threads 8/128 root 91% scratch 356 GB
+    intel1 admits 918 GB (avail 982, reserve 0, fresh 0, peak 0) load 3/112 run 0 threads 32/112 root 21% scratch 271 GB
+    localhost admits 826 GB (avail 955, reserve 0, fresh 0, peak 0) load 15/112 run 0 threads 14/112 root 76% scratch 825 GB
+    epyc7 admits 888 GB (avail 941, reserve 0, fresh 0, peak 0) load 5/96 run 1 threads 120/96 root 35% scratch 225 GB
+    epyc8 admits 913 GB (avail 966, reserve 0, fresh 0, peak 6.6) load 3/96 run 2 threads 190/96 root 51% scratch 310 GB
+    epyc9 admits 939 GB (avail 987, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 47/96 root 40% scratch 1426 GB
     epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 138/96 root 52% scratch 1219 GB
-    epyc11 admits 942 GB (avail 990, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 136/96 root 7% scratch 1616 GB
+    epyc11 admits 942 GB (avail 990, reserve 0, fresh 0, peak 0) load 0/96 run 0 threads 136/96 root 7% scratch 1616 GB
     epyc12 admits 939 GB (avail 987, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 0/96 root 37% scratch 830 GB
     next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-27 20:10:02 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: missing fresh plan image verdict for qwen_compute/sle_st_b_v2__clfde1249e form 186133c2ea622051338268cacc56c830d5c2b1454b05bd83292e3872ec5
-    2026-11-27 20:10:13 PST AUTOPILOT: KIT-WAVE RETRY-KEY-LAUNCH qwen_compute/coll_ftc: explicit retry key (fix named or INFRA) in the die config overrides SKIP-SAME-INPUT
-    2026-11-27 20:10:17 PST AUTOPILOT: KIT-WAVE RETRY-KEY-LAUNCH qwen_compute/slw_stm_v3: explicit retry key (fix named or INFRA) in the die config overrides SKIP-SAME-INPUT
-    2026-11-27 20:12:05 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
-    2026-11-27 20:12:58 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-27 20:13:19 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 127.3 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 127.
+    2026-11-27 20:24:13 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_hc1__cl68f9248e__cl144ee7b3 form a0511907c91b981c550ae300068e038b27a7a25b44dccd902d4d3ff
+    2026-11-27 20:24:53 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/slw_hc1__cl68f9248e__cle683a076: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for slw_hc1__cl68f9248e__cle683a076: not held [+4 identical l
+    2026-11-27 20:24:58 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_hc1__cl68f9248e__cle683a076 form 0e7dce7f66389b4b6c3e1085fa5a1b7851f5adc3bcd8b9ec121387b
+    2026-11-27 20:25:43 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
+    2026-11-27 20:26:27 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-27 20:26:47 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 127.5 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 127.
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-27 16:58 PST DIED [HEAD-INT-R3] ot-run otrun-open-snipe-3419775 on open-snipe: rc=78 after 4 s, ended 00:58:41, log none, cmd: --priority die --strict-host --no-spill --mem 8 --threads 1 --disk 1 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock | class=NOT-RUN cause=NOT-RUN SETUP: NOT-RUN SETUP missing input /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/tree/physi
-- 2026-11-27 16:59 PST DIED [COMPOSE-KEYCLASH-R1] ot-push-main otpush-civil-redfish-2130758 on civil-redfish: rc=3 after 4 s, ended 00:59:31, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 4 s, no log
-- 2026-11-27 17:00 PST DIED [COMPOSE-KEYCLASH-R1] ot-push-main otpush-civil-redfish-2145899 on civil-redfish: rc=3 after 5 s, ended 01:00:27, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 5 s, no log
-- 2026-11-27 17:00 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-PLAN-VISUAL s81_head/hd_lep0N: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 6a0b90de13abfb8ba3c0abe6d273fda234934bff5704b17f8eb5b431d1a4b88a (request /home/ubuntu/coord/autopilot/private_specs/HEAD-EAST-R4/s81_head_hd_lep0N_1127165959/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane HEAD-INT-R3 (fallback INT-R3); rea
-- 2026-11-27 17:00 PST RENDER [SMELL-WATCH -> HEAD-INT-R3, HEAD-PROBE-R3; cc HEAD-INT-R3] 1 checkpoint render(s) started: hd_st_n4 PLACE-GP on epyc11: epyc11:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/private/HEAD-PROBE-R3/hd_st_n4_1128003833/gen/hd_st_n4/vis_review/place-gp-1127-1700PST (floorplan.png, density.png, SMELL.txt with the GRT per-layer ov
 - 2026-11-27 17:02 PST RESULT [HEAD-PROBE-R3] C-TAP-REACH-3 CTS probes (CASEAM, plan 27eee0a2f48b, rt d9b7ec5dc7f8, epyc11) all 3 types done. OT_TAP_SPAN over-300 taps: hd_st_k5 15/36 (max 482) -> 0/60 (max 296); hd_st_turn 9/36 (485) -> 0/46 (275); hd_st_n4 8/31 (398) -> 0/39 (299). Setup_ws baseline->new: k5 +123.30 -> +95.25 (tap-insertion on the u_cland_origin input-port path, new tap clk_t59 319 ps), turn +123.8
 - 2026-11-27 17:02 PST RESULT [HEAD-CASEAM-R4] C-TAP-REACH-3 CTS qualification complete (HEAD-PROBE-R3 probes, plan 27eee0a2f48b, kit-local clock, place+CTS PASS on all three): OT_TAP_SPAN hd_st_k5 15/36 over (max 482) -> 0/60 (max 296); hd_st_turn 9/36 (485) -> 0/46 (275); hd_st_n4 8/31 (398) -> 0/39 (299). Tool model 295.8 / 274.6 / 299.5 vs CTS 296 / 275 / 299: within 0.5 um. Timing FF pre-repair: k5 setup_ws +123
 - 2026-11-27 17:03 PST REVIEW [QC-R3-VREVIEW -> QC-INT-R3; cc COORD, QC-R3-TAPLOAD, QC-R3-VISUAL] classes C-TAP-LOAD, C-STREET, C-BANK-PILE, C-LEG405, C-PIN-REG-REACH, C-RST-RELAY-REACH. Independent Fable post-place review of the 15 WAIT-VISUAL kits on qc_2100_combined_77f2_1126, attempt_1, exact 3_place (layout.png, density.png, auto_geom.png opened for every kit). 15 GEOM VERDICT lines with kit=, image, odb_sha256 
@@ -125,4 +120,9 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-27 19:40 PST INFO [AUTO-CLEAN -> COORD] 4-hourly cleanup report: intel1 freed 0 GB, top writers 4 h: kw45 113 GB, s81-allfix-int 76 GB, kv-int-r2 52 GB, kv-allfix 52 GB, kw43-wave-1109n 12 GB | epyc2 freed 1 GB, top writers 4 h: auto-resign 0 GB, codex-flow-time-shadow-1551 0 GB, C-LEG405-R3 0 GB, COUNT-AUDIT-1700-tmp 0 GB, FIX-QC-DPL-RERUN 0 GB | epyc7 freed 77 GB, top writers 4 h: kw45 113 GB, s81-allfix-
 - 2026-11-27 20:09 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/sle_st_b_v2__clfde1249e: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 186133c2ea622051338268cacc56c830d5c2b1454b05bd83292e3872ec53ac01 (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_sle_st_b_v2__clfde1249e_b1534ee06320c/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lan
 - 2026-11-27 20:12 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): sle_fe_v3 SIGNED OFF -> count eligible; parent qualification pending (signed off, archived epyc7:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/sle_fe_v3__eb1e73448b flow flow)
+- 2026-11-27 20:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-27 20:22 PST: 3 running jobs, PROGRESSING 3, PLATEAU 0, SLOW 0, NO-PROGRESS 0 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv
+- 2026-11-27 20:23 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/phy_serdes: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 2c61cc1573f2e13842c0a5fe9e058a6a4133b8b5bb0d517ee42371b8b613fbf1 (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_phy_serdes_b08bfab19e9d5/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC-INT-R3 (fallback INT-
+- 2026-11-27 20:23 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/phy_ucie_kv: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 2e26be1a6b65cfa731ee4db87a6e042a46ba2f5ebf49a9480a72cbe3cd73d1df (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_phy_ucie_kv_b737a8d56d14a/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC-INT-R3 (fallback IN
+- 2026-11-27 20:25 PST NEEDS-ACTION [UNCOUNTED-SIGNED -> COORD + s81_head owner] s81_head/dp_hd_ctl_e signed but not counted for 2.9 h: missing gate export (set aside: exported, rtx-pro has not verified it (spool age 2.3 h): /srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_ctl_e__6d2e187f0d/kit/signoff/s); table lanes/UNCOUNTED-SIGNED.md
+- 2026-11-27 20:25 PST NEEDS-ACTION [UNCOUNTED-SIGNED -> COORD + s81_head owner] s81_head/dp_hd_st_m signed but not counted for 2.7 h: missing gate export (set aside: exported, rtx-pro has not verified it (spool age 2.2 h): /srv/opentallas-scratch2/claude/autopilot/closed/s81_head/hd_st_m__6d2e187f0d/kit/signoff/si); table lanes/UNCOUNTED-SIGNED.md
 
