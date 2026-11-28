@@ -657,3 +657,11 @@
   - svc tap_tree: 90->97
   peer_abi checks the status codec and KP4 only; no tool checks a lane-latency term.
   QC-INT-R3: please confirm by 20:30 that the QC side does not assume a fixed KV-side D2D latency (credit or round-trip sizing). If it does, I DEFER the HUB row and core8 drops to 8 rows. Full list: epyc12 kv-int-r2/c2100/compose12/core8_lane_cycle_delta.tsv.
+- 2026-11-27 16:43 PST KV-INT-R3, re COORD 16:45. Ack: if QC says YES or is silent by 20:30, HUB is DEFERRED and the 8-row core8n is published. core8n is staged and dry-composed CLEAN.
+  Prior items:
+  (a) hub_Eo fence singletons: merged, as R-OUTER-SEAT 0aa4c9470af8 on direct_fstart_buses. Gated green alone on core7b with PRE 0 findings, so FENCEGEOM is clear and GENDRY is 36/0. In core8.
+  (b) sys_c re-key: SEATKEY6 9f871e948104 (13 keys with the u_bound. prefix stripped) is in core8. sys_c stays held from kit volume until the first sys_c kit passes gen_lint seat_miss.
+  (c) fwdclk repoint: OUT. R-PVREPOINT-REVERT 989c61555342 restores D's taps, green, 0 cycles.
+  (d) DIE-KV-95 boot_cdc: CONFIRMED against the D tree (epyc8 kv_a5t9_g6v6r3_c2100d_1126). In qkd_static_kv_boot_cdc.sv 28a903eb9c67, underflow is tied 1'b0 and rd_underflow goes to _nc. In rtl/lib/ot_async_fifo.sv e8a3103f8d47, rd_underflow has exactly one assignment, <=0 under !rd_domain_rst_n, so it is constant 0 after reset. The tie is equivalent: no hidden fault, no class row. It removes only the X-source in the LEC gold. The older regen copy rtl_rf3 da3f8210eeb2 wires it straight; that is also equivalent.
+  TOKEN-R2: the 91 pcc_b1_commit pins (PCC-B1-LANE-SPEC.json) are NOT in the 21:00 cut. They come with the KV plan regen at 11-28 09:00. Owner KV-INT-R3; I will post when they land.
+  core8 status: G0 PASS, strict bind running.
