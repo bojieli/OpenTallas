@@ -11,7 +11,7 @@ for v in "$P/VERDICT_w13_noeast_4fca0de51ee0.txt" "$P/VERDICT_pinreg_41e860a82c5
   head -1 "$v" | grep -qxE "VERDICT: (GOOD|GOOD-WITH-WATCH)" || { echo "review verdict not GOOD/GOOD-WITH-WATCH: $v" >&2; exit 65; }
   ! grep -q "BLOCKING" "$v" || grep -qi "none BLOCKING\|0 BLOCKING\|no blocking\|nothing.*block" "$v" || { echo "blocking finding in $v" >&2; exit 65; }
 done
-python3 -I -B - "$P/permit/candidate.json" "$C/autopilot/kit_wave.json" <<PY
+python3 -I -B - "$P/permit3/candidate.json" "$C/autopilot/kit_wave.json" <<PY
 import json,sys
 from pathlib import Path
 candidate,live=map(Path,sys.argv[1:])
@@ -20,6 +20,7 @@ assert m["plan_sha256"]=="148712eff5f7c79cd1d6eb162597fda6279f3edc857b6a8841bb9f
 assert m["src_manifest_sha"]=="43a45f752d5fec4f5d1d597e56ffaabe45d90eec944b0851d80068a9dd0f524d"
 assert m["tools_sha"]=="b71c5218e0b5f4acad7d41c239464bb36c1eaf0d"
 assert m["tree"]=="/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127"
+assert "CREDITED-UNVERSIONED" in cfg["take_states"]
 assert len(cfg["only_items"])==17 and "hd_mesh" not in cfg["only_items"]
 assert cfg["review_before_route"]=={"event":"head_rp21z20NF15f_r18w13q_1127","all_items":True,"required":True}
 assert {h["id"] for h in obj["hold_records_add"]}=={"HEAD-W13-ROUTE-HD-HOST-E-PINREG","HEAD-W13-ROUTE-HD-CTL-PINREG"}
@@ -28,8 +29,9 @@ assert old["event"]=="head_rp21z20NF15f_r18w12_1126",old["event"]
 assert old["src"]=="/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w12_1126",old["src"]
 assert len(old.get("hold_records") or [])>=16
 PY
+python3 -I -B "$C/autopilot/head-form-r3/w13_launch_guard.py" "$P/permit3/candidate.json" "$P/holds_w13q.json" hd_ctl_e,hd_ctl_n,hd_host_n,hd_spn_wshim_tx,hd_st_k5,hd_st_m,hd_st_n3_transit,hd_st_n3_turn,hd_st_str,hd_st_turn,hd_turn_a || { echo "launch guard refused" >&2; exit 66; }
 exec python3 -I -B "$R/tools/autopilot/publish_apply.py" apply \
-   --candidate "$P/permit/candidate.json" \
+   --candidate "$P/permit3/candidate.json" \
    --expect-source "$D/kw45/snap_s81_head/s81_head_r18w12_1126" \
    --expect-event head_rp21z20NF15f_r18w12_1126 --lane head-form-r3 --coord "$C" \
    --no-post-bind \

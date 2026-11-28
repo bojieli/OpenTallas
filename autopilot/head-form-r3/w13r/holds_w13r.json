@@ -1,0 +1,38 @@
+[
+ {
+  "id": "HEAD-W13-ROUTE-HD-HOST-E-PINREG",
+  "plan_sha": "167256c371af4654239044b5ead3be4301e88c189c5612caf03cd3a067130bd0",
+  "items": [
+   "hd_host_e"
+  ],
+  "route": true,
+  "cause": "C-PIN-REG-REACH (C-PINREG-LANDING-DEPTH) pin-register landing reach on dense strip faces",
+  "owner": "HEAD-INT-R3",
+  "reason": "PINREG-W13 coll_i1 band re-site + item_env OT_CLAND_STRIP_DENS=1.5. Route/CTS only after (a) the HEAD-PROBE-R3 CTS probe on the probed placement shows clean pin access under the strips and (b) a judgement on r2r_count 68->104 (revert the coll_i1 row and item_env if judged worse); first W13 3_place needs a visual review. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+  "release": []
+ },
+ {
+  "id": "HEAD-W13-ROUTE-HD-CTL-PINREG",
+  "plan_sha": "167256c371af4654239044b5ead3be4301e88c189c5612caf03cd3a067130bd0",
+  "items": [
+   "hd_ctl"
+  ],
+  "route": true,
+  "cause": "C-PIN-REG-REACH (C-PINREG-LANDING-DEPTH) pin-register landing reach on dense strip faces",
+  "owner": "HEAD-INT-R3",
+  "reason": "PINREG-W13 budgets.cland_pinslot_dense_types=[hd_ctl] + item_env OT_CLAND_STRIP_DENS=1.5. Route/CTS only after (a) the HEAD-PROBE-R3 CTS probe shows clean pin access under the strips and (c) pin_reg_p90 29.78 vs 30 (margin 0.22 um) re-checked at CTS; follow-up h_rx_i band re-home (207 pins over 30). owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+  "release": []
+ },
+ {
+  "id": "HEAD-W13-ROUTE-HD-ST-N4-TAPREACH",
+  "plan_sha": "167256c371af4654239044b5ead3be4301e88c189c5612caf03cd3a067130bd0",
+  "items": [
+   "hd_st_n4"
+  ],
+  "route": true,
+  "cause": "C-TAP-REACH (C-TAP-REACH-3 rows on hd_st_n4: added/moved clock taps for sink-box reach > 300 um)",
+  "owner": "HEAD-CASEAM-R4",
+  "reason": "C-TAP-REACH-3 enters W13r on hd_st_n4. Route/CTS release only when the HEAD-PROBE-R3 hd_st_n4 CTS probe (epyc11) shows 0 taps over 300 um, slew violations 0, hold not worse than W12f, and setup not below the academic gate (-42 ps). Evidence from HEAD-PROBE-R3. owner=HEAD-CASEAM-R4 eta=2026-11-28 09:00",
+  "release": []
+ }
+]
