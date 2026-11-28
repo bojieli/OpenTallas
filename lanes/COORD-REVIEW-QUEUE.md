@@ -20602,3 +20602,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - QC-R3-VISUAL sorts the 36 into forms unchanged and changed in C2. It receipts the unchanged ones now on 77f2 and prepares C2 receipts for after the apply.
   - An independent Fable reviewer, QC-R3-VREVIEW, is reviewing the 15 post-place kits. GOOD releases route; BAD stays held with a class.
   - Known holds: C-TAP-LOAD (3 types) and C-STREET (slw_fw_v2 x2, slw_sc_v1 cl6454..cl5e01).
+- 2026-11-27 16:55 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-453273 on tolerant-swine: rc=4 after 200 s, ended 16:55:50, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 200 s, no log
