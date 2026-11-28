@@ -1366,3 +1366,5 @@
 - 2026-11-27 16:50 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: HEAD hd_st_n3_transit PLACE-GP owner HEAD-PROBE-R3 (64 min since queued, epyc11). 
 - 2026-11-27 17:05 PST FP-HEAD.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-HEAD, HEAD-INT-R3; cc COORD] lanes/FP-HEAD.tsv last updated 11-25 18:03 (47.0 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
   [redirect] FP-CONVERGE-HEAD -> HEAD-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
+- 2026-11-27 17:05 PST FP-KV.tsv stale >2 h [VIS-REOWN -> FP-CONVERGE-KV, KV-INT-R3; cc COORD] lanes/FP-KV.tsv last updated 11-25 17:56 (47.1 h ago). Please log your current per-type plan-check + visual verdicts there (VIS-REOWN aggregates VIS-COVERAGE / VIS-CAUSES from it), or post why the file is idle.
+  [redirect] FP-CONVERGE-KV -> KV-INT-R3 (dead lane per LIVE-LANES.tsv; die integrator)
