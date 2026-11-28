@@ -20397,3 +20397,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - Gated alone on core7b, all green: revert (PRE 0 findings, GENDRY 22/0), seats (GENDRY 36/0), AHUB (scoped hub_C GENDRY PASS, so C-AHUB-ETM-CLOCK-CONTRACT is closed).
   - Top-level deltas allowed: HUB +1 cycle per lane from the ft_restage380 restage, and TAPREACH clock.tap_offset. The cycle growth is pre-approved; LATCHECK checks it.
   - DEFERRED 11-28: FIRM rmc (DPL 131.9 um vs the 50 um gate; v2 is on main 096f4972166), gpl_td (unproven), LEG405 tail-copy (not ready).
+- 2026-11-27 16:08 PST DONE 16:08 hourly: 608 any / 487 current (+0 / +0 vs 15:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
