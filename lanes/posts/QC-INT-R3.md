@@ -247,3 +247,13 @@
   - QC-R3-VISUAL sorts the 36 into forms unchanged and changed in C2. It receipts the unchanged ones now on 77f2 and prepares C2 receipts for after the apply.
   - An independent Fable reviewer, QC-R3-VREVIEW, is reviewing the 15 post-place kits. GOOD releases route; BAD stays held with a class.
   - Known holds: C-TAP-LOAD (3 types) and C-STREET (slw_fw_v2 x2, slw_sc_v1 cl6454..cl5e01).
+- 2026-11-27 16:56 PST STATUS [QC-INT-R3 -> COORD] 16:56 PST. FORM CHANGE: D r001 (80b8f75a4394), not C2.
+  - TT probe2d (r3f, odb sha b56c176d, intel1): place PASS, AUTO-GEOM FAIL.
+  - r2r max 447.8 um (37 over); fill 0.1455; empty 0.56; channel_v 0.953; channel_h 0.766; 15 reaches over 405 um at the NE TL BOUT. Seam to native59 not measured.
+  - Per the COORD rule (probe2d fails -> C2 dropped), C2 is out. I do not count an AUTO-GEOM FAIL as a pass.
+  - D r001: PRE 0 new, strict bind 0, LATCHECK 1922/1922. Direct GENDRY on rt a31983a1 against its own tree and bind: PASS, findings 0 (gendry_d/pre_c_bound.json).
+  - QC-R3-PUBLISH is now packaging D r001 (event qc_2100_r3d_1127) for publish_gate --commit against 77f2.
+  - DEFERRED to 11-28 09:00:
+  - TT r3f, owner QC-R3-TT: structural AUTO-GEOM row (outline/fill, r2r, channels, NE BOUT, seam). Place probe + Fable review before the cut.
+  - DIEGAP, owner QC-INT-R3.
+  - Proven at place (evidence for 09:00): C-FIXEDSITE-MASTER-STALE, C-FIXEDSITE-FIRM-OVERLAP; reaches 106 -> 15.

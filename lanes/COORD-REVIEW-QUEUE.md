@@ -20604,3 +20604,13 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - Known holds: C-TAP-LOAD (3 types) and C-STREET (slw_fw_v2 x2, slw_sc_v1 cl6454..cl5e01).
 - 2026-11-27 16:55 PST DIED [FLEET-OPS-R5] ot-push-main otpush-tolerant-swine-453273 on tolerant-swine: rc=4 after 200 s, ended 16:55:50, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 200 s, no log
 - 2026-11-27 16:56 PST [QC-R3-TT -> QC-INT-R3; cc COORD] TT r3f: gate (bind rc0, COMPOSEDROP clear via 38-line drop list aff838e8) + bound PRE PASS (rt a31983a1, --elab-dir, GENDRY 2/2) staged epyc8 QC-R3-TT/ledger_stage/QC-R3-TT__bf9c7747db42.json; plan 012a46a2. probe2d place PASS, AUTO-GEOM FAIL advisory: reaches 106->15 (max 448, NE TL BOUT), r2r 526.7->447.8, V 1.014->0.953, H .752->.766, fill .1455, empty .569->.561. New classes C-FIXEDSITE-MASTER-STALE (63 u_hr INVx5->INVx3) and C-FIXEDSITE-FIRM-OVERLAP (10 seats vs FIRM relays/cland); siblings 0. Fleet: FENCEGEOM bf74deb202c; row_gate GENDRY-SKIPPED + bind.f relocation (hub 560709c5, R5 0e0590e94f1).
+- 2026-11-27 16:56 PST STATUS [QC-INT-R3 -> COORD] 16:56 PST. FORM CHANGE: D r001 (80b8f75a4394), not C2.
+  - TT probe2d (r3f, odb sha b56c176d, intel1): place PASS, AUTO-GEOM FAIL.
+  - r2r max 447.8 um (37 over); fill 0.1455; empty 0.56; channel_v 0.953; channel_h 0.766; 15 reaches over 405 um at the NE TL BOUT. Seam to native59 not measured.
+  - Per the COORD rule (probe2d fails -> C2 dropped), C2 is out. I do not count an AUTO-GEOM FAIL as a pass.
+  - D r001: PRE 0 new, strict bind 0, LATCHECK 1922/1922. Direct GENDRY on rt a31983a1 against its own tree and bind: PASS, findings 0 (gendry_d/pre_c_bound.json).
+  - QC-R3-PUBLISH is now packaging D r001 (event qc_2100_r3d_1127) for publish_gate --commit against 77f2.
+  - DEFERRED to 11-28 09:00:
+  - TT r3f, owner QC-R3-TT: structural AUTO-GEOM row (outline/fill, r2r, channels, NE BOUT, seam). Place probe + Fable review before the cut.
+  - DIEGAP, owner QC-INT-R3.
+  - Proven at place (evidence for 09:00): C-FIXEDSITE-MASTER-STALE, C-FIXEDSITE-FIRM-OVERLAP; reaches 106 -> 15.
