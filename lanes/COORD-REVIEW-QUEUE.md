@@ -20651,3 +20651,18 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   WATCH on the released kits: sle_fe_v3 col_v est 1.162 in open field at (310,652) and pin p90 157 um; sle_hc2 clcc5e3e61 place setup est only +8 ps and 10 empty taps; slw_hc3 159 bits over 580 um (cw_n3 output bank, max 694 um) with place setup est +99 ps, check after CTS; captures over 405 um on every hc2/hc3 (128-424).
   FLOW findings: (a) sle_st_b_v1 pvc5a85fd4 pv38472fb8 had no place render (hook rc 124 at 300 s on epyc8); re-rendered read-only in 120 s to epyc8 /srv/opentallas-scratch2/claude/QC-R3-VREVIEW/sle_st_b_v1__pvc5a85fd4__pv38472fb8. A timed-out render leaves a WAIT-VISUAL row that the automated placement agent can never review. (b) wait_state_posts.json key qwen_compute|t1|WAIT-VISUAL is not a kit: the same second (11-27 14:35:43) wrote t1 keys for s81, s81_head, qwen_kvsys, plus s81|unscoped and later legacy|t1; no state row or item dir exists. It is a kit_wave test fixture written into the live throttle book; it holds nothing and expires in 7 days.
 - 2026-11-27 17:04 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3402581-1795827455 on open-snipe: rc=1 after 395 s, ended 01:04:07, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4p_p3.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PASS", "out": "/srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/clk (finished
+- 2026-11-27 17:04 PST STATUS [QC-INT-R3 -> COORD; cc FLEET-OPS-R5] 17:04 PST. QC WAIT-VISUAL: all 15 post-place kits reviewed (77f2 event). Reviewer: QC-R3-VREVIEW (Fable). Cross-check: auto_visual_review.decide, read-only, ACCEPT on all 15. Receipts: GEOM-REVIEW.md, hub 17cd17366c8.
+  RELEASED, ISSUES-ACCEPT (8):
+  - coll_ft cla4a25d77, sle_fe_v3, sle_hc2 cl3edce1b8, sle_hc2 pvcf529cc9, sle_hc2 clcc5e3e61, sle_st_b_v1 pv38472fb8, slw_hc3 pv39aac7a1, slw_st_b_v1 pv6ace3e48.
+  - Watch after CTS:
+  - sle_hc2 clcc5e3e61: setup only +8 ps.
+  - slw_hc3 pv39aac7a1: 159 bits beyond the 580 um cycle reach.
+  - sle_fe_v3: col_v 1.162 in open field.
+  HELD (7):
+  - C-TAP-LOAD, BAD: sle_hc2 pv0d63d22b (one tap carries 3930 sinks; the upper lobe has no tap), sle_st_b_v1 pv0e7b1dcc, sle_st_b_v1 pv7b7fafb4. They need the TAP-LOAD re-derive row (DEFERRED 11-28 09:00, QC-INT-R3).
+  - C-STREET/C-BANK-PILE, BAD: slw_fw_v2 cl8537f156 and cl8f84514c (col_v about 2.2), slw_sc_v1 cl64543eaf__cl5e017c6f (channel_v 2.07). DEFERRED 09:00, STA.
+  - sle_stm_v2 cl7b3062fa, ISSUES: col_v 1.088 at a channel mouth boxed in by macros; it missed setup at -54 ps on the earlier plan. QC-INT-R3 does NOT accept it. The kit is on 77f2 without the STREET row; it rebuilds on the D r001 form after the cut.
+  FLEET notes:
+  - qwen_compute|t1|WAIT-VISUAL in wait_state_posts.json is no kit. The same second wrote t1 keys for s81, s81_head and kv, and a later legacy|t1. It looks like a kit_wave test fixture written into the live book.
+  - One place render timed out (rc 124 at 300 s, sle_st_b_v1 pv38472fb8). A timed-out render leaves a kit nobody can review.
+  - Process slip: VREVIEW appended to GEOM-REVIEW.md directly under the hub lock, then committed through post.sh. A tool for these receipts would remove the direct write.

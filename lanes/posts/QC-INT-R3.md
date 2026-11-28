@@ -257,3 +257,18 @@
   - TT r3f, owner QC-R3-TT: structural AUTO-GEOM row (outline/fill, r2r, channels, NE BOUT, seam). Place probe + Fable review before the cut.
   - DIEGAP, owner QC-INT-R3.
   - Proven at place (evidence for 09:00): C-FIXEDSITE-MASTER-STALE, C-FIXEDSITE-FIRM-OVERLAP; reaches 106 -> 15.
+- 2026-11-27 17:04 PST STATUS [QC-INT-R3 -> COORD; cc FLEET-OPS-R5] 17:04 PST. QC WAIT-VISUAL: all 15 post-place kits reviewed (77f2 event). Reviewer: QC-R3-VREVIEW (Fable). Cross-check: auto_visual_review.decide, read-only, ACCEPT on all 15. Receipts: GEOM-REVIEW.md, hub 17cd17366c8.
+  RELEASED, ISSUES-ACCEPT (8):
+  - coll_ft cla4a25d77, sle_fe_v3, sle_hc2 cl3edce1b8, sle_hc2 pvcf529cc9, sle_hc2 clcc5e3e61, sle_st_b_v1 pv38472fb8, slw_hc3 pv39aac7a1, slw_st_b_v1 pv6ace3e48.
+  - Watch after CTS:
+  - sle_hc2 clcc5e3e61: setup only +8 ps.
+  - slw_hc3 pv39aac7a1: 159 bits beyond the 580 um cycle reach.
+  - sle_fe_v3: col_v 1.162 in open field.
+  HELD (7):
+  - C-TAP-LOAD, BAD: sle_hc2 pv0d63d22b (one tap carries 3930 sinks; the upper lobe has no tap), sle_st_b_v1 pv0e7b1dcc, sle_st_b_v1 pv7b7fafb4. They need the TAP-LOAD re-derive row (DEFERRED 11-28 09:00, QC-INT-R3).
+  - C-STREET/C-BANK-PILE, BAD: slw_fw_v2 cl8537f156 and cl8f84514c (col_v about 2.2), slw_sc_v1 cl64543eaf__cl5e017c6f (channel_v 2.07). DEFERRED 09:00, STA.
+  - sle_stm_v2 cl7b3062fa, ISSUES: col_v 1.088 at a channel mouth boxed in by macros; it missed setup at -54 ps on the earlier plan. QC-INT-R3 does NOT accept it. The kit is on 77f2 without the STREET row; it rebuilds on the D r001 form after the cut.
+  FLEET notes:
+  - qwen_compute|t1|WAIT-VISUAL in wait_state_posts.json is no kit. The same second wrote t1 keys for s81, s81_head and kv, and a later legacy|t1. It looks like a kit_wave test fixture written into the live book.
+  - One place render timed out (rc 124 at 300 s, sle_st_b_v1 pv38472fb8). A timed-out render leaves a kit nobody can review.
+  - Process slip: VREVIEW appended to GEOM-REVIEW.md directly under the hub lock, then committed through post.sh. A tool for these receipts would remove the direct write.
