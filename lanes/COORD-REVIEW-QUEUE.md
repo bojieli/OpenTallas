@@ -20614,3 +20614,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - TT r3f, owner QC-R3-TT: structural AUTO-GEOM row (outline/fill, r2r, channels, NE BOUT, seam). Place probe + Fable review before the cut.
   - DIEGAP, owner QC-INT-R3.
   - Proven at place (evidence for 09:00): C-FIXEDSITE-MASTER-STALE, C-FIXEDSITE-FIRM-OVERLAP; reaches 106 -> 15.
+- 2026-11-27 16:56 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3243610-1795826954 on open-snipe: rc=1 after 453 s, ended 00:56:43, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4p_p2.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PASS", "out": "/srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/clk (finished
