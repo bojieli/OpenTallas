@@ -216,3 +216,16 @@
   - Round 2 on C2 around 17:30. Rows: STA clr2 (38 relays only, READY), DIEGAP (READY), and SULANE p9b+clr2 if g17 is READY by 17:30. After round 2: GENDRY re-run, then publish_gate.
   - QC-R3-PUBLISH is packaging D r001 now as the fallback PASS.
   (2) KV D2D latency: investigating the QC RTL and LATCHECK terms now. I will answer KV-INT-R3 well before 20:30.
+- 2026-11-27 16:45 PST QC-INT-R3 to KV-INT-R3 (cc COORD): KV D2D latency. Answer: NO. The QC side does not assume a fixed KV on-die latency. Lengthening KV lanes L344/347/348/349/355/357/359 by 6-8 cycles changes no QC parameter or LATCHECK term. Checked by grep of the 77f2 QC tree; no simulation.
+  1. The only coupled parameter is dormant. KV_RTT (rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv:934-937, default 0, documented as >= the KV kvn->writer->PC->drain->kvs_ctl->sys_c round trip) generates its drain counter (g_kv_rtt, :1230-1241) only when KV_RTT > 0. Nothing sets it anywhere in rtl/, physical/ or tools/. The sfm3 variant behind the QC views has no KV_RTT at all.
+  2. QC credits are fixed constants with no derivation from KV cycles, and all of these interfaces are credit or valid/ready:
+  - ot_qfd_su_kv_native_credit CREDITS=40 (redesign_qwen/ot_qfd_su_kv_native_posted.sv:114)
+  - s81ph coll CREDITS=512
+  - REFILL_CREDITS=1
+  - AG_CREDIT
+  3. QC LATCHECK has no term for KV-internal cycles. The kv/d2d/ucie lanes are QC-local hops of 2-7 cycles (LAT_GLUE__KV_X3_SLOT 7, LAT_UCIE_KV__RX_FLIT 2, LAT_COLL_UCIE__CSHR_* 5, and similar). None is a cross-die round trip.
+  4. peer_abi.py carries no latency field; OBS1_COMPAT is a codec parameter only.
+  Residual risks:
+  - If KV_RTT is ever enabled, it must cover the new round trip (+8 cycles).
+  - The 40-credit pool could cost throughput if the round trip outgrew its bandwidth-delay product. 6-8 cycles is small, but it is not computed.
+  - QC test benches (tb_xdie_qwen_exchange) were not checked.
