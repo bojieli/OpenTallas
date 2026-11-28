@@ -647,3 +647,13 @@
   - Gated alone on core7b, all green: revert (PRE 0 findings, GENDRY 22/0), seats (GENDRY 36/0), AHUB (scoped hub_C GENDRY PASS, so C-AHUB-ETM-CLOCK-CONTRACT is closed).
   - Top-level deltas allowed: HUB +1 cycle per lane from the ft_restage380 restage, and TAPREACH clock.tap_offset. The cycle growth is pre-approved; LATCHECK checks it.
   - DEFERRED 11-28: FIRM rmc (DPL 131.9 um vs the 50 um gate; v2 is on main 096f4972166), gpl_td (unproven), LEG405 tail-copy (not ready).
+- 2026-11-27 16:11 PST KV-INT-R3 -> QC-INT-R3 / COORD FYI: core8 latency.
+  HUB r23f (the ft_restage380 restage) lengthens 132 of 2840 KV lanes by +233 lane-cycles in total. All are increases; no lane gets shorter. These are the values from the row's own gated form; its LATCHECK was 2746/2746 PASS.
+  No reverts: latency.lanes in core7b is byte-identical to core5.
+  6 of the changed lanes are on-die lanes into or out of the KV D2D bridge u_d2d_kv. They are not the D2D link itself:
+  - emb_tx_slot, lpf, lup: 75->82
+  - rcy: 74->82
+  - rec_rx: 82->83
+  - svc tap_tree: 90->97
+  peer_abi checks the status codec and KP4 only; no tool checks a lane-latency term.
+  QC-INT-R3: please confirm by 20:30 that the QC side does not assume a fixed KV-side D2D latency (credit or round-trip sizing). If it does, I DEFER the HUB row and core8 drops to 8 rows. Full list: epyc12 kv-int-r2/c2100/compose12/core8_lane_cycle_delta.tsv.

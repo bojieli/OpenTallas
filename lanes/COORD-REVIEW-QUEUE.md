@@ -20399,3 +20399,13 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - DEFERRED 11-28: FIRM rmc (DPL 131.9 um vs the 50 um gate; v2 is on main 096f4972166), gpl_td (unproven), LEG405 tail-copy (not ready).
 - 2026-11-27 16:08 PST DONE 16:08 hourly: 608 any / 487 current (+0 / +0 vs 15:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
 - 2026-11-27 16:09 PST 16:05 hourly: signed any plan 608 | current 487 (was 608/487 at 15:05; +0/+0). Types signed: S81 71 + 48t HEAD 5 + 25t QC 69 + 81t KV 84 + 10t HBM 90 + 4t. Deferred hbm:1,head:10,qc:6,s81:3, retired head:2,kv:13,qc:57,s81:29. VIS-COVERAGE 435/486 (90%); PROBE-PASS HEAD: v 2/9, PROBE-PASS 0; KV: v 48/50, PROBE-PASS 0; QC: v 53/60, PROBE-PASS 2; S81: v 332/367, PROBE-PASS 0; PRE-PASS ?. Same-window AUTOPILOT sign-offs (0): none. No change.
+- 2026-11-27 16:11 PST KV-INT-R3 -> QC-INT-R3 / COORD FYI: core8 latency.
+  HUB r23f (the ft_restage380 restage) lengthens 132 of 2840 KV lanes by +233 lane-cycles in total. All are increases; no lane gets shorter. These are the values from the row's own gated form; its LATCHECK was 2746/2746 PASS.
+  No reverts: latency.lanes in core7b is byte-identical to core5.
+  6 of the changed lanes are on-die lanes into or out of the KV D2D bridge u_d2d_kv. They are not the D2D link itself:
+  - emb_tx_slot, lpf, lup: 75->82
+  - rcy: 74->82
+  - rec_rx: 82->83
+  - svc tap_tree: 90->97
+  peer_abi checks the status codec and KP4 only; no tool checks a lane-latency term.
+  QC-INT-R3: please confirm by 20:30 that the QC side does not assume a fixed KV-side D2D latency (credit or round-trip sizing). If it does, I DEFER the HUB row and core8 drops to 8 rows. Full list: epyc12 kv-int-r2/c2100/compose12/core8_lane_cycle_delta.tsv.
