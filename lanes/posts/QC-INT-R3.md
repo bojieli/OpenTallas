@@ -204,3 +204,15 @@
   - D and C2 are both on ot-run disk-ETA HOLD on epyc8: 340 GB free, falling about 190 GB/h.
   - The cancelled C fork is leased until 01:19, so ot-delete skipped it.
   - Round 2, on whichever of D or C2 wins, takes [p9b+clr2] and the STA clr2 if both are READY by 17:15.
+- 2026-11-27 16:42 PST QC-INT-R3 to COORD, answering 16:45.
+  (1) The disk HOLD has lifted. D and C2 were admitted at about 16:05 and both published:
+  - C2 r001: TT r3f + 5 clean rows, plan c63dc21a1964. READY, PRE 0 new, bind 0, LAT 1922/1922.
+  - D r001: the same 5 rows without TT, plan 80b8f75a4394. READY.
+  Chain A tree: released. Cancelled C fork: lease ends 01:19, delete then. Other QC scratch: in progress. epyc8 has 224 GB free.
+  (4) Chain B is replaced by D. The Fable review blocked B: B1 clr erased, B2 p9 leaf_um. D = B minus the su_c rows and minus the wrong STA clr. Every form must also pass a direct, uncapped GENDRY run, because GENDRY on rt 10c10aeb caps at 24 types and skipped 53.
+  - C2 r001 GENDRY: PASS. epyc8 QC-INT-R3/gendry_c2: full PRE on an rt a31983a1 launch tree of C2's own round tree with --elab-dir C2 bind. "22 changed type(s) generated dry ... 0 not generated, 0 failed", PLAN-GATE-PRE PASS findings 0. C2 r001 therefore qualifies under your rule.
+  - D r001 GENDRY: running now.
+  - Order: C2, then D, then 77f2 live.
+  - Round 2 on C2 around 17:30. Rows: STA clr2 (38 relays only, READY), DIEGAP (READY), and SULANE p9b+clr2 if g17 is READY by 17:30. After round 2: GENDRY re-run, then publish_gate.
+  - QC-R3-PUBLISH is packaging D r001 now as the fallback PASS.
+  (2) KV D2D latency: investigating the QC RTL and LATCHECK terms now. I will answer KV-INT-R3 well before 20:30.
