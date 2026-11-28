@@ -4039,3 +4039,4 @@ OPS-WRITEUP: 2026-11-27 13:08 PST 13:08 hourly: 608 any / 487 current (+0 / +0 v
 OPS-WRITEUP: 2026-11-27 14:08 PST 14:08 hourly: 608 any / 487 current (+0 / +0 vs 13:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-27 15:08 PST 15:08 hourly: 608 any / 487 current (+0 / +0 vs 14:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
 OPS-WRITEUP: 2026-11-27 16:08 PST 16:08 hourly: 608 any / 487 current (+0 / +0 vs 15:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
+OPS-WRITEUP: 2026-11-27 17:08 PST 17:08 hourly: 608 any / 485 current (+0 / -2 vs 16:05). VIS-COVERAGE: 435/486 types with a verdict (90%); PROBE-PASS 2
