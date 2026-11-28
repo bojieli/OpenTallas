@@ -507,6 +507,13 @@ def topology_check(tree, plan, asbuilt, bind_out, work, dp, topology_base=None):
             "types_failed": sorted(f["type"] for f in r.get("failed") or []), "why": r.get("why", ""), "result": out}
 
 
+def pre_launch_dir(work, tool_root, tree):
+    """P-LAUNCH-STAMP-RT-ONLY: the shared launch dir is keyed by rt AND the resolved tree (sha256[:12]); the stamp in it names one src, so
+    two trees on one rt (W13m / W13q) never meet each other's stamp, while the same rt+tree reuses its dir."""
+    tid = hashlib.sha256(str(Path(tree).resolve()).encode()).hexdigest()[:12]
+    return str(Path(work, "pre-%s-%s" % (Path(tool_root).resolve().name, tid)).resolve())
+
+
 def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
                bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None, pre_baseline=None, peers=None, die=None, die_ctree=None, topology_base=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
@@ -527,7 +534,7 @@ def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseli
     if tools_src == "rt":
         composer = Path(tool_root, "tools/autopilot/rt_launch_tree.sh")
         if composer.is_file():
-            pre_tree = str(Path(work, "pre-" + Path(tool_root).resolve().name).resolve())
+            pre_tree = pre_launch_dir(work, tool_root, tree)
             rc1, t1 = _sub(["bash", str(composer), tree, str(tool_root), pre_tree], tree)
     pre = [py, "-I", os.path.join(dp, "plan_gate_pre.py"), "check", "--tree", pre_tree, "--plan", plan, "--quiet"]
     if asbuilt:

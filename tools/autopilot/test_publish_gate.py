@@ -368,7 +368,7 @@ class RtToolsForPreG0(unittest.TestCase):
         composer.parent.mkdir(parents=True)
         composer.write_text("#!/bin/bash\n")
         work = Path(self.td) / "gate-work"
-        launch = str(work / "pre-rt")
+        launch = PG.pre_launch_dir(work, self.rt, self.tree)
         calls = []
 
         def sub(argv, cwd, timeout=None):
