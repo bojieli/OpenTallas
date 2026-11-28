@@ -1,0 +1,63 @@
+VERDICT: GOOD-WITH-WATCH
+reviewer: Fable (independent agent, HEAD-FORM-R3 commissioned 11-27)
+**Independent review: W13 no-EAST form, s81_head (plan 4fca0de51ee0)**
+
+All five images were opened. The lean renders draw only the outline, taps, feedthrough lines and region lines; they do not draw the relocated seats. Seat checks below are therefore numeric, from the plan diff against the outlines and the line positions measured in the renders.
+
+**1. Source geometry of the 4 changed types: GOOD, with watch items**
+- **hd_spn_end (588x2074):** all 11 changed leaves are inside the outline and none are stacked.
+  - The fifth status stages sit at (345.6,1267.9), (362.9,1250.6), (332.6,1280.9) and (321.8,1291.7), about 10 um apart, clustered on anchor agg_2 at (339.1,1274.4).
+  - Last-stage hops are 270, 287, 257 and 150 um; agg_2 to agg_1 is 373.7 um. All are under 405 um.
+  - The moves go west/south toward the anchors, consistent with the README's claim for the 466–711 um legs.
+  - Watch: the render title reports "2 AIM, worst 400um", which is 5 um of margin; the earlier review cites placed legs of 395.8 and 393.5 um.
+  - Watch: the ad_i stage (x=345.6) is about 2.5 um from the red feedthrough line at x≈348. The cluster also straddles the green region line at x≈340, with agg_2 0.9 um from it. I could not tell what the green line represents.
+  - Watch: the three local resets moved about 55 um north to y≈106–110, between the feedthrough lines at 348 and 425. Direction cannot be confirmed without consumer positions, and the earlier review says reset copies geo_441/442/4/14/24 were not moved with their consumers.
+  - The README says "9 leaf ops"; the diff shows 11 leaves. This is bookkeeping only.
+- **hd_spn_eshim_rx (95x1037):** relay u_rrl_10/q (50,519.5) and export seat (89.6,864) are in the outline, with hops of about 347 and 384 um. The diff line is truncated, so only 3 of the 19 WEN seats are visible; the other 16 are unchecked.
+- **hd_spn_eshim_tx:** the four taps render in the outline at y=17, 243, 567 and 858.6. clk_t3 is centred on the link window (708–1008) and both stations are fixed to it. regs_um is truncated in the diff and unchecked. There is no placed evidence.
+- **hd_turn_b (173x700):** relay (87.8,360.7) is in the outline. The export seat (86.0,694.98) is in the outline but 3.8 um above the widened t_i band top (691.2), in the edge margin; this is by design (pin + 0.9 um).
+- **ISSUE (known, deferred):** the Turn B placed buffer detours of 412.4 and 426.2 um are over 405 um and not fixed by this form. LEG405 is plan-level and does not see them. The README defers them to HEAD-PART-R3, eta 11-28 09:00.
+
+**2. Whole-die render: GOOD**
+- The spn_end, eShim RX/TX and Turn B slots abut their neighbours with no visible overlap or misplaced instance.
+- The white unassigned pockets (around x 7000–7400 / y 1300–2560, and around x 11750–12600 at top and bottom) are away from the changed types.
+
+**3. Latency: GOOD**
+- All six channels chE0_h..chE5_h change identically: cycles 7→8, natural 7→8, stations 1→2. This matches the eShim TX ft_slots stations 1→2, a single +1.
+- Watch: the earlier review found the token-pass schedule receipt and prep latency still showing 7 (stale, reportedly unread).
+
+**4. Phase-bind deferral: GOOD-WITH-WATCH**
+- The deferral file has 22 unique instances, exactly the set of 22 PRE DEFERRED lines, and the summary says misbound 22. Every entry has an owner and eta 2026-11-28 09:00.
+- lk_EN0 and lk_WN1 are HEAD-INT-R3 / P-RESET-RECEIPT; the other 20 are HEAD-POCKET-R3. Scores and phase transitions match PRE line by line.
+- The key is CTREE 46e98067f0ff, plan_sha12 607dd5dd5c82, and sidecar b9272a9184e7, which matches summary.json.
+- Spot-check of 8 records, all consistent with the 60 ps guard and the 416.5 ps half-cycle step:
+
+| Instance | plan_h score (ps) | best_h score (ps) | Status |
+|---|---|---|---|
+| tE3b3 (range minimum) | -210.66 | 205.84 | MISBOUND |
+| nst4 | -66.949 | 349.551 | MISBOUND |
+| tW0b0 | -37.64 | 378.86 | MISBOUND |
+| sst2 | 1.732 | 314.98 | MISBOUND |
+| sp4_bw_i_shim (no plan phase, default 0) | 14.346 | 310.768 | MISBOUND |
+| lk_EN0 | 18.156 | 278.969 | MISBOUND |
+| tE0o5 | 51.48 | 285.436 | MISBOUND |
+| lk_WN2 | 248.733 | 248.733 | OK |
+
+- The range maximum, sp3_bw_i_shim at 58.385 ps, has no sample record; it was checked from the PRE line and deferral only. The lowest best score is tE3b1 at 164.947 ps, still above 60.
+- **Validity of the W12f derive:** no reset_entry_phase or strap rows changed, so plan_h is identical and the scores stand to first order. Three things weaken that:
+  - The form moves reset relay and export seats in three types and switches eShim TX to explicit taps, so the W12f clock tree and data windows are not exactly this form's. OK instances with thin margin could flip unseen.
+  - 13 of 22 plan scores are within ±60 ps of zero.
+  - 5 of the 8 samples (lk_EN0, tE3b3, tW0b0, tE0o5, lk_WN2) are measured on "proxy_first_flop", data windows come from W11 views, and the clock is a clock-only route.
+- The pending regen+derive must run on the W13 plan.
+
+**5. Not caught by gates**
+- Negative scores down to -210 ps mean real wrong-edge reset capture on 22 instances. This is carried from W12f, not a regression.
+- All 22 deferrals expire at 2026-11-28 09:00, the next cut, where PRE fails past eta.
+- The PRE warning COUNT-ALIGN-UNBOUND (count_aligned has no clock provenance) is still open.
+- PRE is plan-only: the earlier review notes MACROGHOST, SEATMATCH and RSTREACH are downgraded.
+- Native release is accepted as QUALIFIED_CONDITIONAL by substring match.
+- The reset_entry statuses sum to 358 against 359 partitions; one partition is unaccounted for.
+
+Nothing here blocks the 21:00 cut.
+
+VERDICT: GOOD-WITH-WATCH: Turn B placed detours 412/426 um still over 405 (deferred); hd_spn_end worst leg 400 um and ad_i/agg_2 seats 1–3 um from feedthrough/region lines; eShim TX unplaced, probe owed; 16 WEN seats and regs_um not visible in the diff; phase-bind derive must be redone on the W13 clock, 22 deferrals expire 11-28 09:00; stale chE*_h=7 receipts; COUNT-ALIGN-UNBOUND.

@@ -1,0 +1,92 @@
+{
+ "hd_ctl_e": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 855x104 strip with two full-width horizontal feedthroughs (y~22 and y~82) inside the outline, no taps, no macros; nothing crosses or leaves the outline.",
+  "identical_to_w12f": true
+ },
+ "hd_ctl_n": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 14 taps all inside the 1296x708 outline; 4 red feedthrough polylines stay inside, with segments lying on the west/north outline edges (ft_out 0). Watch (not plan-visual): PRE TAPREACH worst 455.1 um for landing reset k7.",
+  "identical_to_w12f": true
+ },
+ "hd_host_n": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 6 feedthrough polylines inside the 1443x657 outline (edge-hugging on W/N/E faces, two vertical crossings at x~358/435), no macros, no taps; no collision seen.",
+  "identical_to_w12f": true
+ },
+ "hd_spn_eshim_rx": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f although a PARTITIONS row was added, so the render shows no sign of the change. 95x1037 strip with one link slot line at y~860 inside the outline, no taps or macros. Watch: ADV-TAP-LOAD bins 1,238 vs 2,990 netlist flops (x2.42) and link_o 566 bits with no station within 50 um.",
+  "identical_to_w12f": true
+ },
+ "hd_spn_eshim_tx": {
+  "verdict": "GOOD",
+  "finding": "Differs from W12f: 4 added taps (about (17,18), (17,243), (60,567), (77,860)) and two station markers on the link line at y~860; all are inside the 95x1037 outline and nothing else moved. Watch: STNXREF-BITCOUNT 2 bit-site patterns for 2 stations (want 1), link_o 566 bits with no station within 50 um.",
+  "identical_to_w12f": false
+ },
+ "hd_spn_wshim_tx": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 700x1037 outline with one full-width feedthrough at y~860, no taps or macros drawn; clean.",
+  "identical_to_w12f": true
+ },
+ "hd_st_k5": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 36 taps all inside the 1443x873 outline; 4 feedthroughs (two horizontal near y~775/835, one L from x~485 to the E face at y~445, one along the S/E edges) stay inside the outline; no macros.",
+  "identical_to_w12f": true
+ },
+ "hd_st_m": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 1443x130 strip with two full-width feedthroughs at y~40 and y~80 inside the outline; no taps or macros.",
+  "identical_to_w12f": true
+ },
+ "hd_st_n3_transit": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 1443x475 outline with two full-width feedthroughs at y~128 and y~350; no taps or macros; clean.",
+  "identical_to_w12f": true
+ },
+ "hd_st_n3_turn": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 1305x605 outline; two turn feedthroughs (one along the N/E edges, one L at x~347/y~343) inside the outline; no taps or macros.",
+  "identical_to_w12f": true
+ },
+ "hd_st_str": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 1443x475 outline with two full-width feedthroughs at y~128 and y~350; no taps or macros; clean.",
+  "identical_to_w12f": true
+ },
+ "hd_st_turn": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 36 taps all inside the 1305x1132 outline (closest at about (1295,25)); two turn feedthroughs (N/E edge and L at x~347/y~350) inside the outline; no macros.",
+  "identical_to_w12f": true
+ },
+ "hd_turn_a": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f. 173x1037 strip with one L feedthrough (W face y~858 to S face x~87) inside the outline; no taps or macros.",
+  "identical_to_w12f": true
+ },
+ "hd_turn_b": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f although the Turn B row was added, so the render shows no sign of the change. 173x700 outline with a single slot traced on the N edge (x 0-87) and upper W edge, 0 red feedthroughs, no taps or macros. Watch: t_o 358 of 566 bits with no out-face station within 50 um; placed detours 412/426 um deferred.",
+  "identical_to_w12f": true
+ },
+ "hd_mesh": {
+  "verdict": "BAD",
+  "finding": "Differs from W12f: new green chain legs are drawn, and the two E-W legs at y~420-437 run straight through the hard-macro bodies of all three FIFO bank groups (x~70-155, 190-265, 310-400), which W12f did not have. PRE confirms it as new at W13: ADV-CORE-LEG-OVERMACRO coll_ob 208 um and m_rx_o 138 um over cores, ADV-ROUTE-DEMAND 78 gcells >=0.8 (peak 1.88) at x230-280 y420-460 with 88% over cores, and ADV-MACRO-GAP 576 bits through a 7.9 um macro gap; a placement would reproduce this.",
+  "identical_to_w12f": false
+ },
+ "hd_spn_end": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f although C-SPN-END-STRUCT changed the plan (PRE differs: the two ADV-LEG405-STAGED be_i/bw_i findings are gone), so the render shows no sign of the change. 68 taps all inside the 588x2074 outline, 6 vertical full-height feedthroughs at x~350-550 inside it, region lines inside, no macros. Watch: ADV-TAP-REACH 2 seats >300 um (max 302), ADV-EDGE-STRIP 565-bit W window with 66 um strip.",
+  "identical_to_w12f": true
+ },
+ "hd_host_e": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f; the W13p PINREG band and pinslot row are not drawn, so they are not visually verified. 45 taps all inside the 657x570 outline and outside the macro bodies, 20 bank macros plus the large u_epc core with no overlaps. Watch (same as W12f): band coll_i1 overlaps u_epc by 383 um2 (a ~2 um strip), 2 reserved clock sites in macro halos, 13 macro channels <14.88 um; new at W13: 2 place_regions unsnapped (lane1_sko_data, lane1_receive_data).",
+  "identical_to_w12f": true
+ },
+ "hd_ctl": {
+  "verdict": "GOOD",
+  "finding": "Byte-identical to W12f; the W13p PINREG band and pinslot row are not drawn, so they are not visually verified. Four hard cores inside the 588x518 outline with no overlap; green legs cross the bottom core (y~82, x 345-435) and run over the two lower cores at x~500, which is the same as the W12f render reviewed GOOD (ADV-CORE-LEG-OVERMACRO h_tx_o 129 um, n_rx_i 109 um, no route-demand advisory). Watch: ADV-SEATLINE lepk_o0 1,104 bits on a 0 um window, ADV-EDGE-STRIP 43 um strip on S face.",
+  "identical_to_w12f": true
+ }
+}

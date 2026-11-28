@@ -1,0 +1,44 @@
+VERDICT: GOOD-WITH-WATCH
+
+Scope: PINREG-W13 row only (W13m 28884620dada -> W13p 41e860a82c5f, 8 leaves) plus item_env OT_CLAND_STRIP_DENS=1.5 for hd_host_e and hd_ctl.
+Nothing found that should block adopting the plan at the cut. Both types stay route-HELD, so the open items below gate route, not adoption.
+
+ANSWERS
+Q1 hd_host_e coll_i1 [340.72,19.44,550.24,41.04]: geometry is sound.
+ - Inside outline 656.64x570.24. It is the only band of the type, so no band-band conflict.
+ - Clear of all 20 hard cores. u_epc is [423.36,60.48,648,552.96]; band top 41.04 leaves 19.44 um. The OLD rect (top 62.64) overlapped u_epc by 383 um2; the move removes that.
+ - Clear of all 46 clock.reserved_sites_um rects (old rect covered 8), the two place_regions, count/id straps (y 4.3-13) and reset raw exports.
+ - Area 209.52 x 21.6 = 4525.63 um2 vs area_reserve_um2 4521.621: met, margin only 0.09 %.
+ - Seat: bus coll_i1 window on S face is [342.48,548.48]; band x-span is the window +/-1.76 um. Old band was 52 um east of the window (matches author's along_med 50.4).
+ - max_pin_to_band_hop_um 145.8 = window centre (445.48,0) to farthest band corner (104.76+41.04). Reproduced; it is the stock tool value and < 405 and < 180.
+ - Removed keys: band_spread_target / spread / monitor_bits are dropped by the stock face-home tool itself (facehome/plan_fhoff_hd_host_e.json coll_i1 is identical to W13p). In rt b71c5218e0b5 no tool reads monitor_bits (clock_landing_plan.py:954 writes it, head_band_ringff_delta.py:75 only copies it); spread / band_spread_target appear only in writers and skip-lists. No consumer loses anything. Strict bind 48 jobs PASS, 8341 inst, 0 unbound.
+Q2 hd_ctl: budgets.cland_pinslot_dense_types=[hd_ctl] makes gen_phys export OT_CLAND_PINSLOT_DENSE=1, so y-column (W/E face) ring slot flops pack body to body (spread 0.4) - acts on lepk_i0 (W face, 1104 bits, 817 pins over 30 in the plain probe). OT_CLAND_STRIP_DENS=1.5 lowers N/S strip rows (3 -> 2) for the S-face rings b_i / h_rx_i / a_rx_i / b7_rx_i. hd_ctl plan subtree is byte-identical W12f == W13m == W13p, so the W12f-based probe applies. Margin 0.22 um is a watch item, not a blocker.
+Q3 Diff W13m -> W13p: recomputed leaf by leaf = exactly the 8 leaves in rows_pinreg_w13m.json, nothing else. w13p_plan.json sha256 == merged_w13m_pinreg.json (41e860a82c5f...). hd_ctl subtree unchanged; only budgets gains the one key.
+Q4 Author's ISSUES:
+ - Taps in/near coll_i1: INHERITED. clock.taps unchanged; clk_t18/t21/t37/t41 inside the new rect, clk_t2 and clk_t4 2.16 um off its edge. All six were inside the old rect too (old rect held 9 taps).
+ - Band area halved: NOT inherited - introduced by this delta (9344 -> 4526 um2, spread 2.07 -> 1.00). Acceptable (reserve met, probe GRT 0), see W3.
+ - hd_ctl ft across macros: INHERITED. ADV-CORE-LEG-OVERMACRO hd_ctl (h_tx_o 129 um, n_rx_i 109 um) is identical in all three gates.
+ - ADV-SLOT-GAP 20 on hd_host_e: INHERITED, identical in all three gates (SRAM bank 2.136-um gaps).
+ - Lean renders type_hd_host_e.png / type_hd_ctl.png are byte-identical across W12f, W13m and W13p gates (all 27 type renders identical W13m vs W13p).
+Q5 r2r_count 68 -> 104 and unprobed post-CTS pin access: not blocking for adoption; both are route-hold conditions (W5, W6).
+
+FINDINGS (all, none BLOCKING)
+W1 WATCH (HEAD-INT-R3 integrator): the merged-plan PRE has a new warning the README does not mention: "WARN COMPOSEDROP 3 plan paths the baseline carries are missing" (coll_i1.spread, .band_spread_target, .monitor_bits). README says "PRE PASS findings=0 (ADV-LEG405-STAGED report only)". The drops are intended, but they need a --drop-list entry at compose; with OT_COMPOSE_DROP=fail this becomes a FAIL.
+W2 WATCH (HEAD-PART-R3): landing_contract.collector_local_sources[coll_i1].band still holds the OLD band (rect [394.48,17.28,600.48,62.64], hop 169.8, spread, monitor_bits). The row did not update the mirror. Same pattern already exists on 12 other bands in 7 types, 8 of them with a different rect (hd_ctl a_rx_i/h_rx_i, hd_ctl_n, hd_lep0N, hd_lep0N_w, hd_spn_end, hd_tile, hd_turn_b), and bind passes. Readers of the mirror rect: rows_s81_monleg(_src).py src_points (band centre), landing_place.py:979 fallback, kit_topology alias check. Sync it in the next row.
+W3 WATCH (HEAD-PART-R3): band has no slack - area margin 0.09 %, ADV-LAND-CAP fill 0.34 -> 0.65 (second highest on the die). Inside it sit 4 clock taps, status anchor u_cland_agg_1 (527.72,39.96) and status input stage (444.45,30.67). The 19.4-um channel to u_epc also holds reader-start stage 3 (414.93,47.52), reset tap (550.15,47.52), local reset k4 and taps t30/t31/t40.
+W4 WATCH (HEAD-PROBE-R3): hop reference changed between old and new value. Old 169.8 was measured from the pin point x=501.64; new 145.8 from the window centre 445.48. From the old reference the new band is 201.96 um (> the 180 advisory line, < 405). fclk_in_coll_i1 pin (501.76,2.66) to the far west band corner is now ~199 um (was ~167): check forwarded write-clock slew/skew on the 2304 write flops in the CTS probe.
+W5 WATCH (HEAD-PART-R3, route-hold b): hd_host_e r2r_count 68 -> 104, FAIL before and after. Needs a judgement before sign-off route; revert row + env if worse.
+W6 WATCH (HEAD-PROBE-R3, route-hold a): post-CTS pin access under the denser strips is not probed for either type. No CTS has run on any probe.
+W7 WATCH (HEAD-PART-R3, route-hold c): hd_ctl pin_reg_p90 29.78 vs 30 (0.22 um). Any placement or tool-rt change can flip it; residual h_rx_i (band 2x its pin hull, 207 pins over 30) is the follow-up.
+W8 WATCH (HEAD-INT-R3 integrator): the two item_env rows are outside the plan sha. The probed form is plan + env together; the plan alone (band halved, wave env STRIP_DENS 1.0) was never probed. Apply env_rows.json in the same cut and confirm "export OT_CLAND_STRIP_DENS = 1.5" in both kits' config.mk.
+W9 WATCH (HEAD-PART-R3): README says "Delta vs W13m base: none seen". The W13m gate has since finished; actual delta is: removed ADV-BAND-AT-PIN hd_host_e, ADV-LAND-CAP OVERLAP 383 um2 and G0 landing_band_core warning (248 -> 247); added COMPOSEDROP x3 and the LAND-CAP fill change. All else equal (LATCHECK 334/334, latcheck.tsv identical, G0 0 errors).
+W10 WATCH (HEAD-PART-R3): no static check or render shows either change. Lean renders do not draw bands, and the dense pinslot has no PRE/lean footprint. Geometry here was verified from plan numbers only; the first W13p 3_place of both types needs a visual review.
+W11 WATCH (HEAD-PART-R3): probe evidence (p90, over-30 pins, GRT 0, r2r) lives on intel1 and was not re-read here; taken from the two READMEs and analysis/pinclass_*.json (plain-probe side confirmed: host_e p90 76.47, 518 over 30, along_med 50.4).
+
+EVIDENCE CHECKED (epyc12, read-only)
+- form/w13m_plan.json, form/w13p_plan.json, rows_2100/PINREG-W13/{README.md,rows_pinreg_w13m.json,env_rows.json,merged_w13m_pinreg.json,PROPOSAL_face_home_off_window.diff,evidence/*}: sha256, full recursive diff, hd_host_e / hd_ctl subtrees, budgets.
+- W12f plan (form/gate_w12f_rt32f2/prep/source_plan.json 607dd5dd5c82): hd_host_e and hd_ctl subtrees and budgets equal W13m.
+- rows_2100/PARTITIONS/C-PINREG-LANDING-DEPTH: README.md, CLASS-ROW.tsv, env_rows.json, analysis/pinclass_hd_host_e.json, pinclass_hd_ctl.json, facehome/plan_fhoff_hd_host_e.json, rows_ready_plan.json, review_fable_3place.txt (head).
+- Gates part/gate_pinreg_w13m, form/gate_w13m_b71c, form/gate_w12f_rt32f2: summary.json, pre.json (advisories + pre_record warns set-diffed), g0.log, g0/g0_report.json findings, latcheck.tsv/log, bind.log, lean.log, lean/*.png hashes; type_hd_host_e.png and type_hd_ctl.png opened.
+- Tools rt b71c5218e0b5: clock_landing_plan.py (rehome_far_bands, hop, monitor_bits), gen_phys.py (_cland_strip_density, _cland_pinslot_dense), landing_placement.tcl (strip density, pinslot dense), adv_fpconv.py band_at_pin, compose_drop_guard.py, kit_topology.py, side_band_sync.py, bound_station_source.py, head_band_ringff_delta.py; grep of all readers of the removed keys.
+- Gate sidecar prep/source_sidecar.json hd_host_e collector rows (unchanged, old band copy, bus_geometry empty).

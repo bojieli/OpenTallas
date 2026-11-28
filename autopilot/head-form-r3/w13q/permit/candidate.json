@@ -1,0 +1,107 @@
+{
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127",
+  "manifest_hash": "43a45f752d5fec4f5d1d597e56ffaabe45d90eec944b0851d80068a9dd0f524d",
+  "src_manifest_sha": "43a45f752d5fec4f5d1d597e56ffaabe45d90eec944b0851d80068a9dd0f524d",
+  "tools_sha": "b71c5218e0b5f4acad7d41c239464bb36c1eaf0d",
+  "hosts": [
+   "epyc7",
+   "epyc8",
+   "intel2",
+   "intel1"
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w13q_int_1127/source_plan.json",
+  "plan_sha256": "148712eff5f7c79cd1d6eb162597fda6279f3edc857b6a8841bb9f81ef382fa7",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w13q_int_1127/source_sidecar.json",
+  "sidecar_sha256": "b9272a9184e7eae540fbda1aea28d6bcb9439cbf9f908d7bf7ec184bf15cfeff",
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/results/head_native_release_nf15f_r18w13q_1127/native_release_receipt.json",
+  "band_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w8_b/source_plan.json",
+  "remap_base": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w12_int_1126/source_plan.json",
+  "frozen_kit_tree": "",
+  "physical_qualified": false,
+  "most_recent_fable_verdict": "",
+  "smoke": "PASS",
+  "smoke_detail": "HEAD-FORM-R3 W13 21:00 11-27 cut, form W13q: W12f 607dd5dd5c82 + PARTITIONS (C-SPN-END-STRUCT spnend 256dd8, eshim rx 4206bd, turn_b 47187c, eshim tx 1f0b1b) = trial1 4fca0de51ee0, + PINREG-W13 (C-PIN-REG-REACH, 8 leaves: hd_host_e coll_i1 band re-site, budgets.cland_pinslot_dense_types=[hd_ctl]) -> plan 148712eff5f7, sidecar b9272a9184e7. EAST dropped, TILE k4 deferred, HD-MESH-LEG405 deferred (plan-visual BAD), 40 PHASE-BIND rows not applied (W12f derive phase_bind 2a2184d506f6 + typed 22-instance deferral 7ebb28579cc0 accepted by COORD 1447, CTREE 46e98067f0ff). Gate of record epyc12:/srv/opentallas-scratch2/claude/HEAD-INT-R3/form/gate_w13q_b71c/summary.json on rt b71c5218e0b5 (ot-run oth-ubuntu-1763067-1795821377): republish 27, lattab, PRE 0 findings, strict bind 48 jobs 8338 inst 0 unbound, cohort 27/27, LATCHECK 334/334, native QUALIFIED_CONDITIONAL 12, G0 0 errors 244 warnings, leg405 PASS, lean PASS. Reviews (Fable): no-EAST form GOOD-WITH-WATCH, PINREG delta GOOD-WITH-WATCH, plan-visual 18 only_items lean renders.",
+  "config": {
+   "event": "head_rp21z20NF15f_r18w13q_1127",
+   "tools_sha": "b71c5218e0b5f4acad7d41c239464bb36c1eaf0d",
+   "gen_host": "epyc7",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "intel2",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/prep/NF15f/prep_r18w13q_int_1127/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ],
+   "review_before_route": {
+    "event": "head_rp21z20NF15f_r18w13q_1127",
+    "all_items": true,
+    "required": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ],
+   "tools_from_rt": true,
+   "only_items": [
+    "hd_ctl_e",
+    "hd_ctl_n",
+    "hd_host_n",
+    "hd_spn_eshim_rx",
+    "hd_spn_eshim_tx",
+    "hd_spn_wshim_tx",
+    "hd_st_k5",
+    "hd_st_m",
+    "hd_st_n3_transit",
+    "hd_st_n3_turn",
+    "hd_st_str",
+    "hd_st_turn",
+    "hd_turn_a",
+    "hd_turn_b",
+    "hd_spn_end",
+    "hd_host_e",
+    "hd_ctl"
+   ]
+  },
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w13q_1127/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  },
+  "records": {}
+ },
+ "optimistic": true,
+ "hold_records_add": [
+  {
+   "id": "HEAD-W13-ROUTE-HD-HOST-E-PINREG",
+   "plan_sha": "148712eff5f7c79cd1d6eb162597fda6279f3edc857b6a8841bb9f81ef382fa7",
+   "items": [
+    "hd_host_e"
+   ],
+   "route": true,
+   "cause": "C-PIN-REG-REACH (C-PINREG-LANDING-DEPTH) pin-register landing reach on dense strip faces",
+   "owner": "HEAD-INT-R3",
+   "reason": "PINREG-W13 coll_i1 band re-site + item_env OT_CLAND_STRIP_DENS=1.5. Route/CTS only after (a) the HEAD-PROBE-R3 CTS probe on the probed placement shows clean pin access under the strips and (b) a judgement on r2r_count 68->104 (revert the coll_i1 row and item_env if judged worse); first W13 3_place needs a visual review. owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+   "release": []
+  },
+  {
+   "id": "HEAD-W13-ROUTE-HD-CTL-PINREG",
+   "plan_sha": "148712eff5f7c79cd1d6eb162597fda6279f3edc857b6a8841bb9f81ef382fa7",
+   "items": [
+    "hd_ctl"
+   ],
+   "route": true,
+   "cause": "C-PIN-REG-REACH (C-PINREG-LANDING-DEPTH) pin-register landing reach on dense strip faces",
+   "owner": "HEAD-INT-R3",
+   "reason": "PINREG-W13 budgets.cland_pinslot_dense_types=[hd_ctl] + item_env OT_CLAND_STRIP_DENS=1.5. Route/CTS only after (a) the HEAD-PROBE-R3 CTS probe shows clean pin access under the strips and (c) pin_reg_p90 29.78 vs 30 (margin 0.22 um) re-checked at CTS; follow-up h_rx_i band re-home (207 pins over 30). owner=HEAD-PART-R3 eta=2026-11-28 09:00",
+   "release": []
+  }
+ ]
+}

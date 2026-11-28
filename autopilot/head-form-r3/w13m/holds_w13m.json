@@ -1,0 +1,3 @@
+[
+ {"id": "HEAD-W13-ROUTE-HD-MESH-LEG405", "plan_sha": "28884620dadad49c1c989ead7ca7f6cfa4454934c395cc0847e1c0fcf3f1aa05", "items": ["hd_mesh"], "route": true, "cause": "C-LEG405 hd_mesh seat0 leg 428.82 um and type worst a_in 564.9 um over the 405 um hop limit", "owner": "HEAD-INT-R3", "reason": "HD-MESH-LEG405 cut seat0 658.64 -> 428.82 um but the class stays OPEN (type worst a_in 564.9 um). Keep hd_mesh route-HELD until a corrected placed successor and an independent review. owner=HEAD-PART-R3 eta=2026-11-28 09:00", "release": []}
+]
