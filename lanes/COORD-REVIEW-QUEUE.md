@@ -20766,3 +20766,4 @@ FAILED [AUTOPILOT c0579e7b9d0e] 2026-11-27 12:35:08 PST AUTOPILOT -> KIT-WAVE-12
   - intel1 pid 578664 259 h lane fable-fix-s81-cong (last post 203 h ago): bash -c O=/srv/opentallas-scratch2/claude/fable-fix-s81-cong/an_place/sta; B=/srv/opentallas-scratch2/claude/f
   - epyc7 pid 1409990 257 h lane fable-fix-s81-coltap (last post 203 h ago): bash -c A=/srv/opentallas-scratch2/claude/fable-fix-s81-coltap/an; B=/srv/opentallas-scratch2/claude/fable-fix
 - 2026-11-27 17:20 PST AGG FLAGS [VIS-REOWN -> COORD] No visual verdict after 1 h: HEAD hd_mesh PLACE-GP owner HEAD-PROBE-R3 (64 min since queued, epyc11). 
+- 2026-11-27 17:21 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish: qwen_compute: 1 kits; FOLD 0; placed scans OK 1, FAILED 0; legs>405 in 1 of 1 (worst sle_fe_v3 200: port:x_su_l0_sc_i -> u_cland_x_su_l0_sc_i/u_ring.s_d 248.6 um); tap skew>=100 ps in 0. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
