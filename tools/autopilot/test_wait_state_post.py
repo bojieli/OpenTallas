@@ -30,3 +30,19 @@ def test_s81_head_routes_to_head_int_r3_not_s81(tmp_path):
     t = "WAIT-PLAN-VISUAL: missing fresh plan image verdict for s81_head/hd_x form abc123; request /r/plan_visual_request.json"
     assert KW.wait_state_post("s81_head", "hd_x", t, now=1, post_fn=lambda lane, text: posts.append((lane, text)), book_path=tmp_path / "b.json")
     assert "HEAD-INT-R3" in posts[0][1] and "S81-INT-R3" not in posts[0][1]
+
+def test_post_budget_defers_unbooked(tmp_path, monkeypatch):
+    """TICK-DEAD 11-27: each real post costs 15-20 s; once the per-process budget is spent a wait-state post is deferred, not booked."""
+    import hub_post as HP
+    bp, calls = tmp_path / "b.json", []
+    monkeypatch.setattr(HP, "_SPENT", [0.0])
+    monkeypatch.setattr(HP, "POST_BUDGET_S", 5.0)
+    monkeypatch.setattr(HP, "_post_real", lambda lane, text, hub: calls.append(text) or True)
+    clock = iter(range(0, 1000, 6))                     # every real post "takes" 6 s
+    monkeypatch.setattr(HP.time, "monotonic", lambda: next(clock))
+    t = "WAIT-PLAN-VISUAL: missing fresh plan image verdict for qwen_kvsys/x form abc123; request /r/q.json"
+    assert KW.wait_state_post("qwen_kvsys", "a", t, now=100, book_path=bp)
+    assert not KW.wait_state_post("qwen_kvsys", "b", t, now=100, book_path=bp)          # budget spent: deferred
+    assert len(calls) == 1 and "qwen_kvsys|b|" not in bp.read_text()                     # not booked: next tick retries
+    HP._SPENT[0] = 0.0                                                                    # next tick = new process
+    assert KW.wait_state_post("qwen_kvsys", "b", t, now=101, book_path=bp) and len(calls) == 2

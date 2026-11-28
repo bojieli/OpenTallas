@@ -8,15 +8,38 @@ import os
 import shlex
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 SIX_H = 6 * 3600
 COORD = Path(os.environ.get("COORD_DIR") or Path.home() / "coord")
 
 
-def post(lane, text, post_fn=None, hub="intel2"):
+# Per-process wall budget for budgeted posts (a tick is one process): each real post.sh run takes 15-20 s on a loaded hub, so ~40 new
+# wait-state keys in one kit-wave step spent 12 of the tick's 15 minutes and the 900 s TimeoutStartSec killed the tick (TICK-DEAD 11-27 15:36).
+POST_BUDGET_S = float(os.environ.get("OT_HUB_POST_BUDGET_S") or 60)
+_SPENT = [0.0]
+
+
+def budget_ok(post_fn=None):
+    """True while a budgeted caller may still start a real post this process; always True with a test post_fn."""
+    return post_fn is not None or _SPENT[0] < POST_BUDGET_S
+
+
+def post(lane, text, post_fn=None, hub="intel2", budgeted=False):
     if post_fn is not None:
         return post_fn(lane, text)
+    if budgeted and _SPENT[0] >= POST_BUDGET_S:
+        return False
+    t0 = time.monotonic()
+    try:
+        return _post_real(lane, text, hub)
+    finally:
+        if budgeted:
+            _SPENT[0] += time.monotonic() - t0
+
+
+def _post_real(lane, text, hub):
     if "pytest" in sys.modules and not os.environ.get("OT_HUB_POST_REAL"):
         return False                          # a test never posts to the real hub
     try:

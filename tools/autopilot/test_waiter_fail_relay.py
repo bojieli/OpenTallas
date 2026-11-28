@@ -144,3 +144,17 @@ def test_explicit_verdict_decides():
     assert R.parse(q(1, "L", "all good verdict=PASS but AUTO-GEOM FAIL expected")) is None
     assert R.parse(q(1, "L", "x", tag="RESULT-FAIL")) and R.parse(q(1, "L", "FAIL everywhere", tag="RESULT-PASS")) is None
     assert R.classify("class_id=C-X FAIL: bind") == "FAIL" and R.classify("clean run") == "PASS"
+
+
+def test_whole_token_verdict_not_substring():
+    """regression 5da0b183b934: 'FAIL-CLASS 8070467972 verdict CLOSED-SUPERSEDED' was relayed as WAITER-FAIL."""
+    closed = "FAIL-CLASS 8070467972 verdict CLOSED-SUPERSEDED. Cause: old run; no further action applies."
+    assert R.classify(closed) != "FAIL" and R.parse(q(1, "HEAD-INT-R3", closed)) is None
+    for neg in ("CLOSED-SUPERSEDED the old run", "NOT-FAILED-X on this row", "SUPERSEDED-FAIL-OVER done", "FAILURE-CLASS closed", "REFUSAL-LOG ok"):
+        assert R.classify(neg) != "FAIL", neg
+        assert R.parse(q(1, "L", neg)) is None, neg
+    for pos in ("FAIL: bind", "FAILED bind", "REFUSE: x", "REFUSED x", "Traceback (most recent call last)", "class_id=C-X FAIL: bind",
+                "FAIL", "did NOT pass", "verdict=FAIL: G0"):
+        assert R.classify(pos) == "FAIL", pos
+        assert R.parse(q(1, "L", pos)), pos
+    assert R.parse(q(1, "L", "anything", tag="RESULT-FAIL"))

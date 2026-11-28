@@ -36,7 +36,9 @@ LANE = "PLAN-GATE-PRE-1115"
 VERDICT_TOKEN = re.compile(r"\b(?:verdict|status|result)\s*[=:]\s*(?P<v>[A-Za-z_-]+)", re.I)
 FAIL_WORDS = ("fail", "failed", "refuse", "refused", "error", "blocked")
 PASS_WORDS = ("pass", "passed", "ok", "done", "good", "success")
-LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:FAIL(?:ED)?\b|REFUSE\b|REFUSED\b|Traceback\b)")
+# whole-token failure verdict: FAIL-CLASS ... verdict CLOSED-SUPERSEDED (5da0b183b934), NOT-FAILED-X, SUPERSEDED-FAIL-OVER are not failures;
+# a hyphen or capital letter next to the word makes it part of a longer token.
+LEAD_FAIL = re.compile(r"^(?:class_id=\S+\s+)?(?:(?<![A-Z-])(?:FAIL|FAILED|REFUSE|REFUSED)(?![A-Z-])|Traceback\b)")
 FAIL_PHRASE = re.compile(r"\b(?:did|do|does) NOT pass\b")
 LINE = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d [^\[]*?)\s*\b(?P<tag>RESULT(?:-FAIL|-PASS)?)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)\s*->\s*"
                   r"(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")

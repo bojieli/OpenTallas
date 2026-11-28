@@ -11475,6 +11475,8 @@ def wait_state_post(die, item, text, cfg=None, now=None, post_fn=None, book_path
             book = json.loads(bp.read_text())
         except (OSError, ValueError):
             book = {}
+        if not HP.budget_ok(post_fn):
+            return False                      # tick post budget spent: not booked, so the next tick posts it
         if not HP.due(book, f"{die}|{item}|{state}", now):
             return False
         d = ((cfg or {}).get("dies") or {}).get(die) or {}
@@ -11487,7 +11489,7 @@ def wait_state_post(die, item, text, cfg=None, now=None, post_fn=None, book_path
             os.replace(tmp, bp)
         except OSError:
             pass
-        HP.post("KIT-WAVE", msg, post_fn=post_fn)
+        HP.post("KIT-WAVE", msg, post_fn=post_fn, budgeted=True)
         return True
     except Exception:
         return False
