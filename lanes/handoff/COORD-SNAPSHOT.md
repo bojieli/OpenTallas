@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-27 17:30 PST
+# COORD snapshot 2026-11-27 17:45 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -11,26 +11,26 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 ## READY/ASK with no later COORD post naming them (0, heuristic: check each)
 
 ## Lane handoff files (age) and last queue post
-- CLAUDE-RESUME-1127: handoff 507 min old; last post none in recent queue
-- EXPLORER-STORE-R1: handoff 1002 min old; last post 2026-11-26 22:07 STATE
-- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 820 min old; last post none in recent queue
-- PCC-B1-LANE-SPEC: handoff 370 min old; last post none in recent queue
-- PREPARED-PUBLICATION-PLACE: handoff 1097 min old; last post none in recent queue
-- PUBLISH-GATE: handoff 1002 min old; last post 2026-11-26 23:27 READY
-- QC-ALLFIX-COLL: handoff 828 min old; last post none in recent queue
-- ROM-WEIGHTS-1119: handoff 1002 min old; last post 2026-11-26 23:36 STATE
+- CLAUDE-RESUME-1127: handoff 522 min old; last post none in recent queue
+- EXPLORER-STORE-R1: handoff 1017 min old; last post 2026-11-26 22:07 STATE
+- HEAD-INT-R2-HOSTW-CAPACITY-1127: handoff 835 min old; last post none in recent queue
+- PCC-B1-LANE-SPEC: handoff 385 min old; last post none in recent queue
+- PREPARED-PUBLICATION-PLACE: handoff 1112 min old; last post none in recent queue
+- PUBLISH-GATE: handoff 1017 min old; last post 2026-11-26 23:27 READY
+- QC-ALLFIX-COLL: handoff 843 min old; last post none in recent queue
+- ROM-WEIGHTS-1119: handoff 1017 min old; last post 2026-11-26 23:36 STATE
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
-- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 38 live
+- LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 36 live
+- s81_head agent ? last post 2026-11-27 17:37 KIT-WAVE
+- KIT-WAVE agent ? last post 2026-11-27 17:33 WAIT-STATE
 - FLEET-OPS-R agent ? last post 2026-11-27 17:28 ALERT
 - NOPROG-FIX-1115 agent ? last post 2026-11-27 17:22 STATE
 - CBC-RULES-1119 agent ? last post 2026-11-27 17:17 HOURLY
 - qwen_compute agent ? last post 2026-11-27 17:14 KIT-WAVE
 - HOLDGEN-1115 agent ? last post 2026-11-27 17:14 ALERT
-- s81_head agent ? last post 2026-11-27 17:14 KIT-WAVE
 - HEAD-TILE-R3 agent ? last post 2026-11-27 17:13 DIED
 - S81-INT-R3 agent ? last post 2026-11-27 17:11 DIED
-- KIT-WAVE agent ? last post 2026-11-27 17:07 WAIT-STATE
 - QC-INT-R3 agent ? last post 2026-11-27 17:06 STATUS
 - HEAD-INT-R3 agent ? last post 2026-11-27 17:05 REVIEW
 - QC-R3-VREVIEW agent ? last post 2026-11-27 17:03 REVIEW
@@ -58,14 +58,12 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - S81-INT-R3-VIEWS agent ? last post 2026-11-27 15:00 RESULT
 - KV-INT-R3/PV-RESET agent ? last post 2026-11-27 14:56 RESULT
 - PLAN-GATE-PRE-1115 agent ? last post 2026-11-27 14:54 NEEDS-ACTION
-- CLASS-OWNERS-R3 agent ? last post 2026-11-27 14:42 DIED
-- FAIL-ROUTE-1115 agent ? last post 2026-11-27 14:38 HANDOVER
 
 ## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kit
 
 ## Failure breakdown (tools/failure_breakdown.py)
-## FAILURES · unsigned cores and types by class (auto, 2026-11-27 17:30 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-27 17:45 PST)
 count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 1, head 10, qc 6, s81 5) | retired-plan 101 (head 2, kv 13, qc 57, s81 29)
 - [ ] FAIL.S81.CORES 69/72 signed · open: no kit-wave row 2 (dsdv_gunit_l4r, dsfd_su_t_rxsb) · signed off, not counted 1 (dsdv_gunit_l5f)
 - [ ] FAIL.S81.TYPES 48/402 signed · kit rows: cancelled (superseded) 194 (bk_sel__t2, +193) · held by die owner (plan event pending) 153 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +152)
@@ -79,15 +77,15 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 1 current-event (+7 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.QC 7 (cores 0, types 7) · by owner: KIT-WAVE-1 3, QC-PLAN 2, unowned 1, QC-STALE-GEOM 1
-  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (102.2h) · owner QC-PLAN
-  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (96.2h) · owner QC-PLAN
-  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (77.8h) · owner unowned
-  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (77.7h) · owner KIT-WAVE-1
-  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (69h) · owner QC-STALE-GEOM
-  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (45.9h) · owner KIT-WAVE-1
-  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (32.2h) · owner KIT-WAVE-1
+  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (102.4h) · owner QC-PLAN
+  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (96.4h) · owner QC-PLAN
+  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (78.1h) · owner unowned
+  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (77.9h) · owner KIT-WAVE-1
+  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (69.2h) · owner QC-STALE-GEOM
+  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (46.2h) · owner KIT-WAVE-1
+  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (32.4h) · owner KIT-WAVE-1
 - [ ] STALE.KV 1 (cores 0, types 1) · by owner: FAM-KV-HUBC-SYSC-R2 1
-  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (92.6h) · owner FAM-KV-HUBC-SYSC-R2
+  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (92.8h) · owner FAM-KV-HUBC-SYSC-R2
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
 - TOOLS-LAG qwen_compute 365 commits / missing none
 - TOOLS-LAG qwen_kvsys 402 commits / missing none
@@ -96,41 +94,34 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 - TAP-INSERTION qwen_compute: 4733 taps in 45 types, 127 over 1650 sinks; insertion max 696 ps (p50 269, p90 284), skew max 176 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 596 taps in 6 types, 17 over 1650 sinks; insertion max 516 ps (p50 258, p90 289), skew max 208 ps; oversized taps: ins max 412 ps, skew max 100 ps
 - TAP-INSERTION s81: 3591 taps in 55 types, 130 over 1650 sinks; insertion max 1000 ps (p50 466, p90 498), skew max 313 ps; oversized taps: ins max 838 ps, skew max 175 ps
-- TAP-INSERTION s81_head: 506 taps in 10 types, 9 over 1650 sinks; insertion max 613 ps (p50 458, p90 468), skew max 171 ps; oversized taps: ins max 466 ps, skew max 62 ps
+- TAP-INSERTION s81_head: 513 taps in 11 types, 9 over 1650 sinks; insertion max 613 ps (p50 458, p90 468), skew max 171 ps; oversized taps: ins max 466 ps, skew max 62 ps
 
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
     HOST-REPORT 2026-11-27 17:05 | tolera L12.49/112 units0 free830G | key-ca L13.75/112 units4 free274G | dear-c L2.66/128 units0 free353G | loved- L9.60/96 units3 free249G | outgoi L14.77/96 units1 free272G | renewe L2.12/96 units0 free1368G | civil- L3.49/96 units0 free1210G | viable L3.04/96 units1 free1617G | HOST-CAPS ok (9 owned caps); expiring (renew or revert): intel2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); intel1:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); epyc2:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); epyc7:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); epyc8:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); epyc9:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R2 expires=2026-12-06T00:00Z (190.9 h left); e
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  336G  109G  76% /
-    17:30:17 up 34 days, 13:10, 147 users,  load average: 9.32, 13.84, 13.40
+    17:45:18 up 34 days, 13:25, 144 users,  load average: 5.71, 8.30, 10.44
 
 ## ot-run status
-    ot-run status: epyc2 admits 918 GB (avail 975, reserve 0, fresh 0, peak 0) load 10/128 run 1 threads 16/128 root 91% scratch 350 GB
-    intel1 admits 899 GB (avail 977, reserve 0, fresh 0, peak 277.4) load 7/112 run 3 threads 96/112 root 21% scratch 270 GB
-    localhost admits 822 GB (avail 950, reserve 0, fresh 0, peak 46.8) load 9/112 run 2 threads 30/112 root 76% scratch 822 GB
-    epyc7 admits 859 GB (avail 937, reserve 0, fresh 0, peak 1.1) load 11/96 run 6 threads 164/96 root 35% scratch 245 GB
-    epyc8 admits 877 GB (avail 944, reserve 0, fresh 0, peak 11.4) load 10/96 run 3 threads 198/96 root 51% scratch 303 GB
-    epyc9 admits 939 GB (avail 987, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 47/96 root 40% scratch 1368 GB
-    epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 138/96 root 52% scratch 1209 GB
-    epyc11 admits 939 GB (avail 988, reserve 0, fresh 0, peak 0) load 2/96 run 1 threads 144/96 root 7% scratch 1614 GB
-    epyc12 admits 914 GB (avail 963, reserve 0, fresh 0, peak 73.6) load 65/96 run 1 threads 48/96 root 37% scratch 759 GB
+    ot-run status: epyc2 admits 946 GB (avail 987, reserve 0, fresh 0, peak 0) load 2/128 run 0 threads 8/128 root 91% scratch 350 GB
+    intel1 admits 906 GB (avail 976, reserve 0, fresh 0, peak 229.7) load 8/112 run 2 threads 88/112 root 21% scratch 269 GB
+    localhost admits 826 GB (avail 955, reserve 0, fresh 0, peak 0) load 6/112 run 0 threads 14/112 root 76% scratch 820 GB
+    epyc7 admits 864 GB (avail 950, reserve 0, fresh 0, peak 1.1) load 12/96 run 5 threads 148/96 root 35% scratch 237 GB
+    epyc8 admits 893 GB (avail 960, reserve 0, fresh 0, peak 5.8) load 15/96 run 2 threads 190/96 root 51% scratch 306 GB
+    epyc9 admits 939 GB (avail 988, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 47/96 root 40% scratch 1368 GB
+    epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 138/96 root 52% scratch 1216 GB
+    epyc11 admits 941 GB (avail 990, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 136/96 root 7% scratch 1614 GB
+    epyc12 admits 936 GB (avail 984, reserve 0, fresh 0, peak 0) load 5/96 run 0 threads 0/96 root 37% scratch 759 GB
     next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-27 17:22:24 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/sle_st_b_v2__cl14c98df5__pvcd986c42 form 1df1f5065095c1e939d2171d39f71044bad2c29eb0764a574e2
-    2026-11-27 17:22:58 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
-    2026-11-27 17:23:42 PST AUTOPILOT: KIT-WAVE HOLD-TERM qwen_compute: 57 hold(s), 0 without owner/eta (HOLD-NO-TERM), 0 overdue [+4 identical line(s) in the last hour]
-    2026-11-27 17:23:42 PST AUTOPILOT: KIT-WAVE HOLD-TERM qwen_kvsys: 46 hold(s), 0 without owner/eta (HOLD-NO-TERM), 46 overdue: kv3_hgi [owner KV-ALLFIX] eta 11-24 11:00; kv3_hgi_v7 [owner KV-ALLFIX] et
-    2026-11-27 17:23:42 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-27 17:24:04 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 124.5 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 124.
+    2026-11-27 17:35:16 PST AUTOPILOT: KIT-WAVE RETRY-KEY-LAUNCH qwen_compute/slw_stm_v3: explicit retry key (fix named or INFRA) in the die config overrides SKIP-SAME-INPUT
+    2026-11-27 17:37:11 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
+    2026-11-27 17:37:22 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_st_b_v1__cl6357f1cc__pvffd43fdc form 821f10a969b1a5d33dab99482b9cbd67c33aa40bffa6fbaa39d
+    2026-11-27 17:37:27 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_st_b_v1__cle6023ec2 form d982bd866f129182d79fade9ce08d26b8b7138cf132a04d9e25a006e11c8e4c
+    2026-11-27 17:38:00 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-27 17:38:21 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 124.7 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 124.
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-27 16:40 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3037754-1795826168 on open-snipe: rc=1 after 234 s, ended 00:39:59, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4f_v1.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PA
-- 2026-11-27 16:40 PST RESULT [CLASS-TRACK-R3 -> COORD; cc HEAD-EAST-R4, HEAD-PART-R3, FLEET-OPS-R5, HEAD-INT-R3] Commit 55177c62fdcf. Registered: C-MERGE3-BASE-HIDES-FORK-CONFLICT FLEET 1 (owner HEAD-EAST-R4, hub 429960a54abf, blocking safety fix, count 1 until the all-dies census lands: per-die rows can be added then); P-PUSH-GATE-FLAKE FLEET CLOSED (c604c1d488f, not in the table before); P-SEAM-UNTIMED-CTL-NSTRIP 
-- 2026-11-27 16:40 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.s81_head has key(s) no runtime code reads: item_env_note_w13q; the setting does nothing (delete it or add its reader)
-- 2026-11-27 16:42 PST RESULT [CLASS-TRACK-R3 -> COORD; cc S81-INT-R3, FLEET-OPS-R5, CLASS-OWNERS-R3, HEAD-PART-R3, HEAD-INT-R3, LEC-R3] Commit c20abdec69f2. FLAG CLOSED: LL final bodies count per COORD 14:55 (608/487); I left the 3 views/dsfd_node_LL* DNC rows untouched (they are COORD-superseded for those bodies; tell me if you want them marked CLEARED). 15:05/16:05 RECHECK of the diagnostic copies: SIGN-RATE 15:05
-- 2026-11-27 16:43 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3037732-1795826168 on open-snipe: rc=1 after 449 s, ended 00:43:34, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4f_v3.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PA
-- 2026-11-27 16:44 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3133486-1795826529 on open-snipe: rc=1 after 136 s, ended 00:44:22, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4p_v1.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PA
-- 2026-11-27 16:45 PST SMELL [SMELL-WATCH -> QC-INT-R3, QC-SLECTL-RRL; cc QC-INT-R3] 1 kit-class(es): coll_core 4_1_cts [CTS] intel1: CTS stage 2.1 h (> 2 h); render intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/qc_2100_combined_77f2_1126/private/QC-R3-VISUAL/coll_core_1127132045/gen/coll_core/smell_review/4_1_cts-1127-1645PST (rendering). Early trigger (OWNER 04:1x): 
 - 2026-11-27 16:45 PST SMELL [SMELL-WATCH -> HEAD-INT-R3, HEAD-PROBE-R3; cc HEAD-INT-R3] STA-WNS: quick setup STA (TT, placement parasitics, ideal clock) WNS below -150 ps: hd_mesh PLACE-GP: WNS -243.8 ps, TNS -5439, 12 endpoints < -150; epyc11:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/private/HEAD-PROBE-R3/hd_mesh_1127231904/gen/hd_mesh/vis_review/p
 - 2026-11-27 16:47 PST DIED [HEAD-TILE-R3] ot-run oth-ubuntu-3156650-1795826614 on open-snipe: rc=1 after 265 s, ended 00:47:56, log /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/dieclock/kit_k4p_p1.otrun.log, cmd: --priority die --strict-host --no-spill --mem 58 --threads 24 --disk 20 --dir /srv/opentallas-scratch2/claude/HEAD-INT-R3/HEAD-TILE-R3/diecl | class=CHECKER-RC cause={"rc": 1, "stage_check": "PA
 - 2026-11-27 16:48 PST WAIT-STATE [KIT-WAVE -> S81-INT-R3] WAIT-PLAN-VISUAL s81_head/hd_serdes: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 6bddad3ebd85ffeb50dd0c5b79f1bdc030188b51fc4ae02289d0f074146a3323 (request /srv/opentallas-scratch2/claude/HEAD-INT-R3/serdes_start/spec/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane S81-INT-R3 (fallback INT-R3); reason: WAIT-PLAN-VISUAL: m
@@ -184,4 +175,11 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 - 2026-11-27 17:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-allfix on intel1 wrote 52 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-27 17:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-int-r2 on intel1 wrote 52 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-27 17:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: s81-allfix-int on intel1 wrote 76 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-27 17:32 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_host_n: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_host_n; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126
+- 2026-11-27 17:33 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_spn_wshim_tx: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_spn_wshim_tx; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f
+- 2026-11-27 17:33 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_st_n3_transit: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_st_n3_transit; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF1
+- 2026-11-27 17:33 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_st_n3_turn: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_st_n3_turn; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18
+- 2026-11-27 17:33 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_st_str: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_st_str; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126
+- 2026-11-27 17:33 PST WAIT-STATE [KIT-WAVE -> HEAD-INT-R3] WAIT-VISUAL s81_head/hd_turn_a: missing lanes/GEOM-REVIEW.md GOOD / OK / ISSUES-ACCEPT verdict line for s81_head/hd_turn_a; reviewer lane HEAD-INT-R3 (fallback INT-R3); reason: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126
+- 2026-11-27 17:37 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-100): 7 event(s): hd_host_n AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit=intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r18w12_1126/items/hd_host_n/attempt_2/gen/hd_host_n; hd_spn_wshim_tx AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: view the placem
 
