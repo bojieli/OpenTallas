@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-28 15:15 PST
+# COORD snapshot 2026-11-28 15:30 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -15,17 +15,17 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 
 ## Live lanes (queue posts + LANE-STATUS + agent_ids)
 - LANE-STATUS rows 195; agent_ids.tsv 132 (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): 5 live
-- AUTO-CLEAN agent ? last post 2026-11-28 15:00 ALERT
+- NOPROG-FIX-1115 agent ? last post 2026-11-28 15:22 STATE
+- CBC-RULES-1119 agent ? last post 2026-11-28 15:17 HOURLY
+- AUTO-CLEAN agent ? last post 2026-11-28 15:15 ALERT
 - PROGRESS-WATCH agent ? last post 2026-11-28 14:34 ALERT
-- NOPROG-FIX-1115 agent ? last post 2026-11-28 14:22 STATE
-- CBC-RULES-1119 agent ? last post 2026-11-28 14:17 HOURLY
 - KIT-WAVE agent ? last post 2026-11-28 12:30 WAIT-STATE
 
 ## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)
 - [ ] S81.CLK Die clock 12.25 · S81 / DIE-S81-65 · PASS (kits pending) · plan dd2cd280def6 approved 10-31 21:4x: clock-tree GRT0, TT +49.70, CA 0/2330 (older pass counts, OWNER); retained FF +10.75 on 65420 pairs; remaining real-view hold pairs measured as kit
 
 ## Failure breakdown (tools/failure_breakdown.py)
-## FAILURES · unsigned cores and types by class (auto, 2026-11-28 15:15 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-28 15:30 PST)
 count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 1, head 10, qc 6, s81 5) | retired-plan 101 (head 2, kv 13, qc 57, s81 29)
 - [ ] FAIL.S81.CORES 69/72 signed · open: no kit-wave row 2 (dsdv_gunit_l4r, dsfd_su_t_rxsb) · signed off, not counted 1 (dsdv_gunit_l5f)
 - [ ] FAIL.S81.TYPES 48/402 signed · kit rows: cancelled (superseded) 194 (bk_sel__t2, +193) · held by die owner (plan event pending) 153 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +152)
@@ -39,15 +39,15 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 1 current-event (+7 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts, NOT SEEN: epyc11; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.QC 7 (cores 0, types 7) · by owner: KIT-WAVE-1 3, QC-PLAN 2, unowned 1, QC-STALE-GEOM 1
-  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (123.9h) · owner QC-PLAN
-  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (117.9h) · owner QC-PLAN
-  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (99.6h) · owner unowned
-  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (99.4h) · owner KIT-WAVE-1
-  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (90.7h) · owner QC-STALE-GEOM
-  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (67.7h) · owner KIT-WAVE-1
-  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (53.9h) · owner KIT-WAVE-1
+  - type sle_ctl__cla4f6f12f · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 11:21 (124.2h) · owner QC-PLAN
+  - type sle_fw_v2__cl69f5e854 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 17:19 (118.2h) · owner QC-PLAN
+  - type slw_fw_v1__clf51c11d8__cl592e3d37 · CANCELLED geom GHOST @ 2026-11-24 11:42 (99.8h) · owner unowned
+  - type slw_fw_v3 · CANCELLED geom SUPERSEDED @ 2026-11-24 11:50 (99.7h) · owner KIT-WAVE-1
+  - type slw_fe_v1__clfe325744__cl08d14f0d · CANCELLED geom SUPERSEDED @ 2026-11-24 20:33 (91h) · owner QC-STALE-GEOM
+  - type native59 · CANCELLED geom SUPERSEDED @ 2026-11-25 19:34 (67.9h) · owner KIT-WAVE-1
+  - type coll_ucie · CANCELLED geom QUEUE-CANCELLED @ 2026-11-26 09:19 (54.2h) · owner KIT-WAVE-1
 - [ ] STALE.KV 1 (cores 0, types 1) · by owner: FAM-KV-HUBC-SYSC-R2 1
-  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (114.3h) · owner FAM-KV-HUBC-SYSC-R2
+  - type kv3_sys_c · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (114.6h) · owner FAM-KV-HUBC-SYSC-R2
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
 - TOOLS-LAG qwen_compute 365 commits / missing none
 - TOOLS-LAG qwen_kvsys 402 commits / missing none
@@ -61,33 +61,29 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 ## Host load and disk (latest HOST-REPORT, this host df/uptime)
     HOST-REPORT 2026-11-28 15:05 | tolera L8.67/112 units0 free908G | key-ca L2.46/112 units0 free484G | dear-c L2.86/128 units0 free383G | loved- L6.28/96 units1 free530G | outgoi L5.13/96 units0 free430G | renewe L2.29/96 units0 free1527G | civil- L5.00/96 units0 free1480G | ssh: connect to host 84.32.189.120 port 22: Connection timed out
     Filesystem      Size  Used Avail Use% Mounted on | /dev/nvme1n1p2  468G  336G  109G  76% /
-    15:15:49 up 35 days, 10:56, 142 users,  load average: 2.89, 5.90, 8.04
+    15:30:50 up 35 days, 11:11, 139 users,  load average: 5.43, 5.17, 5.95
 
 ## ot-run status
-    ot-run status: epyc2 admits 946 GB (avail 987, reserve 0, fresh 0, peak 0) load 2/128 run 0 threads 8/128 root 91% scratch 382 GB
-    intel1 admits 917 GB (avail 982, reserve 0, fresh 0, peak 0) load 9/112 run 0 threads 24/112 root 22% scratch 483 GB
-    localhost admits 830 GB (avail 959, reserve 0, fresh 0, peak 0) load 3/112 run 0 threads 14/112 root 76% scratch 907 GB
+    ot-run status: epyc2 admits 946 GB (avail 987, reserve 0, fresh 0, peak 0) load 3/128 run 0 threads 8/128 root 91% scratch 382 GB
+    intel1 admits 917 GB (avail 982, reserve 0, fresh 0, peak 0) load 6/112 run 0 threads 24/112 root 22% scratch 483 GB
+    localhost admits 830 GB (avail 958, reserve 0, fresh 0, peak 0) load 5/112 run 0 threads 14/112 root 76% scratch 907 GB
     epyc7 admits 893 GB (avail 941, reserve 0, fresh 0, peak 0) load 4/96 run 1 threads 112/96 root 36% scratch 529 GB
-    epyc8 admits 931 GB (avail 980, reserve 0, fresh 0, peak 0) load 4/96 run 0 threads 174/96 root 51% scratch 429 GB
-    epyc9 admits 939 GB (avail 988, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 47/96 root 40% scratch 1526 GB
-    epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 138/96 root 53% scratch 1479 GB
+    epyc8 admits 934 GB (avail 982, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 174/96 root 51% scratch 429 GB
+    epyc9 admits 939 GB (avail 987, reserve 0, fresh 0, peak 0) load 1/96 run 0 threads 47/96 root 40% scratch 1526 GB
+    epyc10 admits 937 GB (avail 985, reserve 0, fresh 0, peak 0) load 2/96 run 0 threads 138/96 root 53% scratch 1479 GB
     epyc11 unreachable
     epyc12 unreachable
     next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-28 15:04:03 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/sle_fe_v1__cl8210183c: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for sle_fe_v1__cl8210183c: not held [+3 identical line(s) in the last h
-    2026-11-28 15:04:09 PST AUTOPILOT: KIT-WAVE LAUNCH-REFUSED qwen_compute/slw_fe_v1__clfe325744__cl08d14f0d: LBL-FAIL: lanes/VIS-COVERAGE.tsv row slw_fe_v1__clfe325744__cl08d14f0d is FAIL: no relaunch /
-    2026-11-28 15:05:24 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
-    2026-11-28 15:05:30 PST AUTOPILOT: KIT-WAVE LAUNCH-REFUSED qwen_compute/slw_fe_v1__cl95cd1d0c: LBL-FAIL: lanes/VIS-COVERAGE.tsv row slw_fe_v1__cl95cd1d0c is FAIL: no relaunch / first attempt until its
-    2026-11-28 15:06:08 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
-    2026-11-28 15:08:37 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 146.2 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 145.
+    2026-11-28 15:22:00 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_hc1__cl68f9248e__cl144ee7b3 form a0511907c91b981c550ae300068e038b27a7a25b44dccd902d4d3ff
+    2026-11-28 15:22:40 PST AUTOPILOT: KIT-WAVE LBL-PASS qwen_compute/slw_hc1__cl68f9248e__cle683a076: LBL-NOROW no lanes/VIS-COVERAGE.tsv row for slw_hc1__cl68f9248e__cle683a076: not held [+3 identical l
+    2026-11-28 15:22:45 PST AUTOPILOT: KIT-WAVE WAIT-PLAN-VISUAL: BAD fresh plan image verdict for qwen_compute/slw_hc1__cl68f9248e__cle683a076 form 0e7dce7f66389b4b6c3e1085fa5a1b7851f5adc3bcd8b9ec121387b
+    2026-11-28 15:23:30 PST AUTOPILOT: KIT-WAVE LAUNCH-KEEP qwen_compute/sle_st_b_v1__pv0e7b1dcc: active producer kw-qwenco-slestbv1pv0e7b1dcc-1-4173
+    2026-11-28 15:24:14 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 HOLD-LEAK=0 TERM-UNREACHABLE=0 TERM-VARIANT=0 HOLD-SUPERSEDED=0 HOLD-ZERO-MATCH=0 PROOF-HELD=0 PILOT-DEADLOCK=0
+    2026-11-28 15:26:43 PST AUTOPILOT: UNDER-USE HELD SKIP-HELD 6: s81/serdes__t3 1 [owner S81-SERDES-TAPSKEW, 146.5 h, eta 11-25 00:30, FLAGGED OVERDUE]; s81/serdes__t16 1 [owner S81-SERDES-TAPSKEW, 146.
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-28 10:49 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/slw_hc1__cl68f9248e__cl144ee7b3: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form a0511907c91b981c550ae300068e038b27a7a25b44dccd902d4d3ff8a179f6d0 (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_slw_hc1__cl68f9248e__cl144ee7b3_b1db3fbb0d2df/a1/plan_visual_request.json) (a GOOD verdict on the exact plan for
-- 2026-11-28 10:49 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/slw_su_l0__cl1e5219ea: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 8a1d76b8ad14ef5149870c7a441a4f0174e222d5f42774294d2dd00cbb19a9df (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_slw_su_l0__cl1e5219ea_bca4e690ba4cf/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC
-- 2026-11-28 10:50 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/sle_fe_v1__cl1cbb7497: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 821f10a969b1a5d33dab99482b9cbd67c33aa40bffa6fbaa39de5e61cb6aaafd (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_sle_fe_v1__cl1cbb7497_ba941daa1c1dc/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC
-- 2026-11-28 10:50 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/sle_fe_v1__cl8210183c: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 821f10a969b1a5d33dab99482b9cbd67c33aa40bffa6fbaa39de5e61cb6aaafd (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_sle_fe_v1__cl8210183c_b8c70bd6e251b/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC
 - 2026-11-28 11:03 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/slw_sc_v1__cl63e5a7a2: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 821f10a969b1a5d33dab99482b9cbd67c33aa40bffa6fbaa39de5e61cb6aaafd (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_slw_sc_v1__cl63e5a7a2_b0bec21de3f4d/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC
 - 2026-11-28 11:03 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/slw_sc_v1__cl64543eaf__cl4590432d: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form ec04e1fa02957f80a3730f4ce7ec1f69ceaf2b2cb6d94c099ad05c83e1e04950 (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_slw_sc_v1__cl64543eaf__cl4590432d_bc7eb7bfcef28/a1/plan_visual_request.json) (a GOOD verdict on the exact plan
 - 2026-11-28 11:04 PST WAIT-STATE [KIT-WAVE -> QC-INT-R3] WAIT-PLAN-VISUAL qwen_compute/slw_sc_v2: missing lanes/PLAN-VISUAL-REVIEW.tsv row for form 77ae5ab78a0ab98c8cc48afc11c944631484b598f3fd5e43b4dd96c1a7ede5e9 (request /home/ubuntu/coord/autopilot/plan_visual_requests/qwen_compute_slw_sc_v2_bddbefcca98b3/a1/plan_visual_request.json) (a GOOD verdict on the exact plan form); reviewer lane QC-INT-R3 (fallback INT-R3
@@ -144,4 +140,8 @@ count_hourly: signed any plan 608 | current plan 485 | deferred re-sign 22 (hbm 
 - 2026-11-28 14:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
 - 2026-11-28 15:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
 - 2026-11-28 15:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
+- 2026-11-28 15:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
+- 2026-11-28 15:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
+- 2026-11-28 15:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-INT-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned S81 119 types; CBC-FALLBACK (r713: >= 2 failed design fix rounds -> close-by-construction form; die owner folds tools/die_plan/cbc_pass.py rows into the next event): S81 col_h9_r1: 60 unsigned (col_h9_r1__t1__cl49d7a23e__pv047ea3b3,col_h9_r1__t1__cl49d7a23e__pv0a45e191,col_h9
+- 2026-11-28 15:22 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-28 15:22 PST: 1 running jobs, PROGRESSING 0, PLATEAU 1, SLOW 0, NO-PROGRESS 0 (this table is advisory; the separate noprog.timer watchdog (noprog_watchdog.py) DOES ot-heavy-stop NO-PROGRESS jobs, per-host log ~/.local/state/noprog/actions.jsonl); table lanes/NOPROG.tsv; hosts without report ['epyc11', 'epyc12']
 
