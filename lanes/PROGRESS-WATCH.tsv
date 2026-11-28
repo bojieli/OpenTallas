@@ -616,3 +616,4 @@ time	die	class	state	posted	text
 2026-11-27 11:36:10	s81	PARKED	parked	no	PARKED s81: DIE-OFF is intentional (parked), not alerting
 2026-11-27 15:36:42	autopilot	TICK-DEAD	alert	yes	[PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 15:12:42 (24 min; no launch or classify meanwhile) running tick started 15:32:17, last mark 'after admit_new'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
 2026-11-27 20:37:24	hbm	PARKED	parked	no	PARKED hbm: DIE-OFF is intentional (parked), not alerting
+2026-11-27 21:07:35	qwen_compute	NO-PROGRESS	alert	yes	NO-PROGRESS qwen_compute: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 233 min (last 17:13) and 0 private-spec launches for 60 min (last 15:32 ot-run QC-R3-TT tt_ctlm_1127143920); 57 hold(s): 0 without eta, 57 overdue
