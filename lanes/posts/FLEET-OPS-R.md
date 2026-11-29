@@ -1704,3 +1704,4 @@
 - 2026-11-28 15:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
 - 2026-11-28 15:46 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
 - 2026-11-28 16:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
+- 2026-11-28 16:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc12: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc12
